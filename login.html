@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TREZOR Login</title>
+</head>
+<body>
+
+...
+
+<script type="text/javascript">
+
+function receiveMessage(event)
+{
+	var request = event.data;
+
+	alert('host: ' + request.host);
+
+	/* TODO: write magic :-) */
+
+	var response = {};
+	response.success = true;
+	response.challenge_hidden = request.challenge_hidden;
+	response.challenge_visual = request.challenge_visual;
+	response.address = '1G24md2ep5kjFGNT8Fe4RtZG2JE9GR1Xqe';
+	response.public_key = '0284efcc0a291c6ce86d016456a3c87f832f63c3266fd202a0785d3c10b02ef245';
+	response.signature = '1f66f1c8ef5ec104ea29b8270e4c5a622eb75fc51d40c81ce08176a0d3a1e197d9952b002b4bc278e7affabad3ff238e68c589f5b1a23990e019c20ac1d4269596';
+
+	event.source.postMessage(response, event.origin);
+	window.close();
+}
+
+window.addEventListener('message', receiveMessage, false);
+
+</script>
+
+</body>
+</html>
