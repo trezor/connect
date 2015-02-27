@@ -60,6 +60,9 @@ function receiveMessage(event)
 	if (request.host) {
 		document.getElementById('hostname').innerHTML = request.host;
 	}
+	if (request.icon) {
+		document.getElementById('hosticon').src = request.icon;
+	}
 
 	/* TODO: write magic :-) */
 
@@ -74,7 +77,7 @@ function receiveMessage(event)
 	setTimeout(function() {
 		event.source.postMessage(response, event.origin);
 		window.close();
-	}, 1000);
+	}, 2000);
 }
 
 window.addEventListener('message', receiveMessage, false);

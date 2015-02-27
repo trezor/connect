@@ -6,6 +6,7 @@ for (var i = 0; i < elements.length; i++) {
 	content = '<img style="cursor: pointer; cursor: hand;" src="' + connect_path + 'login.png" onclick="trezor_login_handler();">';
 	var e = elements[i];
 	window.callback = e.getAttribute('callback');
+	window.hosticon = e.getAttribute('icon');
 	e.parentNode.innerHTML = content;
 }
 
@@ -29,6 +30,7 @@ function trezor_login_handler() {
 		request.path = null;
 		request.challenge_hidden = btoa(String.fromCharCode.apply(null, window.crypto.getRandomValues(new Uint8Array(24))));
 		request.challenge_visual = new Date().toISOString().substring(0,19).replace('T',' ');
+		request.icon = window.hosticon;
 		popup.postMessage(request, origin);
 	}, 1000);
 }
