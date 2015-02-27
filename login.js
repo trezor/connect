@@ -11,7 +11,7 @@ for (var i = 0; i < elements.length; i++) {
 
 function receiveMessage(event) {
 	if (event.origin !== origin) return;
-	window['callback'](event.data);
+	window[window.callback](event.data);
 }
 
 window.addEventListener('message', receiveMessage, false);
