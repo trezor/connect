@@ -3,17 +3,63 @@
 <head>
 <title>TREZOR Login</title>
 </head>
+<style type="text/css">
+body {
+	margin: 0;
+	padding: 0;
+}
+#main {
+	background: #eee;
+	color: #333;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	width: 400px;
+	height: 300px;
+}
+#top {
+	background: #333 url('login_trezor.png') 8px 4px no-repeat;
+	color: #fff;
+	height: 56px;
+	line-height: 56px;
+	padding-right: 12px;
+	text-align: right;
+	font-size: 30px;
+}
+#middle {
+	font-size: 21px;
+	text-align: center;
+	height: 156px;
+	padding-top: 40px;
+}
+#bottom {
+	background: #333;
+	color: #fff;
+	height: 48px;
+	line-height: 48px;
+	font-size: 16px;
+	text-align: center;
+}
+</style>
 <body>
 
-...
+<div id="main">
+  <div id="top">Login</div>
+  <div id="middle">
+    <img id="hosticon" src="login_default.png" width="96" height="96"><br>
+    <strong id="hostname"></strong>
+  </div>
+  <div id="bottom">
+    Please connect your TREZOR device ...
+  </div>
+</div>
 
 <script type="text/javascript">
-
 function receiveMessage(event)
 {
 	var request = event.data;
 
-	alert('host: ' + request.host);
+	if (request.host) {
+		document.getElementById('hostname').innerHTML = request.host;
+	}
 
 	/* TODO: write magic :-) */
 
@@ -25,12 +71,13 @@ function receiveMessage(event)
 	response.public_key = '0284efcc0a291c6ce86d016456a3c87f832f63c3266fd202a0785d3c10b02ef245';
 	response.signature = '1f66f1c8ef5ec104ea29b8270e4c5a622eb75fc51d40c81ce08176a0d3a1e197d9952b002b4bc278e7affabad3ff238e68c589f5b1a23990e019c20ac1d4269596';
 
-	event.source.postMessage(response, event.origin);
-	window.close();
+	setTimeout(function() {
+		event.source.postMessage(response, event.origin);
+		window.close();
+	}, 1000);
 }
 
 window.addEventListener('message', receiveMessage, false);
-
 </script>
 
 </body>

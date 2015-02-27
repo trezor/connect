@@ -5,12 +5,13 @@ var connect_path = origin + '/connect/';
 for (var i = 0; i < elements.length; i++) {
 	content = '<img style="cursor: pointer; cursor: hand;" src="' + connect_path + 'login.png" onclick="trezor_login_handler();">';
 	var e = elements[i];
+	window.callback = e.getAttribute('callback');
 	e.parentNode.innerHTML = content;
 }
 
 function receiveMessage(event) {
 	if (event.origin !== origin) return;
-	trezorLogin(event.data);
+	window['callback'](event.data);
 }
 
 window.addEventListener('message', receiveMessage, false);
