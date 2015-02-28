@@ -10,7 +10,7 @@ Usage:
 <script type="text/javascript">
 function trezorLogin(response) {
 	if (response.success) {
-		alert('success');
+		alert(JSON.stringify(response));
 	} else {
 		alert('failure');
 	}
