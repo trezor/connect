@@ -44,8 +44,8 @@ body {
 <div id="main">
   <div id="top">Login</div>
   <div id="middle">
-    <img id="hosticon" src="login_default.png" width="96" height="96"><br>
-    <strong id="hostname"></strong>
+    <img id="login_icon" src="login_default.png" width="96" height="96"><br>
+    <strong id="login_label"></strong>
   </div>
   <div id="bottom">
     Please connect your TREZOR device ...
@@ -56,13 +56,14 @@ body {
 function receiveMessage(event)
 {
 	var request = event.data;
-
-	if (request.host) {
-		document.getElementById('hostname').innerHTML = request.host;
-	}
-	if (request.icon) {
-		document.getElementById('hosticon').src = request.icon;
-	}
+	var label = '';
+	if (request.proto) label += request.proto + '://';
+	if (request.user) label += request.user + '@';
+	if (request.host) label += request.host;
+	if (request.port) label += ':' + request.port;
+	if (request.path) label += request.path;
+	document.getElementById('login_label').innerHTML = label;
+	if (request.icon) document.getElementById('login_icon').src = request.icon;
 
 	/* TODO: write magic :-) */
 
