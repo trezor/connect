@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>TREZOR Login</title>
+<script src="https://trezor.github.io/connect/trezor.js" type="text/javascript"></script>
 </head>
 <style type="text/css">
 body {
@@ -11,7 +12,7 @@ body {
 #main {
 	background: #eee;
 	color: #333;
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-family: Helvetica, Arial, sans-serif;
 	width: 400px;
 	height: 300px;
 }
@@ -55,35 +56,90 @@ body {
 </div>
 
 <script type="text/javascript">
+
 function receiveMessage(event)
 {
 	var request = event.data;
+	if (!request || !request.identity) return;
 	var label = '';
-	if (request.proto) label += request.proto + '://';
-	if (request.user) label += request.user + '@';
-	if (request.host) label += request.host;
-	if (request.port) label += ':' + request.port;
-	if (request.path) label += request.path;
+	if (request.identity.proto) label += request.identity.proto + '://';
+	if (request.identity.user) label += request.identity.user + '@';
+	if (request.identity.host) label += request.identity.host;
+	if (request.identity.port) label += ':' + request.identity.port;
+	if (request.identity.path) label += request.identity.path;
 	document.getElementById('login_label').innerHTML = label;
 	if (request.icon) document.getElementById('login_icon').src = request.icon;
 
-	/* TODO: write magic :-) */
+	// FIXME: how to do this properly and pass request object to line 131?
+	window.request = request;
 
-	var response = {};
-	response.success = true;
-	response.challenge_hidden = request.challenge_hidden;
-	response.challenge_visual = request.challenge_visual;
-	response.address = '1G24md2ep5kjFGNT8Fe4RtZG2JE9GR1Xqe';
-	response.public_key = '0284efcc0a291c6ce86d016456a3c87f832f63c3266fd202a0785d3c10b02ef245';
-	response.signature = '1f66f1c8ef5ec104ea29b8270e4c5a622eb75fc51d40c81ce08176a0d3a1e197d9952b002b4bc278e7affabad3ff238e68c589f5b1a23990e019c20ac1d4269596';
-
-	setTimeout(function() {
-		event.source.postMessage(response, event.origin);
-		window.close();
-	}, 2000);
+	trezor
+		.loadTransport()
+		.then(configureTransport)
+		.then(getSession)
+		.then(callSignIdentity)
+		// success
+		.then(function(response) {
+			console.log(response);
+			response.success = true;
+			event.source.postMessage(response, event.origin);
+			window.close();
+		})
+		// failure
+		.catch(function(error) {
+			console.error(error);
+			var response = {};
+			response.success = false;
+			response.error = error;
+			event.source.postMessage(response, event.origin);
+			window.close();
+		});
 }
 
 window.addEventListener('message', receiveMessage, false);
+
+function configureTransport(transport) {
+	return trezor
+		.http('https://mytrezor.com/data/plugin/config_signed.bin')
+		.then(function (config) {
+			return transport.configure(config);
+		})
+		.then(function () {
+			return transport;
+		});
+}
+
+function getSession(transport) {
+	return transport.enumerate()
+		.then(function (devices) {
+			if (!devices.length) {
+				throw new Error('No connected devices.');
+			}
+			return transport.acquire(devices[0]);
+		})
+		.then(function (result) {
+			var id = result.session;
+			return new trezor.Session(transport, id);
+		})
+		.then(function (session) {
+			session.initialize();
+			return session;
+		});
+}
+
+function callSignIdentity(session) {
+	var request = window.request; // FIXME
+	return session.signIdentity(request.identity, request.challenge_hidden, request.challenge_visual).then(function (result) {
+		var response = {};
+		response.challenge_hidden = request.challenge_hidden;
+		response.challenge_visual = request.challenge_visual;
+		response.address = result.message.address;
+		response.public_key = result.message.public_key;
+		response.signature = result.message.signature;
+		return response;
+	});
+}
+
 </script>
 
 </body>
