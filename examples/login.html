@@ -5,9 +5,9 @@
 <script type="text/javascript">
 function trezorLogin(response) {
 	if (response.success) {
-		alert(JSON.stringify(response));
+		alert('success:\n\n' + JSON.stringify(response));
 	} else {
-		alert('failure');
+		alert('failure:\n\n' + JSON.stringify(response));
 	}
 }
 </script>

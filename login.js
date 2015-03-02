@@ -30,7 +30,7 @@ function trezor_login_handler() {
 		request.identity.port = location.port ? location.port : null;
 		request.identity.path = null;
 		request.identity.index = 0;
-		request.challenge_hidden = btoa(String.fromCharCode.apply(null, window.crypto.getRandomValues(new Uint8Array(24))));
+		request.challenge_hidden = Array.apply(null, Array(64)).map(function () {return Math.floor(Math.random()*16).toString(16);}).join('');
 		request.challenge_visual = new Date().toISOString().substring(0,19).replace('T',' ');
 		request.icon = window.hosticon;
 		popup.postMessage(request, origin);

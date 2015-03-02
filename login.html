@@ -57,6 +57,23 @@ body {
 
 <script type="text/javascript">
 
+function buttonCallback(code)
+{
+
+}
+
+function pinCallback(type, callback)
+{
+	var pin = prompt('Enter PIN:');
+	callback(null, pin);
+}
+
+function passphraseCallback(callback)
+{
+	var passphrase = prompt('Enter Passphrase:');
+	callback(null, passphrase);
+}
+
 function receiveMessage(event)
 {
 	var request = event.data;
@@ -90,10 +107,11 @@ function receiveMessage(event)
 			console.error(error);
 			var response = {};
 			response.success = false;
-			response.error = error;
+			response.error = error.message;
 			event.source.postMessage(response, event.origin);
 			window.close();
-		});
+		})
+		.done();
 }
 
 window.addEventListener('message', receiveMessage, false);
@@ -122,8 +140,13 @@ function getSession(transport) {
 			return new trezor.Session(transport, id);
 		})
 		.then(function (session) {
-			session.initialize();
-			return session;
+			return session.initialize()
+				.then(function (result) {
+					session.on('button', buttonCallback);
+					session.on('pin', pinCallback);
+					session.on('passphrase', passphraseCallback);
+					return session;
+				});
 		});
 }
 
