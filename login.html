@@ -51,7 +51,7 @@ body {
     <strong id="login_label"></strong>
   </div>
   <div id="bottom">
-    Please connect your TREZOR device ...
+    <span id="status_bar">Please connect your TREZOR device ...</span>
   </div>
 </div>
 
@@ -59,7 +59,7 @@ body {
 
 function buttonCallback(code)
 {
-
+	document.getElementById('status_bar').innerHTML = 'Confirm action on your device ...';
 }
 
 function pinCallback(type, callback)
