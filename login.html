@@ -45,10 +45,9 @@ body {
 <div id="main">
   <div id="top">Sign in</div>
   <div id="middle">
-    <img id="login_icon" width="96" height="96"
-         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAQAAABIkb+zAAAEOUlEQVR42u2cb2iVVRjAf9dtjrvNFE1XY5lTIxd9mY8ysAhxjLIPRYVW9AdkhYwQTUEm+UEjiGDloij6UrSozKJIIT/YLv2bIO4h8IMrSDdGciXLGlc3Nrfdvul9313vfV92z3nvgfe5X+4597z3Pr97znme8zznPW+CgCKVLKOdJ2ihnipsSJZRfud7PmNYx27WKBFQ/RXs5RluIRpJ0aPH5gAgLRynnihlgk/0xXwfVARQv5XT1BGtVLK2YUnDifRMaABpJkWScpBWLqQ15BCSaj7mScpHGvWCv2sKy8q86s9YUnferJr3eSQcwA5feZpezjBpxYgmaGQLqz21D8gKHQ4D8LynNE47p3TK3oiRN/mJe3IqkmxguHAn5V6+mFpPRY/221Qf9B/fkJnPqmKjLFeafP//L/ZnrZ5jyFNxqySCA1T7xv+VSCzPRU+pihAADkgMEAPEADFADBADxAAOA0id3OEwgHSSYUT6ZaGTAHIn7wGwgT5Z7WIPtN1gYUBa3QNYnvN+If3yaPkBeLNGSV/r+b62R2S3fYDCQf0QB7gRA09y3pc3wAfULS36XBkB6J8cDPVtCZ6VCjp11GVH9jRfS5PbnngTP0iL20uJ5aRsmVVTa6FF/Czb3V7MVfGuvGbVCkmCRT7bXkjGfWnHfN/9itTQpZNWAGQBXTxGfdBdM7KBtj1eZo10aNo4gFTyOi8Z+YXN9MlG/cv0HFjKNmN/UjPnpdk0wGJqDA7UWgZkq1mAasPGoobDssskQNa4vUtwSHpknikAO7KTw1LrMgBsYUDqXAaANaW1SVHkhZbSJw+7DAC38410uQxgLSY2JWle0O/cBbhEmw662wO/sV5LuN9sew58yTot6Xa5XYC3eUqvmpnECePKZ9mtPeas0IRh9cfYpkdMmtHLjBmMCK6yvnR2J/8cuMRHxtQfZKUp9a/3gE7JPkZDB/VBwvrjdJiLiHP8gGZkP92h0iqvsrNoq0PW0iqgWf4Nc6kUM4hTvKH73V0LXWOHfuDuYu4/HtJTNnyjGU88wiY76psBSLFRf7W1Oik9wOc8rkNlEtBIIx2eTb4vdKSIb/i0rDb5aOJATmma0+QC+F3eJPv0rfIKKad9rmvGV/a23arfuhUT5+4aj/KgLbtTukl89HpGVVkXjfpzAtAM7VwBTtKmfziZVtE+FkhSx4lQ5uwHolU/vmcuBogBYoAYIAaIAWIAgwDenHVFROe6b/OUrnlviygM4A3Ok9xvX3tZ5TvR+bcGB9DLeNOHu+Q+sbqrJks46ou7z4WLB3rp9PTBj/RKlAeixznpbVbsTH0zZ/NUR3ck/Zj6jqQXeapBQ4a7uHdWdcLSa7a0pTOhzKhOcDBc0t2obPc/0yCAH9BBNpeJ+u/wIXkGQxBb4PajSSB9seErqrnb+K2BN5MUe7Q7/0eBN7jL9fE8/wPTvRS9jzBrBwAAAABJRU5ErkJggg==">
+    <img id="login_icon" width="96" height="96" src="">
     <br>
-    <strong id="login_label"></strong>
+    <strong id="login_origin"></strong>
   </div>
   <div id="bottom">
     <span id="status_bar">Please connect your TREZOR device ...</span>
@@ -77,14 +76,16 @@ function passphraseCallback(callback)
 function receiveMessage(event)
 {
 	var request = event.data;
-	if (!request || !request.identity) return;
-	var label = '';
-	if (request.identity.proto) label += request.identity.proto + '://';
-	if (request.identity.user) label += request.identity.user + '@';
-	if (request.identity.host) label += request.identity.host;
-	if (request.identity.port) label += ':' + request.identity.port;
-	if (request.identity.path) label += request.identity.path;
-	document.getElementById('login_label').innerHTML = label;
+	if (!request) return;
+	var loc = event.origin.split(':');
+	request.identity = {};
+	request.identity.proto = loc[0];
+	request.identity.user = null;
+	request.identity.host = loc[1].substring(2);
+	request.identity.port = loc[2] ? loc[2] : null;
+	request.identity.path = null;
+	request.identity.index = 0;
+	document.getElementById('login_origin').innerHTML = event.origin;
 	if (request.icon) document.getElementById('login_icon').src = request.icon;
 
 	// FIXME: how to do this properly and pass request object to line 131?

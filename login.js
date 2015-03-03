@@ -23,13 +23,6 @@ function trezor_login_handler() {
 	// give some time to popup to open, then send request
 	setTimeout(function() {
 		var request = {};
-		request.identity = {};
-		request.identity.proto = location.protocol.substring(0, location.protocol.length - 1);
-		request.identity.user = null;
-		request.identity.host = location.hostname;
-		request.identity.port = location.port ? location.port : null;
-		request.identity.path = null;
-		request.identity.index = 0;
 		request.challenge_hidden = Array.apply(null, Array(64)).map(function () {return Math.floor(Math.random()*16).toString(16);}).join('');
 		request.challenge_visual = new Date().toISOString().substring(0,19).replace('T',' ');
 		request.icon = window.hosticon;
