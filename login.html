@@ -88,9 +88,15 @@ function receiveMessage(event)
 	document.getElementById('login_origin').innerHTML = event.origin;
 	if (request.icon) document.getElementById('login_icon').src = request.icon;
 
-	// FIXME: how to do this properly and pass request object to line 131?
+	// FIXME: how to do this properly and pass request object to function callSignIdentity?
 	window.request = request;
 
+	trezorLogin();
+}
+
+window.addEventListener('message', receiveMessage, false);
+
+function trezorLogin() {
 	trezor
 		.loadTransport()
 		.then(configureTransport)
@@ -106,16 +112,18 @@ function receiveMessage(event)
 		// failure
 		.catch(function(error) {
 			console.error(error);
-			var response = {};
-			response.success = false;
-			response.error = error.message;
-			event.source.postMessage(response, event.origin);
-			window.close();
+			if (error.message == 'No connected devices.') {
+				setTimeout(trezorLogin, 3000);
+			} else {
+				var response = {};
+				response.success = false;
+				response.error = error.message;
+				event.source.postMessage(response, event.origin);
+				window.close();
+			}
 		})
 		.done();
 }
-
-window.addEventListener('message', receiveMessage, false);
 
 function configureTransport(transport) {
 	return trezor
