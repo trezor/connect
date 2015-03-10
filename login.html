@@ -91,12 +91,12 @@ function receiveMessage(event)
 	// FIXME: how to do this properly and pass request object to function callSignIdentity?
 	window.request = request;
 
-	trezorLogin();
+	trezorLogin(event);
 }
 
 window.addEventListener('message', receiveMessage, false);
 
-function trezorLogin() {
+function trezorLogin(event) {
 	trezor
 		.loadTransport()
 		.then(configureTransport)
@@ -113,7 +113,7 @@ function trezorLogin() {
 		.catch(function(error) {
 			console.error(error);
 			if (error.message == 'No connected devices.') {
-				setTimeout(trezorLogin, 3000);
+				setTimeout(function(){ trezorLogin(event); }, 3000);
 			} else {
 				var response = {};
 				response.success = false;
