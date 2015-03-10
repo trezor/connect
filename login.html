@@ -76,7 +76,7 @@ function passphraseCallback(callback)
 function receiveMessage(event)
 {
 	var request = event.data;
-	if (!request) return;
+	if (!request || !request.trezor_login) return;
 	var loc = event.origin.split(':');
 	request.identity = {};
 	request.identity.proto = loc[0];

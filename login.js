@@ -23,6 +23,7 @@ function trezor_login_handler() {
 	// give some time to popup to open, then send request
 	setTimeout(function() {
 		var request = {};
+		request.trezor_login = true;
 		request.challenge_hidden = Array.apply(null, Array(64)).map(function () {return Math.floor(Math.random()*16).toString(16);}).join('');
 		request.challenge_visual = new Date().toISOString().substring(0,19).replace('T',' ');
 		request.icon = window.hosticon;
