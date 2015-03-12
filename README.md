@@ -1,18 +1,25 @@
 TREZOR Connect API
 ==================
 
+Connect is a platform for easy integration of TREZOR into 3rd party services.
+
 Login
 -----
 
-Usage:
+Easy Login Dialog via TREZOR.
+To use it include the following in your site and adapt the `trezorLogin` function.
+
+To understand the mechanics, please consult the Challenge-Response chapter of
+[SLIP-0046: Authentication using deterministic hierarchy](http://doc.satoshilabs.com/slips/slip-0046.html).
+
 
 ```html
 <script type="text/javascript">
 function trezorLogin(response) {
 	if (response.success) {
-		alert(JSON.stringify(response));
+		alert('success:\n\n' + JSON.stringify(response));
 	} else {
-		alert('failure');
+		alert('failure:\n\n' + JSON.stringify(response));
 	}
 }
 </script>
