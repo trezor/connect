@@ -56,4 +56,4 @@ On error the contents of the response will be:
 ```
 
 To understand the full mechanics, please consult the Challenge-Response chapter of
-[SLIP-0046: Authentication using deterministic hierarchy](http://doc.satoshilabs.com/slips/slip-0046.html).
+[SLIP-0013: Authentication using deterministic hierarchy](http://doc.satoshilabs.com/slips/slip-0013.html).
