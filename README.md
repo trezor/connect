@@ -9,7 +9,6 @@ Login
 Easy Login Dialog via TREZOR.
 To use it include the following in your site and adapt the `trezorLogin` function.
 
-
 ```html
 <script type="text/javascript">
 function trezorLogin(response) {
@@ -31,8 +30,20 @@ function trezorLogin(response) {
 <script src="https://trezor.github.io/connect/login.js" type="text/javascript"></script>
 ```
 
-On successful login the device will return the following structure. Challenge fields are copied from request,
-the rest is returned from TREZOR.
+The tag will translate into the following button:
+
+![login button](https://raw.githubusercontent.com/trezor/connect/gh-pages/docs/login_button.png)
+
+If user clicks on the image, the following dialog will popup:
+
+![login dialog](https://raw.githubusercontent.com/trezor/connect/gh-pages/docs/login_dialog.png)
+
+and TREZOR will show the following screen:
+
+![login trezor](https://raw.githubusercontent.com/trezor/connect/gh-pages/docs/login_trezor.jpg)
+
+If user confirms the action the device will return the login structure.
+Challenge fields are copied from request, the rest is returned from TREZOR.
 
 ```
 {
