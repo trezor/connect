@@ -30,19 +30,19 @@ function trezorLogin(response) {
 <script src="https://trezor.github.io/connect/login.js" type="text/javascript"></script>
 ```
 
-The tag will translate into the following button:
+The `<trezor:login>` tag will be translated into the following button:
 
 ![login button](https://raw.githubusercontent.com/trezor/connect/gh-pages/docs/login_button.png)
 
-If user clicks on the image, the following dialog will popup:
+When user clicks on the button, the following dialog windows will popup:
 
 ![login dialog](https://raw.githubusercontent.com/trezor/connect/gh-pages/docs/login_dialog.png)
 
-and TREZOR will show the following screen:
+and TREZOR will show the following confirmation screen:
 
 ![login trezor](https://raw.githubusercontent.com/trezor/connect/gh-pages/docs/login_trezor.jpg)
 
-If user confirms the action the device will return the login structure.
+If user confirms the action, the device will return the login structure described below.
 Challenge fields are copied from request, the rest is returned from TREZOR.
 
 ```
@@ -57,7 +57,11 @@ Challenge fields are copied from request, the rest is returned from TREZOR.
 
 ```
 
-On error the contents of the response will be:
+Service backend needs to concatenate the `challenge_hidden` (translated to binary) and `challenge_visual` fields into the message and check whether the signature matches its contents against the `public_key`/`address`.
+
+If that is the case, the backend either creates an account (if the `public_key`/`address` identity is seen for the first time) or signs in the user (if the `public_key`/`address` identity is already a known user).
+
+In case the error is encountered, the contents of the response will be:
 
 ```
 {
