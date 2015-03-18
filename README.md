@@ -23,7 +23,7 @@ function trezorLogin(response) {
 
 ...
 
-<trezor:login callback="trezorLogin" icon="https://en.bitcoin.it/w/images/en/2/29/BC_Logo_.png">
+<trezor:login callback="trezorLogin" icon="http://coinmap.org/logo_96x96.png">
 </trezor:login>
 
 ...
