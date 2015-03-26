@@ -18,7 +18,7 @@ function receiveMessage(event) {
 window.addEventListener('message', receiveMessage, false);
 
 function trezor_login_handler() {
-	var w = 400, h = 300, x = (screen.width - w) / 2, y = (screen.height - h) / 3;
+	var w = 500, h = 400, x = (screen.width - w) / 2, y = (screen.height - h) / 3;
 	var popup = window.open(connect_path + 'login.html', 'trezor_login_window', 'height='+h+',width='+w+',left='+x+',top='+y+',menubar=no,toolbar=no,location=no,personalbar=no,status=no');
 	// give some time to popup to open, then send request
 	setTimeout(function() {

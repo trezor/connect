@@ -22,7 +22,7 @@ function trezorLogin(response) {
 
 ...
 
-<trezor:login callback="trezorLogin" icon="http://coinmap.org/logo_96x96.png">
+<trezor:login callback="trezorLogin" icon="http://coinmap.org/img/logo_square.png">
 </trezor:login>
 
 ...
