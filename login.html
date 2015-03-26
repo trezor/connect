@@ -39,6 +39,26 @@ body {
 	font-size: 16px;
 	text-align: center;
 }
+#pin_dialog {
+	width: 300px;
+	height: 150px;
+	background: #eee;
+	border: 1px solid #888;
+	position: fixed;
+	left: 50px;
+	top: 80px;
+	display: none;
+}
+#passphrase_dialog {
+	width: 300px;
+	height: 150px;
+	background: #eee;
+	border: 1px solid #888;
+	position: fixed;
+	left: 50px;
+	top: 80px;
+	display: none;
+}
 </style>
 <body>
 
@@ -47,10 +67,38 @@ body {
   <div id="middle">
     <img id="login_icon" width="96" height="96" src="">
     <br>
-    <strong id="login_origin"></strong>
+    <strong id="login_origin">https://coinmap.org/</strong>
   </div>
   <div id="bottom">
     <span id="status_bar">Please connect your TREZOR device ...</span>
+  </div>
+  <div id="pin_dialog">
+    <div>Please enter your PIN:</div>
+    <div>Look at the device for number positions.</div>
+    <div>
+      <button type="button" onclick="pinAdd(7);">&bull;</button>
+      <button type="button" onclick="pinAdd(8);">&bull;</button>
+      <button type="button" onclick="pinAdd(9);">&bull;</button>
+    </div>
+    <div>
+      <button type="button" onclick="pinAdd(4);">&bull;</button>
+      <button type="button" onclick="pinAdd(5);">&bull;</button>
+      <button type="button" onclick="pinAdd(6);">&bull;</button>
+    </div>
+    <div>
+      <button type="button" onclick="pinAdd(1);">&bull;</button>
+      <button type="button" onclick="pinAdd(2);">&bull;</button>
+      <button type="button" onclick="pinAdd(3);">&bull;</button>
+    </div>
+    <div><input type="password" id="pin" name="pin" autocomplete="off" disabled> <button type="button" onclick="pinBackspace();">&larr;</button></div>
+    <div><button type="button" onclick="pinEnter();">Enter</button></div>
+  </div>
+  <div id="passphrase_dialog">
+    <div><label for="passphrase">Please enter your passphrase:</label></div>
+    <div><input type="password" id="passphrase" name="passphrase" autocomplete="off"></div>
+    <div>Note that passphrase is case-sensitive.</div>
+    <div><label><input type="checkbox" id="show_passphrase" onclick="passphraseToggle();"> Show passphrase</label></div>
+    <div><button type="button" onclick="passphraseEnter();">Enter</button></div>
   </div>
 </div>
 
@@ -63,14 +111,54 @@ function buttonCallback(code)
 
 function pinCallback(type, callback)
 {
-	var pin = prompt('Enter PIN:');
-	callback(null, pin);
+	var e = document.getElementById('pin_dialog');
+	e.style.display = 'block';
+	e.callback = callback;
+}
+
+function pinAdd(num)
+{
+	var e = document.getElementById('pin');
+	e.value += num;
+}
+
+function pinBackspace(num)
+{
+	var e = document.getElementById('pin');
+	e.value = e.value.slice(0, -1);
+}
+
+function pinEnter()
+{
+	var e = document.getElementById('pin');
+	var pin = e.value;
+	e = document.getElementById('pin_dialog');
+	e.style.display = 'none';
+	e.callback(null, pin);
 }
 
 function passphraseCallback(callback)
 {
-	var passphrase = prompt('Enter Passphrase:');
-	callback(null, passphrase);
+	var e = document.getElementById('passphrase_dialog');
+	e.style.display = 'block';
+	e.callback = callback;
+	e = document.getElementById('passphrase');
+	e.focus();
+}
+
+function passphraseToggle()
+{
+	var e = document.getElementById('passphrase');
+	e.type = e.type == 'text' ? 'password' : 'text';
+}
+
+function passphraseEnter()
+{
+	var e = document.getElementById('passphrase');
+	var passphrase = e.value;
+	e = document.getElementById('passphrase_dialog');
+	e.style.display = 'none';
+	e.callback(null, passphrase);
 }
 
 function receiveMessage(event)
