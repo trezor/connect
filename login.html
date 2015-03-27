@@ -42,36 +42,31 @@ body {
 #login_icon {
 	padding-bottom: 16px;
 }
-
-
-
-/**
- * Passphrase
- */
 #passphrase_dialog {
 	width: 250px;
-	height: 160px;
+	height: 200px;
 	background: #eee;
 	position: absolute;
 	border: none;
 	left: 125px;
 	top: 107px;
-	display:none;
+	display: none;
 }
-
 #passphrase_header {
 	font-size: 18px;
+	text-align: center;
 }
 #passphrase_subheader {
 	font-size: 75%;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	text-align: center;
 }
-
 #passphrase_input_row {
 	margin-top: 10px;
 	margin-bottom: 10px;
 	width: 100%;
 }
-
 #passphrase_input_row input {
 	width: 100%;
 	padding-left: 6px;
@@ -79,19 +74,17 @@ body {
 	box-sizing: border-box;
 	padding-top: 4px;
 	padding-bottom: 4px;
+	text-align: center;
 }
-
 #passphrase_show_label {
 	font-size: 90%;
 	top: -2px;
 	position: relative;
 }
-
-
 #passphrase_show_row {
 	margin-bottom: 15px;
+	text-align: center;
 }
-
 #passphrase_enter button {
 	width: 100%;
 	height: 25px;
@@ -100,55 +93,44 @@ body {
 	color: white;
 	font-size: 1em;
 }
-
 #passphrase_enter button:hover {
 	background-color: rgb(100, 100, 100);
 	cursor: pointer;
 }
 #passphrase_enter button:active {
-	box-shadow:inset 0 4px 5px rgba(0,0,0,.125);
+	box-shadow: inset 0 4px 5px rgba(0,0,0,.125);
 }
-
 #passphrase_enter button:focus {
-	outline:0;
+	outline: 0;
 }
-
-
-
-/**
- * PIN
- */
 #pin_dialog {
-	width: 220px;
-	height: 250px;
+	width: 500px;
+	height: 285px;
 	background: #eee;
 	position: absolute;
-	left: 155px;
+	left: 0px;
 	top: 63px;
 	display: none;
-	border:none;
+	border: none;
 }
-
 #pin_header {
 	font-size: 18px;
+	text-align: center;
 }
-
 #pin_subheader {
+	margin-top: 4px;
 	font-size: 75%;
-	left:-15px;
-	position:relative;
+	position: relative;
+	text-align: center;
 }
-
 #pin_table {
-	display:table;
-	margin-top:10px;
+	display: table;
+	margin-top: 6px;
+	margin-left: 160px;
 }
-
 #pin_table > div {
-	display:table-row;
+	display: table-row;
 }
-
-
 #pin_table button {
 	width: 55px;
 	height: 55px;
@@ -156,22 +138,19 @@ body {
 	cursor: pointer;
 	font-weight: 400;
 	font-size: 18px;
-	display:table-cell;
+	display: table-cell;
 	margin-right: 6px;
 	margin-bottom: 6px;
 	background-color: rgb(189, 189, 189);
 }
-
 #pin_table button:focus {
-	outline:0;
+	outline: 0;
 }
-
 #pin_table button:active {
-	box-shadow:inset 0 2px 3px rgba(0,0,0,.125);
+	box-shadow: inset 0 2px 3px rgba(0,0,0,.125);
 }
-
 #pin_backspace {
-	position:absolute;
+	position: absolute;
 	right: 0px;
 	top: 0px;
 	border: 1px solid transparent;
@@ -182,15 +161,12 @@ body {
 	font-size: 15px;
 	padding-right: 3px;
 }
-
 #pin_backspace:focus {
-	outline:0;
+	outline: 0;
 }
-
 #pin_backspace:active {
-	box-shadow:inset 0 2px 3px rgba(0,0,0,.125);
+	box-shadow: inset 0 2px 3px rgba(0,0,0,.125);
 }
-
 #pin_back_arrow {
 	position: absolute;
 	left: -12px;
@@ -199,20 +175,24 @@ body {
 	border-bottom: 11px solid transparent;
 	border-right: 11px solid  rgb(189, 189, 189);
 }
-
 #pin_input_row {
-	width:177px;
-	position:relative;
-	margin-bottom:2px;
+	width: 177px;
+	position: relative;
+	margin-bottom: 2px;
+	margin-left: 160px;
 }
 #pin_input_row input {
 	border: none;
 	background-color: rgb(238, 238, 238);
 	font-size: 1.2em;
+	width: 140px;
+	text-align: center;
+	padding-left: 19px;
 }
-
 #pin_enter {
 	width: 177px;
+	margin-left: 160px;
+	margin-top: 5px;
 }
 #pin_enter button {
 	width: 100%;
@@ -222,21 +202,18 @@ body {
 	color: white;
 	font-size: 1em;
 }
-
 #pin_enter button:hover {
 	background-color: rgb(100, 100, 100);
 	cursor: pointer;
 }
 #pin_enter button:active {
-	box-shadow:inset 0 4px 5px rgba(0,0,0,.125);
+	box-shadow: inset 0 4px 5px rgba(0,0,0,.125);
 }
-
 #pin_enter button:focus {
-	outline:0;
+	outline: 0;
 }
-
-
-</style></head>
+</style>
+</head>
 
 <body>
 
@@ -251,7 +228,7 @@ body {
     <span id="status_bar">Please connect your TREZOR device ...</span>
   </div>
   <div id="pin_dialog">
-    <div id="pin_header">Please enter your PIN</div>
+    <div id="pin_header">Please enter your PIN:</div>
     <div id="pin_subheader">Look at the device for number positions.</div>
 
     <div id="pin_table">
@@ -284,7 +261,7 @@ body {
   </div>
 
   <div id="passphrase_dialog">
-    <div id="passphrase_header">Please enter your passphrase</div>
+    <div id="passphrase_header">Please enter your passphrase:</div>
     <div id="passphrase_subheader">Note that passphrase is case-sensitive.</div>
     <div id="passphrase_input_row"><input type="password" id="passphrase" name="passphrase" autocomplete="off"></div>
 
