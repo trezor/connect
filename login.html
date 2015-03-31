@@ -305,6 +305,13 @@ function pinEnter()
 	e.callback(null, pin);
 }
 
+/* use always empty passphrase */
+function passphraseCallback(callback)
+{
+	callback(null, "");
+}
+
+/*
 function passphraseCallback(callback)
 {
 	var e = document.getElementById('passphrase_dialog');
@@ -328,6 +335,7 @@ function passphraseEnter()
 	e.style.display = 'none';
 	e.callback(null, passphrase);
 }
+*/
 
 function receiveMessage(event)
 {
