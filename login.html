@@ -344,10 +344,12 @@ function receiveMessage(event)
 	var loc = event.origin.split(':');
 	request.identity = {};
 	request.identity.proto = loc[0];
-	request.identity.user = null;
+	/* request.identity.user = null; */
 	request.identity.host = loc[1].substring(2);
-	request.identity.port = loc[2] ? loc[2] : null;
-	request.identity.path = null;
+	if (loc[2]) {
+		request.identity.port = loc[2];
+	}
+	/* request.identity.path = null; */
 	request.identity.index = 0;
 	document.getElementById('login_origin').innerHTML = event.origin;
 	if (request.icon) document.getElementById('login_icon').src = request.icon;
