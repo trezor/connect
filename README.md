@@ -25,6 +25,29 @@ function trezorLogin(response) {
 <trezor:login callback="trezorLogin" icon="http://coinmap.org/img/logo_square.png">
 </trezor:login>
 
+<!--
+// You can use custom hidden/visual challenges (i.e. not generated
+// by Connect) by setting the challenge_hidden/challenge_visual
+// attributes of the trezor:login tag.
+// This can be done either on the server side while rendering
+// the page contents like this:
+
+<trezor:login callback="trezorLogin"
+              challenge_hidden="0123456789abcdef"
+              challenge_visual="Lorem Ipsum"
+              icon="http://coinmap.org/img/logo_square.png">
+</trezor:login>
+
+// ... or using the following script on the client side:
+
+<script>
+var elements = document.getElementsByTagName('trezor:login');
+var e = elements[0];
+e.setAttribute('challenge_hidden', '0123456789abcdef');
+e.setAttribute('challenge_visual', 'Lorem Ipsum');
+</script>
+-->
+
 ...
 
 <script src="https://trezor.github.io/connect/login.js" type="text/javascript"></script>
