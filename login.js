@@ -5,14 +5,18 @@ var content = '<a style="font-family: Helvetica, Arial, sans-serif; font-size: 1
 
 for (var i = 0; i < elements.length; i++) {
 	var e = elements[i];
-	window.callback = e.getAttribute('callback');
-	window.hosticon = e.getAttribute('icon');
+	window.connect_data = {
+		'callback': e.getAttribute('callback'),
+		'hosticon': e.getAttribute('icon'),
+		'challenge_hidden': e.getAttribute('challenge_hidden') || Array.apply(null, Array(64)).map(function () {return Math.floor(Math.random()*16).toString(16);}).join(''),
+		'challenge_visual': e.getAttribute('challenge_visual') || new Date().toISOString().substring(0,19).replace('T',' ')
+	};
 	e.parentNode.innerHTML = content;
 }
 
 function receiveMessage(event) {
 	if (event.origin !== origin) return;
-	window[window.callback](event.data);
+	window[window.connect_data.callback](event.data);
 }
 
 window.addEventListener('message', receiveMessage, false);
@@ -24,9 +28,9 @@ function trezor_login_handler() {
 	setTimeout(function() {
 		var request = {};
 		request.trezor_login = true;
-		request.challenge_hidden = Array.apply(null, Array(64)).map(function () {return Math.floor(Math.random()*16).toString(16);}).join('');
-		request.challenge_visual = new Date().toISOString().substring(0,19).replace('T',' ');
-		request.icon = window.hosticon;
+		request.challenge_hidden = window.connect_data.challenge_hidden;
+		request.challenge_visual = window.connect_data.challenge_visual;
+		request.icon = window.connect_data.hosticon;
 		popup.postMessage(request, origin);
 	}, 1500);
 }
