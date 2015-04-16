@@ -95,3 +95,28 @@ In case the error is encountered, the contents of the response will be:
 
 To understand the full mechanics, please consult the Challenge-Response chapter of
 [SLIP-0013: Authentication using deterministic hierarchy](http://doc.satoshilabs.com/slips/slip-0013.html).
+
+Server side
+-----------
+Please see reference implementation of server-side verification of the signature in Python:
+
+```
+import binascii
+import hashlib
+import base64
+import bitcoin
+
+def verify(challenge_hidden, challenge_visual, pubkey, signature):
+    message = binascii.unhexlify(challenge_hidden) + challenge_visual
+    signature_b64 = base64.b64encode(binascii.unhexlify(signature))
+
+    return bitcoin.ecdsa_verify(message, signature_b64, pubkey)
+
+if __name__ == '__main__':
+    challenge_hidden = "cd8552569d6e4509266ef137584d1e62c7579b5b8ed69bbafa4b864c6521e7c2"
+    challenge_visual = "2015-03-23 17:39:22"
+    pubkey = "020cbccdc85ef2ce4718e46bc20ca9e50025de12b4e7900d1085152a52ebfc2590"
+    signature = "2063f0a4ea00bf412b3526fbc0bc1e3850c8597d56e73bc748fa9d315114061fe522f250687188312df56ac5ed84bfc627ee9136c258ffaedaa6613542b340d81c"
+
+    print verify(challenge_hidden, challenge_visual, pubkey, signature)
+```
