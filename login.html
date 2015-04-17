@@ -395,7 +395,7 @@ function trezorLogin(event) {
 
 function configureTransport(transport) {
 	return trezor
-		.http('https://mytrezor.com/data/plugin/config_signed.bin')
+		.http('https://trezor.github.io/connect/config_signed.bin') // FIXME: download from mytrezor.com after fixing CORS
 		.then(function (config) {
 			return transport.configure(config);
 		})
