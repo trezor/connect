@@ -99,7 +99,10 @@ To understand the full mechanics, please consult the Challenge-Response chapter 
 Server side
 -----------
 
-Here is the reference implementation of the server-side signature verification written in Python:
+Here is the reference implementation of the server-side signature verification written in various languages:
+
+Python
+======
 
 ``` python
 import binascii
@@ -121,4 +124,34 @@ def main():
 
 if __name__ == '__main__':
     main()
+```
+
+PHP
+====
+
+``` php
+<?php
+namespace BitcoinPHP\BitcoinECDSA;
+require "BitcoinECDSA.php";
+
+function verify($challenge_hidden, $challenge_visual, $pubkey, $signature)
+{
+    $message = hex2bin($challenge_hidden) . $challenge_visual;
+    
+    $R = substr($signature, 2, 64);
+    $S = substr($signature, 66, 64);
+    
+    $ecdsa = new BitcoinECDSA();    
+    $hash = $ecdsa->hash256("\x18Bitcoin Signed Message:\n" . $ecdsa->numToVarIntString(strlen($message)) . $message);
+
+    return (bool)$ecdsa->checkSignaturePoints($pubkey, $R, $S, $hash);
+
+}
+
+$challenge_hidden = "cd8552569d6e4509266ef137584d1e62c7579b5b8ed69bbafa4b864c6521e7c2";
+$challenge_visual = "2015-03-23 17:39:22";
+$pubkey = "020cbccdc85ef2ce4718e46bc20ca9e50025de12b4e7900d1085152a52ebfc2590";
+$signature = "2063f0a4ea00bf412b3526fbc0bc1e3850c8597d56e73bc748fa9d315114061fe522f250687188312df56ac5ed84bfc627ee9136c258ffaedaa6613542b340d81c";
+
+echo (int)verify($challenge_hidden, $challenge_visual, $pubkey, $signature);
 ```
