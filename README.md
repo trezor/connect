@@ -103,6 +103,7 @@ Here is the reference implementation of the server-side signature verification w
 
 Python
 ======
+Dependencies: https://pypi.python.org/pypi/bitcoin >= 1.1.27
 
 ``` python
 import binascii
@@ -128,6 +129,7 @@ if __name__ == '__main__':
 
 PHP
 ====
+Dependencies: https://github.com/BitcoinPHP/BitcoinECDSA.php
 
 ``` php
 <?php
