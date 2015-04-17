@@ -1,10 +1,8 @@
-TREZOR Connect API
-==================
+#TREZOR Connect API
 
 Connect is a platform for easy integration of TREZOR into 3rd party services.
 
-Login
------
+##Login
 
 Easy Login Dialog via TREZOR.
 To use it include the following in your site and adapt the `trezorLogin` function.
@@ -68,7 +66,7 @@ and TREZOR will show the following confirmation screen:
 If user confirms the action, the device will return the login structure described below.
 Challenge fields are copied from request, the rest is returned from TREZOR.
 
-```
+```javascript
 {
   "success": true,
   "challenge_hidden": "aaa3d9fb398428c72254c83b5ef020663d8bff43324187295865965c1bf51160",
@@ -77,7 +75,6 @@ Challenge fields are copied from request, the rest is returned from TREZOR.
   "public_key": "02134ba0f19c15d41193184f96e444f5903935de726e0433aeae16e446b07129e4",
   "signature":"20fa9e8db27700b6784cf270292b8b7fddd1d126346066c286b02ccf951d9fa3141a6b0528bfc87605c940c491c1f58ccfd7350775df2fd973dcf096415db3f0d7"
 }
-
 ```
 
 Service backend needs to concatenate the `challenge_hidden` (translated to binary) and `challenge_visual` fields into the message and check whether the signature matches its contents against the `public_key`/`address`.
@@ -86,7 +83,7 @@ If that is the case, the backend either creates an account (if the `public_key`/
 
 In case the error is encountered, the contents of the response will be:
 
-```
+```javascript
 {
   "success": false,
   "error": "String description of the error"
@@ -96,16 +93,15 @@ In case the error is encountered, the contents of the response will be:
 To understand the full mechanics, please consult the Challenge-Response chapter of
 [SLIP-0013: Authentication using deterministic hierarchy](http://doc.satoshilabs.com/slips/slip-0013.html).
 
-Server side
------------
+##Server side
 
 Here is the reference implementation of the server-side signature verification written in various languages:
 
-Python
-======
+###Python
+
 Dependencies: https://pypi.python.org/pypi/bitcoin >= 1.1.27
 
-``` python
+```python
 import binascii
 import hashlib
 import base64
@@ -127,11 +123,11 @@ if __name__ == '__main__':
     main()
 ```
 
-PHP
-====
+###PHP
+
 Dependencies: https://github.com/BitcoinPHP/BitcoinECDSA.php
 
-``` php
+```php
 <?php
 namespace BitcoinPHP\BitcoinECDSA;
 require "BitcoinECDSA.php";
@@ -139,11 +135,11 @@ require "BitcoinECDSA.php";
 function verify($challenge_hidden, $challenge_visual, $pubkey, $signature)
 {
     $message = hex2bin($challenge_hidden) . $challenge_visual;
-    
+
     $R = substr($signature, 2, 64);
     $S = substr($signature, 66, 64);
-    
-    $ecdsa = new BitcoinECDSA();    
+
+    $ecdsa = new BitcoinECDSA();
     $hash = $ecdsa->hash256("\x18Bitcoin Signed Message:\n" . $ecdsa->numToVarIntString(strlen($message)) . $message);
 
     return (bool)$ecdsa->checkSignaturePoints($pubkey, $R, $S, $hash);
