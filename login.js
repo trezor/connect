@@ -16,7 +16,12 @@ for (var i = 0; i < elements.length; i++) {
 
 function receiveMessage(event) {
 	if (event.origin !== origin) return;
-	window[window.connect_data.callback](event.data);
+	if (window.connect_data.interval) {
+		clearInterval(window.connect_data.interval);
+	}
+	if (window.connect_data.callback) {
+		window[window.connect_data.callback](event.data);
+	}
 }
 
 window.addEventListener('message', receiveMessage, false);
@@ -24,13 +29,13 @@ window.addEventListener('message', receiveMessage, false);
 function trezor_login_handler() {
 	var w = 500, h = 400, x = (screen.width - w) / 2, y = (screen.height - h) / 3;
 	var popup = window.open(connect_path + 'login.html', 'trezor_login_window', 'height='+h+',width='+w+',left='+x+',top='+y+',menubar=no,toolbar=no,location=no,personalbar=no,status=no');
-	// give some time to popup to open, then send request
-	setTimeout(function() {
+	// repeatedly sent request
+	window.connect_data.interval = setInterval(function() {
 		var request = {};
 		request.trezor_login = true;
 		request.challenge_hidden = window.connect_data.challenge_hidden;
 		request.challenge_visual = window.connect_data.challenge_visual;
 		request.icon = window.connect_data.hosticon;
 		popup.postMessage(request, origin);
-	}, 1500);
+	}, 250);
 }

@@ -340,6 +340,7 @@ function passphraseEnter()
 
 function receiveMessage(event)
 {
+	if (window.connect_data) return; // already filled in
 	var request = event.data;
 	if (!request || !request.trezor_login) return;
 	var loc = event.origin.split(':');
