@@ -291,7 +291,7 @@ function pinAdd(num)
 	e.value += num;
 }
 
-function pinBackspace(num)
+function pinBackspace()
 {
 	var e = document.getElementById('pin');
 	e.value = e.value.slice(0, -1);
@@ -440,6 +440,31 @@ function callSignIdentity(session) {
 		return response;
 	});
 }
+
+
+function pinKeydownHandler(e) {
+    var k = e.keyCode;
+    if (k === 8) { // Backspace
+        pinBackspace();
+    } else if (k === 13) {
+        pinEnter();
+    } else if (isNumericKey(k)) {
+        num = getNumberFromKey(k);
+        pinAdd(String.fromCharCode(num));
+    }
+    var e = document.getElementById('pin');
+    console.log(e.value);
+}
+
+function isNumericKey(k) {
+    return (k >= 49 && k <= 57) || (k >= 97 && k <= 105);
+}
+
+function getNumberFromKey(k) {
+    return (k >= 97) ? (k - (97 - 49)) : k;
+}
+
+window.addEventListener('keydown',pinKeydownHandler )
 
 </script>
 
