@@ -449,11 +449,9 @@ function pinKeydownHandler(e) {
     } else if (k === 13) {
         pinEnter();
     } else if (isNumericKey(k)) {
-        num = getNumberFromKey(k);
+        var num = getNumberFromKey(k);
         pinAdd(String.fromCharCode(num));
     }
-    var e = document.getElementById('pin');
-    console.log(e.value);
 }
 
 function isNumericKey(k) {
