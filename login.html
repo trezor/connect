@@ -443,26 +443,26 @@ function callSignIdentity(session) {
 
 
 function pinKeydownHandler(e) {
-    var k = e.keyCode;
-    if (k === 8) { // Backspace
-        pinBackspace();
-    } else if (k === 13) {
-        pinEnter();
-    } else if (isNumericKey(k)) {
-        var num = getNumberFromKey(k);
-        pinAdd(String.fromCharCode(num));
-    }
+	var k = e.keyCode;
+	if (k === 8) { // Backspace
+		pinBackspace();
+	} else if (k === 13) {
+		pinEnter();
+	} else if (isNumericKey(k)) {
+		var num = getNumberFromKey(k);
+		pinAdd(String.fromCharCode(num));
+	}
 }
 
 function isNumericKey(k) {
-    return (k >= 49 && k <= 57) || (k >= 97 && k <= 105);
+	return (k >= 49 && k <= 57) || (k >= 97 && k <= 105);
 }
 
 function getNumberFromKey(k) {
-    return (k >= 97) ? (k - (97 - 49)) : k;
+	return (k >= 97) ? (k - (97 - 49)) : k;
 }
 
-window.addEventListener('keydown',pinKeydownHandler )
+window.addEventListener('keydown', pinKeydownHandler);
 
 </script>
 
