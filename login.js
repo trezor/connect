@@ -2,7 +2,7 @@ var elements = document.getElementsByTagName('trezor:login');
 var origin = 'https://trezor.github.io';
 var connect_path = origin + '/connect/';
 
-var contentCss = '<style type="text/css">@import url("https://trezor.github.io/button.css")</style>';
+var contentCss = '<style type="text/css">@import url("https://trezor.github.io/connect/button.css")</style>';
 
 var contentHtml = '<div id="trezorconnect-wrapper"><a id="trezorconnect-button" onclick="trezor_login_handler();"><span id="trezorconnect-icon"></span>Sign in with <strong>TREZOR</strong></a><span id="trezorconnect-info"><a id="trezorconnect-infolink" href="https://www.bitcointrezor.com/" target="_blank">What is TREZOR?</a></div>';
 
