@@ -93,6 +93,12 @@ In case the error is encountered, the contents of the response will be:
 To understand the full mechanics, please consult the Challenge-Response chapter of
 [SLIP-0013: Authentication using deterministic hierarchy](http://doc.satoshilabs.com/slips/slip-0013.html).
 
+###Restyling the button
+
+You can restyle the login button to fit the look of your website. See the example in examples/login-restyled.html .
+
+The default CSS being used is in button.css file.
+
 ##Server side
 
 Here is the reference implementation of the server-side signature verification written in various languages:
