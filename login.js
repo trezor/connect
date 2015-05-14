@@ -1,8 +1,8 @@
 window.connect_data = {};
 
 var elements = document.getElementsByTagName('trezor:login');
-var origin = 'https://trezor.github.io';
-var connect_path = origin + '/connect/';
+var connect_origin = 'https://trezor.github.io';
+var connect_path = connect_origin + '/connect/';
 
 var content_css = '<style type="text/css">@import url("'+connect_path+'button.css")</style>';
 
@@ -18,7 +18,7 @@ for (var i = 0; i < elements.length; i++) {
 }
 
 function receiveMessage(event) {
-	if (event.origin !== origin) return;
+	if (event.origin !== connect_origin) return;
 	if (window.connect_data.interval) {
 		clearInterval(window.connect_data.interval);
 	}
@@ -40,6 +40,6 @@ function trezor_login_handler(callback, hosticon, challenge_hidden, challenge_vi
 		request.icon = hosticon || 'https://trezor.github.io/connect/trezor.png';
 		request.challenge_hidden = challenge_hidden || Array.apply(null, Array(64)).map(function () {return Math.floor(Math.random()*16).toString(16);}).join('');
 		request.challenge_visual = challenge_visual || new Date().toISOString().substring(0,19).replace('T',' ');
-		popup.postMessage(request, origin);
+		popup.postMessage(request, connect_origin);
 	}, 250);
 }
