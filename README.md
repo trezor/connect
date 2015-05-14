@@ -114,7 +114,7 @@ import base64
 import bitcoin
 
 def verify(challenge_hidden, challenge_visual, pubkey, signature):
-    message = binascii.unhexlify(challenge_hidden) + challenge_visual
+    message = binascii.unhexlify(challenge_hidden + binascii.hexlify(challenge_visual))
     signature_b64 = base64.b64encode(binascii.unhexlify(signature))
     return bitcoin.ecdsa_verify(message, signature_b64, pubkey)
 
