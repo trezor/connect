@@ -24,6 +24,12 @@ function trezorLogin(response) {
 </trezor:login>
 
 <!--
+// You can use custom icon (i.e. not TREZOR logo) by setting the
+// icon attribute of the trezor:login tag.
+
+<trezor:login icon="https://example.com/icon.png">
+</trezor:login>
+
 // You can use custom hidden/visual challenges (i.e. not generated
 // by Connect) by setting the challenge_hidden/challenge_visual
 // attributes of the trezor:login tag.
