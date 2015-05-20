@@ -20,7 +20,7 @@ function trezorLogin(response) {
 
 ...
 
-<trezor:login callback="trezorLogin" icon="http://coinmap.org/img/logo_square.png">
+<trezor:login callback="trezorLogin">
 </trezor:login>
 
 <!--
@@ -32,8 +32,7 @@ function trezorLogin(response) {
 
 <trezor:login callback="trezorLogin"
               challenge_hidden="0123456789abcdef"
-              challenge_visual="Lorem Ipsum"
-              icon="http://coinmap.org/img/logo_square.png">
+              challenge_visual="Lorem Ipsum">
 </trezor:login>
 
 // ... or using the following script on the client side:
