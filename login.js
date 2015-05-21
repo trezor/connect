@@ -6,7 +6,7 @@ var connect_path = connect_origin + '/connect/';
 
 var content_css = '<style type="text/css">@import url("'+connect_path+'button.css")</style>';
 
-var content_html = '<div id="trezorconnect-wrapper"><a id="trezorconnect-button" onclick="trezor_login_handler(\'@callback@\', \'@hosticon@\', \'@challenge_hidden@\', \'@challenge_visual@\');"><span id="trezorconnect-icon"></span>Sign in with <strong>TREZOR</strong></a><span id="trezorconnect-info"><a id="trezorconnect-infolink" href="https://www.bitcointrezor.com/" target="_blank">What is TREZOR?</a></div>';
+var content_html = '<div id="trezorconnect-wrapper"><a id="trezorconnect-button" onclick="trezor_login_handler(\'@callback@\', \'@hosticon@\', \'@challenge_hidden@\', \'@challenge_visual@\');"><span id="trezorconnect-icon"></span>Sign in with <strong>TREZOR</strong></a><span id="trezorconnect-info"><a id="trezorconnect-infolink" href="https://www.buytrezor.com/" target="_blank">What is TREZOR?</a></div>';
 
 for (var i = 0; i < elements.length; i++) {
 	var e = elements[i];
