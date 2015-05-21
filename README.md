@@ -33,6 +33,8 @@ function trezorLogin(response) {
 // You can use custom hidden/visual challenges (i.e. not generated
 // by Connect) by setting the challenge_hidden/challenge_visual
 // attributes of the trezor:login tag.
+// To protect against replay attack, you must use randomized
+// challenge_hidden for every attempt.
 // This can be done either on the server side while rendering
 // the page contents like this:
 
@@ -46,7 +48,7 @@ function trezorLogin(response) {
 <script>
 var elements = document.getElementsByTagName('trezor:login');
 var e = elements[0];
-e.setAttribute('challenge_hidden', '0123456789abcdef');
+e.setAttribute('challenge_hidden', '0123456789abcdef'); // Use random value
 e.setAttribute('challenge_visual', 'Lorem Ipsum');
 </script>
 -->
@@ -124,7 +126,7 @@ def verify(challenge_hidden, challenge_visual, pubkey, signature):
     return bitcoin.ecdsa_verify(message, signature_b64, pubkey)
 
 def main():
-    challenge_hidden = "cd8552569d6e4509266ef137584d1e62c7579b5b8ed69bbafa4b864c6521e7c2"
+    challenge_hidden = "cd8552569d6e4509266ef137584d1e62c7579b5b8ed69bbafa4b864c6521e7c2" // Use random value
     challenge_visual = "2015-03-23 17:39:22"
     pubkey = "020cbccdc85ef2ce4718e46bc20ca9e50025de12b4e7900d1085152a52ebfc2590"
     signature = "2063f0a4ea00bf412b3526fbc0bc1e3850c8597d56e73bc748fa9d315114061fe522f250687188312df56ac5ed84bfc627ee9136c258ffaedaa6613542b340d81c"
@@ -157,7 +159,7 @@ function verify($challenge_hidden, $challenge_visual, $pubkey, $signature)
 
 }
 
-$challenge_hidden = "cd8552569d6e4509266ef137584d1e62c7579b5b8ed69bbafa4b864c6521e7c2";
+$challenge_hidden = "cd8552569d6e4509266ef137584d1e62c7579b5b8ed69bbafa4b864c6521e7c2"; // Use random value
 $challenge_visual = "2015-03-23 17:39:22";
 $pubkey = "020cbccdc85ef2ce4718e46bc20ca9e50025de12b4e7900d1085152a52ebfc2590";
 $signature = "2063f0a4ea00bf412b3526fbc0bc1e3850c8597d56e73bc748fa9d315114061fe522f250687188312df56ac5ed84bfc627ee9136c258ffaedaa6613542b340d81c";
@@ -172,7 +174,7 @@ Dependencies: https://github.com/lian/bitcoin-ruby
 ```ruby
 require 'bitcoin'
 
-challenge_hidden = "aaa3d9fb398428c72254c83b5ef020663d8bff43324187295865965c1bf51160"
+challenge_hidden = "aaa3d9fb398428c72254c83b5ef020663d8bff43324187295865965c1bf51160" # Use random value
 challenge_visual = "2015-03-12 17:32:26"
 address = "1JZuZ6Ttk4Wv7B98M5cF6GswMqGSHnUZ2J"
 public_key = "02134ba0f19c15d41193184f96e444f5903935de726e0433aeae16e446b07129e4"
