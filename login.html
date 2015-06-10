@@ -437,6 +437,7 @@ function callSignIdentity(session) {
 		response.address = result.message.address;
 		response.public_key = result.message.public_key.toLowerCase();
 		response.signature = result.message.signature.toLowerCase();
+		response.version = 1;
 		return response;
 	});
 }
