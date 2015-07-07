@@ -112,7 +112,7 @@ def verify(challenge_hidden, challenge_visual, pubkey, signature, version):
     elif version == 2:
         h1 = hashlib.sha256(binascii.unhexlify(challenge_hidden)).digest()
         h2 = hashlib.sha256(challenge_visual).digest()
-        message = hashlib.sha256(h1 + h2).digest()
+        message = h1 + h2
     else:
         raise Exception('Unknown version')
     signature_b64 = base64.b64encode(binascii.unhexlify(signature))
@@ -149,7 +149,7 @@ function verify($challenge_hidden, $challenge_visual, $pubkey, $signature, $vers
     if ($version == 1) {
         $message = hex2bin($challenge_hidden) . $challenge_visual;
     } elseif ($version == 2) {
-        $message = sha256(sha256(hex2bin($challenge_hidden)) . sha256($challenge_visual));
+        $message = sha256(hex2bin($challenge_hidden)) . sha256($challenge_visual);
     } else {
         die('Unknown version');
     }
@@ -193,7 +193,7 @@ def verify(challenge_hidden, challenge_visual, pubkey, signature, version)
     when 1
       message = challenge_hidden.htb + challenge_visual
     when 2
-      message = sha256.digest(sha256.digest(challenge_hidden.htb) + sha256.digest(challenge_visual))
+      message = sha256.digest(challenge_hidden.htb) + sha256.digest(challenge_visual)
     else
       raise "Unknown version"
   end
