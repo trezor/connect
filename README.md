@@ -65,7 +65,7 @@ Challenge fields are copied from request, the rest is returned from TREZOR.
   "success": true,
   "public_key": "02134ba0f19c15d41193184f96e444f5903935de726e0433aeae16e446b07129e4",
   "signature":"20fa9e8db27700b6784cf270292b8b7fddd1d126346066c286b02ccf951d9fa3141a6b0528bfc87605c940c491c1f58ccfd7350775df2fd973dcf096415db3f0d7",
-  "version": 1
+  "version": 2
 }
 ```
 
@@ -79,7 +79,7 @@ In case the error is encountered, the contents of the response will be:
 {
   "success": false,
   "error": "String description of the error",
-  "version": 1
+  "version": 2
 }
 ```
 

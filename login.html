@@ -432,12 +432,15 @@ function callSignIdentity(session) {
 	var request = window.connect_data.request;
 	return session.signIdentity(request.identity, request.challenge_hidden, request.challenge_visual).then(function (result) {
 		var response = {};
-		response.challenge_hidden = request.challenge_hidden;
-		response.challenge_visual = request.challenge_visual;
-		response.address = result.message.address;
+		var version = 1;
+		if (version == 1) {
+			response.challenge_hidden = request.challenge_hidden;
+			response.challenge_visual = request.challenge_visual;
+			response.address = result.message.address;
+		}
 		response.public_key = result.message.public_key.toLowerCase();
 		response.signature = result.message.signature.toLowerCase();
-		response.version = 1;
+		response.version = version;
 		return response;
 	});
 }
