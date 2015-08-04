@@ -119,11 +119,11 @@ def verify(challenge_hidden, challenge_visual, pubkey, signature, version):
     return bitcoin.ecdsa_verify(message, signature_b64, pubkey)
 
 def main():
-    challenge_hidden = "cd8552569d6e4509266ef137584d1e62c7579b5b8ed69bbafa4b864c6521e7c2" // Use random value
+    challenge_hidden = "cd8552569d6e4509266ef137584d1e62c7579b5b8ed69bbafa4b864c6521e7c2" # Use random value
     challenge_visual = "2015-03-23 17:39:22"
-    pubkey = "020cbccdc85ef2ce4718e46bc20ca9e50025de12b4e7900d1085152a52ebfc2590"
-    signature = "2063f0a4ea00bf412b3526fbc0bc1e3850c8597d56e73bc748fa9d315114061fe522f250687188312df56ac5ed84bfc627ee9136c258ffaedaa6613542b340d81c"
-    print verify(challenge_hidden, challenge_visual, pubkey, signature, 1)
+    pubkey = "023a472219ad3327b07c18273717bb3a40b39b743756bf287fbd5fa9d263237f45"
+    signature = "20f2d1a42d08c3a362be49275c3ffeeaa415fc040971985548b9f910812237bb41770bf2c8d488428799fbb7e52c11f1a3404011375e4080e077e0e42ab7a5ba02"
+    print verify(challenge_hidden, challenge_visual, pubkey, signature, 2)
 
 if __name__ == '__main__':
     main()
@@ -166,10 +166,10 @@ function verify($challenge_hidden, $challenge_visual, $pubkey, $signature, $vers
 
 $challenge_hidden = "cd8552569d6e4509266ef137584d1e62c7579b5b8ed69bbafa4b864c6521e7c2"; // Use random value
 $challenge_visual = "2015-03-23 17:39:22";
-$pubkey = "020cbccdc85ef2ce4718e46bc20ca9e50025de12b4e7900d1085152a52ebfc2590";
-$signature = "2063f0a4ea00bf412b3526fbc0bc1e3850c8597d56e73bc748fa9d315114061fe522f250687188312df56ac5ed84bfc627ee9136c258ffaedaa6613542b340d81c";
+$pubkey = "023a472219ad3327b07c18273717bb3a40b39b743756bf287fbd5fa9d263237f45";
+$signature = "20f2d1a42d08c3a362be49275c3ffeeaa415fc040971985548b9f910812237bb41770bf2c8d488428799fbb7e52c11f1a3404011375e4080e077e0e42ab7a5ba02";
 
-echo (int)verify($challenge_hidden, $challenge_visual, $pubkey, $signature, 1);
+echo (int)verify($challenge_hidden, $challenge_visual, $pubkey, $signature, 2);
 ```
 
 ###Ruby
@@ -180,10 +180,10 @@ Dependencies: https://github.com/lian/bitcoin-ruby
 require 'digest'
 require 'bitcoin'
 
-challenge_hidden = "aaa3d9fb398428c72254c83b5ef020663d8bff43324187295865965c1bf51160" # Use random value
-challenge_visual = "2015-03-12 17:32:26"
-public_key = "02134ba0f19c15d41193184f96e444f5903935de726e0433aeae16e446b07129e4"
-signature = "20fa9e8db27700b6784cf270292b8b7fddd1d126346066c286b02ccf951d9fa3141a6b0528bfc87605c940c491c1f58ccfd7350775df2fd973dcf096415db3f0d7"
+challenge_hidden = "cd8552569d6e4509266ef137584d1e62c7579b5b8ed69bbafa4b864c6521e7c2" # Use random value
+challenge_visual = "2015-03-23 17:39:22"
+public_key = "023a472219ad3327b07c18273717bb3a40b39b743756bf287fbd5fa9d263237f45"
+signature = "20f2d1a42d08c3a362be49275c3ffeeaa415fc040971985548b9f910812237bb41770bf2c8d488428799fbb7e52c11f1a3404011375e4080e077e0e42ab7a5ba02"
 
 def verify(challenge_hidden, challenge_visual, pubkey, signature, version)
   address = Bitcoin.pubkey_to_address(pubkey)
@@ -197,7 +197,6 @@ def verify(challenge_hidden, challenge_visual, pubkey, signature, version)
     else
       raise "Unknown version"
   end
-  Bitcoin.verify_message(address, signature, message, 1)
+  Bitcoin.verify_message(address, signature, message, 2)
 end
-
 ```
