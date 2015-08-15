@@ -357,7 +357,8 @@ function receiveMessage(event)
 	if (request.icon) document.getElementById('login_icon').src = request.icon;
 
 	window.connect_data = {
-		'request': request
+		'request': request,
+		'features': null
 	};
 
 	trezorLogin(event);
@@ -420,6 +421,7 @@ function getSession(transport) {
 		.then(function (session) {
 			return session.initialize()
 				.then(function (result) {
+					window.connect_data.features = result.message;
 					session.on('button', buttonCallback);
 					session.on('pin', pinCallback);
 					session.on('passphrase', passphraseCallback);
@@ -430,9 +432,13 @@ function getSession(transport) {
 
 function callSignIdentity(session) {
 	var request = window.connect_data.request;
+	var features = window.connect_data.features;
 	return session.signIdentity(request.identity, request.challenge_hidden, request.challenge_visual).then(function (result) {
 		var response = {};
 		var version = 1;
+		if (features && features.major_version >= 1 && features.minor_version >= 3 && features.patch_version >= 4) {
+			version = 2;
+		}
 		if (version == 1) {
 			response.challenge_hidden = request.challenge_hidden;
 			response.challenge_visual = request.challenge_visual;
