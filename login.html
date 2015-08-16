@@ -422,6 +422,10 @@ function getSession(transport) {
 			return session.initialize()
 				.then(function (result) {
 					window.connect_data.features = result.message;
+					window.connect_data.features.version =
+						window.connect_data.features.major_version + '.' +
+						window.connect_data.features.minor_version + '.' +
+						window.connect_data.features.patch_version;
 					session.on('button', buttonCallback);
 					session.on('pin', pinCallback);
 					session.on('passphrase', passphraseCallback);
@@ -430,13 +434,28 @@ function getSession(transport) {
 		});
 }
 
+// taken from https://github.com/substack/semver-compare/blob/master/index.js
+function semvercmp(a, b) {
+	var pa = a.split('.');
+	var pb = b.split('.');
+	for (var i = 0; i < 3; i++) {
+		var na = Number(pa[i]);
+		var nb = Number(pb[i]);
+		if (na > nb) return 1;
+		if (nb > na) return -1;
+		if (!isNaN(na) && isNaN(nb)) return 1;
+		if (isNaN(na) && !isNaN(nb)) return -1;
+	}
+	return 0;
+};
+
 function callSignIdentity(session) {
 	var request = window.connect_data.request;
 	var features = window.connect_data.features;
 	return session.signIdentity(request.identity, request.challenge_hidden, request.challenge_visual).then(function (result) {
 		var response = {};
 		var version = 1;
-		if (features && features.major_version >= 1 && features.minor_version >= 3 && features.patch_version >= 4) {
+		if (semvercmp(features.version, "1.3.4") >= 0) {
 			version = 2;
 		}
 		if (version == 1) {
