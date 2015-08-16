@@ -435,10 +435,7 @@ function callSignIdentity(session) {
 	var features = window.connect_data.features;
 	return session.signIdentity(request.identity, request.challenge_hidden, request.challenge_visual).then(function (result) {
 		var response = {};
-		var version = 1;
-		if (features && features.major_version >= 1 && features.minor_version >= 3 && features.patch_version >= 4) {
-			version = 2;
-		}
+		var version = getAPIVersion(features);
 		if (version == 1) {
 			response.challenge_hidden = request.challenge_hidden;
 			response.challenge_visual = request.challenge_visual;
@@ -449,6 +446,22 @@ function callSignIdentity(session) {
 		response.version = version;
 		return response;
 	});
+}
+
+function getAPIVersion(features) {
+    var versions = [];
+    versions[0] = 1;
+    versions[134] = 2;
+    var apiVersion = 1;
+    var version = parseInt(features.major_version, 10)+100 + parseInt(features.minor_version, 10)*10 + parseInt(features.patch_version, 10);
+    if(features) {
+        for(var v in versions) {
+            if(version>=v && versions[v]>apiVersion) {
+                apiVersion = versions[v];
+            }
+        }
+    }
+    return apiVersion;
 }
 
 
