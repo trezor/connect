@@ -453,7 +453,7 @@ function getAPIVersion(features) {
     versions[0] = 1;
     versions[134] = 2;
     var apiVersion = 1;
-    var version = parseInt(features.major_version, 10)+100 + parseInt(features.minor_version, 10)*10 + parseInt(features.patch_version, 10);
+    var version = parseInt(features.major_version, 10)*100 + parseInt(features.minor_version, 10)*10 + parseInt(features.patch_version, 10);
     if(features) {
         for(var v in versions) {
             if(version>=v && versions[v]>apiVersion) {
