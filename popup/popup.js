@@ -100,8 +100,9 @@ function handleLogin(event) {
                 challenge_hidden: request.challenge_hidden,
                 challenge_visual: request.challenge_visual,
                 address: result.message.address,
-                public_key: result.message.public_key,
-                signature: result.message.signature
+                public_key: result.message.public_key.toLowerCase(),
+                signature: result.message.signature.toLowerCase(),
+                version: 2      // since firmware 1.3.4
             });
         })
 
@@ -407,7 +408,9 @@ function waitForFirstDevice(transport) {
             if (!device.isInitialized()) {
                 throw DEVICE_IS_EMPTY;
             }
-            if (!device.atLeast('1.3.0')) {
+            if (!device.atLeast('1.3.4')) {
+                // 1.3.0 introduced PublicKey.xpub field
+                // 1.3.4 has version2 of SignIdentity algorithm
                 throw FIRMWARE_IS_OLD;
             }
             return device;
