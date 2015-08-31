@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width">
+
+    <title>TREZOR Connect</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400,700">
+    <link rel="stylesheet" href="./popup.css">
+  </head>
+  <body>
+    <div id="header">
+      <img id="logo" src="img/trezor_horizontal.png" alt="TREZOR">
+
+      <div id="header_right">
+        <img id="header_icon" src="" style="display: none">
+        <div id="operation">
+          <div id="operation_login" style="display: none">Sign in to</div>
+          <div id="operation_xpubkey" style="display: none">Export public key</div>
+          <div id="operation_signtx" style="display: none">Sign transaction</div>
+          <div id="origin"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="alert_loading" class="alert">
+      <div class="alert_heading fade">Loading&hellip;</div>
+    </div>
+
+    <div id="alert_signing" class="alert fadeout">
+      <div class="alert_heading fade">Signing transaction&hellip;</div>
+    </div>
+
+    <div id="alert_connect" class="alert fadeout">
+      <img class="alert_icon" src="img/trezor_connect.png">
+      <div class="alert_heading">
+        Connect your <strong class="smallcaps">TREZOR</strong> device.
+      </div>
+    </div>
+
+    <div id="alert_reconnect" class="alert fadeout">
+      <div class="alert_heading">
+        Connected device is in<br> firmware update mode.<br> Please re-connect it.
+      </div>
+    </div>
+
+    <div id="alert_device_empty" class="alert fadeout">
+      <div>
+        Your device needs to be initialized first. Please try again after
+        initializing at
+        <a href="https://mytrezor.com" target="_blank" onclick="closeWindow();">myTREZOR.com</a>.
+      </div>
+    </div>
+
+    <div id="alert_firmware_old" class="alert fadeout">
+      <div>
+        The firmware of your device needs to be upgraded. Please try again after
+        upgrading at
+        <a href="https://mytrezor.com" target="_blank" onclick="closeWindow();">myTREZOR.com</a>.
+      </div>
+    </div>
+
+    <div id="alert_transport_missing" class="alert fadeout">
+      <p>
+        To use your <strong class="smallcaps">TREZOR</strong> device, proceed
+        with instructions at
+        <a href="https://mytrezor.com" target="_blank" onclick="closeWindow();">myTREZOR.com</a>
+        and try again afterwards.
+      </p>
+      <p>
+        <a href="https://buytrezor.com"
+           onclick="closeWindow();"
+           target="_blank">What is <span class="smallcaps">TREZOR</span>?</a>
+      </p>
+    </div>
+
+    <div id="alert_browser_old" class="alert fadeout">
+      <div>
+        Only Chrome, Firefox, Safari and Microsoft Edge browsers are supported. Sorry!
+      </div>
+    </div>
+
+    <div id="alert_pin_invalid" class="alert fadeout">
+      <div class="alert_heading">Entered PIN is not correct. Retrying...</div>
+    </div>
+
+    <div id="alert_confirm" class="alert fadeout">
+      <div class="alert_heading">Follow instructions on your device.</div>
+    </div>
+
+    <div id="alert_xpubkey" class="alert fadeout">
+      <p class="alert_heading">
+        Export public key for <strong id="xpubkey_id"></strong>?
+      </p>
+      <div>
+        <button type="button" onclick="exportXpubKey();">
+          Export
+        </button>
+        <button type="button" onclick="cancelXpubKey();">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <div id="pin_dialog" class="alert fadeout">
+      <div id="pin_header">Please enter your PIN.</div>
+      <div id="pin_subheader">Look at the device for number positions.</div>
+
+      <div id="pin_form">
+        <div id="pin_table">
+          <div>
+            <button type="button" key="7" onclick="pinAdd(this);">&#8226;</button>
+            <button type="button" key="8" onclick="pinAdd(this);">&#8226;</button>
+            <button type="button" key="9" onclick="pinAdd(this);">&#8226;</button>
+          </div>
+          <div>
+            <button type="button" key="4" onclick="pinAdd(this);">&#8226;</button>
+            <button type="button" key="5" onclick="pinAdd(this);">&#8226;</button>
+            <button type="button" key="6" onclick="pinAdd(this);">&#8226;</button>
+          </div>
+          <div>
+            <button type="button" key="1" onclick="pinAdd(this);">&#8226;</button>
+            <button type="button" key="2" onclick="pinAdd(this);">&#8226;</button>
+            <button type="button" key="3" onclick="pinAdd(this);">&#8226;</button>
+          </div>
+        </div>
+
+        <div id="pin_input_row">
+          <input type="password" id="pin" name="pin" autocomplete="off" maxlength="9" disabled>
+          <button type="button" id="pin_backspace" onclick="pinBackspace();">
+            &#9003; <!-- ERASE TO THE LEFT -->
+          </button>
+        </div>
+
+        <div id="pin_enter"><button type="button" onclick="pinEnter();">Enter</button></div>
+      </div>
+    </div>
+
+    <div id="passphrase_dialog" class="alert fadeout">
+      <div id="passphrase_header">Please enter your passphrase:</div>
+      <div id="passphrase_subheader">Note that passphrase is case-sensitive.</div>
+
+      <div id="passphrase_input_row">
+        <input type="password" id="passphrase" name="passphrase" autocomplete="off">
+      </div>
+
+      <div id="passphrase_show_row">
+        <label>
+          <input type="checkbox" id="show_passphrase" onclick="passphraseToggle();">
+          <span id="passphrase_show_label">Show passphrase</span>
+        </label>
+      </div>
+      <div id="passphrase_enter">
+        <button type="button" onclick="passphraseEnter();">Enter</button>
+      </div>
+    </div>
+
+    <script src="./popup-dist.js"></script>
+  </body>
+</html>

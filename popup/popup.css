@@ -1,0 +1,284 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	padding: 20px;
+ 	background: linear-gradient(0deg, #ffffff, #fcfcfc) no-repeat;
+	color: #333333;
+	font: 400 18px/1.4 Roboto, Helvetica, Arial, sans-serif;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+a {
+    color: #000000;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #777777;
+}
+
+button {
+    padding: 8px 12px;
+    font-size: 18px;
+    background: transparent;
+    border: 1px solid #777777;
+    border-radius: 5px;
+	color: #555555;
+	cursor: pointer;
+    transition: background 0.5s, color 0.5s, border 0.5s;
+}
+
+button:hover {
+    color: #000000;
+	border-color: #000000;
+}
+
+button:active,
+button.active {
+	color: #ffffff;
+	background: #666666; /* same as border */
+    transition: none;
+}
+
+button:focus {
+	outline: 0;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 6px;
+    border: 0;
+    border-bottom: 1px solid #bbbbbb;
+    background: transparent;
+    font-size: 18px;
+}
+
+.smallcaps {
+    font-size: 85%;
+}
+
+.fade {
+    /* animation: fade 2.0s infinite ease-in-out; */
+}
+
+@keyframes fade {
+    0% { opacity: 1; }
+    50% { opacity: 0.2; }
+    100% { opacity: 1; }
+}
+
+#header {
+    overflow: hidden; /* children float */
+}
+
+#logo {
+    float: left;
+    width: 126px;
+	height: 41px;
+}
+
+#header_right {
+    float: right;
+    overflow: hidden; /* children float */
+}
+
+#header_icon {
+	float: left;
+	height: 48px;
+    margin-right: 10px;
+}
+
+#operation {
+    float: left;
+}
+
+#origin {
+	font-size: 14px;
+	opacity: 0.8;
+}
+
+/*
+ * alerts
+ */
+
+.alert {
+    position: absolute;
+    left: 20px;                 /* same as padding */
+    right: 20px;                /* same as padding */
+    margin-top: 150px;
+    text-align: center;
+
+    /* opacity: 1; */
+    visibility: visible;
+    /* transition: visibility 0s, opacity 0.3s cubic-bezier(0.755, 0.05, 0.855, 0.06); */
+}
+
+.alert.fadeout {
+    /* opacity: 0; */
+    visibility: hidden;
+    /* transition: visibility 0s 0.3s, opacity 0.3s cubic-bezier(0.755, 0.05, 0.855, 0.06); */
+}
+
+.alert_icon {
+    width: 90px;
+    height: 90px;
+    padding: 1px;               /* whitespace between border and image */
+    vertical-align: middle;     /* center-to-center with heading */
+    border: 1px solid #333333;	/* same as text color */
+    border-radius: 50%;         /* make icon round */
+}
+
+.alert_heading {
+    font-size: 32px;
+    font-weight: 100;
+	line-height: 1.3;
+}
+
+.alert_icon + .alert_heading {
+    display: inline-block;      /* inline with icon */
+    max-width: 250px;
+    margin-left: 20px;          /* set off from icon */
+    vertical-align: middle;     /* center-to-center with icon */
+    text-align: left;
+}
+
+.alert_heading strong {
+    font-weight: 400;
+}
+
+#alert_connect {
+    margin-top: 120px;
+}
+
+/*
+ * passphrase
+ */
+
+#passphrase_dialog {
+    margin-top: 70px;
+}
+
+#passphrase_header {
+    font-size: 24px;
+    font-weight: 100;
+}
+
+#passphrase_subheader,
+#passphrase_show_label {
+	font-size: 14px;
+    opacity: 0.8;
+}
+
+#passphrase_show_row {
+	text-align: center;
+}
+
+#passphrase_input_row,
+#passphrase_enter {
+    margin-top: 10px;
+}
+
+#passphrase_show_row {
+    margin-top: 5px;
+}
+
+#passphrase_input_row input,
+#passphrase_enter button {
+    width: 250px;
+}
+
+/*
+ * pin
+ */
+
+#pin_dialog {
+    margin-top: 30px;
+}
+
+#pin_header {
+    font-size: 24px;
+    font-weight: 100;
+}
+
+#pin_subheader {
+	font-size: 14px;
+    opacity: 0.8;
+}
+
+#pin_form {
+    display: inline-block; /* stick around content, align to center */
+}
+
+#pin_table,
+#pin_input_row,
+#pin_enter{
+	margin-top: 10px; /* vertical spacing */
+}
+
+#pin_table > div {
+    overflow: hidden; /* children float */
+}
+
+#pin_table button {
+    float: left;
+	width: 55px;
+	height: 55px;
+	margin-left: 10px;
+	margin-top: 10px;
+
+    color: #666666;
+    border: 1px solid #888888;
+    font-weight: 700;
+}
+
+#pin_table button:hover {
+    color: #000000;
+	border-color: #000000;
+}
+
+#pin_table button:active,
+#pin_table button.active {
+    color: transparent;
+    background: #888888;
+    border-color: #888888;
+}
+
+#pin_table > div > button:first-child {
+	margin-left: 0; /* cancel for the first column */
+}
+
+#pin_table button:focus {
+	outline: 0;
+}
+
+#pin_input_row {
+	position: relative; /* #pin_backspace has position: absolute */
+    text-align: left;
+}
+
+#pin_input_row input {
+    width: 185px; /* same as #pin_table width, % cause problems in firefox */
+    padding-left: 0;
+    padding-right: 0;
+	text-align: center;
+}
+
+#pin_backspace {
+    position: absolute;
+    right: 0;
+    top: 8px;
+    padding: 3px 3px 1px;
+    border: 0;
+    border-radius: 0;
+}
+
+#pin_enter button {
+	width: 100%;
+}
