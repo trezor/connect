@@ -3,13 +3,11 @@
 <head>
 <title>TREZOR Login Test</title>
 <script type="text/javascript">
+
 function trezorLogin(response) {
-	if (response.success) {
-		alert('success:\n\n' + JSON.stringify(response));
-	} else {
-		alert('failure:\n\n' + JSON.stringify(response));
-	}
+    console.log(response);
 }
+
 </script>
 </head>
 <body>
@@ -45,7 +43,7 @@ e.setAttribute('challenge_visual', 'Lorem Ipsum');
 </script>
 -->
 
-<script src="https://trezor.github.io/connect/login.js" type="text/javascript"></script>
+<script src="../login.js" type="text/javascript"></script>
 
 </body>
 </html>

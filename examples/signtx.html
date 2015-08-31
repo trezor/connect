@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Sign Transaction Test</title>
+    <script>
+
+     function trezorSignTx() {
+         // spend one change output
+         var inputs = [{
+             'address_n': [
+                 44 | 0x80000000, // purpose
+                 0 | 0x80000000,  // coin type
+                 2 | 0x80000000,  // account
+                 1,               // change
+                 0                // address
+             ],
+             'prev_index': 0,
+             'prev_hash': 'b035d89d4543ce5713c553d69431698116a822c57c03ddacf3f04b763d1999ac'
+         }];
+
+         // send to 2 address outputs and one change output
+         var outputs = [{
+             'address_n': [
+                 44 | 0x80000000, // purpose
+                 0 | 0x80000000,  // coin type
+                 2 | 0x80000000,  // account
+                 1,               // change
+                 1                // address
+             ],
+             'amount': 3181747,
+             'script_type': 'PAYTOADDRESS'
+         }, {
+             'address': '18WL2iZKmpDYWk1oFavJapdLALxwSjcSk2',
+             'amount': 100000,
+             'script_type': 'PAYTOADDRESS'
+         }, {
+             'address': '1zCwvDuB3aMmvv5bENNSQ78Tod9F1Lao6',
+             'amount': 100000,
+             'script_type': 'PAYTOADDRESS'
+         }];
+
+         TrezorConnect.signTx(inputs, outputs, function (result) {
+             console.log(result);
+         });
+     }
+
+    </script>
+  </head>
+  <body>
+
+    <button onclick="trezorSignTx()">Sign</button>
+
+    <script src="../login.js" type="text/javascript"></script>
+
+  </body>
+</html>
