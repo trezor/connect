@@ -1,3 +1,5 @@
+# Dependencies: https://pypi.python.org/pypi/bitcoin >= 1.1.27
+
 import binascii
 import hashlib
 import base64

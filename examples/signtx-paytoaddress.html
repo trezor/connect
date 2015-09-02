@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Sign Transaction Test</title>
+    <script>
+
+     function trezorSignTx() {
+         // spend one change output
+         var inputs = [{
+             address_n: [44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 1, 0],
+             prev_index: 0,
+             prev_hash: 'b035d89d4543ce5713c553d69431698116a822c57c03ddacf3f04b763d1999ac'
+         }];
+
+         // send to 1 address output and one change output
+         var outputs = [{
+             address_n: [44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 1, 1],
+             amount: 3181747,
+             script_type: 'PAYTOADDRESS'
+         }, {
+             address: '18WL2iZKmpDYWk1oFavJapdLALxwSjcSk2',
+             amount: 200000,
+             script_type: 'PAYTOADDRESS'
+         }];
+
+         TrezorConnect.signTx(inputs, outputs, function (result) {
+             if (result.success) {
+                 console.log('Serialized TX:', result.serialized_tx); // tx in hex
+                 console.log('Signatures:', result.signatures); // array of signatures, in hex
+             } else {
+                 console.error('Error:', result.error); // error message
+             }
+         });
+     }
+
+    </script>
+  </head>
+  <body>
+
+    <button onclick="trezorSignTx()">Sign</button>
+
+    <script src="../login.js"></script>
+
+  </body>
+</html>

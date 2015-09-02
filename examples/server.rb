@@ -1,3 +1,5 @@
+# Dependencies: https://github.com/lian/bitcoin-ruby
+
 require 'digest'
 require 'bitcoin'
 

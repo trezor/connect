@@ -5,16 +5,18 @@
     <script>
 
      function trezorSignTx() {
-         // var address_n = [
-         //     44 | 0x80000000, // purpose
-         //     0 | 0x80000000,  // coin type
-         //     2 | 0x80000000,  // account
-         // ];
+         var path = "m/44'/0'/0'"; // first BIP44 account
 
-         var address_n = "m/44'/0'/2'";
+         // var path = [44 | 0x80000000,
+         //             0  | 0x80000000,
+         //             0  | 0x80000000 ]; // same, in raw form
 
-         TrezorConnect.getXPubKey(address_n, function (result) {
-             console.log(result);
+         TrezorConnect.getXPubKey(path, function (result) {
+             if (result.success) {
+                 console.log('XPUB:', result.xpub); // serialized XPUB
+             } else {
+                 console.error('Error:', result.error); // error message
+             }
          });
      }
 

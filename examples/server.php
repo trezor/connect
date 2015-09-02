@@ -1,7 +1,10 @@
 <?php
-namespace BitcoinPHP\BitcoinECDSA;
-require "BitcoinECDSA.php";
 
+// Dependencies: https://github.com/BitcoinPHP/BitcoinECDSA.php
+
+require_once("BitcoinECDSA.php");
+
+use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 
 function sha256($data)
 {
