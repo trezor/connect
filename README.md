@@ -1,6 +1,13 @@
 # TREZOR Connect API
 
-Connect is a platform for easy integration of TREZOR into 3rd party services.
+Connect is a platform for easy integration of TREZOR into 3rd party
+services. It provides websites with functionality to authenticate users, access
+public keys and sign transactions. User interface is presented in a secure popup
+window:
+
+![login dialog](docs/login_dialog.png)
+
+## Usage
 
 First, you need to include the library in your page:
 
@@ -8,10 +15,11 @@ First, you need to include the library in your page:
 <script src="https://trezor.github.io/connect/login.js"></script>
 ```
 
-API calls have a callback argument.  Callback is guaranteed to get called with
-a result object, even if user closes the window, network connection times out,
-etc.  In case of failure, `result.success` is false and `result.error` is the
-error message.
+All API calls have a callback argument.  Callback is guaranteed to get called
+with a result object, even if user closes the window, network connection times
+out, etc.  In case of failure, `result.success` is false and `result.error` is
+the error message.  It is recommended to log the error message and let user
+restart the action.
 
 1. [Login](#login)
 2. [Export public key](#exportpublickey)
@@ -97,7 +105,7 @@ You can restyle the login button to fit the look of your website.  See the
 example in [`examples/login-restyled.html`](examples/login-restyled.html).  The
 default CSS being used is [`login_buttons.css`](login_buttons.css):
 
-![login button](https://raw.githubusercontent.com/trezor/connect/gh-pages/docs/login_button.png)
+![login button](docs/login_button.png)
 
 ### Server side
 
