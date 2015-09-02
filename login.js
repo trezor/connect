@@ -106,9 +106,6 @@ window.TrezorConnect = (function () {
          * @typedef RequestLoginResult
          * @param {boolean} success
          * @param {?string} error
-         * @param {?string} challenge_hidden  from the request data, or default
-         * @param {?string} challenge_visual  from the request data, or default
-         * @param {?string} address           address used for signing
          * @param {?string} public_key        public key used for signing, in hex
          * @param {?string} signature         signature, in hex
          */
@@ -117,8 +114,8 @@ window.TrezorConnect = (function () {
          * Sign a login challenge for active origin.
          *
          * @param {?string} hosticon
-         * @param {?string} challenge_hidden  optional, random data if not set
-         * @param {?string} challenge_visual  optional, current timestamp if not set
+         * @param {string} challenge_hidden
+         * @param {string} challenge_visual
          * @param {string|function(RequestLoginResult)} callback
          *
          * @see https://github.com/trezor/trezor-common/blob/master/protob/messages.proto
@@ -140,8 +137,8 @@ window.TrezorConnect = (function () {
             manager.sendWithChannel({
                 'type': 'login',
                 'icon': hosticon,
-                'challenge_hidden': challenge_hidden || getRandomHex(64),
-                'challenge_visual': challenge_visual || getTimestamp()
+                'challenge_hidden': challenge_hidden,
+                'challenge_visual': challenge_visual
             }, function (result) {
                 manager.close();
                 callback(result);
@@ -211,25 +208,6 @@ window.TrezorConnect = (function () {
                 }
                 return n;
             });
-    }
-
-    /*
-     * `requestLogin()`
-     */
-
-    function getTimestamp() {
-        return new Date()
-            .toISOString()
-            .substring(0, 19)
-            .replace('T', ' ');
-    }
-
-    function getRandomHex(length) {
-        var array = Array.apply(null, Array(length));
-        var digits = array.map(function () {
-            return Math.floor(Math.random() * 16).toString(16);
-        });
-        return digits.join('');
     }
 
     /*
