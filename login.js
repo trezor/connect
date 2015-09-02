@@ -1,11 +1,8 @@
 window.TrezorConnect = (function () {
     'use strict';
 
-    // var CONNECT_ORIGIN = 'https://trezor.github.io';
-    // var CONNECT_PATH = CONNECT_ORIGIN + '/connect';
-    var CONNECT_ORIGIN = 'http://localhost.mytrezor.com:9000';
-    // var CONNECT_ORIGIN = 'http://localhost:9000';
-    var CONNECT_PATH = CONNECT_ORIGIN;
+    var CONNECT_ORIGIN = 'https://trezor.github.io';
+    var CONNECT_PATH = CONNECT_ORIGIN + '/connect';
     var CONNECT_POPUP = CONNECT_PATH + '/popup/popup.html';
 
     var ERR_TIMED_OUT = 'Loading timed out';
