@@ -315,7 +315,7 @@ window.TrezorConnect = (function () {
 
         this.popup = new Popup(url, name, params);
         this.channel = new Channel(this.popup.window, origin, ready);
-        this.timeout = setTimeout(timedout, 50000);
+        this.timeout = setTimeout(timedout, 5000);
 
         this.popup.onclose = closed;
 
