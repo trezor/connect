@@ -22,8 +22,8 @@ the error message.  It is recommended to log the error message and let user
 restart the action.
 
 1. [Login](#login)
-2. [Export public key](#exportpublickey)
-3. [Sign transaction](#signtransaction)
+2. [Export public key](#export-public-key)
+3. [Sign transaction](#sign-transaction)
 
 ## Login
 
@@ -44,7 +44,7 @@ of
 
 ### Using Javascript API
 
-[Example:](examples/signtx-js.html)
+[Example:](examples/login-js.html)
 
 ```javascript
 // site icon, optional. at least 48x48px
@@ -69,11 +69,10 @@ TrezorConnect.requestLogin(hosticon, challenge_hidden, challenge_visual, functio
 
 All `<trezor:login>` tags get transformed into HTML login buttons. The
 parameters are exactly the same as for
-[`TrezorConnect.requestLogin`](#usingjavascriptapi), but `callback` represents
-name of global function that gets called with the
-result.
+[`TrezorConnect.requestLogin`](#using-javascript-api), but `callback` represents
+name of global function that gets called with the result.
 
-[Example:](examples/signtx.html)
+[Example:](examples/signtx-paytoaddress.html)
 
 ```html
 <script>
