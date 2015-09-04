@@ -165,8 +165,9 @@ window.TrezorConnect = (function () {
             + '</div>';
 
         /**
-         * Find <trezor:login> elements and replace them with login buttons. You
-         * don't need to use these special elements, feel free to call
+         * Find <trezor:login> elements and replace them with login buttons.
+         * It's not required to use these special elements, feel free to call
+         * `TrezorConnect.requestLogin` directly.
          */
         this.renderLoginButtons = function () {
             var elements = document.getElementsByTagName('trezor:login');
