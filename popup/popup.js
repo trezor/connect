@@ -97,9 +97,6 @@ function handleLogin(event) {
         .then(function (result) { // success
             respondToEvent(event, {
                 success: true,
-                challenge_hidden: request.challenge_hidden,
-                challenge_visual: request.challenge_visual,
-                address: result.message.address,
                 public_key: result.message.public_key.toLowerCase(),
                 signature: result.message.signature.toLowerCase(),
                 version: 2      // since firmware 1.3.4
