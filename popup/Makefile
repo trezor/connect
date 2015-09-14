@@ -5,14 +5,20 @@ TARGET=popup-dist.js
 .PHONY: watch build clean
 
 watch: ${ENTRY} node_modules
-	${BIN}/watchify $< -v -o ${TARGET}
+	${BIN}/watchify $< \
+		-t [ babelify ] \
+		-o ${TARGET} \
+		-v
 
 build: ${ENTRY} node_modules
-	${BIN}/browserify $< -d -g uglifyify \
-		| ${BIN}/exorcist ${TARGET}.map > ${TARGET}
+	${BIN}/browserify $< \
+		-t [ babelify --sourceMapRelative . ] \
+		-g [ uglifyify ] \
+		-d \
+	| ${BIN}/exorcist ${TARGET}.map > ${TARGET}
 
 clean:
-	rm -f ${TARGET}
+	rm -f ${TARGET} ${TARGET}.map
 
 node_modules:
 	npm install

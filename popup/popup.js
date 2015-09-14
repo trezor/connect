@@ -1,10 +1,10 @@
 window.fetch = undefined;
 require('whatwg-fetch');
 
-var Promise = require('es6-promise').Promise;
-var bowser = require('bowser');
-var trezor = require('trezor.js');
-var Session = trezor.Session;
+let Promise = require('es6-promise').Promise;
+let bowser = require('bowser');
+let trezor = require('trezor.js');
+let {Session} = trezor;
 
 global.alert = '#alert_loading';
 global.device = null;
@@ -13,7 +13,7 @@ window.addEventListener('message', onMessage);
 window.opener.postMessage('handshake', '*');
 
 function onMessage(event) {
-    var request = event.data;
+    let request = event.data;
     if (!request) {
         return;
     }
@@ -46,26 +46,28 @@ function onMessage(event) {
 }
 
 function respondToEvent(event, message) {
-    var origin = event.origin !== 'null' ? event.origin : '*';
+    let origin = (event.origin !== 'null') ? event.origin : '*';
     event.source.postMessage(message, origin);
 }
 
 function parseIdentity(event) {
-    var identity = {};
-    var origin = event.origin.split(':');
+    let identity = {};
+    let origin = event.origin.split(':');
+
     identity.proto = origin[0];
     identity.host = origin[1].substring(2);
     if (origin[2]) {
         identity.port = origin[2];
     }
     identity.index = 0;
+
     return identity;
 }
 
 function showIdentity(identity) {
-    var host = identity.host;
-    var proto = (identity.proto !== 'https') ? (identity.proto + '://') : '';
-    var port = (identity.port) ? (':' + identity.port) : '';
+    let host = identity.host;
+    let proto = (identity.proto !== 'https') ? (identity.proto + '://') : '';
+    let port = (identity.port) ? (':' + identity.port) : '';
     return proto + host + port;
 }
 
@@ -74,41 +76,40 @@ function showIdentity(identity) {
  */
 
 function handleLogin(event) {
-    var request = event.data;
+    let request = event.data;
 
-    showSelector('#operation_login');
     if (request.icon) {
         document.querySelector('#header_icon').src = request.icon;
-        showSelector('#header_icon');
+        show('#header_icon');
     }
+    show('#operation_login');
 
     initDevice({ emptyPassphrase: true })
 
         .then(function signIdentity(device) { // send SignIdentity
+            let handler = errorHandler(() => signIdentity(device));
             return device.session.signIdentity(
                 request.identity,
                 request.challenge_hidden,
                 request.challenge_visual
-            ).catch(commonErrorsHandler(function () {
-                return signIdentity(device);
-            }));
+            ).catch(handler);
         })
 
-        .then(function (result) { // success
+        .then((result) => { // success
+            let {message} = result;
+            let {public_key, signature} = message;
+
             respondToEvent(event, {
                 success: true,
-                public_key: result.message.public_key.toLowerCase(),
-                signature: result.message.signature.toLowerCase(),
+                public_key: public_key.toLowerCase(),
+                signature: signature.toLowerCase(),
                 version: 2      // since firmware 1.3.4
             });
         })
 
-        .catch(function (error) { // failure
+        .catch((error) => { // failure
             console.error(error);
-            respondToEvent(event, {
-                success: false,
-                error: error.message
-            });
+            respondToEvent(event, {success: false, error: error.message});
         });
 }
 
@@ -117,44 +118,45 @@ function handleLogin(event) {
  */
 
 function handleXpubKey(event) {
-    var path = fixAddressValues(event.data.path);
+    let path = event.data.path;
+    if (path) {
+        path = path.map((i) => i >>> 0);
+    }
 
-    showSelector('#operation_xpubkey');
+    show('#operation_xpubkey');
 
     initDevice()
 
-        .then(function (device) {
-            var getPublicKey = function getPublicKey() {
-                return device.session.getPublicKey(path).catch(
-                    commonErrorsHandler(getPublicKey)
-                );
+        .then((device) => {
+            let getPublicKey = (path) => {
+                let handler = errorHandler(() => getPublicKey(path));
+                return device.session.getPublicKey(path).catch(handler);
             };
             return alertExportXpubKey(path).then(getPublicKey);
         })
 
-        .then(function (result) { // success
-            var message = result.message;
-            var xpub = message.xpub;
+        .then((result) => { // success
+            let {message} = result;
+            var {xpub} = message;
+
             respondToEvent(event, {
                 success: true,
-                xpubkey: xpub
+                xpubkey: xpub,
+                path: serializePath(path)
             });
         })
 
-        .catch(function (error) { // failure
+        .catch((error) => { // failure
             console.error(error);
-            respondToEvent(event, {
-                success: false,
-                error: error.message
-            });
+            respondToEvent(event, {success: false, error: error.message});
         });
 }
 
 function alertExportXpubKey(path) {
-    return new Promise(function (resolve, reject) {
-        var e = document.getElementById('xpubkey_id');
+    return new Promise((resolve, reject) => {
+        let e = document.getElementById('xpubkey_id');
         e.textContent = xpubKeyLabel(path);
-        e.callback = function (exportXpub) {
+        e.callback = (exportXpub) => {
             if (exportXpub) {
                 resolve(path);
             } else {
@@ -177,22 +179,20 @@ function cancelXpubKey() {
 
 window.cancelXpubKey = cancelXpubKey;
 
-var HD_HARDENED = 0x80000000;
+let HD_HARDENED = 0x80000000;
 
 function xpubKeyLabel(path) {
-    var hardened = function (i) {
-        return path[i] & ~HD_HARDENED;
-    };
+    let hardened = (i) => path[i] & ~HD_HARDENED;
     switch (hardened(0)) {
-    case 44: return 'Account #' + (hardened(2) + 1);
-    case 45: return 'Multisig wallet';
+    case 44: return `Account #${hardened(2) + 1}`;
+    case 45: return `Multisig wallet`;
     default: return serializePath(path);
     }
 }
 
 function serializePath(path) {
-    return path.map(function (i) {
-        var s = (i & ~HD_HARDENED).toString();
+    return path.map((i) => {
+        let s = (i & ~HD_HARDENED).toString();
         if (i & HD_HARDENED) {
             return s + "'";
         } else {
@@ -206,125 +206,114 @@ function serializePath(path) {
  */
 
 function handleSignTx(event) {
-    var fix = function (o) {
+    let fix = (o) => {
         if (o.address_n) {
-            o.address_n = fixAddressValues(o.address_n);
+            // make sure bip32 indices are unsigned
+            o.address_n = o.address_n.map((i) => i >>> 0);
         }
         return o;
     };
-    var inputs = event.data.inputs.map(fix);
-    var outputs = event.data.outputs.map(fix);
-    var coinName = 'Bitcoin';
+    let inputs = event.data.inputs.map(fix);
+    let outputs = event.data.outputs.map(fix);
+    let COIN_NAME = 'Bitcoin';
 
-    showSelector('#operation_signtx');
+    show('#operation_signtx');
 
     initDevice()
 
-        .then(function (device) {
-            var signTx = function signTx(refTxs) {
+        .then((device) => {
+            let signTx = (refTxs) => {
+                let handler = errorHandler(() => signTx(refTxs));
                 return device.session.signTx(
                     inputs,
                     outputs,
                     refTxs,
-                    device.getCoin(coinName)
-                ).catch(commonErrorsHandler(function () {
-                    return signTx(refTxs);
-                }));
+                    device.getCoin(COIN_NAME)
+                ).catch(handler);
             };
-
             return lookupReferencedTxs(inputs).then(signTx);
         })
 
-        .then(function (result) { // success
-            var message = result.message;
+        .then((result) => { // success
+            let {message} = result;
+            let {serialized} = message;
+
             respondToEvent(event, {
                 success: true,
                 type: 'signtx',
-                signatures: message.serialized.signatures,
-                serialized_tx: message.serialized.serialized_tx
+                signatures: serialized.signatures,
+                serialized_tx: serialized.serialized_tx
             });
         })
 
-        .catch(function (error) { // failure
+        .catch((error) => { // failure
             console.error(error);
-            respondToEvent(event, {
-                success: false,
-                error: error.message
-            });
+            respondToEvent(event, {success: false, error: error.message});
         });
 }
 
-function fixAddressValues(path) {
-    // make sure bip32 indices are unsigned
-    return path.map(function (i) { return i >>> 0; });
-}
-
 function lookupReferencedTxs(inputs) {
-    return Promise.all(inputs.map(function (input) {
-        return lookupTx(input.prev_hash);
-    }));
+    return Promise.all(inputs.map((input) => lookupTx(input.prev_hash)));
 }
 
-var INSIGHT_URL = 'https://insight.bitpay.com';
+let INSIGHT_URL = 'https://insight.bitpay.com';
 
 function lookupTx(hash) {
     return fetch(INSIGHT_URL + '/api/tx/' + hash)
-        .then(function (response) {
+        .then((response) => {
             if (response.status === 200) {
                 return response;
             } else {
                 throw new Error(response.statusText);
             }
         })
-        .then(function (response) { return response.json(); })
-        .then(function (result) {
-            return {
-                hash: result.txid,
-                version: result.version,
-                lock_time: result.locktime,
+        .then((response) => response.json())
+        .then((result) => ({
+            hash: result.txid,
+            version: result.version,
+            lock_time: result.locktime,
 
-                inputs_cnt: result.vin.length,
-                inputs: result.vin.map(function (input) {
-                    return {
-                        prev_hash: input.txid,
-                        prev_index: input.vin >>> 0,    // can be -1 in coinbase
-                        sequence: input.sequence >>> 0, // usually -1, 0 in coinbase
-                        script_sig: input.scriptSig.hex
-                    };
-                }),
+            inputs_cnt: result.vin.length,
+            inputs: result.vin.map((input) => {
+                return {
+                    prev_hash: input.txid,
+                    prev_index: input.vin >>> 0,    // can be -1 in coinbase
+                    sequence: input.sequence >>> 0, // usually -1, 0 in coinbase
+                    script_sig: input.scriptSig.hex
+                };
+            }),
 
-                outputs_cnt: result.vout.length,
-                bin_outputs: result.vout.map(function (output) {
-                    var amount = (output.value * 1e8) | 0;
-                    return {
-                        amount: amount,
-                        script_pubkey: output.scriptPubKey.hex
-                    };
-                })
-            };
-        });
+            outputs_cnt: result.vout.length,
+            bin_outputs: result.vout.map((output) => {
+                let amount = (output.value * 1e8) | 0;
+                return {
+                    amount: amount,
+                    script_pubkey: output.scriptPubKey.hex
+                };
+            })
+        }));
 }
 
 /*
  * device
  */
 
-var NO_TRANSPORT = new Error('No trezor.js transport is available');
-var NO_CONNECTED_DEVICES = new Error('No connected devices');
-var DEVICE_IS_BOOTLOADER = new Error('Connected device is in bootloader mode');
-var DEVICE_IS_EMPTY = new Error('Connected device is not initialized');
-var FIRMWARE_IS_OLD = new Error('Firmware of connected device is too old');
+let NO_TRANSPORT = new Error('No trezor.js transport is available');
+let NO_CONNECTED_DEVICES = new Error('No connected devices');
+let DEVICE_IS_BOOTLOADER = new Error('Connected device is in bootloader mode');
+let DEVICE_IS_EMPTY = new Error('Connected device is not initialized');
+let FIRMWARE_IS_OLD = new Error('Firmware of connected device is too old');
 
-function commonErrorsHandler(retry) {
-    return function (error) {
+function errorHandler(retry) {
+    return (error) => {
 
-        // application errors
+        var never = new Promise(() => {});
 
-        switch (error) {
+        switch (error) { // application errors
 
         case NO_TRANSPORT:
             showAlert('#alert_transport_missing');
-            return neverResolve();
+            return never;
 
         case NO_CONNECTED_DEVICES:
             showAlert('#alert_connect');
@@ -336,16 +325,14 @@ function commonErrorsHandler(retry) {
 
         case DEVICE_IS_EMPTY:
             showAlert('#alert_device_empty');
-            return neverResolve();
+            return never;
 
         case FIRMWARE_IS_OLD:
             showAlert('#alert_firmware_old');
-            return neverResolve();
+            return never;
         }
 
-        // 'Failure' messages
-
-        switch (error.code) {
+        switch (error.code) { // 'Failure' messages
 
         case 'Failure_PinInvalid':
             showAlert('#alert_pin_invalid');
@@ -356,49 +343,102 @@ function commonErrorsHandler(retry) {
     };
 }
 
-function initDevice(options) {
-    options = options || {};
+function initDevice({emptyPassphrase} = {}) {
+    return initTransport()
+        .then(waitForFirstDevice)
+        .then((device) => {
+            let passphraseHandler = (emptyPassphrase)
+                ? emptyPassphraseCallback
+                : passphraseCallback;
 
-    return initTransport().then(waitForFirstDevice).then(function (device) {
-        var passphraseHandler = (options.emptyPassphrase)
-            ? emptyPassphraseCallback
-            : passphraseCallback;
-        device.session.on('passphrase', passphraseHandler);
-        device.session.on('button', buttonCallback);
-        device.session.on('pin', pinCallback);
+            device.session.on('passphrase', passphraseHandler);
+            device.session.on('button', buttonCallback);
+            device.session.on('pin', pinCallback);
 
-        global.device = device;
+            global.device = device;
 
-        return device;
-    });
+            return device;
+        });
 }
 
-function initTransport() {
-    var CONFIG_URL = './../config_signed.bin';
-
-    return trezor.loadTransport().then(function (transport) {
-        return trezor.http(CONFIG_URL)
-            .then(function (config) { return transport.configure(config); })
-            .then(function () { return transport; });
-    }).catch(function () {
+function initTransport(configUrl = './../config_signed.bin') {
+    let configure = (transport) => {
+        return trezor.http(configUrl)
+            .then((c) => transport.configure(c))
+            .then(() => transport);
+    };
+    let result = trezor.loadTransport().then(configure).catch(() => {
         throw NO_TRANSPORT;
-    }).catch(commonErrorsHandler());
+    });
+    return result.catch(errorHandler());
 }
 
-function waitForFirstDevice(transport) {
-    var WAIT_BEFORE_RETRY = 500;
+class Device {
 
-    var retryWait = function () {
-        return resolveAfter(WAIT_BEFORE_RETRY).then(function () {
+    constructor(session, features, accounts = []) {
+        this.session = session;
+        this.features = features;
+        this.accounts = accounts;
+    }
+
+    static fromDescriptor(transport, descriptor) {
+        return Device.acquire(transport, descriptor)
+            .then(Device.fromSession);
+    }
+
+    static fromSession(session) {
+        return session.initialize()
+            .then((result) => new Device(session, result.message));
+    }
+
+    static acquire(transport, descriptor) {
+        return transport.acquire(descriptor)
+            .then((result) => new Session(transport, result.session));
+    }
+
+    isBootloader() {
+        return this.features.bootloader_mode;
+    }
+
+    isInitialized() {
+        return this.features.initialized;
+    }
+
+    getVersion() {
+        return [
+            this.features.major_version,
+            this.features.minor_version,
+            this.features.patch_version
+        ].join('.');
+    }
+
+    atLeast(version) {
+        return semvercmp(this.getVersion(), version) >= 0;
+    }
+
+    getCoin(name) {
+        let coins = this.features.coins;
+        for (let i = 0; i < coins.length; i++) {
+            if (coins[i].coin_name === name) {
+                return coins[i];
+            }
+        }
+        throw new Error('Device does not support given coin type');
+    }
+}
+
+function waitForFirstDevice(transport, waitBeforeRetry = 500) {
+    let retryWait = () => {
+        return resolveAfter(waitBeforeRetry).then(() => {
             return waitForFirstDevice(transport);
         });
     };
 
-    return transport.enumerate().then(function (descriptors) {
+    return transport.enumerate().then((descriptors) => {
         if (descriptors.length === 0) {
             throw NO_CONNECTED_DEVICES;
         }
-        return Device.fromDescriptor(transport, descriptors[0]).then(function (device) {
+        return Device.fromDescriptor(transport, descriptors[0]).then((device) => {
             if (device.isBootloader()) {
                 throw DEVICE_IS_BOOTLOADER;
             }
@@ -412,73 +452,22 @@ function waitForFirstDevice(transport) {
             }
             return device;
         });
-    }).catch(commonErrorsHandler(retryWait));
+    }).catch(errorHandler(retryWait));
 }
-
-function Device(session, features) {
-    this.session = session;
-    this.features = features;
-}
-
-Device.fromDescriptor = function (transport, descriptor) {
-    return Device.acquire(transport, descriptor).then(Device.fromSession);
-};
-
-Device.fromSession = function (session) {
-    return session.initialize().then(function (result) {
-        return new Device(session, result.message);
-    });
-};
-
-Device.acquire = function (transport, descriptor) {
-    return transport.acquire(descriptor).then(function (result) {
-        return new Session(transport, result.session);
-    });
-};
-
-Device.prototype.isBootloader = function () { return this.features.bootloader_mode; };
-Device.prototype.isInitialized = function () { return this.features.initialized; };
-
-Device.prototype.getVersion = function () {
-    return [
-        this.features.major_version,
-        this.features.minor_version,
-        this.features.patch_version
-    ].join('.');
-};
-
-Device.prototype.atLeast = function (version) {
-    return semvercmp(this.getVersion(), version) >= 0;
-};
-
-Device.prototype.getCoin = function (name) {
-    var coins = this.features.coins;
-
-    for (var i = 0; i < coins.length; i++) {
-        if (coins[i].coin_name === name) {
-            return coins[i];
-        }
-    }
-    throw new Error('Device does not support given coin type');
-};
 
 /*
  * buttons
  */
 
 function buttonCallback(code) {
-    var received = false;
-
-    var receive = function () {
-        if (!received) {        // we have two handlers
-            received = true;
-            showAlert(global.alert);
-        }
+    let receive = () => {
+        global.device.session.removeListener('receive', receive);
+        global.device.session.removeListener('error', receive);
+        showAlert(global.alert);
     };
-
+    global.device.session.on('receive', receive);
+    global.device.session.on('error', receive);
     showAlert('#alert_confirm');
-    global.device.session.once('receive', receive);
-    global.device.session.once('error', receive);
 }
 
 /*
@@ -519,21 +508,21 @@ function pinKeydownHandler(ev) {
 }
 
 function pinAdd(el) {
-    var e = document.querySelector('#pin');
+    let e = document.querySelector('#pin');
     e.value += el.getAttribute('key');
 }
 
 window.pinAdd = pinAdd;
 
 function pinBackspace() {
-    var e = document.querySelector('#pin');
+    let e = document.querySelector('#pin');
     e.value = e.value.slice(0, -1);
 }
 
 window.pinBackspace = pinBackspace;
 
 function pinEnter() {
-    var pin = document.querySelector('#pin').value;
+    let pin = document.querySelector('#pin').value;
     document.querySelector('#pin').value = '';
     document.querySelector('#pin_dialog').callback(null, pin);
     showAlert(global.alert);
@@ -565,14 +554,14 @@ function passphraseKeydownHandler(ev) {
 }
 
 function passphraseToggle() {
-    var e = document.querySelector('#passphrase');
+    let e = document.querySelector('#passphrase');
     e.type = (e.type === 'text') ? 'password' : 'text';
 }
 
 window.passphraseToggle = passphraseToggle;
 
 function passphraseEnter() {
-    var passphrase = document.querySelector('#passphrase').value;
+    let passphrase = document.querySelector('#passphrase').value;
     window.removeEventListener('keydown', passphraseKeydownHandler);
     document.querySelector('#passphrase_dialog').callback(null, passphrase);
     showAlert(global.alert);
@@ -586,11 +575,11 @@ window.passphraseEnter = passphraseEnter;
 
 // taken from https://github.com/substack/semver-compare/blob/master/index.js
 function semvercmp(a, b) {
-    var pa = a.split('.');
-    var pb = b.split('.');
-    for (var i = 0; i < 3; i++) {
-        var na = Number(pa[i]);
-        var nb = Number(pb[i]);
+    let pa = a.split('.');
+    let pb = b.split('.');
+    for (let i = 0; i < 3; i++) {
+        let na = Number(pa[i]);
+        let nb = Number(pb[i]);
         if (na > nb) return 1;
         if (nb > na) return -1;
         if (!isNaN(na) && isNaN(nb)) return 1;
@@ -599,61 +588,57 @@ function semvercmp(a, b) {
     return 0;
 }
 
-function clickMatchingElement(ev, keys) {
-    var s = keys[ev.keyCode.toString()];
+function clickMatchingElement(ev, keys, active = 'active') {
+    let s = keys[ev.keyCode.toString()];
     if (s) {
-        var e = document.querySelector(s);
+        let e = document.querySelector(s);
         if (e) {
             e.click();
-            e.classList.add('active');
-            setTimeout(function () {
-                e.classList.remove('active');
+            e.classList.add(active);
+            setTimeout(() => {
+                e.classList.remove(active);
             }, 25);
         }
     }
 }
 
-function showSelector(selector) {
-    var els = document.querySelectorAll(selector);
-    for (var i = 0; i < els.length; i++) {
+function show(selector) {
+    let els = document.querySelectorAll(selector);
+    for (let i = 0; i < els.length; i++) {
         els[i].style.display = '';
     }
     return els;
 }
 
 function showAlert(element) {
-    fadeOutSelector('.alert');
-    fadeInSelector(element);
+    fadeOut('.alert');
+    fadeIn(element);
 }
 
-function fadeInSelector(selector) {
-    var els = document.querySelectorAll(selector);
-    for (var i = 0; i < els.length; i++) {
+function fadeIn(selector) {
+    let els = document.querySelectorAll(selector);
+    for (let i = 0; i < els.length; i++) {
         els[i].classList.remove('fadeout');
     }
     return els;
 }
 
-function fadeOutSelector(selector) {
-    var els = document.querySelectorAll(selector);
-    for (var i = 0; i < els.length; i++) {
+function fadeOut(selector) {
+    let els = document.querySelectorAll(selector);
+    for (let i = 0; i < els.length; i++) {
         els[i].classList.add('fadeout');
     }
     return els;
 }
 
 function resolveAfter(msec, value) {
-    return new Promise(function (resolve) {
-        setTimeout(function () { resolve(value); }, msec);
+    return new Promise((resolve) => {
+        setTimeout(resolve, msec, value);
     });
 }
 
-function neverResolve() {
-    return new Promise(function () { });
-}
-
 function closeWindow() {
-    setTimeout(function () { window.close(); }, 50);
+    setTimeout(() => { window.close(); }, 50);
 }
 
 window.closeWindow = closeWindow;

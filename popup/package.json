@@ -7,22 +7,23 @@
     "type": "git",
     "url": "https://github.com/trezor/connect.git"
   },
-  "author": "",
-  "license": "GPL",
+  "author": "SatoshiLabs <http://satoshilabs.com>",
+  "license": "GPL-3.0+",
   "bugs": {
     "url": "https://github.com/trezor/connect/issues"
   },
   "homepage": "https://github.com/trezor/connect",
   "dependencies": {
     "bowser": "^1.0.0",
-    "es6-promise": "^2.1.1",
+    "es6-promise": "^2.3.0",
     "trezor.js": "git://github.com/trezor/trezor.js",
     "whatwg-fetch": "^0.9.0"
   },
   "devDependencies": {
-    "browserify": "^10.2.3",
+    "babelify": "^6.3.0",
+    "browserify": "^11.0.1",
     "exorcist": "^0.4.0",
     "uglifyify": "^3.0.1",
-    "watchify": "^3.2.1"
+    "watchify": "^3.4.0"
   }
 }
