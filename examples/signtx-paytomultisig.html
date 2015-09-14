@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Sign Transaction Test</title>
+    <script>
+
+     function trezorSignTx() {
+
+         var n1 = null;
+         var n2 = null;
+         var n3 = null;
+
+         // spent a multisig
+         var inputs = [{
+             prev_index: 1,
+             prev_hash: 'c6091adf4c0c23982a35899a6e58ae11e703eacd7954f588ed4b9cdefc4dba52',
+             script_type: 'SPENDMULTISIG',
+             multisig: {
+                 pubkeys: [{node: n1, address_n: [1]},
+                           {node: n2, address_n: [1]},
+                           {node: n3, address_n: [1]}],
+                 signatures: ['', '', ''],
+                 m: 2
+             }
+         }];
+
+         // send to p2pkh address
+         var outputs = [{
+             multisig: {
+                 pubkeys: [{node: n1, address_n: [2]},
+                           {node: n2, address_n: [2]},
+                           {node: n3, address_n: [2]}],
+                 signatures: ['', '', ''],
+                 m: 2
+             },
+             amount: 100000,
+             script_type: 'PAYTOMULTISIG'
+         }];
+
+         TrezorConnect.signTx(inputs, outputs, function (result) {
+             if (result.success) {
+                 console.log('Serialized TX:', result.serialized_tx); // tx in hex
+                 console.log('Signatures:', result.signatures); // array of signatures, in hex
+             } else {
+                 console.error('Error:', result.error); // error message
+             }
+         });
+     }
+
+    </script>
+  </head>
+  <body>
+
+    <button onclick="trezorSignTx()">Sign</button>
+
+    <script src="../login.js"></script>
+
+  </body>
+</html>
