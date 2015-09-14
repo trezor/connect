@@ -152,7 +152,17 @@ function handleXpubKey(event) {
         });
 }
 
+let HD_HARDENED = 0x80000000;
+
 function alertExportXpubKey(path) {
+    if (!path) {
+        // TODO: run account discovery and let user pick the account
+        path = [
+            44 | HD_HARDENED,
+            0  | HD_HARDENED,
+            0  | HD_HARDENED
+        ];
+    }
     return new Promise((resolve, reject) => {
         let e = document.getElementById('xpubkey_id');
         e.textContent = xpubKeyLabel(path);
@@ -178,8 +188,6 @@ function cancelXpubKey() {
 }
 
 window.cancelXpubKey = cancelXpubKey;
-
-let HD_HARDENED = 0x80000000;
 
 function xpubKeyLabel(path) {
     let hardened = (i) => path[i] & ~HD_HARDENED;
