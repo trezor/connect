@@ -120,6 +120,7 @@ function handleLogin(event) {
 function handleXpubKey(event) {
     let path = event.data.path;
     if (path) {
+        // make sure bip32 indices are unsigned
         path = path.map((i) => i >>> 0);
     }
 
