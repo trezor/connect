@@ -70,9 +70,10 @@ TrezorConnect.requestLogin(hosticon, challenge_hidden, challenge_visual, functio
 All `<trezor:login>` tags get transformed into HTML login buttons. The
 parameters are exactly the same as for
 [`TrezorConnect.requestLogin`](#using-javascript-api), but `callback` represents
-name of global function that gets called with the result.
+name of global function that gets called with the result, and optional `text`
+allows to override the default "Login with **TREZOR**".
 
-[Example:](examples/signtx-paytoaddress.html)
+[Example:](examples/login.html)
 
 ```html
 <script>

@@ -156,7 +156,8 @@ window.TrezorConnect = (function () {
         var LOGIN_HTML =
             '<div id="trezorconnect-wrapper">'
             + '  <a id="trezorconnect-button" onclick="' + LOGIN_ONCLICK + '">'
-            + '    <span id="trezorconnect-icon"></span> Sign in with <strong>TREZOR</strong>'
+            + '    <span id="trezorconnect-icon"></span>'
+            + '    <span id="trezorconnect-text">@text@</span>'
             + '  </a>'
             + '  <span id="trezorconnect-info">'
             + '    <a id="trezorconnect-infolink" href="https://www.buytrezor.com/"'
@@ -174,13 +175,19 @@ window.TrezorConnect = (function () {
 
             for (var i = 0; i < elements.length; i++) {
                 var e = elements[i];
+                var text = e.getAttribute('text') || 'Sign in with TREZOR';
                 var callback = e.getAttribute('callback') || '';
                 var hosticon = e.getAttribute('icon') || '';
                 var challenge_hidden = e.getAttribute('challenge_hidden') || '';
                 var challenge_visual = e.getAttribute('challenge_visual') || '';
 
+                // it's not valid to put markup into attributes, so let users
+                // supply a raw text and make TREZOR bold
+                text = text.replace('TREZOR', '<strong>TREZOR</strong>');
+
                 e.parentNode.innerHTML =
                     LOGIN_CSS + LOGIN_HTML
+                    .replace('@text@', text)
                     .replace('@callback@', callback)
                     .replace('@hosticon@', hosticon)
                     .replace('@challenge_hidden@', challenge_hidden)

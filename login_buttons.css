@@ -1,6 +1,6 @@
 #trezorconnect-wrapper {
-    width:193px;
-    font-family: Helvetica, Arial, sans-serif; 
+    display: inline-block;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 #trezorconnect-button {
