@@ -1,7 +1,8 @@
 window.fetch = undefined;
 require('whatwg-fetch');
 
-let Promise = require('es6-promise').Promise;
+let {Promise} = require('es6-promise');
+
 let bowser = require('bowser');
 let trezor = require('trezor.js');
 let {Session} = trezor;
@@ -153,7 +154,7 @@ function handleXpubKey(event) {
         });
 }
 
-let HD_HARDENED = 0x80000000;
+const HD_HARDENED = 0x80000000;
 
 function alertExportXpubKey(path) {
     if (!path) {
@@ -224,7 +225,7 @@ function handleSignTx(event) {
     };
     let inputs = event.data.inputs.map(fix);
     let outputs = event.data.outputs.map(fix);
-    let COIN_NAME = 'Bitcoin';
+    const COIN_NAME = 'Bitcoin';
 
     show('#operation_signtx');
 
@@ -265,7 +266,7 @@ function lookupReferencedTxs(inputs) {
     return Promise.all(inputs.map((input) => lookupTx(input.prev_hash)));
 }
 
-let INSIGHT_URL = 'https://insight.bitpay.com';
+const INSIGHT_URL = 'https://insight.bitpay.com';
 
 function lookupTx(hash) {
     return fetch(INSIGHT_URL + '/api/tx/' + hash)
@@ -307,11 +308,11 @@ function lookupTx(hash) {
  * device
  */
 
-let NO_TRANSPORT = new Error('No trezor.js transport is available');
-let NO_CONNECTED_DEVICES = new Error('No connected devices');
-let DEVICE_IS_BOOTLOADER = new Error('Connected device is in bootloader mode');
-let DEVICE_IS_EMPTY = new Error('Connected device is not initialized');
-let FIRMWARE_IS_OLD = new Error('Firmware of connected device is too old');
+const NO_TRANSPORT = new Error('No trezor.js transport is available');
+const NO_CONNECTED_DEVICES = new Error('No connected devices');
+const DEVICE_IS_BOOTLOADER = new Error('Connected device is in bootloader mode');
+const DEVICE_IS_EMPTY = new Error('Connected device is not initialized');
+const FIRMWARE_IS_OLD = new Error('Firmware of connected device is too old');
 
 function errorHandler(retry) {
     return (error) => {
@@ -402,7 +403,7 @@ class Device {
 
     static acquire(transport, descriptor) {
         return transport.acquire(descriptor)
-            .then((result) => new Session(transport, result.session));
+            .then((result) => new trezor.Session(transport, result.session));
     }
 
     isBootloader() {
