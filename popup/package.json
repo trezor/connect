@@ -14,6 +14,8 @@
   },
   "homepage": "https://github.com/trezor/connect",
   "dependencies": {
+    "bip32-utils": "^0.6.2",
+    "bitcoinjs-lib": "^2.0.0",
     "bowser": "^1.0.0",
     "es6-promise": "^2.3.0",
     "trezor.js": "git://github.com/trezor/trezor.js",

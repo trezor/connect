@@ -4,8 +4,10 @@ require('whatwg-fetch');
 let {Promise} = require('es6-promise');
 
 let bowser = require('bowser');
+let bitcoin = require('bitcoin');
+let Blockchain = require('cb-insight');
+let bip32 = require('bip32-utils');
 let trezor = require('trezor.js');
-let {Session} = trezor;
 
 global.alert = '#alert_loading';
 global.device = null;
@@ -435,6 +437,40 @@ class Device {
         }
         throw new Error('Device does not support given coin type');
     }
+
+    getAccountNode(i) {
+        var path = [            // BIP0044
+            44 | HD_HARDENED,
+            0  | HD_HARDENED,
+            i  | HD_HARDENED
+        ];
+        return this.session.getPublicKey(path);
+    }
+
+    discoverAccounts(blockchain, onaddress, onaccount, firstIndex = 0, atLeast = 1) {
+        let accounts = [];
+
+        let discover = (i) => {
+            return this.getAccountNode(i).then((node) => {
+                let external = node.derive(0);
+                let internal = node.derive(1);
+                let account = new bip32.Account(external, internal);
+
+                return discoverChain(external, blockchain, onaddress).then(() => {
+                    if (external.length > 0 || i < atLeast) {
+                        if (onaccount) {
+                            onaccount(account);
+                        }
+                        accounts.push(account);
+                        return discover(i + 1);
+                    } else {
+                        return accounts;
+                    }
+                });
+            });
+        };
+        return discover(firstIndex);
+    }
 }
 
 function waitForFirstDevice(transport, waitBeforeRetry = 500) {
@@ -463,6 +499,70 @@ function waitForFirstDevice(transport, waitBeforeRetry = 500) {
             return device;
         });
     }).catch(errorHandler(retryWait));
+}
+
+function discoverChain(chain, blockchain, onaddress) {
+    const GAP_LIMIT = 10;
+
+    return new Promise((resolve, reject) => {
+        bip32.discovery(chain, GAP_LIMIT, (addresses, callback) => {
+            blockchain.addresses.summary(addresses, (error, results) => {
+                if (error) {
+                    callback(error);
+                } else {
+                    callback(null, results.map((result, i) => {
+                        if (onaddress) {
+                            onaddress(addresses[i]);
+                        }
+                        return result.totalReceived > 0;
+                    }));
+                }
+            });
+
+        }, (error, used, checked) => {
+            if (error) {
+                reject(error);
+            } else {
+                for (let i = 1; i < (checked - used); i++) {
+                    chain.pop();
+                }
+                resolve(chain);
+            }
+        });
+    });
+}
+
+function showAccounts(callback) {
+    let blockchain = new Blockchain(INSIGHT_URL);
+
+    let accounts = [];
+
+    let onaddress = () => {
+        renderAccountDiscovery(accounts);
+    };
+    let onaccount = (account) => {
+        accounts.push(account);
+        renderAccountDiscovery(accounts);
+    };
+
+    showAlert('#alert_discovery');
+
+    return global.device.discoverAccounts(
+        blockchain,
+        onaddress,
+        onaccount
+    ).then(callback);
+}
+
+function renderAccountDiscovery(accounts) {
+    document.querySelector('#accounts').innerHTML = accounts.map(
+        (account, i) => `
+<div class="account">
+  <span class="account-title">Account #${i + 1}</span>
+  <span class="account-status">- ${account.getChain(0).length} addresses</span>
+</div>
+`
+    ).join('');
 }
 
 /*
