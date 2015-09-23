@@ -545,7 +545,7 @@ function showAccounts(callback) {
         renderAccountDiscovery(accounts);
     };
 
-    showAlert('#alert_discovery');
+    showAlert('#alert_accounts');
 
     return global.device.discoverAccounts(
         blockchain,
