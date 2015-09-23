@@ -468,7 +468,7 @@ function waitForFirstDevice(transport, waitBeforeRetry = 500) {
  * buttons
  */
 
-function buttonCallback(code) {
+function buttonCallback(/* code */) {
     let receive = () => {
         global.device.session.removeListener('receive', receive);
         global.device.session.removeListener('error', receive);
