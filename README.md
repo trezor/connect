@@ -134,7 +134,7 @@ var path = "m/44'/0'/0'"; // first BIP44 account
 
 TrezorConnect.getXPubKey(path, function (result) {
     if (result.success) {
-        console.log('XPUB:', result.xpub); // serialized XPUB
+        console.log('XPUB:', result.xpubkey); // serialized XPUB
     } else {
         console.error('Error:', result.error); // error message
     }
