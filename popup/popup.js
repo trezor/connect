@@ -442,6 +442,38 @@ class Device {
     }
 }
 
+function waitForFirstDevice(transport, waitBeforeRetry = 500) {
+    let retryWait = () => {
+        return resolveAfter(waitBeforeRetry).then(() => {
+            return waitForFirstDevice(transport);
+        });
+    };
+
+    return transport.enumerate().then((descriptors) => {
+        if (descriptors.length === 0) {
+            throw NO_CONNECTED_DEVICES;
+        }
+        return Device.fromDescriptor(transport, descriptors[0]).then((device) => {
+            if (device.isBootloader()) {
+                throw DEVICE_IS_BOOTLOADER;
+            }
+            if (!device.isInitialized()) {
+                throw DEVICE_IS_EMPTY;
+            }
+            if (!device.atLeast('1.3.4')) {
+                // 1.3.0 introduced HDNodeType.xpub field
+                // 1.3.4 has version2 of SignIdentity algorithm
+                throw FIRMWARE_IS_OLD;
+            }
+            return device;
+        });
+    }).catch(errorHandler(retryWait));
+}
+
+/*
+ * accounts, discovery
+ */
+
 class Account {
 
     static fromDevice(device, i) {
@@ -476,34 +508,6 @@ class Account {
     getPath() {
         return Account.getPathForIndex(this.node.index);
     }
-}
-
-function waitForFirstDevice(transport, waitBeforeRetry = 500) {
-    let retryWait = () => {
-        return resolveAfter(waitBeforeRetry).then(() => {
-            return waitForFirstDevice(transport);
-        });
-    };
-
-    return transport.enumerate().then((descriptors) => {
-        if (descriptors.length === 0) {
-            throw NO_CONNECTED_DEVICES;
-        }
-        return Device.fromDescriptor(transport, descriptors[0]).then((device) => {
-            if (device.isBootloader()) {
-                throw DEVICE_IS_BOOTLOADER;
-            }
-            if (!device.isInitialized()) {
-                throw DEVICE_IS_EMPTY;
-            }
-            if (!device.atLeast('1.3.4')) {
-                // 1.3.0 introduced PublicKey.xpub field
-                // 1.3.4 has version2 of SignIdentity algorithm
-                throw FIRMWARE_IS_OLD;
-            }
-            return device;
-        });
-    }).catch(errorHandler(retryWait));
 }
 
 function discoverChain(chain, blockchain, onUsed) {
