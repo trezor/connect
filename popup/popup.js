@@ -4,7 +4,7 @@ require('whatwg-fetch');
 let {Promise} = require('es6-promise');
 
 let bowser = require('bowser');
-let bitcoin = require('bitcoin');
+let bitcoin = require('bitcoinjs-lib');
 let Blockchain = require('cb-insight');
 let bip32 = require('bip32-utils');
 let trezor = require('trezor.js');
@@ -134,12 +134,14 @@ function handleXpubKey(event) {
         .then((device) => {
             let getPublicKey = (path) => {
                 let handler = errorHandler(() => getPublicKey(path));
-                return device.session.getPublicKey(path).catch(handler);
+                return device.session.getPublicKey(path)
+                    .then((result) => ({result, path}))
+                    .catch(handler);
             };
             return alertExportXpubKey(path).then(getPublicKey);
         })
 
-        .then((result) => { // success
+        .then(({result, path}) => { // success
             let {message} = result;
             var {xpub} = message;
 
@@ -160,12 +162,9 @@ const HD_HARDENED = 0x80000000;
 
 function alertExportXpubKey(path) {
     if (!path) {
-        // TODO: run account discovery and let user pick the account
-        path = [
-            44 | HD_HARDENED,
-            0  | HD_HARDENED,
-            0  | HD_HARDENED
-        ];
+        return promptAccount().then((account) => {
+            return account.getPath();
+        });
     }
     return new Promise((resolve, reject) => {
         let e = document.getElementById('xpubkey_id');
@@ -387,12 +386,6 @@ function initTransport(configUrl = './../config_signed.bin') {
 
 class Device {
 
-    constructor(session, features, accounts = []) {
-        this.session = session;
-        this.features = features;
-        this.accounts = accounts;
-    }
-
     static fromDescriptor(transport, descriptor) {
         return Device.acquire(transport, descriptor)
             .then(Device.fromSession);
@@ -406,6 +399,11 @@ class Device {
     static acquire(transport, descriptor) {
         return transport.acquire(descriptor)
             .then((result) => new trezor.Session(transport, result.session));
+    }
+
+    constructor(session, features) {
+        this.session = session;
+        this.features = features;
     }
 
     isBootloader() {
@@ -438,38 +436,45 @@ class Device {
         throw new Error('Device does not support given coin type');
     }
 
-    getAccountNode(i) {
-        var path = [            // BIP0044
-            44 | HD_HARDENED,
-            0  | HD_HARDENED,
-            i  | HD_HARDENED
-        ];
-        return this.session.getPublicKey(path);
+    getNode(path) {
+        return this.session.getPublicKey(path)
+            .then(({message}) => bitcoin.HDNode.fromBase58(message.xpub));
+    }
+}
+
+class Account {
+
+    static fromDevice(device, i) {
+        return device.getNode(Account.getPathForIndex(i))
+            .then((node) => new Account(node));
     }
 
-    discoverAccounts(blockchain, onaddress, onaccount, firstIndex = 0, atLeast = 1) {
-        let accounts = [];
+    static getPathForIndex(i) {
+        return [
+            (44 | HD_HARDENED) >>> 0,
+            (0  | HD_HARDENED) >>> 0,
+            (i  | HD_HARDENED) >>> 0
+        ];
+    }
 
-        let discover = (i) => {
-            return this.getAccountNode(i).then((node) => {
-                let external = node.derive(0);
-                let internal = node.derive(1);
-                let account = new bip32.Account(external, internal);
+    constructor(node) {
+        this.node = node;
+        this.a = new bip32.Account([
+            new bip32.Chain(node.derive(0)),
+            new bip32.Chain(node.derive(1))
+        ]);
+    }
 
-                return discoverChain(external, blockchain, onaddress).then(() => {
-                    if (external.length > 0 || i < atLeast) {
-                        if (onaccount) {
-                            onaccount(account);
-                        }
-                        accounts.push(account);
-                        return discover(i + 1);
-                    } else {
-                        return accounts;
-                    }
-                });
-            });
-        };
-        return discover(firstIndex);
+    isUsed() {
+        return this.getAddressCount() > 0;
+    }
+
+    getAddressCount() {
+        return this.a.chains[0].k + this.a.chains[1].k;
+    }
+
+    getPath() {
+        return Account.getPathForIndex(this.node.index);
     }
 }
 
@@ -501,21 +506,23 @@ function waitForFirstDevice(transport, waitBeforeRetry = 500) {
     }).catch(errorHandler(retryWait));
 }
 
-function discoverChain(chain, blockchain, onaddress) {
-    const GAP_LIMIT = 10;
+function discoverChain(chain, blockchain, onUsed) {
+    const gapLimit = 20;
 
     return new Promise((resolve, reject) => {
-        bip32.discovery(chain, GAP_LIMIT, (addresses, callback) => {
+        bip32.discovery(chain, gapLimit, (addresses, callback) => {
             blockchain.addresses.summary(addresses, (error, results) => {
                 if (error) {
                     callback(error);
                 } else {
-                    callback(null, results.map((result, i) => {
-                        if (onaddress) {
-                            onaddress(addresses[i]);
+                    let areUsed = results.map((result, i) => {
+                        let isUsed = result.totalReceived > 0;
+                        if (isUsed) {
+                            onUsed(addresses[i], result);
                         }
-                        return result.totalReceived > 0;
-                    }));
+                        return isUsed;
+                    });
+                    callback(null, areUsed);
                 }
             });
 
@@ -532,37 +539,117 @@ function discoverChain(chain, blockchain, onaddress) {
     });
 }
 
-function showAccounts(callback) {
-    let blockchain = new Blockchain(INSIGHT_URL);
+function discoverAccount(account, blockchain, onUsed) {
+    let chains = account.a.chains;
+    let discover = (chain) => discoverChain(chain, blockchain, onUsed);
+    return Promise.all(chains.map(discover));
+}
+
+function discoverAccounts(device, blockchain, onStart, onUsed, onEnd) {
+    const firstIndex = 0;
+    const atLeast = 1;
 
     let accounts = [];
 
-    let onaddress = () => {
-        renderAccountDiscovery(accounts);
-    };
-    let onaccount = (account) => {
-        accounts.push(account);
-        renderAccountDiscovery(accounts);
+    let discover = (i) => {
+        return Account.fromDevice(device, i).then((account) => {
+
+            onStart(account);
+
+            return discoverAccount(account, blockchain, onUsed).then(() => {
+                let isUsed = account.isUsed();
+                if (isUsed || i < atLeast) {
+                    accounts.push(account);
+                }
+                onEnd(account);
+
+                if (isUsed) {
+                    return discover(i + 1);
+                } else {
+                    return accounts;
+                }
+            });
+        });
     };
 
-    showAlert('#alert_accounts');
-
-    return global.device.discoverAccounts(
-        blockchain,
-        onaddress,
-        onaccount
-    ).then(callback);
+    return discover(firstIndex);
 }
 
-function renderAccountDiscovery(accounts) {
-    document.querySelector('#accounts').innerHTML = accounts.map(
-        (account, i) => `
+function renderAccountDiscovery(discovered, discovering) {
+    let accounts = (discovering)
+            ? discovered.concat(discovering)
+            : discovered;
+    document.querySelector('#accounts').innerHTML = accounts.map((account, i) => {
+        let count = account.getAddressCount();
+        let content = (count > 0) ? `${count} addresses` : `empty`;
+        let status = (account === discovering) ? `Loading...` : ``;
+        return `
 <div class="account">
   <span class="account-title">Account #${i + 1}</span>
-  <span class="account-status">- ${account.getChain(0).length} addresses</span>
+  <small class="account-status">${status} (${content})</small>
 </div>
-`
-    ).join('');
+`;
+    }).join('');
+}
+
+function renderAccounts(accounts) {
+    document.querySelector('#accounts').innerHTML = accounts.map((account, i) => {
+        let count = account.getAddressCount();
+        let content = (count > 0) ? `${count} addresses` : `empty`;
+        return `
+<div class="account">
+  <button onclick="selectAccount(${i})">
+    <span class="account-title">Account #${i + 1}</span>
+    <small class="account-status">(${content})</small>
+  </button>
+</div>
+`;
+    }).join('');
+}
+
+function showAccounts(device) {
+    let blockchain = new Blockchain(INSIGHT_URL);
+
+    let discovered = [];
+    let discovering = null;
+
+    let onStart = (account) => {
+        discovering = account;
+    };
+
+    let onUsed = () => {
+        renderAccountDiscovery(discovered, discovering);
+    };
+
+    let onEnd = (account) => {
+        discovering = null;
+        discovered.push(account);
+        renderAccountDiscovery(discovered, discovering);
+    };
+
+    let heading = document.querySelector('#alert_accounts .alert_heading');
+
+    showAlert('#alert_accounts');
+    global.alert = '#alert_accounts';
+
+    heading.innerText = 'Loading accounts...';
+    return discoverAccounts(device, blockchain, onStart, onUsed, onEnd).then((accounts) => {
+        global.alert = '#alert_loading';
+        heading.innerText = 'Select an account:';
+        renderAccounts(accounts);
+        return accounts;
+    });
+}
+
+function promptAccount() {
+    return showAccounts(global.device).then((accounts) => {
+        return new Promise((resolve) => {
+            window.selectAccount = (i) => {
+                window.selectAccount = null;
+                resolve(accounts[i]);
+            };
+        });
+    });
 }
 
 /*

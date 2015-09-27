@@ -17,6 +17,7 @@
     "bip32-utils": "^0.6.2",
     "bitcoinjs-lib": "^2.0.0",
     "bowser": "^1.0.0",
+    "cb-insight": "^0.1.0",
     "es6-promise": "^2.3.0",
     "trezor.js": "git://github.com/trezor/trezor.js",
     "whatwg-fetch": "^0.9.0"
