@@ -172,6 +172,7 @@ function alertExportXpubKey(path) {
         let e = document.getElementById('xpubkey_id');
         e.textContent = xpubKeyLabel(path);
         e.callback = (exportXpub) => {
+            showAlert(global.alert);
             if (exportXpub) {
                 resolve(path);
             } else {
@@ -307,8 +308,6 @@ function lookupTx(hash) {
             hash: result.txid,
             version: result.version,
             lock_time: result.locktime,
-
-            inputs_cnt: result.vin.length,
             inputs: result.vin.map((input) => {
                 return {
                     prev_hash: input.txid,
@@ -317,8 +316,6 @@ function lookupTx(hash) {
                     script_sig: input.scriptSig.hex
                 };
             }),
-
-            outputs_cnt: result.vout.length,
             bin_outputs: result.vout.map((output) => {
                 let amount = (output.value * 1e8) | 0;
                 return {
