@@ -491,7 +491,7 @@ class Account {
 
     constructor(node) {
         this.node = node;
-        this.a = new bip32.Account([
+        this.bip32 = new bip32.Account([
             new bip32.Chain(node.derive(0)),
             new bip32.Chain(node.derive(1))
         ]);
@@ -502,7 +502,7 @@ class Account {
     }
 
     getAddressCount() {
-        return this.a.chains[0].k + this.a.chains[1].k;
+        return this.bip32.chains[0].k + this.bip32.chains[1].k;
     }
 
     getPath() {
@@ -544,7 +544,7 @@ function discoverChain(chain, blockchain, onUsed) {
 }
 
 function discoverAccount(account, blockchain, onUsed) {
-    let chains = account.a.chains;
+    let chains = account.bip32.chains;
     let discover = (chain) => discoverChain(chain, blockchain, onUsed);
     return Promise.all(chains.map(discover));
 }
@@ -565,6 +565,7 @@ function discoverAccounts(device, blockchain, onStart, onUsed, onEnd) {
                 if (isUsed || i < atLeast) {
                     accounts.push(account);
                 }
+
                 onEnd(account);
 
                 if (isUsed) {
@@ -583,32 +584,35 @@ function renderAccountDiscovery(discovered, discovering) {
     let accounts = (discovering)
             ? discovered.concat(discovering)
             : discovered;
-    document.querySelector('#accounts').innerHTML = accounts.map((account, i) => {
+
+    let components = accounts.map((account, i) => {
         let count = account.getAddressCount();
         let content = (count > 0) ? `${count} addresses` : `empty`;
         let status = (account === discovering) ? `Loading...` : ``;
-        return `
-<div class="account">
-  <span class="account-title">Account #${i + 1}</span>
-  <small class="account-status">${status} (${content})</small>
-</div>
-`;
-    }).join('');
+
+        return `<div class="account">
+                  <span class="account-title">Account #${i + 1}</span>
+                  <small class="account-status">${status} (${content})</small>
+                </div>`;
+    });
+
+    document.querySelector('#accounts').innerHTML = components.join('');
 }
 
 function renderAccounts(accounts) {
-    document.querySelector('#accounts').innerHTML = accounts.map((account, i) => {
+    let components = accounts.map((account, i) => {
         let count = account.getAddressCount();
         let content = (count > 0) ? `${count} addresses` : `empty`;
-        return `
-<div class="account">
-  <button onclick="selectAccount(${i})">
-    <span class="account-title">Account #${i + 1}</span>
-    <small class="account-status">(${content})</small>
-  </button>
-</div>
-`;
-    }).join('');
+
+        return `<div class="account">
+                  <button onclick="selectAccount(${i})">
+                    <span class="account-title">Account #${i + 1}</span>
+                    <small class="account-status">(${content})</small>
+                  </button>
+                </div>`;
+    });
+
+    document.querySelector('#accounts').innerHTML = components.join('');
 }
 
 function showAccounts(device) {
