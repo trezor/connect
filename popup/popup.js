@@ -610,14 +610,24 @@ function renderAccountDiscovery(discovered, discovering) {
             : discovered;
 
     let components = accounts.map((account, i) => {
+        let content;
         let count = account.getAddressCount();
-        let content = (count > 0) ? `${count} addresses` : `empty`;
-        let status = (account === discovering) ? `Loading...` : ``;
+        if (count === 0) {
+            content = `empty`;
+        } else if (count === 1) {
+            content = `${count} address`;
+        } else {
+            content = `${count} addresses`;
+        }
+        let status = (account === discovering) ? `Loading...` : content;
 
-        return `<div class="account">
-                  <span class="account-title">Account #${i + 1}</span>
-                  <small class="account-status">${status} (${content})</small>
-                </div>`;
+        return `
+            <div class="account">
+             <button disabled>
+              <span class="account-title">Account #${i + 1}</span>
+              <small class="account-status">(${status})</small>
+             </button>
+            </div>`;
     });
 
     document.querySelector('#accounts').innerHTML = components.join('');
@@ -625,15 +635,23 @@ function renderAccountDiscovery(discovered, discovering) {
 
 function renderAccounts(accounts) {
     let components = accounts.map((account, i) => {
+        let content;
         let count = account.getAddressCount();
-        let content = (count > 0) ? `${count} addresses` : `empty`;
+        if (count === 0) {
+            content = `empty`;
+        } else if (count === 1) {
+            content = `${count} address`;
+        } else {
+            content = `${count} addresses`;
+        }
 
-        return `<div class="account">
-                  <button onclick="selectAccount(${i})">
-                    <span class="account-title">Account #${i + 1}</span>
-                    <small class="account-status">(${content})</small>
-                  </button>
-                </div>`;
+        return `
+            <div class="account">
+             <button onclick="selectAccount(${i})">
+              <span class="account-title">Account #${i + 1}</span>
+              <small class="account-status">(${content})</small>
+             </button>
+            </div>`;
     });
 
     document.querySelector('#accounts').innerHTML = components.join('');
@@ -643,20 +661,25 @@ function showAccounts(device) {
     let blockchain = new Blockchain(INSIGHT_URL);
 
     let discovered = [];
+    let candidate = null;
     let discovering = null;
 
     let onStart = (account) => {
-        discovering = account;
+        candidate = account;
     };
 
     let onUsed = () => {
+        discovering = candidate;
+        candidate = null;
         renderAccountDiscovery(discovered, discovering);
     };
 
     let onEnd = (account) => {
         discovering = null;
-        discovered.push(account);
-        renderAccountDiscovery(discovered, discovering);
+        if (candidate === null) {
+            discovered.push(account);
+            renderAccountDiscovery(discovered, discovering);
+        }
     };
 
     let heading = document.querySelector('#alert_accounts .alert_heading');

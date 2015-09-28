@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR XPUB Discovery Test</title>
+    <script>
+
+     function trezorGetXPubKey() {
+         // if we do not specify a path, account discovery is done and user is
+         // presented with a list of accounts. node of the selected account is
+         // then returned.
+         TrezorConnect.getXPubKey(null, function (result) {
+             if (result.success) {
+                 var accountIndex = result.path[result.path.length - 1] & ~0x80000000;
+
+                 console.log('XPUB:', result.xpubkey); // serialized XPUB
+                 console.log('Raw path:', result.path);
+                 console.log('Serialized path:', result.serializedPath);
+                 console.log('Account index:', accountIndex); // index of BIP44 account
+             } else {
+                 console.error('Error:', result.error); // error message
+             }
+         });
+     }
+
+    </script>
+  </head>
+  <body>
+
+    <button onclick="trezorGetXPubKey()">Discover accounts and get XPUB key</button>
+
+    <script src="../login.js"></script>
+
+  </body>
+</html>

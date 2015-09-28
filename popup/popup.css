@@ -32,7 +32,7 @@ button {
     border-radius: 5px;
 	color: #555555;
 	cursor: pointer;
-    transition: background 0.5s, color 0.5s, border 0.5s;
+    transition: background 0.5s, color 0.5s, border 0.5s, opacity 0.5s;
 }
 
 button:hover {
@@ -49,6 +49,10 @@ button.active {
 
 button:focus {
 	outline: 0;
+}
+
+button[disabled] {
+    opacity: 0.8;
 }
 
 input[type="text"],
@@ -155,6 +159,26 @@ input[type="password"] {
 
 #alert_connect {
     margin-top: 120px;
+}
+
+#alert_accounts {
+    margin-top: 90px;
+}
+
+.account button {
+    width: 250px;
+    margin-bottom: -1px;
+    border-radius: 0;
+}
+
+.account:first-child button {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.account:last-child button {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 /*
