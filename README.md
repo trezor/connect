@@ -185,3 +185,5 @@ TrezorConnect.signTx(inputs, outputs, function (result) {
     }
 });
 ```
+
+[PAYTOMULTISIG example.](examples/signtx-paytomultisig.html)
