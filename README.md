@@ -141,6 +141,10 @@ TrezorConnect.getXPubKey(path, function (result) {
 });
 ```
 
+If you omit the path, BIP-0044 account discovery is performed and user is
+presented with a list of discovered accounts.  Node of selected account is then
+exported.  [Example.](examples/xpubkey-discovery.html)
+
 ## Sign transaction
 
 `TrezorConnect.signTx(inputs, outputs, callback)` asks device to sign given
