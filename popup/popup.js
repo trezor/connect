@@ -217,15 +217,26 @@ function serializePath(path) {
  */
 
 function handleSignTx(event) {
-    let fix = (o) => {
+    let fixPath = (o) => {
         if (o.address_n) {
             // make sure bip32 indices are unsigned
             o.address_n = o.address_n.map((i) => i >>> 0);
         }
         return o;
     };
-    let inputs = event.data.inputs.map(fix);
-    let outputs = event.data.outputs.map(fix);
+    let convertXpub = (o) => {
+        if (o.multisig && o.multisig.pubkeys) {
+            // convert xpubs to HDNodeTypes
+            o.multisig.pubkeys.forEach((pk) => {
+                if (typeof pk.node === 'string') {
+                    pk.node = xpubToHDNodeType(pk.node);
+                }
+            });
+        }
+        return o;
+    };
+    let inputs = event.data.inputs.map(fixPath).map(convertXpub);
+    let outputs = event.data.outputs.map(fixPath).map(convertXpub);
     const COIN_NAME = 'Bitcoin';
 
     show('#operation_signtx');
@@ -261,6 +272,17 @@ function handleSignTx(event) {
             console.error(error);
             respondToEvent(event, {success: false, error: error.message});
         });
+}
+
+function xpubToHDNodeType(xpub) {
+    let hd = bitcoin.HDNode.fromBase58(xpub);
+    return {
+        depth: hd.depth,
+        child_num: hd.index,
+        fingerprint: hd.parentFingerprint,
+        public_key: hd.keyPair.getPublicKeyBuffer().toString('hex'),
+        chain_code: hd.chainCode.toString('hex')
+    };
 }
 
 function lookupReferencedTxs(inputs) {
@@ -359,8 +381,8 @@ function initDevice({emptyPassphrase} = {}) {
         .then(waitForFirstDevice)
         .then((device) => {
             let passphraseHandler = (emptyPassphrase)
-                ? emptyPassphraseCallback
-                : passphraseCallback;
+                    ? emptyPassphraseCallback
+                    : passphraseCallback;
 
             device.session.on('passphrase', passphraseHandler);
             device.session.on('button', buttonCallback);

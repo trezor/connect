@@ -6,35 +6,44 @@
 
      function trezorSignTx() {
 
-         var n1 = null;
-         var n2 = null;
-         var n3 = null;
+         // this example requires a device loaded with seed:
+         // alcohol woman abuse must during monitor noble actual mixed trade anger aisle
 
-         // spent a multisig
+         // for a convenience, TrezorConnect internals convert xpubs to HDNodeType.
+         var ext1 = 'xpub6E2LkiC2h7icfcjXPFDmwufDRaaTjTRYcS2nD7eGQeFx1WwZxxvCya5GefiJND6ddJnAjzzMusLcCnu6WyhZPrF6e5G71MWjNJVfs6u9csg';
+         var ext2 = 'xpub6FKKCwdfD85eHmKn7d3mmbhqsHnGkB2n7Hmre29gbnR1cR4U1wrtf2akh1VVqjcTdfkxmwPjQyYPhLLgwBijfFPAYqTZzcjj4awB1BMUxq2';
+         var int1 = 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy';
+
+         // spend a multisig input
          var inputs = [{
-             prev_index: 1,
-             prev_hash: 'c6091adf4c0c23982a35899a6e58ae11e703eacd7954f588ed4b9cdefc4dba52',
+             address_n: [1],
+             prev_index: 0,
+             prev_hash: 'd1d08ea63255af4ad16b098e9885a252632086fa6be53301521d05253ce8a73d',
              script_type: 'SPENDMULTISIG',
              multisig: {
-                 pubkeys: [{node: n1, address_n: [1]},
-                           {node: n2, address_n: [1]},
-                           {node: n3, address_n: [1]}],
+                 pubkeys: [{node: ext1, address_n: [1]},
+                           {node: ext2, address_n: [1]},
+                           {node: int1, address_n: [1]}],
                  signatures: ['', '', ''],
                  m: 2
              }
          }];
 
-         // send to p2pkh address
+         // send to PAYTOADDRESS output and a change output
          var outputs = [{
+             script_type: 'PAYTOADDRESS',
+             amount: 50000,
+             address: '18WL2iZKmpDYWk1oFavJapdLALxwSjcSk2'
+         }, {
+             script_type: 'PAYTOMULTISIG',
+             amount: 49000,
              multisig: {
-                 pubkeys: [{node: n1, address_n: [2]},
-                           {node: n2, address_n: [2]},
-                           {node: n3, address_n: [2]}],
+                 pubkeys: [{node: ext1, address_n: [2]},
+                           {node: ext2, address_n: [2]},
+                           {node: int1, address_n: [2]}],
                  signatures: ['', '', ''],
                  m: 2
-             },
-             amount: 100000,
-             script_type: 'PAYTOMULTISIG'
+             }
          }];
 
          TrezorConnect.signTx(inputs, outputs, function (result) {
