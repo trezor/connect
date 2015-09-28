@@ -295,7 +295,7 @@ function lookupReferencedTxs(inputs) {
 const INSIGHT_URL = 'https://insight.bitpay.com';
 
 function lookupTx(hash) {
-    return fetch(INSIGHT_URL + '/api/tx/' + hash)
+    return fetch(INSIGHT_URL + '/api/rawtx/' + hash)
         .then((response) => {
             if (response.status === 200) {
                 return response;
@@ -304,26 +304,33 @@ function lookupTx(hash) {
             }
         })
         .then((response) => response.json())
-        .then((result) => ({
-            hash: result.txid,
-            version: result.version,
-            lock_time: result.locktime,
-            inputs: result.vin.map((input) => {
-                return {
-                    prev_hash: input.txid,
-                    prev_index: input.vin >>> 0,    // can be -1 in coinbase
-                    sequence: input.sequence >>> 0, // usually -1, 0 in coinbase
-                    script_sig: input.scriptSig.hex
-                };
-            }),
-            bin_outputs: result.vout.map((output) => {
-                let amount = (output.value * 1e8) | 0;
-                return {
-                    amount: amount,
-                    script_pubkey: output.scriptPubKey.hex
-                };
-            })
-        }));
+        .then(({rawtx}) => {
+            let tx = bitcoin.Transaction.fromHex(rawtx);
+
+            return {
+                hash: hash,
+                version: tx.version,
+                lock_time: tx.locktime,
+                inputs: tx.ins.map((input) => {
+                    let hash = input.hash.slice();
+
+                    Array.prototype.reverse.call(hash);
+
+                    return {
+                        prev_hash: hash.toString('hex'),
+                        prev_index: input.index >>> 0,
+                        sequence: input.sequence >>> 0,
+                        script_sig: input.script.toString('hex')
+                    };
+                }),
+                bin_outputs: tx.outs.map((output) => {
+                    return {
+                        amount: output.value,
+                        script_pubkey: output.script.toString('hex')
+                    };
+                })
+            };
+        });
 }
 
 /*
