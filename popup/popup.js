@@ -121,10 +121,10 @@ function handleLogin(event) {
  */
 
 function handleXpubKey(event) {
-    let path = event.data.path;
-    if (path) {
+    let requestedPath = event.data.path;
+    if (requestedPath) {
         // make sure bip32 indices are unsigned
-        path = path.map((i) => i >>> 0);
+        requestedPath = requestedPath.map((i) => i >>> 0);
     }
 
     show('#operation_xpubkey');
@@ -138,7 +138,7 @@ function handleXpubKey(event) {
                     .then((result) => ({result, path}))
                     .catch(handler);
             };
-            return alertExportXpubKey(path).then(getPublicKey);
+            return alertExportXpubKey(requestedPath).then(getPublicKey);
         })
 
         .then(({result, path}) => { // success
