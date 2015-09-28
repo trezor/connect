@@ -331,6 +331,64 @@ function lookupTx(hash) {
  * device
  */
 
+class Device {
+
+    static fromDescriptor(transport, descriptor) {
+        return Device.acquire(transport, descriptor)
+            .then(Device.fromSession);
+    }
+
+    static fromSession(session) {
+        return session.initialize()
+            .then((result) => new Device(session, result.message));
+    }
+
+    static acquire(transport, descriptor) {
+        return transport.acquire(descriptor)
+            .then((result) => new trezor.Session(transport, result.session));
+    }
+
+    constructor(session, features) {
+        this.session = session;
+        this.features = features;
+    }
+
+    isBootloader() {
+        return this.features.bootloader_mode;
+    }
+
+    isInitialized() {
+        return this.features.initialized;
+    }
+
+    getVersion() {
+        return [
+            this.features.major_version,
+            this.features.minor_version,
+            this.features.patch_version
+        ].join('.');
+    }
+
+    atLeast(version) {
+        return semvercmp(this.getVersion(), version) >= 0;
+    }
+
+    getCoin(name) {
+        let coins = this.features.coins;
+        for (let i = 0; i < coins.length; i++) {
+            if (coins[i].coin_name === name) {
+                return coins[i];
+            }
+        }
+        throw new Error('Device does not support given coin type');
+    }
+
+    getNode(path) {
+        return this.session.getPublicKey(path)
+            .then(({message}) => bitcoin.HDNode.fromBase58(message.xpub));
+    }
+}
+
 const NO_TRANSPORT = new Error('No trezor.js transport is available');
 const NO_CONNECTED_DEVICES = new Error('No connected devices');
 const DEVICE_IS_BOOTLOADER = new Error('Connected device is in bootloader mode');
@@ -404,64 +462,6 @@ function initTransport(configUrl = './../config_signed.bin') {
         throw NO_TRANSPORT;
     });
     return result.catch(errorHandler());
-}
-
-class Device {
-
-    static fromDescriptor(transport, descriptor) {
-        return Device.acquire(transport, descriptor)
-            .then(Device.fromSession);
-    }
-
-    static fromSession(session) {
-        return session.initialize()
-            .then((result) => new Device(session, result.message));
-    }
-
-    static acquire(transport, descriptor) {
-        return transport.acquire(descriptor)
-            .then((result) => new trezor.Session(transport, result.session));
-    }
-
-    constructor(session, features) {
-        this.session = session;
-        this.features = features;
-    }
-
-    isBootloader() {
-        return this.features.bootloader_mode;
-    }
-
-    isInitialized() {
-        return this.features.initialized;
-    }
-
-    getVersion() {
-        return [
-            this.features.major_version,
-            this.features.minor_version,
-            this.features.patch_version
-        ].join('.');
-    }
-
-    atLeast(version) {
-        return semvercmp(this.getVersion(), version) >= 0;
-    }
-
-    getCoin(name) {
-        let coins = this.features.coins;
-        for (let i = 0; i < coins.length; i++) {
-            if (coins[i].coin_name === name) {
-                return coins[i];
-            }
-        }
-        throw new Error('Device does not support given coin type');
-    }
-
-    getNode(path) {
-        return this.session.getPublicKey(path)
-            .then(({message}) => bitcoin.HDNode.fromBase58(message.xpub));
-    }
 }
 
 function waitForFirstDevice(transport, waitBeforeRetry = 500) {
