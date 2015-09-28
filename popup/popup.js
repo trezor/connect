@@ -144,11 +144,13 @@ function handleXpubKey(event) {
         .then(({result, path}) => { // success
             let {message} = result;
             var {xpub} = message;
+            let serializedPath = serializePath(path);
 
             respondToEvent(event, {
                 success: true,
                 xpubkey: xpub,
-                path: serializePath(path)
+                path,
+                serializedPath
             });
         })
 
