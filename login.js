@@ -245,6 +245,18 @@ window.TrezorConnect = (function () {
 
     function Channel(target, origin, waiting) {
 
+        var decode = function (data) {
+            if (typeof data === 'string' && data !== 'handshake') {
+                return JSON.parse(data);
+            } else {
+                return data;
+            }
+        };
+
+        var encode = function (data) {
+            return JSON.stringify(data);
+        };
+
         var respond = function (data) {
             if (waiting) {
                 var callback = waiting;
@@ -255,7 +267,7 @@ window.TrezorConnect = (function () {
 
         var receive = function (event) {
             if (event.source === target && event.origin === origin) {
-                respond(event.data);
+                respond(decode(event.data));
             }
         };
 
@@ -270,7 +282,7 @@ window.TrezorConnect = (function () {
         this.send = function (value, callback) {
             if (waiting === null) {
                 waiting = callback;
-                target.postMessage(value, origin);
+                target.postMessage(encode(value), origin);
             } else {
                 throw new Error(ERR_ALREADY_WAITING);
             }
