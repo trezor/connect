@@ -20,9 +20,6 @@ function onMessage(event) {
     if (!request) {
         return;
     }
-    if (typeof request === 'string') {
-        request = JSON.parse(request);
-    }
 
     if (bowser.msie) {
         showAlert('#alert_browser_unsupported');
@@ -35,15 +32,15 @@ function onMessage(event) {
     switch (request.type) {
 
     case 'login':
-        handleLogin(event, request);
+        handleLogin(event);
         break;
 
     case 'xpubkey':
-        handleXpubKey(event, request);
+        handleXpubKey(event);
         break;
 
     case 'signtx':
-        handleSignTx(event, request);
+        handleSignTx(event);
         break;
 
     default:
@@ -53,7 +50,6 @@ function onMessage(event) {
 
 function respondToEvent(event, message) {
     let origin = (event.origin !== 'null') ? event.origin : '*';
-    message = JSON.stringify(message);
     event.source.postMessage(message, origin);
 }
 
@@ -82,7 +78,9 @@ function showIdentity(identity) {
  * login
  */
 
-function handleLogin(event, request) {
+function handleLogin(event) {
+    let request = event.data;
+
     if (request.icon) {
         document.querySelector('#header_icon').src = request.icon;
         show('#header_icon');
@@ -122,8 +120,8 @@ function handleLogin(event, request) {
  * xpubkey
  */
 
-function handleXpubKey(event, request) {
-    let requestedPath = request.path;
+function handleXpubKey(event) {
+    let requestedPath = event.data.path;
     if (requestedPath) {
         // make sure bip32 indices are unsigned
         requestedPath = requestedPath.map((i) => i >>> 0);
@@ -221,7 +219,7 @@ function serializePath(path) {
  * signtx
  */
 
-function handleSignTx(event, request) {
+function handleSignTx(event) {
     let fixPath = (o) => {
         if (o.address_n) {
             // make sure bip32 indices are unsigned
@@ -240,8 +238,8 @@ function handleSignTx(event, request) {
         }
         return o;
     };
-    let inputs = request.inputs.map(fixPath).map(convertXpub);
-    let outputs = request.outputs.map(fixPath).map(convertXpub);
+    let inputs = event.data.inputs.map(fixPath).map(convertXpub);
+    let outputs = event.data.outputs.map(fixPath).map(convertXpub);
     const COIN_NAME = 'Bitcoin';
 
     show('#operation_signtx');
