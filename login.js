@@ -32,6 +32,14 @@ window.TrezorConnect = (function () {
         }
     );
 
+    var closeAfterError = true;
+
+    function close(success) {
+        if (success || closeAfterError) {
+            manager.close();
+        }
+    }
+
     /**
      * Public API.
      */
@@ -43,6 +51,13 @@ window.TrezorConnect = (function () {
         this.ERR_TIMED_OUT = ERR_TIMED_OUT;
         this.ERR_WINDOW_CLOSED = ERR_WINDOW_CLOSED;
         this.ERR_ALREADY_WAITING = ERR_ALREADY_WAITING;
+
+        /**
+         * @param {boolean} value
+         */
+        this.closeAfterError = function (value) {
+            closeAfterError = value;
+        };
 
         /**
          * @typedef XPubKeyResult
@@ -71,7 +86,7 @@ window.TrezorConnect = (function () {
                 'type': 'xpubkey',
                 'path': path
             }, function (result) {
-                manager.close();
+                close(result.success);
                 callback(result);
             });
         };
@@ -100,7 +115,7 @@ window.TrezorConnect = (function () {
                 'inputs': inputs,
                 'outputs': outputs
             }, function (result) {
-                manager.close();
+                close(result.success);
                 callback(result);
             });
         };
@@ -143,7 +158,7 @@ window.TrezorConnect = (function () {
                 'challenge_hidden': challenge_hidden,
                 'challenge_visual': challenge_visual
             }, function (result) {
-                manager.close();
+                close(result.success);
                 callback(result);
             });
         };
