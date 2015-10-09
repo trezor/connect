@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Compose & Sign Transaction Test</title>
+    <script>
+
+     function trezorComposeTx() {
+         var outputs = [{
+             address: '17RdK7aSerDgahHu858MMRG82ePTQxytc4',
+             amount: 3181747
+         }];
+
+         TrezorConnect.closeAfterError(false);
+         TrezorConnect.composeAndSignTx(outputs, function (result) {
+             if (result.success) {
+                 console.log('Serialized TX:', result.serialized_tx); // tx in hex
+                 console.log('Signatures:', result.signatures); // array of signatures, in hex
+             } else {
+                 console.error('Error:', result.error); // error message
+             }
+         });
+     }
+
+    </script>
+  </head>
+  <body>
+
+    <button onclick="trezorComposeTx()">Compose & Sign</button>
+
+    <script src="../login.js"></script>
+
+  </body>
+</html>

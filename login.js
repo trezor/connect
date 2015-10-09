@@ -121,11 +121,36 @@ window.TrezorConnect = (function () {
         };
 
         /**
+         * @typedef TxRecipient
+         * @param {number} amount   the amount to send, in satoshis
+         * @param {string} address  the address of the recipient
+         */
+
+        /**
+         * Compose a transaction by doing BIP-0044 discovery, letting the user
+         * select an account, and picking UTXO by internal preferences.
+         * Transaction is then signed and returned in the same format as
+         * `signTx`.  Only supports BIP-0044 accounts (single-signature).
+         *
+         * @param {array<TxRecipient>} recipients
+         * @param {function(SignTxResult)} callback
+         */
+        this.composeAndSignTx = function (recipients, callback) {
+            manager.sendWithChannel({
+                'type': 'composetx',
+                'recipients': recipients
+            }, function (result) {
+                close(result.success);
+                callback(result);
+            });
+        };
+
+        /**
          * @typedef RequestLoginResult
          * @param {boolean} success
          * @param {?string} error
-         * @param {?string} public_key        public key used for signing, in hex
-         * @param {?string} signature         signature, in hex
+         * @param {?string} public_key  public key used for signing, in hex
+         * @param {?string} signature   signature, in hex
          */
 
         /**

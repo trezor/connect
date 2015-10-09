@@ -1,19 +1,23 @@
-window.fetch = undefined;
-require('whatwg-fetch');
+import 'whatwg-fetch';
+import {Promise} from 'es6-promise';
 
-let {Promise} = require('es6-promise');
-
-let bowser = require('bowser');
-let bitcoin = require('bitcoinjs-lib');
-let Blockchain = require('cb-insight');
-let bip32 = require('bip32-utils');
-let trezor = require('trezor.js');
+import bowser from 'bowser';
+import bitcoin from 'bitcoinjs-lib';
+import bip32 from 'bip32-utils';
+import trezor from 'trezor.js';
+import Blockchain from 'cb-insight';
 
 global.alert = '#alert_loading';
 global.device = null;
 
 window.addEventListener('message', onMessage);
 window.opener.postMessage('handshake', '*');
+
+const COIN_NAME = 'Bitcoin';
+
+const INSIGHT_URL = 'https://insight.bitpay.com';
+
+const HD_HARDENED = 0x80000000;
 
 function onMessage(event) {
     let request = event.data;
@@ -41,6 +45,10 @@ function onMessage(event) {
 
     case 'signtx':
         handleSignTx(event);
+        break;
+
+    case 'composetx':
+        handleComposeTx(event);
         break;
 
     default:
@@ -132,13 +140,27 @@ function handleXpubKey(event) {
     initDevice()
 
         .then((device) => {
+
+            let getPermission = (path) => {
+                let handler = errorHandler(() => getPermission(path));
+                return promptXpubKeyPermission(path).catch(handler);
+            };
+
             let getPublicKey = (path) => {
                 let handler = errorHandler(() => getPublicKey(path));
                 return device.session.getPublicKey(path)
                     .then((result) => ({result, path}))
                     .catch(handler);
             };
-            return alertExportXpubKey(requestedPath).then(getPublicKey);
+
+            if (requestedPath) {
+                return getPermission(requestedPath)
+                    .then(getPublicKey);
+            } else {
+                return waitForAccount()
+                    .then((account) => account.getPath())
+                    .then(getPublicKey);
+            }
         })
 
         .then(({result, path}) => { // success
@@ -160,14 +182,7 @@ function handleXpubKey(event) {
         });
 }
 
-const HD_HARDENED = 0x80000000;
-
-function alertExportXpubKey(path) {
-    if (!path) {
-        return promptAccount().then((account) => {
-            return account.getPath();
-        });
-    }
+function promptXpubKeyPermission(path) {
     return new Promise((resolve, reject) => {
         let e = document.getElementById('xpubkey_id');
         e.textContent = xpubKeyLabel(path);
@@ -240,7 +255,6 @@ function handleSignTx(event) {
     };
     let inputs = event.data.inputs.map(fixPath).map(convertXpub);
     let outputs = event.data.outputs.map(fixPath).map(convertXpub);
-    const COIN_NAME = 'Bitcoin';
 
     show('#operation_signtx');
 
@@ -292,44 +306,57 @@ function lookupReferencedTxs(inputs) {
     return Promise.all(inputs.map((input) => lookupTx(input.prev_hash)));
 }
 
-const INSIGHT_URL = 'https://insight.bitpay.com';
+/*
+ * composetx
+ */
 
-function lookupTx(hash) {
-    return fetch(INSIGHT_URL + '/api/rawtx/' + hash)
-        .then((response) => {
-            if (response.status === 200) {
-                return response;
-            } else {
-                throw new Error(response.statusText);
-            }
-        })
-        .then((response) => response.json())
-        .then(({rawtx}) => {
-            let tx = bitcoin.Transaction.fromHex(rawtx);
+function handleComposeTx(event) {
+    let recipients = event.data.recipients;
 
-            return {
-                hash: hash,
-                version: tx.version,
-                lock_time: tx.locktime,
-                inputs: tx.ins.map((input) => {
-                    let hash = input.hash.slice();
+    show('#operation_signtx');
 
-                    Array.prototype.reverse.call(hash);
+    initDevice()
 
-                    return {
-                        prev_hash: hash.toString('hex'),
-                        prev_index: input.index >>> 0,
-                        sequence: input.sequence >>> 0,
-                        script_sig: input.script.toString('hex')
-                    };
-                }),
-                bin_outputs: tx.outs.map((output) => {
-                    return {
-                        amount: output.value,
-                        script_pubkey: output.script.toString('hex')
-                    };
-                })
+        .then((device) => {
+
+            let getAccount = () => {
+                let handler = errorHandler(getAccount);
+                return waitForAccount().catch(handler);
             };
+
+            let signTx = (inputs, outputs, refTxs) => {
+                let handler = errorHandler(() => signTx(inputs, outputs, refTxs));
+                return device.session.signTx(
+                    inputs,
+                    outputs,
+                    refTxs,
+                    device.getCoin(COIN_NAME)
+                ).catch(handler);
+            };
+
+            return getAccount().then((account) => {
+                let {inputs, outputs} = account.composeTx(recipients);
+
+                return lookupReferencedTxs(inputs)
+                    .then((refTxs) => signTx(inputs, outputs, refTxs));
+            });
+        })
+
+        .then((result) => { // success
+            let {message} = result;
+            let {serialized} = message;
+
+            respondToEvent(event, {
+                success: true,
+                type: 'signtx',
+                signatures: serialized.signatures,
+                serialized_tx: serialized.serialized_tx
+            });
+        })
+
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
         });
 }
 
@@ -517,13 +544,20 @@ class Account {
         ];
     }
 
-    constructor(node) {
+    constructor(node, unspents = []) {
         this.node = node;
+        this.unspents = unspents;
         this.bip32 = new bip32.Account([
             new bip32.Chain(node.derive(0)),
             new bip32.Chain(node.derive(1))
         ]);
     }
+
+    getPath() {
+        return Account.getPathForIndex(this.node.index);
+    }
+
+    // usable if the discovery is finished or in progress:
 
     isUsed() {
         return this.getAddressCount() > 0;
@@ -533,9 +567,178 @@ class Account {
         return this.bip32.chains[0].k + this.bip32.chains[1].k;
     }
 
-    getPath() {
-        return Account.getPathForIndex(this.node.index);
+    getAddresses() {
+        return this.bip32.getAllAddresses();
     }
+
+    // usable if the discovery is finished:
+
+    getBalance() {
+        return this.unspents
+            .reduce((b, u) => b + u.value, 0);
+    }
+
+    getConfirmedBalance() {
+        return this.unspents
+            .filter((u) => u.confirmations > 0)
+            .reduce((b, u) => b + u.value, 0)
+    }
+
+    getReceiveAddress() {
+        return this.bip32.getChainAddress(0)
+    }
+
+    getChangeAddress() {
+        return this.bip32.getChainAddress(1)
+    }
+
+    getAddressPath(address) {
+        for (let i = 0; i < this.bip32.chains.length; i++) {
+            let index = this.bip32.chains[i].find(address);
+
+            if (index !== undefined) {
+                let base = this.getPath();
+
+                return base.concat([i, index]);
+            }
+        }
+    }
+
+    composeTx(outputs) {
+        const feePerKB = 10000;
+        const txDust = 5460;
+
+        let {inputs, change} = selectUnspents(this.unspents, outputs, feePerKB);
+
+        outputs = outputs.slice();
+
+        if (change > txDust) {
+            let address = this.getChangeAddress();
+            let output = {
+                address: address,
+                amount: change
+            };
+            outputs.push(output);
+        }
+
+        outputs.sort((a, b) => a.amount - b.amount);
+
+        return this.convertTxForDevice(inputs, outputs);
+    }
+
+    convertTxForDevice(inputs, outputs) {
+        return {
+
+            inputs: inputs.map((input) => {
+                let address_n = this.getAddressPath(input.address);
+
+                if (!address_n) {
+                    throw new Error(`Address path not found for input address`);
+                }
+
+                return {
+                    script_type: 'SPENDADDRESS',
+                    prev_hash: input.txId,
+                    prev_index: input.vout,
+                    address_n
+                };
+            }),
+
+            outputs: outputs.map((output) => {
+                let address_n = this.getAddressPath(output.address);
+                let chain = address_n[address_n.length - 2];
+
+                // only change output is specified with address_n
+                if (address_n && chain === 1) {
+                    return {
+                        script_type: 'PAYTOADDRESS',
+                        address_n: address_n,
+                        amount: output.amount
+                    }
+
+                } else {
+                    return {
+                        script_type: 'PAYTOADDRESS',
+                        address: output.address,
+                        amount: output.amount
+                    };
+                }
+            })
+        }
+    }
+}
+
+const TX_EMPTY_SIZE = 8;
+const TX_PUBKEYHASH_INPUT = 40 + 2 + 106;
+const TX_PUBKEYHASH_OUTPUT = 8 + 2 + 25;
+
+function selectUnspents(unspents, outputs, feePerKB) {
+    // based on https://github.com/dcousens/coinselect
+
+    let candidates = [];
+    let outgoing = 0;
+    let incoming = 0;
+
+    let byteLength = TX_EMPTY_SIZE;
+
+    unspents = unspents.slice().sort((a, b) => {
+        let ac = (a.confirmations || 0);
+        let bc = (b.confirmations || 0);
+        return (bc - ac)            // descending confirmations
+            || (a.value - b.value); // ascending value
+    });
+
+    for (let i = 0; i < outputs.length; i++) {
+        outgoing += outputs[i].amount;
+        byteLength += TX_PUBKEYHASH_OUTPUT;
+    }
+
+    for (let i = 0; i < unspents.length; i++) {
+        incoming += unspents[i].value;
+        byteLength += TX_PUBKEYHASH_INPUT;
+
+        candidates.push(unspents[i]);
+
+        if (incoming < outgoing) {
+            // don't bother with fees until we cover all outputs
+            continue;
+        }
+
+        let baseFee = estimateFee(byteLength, feePerKB);
+        let total = outgoing + baseFee;
+
+        if (incoming < total) {
+            // continue until we can afford the base fee
+            continue;
+        }
+
+        let feeWithChange = estimateFee(byteLength + TX_PUBKEYHASH_OUTPUT, feePerKB);
+        let totalWithChange = outgoing + feeWithChange;
+
+        // can we afford a change output?
+        if (incoming >= totalWithChange) {
+            let change = incoming - totalWithChange;
+            return {
+                inputs: candidates,
+                change: change,
+                fee: feeWithChange
+            };
+
+        } else {
+            let fee = incoming - total;
+            return {
+                inputs: candidates,
+                change: 0,
+                fee: fee
+            };
+        }
+    }
+
+    throw new Error(`Insufficient funds`);
+}
+
+function estimateFee(byteLength, feePerKB) {
+    return Math.ceil(byteLength / 1000) * feePerKB;
 }
 
 function discoverChain(chain, blockchain, onUsed) {
@@ -571,15 +774,35 @@ function discoverChain(chain, blockchain, onUsed) {
     });
 }
 
+function discoverUnspents(addresses, blockchain) {
+    return new Promise((resolve, reject) => {
+        blockchain.addresses.unspents(addresses, (error, unspents) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(unspents);
+            }
+        });
+    });
+}
+
 function discoverAccount(account, blockchain, onUsed) {
     let chains = account.bip32.chains;
-    let discover = (chain) => discoverChain(chain, blockchain, onUsed);
-    return Promise.all(chains.map(discover));
+    let discover = (chain) => {
+        return discoverChain(chain, blockchain, onUsed).then(() => {
+            return discoverUnspents(chain.addresses, blockchain);
+        });
+    };
+
+    return Promise.all(chains.map(discover)).then((results) => {
+        let unspents = Array.prototype.concat.apply([], results); // flatten
+        account.unspents = unspents;
+        return account;
+    });
 }
 
 function discoverAccounts(device, blockchain, onStart, onUsed, onEnd) {
     const firstIndex = 0;
-    const atLeast = 1;
 
     let accounts = [];
 
@@ -589,14 +812,11 @@ function discoverAccounts(device, blockchain, onStart, onUsed, onEnd) {
             onStart(account);
 
             return discoverAccount(account, blockchain, onUsed).then(() => {
-                let isUsed = account.isUsed();
-                if (isUsed || i < atLeast) {
-                    accounts.push(account);
-                }
+                accounts.push(account);
 
                 onEnd(account);
 
-                if (isUsed) {
+                if (account.isUsed()) {
                     return discover(i + 1);
                 } else {
                     return accounts;
@@ -616,12 +836,11 @@ function renderAccountDiscovery(discovered, discovering) {
     let components = accounts.map((account, i) => {
         let content;
         let count = account.getAddressCount();
+        let balance = (account.getBalance() / 1e8).toString();
         if (count === 0) {
-            content = `empty`;
-        } else if (count === 1) {
-            content = `${count} address`;
+            content = `Fresh account`;
         } else {
-            content = `${count} addresses`;
+            content = `${balance} BTC`;
         }
         let status = (account === discovering) ? `Loading...` : content;
 
@@ -629,7 +848,7 @@ function renderAccountDiscovery(discovered, discovering) {
             <div class="account">
              <button disabled>
               <span class="account-title">Account #${i + 1}</span>
-              <small class="account-status">(${status})</small>
+              <span class="account-status">${status}</span>
              </button>
             </div>`;
     });
@@ -641,19 +860,18 @@ function renderAccounts(accounts) {
     let components = accounts.map((account, i) => {
         let content;
         let count = account.getAddressCount();
+        let balance = (account.getBalance() / 1e8).toString();
         if (count === 0) {
-            content = `empty`;
-        } else if (count === 1) {
-            content = `${count} address`;
+            content = `Fresh account`;
         } else {
-            content = `${count} addresses`;
+            content = `${balance} BTC`;
         }
 
         return `
             <div class="account">
              <button onclick="selectAccount(${i})">
               <span class="account-title">Account #${i + 1}</span>
-              <small class="account-status">(${content})</small>
+              <span class="account-status">${content}</span>
              </button>
             </div>`;
     });
@@ -665,25 +883,20 @@ function showAccounts(device) {
     let blockchain = new Blockchain(INSIGHT_URL);
 
     let discovered = [];
-    let candidate = null;
     let discovering = null;
 
     let onStart = (account) => {
-        candidate = account;
+        discovering = account;
     };
 
     let onUsed = () => {
-        discovering = candidate;
-        candidate = null;
         renderAccountDiscovery(discovered, discovering);
     };
 
-    let onEnd = (account) => {
+    let onEnd = () => {
+        discovered.push(discovering);
         discovering = null;
-        if (candidate === null) {
-            discovered.push(account);
-            renderAccountDiscovery(discovered, discovering);
-        }
+        renderAccountDiscovery(discovered, discovering);
     };
 
     let heading = document.querySelector('#alert_accounts .alert_heading');
@@ -700,14 +913,22 @@ function showAccounts(device) {
     });
 }
 
-function promptAccount() {
-    return showAccounts(global.device).then((accounts) => {
-        return new Promise((resolve) => {
-            window.selectAccount = (i) => {
-                window.selectAccount = null;
-                resolve(accounts[i]);
-            };
-        });
+function waitForAccount() {
+    return showAccounts(global.device)
+        .then(selectAccount)
+        .then((account) => {
+            global.account = account;
+            return account;
+        })
+        .catch(errorHandler(waitForAccount));
+}
+
+function selectAccount(accounts) {
+    return new Promise((resolve) => {
+        window.selectAccount = (i) => {
+            window.selectAccount = null;
+            resolve(accounts[i]);
+        };
     });
 }
 
@@ -828,6 +1049,45 @@ window.passphraseEnter = passphraseEnter;
 /*
  * utils
  */
+
+function lookupTx(hash) {
+    return fetch(`${INSIGHT_URL}/api/rawtx/${hash}`)
+        .then((response) => {
+            if (response.status === 200) {
+                return response;
+            } else {
+                throw new Error(response.statusText);
+            }
+        })
+        .then((response) => response.json())
+        .then(({rawtx}) => {
+            let tx = bitcoin.Transaction.fromHex(rawtx);
+
+            return {
+                hash: hash,
+                version: tx.version,
+                lock_time: tx.locktime,
+                inputs: tx.ins.map((input) => {
+                    let hash = input.hash.slice();
+
+                    Array.prototype.reverse.call(hash);
+
+                    return {
+                        prev_hash: hash.toString('hex'),
+                        prev_index: input.index >>> 0,
+                        sequence: input.sequence >>> 0,
+                        script_sig: input.script.toString('hex')
+                    };
+                }),
+                bin_outputs: tx.outs.map((output) => {
+                    return {
+                        amount: output.value,
+                        script_pubkey: output.script.toString('hex')
+                    };
+                })
+            };
+        });
+}
 
 // taken from https://github.com/substack/semver-compare/blob/master/index.js
 function semvercmp(a, b) {
