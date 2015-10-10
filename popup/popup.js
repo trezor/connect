@@ -1,3 +1,9 @@
+// TODO: tests (especially coin selection)
+// TODO: migrate to bitcoin.* structures throughout the app
+// TODO: compose tx as a full bitcoin.Transaction, then convert to device type,
+//       after signing remove sigs and verify
+// TODO: split to modules (blockchain, device, accounts, ui)
+
 import 'whatwg-fetch';
 import {Promise} from 'es6-promise';
 
@@ -13,7 +19,14 @@ global.device = null;
 window.addEventListener('message', onMessage);
 window.opener.postMessage('handshake', '*');
 
+const NETWORK = bitcoin.networks.bitcoin;
+
 const COIN_NAME = 'Bitcoin';
+
+const SCRIPT_TYPES = {
+    [NETWORK.pubKeyHash]: 'PAYTOADDRESS',
+    [NETWORK.scriptHash]: 'PAYTOSCRIPTHASH'
+};
 
 const INSIGHT_URL = 'https://insight.bitpay.com';
 
@@ -633,7 +646,7 @@ class Account {
                 let address_n = this.getAddressPath(input.address);
 
                 if (!address_n) {
-                    throw new Error(`Address path not found for input address`);
+                    throw new Error(`Path not found for input address "${input.address}"`);
                 }
 
                 return {
@@ -645,20 +658,26 @@ class Account {
             }),
 
             outputs: outputs.map((output) => {
+                let decoded = bitcoin.address.fromBase58Check(output.address);
+                let scriptType = SCRIPT_TYPES[decoded.version];
+
+                if (!scriptType) {
+                    throw new Error(`Address "${output.address}" has no known script type`);
+                }
+
                 let address_n = this.getAddressPath(output.address);
-                let chain = address_n[address_n.length - 2];
 
                 // only change output is specified with address_n
-                if (address_n && chain === 1) {
+                if (address_n && address_n[address_n.length - 2] === 1) {
                     return {
-                        script_type: 'PAYTOADDRESS',
+                        script_type: scriptType,
                         address_n: address_n,
                         amount: output.amount
                     }
 
                 } else {
                     return {
-                        script_type: 'PAYTOADDRESS',
+                        script_type: scriptType,
                         address: output.address,
                         amount: output.amount
                     };

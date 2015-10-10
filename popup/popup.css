@@ -162,7 +162,7 @@ input[type="password"] {
 }
 
 #alert_accounts {
-    margin-top: 90px;
+    margin-top: 60px;
 }
 
 .account button {
@@ -179,6 +179,12 @@ input[type="password"] {
 .account:last-child button {
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
+}
+
+.account-status {
+    display: block;
+	font-size: 14px;
+	opacity: 0.8;
 }
 
 /*
