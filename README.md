@@ -198,8 +198,6 @@ selecting an account, transaction is composed by internal coin-selection
 preferences.  Transaction is then signed and returned in the same format as
 `signTx`.  Change output is added automatically, if needed.
 
-- `recipients`: array of `{address: '...', amount: 1000 }`
-
 [Example:](examples/composetx.html)
 
 ```javascript
