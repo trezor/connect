@@ -19,6 +19,9 @@
           <div id="operation_login" style="display: none">Sign in to</div>
           <div id="operation_xpubkey" style="display: none">Export public key</div>
           <div id="operation_signtx" style="display: none">Sign transaction</div>
+          <div id="operation_composetx" style="display: none">
+            Send <span id="composetx_amount"></span>
+          </div>
           <div id="origin"></div>
         </div>
       </div>
@@ -87,6 +90,10 @@
 
     <div id="alert_confirm" class="alert fadeout">
       <div class="alert_heading">Follow instructions on your device.</div>
+    </div>
+
+    <div id="alert_insufficient_funds" class="alert fadeout">
+      <div class="alert_heading">Account funds are insufficient. Retrying...</div>
     </div>
 
     <div id="alert_accounts" class="alert fadeout">

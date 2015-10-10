@@ -326,15 +326,20 @@ function lookupReferencedTxs(inputs) {
 function handleComposeTx(event) {
     let recipients = event.data.recipients;
 
-    show('#operation_signtx');
+    show('#operation_composetx');
+
+    let total = recipients.reduce((t, r) => t + r.amount, 0);
+    document.querySelector('#composetx_amount').innerText = formatAmount(total);
 
     initDevice()
 
         .then((device) => {
 
-            let getAccount = () => {
-                let handler = errorHandler(getAccount);
-                return waitForAccount().catch(handler);
+            let composeTx = () => {
+                let handler = errorHandler(composeTx);
+                return waitForAccount()
+                    .then((account) => account.composeTx(recipients))
+                    .catch(handler);
             };
 
             let signTx = (inputs, outputs, refTxs) => {
@@ -347,9 +352,7 @@ function handleComposeTx(event) {
                 ).catch(handler);
             };
 
-            return getAccount().then((account) => {
-                let {inputs, outputs} = account.composeTx(recipients);
-
+            return composeTx().then(({inputs, outputs}) => {
                 return lookupReferencedTxs(inputs)
                     .then((refTxs) => signTx(inputs, outputs, refTxs));
             });
@@ -441,6 +444,8 @@ const DEVICE_IS_BOOTLOADER = new Error('Connected device is in bootloader mode')
 const DEVICE_IS_EMPTY = new Error('Connected device is not initialized');
 const FIRMWARE_IS_OLD = new Error('Firmware of connected device is too old');
 
+const INSUFFICIENT_FUNDS = new Error('Insufficient funds');
+
 function errorHandler(retry) {
     return (error) => {
 
@@ -467,6 +472,10 @@ function errorHandler(retry) {
         case FIRMWARE_IS_OLD:
             showAlert('#alert_firmware_old');
             return never;
+
+        case INSUFFICIENT_FUNDS:
+            showAlert('#alert_insufficient_funds');
+            return resolveAfter(2500).then(retry);
         }
 
         switch (error.code) { // 'Failure' messages
@@ -753,7 +762,7 @@ function selectUnspents(unspents, outputs, feePerKB) {
         }
     }
 
-    throw new Error(`Insufficient funds`);
+    throw INSUFFICIENT_FUNDS;
 }
 
 function estimateFee(byteLength, feePerKB) {
@@ -855,11 +864,11 @@ function renderAccountDiscovery(discovered, discovering) {
     let components = accounts.map((account, i) => {
         let content;
         let count = account.getAddressCount();
-        let balance = (account.getBalance() / 1e8).toString();
+        let balance = account.getBalance();
         if (count === 0) {
             content = `Fresh account`;
         } else {
-            content = `${balance} BTC`;
+            content = formatAmount(balance);
         }
         let status = (account === discovering) ? `Loading...` : content;
 
@@ -879,11 +888,11 @@ function renderAccounts(accounts) {
     let components = accounts.map((account, i) => {
         let content;
         let count = account.getAddressCount();
-        let balance = (account.getBalance() / 1e8).toString();
+        let balance = account.getBalance();
         if (count === 0) {
             content = `Fresh account`;
         } else {
-            content = `${balance} BTC`;
+            content = formatAmount(balance);
         }
 
         return `
@@ -1174,6 +1183,11 @@ function resolveAfter(msec, value) {
 
 function closeWindow() {
     setTimeout(() => { window.close(); }, 50);
+}
+
+function formatAmount(n) {
+    let s = (n / 1e8).toString();
+    return `${s} BTC`;
 }
 
 window.closeWindow = closeWindow;
