@@ -329,7 +329,7 @@ function handleComposeTx(event) {
     show('#operation_composetx');
 
     let total = recipients.reduce((t, r) => t + r.amount, 0);
-    document.querySelector('#composetx_amount').innerText = formatAmount(total);
+    document.querySelector('#composetx_amount').textContent = formatAmount(total);
 
     initDevice()
 
@@ -932,10 +932,10 @@ function showAccounts(device) {
     showAlert('#alert_accounts');
     global.alert = '#alert_accounts';
 
-    heading.innerText = 'Loading accounts...';
+    heading.textContent = 'Loading accounts...';
     return discoverAccounts(device, blockchain, onStart, onUsed, onEnd).then((accounts) => {
         global.alert = '#alert_loading';
-        heading.innerText = 'Select an account:';
+        heading.textContent = 'Select an account:';
         renderAccounts(accounts);
         return accounts;
     });
