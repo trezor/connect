@@ -24,6 +24,7 @@ restart the action.
 1. [Login](#login)
 2. [Export public key](#export-public-key)
 3. [Sign transaction](#sign-transaction)
+4. [Request payment](#request-payment)
 
 ## Login
 
@@ -187,3 +188,33 @@ TrezorConnect.signTx(inputs, outputs, function (result) {
 ```
 
 [PAYTOMULTISIG example.](examples/signtx-paytomultisig.html)
+
+## Request payment
+
+`TrezorConnect.composeAndSignTx(recipients, callback)` requests a payment from
+the user's wallet to a set of given recipients.  Internally, a BIP-0044 account
+discovery is performed, user is presented with a list of accounts.  After
+selecting an account, transaction is composed by internal coin-selection
+preferences.  Transaction is then signed and returned in the same format as
+`signTx`.  Change output is added automatically, if needed.
+
+- `recipients`: array of `{address: '...', amount: 1000 }`
+
+[Example:](examples/composetx.html)
+
+```javascript
+var recipients = [{
+    address: '18WL2iZKmpDYWk1oFavJapdLALxwSjcSk2',
+    amount: 200000
+}];
+
+TrezorConnect.composeAndSignTx(recipients, function (result) {
+    if (result.success) {
+        console.log('Serialized TX:', result.serialized_tx); // tx in hex
+        console.log('Signatures:', result.signatures); // array of signatures, in hex
+    } else {
+        console.error('Error:', result.error); // error message
+    }
+});
+
+```
