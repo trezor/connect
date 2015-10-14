@@ -509,7 +509,8 @@ function initDevice({emptyPassphrase} = {}) {
 
 function initTransport(configUrl = './../config_signed.bin') {
     let configure = (transport) => {
-        return trezor.http(configUrl)
+        let timestamp = new Date().getTime();
+        return trezor.http(configUrl + '?' + timestamp)
             .then((c) => transport.configure(c))
             .then(() => transport);
     };
