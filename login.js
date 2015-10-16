@@ -1,63 +1,46 @@
-window.TrezorConnect = (function () {
+this.TrezorConnect = (function () {
     'use strict';
 
-    var CONNECT_ORIGIN = 'https://trezor.github.io';
-    var CONNECT_PATH = CONNECT_ORIGIN + '/connect';
-    var CONNECT_POPUP = CONNECT_PATH + '/popup/popup.html';
+    var chrome = window.chrome;
+    var IS_CHROME_APP = chrome && chrome.app && chrome.app.window;
 
     var ERR_TIMED_OUT = 'Loading timed out';
     var ERR_WINDOW_CLOSED = 'Window closed';
+    var ERR_WINDOW_BLOCKED = 'Window blocked';
     var ERR_ALREADY_WAITING = 'Already waiting for a response';
+    var ERR_CHROME_NOT_CONNECTED = 'Internal Chrome popup is not responding.';
 
-    var manager = new PopupManager(
-        CONNECT_POPUP,
-        CONNECT_ORIGIN,
-        'trezor-connect',
-        function () {
-            var w = 600;
-            var h = 500;
-            var x = (screen.width - w) / 2;
-            var y = (screen.height - h) / 3;
-            var params =
-                'height=' + h +
-                ',width=' + w +
-                ',left=' + x +
-                ',top=' + y +
-                ',menubar=no' +
-                ',toolbar=no' +
-                ',location=no' +
-                ',personalbar=no' +
-                ',status=no';
-            return params;
-        }
-    );
-
-    var closeAfterError = true;
-
-    function close(success) {
-        if (success || closeAfterError) {
-            manager.close();
-        }
-    }
+    var DISABLE_LOGIN_BUTTONS = window.TREZOR_DISABLE_LOGIN_BUTTONS || false;
+    var CHROME_URL = window.TREZOR_CHROME_URL || './wrapper.html';
+    var POPUP_URL = window.TREZOR_POPUP_URL || 'https://trezor.github.io/connect/popup/popup.html';
+    var POPUP_PATH = window.TREZOR_POPUP_PATH || 'https://trezor.github.io/connect/';
+    var POPUP_ORIGIN = window.TREZOR_POPUP_ORIGIN || 'https://trezor.github.io';
 
     /**
      * Public API.
      */
     function TrezorConnect() {
 
+        var manager = new PopupManager();
+
         /**
          * Popup errors.
          */
         this.ERR_TIMED_OUT = ERR_TIMED_OUT;
         this.ERR_WINDOW_CLOSED = ERR_WINDOW_CLOSED;
+        this.ERR_WINDOW_BLOCKED = ERR_WINDOW_BLOCKED;
         this.ERR_ALREADY_WAITING = ERR_ALREADY_WAITING;
+        this.ERR_CHROME_NOT_CONNECTED = ERR_CHROME_NOT_CONNECTED;
 
         /**
          * @param {boolean} value
          */
-        this.closeAfterError = function (value) {
-            closeAfterError = value;
-        };
+        this.closeAfterSuccess = function (value) { manager.closeAfterSuccess = value; };
+
+        /**
+         * @param {boolean} value
+         */
+        this.closeAfterFailure = function (value) { manager.closeAfterFailure = value; };
 
         /**
          * @typedef XPubKeyResult
@@ -83,12 +66,9 @@ window.TrezorConnect = (function () {
                 path = parseHDPath(path);
             }
             manager.sendWithChannel({
-                'type': 'xpubkey',
-                'path': path
-            }, function (result) {
-                close(result.success);
-                callback(result);
-            });
+                type: 'xpubkey',
+                path: path
+            }, callback);
         };
 
         /**
@@ -111,13 +91,10 @@ window.TrezorConnect = (function () {
          */
         this.signTx = function (inputs, outputs, callback) {
             manager.sendWithChannel({
-                'type': 'signtx',
-                'inputs': inputs,
-                'outputs': outputs
-            }, function (result) {
-                close(result.success);
-                callback(result);
-            });
+                type: 'signtx',
+                inputs: inputs,
+                outputs: outputs
+            }, callback);
         };
 
         /**
@@ -137,12 +114,9 @@ window.TrezorConnect = (function () {
          */
         this.composeAndSignTx = function (recipients, callback) {
             manager.sendWithChannel({
-                'type': 'composetx',
-                'recipients': recipients
-            }, function (result) {
-                close(result.success);
-                callback(result);
-            });
+                type: 'composetx',
+                recipients: recipients
+            }, callback);
         };
 
         /**
@@ -178,18 +152,15 @@ window.TrezorConnect = (function () {
                 throw new TypeError('TrezorConnect: login callback not found');
             }
             manager.sendWithChannel({
-                'type': 'login',
-                'icon': hosticon,
-                'challenge_hidden': challenge_hidden,
-                'challenge_visual': challenge_visual
-            }, function (result) {
-                close(result.success);
-                callback(result);
-            });
+                type: 'login',
+                icon: hosticon,
+                challenge_hidden: challenge_hidden,
+                challenge_visual: challenge_visual
+            }, callback);
         };
 
         var LOGIN_CSS =
-            '<style>@import url("' + CONNECT_PATH + '/login_buttons.css")</style>';
+            '<style>@import url("@connect_path@/login_buttons.css")</style>';
 
         var LOGIN_ONCLICK =
             'TrezorConnect.requestLogin('
@@ -229,19 +200,16 @@ window.TrezorConnect = (function () {
                 text = text.replace('TREZOR', '<strong>TREZOR</strong>');
 
                 e.parentNode.innerHTML =
-                    LOGIN_CSS + LOGIN_HTML
+                    (LOGIN_CSS + LOGIN_HTML)
                     .replace('@text@', text)
                     .replace('@callback@', callback)
                     .replace('@hosticon@', hosticon)
                     .replace('@challenge_hidden@', challenge_hidden)
-                    .replace('@challenge_visual@', challenge_visual);
+                    .replace('@challenge_visual@', challenge_visual)
+                    .replace('@connect_path@', POPUP_PATH);
             }
         };
     }
-
-    var exports = new TrezorConnect();
-    exports.renderLoginButtons();
-    return exports;
 
     /*
      * `getXPubKey()`
@@ -265,36 +233,126 @@ window.TrezorConnect = (function () {
      * Popup management
      */
 
-    function Popup(url, name, params) {
-        var w = window.open(url, name, params);
+    function ChromePopup(url, name, width, height) {
+        var left = (screen.width - width) / 2;
+        var top = (screen.height - height) / 2;
+        var opts = {
+            id: name,
+            innerBounds: {
+                width: width,
+                height: height,
+                left: left,
+                top: top
+            }
+        };
+
+        var closed = function () {
+            if (this.onclose) {
+                this.onclose(false); // never report as blocked
+            }
+        }.bind(this);
+
+        var opened = function (w) {
+            this.window = w;
+            this.window.onClosed.addListener(closed);
+        }.bind(this);
+
+        chrome.app.window.create(url, opts, opened);
+
+        this.name = name;
+        this.window = null;
+        this.onclose = null;
+    }
+
+    function ChromeChannel(popup, waiting) {
+        var port = null;
+
+        var respond = function (data) {
+            if (waiting) {
+                var w = waiting;
+                waiting = null;
+                w(data);
+            }
+        };
+
+        var setup = function (p) {
+            if (p.name === popup.name) {
+                port = p;
+                port.onMessage.addListener(respond);
+                chrome.runtime.onConnect.removeListener(setup);
+            }
+        };
+
+        chrome.runtime.onConnect.addListener(setup);
+
+        this.respond = respond;
+
+        this.close = function () {
+            chrome.runtime.onConnect.removeListener(setup);
+            port.onMessage.removeListener(respond);
+            port.disconnect();
+            port = null;
+        };
+
+        this.send = function (value, callback) {
+            if (waiting === null) {
+                waiting = callback;
+
+                if (port) {
+                    port.postMessage(value);
+                } else {
+                    throw new Error(ERR_CHROME_NOT_CONNECTED);
+                }
+            } else {
+                throw new Error(ERR_ALREADY_WAITING);
+            }
+        };
+    }
+
+    function Popup(url, origin, name, width, height) {
+        var left = (screen.width - width) / 2;
+        var top = (screen.height - height) / 2;
+        var opts =
+            'width=' + width +
+            ',height=' + height +
+            ',left=' + left +
+            ',top=' + top +
+            ',menubar=no' +
+            ',toolbar=no' +
+            ',location=no' +
+            ',personalbar=no' +
+            ',status=no';
+        var w = window.open(url, name, opts);
 
         var interval;
+        var blocked = w.closed;
         var iterate = function () {
             if (w.closed) {
                 clearInterval(interval);
                 if (this.onclose) {
-                    this.onclose();
+                    this.onclose(blocked);
                 }
             }
         }.bind(this);
         interval = setInterval(iterate, 100);
 
         this.window = w;
+        this.origin = origin;
         this.onclose = null;
     }
 
-    function Channel(target, origin, waiting) {
+    function Channel(popup, waiting) {
 
         var respond = function (data) {
             if (waiting) {
-                var callback = waiting;
+                var w = waiting;
                 waiting = null;
-                callback(data);
+                w(data);
             }
         };
 
         var receive = function (event) {
-            if (event.source === target && event.origin === origin) {
+            if (event.source === popup.window && event.origin === popup.origin) {
                 respond(event.data);
             }
         };
@@ -310,14 +368,14 @@ window.TrezorConnect = (function () {
         this.send = function (value, callback) {
             if (waiting === null) {
                 waiting = callback;
-                target.postMessage(value, origin);
+                popup.window.postMessage(value, popup.origin);
             } else {
                 throw new Error(ERR_ALREADY_WAITING);
             }
         };
     }
 
-    function ConnectedChannel(url, origin, name, params) {
+    function ConnectedChannel(p) {
 
         var ready = function () {
             clearTimeout(this.timeout);
@@ -326,22 +384,34 @@ window.TrezorConnect = (function () {
             this.onready();
         }.bind(this);
 
-        var closed = function () {
+        var closed = function (blocked) {
             clearTimeout(this.timeout);
             this.channel.close();
-            this.onerror(new Error(ERR_WINDOW_CLOSED));
+            if (blocked) {
+                this.onerror(new Error(ERR_WINDOW_BLOCKED));
+            } else {
+                this.onerror(new Error(ERR_WINDOW_CLOSED));
+            }
         }.bind(this);
 
         var timedout = function () {
             this.popup.onclose = null;
-            this.popup.window.close();
+            if (this.popup.window) {
+                this.popup.window.close();
+            }
             this.channel.close();
             this.onerror(new Error(ERR_TIMED_OUT));
         }.bind(this);
 
-        this.popup = new Popup(url, name, params);
-        this.channel = new Channel(this.popup.window, origin, ready);
-        this.timeout = setTimeout(timedout, 5000);
+        if (IS_CHROME_APP) {
+            this.popup = new ChromePopup(p.chromeUrl, p.name, p.width, p.height);
+            this.channel = new ChromeChannel(this.popup, ready);
+        } else {
+            this.popup = new Popup(p.url, p.origin, p.name, p.width, p.height);
+            this.channel = new Channel(this.popup, ready);
+        }
+
+        this.timeout = setTimeout(timedout, 500000);
 
         this.popup.onclose = closed;
 
@@ -350,7 +420,7 @@ window.TrezorConnect = (function () {
         this.onerror = null;
     }
 
-    function PopupManager(url, origin, name, onparams) {
+    function PopupManager() {
         var cc = null;
 
         var closed = function () {
@@ -360,7 +430,15 @@ window.TrezorConnect = (function () {
         };
 
         var open = function (callback) {
-            cc = new ConnectedChannel(url, origin, name, onparams());
+            cc = new ConnectedChannel({
+                name: 'trezor-connect',
+                width: 600,
+                height: 500,
+                origin: POPUP_ORIGIN,
+                path: POPUP_PATH,
+                url: POPUP_URL,
+                chromeUrl: CHROME_URL
+            });
             cc.onready = function () {
                 cc.popup.onclose = closed;
                 callback(cc.channel);
@@ -369,7 +447,10 @@ window.TrezorConnect = (function () {
                 cc = null;
                 callback(error);
             };
-        };
+        }.bind(this);
+
+        this.closeAfterSuccess = true;
+        this.closeAfterFailure = true;
 
         this.close = function () {
             if (cc) {
@@ -390,22 +471,44 @@ window.TrezorConnect = (function () {
         };
 
         this.sendWithChannel = function (message, callback) {
+
+            var respond = function (response) {
+                var succ = response.success && this.closeAfterSuccess;
+                var fail = !response.success && this.closeAfterFailure;
+                if (succ || fail) {
+                    this.close();
+                }
+                callback(response);
+            }.bind(this);
+
             var onresponse = function (response) {
                 if (response instanceof Error) {
-                    callback({success: false, error: response.message});
+                    var error = response;
+                    respond({ success: false, error: error.message });
                 } else {
-                    callback(response);
+                    respond(response);
                 }
             };
+
             var onchannel = function (channel) {
                 if (channel instanceof Error) {
-                    callback({success: false, error: channel.message});
+                    var error = channel;
+                    respond({ success: false, error: error.message });
                 } else {
                     channel.send(message, onresponse);
                 }
-            }
+            };
+
             this.waitForChannel(onchannel);
         };
     }
+
+    var exports = new TrezorConnect();
+
+    if (!IS_CHROME_APP && !DISABLE_LOGIN_BUTTONS) {
+        exports.renderLoginButtons();
+    }
+
+    return exports;
 
 }());

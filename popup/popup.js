@@ -13,28 +13,33 @@ import bip32 from 'bip32-utils';
 import trezor from 'trezor.js';
 import Blockchain from 'cb-insight';
 
-global.alert = '#alert_loading';
-global.device = null;
-
-window.addEventListener('message', onMessage);
-window.opener.postMessage('handshake', '*');
-
 const NETWORK = bitcoin.networks.bitcoin;
-
 const COIN_NAME = 'Bitcoin';
-
 const SCRIPT_TYPES = {
     [NETWORK.pubKeyHash]: 'PAYTOADDRESS',
     [NETWORK.scriptHash]: 'PAYTOSCRIPTHASH'
 };
-
 const INSIGHT_URL = 'https://insight.bitpay.com';
-
+const CONFIG_URL = 'https://mytrezor.s3.amazonaws.com/plugin/config_signed.bin';
 const HD_HARDENED = 0x80000000;
+
+global.alert = '#alert_loading';
+global.device = null;
+
+if (window.opener) {
+    // try to initiate the handshake, but only if we can reach the opener
+    window.opener.postMessage('handshake', '*');
+}
+window.addEventListener('message', onMessage);
 
 function onMessage(event) {
     let request = event.data;
     if (!request) {
+        return;
+    }
+
+    if (request === 'handshake') {
+        respondToEvent(event, 'handshake');
         return;
     }
 
@@ -74,6 +79,10 @@ function respondToEvent(event, message) {
     event.source.postMessage(message, origin);
 }
 
+const CHROME_EXTENSION_NAMES = {
+    'galigcdcmebdaamahigommoddcpklekf': 'Copay Bitcoin Wallet'
+};
+
 function parseIdentity(event) {
     let identity = {};
     let origin = event.origin.split(':');
@@ -89,10 +98,15 @@ function parseIdentity(event) {
 }
 
 function showIdentity(identity) {
-    let host = identity.host;
-    let proto = (identity.proto !== 'https') ? (identity.proto + '://') : '';
-    let port = (identity.port) ? (':' + identity.port) : '';
-    return proto + host + port;
+    if (identity.proto === 'chrome-extension') {
+        let name = CHROME_EXTENSION_NAMES[identity.host];
+        return (name) ? name : 'Unknown Chrome Extension';
+    } else {
+        let host = identity.host;
+        let proto = (identity.proto !== 'https') ? (identity.proto + '://') : '';
+        let port = (identity.port) ? (':' + identity.port) : '';
+        return proto + host + port;
+    }
 }
 
 /*
@@ -178,7 +192,7 @@ function handleXpubKey(event) {
 
         .then(({result, path}) => { // success
             let {message} = result;
-            var {xpub} = message;
+            let {xpub} = message;
             let serializedPath = serializePath(path);
 
             respondToEvent(event, {
@@ -449,21 +463,13 @@ const INSUFFICIENT_FUNDS = new Error('Insufficient funds');
 function errorHandler(retry) {
     return (error) => {
 
-        var never = new Promise(() => {});
+        let never = new Promise(() => {});
 
         switch (error) { // application errors
 
         case NO_TRANSPORT:
             showAlert('#alert_transport_missing');
             return never;
-
-        case NO_CONNECTED_DEVICES:
-            showAlert('#alert_connect');
-            return retry();
-
-        case DEVICE_IS_BOOTLOADER:
-            showAlert('#alert_reconnect');
-            return retry();
 
         case DEVICE_IS_EMPTY:
             showAlert('#alert_device_empty');
@@ -472,6 +478,14 @@ function errorHandler(retry) {
         case FIRMWARE_IS_OLD:
             showAlert('#alert_firmware_old');
             return never;
+
+        case NO_CONNECTED_DEVICES:
+            showAlert('#alert_connect');
+            return resolveAfter(500).then(retry);
+
+        case DEVICE_IS_BOOTLOADER:
+            showAlert('#alert_reconnect');
+            return resolveAfter(500).then(retry);
 
         case INSUFFICIENT_FUNDS:
             showAlert('#alert_insufficient_funds');
@@ -507,26 +521,24 @@ function initDevice({emptyPassphrase} = {}) {
         });
 }
 
-function initTransport(configUrl = './../config_signed.bin') {
+function initTransport() {
     let configure = (transport) => {
         let timestamp = new Date().getTime();
-        return trezor.http(configUrl + '?' + timestamp)
+        let configUrl = CONFIG_URL + '?' + timestamp;
+
+        return trezor.http(configUrl)
             .then((c) => transport.configure(c))
             .then(() => transport);
     };
+
     let result = trezor.loadTransport().then(configure).catch(() => {
         throw NO_TRANSPORT;
     });
+
     return result.catch(errorHandler());
 }
 
-function waitForFirstDevice(transport, waitBeforeRetry = 500) {
-    let retryWait = () => {
-        return resolveAfter(waitBeforeRetry).then(() => {
-            return waitForFirstDevice(transport);
-        });
-    };
-
+function waitForFirstDevice(transport) {
     return transport.enumerate().then((descriptors) => {
         if (descriptors.length === 0) {
             throw NO_CONNECTED_DEVICES;
@@ -545,7 +557,7 @@ function waitForFirstDevice(transport, waitBeforeRetry = 500) {
             }
             return device;
         });
-    }).catch(errorHandler(retryWait));
+    }).catch(errorHandler(() => waitForFirstDevice(transport)));
 }
 
 /*

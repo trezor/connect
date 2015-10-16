@@ -13,7 +13,7 @@
              amount: parseInt(amount)
          }];
 
-         TrezorConnect.closeAfterError(false);
+         TrezorConnect.closeAfterFailure(false);
          TrezorConnect.composeAndSignTx(outputs, function (result) {
              if (result.success) {
                  console.log('Serialized TX:', result.serialized_tx); // tx in hex
