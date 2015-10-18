@@ -11,7 +11,7 @@ this.TrezorConnect = (function () {
     var ERR_CHROME_NOT_CONNECTED = 'Internal Chrome popup is not responding.';
 
     var DISABLE_LOGIN_BUTTONS = window.TREZOR_DISABLE_LOGIN_BUTTONS || false;
-    var CHROME_URL = window.TREZOR_CHROME_URL || './wrapper.html';
+    var CHROME_URL = window.TREZOR_CHROME_URL || './chrome/wrapper.html';
     var POPUP_URL = window.TREZOR_POPUP_URL || 'https://trezor.github.io/connect/popup/popup.html';
     var POPUP_PATH = window.TREZOR_POPUP_PATH || 'https://trezor.github.io/connect/';
     var POPUP_ORIGIN = window.TREZOR_POPUP_ORIGIN || 'https://trezor.github.io';
