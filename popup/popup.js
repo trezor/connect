@@ -977,15 +977,26 @@ function selectAccount(accounts) {
  * buttons
  */
 
-function buttonCallback(/* code */) {
+function buttonCallback(code) {
+
     let receive = () => {
         global.device.session.removeListener('receive', receive);
         global.device.session.removeListener('error', receive);
         showAlert(global.alert);
     };
+
     global.device.session.on('receive', receive);
     global.device.session.on('error', receive);
-    showAlert('#alert_confirm');
+
+    switch (code) {
+    case 'ButtonRequest_ConfirmOutput':
+    case 'ButtonRequest_SignTx':
+        showAlert('#alert_confirm_tx');
+        break;
+    default:
+        showAlert('#alert_confirm');
+        break;
+    }
 }
 
 /*
