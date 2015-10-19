@@ -16,6 +16,8 @@ this.TrezorConnect = (function () {
     var POPUP_PATH = window.TREZOR_POPUP_PATH || 'https://trezor.github.io/connect/';
     var POPUP_ORIGIN = window.TREZOR_POPUP_ORIGIN || 'https://trezor.github.io';
 
+    var POPUP_INIT_TIMEOUT = 15000;
+
     /**
      * Public API.
      */
@@ -411,7 +413,7 @@ this.TrezorConnect = (function () {
             this.channel = new Channel(this.popup, ready);
         }
 
-        this.timeout = setTimeout(timedout, 500000);
+        this.timeout = setTimeout(timedout, POPUP_INIT_TIMEOUT);
 
         this.popup.onclose = closed;
 
@@ -453,7 +455,7 @@ this.TrezorConnect = (function () {
         this.closeAfterFailure = true;
 
         this.close = function () {
-            if (cc) {
+            if (cc && cc.popup.window) {
                 cc.popup.window.close();
             }
         };
