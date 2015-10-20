@@ -15,6 +15,8 @@ First, you need to include the library in your page:
 <script src="https://trezor.github.io/connect/login.js"></script>
 ```
 
+Bower package `trezor-connect` is also available.
+
 All API calls have a callback argument.  Callback is guaranteed to get called
 with a result object, even if user closes the window, network connection times
 out, etc.  In case of failure, `result.success` is false and `result.error` is
