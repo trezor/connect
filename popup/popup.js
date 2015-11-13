@@ -240,10 +240,10 @@ window.cancelXpubKey = cancelXpubKey;
 function xpubKeyLabel(path) {
     let hardened = (i) => path[i] & ~HD_HARDENED;
     if (hardened(0) === 44) {
-        return `Account #${hardened(2) + 1}`;
+        return `account #${hardened(2) + 1}`;
     }
     if (hardened(0) === 48) {
-        return `Multisig account #${hardened(2) + 1}`;
+        return `multisig account #${hardened(2) + 1}`;
     }
     if (path[0] === 45342) {
         if (hardened(1) === 44) {
