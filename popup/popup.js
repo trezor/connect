@@ -253,7 +253,7 @@ function xpubKeyLabel(path) {
             return `Copay ID of multisig account #${hardened(2) + 1}`;
         }
     }
-    return serializePath(path);
+    return 'm/' + serializePath(path);
 }
 
 function serializePath(path) {
