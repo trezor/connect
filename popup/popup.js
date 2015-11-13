@@ -239,11 +239,21 @@ window.cancelXpubKey = cancelXpubKey;
 
 function xpubKeyLabel(path) {
     let hardened = (i) => path[i] & ~HD_HARDENED;
-    switch (hardened(0)) {
-    case 44: return `Account #${hardened(2) + 1}`;
-    case 45: return `Multisig wallet`;
-    default: return serializePath(path);
+    if (hardened(0) === 44) {
+        return `Account #${hardened(2) + 1}`;
     }
+    if (hardened(0) === 48) {
+        return `Multisig account #${hardened(2) + 1}`;
+    }
+    if (path[0] === 45342) {
+        if (hardened(1) === 44) {
+            return `Copay ID of account #${hardened(2) + 1}`;
+        }
+        if (hardened(1) === 48) {
+            return `Copay ID of multisig account #${hardened(2) + 1}`;
+        }
+    }
+    return serializePath(path);
 }
 
 function serializePath(path) {
