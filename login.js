@@ -41,7 +41,7 @@ this.TrezorConnect = (function () {
          * @param {function(?Error)} callback
          */
         this.open = function (callback) {
-            let onchannel = function (result) {
+            var onchannel = function (result) {
                 if (result instanceof Error) {
                     callback(result);
                 } else {
