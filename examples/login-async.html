@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Login Test</title>
+    <script>
+
+     function trezorLogin() {
+         // we need to asynchronously generate the challenges, but a popup needs
+         // to be open synchronously to make popup blockers happy
+         TrezorConnect.open(function (error) {
+             if (error) {
+                 console.error('Error:', error);
+             } else {
+                 generateChallenges(doTrezorLogin);
+             }
+         });
+     }
+
+     function generateChallenges(callback) {
+         setTimeout(function () {
+             // server-side generated and randomized challenges
+             var challenge_hidden = '';
+             var challenge_visual = '';
+             callback(challenge_hidden, challenge_visual);
+         }, 500);
+     }
+
+     function doTrezorLogin(challenge_hidden, challenge_visual) {
+         // site icon, optional. at least 48x48px
+         var hosticon = 'https://example.com/icon.png';
+
+         TrezorConnect.requestLogin(hosticon, challenge_hidden, challenge_visual, function (result) {
+             if (result.success) {
+                 console.log('Public key:', result.public_key); // pubkey in hex
+                 console.log('Signature:', result.signature); // signature in hex
+                 console.log('Version 2:', result.version === 2); // version field
+             } else {
+                 console.error('Error:', result.error);
+             }
+         });
+     }
+
+    </script>
+  </head>
+  <body>
+
+    <button onclick="trezorLogin()">Sign In</button>
+
+    <script src="../login.js"></script>
+
+  </body>
+</html>

@@ -35,11 +35,35 @@ this.TrezorConnect = (function () {
         this.ERR_CHROME_NOT_CONNECTED = ERR_CHROME_NOT_CONNECTED;
 
         /**
+         * Open the popup for further communication. All API functions open the
+         * popup automatically, but if you need to generate some parameters
+         * asynchronously, use `open` first to avoid popup blockers.
+         * @param {function(?Error)} callback
+         */
+        this.open = function (callback) {
+            let onchannel = function (result) {
+                if (result instanceof Error) {
+                    callback(result);
+                } else {
+                    callback();
+                }
+            };
+            manager.waitForChannel(onchannel);
+        };
+
+        /**
+         * Close the opened popup, if any.
+         */
+        this.close = function () { manager.close(); };
+
+        /**
+         * Enable or disable closing the opened popup after a successful call.
          * @param {boolean} value
          */
         this.closeAfterSuccess = function (value) { manager.closeAfterSuccess = value; };
 
         /**
+         * Enable or disable closing the opened popup after a failed call.
          * @param {boolean} value
          */
         this.closeAfterFailure = function (value) { manager.closeAfterFailure = value; };
