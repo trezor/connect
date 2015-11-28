@@ -80,7 +80,7 @@ function respondToEvent(event, message) {
 }
 
 const CHROME_EXTENSION_NAMES = {
-    'galigcdcmebdaamahigommoddcpklekf': 'Copay Bitcoin Wallet'
+    'cnidaodnidkbaplmghlelgikaiejfhja': 'Copay Bitcoin Wallet'
 };
 
 function parseIdentity(event) {
