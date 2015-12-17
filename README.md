@@ -119,6 +119,7 @@ written in various languages:
 - **Python**: [`examples/server.py`](examples/server.py)
 - **PHP**: [`examples/server.php`](examples/server.php)
 - **Ruby**: [`examples/server.rb`](examples/server.rb)
+- **C#**: [`examples/server.cs`](examples/server.cs)
 
 ## Export public key
 
