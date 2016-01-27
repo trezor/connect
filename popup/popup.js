@@ -137,12 +137,14 @@ function handleLogin(event) {
             let {message} = result;
             let {public_key, signature} = message;
 
-            respondToEvent(event, {
-                success: true,
-                public_key: public_key.toLowerCase(),
-                signature: signature.toLowerCase(),
-                version: 2      // since firmware 1.3.4
-            });
+            return device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    public_key: public_key.toLowerCase(),
+                    signature: signature.toLowerCase(),
+                    version: 2      // since firmware 1.3.4
+                });
+            })
         })
 
         .catch((error) => { // failure
@@ -195,11 +197,13 @@ function handleXpubKey(event) {
             let {xpub} = message;
             let serializedPath = serializePath(path);
 
-            respondToEvent(event, {
-                success: true,
-                xpubkey: xpub,
-                path,
-                serializedPath
+            return device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    xpubkey: xpub,
+                    path,
+                    serializedPath
+                });
             });
         })
 
@@ -314,11 +318,13 @@ function handleSignTx(event) {
             let {message} = result;
             let {serialized} = message;
 
-            respondToEvent(event, {
-                success: true,
-                type: 'signtx',
-                signatures: serialized.signatures,
-                serialized_tx: serialized.serialized_tx
+            return device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    type: 'signtx',
+                    signatures: serialized.signatures,
+                    serialized_tx: serialized.serialized_tx
+                });
             });
         })
 
@@ -386,11 +392,13 @@ function handleComposeTx(event) {
             let {message} = result;
             let {serialized} = message;
 
-            respondToEvent(event, {
-                success: true,
-                type: 'signtx',
-                signatures: serialized.signatures,
-                serialized_tx: serialized.serialized_tx
+            return device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    type: 'signtx',
+                    signatures: serialized.signatures,
+                    serialized_tx: serialized.serialized_tx
+                });
             });
         })
 
