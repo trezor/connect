@@ -43,7 +43,7 @@ identity is already a known user).
 
 To understand the full mechanics, please consult the Challenge-Response chapter
 of
-[SLIP-0013: Authentication using deterministic hierarchy](http://doc.satoshilabs.com/slips/slip-0013.html).
+[SLIP-0013: Authentication using deterministic hierarchy](https://github.com/satoshilabs/slips/blob/master/slip-0013.md).
 
 ### Using Javascript API
 
