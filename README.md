@@ -1,11 +1,17 @@
 # TREZOR Connect API
 
-Connect is a platform for easy integration of TREZOR into 3rd party
+TREZOR Connect is a platform for easy integration of TREZOR into 3rd party
 services. It provides websites with functionality to authenticate users, access
 public keys and sign transactions. User interface is presented in a secure popup
 window:
 
 ![login dialog](docs/login_dialog.png)
+
+User needs to confirm actions on his TREZOR:
+
+![login dialog](docs/confirm.png)
+
+More general (and slightly obsolete) info can be found [here](https://doc.satoshilabs.com/trezor-tech/api-connect.html).
 
 ## Usage
 
