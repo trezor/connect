@@ -68,7 +68,12 @@ function onMessage(event) {
     case 'composetx':
         handleComposeTx(event);
         break;
-
+        
+    case 'signmsg':
+        handleSignMsg(event);
+        break;
+    	
+        
     default:
         console.warn('Unknown message', request);
     }
@@ -143,6 +148,69 @@ function handleLogin(event) {
                     public_key: public_key.toLowerCase(),
                     signature: signature.toLowerCase(),
                     version: 2      // since firmware 1.3.4
+                });
+            })
+        })
+
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+
+/*
+ * sign message
+ */
+
+function handleSignMsg(event) {
+	let txtmessage  = event.data.message;
+	let msgBuff = new Buffer(txtmessage,"ascii");
+    let message = msgBuff.toString("hex");
+    let requestedPath = event.data.path;
+    let coin = event.data.coin;
+    
+    // make sure bip32 indices are unsigned
+    requestedPath = requestedPath.map((i) => i >>> 0);
+
+    show('#operation_signmsg');
+
+    
+    initDevice({ emptyPassphrase: true })
+
+        .then(function signMessage(device) { // send SignMessage
+            let handler = errorHandler(() => signMessage(device));
+            device.session.on('button', (code)=>{
+            	if (code != "ButtonRequest_ProtectCall") {
+            		buttonCallback(code);
+            	} else {
+            		showAlert('#alert_confirm_signmsg');
+                    let e = document.getElementById('message_to_sign');
+                    e.appendChild(document.createTextNode(txtmessage));
+            	}
+
+            });
+            return device.session.signMessage(
+            		requestedPath,
+            		message,
+            		coin
+            ).catch(handler);
+            return ret; 
+        })
+
+        .then((result) => { // success
+        	let {message} = result;
+            let {address, signature} = message;
+            
+            let signBuff = new Buffer(signature,"hex");
+            let baseSign = signBuff.toString("base64");
+           
+
+            return device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    address: address,
+                    signature: baseSign
                 });
             })
         })
