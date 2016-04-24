@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>TREZOR Login Test</title>
+    <script>
+
+     function trezorSignMessage() {
+ 
+    	 var path = document.getElementById("path").value;
+    	 var message = document.getElementById("message").value;
+    	 var coin = document.getElementById("coin").value;
+    	 
+    	 var address = document.getElementById("address");
+    	 var signature = document.getElementById("signature");
+
+    	 TrezorConnect.open(function() {
+         TrezorConnect.signMessage(path, message, function (result) {
+             if (result.success) {
+            	 address.innerHTML=result.address;
+            	 signature.innerHTML=result.signature;
+             } else {
+            	 address.innerHTML="";
+            	 address.appendChild(document.createTextNode("Error: "+result.error));
+            	 signature.innerHTML="";
+             }
+         },coin);
+    	 });
+     }
+
+    </script>
+  </head>
+  <body>
+  <table>
+  <tr><td>Path:</td><td><input id="path" value="m/1'/2'/3'"></td></tr>
+  <tr><td>Message:</td><td><input id="message" value="an ascii message" size="64"></td></tr>
+  <tr><td>Coin:</td><td><select id="coin">
+  <option>Bitcoin</option>
+  <option>Litecoin</option>
+  <option>Testnet</option>
+  <option>Namecoin</option>
+  <option>Dogecoin</option>
+  <option>Dash</option>  
+  </select></td></tr>
+  <tr><td></td><td><button onclick="trezorSignMessage()">Sign Message</button></td></tr>
+  </table>
+  <hr>
+  <table>
+  <tr><td>Address:</td><td id="address"></td></tr>
+  <tr><td>Signature:</td><td id="signature"></td></tr>
+  </table>
+  
+
+    
+
+    <script src="../login.js"></script>
+
+  </body>
+</html>

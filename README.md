@@ -219,3 +219,31 @@ TrezorConnect.composeAndSignTx(recipients, function (result) {
 });
 
 ```
+
+## Sign a message
+
+`TrezorConnect.signMessage(path, message, callback [,coin])` asks device to
+sign a message using the private key derived by given BIP32 path. Path can be specified 
+either as an array of numbers or as string m/A'/B'/C/...
+
+Message is signed and address+signature is returned
+
+[Example:](signmsg-js.html)
+
+```javascript
+  var path="m/44'/0'/0";
+  var message="Example message";
+
+  TrezorConnect.signMessage(path, message, function (result) {
+             if (result.success) {
+            	 address.innerHTML=result.address;
+            	 signature.innerHTML=result.signature;
+             } else {
+            	 address.innerHTML="";
+            	 address.appendChild(document.createTextNode("Error: "+result.error));
+            	 signature.innerHTML="";
+             }
+});
+```
+**note:** The argument coin is optional and defaults to "Bitcoin" if missing.
+
