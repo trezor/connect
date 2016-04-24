@@ -13,20 +13,44 @@
     "url": "https://github.com/trezor/connect/issues"
   },
   "homepage": "https://github.com/trezor/connect",
-  "dependencies": {
+"browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "plugins": [
+            "transform-object-rest-spread",
+            "transform-flow-strip-types",
+            "transform-class-properties",
+            "add-module-exports"
+          ],
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
+  }, 
+    "dependencies": {
     "bip32-utils": "^0.6.2",
-    "bitcoinjs-lib": "^2.0.0",
+    "bitcoinjs-lib": "^2.1.3",
     "bowser": "^1.0.0",
     "cb-insight": "^0.1.0",
     "es6-promise": "^2.3.0",
     "trezor.js": "git://github.com/trezor/trezor.js",
-    "whatwg-fetch": "^0.9.0"
+    "whatwg-fetch": "^0.11.0"
   },
   "devDependencies": {
-    "babelify": "^6.3.0",
-    "browserify": "^11.0.1",
+    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-plugin-transform-class-properties": "^6.4.0",
+    "babel-plugin-transform-flow-strip-types": "^6.4.0",
+    "babel-plugin-transform-object-rest-spread": "^6.6.5",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0",
     "exorcist": "^0.4.0",
     "uglifyify": "^3.0.1",
-    "watchify": "^3.4.0"
+    "watchify": "^3.4.0",
+    "babel-preset-es2015": "^6.3.13"
+    
   }
 }
