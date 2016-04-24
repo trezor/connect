@@ -165,6 +165,19 @@ input[type="password"] {
     margin-top: 60px;
 }
 
+#alert_confirm_signmsg {
+    margin-top: 60px;
+}
+
+#message_to_sign {
+	margin-top: 60px;
+	font-family: monospace;
+	border: 1px solid black;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+
 .account button {
     width: 250px;
     margin-bottom: -1px;
