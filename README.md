@@ -228,7 +228,7 @@ either as an array of numbers or as string m/A'/B'/C/...
 
 Message is signed and address+signature is returned
 
-[Example:](signmsg-js.html)
+[Example:](examples/signmsg-js.html)
 
 ```javascript
   var path="m/44'/0'/0";
