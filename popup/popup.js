@@ -10,7 +10,7 @@ import {Promise} from 'es6-promise';
 import bowser from 'bowser';
 import bitcoin from 'bitcoinjs-lib';
 import bip32 from 'bip32-utils';
-import trezor from 'trezor.js';
+import * as trezor from 'trezor.js'; 
 import Blockchain from 'cb-insight';
 
 const NETWORK = bitcoin.networks.bitcoin;
