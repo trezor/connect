@@ -147,14 +147,14 @@ function handleLogin(event) {
             let {message} = result;
             let {public_key, signature} = message;
 
-            return device.session.release().then(() => {
+            return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
                     public_key: public_key.toLowerCase(),
                     signature: signature.toLowerCase(),
                     version: 2      // since firmware 1.3.4
                 });
-            })
+            });
         })
 
         .catch((error) => { // failure
@@ -207,7 +207,7 @@ function handleXpubKey(event) {
             let {xpub} = message;
             let serializedPath = serializePath(path);
 
-            return device.session.release().then(() => {
+            return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
                     xpubkey: xpub,
@@ -328,7 +328,7 @@ function handleSignTx(event) {
             let {message} = result;
             let {serialized} = message;
 
-            return device.session.release().then(() => {
+            return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
                     type: 'signtx',
@@ -402,7 +402,7 @@ function handleComposeTx(event) {
             let {message} = result;
             let {serialized} = message;
 
-            return device.session.release().then(() => {
+            return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
                     type: 'signtx',
