@@ -1,0 +1,4 @@
+[submodule "popup/trezor-crypto"]
+	path = popup/trezor-crypto
+	url = https://github.com/jpochyla/trezor-crypto.git
+	branch = emscripten
