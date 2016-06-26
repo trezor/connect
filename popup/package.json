@@ -19,6 +19,7 @@
     "bowser": "^1.0.0",
     "cb-insight": "^0.1.0",
     "es6-promise": "^2.3.0",
+    "hd-wallet": "github:trezor/hd-wallet",
     "trezor.js": "git://github.com/trezor/trezor.js",
     "whatwg-fetch": "^0.9.0"
   },
