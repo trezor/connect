@@ -77,7 +77,7 @@ function onMessage(event) {
     case 'composetx':
         handleComposeTx(event);
         break;
-        
+
     case 'signmsg':
         handleSignMsg(event);
         break;
@@ -169,7 +169,6 @@ function handleLogin(event) {
             respondToEvent(event, {success: false, error: error.message});
         });
 }
-
 
 /*
  * sign message
@@ -265,7 +264,6 @@ function handleVerifyMsg(event) {
         });
 }
 
-
 /*
  * xpubkey
  */
@@ -282,7 +280,6 @@ function handleXpubKey(event) {
     initDevice()
 
         .then((device) => {
-
             let getPermission = (path) => {
                 let handler = errorHandler(() => getPermission(path));
                 return promptXpubKeyPermission(path).catch(handler);
@@ -477,7 +474,6 @@ function handleComposeTx(event) {
     initDevice()
 
         .then((device) => {
-
             let composeTx = () => {
                 let handler = errorHandler(composeTx);
                 return waitForAccount()
@@ -593,7 +589,6 @@ const INSUFFICIENT_FUNDS = new Error('Insufficient funds');
 
 function errorHandler(retry) {
     return (error) => {
-
         let never = new Promise(() => {});
 
         switch (error) { // application errors
@@ -724,8 +719,8 @@ class Account {
     static getPathForIndex(i) {
         return [
             (44 | HD_HARDENED) >>> 0,
-            (0  | HD_HARDENED) >>> 0,
-            (i  | HD_HARDENED) >>> 0
+            (0 | HD_HARDENED) >>> 0,
+            (i | HD_HARDENED) >>> 0
         ];
     }
 
@@ -875,7 +870,7 @@ class Account {
     getConfirmedBalance() {
         return this.unspents
             .filter((u) => u.confirmations > 0)
-            .reduce((b, u) => b + u.value, 0)
+            .reduce((b, u) => b + u.value, 0);
     }
 
     getChangeAddress() {
@@ -942,8 +937,7 @@ class Account {
                         script_type: scriptType,
                         address_n: address_n,
                         amount: output.amount
-                    }
-
+                    };
                 } else {
                     return {
                         script_type: scriptType,
@@ -952,7 +946,7 @@ class Account {
                     };
                 }
             })
-        }
+        };
     }
 }
 
@@ -972,8 +966,8 @@ function selectUnspents(unspents, outputs, feePerKB) {
     unspents = unspents.slice().sort((a, b) => {
         let ac = (a.confirmations || 0);
         let bc = (b.confirmations || 0);
-        return (bc - ac)            // descending confirmations
-            || (a.value - b.value); // ascending value
+        return (bc - ac) ||         // descending confirmations
+               (a.value - b.value); // ascending value
     });
 
     for (let i = 0; i < outputs.length; i++) {
@@ -1011,7 +1005,6 @@ function selectUnspents(unspents, outputs, feePerKB) {
                 change: change,
                 fee: feeWithChange
             };
-
         } else {
             let fee = incoming - total;
             return {
@@ -1063,11 +1056,11 @@ function renderAccountDiscovery(discovered, discovering) {
         let used = account.used;
         let balance = account.getBalance();
         if (!used) {
-            content = `Fresh account`;
+            content = 'Fresh account';
         } else {
             content = formatAmount(balance);
         }
-        let status = (account === discovering) ? `Loading...` : content;
+        let status = (account === discovering) ? 'Loading...' : content;
 
         return `
             <div class="account">
@@ -1087,7 +1080,7 @@ function renderAccounts(accounts) {
         let used = account.used;
         let balance = account.getBalance();
         if (!used) {
-            content = `Fresh account`;
+            content = 'Fresh account';
         } else {
             content = formatAmount(balance);
         }
@@ -1160,7 +1153,6 @@ function selectAccount(accounts) {
  */
 
 function buttonCallback(code) {
-
     let receive = () => {
         global.device.session.removeListener('receive', receive);
         global.device.session.removeListener('error', receive);
