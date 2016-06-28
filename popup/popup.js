@@ -189,13 +189,7 @@ function handleSignMsg(event) {
         .then(function signMessage(device) { // send SignMessage
             let handler = errorHandler(() => signMessage(device));
             device.session.on('button', (code) => {
-                if (code !== 'ButtonRequest_ProtectCall') {
-                    buttonCallback(code);
-                } else {
-                    showAlert('#alert_confirm_signmsg');
-                    let e = document.getElementById('message_to_sign');
-                    e.appendChild(document.createTextNode(txtmessage));
-                }
+                buttonCallback(code);
             });
 
             return device.session.signMessage(
