@@ -173,55 +173,52 @@ function handleLogin(event) {
  */
 
 function handleSignMsg(event) {
-	let txtmessage  = event.data.message;
-	let msgBuff = new Buffer(txtmessage,"ascii");
-    let message = msgBuff.toString("hex");
+    let txtmessage = event.data.message;
+    let msgBuff = new Buffer(txtmessage, 'utf8');
+    let message = msgBuff.toString('hex');
     let requestedPath = event.data.path;
     let coin = event.data.coin;
-    
+
     // make sure bip32 indices are unsigned
     requestedPath = requestedPath.map((i) => i >>> 0);
 
     show('#operation_signmsg');
 
-    
-    initDevice({ emptyPassphrase: true })
+    initDevice()
 
         .then(function signMessage(device) { // send SignMessage
             let handler = errorHandler(() => signMessage(device));
-            device.session.on('button', (code)=>{
-            	if (code != "ButtonRequest_ProtectCall") {
-            		buttonCallback(code);
-            	} else {
-            		showAlert('#alert_confirm_signmsg');
+            device.session.on('button', (code) => {
+                if (code !== 'ButtonRequest_ProtectCall') {
+                    buttonCallback(code);
+                } else {
+                    showAlert('#alert_confirm_signmsg');
                     let e = document.getElementById('message_to_sign');
                     e.appendChild(document.createTextNode(txtmessage));
-            	}
-
+                }
             });
+
             return device.session.signMessage(
-            		requestedPath,
-            		message,
-            		coin
+                requestedPath,
+                message,
+                coin
             ).catch(handler);
-            return ret; 
         })
 
         .then((result) => { // success
-        	let {message} = result;
+            let {message} = result;
             let {address, signature} = message;
-            
-            let signBuff = new Buffer(signature,"hex");
-            let baseSign = signBuff.toString("base64");
-           
 
-            return device.session.release().then(() => {
+            let signBuff = new Buffer(signature, 'hex');
+            let baseSign = signBuff.toString('base64');
+
+            return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
                     address: address,
                     signature: baseSign
                 });
-            })
+            });
         })
 
         .catch((error) => { // failure

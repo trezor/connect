@@ -170,11 +170,11 @@ input[type="password"] {
 }
 
 #message_to_sign {
-	margin-top: 60px;
-	font-family: monospace;
-	border: 1px solid black;
-	padding: 10px;
-	border-radius: 5px;
+    margin-top: 60px;
+    font-family: 'Roboto Mono', monospace;
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 

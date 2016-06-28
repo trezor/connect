@@ -232,24 +232,25 @@ TrezorConnect.composeAndSignTx(recipients, function (result) {
 sign a message using the private key derived by given BIP32 path. Path can be specified 
 either as an array of numbers or as string m/A'/B'/C/...
 
-Message is signed and address+signature is returned
+Message is signed and address + signature is returned
 
-[Example:](examples/signmsg-js.html)
+[Example:](examples/signmsg.html)
 
 ```javascript
-  var path="m/44'/0'/0";
-  var message="Example message";
+var path="m/44'/0'/0";
+var message='Example message';
 
-  TrezorConnect.signMessage(path, message, function (result) {
-             if (result.success) {
-            	 address.innerHTML=result.address;
-            	 signature.innerHTML=result.signature;
-             } else {
-            	 address.innerHTML="";
-            	 address.appendChild(document.createTextNode("Error: "+result.error));
-            	 signature.innerHTML="";
-             }
+TrezorConnect.signMessage(path, message, function (result) {
+    if (result.success) {
+        console.log('Message signed!', result.signature); // signature in base64
+        console.log('Signing address:', result.address); // address in standard b58c form
+    } else {
+        console.error('Error:', result.error); // error message
+    }
 });
 ```
+
 **note:** The argument coin is optional and defaults to "Bitcoin" if missing.
+
+The message can be UTF-8; however, TREZOR is not displaying non-ascii characters, and third-party apps are not dealing with them correctly either. Therefore, using ASCII only is recommended.
 

@@ -14,18 +14,16 @@
     	 var address = document.getElementById("address");
     	 var signature = document.getElementById("signature");
 
-    	 TrezorConnect.open(function() {
-         TrezorConnect.signMessage(path, message, function (result) {
-             if (result.success) {
-            	 address.innerHTML=result.address;
-            	 signature.innerHTML=result.signature;
-             } else {
-            	 address.innerHTML="";
+       TrezorConnect.signMessage(path, message, function (result) {
+           if (result.success) {
+            	 address.innerHTML = result.address;
+            	 signature.innerHTML = result.signature;
+           } else {
+            	 address.innerHTML = "";
             	 address.appendChild(document.createTextNode("Error: "+result.error));
-            	 signature.innerHTML="";
-             }
-         },coin);
-    	 });
+            	 signature.innerHTML = "";
+           }
+       }, coin);
      }
 
     </script>

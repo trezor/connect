@@ -189,7 +189,7 @@ this.TrezorConnect = (function () {
          * @typedef SignMessageResult
          * @param {boolean} success
          * @param {?string} error
-         * @param {?string} address address (hashed public key) 
+         * @param {?string} address address (in base58check)
          * @param {?string} signature   signature, in base64
          */
 
@@ -199,7 +199,7 @@ this.TrezorConnect = (function () {
          * @param {string|array} path  
          * @param {string} message to sign (ascii)
          * @param {string|function(SignMessageResult)} callback
-         * @param {?string} coin -  (optional) name of coin (default Bitcoin)
+         * @param {?string} coin - (optional) name of coin (default Bitcoin)
          *
          */
         this.signMessage = function (
@@ -208,12 +208,12 @@ this.TrezorConnect = (function () {
         		callback,
         		opt_coin
         ) {
-        	if (typeof path === 'string') {
-                  path = parseHDPath(path);
+            if (typeof path === 'string') {
+                path = parseHDPath(path);
             }
-        	if (!opt_coin) {
-        		opt_coin = "Bitcoin";
-        	}
+            if (!opt_coin) {
+                opt_coin = 'Bitcoin';
+            }
             if (!callback) {
                 throw new TypeError('TrezorConnect: callback not found');
             }
