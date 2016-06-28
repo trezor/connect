@@ -7,6 +7,7 @@
 
     <title>TREZOR Connect</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
     <link rel="stylesheet" href="./popup.css">
   </head>
   <body>
@@ -17,6 +18,7 @@
         <img id="header_icon" src="" style="display: none">
         <div id="operation">
           <div id="operation_login" style="display: none">Sign in to</div>
+          <div id="operation_signmsg" style="display: none">Sign a message</div>
           <div id="operation_xpubkey" style="display: none">Export public key</div>
           <div id="operation_signtx" style="display: none">Sign transaction</div>
           <div id="operation_composetx" style="display: none">
@@ -97,6 +99,13 @@
         Check recipient address on your device<br>
         and follow further instructions.
       </div>
+    </div>
+
+    <div id="alert_confirm_signmsg" class="alert fadeout">
+      <div class="alert_heading">
+      	Please confirm following message on your device      	      
+      </div>
+      <div id="message_to_sign"></div>
     </div>
 
     <div id="alert_insufficient_funds" class="alert fadeout">

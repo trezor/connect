@@ -185,6 +185,47 @@ this.TrezorConnect = (function () {
             }, callback);
         };
 
+        /**
+         * @typedef SignMessageResult
+         * @param {boolean} success
+         * @param {?string} error
+         * @param {?string} address address (in base58check)
+         * @param {?string} signature   signature, in base64
+         */
+
+        /**
+         * Sign a message 
+         *
+         * @param {string|array} path  
+         * @param {string} message to sign (ascii)
+         * @param {string|function(SignMessageResult)} callback
+         * @param {?string} coin - (optional) name of coin (default Bitcoin)
+         *
+         */
+        this.signMessage = function (
+        		path,
+        		message,
+        		callback,
+        		opt_coin
+        ) {
+            if (typeof path === 'string') {
+                path = parseHDPath(path);
+            }
+            if (!opt_coin) {
+                opt_coin = 'Bitcoin';
+            }
+            if (!callback) {
+                throw new TypeError('TrezorConnect: callback not found');
+            }
+            manager.sendWithChannel({
+                type: 'signmsg',
+                path: path,
+                message: message,
+                coin: opt_coin
+            }, callback);
+        };
+
+        
         var LOGIN_CSS =
             '<style>@import url("@connect_path@/login_buttons.css")</style>';
 
