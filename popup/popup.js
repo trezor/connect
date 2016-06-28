@@ -8,10 +8,10 @@ import 'whatwg-fetch';
 import {Promise} from 'es6-promise';
 
 import bowser from 'bowser';
-import bitcoin from 'bitcoinjs-lib';
-import bip32 from 'bip32-utils';
-import trezor from 'trezor.js';
-import Blockchain from 'cb-insight';
+import * as bitcoin from 'bitcoinjs-lib';
+import * as trezor from 'trezor.js';
+
+import * as hd from 'hd-wallet';
 
 const NETWORK = bitcoin.networks.bitcoin;
 const COIN_NAME = 'Bitcoin';
@@ -19,9 +19,19 @@ const SCRIPT_TYPES = {
     [NETWORK.pubKeyHash]: 'PAYTOADDRESS',
     [NETWORK.scriptHash]: 'PAYTOSCRIPTHASH'
 };
-const INSIGHT_URL = 'https://insight.bitpay.com';
+const INSIGHT_URL = 'https://bitcore.mytrezor.com/insight-api';
 const CONFIG_URL = 'https://mytrezor.s3.amazonaws.com/plugin/config_signed.bin';
 const HD_HARDENED = 0x80000000;
+
+const CHUNK_SIZE = 20;
+const GAP_LENGTH = 20;
+const ADDRESS_VERSION = 0x0;
+const BITCORE_URL = 'https://bitcore.mytrezor.com';
+const BITCORE_INSIGHT_PATH = 'insight-api';
+const BITCORE_WEBSOCKET = true;
+
+const SOCKET_WORKER_PATH = './socket-worker-dist.js';
+const CRYPTO_WORKER_PATH = './trezor-crypto-dist.js';
 
 global.alert = '#alert_loading';
 global.device = null;
@@ -137,14 +147,14 @@ function handleLogin(event) {
             let {message} = result;
             let {public_key, signature} = message;
 
-            return device.session.release().then(() => {
+            return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
                     public_key: public_key.toLowerCase(),
                     signature: signature.toLowerCase(),
                     version: 2      // since firmware 1.3.4
                 });
-            })
+            });
         })
 
         .catch((error) => { // failure
@@ -197,7 +207,7 @@ function handleXpubKey(event) {
             let {xpub} = message;
             let serializedPath = serializePath(path);
 
-            return device.session.release().then(() => {
+            return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
                     xpubkey: xpub,
@@ -318,7 +328,7 @@ function handleSignTx(event) {
             let {message} = result;
             let {serialized} = message;
 
-            return device.session.release().then(() => {
+            return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
                     type: 'signtx',
@@ -392,7 +402,7 @@ function handleComposeTx(event) {
             let {message} = result;
             let {serialized} = message;
 
-            return device.session.release().then(() => {
+            return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
                     type: 'signtx',
@@ -582,11 +592,30 @@ function waitForFirstDevice(transport) {
  * accounts, discovery
  */
 
+function createBlockchain() {
+    return new hd.BitcoreBlockchain(BITCORE_URL, {
+        upgrade: BITCORE_WEBSOCKET,
+        transports: BITCORE_WEBSOCKET ? ['websocket', 'polling'] : ['polling', 'websocket'],
+        insightPath: BITCORE_INSIGHT_PATH
+    }, createSocketWorker());
+}
+
+function createSocketWorker() {
+    let socketWorker = new Worker(SOCKET_WORKER_PATH);
+    return socketWorker;
+}
+
+function createCryptoChannel() {
+    let worker = new Worker(CRYPTO_WORKER_PATH);
+    let channel = new hd.WorkerChannel(worker);
+    return channel;
+}
+
 class Account {
 
-    static fromDevice(device, i) {
+    static fromDevice(device, i, cryptoChannel, blockchain) {
         return device.getNode(Account.getPathForIndex(i))
-            .then((node) => new Account(node));
+            .then((node) => new Account(node, cryptoChannel, blockchain));
     }
 
     static getPathForIndex(i) {
@@ -597,31 +626,140 @@ class Account {
         ];
     }
 
-    constructor(node, unspents = []) {
+    constructor(node, cryptoChannel, blockchain) {
         this.node = node;
-        this.unspents = unspents;
-        this.bip32 = new bip32.Account([
-            new bip32.Chain(node.derive(0)),
-            new bip32.Chain(node.derive(1))
-        ]);
+        this.unspents = [];
+        this.channel = cryptoChannel;
+        this.addressSources = this._getSources();
+        this.used = false;
+        this.nextChange = '';
+        this.addressPaths = {};
+        this.blockchain = blockchain;
+    }
+
+    _createAddressSource(node) {
+        let source;
+        source = new hd.WorkerAddressSource(this.channel, node, ADDRESS_VERSION);
+        source = new hd.PrefatchingSource(source);
+        source = new hd.CachingSource(source);
+        return source;
+    }
+
+    _getSources() {
+        let external = this.node.derive(0);
+        let internal = this.node.derive(1);
+        let sources = [
+            this._createAddressSource(external),
+            this._createAddressSource(internal)
+        ];
+        return sources;
+    }
+
+    discover(onUsed) {
+        return this._initAccountDiscovery().then(initialState => {
+            let process = this._createAccountsDiscoveryProcess(initialState);
+            return this._finishAccountDiscovery(process, onUsed);
+        }).then(state => {
+            this.nextChange = this._nextChangeAddress(state);
+            this.used = this._isUsed(state);
+            this.addressPaths = this._getAddressPaths(state);
+            return this._loadBlockheight().then(blockheight => {
+                this.unspents = this._deriveUnspents(state, blockheight);
+            });
+        });
+    }
+
+    _initAccountDiscovery() {
+        return this._loadBlocks().then((blocks) => hd.newAccountDiscovery(blocks));
+    }
+
+    _createAccountsDiscoveryProcess(initialState) {
+        let sources = this.addressSources;
+        return hd.discoverAccount(
+            initialState,
+            sources,
+            CHUNK_SIZE,
+            this.blockchain,
+            GAP_LENGTH
+        );
+    }
+
+    _getAddressPaths(state) {
+        let base = this.getPath();
+        let res = {};
+        for (let i = 0; i < 2; i++) {
+            state[i].chain.indexes.forEach((index, address) => {
+                let path = base.concat([i, index]);
+                res[address] = path;
+            });
+        }
+        return res;
+    }
+
+    _getTransactionCount(state) {
+        let size = 0;
+        state.forEach(({transactions}) => {
+            size = size + transactions.size;
+        });
+        return size;
+    }
+
+    _isUsed(state) {
+        let u0 = state[0].history.nextIndex > 0;
+        let u1 = state[1].history.nextIndex > 0;
+        return u1 || u0;
+    }
+
+    _nextChangeAddress(state) {
+        let nextIndex = state[1].history.nextIndex;
+        let address = state[1].chain.addresses.get(nextIndex);
+        return address;
+    }
+
+    _finishAccountDiscovery(discovery, onUsed) {
+        discovery.values.attach((state) => {
+            if (this._isUsed(state)) {
+                onUsed();
+            }
+        });
+        return discovery.awaitLast();
+    }
+
+    _loadBlockheight() {
+        return this.blockchain.lookupSyncStatus().then(({height}) => height);
+    }
+
+    _deriveUnspents(state, blockheight) {
+        let t0 = state[0].transactions;
+        let t1 = state[1].transactions;
+        let map = t0.merge(t1);
+        let unspents = hd.collectUnspents(
+            map,
+            state[0].chain,
+            state[1].chain
+        );
+        return unspents.map(unspent => {
+            let txId = unspent.id;
+            let confirmations = unspent.height ? (blockheight - unspent.height + 1) : undefined;
+            let address = bitcoin.address.fromOutputScript(unspent.script);
+            let value = unspent.value;
+            let vout = unspent.index;
+            return {
+                txId,
+                confirmations,
+                address,
+                value,
+                vout
+            };
+        });
+    }
+
+    _loadBlocks() {
+        return hd.lookupBlockRange(this.blockchain, null);
     }
 
     getPath() {
         return Account.getPathForIndex(this.node.index);
-    }
-
-    // usable if the discovery is finished or in progress:
-
-    isUsed() {
-        return this.getAddressCount() > 0;
-    }
-
-    getAddressCount() {
-        return this.bip32.chains[0].k + this.bip32.chains[1].k;
-    }
-
-    getAddresses() {
-        return this.bip32.getAllAddresses();
     }
 
     // usable if the discovery is finished:
@@ -637,24 +775,12 @@ class Account {
             .reduce((b, u) => b + u.value, 0)
     }
 
-    getReceiveAddress() {
-        return this.bip32.getChainAddress(0)
-    }
-
     getChangeAddress() {
-        return this.bip32.getChainAddress(1)
+        return this.nextChange;
     }
 
     getAddressPath(address) {
-        for (let i = 0; i < this.bip32.chains.length; i++) {
-            let index = this.bip32.chains[i].find(address);
-
-            if (index !== undefined) {
-                let base = this.getPath();
-
-                return base.concat([i, index]);
-            }
-        }
+        return this.addressPaths[address];
     }
 
     composeTx(outputs) {
@@ -800,82 +926,19 @@ function estimateFee(byteLength, feePerKB) {
     return Math.ceil(byteLength / 1000) * feePerKB;
 }
 
-function discoverChain(chain, blockchain, onUsed) {
-    const gapLimit = 20;
-
-    return new Promise((resolve, reject) => {
-        bip32.discovery(chain, gapLimit, (addresses, callback) => {
-            blockchain.addresses.summary(addresses, (error, results) => {
-                if (error) {
-                    callback(error);
-                } else {
-                    let areUsed = results.map((result, i) => {
-                        let isUsed = result.totalReceived > 0;
-                        if (isUsed) {
-                            onUsed(addresses[i], result);
-                        }
-                        return isUsed;
-                    });
-                    callback(null, areUsed);
-                }
-            });
-
-        }, (error, used, checked) => {
-            if (error) {
-                reject(error);
-            } else {
-                for (let i = 1; i < (checked - used); i++) {
-                    chain.pop();
-                }
-                resolve(chain);
-            }
-        });
-    });
-}
-
-function discoverUnspents(addresses, blockchain) {
-    return new Promise((resolve, reject) => {
-        blockchain.addresses.unspents(addresses, (error, unspents) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(unspents);
-            }
-        });
-    });
-}
-
-function discoverAccount(account, blockchain, onUsed) {
-    let chains = account.bip32.chains;
-    let discover = (chain) => {
-        return discoverChain(chain, blockchain, onUsed).then(() => {
-            return discoverUnspents(chain.addresses, blockchain);
-        });
-    };
-
-    return Promise.all(chains.map(discover)).then((results) => {
-        let unspents = Array.prototype.concat.apply([], results); // flatten
-        account.unspents = unspents;
-        return account;
-    });
-}
-
-function discoverAccounts(device, blockchain, onStart, onUsed, onEnd) {
-    const firstIndex = 0;
-
+function discoverAccounts(device, onStart, onUsed, onEnd) {
     let accounts = [];
 
+    let channel = createCryptoChannel();
+    let blockchain = createBlockchain();
+
     let discover = (i) => {
-        return Account.fromDevice(device, i).then((account) => {
-
+        return Account.fromDevice(device, i, channel, blockchain).then((account) => {
             onStart(account);
-
-            return discoverAccount(account, blockchain, onUsed).then(() => {
+            return account.discover(onUsed).then(() => {
                 accounts.push(account);
-
-                onEnd(account);
-
-                if (account.isUsed()) {
+                onEnd();
+                if (account.used) {
                     return discover(i + 1);
                 } else {
                     return accounts;
@@ -884,7 +947,7 @@ function discoverAccounts(device, blockchain, onStart, onUsed, onEnd) {
         });
     };
 
-    return discover(firstIndex);
+    return discover(0);
 }
 
 function renderAccountDiscovery(discovered, discovering) {
@@ -894,9 +957,9 @@ function renderAccountDiscovery(discovered, discovering) {
 
     let components = accounts.map((account, i) => {
         let content;
-        let count = account.getAddressCount();
+        let used = account.used;
         let balance = account.getBalance();
-        if (count === 0) {
+        if (!used) {
             content = `Fresh account`;
         } else {
             content = formatAmount(balance);
@@ -918,9 +981,9 @@ function renderAccountDiscovery(discovered, discovering) {
 function renderAccounts(accounts) {
     let components = accounts.map((account, i) => {
         let content;
-        let count = account.getAddressCount();
+        let used = account.used;
         let balance = account.getBalance();
-        if (count === 0) {
+        if (!used) {
             content = `Fresh account`;
         } else {
             content = formatAmount(balance);
@@ -939,8 +1002,6 @@ function renderAccounts(accounts) {
 }
 
 function showAccounts(device) {
-    let blockchain = new Blockchain(INSIGHT_URL);
-
     let discovered = [];
     let discovering = null;
 
@@ -964,7 +1025,7 @@ function showAccounts(device) {
     global.alert = '#alert_accounts';
 
     heading.textContent = 'Loading accounts...';
-    return discoverAccounts(device, blockchain, onStart, onUsed, onEnd).then((accounts) => {
+    return discoverAccounts(device, onStart, onUsed, onEnd).then((accounts) => {
         global.alert = '#alert_loading';
         heading.textContent = 'Select an account:';
         renderAccounts(accounts);
@@ -1121,7 +1182,7 @@ window.passphraseEnter = passphraseEnter;
  */
 
 function lookupTx(hash) {
-    return fetch(`${INSIGHT_URL}/api/rawtx/${hash}`)
+    return fetch(`${INSIGHT_URL}/rawtx/${hash}`)
         .then((response) => {
             if (response.status === 200) {
                 return response;
