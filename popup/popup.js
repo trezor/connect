@@ -77,12 +77,15 @@ function onMessage(event) {
     case 'composetx':
         handleComposeTx(event);
         break;
-        
+
     case 'signmsg':
         handleSignMsg(event);
         break;
-    	
-        
+
+    case 'verifymsg':
+        handleVerifyMsg(event);
+        break;
+
     default:
         console.warn('Unknown message', request);
     }
@@ -167,7 +170,6 @@ function handleLogin(event) {
         });
 }
 
-
 /*
  * sign message
  */
@@ -189,13 +191,7 @@ function handleSignMsg(event) {
         .then(function signMessage(device) { // send SignMessage
             let handler = errorHandler(() => signMessage(device));
             device.session.on('button', (code) => {
-                if (code !== 'ButtonRequest_ProtectCall') {
-                    buttonCallback(code);
-                } else {
-                    showAlert('#alert_confirm_signmsg');
-                    let e = document.getElementById('message_to_sign');
-                    e.appendChild(document.createTextNode(txtmessage));
-                }
+                buttonCallback(code);
             });
 
             return device.session.signMessage(
@@ -227,6 +223,47 @@ function handleSignMsg(event) {
         });
 }
 
+function handleVerifyMsg(event) {
+    let txtmessage = event.data.message;
+    let msgBuff = new Buffer(txtmessage, 'utf8');
+    let message = msgBuff.toString('hex');
+
+    let signBase = event.data.signature;
+    let signature = new Buffer(signBase, 'base64').toString('hex');
+
+    let address = event.data.address;
+
+    show('#operation_verifymsg');
+
+    initDevice()
+
+        .then(function verifyMessage(device) { // send VerifyMessage
+            let handler = errorHandler(() => verifyMessage(device));
+            device.session.on('button', (code) => {
+                buttonCallback(code);
+            });
+
+            return device.session.verifyMessage(
+                address,
+                signature,
+                message
+            ).catch(handler);
+        })
+
+        .then((result) => { // success
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true
+                });
+            });
+        })
+
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
 /*
  * xpubkey
  */
@@ -243,7 +280,6 @@ function handleXpubKey(event) {
     initDevice()
 
         .then((device) => {
-
             let getPermission = (path) => {
                 let handler = errorHandler(() => getPermission(path));
                 return promptXpubKeyPermission(path).catch(handler);
@@ -438,7 +474,6 @@ function handleComposeTx(event) {
     initDevice()
 
         .then((device) => {
-
             let composeTx = () => {
                 let handler = errorHandler(composeTx);
                 return waitForAccount()
@@ -554,7 +589,6 @@ const INSUFFICIENT_FUNDS = new Error('Insufficient funds');
 
 function errorHandler(retry) {
     return (error) => {
-
         let never = new Promise(() => {});
 
         switch (error) { // application errors
@@ -685,8 +719,8 @@ class Account {
     static getPathForIndex(i) {
         return [
             (44 | HD_HARDENED) >>> 0,
-            (0  | HD_HARDENED) >>> 0,
-            (i  | HD_HARDENED) >>> 0
+            (0 | HD_HARDENED) >>> 0,
+            (i | HD_HARDENED) >>> 0
         ];
     }
 
@@ -836,7 +870,7 @@ class Account {
     getConfirmedBalance() {
         return this.unspents
             .filter((u) => u.confirmations > 0)
-            .reduce((b, u) => b + u.value, 0)
+            .reduce((b, u) => b + u.value, 0);
     }
 
     getChangeAddress() {
@@ -903,8 +937,7 @@ class Account {
                         script_type: scriptType,
                         address_n: address_n,
                         amount: output.amount
-                    }
-
+                    };
                 } else {
                     return {
                         script_type: scriptType,
@@ -913,7 +946,7 @@ class Account {
                     };
                 }
             })
-        }
+        };
     }
 }
 
@@ -933,8 +966,8 @@ function selectUnspents(unspents, outputs, feePerKB) {
     unspents = unspents.slice().sort((a, b) => {
         let ac = (a.confirmations || 0);
         let bc = (b.confirmations || 0);
-        return (bc - ac)            // descending confirmations
-            || (a.value - b.value); // ascending value
+        return (bc - ac) ||         // descending confirmations
+               (a.value - b.value); // ascending value
     });
 
     for (let i = 0; i < outputs.length; i++) {
@@ -972,7 +1005,6 @@ function selectUnspents(unspents, outputs, feePerKB) {
                 change: change,
                 fee: feeWithChange
             };
-
         } else {
             let fee = incoming - total;
             return {
@@ -1024,11 +1056,11 @@ function renderAccountDiscovery(discovered, discovering) {
         let used = account.used;
         let balance = account.getBalance();
         if (!used) {
-            content = `Fresh account`;
+            content = 'Fresh account';
         } else {
             content = formatAmount(balance);
         }
-        let status = (account === discovering) ? `Loading...` : content;
+        let status = (account === discovering) ? 'Loading...' : content;
 
         return `
             <div class="account">
@@ -1048,7 +1080,7 @@ function renderAccounts(accounts) {
         let used = account.used;
         let balance = account.getBalance();
         if (!used) {
-            content = `Fresh account`;
+            content = 'Fresh account';
         } else {
             content = formatAmount(balance);
         }
@@ -1121,7 +1153,6 @@ function selectAccount(accounts) {
  */
 
 function buttonCallback(code) {
-
     let receive = () => {
         global.device.session.removeListener('receive', receive);
         global.device.session.removeListener('error', receive);
