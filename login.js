@@ -194,7 +194,7 @@ this.TrezorConnect = (function () {
          */
 
         /**
-         * Sign a message 
+         * Sign a message
          *
          * @param {string|array} path  
          * @param {string} message to sign (ascii)
@@ -203,10 +203,10 @@ this.TrezorConnect = (function () {
          *
          */
         this.signMessage = function (
-        		path,
-        		message,
-        		callback,
-        		opt_coin
+            path,
+            message,
+            callback,
+            opt_coin
         ) {
             if (typeof path === 'string') {
                 path = parseHDPath(path);
@@ -224,6 +224,33 @@ this.TrezorConnect = (function () {
                 coin: opt_coin
             }, callback);
         };
+
+        /**
+         * Verify message
+         *
+         * @param {string} address
+         * @param {string} signature (base64)
+         * @param {string} message (string)
+         * @param {?string} coin - (optional) name of coin (default Bitcoin)
+         *
+         */
+        this.verifyMessage = function (
+            address,
+            signature,
+            message,
+            callback
+        ) {
+            if (!callback) {
+                throw new TypeError('TrezorConnect: callback not found');
+            }
+            manager.sendWithChannel({
+                type: 'verifymsg',
+                address: address,
+                signature: signature,
+                message: message,
+            }, callback);
+        };
+
 
         
         var LOGIN_CSS =

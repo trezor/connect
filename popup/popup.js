@@ -81,8 +81,11 @@ function onMessage(event) {
     case 'signmsg':
         handleSignMsg(event);
         break;
-    	
-        
+
+    case 'verifymsg':
+        handleVerifyMsg(event);
+        break;
+
     default:
         console.warn('Unknown message', request);
     }
@@ -220,6 +223,48 @@ function handleSignMsg(event) {
             respondToEvent(event, {success: false, error: error.message});
         });
 }
+
+function handleVerifyMsg(event) {
+    let txtmessage = event.data.message;
+    let msgBuff = new Buffer(txtmessage, 'utf8');
+    let message = msgBuff.toString('hex');
+
+    let signBase = event.data.signature;
+    let signature = new Buffer(signBase, 'base64').toString('hex');
+
+    let address = event.data.address;
+
+    show('#operation_verifymsg');
+
+    initDevice()
+
+        .then(function verifyMessage(device) { // send VerifyMessage
+            let handler = errorHandler(() => verifyMessage(device));
+            device.session.on('button', (code) => {
+                buttonCallback(code);
+            });
+
+            return device.session.verifyMessage(
+                address,
+                signature,
+                message
+            ).catch(handler);
+        })
+
+        .then((result) => { // success
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true
+                });
+            });
+        })
+
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
 
 /*
  * xpubkey

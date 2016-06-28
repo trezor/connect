@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>TREZOR Login Test</title>
+    <script>
+
+     function trezorVerifyMessage() {
+ 
+    	 var address = document.getElementById("address").value;
+    	 var message = document.getElementById("message").value;
+    	 var signature = document.getElementById("signature").value;
+
+       TrezorConnect.verifyMessage(address, signature, message, function (result) {
+           if (result.success) {
+               console.log("Success! Verified.");
+           } else {
+               console.log(result.error);
+           }
+       });
+     }
+
+    </script>
+  </head>
+  <body>
+  <table>
+  <tr><td>Address:</td><td><input id="address" value="18BhaXeC4uGJ7FPVK7o5vdtwWm4Bdd44nJ" size="64"></td></tr>
+  <tr><td>Message:</td><td><input id="message" value="Foo bar baz" size="64"></td></tr>
+  <tr><td>Signature:</td><td><input id="signature" value="H5E7SDo6fk1t973FFbVZFQTxzSY3i83Mdm1pxm6uOUyCfJjdqdHp93Y3AuHFi8FwWuX3pZQtbkQbti3Kfqf8014=" size="64"></td></tr>
+  <tr><td></td><td><button onclick="trezorVerifyMessage()">Verify Message</button></td></tr>
+  </table>
+  
+
+    <script src="../login.js"></script>
+
+  </body>
+</html>
