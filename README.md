@@ -13,12 +13,14 @@ User needs to confirm actions on his TREZOR:
 
 More general (and slightly obsolete) info can be found [here](https://doc.satoshilabs.com/trezor-tech/api-connect.html).
 
+Examples of usage can be found on https://trezor.github.io/connect/examples/ 
+
 ## Usage
 
 First, you need to include the library in your page:
 
 ```html
-<script src="https://trezor.github.io/connect/login.js"></script>
+<script src="https://trezor.github.io/connect/connect.js"></script>
 ```
 
 Bower package `trezor-connect` is also available.
