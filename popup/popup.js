@@ -86,6 +86,10 @@ function onMessage(event) {
         handleVerifyMsg(event);
         break;
 
+    case 'cipherkeyvalue':
+        handleCipherKeyValue(event);
+        break;
+
     default:
         console.warn('Unknown message', request);
     }
@@ -254,6 +258,53 @@ function handleVerifyMsg(event) {
             return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true
+                });
+            });
+        })
+
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+function handleCipherKeyValue(event) {
+    let path = event.data.path;
+    let key = event.data.key;
+    let value = event.data.value;
+    let encrypt = event.data.encrypt;
+    let ask_on_encrypt = event.data.ask_on_encrypt;
+    let ask_on_decrypt = event.data.ask_on_decrypt;
+
+    if (encrypt) {
+        show('#operation_cipherkeyvalue_encrypt');
+    } else {
+        show('#operation_cipherkeyvalue_decrypt');
+    }
+
+    initDevice()
+
+        .then(function cipherKeyValue(device) { // send CipherKeyValue
+            let handler = errorHandler(() => cipherKeyValue(device));
+            device.session.on('button', (code) => {
+                buttonCallback(code);
+            });
+
+            return device.session.cipherKeyValue(
+                path,
+                key,
+                value,
+                encrypt,
+                ask_on_encrypt,
+                ask_on_decrypt
+            ).catch(handler);
+        })
+
+        .then((result) => { // success
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    value: result.message.value // in hexadecimal
                 });
             });
         })

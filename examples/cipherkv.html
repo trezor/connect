@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>TREZOR Login Test</title>
+    <script>
+
+     function trezorCipherKeyValue() {
+ 
+    	 var path = document.getElementById("path").value;
+    	 var key = document.getElementById("key").value;
+    	 var value = document.getElementById("value").value;
+    	 
+    	 var encrypt = document.getElementById("encrypt").checked;
+    	 var ask_on_encrypt = document.getElementById("ask_on_decrypt").checked;
+    	 var ask_on_decrypt = document.getElementById("ask_on_encrypt").checked;
+
+    	 var resultEl = document.getElementById("result");
+
+       TrezorConnect.closeAfterFailure(false);
+       TrezorConnect.cipherKeyValue(path, key, value, encrypt, ask_on_encrypt, ask_on_decrypt, function (result) {
+           if (result.success) {
+            	 resultEl.innerHTML = result.value;
+           } else {
+            	 resultEl.innerHTML = "";
+            	 resultEl.appendChild(document.createTextNode("Error: " + result.error));
+           }
+       });
+     }
+
+    </script>
+  </head>
+  <body>
+  <table>
+  <tr><td>Path:</td><td><input id="path" value="m/1'/2'/3'"></td></tr>
+  <tr><td>Key:</td><td><input id="key" value="My key" size="64"></td></tr>
+  <tr><td>Value (in hexadecimal, must be multiple of 16 bytes):</td><td><input id="value" value="1c0ffeec0ffeec0ffeec0ffeec0ffee1" size="64"></td></tr>
+  <tr><td>Encrypt:</td><td>
+  <label><input type="checkbox" id="encrypt" checked> Encrypt</label><br>
+  </td>
+  </tr>
+  <tr><td>Ask on encrypt:</td><td>
+  <label><input type="checkbox" id="ask_on_encrypt"> Ask on encrypt</label><br>
+  </td>
+  </tr>
+  <tr><td>Ask on decrypt:</td><td>
+  <label><input type="checkbox" id="ask_on_decrypt"> Ask on decrypt</label><br>
+  </td>
+  </tr>
+  <tr><td></td><td><button onclick="trezorCipherKeyValue()">Encrypt/decrypt</button></td></tr>
+  </table>
+  <hr>
+  <table>
+  <tr><td>Result:</td><td id="result"></td></tr>
+  </table>
+  
+
+    
+
+    <script src="../login.js"></script>
+
+  </body>
+</html>

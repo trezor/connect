@@ -251,6 +251,41 @@ this.TrezorConnect = (function () {
             }, callback);
         };
 
+        this.cipherKeyValue = function (
+            path,
+            key,
+            value,
+            encrypt,
+            ask_on_encrypt,
+            ask_on_decrypt,
+            callback
+        ) {
+            if (typeof path === 'string') {
+                path = parseHDPath(path);
+            }
+            if (typeof value !== 'string') {
+                throw new TypeError('TrezorConnect: Value must be a string');
+            }
+            if (!(/^[0-9A-Fa-f]*$/.test(value))) {
+                throw new TypeError('TrezorConnect: Value must be hexadecimal');
+            }
+            if (value.length % 32 !== 0) {
+                // 1 byte == 2 hex strings
+                throw new TypeError('TrezorConnect: Value length must be multiple of 16 bytes');
+            }
+            if (!callback) {
+                throw new TypeError('TrezorConnect: callback not found');
+            }
+            manager.sendWithChannel({
+                type: 'cipherkeyvalue',
+                path: path,
+                key: key,
+                value: value,
+                encrypt: !!encrypt,
+                ask_on_encrypt: !!ask_on_encrypt,
+                ask_on_decrypt: !!ask_on_decrypt
+            }, callback);
+        };
 
         
         var LOGIN_CSS =
