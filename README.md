@@ -254,3 +254,31 @@ TrezorConnect.signMessage(path, message, function (result) {
 
 The message can be UTF-8; however, TREZOR is not displaying non-ascii characters, and third-party apps are not dealing with them correctly either. Therefore, using ASCII only is recommended.
 
+## Symmetric key-value encryption
+
+`TrezorConnect.signMessage(path, key, value, encrypt, ask_on_encrypt, ask_on_decrypt, callback)` asks device to
+encrypt value
+using the private key derived by given BIP32 path and the given key. Path can be specified 
+either as an array of numbers or as string m/A'/B'/C/... , value must be hexadecimal value - with length a multiple of 16 bytes (so 32 letters in hexadecimal).
+
+More information can be found in [https://github.com/satoshilabs/slips/blob/master/slip-0011.md](SLIP 0011). IV is always computed automatically.
+
+[Example:](examples/signmsg.html)
+
+```javascript
+var path = "m/44'/0'/0";
+var message = '1c0ffeec0ffeec0ffeec0ffeec0ffee1';
+var key = 'This is displayed on TREZOR on encrypt.';
+var encrypt = true;
+var ask_on_encrypt = true;
+var ask_on_decrypt = false;
+
+TrezorConnect.cipherKeyValue(path, key, value, encrypt, ask_on_encrypt, ask_on_decrypt, function (result) {
+    if (result.success) {
+        console.log('Encrypted!', result.value); // in hexadecimal
+    } else {
+        console.error('Error:', result.error); // error message
+    }
+});
+```
+
