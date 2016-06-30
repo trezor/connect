@@ -1,1 +1,1 @@
-login.js
+./login.js
