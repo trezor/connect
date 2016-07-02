@@ -263,9 +263,9 @@ encrypt value
 using the private key derived by given BIP32 path and the given key. Path can be specified 
 either as an array of numbers or as string m/A'/B'/C/... , value must be hexadecimal value - with length a multiple of 16 bytes (so 32 letters in hexadecimal).
 
-More information can be found in [https://github.com/satoshilabs/slips/blob/master/slip-0011.md](SLIP 0011). IV is always computed automatically.
+More information can be found in [SLIP-0011](https://github.com/satoshilabs/slips/blob/master/slip-0011.md). IV is always computed automatically.
 
-[Example:](examples/signmsg.html)
+[Example](examples/signmsg.html):
 
 ```javascript
 var path = "m/44'/0'/0";
