@@ -7,7 +7,7 @@
      function trezorGetBalance() {
          TrezorConnect.getBalance(function (result) {
              if (result.success) {
-                 console.log('Balance including unconfirmed (in satoshis):', result.unconfirmed);
+                 console.log('Balance including unconfirmed (in satoshis):', result.balance);
                  console.log('Confirmed balance (in satoshis):', result.confirmed);
              } else {
                  console.error('Error:', result.error); // error message
