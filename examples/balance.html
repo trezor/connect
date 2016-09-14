@@ -5,7 +5,7 @@
     <script>
 
      function trezorGetBalance() {
-         TrezorConnect.getFreshAddress(function (result) {
+         TrezorConnect.getBalance(function (result) {
              if (result.success) {
                  console.log('Balance including unconfirmed (in satoshis):', result.unconfirmed);
                  console.log('Confirmed balance (in satoshis):', result.confirmed);
