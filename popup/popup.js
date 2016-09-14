@@ -19,7 +19,7 @@ const SCRIPT_TYPES = {
     [NETWORK.scriptHash]: 'PAYTOSCRIPTHASH'
 };
 const INSIGHT_URL = 'https://bitcore.mytrezor.com/insight-api';
-const CONFIG_URL = 'https://mytrezor.s3.amazonaws.com/plugin/config_signed.bin';
+const CONFIG_URL = 'https://wallet.trezor.io/data/config_signed.bin';
 const HD_HARDENED = 0x80000000;
 
 const CHUNK_SIZE = 20;
