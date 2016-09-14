@@ -41,6 +41,16 @@ if (window.opener) {
 }
 window.addEventListener('message', onMessage);
 
+function httpRequest(url) {
+    return fetch(url).then((response) => {
+        if (response.status === 200) {
+            return response.text();
+        } else {
+            throw new Error(response.statusText);
+        }
+    })
+}
+
 function onMessage(event) {
     let request = event.data;
     if (!request) {
@@ -703,12 +713,13 @@ function initTransport() {
         let timestamp = new Date().getTime();
         let configUrl = CONFIG_URL + '?' + timestamp;
 
-        return trezor.http(configUrl)
+        return httpRequest(configUrl)
             .then((c) => transport.configure(c))
             .then(() => transport);
     };
 
-    let result = trezor.loadTransport().then(configure).catch(() => {
+    let result = trezor.loadTransport().then(configure).catch((e) => {
+        console.error(e);
         throw NO_TRANSPORT;
     });
 
@@ -1328,15 +1339,8 @@ window.passphraseEnter = passphraseEnter;
  */
 
 function lookupTx(hash) {
-    return fetch(`${INSIGHT_URL}/rawtx/${hash}`)
-        .then((response) => {
-            if (response.status === 200) {
-                return response;
-            } else {
-                throw new Error(response.statusText);
-            }
-        })
-        .then((response) => response.json())
+    return httpRequest(`${INSIGHT_URL}/rawtx/${hash}`)
+        .then((response) => JSON.parse(response))
         .then(({rawtx}) => {
             let tx = bitcoin.Transaction.fromHex(rawtx);
 

@@ -16,6 +16,8 @@ this.TrezorConnect = (function () {
     var POPUP_PATH = window.TREZOR_POPUP_PATH || 'https://trezor.github.io/connect/';
     var POPUP_ORIGIN = window.TREZOR_POPUP_ORIGIN || 'https://trezor.github.io';
 
+    var INSIGHT_URL = window.TREZOR_INSIGHT_URL || 'https://bitcore.mytrezor.com/insight-api';
+
     var POPUP_INIT_TIMEOUT = 15000;
 
     /**
@@ -287,7 +289,39 @@ this.TrezorConnect = (function () {
             }, callback);
         };
 
-        
+        this.pushTransaction = function (
+          rawTx,
+          callback
+        ) {
+            if (!(/^[0-9A-Fa-f]*$/.test(rawTx))) {
+                throw new TypeError('TrezorConnect: Transaction must be hexadecimal');
+            }
+            if (!callback) {
+                throw new TypeError('TrezorConnect: callback not found');
+            }
+
+            var xhr = new XMLHttpRequest();
+            var method = 'POST';
+            var url = INSIGHT_URL + '/tx/send';
+            var data = {
+                rawtx: rawTx
+            };
+
+            xhr.open(method, url, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var txid = JSON.parse(xhr.responseText).txid;
+                        callback({success: true, txid: txid});
+                    } else {
+                        callback({error: new Error(xhr.responseText)});
+                    }
+                }
+            };
+            xhr.send(JSON.stringify(data));
+        }
+
         var LOGIN_CSS =
             '<style>@import url("@connect_path@/login_buttons.css")</style>';
 
