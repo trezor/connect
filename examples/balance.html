@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Get balance</title>
+    <script>
+
+     function trezorGetBalance() {
+         TrezorConnect.getFreshAddress(function (result) {
+             if (result.success) {
+                 console.log('Balance including unconfirmed (in satoshis):', result.unconfirmed);
+                 console.log('Confirmed balance (in satoshis):', result.confirmed);
+             } else {
+                 console.error('Error:', result.error); // error message
+             }
+         });
+     }
+
+    </script>
+  </head>
+  <body>
+
+    <button onclick="trezorGetBalance()">Get balance</button>
+
+    <script src="https://trezor.github.io/connect/connect.js"></script>
+
+  </body>
+</html>

@@ -84,6 +84,10 @@ function onMessage(event) {
         handleFreshAddress(event);
         break;
 
+    case 'balance':
+        handleBalance(event);
+        break;
+
     case 'signtx':
         handleSignTx(event);
         break;
@@ -476,6 +480,37 @@ function handleFreshAddress(event) {
         });
 }
 
+function handleBalance(event) {
+    show('#operation_balance');
+
+    initDevice()
+
+        .then((device) => {
+            return waitForAccount()
+                .then((account) => {
+                    return {
+                        balance: account.getBalance(),
+                        confirmed: account.getConfirmedBalance()
+                    };
+                );
+        })
+
+        .then({balance, confirmed} => { // success
+
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    confirmed: confirmed,
+                    balance: balance
+                });
+            });
+        })
+
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
 
 /*
  * signtx

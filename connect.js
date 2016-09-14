@@ -105,6 +105,12 @@ this.TrezorConnect = (function () {
             }, callback)
         }
 
+        this.getBalance = function (callback) {
+            manager.sendWithChannel({
+                type: 'balance'
+            }, callback)
+        }
+
         /**
          * @typedef SignTxResult
          * @param {boolean} success
