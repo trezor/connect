@@ -157,24 +157,6 @@ If you omit the path, BIP-0044 account discovery is performed and user is
 presented with a list of discovered accounts.  Node of selected account is then
 exported.  [Example.](examples/xpubkey-discovery.html)
 
-## Get first unused address
-
-`TrezorConnect.getFreshAddress(callback)` gets first unused address of an account.
-
-The user is offered a selection of accounts and has to select one.
-
-[Example:](examples/freshaddress.html)
-
-```javascript
-TrezorConnect.getFreshAddress(function (result) {
-   if (result.success) {
-       resultEl.innerHTML = result.address; // fresh address
-   } else {
-       console.error('Error:', result.error); // error message
-   }
-});
-```
-
 ## Sign transaction
 
 `TrezorConnect.signTx(inputs, outputs, callback)` asks device to sign given
@@ -316,6 +298,43 @@ var ask_on_decrypt = false;
 TrezorConnect.cipherKeyValue(path, key, value, encrypt, ask_on_encrypt, ask_on_decrypt, function (result) {
     if (result.success) {
         console.log('Encrypted!', result.value); // in hexadecimal
+    } else {
+        console.error('Error:', result.error); // error message
+    }
+});
+```
+
+## Get first unused address
+
+`TrezorConnect.getFreshAddress(callback)` gets first unused address of an account.
+
+The user is offered a selection of accounts and has to select one.
+
+[Example:](examples/freshaddress.html)
+
+```javascript
+TrezorConnect.getFreshAddress(function (result) {
+   if (result.success) {
+       resultEl.innerHTML = result.address; // fresh address
+   } else {
+       console.error('Error:', result.error); // error message
+   }
+});
+```
+
+## Get balance
+
+`TrezorConnect.getFreshAddress(callback)` returns balance of an account, plus "confirmed" balance (transactions with at least 1 confirmation).
+
+The user is offered a selection of accounts and has to select one.
+
+[Example:](examples/balance.html)
+
+```javascript
+TrezorConnect.getBalance(function (result) {
+    if (result.success) {
+        console.log('Balance including unconfirmed (in satoshis):', result.balance);
+        console.log('Confirmed balance (in satoshis):', result.confirmed);
     } else {
         console.error('Error:', result.error); // error message
     }
