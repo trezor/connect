@@ -157,6 +157,24 @@ If you omit the path, BIP-0044 account discovery is performed and user is
 presented with a list of discovered accounts.  Node of selected account is then
 exported.  [Example.](examples/xpubkey-discovery.html)
 
+## Get first unused address
+
+`TrezorConnect.getFreshAddress(callback)` gets first unused address of an account.
+
+The user is offered a selection of accounts and has to select one.
+
+[Example:](examples/freshaddress.html)
+
+```javascript
+TrezorConnect.getFreshAddress(function (result) {
+   if (result.success) {
+       resultEl.innerHTML = result.address; // fresh address
+   } else {
+       console.error('Error:', result.error); // error message
+   }
+});
+```
+
 ## Sign transaction
 
 `TrezorConnect.signTx(inputs, outputs, callback)` asks device to sign given
