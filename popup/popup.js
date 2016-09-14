@@ -492,10 +492,10 @@ function handleBalance(event) {
                         balance: account.getBalance(),
                         confirmed: account.getConfirmedBalance()
                     };
-                );
+                });
         })
 
-        .then({balance, confirmed} => { // success
+        .then(({balance, confirmed}) => { // success
 
             return global.device.session.release().then(() => {
                 respondToEvent(event, {
