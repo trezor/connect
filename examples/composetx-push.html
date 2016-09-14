@@ -15,23 +15,17 @@
 
         TrezorConnect.closeAfterFailure(false);
         TrezorConnect.composeAndSignTx(outputs, function (result) {
-
             if (result.success) {
-
-                TrezorConnect.pushTransaction(result.serialized_tx, function (result) {
-                    // result from pushTransaction "overwriting" result from composeAndSignTx
-                    // since we don't need that anymore
-                    if (result.success) {
-                        console.log('Transaction pushed. Id:', result.txid);
+                TrezorConnect.pushTransaction(result.serialized_tx, function (pushResult) {
+                    if (pushResult.success) {
+                        console.log('Transaction pushed. Id:', pushResult.txid); // ID of the transaction
                     } else {
-                        console.error('Error:', result.error);
+                        console.error('Error:', pushResult.error); // error message
                     }
                 });
-            
             } else {
                 console.error('Error:', result.error); // error message
             }
-
         });
     }
 
@@ -45,7 +39,7 @@
 
     <button onclick="trezorComposeTx()">Compose & Sign</button>
 
-    <script src="../connect.js"></script>
+    <script src="https://trezor.github.io/connect/connect.js"></script>
 
   </body>
 </html>
