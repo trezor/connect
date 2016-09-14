@@ -80,6 +80,10 @@ function onMessage(event) {
         handleXpubKey(event);
         break;
 
+    case 'freshaddress':
+        handleFreshAddress(event);
+        break;
+
     case 'signtx':
         handleSignTx(event);
         break;
@@ -443,6 +447,37 @@ function serializePath(path) {
 }
 
 /*
+ * Fresh address 
+ */
+
+function handleFreshAddress(event) {
+    show('#operation_freshaddress');
+
+    initDevice()
+
+        .then((device) => {
+            return waitForAccount()
+                .then((account) => account.nextAddress)
+        })
+
+        .then(address => { // success
+
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    address: address
+                });
+            });
+        })
+
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+
+/*
  * signtx
  */
 
@@ -793,6 +828,7 @@ class Account {
         this.addressSources = this._getSources();
         this.used = false;
         this.nextChange = '';
+        this.nextAddress = '';
         this.addressPaths = {};
         this.blockchain = blockchain;
     }
@@ -821,6 +857,7 @@ class Account {
             return this._finishAccountDiscovery(process, onUsed);
         }).then(state => {
             this.nextChange = this._nextChangeAddress(state);
+            this.nextAddress = this._nextAddress(state);
             this.used = this._isUsed(state);
             this.addressPaths = this._getAddressPaths(state);
             return this._loadBlockheight().then(blockheight => {
@@ -873,6 +910,12 @@ class Account {
     _nextChangeAddress(state) {
         let nextIndex = state[1].history.nextIndex;
         let address = state[1].chain.addresses.get(nextIndex);
+        return address;
+    }
+
+    _nextAddress(state) {
+        let nextIndex = state[0].history.nextIndex;
+        let address = state[0].chain.addresses.get(nextIndex);
         return address;
     }
 

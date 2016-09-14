@@ -99,6 +99,12 @@ this.TrezorConnect = (function () {
             }, callback);
         };
 
+        this.getFreshAddress = function (callback) {
+            manager.sendWithChannel({
+                type: 'freshaddress'
+            }, callback)
+        }
+
         /**
          * @typedef SignTxResult
          * @param {boolean} success
