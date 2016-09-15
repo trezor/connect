@@ -324,7 +324,7 @@ TrezorConnect.getFreshAddress(function (result) {
 
 ## Get balance
 
-`TrezorConnect.getFreshAddress(callback)` returns balance of an account, plus "confirmed" balance (transactions with at least 1 confirmation).
+`TrezorConnect.getBalance(callback)` returns balance of an account, plus "confirmed" balance (transactions with at least 1 confirmation).
 
 The user is offered a selection of accounts and has to select one.
 
