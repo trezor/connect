@@ -278,7 +278,7 @@ The message can be UTF-8; however, TREZOR is not displaying non-ascii characters
 
 ## Symmetric key-value encryption
 
-`TrezorConnect.signMessage(path, key, value, encrypt, ask_on_encrypt, ask_on_decrypt, callback)` asks device to
+`TrezorConnect.cipherKeyValue(path, key, value, encrypt, ask_on_encrypt, ask_on_decrypt, callback)` asks device to
 encrypt value
 using the private key derived by given BIP32 path and the given key. Path can be specified 
 either as an array of numbers or as string m/A'/B'/C/... , value must be hexadecimal value - with length a multiple of 16 bytes (so 32 letters in hexadecimal).
