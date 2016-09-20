@@ -293,8 +293,8 @@ More information can be found in [SLIP-0011](https://github.com/satoshilabs/slip
 
 ```javascript
 var path = "m/44'/0'/0";
-var message = '1c0ffeec0ffeec0ffeec0ffeec0ffee1';
 var key = 'This is displayed on TREZOR on encrypt.';
+var value = '1c0ffeec0ffeec0ffeec0ffeec0ffee1';
 var encrypt = true;
 var ask_on_encrypt = true;
 var ask_on_decrypt = false;
