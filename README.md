@@ -309,7 +309,7 @@ TrezorConnect.cipherKeyValue(path, key, value, encrypt, ask_on_encrypt, ask_on_d
 
 ## Get account info
 
-`TrezorConnect.getAccountInfo(description, callback)` gets default info of an account.
+`TrezorConnect.getAccountInfo(description, callback)` gets an info of an account.
 
 [Example:](examples/accountinfo.html)
 ```javascript
