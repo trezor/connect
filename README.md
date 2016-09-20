@@ -35,6 +35,10 @@ restart the action.
 2. [Export public key](#export-public-key)
 3. [Sign transaction](#sign-transaction)
 4. [Request payment](#request-payment)
+5. [Sign message](#sign-message)
+6. [Symmetric key-value encryption](#symmetric-key-value-encryption)
+7. [Get first unused address](#get-first-unused-address)
+8. [Get balance](#get-balance)
 
 ## Login
 
@@ -248,7 +252,7 @@ TrezorConnect.composeAndSignTx(outputs, function (result) {
 
 ```
 
-## Sign a message
+## Sign message
 
 `TrezorConnect.signMessage(path, message, callback [,coin])` asks device to
 sign a message using the private key derived by given BIP32 path. Path can be specified 
