@@ -1,3 +1,11 @@
+if (!Array.isArray) {
+    Array.isArray = function(arg) {
+        return Object.prototype.toString.call(arg) === '[object Array]';
+    };
+}
+
+var HD_HARDENED = 0x80000000;
+
 this.TrezorConnect = (function () {
     'use strict';
 
@@ -100,14 +108,34 @@ this.TrezorConnect = (function () {
         };
 
         this.getFreshAddress = function (callback) {
+            var wrapperCallback = function (result) {
+                if (result.success) {
+                    callback({success: true, address: result.freshAddress});
+                } else {
+                    callback(result);
+                }
+            }
+
             manager.sendWithChannel({
-                type: 'freshaddress'
-            }, callback)
+                type: 'accountinfo'
+            }, wrapperCallback);
+        }
+
+        this.getAccountInfo = function (input, callback) {
+            try {
+                var description = parseAccountInfoInput(input);
+                manager.sendWithChannel({
+                    type: 'accountinfo',
+                    description: description
+                }, callback);
+            } catch(e) {
+                callback({success: false, error: e});
+            }
         }
 
         this.getBalance = function (callback) {
             manager.sendWithChannel({
-                type: 'balance'
+                type: 'accountinfo'
             }, callback)
         }
 
@@ -396,12 +424,58 @@ this.TrezorConnect = (function () {
             .split('/')
             .filter(function (p) { return p !== 'm'; })
             .map(function (p) {
+                var hardened = false;
+                if (p[p.length - 1] === "'") {
+                    hardened = true;
+                }
+                p = p.substr(0, p.length - 1);
+                if (isNaN(p)) {
+                   throw new Error('Not a valid path.');
+                }
                 var n = parseInt(p);
-                if (p[p.length - 1] === "'") { // hardened index
+                if (hardened) { // hardened index
                     n = n | 0x80000000;
                 }
                 return n;
             });
+    }
+
+
+    function getIdFromPath(path) {
+        if (path.length !== 3) {
+            throw new Error();
+        }
+        if ((path[0] >>> 0) !== ((44 | HD_HARDENED) >>> 0)) {
+            throw new Error();
+        }
+        if ((path[1] >>> 0) !== ((0 | HD_HARDENED) >>> 0)) {
+            throw new Error();
+        }
+        return ((path[2] & ~HD_HARDENED) >>> 0);
+    }
+
+    // parses first argument from getAccountInfo
+    function parseAccountInfoInput(input) {
+        if (input == null) {
+            return null;
+        }
+
+        if (typeof input === 'string') {
+            if (input.substr(0, 4) === 'xpub') {
+                return input;
+            }
+            if (isNaN(input)) {
+                var parsedPath = parseHDPath(input);
+                return getIdFromPath(parsedPath);
+            } else {
+                return parseInt(input);
+            }
+        } else if (Array.isArray(input)) {
+            return getIdFromPath(input);
+        } else if (typeof input === 'number') {
+            return input;
+        }
+        throw new Error('Unknown input format.');
     }
 
     /*

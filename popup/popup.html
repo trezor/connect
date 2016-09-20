@@ -22,6 +22,7 @@
           <div id="operation_verifymsg" style="display: none">Verify a message</div>
           <div id="operation_xpubkey" style="display: none">Export public key</div>
           <div id="operation_freshaddress" style="display: none">Export fresh address</div>
+          <div id="operation_accountinfo" style="display: none">Export account info</div>
           <div id="operation_balance" style="display: none">Get balance</div>
           <div id="operation_signtx" style="display: none">Sign transaction</div>
           <div id="operation_cipherkeyvalue_encrypt" style="display: none">Encode value</div>
@@ -129,6 +130,22 @@
         </button>
       </div>
     </div>
+
+    <div id="alert_accountinfo" class="alert fadeout">
+      <p class="alert_heading">
+        Export account info for<br>
+        <strong>Account #<span id="accountinfo_id"></span></strong>?
+      </p>
+      <div>
+        <button type="button" onclick="exportInfo();">
+          Export
+        </button>
+        <button type="button" onclick="cancelInfo();">
+          Cancel
+        </button>
+      </div>
+    </div>
+
 
     <div id="pin_dialog" class="alert fadeout">
       <div id="pin_header">Please enter your PIN.</div>

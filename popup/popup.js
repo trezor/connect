@@ -80,12 +80,8 @@ function onMessage(event) {
         handleXpubKey(event);
         break;
 
-    case 'freshaddress':
-        handleFreshAddress(event);
-        break;
-
-    case 'balance':
-        handleBalance(event);
+    case 'accountinfo':
+        handleAccountInfo(event);
         break;
 
     case 'signtx':
@@ -337,6 +333,13 @@ function handleCipherKeyValue(event) {
  * xpubkey
  */
 
+function getPublicKey(path) {
+    let handler = errorHandler(() => getPublicKey(path));
+    return global.device.session.getPublicKey(path)
+        .then((result) => ({result, path}))
+        .catch(handler);
+}
+
 function handleXpubKey(event) {
     let requestedPath = event.data.path;
     if (requestedPath) {
@@ -352,13 +355,6 @@ function handleXpubKey(event) {
             let getPermission = (path) => {
                 let handler = errorHandler(() => getPermission(path));
                 return promptXpubKeyPermission(path).catch(handler);
-            };
-
-            let getPublicKey = (path) => {
-                let handler = errorHandler(() => getPublicKey(path));
-                return device.session.getPublicKey(path)
-                    .then((result) => ({result, path}))
-                    .catch(handler);
             };
 
             if (requestedPath) {
@@ -454,54 +450,123 @@ function serializePath(path) {
  * Fresh address 
  */
 
-function handleFreshAddress(event) {
-    show('#operation_freshaddress');
-
-    initDevice()
-
-        .then((device) => {
-            return waitForAccount()
-                .then((account) => account.nextAddress)
-        })
-
-        .then(address => { // success
-
-            return global.device.session.release().then(() => {
-                respondToEvent(event, {
-                    success: true,
-                    address: address
-                });
-            });
-        })
-
-        .catch((error) => { // failure
-            console.error(error);
-            respondToEvent(event, {success: false, error: error.message});
-        });
+function getAccountByDescription(description) {
+    if (description == null) {
+        return waitForAccount();
+    }
+    if (typeof description === 'string' && description.substring(0,4) === 'xpub') {
+        return getAccountByXpub(description);
+    }
+    if (!isNaN(description)) {
+        return getAccountById(parseInt(description));
+    }
+    throw new Error('Wrongly formatted description.');
 }
 
-function handleBalance(event) {
-    show('#operation_balance');
 
+function getAccountByXpub(xpub) {
+    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].reduce((prev, current) => {
+        return prev.then(account => {
+            if (account != null) {
+                return account;
+            }
+            const accountP = Account.fromDevice(global.device, current, createCryptoChannel(), createBlockchain());
+            return accountP.then(account => {
+                if (account.node.toBase58() === xpub) {
+                    return account;
+                } else {
+                    return null;
+                }
+            });
+        });
+    }, Promise.resolve(null)).then(account => {
+        if (account == null) {
+            return Promise.reject(new Error('No account with the given xpub'));
+        } else {
+            let onEnd = function() {};
+            return promptInfoPermission(account.id)
+                .then(() => account.discover(onEnd))
+                .then(() => account);
+        }
+    });
+}
+
+function getAccountById(id) {
+    let onEnd = function() {};
+
+    const accountP = Account.fromDevice(global.device, id, createCryptoChannel(), createBlockchain());
+    return accountP.then(account => {
+        return promptInfoPermission(id).then(() => {
+            return account.discover(onEnd).then(() => account);
+        });
+    });
+}
+
+function promptInfoPermission(id) {
+    return new Promise((resolve, reject) => {
+        let e = document.getElementById('accountinfo_id');
+        e.textContent = id + 1;
+        e.callback = (exportInfo) => {
+            showAlert(global.alert);
+            if (exportInfo) {
+                resolve();
+            } else {
+                reject(new Error('Cancelled'));
+            }
+        };
+        showAlert('#alert_accountinfo');
+    });
+}
+
+function exportInfo() {
+    document.querySelector('#accountinfo_id').callback(true);
+}
+
+window.exportInfo = exportInfo;
+
+function cancelInfo() {
+    document.querySelector('#accountinfo_id').callback(false);
+}
+
+window.cancelInfo = cancelInfo;
+
+function handleAccountInfo(event) {
+    show('#operation_accountinfo');
+
+    let description = event.data.description;
     initDevice()
-
         .then((device) => {
-            return waitForAccount()
+            return getAccountByDescription(description)
                 .then((account) => {
                     return {
+                        path: account.getPath(),
+                        address: account.nextAddress,
+                        addressPath: account.getAddressPath(account.nextAddress),
+                        addressId: account.nextAddressId,
+                        xpub: account.node.toBase58(),
                         balance: account.getBalance(),
-                        confirmed: account.getConfirmedBalance()
-                    };
-                });
+                        confirmed: account.getConfirmedBalance(),
+                        id: account.id
+                    }
+                })
         })
 
-        .then(({balance, confirmed}) => { // success
+        .then(({id, address, path, addressPath, addressId, xpub, balance, confirmed}) => { // success
+            let serializedPath = serializePath(path);
 
             return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
-                    confirmed: confirmed,
-                    balance: balance
+                    freshAddress: address,
+                    serializedPath,
+                    path,
+                    freshAddressPath: addressPath,
+                    freshAddressId: addressId,
+                    serializedFreshAddressPath: serializePath(addressPath),
+                    balance,
+                    confirmed,
+                    xpub,
+                    id
                 });
             });
         })
@@ -844,8 +909,13 @@ function createCryptoChannel() {
 class Account {
 
     static fromDevice(device, i, cryptoChannel, blockchain) {
-        return device.getNode(Account.getPathForIndex(i))
-            .then((node) => new Account(node, cryptoChannel, blockchain));
+        return Account.fromPath(device, Account.getPathForIndex(i), cryptoChannel, blockchain);
+    }
+
+    static fromPath(device, path, cryptoChannel, blockchain) {
+        const i = (path[path.length - 1] & ~HD_HARDENED) >>> 0;
+        return device.getNode(path)
+            .then((node) => new Account(node, i, cryptoChannel, blockchain));
     }
 
     static getPathForIndex(i) {
@@ -856,7 +926,8 @@ class Account {
         ];
     }
 
-    constructor(node, cryptoChannel, blockchain) {
+    constructor(node, id, cryptoChannel, blockchain) {
+        this.id = id;
         this.node = node;
         this.unspents = [];
         this.channel = cryptoChannel;
@@ -864,6 +935,7 @@ class Account {
         this.used = false;
         this.nextChange = '';
         this.nextAddress = '';
+        this.nextAddressId = null;
         this.addressPaths = {};
         this.blockchain = blockchain;
     }
@@ -893,6 +965,7 @@ class Account {
         }).then(state => {
             this.nextChange = this._nextChangeAddress(state);
             this.nextAddress = this._nextAddress(state);
+            this.nextAddressId = this._nextAddressId(state);
             this.used = this._isUsed(state);
             this.addressPaths = this._getAddressPaths(state);
             return this._loadBlockheight().then(blockheight => {
@@ -952,6 +1025,10 @@ class Account {
         let nextIndex = state[0].history.nextIndex;
         let address = state[0].chain.addresses.get(nextIndex);
         return address;
+    }
+
+    _nextAddressId(state) {
+        return state[0].history.nextIndex;
     }
 
     _finishAccountDiscovery(discovery, onUsed) {
@@ -1175,6 +1252,9 @@ function discoverAccounts(device, onStart, onUsed, onEnd) {
                 accounts.push(account);
                 onEnd();
                 if (account.used) {
+                    if (i + 1 >= 10) {
+                        return accounts; // stop at Account #10
+                    }
                     return discover(i + 1);
                 } else {
                     return accounts;
