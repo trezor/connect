@@ -719,24 +719,9 @@ function handleComposeTx(event) {
 
 class Device {
 
-    static fromDescriptor(transport, descriptor) {
-        return Device.acquire(transport, descriptor)
-            .then(Device.fromSession);
-    }
-
-    static fromSession(session) {
-        return session.initialize()
-            .then((result) => new Device(session, result.message));
-    }
-
-    static acquire(transport, descriptor) {
-        return transport.acquire(descriptor)
-            .then((result) => new trezor.Session(transport, result.session));
-    }
-
-    constructor(session, features) {
+    constructor(session, device) {
         this.session = session;
-        this.features = features;
+        this.features = device.features;
     }
 
     isBootloader() {
@@ -827,7 +812,8 @@ function errorHandler(retry) {
 
 function initDevice({emptyPassphrase} = {}) {
     return initTransport()
-        .then(waitForFirstDevice)
+        .then((t) => resolveAfter(500, t))
+        .then((t) => waitForFirstDevice(t))
         .then((device) => {
             let passphraseHandler = (emptyPassphrase)
                     ? emptyPassphraseCallback
@@ -844,43 +830,53 @@ function initDevice({emptyPassphrase} = {}) {
 }
 
 function initTransport() {
-    let configure = (transport) => {
-        let timestamp = new Date().getTime();
-        let configUrl = CONFIG_URL + '?' + timestamp;
 
-        return httpRequest(configUrl)
-            .then((c) => transport.configure(c))
-            .then(() => transport);
-    };
 
-    let result = trezor.loadTransport().then(configure).catch((e) => {
-        console.error(e);
-        throw NO_TRANSPORT;
-    });
+    let timestamp = new Date().getTime();
+    let configUrl = CONFIG_URL + '?' + timestamp;
+
+    let result = new Promise((resolve, reject) => {
+        let list = new trezor.DeviceList({configUrl});
+        let onError;
+        let onTransport = () => {
+            list.removeListener('error', onError);
+            resolve(list);
+        };
+        onError = () => {
+            list.removeListener('transport', onTransport);
+            reject(NO_TRANSPORT);
+        };
+        list.on('error', onError);
+        list.on('transport', onTransport);
+    })
 
     return result.catch(errorHandler());
 }
 
-function waitForFirstDevice(transport) {
-    return transport.enumerate().then((descriptors) => {
-        if (descriptors.length === 0) {
-            throw NO_CONNECTED_DEVICES;
-        }
-        return Device.fromDescriptor(transport, descriptors[0]).then((device) => {
-            if (device.isBootloader()) {
-                throw DEVICE_IS_BOOTLOADER;
-            }
-            if (!device.isInitialized()) {
-                throw DEVICE_IS_EMPTY;
-            }
-            if (!device.atLeast('1.3.4')) {
-                // 1.3.0 introduced HDNodeType.xpub field
-                // 1.3.4 has version2 of SignIdentity algorithm
-                throw FIRMWARE_IS_OLD;
-            }
-            return device;
-        });
-    }).catch(errorHandler(() => waitForFirstDevice(transport)));
+function waitForFirstDevice(list) {
+    let res;
+    if (!(list.hasDeviceOrUnacquiredDevice())) {
+        res = Promise.reject(NO_CONNECTED_DEVICES);
+    } else {
+        res = list.acquireFirstDevice()
+            .then(({device, session}) => new Device(session, device))
+            .then((device) => {
+                if (device.isBootloader()) {
+                    throw DEVICE_IS_BOOTLOADER;
+                }
+                if (!device.isInitialized()) {
+                    throw DEVICE_IS_EMPTY;
+                }
+                if (!device.atLeast('1.3.4')) {
+                    // 1.3.0 introduced HDNodeType.xpub field
+                    // 1.3.4 has version2 of SignIdentity algorithm
+                    throw FIRMWARE_IS_OLD;
+                }
+                return device;
+            })
+    }
+
+    return res.catch(errorHandler(() => waitForFirstDevice(list)));
 }
 
 /*
