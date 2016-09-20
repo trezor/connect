@@ -241,7 +241,7 @@ this.TrezorConnect = (function () {
          * @param {string|array} path  
          * @param {string} message to sign (ascii)
          * @param {string|function(SignMessageResult)} callback
-         * @param {?string} coin - (optional) name of coin (default Bitcoin)
+         * @param {?string} opt_coin - (optional) name of coin (default Bitcoin)
          *
          */
         this.signMessage = function (
@@ -263,7 +263,7 @@ this.TrezorConnect = (function () {
                 type: 'signmsg',
                 path: path,
                 message: message,
-                coin: opt_coin
+                coin: {coin_name: opt_coin}
             }, callback);
         };
 
@@ -273,15 +273,20 @@ this.TrezorConnect = (function () {
          * @param {string} address
          * @param {string} signature (base64)
          * @param {string} message (string)
-         * @param {?string} coin - (optional) name of coin (default Bitcoin)
+         * @param {string|function()} callback
+         * @param {?string} opt_coin - (optional) name of coin (default Bitcoin)
          *
          */
         this.verifyMessage = function (
             address,
             signature,
             message,
-            callback
+            callback,
+            opt_coin
         ) {
+            if (!opt_coin) {
+                opt_coin = 'Bitcoin';
+            }
             if (!callback) {
                 throw new TypeError('TrezorConnect: callback not found');
             }
@@ -290,9 +295,22 @@ this.TrezorConnect = (function () {
                 address: address,
                 signature: signature,
                 message: message,
+                coin: {coin_name: opt_coin}
             }, callback);
         };
 
+        /**
+         * Symmetric key-value encryption
+         *
+         * @param {string|array} path
+         * @param {string} key to show on device display
+         * @param {string} value hexadecimal value, length a multiple of 16 bytes
+         * @param {boolean} encrypt / decrypt direction
+         * @param {boolean} ask_on_encrypt (should user confirm on encrypt?)
+         * @param {boolean} ask_on_decrypt (should user confirm on decrypt?)
+         * @param {string|function()} callback
+         *
+         */
         this.cipherKeyValue = function (
             path,
             key,
