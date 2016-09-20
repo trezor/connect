@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Get account info</title>
+    <script>
+
+    function trezorGetAccountInfo() {
+        var description = "m/44'/0'/2'"; // third account 
+                                         // (note that names on connect start with Account 1, which has index 0)
+
+        // var description = [44 | 0x80000000,
+        //                    0  | 0x80000000,
+        //                    2  | 0x80000000 ]; // same, in raw form
+
+        // var description = 2 // third account
+        // var description = "2" // can also be input as string
+
+        // var description = null // will start account discovery and let user select
+        
+        // var description = "xpub6BiVtCpG9fQPxnPmHXG8PhtzQdWC2Su4qWu6XW9tpWFYhxydCLJGrWBJZ5H6qTAHdPQ7pQhtpjiYZVZARo14qHiay2fvrX996oEP42u8wZy" 
+        // if specified by xpub, it has to be of one of the first 10 accounts
+        // this one is from test account, specified here
+        // https://github.com/satoshilabs/slips/blob/master/slip-0014.md
+
+        TrezorConnect.closeAfterFailure(false);
+        TrezorConnect.getAccountInfo(description, function (result) {
+            if (result.success) {
+                console.log('Account ID: ', result.id);
+                console.log('Account path: ', result.path);
+                console.log('Serialized account path: ', result.serializedPath);
+                console.log('Xpub', result.xpub);
+
+                console.log('Fresh address (first unused address): ', result.freshAddress);
+                console.log('Fresh address ID: ', result.freshAddressId);
+                console.log('Fresh address path: ', result.freshAddressPath);
+                console.log('Serialized fresh address path: ', result.serializedFreshAddressPath);
+
+                console.log('Balance in satoshis (including unconfirmed):', result.balance);
+                console.log('Balance in satoshis (only confirmed):', result.confirmed);
+            } else {
+                console.error('Error:', result.error); // error message
+            }
+        });
+    }
+
+    </script>
+  </head>
+  <body>
+
+    <button onclick="trezorGetAccountInfo()">Get account info</button>
+
+    <script src="https://trezor.github.io/connect/connect.js"></script>
+
+  </body>
+</html>

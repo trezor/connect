@@ -34,11 +34,10 @@ restart the action.
 1. [Login](#login)
 2. [Export public key](#export-public-key)
 3. [Sign transaction](#sign-transaction)
-4. [Request payment](#request-payment)
+4. [Request payment](#request-payment) (including broadcasting the resulting transaction to the network)
 5. [Sign message](#sign-message)
 6. [Symmetric key-value encryption](#symmetric-key-value-encryption)
-7. [Get first unused address](#get-first-unused-address)
-8. [Get balance](#get-balance)
+7. [Get account info](#get-account-info) (including info about balance and first unused address)
 
 ## Login
 
@@ -232,7 +231,7 @@ TrezorConnect.composeAndSignTx(recipients, function (result) {
 
 ```
 
-You can also push the transaction to the network with a call.
+You can also push and broadcast the resulting transaction to the Bitcoin network with a call.
 
 [Example:](examples/composetx-push.html)
 ```javascript
@@ -308,40 +307,41 @@ TrezorConnect.cipherKeyValue(path, key, value, encrypt, ask_on_encrypt, ask_on_d
 });
 ```
 
-## Get first unused address
+## Get account info
 
-`TrezorConnect.getFreshAddress(callback)` gets first unused address of an account.
+`TrezorConnect.getAccountInfo(description, callback)` gets default info of an account.
 
-The user is offered a selection of accounts and has to select one.
-
-[Example:](examples/freshaddress.html)
-
+[Example:](examples/accountinfo.html)
 ```javascript
-TrezorConnect.getFreshAddress(function (result) {
-   if (result.success) {
-       resultEl.innerHTML = result.address; // fresh address
-   } else {
-       console.error('Error:', result.error); // error message
-   }
-});
-```
+var description = "m/44'/0'/2'"; // third account (see below)
 
-## Get balance
+TrezorConnect.getAccountInfo(description, function (result) {
+    if (result.success) { // success
+        console.log('Account ID: ', result.id);
+        console.log('Account path: ', result.path);
+        console.log('Serialized account path: ', result.serializedPath);
+        console.log('Xpub', result.xpub);
 
-`TrezorConnect.getBalance(callback)` returns balance of an account, plus "confirmed" balance (transactions with at least 1 confirmation).
+        console.log('Fresh address (first unused address): ', result.freshAddress);
+        console.log('Fresh address ID: ', result.freshAddressId);
+        console.log('Fresh address path: ', result.freshAddressPath);
+        console.log('Serialized fresh address path: ', result.serializedFreshAddressPath);
 
-The user is offered a selection of accounts and has to select one.
-
-[Example:](examples/balance.html)
-
-```javascript
-TrezorConnect.getBalance(function (result) {
-    if (result.success) {
-        console.log('Balance including unconfirmed (in satoshis):', result.balance);
-        console.log('Confirmed balance (in satoshis):', result.confirmed);
+        console.log('Balance in satoshis (including unconfirmed):', result.balance);
+        console.log('Balance in satoshis (only confirmed):', result.confirmed);
     } else {
         console.error('Error:', result.error); // error message
     }
 });
+
 ```
 
+Description can be one of the following:
+
+* `null` (or `undefined`) - in that case, the user is presented with his accounts and has to select one
+* path - either as a string (`"m/44'/0'/2'`), or as an array (`[44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000]`) 
+    * it has to be a BIP44 path for Bitcoin, meaning it has to start with `44'/0'/`.
+* id - ID of the account (either as a string or as a number)
+    * note that accounts have zero-based IDs, but the numbering on the screen start with "Account #1"; so account with id 2 is "Account #3", etc.
+* xpub - xpub of the account
+    * the xpub must start with `xpub`, and has to belong to one of the first 10 accounts
