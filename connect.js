@@ -452,7 +452,7 @@ this.TrezorConnect = (function () {
                 }
                 var n = parseInt(p);
                 if (hardened) { // hardened index
-                    n = n | 0x80000000;
+                    n = (n | 0x80000000) >>> 0;
                 }
                 return n;
             });
