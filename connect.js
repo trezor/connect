@@ -419,8 +419,7 @@ this.TrezorConnect = (function () {
                 // it's not valid to put markup into attributes, so let users
                 // supply a raw text and make TREZOR bold
                 text = text.replace('TREZOR', '<strong>TREZOR</strong>');
-
-                e.parentNode.innerHTML =
+                e.outerHTML =
                     (LOGIN_CSS + LOGIN_HTML)
                     .replace('@text@', text)
                     .replace('@callback@', callback)
