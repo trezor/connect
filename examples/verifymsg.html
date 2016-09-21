@@ -14,12 +14,13 @@
 
 
        TrezorConnect.closeAfterFailure(false);
-       TrezorConnect.verifyMessage(address, signature, message, function (result) {
-           if (result.success) {
+       TrezorConnect.verifyMessage(address, signature, message, function (response) {
+           if (response.success) {
                console.log("Success! Verified.");
            } else {
-               console.log(result.error);
+               console.log(response.error);
            }
+           document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
        }, coin);
      }
 
@@ -40,9 +41,12 @@
   </select></td></tr>
   <tr><td></td><td><button onclick="trezorVerifyMessage()">Verify Message</button></td></tr>
   </table>
-  
 
-    <script src="https://trezor.github.io/connect/connect.js"></script>
+  <pre id="response"></pre>
+
+
+
+  <script src="https://trezor.github.io/connect/connect.js"></script>
 
   </body>
 </html>

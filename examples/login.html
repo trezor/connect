@@ -5,6 +5,7 @@
 <script type="text/javascript">
 
 function trezorLogin(response) {
+    document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
     console.log(response);
 }
 
@@ -12,8 +13,9 @@ function trezorLogin(response) {
 </head>
 <body>
 
-<trezor:login callback="trezorLogin">
-</trezor:login>
+<trezor:login callback="trezorLogin"></trezor:login>
+
+<pre id="response"></pre>
 
 <!--
 // You can use custom icon (i.e. not TREZOR logo) by setting the

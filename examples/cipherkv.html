@@ -18,13 +18,14 @@
     	 var resultEl = document.getElementById("result");
 
        TrezorConnect.closeAfterFailure(false);
-       TrezorConnect.cipherKeyValue(path, key, value, encrypt, ask_on_encrypt, ask_on_decrypt, function (result) {
-           if (result.success) {
-            	 resultEl.innerHTML = result.value;
+       TrezorConnect.cipherKeyValue(path, key, value, encrypt, ask_on_encrypt, ask_on_decrypt, function (response) {
+           if (response.success) {
+            	 resultEl.innerHTML = response.value;
            } else {
             	 resultEl.innerHTML = "";
-            	 resultEl.appendChild(document.createTextNode("Error: " + result.error));
+            	 resultEl.appendChild(document.createTextNode("Error: " + response.error));
            }
+           document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
        });
      }
 
@@ -53,6 +54,8 @@
   <table>
   <tr><td>Result:</td><td id="result"></td></tr>
   </table>
+
+  <pre id="response"></pre>
 
     <script src="https://trezor.github.io/connect/connect.js"></script>
 

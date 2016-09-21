@@ -23,23 +23,24 @@
         // https://github.com/satoshilabs/slips/blob/master/slip-0014.md
 
         TrezorConnect.closeAfterFailure(false);
-        TrezorConnect.getAccountInfo(description, function (result) {
-            if (result.success) {
-                console.log('Account ID: ', result.id);
-                console.log('Account path: ', result.path);
-                console.log('Serialized account path: ', result.serializedPath);
-                console.log('Xpub', result.xpub);
+        TrezorConnect.getAccountInfo(description, function (response) {
+            if (response.success) {
+                console.log('Account ID: ', response.id);
+                console.log('Account path: ', response.path);
+                console.log('Serialized account path: ', response.serializedPath);
+                console.log('Xpub', response.xpub);
 
-                console.log('Fresh address (first unused address): ', result.freshAddress);
-                console.log('Fresh address ID: ', result.freshAddressId);
-                console.log('Fresh address path: ', result.freshAddressPath);
-                console.log('Serialized fresh address path: ', result.serializedFreshAddressPath);
+                console.log('Fresh address (first unused address): ', response.freshAddress);
+                console.log('Fresh address ID: ', response.freshAddressId);
+                console.log('Fresh address path: ', response.freshAddressPath);
+                console.log('Serialized fresh address path: ', response.serializedFreshAddressPath);
 
-                console.log('Balance in satoshis (including unconfirmed):', result.balance);
-                console.log('Balance in satoshis (only confirmed):', result.confirmed);
+                console.log('Balance in satoshis (including unconfirmed):', response.balance);
+                console.log('Balance in satoshis (only confirmed):', response.confirmed);
             } else {
-                console.error('Error:', result.error); // error message
+                console.error('Error:', response.error); // error message
             }
+            document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
         });
     }
 
@@ -48,6 +49,8 @@
   <body>
 
     <button onclick="trezorGetAccountInfo()">Get account info</button>
+
+    <pre id="response"></pre>
 
     <script src="https://trezor.github.io/connect/connect.js"></script>
 

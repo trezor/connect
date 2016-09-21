@@ -29,14 +29,15 @@
          // site icon, optional. at least 48x48px
          var hosticon = 'https://example.com/icon.png';
 
-         TrezorConnect.requestLogin(hosticon, challenge_hidden, challenge_visual, function (result) {
-             if (result.success) {
-                 console.log('Public key:', result.public_key); // pubkey in hex
-                 console.log('Signature:', result.signature); // signature in hex
-                 console.log('Version 2:', result.version === 2); // version field
+         TrezorConnect.requestLogin(hosticon, challenge_hidden, challenge_visual, function (response) {
+             if (response.success) {
+                 console.log('Public key:', response.public_key); // pubkey in hex
+                 console.log('Signature:', response.signature); // signature in hex
+                 console.log('Version 2:', response.version === 2); // version field
              } else {
-                 console.error('Error:', result.error);
+                 console.error('Error:', response.error);
              }
+             document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
          });
      }
 
@@ -45,6 +46,8 @@
   <body>
 
     <button onclick="trezorLogin()">Sign In</button>
+
+    <pre id="response"></pre>
 
     <script src="https://trezor.github.io/connect/connect.js"></script>
 

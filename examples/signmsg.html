@@ -15,15 +15,16 @@
     	 var signature = document.getElementById("signature");
 
        TrezorConnect.closeAfterFailure(false);
-       TrezorConnect.signMessage(path, message, function (result) {
-           if (result.success) {
-            	 address.innerHTML = result.address;
-            	 signature.innerHTML = result.signature;
+       TrezorConnect.signMessage(path, message, function (response) {
+           if (response.success) {
+            	 address.innerHTML = response.address;
+            	 signature.innerHTML = response.signature;
            } else {
             	 address.innerHTML = "";
-            	 address.appendChild(document.createTextNode("Error: "+result.error));
+            	 address.appendChild(document.createTextNode("Error: " + response.error));
             	 signature.innerHTML = "";
            }
+           document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
        }, coin);
      }
 
@@ -48,6 +49,8 @@
   <tr><td>Address:</td><td id="address"></td></tr>
   <tr><td>Signature:</td><td id="signature"></td></tr>
   </table>
+
+  <pre id="response"></pre>
   
 
     

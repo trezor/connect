@@ -46,13 +46,14 @@
              }
          }];
 
-         TrezorConnect.signTx(inputs, outputs, function (result) {
-             if (result.success) {
-                 console.log('Serialized TX:', result.serialized_tx); // tx in hex
-                 console.log('Signatures:', result.signatures); // array of signatures, in hex
+         TrezorConnect.signTx(inputs, outputs, function (response) {
+             if (response.success) {
+                 console.log('Serialized TX:', response.serialized_tx); // tx in hex
+                 console.log('Signatures:', response.signatures); // array of signatures, in hex
              } else {
-                 console.error('Error:', result.error); // error message
+                 console.error('Error:', response.error); // error message
              }
+             document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
          });
      }
 
@@ -61,6 +62,8 @@
   <body>
 
     <button onclick="trezorSignTx()">Sign</button>
+
+    <pre id="response"></pre>
 
     <script src="https://trezor.github.io/connect/connect.js"></script>
 

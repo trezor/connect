@@ -11,14 +11,15 @@
          //             0  | 0x80000000,
          //             0  | 0x80000000 ]; // same, in raw form
 
-         TrezorConnect.getXPubKey(path, function (result) {
-             if (result.success) {
-                 console.log('XPUB:', result.xpubkey); // serialized XPUB
-                 console.log('Raw path:', result.path);
-                 console.log('Serialized path:', result.serializedPath);
+         TrezorConnect.getXPubKey(path, function (response) {
+             if (response.success) {
+                 console.log('XPUB:', response.xpubkey); // serialized XPUB
+                 console.log('Raw path:', response.path);
+                 console.log('Serialized path:', response.serializedPath);
              } else {
-                 console.error('Error:', result.error); // error message
+                 console.error('Error:', response.error); // error message
              }
+             document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
          });
      }
 
@@ -27,6 +28,8 @@
   <body>
 
     <button onclick="trezorGetXPubKey()">Get XPUB key</button>
+
+    <pre id="response"></pre>
 
     <script src="https://trezor.github.io/connect/connect.js"></script>
 

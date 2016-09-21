@@ -5,6 +5,7 @@
     <script>
 
      function trezorLogin(response) {
+         document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
          console.log(response);
      }
 
@@ -14,6 +15,8 @@
 
     <trezor:login callback="trezorLogin" text="Pair with TREZOR">
     </trezor:login>
+
+    <pre id="response"></pre>
 
     <script src="https://trezor.github.io/connect/connect.js"></script>
 
