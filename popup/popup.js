@@ -250,6 +250,7 @@ function handleVerifyMsg(event) {
     let signature = new Buffer(signBase, 'base64').toString('hex');
 
     let address = event.data.address;
+    let coin = event.data.coin;
 
     show('#operation_verifymsg');
 
@@ -264,7 +265,8 @@ function handleVerifyMsg(event) {
             return device.session.verifyMessage(
                 address,
                 signature,
-                message
+                message,
+                coin
             ).catch(handler);
         })
 
