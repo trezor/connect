@@ -10,6 +10,7 @@
     	 var address = document.getElementById("address").value;
     	 var message = document.getElementById("message").value;
     	 var signature = document.getElementById("signature").value;
+         var coin = document.getElementById("coin").value;
 
 
        TrezorConnect.closeAfterFailure(false);
@@ -19,7 +20,7 @@
            } else {
                console.log(result.error);
            }
-       });
+       }, coin);
      }
 
     </script>
@@ -29,6 +30,14 @@
   <tr><td>Address:</td><td><input id="address" value="18BhaXeC4uGJ7FPVK7o5vdtwWm4Bdd44nJ" size="64"></td></tr>
   <tr><td>Message:</td><td><input id="message" value="Foo bar baz" size="64"></td></tr>
   <tr><td>Signature:</td><td><input id="signature" value="H5E7SDo6fk1t973FFbVZFQTxzSY3i83Mdm1pxm6uOUyCfJjdqdHp93Y3AuHFi8FwWuX3pZQtbkQbti3Kfqf8014=" size="128"></td></tr>
+  <tr><td>Coin:</td><td><select id="coin">
+      <option>Bitcoin</option>
+      <option>Litecoin</option>
+      <option>Testnet</option>
+      <option>Namecoin</option>
+      <option>Dogecoin</option>
+      <option>Dash</option>
+  </select></td></tr>
   <tr><td></td><td><button onclick="trezorVerifyMessage()">Verify Message</button></td></tr>
   </table>
   
