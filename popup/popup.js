@@ -1430,7 +1430,9 @@ function pinKeydownHandler(ev) {
 
 function pinAdd(el) {
     let e = document.querySelector('#pin');
-    e.value += el.getAttribute('key');
+    if (e.value.length < 9) {
+        e.value += el.getAttribute('key');
+    }
 }
 
 window.pinAdd = pinAdd;
