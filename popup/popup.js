@@ -851,7 +851,7 @@ function initTransport() {
         };
         list.on('error', onError);
         list.on('transport', onTransport);
-    })
+    });
 
     return result.catch(errorHandler());
 }
@@ -1279,21 +1279,30 @@ function renderAccountDiscovery(discovered, discovering) {
         } else {
             content = formatAmount(balance);
         }
-        let status = (account === discovering) ? 'Loading...' : content;
 
-        return `
-            <div class="account">
-             <button onclick="selectAccount(${i})">
-              <span class="account-title">Account #${i + 1}</span>
-              <span class="account-status">${status}</span>
-             </button>
-            </div>`;
+        if (account !== discovering) {
+            return `
+                <div class="account">
+                 <button onclick="selectAccount(${i})">
+                 <span class="account-title">Account #${i + 1}</span>
+                 <span class="account-status">${content}</span>
+                 </button>
+                </div>`;
+        } else {
+            return `
+                <div class="account">
+                 <button disabled>
+                 <span class="account-title">Account #${i + 1}</span>
+                 <span class="account-status">Loading...</span>
+                 </button>
+                </div>`;
+        }
     });
 
     document.querySelector('#accounts').innerHTML = components.join('');
 }
 
-function showAccounts(device) {
+function showSelectionAccounts(device) {
     let discovered = [];
     let discovering = null;
 
@@ -1317,22 +1326,21 @@ function showAccounts(device) {
     global.alert = '#alert_accounts';
 
     heading.textContent = 'Loading accounts...';
-    return discoverAccounts(device, onStart, onUsed, onEnd).then((accounts) => {
+    discoverAccounts(device, onStart, onUsed, onEnd).then((accounts) => {
         global.alert = '#alert_loading';
         heading.textContent = 'Select an account:';
         renderAccountDiscovery(accounts, discovering);
-        return accounts;
     });
+    return selectAccount(discovered);
 }
 
 function waitForAccount() {
-    return showAccounts(global.device)
-        .then(selectAccount)
-        .then((account) => {
+    return showSelectionAccounts(global.device)
+      .then((account) => {
             global.account = account;
             return account;
         })
-        .catch(errorHandler(waitForAccount));
+      .catch(errorHandler(waitForAccount));
 }
 
 function selectAccount(accounts) {
