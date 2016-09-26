@@ -804,6 +804,7 @@ function errorHandler(retry) {
         switch (error.code) { // 'Failure' messages
 
         case 'Failure_PinInvalid':
+            document.querySelector('#pin').value = '';
             showAlert('#alert_pin_invalid');
             return resolveAfter(2500).then(retry);
         }
@@ -1282,32 +1283,9 @@ function renderAccountDiscovery(discovered, discovering) {
 
         return `
             <div class="account">
-             <button disabled>
-              <span class="account-title">Account #${i + 1}</span>
-              <span class="account-status">${status}</span>
-             </button>
-            </div>`;
-    });
-
-    document.querySelector('#accounts').innerHTML = components.join('');
-}
-
-function renderAccounts(accounts) {
-    let components = accounts.map((account, i) => {
-        let content;
-        let used = account.used;
-        let balance = account.getBalance();
-        if (!used) {
-            content = 'Fresh account';
-        } else {
-            content = formatAmount(balance);
-        }
-
-        return `
-            <div class="account">
              <button onclick="selectAccount(${i})">
               <span class="account-title">Account #${i + 1}</span>
-              <span class="account-status">${content}</span>
+              <span class="account-status">${status}</span>
              </button>
             </div>`;
     });
@@ -1342,7 +1320,7 @@ function showAccounts(device) {
     return discoverAccounts(device, onStart, onUsed, onEnd).then((accounts) => {
         global.alert = '#alert_loading';
         heading.textContent = 'Select an account:';
-        renderAccounts(accounts);
+        renderAccountDiscovery(accounts, discovering);
         return accounts;
     });
 }
@@ -1397,11 +1375,13 @@ function buttonCallback(code) {
 
 function pinCallback(type, callback) {
     document.querySelector('#pin_dialog').callback = callback;
+    document.querySelector('#pin').value = '';
     window.addEventListener('keydown', pinKeydownHandler);
     showAlert('#pin_dialog');
 }
 
 function pinKeydownHandler(ev) {
+    ev.preventDefault();
     clickMatchingElement(ev, {
         8: '#pin_backspace',
         13: '#pin_enter button',
@@ -1445,12 +1425,11 @@ function pinBackspace() {
 window.pinBackspace = pinBackspace;
 
 function pinEnter() {
+    window.removeEventListener('keydown', pinKeydownHandler);
     let pin = document.querySelector('#pin').value;
     document.querySelector('#pin').value = '';
     document.querySelector('#pin_dialog').callback(null, pin);
     showAlert(global.alert);
-
-    window.removeEventListener('keydown', pinKeydownHandler);
 }
 
 window.pinEnter = pinEnter;
