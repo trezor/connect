@@ -358,26 +358,10 @@ this.TrezorConnect = (function () {
                 throw new TypeError('TrezorConnect: callback not found');
             }
 
-            var xhr = new XMLHttpRequest();
-            var method = 'POST';
-            var url = INSIGHT_URL + '/tx/send';
-            var data = {
-                rawtx: rawTx
-            };
-
-            xhr.open(method, url, true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        var txid = JSON.parse(xhr.responseText).txid;
-                        callback({success: true, txid: txid});
-                    } else {
-                        callback({error: new Error(xhr.responseText)});
-                    }
-                }
-            };
-            xhr.send(JSON.stringify(data));
+            manager.sendWithChannel({
+                type: 'pushTx',
+                tx: rawTx
+            }, callback);
         }
 
         var LOGIN_CSS =
