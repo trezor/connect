@@ -25,9 +25,7 @@ const HD_HARDENED = 0x80000000;
 const CHUNK_SIZE = 20;
 const GAP_LENGTH = 20;
 const ADDRESS_VERSION = 0x0;
-const BITCORE_URL = 'https://bitcore.mytrezor.com';
-const BITCORE_INSIGHT_PATH = 'insight-api';
-const BITCORE_WEBSOCKET = true;
+const BITCORE_URLS = ['https://bitcore3.trezor.io', 'https://bitcore2.trezor.io'];
 
 const SOCKET_WORKER_PATH = './socket-worker-dist.js';
 const CRYPTO_WORKER_PATH = './trezor-crypto-dist.js';
@@ -997,11 +995,7 @@ function waitForFirstDevice(list) {
  */
 
 function createBlockchain() {
-    return new hd.BitcoreBlockchain(BITCORE_URL, {
-        upgrade: BITCORE_WEBSOCKET,
-        transports: BITCORE_WEBSOCKET ? ['websocket', 'polling'] : ['polling', 'websocket'],
-        insightPath: BITCORE_INSIGHT_PATH
-    }, createSocketWorker());
+    return new hd.BitcoreBlockchain(BITCORE_URLS, () => createSocketWorker());
 }
 
 function createSocketWorker() {
