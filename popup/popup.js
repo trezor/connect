@@ -1503,6 +1503,8 @@ function selectFee(transactions) {
     return new Promise((resolve) => {
         window.selectFee = (i) => {
             window.selectFee = null;
+            document.querySelector('#accounts').innerHTML = '';
+            document.querySelector('#alert_fees .alert_heading').innerHTML = '';
             resolve(transactions[i].tx.converted);
         };
     });
