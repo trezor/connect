@@ -357,11 +357,12 @@ this.TrezorConnect = (function () {
             if (!callback) {
                 throw new TypeError('TrezorConnect: callback not found');
             }
-
-            manager.sendWithChannel({
-                type: 'pushTx',
-                tx: rawTx
-            }, callback);
+            setTimeout(function () {
+                manager.sendWithChannel({
+                    type: 'pushTx',
+                    tx: rawTx
+                }, callback);
+            }, 2);
         }
 
         var LOGIN_CSS =
