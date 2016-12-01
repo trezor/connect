@@ -41,10 +41,10 @@ if (window.opener) {
 }
 window.addEventListener('message', onMessage);
 
-function httpRequest(url) {
+function httpRequest(url, json) {
     return fetch(url).then((response) => {
         if (response.status === 200) {
-            return response.text();
+            return response.text().then(result => (json ? JSON.parse(result) : result));
         } else {
             throw new Error(response.statusText);
         }
@@ -661,6 +661,84 @@ function lookupReferencedTxs(inputs) {
  * composetx
  */
 
+const FEE_LEVELS = [
+    {
+        name: 'High',
+        noDelay: true,
+        minutes: 35,
+    }, {
+        name: 'Normal',
+        noDelay: false,
+        minutes: 60,
+    }, {
+        name: 'Economy',
+        noDelay: false,
+        minutes: 5 * 60,
+    }, {
+        name: 'Low',
+        noDelay: false,
+        minutes: 12 * 60,
+    },
+];
+
+function recommendFee(level, feeList, previous) {
+    const minutes = level.minutes;
+    let noDelay = level.noDelay;
+    if (noDelay) {
+        if (feeList.fees.filter(interval => interval.maxDelay === 0).length === 0) {
+            noDelay = false;
+        }
+    }
+
+    if (minutes < 35) {
+        return recommendFee({...level, minutes: 35}, feeList, previous);
+    }
+    const correct = feeList.fees.filter(interval => {
+        const correctMinutes = interval.maxMinutes <= minutes;
+        if (noDelay) {
+            return correctMinutes && interval.maxDelay === 0;
+        }
+        return correctMinutes;
+    }).filter(interval => {
+        return previous.filter(p => p.maxFee <= interval.maxFee).length === 0;
+    });
+
+    correct.sort((a, b) => a.maxFee - b.maxFee);
+    if (correct.length === 0) {
+        return recommendFee({...level, minutes: minutes + 5}, feeList, previous);
+    }
+
+    return {
+        ...correct[0],
+        name: level.name
+    };
+}
+
+function download21coFees() {
+    return httpRequest('https://bitcoinfees.21.co/api/v1/fees/list', true)
+        .catch((err) => {
+            console.error(err);
+            return null;
+        });
+}
+
+function findAllRecommendedFeeLevels() {
+    return download21coFees().then(downloaded => {
+        if (downloaded == null) {
+            return null;
+        } else {
+            const res = [];
+            FEE_LEVELS.forEach(level => {
+                const fee = recommendFee(level, downloaded, res);
+                res.push(fee);
+            });
+            return res;
+        }
+    });
+}
+
+const HARDCODED_FEE_PER_BYTE = 60;
+
 function handleComposeTx(event) {
     let recipients = event.data.recipients;
 
@@ -672,11 +750,30 @@ function handleComposeTx(event) {
     initDevice()
 
         .then((device) => {
+            const feesP = findAllRecommendedFeeLevels();
+
             let composeTx = () => {
                 let handler = errorHandler(composeTx);
                 return waitForAccount()
-                    .then((account) => account.composeTx(recipients))
-                    .catch(handler);
+                    .then((account) => {
+                        return feesP.then(fees => {
+                            if (fees == null) {
+                                // special case - if fees not loaded, just one tx
+                                return account.composeTx(recipients, HARDCODED_FEE_PER_BYTE);
+                            } else {
+                                // make one transaction for every fee level
+                                // so we can later show user all
+                                // and he picks one
+                                return Promise.all(fees.map(fee => {
+                                    const tx = account.composeTx(recipients, fee.maxFee)
+                                    return {
+                                        ...fee,
+                                        tx
+                                    };
+                                }));
+                            }
+                        })
+                    }).catch(handler);
             };
 
             let signTx = (inputs, outputs, refTxs) => {
@@ -689,10 +786,23 @@ function handleComposeTx(event) {
                 ).catch(handler);
             };
 
-            return composeTx().then(({inputs, outputs}) => {
-                return lookupReferencedTxs(inputs)
-                    .then((refTxs) => signTx(inputs, outputs, refTxs));
-            });
+            let chooseTxFee = (transactions) => {
+                return feesP.then(fees => {
+                    if (fees == null) {
+                        // special case - if fees not loaded, just one tx
+                        return transactions.converted;
+                    } else {
+                        return waitForFee(transactions);
+                    }
+                });
+            }
+
+            return composeTx()
+                .then(chooseTxFee)
+                .then(({inputs, outputs}) => {
+                    return lookupReferencedTxs(inputs)
+                        .then((refTxs) => signTx(inputs, outputs, refTxs));
+                });
         })
 
         .then((result) => { // success
@@ -1097,11 +1207,10 @@ class Account {
         return this.addressPaths[address];
     }
 
-    composeTx(outputs) {
-        const feePerKB = 10000;
+    composeTx(outputs, feePerByte) {
         const txDust = 5460;
 
-        let {inputs, change} = selectUnspents(this.unspents, outputs, feePerKB);
+        let {inputs, change, fee} = selectUnspents(this.unspents, outputs, feePerByte);
 
         outputs = outputs.slice();
 
@@ -1112,11 +1221,13 @@ class Account {
                 amount: change
             };
             outputs.push(output);
+        } else {
+            fee = fee + change;
         }
 
         outputs.sort((a, b) => a.amount - b.amount);
 
-        return this.convertTxForDevice(inputs, outputs);
+        return {converted: this.convertTxForDevice(inputs, outputs), fee};
     }
 
     convertTxForDevice(inputs, outputs) {
@@ -1170,7 +1281,7 @@ const TX_EMPTY_SIZE = 8;
 const TX_PUBKEYHASH_INPUT = 40 + 2 + 106;
 const TX_PUBKEYHASH_OUTPUT = 8 + 2 + 25;
 
-function selectUnspents(unspents, outputs, feePerKB) {
+function selectUnspents(unspents, outputs, feePerByte) {
     // based on https://github.com/dcousens/coinselect
 
     let candidates = [];
@@ -1202,7 +1313,7 @@ function selectUnspents(unspents, outputs, feePerKB) {
             continue;
         }
 
-        let baseFee = estimateFee(byteLength, feePerKB);
+        let baseFee = estimateFee(byteLength, feePerByte);
         let total = outgoing + baseFee;
 
         if (incoming < total) {
@@ -1210,7 +1321,7 @@ function selectUnspents(unspents, outputs, feePerKB) {
             continue;
         }
 
-        let feeWithChange = estimateFee(byteLength + TX_PUBKEYHASH_OUTPUT, feePerKB);
+        let feeWithChange = estimateFee(byteLength + TX_PUBKEYHASH_OUTPUT, feePerByte);
         let totalWithChange = outgoing + feeWithChange;
 
         // can we afford a change output?
@@ -1234,8 +1345,8 @@ function selectUnspents(unspents, outputs, feePerKB) {
     throw INSUFFICIENT_FUNDS;
 }
 
-function estimateFee(byteLength, feePerKB) {
-    return Math.ceil(byteLength / 1000) * feePerKB;
+function estimateFee(byteLength, feePerByte) {
+    return byteLength * feePerByte;
 }
 
 function discoverAccounts(device, onStart, onUsed, onEnd) {
@@ -1347,7 +1458,58 @@ function selectAccount(accounts) {
     return new Promise((resolve) => {
         window.selectAccount = (i) => {
             window.selectAccount = null;
+            document.querySelector('#accounts').innerHTML = '';
             resolve(accounts[i]);
+        };
+    });
+}
+
+
+function showSelectionFees(device, transactions) {
+    let heading = document.querySelector('#alert_fees .alert_heading');
+
+    showAlert('#alert_fees');
+    global.alert = '#alert_fees';
+
+    heading.textContent = 'Select fee:';
+
+    let components = transactions.map((transactionFeeInfo, i) => {
+        let feeNameObj = '';
+        if (transactionFeeInfo.name === 'Normal') {
+            feeNameObj = 
+                `
+                <span class="fee-name-normal">${transactionFeeInfo.name}</span>
+                <span class="fee-name-subtitle">recommended</span>
+                `;
+        } else {
+            feeNameObj = `<span class="fee-name">${transactionFeeInfo.name}</span>`;
+        }
+        return `
+            <div class="fee">
+              <button onclick="selectFee(${i})">
+              ${feeNameObj}
+              <span class="fee-size">${formatAmount(transactionFeeInfo.tx.fee)}</span>
+              <span class="fee-minutes">${formatTime(transactionFeeInfo.maxMinutes)}</span>
+              </button>
+            </div>
+        `;
+    });
+
+    document.querySelector('#fees').innerHTML = components.join('');
+
+    return selectFee(transactions);
+}
+
+function waitForFee(transactions) {
+    return showSelectionFees(global.device, transactions)
+        .catch(errorHandler(waitForFee));
+}
+
+function selectFee(transactions) {
+    return new Promise((resolve) => {
+        window.selectFee = (i) => {
+            window.selectFee = null;
+            resolve(transactions[i].tx.converted);
         };
     });
 }
@@ -1484,8 +1646,7 @@ window.passphraseEnter = passphraseEnter;
  */
 
 function lookupTx(hash) {
-    return httpRequest(`${INSIGHT_URL}/rawtx/${hash}`)
-        .then((response) => JSON.parse(response))
+    return httpRequest(`${INSIGHT_URL}/rawtx/${hash}`, true)
         .then(({rawtx}) => {
             let tx = bitcoin.Transaction.fromHex(rawtx);
 
@@ -1584,8 +1745,30 @@ function closeWindow() {
 }
 
 function formatAmount(n) {
+    if ((n / 1e8) < 0.1 && n != 0) {
+        let s = (n / 1e5).toString();
+        return `${s} mBTC`;
+    }
     let s = (n / 1e8).toString();
     return `${s} BTC`;
+}
+
+function formatTime(n) {
+    let hours = Math.floor(n / 60);
+    let minutes = n % 60;
+    
+    let res = '';
+    if (hours != 0) {
+        res += hours + ' hour';
+        if (hours > 1) {
+            res += 's';
+        }
+        res += ' ';
+    }
+    if (minutes != 0) {
+        res += minutes + ' minutes';
+    }
+    return res;
 }
 
 window.closeWindow = closeWindow;

@@ -161,18 +161,82 @@ input[type="password"] {
     margin-top: 120px;
 }
 
+
+#alert_fees {
+    margin-top: 60px;
+}
+
+.fee button
+{
+    width: 250px;
+    margin-bottom: -1px;
+    border-radius: 0;
+    position: relative;
+    height: 50px;
+}
+
+.fee:first-child button
+{
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.fee:last-child button {
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.fee-name {
+    position: absolute;
+    top: 15px;
+    left: 14px;
+}
+
+.fee-name-normal {
+    position: absolute;
+    top: 9px;
+    left: 14px;
+}
+
+.fee-name-subtitle {
+    position: absolute;
+    top: 26px;
+    left: 14px;
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+.fee-size,
+.fee-minutes {
+	font-size: 13px;
+	opacity: 0.8;
+  position: absolute;
+  right: 10px;
+}
+
+.fee-size {
+  top: 8px;
+}
+
+.fee-minutes {
+  top: 24px;
+}
+
+
+
 #alert_accounts {
     margin-top: 60px;
 }
 
-
-.account button {
+.account button
+{
     width: 250px;
     margin-bottom: -1px;
     border-radius: 0;
 }
 
-.account:first-child button {
+.account:first-child button
+{
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
