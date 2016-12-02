@@ -1386,13 +1386,23 @@ function renderAccountDiscovery(discovered, discovering) {
         }
 
         if (account !== discovering) {
-            return `
-                <div class="account">
-                 <button onclick="selectAccount(${i})">
-                 <span class="account-title">Account #${i + 1}</span>
-                 <span class="account-status">${content}</span>
-                 </button>
-                </div>`;
+            if (discovering) {
+                return `
+                    <div class="account">
+                    <button disabled>
+                    <span class="account-title">Account #${i + 1}</span>
+                    <span class="account-status">${content}</span>
+                    </button>
+                    </div>`;
+            } else {
+                return `
+                    <div class="account">
+                    <button onclick="selectAccount(${i})">
+                    <span class="account-title">Account #${i + 1}</span>
+                    <span class="account-status">${content}</span>
+                    </button>
+                    </div>`;
+            }
         } else {
             return `
                 <div class="account">
