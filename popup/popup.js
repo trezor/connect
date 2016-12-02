@@ -70,10 +70,6 @@ function onMessage(event) {
 
     switch (request.type) {
 
-    case 'pushTx':
-        handlePushTx(event);
-        break;
-
     case 'login':
         handleLogin(event);
         break;
@@ -144,22 +140,6 @@ function showIdentity(identity) {
         let port = (identity.port) ? (':' + identity.port) : '';
         return proto + host + port;
     }
-}
-
-function handlePushTx(event) {
-    let request = event.data;
-
-    createBlockchain().then(blockchain => {
-        return blockchain.sendTransaction(event.tx)
-    }).then((id) => {
-        respondToEvent(event, {
-            success: true,
-            txId: id
-        });
-    }, (error) => {
-        console.error(error);
-        respondToEvent(event, {success: false, error: error.message});
-    })
 }
 
 /*

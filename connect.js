@@ -24,7 +24,11 @@ this.TrezorConnect = (function () {
     var POPUP_PATH = window.TREZOR_POPUP_PATH || 'https://trezor.github.io/connect/';
     var POPUP_ORIGIN = window.TREZOR_POPUP_ORIGIN || 'https://trezor.github.io';
 
-    var INSIGHT_URL = window.TREZOR_INSIGHT_URL || 'https://bitcore.mytrezor.com/insight-api';
+    var INSIGHT_URLS = window.TREZOR_INSIGHT_URLS || 
+        [
+            'https://bitcore2.trezor.io/api/',
+            'https://bitcore3.trezor.io/api/',
+        ];
 
     var POPUP_INIT_TIMEOUT = 15000;
 
@@ -357,12 +361,36 @@ this.TrezorConnect = (function () {
             if (!callback) {
                 throw new TypeError('TrezorConnect: callback not found');
             }
-            setTimeout(function () {
-                manager.sendWithChannel({
-                    type: 'pushTx',
-                    tx: rawTx
-                }, callback);
-            }, 2);
+
+            var tryUrl = function(i) {
+                var insight_url = INSIGHT_URLS[i];
+                var xhr = new XMLHttpRequest();
+                var method = 'POST';
+                var url = insight_url + '/tx/send';
+                var data = {
+                    rawtx: rawTx
+                };
+
+                xhr.open(method, url, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {
+                        if (xhr.status === 200) {
+                            var txid = JSON.parse(xhr.responseText).txid;
+                            callback({success: true, txid: txid});
+                        } else {
+                            if (i === INSIGHT_URLS.length - 1) {
+                                callback({error: new Error(xhr.responseText)});
+                            } else {
+                                tryUrl(i + 1);
+                            }
+                        }
+                    }
+                };
+                xhr.send(JSON.stringify(data));
+            }
+
+            tryUrl(0);
         }
 
         var LOGIN_CSS =
