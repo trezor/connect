@@ -2643,9 +2643,9 @@ trezor-link@^0.2.70:
   dependencies:
     semver-compare "^1.0.0"
 
-trezor.js@5.4.3:
-  version "5.4.3"
-  resolved "https://registry.yarnpkg.com/trezor.js/-/trezor.js-5.4.3.tgz#b46759ca034bd79917b9714e6c9fff5537c6f2a7"
+trezor.js@^5.5.0:
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/trezor.js/-/trezor.js-5.5.0.tgz#ecb4b3db7132a9ce5481d3565e82aed346e24ee0"
   dependencies:
     bitcoinjs-lib-zcash "^2.3.0"
     ecurve "^1.0.2"

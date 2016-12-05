@@ -969,7 +969,7 @@ function waitForFirstDevice(list) {
     if (!(list.hasDeviceOrUnacquiredDevice())) {
         res = Promise.reject(NO_CONNECTED_DEVICES);
     } else {
-        res = list.acquireFirstDevice()
+        res = list.acquireFirstDevice(true)
             .then(({device, session}) => new Device(session, device))
             .then((device) => {
                 if (device.isBootloader()) {
