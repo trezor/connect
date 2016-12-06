@@ -33,7 +33,7 @@
   "homepage": "https://github.com/trezor/connect",
   "dependencies": {
     "bip32-utils": "^0.6.2",
-    "bitcoinjs-lib": "^2.2.0",
+    "bitcoinjs-lib-zcash": "^2.3.1",
     "bowser": "^1.0.0",
     "cb-insight": "^0.1.0",
     "es6-promise": "^2.3.0",

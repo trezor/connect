@@ -8,7 +8,7 @@ import 'whatwg-fetch';
 import {Promise} from 'es6-promise';
 
 import bowser from 'bowser';
-import * as bitcoin from 'bitcoinjs-lib';
+import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as trezor from 'trezor.js';
 import * as hd from 'hd-wallet';
 
