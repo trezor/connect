@@ -12,6 +12,8 @@ import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as trezor from 'trezor.js';
 import * as hd from 'hd-wallet';
 
+var semvercmp = require('semver-compare');
+
 const NETWORK = bitcoin.networks.bitcoin;
 const COIN_NAME = 'Bitcoin';
 const SCRIPT_TYPES = {
@@ -68,6 +70,8 @@ function onMessage(event) {
     request.identity = parseIdentity(event);
     document.querySelector('#origin').textContent = showIdentity(request.identity);
 
+    parseRequiredFirmware(request.requiredFirmware);
+
     switch (request.type) {
 
     case 'login':
@@ -84,6 +88,10 @@ function onMessage(event) {
 
     case 'signtx':
         handleSignTx(event);
+        break;
+
+    case 'signethtx':
+        handleSignEthTx(event);
         break;
 
     case 'composetx':
@@ -369,13 +377,15 @@ function handleXpubKey(event) {
 
         .then(({result, path}) => { // success
             let {message} = result;
-            let {xpub} = message;
+            let {xpub, node} = message;
             let serializedPath = serializePath(path);
 
             return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
                     xpubkey: xpub,
+                    chainCode: node.chain_code,
+                    publicKey: node.public_key,
                     path,
                     serializedPath
                 });
@@ -576,6 +586,59 @@ function handleAccountInfo(event) {
             respondToEvent(event, {success: false, error: error.message});
         });
 }
+
+function handleSignEthTx(event) {
+    let fixPath = (address_n) => {
+            // make sure bip32 indices are unsigned
+        return address_n.map((i) => i >>> 0);
+    };
+
+    let address_n = fixPath(event.data.address_n);
+    let nonce = event.data.nonce;
+    let gas_price = event.data.gas_price;
+    let gas_limit = event.data.gas_limit;
+    let to = event.data.to;
+    let value = event.data.value;
+    let data = event.data.data;
+
+    show('#operation_signtx');
+
+    initDevice()
+
+        .then(function signEthTx(device) {
+            let handler = errorHandler(() => signEthTx(device));
+            device.session.on('button', (code) => {
+                buttonCallback(code);
+            });
+
+            return device.session.signEthTx(
+                address_n,
+                nonce,
+                gas_price,
+                gas_limit,
+                to,
+                value,
+                data
+            ).catch(handler);
+        })
+
+        .then((result) => { // success
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    r: result.r,
+                    v: result.v,
+                    s: result.s
+                });
+            });
+        })
+
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
 
 /*
  * signtx
@@ -964,6 +1027,41 @@ function initTransport() {
     return result.catch(errorHandler());
 }
 
+// note - this can be changed in onMessage
+// caller can specify his own version
+// but only bigger than 1.3.4
+let requiredFirmware = '1.3.4';
+
+function parseRequiredFirmware(firmware) {
+  if (firmware == null) {
+    return;
+  }
+  try {
+    let firmwareString = '';
+    if (typeof firmware === 'string') {
+      firmwareString = firmware;
+    } else {
+      // this can cause an exception, but we run this in try anyway
+      firmwareString = firmware.map((n) => n.toString()).join('.');
+    }
+
+    const split = firmwareString.split('.');
+    if (split.length !== 3) {
+      throw new Error('Too long version');
+    }
+    if (!(split[0].match(/^\d+$/)) || !(split[1].match(/^\d+$/)) || !(split[2].match(/^\d+$/))) {
+      throw new Error('Version not valid');
+    }
+
+    if (semvercmp(firmwareString, requiredFirmware) >= 0) {
+      requiredFirmware = firmwareString;
+    }
+  } catch (e) {
+    // print error, but otherwise ignore
+    console.error(e);
+  }
+}
+
 function waitForFirstDevice(list) {
     let res;
     if (!(list.hasDeviceOrUnacquiredDevice())) {
@@ -978,7 +1076,7 @@ function waitForFirstDevice(list) {
                 if (!device.isInitialized()) {
                     throw DEVICE_IS_EMPTY;
                 }
-                if (!device.atLeast('1.3.4')) {
+                if (!device.atLeast(requiredFirmware)) {
                     // 1.3.0 introduced HDNodeType.xpub field
                     // 1.3.4 has version2 of SignIdentity algorithm
                     throw FIRMWARE_IS_OLD;
@@ -1680,21 +1778,6 @@ function lookupTx(hash) {
                 })
             };
         });
-}
-
-// taken from https://github.com/substack/semver-compare/blob/master/index.js
-function semvercmp(a, b) {
-    let pa = a.split('.');
-    let pb = b.split('.');
-    for (let i = 0; i < 3; i++) {
-        let na = Number(pa[i]);
-        let nb = Number(pb[i]);
-        if (na > nb) return 1;
-        if (nb > na) return -1;
-        if (!isNaN(na) && isNaN(nb)) return 1;
-        if (isNaN(na) && !isNaN(nb)) return -1;
-    }
-    return 0;
 }
 
 function clickMatchingElement(ev, keys, active = 'active') {

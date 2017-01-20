@@ -22,4 +22,4 @@ clean:
 	rm -f ${TARGET_WORKER} ${TARGET_WORKER}.map
 
 node_modules:
-	npm install
+	yarn

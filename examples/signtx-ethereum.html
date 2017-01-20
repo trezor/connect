@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Sign Transaction Test</title>
+    <script>
+
+     function trezorSignTx() {
+         // spend one change output
+         var address_n = "m/44'/60'/0'/0"; 
+
+         // var address_n = [44 | 0x80000000,
+         //                  60 | 0x80000000,
+         //                  0  | 0x80000000 ,
+         //                  0 ]; // same, in raw form
+
+         var nonce = '03'; // note - it is hex, not number!!!
+         var gas_price = '098bca5a00';
+         var gas_limit = 'a43f';
+         var to = 'e0b7927c4af23765cb51314a0e0521a9645f0e2a';
+         // var value = '01'; // in hexadecimal, in wei - this is 1 wei
+         var value = '010000000000000000'; // in hexadecimal, in wei - this is about 18 ETC
+         var data = 'a9059cbb000000000000000000000000dc7359317ef4cc723a3980213a013c0433a338910000000000000000000000000000000000000000000000000000000001312d00'; // some contract data 
+         // var data = null  // for no data
+
+         TrezorConnect.signEthereumTx(
+            address_n,
+            nonce,
+            gas_price,
+            gas_limit,
+            to,
+            value,
+            data,
+            function (response) {
+             if (response.success) {
+                 console.log('Signature V (recovery parameter):', response.v); // number
+                 console.log('Signature R component:', response.r); // bytes
+                 console.log('Signature S component:', response.s); // bytes
+             } else {
+                 console.error('Error:', response.error); // error message
+             }
+             document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+         });
+     }
+
+    </script>
+  </head>
+  <body>
+
+    <button onclick="trezorSignTx()">Sign</button>
+
+    <pre id="response"></pre>
+
+    <script src="../connect.js"></script>
+
+  </body>
+</html>

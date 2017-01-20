@@ -31,6 +31,10 @@ out, etc.  In case of failure, `result.success` is false and `result.error` is
 the error message.  It is recommended to log the error message and let user
 restart the action.
 
+All the API calls also have an optional parameter requiredFirmware; you can
+require that firmware version or newer (for example, 1.4.0 for Ethereum support)
+- see example xpub-ethereum.
+
 1. [Login](#login)
 2. [Export public key](#export-public-key)
 3. [Sign transaction](#sign-transaction)
@@ -203,6 +207,27 @@ TrezorConnect.signTx(inputs, outputs, function (result) {
 ```
 
 [PAYTOMULTISIG example.](examples/signtx-paytomultisig.html)
+
+## Sign Ethereum transaction
+
+```javascript
+TrezorConnect.signEthereumTx(
+  address_n, // address path - either array or string, see example
+  nonce,     // nonce - hexadecimal string
+  gas_price, // gas price - hexadecimal string
+  gas_limit, // gas limit - hexadecimal string
+  to,        // address
+  value,     // value in wei, hexadecimal string
+  data,      // data, hexadecimal string OR null for no data
+  callback)
+```
+
+This will return signature in three components - v, r, s - v is number, the rest is hexadecimal string.
+
+All the hexa strings are *without* the '0x' prefix, *including the address*.
+
+[Ethereum example:](examples/signtx-ethereum.html)
+
 
 ## Request payment
 
