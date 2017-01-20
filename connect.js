@@ -801,7 +801,11 @@ this.TrezorConnect = (function () {
                     callback(new Error(ERR_ALREADY_WAITING));
                 }
             } else {
-                open(callback);
+                try {
+                    open(callback);
+                } catch (e) {
+                    callback(new Error(ERR_WINDOW_BLOCKED));
+                }
             }
         };
 

@@ -38,7 +38,7 @@
     "cb-insight": "^0.1.0",
     "es6-promise": "^2.3.0",
     "hd-wallet": "1.0.13-bitcore3",
-    "trezor.js": "5.9.4",
+    "trezor.js": "5.9.9",
     "whatwg-fetch": "^0.11.0"
   },
   "devDependencies": {
