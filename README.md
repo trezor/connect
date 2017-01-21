@@ -13,7 +13,7 @@ User needs to confirm actions on his TREZOR:
 
 More general (and slightly obsolete) info can be found [here](https://doc.satoshilabs.com/trezor-tech/api-connect.html).
 
-Examples of usage can be found on https://trezor.github.io/connect/examples/ 
+Examples of usage can be found on https://trezor.github.io/connect/examples/
 
 ## Usage
 
@@ -127,10 +127,11 @@ default CSS being used is [`login_buttons.css`](login_buttons.css):
 Here is the reference implementation of the server-side signature verification
 written in various languages:
 
-- **Python**: [`examples/server.py`](examples/server.py)
-- **PHP**: [`examples/server.php`](examples/server.php)
-- **Ruby**: [`examples/server.rb`](examples/server.rb)
 - **C#**: [`examples/server.cs`](examples/server.cs)
+- **Javscript**: [`examples/server.js`](examples/server.js)
+- **PHP**: [`examples/server.php`](examples/server.php)
+- **Python**: [`examples/server.py`](examples/server.py)
+- **Ruby**: [`examples/server.rb`](examples/server.rb)
 
 ## Export public key
 
@@ -254,7 +255,7 @@ TrezorConnect.composeAndSignTx(outputs, function (result) {
 ## Sign message
 
 `TrezorConnect.signMessage(path, message, callback [,coin])` asks device to
-sign a message using the private key derived by given BIP32 path. Path can be specified 
+sign a message using the private key derived by given BIP32 path. Path can be specified
 either as an array of numbers or as string m/A'/B'/C/...
 
 Message is signed and address + signature is returned
@@ -283,7 +284,7 @@ The message can be UTF-8; however, TREZOR is not displaying non-ascii characters
 
 `TrezorConnect.cipherKeyValue(path, key, value, encrypt, ask_on_encrypt, ask_on_decrypt, callback)` asks device to
 encrypt value
-using the private key derived by given BIP32 path and the given key. Path can be specified 
+using the private key derived by given BIP32 path and the given key. Path can be specified
 either as an array of numbers or as string m/A'/B'/C/... , value must be hexadecimal value - with length a multiple of 16 bytes (so 32 letters in hexadecimal).
 
 More information can be found in [SLIP-0011](https://github.com/satoshilabs/slips/blob/master/slip-0011.md). IV is always computed automatically.
@@ -339,7 +340,7 @@ TrezorConnect.getAccountInfo(description, function (result) {
 Description can be one of the following:
 
 * `null` (or `undefined`) - in that case, the user is presented with his accounts and has to select one
-* path - either as a string (`"m/44'/0'/2'`), or as an array (`[44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000]`) 
+* path - either as a string (`"m/44'/0'/2'`), or as an array (`[44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000]`)
     * it has to be a BIP44 path for Bitcoin, meaning it has to start with `44'/0'/`.
 * id - ID of the account (either as a string or as a number)
     * note that accounts have zero-based IDs, but the numbering on the screen start with "Account #1"; so account with id 2 is "Account #3", etc.
