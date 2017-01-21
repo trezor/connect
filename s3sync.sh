@@ -10,6 +10,6 @@ bucket=connect.trezor.io
 set -e
 cd `dirname $0`
 
-aws s3 sync --exclude ".git*" . s3://$bucket/$api_version/
+aws s3 sync --exclude ".git*" dist-$api_version s3://$bucket/$api_version/
 
 echo "DONE"
