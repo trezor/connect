@@ -128,7 +128,7 @@ Here is the reference implementation of the server-side signature verification
 written in various languages:
 
 - **C#**: [`examples/server.cs`](examples/server.cs)
-- **Javscript**: [`examples/server.js`](examples/server.js)
+- **Javascript**: [`examples/server.js`](examples/server.js)
 - **PHP**: [`examples/server.php`](examples/server.php)
 - **Python**: [`examples/server.py`](examples/server.py)
 - **Ruby**: [`examples/server.rb`](examples/server.rb)
