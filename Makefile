@@ -1,5 +1,6 @@
 dist-%:
-	#git checkout v$*
+	git fetch --tags
+	git checkout v$*
 	mkdir dist
 	cp -r chrome dist
 	cp -r examples dist
