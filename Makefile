@@ -14,4 +14,4 @@ dist-%:
 	cp popup/socket-worker-dist.js.map dist-$*/popup
 	cp -r popup/img/ dist-$*/popup
 	cp login_buttons.css dist-$*
-	cat connect.js | sed 's/FILL_URL/https:\/\/connect.trezor.io/$*/' > dist-$*/connect.js
+	cat connect.js | sed 's/FILL_URL/https:\/\/connect.trezor.io\/$*/' > dist-$*/connect.js
