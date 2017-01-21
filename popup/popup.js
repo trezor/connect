@@ -20,7 +20,6 @@ const SCRIPT_TYPES = {
     [NETWORK.pubKeyHash]: 'PAYTOADDRESS',
     [NETWORK.scriptHash]: 'PAYTOSCRIPTHASH'
 };
-const INSIGHT_URL = 'https://bitcore.mytrezor.com/insight-api';
 const CONFIG_URL = 'https://wallet.trezor.io/data/config_signed.bin';
 const HD_HARDENED = 0x80000000;
 
@@ -1749,10 +1748,10 @@ window.passphraseEnter = passphraseEnter;
  * utils
  */
 
-function lookupTx(hash) {
-    return httpRequest(`${INSIGHT_URL}/rawtx/${hash}`, true)
-        .then(({rawtx}) => {
-            let tx = bitcoin.Transaction.fromHex(rawtx);
+function lookupTx(hash, blockchain) {
+    return blockchain.lookupTransaction(hash)
+        .then((txinfo) => {
+            let tx = txinfo.tx;
 
             return {
                 hash: hash,
