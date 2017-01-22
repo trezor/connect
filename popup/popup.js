@@ -62,7 +62,12 @@ function onMessage(event) {
     }
 
     if (bowser.msie) {
-        showAlert('#alert_browser_unsupported');
+        showAlert('#alert_browser_old');
+        return;
+    }
+
+    if (bowser.mobile || bowser.tablet) {
+        showAlert('#alert_browser_mobile');
         return;
     }
 
