@@ -457,8 +457,8 @@ this.TrezorConnect = (function () {
                 var hardened = false;
                 if (p[p.length - 1] === "'") {
                     hardened = true;
+                    p = p.substr(0, p.length - 1);
                 }
-                p = p.substr(0, p.length - 1);
                 if (isNaN(p)) {
                    throw new Error('Not a valid path.');
                 }
