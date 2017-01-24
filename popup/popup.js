@@ -604,6 +604,7 @@ function handleSignEthTx(event) {
     let to = event.data.to;
     let value = event.data.value;
     let data = event.data.data;
+    let chain_id = event.data.chain_id;
 
     show('#operation_signtx');
 
@@ -615,6 +616,11 @@ function handleSignEthTx(event) {
                 buttonCallback(code);
             });
 
+            let chain_id_sent;
+            if (device.atLeast('1.4.2')) {
+                chain_id_sent = chain_id;
+            }
+
             return device.session.signEthTx(
                 address_n,
                 nonce,
@@ -622,7 +628,8 @@ function handleSignEthTx(event) {
                 gas_limit,
                 to,
                 value,
-                data
+                data,
+                chain_id_sent
             ).catch(handler);
         })
 

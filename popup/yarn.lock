@@ -2666,9 +2666,9 @@ trezor-link@0.2.98:
     protobufjs "3.8.2"
     semver-compare "^1.0.0"
 
-trezor.js@5.9.9:
-  version "5.9.9"
-  resolved "https://registry.yarnpkg.com/trezor.js/-/trezor.js-5.9.9.tgz#8d3c07309fb996224fecd43cbc0c67bbcdd26a4e"
+trezor.js@5.10.0:
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/trezor.js/-/trezor.js-5.10.0.tgz#a9833d424921850509095b87d050d9ca1c667ca5"
   dependencies:
     bitcoinjs-lib-zcash "^2.3.0"
     ecurve "^1.0.2"

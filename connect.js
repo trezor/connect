@@ -189,6 +189,7 @@ this.TrezorConnect = (function () {
             to,
             value,
             data,
+            chain_id,
             callback,
             requiredFirmware
         ) {
@@ -207,6 +208,7 @@ this.TrezorConnect = (function () {
                 to: to,
                 value: value,
                 data: data,
+                chain_id: chain_id,
                 requiredFirmware: requiredFirmware
             }, callback);
         };

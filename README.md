@@ -217,6 +217,7 @@ TrezorConnect.signEthereumTx(
   to,        // address
   value,     // value in wei, hexadecimal string
   data,      // data, hexadecimal string OR null for no data
+  chain_id,  // chain id for EIP-155 - is only used in fw 1.4.2 and newer, older will ignore it
   callback)
 ```
 
