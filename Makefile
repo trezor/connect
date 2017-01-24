@@ -5,6 +5,7 @@ dist-%:
 	cp -r chrome dist-$*
 	cp -r examples dist-$*
 	mkdir dist-$*/popup
+	cp popup/config_signed.bin dist-$*/popup
 	cp popup/popup.css dist-$*/popup
 	cp popup/popup.html dist-$*/popup
 	cp popup/popup-dist.js dist-$*/popup
