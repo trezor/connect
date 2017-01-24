@@ -23,4 +23,4 @@ dist-%:
 sync-%:
 	# Before first use: Install awscli (pip install awscli)
 	#   Configure access credentials (aws configure), region is "eu-central-1"
-	aws s3 sync dist/$* s3://connect.trezor.io/$*/
+	aws s3 sync --delete dist/$* s3://connect.trezor.io/$*/
