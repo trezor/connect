@@ -12,6 +12,7 @@ import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as trezor from 'trezor.js';
 import * as hd from 'hd-wallet';
 
+var bip44 = require('bip44-constants')
 var semvercmp = require('semver-compare');
 
 const NETWORK = bitcoin.networks.bitcoin;
@@ -430,10 +431,21 @@ function cancelXpubKey() {
 
 window.cancelXpubKey = cancelXpubKey;
 
+function getCoinName(n) {
+    for (let name of Object.keys(bip44)) {
+        let number = parseInt(bip44[name]);
+        if (number === n) {
+            return name;
+        }
+    };
+    return 'Unknown coin';
+}
+
 function xpubKeyLabel(path) {
     let hardened = (i) => path[i] & ~HD_HARDENED;
     if (hardened(0) === 44) {
-        return `account #${hardened(2) + 1}`;
+        let coinName = getCoinName(path[1]);
+        return `${coinName} account #${hardened(2) + 1}`;
     }
     if (hardened(0) === 48) {
         return `multisig account #${hardened(2) + 1}`;
