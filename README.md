@@ -13,14 +13,14 @@ User needs to confirm actions on his TREZOR:
 
 More general (and slightly obsolete) info can be found [here](https://doc.satoshilabs.com/trezor-tech/api-connect.html).
 
-Examples of usage can be found on https://trezor.github.io/connect/examples/
+Examples of usage can be found on https://connect.trezor.io/1/examples/
 
 ## Usage
 
 First, you need to include the library in your page:
 
 ```html
-<script src="https://trezor.github.io/connect/connect.js"></script>
+<script src="https://connect.trezor.io/1/connect.js"></script>
 ```
 
 All API calls have a callback argument.  Callback is guaranteed to get called
@@ -32,6 +32,17 @@ restart the action.
 All the API calls also have an optional parameter requiredFirmware; you can
 require that firmware version or newer (for example, 1.4.0 for Ethereum support)
 - see example xpub-ethereum.
+
+## Versions
+
+We started tagging versions and releasing them to separate URLs, so we don't break 
+any existing (and working) integrations.
+
+Currently, we are at version 1, which has an url `https://connect.trezor.io/1/connect.js`. The older version
+at `https://trezor.github.io/connect/connect.js` is still working, but not updated.
+
+With regards to this repo - All updates should go to `master` branch, the releases are tagged. The `gh-pages` is the same older version, that is used at `trezor.github.io/connect/connect.js`, and it's there for backwards compatibility; please don't touch.
+
 
 1. [Login](#login)
 2. [Export public key](#export-public-key)
