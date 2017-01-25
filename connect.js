@@ -32,7 +32,7 @@ this.TrezorConnect = (function () {
 
     var INSIGHT_URLS = window.TREZOR_INSIGHT_URLS || 
         [
-            'https://bitcore2.trezor.io/api/',
+            'https://bitcore1.trezor.io/api/',
             'https://bitcore3.trezor.io/api/',
         ];
 
