@@ -703,7 +703,7 @@ function handleSignTx(event) {
                     device.getCoin(COIN_NAME)
                 ).catch(handler);
             };
-            return lookupReferencedTxs(inputs).then(signTx);
+            return lookupReferencedTxs(inputs, createBlockchain()).then(signTx);
         })
 
         .then((result) => { // success
@@ -737,8 +737,8 @@ function xpubToHDNodeType(xpub) {
     };
 }
 
-function lookupReferencedTxs(inputs) {
-    return Promise.all(inputs.map((input) => lookupTx(input.prev_hash)));
+function lookupReferencedTxs(inputs, blockchain) {
+    return Promise.all(inputs.map((input) => lookupTx(input.prev_hash, blockchain)));
 }
 
 /*
