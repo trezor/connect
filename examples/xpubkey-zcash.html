@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Get XPUB Key Test</title>
+    <script>
+
+     function trezorGetXPubKey() {
+         var path = "m/44'/133'/0'"; // first BIP44 account
+
+         // var path = [44 | 0x80000000,
+         //             0  | 0x80000000,
+         //             0  | 0x80000000 ]; // same, in raw form
+
+         TrezorConnect.getXPubKey(path, function (response) {
+             if (response.success) {
+                 console.log('XPUB:', response.xpubkey); // serialized XPUB
+                 console.log('Raw path:', response.path);
+                 console.log('Serialized path:', response.serializedPath);
+             } else {
+                 console.error('Error:', response.error); // error message
+             }
+             document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+         });
+     }
+
+    </script>
+  </head>
+  <body>
+
+    <button onclick="trezorGetXPubKey()">Get XPUB key</button>
+
+    <pre id="response"></pre>
+
+    <script src="https://connect.trezor.io/1/connect.js"></script>
+
+  </body>
+</html>
