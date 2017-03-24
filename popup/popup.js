@@ -496,7 +496,7 @@ function getAccountByXpub(xpub) {
             if (account != null) {
                 return account;
             }
-            const accountP = Account.fromDevice(global.device, current, createCryptoChannel(), createBlockchain());
+            const accountP = Account.fromDevice(global.device, current, createCryptoChannel(), getBlockchain());
             return accountP.then(account => {
                 if (account.node.toBase58() === xpub) {
                     return account;
@@ -884,7 +884,7 @@ function handleComposeTx(event) {
             return composeTx()
                 .then(chooseTxFee)
                 .then(({inputs, outputs}) => {
-                    return lookupReferencedTxs(inputs)
+                    return lookupReferencedTxs(inputs, getBlockchain())
                         .then((refTxs) => signTx(inputs, outputs, refTxs));
                 });
         })
@@ -1117,6 +1117,14 @@ function waitForFirstDevice(list) {
 
 function createBlockchain() {
     return new hd.BitcoreBlockchain(BITCORE_URLS, () => createSocketWorker());
+}
+
+let blockchain = null;
+function getBlockchain() {
+    if (blockchain == null) {
+        blockchain = createBlockchain();
+    }
+    return blockchain;
 }
 
 function createSocketWorker() {
@@ -1468,10 +1476,9 @@ function discoverAccounts(device, onStart, onUsed, onEnd) {
     let accounts = [];
 
     let channel = createCryptoChannel();
-    let blockchain = createBlockchain();
 
     let discover = (i) => {
-        return Account.fromDevice(device, i, channel, blockchain).then((account) => {
+        return Account.fromDevice(device, i, channel, getBlockchain()).then((account) => {
             onStart(account);
             return account.discover(onUsed).then(() => {
                 accounts.push(account);
