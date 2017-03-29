@@ -34,8 +34,8 @@ this.TrezorConnect = (function () {
 
     var DISABLE_LOGIN_BUTTONS = window.TREZOR_DISABLE_LOGIN_BUTTONS || false;
     var CHROME_URL = window.TREZOR_CHROME_URL || './chrome/wrapper.html';
-    var POPUP_URL = window.TREZOR_POPUP_URL || 'FILL_URL/popup/popup.html';
-    var POPUP_PATH = window.TREZOR_POPUP_PATH || 'FILL_URL';
+    var POPUP_URL = window.TREZOR_POPUP_URL || 'https://connect.trezor.io/1/popup/popup.html';
+    var POPUP_PATH = window.TREZOR_POPUP_PATH || 'https://connect.trezor.io/1/';
     var POPUP_ORIGIN = window.TREZOR_POPUP_ORIGIN || 'https://connect.trezor.io';
 
     var INSIGHT_URLS = window.TREZOR_INSIGHT_URLS || 
