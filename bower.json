@@ -1,12 +1,12 @@
 {
   "name": "trezor-connect",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "homepage": "https://github.com/trezor/connect",
   "authors": [
     "Jan Pochyla <jpochyla@gmail.com>"
   ],
   "description": "Platform for easy integration of TREZOR into web services.",
-  "main": "login.js",
+  "main": "connect.js",
   "moduleType": [
     "globals"
   ],
@@ -22,7 +22,7 @@
   "ignore": [
     "**/*",
     "!README.md",
-    "!login.js",
+    "!connect.js",
     "!chrome/wrapper.js",
     "!chrome/wrapper.html",
     "!popup/popup.css",
