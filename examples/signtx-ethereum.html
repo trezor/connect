@@ -21,6 +21,7 @@
          var value = '010000000000000000'; // in hexadecimal, in wei - this is about 18 ETC
          var data = 'a9059cbb000000000000000000000000dc7359317ef4cc723a3980213a013c0433a338910000000000000000000000000000000000000000000000000000000001312d00'; // some contract data 
          // var data = null  // for no data
+         var chain_id = 1; // 1 for ETH, 61 for ETC
 
          TrezorConnect.signEthereumTx(
             address_n,
@@ -30,6 +31,7 @@
             to,
             value,
             data,
+            chain_id,
             function (response) {
              if (response.success) {
                  console.log('Signature V (recovery parameter):', response.v); // number
