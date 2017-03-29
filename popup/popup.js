@@ -757,11 +757,11 @@ const FEE_LEVELS = [
     }, {
         name: 'Economy',
         noDelay: false,
-        minutes: 5 * 60,
+        minutes: 6 * 60,
     }, {
         name: 'Low',
         noDelay: false,
-        minutes: 12 * 60,
+        minutes: 24 * 60,
     },
 ];
 
