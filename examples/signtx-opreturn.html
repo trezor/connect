@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Sign Transaction Test</title>
+    <script>
+
+     function trezorSignTx() {
+         // spend one output
+         var inputs = [{
+             address_n: [44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 0, 0],
+             prev_index: 0,
+             prev_hash: 'b035d89d4543ce5713c553d69431698116a822c57c03ddacf3f04b763d1999ac'
+         }];
+
+
+         // send to 1 OP_RETURN output and one change output
+         // the rest will be used as fee
+         var outputs = [{
+             address_n: [44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 1, 1],
+             amount: 3431247,
+             script_type: 'PAYTOADDRESS'
+         }, {
+             amount: 0, // amount has to be 0 in OP_RETURN, but it has to be present
+             script_type: 'PAYTOOPRETURN',
+             op_return_data: 'deadbeef' // in hexadecimal
+         }];
+
+         TrezorConnect.signTx(inputs, outputs, function (response) {
+             if (response.success) {
+                 console.log('Serialized TX:', response.serialized_tx); // tx in hex
+                 console.log('Signatures:', response.signatures); // array of signatures, in hex
+             } else {
+                 console.error('Error:', response.error); // error message
+             }
+             document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+         });
+     }
+
+    </script>
+  </head>
+  <body>
+
+    <button onclick="trezorSignTx()">Sign</button>
+
+    <pre id="response"></pre>
+
+    <script src="../connect.js"></script>
+
+  </body>
+</html>
