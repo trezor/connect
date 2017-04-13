@@ -1,5 +1,7 @@
 # TREZOR Connect API
 
+[![Build Status](https://travis-ci.org/trezor/connect.svg?branch=master)](https://travis-ci.org/trezor/connect) [![gitter](https://badges.gitter.im/trezor/community.svg)](https://gitter.im/trezor/community)
+
 TREZOR Connect is a platform for easy integration of TREZOR into 3rd party
 services. It provides websites with functionality to authenticate users, access
 public keys and sign transactions. User interface is presented in a secure popup
