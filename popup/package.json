@@ -8,7 +8,7 @@
     "url": "https://github.com/trezor/connect.git"
   },
   "author": "SatoshiLabs <http://satoshilabs.com>",
-  "license": "GPL-3.0+",
+  "license": "LGPL-3.0+",
   "browserify": {
     "transform": [
       [
