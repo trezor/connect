@@ -1,0 +1,11 @@
+sudo: false
+language: node_js
+dist: trusty
+
+node_js:
+  - "4.4"
+
+script:
+  - cd popup
+  - npm install
+  - make build

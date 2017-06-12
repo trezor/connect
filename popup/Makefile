@@ -1,10 +1,10 @@
-BIN=`npm bin`
+BIN=$(shell npm bin)
 ENTRY=popup.js
 TARGET=popup-dist.js
 ENTRY_WORKER=node_modules/hd-wallet/lib/socket-worker.js
 TARGET_WORKER=socket-worker-dist.js
 
-.PHONY: build clean
+.PHONY: build clean node_modules
 
 build: ${ENTRY} ${ENTRY_WORKER} node_modules
 	${BIN}/browserify ${ENTRY} \
