@@ -29,6 +29,7 @@
           <div id="operation_signtx" style="display: none">Sign transaction</div>
           <div id="operation_cipherkeyvalue_encrypt" style="display: none">Encode value</div>
           <div id="operation_cipherkeyvalue_decrypt" style="display: none">Decode value</div>
+          <div id="operation_nemaddress" style="display: none">Export NEM address</div>
           <div id="operation_composetx" style="display: none">
             Send <span id="composetx_amount"></span>
           </div>
@@ -154,6 +155,21 @@
           Export
         </button>
         <button type="button" onclick="cancelInfo();">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <div id="alert_nemaddress" class="alert fadeout">
+      <p class="alert_heading">
+        Export <strong>NEM address</strong> for<br>
+        <strong id="nem_account"></strong> on network <strong id="nem_network"></strong>?
+      </p>
+      <div>
+        <button type="button" onclick="exportNEMAddress();">
+          Export
+        </button>
+        <button type="button" onclick="cancelNEMAddress();">
           Cancel
         </button>
       </div>
