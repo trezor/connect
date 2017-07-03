@@ -119,8 +119,8 @@ function onMessage(event) {
         handleGetAddress(event);
         break;
 
-    case 'getethaddress':
-        handleGetEthAddress(event);
+    case 'ethgetaddress':
+        handleEthereumGetAddress(event);
         break;
 
     default:
@@ -768,7 +768,7 @@ function handleGetAddress(event) {
  * getethaddress
  */
 
-function handleGetEthAddress(event) {
+function handleEthereumGetAddress(event) {
     let address = event.data.address_n;
 
     initDevice()

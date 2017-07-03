@@ -14,38 +14,21 @@
         var segwit = document.getElementById('segwit').checked;
 
         TrezorConnect.getAddress(path, coin, segwit, null, function (response) {
-            console.log("BTC RESP!", response);
-        //  if (response.success) {
-        //      console.log('XPUB:', response.xpubkey); // serialized XPUB
-        //      console.log('Raw path:', response.path);
-        //      console.log('Serialized path:', response.serializedPath);
-        //  } else {
-        //      console.error('Error:', response.error); // error message
-        //  }
-        //  document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+            console.log("TrezorConnect.getAddress response", response);
         });
      }
 
-     function trezorGetEthereumAddress() {
-        
+     function trezorEthereumGetAddress() {
         var path = document.getElementById('ethaddress').value;
 
-        TrezorConnect.getEthereumAddress(path, function (response) {
-             console.log("ETH RESP!", response);
-            //  if (response.success) {
-            //      console.log('XPUB:', response.xpubkey); // serialized XPUB
-            //      console.log('Raw path:', response.path);
-            //      console.log('Serialized path:', response.serializedPath);
-            //  } else {
-            //      console.error('Error:', response.error); // error message
-            //  }
-            //  document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+        TrezorConnect.ethereumGetAddress(path, function (response) {
+             console.log("TrezorConnect.ethereumGetAddress", response);
         });
      }
 
-     window.TREZOR_POPUP_URL = 'http://localhost/popup.html';
-     window.TREZOR_POPUP_PATH = 'http://localhost/';
-     window.TREZOR_POPUP_ORIGIN = 'http://localhost';
+    //  window.TREZOR_POPUP_URL = 'http://localhost/popup.html';
+    //  window.TREZOR_POPUP_PATH = 'http://localhost/';
+    //  window.TREZOR_POPUP_ORIGIN = 'http://localhost';
 
     </script>
   </head>
@@ -70,9 +53,9 @@
     <hr/>
 
     <div>
-        <h3>TrezorConnect.getEthereumAddress</h3>
+        <h3>TrezorConnect.ethereumGetAddress</h3>
         <input type="text" id="ethaddress" name="ethaddress" value="m/44'/60'/0'/0" />
-        <button onclick="trezorGetEthereumAddress()">Get Ethereum Address</button>
+        <button onclick="trezorEthereumGetAddress()">Ethereum Get Address</button>
     </div>
     
 

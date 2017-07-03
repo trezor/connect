@@ -479,14 +479,14 @@ this.TrezorConnect = (function () {
          * @param {?(string|array<number>)} requiredFirmware
          *
          */
-        this.getEthereumAddress = function (address, requiredFirmware) {
+        this.ethereumGetAddress = function (address, requiredFirmware) {
 
             if (typeof address === 'string') {
                 address = parseHDPath(address);
             }
 
             manager.sendWithChannel(_fwStrFix({
-                type: 'getethaddress',
+                type: 'ethgetaddress',
                 address_n: address,
             }, requiredFirmware), function () {} );
         }
