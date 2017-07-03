@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Get Address Test</title>
+    <script>
+
+     function trezorGetAddress() {
+        var path = document.getElementById('ethaddress').value; 
+        // var path = "m/44'/0'/2'" // third account 
+                                    // (note that names on connect start with Account 1, which has index 0)
+        // var path = [44 | 0x80000000 ]; // same, in raw form
+
+        var coin = document.getElementById('coin').value;
+        var segwit = document.getElementById('segwit').checked;
+
+        TrezorConnect.getAddress(path, coin, segwit, null, function (response) {
+            console.log("BTC RESP!", response);
+        //  if (response.success) {
+        //      console.log('XPUB:', response.xpubkey); // serialized XPUB
+        //      console.log('Raw path:', response.path);
+        //      console.log('Serialized path:', response.serializedPath);
+        //  } else {
+        //      console.error('Error:', response.error); // error message
+        //  }
+        //  document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+        });
+     }
+
+     function trezorGetEthereumAddress() {
+        
+        var path = document.getElementById('ethaddress').value;
+
+        TrezorConnect.getEthereumAddress(path, function (response) {
+             console.log("ETH RESP!", response);
+            //  if (response.success) {
+            //      console.log('XPUB:', response.xpubkey); // serialized XPUB
+            //      console.log('Raw path:', response.path);
+            //      console.log('Serialized path:', response.serializedPath);
+            //  } else {
+            //      console.error('Error:', response.error); // error message
+            //  }
+            //  document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+        });
+     }
+
+     window.TREZOR_POPUP_URL = 'http://localhost/popup.html';
+     window.TREZOR_POPUP_PATH = 'http://localhost/';
+     window.TREZOR_POPUP_ORIGIN = 'http://localhost';
+
+    </script>
+  </head>
+  <body>
+    <div>
+        <h3>TrezorConnect.getAddress</h3>
+        <select id="coin" name="coin" style="display: inline-block;">
+            <option>Bitcoin</option>
+            <option>Litecoin</option>
+            <option>Dogecoin</option>
+            <option>Dash</option>
+            <option>Zcash</option>
+            <option>Testnet</option>
+            <option>Namecoin</option>
+            <option>Zcash testnet</option>
+        </select>
+        <input type="text" id="address" name="address" value="m/44'/0'/2'" style="display: inline-block;" />
+        <input type="checkbox" id="segwit" checked /> Segwit
+        <button onclick="trezorGetAddress()" style="display: inline-block;">Get Address</button>
+    </div>
+    
+    <hr/>
+
+    <div>
+        <h3>TrezorConnect.getEthereumAddress</h3>
+        <input type="text" id="ethaddress" name="ethaddress" value="m/44'/60'/0'/0" />
+        <button onclick="trezorGetEthereumAddress()">Get Ethereum Address</button>
+    </div>
+    
+
+    <pre id="response"></pre>
+
+    <script src="../connect.js"></script>
+
+  </body>
+</html>

@@ -3,7 +3,7 @@
   "version": "1.1.3",
   "homepage": "https://github.com/trezor/connect",
   "authors": [
-    "author": "SatoshiLabs <http://satoshilabs.com>"
+    {"author": "SatoshiLabs <http://satoshilabs.com>"}
   ],
   "description": "Platform for easy integration of TREZOR into web services.",
   "main": "connect.js",

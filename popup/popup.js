@@ -115,6 +115,14 @@ function onMessage(event) {
         handleCipherKeyValue(event);
         break;
 
+    case 'getaddress':
+        handleGetAddress(event);
+        break;
+
+    case 'getethaddress':
+        handleGetEthAddress(event);
+        break;
+
     default:
         console.warn('Unknown message', request);
     }
@@ -739,6 +747,34 @@ function xpubToHDNodeType(xpub) {
 
 function lookupReferencedTxs(inputs, blockchain) {
     return Promise.all(inputs.map((input) => lookupTx(input.prev_hash, blockchain)));
+}
+
+/*
+ * getaddress
+ */
+
+function handleGetAddress(event) {
+    let address = event.data.address_n;
+    let coin = event.data.coin;
+    let segwit = event.data.segwit;
+
+    initDevice()
+        .then((device) => {
+            return device.session.getAddress(address, coin, true, segwit);
+        });
+}
+
+/*
+ * getethaddress
+ */
+
+function handleGetEthAddress(event) {
+    let address = event.data.address_n;
+
+    initDevice()
+        .then((device) => {
+            return device.session.ethereumGetAddress(address, true);
+        });
 }
 
 /*

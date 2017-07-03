@@ -449,6 +449,48 @@ this.TrezorConnect = (function () {
             tryUrl(0);
         }
 
+        /**
+         * Display address on device
+         *
+         * @param {array} address
+         * @param {string} coin 
+         * @param {boolean} segwit
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.getAddress = function (address, coin, segwit, requiredFirmware) {
+
+            if (typeof address === 'string') {
+                address = parseHDPath(address);
+            }
+
+            manager.sendWithChannel(_fwStrFix({
+                type: 'getaddress',
+                address_n: address,
+                coin: coin,
+                segwit: segwit
+            }, requiredFirmware), function () {} );
+        }
+
+        /**
+         * Display ethereum address on device
+         *
+         * @param {array} address
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.getEthereumAddress = function (address, requiredFirmware) {
+
+            if (typeof address === 'string') {
+                address = parseHDPath(address);
+            }
+
+            manager.sendWithChannel(_fwStrFix({
+                type: 'getethaddress',
+                address_n: address,
+            }, requiredFirmware), function () {} );
+        }
+
         var LOGIN_CSS =
             '<style>@import url("@connect_path@/login_buttons.css")</style>';
 
