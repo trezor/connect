@@ -458,7 +458,7 @@ this.TrezorConnect = (function () {
          * @param {?(string|array<number>)} requiredFirmware
          *
          */
-        this.getAddress = function (address, coin, segwit, requiredFirmware) {
+        this.getAddress = function (address, coin, segwit, requiredFirmware, callback) {
 
             if (typeof address === 'string') {
                 address = parseHDPath(address);
@@ -469,7 +469,7 @@ this.TrezorConnect = (function () {
                 address_n: address,
                 coin: coin,
                 segwit: segwit
-            }, requiredFirmware), function () {} );
+            }, requiredFirmware), callback);
         }
 
         /**
@@ -479,7 +479,7 @@ this.TrezorConnect = (function () {
          * @param {?(string|array<number>)} requiredFirmware
          *
          */
-        this.ethereumGetAddress = function (address, requiredFirmware) {
+        this.ethereumGetAddress = function (address, requiredFirmware, callback) {
 
             if (typeof address === 'string') {
                 address = parseHDPath(address);
@@ -488,7 +488,7 @@ this.TrezorConnect = (function () {
             manager.sendWithChannel(_fwStrFix({
                 type: 'ethgetaddress',
                 address_n: address,
-            }, requiredFirmware), function () {} );
+            }, requiredFirmware), callback);
         }
 
         var LOGIN_CSS =

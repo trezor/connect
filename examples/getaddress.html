@@ -21,14 +21,14 @@
      function trezorEthereumGetAddress() {
         var path = document.getElementById('ethaddress').value;
 
-        TrezorConnect.ethereumGetAddress(path, function (response) {
+        TrezorConnect.ethereumGetAddress(path, null, function (response) {
              console.log("TrezorConnect.ethereumGetAddress", response);
         });
      }
 
-    //  window.TREZOR_POPUP_URL = 'http://localhost/popup.html';
-    //  window.TREZOR_POPUP_PATH = 'http://localhost/';
-    //  window.TREZOR_POPUP_ORIGIN = 'http://localhost';
+     window.TREZOR_POPUP_URL = 'http://localhost/popup.html';
+     window.TREZOR_POPUP_PATH = 'http://localhost/';
+     window.TREZOR_POPUP_ORIGIN = 'http://localhost';
 
     </script>
   </head>

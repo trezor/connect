@@ -760,7 +760,15 @@ function handleGetAddress(event) {
 
     initDevice()
         .then((device) => {
-            return device.session.getAddress(address, coin, true, segwit);
+            device.session.getAddress(address, coin, true, segwit)
+            .then(response => {
+                respondToEvent(event, {
+                    success: true,
+                    type: 'getaddress',
+                    address: response.message.address,
+                    path: response.message.path
+                });
+            });
         });
 }
 
@@ -773,7 +781,15 @@ function handleEthereumGetAddress(event) {
 
     initDevice()
         .then((device) => {
-            return device.session.ethereumGetAddress(address, true);
+            device.session.ethereumGetAddress(address, true)
+            .then(response => {
+                respondToEvent(event, {
+                    success: true,
+                    type: 'ethgetaddress',
+                    address: response.message.address,
+                    path: response.message.path
+                });
+            });
         });
 }
 
