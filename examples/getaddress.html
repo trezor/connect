@@ -5,13 +5,17 @@
     <script>
 
      function trezorGetAddress() {
-        var path = document.getElementById('ethaddress').value; 
+        var path = document.getElementById('address').value;
         // var path = "m/44'/0'/2'" // third account 
                                     // (note that names on connect start with Account 1, which has index 0)
         // var path = [44 | 0x80000000 ]; // same, in raw form
 
         var coin = document.getElementById('coin').value;
         var segwit = document.getElementById('segwit').checked;
+        if (!(coin === 'Testnet' || coin === 'Litecoin')) {
+          // segwit on non-segwit-enabled coins doesn't make sense
+          segwit = false;
+        }
 
         TrezorConnect.getAddress(path, coin, segwit, null, function (response) {
             console.log("TrezorConnect.getAddress response", response);
@@ -26,12 +30,23 @@
         });
      }
 
+     function changedCoin(element) {
+        var coin = element.value;
+        // segwit on non-segwit-enabled coins doesn't make sense
+        if (coin === 'Testnet' || coin === 'Litecoin') {
+          document.getElementById('segwit').disabled = false;
+        } else {
+          document.getElementById('segwit').checked = false;
+          document.getElementById('segwit').disabled = true;
+        }
+     }
+
     </script>
   </head>
   <body>
     <div>
         <h3>TrezorConnect.getAddress</h3>
-        <select id="coin" name="coin" style="display: inline-block;">
+        <select id="coin" name="coin" style="display: inline-block;" onchange="changedCoin(this)">
             <option>Bitcoin</option>
             <option>Litecoin</option>
             <option>Dogecoin</option>
@@ -42,7 +57,7 @@
             <option>Zcash testnet</option>
         </select>
         <input type="text" id="address" name="address" value="m/44'/0'/2'" style="display: inline-block;" />
-        <input type="checkbox" id="segwit" checked /> Segwit
+        <input type="checkbox" id="segwit" disabled/> Segwit
         <button onclick="trezorGetAddress()" style="display: inline-block;">Get Address</button>
     </div>
     
