@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Get Address Test</title>
+    <script>
+
+     function trezorGetAddress() {
+        var path = document.getElementById('address').value;
+        // var path = "m/44'/0'/2'" // third account 
+                                    // (note that names on connect start with Account 1, which has index 0)
+        // var path = [44 | 0x80000000 ]; // same, in raw form
+
+        var coin = document.getElementById('coin').value;
+        var segwit = document.getElementById('segwit').checked;
+        if (!(coin === 'Testnet' || coin === 'Litecoin')) {
+          // segwit on non-segwit-enabled coins doesn't make sense
+          segwit = false;
+        }
+
+        TrezorConnect.getAddress(path, coin, segwit, function (response) {
+            console.log("TrezorConnect.getAddress response", response);
+        });
+     }
+
+     function trezorEthereumGetAddress() {
+        var path = document.getElementById('ethaddress').value;
+
+        TrezorConnect.ethereumGetAddress(path, function (response) {
+             console.log("TrezorConnect.ethereumGetAddress", response);
+        });
+     }
+
+     function changedCoin(element) {
+        var coin = element.value;
+        // segwit on non-segwit-enabled coins doesn't make sense
+        if (coin === 'Testnet' || coin === 'Litecoin') {
+          document.getElementById('segwit').disabled = false;
+        } else {
+          document.getElementById('segwit').checked = false;
+          document.getElementById('segwit').disabled = true;
+        }
+     }
+
+    </script>
+  </head>
+  <body>
+    <div>
+        <h3>TrezorConnect.getAddress</h3>
+        <select id="coin" name="coin" style="display: inline-block;" onchange="changedCoin(this)">
+            <option>Bitcoin</option>
+            <option>Litecoin</option>
+            <option>Dogecoin</option>
+            <option>Dash</option>
+            <option>Zcash</option>
+            <option>Testnet</option>
+            <option>Namecoin</option>
+            <option>Zcash testnet</option>
+        </select>
+        <input type="text" id="address" name="address" value="m/44'/0'/2'/0/0" style="display: inline-block;" />
+        <input type="checkbox" id="segwit" disabled/> Segwit
+        <button onclick="trezorGetAddress()" style="display: inline-block;">Get Address</button>
+    </div>
+    
+    <hr/>
+
+    <div>
+        <h3>TrezorConnect.ethereumGetAddress</h3>
+        <input type="text" id="ethaddress" name="ethaddress" value="m/44'/60'/0'/0/0" />
+        <button onclick="trezorEthereumGetAddress()">Ethereum Get Address</button>
+    </div>
+    
+
+    <pre id="response"></pre>
+
+    <script src="../connect.js"></script>
+
+  </body>
+</html>
