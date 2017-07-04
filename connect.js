@@ -458,7 +458,7 @@ this.TrezorConnect = (function () {
          * @param {?(string|array<number>)} requiredFirmware
          *
          */
-        this.getAddress = function (address, coin, segwit, requiredFirmware, callback) {
+        this.getAddress = function (address, coin, segwit, callback, requiredFirmware) {
 
             if (typeof address === 'string') {
                 address = parseHDPath(address);
@@ -479,7 +479,7 @@ this.TrezorConnect = (function () {
          * @param {?(string|array<number>)} requiredFirmware
          *
          */
-        this.ethereumGetAddress = function (address, requiredFirmware, callback) {
+        this.ethereumGetAddress = function (address, callback, requiredFirmware) {
 
             if (typeof address === 'string') {
                 address = parseHDPath(address);

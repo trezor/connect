@@ -17,7 +17,7 @@
           segwit = false;
         }
 
-        TrezorConnect.getAddress(path, coin, segwit, null, function (response) {
+        TrezorConnect.getAddress(path, coin, segwit, function (response) {
             console.log("TrezorConnect.getAddress response", response);
         });
      }
@@ -25,7 +25,7 @@
      function trezorEthereumGetAddress() {
         var path = document.getElementById('ethaddress').value;
 
-        TrezorConnect.ethereumGetAddress(path, null, function (response) {
+        TrezorConnect.ethereumGetAddress(path, function (response) {
              console.log("TrezorConnect.ethereumGetAddress", response);
         });
      }
