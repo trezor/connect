@@ -123,6 +123,10 @@ function onMessage(event) {
         handleEthereumGetAddress(event);
         break;
 
+    case 'setcoinname':
+        handleSetCoinName(event);
+        break;
+
     default:
         console.warn('Unknown message', request);
     }
@@ -403,6 +407,21 @@ function handleXpubKey(event) {
                     serializedPath
                 });
             });
+        })
+
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+function handleSetCoinName(event) {
+    let coin_name = event.data.coin_name;
+
+    initDevice()
+
+        .then((device) => {
+            device.setCoin(coin_name);
         })
 
         .catch((error) => { // failure
@@ -708,7 +727,7 @@ function handleSignTx(event) {
                     inputs,
                     outputs,
                     refTxs,
-                    device.getCoin(COIN_NAME)
+                    device.getCoin()
                 ).catch(handler);
             };
             return lookupReferencedTxs(inputs, createBlockchain()).then(signTx);
@@ -918,7 +937,7 @@ function handleComposeTx(event) {
                     inputs,
                     outputs,
                     refTxs,
-                    device.getCoin(COIN_NAME)
+                    device.getCoin()
                 ).catch(handler);
             };
 
@@ -967,6 +986,8 @@ function handleComposeTx(event) {
 
 class Device {
 
+    coin_name = 'Bitcoin';
+
     constructor(session, device) {
         this.session = session;
         this.features = device.features;
@@ -992,11 +1013,16 @@ class Device {
         return semvercmp(this.getVersion(), version) >= 0;
     }
 
-    getCoin(name) {
+    getCoin() {
+        return coin_name;
+    }
+
+    setCoin(name) {
         let coins = this.features.coins;
         for (let i = 0; i < coins.length; i++) {
             if (coins[i].coin_name === name) {
-                return coins[i];
+                coin_name = name;
+                return;
             }
         }
         throw new Error('Device does not support given coin type');
