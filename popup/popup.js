@@ -157,6 +157,10 @@ function onMessage(event) {
         handleNEMGetAddress(event);
         break;
 
+    case 'nemSignTx':
+        handleNEMSignTx(event);
+        break;
+
     default:
         console.warn('Unknown message', request);
     }
@@ -475,6 +479,84 @@ function handleNEMGetAddress(event) {
                 respondToEvent(event, {
                     success: true,
                     address: address
+                });
+            });
+        })
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+function handleNEMSignTx(event) {
+    const address_n = event.data.address_n.map((i) => i >>> 0);
+
+    const commonProto = (common, address_n) => ({
+        address_n: address_n,
+        network: (common.version >> 24) & 0xFF,
+        timestamp: common.timeStamp,
+        fee: common.fee,
+        deadline: common.deadline,
+        signer: address_n ? undefined : common.signer
+    });
+
+    const transferProto = (transfer) => {
+        const mosaics = transfer.mosaics ? transfer.mosaics.map((mosaic) => ({
+            namespace: mosaic.mosaicId.namespaceId,
+            mosaic: mosaic.mosaicId.name,
+            quantity: mosaic.quantity
+        })) : undefined;
+
+        return {
+            recipient: transfer.recipient,
+            amount: transfer.amount,
+            payload: transfer.message.payload || undefined,
+            public_key: transfer.message.type == 0x02 ? transfer.message.publicKey : undefined,
+            mosaics: mosaics
+        };
+    };
+
+    const createTx = () => {
+        let transaction = event.data.transaction;
+
+        const message = {
+            transaction: commonProto(transaction, address_n)
+        };
+
+        message.cosigning = (transaction.type == 0x1002);
+        if (message.cosigning || transaction.type == 0x1004) {
+            transaction = transaction.otherTrans;
+
+            message.multisig = commonProto(transaction);
+        }
+
+        if (transaction.type == 0x101) {
+            message.transfer = transferProto(transaction);
+        } else {
+            throw new Error('Unknown transaction type');
+        }
+
+        return message;
+    };
+
+    const signTx = (message) => {
+        const handler = errorHandler(() => signTx(message));
+        return global.device.session.nemSignTx(message)
+            .catch(handler);
+    };
+
+    show('#operation_signtx');
+
+    initDevice()
+        .then(createTx)
+        .then(signTx)
+        .then((result) => { // success
+            const {message} = result;
+
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    message: message
                 });
             });
         })

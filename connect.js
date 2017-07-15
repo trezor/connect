@@ -542,6 +542,25 @@ this.TrezorConnect = (function () {
             }, requiredFirmware), callback);
         }
 
+        this.nemSignTx = function (
+          address_n,
+          transaction,
+          callback,
+          requiredFirmware
+        ) {
+            if (requiredFirmware == null) {
+                requiredFirmware = '1.5.0'; // first firmware that supports NEM
+            }
+            if (typeof address_n === 'string') {
+                address_n = parseHDPath(address_n);
+            }
+            manager.sendWithChannel(_fwStrFix({
+                type: 'nemSignTx',
+                address_n: address_n,
+                transaction: transaction
+            }, requiredFirmware), callback);
+        }
+
         this.pushTransaction = function (
           rawTx,
           callback
