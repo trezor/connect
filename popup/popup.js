@@ -462,8 +462,10 @@ function handleNEMGetAddress(event) {
     }
 
     const getPermission = () => {
-        const handler = errorHandler(getPermission);
-        return promptNEMAddressPermission(address_n, network).catch(handler);
+        if (!show_display) {
+            const handler = errorHandler(getPermission);
+            return promptNEMAddressPermission(address_n, network).catch(handler);
+        }
     };
 
     show('#operation_nemaddress');
