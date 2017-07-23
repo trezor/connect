@@ -50,6 +50,11 @@ const NEM_MAINNET = 0x68;
 const NEM_TESTNET = 0x98;
 const NEM_MIJIN = 0x60;
 
+const NEM_MOSAIC_LEVY_TYPES = {
+    1: "MosaicLevy_Absolute",
+    2: "MosaicLevy_Percentile"
+};
+
 global.alert = '#alert_loading';
 global.device = null;
 
@@ -550,6 +555,49 @@ function handleNEMSignTx(event) {
         fee: provisionNamespace.rentalFee
     });
 
+    const mosaicCreationProto = (mosaicCreation) => {
+        const levy = mosaicCreation.mosaicDefinition.levy || undefined;
+
+        const definition = {
+            namespace: mosaicCreation.mosaicDefinition.id.namespaceId,
+            mosaic: mosaicCreation.mosaicDefinition.id.name,
+            levy: levy && NEM_MOSAIC_LEVY_TYPES[levy.type],
+            fee: levy && levy.fee,
+            levy_address: levy && levy.recipient,
+            levy_namespace: levy && levy.mosaicId.namespaceId,
+            levy_mosaic: levy && levy.mosaicId.name,
+            description: mosaicCreation.mosaicDefinition.description
+        };
+
+        mosaicCreation.mosaicDefinition.properties.forEach((property) => {
+            const { name, value } = property;
+
+            switch (property.name) {
+                case "divisibility":
+                    definition.divisibility = parseInt(value);
+                    break;
+
+                case "initialSupply":
+                    definition.supply = parseInt(value);
+                    break;
+
+                case "supplyMutable":
+                    definition.mutable_supply = (value == "true");
+                    break;
+
+                case "transferable":
+                    definition.transferable = (value == "true");
+                    break;
+            }
+        });
+
+        return {
+            definition: definition,
+            sink: mosaicCreation.creationFeeSink,
+            fee: mosaicCreation.creationFee
+        };
+    };
+
     const createTx = () => {
         let transaction = event.data.transaction;
 
@@ -571,6 +619,10 @@ function handleNEMSignTx(event) {
 
             case 0x2001:
                 message.provision_namespace = provisionNamespaceProto(transaction);
+                break;
+
+            case 0x4001:
+                message.mosaic_creation = mosaicCreationProto(transaction);
                 break;
 
             default:
