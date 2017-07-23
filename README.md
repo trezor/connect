@@ -37,11 +37,11 @@ require that firmware version or newer (for example, 1.4.0 for Ethereum support)
 
 ## Versions
 
-We started tagging versions and releasing them to separate URLs, so we don't break 
+We started tagging versions and releasing them to separate URLs, so we don't break
 any existing (and working) integrations.
 
 Currently, we are at version 2, which has an url `https://connect.trezor.io/2/connect.js`. The older version
-at `https://trezor.github.io/connect/connect.js` is still working, but not updated.
+at `https://trezor.github.io/connect/connect.js` is still working, but new features are not being added.
 
 With regards to this repo - All updates should go to `master` branch, the releases are tagged. The `gh-pages` is the same older version, that is used at `trezor.github.io/connect/connect.js`, and it's there for backwards compatibility; please don't touch.
 
