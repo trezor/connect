@@ -43,6 +43,11 @@ const NEM_MOSAIC_LEVY_TYPES = {
     2: "MosaicLevy_Percentile"
 };
 
+const NEM_SUPPLY_CHANGE_TYPES = {
+    1: "SupplyChange_Increase",
+    2: "SupplyChange_Decrease"
+};
+
 global.alert = '#alert_loading';
 global.device = null;
 
@@ -573,6 +578,13 @@ function handleNEMSignTx(event) {
         };
     };
 
+    const mosaicSupplyChangeProto = (mosaicSupplyChange) => ({
+        namespace: mosaicSupplyChange.mosaicId.namespaceId,
+        mosaic: mosaicSupplyChange.mosaicId.name,
+        type: NEM_SUPPLY_CHANGE_TYPES[mosaicSupplyChange.supplyType],
+        delta: mosaicSupplyChange.delta
+    });
+
     const createTx = () => {
         let transaction = event.data.transaction;
 
@@ -598,6 +610,10 @@ function handleNEMSignTx(event) {
 
             case 0x4001:
                 message.mosaic_creation = mosaicCreationProto(transaction);
+                break;
+
+            case 0x4002:
+                message.supply_change = mosaicSupplyChangeProto(transaction);
                 break;
 
             default:
