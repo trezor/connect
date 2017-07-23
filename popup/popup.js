@@ -518,6 +518,13 @@ function handleNEMSignTx(event) {
         };
     };
 
+    const provisionNamespaceProto = (provisionNamespace) => ({
+        namespace: provisionNamespace.newPart,
+        parent: provisionNamespace.parent || undefined,
+        sink: provisionNamespace.rentalFeeSink,
+        fee: provisionNamespace.rentalFee
+    });
+
     const createTx = () => {
         let transaction = event.data.transaction;
 
@@ -532,10 +539,18 @@ function handleNEMSignTx(event) {
             message.multisig = commonProto(transaction);
         }
 
-        if (transaction.type == 0x101) {
-            message.transfer = transferProto(transaction);
-        } else {
-            throw new Error('Unknown transaction type');
+        switch (transaction.type) {
+            case 0x0101:
+                message.transfer = transferProto(transaction);
+                break;
+
+            case 0x2001:
+                message.provision_namespace = provisionNamespaceProto(transaction);
+                break;
+
+            default:
+                throw new Error('Unknown transaction type');
+                break;
         }
 
         return message;
