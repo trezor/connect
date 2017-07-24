@@ -529,7 +529,7 @@ this.TrezorConnect = (function () {
           requiredFirmware
         ) {
             if (requiredFirmware == null) {
-                requiredFirmware = '1.5.0'; // first firmware that supports NEM
+                requiredFirmware = '1.6.0'; // first firmware that supports NEM
             }
             if (typeof address_n === 'string') {
                 address_n = parseHDPath(address_n);
@@ -549,7 +549,7 @@ this.TrezorConnect = (function () {
           requiredFirmware
         ) {
             if (requiredFirmware == null) {
-                requiredFirmware = '1.5.0'; // first firmware that supports NEM
+                requiredFirmware = '1.6.0'; // first firmware that supports NEM
             }
             if (typeof address_n === 'string') {
                 address_n = parseHDPath(address_n);
