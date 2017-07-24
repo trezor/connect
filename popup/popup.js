@@ -48,6 +48,11 @@ const NEM_SUPPLY_CHANGE_TYPES = {
     2: "SupplyChange_Decrease"
 };
 
+const NEM_AGGREGATE_MODIFICATION_TYPES = {
+    1: "CosignatoryModification_Add",
+    2: "CosignatoryModification_Delete"
+};
+
 global.alert = '#alert_loading';
 global.device = null;
 
@@ -535,6 +540,14 @@ function handleNEMSignTx(event) {
         fee: provisionNamespace.rentalFee
     });
 
+    const aggregateModificationProto = (aggregateModification) => ({
+        modifications: aggregateModification.modifications.map((modification) => ({
+            type: NEM_AGGREGATE_MODIFICATION_TYPES[modification.modificationType],
+            public_key: modification.cosignatoryAccount
+        })),
+        relative_change: aggregateModification.minCosignatories.relativeChange
+    });
+
     const mosaicCreationProto = (mosaicCreation) => {
         const levy = mosaicCreation.mosaicDefinition.levy || undefined;
 
@@ -602,6 +615,10 @@ function handleNEMSignTx(event) {
         switch (transaction.type) {
             case 0x0101:
                 message.transfer = transferProto(transaction);
+                break;
+
+            case 0x1001:
+                message.aggregate_modification = aggregateModificationProto(transaction);
                 break;
 
             case 0x2001:
