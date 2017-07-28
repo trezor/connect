@@ -90,6 +90,12 @@ function onMessage(event) {
     case 'accountinfo':
         handleAccountInfo(event);
         break;
+    case 'allaccountsinfo':
+        handleAllAccountsInfo(event);
+        break;
+    case 'claimBitcoinCashAccountsInfo':
+        handleClaimBitcoinCashAccountsInfo(event);
+        break;
 
     case 'signtx':
         handleSignTx(event);
@@ -488,6 +494,9 @@ function getAccountByDescription(description) {
     if (description == null) {
         return waitForAccount();
     }
+    if(description === 'all'){
+        return waitForAllAccounts();
+    }
     if (typeof description === 'string' && description.substring(0,4) === 'xpub') {
         return getAccountByXpub(description);
     }
@@ -564,6 +573,110 @@ function cancelInfo() {
 
 window.cancelInfo = cancelInfo;
 
+
+function handleClaimBitcoinCashAccountsInfo(event) {
+    show('#operation_accountinfo');
+    let description = event.data.description;
+    initDevice()
+        .then((device) => {
+            return getAccountByDescription(description)
+                .then(accounts => {
+                    let list = [];
+                    // get new BitcoinCash address for every retreived account
+                    return accounts.reduce(
+                        (promise, a) => {
+                            return promise.then(hdnode => {
+
+                                // modify BTC path to BCC path
+                                let bccPath = a.getPath();
+                                bccPath[1] =  (145 | HD_HARDENED) >>> 0;
+                                bccPath.push(0, 0);
+
+                                // get BCC adress from BCC path
+                                return device.session.getAddress(bccPath, 'Bitcoin', false, false)
+                                .then(bccAddressResponse => {
+                                    list.push({
+                                        id: a.id,
+                                        addressId: a.nextAddressId,
+                                        balance: a.getBalance(),
+                                        path: a.getPath(),
+                                        unspents: a.getUnspents(),
+                                        bitcoinCashAddress: bccAddressResponse.message.address,
+                                        bitcoinCashPath: bccAddressResponse.message.path
+                                    });
+                                    return list;
+                                });
+                            });
+                        },
+                        Promise.resolve()
+                    );
+                });
+        })
+        .then(list => {
+            // get fees
+            return findAllRecommendedFeeLevels().then(fees => {
+                return {
+                    accounts: list,
+                    fees: fees
+                }
+            });
+        })
+        .then(response => { // success
+            return global.device.session.release().then(() => {
+                respondToEvent(event, { 
+                    success: true, 
+                    accounts: response.accounts, 
+                    fees: response.fees 
+                });
+            });
+        })
+        .catch(error => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+
+}
+
+
+function handleAllAccountsInfo(event) {
+    show('#operation_accountinfo');
+    let description = event.data.description;
+    initDevice()
+        .then((device) => {
+            return getAccountByDescription(description)
+                .then(accounts => {
+                    let list = [];
+                    for(let a of accounts){
+                        list.push({
+                            path: a.getPath(),
+                            //unspents: a.getUnspents(),
+                            address: a.nextAddress,
+                            addressPath: a.getAddressPath(a.nextAddress),
+                            addressId: a.nextAddressId,
+                            xpub: a.node.toBase58(),
+                            balance: a.getBalance(),
+                            confirmed: a.getConfirmedBalance(),
+                            id: a.id
+                        });
+                    }
+                    return list;
+                });
+        })
+        .then(response => { // success
+            return global.device.session.release().then(() => {
+                respondToEvent(event, { 
+                    success: true, 
+                    accounts: response
+                });
+            });
+        })
+        .catch(error => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+
+}
+
 function handleAccountInfo(event) {
     show('#operation_accountinfo');
 
@@ -587,7 +700,6 @@ function handleAccountInfo(event) {
 
         .then(({id, address, path, addressPath, addressId, xpub, balance, confirmed}) => { // success
             let serializedPath = serializePath(path);
-
             return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
@@ -602,9 +714,8 @@ function handleAccountInfo(event) {
                     xpub,
                     id
                 });
-            });
+            });  
         })
-
         .catch((error) => { // failure
             console.error(error);
             respondToEvent(event, {success: false, error: error.message});
@@ -1337,20 +1448,33 @@ class Account {
             state[0].chain,
             state[1].chain
         );
+
         return unspents.map(unspent => {
             let txId = unspent.id;
             let confirmations = unspent.height ? (blockheight - unspent.height + 1) : undefined;
             let address = bitcoin.address.fromOutputScript(unspent.script);
+            let accountPath = Account.getPathForIndex(this.node.index);
+            let publicAddressPath = this._findAddressInChain(state[0].chain, 0, address);
+            if(publicAddressPath[1] === undefined){
+                publicAddressPath = this._findAddressInChain(state[1].chain, 1, address);
+            }
+            let addressPath = accountPath.concat(publicAddressPath);
             let value = unspent.value;
             let vout = unspent.index;
             return {
                 txId,
                 confirmations,
                 address,
+                addressPath,
                 value,
                 vout
             };
         });
+    }
+
+    _findAddressInChain(chain, chainId, address) {
+        //return [chainId, chain.addresses.get(address)];
+        return [chainId, chain.indexes.get(address)];
     }
 
     _loadBlocks() {
@@ -1366,6 +1490,10 @@ class Account {
     getBalance() {
         return this.unspents
             .reduce((b, u) => b + u.value, 0);
+    }
+
+    getUnspents() {
+        return this.unspents;
     }
 
     getConfirmedBalance() {
@@ -1636,6 +1764,33 @@ function waitForAccount() {
             return account;
         })
       .catch(errorHandler(waitForAccount));
+}
+
+function waitForAllAccounts() {
+    showAlert('#alert_accounts');
+    global.alert = '#alert_accounts';
+    let heading = document.querySelector('#alert_accounts .alert_heading');
+    heading.textContent = 'Loading accounts...';
+
+    let discovered = [];
+    let discovering = null;
+
+    let onStart = (account) => {
+        discovering = account;
+    };
+
+    let onUsed = () => {};
+
+    let onEnd = () => {
+        discovered.push(discovering);
+        discovering = null;
+    };
+
+    return new Promise(resolve => {
+        discoverAccounts(global.device, onStart, onUsed, onEnd).then((accounts) => {
+            resolve(discovered);
+        });
+    });
 }
 
 function selectAccount(accounts) {

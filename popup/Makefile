@@ -17,6 +17,13 @@ build: ${ENTRY} ${ENTRY_WORKER} node_modules
 	| ${BIN}/exorcist ${TARGET_WORKER}.map > ${TARGET_WORKER}
 	cp trezor-crypto/emscripten/trezor-crypto.js trezor-crypto-dist.js
 
+build-fast: 
+	${BIN}/browserify ${ENTRY} \
+		-g [ uglifyify ] \
+		-d \
+	| ${BIN}/exorcist ${TARGET}.map > ${TARGET}
+
+
 clean:
 	rm -f ${TARGET} ${TARGET}.map
 	rm -f ${TARGET_WORKER} ${TARGET_WORKER}.map
