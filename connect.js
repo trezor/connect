@@ -153,6 +153,28 @@ this.TrezorConnect = (function () {
             }
         }
 
+        this.getAllAccountsInfo = function(callback, requiredFirmware){
+            try {
+                manager.sendWithChannel(_fwStrFix({
+                    type: 'allaccountsinfo',
+                    description: 'all'
+                }, requiredFirmware), callback);
+            } catch(e) {
+                callback({success: false, error: e});
+            }
+        }
+
+        this.claimBitcoinCashAccountsInfo = function(callback, requiredFirmware){
+            try {
+                manager.sendWithChannel(_fwStrFix({
+                    type: 'claimBitcoinCashAccountsInfo',
+                    description: 'all'
+                }, requiredFirmware), callback);
+            } catch(e) {
+                callback({success: false, error: e});
+            }
+        }
+
         this.getBalance = function (callback, requiredFirmware) {
             manager.sendWithChannel(_fwStrFix({
                 type: 'accountinfo'
