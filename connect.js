@@ -200,11 +200,12 @@ this.TrezorConnect = (function () {
          *
          * @see https://github.com/trezor/trezor-common/blob/master/protob/types.proto
          */
-        this.signTx = function (inputs, outputs, callback, requiredFirmware) {
+        this.signTx = function (inputs, outputs, callback, requiredFirmware, coin) {
             manager.sendWithChannel(_fwStrFix({
                 type: 'signtx',
                 inputs: inputs,
-                outputs: outputs
+                outputs: outputs,
+                coin: coin
             }, requiredFirmware), callback);
         };
 

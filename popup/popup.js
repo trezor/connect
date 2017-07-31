@@ -808,6 +808,7 @@ function handleSignTx(event) {
     };
     let inputs = event.data.inputs.map(fixPath).map(convertXpub);
     let outputs = event.data.outputs.map(fixPath).map(convertXpub);
+    let coin = event.data.coin || COIN_NAME;
 
     show('#operation_signtx');
 
@@ -820,7 +821,7 @@ function handleSignTx(event) {
                     inputs,
                     outputs,
                     refTxs,
-                    device.getCoin(COIN_NAME)
+                    device.getCoin(coin)
                 ).catch(handler);
             };
             return lookupReferencedTxs(inputs, createBlockchain()).then(signTx);
