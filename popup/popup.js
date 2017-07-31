@@ -1788,12 +1788,8 @@ function waitForAllAccounts() {
         discovering = null;
     };
 
-    return new Promise((resolve, reject) => {
-        discoverAccounts(global.device, onStart, onUsed, onEnd).then((accounts) => {
-            resolve(discovered);
-        }).catch(error => {
-            reject(error);
-        })
+    return discoverAccounts(global.device, onStart, onUsed, onEnd).then((accounts) => {
+        return discovered;
     });
 }
 

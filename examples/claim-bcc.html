@@ -4,52 +4,22 @@
     <title>TREZOR Claim Bitcoin Cash</title>
     <script>
 
-    var HD_HARDENED = 0x80000000;
-
-    function getPathFromIndex(index) {
-        return getSerializedPath([
-            (44 | HD_HARDENED) >>> 0,
-            (145 | HD_HARDENED) >>> 0,
-            (index | HD_HARDENED) >>> 0
-        ]);
-    }
-
-    function getSerializedPath(path) {
-        return path.map((i) => {
-            let s = (i & ~HD_HARDENED).toString();
-            if (i & HD_HARDENED) {
-                return s + "'";
-            } else {
-                return s;
-            }
-        }).join('/');
-    }
-
-    function calculateFee(unspents){
-
-    }
-
+    window.TREZOR_INSIGHT_URLS = ['https://bch-bitcore2.trezor.io/api/'];
     window.TREZOR_POPUP_URL = 'http://localhost/popup/popup.html';
     window.TREZOR_POPUP_PATH = 'http://localhost/';
     window.TREZOR_POPUP_ORIGIN = 'http://localhost';
 
-     function getAllAcountsInfo() {
-
+    function getAllAcountsInfo() {
         TrezorConnect.closeAfterFailure(false);
-        TrezorConnect.closeAfterSuccess(false);
-        //TrezorConnect.getAllAccountsInfo(function(response) {
         TrezorConnect.claimBitcoinCashAccountsInfo(function(response) {
-             if (response.success) {
-                console.log("PATH", response)
-                 //console.log('Serialized Path', response.serializedPath, "");
-                //document.getElementById("response").innerHTML = '<div>Account#' + (response.id+1) + ' PATH: ' + response.serializedPath + ' BCC Path: ' + getPathFromIndex(response.id) + ' </div>';
-             } else {
-                 console.error('Error:', response.error); // error message
-             }
-
-             console.log(response);
+            if (response.success) {
+                console.log("Response:", response)
+            } else {
+                console.error('Error:', response.error); // error message
+            }
+            document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
         });
-     }
+    }
 
     </script>
   </head>
