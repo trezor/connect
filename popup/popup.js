@@ -1467,6 +1467,7 @@ class Account {
                 confirmations,
                 address,
                 addressPath,
+                height: unspent.height,
                 value,
                 vout
             };
