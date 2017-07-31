@@ -577,15 +577,15 @@ window.cancelInfo = cancelInfo;
 function handleClaimBitcoinCashAccountsInfo(event) {
     show('#operation_accountinfo');
     let description = event.data.description;
-    initDevice()
-        .then((device) => {
+    initDevice({ emptyPassphrase: false })
+        .then(function getAccounts(device) {
             return getAccountByDescription(description)
                 .then(accounts => {
                     let list = [];
                     // get new BitcoinCash address for every retreived account
                     return accounts.reduce(
                         (promise, a) => {
-                            return promise.then(hdnode => {
+                            return promise.then(() => {
 
                                 // modify BTC path to BCC path
                                 let bccPath = a.getPath();
@@ -610,7 +610,8 @@ function handleClaimBitcoinCashAccountsInfo(event) {
                         },
                         Promise.resolve()
                     );
-                });
+                // handle invalid pin error, loop function
+                }).catch(errorHandler(() => getAccounts(device)));
         })
         .then(list => {
             // get fees
@@ -1786,10 +1787,12 @@ function waitForAllAccounts() {
         discovering = null;
     };
 
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         discoverAccounts(global.device, onStart, onUsed, onEnd).then((accounts) => {
             resolve(discovered);
-        });
+        }).catch(error => {
+            reject(error);
+        })
     });
 }
 

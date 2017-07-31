@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>TREZOR Convert BTC to BCC</title>
+    <title>TREZOR Claim Bitcoin Cash</title>
     <script>
 
     var HD_HARDENED = 0x80000000;
@@ -40,17 +40,14 @@
         //TrezorConnect.getAllAccountsInfo(function(response) {
         TrezorConnect.claimBitcoinCashAccountsInfo(function(response) {
              if (response.success) {
-
                 console.log("PATH", response)
                  //console.log('Serialized Path', response.serializedPath, "");
-
                 //document.getElementById("response").innerHTML = '<div>Account#' + (response.id+1) + ' PATH: ' + response.serializedPath + ' BCC Path: ' + getPathFromIndex(response.id) + ' </div>';
              } else {
                  console.error('Error:', response.error); // error message
              }
 
              console.log(response);
-             //document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
         });
      }
 
