@@ -10,6 +10,7 @@
     window.TREZOR_POPUP_ORIGIN = 'http://localhost';
 
     function getAllAcountsInfo() {
+        TrezorConnect.closeAfterSuccess(false);
         TrezorConnect.closeAfterFailure(false);
         TrezorConnect.claimBitcoinCashAccountsInfo(function(response) {
             if (response.success) {
