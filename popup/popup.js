@@ -832,6 +832,7 @@ function handleSignTx(event) {
     let inputs = event.data.inputs.map(fixPath).map(convertXpub);
     let outputs = event.data.outputs.map(fixPath).map(convertXpub);
     let coin = event.data.coin || COIN_NAME;
+    let skipReferenceLookup = coin === 'Bcash';
 
     show('#operation_signtx');
 
@@ -847,7 +848,10 @@ function handleSignTx(event) {
                     device.getCoin(coin)
                 ).catch(handler);
             };
-            return lookupReferencedTxs(inputs, createBlockchain()).then(signTx);
+            const referencedTxs = skipReferenceLookup ?
+                Promise.resolve([]) :
+                lookupReferencedTxs(inputs, createBlockchain());
+            return referencedTxs.then(signTx);
         })
 
         .then((result) => { // success
