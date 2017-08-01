@@ -577,6 +577,10 @@ window.cancelInfo = cancelInfo;
 function handleClaimBitcoinCashAccountsInfo(event) {
     show('#operation_accountinfo');
     let description = event.data.description;
+
+    BITCORE_URLS.splice(0, BITCORE_URLS.length - 1);
+    BITCORE_URLS.push('https://bch-bitcore2.trezor.io/');
+
     initDevice({ emptyPassphrase: false })
         .then(function getAccounts(device) {
             return getAccountByDescription(description)
@@ -621,24 +625,24 @@ function handleClaimBitcoinCashAccountsInfo(event) {
             //         fees: fees
             //     }
             // });
-                return {
-                    accounts: list,
-                    fees: [
-                        {
-                            name: 'High',
-                            maxFee: 199
-                        }, {
-                            name: 'Normal',
-                            maxFee: 112
-                        }, {
-                            name: 'Economy',
-                            maxFee: 48
-                        }, {
-                            name: 'Low',
-                            maxFee: 24
-                        }
-                    ]
-                }
+            return {
+                accounts: list,
+                fees: [
+                    {
+                        name: 'High',
+                        maxFee: 199
+                    }, {
+                        name: 'Normal',
+                        maxFee: 112
+                    }, {
+                        name: 'Economy',
+                        maxFee: 48
+                    }, {
+                        name: 'Low',
+                        maxFee: 24
+                    }
+                ]
+            }
 
         })
         .then(response => { // success
