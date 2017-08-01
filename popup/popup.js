@@ -578,7 +578,7 @@ function handleClaimBitcoinCashAccountsInfo(event) {
     show('#operation_accountinfo');
     let description = event.data.description;
 
-    BITCORE_URLS.splice(0, BITCORE_URLS.length - 1);
+    BITCORE_URLS.splice(0, BITCORE_URLS.length);
     BITCORE_URLS.push('https://bch-bitcore2.trezor.io/');
 
     initDevice({ emptyPassphrase: false })
