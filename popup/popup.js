@@ -615,12 +615,31 @@ function handleClaimBitcoinCashAccountsInfo(event) {
         })
         .then(list => {
             // get fees
-            return findAllRecommendedFeeLevels().then(fees => {
+            // return findAllRecommendedFeeLevels().then(fees => {
+            //     return {
+            //         accounts: list,
+            //         fees: fees
+            //     }
+            // });
                 return {
                     accounts: list,
-                    fees: fees
+                    fees: [
+                        {
+                            name: 'High',
+                            maxFee: 199
+                        }, {
+                            name: 'Normal',
+                            maxFee: 112
+                        }, {
+                            name: 'Economy',
+                            maxFee: 48
+                        }, {
+                            name: 'Low',
+                            maxFee: 24
+                        }
+                    ]
                 }
-            });
+
         })
         .then(response => { // success
             return global.device.session.release().then(() => {
