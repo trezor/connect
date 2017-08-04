@@ -28,7 +28,7 @@ const CHUNK_SIZE = 20;
 const GAP_LENGTH = 20;
 const ADDRESS_VERSION = 0x0;
 const BITCORE_URLS = ['https://bitcore3.trezor.io', 'https://bitcore1.trezor.io'];
-var   DISCOVER_ACCOUNTS_LIMIT = 10;
+var   ACCOUNT_DISCOVERY_LIMIT = 10;
 
 const SOCKET_WORKER_PATH = './socket-worker-dist.js';
 const CRYPTO_WORKER_PATH = './trezor-crypto-dist.js';
@@ -73,6 +73,7 @@ function onMessage(event) {
         return;
     }
 
+    ACCOUNT_DISCOVERY_LIMIT = request.accountDiscoveryLimit;
     request.identity = parseIdentity(event);
     document.querySelector('#origin').textContent = showIdentity(request.identity);
 
@@ -581,8 +582,6 @@ function handleClaimBitcoinCashAccountsInfo(event) {
 
     BITCORE_URLS.splice(0, BITCORE_URLS.length);
     BITCORE_URLS.push('https://bch-bitcore2.trezor.io/');
-
-    DISCOVER_ACCOUNTS_LIMIT = 20;
 
     initDevice({ emptyPassphrase: false })
         .then(function getAccounts(device) {
@@ -1697,7 +1696,7 @@ function discoverAccounts(device, onStart, onUsed, onEnd) {
                 accounts.push(account);
                 onEnd();
                 if (account.used) {
-                    if (i + 1 >= DISCOVER_ACCOUNTS_LIMIT) {
+                    if (i + 1 >= ACCOUNT_DISCOVERY_LIMIT) {
                         return accounts; // stop at Account #10
                     }
                     return discover(i + 1);

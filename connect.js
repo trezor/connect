@@ -97,6 +97,12 @@ this.TrezorConnect = (function () {
          */
         this.closeAfterFailure = function (value) { manager.closeAfterFailure = value; };
 
+
+        this.setAccountDiscoveryLimit = function(value) {
+            if(!isNaN(value))
+                manager.accountDiscoveryLimit = value;
+        }
+
         /**
          * @typedef XPubKeyResult
          * @param {boolean} success
@@ -852,6 +858,7 @@ this.TrezorConnect = (function () {
 
         this.closeAfterSuccess = true;
         this.closeAfterFailure = true;
+        this.accountDiscoveryLimit = 10;
 
         this.close = function () {
             if (cc && cc.popup.window) {
@@ -876,6 +883,7 @@ this.TrezorConnect = (function () {
         };
 
         this.sendWithChannel = function (message, callback) {
+            message.accountDiscoveryLimit = this.accountDiscoveryLimit;
 
             var respond = function (response) {
                 var succ = response.success && this.closeAfterSuccess;
