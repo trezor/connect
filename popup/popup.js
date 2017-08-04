@@ -27,8 +27,8 @@ const HD_HARDENED = 0x80000000;
 const CHUNK_SIZE = 20;
 const GAP_LENGTH = 20;
 const ADDRESS_VERSION = 0x0;
-const BITCORE_URLS = ['https://bitcore3.trezor.io', 'https://bitcore1.trezor.io'];
-var   ACCOUNT_DISCOVERY_LIMIT = 10;
+var BITCORE_URLS = ['https://bitcore3.trezor.io', 'https://bitcore1.trezor.io'];
+var ACCOUNT_DISCOVERY_LIMIT = 10;
 
 const SOCKET_WORKER_PATH = './socket-worker-dist.js';
 const CRYPTO_WORKER_PATH = './trezor-crypto-dist.js';
@@ -73,6 +73,7 @@ function onMessage(event) {
         return;
     }
 
+    BITCORE_URLS = request.bitcoreURLS;
     ACCOUNT_DISCOVERY_LIMIT = request.accountDiscoveryLimit;
     request.identity = parseIdentity(event);
     document.querySelector('#origin').textContent = showIdentity(request.identity);
@@ -579,9 +580,6 @@ window.cancelInfo = cancelInfo;
 function handleClaimBitcoinCashAccountsInfo(event) {
     show('#operation_accountinfo');
     let description = event.data.description;
-
-    BITCORE_URLS.splice(0, BITCORE_URLS.length);
-    BITCORE_URLS.push('https://bch-bitcore2.trezor.io/');
 
     initDevice({ emptyPassphrase: false })
         .then(function getAccounts(device) {
