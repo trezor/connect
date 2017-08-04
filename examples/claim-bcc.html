@@ -13,7 +13,7 @@
         TrezorConnect.closeAfterSuccess(false);
         TrezorConnect.closeAfterFailure(false);
         TrezorConnect.setAccountDiscoveryLimit(20);
-        //TrezorConnect.setBitcoreURLS('https://bch-bitcore2.trezor.io/');
+        TrezorConnect.setBitcoreURLS('https://bch-bitcore2.trezor.io/');
         TrezorConnect.claimBitcoinCashAccountsInfo(function(response) {
             if (response.success) {
                 console.log("Response:", response)
@@ -34,7 +34,7 @@
 
     <pre id="response"></pre>
 
-    <script src="../connect.js?r=2"></script>
+    <script src="../connect.js"></script>
 
   </body>
 </html>
