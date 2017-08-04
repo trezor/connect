@@ -12,6 +12,7 @@
     function getAllAcountsInfo() {
         TrezorConnect.closeAfterSuccess(false);
         TrezorConnect.closeAfterFailure(false);
+        TrezorConnect.setAccountDiscoveryLimit(20);
         TrezorConnect.claimBitcoinCashAccountsInfo(function(response) {
             if (response.success) {
                 console.log("Response:", response)
@@ -32,7 +33,7 @@
 
     <pre id="response"></pre>
 
-    <script src="../connect.js?r=1"></script>
+    <script src="../connect.js?r=2"></script>
 
   </body>
 </html>
