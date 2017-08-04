@@ -97,7 +97,22 @@ this.TrezorConnect = (function () {
          */
         this.closeAfterFailure = function (value) { manager.closeAfterFailure = value; };
 
+        /**
+         * Set bitcore server
+         * @param {string|Array<string>} value
+         */
+        this.setBitcoreURLS = function(value) {
+            if (typeof value === 'string') {
+                manager.bitcoreURLS = [ value ];
+            }else if (value instanceof Array) {
+                manager.bitcoreURLS = value;
+            }
+        }
 
+        /**
+         * Set max. limit for account discovery
+         * @param {number} value
+         */
         this.setAccountDiscoveryLimit = function(value) {
             if(!isNaN(value))
                 manager.accountDiscoveryLimit = value;
@@ -858,6 +873,7 @@ this.TrezorConnect = (function () {
 
         this.closeAfterSuccess = true;
         this.closeAfterFailure = true;
+        this.bitcoreURLS = ['https://bitcore3.trezor.io', 'https://bitcore1.trezor.io'];
         this.accountDiscoveryLimit = 10;
 
         this.close = function () {
@@ -883,6 +899,7 @@ this.TrezorConnect = (function () {
         };
 
         this.sendWithChannel = function (message, callback) {
+            message.bitcoreURLS = this.bitcoreURLS;
             message.accountDiscoveryLimit = this.accountDiscoveryLimit;
 
             var respond = function (response) {
