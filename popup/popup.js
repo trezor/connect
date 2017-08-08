@@ -24,11 +24,12 @@ const SCRIPT_TYPES = {
 const CONFIG_URL = './config_signed.bin';
 const HD_HARDENED = 0x80000000;
 
-const CHUNK_SIZE = 20;
-const GAP_LENGTH = 20;
+var CHUNK_SIZE = 20;
+var GAP_LENGTH = 20;
 const ADDRESS_VERSION = 0x0;
-var BITCORE_URLS = ['https://bitcore3.trezor.io', 'https://bitcore1.trezor.io'];
+var BITCORE_URLS = ['https://btc-bitcore3.trezor.io', 'https://btc-bitcore1.trezor.io'];
 var ACCOUNT_DISCOVERY_LIMIT = 10;
+var BIP44_COIN_TYPE = 0;
 
 const SOCKET_WORKER_PATH = './socket-worker-dist.js';
 const CRYPTO_WORKER_PATH = './trezor-crypto-dist.js';
@@ -73,8 +74,19 @@ function onMessage(event) {
         return;
     }
 
-    BITCORE_URLS = request.bitcoreURLS;
-    ACCOUNT_DISCOVERY_LIMIT = request.accountDiscoveryLimit;
+    // optional values set by parent window
+    if (request.bitcoreURLS) {
+        BITCORE_URLS = request.bitcoreURLS;
+    }
+    if (request.accountDiscoveryLimit) {
+        ACCOUNT_DISCOVERY_LIMIT = request.accountDiscoveryLimit;
+    }
+    if (request.accountDiscoveryBip44CoinType) {
+        BIP44_COIN_TYPE = request.accountDiscoveryBip44CoinType;
+    }
+    if (request.accountDiscoveryGapLength) {
+        GAP_LENGTH = CHUNK_SIZE = request.accountDiscoveryGapLength;
+    }
     request.identity = parseIdentity(event);
     document.querySelector('#origin').textContent = showIdentity(request.identity);
 
@@ -616,6 +628,31 @@ function handleClaimBitcoinCashAccountsInfo(event) {
                     );
                 // handle invalid pin error, loop function
                 }).catch(errorHandler(() => getAccounts(device)));
+        })
+        .then(list => {
+            if (BIP44_COIN_TYPE === 0) {
+                // BTC account discovery, do nothing...
+                return list;
+            } else {
+                // BCH account discovery.
+                // We need to do a second discovery this time with BTC accounts to find BTC fresh address
+                // to do this we need to set BIP44_COIN_TYPE to 0 (BTC - default)
+                // and after discovery finish set it back to previous cached value...
+                let bip44_coin_type_cache = BIP44_COIN_TYPE;
+                BIP44_COIN_TYPE = 0;
+                return getAccountByDescription(description)
+                .then(accounts => {
+    
+                    BIP44_COIN_TYPE = bip44_coin_type_cache;
+                    for(let item in list){
+                        let btcAccount = accounts[item];
+                        list[item].bitcoinAddress = btcAccount.nextAddress;
+                        list[item].bitcoinAddressPath = btcAccount.getAddressPath(btcAccount.nextAddress);
+                    }
+                    return list;
+                })
+            }
+            
         })
         .then(list => {
             // get fees
@@ -1345,7 +1382,7 @@ class Account {
     static getPathForIndex(i) {
         return [
             (44 | HD_HARDENED) >>> 0,
-            (0 | HD_HARDENED) >>> 0,
+            (BIP44_COIN_TYPE | HD_HARDENED) >>> 0,
             (i | HD_HARDENED) >>> 0
         ];
     }
@@ -1688,7 +1725,7 @@ function discoverAccounts(device, onStart, onUsed, onEnd) {
     let channel = createCryptoChannel();
 
     let discover = (i) => {
-        return Account.fromDevice(device, i, channel, getBlockchain()).then((account) => {
+        return Account.fromPath(device, Account.getPathForIndex(i), channel, getBlockchain()).then((account) => {
             onStart(account);
             return account.discover(onUsed).then(() => {
                 accounts.push(account);
