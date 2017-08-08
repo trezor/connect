@@ -387,6 +387,34 @@ this.TrezorConnect = (function () {
         };
 
         /**
+         * Sign an Ethereum message
+         *
+         * @param {string|array} path
+         * @param {string} message to sign (ascii)
+         * @param {string|function(SignMessageResult)} callback
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.ethereumSignMessage = function (
+            path,
+            message,
+            callback,
+            requiredFirmware
+        ) {
+            if (typeof path === 'string') {
+                path = parseHDPath(path);
+            }
+            if (!callback) {
+                throw new TypeError('TrezorConnect: callback not found');
+            }
+            manager.sendWithChannel(_fwStrFix({
+                type: 'signethmsg',
+                path: path,
+                message: message,
+            }, requiredFirmware), callback);
+        };
+
+        /**
          * Verify message
          *
          * @param {string} address
@@ -417,6 +445,34 @@ this.TrezorConnect = (function () {
                 signature: signature,
                 message: message,
                 coin: {coin_name: opt_coin},
+            }, requiredFirmware), callback);
+        };
+
+        /**
+         * Verify ethereum message
+         *
+         * @param {string} address
+         * @param {string} signature (base64)
+         * @param {string} message (string)
+         * @param {string|function()} callback
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.verifyMessage = function (
+            address,
+            signature,
+            message,
+            callback,
+            requiredFirmware
+        ) {
+            if (!callback) {
+                throw new TypeError('TrezorConnect: callback not found');
+            }
+            manager.sendWithChannel(_fwStrFix({
+                type: 'verifyethmsg',
+                address: address,
+                signature: signature,
+                message: message,
             }, requiredFirmware), callback);
         };
 
