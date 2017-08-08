@@ -128,7 +128,7 @@ this.TrezorConnect = (function () {
         }
 
         /**
-         * Set max. gap for account discovery
+         * Set discovery BIP44 coin type
          * @param {number} value
          */
         this.setAccountDiscoveryBip44CoinType = function(value) {
