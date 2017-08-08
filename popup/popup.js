@@ -116,6 +116,10 @@ function onMessage(event) {
         handleSignMsg(event);
         break;
 
+    case 'signethmsg':
+        handleSignEthMsg(event);
+        break;
+
     case 'verifymsg':
         handleVerifyMsg(event);
         break;
@@ -244,6 +248,57 @@ function handleSignMsg(event) {
                 requestedPath,
                 message,
                 coin
+            ).catch(handler);
+        })
+
+        .then((result) => { // success
+            let {message} = result;
+            let {address, signature} = message;
+
+            let signBuff = new Buffer(signature, 'hex');
+            let baseSign = signBuff.toString('base64');
+
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    address: address,
+                    signature: baseSign
+                });
+            });
+        })
+
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+/*
+ * sign ethereum message
+ */
+
+function handleSignEthMsg(event) {
+    let txtmessage = event.data.message;
+    let msgBuff = new Buffer(txtmessage, 'utf8');
+    let message = msgBuff.toString('hex');
+    let requestedPath = event.data.path;
+
+    // make sure bip32 indices are unsigned
+    requestedPath = requestedPath.map((i) => i >>> 0);
+
+    show('#operation_signethmsg');
+
+    initDevice()
+
+        .then(function signEthMessage(device) { // send EthereumSignMessage
+            let handler = errorHandler(() => signEthMessage(device));
+            device.session.on('button', (code) => {
+                buttonCallback(code);
+            });
+
+            return device.session.signEthMessage(
+                requestedPath,
+                message
             ).catch(handler);
         })
 

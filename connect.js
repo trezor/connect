@@ -369,6 +369,34 @@ this.TrezorConnect = (function () {
         };
 
         /**
+         * Sign an Ethereum message
+         *
+         * @param {string|array} path
+         * @param {string} message to sign (ascii)
+         * @param {string|function(SignMessageResult)} callback
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.ethereumSignMessage = function (
+            path,
+            message,
+            callback,
+            requiredFirmware
+        ) {
+            if (typeof path === 'string') {
+                path = parseHDPath(path);
+            }
+            if (!callback) {
+                throw new TypeError('TrezorConnect: callback not found');
+            }
+            manager.sendWithChannel(_fwStrFix({
+                type: 'signethmsg',
+                path: path,
+                message: message,
+            }, requiredFirmware), callback);
+        };
+
+        /**
          * Verify message
          *
          * @param {string} address
