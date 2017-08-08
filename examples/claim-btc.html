@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Claim Bitcoin Cash</title>
+    <script>
+
+    //window.TREZOR_INSIGHT_URLS = ['https://bch-bitcore2.trezor.io/api/'];
+    window.TREZOR_POPUP_URL = 'http://localhost/popup/popup.html';
+    window.TREZOR_POPUP_PATH = 'http://localhost/';
+    window.TREZOR_POPUP_ORIGIN = 'http://localhost';
+
+    function getAllAcountsInfo() {
+        TrezorConnect.closeAfterSuccess(false);
+        TrezorConnect.closeAfterFailure(false);
+        TrezorConnect.setAccountDiscoveryLimit(30);
+        TrezorConnect.setAccountDiscoveryGapLength(100);
+        TrezorConnect.setAccountDiscoveryBip44CoinType(145);
+        TrezorConnect.claimBitcoinCashAccountsInfo(function(response) {
+            if (response.success) {
+                console.log("Response:", response)
+            } else {
+                console.error('Error:', response.error); // error message
+            }
+            document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+        });
+    }
+
+    </script>
+  </head>
+  <body>
+
+    
+
+    <button onclick="getAllAcountsInfo()">Get Accounts</button>
+
+    <pre id="response"></pre>
+
+    <script src="../connect.js"></script>
+
+  </body>
+</html>

@@ -41,8 +41,8 @@ this.TrezorConnect = (function () {
 
     var INSIGHT_URLS = window.TREZOR_INSIGHT_URLS || 
         [
-            'https://bitcore1.trezor.io/api/',
-            'https://bitcore3.trezor.io/api/',
+            'https://btc-bitcore1.trezor.io/api/',
+            'https://btc-bitcore3.trezor.io/api/',
         ];
 
     var POPUP_INIT_TIMEOUT = 15000;
@@ -116,6 +116,24 @@ this.TrezorConnect = (function () {
         this.setAccountDiscoveryLimit = function(value) {
             if(!isNaN(value))
                 manager.accountDiscoveryLimit = value;
+        }
+
+        /**
+         * Set max. gap for account discovery
+         * @param {number} value
+         */
+        this.setAccountDiscoveryGapLength = function(value) {
+            if(!isNaN(value))
+                manager.accountDiscoveryGapLength = value;
+        }
+
+        /**
+         * Set discovery BIP44 coin type
+         * @param {number} value
+         */
+        this.setAccountDiscoveryBip44CoinType = function(value) {
+            if(!isNaN(value))
+                manager.accountDiscoveryBip44CoinType = value;
         }
 
         /**
@@ -873,8 +891,6 @@ this.TrezorConnect = (function () {
 
         this.closeAfterSuccess = true;
         this.closeAfterFailure = true;
-        this.bitcoreURLS = ['https://bitcore3.trezor.io', 'https://bitcore1.trezor.io'];
-        this.accountDiscoveryLimit = 10;
 
         this.close = function () {
             if (cc && cc.popup.window) {
@@ -899,8 +915,10 @@ this.TrezorConnect = (function () {
         };
 
         this.sendWithChannel = function (message, callback) {
-            message.bitcoreURLS = this.bitcoreURLS;
-            message.accountDiscoveryLimit = this.accountDiscoveryLimit;
+            message.bitcoreURLS = this.bitcoreURLS || null;
+            message.accountDiscoveryLimit = this.accountDiscoveryLimit || null;
+            message.accountDiscoveryGapLength = this.accountDiscoveryGapLength || null;
+            message.accountDiscoveryBip44CoinType = this.accountDiscoveryBip44CoinType || null;
 
             var respond = function (response) {
                 var succ = response.success && this.closeAfterSuccess;
