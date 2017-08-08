@@ -431,6 +431,34 @@ this.TrezorConnect = (function () {
         };
 
         /**
+         * Verify ethereum message
+         *
+         * @param {string} address
+         * @param {string} signature (base64)
+         * @param {string} message (string)
+         * @param {string|function()} callback
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.verifyMessage = function (
+            address,
+            signature,
+            message,
+            callback,
+            requiredFirmware
+        ) {
+            if (!callback) {
+                throw new TypeError('TrezorConnect: callback not found');
+            }
+            manager.sendWithChannel(_fwStrFix({
+                type: 'verifyethmsg',
+                address: address,
+                signature: signature,
+                message: message,
+            }, requiredFirmware), callback);
+        };
+
+        /**
          * Symmetric key-value encryption
          *
          * @param {string|array} path

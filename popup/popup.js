@@ -124,6 +124,10 @@ function onMessage(event) {
         handleVerifyMsg(event);
         break;
 
+    case 'verifyethmsg':
+        handleVerifyEthMsg(event);
+        break;
+
     case 'cipherkeyvalue':
         handleCipherKeyValue(event);
         break;
@@ -350,6 +354,47 @@ function handleVerifyMsg(event) {
                 signature,
                 message,
                 coin
+            ).catch(handler);
+        })
+
+        .then((result) => { // success
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true
+                });
+            });
+        })
+
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+function handleVerifyEthMsg(event) {
+    let txtmessage = event.data.message;
+    let msgBuff = new Buffer(txtmessage, 'utf8');
+    let message = msgBuff.toString('hex');
+
+    let signBase = event.data.signature;
+    let signature = new Buffer(signBase, 'base64').toString('hex');
+
+    let address = event.data.address;
+
+    show('#operation_verifyethmsg');
+
+    initDevice()
+
+        .then(function verifyEthMessage(device) { // send EthereumVerifyMessage
+            let handler = errorHandler(() => verifyEthMessage(device));
+            device.session.on('button', (code) => {
+                buttonCallback(code);
+            });
+
+            return device.session.verifyEthMessage(
+                address,
+                signature,
+                message,
             ).catch(handler);
         })
 
