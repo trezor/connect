@@ -11,13 +11,11 @@ clean:
 	rm -rf dist/
 
 dist-rolling-%:
-	git tag -d `git tag` #delete all local tags to prevent use of tag
 	git fetch
 	git checkout $*
 	make .copy-$*-`git rev-parse --short HEAD`
 
 dist-stable-v%:
-	git tag -d `git tag` #delete all local tags to prevent use of tag
 	git fetch
 	git checkout v$*
 	make .copy-$*
@@ -42,7 +40,7 @@ dist-stable-v%:
 sync-stable-v%:
 	make .sync-$*
 
-sync-rolling-v%:
+sync-rolling-%:
 	make .sync-$*-`git rev-parse --short HEAD`
 
 .sync-%:
