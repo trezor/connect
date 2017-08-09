@@ -3,7 +3,7 @@
  *
  * GPLv3
  */
-var VERSION = 2;
+var VERSION = 3;
 
 if (!Array.isArray) {
     Array.isArray = function(arg) {
