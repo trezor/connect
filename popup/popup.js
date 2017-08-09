@@ -108,9 +108,6 @@ function onMessage(event) {
     case 'allaccountsinfo':
         handleAllAccountsInfo(event);
         break;
-    case 'claimBitcoinCashAccountsInfo':
-        handleClaimBitcoinCashAccountsInfo(event);
-        break;
 
     case 'signtx':
         handleSignTx(event);
@@ -657,116 +654,6 @@ function cancelInfo() {
 }
 
 window.cancelInfo = cancelInfo;
-
-
-function handleClaimBitcoinCashAccountsInfo(event) {
-    show('#operation_accountinfo');
-    let description = event.data.description;
-
-    initDevice({ emptyPassphrase: false })
-        .then(function getAccounts(device) {
-            return getAccountByDescription(description)
-                .then(accounts => {
-                    let list = [];
-                    // get new BitcoinCash address for every retreived account
-                    return accounts.reduce(
-                        (promise, a) => {
-                            return promise.then(() => {
-
-                                // modify BTC path to BCC path
-                                let bccPath = a.getPath();
-                                bccPath[1] =  (145 | HD_HARDENED) >>> 0;
-                                bccPath.push(0, 0);
-
-                                // get BCC adress from BCC path
-                                return device.session.getAddress(bccPath, 'Bitcoin', false, false)
-                                .then(bccAddressResponse => {
-                                    list.push({
-                                        id: a.id,
-                                        addressId: a.nextAddressId,
-                                        balance: a.getBalance(),
-                                        path: a.getPath(),
-                                        unspents: a.getUnspents(),
-                                        bitcoinCashAddress: bccAddressResponse.message.address,
-                                        bitcoinCashPath: bccAddressResponse.message.path
-                                    });
-                                    return list;
-                                });
-                            });
-                        },
-                        Promise.resolve()
-                    );
-                // handle invalid pin error, loop function
-                }).catch(errorHandler(() => getAccounts(device)));
-        })
-        .then(list => {
-            if (BIP44_COIN_TYPE === 0) {
-                // BTC account discovery, do nothing...
-                return list;
-            } else {
-                // BCH account discovery.
-                // We need to do a second discovery this time with BTC accounts to find BTC fresh address
-                // to do this we need to set BIP44_COIN_TYPE to 0 (BTC - default)
-                // and after discovery finish set it back to previous cached value...
-                let bip44_coin_type_cache = BIP44_COIN_TYPE;
-                BIP44_COIN_TYPE = 0;
-                return getAccountByDescription(description)
-                .then(accounts => {
-    
-                    BIP44_COIN_TYPE = bip44_coin_type_cache;
-                    for(let item in list){
-                        let btcAccount = accounts[item];
-                        list[item].bitcoinAddress = btcAccount.nextAddress;
-                        list[item].bitcoinAddressPath = btcAccount.getAddressPath(btcAccount.nextAddress);
-                    }
-                    return list;
-                })
-            }
-            
-        })
-        .then(list => {
-            // get fees
-            // return findAllRecommendedFeeLevels().then(fees => {
-            //     return {
-            //         accounts: list,
-            //         fees: fees
-            //     }
-            // });
-            return {
-                accounts: list,
-                fees: [
-                    {
-                        name: 'High',
-                        maxFee: 199
-                    }, {
-                        name: 'Normal',
-                        maxFee: 112
-                    }, {
-                        name: 'Economy',
-                        maxFee: 48
-                    }, {
-                        name: 'Low',
-                        maxFee: 24
-                    }
-                ]
-            }
-
-        })
-        .then(response => { // success
-            return global.device.session.release().then(() => {
-                respondToEvent(event, { 
-                    success: true, 
-                    accounts: response.accounts, 
-                    fees: response.fees 
-                });
-            });
-        })
-        .catch(error => { // failure
-            console.error(error);
-            respondToEvent(event, {success: false, error: error.message});
-        });
-
-}
 
 
 function handleAllAccountsInfo(event) {
