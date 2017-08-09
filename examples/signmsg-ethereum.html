@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>TREZOR Ethereum Sign Message Test</title>
+    <style>
+      table {
+        display: inline-block;
+        width: 49%;
+        vertical-align: top;
+      }
+      table tr:first-child {
+        font-weight: bold;
+        font-size: 18px;
+        text-indent: 100px;
+      }
+      table td {
+        vertical-align: top;
+        box-sizing: border-box;
+        clear: both;
+      }
+      table tr td:first-child {
+        width: 100px;
+      }
+      input {
+        width: 350px;
+      }
+      textarea {
+        width: 350px;
+        height: 100px;
+      }
+    </style>
+    <script>
+
+    function trezorSignMessage() {
+
+      var path = document.getElementById("path");
+      var message = document.getElementById("message");
+      var messageV = document.getElementById("messageV");
+      var address = document.getElementById("address");
+      var signature = document.getElementById("signature");
+
+
+      TrezorConnect.ethereumSignMessage(path.value, message.value, function (response) {
+          if (response.success) {
+              address.value = response.address;
+              messageV.value = message.value;
+              signature.value = response.signature;
+          } else {
+              address.value = "";
+              messageV.value = "";
+              signature.value = "";
+              address.appendChild(document.createTextNode("Error: " + response.error));
+              
+          }
+          document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+      });
+    }
+
+    function trezorVerifyMessage() {
+
+      var messageV = document.getElementById("messageV");
+      var address = document.getElementById("address");
+      var signature = document.getElementById("signature");
+
+
+      TrezorConnect.ethereumVerifyMessage(address.value, signature.value, messageV.value, function (response) {
+          document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+      });
+    }
+
+    </script>
+  </head>
+  <body>
+
+  <table>
+    <tr>
+      <td colspan="2" style="font-weight:bold">Sign</td>
+    </tr>
+    <tr>
+      <td>Path:</td>
+      <td><input id="path" value="m/44'/60'/0'/0" /></td>
+    </tr>
+    <tr>
+      <td>Message:</td>
+      <td><input id="message" value="Example message" size="64" /></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <button onclick="trezorSignMessage()">Sign Message</button>
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <td colspan="2" style="font-weight:bold">Verify</td>
+    </tr>
+    <tr>
+      <td>Address:</td>
+      <td><input id="address" value="b1125f399310202822d7ee3eed38a65481a928ec" /></td>
+    </tr>
+    <tr>
+      <td>Message:</td>
+      <td><input id="messageV" value="Example message" /></td>
+    </tr>
+    <tr>
+      <td>Signature:</td>
+      <td><textarea id="signature">7eb0c3ebaaabc8ff67a5413a79512293f0184ed3d136fc873f188b3dd39e043f3036f42c75c7c05e236b37f75dbe4b154437391bbe219e5e8d7d69ac4d89d6231c</textarea></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <button onclick="trezorVerifyMessage()">Verify Message</button>
+      </td>
+    </tr>
+  </table>
+
+  <hr>
+
+  <pre id="response"></pre>
+
+  <script src="../connect.js"></script>
+
+  </body>
+</html>

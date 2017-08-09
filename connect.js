@@ -248,6 +248,12 @@ this.TrezorConnect = (function () {
             }, requiredFirmware), callback);
         };
 
+        // new implementation with ethereum at beginnig
+        this.ethereumSignTx = function() {
+            this.signEthereumTx.apply(this, arguments);
+        }
+
+        // old fallback
         this.signEthereumTx = function (
             address_n,
             nonce,
@@ -458,7 +464,7 @@ this.TrezorConnect = (function () {
          * @param {?(string|array<number>)} requiredFirmware
          *
          */
-        this.verifyMessage = function (
+        this.ethereumVerifyMessage = function (
             address,
             signature,
             message,
