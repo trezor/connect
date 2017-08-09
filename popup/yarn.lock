@@ -2730,9 +2730,9 @@ trezor-link@0.2.105:
     protobufjs-old-fixed-webpack "3.8.5"
     semver-compare "^1.0.0"
 
-trezor.js@6.0.3:
-  version "6.0.3"
-  resolved "https://registry.yarnpkg.com/trezor.js/-/trezor.js-6.0.3.tgz#3f54aabe88ff8cb248747f0dc4b8d745f0bf313d"
+trezor.js@6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/trezor.js/-/trezor.js-6.1.0.tgz#043339e5e8882a0f0554bfa8716d03a47154f139"
   dependencies:
     bitcoinjs-lib-zcash "^3.0.0"
     ecurve "^1.0.2"
