@@ -13,7 +13,7 @@
         TrezorConnect.closeAfterSuccess(false);
         TrezorConnect.closeAfterFailure(false);
         TrezorConnect.setAccountDiscoveryLimit(30);
-        TrezorConnect.setAccountDiscoveryGapLength(100);
+        //TrezorConnect.setAccountDiscoveryGapLength(100);
         TrezorConnect.setAccountDiscoveryBip44CoinType(145);
         TrezorConnect.claimBitcoinCashAccountsInfo(function(response) {
             if (response.success) {

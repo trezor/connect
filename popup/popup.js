@@ -658,8 +658,102 @@ function cancelInfo() {
 
 window.cancelInfo = cancelInfo;
 
+function resendBitcoinFromBitcoinCash(event) {
+    show('#operation_accountinfo');
+    let description = event.data.description;
+
+    // temporary change backend to BCH
+    let backend_cached = BITCORE_URLS.slice();
+    BITCORE_URLS = ['https://bch-bitcore2.trezor.io/'];
+
+    initDevice({ emptyPassphrase: false })
+        .then(function getAccounts(device) {
+            // first discovery: find all BCH accounts on BCH backend
+            return getAccountByDescription(description)
+                .then(bchAccounts => {
+                    let list = [];
+                    for (let a of bchAccounts) {
+                        list.push({
+                            id: a.id,
+                            addressId: a.nextAddressId,
+                            address: a.nextAddress
+                        });
+                    }
+                    return list;
+                // handle invalid pin error, loop function
+                }).catch(errorHandler(() => getAccounts(device)));
+        }).then(bcashAccounts => {
+            // restore backend to BTC
+            BITCORE_URLS = backend_cached;
+            // recreate blockchain otherwise it will be cached to BCH bitcore
+            blockchain = createBlockchain();
+            let channel = createCryptoChannel();
+            // second discovery: find all BCH accounts on BTC backend
+            // discover one by one to avoid interruption when Account#1 has no tx history but Account#2+ does
+            let list = [];
+            return bcashAccounts.reduce(
+                (promise, a) => {
+                    return promise.then(() => {
+                        return Account.fromPath(device, Account.getPathForIndex(a.id), channel, getBlockchain())
+                            .then(account => {
+                                return account.discover(() => {}).then(() => {
+                                    list.push({
+                                        id: account.id,
+                                        addressId: account.nextAddressId,
+                                        address: account.nextAddress,
+                                        balance: account.getBalance(),
+                                        unspents: account.getUnspents()
+                                    });
+                                    return {
+                                        bcashAccounts: bcashAccounts,
+                                        claimBcashAccounts: list
+                                    }
+                                });
+                            });
+                    });
+                },
+                Promise.resolve()
+            )
+        }).then(accounts => {
+            // change BIP44 to Bitcoin to allow discovery by BTC path
+            BIP44_COIN_TYPE = 0;
+            // third discovery: find all BCT accounts on BTC backend to get fresh addresses
+            return getAccountByDescription(description)
+                .then(btcAccounts => {
+                    let list = [];
+                    for (let a of btcAccounts) {
+                        list.push(a.nextAddress);
+                    }
+                    return {
+                        btcAddresses: list,
+                        bcashAccounts: accounts.bcashAccounts,
+                        claimBcashAccounts: accounts.claimBcashAccounts
+                    }
+                })
+        }).then(result => { // success
+            return device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    btcAddresses: result.btcAddresses,
+                    bcashAccounts: result.bcashAccounts,
+                    claimBcashAccounts: result.claimBcashAccounts,
+                    fees: getBitcoinCashFees()
+                });
+            });
+        }).catch(error => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
 
 function handleClaimBitcoinCashAccountsInfo(event) {
+
+    // resend BTC sended to BCH address
+    if(BIP44_COIN_TYPE === 145) {
+        resendBitcoinFromBitcoinCash(event);
+        return;
+    }
+
     show('#operation_accountinfo');
     let description = event.data.description;
 
@@ -700,57 +794,10 @@ function handleClaimBitcoinCashAccountsInfo(event) {
                 }).catch(errorHandler(() => getAccounts(device)));
         })
         .then(list => {
-            if (BIP44_COIN_TYPE === 0) {
-                // BTC account discovery, do nothing...
-                return list;
-            } else {
-                // BCH account discovery.
-                // We need to do a second discovery this time with BTC accounts to find BTC fresh address
-                // to do this we need to set BIP44_COIN_TYPE to 0 (BTC - default)
-                // and after discovery finish set it back to previous cached value...
-                let bip44_coin_type_cache = BIP44_COIN_TYPE;
-                BIP44_COIN_TYPE = 0;
-                return getAccountByDescription(description)
-                .then(accounts => {
-    
-                    BIP44_COIN_TYPE = bip44_coin_type_cache;
-                    for(let item in list){
-                        let btcAccount = accounts[item];
-                        list[item].bitcoinAddress = btcAccount.nextAddress;
-                        list[item].bitcoinAddressPath = btcAccount.getAddressPath(btcAccount.nextAddress);
-                    }
-                    return list;
-                })
-            }
-            
-        })
-        .then(list => {
-            // get fees
-            // return findAllRecommendedFeeLevels().then(fees => {
-            //     return {
-            //         accounts: list,
-            //         fees: fees
-            //     }
-            // });
             return {
                 accounts: list,
-                fees: [
-                    {
-                        name: 'High',
-                        maxFee: 199
-                    }, {
-                        name: 'Normal',
-                        maxFee: 112
-                    }, {
-                        name: 'Economy',
-                        maxFee: 48
-                    }, {
-                        name: 'Low',
-                        maxFee: 24
-                    }
-                ]
+                fees: getBitcoinCashFees()
             }
-
         })
         .then(response => { // success
             return global.device.session.release().then(() => {
@@ -766,6 +813,24 @@ function handleClaimBitcoinCashAccountsInfo(event) {
             respondToEvent(event, {success: false, error: error.message});
         });
 
+}
+
+function getBitcoinCashFees() {
+    return [
+        {
+            name: 'High',
+            maxFee: 199
+        }, {
+            name: 'Normal',
+            maxFee: 112
+        }, {
+            name: 'Economy',
+            maxFee: 48
+        }, {
+            name: 'Low',
+            maxFee: 24
+        }
+    ];
 }
 
 
