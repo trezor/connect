@@ -120,6 +120,10 @@ function onMessage(event) {
         handleEthereumSignTx(event);
         break;
 
+    case 'pushtx':
+        handlePushTx(event);
+        break;
+
     case 'composetx':
         handleComposeTx(event);
         break;
@@ -1041,6 +1045,23 @@ function handleSignTx(event) {
             console.error(error);
             respondToEvent(event, {success: false, error: error.message});
         });
+}
+
+function handlePushTx(event) {
+    const { rawTx } = event.data;
+    let blockchain = getBlockchain();
+    blockchain.sendTransaction(rawTx)
+    .then(txid => {
+        respondToEvent(event, {
+            success: true,
+            type: 'pushtx',
+            txid: txid
+        });
+    })
+    .catch((error) => { // failure
+        console.error(error);
+        respondToEvent(event, {success: false, error: error.message});
+    });
 }
 
 function xpubToHDNodeType(xpub) {

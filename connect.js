@@ -532,10 +532,7 @@ this.TrezorConnect = (function () {
             }, requiredFirmware), callback);
         };
 
-        this.pushTransaction = function (
-          rawTx,
-          callback
-        ) {
+        this.pushTransaction = function(rawTx, callback) {
             if (!(/^[0-9A-Fa-f]*$/.test(rawTx))) {
                 throw new TypeError('TrezorConnect: Transaction must be hexadecimal');
             }
@@ -543,35 +540,10 @@ this.TrezorConnect = (function () {
                 throw new TypeError('TrezorConnect: callback not found');
             }
 
-            var tryUrl = function(i) {
-                var insight_url = INSIGHT_URLS[i];
-                var xhr = new XMLHttpRequest();
-                var method = 'POST';
-                var url = insight_url + '/tx/send';
-                var data = {
-                    rawtx: rawTx
-                };
-
-                xhr.open(method, url, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        if (xhr.status === 200) {
-                            var txid = JSON.parse(xhr.responseText).txid;
-                            callback({success: true, txid: txid});
-                        } else {
-                            if (i === INSIGHT_URLS.length - 1) {
-                                callback({error: new Error(xhr.responseText)});
-                            } else {
-                                tryUrl(i + 1);
-                            }
-                        }
-                    }
-                };
-                xhr.send(JSON.stringify(data));
-            }
-
-            tryUrl(0);
+            manager.sendWithChannel({
+                type: 'pushtx',
+                rawTx: rawTx,
+            }, callback);
         }
 
         /**

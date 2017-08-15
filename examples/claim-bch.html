@@ -24,6 +24,36 @@
         });
     }
 
+    function pushTx() {
+
+        var inputs = [{
+            address_n: [2147483692,2147483648,2147483649,0,1], 
+            prev_index: 0, 
+            prev_hash: "fbce3b7f2a339ffdbfaff80599491c0ed77d7b5a2780f174904ea38c8f987cf8",
+            amount: 159229
+        }];
+        var outputs = [{
+            address: "14qYRDAMrDtSxPAqP3BsPWf7CXQeX8hjFT",
+            amount: 157229,
+            script_type: "PAYTOADDRESS"
+        }];
+        
+        TrezorConnect.closeAfterSuccess(false);
+        TrezorConnect.closeAfterFailure(false);
+        TrezorConnect.setBitcoreURLS('https://bch-bitcore2.trezor.io/');
+        TrezorConnect.signTx(inputs, outputs, function(s_response){
+            if(s_response.success){
+                TrezorConnect.closeAfterSuccess(true);
+                TrezorConnect.closeAfterFailure(true);
+                TrezorConnect.pushTransaction(s_response.serialized_tx, function(response){
+                //TrezorConnect.pushTransaction("ABCd", function(response){
+                    console.log("PushTx", response);
+                });
+            }
+        }, '1.0.0', 'Bcash');
+        
+    }
+
     </script>
   </head>
   <body>
@@ -31,6 +61,7 @@
     
 
     <button onclick="getAllAcountsInfo()">Get Accounts</button>
+    <button onclick="pushTx()">Push tx</button>
 
     <pre id="response"></pre>
 
