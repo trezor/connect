@@ -54,19 +54,17 @@
               
           }
           document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
-      });
+      }, '1.5.1');
     }
 
     function trezorVerifyMessage() {
-
       var messageV = document.getElementById("messageV");
       var address = document.getElementById("address");
       var signature = document.getElementById("signature");
 
-
       TrezorConnect.ethereumVerifyMessage(address.value, signature.value, messageV.value, function (response) {
           document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
-      });
+      }, '1.5.1');
     }
 
     </script>
