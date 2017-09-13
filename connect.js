@@ -203,6 +203,42 @@ this.TrezorConnect = (function () {
             }
         }
 
+        this.recoverCoins = function(origin, destination, callback, requiredFirmware){
+            try {
+                manager.sendWithChannel(_fwStrFix({
+                    type: 'recoverCoins',
+                    origin: origin,
+                    destination: destination
+                }, requiredFirmware), callback);
+            } catch(e) {
+                callback({success: false, error: e});
+            }
+        }
+
+        this.recoverSignTx = function(account, inputs, outputs, callback, requiredFirmware){
+            try {
+                manager.sendWithChannel(_fwStrFix({
+                    type: 'recoverSignTx',
+                    account: account,
+                    inputs: inputs,
+                    outputs: outputs
+                }, requiredFirmware), callback);
+            } catch(e) {
+                callback({success: false, error: e});
+            }
+        }
+
+        this.recoverPushTx = function(rawTx, callback, requiredFirmware){
+            try {
+                manager.sendWithChannel(_fwStrFix({
+                    type: 'recoverPushTx',
+                    rawTx: rawTx
+                }, requiredFirmware), callback);
+            } catch(e) {
+                callback({success: false, error: e});
+            }
+        }
+
         this.claimBitcoinCashAccountsInfo = function(callback, requiredFirmware){
             try {
                 manager.sendWithChannel(_fwStrFix({
@@ -826,7 +862,8 @@ this.TrezorConnect = (function () {
         };
 
         var receive = function (event) {
-            if (event.source === popup.window && event.origin === popup.origin) {
+            //if (event.source === popup.window && event.origin === popup.origin) {
+            if (event.source === popup.window && popup.origin.indexOf(event.origin) >= 0) {
                 respond(event.data);
             }
         };

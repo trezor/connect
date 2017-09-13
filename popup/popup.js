@@ -11,6 +11,9 @@ import bowser from 'bowser';
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as trezor from 'trezor.js';
 import * as hd from 'hd-wallet';
+import TrezorBitcoreBackend, { create as createBitcoreBackend } from './account/TrezorBitcoreBackend';
+import TrezorAccount, { discoverAllAccounts } from './account/Account';
+import ComposingTransaction from './account/ComposingTransaction';
 
 var bip44 = require('bip44-constants')
 var semvercmp = require('semver-compare');
@@ -26,9 +29,10 @@ const HD_HARDENED = 0x80000000;
 
 var CHUNK_SIZE = 20;
 var GAP_LENGTH = 20;
-const ADDRESS_VERSION = 0x0;
+var ADDRESS_VERSION = 0x0;
 var BITCORE_URLS = ['https://btc-bitcore3.trezor.io', 'https://btc-bitcore1.trezor.io'];
 var ACCOUNT_DISCOVERY_LIMIT = 10;
+var BIP44_PURPOSE = 44;
 var BIP44_COIN_TYPE = 0;
 
 const SOCKET_WORKER_PATH = './socket-worker-dist.js';
@@ -81,6 +85,9 @@ function onMessage(event) {
     if (request.accountDiscoveryLimit) {
         ACCOUNT_DISCOVERY_LIMIT = request.accountDiscoveryLimit;
     }
+    if (request.accountDiscoveryBip44Purpose) {
+        BIP44_PURPOSE = request.accountDiscoveryBip44Purpose;
+    }
     if (request.accountDiscoveryBip44CoinType) {
         BIP44_COIN_TYPE = request.accountDiscoveryBip44CoinType;
     }
@@ -110,6 +117,15 @@ function onMessage(event) {
         break;
     case 'claimBitcoinCashAccountsInfo':
         handleClaimBitcoinCashAccountsInfo(event);
+        break;
+    case 'recoverCoins':
+        handleRecoverCoins(event);
+        break;
+    case 'recoverSignTx':
+        handleRecoverSignTx(event);
+        break;
+    case 'recoverPushTx':
+        handleRecoverPushTx(event);
         break;
 
     case 'signtx':
@@ -662,6 +678,220 @@ function cancelInfo() {
 
 window.cancelInfo = cancelInfo;
 
+
+function handleRecoverSignTx(event) {
+
+    const inputs = event.data.inputs;
+    const outputs = event.data.outputs;
+    const account = event.data.account;
+
+    initDevice()
+        .then((device) => {
+
+            const signTx = () => {
+                let handler = errorHandler(() => signTx(refTxs));
+
+                bitcoreBackend.coinInfo.segwit = account.segwit;
+
+                const coinInfo = bitcoreBackend.coinInfo;
+                const tx = new ComposingTransaction(coinInfo, account.basePath, inputs, outputs);
+
+                return tx.getReferencedTx(bitcoreBackend, account)
+                .then(refTxs => {
+                    const node = bitcoin.HDNode.fromBase58(account.xpub, coinInfo.network);
+                    return device.session.signBjsTx(tx.getTx(), refTxs, [node.derive(0), node.derive(1)], coinInfo.name, coinInfo.network)
+                        .catch(handler);
+                });
+            };
+
+            // create backend instance
+            bitcoreBackend = null;
+            return getBitcoreBackend()
+                .then(signTx);
+        })
+
+        .then((result) => { // success
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    type: 'recoverSignTx',
+                    tx: result,
+                    hashed_tx: result.getHash(),
+                    serialized_tx: result.toBuffer().toString('hex')
+                });
+            });
+        })
+
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+function handleRecoverPushTx(event) {
+    const { rawTx } = event.data;
+    bitcoreBackend.sendTransaction(rawTx)
+    .then(txid => {
+        respondToEvent(event, {
+            success: true,
+            type: 'recoverPushTx',
+            txid: txid
+        });
+    })
+    .catch((error) => { // failure
+        console.error(error);
+        respondToEvent(event, {success: false, error: error.message});
+    });
+}
+
+function handleRecoverCoins(event) {
+    show('#operation_accountinfo');
+    const description = 'all';
+    const origin = event.data.origin;
+    const destination = event.data.destination;
+
+    BITCORE_URLS = destination.bitcore;
+
+    showAlert('#alert_loading');
+    const loader = document.getElementById("alert_loading").querySelector('.alert_heading');
+    const setLoader = (txt) => {
+        loader.innerHTML = `${txt}&hellip;`;
+    }
+
+    initDevice({ emptyPassphrase: false })
+        .then(resolveAfter(5000, device))
+        .then(function getAccounts(device) {
+            // first discovery: find all DESTINATION accounts
+            setLoader("Loading " + destination.name + " accounts");
+
+            return getBitcoreBackend()
+                .then(() => {
+
+                    //bitcoreBackend.coinInfo.segwit = false; // TODO
+                    //if (origin.id === 'bch1' || origin.id === 'ltc1')
+                    if (destination.id === 'btc1' || destination.id === 'ltc1')
+                        bitcoreBackend.coinInfo.segwit = false;
+
+                    return discoverAllAccounts(device, bitcoreBackend, ACCOUNT_DISCOVERY_LIMIT)
+                    .then(destinationAccounts => {
+                        let list = [];
+                        for (let account of destinationAccounts) {
+                            list.push({
+                                id: account.id,
+                                xpub: account.xpub,
+                                info: account.info
+                            });
+                        }
+                        return list;
+                    });
+                })
+        }).then(destinationAccounts => {
+            // second discovery: find all DESTINATION accounts on ORIGIN backend
+            // discover one by one to avoid interruption when Account#1 has no tx history but Account#2+ does
+            // recreate blockchain instance, otherwise it will be cached to DESTINATION bitcore
+            // set ORIGIN bitcore (bip44 variables remained as DESTINATION)
+            bitcoreBackend = null;
+            BITCORE_URLS = origin.bitcore;
+
+            setLoader("Loading " + origin.name + " accounts");
+
+            return getBitcoreBackend()
+            .then(() => {
+
+                bitcoreBackend.coinInfo.bip44 = destination.bip44[1];
+                // if (origin.id === 'bch1' && (destination.id === 'btc3' || destination.id === 'ltc3'))
+                //     bitcoreBackend.coinInfo.segwit = true;
+                //if (origin.id === 'btc1' && destination.id !== 'ltc3')
+                //    bitcoreBackend.coinInfo.segwit = false;
+
+                if (destination.id === 'bch1')
+                    bitcoreBackend.coinInfo.segwit = false;
+
+                let list = [];
+                return destinationAccounts.reduce(
+                    (promise, a) => {
+                        return promise.then(() => {
+                            return TrezorAccount.fromIndex(device, bitcoreBackend, a.id)
+                                .then(account => {
+                                    return account.discover().then(discovered => {
+                                        list.push({
+                                            id: discovered.id,
+                                            xpub: discovered.xpub,
+                                            basePath: discovered.basePath,
+                                            info: discovered.info,
+                                            segwit: bitcoreBackend.coinInfo.segwit
+                                        });
+                                        return {
+                                            destinationAccounts: destinationAccounts,
+                                            originAccounts: list
+                                        }
+                                    });
+                                });
+                        });
+                    },
+                    Promise.resolve()
+                )
+            });
+        }).then(accounts => {
+            // third discovery: find all ORIGIN accounts on ORIGIN backend to get fresh addresses
+            // set ORIGIN bip44 variables
+            bitcoreBackend.coinInfo.bip44 = origin.bip44[1];
+            if (origin.id !== 'bch1') {
+                bitcoreBackend.coinInfo.segwit = true;
+            }
+
+            let replaceXpubs = false; //(destination.id === 'bch1');
+
+            // let replaceXpubs = false; // Replace for BTC from BCH
+            // if (origin.id === 'bch1' && bitcoreBackend.coinInfo.segwit) {
+            //     bitcoreBackend.coinInfo.segwit = false;
+            //     replaceXpubs = true;
+            //     // not used... BCH to BTC3 (impossible to reclaim)
+            // }
+
+            setLoader("Loading " + origin.name + " addresses");
+
+            return discoverAllAccounts(device, bitcoreBackend, ACCOUNT_DISCOVERY_LIMIT)
+                    .then(originAccounts => {
+                        let list = [];
+                        for (let [index, account] of originAccounts.entries()) {
+                            list.push({
+                                id: account.id,
+                                xpub: account.xpub,
+                                basePath: account.basePath,
+                                info: account.info
+                            });
+                            if (replaceXpubs && accounts.originAccounts[index] !== undefined) {
+                                accounts.originAccounts[index].xpub = account.xpub;
+                                accounts.originAccounts[index].basePath = account.basePath;
+                            }
+                        }
+                        return {
+                            originAddresses: list,
+                            destinationAccounts: accounts.destinationAccounts,
+                            originAccounts: accounts.originAccounts
+                        }
+                    });
+        }).then(result => { // success
+            // prepare connect to signTX
+            return device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    origin,
+                    destination,
+                    originAddresses: result.originAddresses,
+                    destinationAccounts: result.destinationAccounts,
+                    originAccounts: result.originAccounts,
+                    fees: bitcoreBackend.coinInfo.defaultFees
+                });
+            });
+        }).catch(error => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+
 function resendBitcoinFromBitcoinCash(event) {
     show('#operation_accountinfo');
     let description = event.data.description;
@@ -1010,7 +1240,6 @@ function handleSignTx(event) {
     show('#operation_signtx');
 
     initDevice()
-
         .then((device) => {
             let signTx = (refTxs) => {
                 let handler = errorHandler(() => signTx(refTxs));
@@ -1520,6 +1749,21 @@ function createCryptoChannel() {
     return channel;
 }
 
+let bitcoreBackend = null;
+function getBitcoreBackend() {
+    return new Promise(resolve => {
+        if (!bitcoreBackend) {
+            return createBitcoreBackend(BITCORE_URLS)
+            .then(backend => {
+                bitcoreBackend = backend;
+                resolve(backend);
+            })
+        } else{ 
+            resolve(bitcoreBackend);
+        }
+    });
+}
+
 class Account {
 
     static fromDevice(device, i, cryptoChannel, blockchain) {
@@ -1534,7 +1778,7 @@ class Account {
 
     static getPathForIndex(i) {
         return [
-            (44 | HD_HARDENED) >>> 0,
+            (BIP44_PURPOSE | HD_HARDENED) >>> 0,
             (BIP44_COIN_TYPE | HD_HARDENED) >>> 0,
             (i | HD_HARDENED) >>> 0
         ];
@@ -1556,7 +1800,7 @@ class Account {
 
     _createAddressSource(node) {
         let source;
-        source = new hd.WorkerAddressSource(this.channel, node, ADDRESS_VERSION);
+        source = new hd.WorkerAddressSource(this.channel, node, ADDRESS_VERSION, (BIP44_PURPOSE === 49) );
         source = new hd.PrefatchingSource(source);
         source = new hd.CachingSource(source);
         return source;

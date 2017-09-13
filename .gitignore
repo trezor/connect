@@ -1,3 +1,4 @@
 popup/node_modules
 dist
 .DS_Store
+_old
