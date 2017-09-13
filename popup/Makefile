@@ -1,20 +1,27 @@
 BIN=$(shell npm bin)
 ENTRY=popup.js
 TARGET=popup-dist.js
-ENTRY_WORKER=node_modules/hd-wallet/lib/socket-worker.js
-TARGET_WORKER=socket-worker-dist.js
+
+SOCKET_WORKER=node_modules/hd-wallet/lib/socketio-worker/inside.js
+DISCOVERY_WORKER=node_modules/hd-wallet/lib/discovery/worker/inside/index.js
+SOCKET_WORKER_TARGET=socket.worker.js
+DISCOVERY_WORKER_TARGET=discovery.worker.js
 
 .PHONY: build clean node_modules
 
-build: ${ENTRY} ${ENTRY_WORKER} node_modules
+build: ${ENTRY} ${SOCKET_WORKER} ${DISCOVERY_WORKER} node_modules
 	${BIN}/browserify ${ENTRY} \
 		-g [ uglifyify ] \
 		-d \
 	| ${BIN}/exorcist ${TARGET}.map > ${TARGET}
-	${BIN}/browserify ${ENTRY_WORKER} \
+	${BIN}/browserify ${SOCKET_WORKER} \
 		-g [ uglifyify ] \
 		-d \
-	| ${BIN}/exorcist ${TARGET_WORKER}.map > ${TARGET_WORKER}
+	| ${BIN}/exorcist ${SOCKET_WORKER}.map > ${SOCKET_WORKER_TARGET}
+	${BIN}/browserify ${DISCOVERY_WORKER} \
+		-g [ uglifyify ] \
+		-d \
+	| ${BIN}/exorcist ${DISCOVERY_WORKER}.map > ${DISCOVERY_WORKER_TARGET}
 	cp trezor-crypto/emscripten/trezor-crypto.js trezor-crypto-dist.js
 
 build-fast: 
