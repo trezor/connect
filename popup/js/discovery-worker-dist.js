@@ -727,4 +727,4 @@ arguments[4][49][0].apply(exports,arguments)
 }).call(this,require("buffer").Buffer)
 
 },{"bs58":119,"buffer":52,"create-hash":55}]},{},[71])
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=discovery-worker-dist.js.map

@@ -44,18 +44,18 @@ export type AccountProgress = {
 
 
 function createSocketWorker(): Worker {
-    return new Worker('./socket.worker.js');
+    return new Worker('./js/socket-worker-dist.js');
 }
 
 function createDiscoveryWorker(): Worker {
-    return new Worker('./discovery.worker.js');
+    return new Worker('./js/discovery-worker-dist.js');
 }
 
 // this gets compiled or something by emscripten, not sure where from
-const trezorCryptoURL = './trezor-crypto-dist.js';
+const trezorCryptoURL = './js/trezor-crypto-dist.js';
 
 export const create = (urls): Promise<void> => {
-    let b = new TrezorBitcoreBackend({ bitcoreURL: urls });
+    let b = new BitcoreBackend({ bitcoreURL: urls });
     return waitForCoinInfo(b.blockchain).then(ci => {
         coinInfo = ci;
         b.setCoinInfo(ci);
@@ -63,7 +63,7 @@ export const create = (urls): Promise<void> => {
     });
 }
 
-export default class TrezorBitcoreBackend {
+export default class BitcoreBackend {
     options: Options;
     worker: Worker;
     channel: WorkerChannel;
@@ -179,17 +179,3 @@ export default class TrezorBitcoreBackend {
         return this.lastError;
     }
 }
-
-// type BitcoreOptions = {
-//     url: Array<string>,
-// }
-
-// const bitcoreServer = ['https://btc-bitcore1.trezor.io/', 'https://btc-bitcore3.trezor.io/']; //splitUrls(getBitcoreServer().url);
-
-// const bitcoreOptions: BitcoreOptions = {
-//     url: bitcoreServer,
-// };
-
-// export const bitcore = new TrezorBitcoreBackend({
-//     bitcoreURL: bitcoreOptions.url,
-// });

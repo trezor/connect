@@ -197,4 +197,4 @@ function toArray(r,o){var t=[];o=o||0;for(var a=o||0;a<r.length;a++)t[a-o]=r[a];
 "use strict";function encode(e){var t="";do t=alphabet[e%length]+t,e=Math.floor(e/length);while(e>0);return t}function decode(e){var t=0;for(i=0;i<e.length;i++)t=t*length+map[e.charAt(i)];return t}function yeast(){var e=encode(+new Date);return e!==prev?(seed=0,prev=e):e+"."+encode(seed++)}for(var alphabet="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_".split(""),length=64,map={},seed=0,i=0,prev;i<length;i++)map[alphabet[i]]=i;yeast.encode=encode,yeast.decode=decode,module.exports=yeast;
 
 },{}]},{},[28])
-//# sourceMappingURL=inside.js.map
+//# sourceMappingURL=socket-worker-dist.js.map

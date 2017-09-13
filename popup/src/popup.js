@@ -11,9 +11,10 @@ import bowser from 'bowser';
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as trezor from 'trezor.js';
 import * as hd from 'hd-wallet';
-import TrezorBitcoreBackend, { create as createBitcoreBackend } from './account/TrezorBitcoreBackend';
+
 import TrezorAccount, { discoverAllAccounts } from './account/Account';
-import ComposingTransaction from './account/ComposingTransaction';
+import BitcoreBackend, { create as createBitcoreBackend } from './backend/BitcoreBackend';
+import ComposingTransaction from './backend/ComposingTransaction';
 
 var bip44 = require('bip44-constants')
 var semvercmp = require('semver-compare');
