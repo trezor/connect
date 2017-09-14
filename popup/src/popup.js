@@ -763,7 +763,7 @@ function handleRecoverCoins(event) {
         .then(resolveAfter(5000, device))
         .then(function getAccounts(device) {
             // first discovery: find all DESTINATION accounts
-            setLoader("Loading " + destination.name + " accounts");
+            setLoader("Loading " + destination.simpleName + " accounts");
 
             return getBitcoreBackend()
                 .then(() => {
@@ -794,7 +794,7 @@ function handleRecoverCoins(event) {
             bitcoreBackend = null;
             BITCORE_URLS = origin.bitcore;
 
-            setLoader("Loading " + origin.name + " accounts");
+            setLoader("Loading " + origin.simpleName + " accounts");
 
             return getBitcoreBackend()
             .then(() => {
@@ -850,7 +850,7 @@ function handleRecoverCoins(event) {
             //     // not used... BCH to BTC3 (impossible to reclaim)
             // }
 
-            setLoader("Loading " + origin.name + " addresses");
+            setLoader("Loading " + origin.simpleName + " addresses");
 
             return discoverAllAccounts(device, bitcoreBackend, ACCOUNT_DISCOVERY_LIMIT)
                     .then(originAccounts => {
