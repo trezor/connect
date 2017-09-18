@@ -767,9 +767,6 @@ function handleRecoverCoins(event) {
 
             return getBitcoreBackend()
                 .then(() => {
-
-                    //bitcoreBackend.coinInfo.segwit = false; // TODO
-                    //if (origin.id === 'bch1' || origin.id === 'ltc1')
                     if (destination.id === 'btc1' || destination.id === 'ltc1')
                         bitcoreBackend.coinInfo.segwit = false;
 
@@ -800,11 +797,6 @@ function handleRecoverCoins(event) {
             .then(() => {
 
                 bitcoreBackend.coinInfo.bip44 = destination.bip44[1];
-                // if (origin.id === 'bch1' && (destination.id === 'btc3' || destination.id === 'ltc3'))
-                //     bitcoreBackend.coinInfo.segwit = true;
-                //if (origin.id === 'btc1' && destination.id !== 'ltc3')
-                //    bitcoreBackend.coinInfo.segwit = false;
-
                 if (destination.id === 'bch1')
                     bitcoreBackend.coinInfo.segwit = false;
 
@@ -812,8 +804,15 @@ function handleRecoverCoins(event) {
                 return destinationAccounts.reduce(
                     (promise, a) => {
                         return promise.then(() => {
+                            // cornercase: segwit xpub scanned by mycellium
+                            if (destination.id === 'btcX')
+                                bitcoreBackend.coinInfo.segwit = true;
                             return TrezorAccount.fromIndex(device, bitcoreBackend, a.id)
                                 .then(account => {
+                                    // cornercase: segwit xpub scanned by mycellium
+                                    if (destination.id === 'btcX')
+                                        account.backend.coinInfo.segwit = false;
+
                                     return account.discover().then(discovered => {
                                         list.push({
                                             id: discovered.id,
