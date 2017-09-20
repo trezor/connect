@@ -7,28 +7,19 @@
      function trezorSignTx() {
          // spend one change output
          var inputs = [{
-             address_n: [44 | 0x80000000, 0 | 0x80000000, 0 | 0x80000000, 1, 2],
-             prev_hash: '4e1ecd39f37a900bb670491909ceaf7982fc3b70a6ad4bb071705166a825ac55',
-             
-            //  address_n: [49 | 0x80000000, 0 | 0x80000000, 0 | 0x80000000, 0, 4],
-            //  prev_hash: '974e20063f7e2328c1008af08f8e6d946b54353d624fc68c8903c82722db11ff'
-             
+             address_n: [44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 1, 0],
              prev_index: 0,
-             //prev_hash: 'b035d89d4543ce5713c553d69431698116a822c57c03ddacf3f04b763d1999ac'
-
-             
+             prev_hash: 'b035d89d4543ce5713c553d69431698116a822c57c03ddacf3f04b763d1999ac'
          }];
 
          // send to 1 address output and one change output
          var outputs = [{
-             address_n: [44 | 0x80000000, 0 | 0x80000000, 0 | 0x80000000, 1, 5],
-             //amount: 3181747,
-             amount: 39675,
+             address_n: [44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 1, 1],
+             amount: 3181747,
              script_type: 'PAYTOADDRESS'
          }, {
              address: '1FnY5UdbHHfVLiS3v1ntgtdNZn22pDPnVd',
-             //amount: 200000,
-             amount: 10000,
+             amount: 200000,
              script_type: 'PAYTOADDRESS'
          }];
 
