@@ -42,15 +42,6 @@
             }
             document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
         });
-
-        // TrezorConnect.getAllAccountsInfo(function (response) {
-        //     if (response.success) {
-        //         console.log('Account ID: ', response);
-        //     } else {
-        //         console.error('Error:', response.error); // error message
-        //     }
-        //     document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
-        // });
     }
 
     </script>
@@ -61,7 +52,7 @@
 
     <pre id="response"></pre>
 
-    <script src="../connect.js?v5"></script>
+    <script src="../connect.js"></script>
 
   </body>
 </html>
