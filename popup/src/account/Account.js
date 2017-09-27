@@ -1,4 +1,8 @@
 /* @flow */
+
+import { renderAccountDiscovery } from '../view/discovery';
+
+
 const HD_HARDENED = 0x80000000;
 
 export const getPathForIndex = (bip44purpose: number, bip44cointype: number, index: number): Array<number> => {
@@ -29,6 +33,31 @@ export const discoverAllAccounts = (device, bitcoreBackend, limit) => {
         });
     }
     return discover(0, limit);
+}
+
+export const discover = (device, backend, limit) => {
+    const accounts = [];
+    const inside = (i) => {
+        Account.fromIndex(device, backend, i)
+        .then(account => {
+            account.discover().then(discovered => {
+                accounts.push(discovered);
+                renderAccountDiscovery(accounts, null);
+                if (discovered.info.transactions.length > 0) {
+                    return inside(i + 1);
+                } else {
+                    console.log("ALL LOADED!", backend.coinInfo.segwit)
+                    if (backend.coinInfo.segwit) {
+                        backend.coinInfo.segwit = false;
+                        inside(0);
+                    } else {
+                        return accounts;
+                    }
+                }
+            });
+        });
+    }
+    inside(0);
 }
 
 
@@ -76,5 +105,15 @@ export default class Account {
                     console.error('[account] Account loading error', error);
                 }
             );
+    }
+
+    isUsed() {
+        console.log("isUsed", this.info);
+        return (this.info.transactions.length > 0);
+    }
+
+    getBalance() {
+        console.log("getBalance", this.info);
+        return this.info.balance;
     }
 }
