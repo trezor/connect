@@ -14,7 +14,7 @@ import * as hd from 'hd-wallet';
 
 import TrezorAccount, { discover, discoverAllAccounts } from './account/Account';
 import BitcoreBackend, { create as createBitcoreBackend } from './backend/BitcoreBackend';
-import ComposingTransaction from './backend/ComposingTransaction';
+import ComposingTransaction, { findInputs, transformResTxs } from './backend/ComposingTransaction';
 import { httpRequest, formatTime, formatAmount, parseRequiredFirmware } from './utils/utils';
 import { serializePath } from './utils/path';
 import * as Constants from './utils/constants';
@@ -602,14 +602,14 @@ function handleAllAccountsInfo(event) {
                     for(let a of accounts){
                         list.push({
                             path: a.getPath(),
-                            //unspents: a.getUnspents(),
-                            address: a.nextAddress,
-                            addressPath: a.getAddressPath(a.nextAddress),
-                            addressId: a.nextAddressId,
-                            xpub: a.node.toBase58(),
+                            address: a.getNextAddress(),
+                            addressPath: a.getAddressPath(a.getNextAddress()),
+                            addressId: a.getNextAddressId(),
+                            xpub: a.getXpub(),
                             balance: a.getBalance(),
                             confirmed: a.getConfirmedBalance(),
-                            id: a.id
+                            id: a.id,
+                            segwit: a.segwit
                         });
                     }
                     return list;
@@ -642,7 +642,7 @@ function handleAccountInfo(event) {
                         path: account.getPath(),
                         address: account.getNextAddress(),
                         addressId: account.getNextAddressId(),
-                        addressPath: account.getAddressPath( account.getNextAddress() ),
+                        addressPath: account.getAddressPath( account.getNextAddress()),
                         xpub: account.getXpub(),
                         balance: account.getBalance(),
                         confirmed: account.getConfirmedBalance(),
@@ -758,28 +758,42 @@ function handleSignTx(event) {
     let inputs = event.data.inputs.map(fixPath).map(convertXpub);
     let outputs = event.data.outputs.map(fixPath).map(convertXpub);
     let coin = event.data.coin || COIN_NAME;
-    let skipReferenceLookup = coin === 'Bcash';
 
     show('#operation_signtx');
 
     initDevice()
 
         .then((device) => {
-            let signTx = (refTxs) => {
+            let signTx = (account) => {
                 let handler = errorHandler(() => signTx(refTxs));
-                return device.session.signTx(
-                    inputs,
-                    outputs,
-                    refTxs,
-                    device.getCoin(coin)
-                ).catch(handler);
-            };
-            const referencedTxs = skipReferenceLookup ?
-                Promise.resolve([]) :
-                lookupReferencedTxs(inputs, createBlockchain());
-            return referencedTxs.then(signTx);
-        })
 
+                const coinInfo = backend.coinInfo;
+                const inp = findInputs(account.getUtxos(), inputs);
+                if (inp.length !== inputs.length) {
+                    throw new Error('Input not found');
+                }
+                const tx = new ComposingTransaction(coinInfo, account.basePath, inp, []);
+                return tx.getReferencedTx(backend, account, true)
+                .then(refTxs => {
+                    const rt = transformResTxs(refTxs);
+                    return device.session.signTx(
+                        inputs,
+                        outputs,
+                        rt,
+                        device.getCoin(coin)
+                    );
+                }).catch(handler);
+            };
+            return getBitcoreBackend().then(() => {
+                const inputPath = inputs[0].address_n;
+                const path = inputPath.slice(0, 3);
+                return TrezorAccount.fromPath(global.device, backend, path).then(account => {
+                    return account.discover().then(() => {
+                        return signTx(account);
+                    });
+                });
+            });
+        })
         .then((result) => { // success
             let {message} = result;
             let {serialized} = message;
@@ -793,7 +807,6 @@ function handleSignTx(event) {
                 });
             });
         })
-
         .catch((error) => { // failure
             console.error(error);
             respondToEvent(event, {success: false, error: error.message});
@@ -978,16 +991,6 @@ function handleComposeTx(event) {
                     }).catch(handler);
             };
 
-            let signTx = (inputs, outputs, refTxs) => {
-                let handler = errorHandler(() => signTx(inputs, outputs, refTxs));
-                return device.session.signTx(
-                    inputs,
-                    outputs,
-                    refTxs,
-                    device.getCoin(COIN_NAME)
-                ).catch(handler);
-            };
-
             let chooseTxFee = (transactions) => {
                 return feesP.then(fees => {
                     if (fees == null) {
@@ -1001,26 +1004,28 @@ function handleComposeTx(event) {
 
             return composeTx()
                 .then(chooseTxFee)
-                .then(({inputs, outputs}) => {
-                    return lookupReferencedTxs(inputs, getBlockchain())
-                        .then((refTxs) => signTx(inputs, outputs, refTxs));
+                .then(({inputs, outputs, account}) => {
+                    const coinInfo = backend.coinInfo;
+                    const tx = new ComposingTransaction(coinInfo, account.getPath(), inputs, outputs);
+                    return tx.getReferencedTx(backend, account).then(refTxs => {
+                        const node = bitcoin.HDNode.fromBase58(account.getXpub(), coinInfo.network);
+                        return device.session.signBjsTx(tx.getTx(), refTxs, [node.derive(0), node.derive(1)], coinInfo.name, coinInfo.network);
+                    });
                 });
         })
-
         .then((result) => { // success
-            let {message} = result;
-            let {serialized} = message;
+            //const signatures = result.getHash();
+            const serialized_tx = result.toHex();
 
             return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
                     type: 'signtx',
-                    signatures: serialized.signatures,
-                    serialized_tx: serialized.serialized_tx
+                    signatures: [], // TODO
+                    serialized_tx: serialized_tx
                 });
             });
         })
-
         .catch((error) => { // failure
             console.error(error);
             respondToEvent(event, {success: false, error: error.message});
@@ -1313,35 +1318,6 @@ function estimateFee(byteLength, feePerByte) {
     return byteLength * feePerByte;
 }
 
-function discoverAccounts(device, onStart, onUsed, onEnd) {
-    let accounts = [];
-
-    let channel = createCryptoChannel();
-
-    let discover = (i) => {
-        return Account.fromPath(device, Account.getPathForIndex(i), channel, getBlockchain()).then((account) => {
-            onStart(account);
-            return account.discover(onUsed).then(() => {
-                accounts.push(account);
-                onEnd();
-                if (account.used) {
-                    if (i + 1 >= ACCOUNT_DISCOVERY_LIMIT) {
-                        return accounts; // stop at Account #10
-                    }
-                    return discover(i + 1);
-                } else {
-                    return accounts;
-                }
-            });
-        });
-    };
-
-    return discover(0);
-}
-
-
-
-
 function showSelectionAccounts(device) {
     const discoveredAccounts = [];
     getBitcoreBackend().then(b => {
@@ -1358,7 +1334,6 @@ function showSelectionAccounts(device) {
 function selectAccount(accounts) {
     return new Promise((resolve) => {
         window.selectAccount = (index) => {
-            console.log("SELECTED", accounts, accounts[index]);
             window.selectAccount = null;
             showAlert('#alert_loading');
             document.querySelector('#alert_accounts .accounts_tab').classList.remove('visible');
@@ -1382,22 +1357,8 @@ function waitForAllAccounts() {
     let heading = document.querySelector('#alert_accounts .alert_heading');
     heading.textContent = 'Loading accounts...';
 
-    let discovered = [];
-    let discovering = null;
-
-    let onStart = (account) => {
-        discovering = account;
-    };
-
-    let onUsed = () => {};
-
-    let onEnd = () => {
-        discovered.push(discovering);
-        discovering = null;
-    };
-
-    return discoverAccounts(global.device, onStart, onUsed, onEnd).then((accounts) => {
-        return discovered;
+    return getBitcoreBackend().then(b => {
+        return discoverAllAccounts(global.device, backend, ACCOUNT_DISCOVERY_LIMIT);
     });
 }
 

@@ -97,7 +97,6 @@ export default class TrezorBitcoreBackend {
     }
 
     setCoinInfo(coinInfo: ?CoinInfo) {
-        console.log("COIN IFO!", coinInfo)
         this.coinInfo = coinInfo;
         if (coinInfo != null) {
             this.blockchain.zcash = coinInfo.zcash;

@@ -77,8 +77,8 @@ function _waitForCoinInfo(blockchain: BitcoreBlockchain): Promise<void> {
     console.log('[CoinInfo] Wait for coin info...');
     return blockchain.lookupBlockHash(0).then(hash => {
         return getNetworkInfo(blockchain).then((info) => {
-            console.log("INFOOO", info)
             coinInfo = hashToCoinInfo(hash, detectBtcVersion(info));
+            coinInfo.blocks = info.blocks;
             console.log('[CoinInfo] Done reading coin; ' + (coinInfo == null ? 'nothing' : coinInfo.shortcut));
             console.log('[CoinInfo] Current backend URL : ' + blockchain.workingUrl);
             if (coinInfo != null) {

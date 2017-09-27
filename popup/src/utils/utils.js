@@ -1,4 +1,4 @@
-import fetch from 'whatwg-fetch';
+import 'whatwg-fetch';
 import semvercmp from 'semver-compare';
 
 export const httpRequest = (url, json) => {
