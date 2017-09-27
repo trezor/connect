@@ -1,4 +1,6 @@
 import { formatAmount } from '../utils/utils';
+import { HD_HARDENED } from '../utils/constants';
+var bip44 = require('bip44-constants');
 
 // switch accounts tab
 function switchAccountsTab(id) {
@@ -87,3 +89,66 @@ export const fadeOut = (selector) => {
     }
     return els;
 }
+
+export const xpubKeyLabel = (path) => {
+    let hardened = (i) => path[i] & ~HD_HARDENED;
+    if (hardened(0) === 44) {
+        let coinName = getCoinName(path[1]);
+        return `${coinName} Legacy account #${hardened(2) + 1}`;
+    }
+    if (hardened(0) === 48) {
+        return `multisig account #${hardened(2) + 1}`;
+    }
+    if (hardened(0) === 49) {
+        let coinName = getCoinName(path[1]);
+        return `${coinName} account #${hardened(2) + 1}`;
+    }
+    if (path[0] === 45342) {
+        if (hardened(1) === 44) {
+            return `Copay ID of account #${hardened(2) + 1}`;
+        }
+        if (hardened(1) === 48) {
+            return `Copay ID of multisig account #${hardened(2) + 1}`;
+        }
+    }
+    return 'm/' + serializePath(path);
+}
+
+export const getCoinName = (n) => {
+    for (let name of Object.keys(bip44)) {
+        let number = parseInt(bip44[name]);
+        if (number === n) {
+            return name;
+        }
+    };
+    return 'Unknown coin';
+}
+
+
+export const promptInfoPermission = (path) => {
+    return new Promise((resolve, reject) => {
+        let element = document.getElementById('accountinfo_id');
+        element.innerHTML = xpubKeyLabel(path);
+        element.callback = (exportInfo) => {
+            showAlert(global.alert);
+            if (exportInfo) {
+                resolve();
+            } else {
+                reject(new Error('Cancelled'));
+            }
+        };
+        showAlert('#alert_accountinfo');
+    });
+}
+
+function exportInfo() {
+    document.querySelector('#accountinfo_id').callback(true);
+}
+
+global.exportInfo = exportInfo;
+
+function cancelInfo() {
+    document.querySelector('#accountinfo_id').callback(false);
+}
+
+global.cancelInfo = cancelInfo;
