@@ -226,22 +226,52 @@ input[type="password"] {
 
 #alert_accounts {
     margin-top: 60px;
-    display: block !important;
+    margin-bottom: 10px;
+}
+
+#alert_accounts.loading #accounts,
+#alert_accounts.loading #accounts-legacy {
+    pointer-events: none;
+}
+
+#alert_accounts .alert_heading {
+    margin: 0px;
+}
+
+#accounts-legacy {
+    display: none;
 }
 
 .accounts_tab {
-    position: relative;
     padding-bottom: 10px;
+    width: 250px;
+    margin: 0px auto;
     visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.accounts_tab.visible {
+    visibility: visible;
+    opacity: 1;
 }
 
 .accounts_tab div {
-    display: inline-block;
-    margin: 0px 10px;
+    float: left;
+    cursor: pointer;
 }
 
-.accounts_tab div.active {
+.accounts_tab div.accounts_legacy_tab {
+    float: right;
+}
+
+.accounts_tab div.accounts_tab_active {
     border-bottom: 3px solid #4cc148;
+}
+
+.accounts_tab:after {
+    content: "\00a0";
+    clear: both;
 }
 
 .account button
