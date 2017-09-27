@@ -714,7 +714,7 @@ this.TrezorConnect = (function () {
             }
             if (isNaN(input)) {
                 var parsedPath = parseHDPath(input);
-                return getIdFromPath(parsedPath);
+                return parsedPath;
             } else {
                 return parseInt(input);
             }

@@ -16,7 +16,7 @@ import TrezorAccount, { discover, discoverAllAccounts } from './account/Account'
 import BitcoreBackend, { create as createBitcoreBackend } from './backend/BitcoreBackend';
 import ComposingTransaction from './backend/ComposingTransaction';
 import { httpRequest, formatTime, formatAmount, parseRequiredFirmware } from './utils/utils';
-//import { httpRequest, formatTime, formatAmount } from './utils/path';
+import { serializePath } from './utils/path';
 import * as Constants from './utils/constants';
 
 var bip44 = require('bip44-constants')
@@ -458,7 +458,6 @@ function handleXpubKey(event) {
     show('#operation_xpubkey');
 
     initDevice()
-
         .then((device) => {
             let getPermission = (path) => {
                 let handler = errorHandler(() => getPermission(path));
@@ -474,7 +473,6 @@ function handleXpubKey(event) {
                     .then(getPublicKey);
             }
         })
-
         .then(({result, path}) => { // success
             let {message} = result;
             let {xpub, node} = message;
@@ -491,7 +489,6 @@ function handleXpubKey(event) {
                 });
             });
         })
-
         .catch((error) => { // failure
             console.error(error);
             respondToEvent(event, {success: false, error: error.message});
@@ -547,7 +544,7 @@ function xpubKeyLabel(path) {
     }
     if (hardened(0) === 49) {
         let coinName = getCoinName(path[1]);
-        return `${coinName} SegWit account #${hardened(2) + 1}`;
+        return `${coinName} account #${hardened(2) + 1}`;
     }
     if (path[0] === 45342) {
         if (hardened(1) === 44) {
@@ -558,17 +555,6 @@ function xpubKeyLabel(path) {
         }
     }
     return 'm/' + serializePath(path);
-}
-
-function serializePath(path) {
-    return path.map((i) => {
-        let s = (i & ~HD_HARDENED).toString();
-        if (i & HD_HARDENED) {
-            return s + "'";
-        } else {
-            return s;
-        }
-    }).join('/');
 }
 
 /*
@@ -585,8 +571,8 @@ function getAccountByDescription(description) {
     if (typeof description === 'string' && description.substring(0,4) === 'xpub') {
         return getAccountByXpub(description);
     }
-    if (!isNaN(description)) {
-        return getAccountById(parseInt(description));
+    if (Array.isArray(description)) {
+        return getAccountByHDPath(description);
     }
     throw new Error('Wrongly formatted description.');
 }
@@ -619,15 +605,22 @@ function getAccountByXpub(xpub) {
     });
 }
 
-function getAccountById(id) {
-    let onEnd = function() {};
-
-    const accountP = Account.fromDevice(global.device, id, createCryptoChannel(), createBlockchain());
-    return accountP.then(account => {
-        return promptInfoPermission(id).then(() => {
-            return account.discover(onEnd).then(() => account);
+function getAccountByHDPath(path) {
+    return getBitcoreBackend().then(b => {
+        //return TrezorAccount.fromIndex(global.device, backend, bip44purpose, id).then(account => {
+        return TrezorAccount.fromPath(global.device, backend, path).then(account => {
+            return promptInfoPermission(account.id).then(() => {
+                return account.discover().then(() => account);
+            });
         });
     });
+
+    // const accountP = Account.fromDevice(global.device, id, createCryptoChannel(), createBlockchain());
+    // return accountP.then(account => {
+    //     return promptInfoPermission(id).then(() => {
+    //         return account.discover(onEnd).then(() => account);
+    //     });
+    // });
 }
 
 function promptInfoPermission(id) {
@@ -708,10 +701,10 @@ function handleAccountInfo(event) {
                 .then((account) => {
                     return {
                         path: account.getPath(),
-                        address: account.nextAddress,
-                        addressPath: account.getAddressPath(account.nextAddress),
-                        addressId: account.nextAddressId,
-                        xpub: account.node.toBase58(),
+                        address: account.getNextAddress(),
+                        addressId: account.getNextAddressId(),
+                        addressPath: account.getAddressPath( account.getNextAddress() ),
+                        xpub: account.getXpub(),
                         balance: account.getBalance(),
                         confirmed: account.getConfirmedBalance(),
                         id: account.id
@@ -1411,18 +1404,28 @@ function discoverAccounts(device, onStart, onUsed, onEnd) {
 
 
 function showSelectionAccounts(device) {
-
-    let heading = document.querySelector('#alert_accounts .alert_heading');
-    showAlert('#alert_accounts');
-    global.alert = '#alert_accounts';
-
-    heading.textContent = 'Loading accounts...';
-
+    const discoveredAccounts = [];
     getBitcoreBackend().then(b => {
-        discover(device, backend, ACCOUNT_DISCOVERY_LIMIT);
+        discover(device, backend, ACCOUNT_DISCOVERY_LIMIT)
+        .then(accounts => {
+            for (let a of accounts) {
+                discoveredAccounts.push(a);
+            }
+        });
     });
+    return selectAccount(discoveredAccounts);
+}
 
-    return selectAccount([]);
+function selectAccount(accounts) {
+    return new Promise((resolve) => {
+        window.selectAccount = (index) => {
+            console.log("SELECTED", accounts, accounts[index]);
+            window.selectAccount = null;
+            showAlert('#alert_loading');
+            document.querySelector('#alert_accounts .accounts_tab').classList.remove('visible');
+            resolve(accounts[index]);
+        };
+    });
 }
 
 function waitForAccount() {
@@ -1456,16 +1459,6 @@ function waitForAllAccounts() {
 
     return discoverAccounts(global.device, onStart, onUsed, onEnd).then((accounts) => {
         return discovered;
-    });
-}
-
-function selectAccount(accounts) {
-    return new Promise((resolve) => {
-        window.selectAccount = (i) => {
-            window.selectAccount = null;
-            document.querySelector('#accounts').innerHTML = '';
-            resolve(accounts[i]);
-        };
     });
 }
 
