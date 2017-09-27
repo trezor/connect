@@ -1,6 +1,7 @@
 /* @flow */
 
 import { renderAccountDiscovery, showAlert } from '../view';
+import { selectUnspents } from '../backend/ComposingTransaction';
 import { HD_HARDENED } from '../utils/constants';
 
 export const getPathForIndex = (bip44purpose: number, bip44cointype: number, index: number): Array<number> => {
@@ -11,21 +12,22 @@ export const getPathForIndex = (bip44purpose: number, bip44cointype: number, ind
     ];
 }
 
-export const discoverAllAccounts = (device, bitcoreBackend, limit) => {
+export const discoverAllAccounts = (device, backend, limit) => {
     let accounts = [];
     const discover = (i) => {
-        return Account.fromIndex(device, bitcoreBackend, i)
+        return Account.fromIndex(device, backend, i)
         .then((account) => {
             return account.discover().then(discovered => {
                 accounts.push(discovered);
                 if (discovered.info.transactions.length > 0) {
-                    
-                    if (i + 1 >= limit) {
-                        return accounts; // stop at limit
-                    }
-                    return discover(i + 1);
+                    return discover(i + 1, limit);
                 } else {
-                    return accounts;
+                    if (backend.coinInfo.segwit) {
+                        backend.coinInfo.segwit = false;
+                        return discover(0, limit);
+                    } else {
+                        return accounts;
+                    }
                 }
             });
         });
@@ -152,17 +154,56 @@ export default class Account {
         return this.info.usedAddresses.length;
     }
 
+    getChangeAddress() {
+        console.log("change address", this.info);
+        return this.info.changeAddresses[this.info.changeIndex];
+    }
+
     isUsed() {
-        console.log("isUsed", this.info);
         return (this.info && this.info.transactions.length > 0);
     }
 
     getBalance() {
-        console.log("getBalance", this.info);
         return this.info.balance;
     }
 
     getConfirmedBalance() {
         return this.info.balance; // TODO: read confirmations
+    }
+
+    getUtxos() {
+        return this.info.utxos;
+    }
+
+    composeTx(outputs, feePerByte) {
+        const txDust = this.backend.coinInfo.dustLimit;
+        let utxos = [ ...this.info.utxos ];
+        for (let u of utxos) {
+            u.confirmations = this.backend.coinInfo.blocks - u.height + 1;
+        }
+        
+        let { inputs, change, fee } = selectUnspents(utxos, outputs, feePerByte);
+
+        outputs = [ ...outputs ];
+
+        if (change > txDust) {
+            let address = this.getChangeAddress();
+            let output = {
+                amount: change,
+                path: this.getPath().concat([1, this.info.changeIndex])
+            };
+            outputs.push(output);
+        } else {
+            fee = fee + change;
+        }
+
+        outputs.sort((a, b) => a.amount - b.amount);
+
+        for (let o of outputs) {
+            o.value = o.amount;
+        }
+
+        //return { converted: this.convertTxForDevice(inputs, outputs), fee };
+        return { converted: { inputs, outputs, account: this }, fee };
     }
 }
