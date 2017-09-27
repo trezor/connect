@@ -60,7 +60,6 @@ export const renderAccountDiscovery = (discovered, discovering) => {
             segwitButtons.push(button);
         } else {
             legacyButtons.push(button);
-            document.querySelector('#alert_accounts .accounts_tab').classList.add('visible');
         }
     });
 

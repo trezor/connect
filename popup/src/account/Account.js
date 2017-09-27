@@ -35,7 +35,7 @@ export const discoverAllAccounts = (device, backend, limit) => {
     return discover(0, limit);
 }
 
-export const discover = (device, backend, limit) => {
+export const discover = (device, backend, onUpdate, limit) => {
 
     showAlert('#alert_accounts');
     const container = document.querySelector('#alert_accounts');
@@ -49,13 +49,14 @@ export const discover = (device, backend, limit) => {
             renderAccountDiscovery(accounts, account, backend.coinInfo.segwit);
             return account.discover().then(discovered => {
                 accounts.push(discovered);
+                onUpdate(discovered);
+
                 renderAccountDiscovery(accounts, null, backend.coinInfo.segwit);
                 if (discovered.info.transactions.length > 0) {
                     return inside(i + 1);
                 } else {
                     if (backend.coinInfo.segwit) {
                         backend.coinInfo.segwit = false;
-                        //accounts = [];
                         return inside(0);
                     } else {
                         global.alert = '#alert_loading';
@@ -155,7 +156,6 @@ export default class Account {
     }
 
     getChangeAddress() {
-        console.log("change address", this.info);
         return this.info.changeAddresses[this.info.changeIndex];
     }
 
