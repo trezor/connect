@@ -702,26 +702,41 @@ this.TrezorConnect = (function () {
         return ((path[2] & ~HD_HARDENED) >>> 0);
     }
 
+    function checkHDPath(path) {
+        if (typeof path === 'number') {
+            return [
+                (49 | HD_HARDENED) >>> 0,
+                (0 | HD_HARDENED) >>> 0,
+                (path | HD_HARDENED) >>> 0
+            ];
+        }
+        if (path.length !== 3) {
+            throw new Error();
+        }
+        path[0] = path[0] >>> 0;
+        path[1] = path[1] >>> 0;
+        path[2] = path[2] >>> 0;
+        return path;
+    }
+
     // parses first argument from getAccountInfo
     function parseAccountInfoInput(input) {
         if (input == null) {
             return null;
         }
-
         if (typeof input === 'string') {
             if (input.substr(0, 4) === 'xpub') {
                 return input;
             }
             if (isNaN(input)) {
-                var parsedPath = parseHDPath(input);
-                return parsedPath;
+                return parseHDPath(input);
             } else {
-                return parseInt(input);
+                return checkHDPath(parseInt(input));
             }
         } else if (Array.isArray(input)) {
-            return getIdFromPath(input);
+            return checkHDPath(input);
         } else if (typeof input === 'number') {
-            return input;
+            return checkHDPath(input);
         }
         throw new Error('Unknown input format.');
     }
