@@ -226,6 +226,22 @@ input[type="password"] {
 
 #alert_accounts {
     margin-top: 60px;
+    display: block !important;
+}
+
+.accounts_tab {
+    position: relative;
+    padding-bottom: 10px;
+    visibility: hidden;
+}
+
+.accounts_tab div {
+    display: inline-block;
+    margin: 0px 10px;
+}
+
+.accounts_tab div.active {
+    border-bottom: 3px solid #4cc148;
 }
 
 .account button
