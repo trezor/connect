@@ -5,12 +5,12 @@
     <script>
 
     function trezorGetAccountInfo() {
-        var description = "m/44'/0'/2'"; // third account 
+        //var description = "m/44'/0'/0'"; // third account 
                                          // (note that names on connect start with Account 1, which has index 0)
 
-        // var description = [44 | 0x80000000,
-        //                    0  | 0x80000000,
-        //                    2  | 0x80000000 ]; // same, in raw form
+        var description = [44 | 0x80000000,
+                           0  | 0x80000000,
+                           2  | 0x80000000 ]; // same, in raw form
 
         // var description = 2 // third account
         // var description = "2" // can also be input as string
@@ -21,6 +21,9 @@
         // if specified by xpub, it has to be of one of the first 10 accounts
         // this one is from test account, specified here
         // https://github.com/satoshilabs/slips/blob/master/slip-0014.md
+
+        //xpub6CAWv8B7pGFjRVjo8t5nq9kFGzkUjtvQBi2frrU7xnRSL1qWuE8AuXWktTnGECMd5GV9FajYasNxHn4zxbV8odqzES2pjr4tor8JLpHmj4s (segwit)
+        //xpub6D6yNFXJDMMP7VZtiByQSShqFKzFboV5UZjGG7TjLn8eBj9sAqPALEUx8VWFXgsia411CJL8Bnk9KUwCQYm9tUGkH1AGWzNJsugXXnT2Tef (legacy)
 
         TrezorConnect.closeAfterFailure(false);
         TrezorConnect.getAccountInfo(description, function (response) {
@@ -52,7 +55,7 @@
 
     <pre id="response"></pre>
 
-    <script src="../connect.js"></script>
+    <script src="../connect.js?v3"></script>
 
   </body>
 </html>
