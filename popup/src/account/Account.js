@@ -35,7 +35,7 @@ export const discoverAllAccounts = (device, backend, limit) => {
     return discover(0, limit);
 }
 
-export const discover = (device, backend, onUpdate, limit) => {
+export const discoverAccounts = (device, backend, onUpdate, limit) => {
 
     showAlert('#alert_accounts');
     const container = document.querySelector('#alert_accounts');

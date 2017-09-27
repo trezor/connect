@@ -12,7 +12,7 @@ import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as trezor from 'trezor.js';
 import * as hd from 'hd-wallet';
 
-import TrezorAccount, { discover, discoverAllAccounts } from './account/Account';
+import TrezorAccount, { discoverAccounts, discoverAllAccounts } from './account/Account';
 import BitcoreBackend, { create as createBitcoreBackend } from './backend/BitcoreBackend';
 import ComposingTransaction, { findInputs, transformResTxs } from './backend/ComposingTransaction';
 import { httpRequest, formatTime, formatAmount, parseRequiredFirmware } from './utils/utils';
@@ -1241,7 +1241,7 @@ function showSelectionAccounts(device) {
         discoveredAccounts.push(a);
     }
     getBitcoreBackend().then(b => {
-        discover(device, backend, onUpdate, ACCOUNT_DISCOVERY_LIMIT);
+        discoverAccounts(device, backend, onUpdate, ACCOUNT_DISCOVERY_LIMIT);
     });
     return selectAccount(discoveredAccounts);
 }
