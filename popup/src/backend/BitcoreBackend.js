@@ -44,11 +44,11 @@ export type AccountProgress = {
 
 
 function createSocketWorker(): Worker {
-    return new Worker('./js/socket.worker.js');
+    return new Worker('./js/socket-worker-dist.js');
 }
 
 function createDiscoveryWorker(): Worker {
-    return new Worker('./js/discovery.worker.js');
+    return new Worker('./js/discovery-worker-dist.js');
 }
 
 // this gets compiled or something by emscripten, not sure where from

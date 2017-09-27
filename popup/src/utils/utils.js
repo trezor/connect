@@ -1,4 +1,5 @@
-import 'whatwg-fetch';
+import fetch from 'whatwg-fetch';
+import semvercmp from 'semver-compare';
 
 export const httpRequest = (url, json) => {
     return fetch(url).then((response) => {
@@ -35,4 +36,38 @@ export const formatAmount = (n) => {
     }
     let s = (n / 1e8).toString();
     return `${s} BTC`;
+}
+
+
+export const parseRequiredFirmware = (firmware, requiredFirmware) => {
+    if (firmware == null) {
+        return null;
+    }
+    try {
+        let firmwareString = '';
+        if (typeof firmware === 'string') {
+            firmwareString = firmware;
+        } else {
+            // this can cause an exception, but we run this in try anyway
+            firmwareString = firmware.map((n) => n.toString()).join('.');
+        }
+  
+        const split = firmwareString.split('.');
+        if (split.length !== 3) {
+            throw new Error('Firmware version is too long');
+        }
+        if (!(split[0].match(/^\d+$/)) || !(split[1].match(/^\d+$/)) || !(split[2].match(/^\d+$/))) {
+            throw new Error('Firmware version not valid');
+        }
+
+        console.log("semvercmp", semvercmp)
+  
+        if (semvercmp(firmwareString, requiredFirmware) >= 0) {
+            return firmwareString;
+        }
+    } catch (e) {
+        // print error, but don't interrupt application
+        console.error(e);
+    }
+    return null;
 }

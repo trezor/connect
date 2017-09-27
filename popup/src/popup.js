@@ -12,10 +12,12 @@ import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as trezor from 'trezor.js';
 import * as hd from 'hd-wallet';
 
-import TrezorAccount, { discoverAllAccounts } from './account/Account';
+import TrezorAccount, { discover, discoverAllAccounts } from './account/Account';
 import BitcoreBackend, { create as createBitcoreBackend } from './backend/BitcoreBackend';
 import ComposingTransaction from './backend/ComposingTransaction';
-import { httpRequest, formatTime, formatAmount } from './utils/utils'
+import { httpRequest, formatTime, formatAmount, parseRequiredFirmware } from './utils/utils';
+//import { httpRequest, formatTime, formatAmount } from './utils/path';
+import * as Constants from './utils/constants';
 
 var bip44 = require('bip44-constants')
 var semvercmp = require('semver-compare');
@@ -85,7 +87,9 @@ function onMessage(event) {
     request.identity = parseIdentity(event);
     document.querySelector('#origin').textContent = showIdentity(request.identity);
 
-    parseRequiredFirmware(request.requiredFirmware);
+    let requestedFirmware = parseRequiredFirmware(request.requiredFirmware, requiredFirmware);
+    if (requestedFirmware) 
+        requiredFirmware = requestedFirmware;
 
     switch (request.type) {
 
@@ -543,10 +547,14 @@ function xpubKeyLabel(path) {
     let hardened = (i) => path[i] & ~HD_HARDENED;
     if (hardened(0) === 44) {
         let coinName = getCoinName(path[1]);
-        return `${coinName} account #${hardened(2) + 1}`;
+        return `${coinName} Legacy account #${hardened(2) + 1}`;
     }
     if (hardened(0) === 48) {
         return `multisig account #${hardened(2) + 1}`;
+    }
+    if (hardened(0) === 49) {
+        let coinName = getCoinName(path[1]);
+        return `${coinName} SegWit account #${hardened(2) + 1}`;
     }
     if (path[0] === 45342) {
         if (hardened(1) === 44) {
@@ -1240,36 +1248,6 @@ function initTransport() {
 // but only bigger than 1.3.4
 let requiredFirmware = '1.3.4';
 
-function parseRequiredFirmware(firmware) {
-  if (firmware == null) {
-    return;
-  }
-  try {
-    let firmwareString = '';
-    if (typeof firmware === 'string') {
-      firmwareString = firmware;
-    } else {
-      // this can cause an exception, but we run this in try anyway
-      firmwareString = firmware.map((n) => n.toString()).join('.');
-    }
-
-    const split = firmwareString.split('.');
-    if (split.length !== 3) {
-      throw new Error('Too long version');
-    }
-    if (!(split[0].match(/^\d+$/)) || !(split[1].match(/^\d+$/)) || !(split[2].match(/^\d+$/))) {
-      throw new Error('Version not valid');
-    }
-
-    if (semvercmp(firmwareString, requiredFirmware) >= 0) {
-      requiredFirmware = firmwareString;
-    }
-  } catch (e) {
-    // print error, but otherwise ignore
-    console.error(e);
-  }
-}
-
 function waitForFirstDevice(list) {
     let res;
     if (!(list.hasDeviceOrUnacquiredDevice())) {
@@ -1321,6 +1299,21 @@ function createCryptoChannel() {
     let worker = new Worker(CRYPTO_WORKER_PATH);
     let channel = new hd.WorkerChannel(worker);
     return channel;
+}
+
+let backend = null;
+function getBitcoreBackend() {
+    return new Promise(resolve => {
+        if (!backend) {
+            return createBitcoreBackend(BITCORE_URLS)
+            .then(bitcoreBackend => {
+                backend = bitcoreBackend;
+                resolve(backend);
+            })
+        } else{ 
+            resolve(backend);
+        }
+    });
 }
 
 const TX_EMPTY_SIZE = 8;
@@ -1421,83 +1414,22 @@ function discoverAccounts(device, onStart, onUsed, onEnd) {
     return discover(0);
 }
 
-function renderAccountDiscovery(discovered, discovering) {
-    let accounts = (discovering)
-            ? discovered.concat(discovering)
-            : discovered;
 
-    let components = accounts.map((account, i) => {
-        let content;
-        let used = account.used;
-        let balance = account.getBalance();
-        if (!used) {
-            content = 'Fresh account';
-        } else {
-            content = formatAmount(balance);
-        }
 
-        if (account !== discovering) {
-            if (discovering) {
-                return `
-                    <div class="account">
-                    <button disabled>
-                    <span class="account-title">Account #${i + 1}</span>
-                    <span class="account-status">${content}</span>
-                    </button>
-                    </div>`;
-            } else {
-                return `
-                    <div class="account">
-                    <button onclick="selectAccount(${i})">
-                    <span class="account-title">Account #${i + 1}</span>
-                    <span class="account-status">${content}</span>
-                    </button>
-                    </div>`;
-            }
-        } else {
-            return `
-                <div class="account">
-                 <button disabled>
-                 <span class="account-title">Account #${i + 1}</span>
-                 <span class="account-status">Loading...</span>
-                 </button>
-                </div>`;
-        }
-    });
-
-    document.querySelector('#accounts').innerHTML = components.join('');
-}
 
 function showSelectionAccounts(device) {
-    let discovered = [];
-    let discovering = null;
-
-    let onStart = (account) => {
-        discovering = account;
-    };
-
-    let onUsed = () => {
-        renderAccountDiscovery(discovered, discovering);
-    };
-
-    let onEnd = () => {
-        discovered.push(discovering);
-        discovering = null;
-        renderAccountDiscovery(discovered, discovering);
-    };
 
     let heading = document.querySelector('#alert_accounts .alert_heading');
-
     showAlert('#alert_accounts');
     global.alert = '#alert_accounts';
 
     heading.textContent = 'Loading accounts...';
-    discoverAccounts(device, onStart, onUsed, onEnd).then((accounts) => {
-        global.alert = '#alert_loading';
-        heading.textContent = 'Select an account:';
-        renderAccountDiscovery(accounts, discovering);
+
+    getBitcoreBackend().then(b => {
+        discover(device, backend, ACCOUNT_DISCOVERY_LIMIT);
     });
-    return selectAccount(discovered);
+
+    return selectAccount([]);
 }
 
 function waitForAccount() {
