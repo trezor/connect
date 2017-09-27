@@ -25,9 +25,9 @@ acorn@^3.1.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-3.3.0.tgz#45e37fb39e8da3f25baee3ff5369e2bb5f22017a"
 
-after@0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/after/-/after-0.8.1.tgz#ab5d4fb883f596816d3515f8f791c0af486dd627"
+after@0.8.2:
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/after/-/after-0.8.2.tgz#fedb394f9f0e02aa9768e702bda23b505fae7e1f"
 
 align-text@^0.1.1, align-text@^0.1.3:
   version "0.1.4"
@@ -670,40 +670,6 @@ bitcoin-ops@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/bitcoin-ops/-/bitcoin-ops-1.3.0.tgz#6b126b585537bc679b02ed499f14450cffc37e13"
 
-bitcoinjs-lib-zcash:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/bitcoinjs-lib-zcash/-/bitcoinjs-lib-zcash-2.3.1.tgz#75d8eb2908f34b06b3581e9d113a01922d3e6bd7"
-  dependencies:
-    bigi "^1.4.0"
-    bip66 "^1.1.0"
-    bs58check "^1.0.5"
-    buffer-reverse "^1.0.0"
-    create-hash "^1.1.0"
-    create-hmac "^1.1.3"
-    ecurve "^1.0.0"
-    merkle-lib "^1.0.0"
-    randombytes "^2.0.1"
-    typeforce "^1.8.7"
-    varuint-bitcoin "^1.0.4"
-    wif "^2.0.1"
-
-bitcoinjs-lib-zcash@^2.3.4:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/bitcoinjs-lib-zcash/-/bitcoinjs-lib-zcash-2.3.4.tgz#98f2898b9153fb314a089080d69bc705323b74a8"
-  dependencies:
-    bigi "^1.4.0"
-    bip66 "^1.1.0"
-    bs58check "^1.0.5"
-    buffer-reverse "^1.0.0"
-    create-hash "^1.1.0"
-    create-hmac "^1.1.3"
-    ecurve "^1.0.0"
-    merkle-lib "^1.0.0"
-    randombytes "^2.0.1"
-    typeforce "^1.8.7"
-    varuint-bitcoin "^1.0.4"
-    wif "^2.0.1"
-
 bitcoinjs-lib-zcash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/bitcoinjs-lib-zcash/-/bitcoinjs-lib-zcash-3.0.0.tgz#0a36cc2145977d3861a9c859719916638e85a86c"
@@ -896,7 +862,7 @@ bs58@^4.0.0:
   dependencies:
     base-x "^3.0.2"
 
-bs58check@^1.0.5, bs58check@^1.3.1:
+bs58check@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/bs58check/-/bs58check-1.3.1.tgz#e3ea89514b6baa239038a777dc952ae04a808e3a"
   dependencies:
@@ -909,10 +875,6 @@ bs58check@^2.0.0:
   dependencies:
     bs58 "^4.0.0"
     create-hash "^1.1.0"
-
-buffer-reverse@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/buffer-reverse/-/buffer-reverse-1.0.1.tgz#49283c8efa6f901bc01fa3304d06027971ae2f60"
 
 buffer-shims@^1.0.0:
   version "1.0.0"
@@ -1277,32 +1239,32 @@ elliptic@^6.0.0:
     hash.js "^1.0.0"
     inherits "^2.0.1"
 
-engine.io-client@1.8.1:
-  version "1.8.1"
-  resolved "https://registry.yarnpkg.com/engine.io-client/-/engine.io-client-1.8.1.tgz#71237e9bbce04862675d4d6bfbef351c8b6a35a3"
+engine.io-client@~1.8.4:
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/engine.io-client/-/engine.io-client-1.8.4.tgz#9fe85dee25853ca6babe25bd2ad68710863e91c2"
   dependencies:
     component-emitter "1.2.1"
     component-inherit "0.0.3"
     debug "2.3.3"
-    engine.io-parser "1.3.1"
+    engine.io-parser "1.3.2"
     has-cors "1.1.0"
     indexof "0.0.1"
     parsejson "0.0.3"
     parseqs "0.0.5"
     parseuri "0.0.5"
-    ws "1.1.1"
+    ws "1.1.2"
     xmlhttprequest-ssl "1.5.3"
     yeast "0.1.2"
 
-engine.io-parser@1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/engine.io-parser/-/engine.io-parser-1.3.1.tgz#9554f1ae33107d6fbd170ca5466d2f833f6a07cf"
+engine.io-parser@1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/engine.io-parser/-/engine.io-parser-1.3.2.tgz#937b079f0007d0893ec56d46cb220b8cb435220a"
   dependencies:
-    after "0.8.1"
+    after "0.8.2"
     arraybuffer.slice "0.0.6"
     base64-arraybuffer "0.1.5"
     blob "0.0.4"
-    has-binary "0.1.6"
+    has-binary "0.1.7"
     wtf-8 "1.0.0"
 
 es-abstract@^1.6.1:
@@ -1561,12 +1523,6 @@ has-ansi@^2.0.0:
   dependencies:
     ansi-regex "^2.0.0"
 
-has-binary@0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/has-binary/-/has-binary-0.1.6.tgz#25326f39cfa4f616ad8787894e3af2cfbc7b6e10"
-  dependencies:
-    isarray "0.0.1"
-
 has-binary@0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/has-binary/-/has-binary-0.1.7.tgz#68e61eb16210c9545a0a5cce06a873912fe1e68c"
@@ -1606,13 +1562,12 @@ hawk@~3.1.3:
     hoek "2.x.x"
     sntp "1.x.x"
 
-hd-wallet@1.0.13-backfix-bitcore3:
-  version "1.0.13-backfix-bitcore3"
-  resolved "https://registry.yarnpkg.com/hd-wallet/-/hd-wallet-1.0.13-backfix-bitcore3.tgz#5e1bb43948900ee02b699b6d782196dcfb6ce0b8"
+hd-wallet@^3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/hd-wallet/-/hd-wallet-3.5.2.tgz#5b7719df2b3fe8e0cb7a6fc4aa3c627eaa9a59a8"
   dependencies:
-    bitcoinjs-lib-zcash "^2.3.4"
-    immutable "^3.8.1"
-    socket.io-client "^1.5.1"
+    bitcoinjs-lib-zcash "^3.0.0"
+    socket.io-client "^1.7.3"
     whatwg-fetch "^0.11.0"
 
 hoek@2.x.x:
@@ -1645,10 +1600,6 @@ https-browserify@~0.0.0:
 ieee754@^1.1.4:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
-
-immutable@^3.8.1:
-  version "3.8.1"
-  resolved "https://registry.yarnpkg.com/immutable/-/immutable-3.8.1.tgz#200807f11ab0f72710ea485542de088075f68cd2"
 
 indexof@0.0.1:
   version "0.0.1"
@@ -2519,15 +2470,15 @@ sntp@1.x.x:
   dependencies:
     hoek "2.x.x"
 
-socket.io-client@^1.5.1:
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-1.7.1.tgz#6c23725edff804f3919c1ce4ebb25e591c6e61d7"
+socket.io-client@^1.7.3:
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-1.7.4.tgz#ec9f820356ed99ef6d357f0756d648717bdd4281"
   dependencies:
     backo2 "1.0.2"
     component-bind "1.0.0"
     component-emitter "1.2.1"
     debug "2.3.3"
-    engine.io-client "1.8.1"
+    engine.io-client "~1.8.4"
     has-binary "0.1.7"
     indexof "0.0.1"
     object-component "0.0.3"
@@ -2884,9 +2835,9 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
 
-ws@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.1.tgz#082ddb6c641e85d4bb451f03d52f06eabdb1f018"
+ws@1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-1.1.2.tgz#8a244fa052401e08c9886cf44a85189e1fd4067f"
   dependencies:
     options ">=0.0.5"
     ultron "1.0.x"
