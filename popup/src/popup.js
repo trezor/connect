@@ -1215,29 +1215,6 @@ function waitForFirstDevice(list) {
  * accounts, discovery
  */
 
-function createBlockchain() {
-    return new hd.BitcoreBlockchain(BITCORE_URLS, () => createSocketWorker());
-}
-
-let blockchain = null;
-function getBlockchain() {
-    if (blockchain == null) {
-        blockchain = createBlockchain();
-    }
-    return blockchain;
-}
-
-function createSocketWorker() {
-    let socketWorker = new Worker(SOCKET_WORKER_PATH);
-    return socketWorker;
-}
-
-function createCryptoChannel() {
-    let worker = new Worker(CRYPTO_WORKER_PATH);
-    let channel = new hd.WorkerChannel(worker);
-    return channel;
-}
-
 let backend = null;
 function getBitcoreBackend() {
     return new Promise(resolve => {
@@ -1257,83 +1234,14 @@ const TX_EMPTY_SIZE = 8;
 const TX_PUBKEYHASH_INPUT = 40 + 2 + 106;
 const TX_PUBKEYHASH_OUTPUT = 8 + 2 + 25;
 
-function selectUnspents(unspents, outputs, feePerByte) {
-    // based on https://github.com/dcousens/coinselect
-
-    let candidates = [];
-    let outgoing = 0;
-    let incoming = 0;
-
-    let byteLength = TX_EMPTY_SIZE;
-
-    unspents = unspents.slice().sort((a, b) => {
-        let ac = (a.confirmations || 0);
-        let bc = (b.confirmations || 0);
-        return (bc - ac) ||         // descending confirmations
-               (a.value - b.value); // ascending value
-    });
-
-    for (let i = 0; i < outputs.length; i++) {
-        outgoing += outputs[i].amount;
-        byteLength += TX_PUBKEYHASH_OUTPUT;
-    }
-
-    for (let i = 0; i < unspents.length; i++) {
-        incoming += unspents[i].value;
-        byteLength += TX_PUBKEYHASH_INPUT;
-
-        candidates.push(unspents[i]);
-
-        if (incoming < outgoing) {
-            // don't bother with fees until we cover all outputs
-            continue;
-        }
-
-        let baseFee = estimateFee(byteLength, feePerByte);
-        let total = outgoing + baseFee;
-
-        if (incoming < total) {
-            // continue until we can afford the base fee
-            continue;
-        }
-
-        let feeWithChange = estimateFee(byteLength + TX_PUBKEYHASH_OUTPUT, feePerByte);
-        let totalWithChange = outgoing + feeWithChange;
-
-        // can we afford a change output?
-        if (incoming >= totalWithChange) {
-            let change = incoming - totalWithChange;
-            return {
-                inputs: candidates,
-                change: change,
-                fee: feeWithChange
-            };
-        } else {
-            let fee = incoming - total;
-            return {
-                inputs: candidates,
-                change: 0,
-                fee: fee
-            };
-        }
-    }
-
-    throw INSUFFICIENT_FUNDS;
-}
-
-function estimateFee(byteLength, feePerByte) {
-    return byteLength * feePerByte;
-}
-
 function showSelectionAccounts(device) {
     const discoveredAccounts = [];
+
+    const onUpdate = (a) => {
+        discoveredAccounts.push(a);
+    }
     getBitcoreBackend().then(b => {
-        discover(device, backend, ACCOUNT_DISCOVERY_LIMIT)
-        .then(accounts => {
-            for (let a of accounts) {
-                discoveredAccounts.push(a);
-            }
-        });
+        discover(device, backend, onUpdate, ACCOUNT_DISCOVERY_LIMIT);
     });
     return selectAccount(discoveredAccounts);
 }
