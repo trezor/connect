@@ -8,7 +8,7 @@
     <title>TREZOR Connect</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
-    <link rel="stylesheet" href="./css/popup.css?r=1">
+    <link rel="stylesheet" href="./css/popup.css?r=2">
   </head>
   <body>
     <div id="header">
@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <div id="alert_loading" class="alert fadeout">
+    <div id="alert_loading" class="alert">
       <div class="alert_heading fade">Loading&hellip;</div>
     </div>
 
@@ -117,21 +117,15 @@
       <div class="alert_heading">Account funds are insufficient. Retrying...</div>
     </div>
 
-    <div id="alert_accounts" class="alert fadeout2">
+    <div id="alert_accounts" class="alert fadeout loading">
       <!-- content filled dynamically -->
       <p class="alert_heading"></p>
       <div class="accounts_tab">
-        <div class="segwit active">Accounts</div>
-        <div class="legacy">Legacy Accounts</div>
+        <div class="accounts_segwit_tab accounts_tab_active" onclick="switchAccountsTab('segwit')">Accounts</div>
+        <div class="accounts_legacy_tab" onclick="switchAccountsTab('legacy')">Legacy Accounts</div>
       </div>
-      <div id="accounts">
-        <div class="account">
-          <button>
-            <span class="account-title">Account #1</span>
-            <span class="account-status">0 BTC</span>
-          </button>
-        </div>
-      </div>
+      <div id="accounts"></div>
+      <div id="accounts-legacy"></div>
     </div>
 
     <div id="alert_fees" class="alert fadeout">
