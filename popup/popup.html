@@ -8,7 +8,7 @@
     <title>TREZOR Connect</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
-    <link rel="stylesheet" href="./css/popup.css">
+    <link rel="stylesheet" href="./css/popup.css?r=1">
   </head>
   <body>
     <div id="header">
@@ -37,7 +37,7 @@
       </div>
     </div>
 
-    <div id="alert_loading" class="alert">
+    <div id="alert_loading" class="alert fadeout">
       <div class="alert_heading fade">Loading&hellip;</div>
     </div>
 
@@ -117,10 +117,21 @@
       <div class="alert_heading">Account funds are insufficient. Retrying...</div>
     </div>
 
-    <div id="alert_accounts" class="alert fadeout">
+    <div id="alert_accounts" class="alert fadeout2">
       <!-- content filled dynamically -->
       <p class="alert_heading"></p>
-      <div id="accounts"></div>
+      <div class="accounts_tab">
+        <div class="segwit active">Accounts</div>
+        <div class="legacy">Legacy Accounts</div>
+      </div>
+      <div id="accounts">
+        <div class="account">
+          <button>
+            <span class="account-title">Account #1</span>
+            <span class="account-status">0 BTC</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <div id="alert_fees" class="alert fadeout">
@@ -213,6 +224,14 @@
       </div>
     </div>
 
-    <script src="./js/popup-dist.js"></script>
+    <!-- <script src="./js/popup-dist.js"></script> -->
+    <script language="JavaScript">
+      var s = document.getElementsByTagName('script')[0];
+      var sc = document.createElement('script');
+      sc.type = 'text/javascript';
+      sc.async = true;
+      sc.src = './js/popup-dist.js?v=' + Math.random(); 
+      s.parentNode.insertBefore(sc, s);
+     </script>
   </body>
 </html>
