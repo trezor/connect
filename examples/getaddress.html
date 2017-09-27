@@ -12,7 +12,7 @@
 
         var coin = document.getElementById('coin').value;
         var segwit = document.getElementById('segwit').checked;
-        if (!(coin === 'Testnet' || coin === 'Litecoin')) {
+        if (!(coin === 'Testnet' || coin === 'Litecoin' || coin === 'Bitcoin')) {
           // segwit on non-segwit-enabled coins doesn't make sense
           segwit = false;
         }
@@ -33,7 +33,7 @@
      function changedCoin(element) {
         var coin = element.value;
         // segwit on non-segwit-enabled coins doesn't make sense
-        if (coin === 'Testnet' || coin === 'Litecoin') {
+        if (coin === 'Testnet' || coin === 'Litecoin' || coin === 'Bitcoin') {
           document.getElementById('segwit').disabled = false;
         } else {
           document.getElementById('segwit').checked = false;
@@ -57,7 +57,7 @@
             <option>Zcash testnet</option>
         </select>
         <input type="text" id="address" name="address" value="m/44'/0'/2'/0/0" style="display: inline-block;" />
-        <input type="checkbox" id="segwit" disabled/> Segwit
+        <input type="checkbox" id="segwit" /> Segwit
         <button onclick="trezorGetAddress()" style="display: inline-block;">Get Address</button>
     </div>
     

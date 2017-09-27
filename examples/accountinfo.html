@@ -16,11 +16,6 @@
         // var description = "2" // can also be input as string
 
         // var description = null // will start account discovery and let user select
-        
-        // segwit
-        var description = "xpub6CAWv8B7pGFjYqBK38RURniVPq87tk8w1fFZj1FAGQtJnFfPLMNUDMzvE8QLfvFg52DMjW4YyjyS2PTE8ZvgxFXjWuZhvCRKX8Kaw3UDVM8" 
-        // legacy
-        //var description = "xpub6D6yNFXJDMMP7VZtiByQSShqFKzFboV5UZjGG7TjLn8eBj9sAqPALEUx8VWFXgsia411CJL8Bnk9KUwCQYm9tUGkH1AGWzNJsugXXnT2Tef"
 
         // var description = "xpub6BiVtCpG9fQPxnPmHXG8PhtzQdWC2Su4qWu6XW9tpWFYhxydCLJGrWBJZ5H6qTAHdPQ7pQhtpjiYZVZARo14qHiay2fvrX996oEP42u8wZy" 
         // if specified by xpub, it has to be of one of the first 10 accounts
@@ -47,6 +42,15 @@
             }
             document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
         });
+
+        // TrezorConnect.getAllAccountsInfo(function (response) {
+        //     if (response.success) {
+        //         console.log('Account ID: ', response);
+        //     } else {
+        //         console.error('Error:', response.error); // error message
+        //     }
+        //     document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+        // });
     }
 
     </script>
