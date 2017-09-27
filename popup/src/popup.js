@@ -18,6 +18,7 @@ import ComposingTransaction from './backend/ComposingTransaction';
 import { httpRequest, formatTime, formatAmount, parseRequiredFirmware } from './utils/utils';
 import { serializePath } from './utils/path';
 import * as Constants from './utils/constants';
+import { xpubKeyLabel, promptInfoPermission } from './view';
 
 var bip44 = require('bip44-constants')
 var semvercmp = require('semver-compare');
@@ -530,40 +531,6 @@ function cancelXpubKey() {
 
 window.cancelXpubKey = cancelXpubKey;
 
-function getCoinName(n) {
-    for (let name of Object.keys(bip44)) {
-        let number = parseInt(bip44[name]);
-        if (number === n) {
-            return name;
-        }
-    };
-    return 'Unknown coin';
-}
-
-function xpubKeyLabel(path) {
-    let hardened = (i) => path[i] & ~HD_HARDENED;
-    if (hardened(0) === 44) {
-        let coinName = getCoinName(path[1]);
-        return `${coinName} Legacy account #${hardened(2) + 1}`;
-    }
-    if (hardened(0) === 48) {
-        return `multisig account #${hardened(2) + 1}`;
-    }
-    if (hardened(0) === 49) {
-        let coinName = getCoinName(path[1]);
-        return `${coinName} account #${hardened(2) + 1}`;
-    }
-    if (path[0] === 45342) {
-        if (hardened(1) === 44) {
-            return `Copay ID of account #${hardened(2) + 1}`;
-        }
-        if (hardened(1) === 48) {
-            return `Copay ID of multisig account #${hardened(2) + 1}`;
-        }
-    }
-    return 'm/' + serializePath(path);
-}
-
 /*
  * Fresh address 
  */
@@ -584,79 +551,51 @@ function getAccountByDescription(description) {
     throw new Error('Wrongly formatted description.');
 }
 
-
 function getAccountByXpub(xpub) {
-    return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].reduce((prev, current) => {
-        return prev.then(account => {
-            if (account != null) {
+    let index = 0;
+    const inside = (i) => {
+        return TrezorAccount.fromIndex(global.device, backend, i).then(account => {
+            if (account.getXpub() === xpub) {
                 return account;
-            }
-            const accountP = Account.fromDevice(global.device, current, createCryptoChannel(), getBlockchain());
-            return accountP.then(account => {
-                if (account.node.toBase58() === xpub) {
-                    return account;
+            } else {
+                if (i + 1 > ACCOUNT_DISCOVERY_LIMIT) {
+                    if (backend.coinInfo.segwit) {
+                        backend.coinInfo.segwit = false;
+                        return inside(0);
+                    } else {
+                        return null;
+                    }
                 } else {
-                    return null;
+                    return inside(i + 1);
                 }
-            });
+            }
         });
-    }, Promise.resolve(null)).then(account => {
-        if (account == null) {
-            return Promise.reject(new Error('No account with the given xpub'));
-        } else {
-            let onEnd = function() {};
-            return promptInfoPermission(account.id)
-                .then(() => account.discover(onEnd))
-                .then(() => account);
-        }
+    }
+
+    return getBitcoreBackend().then(b => {
+        return inside(0).then(account => {
+            if (account == null) {
+                return Promise.reject(new Error('No account with the given xpub'));
+            } else {
+                return promptInfoPermission(account.getPath()).then(() => {
+                    return account.discover().then(() => account);
+                });
+            }
+        });
     });
 }
 
+
 function getAccountByHDPath(path) {
     return getBitcoreBackend().then(b => {
-        //return TrezorAccount.fromIndex(global.device, backend, bip44purpose, id).then(account => {
         return TrezorAccount.fromPath(global.device, backend, path).then(account => {
-            return promptInfoPermission(account.id).then(() => {
+            return promptInfoPermission(path).then(() => {
                 return account.discover().then(() => account);
             });
         });
     });
-
-    // const accountP = Account.fromDevice(global.device, id, createCryptoChannel(), createBlockchain());
-    // return accountP.then(account => {
-    //     return promptInfoPermission(id).then(() => {
-    //         return account.discover(onEnd).then(() => account);
-    //     });
-    // });
 }
 
-function promptInfoPermission(id) {
-    return new Promise((resolve, reject) => {
-        let e = document.getElementById('accountinfo_id');
-        e.textContent = id + 1;
-        e.callback = (exportInfo) => {
-            showAlert(global.alert);
-            if (exportInfo) {
-                resolve();
-            } else {
-                reject(new Error('Cancelled'));
-            }
-        };
-        showAlert('#alert_accountinfo');
-    });
-}
-
-function exportInfo() {
-    document.querySelector('#accountinfo_id').callback(true);
-}
-
-window.exportInfo = exportInfo;
-
-function cancelInfo() {
-    document.querySelector('#accountinfo_id').callback(false);
-}
-
-window.cancelInfo = cancelInfo;
 
 
 function handleAllAccountsInfo(event) {
