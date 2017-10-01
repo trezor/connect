@@ -164,6 +164,11 @@ const CHROME_EXTENSION_NAMES = {
 };
 
 function parseIdentity(event) {
+    // file:// URLs
+    if (event.origin === 'null') {
+        return null;
+    }
+
     let identity = {};
     let origin = event.origin.split(':');
 
@@ -178,7 +183,9 @@ function parseIdentity(event) {
 }
 
 function showIdentity(identity) {
-    if (identity.proto === 'chrome-extension') {
+    if (identity === null) {
+        return 'Unknown Local Application';
+    } else if (identity.proto === 'chrome-extension') {
         let name = CHROME_EXTENSION_NAMES[identity.host];
         return (name) ? name : 'Unknown Chrome Extension';
     } else {
