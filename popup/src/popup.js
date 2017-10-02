@@ -38,6 +38,7 @@ const ADDRESS_VERSION = 0x0;
 var BITCORE_URLS = ['https://btc-bitcore3.trezor.io', 'https://btc-bitcore1.trezor.io'];
 var ACCOUNT_DISCOVERY_LIMIT = 10;
 var BIP44_COIN_TYPE = 0;
+var COIN_INFO_URL = 'coins.json';
 
 const SOCKET_WORKER_PATH = './js/socket-worker-dist.js';
 const CRYPTO_WORKER_PATH = './js/trezor-crypto-dist.js';
@@ -75,6 +76,9 @@ function onMessage(event) {
     // optional values set by parent window
     if (request.bitcoreURLS) {
         BITCORE_URLS = request.bitcoreURLS;
+    }
+    if (request.coinInfoURL) {
+        COIN_INFO_URL = request.coinInfoURL;
     }
     if (request.accountDiscoveryLimit) {
         ACCOUNT_DISCOVERY_LIMIT = request.accountDiscoveryLimit;
@@ -575,7 +579,7 @@ function getAccountByXpub(xpub) {
                 });
             }
         });
-    });
+    }).catch(error => { throw error; });
 }
 
 
@@ -1210,12 +1214,14 @@ function waitForFirstDevice(list) {
 
 let backend = null;
 function getBitcoreBackend() {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         if (!backend) {
-            return createBitcoreBackend(BITCORE_URLS)
+            return createBitcoreBackend(BITCORE_URLS, COIN_INFO_URL)
             .then(bitcoreBackend => {
                 backend = bitcoreBackend;
                 resolve(backend);
+            }).catch(error => {
+                reject(error);
             })
         } else{ 
             resolve(backend);
@@ -1235,12 +1241,17 @@ function showSelectionAccounts(device) {
     }
     getBitcoreBackend().then(b => {
         discoverAccounts(device, backend, onUpdate, ACCOUNT_DISCOVERY_LIMIT);
-    });
+        window.selectAccountError = null;
+    }).catch(error => {
+        window.selectAccountError(error);
+        window.selectAccountError = null;
+    })
     return selectAccount(discoveredAccounts);
 }
 
 function selectAccount(accounts) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
+        window.selectAccountError = reject;
         window.selectAccount = (index) => {
             window.selectAccount = null;
             showAlert('#alert_loading');
@@ -1267,7 +1278,7 @@ function waitForAllAccounts() {
 
     return getBitcoreBackend().then(b => {
         return discoverAllAccounts(global.device, backend, ACCOUNT_DISCOVERY_LIMIT);
-    });
+    }).catch(error => { throw error; });
 }
 
 

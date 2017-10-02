@@ -54,12 +54,14 @@ function createDiscoveryWorker(): Worker {
 // this gets compiled or something by emscripten, not sure where from
 const trezorCryptoURL = './js/trezor-crypto-dist.js';
 
-export const create = (urls): Promise<void> => {
+export const create = (urls: Array<string>, coinInfoUrl: string): Promise<void> => {
     let b = new TrezorBitcoreBackend({ bitcoreURL: urls });
-    return waitForCoinInfo(b.blockchain).then(ci => {
+    return waitForCoinInfo(b.blockchain, coinInfoUrl).then(ci => {
         coinInfo = ci;
         b.setCoinInfo(ci);
         return b;
+    }).catch(error => {
+        throw error;
     });
 }
 
