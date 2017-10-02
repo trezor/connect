@@ -116,6 +116,16 @@ this.TrezorConnect = (function () {
         }
 
         /**
+         * Set coin info json url
+         * @param {string|Array<string>} value
+         */
+        this.setCoinInfoURL = function(value) {
+            if (typeof value === 'string') {
+                manager.coinInfoURL = value;
+            }
+        }
+
+        /**
          * Set max. limit for account discovery
          * @param {number} value
          */
@@ -988,6 +998,7 @@ this.TrezorConnect = (function () {
 
         this.sendWithChannel = function (message, callback) {
             message.bitcoreURLS = this.bitcoreURLS || null;
+            message.coinInfoURL = this.coinInfoURL || null;
             message.accountDiscoveryLimit = this.accountDiscoveryLimit || null;
             message.accountDiscoveryGapLength = this.accountDiscoveryGapLength || null;
             message.accountDiscoveryBip44CoinType = this.accountDiscoveryBip44CoinType || null;

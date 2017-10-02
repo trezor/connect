@@ -1,7 +1,7 @@
 import 'whatwg-fetch';
 import semvercmp from 'semver-compare';
 
-export const httpRequest = (url, json) => {
+export const httpRequest = (url: string, json: boolean): any => {
     return fetch(url).then((response) => {
         if (response.status === 200) {
             return response.text().then(result => (json ? JSON.parse(result) : result));
@@ -59,8 +59,6 @@ export const parseRequiredFirmware = (firmware, requiredFirmware) => {
         if (!(split[0].match(/^\d+$/)) || !(split[1].match(/^\d+$/)) || !(split[2].match(/^\d+$/))) {
             throw new Error('Firmware version not valid');
         }
-
-        console.log("semvercmp", semvercmp)
   
         if (semvercmp(firmwareString, requiredFirmware) >= 0) {
             return firmwareString;
