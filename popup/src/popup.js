@@ -65,6 +65,11 @@ const NEM_AGGREGATE_MODIFICATION_TYPES = {
     2: "CosignatoryModification_Delete"
 };
 
+const NEM_IMPORTANCE_TRANSFER_MODES = {
+    1: "ImportanceTransfer_Activate",
+    2: "ImportanceTransfer_Deactivate"
+};
+
 global.alert = '#alert_loading';
 global.device = null;
 
@@ -558,6 +563,11 @@ function handleNEMSignTx(event) {
         };
     };
 
+    const importanceTransferProto = (importanceTransfer) => ({
+        mode: NEM_IMPORTANCE_TRANSFER_MODES[importanceTransfer.mode],
+        public_key: importanceTransfer.remoteAccount
+    });
+
     const provisionNamespaceProto = (provisionNamespace) => ({
         namespace: provisionNamespace.newPart,
         parent: provisionNamespace.parent || undefined,
@@ -640,6 +650,10 @@ function handleNEMSignTx(event) {
         switch (transaction.type) {
             case 0x0101:
                 message.transfer = transferProto(transaction);
+                break;
+
+            case 0x0801:
+                message.importance_transfer = importanceTransferProto(transaction);
                 break;
 
             case 0x1001:
