@@ -217,6 +217,38 @@ TrezorConnect.signTx(inputs, outputs, function (result) {
 });
 ```
 
+[SPENDP2SHWITNESS example:](examples/signtx-paytoaddress.html)
+```javascript
+// spend one segwit change output
+var inputs = [{
+    address_n: [49 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 1, 0],
+    prev_index: 0,
+    prev_hash: 'b035d89d4543ce5713c553d69431698116a822c57c03ddacf3f04b763d1999ac'
+    amount: 3382047,
+    script_type: 'SPENDP2SHWITNESS'
+}];
+
+// send to 1 address output and one segwit change output
+var outputs = [{
+    address_n: [49 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 1, 1],
+    amount: 3181747,
+    script_type: 'PAYTOP2SHWITNESS'
+}, {
+    address: '18WL2iZKmpDYWk1oFavJapdLALxwSjcSk2',
+    amount: 200000,
+    script_type: 'PAYTOADDRESS'
+}];
+
+TrezorConnect.signTx(inputs, outputs, function (result) {
+    if (result.success) {
+        console.log('Transaction:', result.serialized_tx); // tx in hex
+        console.log('Signatures:', result.signatures); // array of signatures, in hex
+    } else {
+        console.error('Error:', result.error); // error message
+    }
+});
+```
+
 [PAYTOMULTISIG example.](examples/signtx-paytomultisig.html)
 
 ## Sign Ethereum transaction
@@ -430,6 +462,7 @@ Description can be one of the following:
     * note that accounts have zero-based IDs, but the numbering on the screen start with "Account #1"; so account with id 2 is "Account #3", etc.
 * xpub - xpub of the account
     * the xpub must start with `xpub`, and has to belong to one of the first 10 accounts
+* { account_index: 0, account_type: 'legacy' } - An object with account ID and account type legacy/segwit
 
 ## Show address / get address
 

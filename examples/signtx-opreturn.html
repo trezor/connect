@@ -6,34 +6,71 @@
 
      function trezorSignTx() {
          // spend one output
-         var inputs = [{
-             address_n: [44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 0, 0],
-             prev_index: 0,
-             prev_hash: 'b035d89d4543ce5713c553d69431698116a822c57c03ddacf3f04b763d1999ac'
-         }];
 
+/* Legacy acc 1
+{index: 1, value: 1000, transactionHash: "78dbd0d19ccf8776ac590225cde5797e439959d05b91ecdbacd7c244afb28542", height: 1207997, coinbase: false, …}
+{index: 1, value: 1000, transactionHash: "cafda182818c42a7b663140e28fd55e10cd0fc2616b258d9bc4e7a3942daa719", height: 1207995, coinbase: false, …}
+{index: 1, value: 1000, transactionHash: "607c7b7684f3c5bd4bf640d470a7a8db2f2dcf6e7fa8b1dd1a8b863c9928336c", height: 1207965, coinbase: false, …}
+{index: 1, value: 1000, transactionHash: "a6519965c42b7cc70bd2ae91126548eb0e95bc2ea7c038cfc8e14a2bdbedd6cd", height: 1207960, coinbase: false, …}
+{index: 1, value: 771, transactionHash: "c42667c90518dab8a1e0abd1acf9449036a7a1e4dc7ad712be77a695ae37f1d8", height: 1207922, coinbase: false, …}
+*/
 
-         // send to 1 OP_RETURN output and one change output
-         // the rest will be used as fee
-         var outputs = [{
-             address_n: [44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 1, 1],
-             amount: 3431247,
-             script_type: 'PAYTOADDRESS'
-         }, {
-             amount: 0, // amount has to be 0 in OP_RETURN, but it has to be present
-             script_type: 'PAYTOOPRETURN',
-             op_return_data: 'deadbeef' // in hexadecimal
-         }];
+/*
+Segwit acc 1
+{index: 1, value: 1000, transactionHash: "86ac052f6a8d2adb7bca13459b8a5f9b02889e08d8d929af5e3cc9030109e942", height: 1207999, coinbase: false, …}
+{index: 1, value: 1000, transactionHash: "a1372e6d56cf3d2a0665c3022d7ba7ef04cd269eed880d3815dc3ebcd7f11a30", height: 1207838, coinbase: false, …}
+change: "2N58Jk8pmZbyrXzwjeYREqryrGjqxf9ruuB"
+*/
 
-         TrezorConnect.signTx(inputs, outputs, function (response) {
-             if (response.success) {
-                 console.log('Serialized TX:', response.serialized_tx); // tx in hex
-                 console.log('Signatures:', response.signatures); // array of signatures, in hex
-             } else {
-                 console.error('Error:', response.error); // error message
-             }
-             document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
-         });
+        var inputs = [
+            // {
+            //     address_n: [49 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 1], // 0,3
+            //     prev_index: 0,
+            //     prev_hash: "a1372e6d56cf3d2a0665c3022d7ba7ef04cd269eed880d3815dc3ebcd7f11a30",
+            //     amount: 1000,
+            //     script_type: 'SPENDP2SHWITNESS'
+            // },
+            {
+                address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 1],
+                prev_index: 0,
+                prev_hash: "78dbd0d19ccf8776ac590225cde5797e439959d05b91ecdbacd7c244afb28542"
+            }
+        ];
+
+        //"n4QXymrR72kgCDTbgchGNJmV8befFxX6Sx"
+        // send to 1 OP_RETURN output and one change output
+        // the rest will be used as fee
+        var outputs = [
+            // {
+            //     address_n: [49 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 0],
+            //     amount: 1000,
+            //     script_type: 'PAYTOP2SHWITNESS'
+            // }, 
+            {
+                address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 0],
+                amount: 36500,
+                script_type: 'PAYTOADDRESS'
+            }, 
+            {
+                amount: 0, // amount has to be 0 in OP_RETURN, but it has to be present
+                script_type: 'PAYTOOPRETURN',
+                op_return_data: 'deadbeef' // in hexadecimal
+            }
+        ];
+
+        TrezorConnect.closeAfterSuccess(false);
+        TrezorConnect.closeAfterFailure(false);
+        TrezorConnect.setBitcoreURLS('https://testnet-bitcore4.trezor.io');
+
+        TrezorConnect.signTx(inputs, outputs, function (response) {
+            if (response.success) {
+                console.log('Serialized TX:', response.serialized_tx); // tx in hex
+                console.log('Signatures:', response.signatures); // array of signatures, in hex
+            } else {
+                console.error('Error:', response.error); // error message
+            }
+            document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+        });
      }
 
     </script>

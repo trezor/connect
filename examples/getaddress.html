@@ -22,13 +22,13 @@
         });
      }
 
-     function trezorEthereumGetAddress() {
-        var path = document.getElementById('ethaddress').value;
+    function trezorEthereumGetAddress() {
+      var path = document.getElementById('ethaddress').value;
 
-        TrezorConnect.ethereumGetAddress(path, function (response) {
-             console.log("TrezorConnect.ethereumGetAddress", response);
-        });
-     }
+      TrezorConnect.ethereumGetAddress(path, function (response) {
+        console.log("TrezorConnect.ethereumGetAddress", response);
+      });
+    }
 
      function changedCoin(element) {
         var coin = element.value;
@@ -40,6 +40,13 @@
           document.getElementById('segwit').disabled = true;
         }
      }
+
+    function handleCoinChange() {
+        var coin = document.getElementById('coin').value;
+        document.getElementById('account_path').value = backends[coin].path;
+        document.getElementById('account_xpub').value = backends[coin].xpub;
+        console.log("coin", coin);
+    }
 
     </script>
   </head>
@@ -56,7 +63,7 @@
             <option>Namecoin</option>
             <option>Zcash testnet</option>
         </select>
-        <input type="text" id="address" name="address" value="m/44'/0'/2'/0/0" style="display: inline-block;" />
+        <input type="text" id="address" name="address" value="m/44'/0'/2'/0'/0'" style="display: inline-block;" />
         <input type="checkbox" id="segwit" /> Segwit
         <button onclick="trezorGetAddress()" style="display: inline-block;">Get Address</button>
     </div>
@@ -65,7 +72,7 @@
 
     <div>
         <h3>TrezorConnect.ethereumGetAddress</h3>
-        <input type="text" id="ethaddress" name="ethaddress" value="m/44'/60'/0'/0/0" />
+        <input type="text" id="ethaddress" name="ethaddress" value="m/44'/60'/0'/0'/0'" />
         <button onclick="trezorEthereumGetAddress()">Ethereum Get Address</button>
     </div>
     
