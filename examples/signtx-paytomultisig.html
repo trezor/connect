@@ -4,49 +4,65 @@
     <title>TREZOR Sign Transaction Test</title>
     <script>
 
-     function trezorSignTx() {
+     function trezorSignTx(testId) {
+        // this example requires a device loaded with seed:
+        // alcohol woman abuse must during monitor noble actual mixed trade anger aisle
 
-         // this example requires a device loaded with seed:
-         // alcohol woman abuse must during monitor noble actual mixed trade anger aisle
+        // for a convenience, TrezorConnect internals convert xpubs to HDNodeType.
+        // Test:
+        // https://github.com/trezor/python-trezor/blob/master/tests/device_tests/test_multisig.py
+        var ext1 = 'xpub6E2LkiC2h7icfcjXPFDmwufDRaaTjTRYcS2nD7eGQeFx1WwZxxvCya5GefiJND6ddJnAjzzMusLcCnu6WyhZPrF6e5G71MWjNJVfs6u9csg';
+        var ext2 = 'xpub6FKKCwdfD85eHmKn7d3mmbhqsHnGkB2n7Hmre29gbnR1cR4U1wrtf2akh1VVqjcTdfkxmwPjQyYPhLLgwBijfFPAYqTZzcjj4awB1BMUxq2';
+        var int1 = 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy';
 
-         // for a convenience, TrezorConnect internals convert xpubs to HDNodeType.
-         var ext1 = 'xpub6E2LkiC2h7icfcjXPFDmwufDRaaTjTRYcS2nD7eGQeFx1WwZxxvCya5GefiJND6ddJnAjzzMusLcCnu6WyhZPrF6e5G71MWjNJVfs6u9csg';
-         var ext2 = 'xpub6FKKCwdfD85eHmKn7d3mmbhqsHnGkB2n7Hmre29gbnR1cR4U1wrtf2akh1VVqjcTdfkxmwPjQyYPhLLgwBijfFPAYqTZzcjj4awB1BMUxq2';
-         var int1 = 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy';
+        //spend a multisig input
+        var inputs;
+        if (testId == 1) {
+            inputs = [
+                {
+                    address_n: [1],
+                    prev_index: 1,
+                    prev_hash: 'c6091adf4c0c23982a35899a6e58ae11e703eacd7954f588ed4b9cdefc4dba52',
+                    script_type: 'SPENDMULTISIG',
+                    multisig: {
+                        pubkeys: [
+                            {node: int1, address_n: [1]},
+                            {node: int1, address_n: [2]},
+                            {node: int1, address_n: [3]}
+                        ],
+                        signatures: ['', '', ''],
+                        m: 2
+                    }
+                }
+            ];
+        } else {
+            inputs = [
+                {
+                    address_n: [3],
+                    prev_index: 1,
+                    prev_hash: 'c6091adf4c0c23982a35899a6e58ae11e703eacd7954f588ed4b9cdefc4dba52',
+                    script_type: 'SPENDMULTISIG',
+                    multisig: {
+                        pubkeys: [
+                            {node: int1, address_n: [1]},
+                            {node: int1, address_n: [2]},
+                            {node: int1, address_n: [3]}
+                        ],
+                        signatures: ['3045022100985cc1ba316d140eb4b2d4028d8cd1c451f87bff8ff679858732e516ad04cd3402207af6edda99972af0baa7702a3b7448517c8242e7bca669f6861771cdd16ee058', '', ''],
+                        m: 2
+                    }
+                }
+            ];
+        }
+        
+        // send to PAYTOADDRESS output
+        var outputs = [{
+            script_type: 'PAYTOADDRESS',
+            amount: 100000,
+            address: '12iyMbUb4R2K3gre4dHSrbu5azG5KaqVss'
+        }];
 
-         // spend a multisig input
-         var inputs = [{
-             address_n: [1],
-             prev_index: 0,
-             prev_hash: 'd1d08ea63255af4ad16b098e9885a252632086fa6be53301521d05253ce8a73d',
-             script_type: 'SPENDMULTISIG',
-             multisig: {
-                 pubkeys: [{node: ext1, address_n: [1]},
-                           {node: ext2, address_n: [1]},
-                           {node: int1, address_n: [1]}],
-                 signatures: ['', '', ''],
-                 m: 2
-             }
-         }];
-
-         // send to PAYTOADDRESS output and a change output
-         var outputs = [{
-             script_type: 'PAYTOADDRESS',
-             amount: 50000,
-             address: '1FnY5UdbHHfVLiS3v1ntgtdNZn22pDPnVd'
-         }, {
-             script_type: 'PAYTOMULTISIG',
-             amount: 49000,
-             multisig: {
-                 pubkeys: [{node: ext1, address_n: [2]},
-                           {node: ext2, address_n: [2]},
-                           {node: int1, address_n: [2]}],
-                 signatures: ['', '', ''],
-                 m: 2
-             }
-         }];
-
-         TrezorConnect.signTx(inputs, outputs, function (response) {
+        TrezorConnect.signTx(inputs, outputs, function (response) {
              if (response.success) {
                  console.log('Serialized TX:', response.serialized_tx); // tx in hex
                  console.log('Signatures:', response.signatures); // array of signatures, in hex
@@ -54,14 +70,18 @@
                  console.error('Error:', response.error); // error message
              }
              document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
-         });
+        });
      }
 
     </script>
   </head>
   <body>
 
-    <button onclick="trezorSignTx()">Sign</button>
+    <p>This example requires a device loaded with seed:</p>
+    <pre>alcohol woman abuse must during monitor noble actual mixed trade anger aisle</pre>
+
+    <button onclick="trezorSignTx(1)">Sign with key 1</button>
+    <button onclick="trezorSignTx(2)">Sign with key 2</button>
 
     <pre id="response"></pre>
 

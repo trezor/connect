@@ -8,21 +8,21 @@
          // if we do not specify a path, account discovery is done and user is
          // presented with a list of accounts. node of the selected account is
          // then returned.
-         TrezorConnect.getXPubKey(null, function (response) {
-             if (response.success) {
-                 var accountIndex = response.path[response.path.length - 1] & ~0x80000000;
+        TrezorConnect.getXPubKey(null, function (response) {
+            if (response.success) {
+                var accountIndex = response.path[response.path.length - 1] & ~0x80000000;
 
-                 console.log('XPUB:', response.xpubkey); // serialized XPUB
-                 console.log('Raw path:', response.path);
-                 console.log('Serialized path:', response.serializedPath);
-                 console.log('Chaincode (hex):', response.chainCode);
-                 console.log('Public key (hex):', response.publicKey);
-                 console.log('Account index:', accountIndex); // index of BIP44 account
-             } else {
-                 console.error('Error:', response.error); // error message
-             }
-             document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
-         });
+                console.log('XPUB:', response.xpubkey); // serialized XPUB
+                console.log('Raw path:', response.path);
+                console.log('Serialized path:', response.serializedPath);
+                console.log('Chaincode (hex):', response.chainCode);
+                console.log('Public key (hex):', response.publicKey);
+                console.log('Account index:', accountIndex); // index of BIP44 account
+            } else {
+                console.error('Error:', response.error); // error message
+            }
+            document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+        });
      }
 
     </script>

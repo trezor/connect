@@ -4,30 +4,48 @@
     <title>TREZOR Compose & Sign Transaction Test</title>
     <script>
 
-     function trezorComposeTx() {
-         var address = document.getElementById('address').value;
-         var amount = document.getElementById('amount').value;
+    var backends = { };
+    backends['Bitcoin'] = ['https://btc-bitcore3.trezor.io', 'https://btc-bitcore1.trezor.io'];
+    backends['Bitcoin Cash'] = ['https://bch-bitcore2.trezor.io'];
+    backends['Litecoin'] = ['https://ltc-bitcore1.trezor.io', 'https://ltc-bitcore3.trezor.io'];
+    backends['Dash'] = ['https://dash-bitcore1.trezor.io', 'https://dash-bitcore3.trezor.io'];
+    backends['Zcash'] = ['https://zec-bitcore1.trezor.io'];
+    backends['Testnet'] = ['https://testnet-bitcore4.trezor.io'];
 
-         var outputs = [{
-             address: address,
-             amount: parseInt(amount)
-         }];
+    function trezorComposeTx() {
+        var coin = document.getElementById('coin').value;
+        var address = document.getElementById('address').value;
+        var amount = document.getElementById('amount').value;
 
-         TrezorConnect.closeAfterFailure(false);
-         TrezorConnect.composeAndSignTx(outputs, function (response) {
-             if (response.success) {
-                 console.log('Serialized TX:', response.serialized_tx); // tx in hex
-                 console.log('Signatures:', response.signatures); // array of signatures, in hex
-             } else {
-                 console.error('Error:', response.error); // error message
-             }
-             document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
-         });
-     }
+        var outputs = [{
+            address: address,
+            amount: parseInt(amount)
+        }];
+
+        TrezorConnect.setBitcoreURLS(backends[coin]);
+        TrezorConnect.composeAndSignTx(outputs, function (response) {
+            if (response.success) {
+                console.log('Serialized TX:', response.serialized_tx); // tx in hex
+                console.log('Signatures:', response.signatures); // array of signatures, in hex
+            } else {
+                console.error('Error:', response.error); // error message
+            }
+            document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+        });
+    }
 
     </script>
   </head>
   <body>
+    Coin:
+    <select id="coin">
+        <option selected>Bitcoin</option>
+        <option>Bitcoin Cash</option>
+        <option>Litecoin</option>
+        <option>Dash</option>
+        <option>Zcash</option>
+        <option>Testnet</option>
+    </select>
 
     Address: <input type="text" id="address" size="40"
                     value="17RdK7aSerDgahHu858MMRG82ePTQxytc4">
