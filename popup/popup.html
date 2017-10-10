@@ -8,7 +8,7 @@
     <title>TREZOR Connect</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
-    <link rel="stylesheet" href="./css/popup.css">
+    <link rel="stylesheet" href="./css/popup.css?v8">
   </head>
   <body>
     <div id="header">
@@ -124,14 +124,32 @@
         <div class="accounts_segwit_tab accounts_tab_active" onclick="switchAccountsTab('segwit')">Accounts</div>
         <div class="accounts_legacy_tab" onclick="switchAccountsTab('legacy')">Legacy Accounts</div>
       </div>
-      <div id="accounts"></div>
-      <div id="accounts-legacy"></div>
+      <div id="accounts">
+          <div class="account">
+              <button disabled>
+                  <span class="account-title">Account #1</span>
+                  <span class="account-status">Loading...</span>
+              </button>
+          </div>
+      </div>
+      <div id="accounts-legacy">
+          <div class="account">
+              <button disabled>
+                  <span class="account-title">Legacy Account #1</span>
+                  <span class="account-status">Loading...</span>
+              </button>
+          </div>
+      </div>
     </div>
 
     <div id="alert_fees" class="alert fadeout">
       <!-- content filled dynamically -->
       <p class="alert_heading"></p>
-      <div id="fees"></div>
+      <div class="change-account" onclick="selectFee('change_account')">
+        <span>Change account</span>
+      </div>
+      <div id="fees">
+      </div>
     </div>
 
     <div id="alert_xpubkey" class="alert fadeout">

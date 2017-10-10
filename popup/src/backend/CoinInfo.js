@@ -25,6 +25,7 @@ export type CoinInfo = {
     maxFeeSatoshiKb: number,
     blocktime: number,
     segwit: boolean,
+    hasSegwit: boolean,
     isBitcoin: boolean,
     forkid: ?number,
 };
@@ -84,6 +85,7 @@ const _waitForCoinInfo = (blockchain: BitcoreBlockchain): Promise<CoinInfo> => {
             console.log('[CoinInfo] Done reading coin; ' + (coinInfo == null ? 'nothing' : coinInfo.shortcut));
             console.log('[CoinInfo] Current backend URL : ' + blockchain.workingUrl);
             if (coinInfo != null) {
+                console.log("[CoinInfo] Loaded", coinInfo);
                 return coinInfo;
             } else {
                 console.error('Cannot find blockhash ', hash);
@@ -130,6 +132,7 @@ const parseCoinsJson = (coins: JSON): Array<CoinInfo> => {
         const blocktime = coin.blocktime_minutes;
         const forkid = coin.forkid;
         const segwit = coin.segwit;
+        const hasSegwit = coin.segwit;
         const isBitcoin = shortcut === 'BTC' || shortcut === 'TEST';
     
         return {
@@ -145,6 +148,7 @@ const parseCoinsJson = (coins: JSON): Array<CoinInfo> => {
             minFeeSatoshiKb,
             blocktime,
             segwit,
+            hasSegwit,
             isBitcoin,
             forkid,
         };

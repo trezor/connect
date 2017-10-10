@@ -1,30 +1,59 @@
-import * as _ from 'lodash';
+/* @flow */
+
+import { uniq, reverseBuffer } from '../utils/utils';
+import { fixPath, convertXpub } from '../utils/path';
+import { HD_HARDENED } from '../utils/constants';
 
 export default class ComposingTransaction {
+
+    backend: BitcoreBackend;
+    inputs: Array<TrezorInputs>;
+    outputs: Array<TrezorInputs>;
     
-    constructor(coinInfo, basePath, inputs, outputs) {
-        const inp = [];
-        for(let utxo of inputs){
-            inp.push({
-                hash: reverseBuffer(new Buffer(utxo.transactionHash, 'hex')),
-                index: utxo.index,
-                path: basePath.concat([...utxo.addressPath]),
-                amount: utxo.value,
-                segwit: coinInfo.segwit
-            })
-        }
-        this.inputs = inp;
+    constructor(backend, inputs, outputs) {
+        this.backend = backend;
+        this.inputs = inputs;
         this.outputs = outputs;
     }
 
-    getReferencedTx(backend, account) {
-        if (account.segwit || backend.coinInfo.forkid != null) {
-            return Promise.resolve([]);
+    getReferencedTx() {
+        const nonSegwitInputs = [];
+        for (let utxo of this.inputs) {
+            if (!utxo.segwit) {
+                nonSegwitInputs.push(utxo);
+            }
         }
-        const uins: Array<string> = uniq(this.inputs, inp => reverseBuffer(inp.hash).toString('hex')).map(tx => reverseBuffer(tx.hash).toString('hex'));
-        return Promise.all(
-            uins.map(id => backend.loadTransaction(account.info, id))
-        );
+
+        if (nonSegwitInputs.length < 1) {
+            return Promise.resolve([]);
+        } else {
+            //const uins: Array<string> = uniq(nonSegwitInputs, inp => reverseBuffer(inp.hash).toString('hex')).map(tx => reverseBuffer(tx.hash).toString('hex'));
+            const uins: Array<string> = uniq(this.inputs, inp => reverseBuffer(inp.hash).toString('hex')).map(tx => reverseBuffer(tx.hash).toString('hex'));
+            return Promise.all(
+                uins.map(id => this.backend.loadTransaction(id))
+            );
+        }
+    }
+    
+    // not used
+    checkInput(input) {
+        // check if input has all required fields
+        let isSegwit: boolean = (input.address_n[0] >>> 0) === ((49 | HD_HARDENED) >>> 0)
+        if (isSegwit) {
+            if (input.script_type && input.amount) {
+                return Promise.resolve(input);
+            }
+            return this.backend.loadTransaction(input.prev_hash)
+                .then(tx => {
+                    return {
+                        ...input,
+                        script_type: 'SPENDP2SHWITNESS',
+                        amount: tx.outs[input.prev_index].value
+                    }
+                })
+        } else {
+            return Promise.resolve(input);
+        }
     }
 
     getTx() {
@@ -35,145 +64,76 @@ export default class ComposingTransaction {
     }
 }
 
-const reverseBuffer = (src: Buffer): Buffer => {
-    const buffer = new Buffer(src.length);
-    for (let i = 0, j = src.length - 1; i <= j; ++i, --j) {
-        buffer[i] = src[j];
-        buffer[j] = src[i];
-    }
-    return buffer;
-}
+// signTX validation 
+export const validateInputs = (inputs) => {
+    const bitcoreInputs = [];
+    const trezorInputs = inputs.map(fixPath).map(convertXpub);
 
-export function uniq<X>(array: Array<X>, fun: (inp: X) => string | number): Array<X> {
-    return _.uniq(array, fun);
-}
-
-const TX_EMPTY_SIZE = 8;
-const TX_PUBKEYHASH_INPUT = 40 + 2 + 106;
-const TX_PUBKEYHASH_OUTPUT = 8 + 2 + 25;
-const INSUFFICIENT_FUNDS = new Error('Insufficient funds');
-
-export const selectUnspents = (unspents, outputs, feePerByte) => {
-    // based on https://github.com/dcousens/coinselect
-
-    let candidates = [];
-    let outgoing = 0;
-    let incoming = 0;
-    let byteLength = TX_EMPTY_SIZE;
-
-    unspents = unspents.slice().sort((a, b) => {
-        let ac = (a.confirmations || 0);
-        let bc = (b.confirmations || 0);
-        return (bc - ac) ||         // descending confirmations
-               (a.value - b.value); // ascending value
-    });
-
-    for (let i = 0; i < outputs.length; i++) {
-        outgoing += outputs[i].amount;
-        byteLength += TX_PUBKEYHASH_OUTPUT;
-    }
-
-    for (let i = 0; i < unspents.length; i++) {
-        incoming += unspents[i].value;
-        byteLength += TX_PUBKEYHASH_INPUT;
-
-        candidates.push(unspents[i]);
-
-        if (incoming < outgoing) {
-            // don't bother with fees until we cover all outputs
-            continue;
+    for (let utxo of trezorInputs) {
+        let segwit = (utxo.address_n[0] >>> 0) === ((49 | HD_HARDENED) >>> 0);
+        if (segwit) {
+            if (!utxo.amount) throw new Error('Input amount not set');
+            if (!utxo.script_type) throw new Error('Input script_type not set');
+            //if (utxo.script_type !== 'SPENDP2SHWITNESS') throw new Error('Input script_type should be set to SPENDP2SHWITNESS');
         }
 
-        let baseFee = estimateFee(byteLength, feePerByte);
-        let total = outgoing + baseFee;
-
-        if (incoming < total) {
-            // continue until we can afford the base fee
-            continue;
-        }
-
-        let feeWithChange = estimateFee(byteLength + TX_PUBKEYHASH_OUTPUT, feePerByte);
-        let totalWithChange = outgoing + feeWithChange;
-
-        // can we afford a change output?
-        if (incoming >= totalWithChange) {
-            let change = incoming - totalWithChange;
-            return {
-                inputs: candidates,
-                change: change,
-                fee: feeWithChange
-            };
-        } else {
-            let fee = incoming - total;
-            return {
-                inputs: candidates,
-                change: 0,
-                fee: fee
-            };
-        }
+        bitcoreInputs.push({
+            hash: reverseBuffer(new Buffer(utxo.prev_hash, 'hex')),
+            index: utxo.prev_index,
+            path: utxo.address_n,
+            amount: utxo.amount,
+            segwit: segwit
+        });
     }
 
-    throw INSUFFICIENT_FUNDS;
+    return { trezorInputs, bitcoreInputs };
 }
 
-const estimateFee = (byteLength, feePerByte) => {
-    return byteLength * feePerByte;
-}
-
-export const findInputs = (utxos, inputs) => {
-    let found = [];
-    for(let input of utxos){
-        for (let inp of inputs) {
-            if (input.transactionHash === inp.prev_hash) {
-                found.push(input);
+// signTX validation 
+export const validateOutputs = (outputs) => {
+    const trezorOutputs = outputs.map(fixPath).map(convertXpub);
+    for (let output of trezorOutputs) {
+        if (output.address_n) {
+            let segwit = (output.address_n[0] >>> 0) === ((49 | HD_HARDENED) >>> 0);
+            if (segwit) {
+                if (output.script_type !== 'PAYTOP2SHWITNESS') throw new Error('Output change script_type should be set to PAYTOP2SHWITNESS');
             }
         }
     }
-    return found;
+    return trezorOutputs;
 }
 
-export const transformResTxs = (refTxs) => {
-    const refs = [];
-    for (let r of refTxs) {
-        refs.push({
-            hash: reverseBuffer(r.getHash()).toString('hex'),
-            //hash: "4e1ecd39f37a900bb670491909ceaf7982fc3b70a6ad4bb071705166a825ac55",
-            version: r.version,
-            lock_time: r.locktime,
-            inputs: r.ins.map(input => {
-                let hash = input.hash.slice();
-                Array.prototype.reverse.call(hash);
-                return {
-                    prev_hash: hash.toString('hex'),
-                    prev_index: input.index >>> 0,
-                    sequence: input.sequence >>> 0,
-                    script_sig: input.script.toString('hex')
-                };
-            }),
-            bin_outputs: r.outs.map(output => {
-                return {
-                    amount: output.value,
-                    script_pubkey: output.script.toString('hex')
-                };
-            })
-        });
+export const transformResTxs = (tx: bitcoin.Transaction): trezor.RefTransaction => {
+    const data = getJoinSplitData(tx);
+    const dataStr = data == null ? null : data.toString('hex');
+    return {
+        lock_time: tx.locktime,
+        version: tx.version,
+        hash: tx.getId(),
+        inputs: tx.ins.map((input: bitcoin.Input) => {
+            return {
+                prev_index: input.index,
+                sequence: input.sequence,
+                prev_hash: reverseBuffer(input.hash).toString('hex'),
+                script_sig: input.script.toString('hex'),
+            };
+        }),
+        bin_outputs: tx.outs.map((output: bitcoin.Output) => {
+            return {
+                amount: output.value,
+                script_pubkey: output.script.toString('hex'),
+            };
+        }),
+        extra_data: dataStr,
+    };
+}
+
+function getJoinSplitData(transaction) {
+    if (transaction.version < 2) {
+        return null;
     }
-    return refs;
+    var buffer = transaction.toBuffer();
+    var joinsplitByteLength = transaction.joinsplitByteLength();
+    var res = buffer.slice(buffer.length - joinsplitByteLength);
+    return res;
 }
-
-
-
-// export const parseOutput2bjs = (output) => {
-//     const out = {
-//         amount: output.amount,
-//         value: output.amount
-//     }
-
-//     if (output.address_n || output.path) {
-//         out.path = output.address_n || output.path;
-//     }
-//     if (output.address) {
-//         out.address = output.address;
-//     }
-//     return out;
-// }

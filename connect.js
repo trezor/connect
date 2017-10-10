@@ -43,13 +43,6 @@ this.TrezorConnect = (function () {
         POPUP_PATH = POPUP_ORIGIN;
     }
     var POPUP_URL = window.TREZOR_POPUP_URL || POPUP_PATH + '/popup/popup.html';
-    
-
-    var INSIGHT_URLS = window.TREZOR_INSIGHT_URLS || 
-        [
-            'https://btc-bitcore1.trezor.io/api/',
-            'https://btc-bitcore3.trezor.io/api/',
-        ];
 
     var POPUP_INIT_TIMEOUT = 15000;
 
@@ -198,10 +191,9 @@ this.TrezorConnect = (function () {
 
         this.getAccountInfo = function (input, callback, requiredFirmware) {
             try {
-                var description = parseAccountInfoInput(input);
                 manager.sendWithChannel(_fwStrFix({
                     type: 'accountinfo',
-                    description: description
+                    description: input
                 }, requiredFirmware), callback);
             } catch(e) {
                 callback({success: false, error: e});
@@ -548,35 +540,10 @@ this.TrezorConnect = (function () {
                 throw new TypeError('TrezorConnect: callback not found');
             }
 
-            var tryUrl = function(i) {
-                var insight_url = INSIGHT_URLS[i];
-                var xhr = new XMLHttpRequest();
-                var method = 'POST';
-                var url = insight_url + '/tx/send';
-                var data = {
-                    rawtx: rawTx
-                };
-
-                xhr.open(method, url, true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === XMLHttpRequest.DONE) {
-                        if (xhr.status === 200) {
-                            var txid = JSON.parse(xhr.responseText).txid;
-                            callback({success: true, txid: txid});
-                        } else {
-                            if (i === INSIGHT_URLS.length - 1) {
-                                callback({error: new Error(xhr.responseText)});
-                            } else {
-                                tryUrl(i + 1);
-                            }
-                        }
-                    }
-                };
-                xhr.send(JSON.stringify(data));
-            }
-
-            tryUrl(0);
+            manager.sendWithChannel({
+                type: 'pushtx',
+                rawTx: rawTx,
+            }, callback);
         }
 
         /**
@@ -696,59 +663,6 @@ this.TrezorConnect = (function () {
                 }
                 return n;
             });
-    }
-
-
-    function getIdFromPath(path) {
-        if (path.length !== 3) {
-            throw new Error();
-        }
-        if ((path[0] >>> 0) !== ((44 | HD_HARDENED) >>> 0)) {
-            throw new Error();
-        }
-        if ((path[1] >>> 0) !== ((0 | HD_HARDENED) >>> 0)) {
-            throw new Error();
-        }
-        return ((path[2] & ~HD_HARDENED) >>> 0);
-    }
-
-    function checkHDPath(path) {
-        if (typeof path === 'number') {
-            return [
-                (49 | HD_HARDENED) >>> 0,
-                (0 | HD_HARDENED) >>> 0,
-                (path | HD_HARDENED) >>> 0
-            ];
-        }
-        if (path.length !== 3) {
-            throw new Error();
-        }
-        path[0] = path[0] >>> 0;
-        path[1] = path[1] >>> 0;
-        path[2] = path[2] >>> 0;
-        return path;
-    }
-
-    // parses first argument from getAccountInfo
-    function parseAccountInfoInput(input) {
-        if (input == null) {
-            return null;
-        }
-        if (typeof input === 'string') {
-            if (input.substr(0, 4) === 'xpub') {
-                return input;
-            }
-            if (isNaN(input)) {
-                return parseHDPath(input);
-            } else {
-                return checkHDPath(parseInt(input));
-            }
-        } else if (Array.isArray(input)) {
-            return checkHDPath(input);
-        } else if (typeof input === 'number') {
-            return checkHDPath(input);
-        }
-        throw new Error('Unknown input format.');
     }
 
     /*

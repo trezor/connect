@@ -32,13 +32,13 @@
   },
   "homepage": "https://github.com/trezor/connect",
   "dependencies": {
-    "bip32-utils": "^0.6.2",
-    "bip44-constants": "^2.3.0",
+    "bip32-utils": "^0.10.0",
+    "bip44-constants": "^3.0.0",
     "bitcoinjs-lib-zcash": "^3.0.0",
     "bowser": "^1.0.0",
     "cb-insight": "^0.1.0",
-    "es6-promise": "^2.3.0",
-    "hd-wallet": "^3.5.2",
+    "es6-promise": "^4.1.1",
+    "hd-wallet": "3.5.2",
     "trezor.js": "6.1.0",
     "whatwg-fetch": "^0.11.0"
   },
