@@ -25,7 +25,7 @@ export const xpubKeyLabel = (path) => {
         let coinName = getCoinName(path[1]);
         return `${coinName} account #${hardened(2) + 1}`;
     }
-    if (path[0] === 45342) {
+    if (hardened(0) === 45342) {
         if (hardened(1) === 44) {
             return `Copay ID of account #${hardened(2) + 1}`;
         }
