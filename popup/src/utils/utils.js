@@ -1,5 +1,6 @@
 import 'whatwg-fetch';
 import semvercmp from 'semver-compare';
+import * as _ from 'lodash';
 
 export const httpRequest = (url: string, json: boolean): any => {
     return fetch(url).then((response) => {
@@ -15,6 +16,7 @@ export const formatTime = (n) => {
     let hours = Math.floor(n / 60);
     let minutes = n % 60;
     
+    if (!n) return 'No time estimate';
     let res = '';
     if (hours != 0) {
         res += hours + ' hour';
@@ -29,13 +31,17 @@ export const formatTime = (n) => {
     return res;
 }
 
-export const formatAmount = (n) => {
-    if ((n / 1e8) < 0.1 && n != 0) {
+export const formatAmount = (n, coinInfo = null, mbtc: boolean = true) => {
+
+    let amount = (n / 1e8);
+    if (coinInfo.isBitcoin && mbtc && amount < 0.1 && n != 0) {
         let s = (n / 1e5).toString();
         return `${s} mBTC`;
     }
-    let s = (n / 1e8).toString();
-    return `${s} BTC`;
+    
+    let s = amount.toString();
+    //return `${s} BTC`;
+    return `${s} ${coinInfo.shortcut}`;
 }
 
 
@@ -68,4 +74,45 @@ export const parseRequiredFirmware = (firmware, requiredFirmware) => {
         console.error(e);
     }
     return null;
+}
+
+export function sortBy<X>(array: Array<X>, fun: (x: X) => Array<number>, inplace: boolean = false): Array<X> {
+    const copy = inplace ? array : array.slice();
+    copy.sort((a, b) => {
+        const aArr = fun(a);
+        const bArr = fun(b);
+        if (aArr.length !== bArr.length) {
+            throw new Error('Different array length');
+        }
+        for (let i = 0; i < aArr.length; i++) {
+            const aVal = aArr[i];
+            const bVal = bArr[i];
+            if (aVal !== bVal) {
+                return aVal - bVal;
+            }
+        }
+        return 0;
+    });
+    return copy;
+}
+
+export function range(a: number, b?: number): Array<number> {
+    return _.range(a, b);
+}
+
+export function at<X>(array: Array<X>, permutation: Array<number>): Array<X> {
+    return _.at(array, permutation);
+}
+
+export function uniq<X>(array: Array<X>, fun: (inp: X) => string | number): Array<X> {
+    return _.uniq(array, fun);
+}
+
+export const reverseBuffer = (src: Buffer): Buffer => {
+    const buffer = new Buffer(src.length);
+    for (let i = 0, j = src.length - 1; i <= j; ++i, --j) {
+        buffer[i] = src[j];
+        buffer[j] = src[i];
+    }
+    return buffer;
 }

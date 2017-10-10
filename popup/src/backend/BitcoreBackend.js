@@ -22,6 +22,9 @@ import {
 import { waitForCoinInfo } from './CoinInfo';
 import type { CoinInfo } from './CoinInfo';
 
+
+import { bitcoreFeeLevels, preloadFeeLevel, deriveFeeListFromBitcore, getRecommendedFees } from './recommendedFees';
+
 const getBitcoreServer = {};
 const splitUrls = {};
 let coinInfo: ?CoinInfo;
@@ -55,11 +58,11 @@ function createDiscoveryWorker(): Worker {
 const trezorCryptoURL = './js/trezor-crypto-dist.js';
 
 export const create = (urls: Array<string>, coinInfoUrl: string): Promise<void> => {
-    let b = new TrezorBitcoreBackend({ bitcoreURL: urls });
-    return waitForCoinInfo(b.blockchain, coinInfoUrl).then(ci => {
+    const backend: TrezorBitcoreBackend = new TrezorBitcoreBackend({ bitcoreURL: urls });
+    return waitForCoinInfo(backend.blockchain, coinInfoUrl).then(ci => {
         coinInfo = ci;
-        b.setCoinInfo(ci);
-        return b;
+        backend.setCoinInfo(ci);
+        return backend;
     }).catch(error => {
         throw error;
     });
@@ -149,7 +152,7 @@ export default class TrezorBitcoreBackend {
         return res;
     }
 
-    loadTransaction(account: AccountInfo, id: string): Promise<BitcoinJsTransaction> {
+    loadTransaction(id: string): Promise<BitcoinJsTransaction> {
         return this.blockchain.lookupTransaction(id).then((tx) => {
             return BitcoinJsTransaction.fromHex(tx.hex, tx.zcash);
         });
@@ -178,5 +181,18 @@ export default class TrezorBitcoreBackend {
 
     hasError(): boolean {
         return this.lastError;
+    }
+
+    loadFees(): any {
+        const blockquery = bitcoreFeeLevels.reduce((pr, level) => pr.concat([level.info.blocks, level.info.blocks + 1]), []);
+        return this.blockchain.estimateTxFees(blockquery, true).then(fees => {
+            let feesList: Array<FeeLevel>;
+            if (feesList !== null) {
+                feesList = deriveFeeListFromBitcore(fees);
+            } else {
+                feesList = preloadFeeLevel(this.coinInfo);
+            }
+            return getRecommendedFees(feesList, this.coinInfo);
+        });
     }
 }

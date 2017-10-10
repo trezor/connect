@@ -12,13 +12,14 @@ import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as trezor from 'trezor.js';
 import * as hd from 'hd-wallet';
 
-import TrezorAccount, { discoverAccounts, discoverAllAccounts } from './account/Account';
+import TrezorAccount from './account/Account';
+import { discoverAccounts, discoverAllAccounts, stopAccountsDiscovery } from './account/discovery';
 import BitcoreBackend, { create as createBitcoreBackend } from './backend/BitcoreBackend';
-import ComposingTransaction, { findInputs, transformResTxs } from './backend/ComposingTransaction';
-import { httpRequest, formatTime, formatAmount, parseRequiredFirmware } from './utils/utils';
-import { serializePath } from './utils/path';
+import ComposingTransaction, { transformResTxs, validateInputs, validateOutputs } from './backend/ComposingTransaction';
+import { httpRequest, formatAmount, parseRequiredFirmware } from './utils/utils';
+import { serializePath, validateAccountInfoDescription } from './utils/path';
 import * as Constants from './utils/constants';
-import { xpubKeyLabel, promptInfoPermission } from './view';
+import { promptInfoPermission, promptXpubKeyPermission, showSelectionFees, CHANGE_ACCOUNT } from './view';
 
 var bip44 = require('bip44-constants')
 var semvercmp = require('semver-compare');
@@ -30,7 +31,6 @@ const SCRIPT_TYPES = {
     [NETWORK.scriptHash]: 'PAYTOSCRIPTHASH'
 };
 const CONFIG_URL = './config_signed.bin';
-const HD_HARDENED = 0x80000000;
 
 var CHUNK_SIZE = 20;
 var GAP_LENGTH = 20;
@@ -119,6 +119,10 @@ function onMessage(event) {
 
     case 'signethtx':
         handleEthereumSignTx(event);
+        break;
+
+    case 'pushtx':
+        handlePushTx(event);
         break;
 
     case 'composetx':
@@ -500,33 +504,7 @@ function handleXpubKey(event) {
         });
 }
 
-function promptXpubKeyPermission(path) {
-    return new Promise((resolve, reject) => {
-        let e = document.getElementById('xpubkey_id');
-        e.textContent = xpubKeyLabel(path);
-        e.callback = (exportXpub) => {
-            showAlert(global.alert);
-            if (exportXpub) {
-                resolve(path);
-            } else {
-                reject(new Error('Cancelled'));
-            }
-        };
-        showAlert('#alert_xpubkey');
-    });
-}
 
-function exportXpubKey() {
-    document.querySelector('#xpubkey_id').callback(true);
-}
-
-window.exportXpubKey = exportXpubKey;
-
-function cancelXpubKey() {
-    document.querySelector('#xpubkey_id').callback(false);
-}
-
-window.cancelXpubKey = cancelXpubKey;
 
 /*
  * Fresh address 
@@ -539,11 +517,14 @@ function getAccountByDescription(description) {
     if(description === 'all'){
         return waitForAllAccounts();
     }
-    if (typeof description === 'string' && description.substring(0,4) === 'xpub') {
-        return getAccountByXpub(description);
-    }
     if (Array.isArray(description)) {
         return getAccountByHDPath(description);
+    }
+    // if (typeof description === 'object') {
+    //     return getAccountByXpub(description.xpub);
+    // }
+    if (typeof description === 'string') {
+        return getAccountByXpub(description);
     }
     throw new Error('Wrongly formatted description.');
 }
@@ -637,9 +618,13 @@ function handleAllAccountsInfo(event) {
 function handleAccountInfo(event) {
     show('#operation_accountinfo');
 
-    let description = event.data.description;
-    initDevice()
-        .then((device) => {
+    return getBitcoreBackend()
+    .then(() => {
+        return validateAccountInfoDescription(event.data.description, backend);
+    })
+    .then(description => {
+        return initDevice()
+        .then(device => {
             return getAccountByDescription(description)
                 .then((account) => {
                     return {
@@ -673,10 +658,11 @@ function handleAccountInfo(event) {
                 });
             });  
         })
-        .catch((error) => { // failure
-            console.error(error);
-            respondToEvent(event, {success: false, error: error.message});
-        });
+    })
+    .catch((error) => { // failure
+        console.error(error);
+        respondToEvent(event, {success: false, error: error.message});
+    });
 }
 
 function handleEthereumSignTx(event) {
@@ -741,61 +727,26 @@ function handleEthereumSignTx(event) {
  */
 
 function handleSignTx(event) {
-    let fixPath = (o) => {
-        if (o.address_n) {
-            // make sure bip32 indices are unsigned
-            o.address_n = o.address_n.map((i) => i >>> 0);
-        }
-        return o;
-    };
-    let convertXpub = (o) => {
-        if (o.multisig && o.multisig.pubkeys) {
-            // convert xpubs to HDNodeTypes
-            o.multisig.pubkeys.forEach((pk) => {
-                if (typeof pk.node === 'string') {
-                    pk.node = xpubToHDNodeType(pk.node);
-                }
-            });
-        }
-        return o;
-    };
-    let inputs = event.data.inputs.map(fixPath).map(convertXpub);
-    let outputs = event.data.outputs.map(fixPath).map(convertXpub);
-    let coin = event.data.coin || COIN_NAME;
-
+    
     show('#operation_signtx');
 
     initDevice()
 
         .then((device) => {
-            let signTx = (account) => {
-                let handler = errorHandler(() => signTx(refTxs));
-
-                const coinInfo = backend.coinInfo;
-                const inp = findInputs(account.getUtxos(), inputs);
-                if (inp.length !== inputs.length) {
-                    throw new Error('Input not found');
-                }
-                const tx = new ComposingTransaction(coinInfo, account.basePath, inp, []);
-                return tx.getReferencedTx(backend, account, true)
-                .then(refTxs => {
-                    const rt = transformResTxs(refTxs);
-                    return device.session.signTx(
-                        inputs,
-                        outputs,
-                        rt,
-                        device.getCoin(coin)
-                    );
-                }).catch(handler);
-            };
+            const { trezorInputs, bitcoreInputs } = validateInputs(event.data.inputs);
+            const outputs = validateOutputs(event.data.outputs);
             return getBitcoreBackend().then(() => {
-                const inputPath = inputs[0].address_n;
-                const path = inputPath.slice(0, 3);
-                return TrezorAccount.fromPath(global.device, backend, path).then(account => {
-                    return account.discover().then(() => {
-                        return signTx(account);
-                    });
+                const tx = new ComposingTransaction(backend, bitcoreInputs, outputs);
+                return tx.getReferencedTx().then(refTxs => {
+                    const ref = refTxs.map(r => transformResTxs(r));
+                    return device.session.signTx(
+                        trezorInputs,
+                        outputs,
+                        ref,
+                        backend.coinInfo.name
+                    );
                 });
+
             });
         })
         .then((result) => { // success
@@ -817,19 +768,23 @@ function handleSignTx(event) {
         });
 }
 
-function xpubToHDNodeType(xpub) {
-    let hd = bitcoin.HDNode.fromBase58(xpub);
-    return {
-        depth: hd.depth,
-        child_num: hd.index,
-        fingerprint: hd.parentFingerprint,
-        public_key: hd.keyPair.getPublicKeyBuffer().toString('hex'),
-        chain_code: hd.chainCode.toString('hex')
-    };
-}
-
-function lookupReferencedTxs(inputs, blockchain) {
-    return Promise.all(inputs.map((input) => lookupTx(input.prev_hash, blockchain)));
+function handlePushTx(event) {
+    const { rawTx } = event.data;
+    getBitcoreBackend().then(() => {
+        backend.sendTransactionHex(rawTx)
+        .then(txid => {
+            respondToEvent(event, {
+                success: true,
+                type: 'pushtx',
+                txid: txid
+            });
+        })
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+    });
+    
 }
 
 /*
@@ -880,147 +835,111 @@ function handleEthereumGetAddress(event) {
  * composetx
  */
 
-const FEE_LEVELS = [
-    {
-        name: 'High',
-        noDelay: true,
-        minutes: 35,
-    }, {
-        name: 'Normal',
-        noDelay: false,
-        minutes: 60,
-    }, {
-        name: 'Economy',
-        noDelay: false,
-        minutes: 6 * 60,
-    }, {
-        name: 'Low',
-        noDelay: false,
-        minutes: 24 * 60,
-    },
-];
-
-function recommendFee(level, feeList, previous) {
-    const minutes = level.minutes;
-    let noDelay = level.noDelay;
-    if (noDelay) {
-        if (feeList.fees.filter(interval => interval.maxDelay === 0).length === 0) {
-            noDelay = false;
-        }
-    }
-
-    if (minutes < 35) {
-        return recommendFee({...level, minutes: 35}, feeList, previous);
-    }
-    const correct = feeList.fees.filter(interval => {
-        const correctMinutes = interval.maxMinutes <= minutes;
-        if (noDelay) {
-            return correctMinutes && interval.maxDelay === 0;
-        }
-        return correctMinutes;
-    }).filter(interval => {
-        return previous.filter(p => p.maxFee <= interval.maxFee).length === 0;
-    });
-
-    correct.sort((a, b) => a.maxFee - b.maxFee);
-    if (correct.length === 0) {
-        return recommendFee({...level, minutes: minutes + 5}, feeList, previous);
-    }
-
-    return {
-        ...correct[0],
-        name: level.name
-    };
-}
-
-function download21coFees() {
-    return httpRequest('https://bitcoinfees.21.co/api/v1/fees/list', true)
-        .catch((err) => {
-            console.error(err);
-            return null;
-        });
-}
-
-function findAllRecommendedFeeLevels() {
-    return download21coFees().then(downloaded => {
-        if (downloaded == null) {
-            return null;
-        } else {
-            const res = [];
-            FEE_LEVELS.forEach(level => {
-                const fee = recommendFee(level, downloaded, res);
-                res.push(fee);
-            });
-            return res;
-        }
-    });
-}
-
-const HARDCODED_FEE_PER_BYTE = 60;
-
 function handleComposeTx(event) {
     let recipients = event.data.recipients;
 
-    show('#operation_composetx');
-
-    let total = recipients.reduce((t, r) => t + r.amount, 0);
-    document.querySelector('#composetx_amount').textContent = formatAmount(total);
-
     initDevice()
-
         .then((device) => {
-            const feesP = findAllRecommendedFeeLevels();
 
-            let composeTx = () => {
-                let handler = errorHandler(composeTx);
+            const composeTx = () => {
+
+                show('#operation_composetx');
+                let total = recipients.reduce((t, r) => t + r.amount, 0);
+                document.querySelector('#composetx_amount').textContent = formatAmount(total, backend.coinInfo);
+
                 return waitForAccount()
                     .then((account) => {
-                        return feesP.then(fees => {
-                            if (fees == null) {
-                                // special case - if fees not loaded, just one tx
-                                return account.composeTx(recipients, HARDCODED_FEE_PER_BYTE);
-                            } else {
-                                // make one transaction for every fee level
-                                // so we can later show user all
-                                // and he picks one
-                                return Promise.all(fees.map(fee => {
-                                    const tx = account.composeTx(recipients, fee.maxFee)
-                                    return {
-                                        ...fee,
-                                        tx
-                                    };
-                                }));
-                            }
-                        })
-                    }).catch(handler);
+
+                        return backend.loadFees().then(fees => {
+                            return Promise.all(fees.map(feeLevel => {
+                                // compose tx for every fee level
+                                return account.composeTx(recipients, feeLevel.fee, true)
+                                    .then(tx => {
+                                        return {
+                                            ...feeLevel,
+                                            tx
+                                        };
+                                    }).catch(error => {
+                                        if (error.message === 'Insufficient input') {
+                                            throw INSUFFICIENT_FUNDS;
+                                        }
+                                        return {
+                                            ...feeLevel
+                                        };
+                                    });
+                            }));
+                        });
+                    })
+                    .then(composeCustomTx)
+                    .then(chooseTxFee)
+                    .catch(errorHandler(composeTx));
             };
 
-            let chooseTxFee = (transactions) => {
-                return feesP.then(fees => {
-                    if (fees == null) {
-                        // special case - if fees not loaded, just one tx
-                        return transactions.converted;
-                    } else {
-                        return waitForFee(transactions);
+            const composeCustomTx = (transactions) => {
+                const minFee: number = backend.coinInfo.minFeeSatoshiKb / 1000;
+                const lowFee: number = transactions[ transactions.length - 1].fee;
+
+                // check if afford to spend with predefined fee
+                const affordLow = transactions.reduce((prev, out) => { return out.tx ? prev + 1 : prev }, 0);
+                
+                if (affordLow < 1) {
+                    const quarter: number = lowFee / 4;
+                    let customFee: number = minFee;
+                    const feesToTry: Array<number> = [];
+                    while (customFee < lowFee) {
+                        feesToTry.push(customFee);
+                        customFee = Math.floor(customFee + quarter);
                     }
+
+                    return new Promise((resolve, reject) => {
+                        Promise.all(feesToTry.map(fee => {
+                            return account.composeTx(recipients, fee, true)
+                            .then(tx => {
+                                return fee;
+                            }).catch(error => {
+                                return 0;
+                            }); 
+                        })).then(customFees => {
+                            const maxCustomFee = customFees.reduce((prev, out) => { return out > 0 ? out : prev }, 0);
+                            if (maxCustomFee > 0) {
+                                resolve({ transactions, defaultCustomFee: maxCustomFee })
+                            } else {
+                                reject(INSUFFICIENT_FUNDS);
+                            }
+                        });
+                    });
+
+                } else {
+                    return Promise.resolve({ transactions, defaultCustomFee: lowFee });
+                }
+            }
+
+            const chooseTxFee = ({transactions, defaultCustomFee}) => {
+                return showSelectionFees(transactions, defaultCustomFee, backend.coinInfo, (fee: number) => {
+                    // function called from UI when fee is changed
+                    return account.composeTx(recipients, fee, true)
+                        .catch(error => {
+                            console.log("composeTx Error", error);
+                            return null;
+                        });
                 });
             }
 
-            return composeTx()
-                .then(chooseTxFee)
+            return getBitcoreBackend() 
+                .then(composeTx)
                 .then(({inputs, outputs, account}) => {
+                    backend.coinInfo.segwit = account.segwit;
                     const coinInfo = backend.coinInfo;
-                    const tx = new ComposingTransaction(coinInfo, account.getPath(), inputs, outputs);
-                    return tx.getReferencedTx(backend, account).then(refTxs => {
+                    const tx = new ComposingTransaction(backend, inputs, outputs);
+                    return tx.getReferencedTx().then(refTxs => {
                         const node = bitcoin.HDNode.fromBase58(account.getXpub(), coinInfo.network);
                         return device.session.signBjsTx(tx.getTx(), refTxs, [node.derive(0), node.derive(1)], coinInfo.name, coinInfo.network);
                     });
-                });
+                })
         })
         .then((result) => { // success
             //const signatures = result.getHash();
             const serialized_tx = result.toHex();
-
             return global.device.session.release().then(() => {
                 respondToEvent(event, {
                     success: true,
@@ -1120,9 +1039,11 @@ function errorHandler(retry) {
         case INSUFFICIENT_FUNDS:
             showAlert('#alert_insufficient_funds');
             return resolveAfter(2500).then(retry);
-        }
+        case CHANGE_ACCOUNT: // import from view
+            return resolveAfter(500).then(retry);
+    }
 
-        switch (error.code) { // 'Failure' messages
+    switch (error.code) { // 'Failure' messages
 
         case 'Failure_PinInvalid':
             document.querySelector('#pin').value = '';
@@ -1229,22 +1150,18 @@ function getBitcoreBackend() {
     });
 }
 
-const TX_EMPTY_SIZE = 8;
-const TX_PUBKEYHASH_INPUT = 40 + 2 + 106;
-const TX_PUBKEYHASH_OUTPUT = 8 + 2 + 25;
-
 function showSelectionAccounts(device) {
     const discoveredAccounts = [];
 
     const onUpdate = (a) => {
         discoveredAccounts.push(a);
     }
-    getBitcoreBackend().then(b => {
+    getBitcoreBackend().then(() => {
         discoverAccounts(device, backend, onUpdate, ACCOUNT_DISCOVERY_LIMIT);
-        window.selectAccountError = null;
+       window.selectAccountError = null;
     }).catch(error => {
-        window.selectAccountError(error);
-        window.selectAccountError = null;
+       window.selectAccountError(error);
+       window.selectAccountError = null;
     })
     return selectAccount(discoveredAccounts);
 }
@@ -1253,6 +1170,9 @@ function selectAccount(accounts) {
     return new Promise((resolve, reject) => {
         window.selectAccountError = reject;
         window.selectAccount = (index) => {
+
+            stopAccountsDiscovery();
+
             window.selectAccount = null;
             showAlert('#alert_loading');
             document.querySelector('#alert_accounts .accounts_tab').classList.remove('visible');
@@ -1279,58 +1199,6 @@ function waitForAllAccounts() {
     return getBitcoreBackend().then(b => {
         return discoverAllAccounts(global.device, backend, ACCOUNT_DISCOVERY_LIMIT);
     }).catch(error => { throw error; });
-}
-
-
-function showSelectionFees(device, transactions) {
-    let heading = document.querySelector('#alert_fees .alert_heading');
-
-    showAlert('#alert_fees');
-    global.alert = '#alert_fees';
-
-    heading.textContent = 'Select fee:';
-
-    let components = transactions.map((transactionFeeInfo, i) => {
-        let feeNameObj = '';
-        if (transactionFeeInfo.name === 'Normal') {
-            feeNameObj = 
-                `
-                <span class="fee-name-normal">${transactionFeeInfo.name}</span>
-                <span class="fee-name-subtitle">recommended</span>
-                `;
-        } else {
-            feeNameObj = `<span class="fee-name">${transactionFeeInfo.name}</span>`;
-        }
-        return `
-            <div class="fee">
-              <button onclick="selectFee(${i})">
-              ${feeNameObj}
-              <span class="fee-size">${formatAmount(transactionFeeInfo.tx.fee)}</span>
-              <span class="fee-minutes">${formatTime(transactionFeeInfo.maxMinutes)}</span>
-              </button>
-            </div>
-        `;
-    });
-
-    document.querySelector('#fees').innerHTML = components.join('');
-
-    return selectFee(transactions);
-}
-
-function waitForFee(transactions) {
-    return showSelectionFees(global.device, transactions)
-        .catch(errorHandler(waitForFee));
-}
-
-function selectFee(transactions) {
-    return new Promise((resolve) => {
-        window.selectFee = (i) => {
-            window.selectFee = null;
-            document.querySelector('#fees').innerHTML = '';
-            document.querySelector('#alert_fees .alert_heading').innerHTML = '';
-            resolve(transactions[i].tx.converted);
-        };
-    });
 }
 
 /*
@@ -1464,36 +1332,6 @@ window.passphraseEnter = passphraseEnter;
  * utils
  */
 
-function lookupTx(hash, blockchain) {
-    return blockchain.lookupTransaction(hash)
-        .then((txinfo) => {
-            let tx = txinfo.tx;
-
-            return {
-                hash: hash,
-                version: tx.version,
-                lock_time: tx.locktime,
-                inputs: tx.ins.map((input) => {
-                    let hash = input.hash.slice();
-
-                    Array.prototype.reverse.call(hash);
-
-                    return {
-                        prev_hash: hash.toString('hex'),
-                        prev_index: input.index >>> 0,
-                        sequence: input.sequence >>> 0,
-                        script_sig: input.script.toString('hex')
-                    };
-                }),
-                bin_outputs: tx.outs.map((output) => {
-                    return {
-                        amount: output.value,
-                        script_pubkey: output.script.toString('hex')
-                    };
-                })
-            };
-        });
-}
 
 function clickMatchingElement(ev, keys, active = 'active') {
     let s = keys[ev.keyCode.toString()];
