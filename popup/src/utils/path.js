@@ -56,9 +56,7 @@ export const validateAccountInfoDescription = (description, backend) => {
 
     const error = new Error('Unknown description format.');
     const coinInfo = backend.coinInfo;
-
-    console.log("COININFO", description, typeof description)
-
+    
     // no description given. let user pick account
     if (description == null) {
         return null;
