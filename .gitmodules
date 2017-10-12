@@ -2,3 +2,6 @@
 	path = popup/trezor-crypto
 	url = https://github.com/trezor/trezor-crypto.git
 	branch = master
+[submodule "popup/trezor-common"]
+	path = popup/trezor-common
+	url = https://github.com/trezor/trezor-common.git
