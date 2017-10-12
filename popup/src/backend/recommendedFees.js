@@ -150,7 +150,7 @@ export const getRecommendedFees = (fees: Array<FeeLevel>, coinInfo: CoinInfo): A
             {
                 name: level.name,
                 fee: fee,
-                minutes: level.info.blocks * 10
+                minutes: level.info.blocks * coinInfo.blocktime
             }
         ]);
     }, []);
