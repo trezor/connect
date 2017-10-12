@@ -128,7 +128,8 @@ export const preloadFeeLevel = (coinInfo: CoinInfo) => {
             name: level.toLowerCase(),
             id: i,
             info: {
-                fee: coinInfo.defaultFees[level] / 10e5,
+                // converting sat/B -> btc/B
+                fee: coinInfo.defaultFees[level] / 10e4,
                 blocks: 0
             }
         };
@@ -141,7 +142,8 @@ export const getRecommendedFees = (fees: Array<FeeLevel>, coinInfo: CoinInfo): A
     const feeList: Array<Object> = [];
 
     return fees.reduce((prev, level) => {
-        const fee = Math.max( Math.round(level.info.fee * 10e5), minFee);
+                                        // converting btc/B -> sat/B
+        const fee = Math.max( Math.round(level.info.fee * 10e4), minFee);
         // TODO: altcoins should have 1 fee (normal) 
 
         return prev.concat([
