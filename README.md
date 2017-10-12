@@ -50,7 +50,7 @@ With regards to this repo - All updates should go to `master` branch, the releas
 2. [Export public key](#export-public-key)
 3. [Sign transaction](#sign-transaction)
 4. [Request payment](#request-payment) (including broadcasting the resulting transaction to the network)
-5. [Sign message](#sign-message)
+5. [Sign & Verify message](#sign-message)
 6. [Symmetric key-value encryption](#symmetric-key-value-encryption)
 7. [Get account info](#get-account-info) (including info about balance and first unused address)
 
@@ -153,11 +153,12 @@ written in various languages:
 `TrezorConnect.getXPubKey(path, callback)` retrieves BIP32 extended public key
 by path. User is presented with a description of the requested key and asked to
 confirm the export.
+
 If you want to use this method with altcoins you need to set currency using method:
 ```javascript
     TrezorConnect.setCurrency(coin);
 ```
-where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json) file.
+where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json){:target="_blank"} file.
 By default currency is set to Bitcoin.
 
 [Example:](examples/xpubkey.html)
@@ -196,7 +197,7 @@ If you want to use this method with altcoins you need to set currency using meth
 ```javascript
     TrezorConnect.setCurrency(coin);
 ```
-where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json) file.
+where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json){:target="_blank"} file.
 By default currency is set to Bitcoin.
 
 [PAYTOADDRESS example:](examples/signtx-paytoaddress.html)
@@ -301,7 +302,7 @@ If you want to use this method with altcoins you need to set currency using meth
 ```javascript
     TrezorConnect.setCurrency(coin);
 ```
-where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json) file.
+where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json){:target="_blank"} file.
 By default currency is set to Bitcoin.
 
 [Example:](examples/composetx.html)
