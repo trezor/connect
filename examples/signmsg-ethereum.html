@@ -50,8 +50,6 @@
               address.value = "";
               messageV.value = "";
               signature.value = "";
-              address.appendChild(document.createTextNode("Error: " + response.error));
-              
           }
           document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
       }, '1.5.1');

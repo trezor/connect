@@ -3,37 +3,33 @@
   <head>
     <title>TREZOR Get account info</title>
     <script>
-
+    
+    // Predefined xpub are taken from device loaded with seed account#1:
+    // alcohol woman abuse must during monitor noble actual mixed trade anger aisle
     var backends = { };
     backends['Bitcoin'] = {
-        path: "m/44'/0'/0'",
-        xpub: "xpub6D1weXBcFAo8CqBbpP4TbH5sxQH8ZkqC5pDEvJ95rNNBZC9zrKmZP2fXMuve7ZRBe18pWQQsGg68jkq24mZchHwYENd8cCiSb71u3KD4AFH",
-        bitcore: ['https://btc-bitcore3.trezor.io', 'https://btc-bitcore1.trezor.io']
+        path: "m/49'/0'/0'",
+        xpub: "xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G"
     };
     backends['Bitcoin Cash'] = {
         path: "m/44'/145'/0'",
-        xpub: "xpub6CAgnVoFsaZ3iMaW4jmUpvCvduYGEF1b2g5PQjBQ6oWWyqEpufNRMBN1b4MQaWubnGAnTBt1pEQSwAUaFxNz8B6Ct8fq5s6RYhshNMYK4uk",
-        bitcore: ['https://bch-bitcore2.trezor.io']
+        xpub: "xpub6CAgnVoFsaZ3iMaW4jmUpvCvduYGEF1b2g5PQjBQ6oWWyqEpufNRMBN1b4MQaWubnGAnTBt1pEQSwAUaFxNz8B6Ct8fq5s6RYhshNMYK4uk"
     }
     backends['Litecoin'] = {
-        path: "m/44'/2'/0'",
-        xpub: "Ltub2ZY3zDdgLLb2UQLdVgJTM77kVvZ4u9qDjHpyjtnGFUkt51GmrPLS61M5RJqPxeq8UbSB6YM9pZEEPDm32TNxZkG9H3SdLxr8rdLaqes6n1d",
-        bitcore: ['https://ltc-bitcore1.trezor.io', 'https://ltc-bitcore3.trezor.io']
+        path: "m/49'/2'/0'",
+        xpub: "Ltub2Z4jpCH28E2PzUxcKrAf7dtkRVJc2CtKBcb6F46kkVHUTiMeSBAAHvZ5SxAVCGgUXsHPNN6tig79P6frgVCixL3ZdBzEqmiLZdzc27JrwT8"
     };
     backends['Dash'] = {
         path: "m/44'/5'/0'",
-        xpub: "drkpRywR124kcbPosMejUj1JLQqZwQaxDMKvS7siuP9wBNsPAVzaSHAvTmbYfhdtXtsfN6Rgj2v6m1gb28Xd3Hx3nDZrsuZB6sPZL4mS7VHBHew",
-        bitcore: ['https://dash-bitcore1.trezor.io', 'https://dash-bitcore3.trezor.io']
+        xpub: "drkpRywR124kcbPosMejUj1JLQqZwQaxDMKvS7siuP9wBNsPAVzaSHAvTmbYfhdtXtsfN6Rgj2v6m1gb28Xd3Hx3nDZrsuZB6sPZL4mS7VHBHew"
     }
     backends['Zcash'] = {
         path: "m/44'/133'/0'",
-        xpub: "xpub6BswZtAuSYus2zqBgxxVZNd7FBxYZsoeVKzksuCEjASGkHNPcyTfeK7oY8XNxbdUvVDUzyCTgDPUvQW8bKZH5DCdn2GTQSMM3b9QDpqRGSK",
-        bitcore: ['https://zec-bitcore1.trezor.io']
+        xpub: "xpub6BswZtAuSYus2zqBgxxVZNd7FBxYZsoeVKzksuCEjASGkHNPcyTfeK7oY8XNxbdUvVDUzyCTgDPUvQW8bKZH5DCdn2GTQSMM3b9QDpqRGSK"
     }
     backends['Testnet'] = {
-        path: "m/44'/1'/0'",
-        xpub: "tpubDCknDegFqAdP4V2AhHhs635DPe8N1aTjfKE9m2UFbdej8zmeNbtqDzK59SxnsYSRSx5uS3AujbwgANUiAk4oHmDNUKoGGkWWUY6c48WgjEx",
-        bitcore: ['https://testnet-bitcore4.trezor.io']
+        path: "m/49'/1'/0'",
+        xpub: "tpubDDfS76c9NLz6v8CxwsCBi6YFcW463axCZpc3FR26othehmeXowmSBJ6TVPYYqhkekpivwRgkvdHgy8bCp5eHrqu33bGanQQH2qnVbPLUJEh"
     }
 
     function trezorGetAccountInfo(elementID) {
@@ -73,7 +69,7 @@
         // this one is from test account, specified here
         // https://github.com/satoshilabs/slips/blob/master/slip-0014.md
 
-        TrezorConnect.setBitcoreURLS(backends[coin].bitcore);
+        TrezorConnect.setCurrency(coin);
         TrezorConnect.getAccountInfo(description, function (response) {
             if (response.success) {
                 console.log('Account ID: ', response.id);
@@ -99,7 +95,6 @@
         var coin = document.getElementById('coin').value;
         document.getElementById('account_path').value = backends[coin].path;
         document.getElementById('account_xpub').value = backends[coin].xpub;
-        console.log("coin", coin);
     }
 
     </script>
@@ -135,7 +130,7 @@
 
     <hr />
 
-    <input id="account_path" type="text" value="m/44'/0'/0'" />
+    <input id="account_path" type="text" value="m/49'/0'/0'" />
     <br />
     <button onclick="trezorGetAccountInfo('account_path')">Get account info using path</button>
     <hr />

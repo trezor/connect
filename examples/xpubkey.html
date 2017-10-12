@@ -2,31 +2,84 @@
 <html>
   <head>
     <title>TREZOR Get XPUB Key Test</title>
+    <style>
+    input[type="text"]:disabled {
+        background: #dddddd;
+    }
+    </style>
     <script>
 
-     function trezorGetXPubKey() {
-         var path = "m/49'/0'/0'"; // first BIP44 account
+    function trezorGetXPubKey() {
+        var path = document.getElementById('account_path').value;
+        var coin = document.getElementById('coin').value;
 
-         // var path = [44 | 0x80000000,
-         //             0  | 0x80000000,
-         //             0  | 0x80000000 ]; // same, in raw form
+        if (path.lenght < 1 || document.getElementById('account_path').disabled) path = null;
 
-         TrezorConnect.getXPubKey(path, function (response) {
-             if (response.success) {
-                 console.log('XPUB:', response.xpubkey); // serialized XPUB
-                 console.log('Raw path:', response.path);
-                 console.log('Serialized path:', response.serializedPath);
-             } else {
-                 console.error('Error:', response.error); // error message
-             }
-             document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
-         });
-     }
+        // var path = [44 | 0x80000000,
+        //             0  | 0x80000000,
+        //             0  | 0x80000000 ]; // path in raw form
+
+        TrezorConnect.setCurrency(coin); // set backend
+        TrezorConnect.getXPubKey(path, function (response) {
+            if (response.success) {
+                console.log('XPUB:', response.xpubkey); // serialized XPUB
+                console.log('Raw path:', response.path);
+                console.log('Serialized path:', response.serializedPath);
+            } else {
+                console.error('Error:', response.error); // error message
+            }
+            document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+        });
+    }
+
+    function handleCoinChange() {
+
+        var defaultPaths = {
+            "Bitcoin":       "m/49'/0'/0'",
+            "Bitcoin Cash":  "m/44'/145'/0'",
+            "Litecoin":      "m/49'/2'/0'",
+            "Dogecoin":      "m/44'/3'/0'",
+            "Dash":          "m/44'/5'/0'",
+            "Zcash":         "m/44'/133'/0'",
+            "Testnet":       "m/49'/1'/0'",
+            "Namecoin":      "m/44'/7'/0'",
+        }
+
+        var coin = document.getElementById('coin').value;
+        document.getElementById('account_path').value = defaultPaths[coin];
+
+        var checkbox = document.getElementById('discovery')
+        if (coin === 'Dogecoin' || coin === 'Namecoin') {
+            checkbox.checked = false;
+            checkbox.disabled = true;
+            document.getElementById('account_path').disabled = false;
+        } else {
+            checkbox.disabled = false;
+        }
+    }
+
+    function handleDiscoveryChange(element) {
+        document.getElementById('account_path').disabled = element.checked;
+    }
 
     </script>
   </head>
   <body>
 
+    Coin:
+    <select id="coin" onchange="handleCoinChange()">
+        <option selected>Bitcoin</option>
+        <option>Bitcoin Cash</option>
+        <option>Litecoin</option>
+        <option>Dogecoin</option>
+        <option>Dash</option>
+        <option>Zcash</option>
+        <option>Testnet</option>
+        <option>Namecoin</option>
+    </select>
+
+    <input id="account_path" type="text" value="m/49'/0'/0'" />
+    <input type="checkbox" id="discovery" onchange="handleDiscoveryChange(this)" /> Discover account
     <button onclick="trezorGetXPubKey()">Get XPUB key</button>
 
     <pre id="response"></pre>
