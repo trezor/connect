@@ -138,3 +138,7 @@ function checkHDPath(path) {
     path[2] = path[2] >>> 0;
     return path;
 }
+
+export const isSegwitPath = (path) => {
+    return (path[0] >>> 0) === ((49 | HD_HARDENED) >>> 0);
+}

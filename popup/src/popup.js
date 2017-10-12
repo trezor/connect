@@ -18,7 +18,7 @@ import BitcoreBackend, { create as createBitcoreBackend } from './backend/Bitcor
 import { getCoinInfoByCurrency } from './backend/CoinInfo';
 import ComposingTransaction, { transformResTxs, validateInputs, validateOutputs } from './backend/ComposingTransaction';
 import { httpRequest, setCurrencyUnits, formatAmount, parseRequiredFirmware } from './utils/utils';
-import { serializePath, validateAccountInfoDescription } from './utils/path';
+import { serializePath, isSegwitPath, validateAccountInfoDescription } from './utils/path';
 import * as Constants from './utils/constants';
 import { promptInfoPermission, promptXpubKeyPermission, showSelectionFees, CHANGE_ACCOUNT } from './view';
 
@@ -278,11 +278,11 @@ function handleSignMsg(event) {
 
         .then(function signMessage(device) { // send SignMessage
             let handler = errorHandler(() => signMessage(device));
-
             return device.session.signMessage(
                 requestedPath,
                 message,
-                coin
+                coin,
+                isSegwitPath(requestedPath)
             ).catch(handler);
         })
 
@@ -872,6 +872,10 @@ function handleComposeTx(event) {
                 return waitForAccount()
                     .then((account) => {
 
+                        if (total <= backend.coinInfo.dustLimit) {
+                            throw AMOUNT_TOO_LOW;
+                        }
+
                         return backend.loadFees().then(fees => {
                             return Promise.all(fees.map(feeLevel => {
                                 // compose tx for every fee level
@@ -1031,6 +1035,7 @@ const DEVICE_IS_EMPTY = new Error('Connected device is not initialized');
 const FIRMWARE_IS_OLD = new Error('Firmware of connected device is too old');
 
 const INSUFFICIENT_FUNDS = new Error('Insufficient funds');
+const AMOUNT_TOO_LOW = new Error('Amount is to low');
 
 function errorHandler(retry) {
     return (error) => {
@@ -1061,6 +1066,9 @@ function errorHandler(retry) {
         case INSUFFICIENT_FUNDS:
             showAlert('#alert_insufficient_funds');
             return resolveAfter(2500).then(retry);
+        // case AMOUNT_TOO_LOW:
+        //     showAlert('#alert_amount_too_low');
+        //     return resolveAfter(2500).then(retry);
         case CHANGE_ACCOUNT: // import from view
             return resolveAfter(500).then(retry);
     }

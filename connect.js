@@ -405,7 +405,7 @@ this.TrezorConnect = (function () {
                 type: 'signmsg',
                 path: path,
                 message: message,
-                coin: {coin_name: opt_coin},
+                coin: opt_coin,
             }, requiredFirmware), callback);
         };
 
