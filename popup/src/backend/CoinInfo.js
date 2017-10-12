@@ -98,19 +98,48 @@ const _waitForCoinInfo = (blockchain: BitcoreBlockchain): Promise<CoinInfo> => {
     });
 }
 
-export const waitForCoinInfo = (bl: BitcoreBlockchain, coinInfoUrl: string): Promise<CoinInfo> => {
+export const waitForCoinInfo = (backend: BitcoreBlockchain, coinInfoUrl: string): Promise<CoinInfo> => {
+    if (!coins) {
+        return loadCoinInfo(coinInfoUrl).then(resp => {
+            return _waitForCoinInfo(backend).catch(e => { throw e });
+        });
+    } else {
+        return _waitForCoinInfo(backend).catch(e => { throw e });
+    }
+    // return httpRequest(coinInfoUrl, true).then(resp => {
+    //     coins = parseCoinsJson(resp);
+    //     return _waitForCoinInfo(backend).catch(e => { throw e });
+    // }).catch(error => {
+    //     throw new Error('Coin info file not found at ' + coinInfoUrl);
+    // })
+}
+
+export const loadCoinInfo = (coinInfoUrl: string): Promise<Array<CoinInfo>> => {
     return httpRequest(coinInfoUrl, true).then(resp => {
         coins = parseCoinsJson(resp);
-        return _waitForCoinInfo(bl).catch(e => { throw e });
+        return coins;
     }).catch(error => {
         throw new Error('Coin info file not found at ' + coinInfoUrl);
     })
 }
 
+export const getBitcoreUrls = (currency: string): Array<string> => {
+    let bitcore: Array<string> = [];
+    let lower: string = currency.toLowerCase();
+    coins.map((coin: CoinInfo) => {
+        if (coin.name.toLowerCase() === lower|| coin.shortcut.toLowerCase() === lower || coin.label.toLowerCase() === lower) {
+            bitcore = bitcore.concat(coin.bitcore);
+        }
+    });
+    return bitcore;
+}
+
+
 const parseCoinsJson = (coins: JSON): Array<CoinInfo> => {
     return coins.map(coin => {
         const name = coin.coin_name;
         const shortcut = coin.coin_shortcut;
+        const label = coin.coin_label;
         const network: BitcoinJsNetwork = {
             messagePrefix: 'N/A',
             bip32: {
@@ -134,10 +163,12 @@ const parseCoinsJson = (coins: JSON): Array<CoinInfo> => {
         const segwit = coin.segwit;
         const hasSegwit = coin.segwit;
         const isBitcoin = shortcut === 'BTC' || shortcut === 'TEST';
+        const bitcore = coin.bitcore;
     
         return {
             name,
             shortcut,
+            label,
             network,
             hashGenesisBlock,
             bip44,
@@ -151,6 +182,7 @@ const parseCoinsJson = (coins: JSON): Array<CoinInfo> => {
             hasSegwit,
             isBitcoin,
             forkid,
+            bitcore,
         };
     });
 }

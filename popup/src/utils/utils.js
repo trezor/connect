@@ -31,16 +31,18 @@ export const formatTime = (n) => {
     return res;
 }
 
-export const formatAmount = (n, coinInfo = null, mbtc: boolean = true) => {
+let currencyUnits = 'mbtc';
+export const setCurrencyUnits = (units) => {
+    currencyUnits = units;
+}
 
+export const formatAmount = (n, coinInfo) => {
     let amount = (n / 1e8);
-    if (coinInfo.isBitcoin && mbtc && amount < 0.1 && n != 0) {
+    if (coinInfo.isBitcoin && currencyUnits === 'mbtc' && amount < 0.1 && n != 0) {
         let s = (n / 1e5).toString();
         return `${s} mBTC`;
     }
-    
     let s = amount.toString();
-    //return `${s} BTC`;
     return `${s} ${coinInfo.shortcut}`;
 }
 

@@ -18,8 +18,7 @@ import {
     Transaction as BitcoinJsTransaction,
 } from 'bitcoinjs-lib-zcash';
 
-//import { getBitcoreServer, splitUrls } from '../common/SettingsService';
-import { waitForCoinInfo } from './CoinInfo';
+import { loadCoinInfo, getBitcoreUrls, waitForCoinInfo } from './CoinInfo';
 import type { CoinInfo } from './CoinInfo';
 
 
@@ -57,15 +56,37 @@ function createDiscoveryWorker(): Worker {
 // this gets compiled or something by emscripten, not sure where from
 const trezorCryptoURL = './js/trezor-crypto-dist.js';
 
-export const create = (urls: Array<string>, coinInfoUrl: string): Promise<void> => {
-    const backend: TrezorBitcoreBackend = new TrezorBitcoreBackend({ bitcoreURL: urls });
-    return waitForCoinInfo(backend.blockchain, coinInfoUrl).then(ci => {
-        coinInfo = ci;
-        backend.setCoinInfo(ci);
-        return backend;
-    }).catch(error => {
-        throw error;
-    });
+export const create = (urlsOrCurrency: Array<string> | string, coinInfoUrl: string): Promise<void> => {
+    let backend: TrezorBitcoreBackend; 
+
+    if (typeof urlsOrCurrency === 'string') {
+        // get bitcore urls from coins.json using currency name/shortcut
+        return loadCoinInfo(coinInfoUrl).then( (coins:Array<CoinInfo>) => {
+            const urls: Array<string> = getBitcoreUrls(urlsOrCurrency);
+            if (!urls || urls.length < 1) {
+                throw new Error('Bitcore urls not found for ' + urlsOrCurrency);
+            }
+            backend = new TrezorBitcoreBackend({ bitcoreURL: urls });
+            return waitForCoinInfo(backend.blockchain, coinInfoUrl).then(ci => {
+                coinInfo = ci;
+                backend.setCoinInfo(ci);
+                return backend;
+            });
+        }).catch(error => {
+            throw error;
+        });
+    } else {
+        // get bitcore from bitcoreURLS
+        backend = new TrezorBitcoreBackend({ bitcoreURL: urlsOrCurrency });
+        return waitForCoinInfo(backend.blockchain, coinInfoUrl).then(ci => {
+            coinInfo = ci;
+            backend.setCoinInfo(ci);
+            return backend;
+        }).catch(error => {
+            throw error;
+        });
+    }
+    
 }
 
 export default class TrezorBitcoreBackend {

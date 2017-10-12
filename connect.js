@@ -109,6 +109,26 @@ this.TrezorConnect = (function () {
         }
 
         /**
+         * Set currency. Human readable coin name
+         * @param {string|Array<string>} value
+         */
+        this.setCurrency = function(value) {
+            if (typeof value === 'string') {
+                manager.currency = value;
+            }
+        }
+
+        /**
+         * Set currency units (mBTC, BTC)
+         * @param {string|Array<string>} value
+         */
+        this.setCurrencyUnits = function(value) {
+            if (typeof value === 'string') {
+                manager.currencyUnits = value;
+            }
+        }
+
+        /**
          * Set coin info json url
          * @param {string|Array<string>} value
          */
@@ -912,6 +932,8 @@ this.TrezorConnect = (function () {
 
         this.sendWithChannel = function (message, callback) {
             message.bitcoreURLS = this.bitcoreURLS || null;
+            message.currency = this.currency || null;
+            message.currencyUnits = this.currencyUnits || null;
             message.coinInfoURL = this.coinInfoURL || null;
             message.accountDiscoveryLimit = this.accountDiscoveryLimit || null;
             message.accountDiscoveryGapLength = this.accountDiscoveryGapLength || null;
