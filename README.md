@@ -158,7 +158,7 @@ If you want to use this method with altcoins you need to set currency using meth
 ```javascript
     TrezorConnect.setCurrency(coin);
 ```
-where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json){:target="_blank"} file.
+where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json) file.
 By default currency is set to Bitcoin.
 
 [Example:](examples/xpubkey.html)
@@ -197,7 +197,7 @@ If you want to use this method with altcoins you need to set currency using meth
 ```javascript
     TrezorConnect.setCurrency(coin);
 ```
-where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json){:target="_blank"} file.
+where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json) file.
 By default currency is set to Bitcoin.
 
 [PAYTOADDRESS example:](examples/signtx-paytoaddress.html)
@@ -302,7 +302,7 @@ If you want to use this method with altcoins you need to set currency using meth
 ```javascript
     TrezorConnect.setCurrency(coin);
 ```
-where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json){:target="_blank"} file.
+where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json) file.
 By default currency is set to Bitcoin.
 
 [Example:](examples/composetx.html)
