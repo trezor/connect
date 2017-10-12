@@ -20,7 +20,7 @@ export const showSelectionFees = (transactions, defaultCustomFee, coinInfo, comp
 
     let components = transactions.map((transactionFeeInfo, i) => {
         let feeNameObj = '';
-        if (transactionFeeInfo.name === 'normal') {
+        if (transactionFeeInfo.name === 'normal' && transactionFeeInfo.tx) {
             feeNameObj = `
                 <span class="fee-name-normal">${transactionFeeInfo.name}</span>
                 <span class="fee-name-subtitle">recommended</span>
