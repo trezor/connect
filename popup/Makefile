@@ -7,11 +7,13 @@ SOCKET_WORKER_TARGET=js/socket-worker-dist.js
 DISCOVERY_WORKER_TARGET=js/discovery-worker-dist.js
 TREZOR_CRYPTO=trezor-crypto/emscripten/trezor-crypto.js
 TREZOR_CRYPTO_TARGET=js/trezor-crypto-dist.js
+COINS_JSON=trezor-common/coins.json
+COINS_JSON_TARGET=coins.json
 
 
-.PHONY: build clean node_modules
+.PHONY: build clean node_modules submodules
 
-build: ${ENTRY} ${SOCKET_WORKER} ${DISCOVERY_WORKER} node_modules
+build: ${ENTRY} ${SOCKET_WORKER} ${DISCOVERY_WORKER} node_modules submodules
 	${BIN}/browserify ${ENTRY} \
 		-g [ uglifyify ] \
 		-d \
@@ -25,6 +27,7 @@ build: ${ENTRY} ${SOCKET_WORKER} ${DISCOVERY_WORKER} node_modules
 		-d \
 	| ${BIN}/exorcist ${DISCOVERY_WORKER_TARGET}.map > ${DISCOVERY_WORKER_TARGET}
 	cp ${TREZOR_CRYPTO} ${TREZOR_CRYPTO_TARGET}
+	cp ${COINS_JSON} ${COINS_JSON_TARGET}
 
 build-fast: 
 	${BIN}/browserify ${ENTRY} \
@@ -32,10 +35,12 @@ build-fast:
 		-d \
 	| ${BIN}/exorcist ${TARGET}.map > ${TARGET}
 
-
 clean:
 	rm -f ${TARGET} ${TARGET}.map
 	rm -f ${TARGET_WORKER} ${TARGET_WORKER}.map
 
 node_modules:
 	yarn
+
+submodules:
+	git submodule update
