@@ -15,14 +15,14 @@ User needs to confirm actions on his TREZOR:
 
 More general (and slightly obsolete) info can be found [here](https://doc.satoshilabs.com/trezor-tech/api-connect.html).
 
-Examples of usage can be found on https://connect.trezor.io/2/examples/
+Examples of usage can be found on https://connect.trezor.io/4/examples/
 
 ## Usage
 
 First, you need to include the library in your page:
 
 ```html
-<script src="https://connect.trezor.io/2/connect.js"></script>
+<script src="https://connect.trezor.io/4/connect.js"></script>
 ```
 
 All API calls have a callback argument.  Callback is guaranteed to get called
@@ -40,10 +40,10 @@ require that firmware version or newer (for example, 1.4.0 for Ethereum support)
 We started tagging versions and releasing them to separate URLs, so we don't break
 any existing (and working) integrations.
 
-Currently, we are at version 2, which has an url `https://connect.trezor.io/2/connect.js`. The older version
-at `https://trezor.github.io/connect/connect.js` is still working, but new features are not being added.
+Currently, we are at version 4, which has an url `https://connect.trezor.io/4/connect.js`. The older version
+at `https://trezor.github.io/connect/connect.js`, `https://connect.trezor.io/3/connect.js`, `https://connect.trezor.io/2/connect.js` is still working, but new features are not being added.
 
-With regards to this repo - All updates should go to `master` branch, the releases are tagged. The `gh-pages` is the same older version, that is used at `trezor.github.io/connect/connect.js`, and it's there for backwards compatibility; please don't touch.
+With regards to this repo - All updates should go to `master` branch, the releases are in corresponding branches. The `gh-pages` is the same older version, that is used at `trezor.github.io/connect/connect.js`, and it's there for backwards compatibility; please don't touch.
 
 
 1. [Login](#login)
@@ -151,8 +151,14 @@ written in various languages:
 ## Export public key
 
 `TrezorConnect.getXPubKey(path, callback)` retrieves BIP32 extended public key
-by path.  User is presented with a description of the requested key and asked to
+by path. User is presented with a description of the requested key and asked to
 confirm the export.
+If you want to use this method with altcoins you need to set currency using method:
+```javascript
+    TrezorConnect.setCurrency(coin);
+```
+where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json) file.
+By default currency is set to Bitcoin.
 
 [Example:](examples/xpubkey.html)
 
@@ -163,6 +169,7 @@ var path = "m/44'/0'/0'"; // first BIP44 account
 //             0  | 0x80000000,
 //             0  | 0x80000000]; // same, in raw form
 
+TrezorConnect.setCurrency('BTC');
 TrezorConnect.getXPubKey(path, function (result) {
     if (result.success) {
         console.log('XPUB:', result.xpubkey); // serialized XPUB
@@ -185,6 +192,12 @@ details on TREZOR.
 - `inputs`: array of [`TxInputType`](https://github.com/trezor/trezor-common/blob/master/protob/types.proto#L145-L158)
 - `outputs`: array of [`TxOutputType`](https://github.com/trezor/trezor-common/blob/master/protob/types.proto#L160-L172)
 
+If you want to use this method with altcoins you need to set currency using method:
+```javascript
+    TrezorConnect.setCurrency(coin);
+```
+where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json) file.
+By default currency is set to Bitcoin.
 
 [PAYTOADDRESS example:](examples/signtx-paytoaddress.html)
 
@@ -207,6 +220,7 @@ var outputs = [{
     script_type: 'PAYTOADDRESS'
 }];
 
+TrezorConnect.setCurrency('BTC');
 TrezorConnect.signTx(inputs, outputs, function (result) {
     if (result.success) {
         console.log('Transaction:', result.serialized_tx); // tx in hex
@@ -239,6 +253,7 @@ var outputs = [{
     script_type: 'PAYTOADDRESS'
 }];
 
+TrezorConnect.setCurrency('BTC');
 TrezorConnect.signTx(inputs, outputs, function (result) {
     if (result.success) {
         console.log('Transaction:', result.serialized_tx); // tx in hex
@@ -282,6 +297,13 @@ selecting an account, transaction is composed by internal coin-selection
 preferences.  Transaction is then signed and returned in the same format as
 `signTx`.  Change output is added automatically, if needed.
 
+If you want to use this method with altcoins you need to set currency using method:
+```javascript
+    TrezorConnect.setCurrency(coin);
+```
+where coin is a string parameter with coin_name, coin_shortcut or coin_label declared in [`coins.json`](https://github.com/trezor/trezor-common/blob/master/coins.json) file.
+By default currency is set to Bitcoin.
+
 [Example:](examples/composetx.html)
 
 ```javascript
@@ -321,17 +343,23 @@ TrezorConnect.composeAndSignTx(outputs, function (result) {
 
 ```
 
-## Sign message
+## Sign & Verify message
 
-`TrezorConnect.signMessage(path, message, callback [,coin])` asks device to
+`TrezorConnect.signMessage(path, message, callback [, coin])` asks device to
 sign a message using the private key derived by given BIP32 path. Path can be specified
 either as an array of numbers or as string m/A'/B'/C/...
 
 Message is signed and address + signature is returned
 
+`TrezorConnect.verifyMessage(address, signature, message, callback [, coin])` asks device to
+verify a message using the address and signature.
+
+Message is verified and success is returned.
+
 [Example:](examples/signmsg.html)
 
 ```javascript
+// Sign message
 var path="m/44'/0'/0";
 var message='Example message';
 
@@ -343,13 +371,25 @@ TrezorConnect.signMessage(path, message, function (result) {
         console.error('Error:', result.error); // error message
     }
 });
+
+// Verify message
+var address = '1FS8haK8SCjUyMHCCiDAFLoDD1kQBwc7Zk';
+var signature = 'H4P2mQ0Bc/o5gZ+VU+zclw+ls7c2zLM/g5TfnEzkwdOlJQaEo2OqYwwa5uh+NH71IoOVzMSFPCGA4+7dTy16DQc=';
+
+TrezorConnect.verifyMessage(address, signature, message, function (result) {
+    if (response.success) {
+        console.log("Success! Verified.");
+    } else {
+        console.log(response.error);
+    }
+});
 ```
 
 **note:** The argument coin is optional and defaults to "Bitcoin" if missing.
 
 The message can be UTF-8; however, TREZOR is not displaying non-ascii characters, and third-party apps are not dealing with them correctly either. Therefore, using ASCII only is recommended.
 
-## Sign Ethereum message
+## Sign & Verify Ethereum message
 
 `TrezorConnect.ethereumSignMessage(path, message, callback)` asks device to
 sign a message using the private key derived by given BIP32 path. Path can be specified
