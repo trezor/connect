@@ -208,7 +208,7 @@ export default class TrezorBitcoreBackend {
         const blockquery = bitcoreFeeLevels.reduce((pr, level) => pr.concat([level.info.blocks, level.info.blocks + 1]), []);
         return this.blockchain.estimateTxFees(blockquery, true).then(fees => {
             let feesList: Array<FeeLevel>;
-            if (fees && fees.length > 0) {
+            if (fees && Object.keys(fees).length > 0) {
                 feesList = deriveFeeListFromBitcore(fees);
             } else {
                 feesList = preloadFeeLevel(this.coinInfo);
