@@ -15,6 +15,7 @@ import * as hd from 'hd-wallet';
 import TrezorAccount from './account/Account';
 import { discoverAccounts, discoverAllAccounts, stopAccountsDiscovery } from './account/discovery';
 import BitcoreBackend, { create as createBitcoreBackend } from './backend/BitcoreBackend';
+import { getCoinInfoByCurrency } from './backend/CoinInfo';
 import ComposingTransaction, { transformResTxs, validateInputs, validateOutputs } from './backend/ComposingTransaction';
 import { httpRequest, setCurrencyUnits, formatAmount, parseRequiredFirmware } from './utils/utils';
 import { serializePath, validateAccountInfoDescription } from './utils/path';
@@ -466,9 +467,9 @@ function handleCipherKeyValue(event) {
  * xpubkey
  */
 
-function getPublicKey(path) {
+function getPublicKey(path, coinName) {
     let handler = errorHandler(() => getPublicKey(path));
-    return global.device.session.getPublicKey(path)
+    return global.device.session.getPublicKey(path, coinName)
         .then((result) => ({result, path}))
         .catch(handler);
 }
@@ -491,7 +492,12 @@ function handleXpubKey(event) {
 
             if (requestedPath) {
                 return getPermission(requestedPath)
-                    .then(getPublicKey);
+                    .then(path => {
+                        return getCoinInfoByCurrency(COIN_INFO_URL, CURRENCY ? CURRENCY : 'Bitcoin')
+                            .then(coinInfo => {
+                                return getPublicKey(path, coinInfo.name);
+                            });
+                    })
             } else {
                 return waitForAccount()
                     .then((account) => account.getPath())

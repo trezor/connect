@@ -347,6 +347,11 @@ input[type="password"] {
     margin-bottom: 20px;
 }
 
+#alert_accountinfo,
+#alert_xpubkey {
+    margin-top: 110px;
+}
+
 
 
 /* #alert_accounts.loading #accounts,
