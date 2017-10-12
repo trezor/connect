@@ -358,6 +358,10 @@ input[type="password"] {
     margin: 0px;
 }
 
+#alert_accounts .alert_heading strong {
+    font-weight: 300;
+}
+
 #alert_accounts.no-segwit .alert_heading {
     margin-bottom: 10px;
 }

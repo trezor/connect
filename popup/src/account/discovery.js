@@ -13,7 +13,8 @@ export const discoverAccounts = (device, backend, onUpdate, limit) => {
     showAlert('#alert_accounts');
     const container = document.querySelector('#alert_accounts');
     const heading = document.querySelector('#alert_accounts .alert_heading');
-    heading.textContent = 'Loading accounts...';
+    const coinName = backend.coinInfo.label;
+    heading.innerHTML = `Loading <strong>${coinName}</strong> accounts...`;
 
     const hasSegwit = (backend.coinInfo.hasSegwit && backend.coinInfo.forkid === null);
     if (!hasSegwit) {
@@ -42,7 +43,7 @@ export const discoverAccounts = (device, backend, onUpdate, limit) => {
                         return inside(0);
                     } else {
                         global.alert = '#alert_loading';
-                        heading.textContent = 'Select an account:';
+                        heading.innerHTML = `Select an <strong>${coinName}</strong> account:`;
                         container.classList.remove('loading');
                         
                         return accounts;

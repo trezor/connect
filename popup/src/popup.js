@@ -16,7 +16,7 @@ import TrezorAccount from './account/Account';
 import { discoverAccounts, discoverAllAccounts, stopAccountsDiscovery } from './account/discovery';
 import BitcoreBackend, { create as createBitcoreBackend } from './backend/BitcoreBackend';
 import ComposingTransaction, { transformResTxs, validateInputs, validateOutputs } from './backend/ComposingTransaction';
-import { httpRequest, formatAmount, parseRequiredFirmware } from './utils/utils';
+import { httpRequest, setCurrencyUnits, formatAmount, parseRequiredFirmware } from './utils/utils';
 import { serializePath, validateAccountInfoDescription } from './utils/path';
 import * as Constants from './utils/constants';
 import { promptInfoPermission, promptXpubKeyPermission, showSelectionFees, CHANGE_ACCOUNT } from './view';
@@ -36,6 +36,8 @@ var CHUNK_SIZE = 20;
 var GAP_LENGTH = 20;
 const ADDRESS_VERSION = 0x0;
 var BITCORE_URLS = ['https://btc-bitcore3.trezor.io', 'https://btc-bitcore1.trezor.io'];
+var CURRENCY;
+var CURRENCY_UNITS;
 var ACCOUNT_DISCOVERY_LIMIT = 10;
 var BIP44_COIN_TYPE = 0;
 var COIN_INFO_URL = 'coins.json';
@@ -79,6 +81,13 @@ function onMessage(event) {
     }
     if (request.coinInfoURL) {
         COIN_INFO_URL = request.coinInfoURL;
+    }
+    if (request.currency) {
+        CURRENCY = request.currency;
+    }
+    if (request.currencyUnits) {
+        CURRENCY_UNITS = request.currencyUnits.toLowerCase();
+        setCurrencyUnits(CURRENCY_UNITS);
     }
     if (request.accountDiscoveryLimit) {
         ACCOUNT_DISCOVERY_LIMIT = request.accountDiscoveryLimit;
@@ -1139,12 +1148,11 @@ function waitForFirstDevice(list) {
 /*
  * accounts, discovery
  */
-
 let backend = null;
 function getBitcoreBackend() {
     return new Promise((resolve, reject) => {
         if (!backend) {
-            return createBitcoreBackend(BITCORE_URLS, COIN_INFO_URL)
+            return createBitcoreBackend(CURRENCY ? CURRENCY : BITCORE_URLS, COIN_INFO_URL)
             .then(bitcoreBackend => {
                 backend = bitcoreBackend;
                 resolve(backend);
