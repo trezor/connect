@@ -134,6 +134,19 @@ export const getBitcoreUrls = (currency: string): Array<string> => {
     return bitcore;
 }
 
+export const getCoinInfoByCurrency = (coinInfoUrl: string, currency: string): Promise<CoinInfo> => {
+    return loadCoinInfo(coinInfoUrl).then(resp => {
+        let info: ?CoinInfo = null;
+        let lower: string = currency.toLowerCase();
+        coins.map((coin: CoinInfo) => {
+            if (coin.name.toLowerCase() === lower|| coin.shortcut.toLowerCase() === lower || coin.label.toLowerCase() === lower) {
+                info = coin;
+            }
+        });
+        return info;
+    });
+}
+
 
 const parseCoinsJson = (coins: JSON): Array<CoinInfo> => {
     return coins.map(coin => {
