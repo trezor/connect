@@ -3,57 +3,160 @@
   <head>
   <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <title>TREZOR Sign Message Test</title>
+    <style>
+      table {
+        display: inline-block;
+        width: 49%;
+        vertical-align: top;
+      }
+      table tr:first-child {
+        font-weight: bold;
+        font-size: 18px;
+        text-indent: 100px;
+      }
+      table td {
+        vertical-align: top;
+        box-sizing: border-box;
+        clear: both;
+      }
+      table tr td:first-child {
+        width: 100px;
+      }
+      input {
+        width: 350px;
+      }
+      textarea {
+        width: 350px;
+        height: 100px;
+      }
+    </style>
     <script>
 
-     function trezorSignMessage() {
+    function trezorSignMessage() {
  
-    	 var path = document.getElementById("path").value;
-    	 var message = document.getElementById("message").value;
-    	 var coin = document.getElementById("coin").value;
-    	 
-    	 var address = document.getElementById("address");
-    	 var signature = document.getElementById("signature");
+      var path = document.getElementById("path").value;
+      var message = document.getElementById("message").value;
+      var coin = document.getElementById("coin").value;
+      if (coin === "Bitcoin Cash") coin = "Bcash";
+
+    	var address = document.getElementById("address");
+      var signature = document.getElementById("signature");
+      var messageV = document.getElementById("messageV");
 
        TrezorConnect.closeAfterFailure(false);
        TrezorConnect.signMessage(path, message, function (response) {
            if (response.success) {
-            	 address.innerHTML = response.address;
-            	 signature.innerHTML = response.signature;
+            	address.value = response.address;
+              messageV.value = message;
+              signature.value = response.signature;
            } else {
-            	 address.innerHTML = "";
-            	 address.appendChild(document.createTextNode("Error: " + response.error));
-            	 signature.innerHTML = "";
+              address.value = "";
+              messageV.value = "";
+              signature.value = "";
            }
            document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
        }, coin);
-     }
+    }
+
+    function trezorVerifyMessage() {
+      var messageV = document.getElementById("messageV").value;
+      var address = document.getElementById("address").value;
+      var signature = document.getElementById("signature").value;
+      var coin = document.getElementById("coin").value;
+      if (coin === "Bitcoin Cash") coin = "Bcash";
+
+      console.log(address, signature, messageV, coin)
+
+      TrezorConnect.verifyMessage(address, signature, messageV, function (response) {
+        if (response.success) {
+            console.log("Success! Verified.");
+        } else {
+            console.log(response.error);
+        }
+        document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+      }, coin);
+    }
+
+    function handleCoinChange(element) {
+        var coin = element.value;
+        var defaultPaths = {
+          "Bitcoin":       "m/49'/0'/0'",
+          "Bitcoin Cash":  "m/44'/145'/0'",
+          "Litecoin":      "m/49'/2'/0'",
+          "Dogecoin":      "m/44'/3'/0'",
+          "Dash":          "m/44'/5'/0'",
+          "Zcash":         "m/44'/133'/0'",
+          "Testnet":       "m/49'/1'/0'",
+          "Namecoin":      "m/44'/7'/0'",
+          "Zcash testnet": "m/44'/133'/0'",
+        }
+        document.getElementById('path').value = defaultPaths[coin];
+    }
 
     </script>
   </head>
   <body>
+
   <table>
-  <tr><td>Path:</td><td><input id="path" value="m/1'/2'/3'"></td></tr>
-  <tr><td>Message:</td><td><input id="message" value="an ascii message" size="64"></td></tr>
-  <tr><td>Coin:</td><td><select id="coin">
-  <option>Bitcoin</option>
-  <option>Litecoin</option>
-  <option>Testnet</option>
-  <option>Namecoin</option>
-  <option>Dogecoin</option>
-  <option>Dash</option>  
-  </select></td></tr>
-  <tr><td></td><td><button onclick="trezorSignMessage()">Sign Message</button></td></tr>
+    <tr>
+      <td colspan="2" style="font-weight:bold">Sign</td>
+    </tr>
+    <tr>
+      <td>Path:</td>
+      <td><input id="path" value="m/49'/0'/0'"></td>
+    </tr>
+    <tr>
+      <td>Message:</td>
+      <td><input id="message" value="Example message" size="64"></td>
+    </tr>
+    <tr>
+      <td>Coin:</td>
+      <td>
+        <select id="coin" onchange="handleCoinChange(this)">
+          <option>Bitcoin</option>
+          <option>Bitcoin Cash</option>
+          <option>Litecoin</option>
+          <option>Dogecoin</option>
+          <option>Dash</option>
+          <option>Zcash</option>
+          <option>Testnet</option>
+          <option>Namecoin</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><button onclick="trezorSignMessage()">Sign Message</button></td>
+    </tr>
   </table>
+
+  <table>
+    <tr>
+      <td colspan="2" style="font-weight:bold">Verify</td>
+    </tr>
+    <tr>
+      <td>Address:</td>
+      <td><input id="address" value="" /></td>
+    </tr>
+    <tr>
+      <td>Message:</td>
+      <td><input id="messageV" value="Example message" /></td>
+    </tr>
+    <tr>
+      <td>Signature:</td>
+      <td><textarea id="signature"></textarea></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <button onclick="trezorVerifyMessage()">Verify Message</button>
+      </td>
+    </tr>
+  </table>
+
   <hr>
-  <table>
-  <tr><td>Address:</td><td id="address"></td></tr>
-  <tr><td>Signature:</td><td id="signature"></td></tr>
-  </table>
 
   <pre id="response"></pre>
-
-
-
 
   <script src="../connect.js"></script>
 

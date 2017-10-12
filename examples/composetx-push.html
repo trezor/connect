@@ -4,14 +4,6 @@
     <title>TREZOR Compose & Sign Transaction Test</title>
     <script>
 
-    var backends = { };
-    backends['Bitcoin'] = ['https://btc-bitcore3.trezor.io', 'https://btc-bitcore1.trezor.io'];
-    backends['Bitcoin Cash'] = ['https://bch-bitcore2.trezor.io'];
-    backends['Litecoin'] = ['https://ltc-bitcore1.trezor.io', 'https://ltc-bitcore3.trezor.io'];
-    backends['Dash'] = ['https://dash-bitcore1.trezor.io', 'https://dash-bitcore3.trezor.io'];
-    backends['Zcash'] = ['https://zec-bitcore1.trezor.io'];
-    backends['Testnet'] = ['https://testnet-bitcore4.trezor.io'];
-
     function trezorComposeTx() {
         var coin = document.getElementById('coin').value;
         var address = document.getElementById('address').value;
@@ -22,8 +14,10 @@
             amount: parseInt(amount)
         }];
 
-        TrezorConnect.setBitcoreURLS(backends[coin]);
+        TrezorConnect.setCurrency(coin);
+        // TrezorConnect.setCurrencyUnits('btc'); // default value is mBTC (used only for Bitcoin)
         TrezorConnect.closeAfterSuccess(false);
+        TrezorConnect.closeAfterFailure(false);
         TrezorConnect.composeAndSignTx(outputs, function (response) {
             TrezorConnect.closeAfterSuccess(true);
             if (response.success) {

@@ -17,8 +17,11 @@
           segwit = false;
         }
 
+        if (coin === 'Bitcoin Cash') coin = 'Bcash';
+
         TrezorConnect.getAddress(path, coin, segwit, function (response) {
             console.log("TrezorConnect.getAddress response", response);
+            document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
         });
      }
 
@@ -27,25 +30,38 @@
 
       TrezorConnect.ethereumGetAddress(path, function (response) {
         console.log("TrezorConnect.ethereumGetAddress", response);
+        document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
       });
     }
 
-     function changedCoin(element) {
+    function handleCoinChange(element) {
         var coin = element.value;
-        // segwit on non-segwit-enabled coins doesn't make sense
-        if (coin === 'Testnet' || coin === 'Litecoin' || coin === 'Bitcoin') {
-          document.getElementById('segwit').disabled = false;
-        } else {
-          document.getElementById('segwit').checked = false;
-          document.getElementById('segwit').disabled = true;
+        var defaultPaths = {
+          "Bitcoin":       "m/49'/0'/2'/0'/0'",
+          "Bitcoin Cash":  "m/44'/0'/145'/0'/0'",
+          "Litecoin":      "m/49'/2'/2'/0'/0'",
+          "Dogecoin":      "m/44'/3'/2'/0'/0'",
+          "Dash":          "m/44'/5'/2'/0'/0'",
+          "Zcash":         "m/44'/133'/2'/0'/0'",
+          "Testnet":       "m/49'/1'/2'/0'/0'",
+          "Namecoin":      "m/44'/7'/2'/0'/0'",
+          "Zcash testnet": "m/44'/133'/2'/0'/0'",
         }
-     }
+        var checkbox = document.getElementById('segwit');
+        if (coin === 'Testnet' || coin === 'Litecoin' || coin === 'Bitcoin') {
+          checkbox.disabled = false;
+          checkbox.checked = true;
+        } else {
+          checkbox.checked = false;
+          checkbox.disabled = true;
+        }
+        document.getElementById('address').value = defaultPaths[coin];
+    }
 
-    function handleCoinChange() {
-        var coin = document.getElementById('coin').value;
-        document.getElementById('account_path').value = backends[coin].path;
-        document.getElementById('account_xpub').value = backends[coin].xpub;
-        console.log("coin", coin);
+    function handleSegwitChange(element) {
+      var address = document.getElementById('address');
+      var addressValue = element.checked ? address.value.replace('m/44', 'm/49') : address.value.replace('m/49', 'm/44');
+      address.value = addressValue;
     }
 
     </script>
@@ -53,8 +69,9 @@
   <body>
     <div>
         <h3>TrezorConnect.getAddress</h3>
-        <select id="coin" name="coin" style="display: inline-block;" onchange="changedCoin(this)">
+        <select id="coin" name="coin" style="display: inline-block;" onchange="handleCoinChange(this)">
             <option>Bitcoin</option>
+            <option>Bitcoin Cash</option>
             <option>Litecoin</option>
             <option>Dogecoin</option>
             <option>Dash</option>
@@ -63,8 +80,8 @@
             <option>Namecoin</option>
             <option>Zcash testnet</option>
         </select>
-        <input type="text" id="address" name="address" value="m/44'/0'/2'/0'/0'" style="display: inline-block;" />
-        <input type="checkbox" id="segwit" /> Segwit
+        <input type="text" id="address" name="address" value="m/49'/0'/2'/0'/0'" style="display: inline-block;" />
+        <input type="checkbox" id="segwit" onchange="handleSegwitChange(this)" checked /> Segwit
         <button onclick="trezorGetAddress()" style="display: inline-block;">Get Address</button>
     </div>
     
