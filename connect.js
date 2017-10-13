@@ -552,7 +552,6 @@ this.TrezorConnect = (function () {
         this.nemGetAddress = function (
           address_n,
           network,
-          show_display,
           callback,
           requiredFirmware
         ) {
@@ -566,7 +565,6 @@ this.TrezorConnect = (function () {
                 type: 'nemGetAddress',
                 address_n: address_n,
                 network: network,
-                show_display: !!show_display
             }, requiredFirmware), callback);
         }
 

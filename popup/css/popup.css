@@ -348,6 +348,7 @@ input[type="password"] {
 }
 
 #alert_accountinfo,
+#alert_nemaddress,
 #alert_xpubkey {
     margin-top: 110px;
 }
