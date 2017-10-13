@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TREZOR Sign Transaction Test</title>
+    <script>
+
+     function trezorSignTx(type) {
+         // spend one change output
+         var address_n = "m/44'/1'/0'/0'/0'"; 
+
+         // var address_n = [44 | 0x80000000,
+         //                  60 | 0x80000000,
+         //                  0  | 0x80000000 ,
+         //                  0 ]; // same, in raw form
+
+        // simple
+        var tx1 = {
+            timeStamp: 74649215,
+            amount: 2000000,
+            fee: 2000000,
+            recipient: "TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J",
+            type: 257,
+            deadline: 74735615,
+            version: (0x98 << 24),
+            message: {
+                //payload: binascii.hexlify(b"test_nem_transaction_transfer"),
+                payload: 'test_nem_transaction_transfer',
+                type: 1,
+            },
+            
+        }
+
+        // as mosaic
+        var tx2 = {
+            timeStamp: 76809215,
+            amount: 1000000,
+            fee: 1000000,
+            recipient: "TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J",
+            type: 257,
+            deadline: 76895615,
+            version: (0x98 << 24),
+            message: {},
+            mosaics: [
+                {
+                    mosaicId: {
+                        namespaceId: "nem",
+                        name: "xem",
+                    },
+                    quantity: 1000000,
+                }
+            ]
+        }
+
+        TrezorConnect.nemSignTx(
+            address_n,
+            type === 'simple' ? tx1 : tx2,
+            function (response) {
+                if (response.success) {
+                    console.log('Signature V (recovery parameter):', response.v); // number
+                    console.log('Signature R component:', response.r); // bytes
+                    console.log('Signature S component:', response.s); // bytes
+                } else {
+                    console.error('Error:', response.error); // error message
+                }
+                document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+            },
+            '1.5.2'
+        );
+     }
+
+    </script>
+  </head>
+  <body>
+
+    <button onclick="trezorSignTx('simple')">Sign simple</button>
+    <button onclick="trezorSignTx('mosaic')">Sign mosaic</button>
+
+    <pre id="response"></pre>
+
+    <script src="../connect.js"></script>
+
+  </body>
+</html>

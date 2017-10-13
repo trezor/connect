@@ -18,7 +18,7 @@ import BitcoreBackend, { create as createBitcoreBackend } from './backend/Bitcor
 import { getCoinInfoByCurrency } from './backend/CoinInfo';
 import ComposingTransaction, { transformResTxs, validateInputs, validateOutputs } from './backend/ComposingTransaction';
 import { httpRequest, setCurrencyUnits, formatAmount, parseRequiredFirmware } from './utils/utils';
-import { serializePath, isSegwitPath, validateAccountInfoDescription } from './utils/path';
+import { serializePath, isSegwitPath, validateAccountInfoDescription, hexlify } from './utils/path';
 import * as Constants from './utils/constants';
 import { promptInfoPermission, promptXpubKeyPermission, showSelectionFees, CHANGE_ACCOUNT } from './view';
 
@@ -636,6 +636,10 @@ function handleNEMSignTx(event) {
     const createTx = () => {
         let transaction = event.data.transaction;
 
+        if (transaction.message && transaction.message.payload) {
+            transaction.message.payload = hexlify(transaction.message.payload);
+        }
+
         const message = {
             transaction: commonProto(transaction, address_n)
         };
@@ -643,7 +647,6 @@ function handleNEMSignTx(event) {
         message.cosigning = (transaction.type == 0x1002);
         if (message.cosigning || transaction.type == 0x1004) {
             transaction = transaction.otherTrans;
-
             message.multisig = commonProto(transaction);
         }
 
