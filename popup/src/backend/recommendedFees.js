@@ -142,7 +142,7 @@ export const getRecommendedFees = (fees: Array<FeeLevel>, coinInfo: CoinInfo): A
     const feeList: Array<Object> = [];
 
     return fees.reduce((prev, level) => {
-                                        // converting btc/B -> sat/B
+        // converting btc/B -> sat/B
         const fee = Math.max( Math.round(level.info.fee * 10e4), minFee);
         // TODO: altcoins should have 1 fee (normal) 
 
