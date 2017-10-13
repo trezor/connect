@@ -4,6 +4,7 @@ import { showAlert } from './common';
 
 export { showSelectionFees, CHANGE_ACCOUNT } from './select-fee';
 export { showSelectionAccounts, restoreSelectionAccounts } from './select-account';
+export { promptNEMAddressPermission } from './nem-permission';
 export { showAlert } from './common';
 
 

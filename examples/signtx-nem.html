@@ -55,11 +55,7 @@
             address_n,
             type === 'simple' ? tx1 : tx2,
             function (response) {
-                if (response.success) {
-                    console.log('Signature V (recovery parameter):', response.v); // number
-                    console.log('Signature R component:', response.r); // bytes
-                    console.log('Signature S component:', response.s); // bytes
-                } else {
+                if (!response.success) {
                     console.error('Error:', response.error); // error message
                 }
                 document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);

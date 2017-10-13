@@ -40,7 +40,7 @@
       // network: 0x68 nem mainnet
       // network: 0x98 nem testnet
       TrezorConnect.closeAfterFailure(false);
-      TrezorConnect.nemGetAddress(path, network, true, function (response) {
+      TrezorConnect.nemGetAddress(path, network, function (response) {
         console.log("TrezorConnect.nemGetAddress", response);
         document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
       }, '1.5.2');
