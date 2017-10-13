@@ -44,6 +44,7 @@
       var messageV = document.getElementById("messageV");
 
        TrezorConnect.closeAfterFailure(false);
+       TrezorConnect.closeAfterSuccess(false);
        TrezorConnect.signMessage(path, message, function (response) {
            if (response.success) {
             	address.value = response.address;

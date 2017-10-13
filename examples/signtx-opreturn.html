@@ -58,9 +58,8 @@ change: "2N58Jk8pmZbyrXzwjeYREqryrGjqxf9ruuB"
             }
         ];
 
-        TrezorConnect.closeAfterSuccess(false);
         TrezorConnect.closeAfterFailure(false);
-        TrezorConnect.setBitcoreURLS('https://testnet-bitcore4.trezor.io');
+        TrezorConnect.setCurrency('testnet');
 
         TrezorConnect.signTx(inputs, outputs, function (response) {
             if (response.success) {
