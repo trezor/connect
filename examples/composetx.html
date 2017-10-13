@@ -15,8 +15,7 @@
         }];
 
         TrezorConnect.setCurrency(coin);
-        // TrezorConnect.setCurrencyUnits('btc'); // default value is mBTC (used only for Bitcoin)
-        TrezorConnect.closeAfterFailure(false);
+        TrezorConnect.setCurrencyUnits('btc'); // default value is mBTC (used only for Bitcoin)
         TrezorConnect.composeAndSignTx(outputs, function (response) {
             if (response.success) {
                 console.log('Serialized TX:', response.serialized_tx); // tx in hex
