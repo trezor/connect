@@ -758,6 +758,12 @@ function handleSignTx(event) {
             const { trezorInputs, bitcoreInputs } = validateInputs(event.data.inputs);
             const outputs = validateOutputs(event.data.outputs);
             return getBitcoreBackend().then(() => {
+
+                let total = outputs.reduce((t, r) => t + r.amount, 0);
+                if (total <= backend.coinInfo.dustLimit) {
+                    throw AMOUNT_TOO_LOW;
+                }
+
                 const tx = new ComposingTransaction(backend, bitcoreInputs, outputs);
                 return tx.getReferencedTx().then(refTxs => {
                     const ref = refTxs.map(r => transformResTxs(r));
