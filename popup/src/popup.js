@@ -805,12 +805,12 @@ function handleRecoverCoins(event) {
                     (promise, a) => {
                         return promise.then(() => {
                             // cornercase: segwit xpub scanned by mycellium
-                            if (destination.id === 'btcX')
+                            if (destination.id === 'btcX' || destination.id === 'btc2xX')
                                 bitcoreBackend.coinInfo.segwit = true;
                             return TrezorAccount.fromIndex(device, bitcoreBackend, a.id)
                                 .then(account => {
                                     // cornercase: segwit xpub scanned by mycellium
-                                    if (destination.id === 'btcX')
+                                    if (destination.id === 'btcX' || destination.id === 'btc2xX')
                                         account.backend.coinInfo.segwit = false;
 
                                     return account.discover().then(discovered => {

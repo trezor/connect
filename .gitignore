@@ -1,4 +1,5 @@
 popup/node_modules
+popup/trezor-common
 dist
 .DS_Store
 _old
