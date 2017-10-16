@@ -34,11 +34,11 @@
   "dependencies": {
     "bip32-utils": "^0.6.2",
     "bip44-constants": "^2.3.0",
-    "bitcoinjs-lib-zcash": "^2.3.1",
+    "bitcoinjs-lib-zcash": "^3.0.0",
     "bowser": "^1.0.0",
     "cb-insight": "^0.1.0",
     "es6-promise": "^2.3.0",
-    "hd-wallet": "1.0.13-backfix-bitcore3",
+    "hd-wallet": "1.0.14-backfix-bitcore3",
     "trezor.js": "5.10.0",
     "whatwg-fetch": "^0.11.0"
   },
