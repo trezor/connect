@@ -36,7 +36,7 @@ dist-stable-v%:
 	cp popup/js/trezor-crypto-dist.js dist/$*/popup/js/
 	cp popup/js/socket-worker-dist.js dist/$*/popup/js/
 	cp popup/js/socket-worker-dist.js.map dist/$*/popup/js/
-	cp -r popup/img/ dist/$*/popup/img
+	cp -r popup/img/* dist/$*/popup/img
 	cp login_buttons.css dist/$*
 	cp connect.js dist/$*/connect.js
 
