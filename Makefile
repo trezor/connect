@@ -25,15 +25,18 @@ dist-stable-v%:
 	cp -r chrome dist/$*
 	cp -r examples dist/$*
 	mkdir dist/$*/popup
+	mkdir dist/$*/popup/js
+	mkdir dist/$*/popup/css
+	mkdir dist/$*/popup/img
 	cp popup/config_signed.bin dist/$*/popup
-	cp popup/popup.css dist/$*/popup
+	cp popup/css/popup.css dist/$*/popup/css/
 	cp popup/popup.html dist/$*/popup
-	cp popup/popup-dist.js dist/$*/popup
-	cp popup/popup-dist.js.map dist/$*/popup
-	cp popup/trezor-crypto-dist.js dist/$*/popup
-	cp popup/socket-worker-dist.js dist/$*/popup
-	cp popup/socket-worker-dist.js.map dist/$*/popup
-	cp -r popup/img/ dist/$*/popup
+	cp popup/js/popup-dist.js dist/$*/popup/js/
+	cp popup/js/popup-dist.js.map dist/$*/popup/js/
+	cp popup/js/trezor-crypto-dist.js dist/$*/popup/js/
+	cp popup/js/socket-worker-dist.js dist/$*/popup/js/
+	cp popup/js/socket-worker-dist.js.map dist/$*/popup/js/
+	cp -r popup/img/ dist/$*/popup/img
 	cp login_buttons.css dist/$*
 	cp connect.js dist/$*/connect.js
 
