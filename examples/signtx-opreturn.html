@@ -5,23 +5,7 @@
     <script>
 
      function trezorSignTx() {
-         // spend one output
-
-/* Legacy acc 1
-{index: 1, value: 1000, transactionHash: "78dbd0d19ccf8776ac590225cde5797e439959d05b91ecdbacd7c244afb28542", height: 1207997, coinbase: false, …}
-{index: 1, value: 1000, transactionHash: "cafda182818c42a7b663140e28fd55e10cd0fc2616b258d9bc4e7a3942daa719", height: 1207995, coinbase: false, …}
-{index: 1, value: 1000, transactionHash: "607c7b7684f3c5bd4bf640d470a7a8db2f2dcf6e7fa8b1dd1a8b863c9928336c", height: 1207965, coinbase: false, …}
-{index: 1, value: 1000, transactionHash: "a6519965c42b7cc70bd2ae91126548eb0e95bc2ea7c038cfc8e14a2bdbedd6cd", height: 1207960, coinbase: false, …}
-{index: 1, value: 771, transactionHash: "c42667c90518dab8a1e0abd1acf9449036a7a1e4dc7ad712be77a695ae37f1d8", height: 1207922, coinbase: false, …}
-*/
-
-/*
-Segwit acc 1
-{index: 1, value: 1000, transactionHash: "86ac052f6a8d2adb7bca13459b8a5f9b02889e08d8d929af5e3cc9030109e942", height: 1207999, coinbase: false, …}
-{index: 1, value: 1000, transactionHash: "a1372e6d56cf3d2a0665c3022d7ba7ef04cd269eed880d3815dc3ebcd7f11a30", height: 1207838, coinbase: false, …}
-change: "2N58Jk8pmZbyrXzwjeYREqryrGjqxf9ruuB"
-*/
-
+        
         var inputs = [
             // {
             //     address_n: [49 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 1], // 0,3
@@ -57,9 +41,6 @@ change: "2N58Jk8pmZbyrXzwjeYREqryrGjqxf9ruuB"
                 op_return_data: 'deadbeef' // in hexadecimal
             }
         ];
-
-        TrezorConnect.closeAfterFailure(false);
-        TrezorConnect.setCurrency('testnet');
 
         TrezorConnect.signTx(inputs, outputs, function (response) {
             if (response.success) {
