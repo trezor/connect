@@ -29,16 +29,14 @@ dist-stable-v%:
 	mkdir dist/$*/popup/css
 	mkdir dist/$*/popup/img
 	cp popup/config_signed.bin dist/$*/popup
-	cp popup/css/popup.css dist/$*/popup/css/
+	cp popup/coins.json dist/$*/popup
 	cp popup/popup.html dist/$*/popup
-	cp popup/js/popup-dist.js dist/$*/popup/js/
-	cp popup/js/popup-dist.js.map dist/$*/popup/js/
-	cp popup/js/trezor-crypto-dist.js dist/$*/popup/js/
-	cp popup/js/socket-worker-dist.js dist/$*/popup/js/
-	cp popup/js/socket-worker-dist.js.map dist/$*/popup/js/
-	cp -r popup/img/* dist/$*/popup/img
 	cp login_buttons.css dist/$*
 	cp connect.js dist/$*/connect.js
+	cp -r popup/js dist/$*/popup/
+	cp -r popup/css dist/$*/popup/
+	cp -r popup/img dist/$*/popup/
+	
 
 sync-stable-v%:
 	make .sync-$*
