@@ -34,6 +34,30 @@ var BIP44_COIN_TYPE = 0;
 const SOCKET_WORKER_PATH = './socket-worker-dist.js';
 const CRYPTO_WORKER_PATH = './trezor-crypto-dist.js';
 
+const NEM_MAINNET = 0x68;
+const NEM_TESTNET = 0x98;
+const NEM_MIJIN = 0x60;
+
+const NEM_MOSAIC_LEVY_TYPES = {
+    1: "MosaicLevy_Absolute",
+    2: "MosaicLevy_Percentile"
+};
+
+const NEM_SUPPLY_CHANGE_TYPES = {
+    1: "SupplyChange_Increase",
+    2: "SupplyChange_Decrease"
+};
+
+const NEM_AGGREGATE_MODIFICATION_TYPES = {
+    1: "CosignatoryModification_Add",
+    2: "CosignatoryModification_Delete"
+};
+
+const NEM_IMPORTANCE_TRANSFER_MODES = {
+    1: "ImportanceTransfer_Activate",
+    2: "ImportanceTransfer_Deactivate"
+};
+
 global.alert = '#alert_loading';
 global.device = null;
 
@@ -147,6 +171,14 @@ function onMessage(event) {
 
     case 'ethgetaddress':
         handleEthereumGetAddress(event);
+        break;
+
+    case 'nemGetAddress':
+        handleNEMGetAddress(event);
+        break;
+
+    case 'nemSignTx':
+        handleNEMSignTx(event);
         break;
 
     default:
@@ -437,6 +469,295 @@ function handleCipherKeyValue(event) {
             respondToEvent(event, {success: false, error: error.message});
         });
 }
+
+function handleNEMGetAddress(event) {
+    const address_n = event.data.address_n.map((i) => i >>> 0);
+    const network = event.data.network & 0xFF;
+    const show_display = event.data.show_display;
+
+    const getAddress = () => {
+        const handler = errorHandler(getAddress);
+        return global.device.session.nemGetAddress(address_n, network, show_display)
+            .catch(handler);
+    }
+
+    const getPermission = () => {
+        if (!show_display) {
+            const handler = errorHandler(getPermission);
+            return promptNEMAddressPermission(address_n, network).catch(handler);
+        }
+    };
+
+    show('#operation_nemaddress');
+
+    initDevice()
+        .then(getPermission)
+        .then(getAddress)
+        .then((result) => { // success
+            const {message} = result;
+            const {address} = message;
+
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    address: address
+                });
+            });
+        })
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+function handleNEMSignTx(event) {
+    const address_n = event.data.address_n.map((i) => i >>> 0);
+
+    const commonProto = (common, address_n) => ({
+        address_n: address_n,
+        network: (common.version >> 24) & 0xFF,
+        timestamp: common.timeStamp,
+        fee: common.fee,
+        deadline: common.deadline,
+        signer: address_n ? undefined : common.signer
+    });
+
+    const transferProto = (transfer) => {
+        const mosaics = transfer.mosaics ? transfer.mosaics.map((mosaic) => ({
+            namespace: mosaic.mosaicId.namespaceId,
+            mosaic: mosaic.mosaicId.name,
+            quantity: mosaic.quantity
+        })) : undefined;
+
+        return {
+            recipient: transfer.recipient,
+            amount: transfer.amount,
+            payload: transfer.message.payload || undefined,
+            public_key: transfer.message.type == 0x02 ? transfer.message.publicKey : undefined,
+            mosaics: mosaics
+        };
+    };
+
+    const importanceTransferProto = (importanceTransfer) => ({
+        mode: NEM_IMPORTANCE_TRANSFER_MODES[importanceTransfer.mode],
+        public_key: importanceTransfer.remoteAccount
+    });
+
+    const provisionNamespaceProto = (provisionNamespace) => ({
+        namespace: provisionNamespace.newPart,
+        parent: provisionNamespace.parent || undefined,
+        sink: provisionNamespace.rentalFeeSink,
+        fee: provisionNamespace.rentalFee
+    });
+
+    const aggregateModificationProto = (aggregateModification) => ({
+        modifications: aggregateModification.modifications.map((modification) => ({
+            type: NEM_AGGREGATE_MODIFICATION_TYPES[modification.modificationType],
+            public_key: modification.cosignatoryAccount
+        })),
+        relative_change: aggregateModification.minCosignatories.relativeChange
+    });
+
+    const mosaicCreationProto = (mosaicCreation) => {
+        const levy = mosaicCreation.mosaicDefinition.levy || undefined;
+
+        const definition = {
+            namespace: mosaicCreation.mosaicDefinition.id.namespaceId,
+            mosaic: mosaicCreation.mosaicDefinition.id.name,
+            levy: levy && NEM_MOSAIC_LEVY_TYPES[levy.type],
+            fee: levy && levy.fee,
+            levy_address: levy && levy.recipient,
+            levy_namespace: levy && levy.mosaicId.namespaceId,
+            levy_mosaic: levy && levy.mosaicId.name,
+            description: mosaicCreation.mosaicDefinition.description
+        };
+
+        mosaicCreation.mosaicDefinition.properties.forEach((property) => {
+            const { name, value } = property;
+
+            switch (property.name) {
+                case "divisibility":
+                    definition.divisibility = parseInt(value);
+                    break;
+
+                case "initialSupply":
+                    definition.supply = parseInt(value);
+                    break;
+
+                case "supplyMutable":
+                    definition.mutable_supply = (value == "true");
+                    break;
+
+                case "transferable":
+                    definition.transferable = (value == "true");
+                    break;
+            }
+        });
+
+        return {
+            definition: definition,
+            sink: mosaicCreation.creationFeeSink,
+            fee: mosaicCreation.creationFee
+        };
+    };
+
+    const mosaicSupplyChangeProto = (mosaicSupplyChange) => ({
+        namespace: mosaicSupplyChange.mosaicId.namespaceId,
+        mosaic: mosaicSupplyChange.mosaicId.name,
+        type: NEM_SUPPLY_CHANGE_TYPES[mosaicSupplyChange.supplyType],
+        delta: mosaicSupplyChange.delta
+    });
+
+    const createTx = () => {
+        let transaction = event.data.transaction;
+
+        const message = {
+            transaction: commonProto(transaction, address_n)
+        };
+
+        message.cosigning = (transaction.type == 0x1002);
+        if (message.cosigning || transaction.type == 0x1004) {
+            transaction = transaction.otherTrans;
+
+            message.multisig = commonProto(transaction);
+        }
+
+        switch (transaction.type) {
+            case 0x0101:
+                message.transfer = transferProto(transaction);
+                break;
+
+            case 0x0801:
+                message.importance_transfer = importanceTransferProto(transaction);
+                break;
+
+            case 0x1001:
+                message.aggregate_modification = aggregateModificationProto(transaction);
+                break;
+
+            case 0x2001:
+                message.provision_namespace = provisionNamespaceProto(transaction);
+                break;
+
+            case 0x4001:
+                message.mosaic_creation = mosaicCreationProto(transaction);
+                break;
+
+            case 0x4002:
+                message.supply_change = mosaicSupplyChangeProto(transaction);
+                break;
+
+            default:
+                throw new Error('Unknown transaction type');
+                break;
+        }
+
+        return message;
+    };
+
+    const signTx = (message) => {
+        const handler = errorHandler(() => signTx(message));
+        return global.device.session.nemSignTx(message)
+            .catch(handler);
+    };
+
+    show('#operation_signtx');
+
+    initDevice()
+        .then(createTx)
+        .then(signTx)
+        .then((result) => { // success
+            const {message} = result;
+
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    message: message
+                });
+            });
+        })
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+function promptNEMAddressPermission(address_n, network) {
+    return new Promise((resolve, reject) => {
+        document.getElementById('nem_account').textContent = nemAddressLabel(address_n, network);
+        document.getElementById('nem_network').textContent = nemNetworkName(network);
+        document.getElementById('operation_nemaddress').callback = (exportAddress) => {
+            showAlert(global.alert);
+            if (exportAddress) {
+                resolve();
+            } else {
+                reject(new Error('Cancelled'));
+            }
+        };
+        showAlert('#alert_nemaddress');
+    });
+}
+
+function nemAccountNumber(address_n, network) {
+    const coinType = (network) => {
+        switch (network) {
+        case NEM_MAINNET:
+        case NEM_MIJIN:
+            return parseInt(bip44['NEM']);
+        case NEM_TESTNET:
+            return parseInt(bip44['Testnet']);
+        default:
+            return null;
+        }
+    };
+
+    const hardened = (i) => (i | HD_HARDENED) >>> 0;
+    const unhardened = (i) => (i & ~HD_HARDENED) >>> 0;
+
+    if (address_n.length == 5 &&
+        address_n[0] == hardened(44) &&
+        address_n[1] == coinType(network) &&
+        address_n[3] == hardened(0) &&
+        address_n[4] == hardened(0)) {
+        return unhardened(address_n[2]) + 1;
+    } else {
+        return -1;
+    }
+}
+
+function nemAddressLabel(address_n, network) {
+    const account = nemAccountNumber(address_n, network);
+    if (account < 0) {
+        return 'm/' + serializePath(address_n);
+    } else {
+        return `account #${account}`;
+    }
+}
+
+function nemNetworkName(network) {
+    switch (network) {
+    case NEM_MAINNET:
+        return 'Mainnet';
+    case NEM_TESTNET:
+        return 'Testnet';
+    case NEM_MIJIN:
+        return 'Mijin';
+    default:
+        return `0x${network.toString(16)}`;
+    }
+}
+
+function exportNEMAddress() {
+    document.querySelector('#operation_nemaddress').callback(true);
+}
+
+window.exportNEMAddress = exportNEMAddress;
+
+function cancelNEMAddress() {
+    document.querySelector('#operation_nemaddress').callback(false);
+}
+
+window.cancelNEMAddress = cancelNEMAddress;
 
 /*
  * xpubkey

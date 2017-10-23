@@ -659,8 +659,8 @@ bip32-utils@^0.6.2:
   resolved "https://registry.yarnpkg.com/bip32-utils/-/bip32-utils-0.6.3.tgz#c6e2c7d82f880620bb78973d8ee8b48ccd233d92"
 
 bip44-constants:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/bip44-constants/-/bip44-constants-2.3.0.tgz#0bfcd996d041c97ff05e5d76250f39c3c4cdd670"
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/bip44-constants/-/bip44-constants-2.5.0.tgz#84eb187fea50505dcd46850abd3212602ff26eca"
 
 bip66@^1.1.0:
   version "1.1.4"

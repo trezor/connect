@@ -521,6 +521,46 @@ this.TrezorConnect = (function () {
             }, requiredFirmware), callback);
         };
 
+        this.nemGetAddress = function (
+          address_n,
+          network,
+          show_display,
+          callback,
+          requiredFirmware
+        ) {
+            if (requiredFirmware == null) {
+                requiredFirmware = '1.6.0'; // first firmware that supports NEM
+            }
+            if (typeof address_n === 'string') {
+                address_n = parseHDPath(address_n);
+            }
+            manager.sendWithChannel(_fwStrFix({
+                type: 'nemGetAddress',
+                address_n: address_n,
+                network: network,
+                show_display: !!show_display
+            }, requiredFirmware), callback);
+        }
+
+        this.nemSignTx = function (
+          address_n,
+          transaction,
+          callback,
+          requiredFirmware
+        ) {
+            if (requiredFirmware == null) {
+                requiredFirmware = '1.6.0'; // first firmware that supports NEM
+            }
+            if (typeof address_n === 'string') {
+                address_n = parseHDPath(address_n);
+            }
+            manager.sendWithChannel(_fwStrFix({
+                type: 'nemSignTx',
+                address_n: address_n,
+                transaction: transaction
+            }, requiredFirmware), callback);
+        }
+
         this.pushTransaction = function (
           rawTx,
           callback
