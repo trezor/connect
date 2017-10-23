@@ -708,7 +708,7 @@ function handleNEMSignTx(event) {
  */
 
 function getPublicKey(path, coinName) {
-    let handler = errorHandler(() => getPublicKey(path));
+    let handler = errorHandler(() => getPublicKey(path, coinName));
     return global.device.session.getPublicKey(path, coinName)
         .then((result) => ({result, path}))
         .catch(handler);
@@ -740,8 +740,9 @@ function handleXpubKey(event) {
                     })
             } else {
                 return waitForAccount()
-                    .then((account) => account.getPath())
-                    .then(getPublicKey);
+                    .then(account => {
+                        return getPublicKey(account.getPath(), backend.coinInfo.name);
+                    });
             }
         })
         .then(({result, path}) => { // success
@@ -1268,6 +1269,7 @@ class Device {
         throw new Error('Device does not support given coin type');
     }
 
+    // TODO: not used anywhere, remove
     getNode(path) {
         return this.session.getPublicKey(path)
             .then(({message}) => bitcoin.HDNode.fromBase58(message.xpub));
