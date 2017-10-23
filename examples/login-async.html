@@ -27,7 +27,7 @@
 
      function doTrezorLogin(challenge_hidden, challenge_visual) {
          // site icon, optional. at least 48x48px
-         var hosticon = 'https://example.com/icon.png';
+         var hosticon = 'https://doc.satoshilabs.com/trezor-apps/_images/copay_logo.png';
 
          TrezorConnect.requestLogin(hosticon, challenge_hidden, challenge_visual, function (response) {
              if (response.success) {

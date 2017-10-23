@@ -49,15 +49,15 @@
     function handleCoinChange(element) {
         var coin = element.value;
         var defaultPaths = {
-          "Bitcoin":       "m/49'/0'/2'/0/0",
-          "Bitcoin Cash":  "m/44'/0'/145'/0/0",
-          "Litecoin":      "m/49'/2'/2'/0/0",
-          "Dogecoin":      "m/44'/3'/2'/0/0",
-          "Dash":          "m/44'/5'/2'/0/0",
-          "Zcash":         "m/44'/133'/2'/0/0",
-          "Testnet":       "m/49'/1'/2'/0/0",
-          "Namecoin":      "m/44'/7'/2'/0/0",
-          "Zcash testnet": "m/44'/133'/2'/0/0",
+          "Bitcoin":       "m/49'/0'/0'/0/0",
+          "Bitcoin Cash":  "m/44'/145'/0'/0/0",
+          "Litecoin":      "m/49'/2'/0'/0/0",
+          "Dogecoin":      "m/44'/3'/0'/0/0",
+          "Dash":          "m/44'/5'/0'/0/0",
+          "Zcash":         "m/44'/133'/0'/0/0",
+          "Testnet":       "m/49'/1'/0'/0/0",
+          "Namecoin":      "m/44'/7'/0'/0/0",
+          "Zcash testnet": "m/44'/133'/0'/0/0",
         }
         var checkbox = document.getElementById('segwit');
         if (coin === 'Testnet' || coin === 'Litecoin' || coin === 'Bitcoin') {
@@ -92,7 +92,7 @@
             <option>Namecoin</option>
             <option>Zcash testnet</option>
         </select>
-        <input type="text" id="address" name="address" value="m/49'/0'/2'/0/0" style="display: inline-block;" />
+        <input type="text" id="address" name="address" value="m/49'/0'/0'/0/0" style="display: inline-block;" />
         <input type="checkbox" id="segwit" onchange="handleSegwitChange(this)" checked /> Segwit
         <button onclick="trezorGetAddress()" style="display: inline-block;">Get Address</button>
     </div>
