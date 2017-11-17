@@ -477,7 +477,7 @@ function handleNEMGetAddress(event) {
 
     const getAddress = () => {
         const handler = errorHandler(getAddress);
-        return global.device.session.nemGetAddress(address_n, network, false)
+        return global.device.session.nemGetAddress(address_n, network, true)
             .catch(handler);
     }
 
