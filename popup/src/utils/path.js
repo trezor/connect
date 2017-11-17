@@ -31,17 +31,6 @@ export const fixPath = (o) => {
     return o;
 };
 
-export const hexlify = (str) => {
-    var result = '';
-    var padding = '00';
-    for (var i=0, l=str.length; i<l; i++) {
-        var digit = str.charCodeAt(i).toString(16);
-        var padded = (padding+digit).slice(-2);
-        result += padded;
-    }
-    return result;
-};
-
 export const convertXpub = (o) => {
     if (o.multisig && o.multisig.pubkeys) {
         // convert xpubs to HDNodeTypes
