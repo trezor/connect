@@ -45,6 +45,9 @@ function hashToCoinInfo(hash: string, btcVersion: string): ?CoinInfo {
         if (btcVersion === 'bch') {
             return coinInfos.find(info => info.name === 'Bcash');
         }
+        if (btcVersion === 'btg') {
+            return coinInfos.find(info => info.name === 'Bitcoin Gold');
+        }
     }
     return result;
 }
@@ -67,6 +70,9 @@ function detectBtcVersion(data) {
     if (data.subversion.startsWith('/Bitcoin ABC')) {
         return 'bch';
     }
+    if (data.subversion.startsWith('/Bitcoin Gold')) {
+        return 'btg';
+    }
     if (data.subversion.includes('(BIP148)')) {
         return 'uasf';
     }
@@ -77,7 +83,7 @@ function _waitForCoinInfo(blockchain: BitcoreBlockchain): Promise<void> {
     console.log('[CoinInfo] Wait for coin info...');
     return blockchain.lookupBlockHash(0).then(hash => {
         return getNetworkInfo(blockchain).then((info) => {
-            console.log("INFOOO", info)
+            console.log("[CoinInfo]", info, hash)
             coinInfo = hashToCoinInfo(hash, detectBtcVersion(info));
             console.log('[CoinInfo] Done reading coin; ' + (coinInfo == null ? 'nothing' : coinInfo.shortcut));
             console.log('[CoinInfo] Current backend URL : ' + blockchain.workingUrl);
@@ -170,6 +176,38 @@ const coins = [
 	"dust_limit": 54600,
 	"blocktime_minutes": 2.5,
 	"firmware": "stable"
+},
+{
+	"coin_name": "Bitcoin Gold",
+	"coin_shortcut": "BTG",
+	"coin_label": "Bitcoin Gold",
+	"address_type": 38,
+	"address_type_p2sh": 23,
+	"maxfee_kb": 500000,
+	"minfee_kb": 1000,
+	"signed_message_header": "Bitcoin Gold Signed Message:\n",
+	"hash_genesis_block": "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f",
+	"xprv_magic": "0488ade4",
+	"xpub_magic": "0488b21e",
+	"xpub_magic_segwit_p2sh": "049d7cb2",
+	"bech32_prefix": "btg",
+	"bip44": 156,
+	"segwit": true,
+	"forkid": 79,
+	"force_bip143": true,
+	"default_fee_b": {
+		"Low": 10,
+		"Economy": 70,
+		"Normal": 140,
+		"High": 200
+	},
+	"dust_limit": 546,
+	"blocktime_minutes": 10,
+	"firmware": "stable",
+	"address_prefix": "bitcoingold:",
+	"min_address_length": 27,
+	"max_address_length": 34,
+	"bitcore": []
 }];
 
 export const coinInfos = coins.map(coin => {
