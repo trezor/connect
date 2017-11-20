@@ -3,6 +3,18 @@
   <head>
     <title>TREZOR Sign Transaction Test</title>
     <script>
+     function hexlify(str) {
+         var result = '';
+         var padding = '00';
+         for (var i=0, l=str.length; i<l; i++) {
+             var digit = str.charCodeAt(i).toString(16);
+             var padded = (padding+digit).slice(-2);
+             result += padded;
+         }
+         return result;
+     };
+
+
      function trezorSignTx(type) {
          // spend one change output
          var address_n = "m/44'/1'/0'/0'/0'"; 
@@ -22,9 +34,10 @@
             deadline: 74735615,
             version: (0x98 << 24),
             message: {
-                payload: 'Test send to Alice',
+                payload: hexlify('test_nem_transaction_transfer'),
                 type: 1,
-            }
+            },
+            
         }
 
         // as mosaic
