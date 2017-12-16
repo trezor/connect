@@ -587,6 +587,29 @@ this.TrezorConnect = (function () {
             }, requiredFirmware), callback);
         }
 
+        this.nemDecryptMessage = function (
+          address_n,
+          network,
+          public_key,
+          payload,
+          callback,
+          requiredFirmware
+        ) {
+            if (requiredFirmware == null) {
+                requiredFirmware = '1.6.1'; // first firmware that supports NEM message decryption
+            }
+            if (typeof address_n === 'string') {
+                address_n = parseHDPath(address_n);
+            }
+            manager.sendWithChannel(_fwStrFix({
+                type: 'nemDecryptMessage',
+                address_n: address_n,
+                network: network,
+                public_key: public_key,
+                payload: payload,
+            }, requiredFirmware), callback);
+        }
+
         this.pushTransaction = function (
           rawTx,
           callback

@@ -175,6 +175,10 @@ function onMessage(event) {
         handleNEMSignTx(event);
         break;
 
+    case 'nemDecryptMessage':
+        handleNEMDecryptMessage(event);
+        break;
+
     default:
         console.warn('Unknown message', request);
     }
@@ -697,6 +701,40 @@ function handleNEMSignTx(event) {
             respondToEvent(event, {success: false, error: error.message});
         });
 }
+
+function handleNEMDecryptMessage(event) {
+    const address_n = event.data.address_n.map((i) => i >>> 0);
+    const network = event.data.network & 0xFF;
+    const public_key = event.data.public_key;
+    const payload = event.data.payload;
+
+    const decryptMessage = () => {
+        const handler = errorHandler(decryptMessage);
+        return global.device.session.nemDecryptMessage(address_n, network, public_key, payload)
+            .catch(handler);
+    }
+
+    show('#operation_nemdecrypt');
+
+    initDevice()
+        .then(decryptMessage)
+        .then((result) => { // success
+            const {message} = result;
+            const {payload} = message;
+
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    payload: payload
+                });
+            });
+        })
+        .catch((error) => { // failure
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
 
 
 /*
