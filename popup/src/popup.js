@@ -1576,7 +1576,27 @@ function passphraseCallback(callback) {
     document.querySelector('#passphrase_dialog').callback = callback;
     document.querySelector('#passphrase').focus();
     window.addEventListener('keydown', passphraseKeydownHandler);
+
+    document.querySelector('#passphrase').oninput = passphraseValidation;
+    document.querySelector('#passphrase2').oninput = passphraseValidation;
+    // e.onpropertychange for ie8
+
     showAlert('#passphrase_dialog');
+}
+
+function passphraseValidation() {
+    var p1 = document.querySelector('#passphrase').value;
+    var p2 = document.querySelector('#passphrase2').value;
+    var dialog = document.querySelector('#passphrase_dialog');
+    var button = document.querySelector('#passphrase_enter button');
+
+    if (p1 !== p2) {
+        button.disabled = true;
+        dialog.classList.add('not-valid');
+    } else {
+        button.disabled = false;
+        dialog.classList.remove('not-valid');
+    }
 }
 
 function passphraseKeydownHandler(ev) {
@@ -1586,8 +1606,11 @@ function passphraseKeydownHandler(ev) {
 }
 
 function passphraseToggle() {
-    let e = document.querySelector('#passphrase');
-    e.type = (e.type === 'text') ? 'password' : 'text';
+    var p1 = document.querySelector('#passphrase');
+    var p2 = document.querySelector('#passphrase2');
+    var type = (p1.type === 'text') ? 'password' : 'text'
+    p1.type = type;
+    p2.type = type;
 }
 
 window.passphraseToggle = passphraseToggle;

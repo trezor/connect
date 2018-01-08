@@ -63,6 +63,7 @@ input[type="password"] {
     border-bottom: 1px solid #bbbbbb;
     background: transparent;
     font-size: 18px;
+    outline: 0;
 }
 
 .smallcaps {
@@ -463,6 +464,22 @@ input[type="password"] {
 #passphrase_input_row input,
 #passphrase_enter button {
     width: 250px;
+}
+
+#passphrase_dialog .warning {
+    color: #fa3e3e;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+#passphrase_dialog.not-valid .warning {
+    display: block;
+}
+
+#passphrase_dialog.not-valid button {
+    border-color: #c5c5c5;
+    color: #c5c5c5;
+    pointer-events: none;
 }
 
 /*
