@@ -64,10 +64,10 @@ export default class ComposingTransaction {
     }
 }
 
-// signTX validation 
-export const validateInputs = (inputs) => {
+// signTX validation
+export const validateInputs = (inputs, network) => {
     const bitcoreInputs = [];
-    const trezorInputs = inputs.map(fixPath).map(convertXpub);
+    const trezorInputs = inputs.map(fixPath).map(convertXpub.bind(null, network));
 
     for (let utxo of trezorInputs) {
         let segwit = (utxo.address_n[0] >>> 0) === ((49 | HD_HARDENED) >>> 0);
@@ -89,9 +89,9 @@ export const validateInputs = (inputs) => {
     return { trezorInputs, bitcoreInputs };
 }
 
-// signTX validation 
-export const validateOutputs = (outputs) => {
-    const trezorOutputs = outputs.map(fixPath).map(convertXpub);
+// signTX validation
+export const validateOutputs = (outputs, network) => {
+    const trezorOutputs = outputs.map(fixPath).map(convertXpub.bind(null, network));
     for (let output of trezorOutputs) {
         if (output.address_n) {
             let segwit = (output.address_n[0] >>> 0) === ((49 | HD_HARDENED) >>> 0);

@@ -12,8 +12,8 @@ export const serializePath = (path) => {
     }).join('/');
 }
 
-export const xpubToHDNodeType = (xpub) => {
-    let hd = bitcoin.HDNode.fromBase58(xpub);
+export const xpubToHDNodeType = (xpub, network) => {
+    let hd = bitcoin.HDNode.fromBase58(xpub, network);
     return {
         depth: hd.depth,
         child_num: hd.index,
@@ -31,12 +31,12 @@ export const fixPath = (o) => {
     return o;
 };
 
-export const convertXpub = (o) => {
+export const convertXpub = (network, o) => {
     if (o.multisig && o.multisig.pubkeys) {
         // convert xpubs to HDNodeTypes
         o.multisig.pubkeys.forEach(pk => {
             if (typeof pk.node === 'string') {
-                pk.node = xpubToHDNodeType(pk.node);
+                pk.node = xpubToHDNodeType(pk.node, network);
             }
         });
     }
