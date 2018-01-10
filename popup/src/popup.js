@@ -986,16 +986,15 @@ function handleEthereumSignTx(event) {
  */
 
 function handleSignTx(event) {
-    
+
     show('#operation_signtx');
 
     initDevice()
 
         .then((device) => {
-            const { trezorInputs, bitcoreInputs } = validateInputs(event.data.inputs);
-            const outputs = validateOutputs(event.data.outputs);
             return getBitcoreBackend().then(() => {
-
+                const { trezorInputs, bitcoreInputs } = validateInputs(event.data.inputs, backend.coinInfo.network);
+                const outputs = validateOutputs(event.data.outputs, backend.coinInfo.network);
                 let total = outputs.reduce((t, r) => t + r.amount, 0);
                 if (total <= backend.coinInfo.dustLimit) {
                     throw AMOUNT_TOO_LOW;
