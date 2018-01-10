@@ -42,7 +42,7 @@ this.TrezorConnect = (function () {
         POPUP_ORIGIN = window.location.origin;
         POPUP_PATH = POPUP_ORIGIN;
     }
-    var POPUP_URL = window.TREZOR_POPUP_URL || POPUP_PATH + '/popup/popup.html?v=' + TREZOR_CONNECT_VERSION + '.0.1';
+    var POPUP_URL = window.TREZOR_POPUP_URL || POPUP_PATH + '/popup/popup.html?v=' + new Date().getTime();
 
     var POPUP_INIT_TIMEOUT = 15000;
 
