@@ -25,17 +25,16 @@ dist-stable-v%:
 	cp -r chrome dist/$*
 	cp -r examples dist/$*
 	mkdir dist/$*/popup
+	mkdir dist/$*/popup/js
+	mkdir dist/$*/popup/css
+	mkdir dist/$*/popup/img
 	cp popup/config_signed.bin dist/$*/popup
-	cp popup/popup.css dist/$*/popup
 	cp popup/popup.html dist/$*/popup
-	cp popup/popup-dist.js dist/$*/popup
-	cp popup/popup-dist.js.map dist/$*/popup
-	cp popup/trezor-crypto-dist.js dist/$*/popup
-	cp popup/socket-worker-dist.js dist/$*/popup
-	cp popup/socket-worker-dist.js.map dist/$*/popup
-	cp -r popup/img/ dist/$*/popup
 	cp login_buttons.css dist/$*
 	cp connect.js dist/$*/connect.js
+	cp -r popup/js dist/$*/popup/
+	cp -r popup/css dist/$*/popup/
+	cp -r popup/img dist/$*/popup/
 
 sync-stable-v%:
 	make .sync-$*
