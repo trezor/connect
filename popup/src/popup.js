@@ -6,6 +6,7 @@
 
 
 import {Promise} from 'es6-promise';
+import 'babel-polyfill';
 
 import bowser from 'bowser';
 import * as bitcoin from 'bitcoinjs-lib-zcash';
