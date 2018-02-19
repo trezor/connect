@@ -25,7 +25,7 @@ const SCRIPT_TYPES = {
     [NETWORK.pubKeyHash]: 'PAYTOADDRESS',
     [NETWORK.scriptHash]: 'PAYTOSCRIPTHASH'
 };
-const CONFIG_URL = './config_signed.bin';
+const CONFIG_URL = 'https://wallet.trezor.io/data/config_signed.bin';
 const HD_HARDENED = 0x80000000;
 
 var CHUNK_SIZE = 20;
@@ -36,8 +36,8 @@ var ACCOUNT_DISCOVERY_LIMIT = 10;
 var BIP44_PURPOSE = 44;
 var BIP44_COIN_TYPE = 0;
 
-const SOCKET_WORKER_PATH = './socket-worker-dist.js';
-const CRYPTO_WORKER_PATH = './trezor-crypto-dist.js';
+const SOCKET_WORKER_PATH = './js/socket-worker-dist.js';
+const CRYPTO_WORKER_PATH = './js/trezor-crypto-dist.js';
 
 global.alert = '#alert_loading';
 global.device = null;
