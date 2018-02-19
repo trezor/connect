@@ -5,6 +5,7 @@
 // TODO: split to modules (blockchain, device, accounts, ui)
 
 import 'whatwg-fetch';
+import 'babel-polyfill';
 import {Promise} from 'es6-promise';
 
 import bowser from 'bowser';
