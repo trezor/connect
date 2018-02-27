@@ -160,7 +160,19 @@ input[type="password"] {
 }
 
 #alert_connect {
-    margin-top: 120px;
+    margin-top: 100px;
+}
+
+#webusb_button {
+    display: none;
+}
+
+#webusb_button p {
+    margin-bottom: 10px;
+}
+
+#webusb_button button {
+    margin-left: 18px;
 }
 
 
