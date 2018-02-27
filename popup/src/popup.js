@@ -1379,7 +1379,20 @@ let requiredFirmware = '1.3.4';
 
 function waitForFirstDevice(list) {
     let res;
-    if (!(list.hasDeviceOrUnacquiredDevice())) {
+
+    if (list.unreadableHidDevice()) {
+        res = Promise.reject(NO_TRANSPORT);
+    } else if (!(list.hasDeviceOrUnacquiredDevice())) {
+        const webusbButton = document.getElementById('webusb_button');
+        if (list.requestNeeded) {
+            webusbButton.style.display = 'block';
+            webusbButton.onclick = function() {
+                list.requestDevice()
+                webusbButton.onclick = null;
+            }
+        } else {
+            webusbButton.style.display = 'none';
+        }
         res = Promise.reject(NO_CONNECTED_DEVICES);
     } else {
         res = list.acquireFirstDevice(true)
