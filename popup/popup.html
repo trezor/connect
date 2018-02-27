@@ -8,7 +8,7 @@
     <title>TREZOR Connect</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
-    <link rel="stylesheet" href="./css/popup.css?r=1">
+    <link rel="stylesheet" href="./css/popup.css?r=2">
   </head>
   <body>
     <div id="header">
@@ -47,13 +47,18 @@
     </div>
 
     <div id="alert_connect" class="alert fadeout">
-      <img class="alert_icon" src="./img/trezor_connect.png">
-      <div class="alert_heading">
-        Connect your <strong class="smallcaps">TREZOR</strong> device.
-      </div>
-      <div id="webusb_button">
-          <p>and</p>
-          <button>Add new device</button>
+      <div class="connect_wrapper">
+        <div class="connect_row">
+            <img class="alert_icon" src="./img/trezor_connect.png">
+            <div class="alert_heading">
+              <p>Connect <strong class="smallcaps">TREZOR</strong></p>
+              <p>to continue.</p>
+            </div>
+        </div>
+        <div class="connect_row webusb_option">
+            <p>&amp;</p>
+            <button id="webusb_button">Add new device</button>
+        </div>
       </div>
     </div>
 

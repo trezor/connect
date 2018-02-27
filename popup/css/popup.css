@@ -155,24 +155,40 @@ input[type="password"] {
     text-align: left;
 }
 
+.alert_heading p {
+    margin: 0px;
+}
+
 .alert_heading strong {
     font-weight: 400;
 }
 
 #alert_connect {
-    margin-top: 100px;
+    margin-top: 120px; /* 70px */
 }
 
-#webusb_button {
+#alert_connect.webusb {
+    margin-top: 80px;
+}
+
+#alert_connect .connect_wrapper {
+    display: inline-block;
+}
+
+.webusb_option {
     display: none;
 }
 
-#webusb_button p {
-    margin-bottom: 10px;
+#alert_connect.webusb .webusb_option {
+    display: block;
 }
 
-#webusb_button button {
-    margin-left: 18px;
+.webusb_option p {
+    margin: 20px 0px 30px 0px;
+}
+
+.webusb_option button {
+    width: 100%;
 }
 
 

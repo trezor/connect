@@ -1384,14 +1384,17 @@ function waitForFirstDevice(list) {
         res = Promise.reject(NO_TRANSPORT);
     } else if (!(list.hasDeviceOrUnacquiredDevice())) {
         const webusbButton = document.getElementById('webusb_button');
+        const alert = document.getElementById('alert_connect');
         if (list.requestNeeded) {
-            webusbButton.style.display = 'block';
+            alert.classList.add('webusb');
+            // webusbButton.style.display = 'block';
             webusbButton.onclick = function() {
                 list.requestDevice()
                 webusbButton.onclick = null;
             }
         } else {
-            webusbButton.style.display = 'none';
+            alert.classList.remove('webusb');
+            // webusbButton.style.display = 'none';
         }
         res = Promise.reject(NO_CONNECTED_DEVICES);
     } else {
