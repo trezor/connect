@@ -26,7 +26,7 @@ const SCRIPT_TYPES = {
     [NETWORK.pubKeyHash]: 'PAYTOADDRESS',
     [NETWORK.scriptHash]: 'PAYTOSCRIPTHASH'
 };
-const CONFIG_URL = 'https://wallet.trezor.io/data/config_signed.bin';
+const CONFIG_URL = './config_signed.bin';
 const HD_HARDENED = 0x80000000;
 
 var CHUNK_SIZE = 20;
