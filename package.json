@@ -1,6 +1,6 @@
 {
   "name": "trezor-connect",
-  "version": "5.0.0",
+  "version": "6.1.0",
   "author": "TREZOR <info@trezor.io>",
   "homepage": "https://github.com/trezor/connect",
   "description": "High-level javascript interface for TREZOR hardware wallet.",
@@ -18,13 +18,18 @@
     "javascript"
   ],
   "main": "dist/trezor-connect.js",
+  "bin": {
+    "bump": "./node_modules/version-bump-prompt/bin/bump",
+    "karma": "./node_modules/karma/bin/karma"
+  },
   "scripts": {
     "build": "rm -rf dist && webpack --config ./webpack/webpack.config.prod.babel.js",
     "stats": "webpack --config ./webpack/webpack.config.prod.babel.js --json > dist/stats.json",
-    "test": "./node_modules/karma/bin/karma start karma.conf.js",
+    "test": "karma start karma.conf.js",
     "flow": "flow check src/js",
     "eslint": "eslint src/js",
-    "eslint-fix": "eslint --fix src/js"
+    "eslint-fix": "eslint --fix src/js",
+    "bump": "bump --minor"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -67,6 +72,7 @@
     "pre-build-webpack": "^0.1.0",
     "style-loader": "^0.20.2",
     "uglifyjs-webpack-plugin": "1.1.8",
+    "version-bump-prompt": "^4.0.0",
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.5.0",
     "webpack-hot-middleware": "^2.18.0",
