@@ -6,6 +6,7 @@ node_js:
   - "4.4"
 
 script:
+  - npm install -g yarn
   - npm install
   - make build
 
