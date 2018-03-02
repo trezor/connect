@@ -1,0 +1,31 @@
+# Dev directories
+webpack
+src
+dist
+_old
+.babelrc
+.flowconfig
+flowtype
+.gitignore
+
+# Example directories
+examples
+
+# Dependency directory
+node_modules
+yarn.lock
+
+# OSX
+.DS_Store
+
+# Editors
+.editorconfig
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+logs
+*.log
+.yarnclean

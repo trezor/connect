@@ -1,0 +1,10 @@
+[
+	{
+		"required": true,
+		"version": [2, 0, 5],
+		"min_bridge_version": [2, 0, 7],
+		"url": "data/firmware/2/trezor-2.0.5.bin.hex",
+		"fingerprint": "851172eab96c07bf9efb43771cb0fd14dc0320a68de047132c7bd787a1ad64e9",
+		"changelog": "* first public release"
+	}
+]

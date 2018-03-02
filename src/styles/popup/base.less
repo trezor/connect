@@ -1,0 +1,174 @@
+* , *:before , *:after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+*:focus, *:active, *:active:focus, *.focus, *:active.focus, *.active.focus, *::selection, *::-moz-selection {
+    outline: 0 !important;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+html {
+    font-size: 100%;
+    line-height: 1.5;
+    position: relative;
+    overflow-y: scroll;
+}
+
+body {
+    min-width: 450px;
+    color: @color_primary_text;
+    font: 400 18px/1.4 Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(0deg, #ffffff, #fcfcfc) no-repeat;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+a {
+    color: @color_link;
+    text-decoration: underline;
+    &:visited {
+        color: @color_link_visited;
+    }
+}
+
+main {
+    width: 100%;
+    min-height: 100%;
+    padding-top: 54px;
+    padding-bottom: 28px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// #container {
+//     width: 100%;
+//     border: 1px solid red;
+// }
+
+#views {
+    display: none;
+}
+
+.loader {
+    position: relative;
+    padding: 30px 0px;
+
+    p {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        display: none;
+    }
+}
+
+h3 {
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1;
+}
+
+h4 {
+    font-size: 14px;
+    color: @color_secondary_text;
+    font-weight: 300;
+    line-height: 1;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 250px;
+    padding: 6px;
+    border: 0;
+    border-bottom: 1px solid @color_secondary_text;
+    background: transparent;
+    color: @color_primary_text;
+    font-size: 18px;
+    // disable lastpass icons
+    background-image: none !important;
+    padding-right: 0 !important;
+}
+
+input:focus {
+    outline: 0;
+}
+
+// disable lastpass helper
+#__lpform_input_idx_0_numspan,
+#__lpform_input_idx_0 {
+    display: none;
+}
+
+button {
+    padding: 8px 12px;
+    font-size: 18px;
+    background: transparent;
+    border: 1px solid @color_secondary_text;
+    border-radius: 5px;
+    color: @color_secondary_text;
+    cursor: pointer;
+    transition: background 0.5s, color 0.5s, border 0.5s, opacity 0.5s;
+
+    &:hover {
+        color: @color_link;
+        border-color: @color_link;
+    }
+    &:active {
+        color: @color_white;
+        border-color: @color_secondary_text;
+        background: @color_secondary_text;
+        transition: none;
+    }
+    &:focus {
+        outline: 0;
+    }
+}
+
+button[disabled] {
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+
+.connect {
+    font-size: 32px;
+    font-weight: 100;
+    line-height: 1.3;
+    .icon {
+        display: inline-block;
+        width: 90px;
+        height: 90px;
+        border: 1px solid #333333;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+}
+
+.permissions {
+    h3 {
+        span {
+            display: block;
+            font-weight: 400;
+        }
+    }
+}
+
+.permissions_list {
+    list-style-type: none;
+}

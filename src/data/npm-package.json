@@ -1,0 +1,30 @@
+{
+    "name": "trezor-connect-alpha",
+    "description": "trezor-connect-alpha",
+    "homepage": "https://github.com/szymonlesisz/trezor-connect-alpha",
+    "main": "dist/index.js",
+    "version": "0.0.5",
+    "maintainers": [
+      {
+        "name": "Szymon Lesisz",
+        "email": "szymon.lesisz@gmail.com",
+        "web": "http://satoshilabs.com"
+      }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/szymonlesisz/trezor-connect-alpha.git"
+    },
+    "bugs": {
+        "url": "https://github.com/szymonlesisz/trezor-connect-alpha/issues"
+    },
+    "license": "LGPL-3.0+",
+    "dependencies": {
+        "bip44-constants": "^4.0.1",
+        "bitcoinjs-lib-zcash": "^3.0.0",
+        "hd-wallet": "^7.7.8",
+        "trezor-link": "1.0.6",
+        "whatwg-fetch": "^2.0.3",
+        "window-or-global": "^1.0.1"
+    }
+  }

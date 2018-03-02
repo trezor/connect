@@ -1,0 +1,45 @@
+.pin {
+
+    h4 {
+        margin-bottom: 10px;
+    }
+    .pin_row {
+        button {
+            width: 55px;
+            height: 55px;
+            margin-top: 10px;
+            margin-left: 5px;
+            &:first-child {
+                margin-left: 0px;
+            }
+        }
+    }
+
+    .pin_input_row {
+        margin-top: 10px;
+        display: inline-block;
+        position: relative;
+    }
+
+    input {
+        width: 185px;
+    }
+
+    .pin_backspace {
+        position: absolute;
+        right: 0;
+        top: 4px;
+        padding: 3px 3px 1px;
+        border: 0;
+        border-radius: 0;
+        &:active {
+            color: @color_link;
+            background: transparent;
+        }
+    }
+
+    .submit {
+        margin-top: 10px;
+        width: 185px;
+    }
+}

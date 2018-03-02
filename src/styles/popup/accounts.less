@@ -1,0 +1,92 @@
+.select_account {
+    height: 100%;
+    align-self: flex-start;
+
+    &.normal {
+        .account_type_normal {
+            border-bottom: 3px solid #4cc148;
+        }
+
+        .accounts_normal {
+            display: block;
+        }
+    }
+
+    &.legacy {
+        .account_type_legacy {
+            border-bottom: 3px solid #4cc148;
+        }
+
+        .accounts_legacy {
+            display: block;
+        }
+    }
+}
+
+.account_type_tabs {
+    display: none;
+    width: 270px;
+    margin: 0px auto;
+    padding: 10px 0px;
+
+    .account_type_tab {
+        float: left;
+        cursor: pointer;
+
+        &:last-child {
+            float: right;
+        }
+
+        &.active2 {
+            border-bottom: 3px solid #4cc148;
+        }
+    }
+
+    &:after {
+        content: '\00a0';
+        clear: both;
+    }
+}
+
+.accounts_list {
+    width: 270px;
+    margin: 0px auto;
+
+    .accounts_normal {
+        display: none;
+    }
+
+    .accounts_legacy {
+        display: none;
+    }
+}
+
+.account {
+    button {
+        width: 270px;
+        margin-bottom: -1px;
+        border-radius: 0;
+
+        span {
+            display: block;
+        }
+
+        .account_status {
+            font-size: 14px;
+        }
+    }
+
+    &:first-child {
+        button {
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+    }
+
+    &:last-child {
+        button {
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+    }
+}

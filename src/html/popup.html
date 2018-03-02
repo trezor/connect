@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>TrezorConnect | TREZOR</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="TREZOR info@trezor.io" />
+    <meta name="robots" content="index, follow" />
+    <meta name="title" content="TREZOR Connect" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400">
+</head>
+<body>
+    <header>
+        <figure>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2567.5 722.3" width="100%" height="100%" preserveAspectRatio="xMinYMin meet"><path d="M1186 2932.6h46.2v147H1186v-147z"></path><path d="M249 0C149.9 0 69.7 80.2 69.7 179.3v67.2C34.9 252.8 0 261.2 0 272.1v350.7s0 9.7 10.9 14.3c39.5 16 194.9 71 230.6 83.6 4.6 1.7 5.9 1.7 7.1 1.7 1.7 0 2.5 0 7.1-1.7 35.7-12.6 191.5-67.6 231-83.6 10.1-4.2 10.5-13.9 10.5-13.9V272.1c0-10.9-34.4-19.7-69.3-25.6v-67.2C428.4 80.2 347.7 0 249 0zm0 85.7c58.4 0 93.7 35.3 93.7 93.7v58.4c-65.5-4.6-121.4-4.6-187.3 0v-58.4c0-58.5 35.3-93.7 93.6-93.7zm-.4 238.1c81.5 0 149.9 6.3 149.9 17.6v218.8c0 3.4-.4 3.8-3.4 5-2.9 1.3-139 50.4-139 50.4s-5.5 1.7-7.1 1.7c-1.7 0-7.1-2.1-7.1-2.1s-136.1-49.1-139-50.4-3.4-1.7-3.4-5V341c-.8-11.3 67.6-17.2 149.1-17.2z"></path><g transform="translate(91.363 -287.434) scale(.95575)"><path d="M666.6 890V639.3H575v-89.9h285.6v89.9h-90.7V890H666.6z"></path><path d="M1092 890l-47-107.1h-37.4V890H904.3V549.4h181.8c79.8 0 122.6 52.9 122.6 116.7 0 58.8-34 89.9-61.3 103.3l61.7 120.5H1092zm12.2-223.9c0-18.5-16.4-26.5-33.6-26.5h-63v53.8h63c17.2-.4 33.6-8.4 33.6-27.3z"></path><path d="M1262.9 890V549.4h258.3v89.9h-155.4v33.6h151.6v89.9h-151.6v37.4h155.4V890h-258.3z"></path><path d="M1574.9 890.4v-81.9l129.8-168.8h-129.8v-89.9h265.8v81.1l-130.2 169.7h134v89.9l-269.6-.1z"></path><path d="M1869.7 720.3c0-104.6 81.1-176.4 186.5-176.4 105 0 186.5 71.4 186.5 176.4 0 104.6-81.1 176-186.5 176s-186.5-71.4-186.5-176zm268 0c0-47.5-32.3-85.3-81.9-85.3-49.6 0-81.9 37.8-81.9 85.3s32.3 85.3 81.9 85.3c50 0 81.9-37.8 81.9-85.3z"></path><path d="M2473.6 890.4l-47-107.1h-37.4v107.1h-103.3V549.8h181.8c79.8 0 122.6 52.9 122.6 116.7 0 58.8-34 89.9-61.3 103.3l61.7 120.5h-117.1zm12.6-224.3c0-18.5-16.4-26.5-33.6-26.5h-63v53.8h63c17.3-.4 33.6-8.4 33.6-27.3z"></path></g></svg>
+        </figure>
+        <aside>
+            <figure class="icon">
+                <img src="" width="auto" height="100%" alt="" />
+            </figure>
+            <div class="operation"></div>
+            <div class="origin"></div>
+        </aside>
+    </header>
+    <main id="container">
+        <!-- default view: loader -->
+        <div class="loader">
+            <svg width='60px' height='60px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                <rect x="0" y="0" width="100" height="100" fill="none"></rect>
+                <defs>
+                    <filter id="uil-ring-shadow" x="-100%" y="-100%" width="300%" height="300%">
+                        <feOffset result="offOut" in="SourceGraphic" dx="0" dy="0"></feOffset>
+                        <feGaussianBlur result="blurOut" in="offOut" stdDeviation="0"></feGaussianBlur>
+                        <feBlend in="SourceGraphic" in2="blurOut" mode="normal"></feBlend>
+                    </filter>
+                </defs>
+                <path d="M10,50c0,0,0,0.5,0.1,1.4c0,0.5,0.1,1,0.2,1.7c0,0.3,0.1,0.7,0.1,1.1c0.1,0.4,0.1,0.8,0.2,1.2c0.2,0.8,0.3,1.8,0.5,2.8 c0.3,1,0.6,2.1,0.9,3.2c0.3,1.1,0.9,2.3,1.4,3.5c0.5,1.2,1.2,2.4,1.8,3.7c0.3,0.6,0.8,1.2,1.2,1.9c0.4,0.6,0.8,1.3,1.3,1.9 c1,1.2,1.9,2.6,3.1,3.7c2.2,2.5,5,4.7,7.9,6.7c3,2,6.5,3.4,10.1,4.6c3.6,1.1,7.5,1.5,11.2,1.6c4-0.1,7.7-0.6,11.3-1.6 c3.6-1.2,7-2.6,10-4.6c3-2,5.8-4.2,7.9-6.7c1.2-1.2,2.1-2.5,3.1-3.7c0.5-0.6,0.9-1.3,1.3-1.9c0.4-0.6,0.8-1.3,1.2-1.9 c0.6-1.3,1.3-2.5,1.8-3.7c0.5-1.2,1-2.4,1.4-3.5c0.3-1.1,0.6-2.2,0.9-3.2c0.2-1,0.4-1.9,0.5-2.8c0.1-0.4,0.1-0.8,0.2-1.2 c0-0.4,0.1-0.7,0.1-1.1c0.1-0.7,0.1-1.2,0.2-1.7C90,50.5,90,50,90,50s0,0.5,0,1.4c0,0.5,0,1,0,1.7c0,0.3,0,0.7,0,1.1 c0,0.4-0.1,0.8-0.1,1.2c-0.1,0.9-0.2,1.8-0.4,2.8c-0.2,1-0.5,2.1-0.7,3.3c-0.3,1.2-0.8,2.4-1.2,3.7c-0.2,0.7-0.5,1.3-0.8,1.9 c-0.3,0.7-0.6,1.3-0.9,2c-0.3,0.7-0.7,1.3-1.1,2c-0.4,0.7-0.7,1.4-1.2,2c-1,1.3-1.9,2.7-3.1,4c-2.2,2.7-5,5-8.1,7.1 c-0.8,0.5-1.6,1-2.4,1.5c-0.8,0.5-1.7,0.9-2.6,1.3L66,87.7l-1.4,0.5c-0.9,0.3-1.8,0.7-2.8,1c-3.8,1.1-7.9,1.7-11.8,1.8L47,90.8 c-1,0-2-0.2-3-0.3l-1.5-0.2l-0.7-0.1L41.1,90c-1-0.3-1.9-0.5-2.9-0.7c-0.9-0.3-1.9-0.7-2.8-1L34,87.7l-1.3-0.6 c-0.9-0.4-1.8-0.8-2.6-1.3c-0.8-0.5-1.6-1-2.4-1.5c-3.1-2.1-5.9-4.5-8.1-7.1c-1.2-1.2-2.1-2.7-3.1-4c-0.5-0.6-0.8-1.4-1.2-2 c-0.4-0.7-0.8-1.3-1.1-2c-0.3-0.7-0.6-1.3-0.9-2c-0.3-0.7-0.6-1.3-0.8-1.9c-0.4-1.3-0.9-2.5-1.2-3.7c-0.3-1.2-0.5-2.3-0.7-3.3 c-0.2-1-0.3-2-0.4-2.8c-0.1-0.4-0.1-0.8-0.1-1.2c0-0.4,0-0.7,0-1.1c0-0.7,0-1.2,0-1.7C10,50.5,10,50,10,50z" fill="#cec9c9" filter="url(#uil-ring-shadow)">
+                    <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" repeatCount="indefinite" dur="1s"></animateTransform>
+                </path>
+            </svg>
+        </div>
+    </main>
+    <footer>
+        <span>© 2017</span>
+        <a href="http://satoshilabs.com" target="_blank">SatoshiLabs</a>
+    </footer>
+
+    <!-- Views -->
+    <div id="views" style="display: none;">
+
+        <div class="unknown">
+            <h3>Unknown view</h3>
+            <h4>view_name</h4>
+        </div>
+
+        <!-- Loader -->
+        <div class="loader">
+            <p>Message</p>
+            <svg width='60px' height='60px' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                <rect x="0" y="0" width="100" height="100" fill="none"></rect>
+                <defs>
+                    <filter id="uil-ring-shadow" x="-100%" y="-100%" width="300%" height="300%">
+                        <feOffset result="offOut" in="SourceGraphic" dx="0" dy="0"></feOffset>
+                        <feGaussianBlur result="blurOut" in="offOut" stdDeviation="0"></feGaussianBlur>
+                        <feBlend in="SourceGraphic" in2="blurOut" mode="normal"></feBlend>
+                    </filter>
+                </defs>
+                <path d="M10,50c0,0,0,0.5,0.1,1.4c0,0.5,0.1,1,0.2,1.7c0,0.3,0.1,0.7,0.1,1.1c0.1,0.4,0.1,0.8,0.2,1.2c0.2,0.8,0.3,1.8,0.5,2.8 c0.3,1,0.6,2.1,0.9,3.2c0.3,1.1,0.9,2.3,1.4,3.5c0.5,1.2,1.2,2.4,1.8,3.7c0.3,0.6,0.8,1.2,1.2,1.9c0.4,0.6,0.8,1.3,1.3,1.9 c1,1.2,1.9,2.6,3.1,3.7c2.2,2.5,5,4.7,7.9,6.7c3,2,6.5,3.4,10.1,4.6c3.6,1.1,7.5,1.5,11.2,1.6c4-0.1,7.7-0.6,11.3-1.6 c3.6-1.2,7-2.6,10-4.6c3-2,5.8-4.2,7.9-6.7c1.2-1.2,2.1-2.5,3.1-3.7c0.5-0.6,0.9-1.3,1.3-1.9c0.4-0.6,0.8-1.3,1.2-1.9 c0.6-1.3,1.3-2.5,1.8-3.7c0.5-1.2,1-2.4,1.4-3.5c0.3-1.1,0.6-2.2,0.9-3.2c0.2-1,0.4-1.9,0.5-2.8c0.1-0.4,0.1-0.8,0.2-1.2 c0-0.4,0.1-0.7,0.1-1.1c0.1-0.7,0.1-1.2,0.2-1.7C90,50.5,90,50,90,50s0,0.5,0,1.4c0,0.5,0,1,0,1.7c0,0.3,0,0.7,0,1.1 c0,0.4-0.1,0.8-0.1,1.2c-0.1,0.9-0.2,1.8-0.4,2.8c-0.2,1-0.5,2.1-0.7,3.3c-0.3,1.2-0.8,2.4-1.2,3.7c-0.2,0.7-0.5,1.3-0.8,1.9 c-0.3,0.7-0.6,1.3-0.9,2c-0.3,0.7-0.7,1.3-1.1,2c-0.4,0.7-0.7,1.4-1.2,2c-1,1.3-1.9,2.7-3.1,4c-2.2,2.7-5,5-8.1,7.1 c-0.8,0.5-1.6,1-2.4,1.5c-0.8,0.5-1.7,0.9-2.6,1.3L66,87.7l-1.4,0.5c-0.9,0.3-1.8,0.7-2.8,1c-3.8,1.1-7.9,1.7-11.8,1.8L47,90.8 c-1,0-2-0.2-3-0.3l-1.5-0.2l-0.7-0.1L41.1,90c-1-0.3-1.9-0.5-2.9-0.7c-0.9-0.3-1.9-0.7-2.8-1L34,87.7l-1.3-0.6 c-0.9-0.4-1.8-0.8-2.6-1.3c-0.8-0.5-1.6-1-2.4-1.5c-3.1-2.1-5.9-4.5-8.1-7.1c-1.2-1.2-2.1-2.7-3.1-4c-0.5-0.6-0.8-1.4-1.2-2 c-0.4-0.7-0.8-1.3-1.1-2c-0.3-0.7-0.6-1.3-0.9-2c-0.3-0.7-0.6-1.3-0.8-1.9c-0.4-1.3-0.9-2.5-1.2-3.7c-0.3-1.2-0.5-2.3-0.7-3.3 c-0.2-1-0.3-2-0.4-2.8c-0.1-0.4-0.1-0.8-0.1-1.2c0-0.4,0-0.7,0-1.1c0-0.7,0-1.2,0-1.7C10,50.5,10,50,10,50z" fill="#cec9c9" filter="url(#uil-ring-shadow)">
+                    <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" repeatCount="indefinite" dur="1s"></animateTransform>
+                </path>
+            </svg>
+        </div>
+        <!-- Loader: END -->
+
+        <!-- Connect -->
+        <div class="connect">
+            <div class="icon">
+                <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 110.000000 110.000000" preserveAspectRatio="xMidYMid meet">
+                    <g transform="translate(0.000000,110.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                        <path d="M412 875 c-75 -33 -212 -190 -212 -244 0 -18 39 -64 158 -184 86 -87 169 -165 184 -173 14 -7 61 -25 103 -39 70 -22 79 -23 104 -10 35 17 121 112 121 131 0 20 -39 142 -58 179 -18 37 -297 321 -334 341 -32 17 -25 17 -66 -1z m201 -193 c153 -153 158 -160 182 -231 14 -40 25 -78 25 -85 0 -6 -22 -33 -49 -60 l-49 -48 -73 23 c-84 26 -112 50 -294 238 -126 130 -124 121 -56 196 45 51 132 125 146 125 5 0 81 -71 168 -158z"/>
+                        <path d="M410 665 l-84 -84 45 -50 c24 -27 51 -49 60 -50 8 -1 53 37 99 84 l83 86 -48 49 c-27 28 -54 50 -60 50 -6 0 -48 -38 -95 -85z m147 8 c7 -6 13 -15 13 -20 0 -5 -31 -40 -70 -78 l-70 -69 -30 29 c-16 16 -30 33 -30 39 0 6 30 41 67 78 73 74 65 72 120 21z"/>
+                        <path d="M825 250 l-29 -30 27 -27 27 -28 32 32 32 32 -24 26 c-13 14 -26 25 -30 25 -3 0 -19 -14 -35 -30z m45 -19 c0 -12 -20 -25 -27 -18 -7 7 6 27 18 27 5 0 9 -4 9 -9z"/>
+                        <path d="M898 183 l-52 -53 34 -35 c19 -19 37 -35 40 -35 3 0 30 21 59 48 l53 47 -40 41 -41 41 -53 -54z m81 -12 c8 -14 4 -24 -17 -45 -32 -30 -44 -32 -62 -11 -11 13 -8 21 15 45 33 35 50 38 64 11z"/>
+                    </g>
+                </svg>
+            </div>
+            <p>Connect your <strong class="smallcaps">TREZOR</strong> device.</p>
+        </div>
+        <!-- Connect: END -->
+
+        <!-- Pin -->
+        <div class="pin">
+            <h3>Please enter your PIN.</h3>
+            <h4>Look at the device for number positions.</h4>
+            <div class="pin_row">
+                <button type="button" data-value="7">&#8226;</button>
+                <button type="button" data-value="8">&#8226;</button>
+                <button type="button" data-value="9">&#8226;</button>
+            </div>
+            <div class="pin_row">
+                <button type="button" data-value="4">&#8226;</button>
+                <button type="button" data-value="5">&#8226;</button>
+                <button type="button" data-value="6">&#8226;</button>
+            </div>
+            <div class="pin_row">
+                <button type="button" data-value="1">&#8226;</button>
+                <button type="button" data-value="2">&#8226;</button>
+                <button type="button" data-value="3">&#8226;</button>
+            </div>
+            <div class="pin_input_row">
+                <input type="password" class="input" autocomplete="off" maxlength="9" data-lpignore="true" disabled />
+                <button type="button" class="pin_backspace">&#9003;</button>
+            </div>
+            <div><button class="submit" type="button">Enter</button></div>
+        </div>
+        <!-- Pin: END -->
+
+        <!-- Pin invalid -->
+        <div class="invalid_pin">
+            <h3>Entered PIN is not correct. Retrying...</h3>
+        </div>
+        <!-- Pin invalid: END -->
+
+        <!-- Passphrase -->
+        <div class="passphrase">
+            <h3>Please enter your passphrase.</h3>
+            <h4>Note that passphrase is case-sensitive.</h4>
+            <div>
+                <input
+                    type="password"
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    data-lpignore="true"
+                    tabindex="1" />
+            </div>
+            <div class="passphrase_options">
+                <label>
+                    <input type="checkbox" class="show_passphrase" tabindex="2" />
+                    <span>Show passphrase</span>
+                </label>
+                <label>
+                    <input type="checkbox" class="save_passphrase" tabindex="3" checked />
+                    <span>Save passphrase for future use</span>
+                </label>
+            </div>
+            <div>
+                <button type="button" class="submit" tabindex="4">Enter</button>
+            </div>
+        </div>
+        <!-- Passphrase: END -->
+
+        <!-- Permissions -->
+        <div class="permissions">
+            <h3><span>HOST</span> is requesting permissions to:</h3>
+            <div class="permissions_list"></div>
+            <button class="confirm_button">Accept</button>
+            <button class="cancel_button">Cancel</button>
+        </div>
+        <!-- Permissions: END -->
+
+        <!-- Export xpub confirmation -->
+        <div class="export_xpub">
+            <h3>getxpubConfirmation</h3>
+            <button class="confirm_button">Export</button>
+            <button class="cancel_button">Cancel</button>
+        </div>
+        <!-- Export xpub confirmation: END -->
+
+        <!-- Device selection -->
+        <div class="select_device">
+            <h3>Select device:</h3>
+            <div class="select_device_list"></div>
+        </div>
+        <!-- Device selection: END -->
+
+        <!-- Account selection -->
+        <div class="select_account normal">
+            <h3>Select account:</h3>
+            <div class="account_type_tabs">
+                <div data-tab="normal" class="account_type_tab account_type_normal active">Accounts</div>
+                <div data-tab="legacy" class="account_type_tab account_type_legacy">Legacy Accounts</div>
+            </div>
+            <div class="accounts_list">
+                <div class="accounts_normal">
+                    <div class="account account_default">
+                        <button disabled>
+                            <span class="account_title">Account #1</span>
+                            <span class="account_status">Loading...</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="accounts_legacy">
+                    <div class="account account_default">
+                        <button disabled>
+                            <span class="account_title">Account #1</span>
+                            <span class="account_status">Loading...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Account selection: END -->
+
+        <!-- Device selection -->
+        <div class="select_fee">
+            <h3>Select fee:</h3>
+            <div class="change_account">
+                <span>Change account</span>
+            </div>
+            <div class="select_fee_list">
+
+                <div class="fee">
+                    <button class="fee-custom-opener untouched">
+                        <span class="fee-name">custom</span>
+                        <span class="fee-insufficient-funds"></span>
+                        <span class="fee-size"></span>
+                        <span class="fee-minutes"></span>
+                    </button>
+                    <div class="fee-custom hidden">
+                        <div class="fee-custom-wrapper">
+                            <input type="text" name="custom_fee" value="1" data-lpignore="true" />
+                            <div class="fee-custom-label">sat/B</div>
+                            <button class="fee-custom-button" disabled="disabled">SEND</button>
+                        </div>
+                        <div class="fee-custom-warning">
+                            <strong>Setting custom fee is not recommended.</strong>
+                            If you set too low fee, it might get stuck forever.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Device selection: END -->
+
+        <div class="insufficient_funds">
+            <h3>Account funds are insufficient. Retrying...</h3>
+        </div>
+
+        <div class="amount_too_low">
+            <div class="alert_heading">Amount too low. Retrying...</div>
+        </div>
+
+        <!-- Simple message -->
+        <div class="simple_message">
+            <h3>Header</h3>
+            <div class="message">Message</div>
+        </div>
+        <!-- Simple message: END -->
+
+
+        <!-- Device in bootloader mode -->
+        <div class="bootloader">
+            <div>
+              Connected device is in<br> firmware update mode.<br> Please re-connect it.
+            </div>
+        </div>
+        <!-- Device in bootloader mode: END -->
+
+        <div class="initialize">
+            <div>
+                Your device needs to be initialized first. Please try again after
+                initializing at
+                <a href="https://wallet.trezor.io" onclick="closeWindow();" target="_blank">TREZOR Wallet</a>.
+            </div>
+        </div>
+
+        <div class="firmware">
+            <div>
+                The firmware of your device needs to be upgraded. Please try again after
+                upgrading at
+                <a href="https://wallet.trezor.io" onclick="closeWindow();" target="_blank">TREZOR Wallet</a>.
+            </div>
+        </div>
+
+        <div class="browser_not_supported">
+            <div>
+                Only Chrome, Firefox, Safari and Microsoft Edge browsers are supported. Sorry!
+            </div>
+            <button onclick="closeWindow();">CLOSE</button>
+        </div>
+
+        <div class="browser_mobile">
+            <div>
+                We are sorry, mobile phones are not yet supported. Please, try again on your computer.
+            </div>
+            <button onclick="closeWindow();">CLOSE</button>
+        </div>
+
+        <div class="transport">
+            <p>
+                To use your <strong class="smallcaps">TREZOR</strong> device, proceed
+                with instructions at
+                <a href="https://wallet.trezor.io" onclick="closeWindow();" target="_blank">TREZOR Wallet</a>
+                and try again afterwards.
+            </p>
+            <p>
+                <a href="https://trezor.io" onclick="closeWindow();" target="_blank">What is <span class="smallcaps">TREZOR</span>?</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

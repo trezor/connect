@@ -1,0 +1,12 @@
+{
+    "transport-config": "config_signed.bin",
+    "transport-bridge-latest": "latest.txt",
+    "coins": "coins.json",
+    "firmwares": "releases.json",
+
+    "debug": [
+        "deviceList",
+        "transport"
+    ]
+
+}
