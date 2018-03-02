@@ -1,20 +1,7 @@
-# Npm library
-# lib
-
-# tmp for npm test
-#.babelrc
-#.flowconfig
-#.editorconfig
-#.yarnclean
-#browserslist
-#yarn.lock
+# Builds
 _old
 dist
-
-/examples
-#flowtype
-#src
-#webpack
+dist-npm
 
 # Dependency directory
 node_modules
