@@ -31,13 +31,12 @@ sync-%:
 	# Configure access credentials (aws configure), region is "eu-central-1"
 	aws s3 sync --delete dist/ s3://connect.trezor.io/$*/
 
-
-npm-%:
-	rm -rf dist/npm
-	mkdir -p dist/npm
-	cp src/data/package-connect.json dist/npm/package.json
-	cp README.md dist/npm/README.md
-	cp COPYING dist/npm/COPYING
-	cp dist/js/trezor-connect.*.js dist/npm/index.js
-	cd dist/npm && npm version $*
-	npm publish
+npm:
+	yarn bump
+	rm -rf dist-npm
+	mkdir -p dist-npm
+	cp ./package.npm.connect.json ./dist-npm/package.json
+	cp README.md ./dist-npm/README.md
+	cp COPYING ./dist-npm/COPYING
+	cp ./dist/js/trezor-connect.*.js ./dist-npm/index.js
+	# cd ./dist-npm && npm publish
