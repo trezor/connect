@@ -72,7 +72,8 @@ export const postMessage = (message: CoreMessage): void => {
     if (!window.opener || !iframe) return;
 
     if (iframe) {
-        iframe.postMessage(message, '*');
+        // iframe.postMessage(message, '*');
+        iframe.postMessage(message, window.location.origin);
         // _iframe.contentWindow.postMessage(message, '*');
     } else {
         // TODO: post CoreMessage

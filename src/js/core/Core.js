@@ -96,8 +96,16 @@ const postMessage = (message: CoreMessage): void => {
  * @returns {void}
  * @memberof Core
  */
-export const handleMessage = (message: CoreMessage): void => {
-    _log.log('handle message in core', message);
+export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = false): void => {
+    _log.log('handle message in core', isTrustedOrigin, message);
+
+    const safeMessages: Array<string> = [ IFRAME.CALL, POPUP.CLOSED, UI.CHANGE_SETTINGS ];
+
+    if (!isTrustedOrigin && safeMessages.indexOf(message.type) === -1) {
+        console.error("Message not trusted", message);
+        return;
+    }
+
     switch (message.type) {
 
         case POPUP.HANDSHAKE :
@@ -683,8 +691,8 @@ export class Core extends EventEmitter {
     constructor() {
         super();
     }
-    handleMessage(message: Object): void {
-        handleMessage(message);
+    handleMessage(message: Object, isTrustedOrigin: boolean): void {
+        handleMessage(message, isTrustedOrigin);
     }
     onBeforeUnload(): void {
         if (_deviceList) {

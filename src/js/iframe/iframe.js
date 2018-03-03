@@ -25,12 +25,19 @@ const loggerPopup: Log = initLog('Popup');
 // we need to listen events from Core and convert it to simple objects possible to send over window.postMessage
 
 const handleMessage = (event: MessageEvent): void => {
-    // ignore message from myself
+    // ignore messages from myself (chrome bug?)
     if (event.source === window) return;
 
-    // ignore messages from domain other then parent.window or popup.window
+    // ignore not trusted
+    if (!event.isTrusted) return;
+
+    // is message from popup or extension?
+    const isTrustedOrigin: boolean = (event.origin === window.location.origin || event.origin === 'chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk');
+
+    // ignore messages from domain other then parent.window or popup.window or chrome extension
     // if (event.origin !== window.top.location.origin && event.origin !== window.location.origin) return;
-    if (getOrigin(event.origin) !== getOrigin(document.referrer) && event.origin !== window.location.origin && event.origin !== 'chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk') return;
+    // if (getOrigin(event.origin) !== getOrigin(document.referrer) && event.origin !== window.location.origin && event.origin !== 'chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk') return;
+    if (getOrigin(event.origin) !== getOrigin(document.referrer) && !isTrustedOrigin) return;
 
     const message: CoreMessage = parseMessage(event.data);
 
@@ -51,7 +58,7 @@ const handleMessage = (event: MessageEvent): void => {
     }
 
     // pass data to Core
-    _core.handleMessage(message);
+    _core.handleMessage(message, isTrustedOrigin);
 };
 
 // communication with parent window
