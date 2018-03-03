@@ -39,15 +39,17 @@ export const parse = (input: ?Object): ConnectSettings => {
     if (!input) return currentSettings;
 
     const settings: ConnectSettings = { ...currentSettings };
-    if (typeof input.debug === 'boolean') {
-        settings.debug = input.debug;
-    } else if (typeof input.debug === 'string') {
-        settings.debug = input.debug === 'true';
+    if (input.hasOwnProperty('debug')) {
+        if (Array.isArray(input)) {
+            // enable log with prefix
+        } if (typeof input.debug === 'boolean') {
+            settings.debug = input.debug;
+        } else if (typeof input.debug === 'string') {
+            settings.debug = input.debug === 'true';
+        }
     }
 
-    if (typeof input.hostname === 'string') {
-        settings.trustedHost = input.hostname === 'localhost'; // || trezor.io
-    }
+
     const hostname: string = window.location.hostname;
     const host: string = hostname.substring(hostname.lastIndexOf(".", hostname.lastIndexOf(".") - 1) + 1);
     settings.trustedHost = host === 'localhost' || host === 'trezor.io';

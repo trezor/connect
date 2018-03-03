@@ -38,7 +38,7 @@ export {
     RESPONSE_EVENT,
 };
 
-const _log: Log = new Log('[trezor-connect.js]', true);
+const _log: Log = new Log('[trezor-connect.js]');
 let _settings: ConnectSettings;
 let _popupManager: PopupManager;
 let _iframe: HTMLIFrameElement;
