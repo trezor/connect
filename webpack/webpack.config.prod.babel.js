@@ -94,6 +94,7 @@ module.exports = {
         }),
 
         new CopyWebpackPlugin([
+            { from: `${DATA_SRC}config.json`, to: `${DIST}data/config.json` },
             { from: `${DATA_SRC}coins.json`, to: `${DIST}data/coins.json` },
             { from: `${DATA_SRC}config_signed.bin`, to: `${DIST}data/config_signed.bin` },
             { from: `${DATA_SRC}latest.txt`, to: `${DIST}data/latest.txt` },

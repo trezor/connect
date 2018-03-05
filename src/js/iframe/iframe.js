@@ -5,6 +5,7 @@ import { LOG } from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
 
 import { parse as parseSettings } from '../entrypoints/ConnectSettings';
+import DataManager from '../data/DataManager';
 
 import { Core, CORE_EVENT, init as initCore } from '../core/Core';
 import { parseMessage, UiMessage, ErrorMessage } from '../core/CoreMessage';
@@ -32,7 +33,8 @@ const handleMessage = (event: MessageEvent): void => {
     // if (!event.isTrusted) return;
 
     // is message from popup or extension
-    const isTrustedDomain: boolean = (event.origin === window.location.origin || event.origin === 'chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk');
+    // const isTrustedDomain: boolean = (event.origin === window.location.origin || event.origin === 'chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk');
+    const isTrustedDomain: boolean = (event.origin === window.location.origin || DataManager.config.whitelist.indexOf(event.origin) >= 0);
 
     // ignore messages from domain other then parent.window or popup.window or chrome extension
     // if (event.origin !== window.top.location.origin && event.origin !== window.location.origin) return;

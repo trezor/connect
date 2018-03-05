@@ -4,24 +4,42 @@
 import { httpRequest } from '../utils/networkUtils';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
 import { parseCoinsJson } from '../backend/CoinInfo';
+import { Promise } from 'es6-promise';
 
 export default class DataManager {
 
+    static config: JSON;
     static releases: JSON;
     static settings: ConnectSettings;
     static cachePassphrase: boolean = false;
 
     static async load(settings: ConnectSettings): Promise<void> {
+        const configUrl: string = `${settings.config_src}?r=${ new Date().getTime() }`;
         const coinsUrl: string = settings.coins_src;
         const releasesUrl: string = settings.firmware_releases_src;
 
         try {
+            const config: JSON = await httpRequest(configUrl, 'json');
             const coins: JSON = await httpRequest(coinsUrl, 'json');
             const releases: JSON = await httpRequest(releasesUrl, 'json');
 
+            this.config = config;
             this.releases = releases;
             this.settings = settings;
             parseCoinsJson(coins);
+        } catch (error) {
+            // throw new Error('Cannot load config', error);
+            throw error;
+        }
+    }
+
+
+    // used in popup
+    static async loadConfig(settings: ConnectSettings): Promise<void> {
+        const configUrl: string = `${settings.config_src}?r=${ new Date().getTime() }`;
+        try {
+            const config: JSON = await httpRequest(configUrl, 'json');
+            this.config = config;
         } catch (error) {
             // throw new Error('Cannot load config', error);
             throw error;

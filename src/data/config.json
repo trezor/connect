@@ -1,12 +1,8 @@
 {
-    "transport-config": "config_signed.bin",
-    "transport-bridge-latest": "latest.txt",
-    "coins": "coins.json",
-    "firmwares": "releases.json",
-
-    "debug": [
-        "deviceList",
-        "transport"
+    "whitelist": [
+        "chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk",
+        "chrome-extension://niebkpllfhmpfbffbfifagfgoamhpflf",
+        "trezor.io",
+        "localhost"
     ]
-
 }

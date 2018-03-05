@@ -4,6 +4,8 @@
 import { popupConsole } from '../utils/debug';
 import { parseMessage, UiMessage } from '../core/CoreMessage';
 import type { CoreMessage } from '../core/CoreMessage';
+import DataManager from '../data/DataManager';
+import { parse as parseSettings } from '../entrypoints/ConnectSettings';
 
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
@@ -26,9 +28,8 @@ const initLoaderView = (message: any): void => {
 };
 
 const handleMessage = (event: MessageEvent): void => {
-    // ignore messages from domain other then parent.window
-    // if (event.origin !== window.opener.location.origin) return;
-    if (getOrigin(event.origin) !== getOrigin(document.referrer) && event.origin !== 'chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk') return;
+    // ignore messages from origin other then parent.window or white listed
+    if (getOrigin(event.origin) !== getOrigin(document.referrer) && DataManager.config.whitelist.indexOf(event.origin) < 0) return;
 
     console.log('handleMessage', event.data);
 
@@ -97,8 +98,12 @@ const handleMessage = (event: MessageEvent): void => {
     }
 };
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
     view.init();
+
+    await DataManager.loadConfig( parseSettings({}) );
+
+    console.log("DATAMAN", DataManager.config.whitelist)
 
     window.addEventListener('message', handleMessage);
     postMessage(new UiMessage(POPUP.HANDSHAKE));

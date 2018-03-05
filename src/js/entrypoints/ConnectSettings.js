@@ -7,7 +7,7 @@ export type ConnectSettings = {
     trustedHost: boolean,
     iframe_src: string,
     popup_src: string,
-    config_src: string,
+    +config_src: string,
     coins_src: string,
     firmware_releases_src: string,
     transport_config_src: string,
