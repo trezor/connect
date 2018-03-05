@@ -1,36 +1,97 @@
+@color_white: #ffffff;
+
+@color_header: #212121;
+@color_body: #E3E3E3;
+@color_main: #FBFBFB;
+@color_landing: #F9F9F9;
+
+@color_text_primary: #494949;
+@color_text_secondary: #757575;
+
+@color_gray_light: #F2F2F2; // hover menu
+@color_divider: #E3E3E3; //#EBEBEB;
+
+@color_green_primary: #01B757;
+@color_green_secondary: #00AB51;
+@color_green_tertiary: #009546;
+
+@color_info_primary: #1E7FF0;
+@color_info_secondary: #E1EFFF;
+
+@color_warning_primary: #EB8A00;
+@color_warning_secondary: #FFEFD9;
+
+@color_success_primary: #01B757;
+@color_success_secondary: #DFFFEE;
+
+@color_error_primary: #ED1212;
+@color_error_secondary: #FFE9E9;
+
+.important() {
+    position: relative !important;
+    display: block !important;
+    margin: 0px !important;
+    padding: 0px !important;
+    border: 0px !important;
+    top: 0px !important;
+    left: 0px !important;
+}
+
 .trezorconnect-container {
     position: fixed !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+
     z-index: 10000 !important;
     width: 100% !important;
     height: 100% !important;
     top: 0px !important;
     left: 0px !important;
     background: rgba(0, 0, 0, 0.35) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
+
     overflow: auto !important;
     padding: 20px !important;
     margin: 0px !important;
 
     .trezorconnect-window {
-
+        position: relative !important;
+        display: block !important;
         width: 370px !important;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif !important;
         margin: auto !important;
-        position: relative !important;
-        border-radius: 4px !important;
-        background-color: #fff !important;
+        border-radius: 3px !important;
+        background-color: @color_white !important;
         text-align: center !important;
         overflow: hidden !important;
 
         .trezorconnect-head {
             text-align: left;
             padding: 12px 24px !important;
+            display: flex !important;
+            align-items: center !important;
+
+            .trezorconnect-logo {
+                flex: 1;
+            }
+
+            .trezorconnect-close {
+                cursor: pointer !important;
+                height: 24px !important;
+                svg {
+                    fill: @color_text_secondary;
+                    transition: fill 0.3s ease-in-out !important;
+                }
+                &:hover {
+                    svg {
+                        fill: @color_text_primary;
+                    }
+                }
+            }
         }
 
         .trezorconnect-body {
-            padding: 24px 48px !important;
+            padding: 24px 24px 32px 24px !important;
             background: #FBFBFB !important;
             border-top: 1px solid #EBEBEB;
 
@@ -38,13 +99,34 @@
                 color: #505050 !important;
                 font-size: 16px !important;
                 font-weight: 500 !important;
-                margin-top: 14px !important;
             }
             p {
-                margin: 5px 0px !important;
+                margin: 8px 0px 24px 0px !important;
                 font-weight: normal !important;
                 color: #A9A9A9 !important;
                 font-size: 12px !important;
+            }
+
+            button {
+                width: 100% !important;
+                padding: 12px 24px !important;
+                margin: 0px !important;
+                border-radius: 3px !important;
+                font-size: 14px !important;
+                font-weight: 300 !important;
+                cursor: pointer !important;
+                background: @color_green_primary !important;
+                color: @color_white !important;
+                border: 0px !important;
+                transition: background-color 0.3s ease-in-out !important;
+
+                &:hover {
+                    background-color: @color_green_secondary !important;
+                }
+
+                &:active {
+                    background-color: @color_green_tertiary !important;
+                }
             }
         }
 
