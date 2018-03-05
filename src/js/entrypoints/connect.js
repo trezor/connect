@@ -164,7 +164,11 @@ const handleMessage = (messageEvent: MessageEvent): void => {
             // pass UI event up
             //eventEmitter.emit(event, data);
             eventEmitter.emit(event, type, data);
-            if (type === IFRAME.HANDSHAKE) {
+            if (type === UI.REQUEST_UI_WINDOW) {
+                // popup handshake is resolved automatically
+                if (eventEmitter.listeners(UI_EVENT).length > 0)
+                    postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE });
+            } else if (type === IFRAME.HANDSHAKE) {
                 if (_iframeHandshakePromise) { _iframeHandshakePromise.resolve(); }
                 _iframeHandshakePromise = null;
                 injectStyleSheet();
@@ -214,6 +218,11 @@ class TrezorConnect extends TrezorBase {
         postMessage({ type: UI.CHANGE_SETTINGS, data: parseSettings(settings) }, false);
     }
 
+    static uiResponse(message: Object): void {
+        //_core.handleMessage({ event: UI_EVENT, ...message });
+        postMessage({ event: UI_EVENT, ...message });
+    }
+
     static async __call(params: Object): Promise<Object> {
         if (_iframeHandshakePromise) {
             return { success: false, message: NO_IFRAME.message };
@@ -221,7 +230,8 @@ class TrezorConnect extends TrezorBase {
         }
 
         // request popup. it might be used in the future
-        _popupManager.request(params);
+        if (eventEmitter.listeners(UI_EVENT).length < 1)
+            _popupManager.request(params);
 
         // post message to iframe
         try {
