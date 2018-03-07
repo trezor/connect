@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
     <title>TREZOR Connect</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
@@ -57,7 +58,7 @@
         </div>
         <div class="connect_row webusb_option">
             <p>&amp;</p>
-            <button id="webusb_button">Add new device</button>
+            <button id="webusb_button">Check for devices</button>
         </div>
       </div>
     </div>
@@ -86,10 +87,8 @@
 
     <div id="alert_transport_missing" class="alert fadeout">
       <p>
-        To use your <strong class="smallcaps">TREZOR</strong> device, proceed
-        with instructions at
-        <a href="https://wallet.trezor.io" target="_blank" onclick="closeWindow();">TREZOR Wallet</a>
-        and try again afterwards.
+        TREZOR Connect needs the <a href="https://blog.trezor.io/introducing-new-trezor-bridge-v2-2b7ea5478d65" target="_blank" onclick="closeWindow();">TREZOR Bridge</a> to communicate with your device. 
+        Please install the tool from <a href="https://wallet.trezor.io/#/bridge" target="_blank" onclick="closeWindow();">TREZOR Wallet</a> and try again.
       </p>
       <p>
         <a href="https://trezor.io"
