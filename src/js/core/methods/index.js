@@ -3,7 +3,6 @@
 
 import type { MethodCollection } from './parameters';
 
-// import { method as getxpub, confirmation as getxpubConfirmation, params as getxpubParams } from './getxpub';
 // import getxpub from './getxpub';
 // import discovery from './discovery';
 // import composetx from './composetx';
@@ -17,6 +16,7 @@ import type { MethodCollection } from './parameters';
 
 // import getFeatures from './getFeatures';
 import cipherKeyValue from './cipherKeyValue';
+import requestDevice from './requestDevice';
 
 const methods: {[k: string]: MethodCollection} = {
 
@@ -32,6 +32,7 @@ const methods: {[k: string]: MethodCollection} = {
 
     // 'getFeatures': getFeatures,
     'cipherKeyValue': cipherKeyValue,
+    'requestDevice': requestDevice,
 };
 
 export const find = (name: string): ?MethodCollection => {
