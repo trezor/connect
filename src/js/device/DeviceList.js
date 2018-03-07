@@ -196,6 +196,14 @@ export default class DeviceList extends EventEmitter {
         return list;
     }
 
+    allDevices(): Array<Device> {
+        const list: Array<Device> = [];
+        for (const [key, dev] of Object.entries(this.devices)) {
+            list.push(dev);
+        }
+        return list;
+    }
+
     length(): number {
         return this.asArray().length;
     }

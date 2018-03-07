@@ -431,6 +431,8 @@ export default class Device extends EventEmitter {
         if (this.isUnacquired() || this.isUsedElsewhere() || this.featuresNeedsReload) return false;
         if (new Date().getTime() - this.featuresTimestamp > FEATURES_LIFETIME) return false;
 
+        if (this.features.bootloader_mode || !this.features.initialized) return false;
+
         const pin: boolean = this.features.pin_protection ? this.features.pin_cached : true;
         let pass: boolean = this.features.passphrase_protection ? this.features.passphrase_cached : true;
         if (typeof this.cachedPassphrase[ this.instance ] === 'string') pass = true;
