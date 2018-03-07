@@ -231,8 +231,7 @@ export default class Device extends EventEmitter {
         }
 
         // reload features
-        //await this.getFeatures();
-        //console.log("NEW FEATURES @ end of call", this.features);
+        await this.getFeatures();
 
         // await resolveAfter(2000, null);
         if ( (!this.keepSession && typeof options.keepSession !== 'boolean') || options.keepSession === false) {
