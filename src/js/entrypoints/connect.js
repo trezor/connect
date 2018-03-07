@@ -39,7 +39,7 @@ export {
     RESPONSE_EVENT,
 };
 
-const _log: Log = new Log('[trezor-connect.js]', true);
+const _log: Log = new Log('[trezor-connect.js]');
 let _settings: ConnectSettings;
 let _popupManager: PopupManager;
 let _iframe: HTMLIFrameElement;
@@ -57,10 +57,10 @@ const initIframe = async (settings: Object): Promise<void> => {
     } else {
         _iframe = document.createElement('iframe');
         _iframe.frameBorder = '0';
-        _iframe.width = '100px';
-        _iframe.height = '100px';
-        //_iframe.style.position = 'absolute';
-        //_iframe.style.display = 'none';
+        _iframe.width = '0px';
+        _iframe.height = '0px';
+        _iframe.style.position = 'absolute';
+        _iframe.style.display = 'none';
         _iframe.id = 'trezorconnect';
         _iframe.setAttribute('allow', 'usb');
     }
