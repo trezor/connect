@@ -3,6 +3,7 @@
 
 export const UI_EVENT: string = 'UI_EVENT';
 export const DEVICE_EVENT: string = 'DEVICE_EVENT';
+export const TRANSPORT_EVENT: string = 'TRANSPORT_EVENT';
 export const RESPONSE_EVENT: string = 'RESPONSE_EVENT';
 export const ERROR_EVENT: string = 'ERROR_EVENT';
 
@@ -54,6 +55,17 @@ export class DeviceMessage implements CoreMessage {
     data: Object;
     constructor(type: string, data: any = null) {
         this.event = DEVICE_EVENT;
+        this.type = type;
+        this.data = data;
+    }
+}
+
+export class TransportMessage implements CoreMessage {
+    event: string;
+    type: string;
+    data: Object;
+    constructor(type: string, data: any = null) {
+        this.event = TRANSPORT_EVENT;
         this.type = type;
         this.data = data;
     }

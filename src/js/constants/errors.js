@@ -36,4 +36,5 @@ export const INITIALIZATION_FAILED: TrezorError = new TrezorError(701, 'Initiali
 // in both bridge and extension
 export const WRONG_PREVIOUS_SESSION_ERROR_MESSAGE: string = 'wrong previous session';
 export const INVALID_PIN_ERROR_MESSAGE: string = 'PIN invalid';
+export const WEBUSB_ERROR_MESSAGE: string = 'NetworkError: Unable to claim interface.';
 

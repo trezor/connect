@@ -14,7 +14,7 @@ import * as UI from '../constants/ui';
 import * as IFRAME from '../constants/iframe';
 import * as ERROR from '../constants/errors';
 
-import { UiMessage, DeviceMessage, ResponseMessage } from './CoreMessage';
+import { UiMessage, DeviceMessage, TransportMessage, ResponseMessage } from './CoreMessage';
 import type { CoreMessage, UiPromiseResponse } from './CoreMessage';
 
 import { parse as parseParams, parseGeneral as parseGeneralParams } from './methods/parameters';
@@ -99,7 +99,7 @@ const postMessage = (message: CoreMessage): void => {
 export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = false): void => {
     _log.log('handle message in core', isTrustedOrigin, message);
 
-    const safeMessages: Array<string> = [ IFRAME.CALL, POPUP.CLOSED, UI.CHANGE_SETTINGS ];
+    const safeMessages: Array<string> = [ IFRAME.CALL, POPUP.CLOSED, UI.CHANGE_SETTINGS, TRANSPORT.REQUEST ];
 
     if (!isTrustedOrigin && safeMessages.indexOf(message.type) === -1) {
         console.error("Message not trusted", message);
@@ -107,6 +107,12 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
     }
 
     switch (message.type) {
+
+        case TRANSPORT.REQUEST :
+            _deviceList.requestUSBDevice().then(response => {
+                postMessage(new ResponseMessage(message.id, true, response));
+            });
+            break;
 
         case POPUP.HANDSHAKE :
             getPopupPromise(false).resolve();
@@ -634,6 +640,8 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
     try {
         _deviceList = await getDeviceList();
 
+        postMessage(new TransportMessage(TRANSPORT.START, `${_deviceList.transportType()} ${_deviceList.transportVersion()}`));
+
         _deviceList.on(DEVICE.CONNECT, (device: DeviceDescription) => {
             handleDeviceSelectionChanges();
             postMessage(new DeviceMessage(DEVICE.CONNECT, device));
@@ -658,27 +666,27 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
 
         _deviceList.on(TRANSPORT.ERROR, async (error) => {
             _deviceList = null;
-            postMessage(new DeviceMessage(TRANSPORT.ERROR, error.message || error));
-
+            postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
+            // if transport fails during app lifetime, try to reconnect
             if (settings.transport_reconnect) {
                 await resolveAfter(1000, null);
                 await initDeviceList(settings);
             }
         });
+
+        _deviceList.on(TRANSPORT.START, (transportType) => postMessage(new TransportMessage(TRANSPORT.START, transportType)) );
+        _deviceList.on(TRANSPORT.UNREADABLE, () => postMessage(new TransportMessage(TRANSPORT.UNREADABLE)) );
+
     } catch (error) {
         _deviceList = null;
-
-        if (!settings.transport_reconnect || !_core) {
+        if (!settings.transport_reconnect) {
             throw error;
         } else {
-            postMessage(new DeviceMessage(TRANSPORT.ERROR, error.message || error));
-            await resolveAfter(1000, null);
-
-            // reconnect
+            postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
+            await resolveAfter(3000, null);
+            // try to reconnect
             await initDeviceList(settings);
         }
-
-
     }
 };
 
@@ -722,13 +730,17 @@ const initCore = (): Core => {
 export const init = async (settings: ConnectSettings): Promise<Core> => {
     try {
         await DataManager.load(settings);
-        await initDeviceList(settings);
-
         await initCore();
+        if (!settings.transport_reconnect) {
+            // try only once, if it fails kill app and throw initialization error
+            await initDeviceList(settings);
+        } else {
+            // don't wait for DeviceList result, further communication will be thru TRANSPORT events
+            initDeviceList(settings);
+        }
         return _core;
     } catch (error) {
         // TODO: kill app
-        // postMessage(new IframeMessage(IFRAME.ERROR));
         _log.log('Init error', error);
         throw error;
     }

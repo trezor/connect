@@ -19,7 +19,11 @@ export default class Trezor {
         // to override
     }
 
-    static changeSettings(settings: Object) {
+    static changeSettings(settings: Object): void {
+        // to override
+    }
+
+    static requestDevice(): void {
         // to override
     }
 

@@ -68,35 +68,23 @@ export default class DeviceList extends EventEmitter {
             const bridgeLatestSrc: string = `${ DataManager.getSettings('latest_bridge_src') }?${ Date.now() }`;
             this.options.transport = new Fallback([
                 new BridgeV2(),
-                new Extension(), // Ext ID in Datamanager?
-                //new BridgeV1(),
+                new Parallel({
+                    webusb: {
+                        transport: new Lowlevel(
+                            new WebUsb(),
+                            () => sharedWorkerFactoryWrap()
+                        ),
+                        mandatory: true,
+                    },
+                    hid: {
+                        transport: new Fallback([
+                            new Extension(),
+                            new BridgeV1(bridgeLatestSrc),
+                        ]),
+                        mandatory: false,
+                    },
+                }),
             ]);
-
-            // this.options.transport = new Fallback([
-            //     new BridgeV2(),
-            //     new Parallel({
-            //         webusb: {
-            //             transport: new Lowlevel(
-            //                 new WebUsb(),
-            //                 () => sharedWorkerFactoryWrap()
-            //             ),
-            //             mandatory: true,
-            //         },
-            //         hid: {
-            //             transport: new Fallback([
-            //                 new Extension(),
-            //                 new BridgeV1(),
-            //             ]),
-            //             mandatory: false,
-            //         },
-            //     }),
-            // ]);
-
-            //if (USE_WEBUSB) {
-           //     DeviceList._setTransport(() => new Fallback([new BridgeV2(), new Extension(), new BridgeV1(), new Lowlevel(new WebUsb(), () => sharedWorkerFactoryWrapper())]));
-            //} else {
-            //    DeviceList._setTransport(() => new Fallback([new BridgeV2(), new Extension(), new BridgeV1()]));
-            //}
         }
         if (this.options.debug === undefined) {
             this.options.debug = true; // DataManager.getDebugSettings('deviceList');
@@ -107,6 +95,11 @@ export default class DeviceList extends EventEmitter {
         try {
             this.transport = await this._initTransport();
             await this._initStream();
+            const webUsbPlugin = this.getWebUsbPlugin();
+            if (webUsbPlugin) {
+                webUsbPlugin.unreadableHidDeviceChange.on('change', () => this.emit(TRANSPORT.UNREADABLE));
+            }
+            this.emit(TRANSPORT.START, `${this.transportType()} ${this.transportVersion()}`);
         } catch (error) {
             throw error;
         }
@@ -194,9 +187,9 @@ export default class DeviceList extends EventEmitter {
 
     asArray(): Array<DeviceDescription> {
         const list: Array<DeviceDescription> = [];
-        for (const [key, dev]:[ string, any ] of Object.entries(this.devices)) {
-        //let dev: Device;
-        //for (let dev of Object.entries(this.devices)) {
+        // this line breaks editor syntax color
+        // for (const [key, dev]:[ string, any ] of Object.entries(this.devices)) {
+        for (const [key, dev] of Object.entries(this.devices)) {
             list.push(dev.toMessageObject());
         }
         return list;
@@ -231,6 +224,21 @@ export default class DeviceList extends EventEmitter {
         return this.transport.version;
     }
 
+    // This method should be called directly ONLY in library mode.
+    // otherwise will throw error: Require user gesture to request notification permissions
+    async requestUSBDevice(): Promise<string> {
+        if (this.transport == null) {
+            return Promise.reject();
+        }
+        try {
+            const req = await this.transport.requestDevice();
+            return this.getWebUsbPlugin().unreadableHidDevice ? 'unreadable' : 'success';
+        } catch (error) {
+            console.error(error);
+            return 'cancelled';
+        }
+    }
+
     transportOutdated(): boolean {
         if (this.transport == null) {
             return false;
@@ -239,6 +247,32 @@ export default class DeviceList extends EventEmitter {
             return true;
         }
         return false;
+    }
+
+    getWebUsbPlugin(): any {
+        try {
+            const transport: ?Transport = this.transport;
+            if (transport == null) {
+                return null;
+            }
+            // $FlowIssue - this all is going around Flow :/
+            const activeTransport = transport.activeTransport;
+            if (activeTransport == null || activeTransport.name !== 'ParallelTransport') {
+                return null;
+            }
+            const webusbTransport = activeTransport.workingTransports['webusb'];
+            if (webusbTransport == null) {
+                return null;
+            }
+            // one of the HID fallbacks are working -> do not display the message
+            const hidTransport = activeTransport.workingTransports['hid'];
+            if (hidTransport != null) {
+                return null;
+            }
+            return webusbTransport.plugin;
+        } catch (e) {
+            return null;
+        }
     }
 
     onBeforeUnload(clearSession?: ?boolean) {
@@ -268,7 +302,7 @@ export const getDeviceList = async (): Promise<DeviceList> => {
         await list.init();
         return list;
     } catch (error) {
-        throw ERROR.NO_TRANSPORT;
+        throw error;
     }
 };
 
@@ -297,10 +331,10 @@ class CreateDeviceHandler {
         } catch (error) {
             logger.debug('Cannot create device', error);
 
-            if (error.message.toLowerCase() === ERROR.DEVICE_NOT_FOUND.message.toLowerCase()) {
+            if (error.message === ERROR.DEVICE_NOT_FOUND.message) {
                 // do nothing
                 // it's a race condition between "device_changed" and "device_disconnected"
-            } else if (error.message === ERROR.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE) {
+            } else if (error.message === ERROR.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE || error.toString() === ERROR.WEBUSB_ERROR_MESSAGE) {
                // this should not happen actually - karel (it is happening - szymon)
                // await this._handleWrongSession();
                await this._handleUsedElsewhere();
