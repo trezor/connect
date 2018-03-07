@@ -171,7 +171,7 @@ const handleMessage = (messageEvent: MessageEvent): void => {
 
         case UI_EVENT :
             // pass UI event up
-            eventEmitter.emit(event, data);
+            eventEmitter.emit(event, message);
             eventEmitter.emit(type, data);
             if (type === UI.REQUEST_UI_WINDOW) {
                 // popup handshake is resolved automatically
