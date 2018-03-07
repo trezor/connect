@@ -36,6 +36,7 @@ export interface GeneralParams {
     +deviceInstance: number;
     +deviceState: ?string;
     +keepSession: boolean;
+    +overridePreviousCall: boolean;
     +methodParams: MethodParams;
 }
 
@@ -70,6 +71,7 @@ export const parseGeneral = (message: CoreMessage, methodParams: MethodParams): 
         deviceInstance: data.device ? data.device.instance : 0,
         deviceState: data.device ? data.device.state : null,
         keepSession: typeof data.keepSession === 'boolean' ? data.keepSession : false,
+        overridePreviousCall: typeof data.override === 'boolean' ? data.override : false,
         methodParams
     }
 }

@@ -58,7 +58,7 @@ const params = (raw: Object): MethodParams => {
         throw new Error('Parameter "iv" has invalid type. String expected.');
     }
 
-    const allowed = ['id', 'method', 'device', 'useEmptyPassphrase', 'path', 'key', 'value', 'encrypt', 'askOnEncrypt', 'askOnDecrypt', 'iv'];
+    const allowed = ['id', 'method', 'device', 'override', 'useEmptyPassphrase', 'path', 'key', 'value', 'encrypt', 'askOnEncrypt', 'askOnDecrypt', 'iv'];
     for (const [key, value] of Object.entries(raw)) {
         if (allowed.indexOf(key) < 0) {
             console.warn(`Unknown param "${key}"`);

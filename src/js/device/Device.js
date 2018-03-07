@@ -161,6 +161,16 @@ export default class Device extends EventEmitter {
         return this.runPromise.promise;
     }
 
+    async override(error: Error): Promise<void> {
+        if (this.runPromise) {
+            this.runPromise.reject(error);
+            this.runPromise = null;
+        }
+
+        if (this.deferredActions[ DEVICE.RELEASE ])
+            await this.deferredActions[ DEVICE.RELEASE ].promise;
+    }
+
     interruptionFromUser(error: Error): void {
         logger.debug('+++++interruptionFromUser');
         if (this.runPromise) {
@@ -231,7 +241,8 @@ export default class Device extends EventEmitter {
         }
 
         // reload features
-        await this.getFeatures();
+        if (this.features && !this.features.bootloader_mode && this.features.initialized)
+            await this.getFeatures();
 
         // await resolveAfter(2000, null);
         if ( (!this.keepSession && typeof options.keepSession !== 'boolean') || options.keepSession === false) {

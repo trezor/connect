@@ -303,6 +303,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     const gParameters: GeneralParams = parseGeneralParams(message, parameters);
     _callParameters[responseID] = gParameters;
 
+    let messageResponse: ?ResponseMessage;
+
     // if method is using device (there could be just calls to backend or hd-wallet)
     if (!parameters.useDevice) {
         // TODO: call function and handle interruptions
@@ -357,8 +359,14 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             await device.waitForFirstRun();
             _waitForFirstRun = false;
         } else {
-            postMessage(new ResponseMessage(responseID, false, { error: ERROR.DEVICE_CALL_IN_PROGRESS.message }));
-            throw ERROR.DEVICE_CALL_IN_PROGRESS;
+            if (gParameters.overridePreviousCall) {
+                // resolve previous call before this one
+                // const previous: ?GeneralParams = _callParameters.find(p => p && p.methodParams.deviceHID === device.getDevicePath());
+                await device.override(new Error('Override!'));
+            } else {
+                postMessage(new ResponseMessage(responseID, false, { error: ERROR.DEVICE_CALL_IN_PROGRESS.message }));
+                throw ERROR.DEVICE_CALL_IN_PROGRESS;
+            }
         }
     }
 
@@ -379,7 +387,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
     }
 
-    let messageResponse: ?ResponseMessage;
+
 
     try {
         // This function will run inside Device.run() after device will be acquired and initialized
