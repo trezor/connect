@@ -125,6 +125,14 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
             enableLog(parseSettings(message.data).debug);
             break;
 
+        // TODO: webusb response from popup
+        // case 'WEBUSB' :
+        //     navigator.usb.getDevices().then((d) => {
+        //         console.warn("GETDEVICES!", d)
+        //     })
+        //     console.warn("WEBUSB! Reload device list", _deviceList.getWebUsbPlugin() );
+        //     break;
+
         // messages from UI (popup/modal...)
         case UI.RECEIVE_DEVICE :
         case UI.RECEIVE_CONFIRMATION :
@@ -300,6 +308,23 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         // TODO: call function and handle interruptions
         //const response: Object = await _parameters.method.apply(this, [ parameters, callbacks ]);
         //messageResponse = new ResponseMessage(_parameters.responseID, true, response);
+        // try {
+        //     const callbacks2: MethodCallbacks = {
+        //         device,
+        //         postMessage,
+        //         getPopupPromise,
+        //         createUiPromise,
+        //         findUiPromise,
+        //         removeUiPromise
+        //     };
+        //     const response: Object = await parameters.method.apply(this, [ parameters, callbacks2 ]);
+        //     var messageResponse2 = new ResponseMessage(parameters.responseID, true, response);
+        //     postMessage(messageResponse2);
+        //     return Promise.resolve();
+
+        // } catch (error1) {
+        //     console.error("WEBUS", error1);
+        // }
     }
 
     // find device

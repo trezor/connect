@@ -38,6 +38,9 @@ const handleMessage = (event: MessageEvent): void => {
     // TODO parse incoming strings to avoid string injections !!!
 
     switch (message.type) {
+        case 'request_device' :
+            view.requestDevice(message.data);
+            break;
         case UI.LOADING :
             // showView('loader');
             initLoaderView(message.data);
