@@ -17,7 +17,7 @@ const extractLess = new ExtractTextPlugin({
 module.exports = {
     entry: {
         'trezor-connect': `${JS_SRC}entrypoints/connect.js`,
-        'iframe': `${JS_SRC}iframe/iframe.js`,
+        'iframe': ['babel-polyfill', `${JS_SRC}iframe/iframe.js`], // babel-polyfill is not compiled into trezor-link
         'popup': `${JS_SRC}popup/popup.js`
     },
     output: {
@@ -74,12 +74,12 @@ module.exports = {
 
         extractLess,
         new webpack.IgnorePlugin(/\/iconv-loader$/),
-        new HtmlWebpackPlugin({
-            chunks: ['trezor-connect'],
-            filename: 'index.html',
-            template: `${HTML_SRC}index.html`,
-            inject: true
-        }),
+        // new HtmlWebpackPlugin({
+        //     chunks: ['trezor-connect'],
+        //     filename: 'index.html',
+        //     template: `${HTML_SRC}index.php`,
+        //     inject: true
+        // }),
         new HtmlWebpackPlugin({
             chunks: ['iframe'],
             filename: `iframe.html`,
@@ -94,6 +94,7 @@ module.exports = {
         }),
 
         new CopyWebpackPlugin([
+            { from: `${HTML_SRC}index.html`, to: `${DIST}index.html` },
             { from: `${DATA_SRC}config.json`, to: `${DIST}data/config.json` },
             { from: `${DATA_SRC}coins.json`, to: `${DIST}data/coins.json` },
             { from: `${DATA_SRC}config_signed.bin`, to: `${DIST}data/config_signed.bin` },
