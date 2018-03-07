@@ -115,7 +115,7 @@ const initPopupManager = (): PopupManager => {
 const postMessage = (message: any, usePromise: boolean = true): ?Promise<void> => {
     _messageID++;
     message.id = _messageID;
-    _iframe.contentWindow.postMessage(message, '*');
+    _iframe.contentWindow.postMessage(message, _iframeOrigin);
 
     if (typeof window.chrome !== 'undefined' && window.chrome.runtime && window.chrome.runtime.onConnect) {
         window.chrome.runtime.onConnect.addListener(() => {
