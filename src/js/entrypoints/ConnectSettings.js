@@ -13,6 +13,7 @@ export type ConnectSettings = {
     transport_config_src: string,
     latest_bridge_src: string,
     transport_reconnect: boolean;
+    webusb: boolean;
 }
 
 /*
@@ -30,7 +31,8 @@ const initialSettings: ConnectSettings = {
     firmware_releases_src: 'data/releases-1.json',
     transport_config_src: 'data/config_signed.bin',
     latest_bridge_src: 'data/latest.txt',
-    transport_reconnect: true
+    transport_reconnect: true,
+    webusb: true,
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -86,6 +88,10 @@ export const parse = (input: ?Object): ConnectSettings => {
 
     if (typeof input.transport_reconnect === 'boolean') {
         settings.transport_reconnect = input.transport_reconnect;
+    }
+
+    if (input.hasOwnProperty('webusb') && typeof input.webusb === 'string') {
+        settings.webusb = (input.webusb === 'true');
     }
 
     currentSettings = settings;

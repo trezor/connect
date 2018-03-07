@@ -66,9 +66,9 @@ export default class DeviceList extends EventEmitter {
         this.options = options || {};
         if (!this.options.transport) {
             const bridgeLatestSrc: string = `${ DataManager.getSettings('latest_bridge_src') }?${ Date.now() }`;
-            this.options.transport = new Fallback([
-                new BridgeV2(),
-                new Parallel({
+            const transportTypes: Array<Transport> = [ new BridgeV2() ];
+            if (DataManager.getSettings('webusb')) {
+                transportTypes.push(new Parallel({
                     webusb: {
                         transport: new Lowlevel(
                             new WebUsb(),
@@ -83,8 +83,9 @@ export default class DeviceList extends EventEmitter {
                         ]),
                         mandatory: false,
                     },
-                }),
-            ]);
+                }));
+            }
+            this.options.transport = new Fallback(transportTypes);
         }
         if (this.options.debug === undefined) {
             this.options.debug = true; // DataManager.getDebugSettings('deviceList');
