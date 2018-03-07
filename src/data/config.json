@@ -1,4 +1,9 @@
 {
+    "webusb": [
+        { "vendorId": "0x534c", "productId": "0x0001" },
+        { "vendorId": "0x1209", "productId": "0x53c0" },
+        { "vendorId": "0x1209", "productId": "0x53c1" }
+    ],
     "whitelist": [
         "chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk",
         "chrome-extension://niebkpllfhmpfbffbfifagfgoamhpflf",
