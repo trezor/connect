@@ -1,8 +1,6 @@
 /* @flow */
 'use strict';
 
-import type { CoinInfo } from '../backend/CoinInfo';
-
 export const HD_HARDENED: number = 0x80000000;
 export const toHardened = (n: number): number => (n | HD_HARDENED) >>> 0;
 export const fromHardened = (n: number): number => (n & ~HD_HARDENED) >>> 0;
@@ -39,7 +37,7 @@ export const validatePath = (path: string | Array<number>): Array<number> => {
             if (isNaN(p)) {
                 throw new Error('Not a valid path.');
             }
-            //return (n | HD_HARDENED) >>> 0;
+            // return (n | HD_HARDENED) >>> 0;
             return n;
         });
     }

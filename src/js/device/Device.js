@@ -36,7 +36,7 @@ export type RunOptions = {
     // Method gets called after run() fetch new Features but before trezor-link dispatch "acquire" event
     cancelPopupRequest?: Function,
 
-    keepSession?: boolean
+    keepSession?: boolean,
 }
 
 const parseRunOptions = (options?: RunOptions): RunOptions => {
@@ -167,8 +167,7 @@ export default class Device extends EventEmitter {
             this.runPromise = null;
         }
 
-        if (this.deferredActions[ DEVICE.RELEASE ])
-            await this.deferredActions[ DEVICE.RELEASE ].promise;
+        if (this.deferredActions[ DEVICE.RELEASE ]) { await this.deferredActions[ DEVICE.RELEASE ].promise; }
     }
 
     interruptionFromUser(error: Error): void {
@@ -205,8 +204,7 @@ export default class Device extends EventEmitter {
         fn?: () => Promise<X>,
         options: RunOptions
     ): Promise<any> {
-
-        if (!this.isUsedHere()){
+        if (!this.isUsedHere()) {
             // acquire session
             await this.acquire();
 
@@ -241,11 +239,10 @@ export default class Device extends EventEmitter {
         }
 
         // reload features
-        if (this.features && !this.features.bootloader_mode && this.features.initialized)
-            await this.getFeatures();
+        if (this.features && !this.features.bootloader_mode && this.features.initialized) { await this.getFeatures(); }
 
         // await resolveAfter(2000, null);
-        if ( (!this.keepSession && typeof options.keepSession !== 'boolean') || options.keepSession === false) {
+        if ((!this.keepSession && typeof options.keepSession !== 'boolean') || options.keepSession === false) {
             this.keepSession = false;
             await this.release();
             // wait for release event
@@ -285,7 +282,7 @@ export default class Device extends EventEmitter {
     }
 
     async init(): Promise<void> {
-        //console.warn("+++CALL INITIALIZE", this.features)
+        // console.warn("+++CALL INITIALIZE", this.features)
         const { message } : { message: Features } = await this.commands.initialize();
         this.features = message;
         this.featuresNeedsReload = false;
@@ -300,7 +297,7 @@ export default class Device extends EventEmitter {
 
     getState(): ?string {
         return this.features ? this.features.state : null;
-        //return null;
+        // return null;
     }
 
     async _reloadFeatures(): Promise<void> {
@@ -333,7 +330,6 @@ export default class Device extends EventEmitter {
                 this.featuresNeedsReload = true;
             }
             this.keepSession = false;
-
         } else {
             // acquired
             // TODO: Case where listen event will dispatch before this.transport.acquire (this.acquire) return ID
@@ -455,7 +451,7 @@ export default class Device extends EventEmitter {
                 isUsedElsewhere: this.isUsedElsewhere(),
                 featuresNeedsReload: this.featuresNeedsReload,
                 unacquired: true,
-                features: this.features
+                features: this.features,
             };
         } else {
             const label = this.features.label === '' || this.features.label === null ? defaultLabel : this.features.label;
@@ -464,7 +460,7 @@ export default class Device extends EventEmitter {
                 label: label,
                 isUsedElsewhere: this.isUsedElsewhere(),
                 featuresNeedsReload: this.featuresNeedsReload,
-                features: this.features
+                features: this.features,
             };
         }
     }

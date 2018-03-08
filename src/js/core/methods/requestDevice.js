@@ -6,14 +6,13 @@ import { UiMessage } from '../CoreMessage';
 import type { MethodParams, MethodCallbacks } from './parameters';
 
 const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise<Object> => {
-
     // wait for popup window
     await callbacks.getPopupPromise().promise;
 
     // request account selection view
     callbacks.postMessage(new UiMessage('request_device'));
 
-    const uiResp: UiPromiseResponse = await callbacks.createUiPromise(0, 'WEBUSB').promise;
+    const uiResp: UiPromiseResponse = await callbacks.createUiPromise('WEBUSB', callbacks.device).promise;
 
     return {};
 };

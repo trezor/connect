@@ -10,7 +10,6 @@ import BitcoreBackend from '../backend/BitcoreBackend';
 import type { CoinInfo } from '../backend/CoinInfo';
 
 export default class Account {
-
     // Account variables
     id: number;
     basePath: Array<number>;
@@ -32,9 +31,9 @@ export default class Account {
         this.coinInfo = { ...coinInfo }; // local copy
         this.xpub = xpub;
 
-        //if (version !== network.bip32.private &&
+        // if (version !== network.bip32.private &&
         //    version !== network.bip32.public) throw new Error('Invalid network version')
-        //backend.coinInfo = this.coinInfo;
+        // backend.coinInfo = this.coinInfo;
 
         // todo: handle backend errors/disconnect
     }
@@ -61,7 +60,7 @@ export default class Account {
         const info: AccountInfo = await this.backend.loadAccountInfo(
             this.xpub,
             null, // previous state
-            (progress) => {  },
+            (progress) => { },
             (disposer) => { },
             this.coinInfo.segwit
         );

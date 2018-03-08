@@ -7,7 +7,6 @@ import { parseCoinsJson } from '../backend/CoinInfo';
 import { Promise } from 'es6-promise';
 
 export default class DataManager {
-
     static config: JSON;
     static releases: JSON;
     static settings: ConnectSettings;
@@ -32,7 +31,6 @@ export default class DataManager {
             throw error;
         }
     }
-
 
     // used in popup
     static async loadConfig(settings: ConnectSettings): Promise<void> {

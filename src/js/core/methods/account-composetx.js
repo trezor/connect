@@ -80,14 +80,14 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
     // TODO: check if backend was initialized before
     const backend: BitcoreBackend = await createBackend(coinInfo.name);
 
-    let txComposer: TransactionComposer = new TransactionComposer(input.account, input.outputs);
+    const txComposer: TransactionComposer = new TransactionComposer(input.account, input.outputs);
     await txComposer.init();
 
     if (input.customFee) {
         const tx: BuildTxResult = txComposer.compose(input.customFee);
         return {
-            tx
-        }
+            tx,
+        };
     }
 
     const txs: Array<BuildTxResult> = await txComposer.composeAllLevels();
@@ -112,8 +112,8 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
             // update last tx
             txComposer.composed[ txComposer.composed.length - 1 ] = tx;
         } else {
-            //await showInsufficientFundsView();
-            //return;
+            // await showInsufficientFundsView();
+            // return;
         }
     }
 
@@ -124,9 +124,8 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
 
     return {
         txs,
-        list
+        list,
     };
-
 
     // // cycle of interactions with user
     // // 1. account selection
@@ -205,7 +204,6 @@ const confirmation = async (params: MethodParams, callbacks: MethodCallbacks): P
 };
 
 const params = (raw: Object): MethodParams => {
-
     const permissions: Array<string> = checkPermissions([]);
     const requiredFirmware: string = '1.5.0';
 

@@ -6,7 +6,6 @@ import EventEmitter from 'events';
 export const eventEmitter: EventEmitter = new EventEmitter();
 
 export default class Trezor {
-
     static on(type: string, fn: Function): void {
         eventEmitter.on(type, fn);
     }

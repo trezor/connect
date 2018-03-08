@@ -5,6 +5,7 @@ import Device from '../device/Device';
 
 export type Deferred<T> = {
     id?: string,
+    device: ?Device,
     promise: Promise<T>,
     resolve: (t: T) => void,
     reject: (e: Error) => void,

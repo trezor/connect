@@ -28,6 +28,7 @@ export interface MethodParams {
     keepSession?: boolean,
 
     deviceInstance?: string,
+    useEmptyPassphrase?: boolean;
 }
 
 export interface GeneralParams {
@@ -44,7 +45,7 @@ export interface MethodCallbacks {
     device: Device,
     postMessage: (message: CoreMessage) => void,
     getPopupPromise: () => Deferred<void>,
-    createUiPromise: (callId: number, promiseId: string) => Deferred<UiPromiseResponse>,
+    createUiPromise: (promiseId: string, device?: Device) => Deferred<UiPromiseResponse>,
     findUiPromise: (callId: number, promiseId: string) => ?Deferred<UiPromiseResponse>,
     removeUiPromise: (promise: Deferred<UiPromiseResponse>) => void,
 }
@@ -72,9 +73,9 @@ export const parseGeneral = (message: CoreMessage, methodParams: MethodParams): 
         deviceState: data.device ? data.device.state : null,
         keepSession: typeof data.keepSession === 'boolean' ? data.keepSession : false,
         overridePreviousCall: typeof data.override === 'boolean' ? data.override : false,
-        methodParams
-    }
-}
+        methodParams,
+    };
+};
 
 export const parse = (message: CoreMessage): MethodParams => {
     if (!message.data) {
@@ -87,9 +88,9 @@ export const parse = (message: CoreMessage): MethodParams => {
         throw new Error('Method not set');
     }
 
-    // TODO: escape incomming string
+    // TODO: escape incoming string
     // find method collection in list
-    //const method: ?MethodCollection = findMethod(data.method.toLowerCase());
+    // const method: ?MethodCollection = findMethod(data.method.toLowerCase());
     const method: ?MethodCollection = findMethod(data.method);
     if (!method) {
         throw new Error(`Method ${data.method} not found`);
@@ -101,7 +102,6 @@ export const parse = (message: CoreMessage): MethodParams => {
         params = method.params(data);
         params.deviceHID = data.selectedDevice;
         params.deviceInstance = data.deviceInstance;
-
     } catch (error) {
         throw error;
     }

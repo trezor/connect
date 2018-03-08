@@ -5,7 +5,6 @@ import { checkPermissions } from './permissions';
 import type { MethodParams, MethodCallbacks } from './parameters';
 
 const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise<Object> => {
-
     const input: Object = params.input;
 
     const res: MessageResponse<EthereumSignature> = await callbacks.device.getCommands().ethereumGetAddress(
@@ -46,7 +45,7 @@ const params = (raw: Object): MethodParams => {
         method,
         input: {
             address_n: raw.address_n,
-            showOnTrezor
+            showOnTrezor,
         },
     };
 };

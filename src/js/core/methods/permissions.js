@@ -50,7 +50,7 @@ export const requestPermissions = async (permissions: Array<string>, callbacks: 
 
     callbacks.postMessage(new UiMessage(UI.REQUEST_PERMISSION, permissions));
     // process response
-    const uiResp: UiPromiseResponse = await callbacks.createUiPromise(0, UI.RECEIVE_PERMISSION).promise;
+    const uiResp: UiPromiseResponse = await callbacks.createUiPromise(UI.RECEIVE_PERMISSION, callbacks.device).promise;
 
     const permissionsResponse: string = uiResp.data;
     const permissionsGranted: boolean = (permissionsResponse === 'true');

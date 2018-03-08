@@ -14,7 +14,6 @@ const POPUP_CLOSE_INTERVAL: number = 500;
 const POPUP_OPEN_TIMEOUT: number = 2000;
 
 export default class PopupManager extends EventEmitter {
-
     _window: any; // Window
     src: string;
     locked: boolean;

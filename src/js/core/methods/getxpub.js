@@ -20,19 +20,19 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
     const input: Object = params.input;
 
     if (input.path) {
-        console.log("CoinInfo", input.coinInfo);
+        console.log('CoinInfo', input.coinInfo);
 
-        if (input.coinInfo.hashGenesisBlock === "N/A" || true) {
+        // TODO: fix issue with xpub format!
+        const tmp: boolean = true;
+        if (input.coinInfo.hashGenesisBlock === 'N/A' || tmp) {
             const { message } = await callbacks.device.getCommands().getPublicKey(input.path);
             return {
                 xpub: message.xpub,
                 path: message.node.path,
                 chainCode: message.node.chain_code,
-                publicKey: message.node.public_key
+                publicKey: message.node.public_key,
             };
         }
-
-
 
         const node: HDNode = await callbacks.device.getCommands().getHDNode(input.path, input.coinInfo);
         return {
@@ -127,7 +127,7 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
         });
 
         // wait for user action or error from discovery
-        const uiResp: UiPromiseResponse = await callbacks.createUiPromise(0, UI.RECEIVE_ACCOUNT).promise;
+        const uiResp: UiPromiseResponse = await callbacks.createUiPromise(UI.RECEIVE_ACCOUNT, callbacks.device).promise;
         const resp: string = uiResp.data;
         const respNumber: number = parseInt(resp);
 
@@ -171,7 +171,7 @@ const confirmation = async (params: MethodParams, callbacks: MethodCallbacks): P
         accountType: params.input.accountType,
     }));
     // wait for user action
-    const uiResp: UiPromiseResponse = await callbacks.createUiPromise(0, UI.RECEIVE_CONFIRMATION).promise;
+    const uiResp: UiPromiseResponse = await callbacks.createUiPromise(UI.RECEIVE_CONFIRMATION, callbacks).promise;
     const resp: string = uiResp.data;
     return (resp === 'true');
 };

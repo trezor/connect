@@ -104,9 +104,7 @@ const handleMessage = (event: MessageEvent): void => {
 window.addEventListener('load', async () => {
     view.init();
 
-    await DataManager.loadConfig( parseSettings({}) );
-
-    console.log("DATAMAN", DataManager.config.whitelist)
+    await DataManager.loadConfig(parseSettings({}));
 
     window.addEventListener('message', handleMessage);
     postMessage(new UiMessage(POPUP.HANDSHAKE));

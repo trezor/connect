@@ -33,13 +33,13 @@ import { parse as parseSettings } from '../entrypoints/ConnectSettings';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
 
 // Public variables
-let _core: Core;                        // Class with event emitter
-let _deviceList: ?DeviceList;           // Instance of DeviceList
-let _parameters: ?MethodParams;         // Incoming parsed params
-let _popupPromise: ?Deferred<void>;     // Waiting for popup handshake
-let _uiPromises: Array<Deferred<UiPromiseResponse>> = [];      // Waiting for ui response
-let _waitForFirstRun: boolean = false;  // used in corner-case, where device.isRunning() === true but it isn't loaded yet.
-let _callParameters: Array<GeneralParams> = [];
+let _core: Core; // Class with event emitter
+let _deviceList: ?DeviceList; // Instance of DeviceList
+let _parameters: ?MethodParams; // Incoming parsed params
+let _popupPromise: ?Deferred<void>; // Waiting for popup handshake
+let _uiPromises: Array<Deferred<UiPromiseResponse>> = []; // Waiting for ui response
+let _waitForFirstRun: boolean = false; // used in corner-case, where device.isRunning() === true but it isn't loaded yet.
+const _callParameters: Array<GeneralParams> = [];
 
 export const CORE_EVENT: string = 'CORE_EVENT';
 
@@ -65,20 +65,19 @@ const getPopupPromise = (requestWindow: boolean = true): Deferred<void> => {
  * @memberof Core
  */
 
-const findUiPromise = (callId: number, promiseId: string): ?Deferred<UiPromiseResponse> => {
-    return _uiPromises.find(p => p.id === promiseId);
-}
+const findUiPromise = (callId: number, promiseEvent: string): ?Deferred<UiPromiseResponse> => {
+    return _uiPromises.find(p => p.id === promiseEvent);
+};
 
-const createUiPromise = (device: Device, promiseId: string): Deferred<UiPromiseResponse> => {
-    const uiPromise: Deferred<UiPromiseResponse> = createDeferred(promiseId, device);
+const createUiPromise = (promiseEvent: string, device?: Device): Deferred<UiPromiseResponse> => {
+    const uiPromise: Deferred<UiPromiseResponse> = createDeferred(promiseEvent, device);
     _uiPromises.push(uiPromise);
     return uiPromise;
-}
+};
 
 const removeUiPromise = (promise: Deferred<UiPromiseResponse>): void => {
     _uiPromises = _uiPromises.filter(p => p !== promise);
-}
-
+};
 
 /**
  * Emit message to listener (parent).
@@ -102,17 +101,16 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
     const safeMessages: Array<string> = [ IFRAME.CALL, POPUP.CLOSED, UI.CHANGE_SETTINGS, TRANSPORT.REQUEST ];
 
     if (!isTrustedOrigin && safeMessages.indexOf(message.type) === -1) {
-        console.error("Message not trusted", message);
+        console.error('Message not trusted', message);
         return;
     }
 
     switch (message.type) {
-
-        case TRANSPORT.REQUEST :
-            _deviceList.requestUSBDevice().then(response => {
-                postMessage(new ResponseMessage(message.id, true, response));
-            });
-            break;
+        // case TRANSPORT.REQUEST :
+        //     _deviceList.requestUSBDevice().then(response => {
+        //         postMessage(new ResponseMessage(message.id, true, response));
+        //     });
+        //     break;
 
         case POPUP.HANDSHAKE :
             getPopupPromise(false).resolve();
@@ -185,7 +183,7 @@ const initDevice = async (parameters: GeneralParams): Promise<Device> => {
 
             // initialize uiPromise instance which will catch changes in _deviceList (see: handleDeviceSelectionChanges function)
             // but do not wait for resolve yet
-            createUiPromise(null, UI.RECEIVE_DEVICE);
+            createUiPromise(UI.RECEIVE_DEVICE);
 
             // wait for popup handshake
             await getPopupPromise().promise;
@@ -260,7 +258,6 @@ const requestAuthentication = async (device: Device): Promise<void> => {
  * @memberof Core
  */
 const checkDeviceState = async (device: Device, state: ?string): Promise<boolean> => {
-
     if (!state) return true;
 
     // wait for popup handshake
@@ -308,8 +305,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     // if method is using device (there could be just calls to backend or hd-wallet)
     if (!parameters.useDevice) {
         // TODO: call function and handle interruptions
-        //const response: Object = await _parameters.method.apply(this, [ parameters, callbacks ]);
-        //messageResponse = new ResponseMessage(_parameters.responseID, true, response);
+        // const response: Object = await _parameters.method.apply(this, [ parameters, callbacks ]);
+        // messageResponse = new ResponseMessage(_parameters.responseID, true, response);
         // try {
         //     const callbacks2: MethodCallbacks = {
         //         device,
@@ -357,10 +354,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             // show unexpected state information
             postMessage(new UiMessage(unexpectedState));
 
-            await createUiPromise(device, DEVICE.DISCONNECT).promise;
+            await createUiPromise(DEVICE.DISCONNECT, device).promise;
 
             postMessage(new ResponseMessage(responseID, false, { error: unexpectedState }));
-            throw ERROR.BOOTLOADER;
+            throw unexpectedState;
         }
         unexpectedStateVerified = true;
     }
@@ -406,8 +403,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
     }
 
-
-
     try {
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
@@ -421,7 +416,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
                 device.clearPassphrase();
 
-                await createUiPromise(device, DEVICE.DISCONNECT).promise;
+                await createUiPromise(DEVICE.DISCONNECT, device).promise;
 
                 // interrupt running process and go to "final" block
                 return Promise.resolve();
@@ -453,7 +448,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 getPopupPromise,
                 createUiPromise,
                 findUiPromise,
-                removeUiPromise
+                removeUiPromise,
             };
 
             const trustedHost: boolean = DataManager.getSettings('trustedHost');
@@ -515,7 +510,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 const response: Object = await parameters.method.apply(this, [ parameters, callbacks ]);
                 messageResponse = new ResponseMessage(parameters.responseID, true, response);
             } catch (error) {
-
                 // device.clearPassphrase();
 
                 if (!parameters) {
@@ -586,8 +580,8 @@ const closePopup = (): void => {
  * @memberof Core
  */
 const onDeviceButtonHandler = async (device: Device, code: string): Promise<void> => {
-    postMessage(new DeviceMessage(DEVICE.BUTTON, { device: device.toMessageObject(), code: code } ));
-    postMessage(new UiMessage(UI.REQUEST_BUTTON, { device: device.toMessageObject(), code: code } ));
+    postMessage(new DeviceMessage(DEVICE.BUTTON, { device: device.toMessageObject(), code: code }));
+    postMessage(new UiMessage(UI.REQUEST_BUTTON, { device: device.toMessageObject(), code: code }));
 };
 
 /**
@@ -601,7 +595,7 @@ const onDevicePinHandler = async (device: Device, type: string, callback: (error
     // request pin view
     postMessage(new UiMessage(UI.REQUEST_PIN, { device: device.toMessageObject() }));
     // wait for pin
-    const uiResp: UiPromiseResponse = await createUiPromise(device, UI.RECEIVE_PIN).promise;
+    const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_PIN, device).promise;
     const pin: string = uiResp.data;
     // callback.apply(null, [null, pin]);
     callback(null, pin);
@@ -618,7 +612,7 @@ const onDevicePassphraseHandler = async (device: Device, callback: (error: any, 
     postMessage(new UiMessage(UI.REQUEST_PASSPHRASE, { device: device.toMessageObject() }));
     // wait for passphrase
 
-    const uiResp: UiPromiseResponse = await createUiPromise(device, UI.RECEIVE_PASSPHRASE).promise;
+    const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_PASSPHRASE, device).promise;
     const pass: string = uiResp.data.value;
     const save: boolean = uiResp.data.save;
     DataManager.isPassphraseCached(save);
@@ -628,7 +622,7 @@ const onDevicePassphraseHandler = async (device: Device, callback: (error: any, 
 
 const onEmptyPassphraseHandler = async (device: Device, callback: (error: any, success: any) => void): Promise<void> => {
     callback(null, '');
-}
+};
 
 /**
  * Handle popup closed by user.
@@ -646,8 +640,7 @@ const onPopupClosed = (): void => {
             } else {
                 const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, DEVICE.DISCONNECT);
                 if (uiPromise) {
-                    uiPromise.resolve();
-
+                    uiPromise.resolve({ event: ERROR.POPUP_CLOSED.message, data: null });
                 }
             }
         });
@@ -674,7 +667,6 @@ const onPopupClosed = (): void => {
  * @memberof Core
  */
 const handleDeviceSelectionChanges = (interruptDevice: ?DeviceDescription = null): void => {
-
     // update list of devices in popup
     const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, UI.RECEIVE_DEVICE);
     if (uiPromise && _deviceList) {
@@ -691,12 +683,13 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceDescription = null
     }
 
     // device was disconnected, interrupt pending uiPromises for this device
-    if (interruptDevice) {
+    if (interruptDevice !== null) {
+        const path: string = interruptDevice.path;
         let shouldClosePopup: boolean = false;
-        _uiPromises.forEach(p => {
-            if (p.device && p.device.getDevicePath() === interruptDevice.path) {
+        _uiPromises.forEach((p: Deferred<UiPromiseResponse>) => {
+            if (p.device && p.device.getDevicePath() === path) {
                 if (p.id === DEVICE.DISCONNECT) {
-                    p.resolve();
+                    p.resolve({ event: DEVICE.DISCONNECT, data: null });
                 }
                 shouldClosePopup = true;
             }
@@ -731,7 +724,7 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
         });
 
         _deviceList.on(DEVICE.DISCONNECT, (device: DeviceDescription) => {
-            console.warn()
+            console.warn();
             handleDeviceSelectionChanges(device);
             postMessage(new DeviceMessage(DEVICE.DISCONNECT, device));
         });
@@ -754,9 +747,8 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
             }
         });
 
-        _deviceList.on(TRANSPORT.START, (transportType) => postMessage(new TransportMessage(TRANSPORT.START, transportType)) );
-        _deviceList.on(TRANSPORT.UNREADABLE, () => postMessage(new TransportMessage(TRANSPORT.UNREADABLE)) );
-
+        _deviceList.on(TRANSPORT.START, (transportType) => postMessage(new TransportMessage(TRANSPORT.START, transportType)));
+        _deviceList.on(TRANSPORT.UNREADABLE, () => postMessage(new TransportMessage(TRANSPORT.UNREADABLE)));
     } catch (error) {
         _deviceList = null;
         if (!settings.transport_reconnect) {

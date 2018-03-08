@@ -119,7 +119,7 @@ const postMessage = (message: any, usePromise: boolean = true): ?Promise<void> =
 
     if (typeof window.chrome !== 'undefined' && window.chrome.runtime && window.chrome.runtime.onConnect) {
         window.chrome.runtime.onConnect.addListener(() => {
-            _log.log("chrome.runtime.onConnect")
+            _log.log('chrome.runtime.onConnect');
         });
     }
 
@@ -147,10 +147,9 @@ const handleMessage = (messageEvent: MessageEvent): void => {
     _log.log('handleMessage', message);
 
     switch (event) {
-
         case RESPONSE_EVENT :
             if (_messagePromises[id]) {
-                //_messagePromises[id].resolve(data);
+                // _messagePromises[id].resolve(data);
                 _messagePromises[id].resolve(message);
                 delete _messagePromises[id];
             } else {
@@ -175,8 +174,7 @@ const handleMessage = (messageEvent: MessageEvent): void => {
             eventEmitter.emit(type, data);
             if (type === UI.REQUEST_UI_WINDOW) {
                 // popup handshake is resolved automatically
-                if (eventEmitter.listeners(UI_EVENT).length > 0)
-                    postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE });
+                if (eventEmitter.listeners(UI_EVENT).length > 0) { postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }); }
             } else if (type === IFRAME.HANDSHAKE) {
                 if (_iframeHandshakePromise) { _iframeHandshakePromise.resolve(); }
                 _iframeHandshakePromise = null;
@@ -196,7 +194,6 @@ const handleMessage = (messageEvent: MessageEvent): void => {
 };
 
 class TrezorConnect extends TrezorBase {
-
     // static on(type: string, fn: Function): void {
     //     eventEmitter.on(type, fn);
     // }
@@ -232,7 +229,7 @@ class TrezorConnect extends TrezorBase {
     }
 
     static uiResponse(message: Object): void {
-        //_core.handleMessage({ event: UI_EVENT, ...message });
+        // _core.handleMessage({ event: UI_EVENT, ...message });
         postMessage({ event: UI_EVENT, ...message });
     }
 
@@ -243,8 +240,7 @@ class TrezorConnect extends TrezorBase {
         }
 
         // request popup. it might be used in the future
-        if (eventEmitter.listeners(UI_EVENT).length < 1)
-            _popupManager.request(params);
+        if (eventEmitter.listeners(UI_EVENT).length < 1) { _popupManager.request(params); }
 
         // post message to iframe
         try {
@@ -273,7 +269,6 @@ class TrezorConnect extends TrezorBase {
             type: 'connect',
         };
     }
-
 }
 
 // auto init

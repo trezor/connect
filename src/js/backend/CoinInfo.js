@@ -47,7 +47,7 @@ export const getCoins = (): $ReadOnlyArray<CoinInfo> => {
 
 export const cloneCoinInfo = (ci: CoinInfo): CoinInfo => {
     return JSON.parse(JSON.stringify(ci));
-}
+};
 
 export const generateCoinInfo = (coinName: string): CoinInfo => {
     switch (coinName) {
@@ -135,9 +135,9 @@ export const getCoinInfoByCurrency = (currency: string): ?CoinInfo => {
     // TODO: Ethereum & NEM
     const lower: string = currency.toLowerCase();
     return getCoins().find((coin: CoinInfo) => (
-            coin.name.toLowerCase() === lower ||
-            coin.shortcut.toLowerCase() === lower ||
-            coin.label.toLowerCase() === lower
+        coin.name.toLowerCase() === lower ||
+        coin.shortcut.toLowerCase() === lower ||
+        coin.label.toLowerCase() === lower
     ));
 };
 

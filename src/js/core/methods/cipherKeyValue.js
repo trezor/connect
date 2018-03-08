@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import { validatePath, getPathFromIndex } from '../../utils/pathUtils';
+import { validatePath } from '../../utils/pathUtils';
 import { checkPermissions } from './permissions';
 import type { MethodParams, MethodCallbacks } from './parameters';
 
@@ -9,7 +9,7 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
     const input: Object = params.input;
     const node = await callbacks.device.getCommands().cipherKeyValue(input.path, input.key, input.value, input.encrypt, input.ask_on_encrypt, input.ask_on_decrypt, input.iv);
     return {
-        resp: node
+        resp: node,
     };
 };
 
@@ -82,7 +82,7 @@ const params = (raw: Object): MethodParams => {
             encrypt: raw.encrypt,
             ask_on_encrypt: raw.askOnEncrypt,
             ask_on_decrypt: raw.askOnDecrypt,
-            iv: raw.iv
+            iv: raw.iv,
         },
     };
 };

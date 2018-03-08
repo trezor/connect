@@ -45,13 +45,13 @@ export const showPopupRequest = (open: () => void, cancel: () => void) => {
         document.body.appendChild(div);
     }
 
-    let button: HTMLElement = div.getElementsByClassName('trezorconnect-open')[0];
+    const button: HTMLElement = div.getElementsByClassName('trezorconnect-open')[0];
     button.onclick = () => {
         open();
         if (document.body) { document.body.removeChild(div); }
     };
 
-    let close: HTMLElement = div.getElementsByClassName('trezorconnect-close')[0];
+    const close: HTMLElement = div.getElementsByClassName('trezorconnect-close')[0];
     close.onclick = () => {
         cancel();
         if (document.body) { document.body.removeChild(div); }

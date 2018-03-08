@@ -17,7 +17,7 @@ const splitString = (str: ?string, len: number): [string, string] => {
     const first = str.slice(0, len);
     const second = str.slice(len);
     return [first, second];
-}
+};
 
 const processTxRequest = async (
     typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
@@ -45,7 +45,7 @@ const processTxRequest = async (
         response.message,
         rest
     );
-}
+};
 
 function stripLeadingZeroes(str: string) {
     while (/^00/.test(str)) {
@@ -65,7 +65,6 @@ export const ethereumSignTx = async (
     data?: string,
     chain_id?: number
 ): Promise<EthereumSignature> => {
-
     const length = data == null ? 0 : data.length / 2;
 
     const [first, rest] = splitString(data, 1024 * 2);
@@ -104,4 +103,4 @@ export const ethereumSignTx = async (
         response.message,
         rest
     );
-}
+};

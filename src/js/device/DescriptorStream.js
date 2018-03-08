@@ -25,7 +25,6 @@ export type DeviceDescriptorDiff = {
 const logger: Log = initLog('DescriptorStream', false);
 
 export default class DescriptorStream extends EventEmitter {
-
     // actual low-level transport, from trezor-link
     transport: Transport;
 

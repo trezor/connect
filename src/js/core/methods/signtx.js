@@ -14,12 +14,11 @@ import type { MessageResponse } from '../../device/DeviceCommands';
 import TransactionComposer from '../../tx/TransactionComposer';
 
 const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise<Object> => {
-
     const input: Object = params.input;
     const coinInfo: CoinInfo = input.coinInfo;
     const backend: BitcoreBackend = await createBackend(coinInfo.name);
 
-    let txComposer: TransactionComposer = new TransactionComposer();
+    const txComposer: TransactionComposer = new TransactionComposer();
 
     const refTx: Array<BitcoinJsTransaction> = await txComposer.getReferencedTx(input.tx.transaction.inputs, backend);
     const signedtx: MessageResponse<trezor.SignedTx> = await callbacks.device.getCommands().signTx(input.tx, refTx, coinInfo, 0);
@@ -29,11 +28,12 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
         try {
             txId = await backend.sendTransactionHex(signedtx.message.serialized.serialized_tx);
         } catch (error) {
-            throw {
+            const obj: Object = {
                 custom: true,
                 error: error.message,
                 ...signedtx.message.serialized,
             };
+            throw obj;
         }
     }
 
@@ -64,7 +64,6 @@ const params = (raw: Object): MethodParams => {
         throw new Error(`Coin ${raw.coin} not found`);
     }
 
-
     return {
         responseID: raw.id,
         name: 'custom',
@@ -77,7 +76,7 @@ const params = (raw: Object): MethodParams => {
         input: {
             tx: raw.tx,
             coinInfo: coinInfo,
-            pushTransaction: raw.push
+            pushTransaction: raw.push,
         },
     };
 };

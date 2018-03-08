@@ -44,7 +44,6 @@ export type Input = {
 };
 
 export default class TransactionComposer {
-
     account: Account;
     coinInfo: CoinInfo;
     outputs: Array<any>;
@@ -67,8 +66,7 @@ export default class TransactionComposer {
             // this.coinInfo = account.backend.coinInfo;
             this.coinInfo = account.coinInfo;
         }
-        if (outputs)
-            this.outputs = outputs;
+        if (outputs) { this.outputs = outputs; }
     }
 
     async init(level: ?string, customFee: ?string): Promise<void> {

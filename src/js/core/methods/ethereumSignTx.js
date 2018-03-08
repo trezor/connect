@@ -11,7 +11,6 @@ import type { EthereumSignature } from '../../device/helpers/ethereumSigntx';
 import { validatePath } from '../../utils/pathUtils';
 
 const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise<Object> => {
-
     const input: Object = params.input.raw;
 
     const signedtx: MessageResponse<EthereumSignature> = await callbacks.device.getCommands().ethereumSignTx(
@@ -60,7 +59,7 @@ const params = (raw: Object): MethodParams => {
         confirmation: null,
         method,
         input: {
-            raw
+            raw,
         },
     };
 };

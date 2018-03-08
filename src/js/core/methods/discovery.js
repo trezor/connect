@@ -82,7 +82,7 @@ const params = (raw: Object): MethodParams => {
         }
         if (typeof raw.customCoinInfo.segwit === 'boolean') {
             coinInfo.segwit = raw.customCoinInfo.segwit;
-            //coinInfo.network.bip32.public = parseInt(coinInfo.legacyPubMagic, 16);
+            // coinInfo.network.bip32.public = parseInt(coinInfo.legacyPubMagic, 16);
         }
     }
 

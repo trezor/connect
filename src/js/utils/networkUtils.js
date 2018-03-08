@@ -29,7 +29,7 @@ export const httpRequest = async (url: string, type: string = 'text'): any => {
 };
 
 export const getOrigin = (url: string) => {
-    // eslint-disable-next-line no-irregular-whitespace
+    // eslint-disable-next-line no-irregular-whitespace, no-useless-escape
     const parts: ?Array<string> = url.match(/^.+\:\/\/[^\‌​/]+/);
     return (Array.isArray(parts) && parts.length > 0) ? parts[0] : 'unknown';
 };

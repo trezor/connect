@@ -6,7 +6,7 @@ import type { MethodParams, MethodCallbacks } from './parameters';
 
 const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise<Object> => {
     return {
-        "foo": "bar"
+        'foo': 'bar',
     };
 };
 

@@ -17,7 +17,7 @@ import {
     Lowlevel,
     WebUsb,
     Fallback,
-    Parallel
+    Parallel,
 } from 'trezor-link';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 import DataManager from '../data/DataManager';
@@ -287,7 +287,7 @@ export default class DeviceList extends EventEmitter {
     onBeforeUnload(clearSession?: ?boolean) {
         // this.asArray().forEach(device => device.onBeforeUnload());
 
-        //for (const [key, dev]:[ string, any ] of Object.entries(this.devices)) {
+        // for (const [key, dev]:[ string, any ] of Object.entries(this.devices)) {
         for (const [key, dev] of Object.entries(this.devices)) {
             dev.onBeforeUnload();
         }
@@ -344,9 +344,9 @@ class CreateDeviceHandler {
                 // do nothing
                 // it's a race condition between "device_changed" and "device_disconnected"
             } else if (error.message === ERROR.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE || error.toString() === ERROR.WEBUSB_ERROR_MESSAGE) {
-               // this should not happen actually - karel (it is happening - szymon)
-               // await this._handleWrongSession();
-               await this._handleUsedElsewhere();
+                // this should not happen actually - karel (it is happening - szymon)
+                // await this._handleWrongSession();
+                await this._handleUsedElsewhere();
             } else if (error.message === ERROR.INITIALIZATION_FAILED.message) {
                 // firmware bug - device is in "show address" state which cannot be cancelled
                 await this._handleUsedElsewhere();
@@ -468,7 +468,7 @@ class DiffHandler {
                 if (device.isUnacquired() && !device.isInconsistent()) {
                     // wait for publish changes
                     await resolveAfter(501, null);
-                    logger.debug("Create device from unacquired", device)
+                    logger.debug('Create device from unacquired', device);
                     await this.list._createAndSaveDevice(descriptor);
                 }
             }

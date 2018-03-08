@@ -55,7 +55,7 @@ export const discover = async (options: DiscoveryOptions): Promise<Array<Account
         coinInfo = { ...backend.coinInfo };
     } else if (options.coinInfo) {
         backend = await createBackend(options.coinInfo);
-        //coinInfo = { ...backend.coinInfo };
+        // coinInfo = { ...backend.coinInfo };
         coinInfo = { ...options.coinInfo };
     } else if (options.coin) {
         backend = await createBackend(options.coin);

@@ -313,11 +313,12 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
         try {
             txId = await backend.sendTransactionHex(signedtx.message.serialized.serialized_tx);
         } catch (error) {
-            throw {
+            const obj: Object = {
                 custom: true,
                 error: error.message,
                 ...signedtx.message.serialized,
             };
+            throw obj;
         }
     }
 

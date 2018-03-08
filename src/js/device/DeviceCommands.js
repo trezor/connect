@@ -190,7 +190,6 @@ export default class DeviceCommands {
         });
     }
 
-
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,
@@ -224,7 +223,7 @@ export default class DeviceCommands {
             throw new Error('DeviceCommands already disposed');
         }
 
-        //console.warn("+++++++INITIALIZEEEEEEEE", this.device.getState() )
+        // console.warn("+++++++INITIALIZEEEEEEEE", this.device.getState() )
 
         if (!this.device.getState()) {
             // await this.clearSession({});
@@ -250,7 +249,7 @@ export default class DeviceCommands {
                 console.log('[trezor.js] [call] Received', res.type, logMessage);
             }
             return res;
-        } catch(error) {
+        } catch (error) {
             if (this.debug) {
                 console.log('[trezor.js] [call] Received error', error);
             }
@@ -273,7 +272,7 @@ export default class DeviceCommands {
         try {
             const resp = await this.call(type, msg);
             return await this._filterCommonTypes(resp);
-        } catch(error) {
+        } catch (error) {
             throw error;
         }
     }
@@ -309,19 +308,18 @@ export default class DeviceCommands {
         }
 
         if (res.type === 'PassphraseStateRequest') {
-            //if (this.session.device) {
-                // const currentState = this.session.device.passphraseState;
-                // const receivedState = res.message.state;
-                // if (currentState != null && currentState !== receivedState) {
-                //     return Promise.reject(new Error('Device has entered inconsistent state. Please reconnect the device.'));
-                // }
-                // this.session.device.passphraseState = receivedState;
-            //}
+            // if (this.session.device) {
+            // const currentState = this.session.device.passphraseState;
+            // const receivedState = res.message.state;
+            // if (currentState != null && currentState !== receivedState) {
+            //     return Promise.reject(new Error('Device has entered inconsistent state. Please reconnect the device.'));
+            // }
+            // this.session.device.passphraseState = receivedState;
+            // }
             return this._commonCall('PassphraseStateAck', { });
         }
 
         if (res.type === 'PassphraseRequest') {
-
             if (res.message.on_device) {
                 return this._commonCall('PassphraseAck', { state: this.device.getState() });
             }

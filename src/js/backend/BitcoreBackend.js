@@ -37,7 +37,6 @@ export type Options = {
 };
 
 export default class BitcoreBackend {
-
     options: Options;
     blockchain: BitcoreBlockchain;
 

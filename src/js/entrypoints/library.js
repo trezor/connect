@@ -66,7 +66,6 @@ const handleMessage = (message: CoreMessage) => {
     const error: any = message.error;
 
     switch (event) {
-
         case RESPONSE_EVENT :
             if (_messagePromises[id]) {
                 // _messagePromises[id].resolve(data);
@@ -99,7 +98,6 @@ const handleMessage = (message: CoreMessage) => {
 };
 
 export default class TrezorConnect extends TrezorBase {
-
     static async init(settings: Object): Promise<void> {
         if (_core) { throw ERROR.IFRAME_INITIALIZED; }
 
@@ -178,7 +176,6 @@ export default class TrezorConnect extends TrezorBase {
             type: 'library',
         };
     }
-
 }
 
 // module.exports = TrezorConnect;
@@ -188,20 +185,20 @@ export default class TrezorConnect extends TrezorBase {
 
 //     console.log("AAAAAAAAA", typeof exports, typeof define, root)
 
-    // if (typeof define === 'function' && define.amd) {
-    //     // AMD
-    //     define("TrezorConnect", [], Trezor);
-    // } else if(typeof exports === 'object' && typeof module === 'object') {
-    //     module.exports = Trezor;
-    // } else if (typeof exports === 'object') {
-    //     // Node, CommonJS-like
-    //     exports["TrezorConnect"] = Trezor;
-    // } else {
-    //     // Browser globals (root is window)
-    //     window["TrezorConnect"] = Trezor;
-    // }
+// if (typeof define === 'function' && define.amd) {
+//     // AMD
+//     define("TrezorConnect", [], Trezor);
+// } else if(typeof exports === 'object' && typeof module === 'object') {
+//     module.exports = Trezor;
+// } else if (typeof exports === 'object') {
+//     // Node, CommonJS-like
+//     exports["TrezorConnect"] = Trezor;
+// } else {
+//     // Browser globals (root is window)
+//     window["TrezorConnect"] = Trezor;
+// }
 
-    // window.TrezorConnect = Trezor;
+// window.TrezorConnect = Trezor;
 // }(this, function() {
 //     console.log("AAAA", Trezor)
 //     return Trezor;
