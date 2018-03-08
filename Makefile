@@ -39,4 +39,4 @@ npm:
 	cp README.md ./dist-npm/README.md
 	cp COPYING ./dist-npm/COPYING
 	cp ./dist/js/trezor-connect.*.js ./dist-npm/index.js
-	# cd ./dist-npm && npm publish
+	cd ./dist-npm && npm publish
