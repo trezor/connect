@@ -340,7 +340,7 @@ class CreateDeviceHandler {
         } catch (error) {
             logger.debug('Cannot create device', error);
 
-            if (error.message === ERROR.DEVICE_NOT_FOUND.message) {
+            if (error.message.toLowerCase() === ERROR.DEVICE_NOT_FOUND.message.toLowerCase()) {
                 // do nothing
                 // it's a race condition between "device_changed" and "device_disconnected"
             } else if (error.message === ERROR.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE || error.toString() === ERROR.WEBUSB_ERROR_MESSAGE) {
