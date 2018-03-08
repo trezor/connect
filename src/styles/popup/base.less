@@ -27,7 +27,7 @@ html {
 
 body {
     min-width: 450px;
-    color: @color_primary_text;
+    color: @color_text_primary;
     font: 400 18px/1.4 Roboto, Helvetica, Arial, sans-serif;
     background: linear-gradient(0deg, #ffffff, #fcfcfc) no-repeat;
 }
@@ -38,10 +38,10 @@ p {
 }
 
 a {
-    color: @color_link;
+    color: @color_green_primary;
     text-decoration: underline;
     &:visited {
-        color: @color_link_visited;
+        color: @color_green_primary;
     }
 }
 
@@ -86,7 +86,7 @@ h3 {
 
 h4 {
     font-size: 14px;
-    color: @color_secondary_text;
+    color: @color_text_secondary;
     font-weight: 300;
     line-height: 1;
 }
@@ -96,9 +96,9 @@ input[type="password"] {
     width: 250px;
     padding: 6px;
     border: 0;
-    border-bottom: 1px solid @color_secondary_text;
+    border-bottom: 1px solid @color_text_secondary;
     background: transparent;
-    color: @color_primary_text;
+    color: @color_text_primary;
     font-size: 18px;
     // disable lastpass icons
     background-image: none !important;
@@ -119,20 +119,20 @@ button {
     padding: 8px 12px;
     font-size: 18px;
     background: transparent;
-    border: 1px solid @color_secondary_text;
+    border: 1px solid @color_text_secondary;
     border-radius: 5px;
-    color: @color_secondary_text;
+    color: @color_text_secondary;
     cursor: pointer;
     transition: background 0.5s, color 0.5s, border 0.5s, opacity 0.5s;
 
     &:hover {
-        color: @color_link;
-        border-color: @color_link;
+        color: @color_green_primary;
+        border-color: @color_divider;
     }
     &:active {
         color: @color_white;
-        border-color: @color_secondary_text;
-        background: @color_secondary_text;
+        border-color: @color_text_secondary;
+        background: @color_text_secondary;
         transition: none;
     }
     &:focus {

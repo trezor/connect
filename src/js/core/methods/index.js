@@ -43,3 +43,15 @@ export const find = (name: string): ?MethodCollection => {
 };
 
 export default find;
+
+
+export const find2 = (params: Object): ?AbstractMethod => {
+
+}
+
+export class AbstractMethod {
+    constructor(params: Object) {
+
+    }
+}
+

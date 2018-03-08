@@ -23,6 +23,7 @@
     "karma": "./node_modules/karma/bin/karma"
   },
   "scripts": {
+    "dev:popup": "babel-node ./webpack/server.js",
     "build": "rm -rf dist && webpack --config ./webpack/webpack.config.prod.babel.js",
     "stats": "webpack --config ./webpack/webpack.config.prod.babel.js --json > dist/stats.json",
     "test": "karma start karma.conf.js",
