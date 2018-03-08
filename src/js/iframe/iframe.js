@@ -30,9 +30,10 @@ const handleMessage = (event: MessageEvent): void => {
     // ignore messages from myself (chrome bug?)
     if (event.source === window) return;
 
-    // first message from connect.js
-    if (!_origin && event.data === IFRAME.HANDSHAKE) {
+    // first message from connect.js (parent window)
+    if (!_origin && event.data && event.data.type === IFRAME.HANDSHAKE) {
         _origin = event.origin;
+        init(event.data.settings);
         return;
     }
 
@@ -80,28 +81,16 @@ const postMessage = (message: CoreMessage): void => {
     window.top.postMessage(message, _origin);
 };
 
-// init iframe.html
-window.addEventListener('load', async (): Promise<void> => {
+const init = async (settings: any) => {
     try {
-        window.addEventListener('message', handleMessage, false);
-
-        // parse incoming settings stored in <iframe> data attributes
-        const iframe: Element = window.frameElement;
-        const attrSettings: { [k: string]: string } = {};
-
-        if (iframe) {
-            const attrs: Array<Attr> = [].filter.call(iframe.attributes, (a) => { return /^data-/.test(a.name); });
-            let attr: Attr;
-            for (attr of attrs) {
-                attrSettings[ attr.name.replace('data-', '') ] = attr.value;
-            }
-        }
-        _core = await initCore(parseSettings(attrSettings));
+        _core = await initCore(parseSettings(settings));
         _core.on(CORE_EVENT, postMessage);
-
         postMessage(new UiMessage(IFRAME.HANDSHAKE));
     } catch (error) {
         // TODO: kill app
         postMessage(new ErrorMessage(IFRAME.ERROR));
     }
-}, false);
+}
+
+window.addEventListener('message', handleMessage, false);
+

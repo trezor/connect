@@ -70,8 +70,6 @@ const initIframe = async (settings: Object): Promise<void> => {
     _settings = parseSettings(settings);
     _popupManager = initPopupManager();
 
-    // let src: string =  window.location.hostname === 'localhost' ? 'iframe.html' : 'https://dev.trezor.io/experiments/iframe.html';
-    // const src: string = `${settings.iframeSrc}?settings=${ encodeURI( JSON.stringify(settings) ) }`;
     const src: string = `${_settings.iframe_src}?${ Date.now() }`;
     _iframe.setAttribute('src', src);
 
@@ -80,7 +78,10 @@ const initIframe = async (settings: Object): Promise<void> => {
     if (iframeSrcHost && iframeSrcHost.length > 0) { _iframeOrigin = iframeSrcHost[0]; }
 
     _iframe.onload = () => {
-        _iframe.contentWindow.postMessage(IFRAME.HANDSHAKE, _iframeOrigin)
+        _iframe.contentWindow.postMessage({
+            type: IFRAME.HANDSHAKE,
+            settings: _settings,
+        }, _iframeOrigin);
     }
 
     if (document.body) {
@@ -216,7 +217,7 @@ class TrezorConnect extends TrezorBase {
         window.addEventListener('message', handleMessage);
         const iframeTimeout = window.setTimeout(() => {
             throw IFRAME_TIMEOUT;
-        }, 10000);
+        }, 20000);
         await initIframe(settings);
 
         window.clearTimeout(iframeTimeout);
