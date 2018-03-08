@@ -800,6 +800,7 @@ const initCore = (): Core => {
  */
 export const init = async (settings: ConnectSettings): Promise<Core> => {
     try {
+        _log.enabled = settings.debug;
         await DataManager.load(settings);
         await initCore();
         if (!settings.transport_reconnect) {

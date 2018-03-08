@@ -17,7 +17,7 @@ import * as DEVICE from '../constants/device';
 
 import { NO_IFRAME, IFRAME_INITIALIZED, DEVICE_CALL_IN_PROGRESS, IFRAME_TIMEOUT } from '../constants/errors';
 import PopupManager from '../popup/PopupManager';
-import Log from '../utils/debug';
+import Log, { init as initLog, getLog } from '../utils/debug';
 import css from '../iframe/inline-styles';
 
 import { create as createDeferred } from '../utils/deferred';
@@ -39,7 +39,8 @@ export {
     RESPONSE_EVENT,
 };
 
-const _log: Log = new Log('[trezor-connect.js]');
+const _log: Log = initLog('[trezor-connect.js]');
+
 let _settings: ConnectSettings;
 let _popupManager: PopupManager;
 let _iframe: HTMLIFrameElement;
@@ -61,23 +62,34 @@ const initIframe = async (settings: Object): Promise<void> => {
         _iframe.height = '0px';
         _iframe.style.position = 'absolute';
         _iframe.style.display = 'none';
+        _iframe.style.border = '0px';
+        _iframe.style.width = '0px';
+        _iframe.style.height = '0px';
         _iframe.id = 'trezorconnect';
-        _iframe.setAttribute('allow', 'usb');
     }
-
-    setDataAttributes(_iframe, settings);
 
     _settings = parseSettings(settings);
     _popupManager = initPopupManager();
+    _log.enabled = _settings.debug;
 
     const src: string = `${_settings.iframe_src}?${ Date.now() }`;
     _iframe.setAttribute('src', src);
+    if (_settings.webusb) {
+        _iframe.setAttribute('allow', 'usb');
+    }
 
     // eslint-disable-next-line no-irregular-whitespace
     const iframeSrcHost: ?Array<string> = _iframe.src.match(/^.+\:\/\/[^\‌​/]+/);
     if (iframeSrcHost && iframeSrcHost.length > 0) { _iframeOrigin = iframeSrcHost[0]; }
 
     _iframe.onload = () => {
+
+        if (typeof window.chrome !== 'undefined' && window.chrome.runtime && window.chrome.runtime.onConnect) {
+            window.chrome.runtime.onConnect.addListener(() => {
+                _log.log('chrome.runtime.onConnect');
+            });
+        }
+
         _iframe.contentWindow.postMessage({
             type: IFRAME.HANDSHAKE,
             settings: _settings,
@@ -87,8 +99,6 @@ const initIframe = async (settings: Object): Promise<void> => {
     if (document.body) {
         document.body.appendChild(_iframe);
     }
-
-
 
     _iframeHandshakePromise = createDeferred();
     return _iframeHandshakePromise.promise;
@@ -123,12 +133,6 @@ const postMessage = (message: any, usePromise: boolean = true): ?Promise<void> =
     _messageID++;
     message.id = _messageID;
     _iframe.contentWindow.postMessage(message, _iframeOrigin);
-
-    if (typeof window.chrome !== 'undefined' && window.chrome.runtime && window.chrome.runtime.onConnect) {
-        window.chrome.runtime.onConnect.addListener(() => {
-            _log.log('chrome.runtime.onConnect');
-        });
-    }
 
     if (usePromise) {
         _messagePromises[_messageID] = createDeferred();
@@ -181,7 +185,8 @@ const handleMessage = (messageEvent: MessageEvent): void => {
             eventEmitter.emit(type, data);
             if (type === UI.REQUEST_UI_WINDOW) {
                 // popup handshake is resolved automatically
-                if (eventEmitter.listeners(UI_EVENT).length > 0) { postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }); }
+                //if (eventEmitter.listeners(UI_EVENT).length > 0) { postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }); }
+                if (!_settings.popup) { postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }); }
             } else if (type === IFRAME.HANDSHAKE) {
                 if (_iframeHandshakePromise) { _iframeHandshakePromise.resolve(); }
                 _iframeHandshakePromise = null;
@@ -228,7 +233,9 @@ class TrezorConnect extends TrezorBase {
     }
 
     static changeSettings(settings: Object) {
-        postMessage({ type: UI.CHANGE_SETTINGS, data: parseSettings(settings) }, false);
+        const parsedSettings: ConnectSettings = parseSettings(settings);
+        _log.enabled = parsedSettings.debug;
+        postMessage({ type: UI.CHANGE_SETTINGS, data: parsedSettings }, false);
     }
 
     static async requestDevice() {
@@ -240,6 +247,13 @@ class TrezorConnect extends TrezorBase {
         postMessage({ event: UI_EVENT, ...message });
     }
 
+    static async getLog(args: ?Array<string>): Array<any> {
+        const iframeLogs: ?Object = await postMessage({ type: 'getlog', data: args });
+        const localLogs = getLog(args);
+        console.log("if", iframeLogs)
+        return []; //localLogs.concat(iframeLogs);
+    }
+
     static async __call(params: Object): Promise<Object> {
         if (_iframeHandshakePromise) {
             return { success: false, message: NO_IFRAME.message };
@@ -247,7 +261,9 @@ class TrezorConnect extends TrezorBase {
         }
 
         // request popup. it might be used in the future
-        if (eventEmitter.listeners(UI_EVENT).length < 1) { _popupManager.request(params); }
+        // if (eventEmitter.listeners(UI_EVENT).length < 1) { _popupManager.request(params); }
+        console.log("SET", _settings)
+        if (_settings.popup) { _popupManager.request(params); }
 
         // post message to iframe
         try {

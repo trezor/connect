@@ -39,7 +39,7 @@ export {
 let _core: Core;
 let _messageID: number = 0;
 const _messagePromises: { [key: number]: Deferred<any> } = {};
-const _log: Log = new Log('[trezor-library.js]', true);
+const _log: Log = new Log('[trezor-library.js]');
 
 // Outgoing messages
 const postMessage = (message: any): ?Promise<void> => {

@@ -14,6 +14,7 @@ export type ConnectSettings = {
     latest_bridge_src: string,
     transport_reconnect: boolean;
     webusb: boolean;
+    popup: boolean;
 }
 
 /*
@@ -33,6 +34,7 @@ const initialSettings: ConnectSettings = {
     latest_bridge_src: 'data/latest.txt',
     transport_reconnect: true,
     webusb: true,
+    popup: true,
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -89,8 +91,12 @@ export const parse = (input: ?Object): ConnectSettings => {
         settings.transport_reconnect = input.transport_reconnect;
     }
 
-    if (input.hasOwnProperty('webusb') && typeof input.webusb === 'string') {
-        settings.webusb = (input.webusb === 'true');
+    if (input.hasOwnProperty('webusb') && typeof input.webusb === 'boolean') {
+        settings.webusb = input.webusb;
+    }
+
+    if (input.hasOwnProperty('popup') && typeof input.popup === 'boolean') {
+        settings.popup = input.popup;
     }
 
     currentSettings = settings;

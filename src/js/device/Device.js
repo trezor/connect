@@ -18,7 +18,7 @@ import Log, { init as initLog } from '../utils/debug';
 const FEATURES_LIFETIME: number = 10 * 60 * 1000; // 10 minutes
 
 // custom log
-const logger: Log = initLog('Device', false);
+const logger: Log = initLog('Device');
 
 export type RunOptions = {
 

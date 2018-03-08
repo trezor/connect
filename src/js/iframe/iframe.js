@@ -8,10 +8,10 @@ import { parse as parseSettings } from '../entrypoints/ConnectSettings';
 import DataManager from '../data/DataManager';
 
 import { Core, CORE_EVENT, init as initCore } from '../core/Core';
-import { parseMessage, UiMessage, ErrorMessage } from '../core/CoreMessage';
+import { parseMessage, UiMessage, ErrorMessage, ResponseMessage } from '../core/CoreMessage';
 import type { CoreMessage } from '../core/CoreMessage';
 
-import Log, { init as initLog } from '../utils/debug';
+import Log, { init as initLog, getLog } from '../utils/debug';
 import { getOrigin } from '../utils/networkUtils';
 
 let _core: Core;
@@ -57,6 +57,11 @@ const handleMessage = (event: MessageEvent): void => {
 
     switch (message.type) {
         // utility: print log from popup window
+
+        case 'getlog' :
+            console.warn("GET ifraome LOG!", message)
+            postMessage(new ResponseMessage(message.id, true, getLog()));
+            break;
         case LOG :
             if (typeof message.args === 'string') {
                 const args = JSON.parse(message.args);

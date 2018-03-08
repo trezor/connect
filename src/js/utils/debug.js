@@ -15,6 +15,13 @@ const colors: {[k: string]: string} = {
     'Popup': 'color: #f48a00',
 };
 
+type LogMessage = {
+    level: string,
+    prefix: string,
+    message: Array<any>,
+    timestamp: number,
+}
+
 export default class Log {
     prefix: string;
     enabled: boolean;
@@ -32,7 +39,6 @@ export default class Log {
         this.messages.push({
             level: level,
             prefix: prefix,
-            // message: JSON.stringify(args),
             message: args,
             timestamp: new Date().getTime(),
         });
@@ -68,18 +74,22 @@ export const init = (prefix: string, enabled?: boolean): Log => {
     return instance;
 };
 
-type LogMessage = {
-    level: string,
-    prefix: string,
-    // message: string;
-    message: Array<any>,
-    timestamp: number,
-}
-
 export const enable = (enabled: boolean): void => {
     for (const l of Object.keys(_logs)) {
         _logs[l].enabled = enabled;
     }
+};
+
+export const getLog = (args: ?Array<string>): void => {
+    //if
+    let logs: Array<LogMessage> = [];
+    for (const l of Object.keys(_logs)) {
+        logs = logs.concat(_logs[l].messages);
+    }
+    logs.sort((a, b) => {
+        return a.timestamp - b.timestamp;
+    });
+    return logs;
 };
 
 export const enableByPrefix = (prefix: string, enabled: boolean): void => {

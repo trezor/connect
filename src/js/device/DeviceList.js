@@ -39,7 +39,7 @@ export type DeviceListOptions = {
 };
 
 // custom log
-const logger: Log = initLog('DeviceList', false);
+const logger: Log = initLog('DeviceList');
 
 let sharedWorkerFactory: ?() => ?SharedWorker = null;
 export function setSharedWorkerFactory(swf: ?() => ?SharedWorker) {
