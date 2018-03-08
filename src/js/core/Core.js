@@ -35,7 +35,6 @@ import type { ConnectSettings } from '../entrypoints/ConnectSettings';
 // Public variables
 let _core: Core; // Class with event emitter
 let _deviceList: ?DeviceList; // Instance of DeviceList
-let _parameters: ?MethodParams; // Incoming parsed params
 let _popupPromise: ?Deferred<void>; // Waiting for popup handshake
 let _uiPromises: Array<Deferred<UiPromiseResponse>> = []; // Waiting for ui response
 let _waitForFirstRun: boolean = false; // used in corner-case, where device.isRunning() === true but it isn't loaded yet.

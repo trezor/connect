@@ -75,13 +75,19 @@ const initIframe = async (settings: Object): Promise<void> => {
     const src: string = `${_settings.iframe_src}?${ Date.now() }`;
     _iframe.setAttribute('src', src);
 
+    // eslint-disable-next-line no-irregular-whitespace
+    const iframeSrcHost: ?Array<string> = _iframe.src.match(/^.+\:\/\/[^\‌​/]+/);
+    if (iframeSrcHost && iframeSrcHost.length > 0) { _iframeOrigin = iframeSrcHost[0]; }
+
+    _iframe.onload = () => {
+        _iframe.contentWindow.postMessage(IFRAME.HANDSHAKE, _iframeOrigin)
+    }
+
     if (document.body) {
         document.body.appendChild(_iframe);
     }
 
-    // eslint-disable-next-line no-irregular-whitespace
-    const iframeSrcHost: ?Array<string> = _iframe.src.match(/^.+\:\/\/[^\‌​/]+/);
-    if (iframeSrcHost && iframeSrcHost.length > 0) { _iframeOrigin = iframeSrcHost[0]; }
+
 
     _iframeHandshakePromise = createDeferred();
     return _iframeHandshakePromise.promise;

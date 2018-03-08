@@ -15,6 +15,7 @@ import Log, { init as initLog } from '../utils/debug';
 import { getOrigin } from '../utils/networkUtils';
 
 let _core: Core;
+let _origin: string;
 
 // custom log
 const logger: Log = initLog('IFrame');
@@ -28,6 +29,12 @@ const loggerPopup: Log = initLog('Popup');
 const handleMessage = (event: MessageEvent): void => {
     // ignore messages from myself (chrome bug?)
     if (event.source === window) return;
+
+    // first message from connect.js
+    if (!_origin && event.data === IFRAME.HANDSHAKE) {
+        _origin = event.origin;
+        return;
+    }
 
     // ignore not trusted (not working in FF)
     // if (!event.isTrusted) return;
@@ -70,7 +77,7 @@ const postMessage = (message: CoreMessage): void => {
         return;
     }
     logger.debug('postMessage', message);
-    window.top.postMessage(message, '*');
+    window.top.postMessage(message, _origin);
 };
 
 // init iframe.html
