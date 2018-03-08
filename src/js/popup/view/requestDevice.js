@@ -25,7 +25,6 @@ export const requestDevice = (): void => {
             await navigator.usb.requestDevice({filters: TREZOR_DESCS});
 
             const devices = await navigator.usb.getDevices();
-            console.warn('DEVICESSS', devices);
             postMessage(new UiMessage('WEBUSB'));
         } catch (error) {
             postMessage(new UiMessage('WEBUSB-ERROR'));

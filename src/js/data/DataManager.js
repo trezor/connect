@@ -45,7 +45,6 @@ export default class DataManager {
     }
 
     static getRequiredFirmware(): string {
-        console.log(this.releases);
         return '1.5.1';
     }
 

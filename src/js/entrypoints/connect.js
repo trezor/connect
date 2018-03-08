@@ -250,7 +250,6 @@ class TrezorConnect extends TrezorBase {
     static async getLog(args: ?Array<string>): Array<any> {
         const iframeLogs: ?Object = await postMessage({ type: 'getlog', data: args });
         const localLogs = getLog(args);
-        console.log("if", iframeLogs)
         return []; //localLogs.concat(iframeLogs);
     }
 
@@ -262,7 +261,6 @@ class TrezorConnect extends TrezorBase {
 
         // request popup. it might be used in the future
         // if (eventEmitter.listeners(UI_EVENT).length < 1) { _popupManager.request(params); }
-        console.log("SET", _settings)
         if (_settings.popup) { _popupManager.request(params); }
 
         // post message to iframe

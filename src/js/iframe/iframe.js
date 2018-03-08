@@ -59,7 +59,6 @@ const handleMessage = (event: MessageEvent): void => {
         // utility: print log from popup window
 
         case 'getlog' :
-            console.warn("GET ifraome LOG!", message)
             postMessage(new ResponseMessage(message.id, true, getLog()));
             break;
         case LOG :

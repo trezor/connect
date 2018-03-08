@@ -723,7 +723,6 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
         });
 
         _deviceList.on(DEVICE.DISCONNECT, (device: DeviceDescription) => {
-            console.warn();
             handleDeviceSelectionChanges(device);
             postMessage(new DeviceMessage(DEVICE.DISCONNECT, device));
         });
