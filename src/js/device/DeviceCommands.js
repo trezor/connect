@@ -169,7 +169,8 @@ export default class DeviceCommands {
         value: string,
         data?: string,
         chain_id?: number
-    ): Promise<MessageResponse<ethereumSignTxHelper.EthereumSignature>> {
+    // ): Promise<MessageResponse<ethereumSignTxHelper.EthereumSignature>> {
+    ): Promise<ethereumSignTxHelper.EthereumSignature> {
         return await ethereumSignTxHelper.ethereumSignTx(
             this.typedCall.bind(this),
             address_n,
@@ -199,8 +200,8 @@ export default class DeviceCommands {
         ask_on_decrypt: boolean,
         iv: ?(string | Buffer) // in hexadecimal
     ): Promise<MessageResponse<{value: string}>> {
-        const valueString = value.toString('hex');
-        const ivString = iv == null ? null : iv.toString('hex');
+        const valueString: string = value instanceof Buffer ? value.toString('hex') : value;
+        const ivString: ?string = iv instanceof Buffer ? iv.toString('hex') : iv;
 
         return await this.typedCall('CipherKeyValue', 'CipheredKeyValue', {
             address_n: address_n,

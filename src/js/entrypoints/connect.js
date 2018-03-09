@@ -49,7 +49,7 @@ let _iframeHandshakePromise: ?Deferred<void>;
 let _messageID: number = 0;
 
 // every postMessage to iframe has its own promise to resolve
-const _messagePromises: { [key: number]: Deferred<void> } = {};
+const _messagePromises: { [key: number]: Deferred<any> } = {};
 
 const initIframe = async (settings: Object): Promise<void> => {
     const existedFrame: HTMLIFrameElement = (document.getElementById('trezorconnect'): any);
@@ -232,26 +232,26 @@ class TrezorConnect extends TrezorBase {
         };
     }
 
+    static uiResponse(message: Object): void {
+        // _core.handleMessage({ event: UI_EVENT, ...message });
+        postMessage({ event: UI_EVENT, ...message });
+    }
+
     static changeSettings(settings: Object) {
         const parsedSettings: ConnectSettings = parseSettings(settings);
         _log.enabled = parsedSettings.debug;
         postMessage({ type: UI.CHANGE_SETTINGS, payload: parsedSettings }, false);
     }
 
-    static async requestDevice() {
-        return await this.__call({ method: 'requestDevice' });
-    }
+    // static async requestDevice() {
+    //     return await this.__call({ method: 'requestDevice' });
+    // }
 
-    static uiResponse(message: Object): void {
-        // _core.handleMessage({ event: UI_EVENT, ...message });
-        postMessage({ event: UI_EVENT, ...message });
-    }
-
-    static async getLog(args: ?Array<string>): Array<any> {
-        const iframeLogs: ?Object = await postMessage({ type: 'getlog', payload: args });
-        const localLogs = getLog(args);
-        return []; //localLogs.concat(iframeLogs);
-    }
+    // static async getLog(args: ?Array<string>): Array<any> {
+    //     const iframeLogs: ?Object = await postMessage({ type: 'getlog', payload: args });
+    //     const localLogs = getLog(args);
+    //     return []; //localLogs.concat(iframeLogs);
+    // }
 
     static async __call(params: Object): Promise<Object> {
         if (_iframeHandshakePromise) {

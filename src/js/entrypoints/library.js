@@ -63,7 +63,6 @@ const handleMessage = (message: CoreMessage) => {
     const event: string = message.event;
     const type: string = message.type;
     const payload: any = message.payload;
-    const error: any = message.error;
 
     switch (event) {
         case RESPONSE_EVENT :
@@ -86,7 +85,7 @@ const handleMessage = (message: CoreMessage) => {
             // filter and pass UI event up
             if (type === UI.REQUEST_UI_WINDOW) {
                 // popup handshake is resolved automatically
-                _core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE });
+                _core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, true);
             } else if (type !== POPUP.CANCEL_POPUP_REQUEST) {
                 eventEmitter.emit(event, type, payload);
             }
@@ -115,7 +114,7 @@ export default class TrezorConnect extends TrezorBase {
     }
 
     static changeSettings(settings: Object) {
-        _core.handleMessage({ type: UI.CHANGE_SETTINGS, data: parseSettings(settings) });
+        _core.handleMessage({ type: UI.CHANGE_SETTINGS, data: parseSettings(settings) }, true);
     }
 
     // static async getPublicKey(params: Object): Promise<Object> {
@@ -134,7 +133,7 @@ export default class TrezorConnect extends TrezorBase {
     static uiMessage(message: Object): void {
         // TODO: parse and validate incoming data injections
         //
-        _core.handleMessage({ event: UI_EVENT, ...message });
+        _core.handleMessage({ event: UI_EVENT, ...message }, true);
     }
 
     static async __call(params: Object): Promise<Object> {
@@ -150,7 +149,7 @@ export default class TrezorConnect extends TrezorBase {
             const promise: Promise<Object> = _messagePromises[_messageID].promise;
 
             // send to Core
-            _core.handleMessage({ id: _messageID, type: IFRAME.CALL, data: params });
+            _core.handleMessage({ id: _messageID, type: IFRAME.CALL, data: params }, true);
 
             // wait for response (handled in handleMessage function)
             const response: ?Object = await promise;

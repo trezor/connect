@@ -28,7 +28,7 @@ export default class Log {
     css: string;
     messages: Array<LogMessage>;
 
-    constructor(prefix: string, enabled: boolean) {
+    constructor(prefix: string, enabled: boolean = false) {
         this.prefix = prefix;
         this.enabled = enabled;
         this.messages = [];
@@ -80,7 +80,7 @@ export const enable = (enabled: boolean): void => {
     }
 };
 
-export const getLog = (args: ?Array<string>): void => {
+export const getLog = (args: ?Array<string>): Array<LogMessage> => {
     //if
     let logs: Array<LogMessage> = [];
     for (const l of Object.keys(_logs)) {

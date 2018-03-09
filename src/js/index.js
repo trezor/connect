@@ -22,6 +22,11 @@ export default class Trezor {
         // to override
     }
 
+    static async cipherKeyValue(params: Object): Promise<Object> {
+        return await this.__call({ method: 'cipherKeyValue', ...params });
+    }
+
+    /*
     static requestDevice(): void {
         // to override
     }
@@ -30,9 +35,7 @@ export default class Trezor {
         return await this.__call({ method: 'getFeatures', ...params });
     }
 
-    static async cipherKeyValue(params: Object): Promise<Object> {
-        return await this.__call({ method: 'cipherKeyValue', ...params });
-    }
+
 
     static async requestLogin(params: Object): Promise<Object> {
         return await this.__call({ method: 'requestLogin', ...params });
@@ -66,14 +69,11 @@ export default class Trezor {
     static async customCall(params: Object): Promise<Object> {
         return await this.__call({ method: 'custom', ...params });
     }
+    */
 
     static async __call(params: Object): Promise<Object> {
         // to override
         return {};
-    }
-
-    static uiMessage(message): void {
-        // to override
     }
 
     static dispose(): void {

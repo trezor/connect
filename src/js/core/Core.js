@@ -14,8 +14,8 @@ import * as UI from '../constants/ui';
 import * as IFRAME from '../constants/iframe';
 import * as ERROR from '../constants/errors';
 
-import { UiMessage, DeviceMessage, TransportMessage, ResponseMessage } from './CoreMessage';
-import type { CoreMessage, UiPromiseResponse } from './CoreMessage';
+import { UiMessage, DeviceMessage, TransportMessage, ResponseMessage, CoreMessage } from './CoreMessage';
+import type { UiPromiseResponse } from './CoreMessage';
 
 import { parse as parseParams, parseGeneral as parseGeneralParams } from './methods/parameters';
 import type { GeneralParams, MethodParams, MethodCallbacks } from './methods/parameters';
@@ -682,7 +682,7 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceDescription = null
     }
 
     // device was disconnected, interrupt pending uiPromises for this device
-    if (interruptDevice !== null) {
+    if (interruptDevice) {
         const path: string = interruptDevice.path;
         let shouldClosePopup: boolean = false;
         _uiPromises.forEach((p: Deferred<UiPromiseResponse>) => {

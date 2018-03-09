@@ -21,7 +21,7 @@ export type UiPromiseResponse = {
 }
 
 // parse MessageEvent .data object into CoreMessage
-export const parseMessage = (messageData: Object): CoreMessage => {
+export const parseMessage = (messageData: any): CoreMessage => {
     const message: CoreMessage = {
         event: messageData.event,
         type: messageData.type,

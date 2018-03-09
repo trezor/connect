@@ -9,8 +9,7 @@ import { parse as parseSettings } from '../entrypoints/ConnectSettings';
 import DataManager from '../data/DataManager';
 
 import { Core, CORE_EVENT, init as initCore } from '../core/Core';
-import { parseMessage, UiMessage, ErrorMessage, ResponseMessage, TransportMessage } from '../core/CoreMessage';
-import type { CoreMessage } from '../core/CoreMessage';
+import { parseMessage, UiMessage, ErrorMessage, ResponseMessage, TransportMessage, CoreMessage } from '../core/CoreMessage';
 
 import Log, { init as initLog, getLog } from '../utils/debug';
 import { getOrigin } from '../utils/networkUtils';
@@ -32,7 +31,7 @@ const handleMessage = (event: MessageEvent): void => {
     if (event.source === window) return;
 
     // first message from connect.js (parent window)
-    if (!_origin && event.data && event.data.type === IFRAME.HANDSHAKE) {
+    if (!_origin && event.data && event.data.type === IFRAME.HANDSHAKE && event.data.settings) {
         _origin = event.origin;
         init(event.data.settings);
         return;
@@ -60,7 +59,7 @@ const handleMessage = (event: MessageEvent): void => {
         // utility: print log from popup window
 
         case 'getlog' :
-            postMessage(new ResponseMessage(message.id, true, getLog()));
+            postMessage(new ResponseMessage(message.id || 0, true, getLog()));
             break;
         case LOG :
             if (typeof message.args === 'string') {

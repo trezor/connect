@@ -128,7 +128,7 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
 
         // wait for user action or error from discovery
         const uiResp: UiPromiseResponse = await callbacks.createUiPromise(UI.RECEIVE_ACCOUNT, callbacks.device).promise;
-        const resp: string = uiResp.data;
+        const resp: string = uiResp.payload;
         const respNumber: number = parseInt(resp);
 
         // if ui promise reject we need to stop discovering
@@ -171,8 +171,8 @@ const confirmation = async (params: MethodParams, callbacks: MethodCallbacks): P
         accountType: params.input.accountType,
     }));
     // wait for user action
-    const uiResp: UiPromiseResponse = await callbacks.createUiPromise(UI.RECEIVE_CONFIRMATION, callbacks).promise;
-    const resp: string = uiResp.data;
+    const uiResp: UiPromiseResponse = await callbacks.createUiPromise(UI.RECEIVE_CONFIRMATION, callbacks.device).promise;
+    const resp: string = uiResp.payload;
     return (resp === 'true');
 };
 

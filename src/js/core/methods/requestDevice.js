@@ -3,6 +3,7 @@
 
 import { checkPermissions } from './permissions';
 import { UiMessage } from '../CoreMessage';
+import type { UiPromiseResponse } from '../CoreMessage';
 import type { MethodParams, MethodCallbacks } from './parameters';
 
 const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise<Object> => {

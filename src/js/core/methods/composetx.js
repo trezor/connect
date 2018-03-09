@@ -261,7 +261,7 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
             return await composingCycle();
         }
 
-        const responseData: any = uiResponse.data;
+        const responseData: any = uiResponse.payload;
 
         if (uiResponse.event === UI.RECEIVE_ACCOUNT) {
             // if ui promise reject we need to stop discovering

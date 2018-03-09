@@ -187,21 +187,12 @@ export default class DeviceList extends EventEmitter {
     }
 
     asArray(): Array<DeviceDescription> {
-        const list: Array<DeviceDescription> = [];
-        // this line breaks editor syntax color
-        // for (const [key, dev]:[ string, any ] of Object.entries(this.devices)) {
-        for (const [key, dev] of Object.entries(this.devices)) {
-            list.push(dev.toMessageObject());
-        }
+        const list: Array<DeviceDescription> = this.allDevices().map(device => device.toMessageObject());
         return list;
     }
 
     allDevices(): Array<Device> {
-        const list: Array<Device> = [];
-        for (const [key, dev] of Object.entries(this.devices)) {
-            list.push(dev);
-        }
-        return list;
+        return Object.keys(this.devices).map((key: string) => this.devices[key]);
     }
 
     length(): number {
@@ -264,7 +255,7 @@ export default class DeviceList extends EventEmitter {
             if (transport == null) {
                 return null;
             }
-            // $FlowIssue - this all is going around Flow :/
+
             const activeTransport = transport.activeTransport;
             if (activeTransport == null || activeTransport.name !== 'ParallelTransport') {
                 return null;
@@ -285,16 +276,12 @@ export default class DeviceList extends EventEmitter {
     }
 
     onBeforeUnload(clearSession?: ?boolean) {
-        // this.asArray().forEach(device => device.onBeforeUnload());
-
-        // for (const [key, dev]:[ string, any ] of Object.entries(this.devices)) {
-        for (const [key, dev] of Object.entries(this.devices)) {
-            dev.onBeforeUnload();
-        }
 
         if (this.stream !== null) {
             this.stream.stop();
         }
+
+        this.allDevices().forEach(device => device.onBeforeUnload());
     }
 }
 
