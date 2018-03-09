@@ -39,6 +39,13 @@ module.exports = {
                     fallback: 'style-loader'
                 })
             },
+            {
+                test: /\.(ttf|eot|svg|woff|woff2)$/,
+                loader: 'file-loader',
+                query: {
+                    name: './fonts/[name].[hash].[ext]',
+                },
+            },
         ]
     },
     resolve: {

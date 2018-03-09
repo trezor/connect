@@ -37,14 +37,6 @@ p {
     margin-bottom: 1em;
 }
 
-a {
-    color: @color_green_primary;
-    text-decoration: underline;
-    &:visited {
-        color: @color_green_primary;
-    }
-}
-
 main {
     width: 100%;
     min-height: 100%;
@@ -67,7 +59,7 @@ main {
 
 .loader {
     position: relative;
-    padding: 30px 0px;
+    padding: 30px 0;
 
     p {
         position: absolute;
@@ -79,8 +71,10 @@ main {
 }
 
 h3 {
-    font-size: 24px;
-    font-weight: 300;
+    font-family: 'roboto';
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 14px;
     line-height: 1;
 }
 
@@ -120,19 +114,16 @@ button {
     font-size: 18px;
     background: transparent;
     border: 1px solid @color_text_secondary;
-    border-radius: 5px;
+    border-radius: 3px;
     color: @color_text_secondary;
     cursor: pointer;
     transition: background 0.5s, color 0.5s, border 0.5s, opacity 0.5s;
 
     &:hover {
-        color: @color_green_primary;
         border-color: @color_divider;
     }
     &:active {
         color: @color_white;
-        border-color: @color_text_secondary;
-        background: @color_text_secondary;
         transition: none;
     }
     &:focus {
@@ -144,7 +135,6 @@ button[disabled] {
     opacity: 0.8;
     pointer-events: none;
 }
-
 
 .connect {
     font-size: 32px;
@@ -172,3 +162,4 @@ button[disabled] {
 .permissions_list {
     list-style-type: none;
 }
+
