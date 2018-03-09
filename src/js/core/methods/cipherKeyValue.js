@@ -4,13 +4,23 @@
 import { validatePath } from '../../utils/pathUtils';
 import { checkPermissions } from './permissions';
 import type { MethodParams, MethodCallbacks } from './parameters';
+import type { DefaultMessageResponse, MessageResponse } from '../../device/DeviceCommands';
 
 const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise<Object> => {
     const input: Object = params.input;
-    const node = await callbacks.device.getCommands().cipherKeyValue(input.path, input.key, input.value, input.encrypt, input.ask_on_encrypt, input.ask_on_decrypt, input.iv);
+    const response: MessageResponse<{value: string}> = await callbacks.device.getCommands().cipherKeyValue(
+        input.path,
+        input.key,
+        input.value,
+        input.encrypt,
+        input.ask_on_encrypt,
+        input.ask_on_decrypt,
+        input.iv
+    );
+
     return {
-        resp: node,
-    };
+        value: response.message.value
+    }
 };
 
 const confirmation = async (params: MethodParams, callbacks: MethodCallbacks): Promise<boolean> => {

@@ -119,7 +119,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
             break;
 
         case UI.CHANGE_SETTINGS :
-            enableLog(parseSettings(message.data).debug);
+            enableLog(parseSettings(message.payload).debug);
             break;
 
         // TODO: webusb response from popup
@@ -142,7 +142,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
             // TODO: throw error if not string
             const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, message.type);
             if (uiPromise) {
-                uiPromise.resolve({ event: message.type, data: message.data });
+                uiPromise.resolve({ event: message.type, payload: message.payload });
                 removeUiPromise(uiPromise);
             }
             break;
@@ -202,7 +202,7 @@ const initDevice = async (parameters: GeneralParams): Promise<Device> => {
                 const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(parameters.responseID, UI.RECEIVE_DEVICE);
                 if (uiPromise) {
                     const uiResp: UiPromiseResponse = await uiPromise.promise;
-                    selectedDevicePath = uiResp.data;
+                    selectedDevicePath = uiResp.payload;
                     device = _deviceList.getDevice(selectedDevicePath);
                 }
             }
@@ -279,7 +279,7 @@ const checkDeviceState = async (device: Device, state: ?string): Promise<boolean
  * @memberof Core
  */
 export const onCall = async (message: CoreMessage): Promise<void> => {
-    if (!message.id || !message.data) {
+    if (!message.id || !message.payload) {
         throw ERROR.INVALID_PARAMETERS;
     }
 
@@ -595,7 +595,7 @@ const onDevicePinHandler = async (device: Device, type: string, callback: (error
     postMessage(new UiMessage(UI.REQUEST_PIN, { device: device.toMessageObject() }));
     // wait for pin
     const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_PIN, device).promise;
-    const pin: string = uiResp.data;
+    const pin: string = uiResp.payload;
     // callback.apply(null, [null, pin]);
     callback(null, pin);
 };
@@ -612,8 +612,8 @@ const onDevicePassphraseHandler = async (device: Device, callback: (error: any, 
     // wait for passphrase
 
     const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_PASSPHRASE, device).promise;
-    const pass: string = uiResp.data.value;
-    const save: boolean = uiResp.data.save;
+    const pass: string = uiResp.payload.value;
+    const save: boolean = uiResp.payload.save;
     DataManager.isPassphraseCached(save);
     // callback.apply(null, [null, pass]);
     callback(null, pass);
@@ -639,7 +639,7 @@ const onPopupClosed = (): void => {
             } else {
                 const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, DEVICE.DISCONNECT);
                 if (uiPromise) {
-                    uiPromise.resolve({ event: ERROR.POPUP_CLOSED.message, data: null });
+                    uiPromise.resolve({ event: ERROR.POPUP_CLOSED.message, payload: null });
                 }
             }
         });
@@ -673,7 +673,7 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceDescription = null
         if (list.length === 1) {
             // there is only one device. use it
             // resolve uiPromise to looks like it's a user choice (see: handleMessage function)
-            uiPromise.resolve({ event: UI.RECEIVE_DEVICE, data: list[0].path });
+            uiPromise.resolve({ event: UI.RECEIVE_DEVICE, payload: list[0].path });
             removeUiPromise(uiPromise);
         } else {
             // update device selection list view
@@ -688,7 +688,7 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceDescription = null
         _uiPromises.forEach((p: Deferred<UiPromiseResponse>) => {
             if (p.device && p.device.getDevicePath() === path) {
                 if (p.id === DEVICE.DISCONNECT) {
-                    p.resolve({ event: DEVICE.DISCONNECT, data: null });
+                    p.resolve({ event: DEVICE.DISCONNECT, payload: null });
                 }
                 shouldClosePopup = true;
             }

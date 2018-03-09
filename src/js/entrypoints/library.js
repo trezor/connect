@@ -62,7 +62,7 @@ const handleMessage = (message: CoreMessage) => {
     const id: number = message.id || 0;
     const event: string = message.event;
     const type: string = message.type;
-    const data: any = message.data;
+    const payload: any = message.payload;
     const error: any = message.error;
 
     switch (event) {
@@ -79,7 +79,7 @@ const handleMessage = (message: CoreMessage) => {
         case DEVICE_EVENT :
             // pass DEVICE event up to interpreter
             eventEmitter.emit(event, message);
-            eventEmitter.emit(type, data); // DEVICE_EVENT also emit single events (device_connect/device_disconnect...)
+            eventEmitter.emit(type, payload); // DEVICE_EVENT also emit single events (device_connect/device_disconnect...)
             break;
 
         case UI_EVENT :
@@ -88,7 +88,7 @@ const handleMessage = (message: CoreMessage) => {
                 // popup handshake is resolved automatically
                 _core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE });
             } else if (type !== POPUP.CANCEL_POPUP_REQUEST) {
-                eventEmitter.emit(event, type, data);
+                eventEmitter.emit(event, type, payload);
             }
             break;
 

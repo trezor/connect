@@ -52,7 +52,7 @@ export const requestPermissions = async (permissions: Array<string>, callbacks: 
     // process response
     const uiResp: UiPromiseResponse = await callbacks.createUiPromise(UI.RECEIVE_PERMISSION, callbacks.device).promise;
 
-    const permissionsResponse: string = uiResp.data;
+    const permissionsResponse: string = uiResp.payload;
     const permissionsGranted: boolean = (permissionsResponse === 'true');
     if (permissionsGranted) {
         savePermissions(permissions);

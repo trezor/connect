@@ -153,7 +153,7 @@ const handleMessage = (messageEvent: MessageEvent): void => {
     const id: number = message.id || 0;
     const event: string = message.event;
     const type: string = message.type;
-    const data: any = message.data;
+    const payload: any = message.payload;
 
     _log.log('handleMessage', message);
 
@@ -171,18 +171,18 @@ const handleMessage = (messageEvent: MessageEvent): void => {
         case DEVICE_EVENT :
             // pass DEVICE event up to html
             eventEmitter.emit(event, message);
-            eventEmitter.emit(type, data); // DEVICE_EVENT also emit single events (connect/disconnect...)
+            eventEmitter.emit(type, payload); // DEVICE_EVENT also emit single events (connect/disconnect...)
             break;
 
         case TRANSPORT_EVENT :
             eventEmitter.emit(event, message);
-            eventEmitter.emit(type, data); // DEVICE_EVENT also emit single events (connect/disconnect...)
+            eventEmitter.emit(type, payload); // DEVICE_EVENT also emit single events (connect/disconnect...)
             break;
 
         case UI_EVENT :
             // pass UI event up
             eventEmitter.emit(event, message);
-            eventEmitter.emit(type, data);
+            eventEmitter.emit(type, payload);
             if (type === UI.REQUEST_UI_WINDOW) {
                 // popup handshake is resolved automatically
                 //if (eventEmitter.listeners(UI_EVENT).length > 0) { postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }); }
@@ -196,7 +196,7 @@ const handleMessage = (messageEvent: MessageEvent): void => {
             } else if (type === UI.CLOSE_UI_WINDOW) {
                 _popupManager.close();
             } else {
-                _popupManager.postMessage(new UiMessage(type, data));
+                _popupManager.postMessage(new UiMessage(type, payload));
             }
             break;
 
@@ -235,7 +235,7 @@ class TrezorConnect extends TrezorBase {
     static changeSettings(settings: Object) {
         const parsedSettings: ConnectSettings = parseSettings(settings);
         _log.enabled = parsedSettings.debug;
-        postMessage({ type: UI.CHANGE_SETTINGS, data: parsedSettings }, false);
+        postMessage({ type: UI.CHANGE_SETTINGS, payload: parsedSettings }, false);
     }
 
     static async requestDevice() {
@@ -248,7 +248,7 @@ class TrezorConnect extends TrezorBase {
     }
 
     static async getLog(args: ?Array<string>): Array<any> {
-        const iframeLogs: ?Object = await postMessage({ type: 'getlog', data: args });
+        const iframeLogs: ?Object = await postMessage({ type: 'getlog', payload: args });
         const localLogs = getLog(args);
         return []; //localLogs.concat(iframeLogs);
     }
@@ -265,7 +265,7 @@ class TrezorConnect extends TrezorBase {
 
         // post message to iframe
         try {
-            const response: ?Object = await postMessage({ type: IFRAME.CALL, data: params });
+            const response: ?Object = await postMessage({ type: IFRAME.CALL, payload: params });
             if (response) {
                 // TODO: unlock popupManager request only if there wasn't error "in progress"
                 if (response.error !== DEVICE_CALL_IN_PROGRESS.message) { _popupManager.unlock(); }

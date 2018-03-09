@@ -60,11 +60,11 @@ export type MethodCollection = {
 }
 
 export const parseGeneral = (message: CoreMessage, methodParams: MethodParams): GeneralParams => {
-    if (!message.data) {
+    if (!message.payload) {
         throw new Error('Data not found');
     }
 
-    const data: Object = message.data;
+    const data: Object = message.payload;
 
     return {
         responseID: message.id || 0, // message.id,
@@ -78,11 +78,11 @@ export const parseGeneral = (message: CoreMessage, methodParams: MethodParams): 
 };
 
 export const parse = (message: CoreMessage): MethodParams => {
-    if (!message.data) {
+    if (!message.payload) {
         throw new Error('Data not found');
     }
 
-    const data: Object = { id: message.id, ...message.data };
+    const data: Object = { id: message.id, ...message.payload };
     //
     if (!data.method || typeof data.method !== 'string') {
         throw new Error('Method not set');

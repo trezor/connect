@@ -39,14 +39,14 @@ const handleMessage = (event: MessageEvent): void => {
 
     switch (message.type) {
         case 'request_device' :
-            view.requestDevice(message.data);
+            view.requestDevice(message.payload);
             break;
         case UI.LOADING :
             // showView('loader');
-            initLoaderView(message.data);
+            initLoaderView(message.payload);
             break;
         case UI.SET_OPERATION :
-            if (typeof message.data === 'string') { setOperation(message.data, true); }
+            if (typeof message.payload === 'string') { setOperation(message.payload, true); }
             break;
         case UI.TRANSPORT :
             showView('transport');
@@ -55,22 +55,22 @@ const handleMessage = (event: MessageEvent): void => {
             showView('connect');
             break;
         case UI.SELECT_DEVICE :
-            view.selectDevice(message.data);
+            view.selectDevice(message.payload);
             break;
         case UI.SELECT_ACCOUNT :
-            view.selectAccount(message.data);
+            view.selectAccount(message.payload);
             break;
         case UI.SELECT_FEE :
-            view.selectFee(message.data);
+            view.selectFee(message.payload);
             break;
         case UI.UPDATE_CUSTOM_FEE :
-            view.updateCustomFee(message.data);
+            view.updateCustomFee(message.payload);
             break;
         case UI.INSUFFICIENT_FUNDS :
             showView('insufficient_funds');
             break;
         case UI.REQUEST_BUTTON :
-            view.requestButton(message.data);
+            view.requestButton(message.payload);
             break;
 
         case UI.BOOTLOADER :
@@ -84,10 +84,10 @@ const handleMessage = (event: MessageEvent): void => {
             break;
 
         case UI.REQUEST_PERMISSION :
-            view.initPermissionsView(message.data, event.origin);
+            view.initPermissionsView(message.payload, event.origin);
             break;
         case UI.REQUEST_CONFIRMATION :
-            view.initConfirmationView(message.data);
+            view.initConfirmationView(message.payload);
             break;
         case UI.REQUEST_PIN :
             view.initPinView();
