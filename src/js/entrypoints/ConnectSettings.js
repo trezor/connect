@@ -5,16 +5,16 @@ export type ConnectSettings = {
     // debug: boolean | {[k: string]: boolean};
     debug: boolean,
     trustedHost: boolean,
-    iframe_src: string,
-    popup_src: string,
-    +config_src: string,
-    coins_src: string,
-    firmware_releases_src: string,
-    transport_config_src: string,
-    latest_bridge_src: string,
-    transport_reconnect: boolean;
-    webusb: boolean;
+    iframeSrc: string,
     popup: boolean;
+    popupSrc: string,
+    +configSrc: string,
+    coinsSrc: string,
+    firmwareReleasesSrc: string,
+    transportConfigSrc: string,
+    latestBridgeSrc: string,
+    transportReconnect: boolean;
+    webusb: boolean;
 }
 
 /*
@@ -23,18 +23,18 @@ export type ConnectSettings = {
  */
 
 const initialSettings: ConnectSettings = {
+    configSrc: 'data/config.json', // constant
     debug: false,
     trustedHost: false,
-    iframe_src: 'iframe.html',
-    popup_src: 'popup.html',
-    config_src: 'data/config.json',
-    coins_src: 'data/coins.json',
-    firmware_releases_src: 'data/releases-1.json',
-    transport_config_src: 'data/config_signed.bin',
-    latest_bridge_src: 'data/latest.txt',
-    transport_reconnect: true,
-    webusb: true,
+    iframeSrc: 'iframe.html',
     popup: true,
+    popupSrc: 'popup.html',
+    coinsSrc: 'data/coins.json',
+    firmwareReleasesSrc: 'data/releases-1.json',
+    transportConfigSrc: 'data/config_signed.bin',
+    latestBridgeSrc: 'data/latest.txt',
+    transportReconnect: true,
+    webusb: true,
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -57,38 +57,38 @@ export const parse = (input: ?Object): ConnectSettings => {
     const host: string = hostname.substring(hostname.lastIndexOf('.', hostname.lastIndexOf('.') - 1) + 1);
     settings.trustedHost = host === 'localhost' || host === 'trezor.io';
 
-    if (typeof input.iframe_src === 'string') {
+    if (typeof input.iframeSrc === 'string') {
         // TODO: escape string
-        settings.iframe_src = input.iframe_src;
+        settings.iframeSrc = input.iframeSrc;
     }
 
-    if (typeof input.popup_src === 'string') {
+    if (typeof input.popupSrc === 'string') {
         // TODO: escape string
-        settings.popup_src = input.popup_src;
+        settings.popupSrc = input.popupSrc;
     }
 
-    if (typeof input.coins_src === 'string') {
+    if (typeof input.coinsSrc === 'string') {
         // TODO: escape string
-        settings.coins_src = input.coins_src;
+        settings.coinsSrc = input.coinsSrc;
     }
 
-    if (typeof input.firmware_releases_src === 'string') {
+    if (typeof input.firmwareReleasesSrc === 'string') {
         // TODO: escape string
-        settings.firmware_releases_src = input.firmware_releases_src;
+        settings.firmwareReleasesSrc = input.firmwareReleasesSrc;
     }
 
-    if (typeof input.transport_config_src === 'string') {
+    if (typeof input.transportConfigSrc === 'string') {
         // TODO: escape string
-        settings.transport_config_src = input.transport_config_src;
+        settings.transportConfigSrc = input.transportConfigSrc;
     }
 
-    if (typeof input.latest_bridge_src === 'string') {
+    if (typeof input.latestBridgeSrc === 'string') {
         // TODO: escape string
-        settings.latest_bridge_src = input.latest_bridge_src;
+        settings.latestBridgeSrc = input.latestBridgeSrc;
     }
 
-    if (typeof input.transport_reconnect === 'boolean') {
-        settings.transport_reconnect = input.transport_reconnect;
+    if (typeof input.transportReconnect === 'boolean') {
+        settings.transportReconnect = input.transportReconnect;
     }
 
     if (input.hasOwnProperty('webusb') && typeof input.webusb === 'boolean') {
@@ -126,7 +126,7 @@ export const validate = (input: Object): ValidSettings => {
 export const setDataAttributes = (iframe: Element, input: Object): IFrameDataAttributes => {
     const settings: ValidSettings = validate(input);
     const attrs: IFrameDataAttributes = {};
-    const ignored: Array<string> = ['iframe_src', 'popup_src'];
+    const ignored: Array<string> = ['iframeSrc', 'popupSrc'];
     for (const key of Object.keys(settings)) {
         if (ignored.indexOf(key) < 0) {
             iframe.setAttribute(`data-${key}`, encodeURI(settings[key].toString()));

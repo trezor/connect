@@ -739,7 +739,7 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
             _deviceList = null;
             postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
             // if transport fails during app lifetime, try to reconnect
-            if (settings.transport_reconnect) {
+            if (settings.transportReconnect) {
                 await resolveAfter(1000, null);
                 await initDeviceList(settings);
             }
@@ -749,7 +749,7 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
         _deviceList.on(TRANSPORT.UNREADABLE, () => postMessage(new TransportMessage(TRANSPORT.UNREADABLE)));
     } catch (error) {
         _deviceList = null;
-        if (!settings.transport_reconnect) {
+        if (!settings.transportReconnect) {
             throw error;
         } else {
             postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
@@ -802,8 +802,8 @@ export const init = async (settings: ConnectSettings): Promise<Core> => {
         _log.enabled = settings.debug;
         await DataManager.load(settings);
         await initCore();
-        if (!settings.transport_reconnect) {
-            // try only once, if it fails kill app and throw initialization error
+        if (!settings.transportReconnect) {
+            // try only once, if it fails kill and throw initialization error
             await initDeviceList(settings);
         } else {
             // don't wait for DeviceList result, further communication will be thru TRANSPORT events
@@ -812,7 +812,7 @@ export const init = async (settings: ConnectSettings): Promise<Core> => {
         return _core;
     } catch (error) {
         // TODO: kill app
-        _log.log('Init error', error);
+        _log.log('init error', error);
         throw error;
     }
 };

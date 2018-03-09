@@ -65,7 +65,7 @@ export default class DeviceList extends EventEmitter {
         super();
         this.options = options || {};
         if (!this.options.transport) {
-            const bridgeLatestSrc: string = `${ DataManager.getSettings('latest_bridge_src') }?${ Date.now() }`;
+            const bridgeLatestSrc: string = `${ DataManager.getSettings('latestBridgeSrc') }?${ Date.now() }`;
             const transportTypes: Array<Transport> = [ new BridgeV2() ];
             if (DataManager.getSettings('webusb')) {
                 transportTypes.push(new Parallel({
@@ -124,7 +124,7 @@ export default class DeviceList extends EventEmitter {
             await transport.configure(this.options.config); // TODO!!
         } else {
             logger.debug('Configuring transports: config from fetch');
-            const url: string = `${ DataManager.getSettings('transport_config_src') }?${ Date.now() }`;
+            const url: string = `${ DataManager.getSettings('transportConfigSrc') }?${ Date.now() }`;
             try {
                 const config: string = await httpRequest(url, 'text');
                 await transport.configure(config);

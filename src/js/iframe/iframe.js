@@ -3,12 +3,13 @@
 
 import { LOG } from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
+import * as TRANSPORT from '../constants/transport';
 
 import { parse as parseSettings } from '../entrypoints/ConnectSettings';
 import DataManager from '../data/DataManager';
 
 import { Core, CORE_EVENT, init as initCore } from '../core/Core';
-import { parseMessage, UiMessage, ErrorMessage, ResponseMessage } from '../core/CoreMessage';
+import { parseMessage, UiMessage, ErrorMessage, ResponseMessage, TransportMessage } from '../core/CoreMessage';
 import type { CoreMessage } from '../core/CoreMessage';
 
 import Log, { init as initLog, getLog } from '../utils/debug';
@@ -92,7 +93,8 @@ const init = async (settings: any) => {
         postMessage(new UiMessage(IFRAME.HANDSHAKE));
     } catch (error) {
         // TODO: kill app
-        postMessage(new ErrorMessage(IFRAME.ERROR));
+        postMessage(new UiMessage(IFRAME.HANDSHAKE));
+        postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
     }
 }
 

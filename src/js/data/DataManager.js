@@ -13,9 +13,9 @@ export default class DataManager {
     static cachePassphrase: boolean = false;
 
     static async load(settings: ConnectSettings): Promise<void> {
-        const configUrl: string = `${settings.config_src}?r=${ new Date().getTime() }`;
-        const coinsUrl: string = settings.coins_src;
-        const releasesUrl: string = settings.firmware_releases_src;
+        const configUrl: string = `${settings.configSrc}?r=${ new Date().getTime() }`;
+        const coinsUrl: string = settings.coinsSrc;
+        const releasesUrl: string = settings.firmwareReleasesSrc;
 
         try {
             const config: JSON = await httpRequest(configUrl, 'json');
@@ -34,7 +34,7 @@ export default class DataManager {
 
     // used in popup
     static async loadConfig(settings: ConnectSettings): Promise<void> {
-        const configUrl: string = `${settings.config_src}?r=${ new Date().getTime() }`;
+        const configUrl: string = `${settings.configSrc}?r=${ new Date().getTime() }`;
         try {
             const config: JSON = await httpRequest(configUrl, 'json');
             this.config = config;

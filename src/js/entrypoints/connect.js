@@ -72,7 +72,7 @@ const initIframe = async (settings: Object): Promise<void> => {
     _popupManager = initPopupManager();
     _log.enabled = _settings.debug;
 
-    const src: string = `${_settings.iframe_src}?${ Date.now() }`;
+    const src: string = `${_settings.iframeSrc}?${ Date.now() }`;
     _iframe.setAttribute('src', src);
     if (_settings.webusb) {
         _iframe.setAttribute('allow', 'usb');
@@ -121,7 +121,7 @@ const injectStyleSheet = (): void => {
 };
 
 const initPopupManager = (): PopupManager => {
-    const pm: PopupManager = new PopupManager(_settings.popup_src);
+    const pm: PopupManager = new PopupManager(_settings.popupSrc);
     pm.on(POPUP.CLOSED, () => {
         postMessage({ type: POPUP.CLOSED }, false);
     });
