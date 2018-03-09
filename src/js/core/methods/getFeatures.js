@@ -5,9 +5,7 @@ import { checkPermissions } from './permissions';
 import type { MethodParams, MethodCallbacks } from './parameters';
 
 const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise<Object> => {
-    return {
-        'foo': 'bar',
-    };
+    return callbacks.device.features;
 };
 
 const confirmation = async (params: MethodParams, callbacks: MethodCallbacks): Promise<boolean> => {
@@ -23,7 +21,7 @@ const confirmation = async (params: MethodParams, callbacks: MethodCallbacks): P
  */
 const params = (raw: Object): MethodParams => {
     const permissions: Array<string> = checkPermissions([]);
-    const requiredFirmware: string = '1.5.0';
+    const requiredFirmware: string = '1.0.0';
 
     return {
         responseID: raw.id,
@@ -34,6 +32,7 @@ const params = (raw: Object): MethodParams => {
         requiredPermissions: permissions,
         confirmation: null,
         method,
+        useEmptyPassphrase: raw.useEmptyPassphrase,
         input: {
 
         },

@@ -26,16 +26,14 @@ export default class Trezor {
         return await this.__call({ method: 'cipherKeyValue', ...params });
     }
 
-    /*
-    static requestDevice(): void {
-        // to override
-    }
-
     static async getFeatures(params: Object): Promise<Object> {
         return await this.__call({ method: 'getFeatures', ...params });
     }
 
-
+    /*
+    static requestDevice(): void {
+        // to override
+    }
 
     static async requestLogin(params: Object): Promise<Object> {
         return await this.__call({ method: 'requestLogin', ...params });

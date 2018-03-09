@@ -14,7 +14,7 @@ import type { MethodCollection } from './parameters';
 
 // import accountComposetx from './account-composetx';
 
-// import getFeatures from './getFeatures';
+import getFeatures from './getFeatures';
 import cipherKeyValue from './cipherKeyValue';
 import requestDevice from './requestDevice';
 
@@ -30,7 +30,7 @@ const methods: {[k: string]: MethodCollection} = {
     // 'ethereumSignTx': ethereumSignTx,
     // 'ethereumGetAddress': ethereumGetAddress,
 
-    // 'getFeatures': getFeatures,
+    'getFeatures': getFeatures,
     'cipherKeyValue': cipherKeyValue,
     'requestDevice': requestDevice,
 };
