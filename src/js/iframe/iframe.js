@@ -98,4 +98,8 @@ const init = async (settings: any) => {
 }
 
 window.addEventListener('message', handleMessage, false);
-
+window.addEventListener('beforeunload', () => {
+    if (_core) {
+        _core.onBeforeUnload();
+    }
+});

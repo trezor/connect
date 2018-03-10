@@ -94,6 +94,8 @@ const initIframe = async (settings: Object): Promise<void> => {
             type: IFRAME.HANDSHAKE,
             settings: _settings,
         }, _iframeOrigin);
+
+        _iframe.onload = undefined;
     }
 
     if (document.body) {
@@ -223,13 +225,22 @@ class TrezorConnect extends TrezorBase {
         const iframeTimeout = window.setTimeout(() => {
             throw IFRAME_TIMEOUT;
         }, 20000);
-        await initIframe(settings);
 
+        await initIframe(settings);
         window.clearTimeout(iframeTimeout);
 
-        window.onbeforeunload = () => {
-            _popupManager.onbeforeunload();
-        };
+        window.addEventListener('beforeunload', () => {
+            if (_popupManager) {
+                _popupManager.onBeforeUnload();
+            }
+
+            if (_iframe) {
+                _iframe.setAttribute('src', _iframeOrigin);
+                // if (_iframe.parentNode) {
+                //     _iframe.parentNode.removeChild(_iframe);
+                // }
+            }
+        });
     }
 
     static uiResponse(message: Object): void {
