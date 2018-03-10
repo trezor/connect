@@ -1,11 +1,11 @@
 /* @flow */
 'use strict';
-
-import Device from '../device/Device';
+// do not import Device here
+// import Device from '../device/Device';
 
 export type Deferred<T> = {
     id?: string,
-    device: ?Device,
+    device: ?any,
     promise: Promise<T>,
     resolve: (t: T) => void,
     reject: (e: Error) => void,
@@ -18,7 +18,7 @@ export type AsyncDeferred<T> = {
     run: Function,
 };
 
-export function create<T>(arg?: (() => Promise<void>) | string, device?: Device): Deferred<T> {
+export function create<T>(arg?: (() => Promise<void>) | string, device?: any): Deferred<T> {
     let localResolve: (t: T) => void = (t: T) => {};
     let localReject: (e?: ?Error) => void = (e: ?Error) => {};
     let id: string;
