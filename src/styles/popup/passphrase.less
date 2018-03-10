@@ -1,20 +1,177 @@
 .passphrase {
-    h4 {
+    font-family: 'roboto';
+    color: @color_text_primary;
+
+    h3 {
         margin-bottom: 10px;
+        font-weight: 500;
+        font-size: 16px;
     }
-    label {
+
+    p {
+        margin: 5px 0;
+        font-size: 12px;
+        font-weight: normal;
+        color: @color_text_secondary;
+    }
+    .footer {
+        &:extend(p);
         display: block;
+        -webkit-margin-before: 5px;
+        -webkit-margin-after: 5px;
+        -webkit-margin-start: 0;
+        -webkit-margin-end: 0;
     }
-    .passphrase_options {
-        margin-top: 10px;
-        margin-bottom: 10px;
+
+    label {
+        font-size: 14px;
+        padding-bottom: 6px;
+        display: block;
+        color: @color_text_secondary;
+    }
+    .custom-checkbox {
+        position: relative;
+        display: flex;
+        cursor: pointer;
+        color: @color_text_secondary;
         span {
-            font-size: 14px;
-            color: @color_text_secondary;
+            text-align: center;
         }
+    }
+    .custom-checkbox input {
+      position: absolute;
+      z-index: -1;
+      opacity: 0;
+    }
+    .custom-checkbox input:checked + .indicator:after {
+      background-color: @color_success_primary;
+      border-color: @color_success_primary;
+    }
+    .custom-checkbox input:disabled + .indicator:after {
+      background-color: @color_text_secondary;
+    }
+    .custom-checkbox .indicator {
+      position: relative;
+      height: 24px;
+      width: 24px;
+      margin-right: 12px;
+    }
+    .custom-checkbox .indicator:after {
+      display: inline-block;
+      font-family: 'roboto';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1;
+      font-size: 24px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+
+      // FIXME: placeholder Tick Mark, the original content was: "\E91C"
+      content: "\2713";
+
+      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      color: @color_white;
+      background-color: @color_white;
+      border: 1px solid @color_body;
+      border-radius: 2px;
+    }
+    .custom-checkbox .indicator:hover {
+      border-color: @color_text_secondary;
+    }
+    .custom-checkbox.radio .indicator:after {
+      border-radius: 50%;
+    }
+    .custom-checkbox.radio input:checked + .indicator:after {
+      content: '';
+      background: @color_white;
+      border: 4px solid @color_green_primary;
+  }
+    .custom-checkbox.align-left {
+      padding-left: 20px;
+      padding-right: 10px;
+    }
+    .custom-checkbox.align-left .indicator {
+      position: absolute;
+      left: 0;
+      top: 2px;
+      margin: 0;
+    }
+    .custom-checkbox.align-left .indicator:after {
+      top: 0;
     }
 
     button {
         width: 250px;
+        font-weight: 300;
+        font-size: 14px;
+        background-color: @color_green_primary;
+        border: 0;
+        line-height: 1.42857143; // FIXME: assign magic number to variable
+        color: @color_white;
+        margin-top: 12px;
+    }
+    button:hover {
+        background: @color_green_secondary;
+    }
+    button:active {
+        background: @color_green_tertiary;
+    }
+    button:disabled {
+        pointer-events: none;
+        color: @color_text_secondary;
+        background: @color_gray_light;
+    }
+
+    .row {
+        position: relative;
+        text-align: left;
+        padding-top: 24px;
+    }
+
+    .submit {
+      width: 100%;
+      margin-top: 24px;
+      margin-bottom: 14px;
+    }
+
+    a.green,
+    a.green:visited {
+      font-size: 12px;
+      position: relative;
+      color: @color_green_primary;
+      transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    }
+    a.green:after,
+    a.green:visited:after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      border-top: 1px solid @color_green_primary;
+      line-height: 1px;
+      left: 0;
+      bottom: -1px;
+      transition: border-color 0.3s;
+    }
+    a.green:hover,
+    a.green:visited:hover {
+      cursor: pointer;
+      color: @color_green_secondary;
+    }
+    a.green:active,
+    a.green:visited:active {
+      cursor: pointer;
+      color: @color_green_tertiary;
+    }
+    a.green:hover:after,
+    a.green:visited:hover:after,
+    a.green:active:after,
+    a.green:visited:active:after {
+      border-color: @color_white;
     }
 }

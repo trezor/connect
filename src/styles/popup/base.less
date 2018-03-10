@@ -29,7 +29,7 @@ body {
     min-width: 450px;
     color: @color_text_primary;
     font: 400 18px/1.4 Roboto, Helvetica, Arial, sans-serif;
-    background: linear-gradient(0deg, #ffffff, #fcfcfc) no-repeat;
+    background: linear-gradient(0deg, @color_white, #fcfcfc) no-repeat;
 }
 
 p {
@@ -87,16 +87,23 @@ h4 {
 
 input[type="text"],
 input[type="password"] {
-    width: 250px;
-    padding: 6px;
-    border: 0;
-    border-bottom: 1px solid @color_text_secondary;
+    line-height: 1.42857143; // auto?
+    font-size: 14px;
+    padding: 6px 12px;
     background: transparent;
+    word-spacing: normal;
+    letter-spacing: 4px; // FIXME: 'normal' makes the spacing too wide...
     color: @color_text_primary;
-    font-size: 18px;
-    // disable lastpass icons
     background-image: none !important;
     padding-right: 0 !important;
+    width: 260px;
+    box-shadow: none;
+    border-radius: 2px;
+    border: 1px solid @color_body;
+    height: auto;
+}
+input[type="confirm-password"] {
+  &:extend(input[type="password"]);
 }
 
 input:focus {
@@ -144,7 +151,7 @@ button[disabled] {
         display: inline-block;
         width: 90px;
         height: 90px;
-        border: 1px solid #333333;
+        border: 1px solid #333333; // FIXME: no such color in colors.less, add it?
         border-radius: 50%;
         overflow: hidden;
     }

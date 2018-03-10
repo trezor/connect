@@ -38,35 +38,53 @@
     </header>
     <main id="container">
         <!-- default view: loader -->
-        <div class="pin">
-            <h3>Enter { device.label } PIN</h3>
-            <p class="pin-layout">The PIN layout is displayed on your TREZOR.</p>
+        <div class="passphrase">
+            <h3>Enter { device . label } passphrase</h3>
+            <p>Note that passphrase is case-sensitive.</p>
 
-            <div class="pin-input-row">
-                <input type="password" autocomplete="off" max-length="9" disabled value={pin} />
-                <button type="button" class="pin-backspace transparent"></button>
-            </div>
-
-            <div class="pin-row">
-                <button type="button" data-value="7">&#8226;</button>
-                <button type="button" data-value="8">&#8226;</button>
-                <button type="button" data-value="9">&#8226;</button>
-            </div>
-            <div class="pin-row">
-                <button type="button" data-value="4">&#8226;</button>
-                <button type="button" data-value="5">&#8226;</button>
-                <button type="button" data-value="6">&#8226;</button>
-            </div>
-            <div class="pin-row">
-                <button type="button" data-value="1">&#8226;</button>
-                <button type="button" data-value="2">&#8226;</button>
-                <button type="button" data-value="3">&#8226;</button>
+            <div class="row">
+                <label>Passphrase</label>
+                <div>
+                    <input
+                        type="password"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        data-lpignore="true"
+                        tabindex="1" />
+                </div>
             </div>
 
-            <div><button class="submit-button" type="button">Enter PIN</button></div>
-            <p class="learn-more">Not sure how PIN works? <a class="green" href="http://doc.satoshilabs.com/trezor-user/enteringyourpin.html" target="_blank" rel="noreferrer noopener">Learn more</a></p>
+            <div class="row">
+                <label>Re-enter passphrase</label>
+                <div>
+                    <input
+                        class="confirm-password"
+                        type="password"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        data-lpignore="true"
+                        tabindex="1" />
+                </div>
+            </div>
+            <div class="row">
+                <label class="custom-checkbox">
+                    <input type="checkbox" tabindex="3" value="on" />
+                    <span class="indicator"></span>
+                    Show passphrase
+                </label>
+            </div>
+            <div>
+                <button type="button" class="submit" tabindex="4">Enter</button>
+            </div>
+            <div>
+                <p class="footer">If you want to access your default account</p>
+                <a class="green">Leave passphrase blank</a>
+            </div>
         </div>
-
     </main>
     <footer>
         <span>© 2017</span>
@@ -98,7 +116,7 @@
                 </path>
             </svg>
         </div>
-        <!-- Loader: END -->
+        <!-- Loader: END --s>
 
         <!-- Connect -->
         <div class="connect">
