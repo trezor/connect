@@ -221,7 +221,8 @@ const params = (raw: Object): MethodParams => {
             }
             path = getPathFromIndex(bip44purpose, coinInfo.bip44, raw.account);
             coinInfo = getCoinInfoFromPath(path); // TODO!!!
-            accountType = getAccountLabelFromPath(coinInfo.label, path, coinInfo.segwit);
+            if (coinInfo)
+                accountType = getAccountLabelFromPath(coinInfo.label, path, coinInfo.segwit);
         }
     }
 

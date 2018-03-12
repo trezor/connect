@@ -18,7 +18,7 @@ import Log, { init as initLog } from '../utils/debug';
 const FEATURES_LIFETIME: number = 10 * 60 * 1000; // 10 minutes
 
 // custom log
-const logger: Log = initLog('Device');
+const _log: Log = initLog('Device', true);
 
 export type RunOptions = {
 
@@ -97,7 +97,7 @@ export default class Device extends EventEmitter {
             const device: Device = new Device(transport, descriptor);
             return device;
         } catch (error) {
-            logger.error('Device.fromDescriptor', error);
+            _log.error('Device.fromDescriptor', error);
             throw error;
         }
     }
@@ -148,9 +148,9 @@ export default class Device extends EventEmitter {
         if (this.runPromise) {
             // TODO: check if this method is called twice
             // wait or return nothing?
-            logger.debug('++++++Wait for prev');
+            _log.debug('++++++Wait for prev');
             // await this.runPromise.promise;
-            logger.debug('TODO: is this will be called?');
+            _log.debug('TODO: is this will be called?');
             // throw new Error('Call in progress');
             throw ERROR.DEVICE_CALL_IN_PROGRESS;
         }
@@ -171,7 +171,7 @@ export default class Device extends EventEmitter {
     }
 
     interruptionFromUser(error: Error): void {
-        logger.debug('+++++interruptionFromUser');
+        _log.debug('+++++interruptionFromUser');
         if (this.runPromise) {
             // reject inner defer
             this.runPromise.reject(error);
@@ -189,7 +189,7 @@ export default class Device extends EventEmitter {
     }
 
     interruptionFromOutside(): void {
-        logger.debug('+++++interruptionFromOutside');
+        _log.debug('+++++interruptionFromOutside');
         if (this.runPromise) {
             this.runPromise.reject(ERROR.DEVICE_USED_ELSEWHERE);
             this.runPromise = null;
@@ -282,7 +282,6 @@ export default class Device extends EventEmitter {
     }
 
     async init(): Promise<void> {
-        // console.warn("+++CALL INITIALIZE", this.features)
         const { message } : { message: Features } = await this.commands.initialize();
         this.features = message;
         this.featuresNeedsReload = false;
@@ -313,20 +312,20 @@ export default class Device extends EventEmitter {
     }
 
     async updateDescriptor(descriptor: DeviceDescriptor): Promise<void> {
-        logger.debug('updateDescriptor', 'currentSession', this.originalDescriptor.session, 'upcoming', descriptor.session, 'lastUsedID', this.activitySessionID);
+        _log.debug('updateDescriptor', 'currentSession', this.originalDescriptor.session, 'upcoming', descriptor.session, 'lastUsedID', this.activitySessionID);
 
         if (descriptor.session === null) {
             // released
             if (this.originalDescriptor.session === this.activitySessionID) {
                 // by myself
-                logger.debug('RELEASED BY MYSELF');
+                _log.debug('RELEASED BY MYSELF');
                 if (this.deferredActions[ DEVICE.RELEASE ]) {
                     this.deferredActions[ DEVICE.RELEASE ].resolve();
                     delete this.deferredActions[ DEVICE.RELEASE ];
                 }
             } else {
                 // by other application
-                logger.debug('RELEASED BY OTHER APP');
+                _log.debug('RELEASED BY OTHER APP');
                 this.featuresNeedsReload = true;
             }
             this.keepSession = false;
@@ -335,14 +334,14 @@ export default class Device extends EventEmitter {
             // TODO: Case where listen event will dispatch before this.transport.acquire (this.acquire) return ID
             if (descriptor.session === this.activitySessionID) {
                 // by myself
-                logger.debug('ACQUIRED BY MYSELF');
+                _log.debug('ACQUIRED BY MYSELF');
                 if (this.deferredActions[ DEVICE.ACQUIRE ]) {
                     this.deferredActions[ DEVICE.ACQUIRE ].resolve();
                     // delete this.deferred[ DEVICE.ACQUIRE ];
                 }
             } else {
                 // by other application
-                logger.debug('ACQUIRED BY OTHER');
+                _log.debug('ACQUIRED BY OTHER');
                 this.interruptionFromOutside();
             }
         }
@@ -351,7 +350,7 @@ export default class Device extends EventEmitter {
 
     disconnect(): void {
         // TODO: cleanup everything
-        logger.debug('DISCONNECT CLEANUP!');
+        _log.debug('DISCONNECT CLEANUP!');
         // don't try to release
         delete this.deferredActions[ DEVICE.RELEASE ];
 
@@ -433,11 +432,18 @@ export default class Device extends EventEmitter {
         let pass: boolean = this.features.passphrase_protection ? this.features.passphrase_cached : true;
         if (typeof this.cachedPassphrase[ this.instance ] === 'string') pass = true;
         if (useEmptyPassphrase) pass = true;
-        logger.debug('isAuthenticated', pin, pass, this.cachedPassphrase);
+        _log.debug('isAuthenticated', pin, pass, this.cachedPassphrase);
         return (pin && pass);
     }
 
     onBeforeUnload() {
+        if (this.isUsedHere()) {
+            try {
+                this.transport.release(this.activitySessionID);
+            } catch (err) {
+                // empty
+            }
+        }
         // await this.transport.release(this.activitySessionID);
     }
 

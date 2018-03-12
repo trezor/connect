@@ -105,7 +105,7 @@ export default class BitcoreBackend {
         if (this.coinInfo == null) {
             return Promise.reject(new Error('Address version not set.'));
         }
-        const segwit_s: string = segwit ? 'p2sh' : 'off';
+        const segwit_s: 'p2sh' | 'off' = segwit ? 'p2sh' : 'off';
 
         const discovery = this.discovery.discoverAccount(data, xpub, this.coinInfo.network, segwit_s);
 

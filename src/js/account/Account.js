@@ -46,8 +46,12 @@ export default class Account {
         const monitor = this.backend.monitorAccountActivity(this.xpub, this.info, true);
         // TODO: handle monitor error
         monitor.values.attach(accountInfo => {
-            this.info = accountInfo;
-            listener(this);
+            if (accountInfo instanceof Error) {
+                // TODO: pass error to listener?
+            } else {
+                this.info = accountInfo;
+                listener(this);
+            }
         });
     }
 

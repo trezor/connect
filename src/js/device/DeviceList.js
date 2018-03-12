@@ -10,20 +10,14 @@ import type { DeviceDescriptorDiff } from './DescriptorStream';
 // import Device from './Device';
 import Device from './Device';
 import type { DeviceDescription } from './Device';
-import {
-    BridgeV2,
-    BridgeV1,
-    Extension,
-    Lowlevel,
-    WebUsb,
-    Fallback,
-    Parallel,
-} from 'trezor-link';
+import TrezorLink from 'trezor-link';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 import DataManager from '../data/DataManager';
 import Log, { init as initLog } from '../utils/debug';
 import { resolveAfter } from '../utils/promiseUtils';
 import { httpRequest } from '../utils/networkUtils';
+
+const { BridgeV1, BridgeV2, Extension, Lowlevel, WebUsb, Fallback, Parallel } = TrezorLink;
 
 export type DeviceListOptions = {
     debug?: boolean,
@@ -39,7 +33,7 @@ export type DeviceListOptions = {
 };
 
 // custom log
-const logger: Log = initLog('DeviceList');
+const _log: Log = initLog('DeviceList');
 
 let sharedWorkerFactory: ?() => ?SharedWorker = null;
 export function setSharedWorkerFactory(swf: ?() => ?SharedWorker) {
@@ -64,9 +58,12 @@ export default class DeviceList extends EventEmitter {
     constructor(options: ?DeviceListOptions) {
         super();
         this.options = options || {};
+
+        _log.enabled = DataManager.getSettings('debug');
         if (!this.options.transport) {
             const bridgeLatestSrc: string = `${ DataManager.getSettings('latestBridgeSrc') }?${ Date.now() }`;
             const transportTypes: Array<Transport> = [ new BridgeV2() ];
+
             if (DataManager.getSettings('webusb')) {
                 transportTypes.push(new Parallel({
                     webusb: {
@@ -109,21 +106,21 @@ export default class DeviceList extends EventEmitter {
     async _initTransport(): Promise<Transport> {
         const transport = this.options.transport;
         if (!transport) throw ERROR.NO_TRANSPORT;
-        logger.debug('Initializing transports');
-        // await transport.init( DataManager.getDebugSettings('transport') );
-        await transport.init(false);
-        logger.debug('Configuring transports');
+        _log.debug('Initializing transports');
+        await transport.init( DataManager.getSettings('debug') );
+        // await transport.init(false);
+        _log.debug('Configuring transports');
         await this._configTransport(transport);
-        logger.debug('Configuring transports done');
+        _log.debug('Configuring transports done');
         return transport;
     }
 
     async _configTransport(transport: Transport): Promise<void> {
         if (typeof this.options.config === 'string') {
-            logger.debug('Configuring transports: config from options');
+            _log.debug('Configuring transports: config from options');
             await transport.configure(this.options.config); // TODO!!
         } else {
-            logger.debug('Configuring transports: config from fetch');
+            _log.debug('Configuring transports: config from fetch');
             const url: string = `${ DataManager.getSettings('transportConfigSrc') }?${ Date.now() }`;
             try {
                 const config: string = await httpRequest(url, 'text');
@@ -160,14 +157,14 @@ export default class DeviceList extends EventEmitter {
     async _createAndSaveDevice(
         descriptor: DeviceDescriptor
     ): Promise<void> {
-        logger.debug('Creating Device', descriptor);
+        _log.debug('Creating Device', descriptor);
         await new CreateDeviceHandler(descriptor, this).handle();
     }
 
     async _createUnacquiredDevice(
         descriptor: DeviceDescriptor
     ): Promise<Device> {
-        logger.debug('Creating Unacquired Device', descriptor);
+        _log.debug('Creating Unacquired Device', descriptor);
         try {
             return await Device.createUnacquired(this.transport, descriptor);
         } catch (error) {
@@ -325,7 +322,7 @@ class CreateDeviceHandler {
             // "regular" device creation
             await this._takeAndCreateDevice();
         } catch (error) {
-            logger.debug('Cannot create device', error);
+            _log.debug('Cannot create device', error);
 
             if (error.message.toLowerCase() === ERROR.DEVICE_NOT_FOUND.message.toLowerCase()) {
                 // do nothing
@@ -373,7 +370,7 @@ class DiffHandler {
     }
 
     handle() {
-        logger.debug('Update DescriptorStream', this.diff);
+        _log.debug('Update DescriptorStream', this.diff);
 
         // note - this intentionaly does not wait for connected devices
         // createDevice inside waits for the updateDescriptor event
@@ -414,7 +411,7 @@ class DiffHandler {
             d.forEach((descriptor: DeviceDescriptor) => {
                 const path: string = descriptor.path.toString();
                 const device: Device = this.list.devices[path];
-                logger.debug('Event', e, device);
+                _log.debug('Event', e, device);
                 if (device) {
                     this.list.emit(e, device.toMessageObject());
                 }
@@ -426,7 +423,7 @@ class DiffHandler {
     async _createConnectedDevices() {
         for (const descriptor of this.diff.connected) {
             const path: string = descriptor.path.toString();
-            logger.debug('Connected', descriptor.session, this.list.devices);
+            _log.debug('Connected', descriptor.session, this.list.devices);
             if (descriptor.session == null) {
                 await this.list._createAndSaveDevice(descriptor);
             } else {
@@ -455,7 +452,7 @@ class DiffHandler {
                 if (device.isUnacquired() && !device.isInconsistent()) {
                     // wait for publish changes
                     await resolveAfter(501, null);
-                    logger.debug('Create device from unacquired', device);
+                    _log.debug('Create device from unacquired', device);
                     await this.list._createAndSaveDevice(descriptor);
                 }
             }

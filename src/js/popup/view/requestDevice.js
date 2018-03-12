@@ -21,13 +21,22 @@ export const requestDevice = (): void => {
             // TREZOR v2 Firmware
             { vendorId: 0x1209, productId: 0x53c1 },
         ];
-        try {
-            await navigator.usb.requestDevice({filters: TREZOR_DESCS});
 
-            const devices = await navigator.usb.getDevices();
-            postMessage(new UiMessage('WEBUSB'));
-        } catch (error) {
+        /* $FlowIssue not found */
+        const usb = navigator.usb;
+
+        if (typeof usb !== 'undefined') {
+            try {
+                await usb.requestDevice({filters: TREZOR_DESCS});
+
+                const devices = await usb.getDevices();
+                postMessage(new UiMessage('WEBUSB'));
+            } catch (error) {
+                postMessage(new UiMessage('WEBUSB-ERROR'));
+            }
+        } else {
             postMessage(new UiMessage('WEBUSB-ERROR'));
+            return;
         }
     };
 
