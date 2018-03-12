@@ -39,9 +39,8 @@
     <main id="container">
         <!-- default view: loader -->
         <div class="passphrase">
-            <h3>Enter { device . label } passphrase</h3>
+            <h3>Enter My TREZOR passphrase</h3>
             <p>Note that passphrase is case-sensitive.</p>
-
             <div class="row">
                 <label>Passphrase</label>
                 <div>
@@ -55,7 +54,6 @@
                         tabindex="1" />
                 </div>
             </div>
-
             <div class="row">
                 <label>Re-enter passphrase</label>
                 <div>
@@ -67,24 +65,24 @@
                         autocapitalize="off"
                         spellcheck="false"
                         data-lpignore="true"
-                        tabindex="1" />
+                        tabindex="2" />
                 </div>
             </div>
             <div class="row">
                 <label class="custom-checkbox">
                     <input type="checkbox" tabindex="3" value="on" />
-                    <span class="indicator"></span>
-                    Show passphrase
-                </label>
+                    <span class="indicator"></span>Show passphrase</label>
             </div>
             <div>
                 <button type="button" class="submit" tabindex="4">Enter</button>
             </div>
             <div>
-                <p class="footer">If you want to access your default account</p>
-                <a class="green">Leave passphrase blank</a>
+                <p>If you want to access your default account</p>
+                <p><a>Leave passphrase blank</a></p>
             </div>
         </div>
+
+
     </main>
     <footer>
         <span>© 2017</span>
@@ -96,7 +94,7 @@
 
         <div class="unknown">
             <h3>Unknown view</h3>
-            <h4>view_name</h4>
+            <p>view_name</p>
         </div>
 
         <!-- Loader -->
@@ -136,28 +134,26 @@
 
         <!-- Pin -->
         <div class="pin">
-            <h3>Please enter your PIN.</h3>
-            <h4>Look at the device for number positions.</h4>
-            <div class="pin-row">
-                <button type="button" data-value="7">&#8226;</button>
-                <button type="button" data-value="8">&#8226;</button>
-                <button type="button" data-value="9">&#8226;</button>
-            </div>
-            <div class="pin-row">
-                <button type="button" data-value="4">&#8226;</button>
-                <button type="button" data-value="5">&#8226;</button>
-                <button type="button" data-value="6">&#8226;</button>
-            </div>
-            <div class="pin-row">
-                <button type="button" data-value="1">&#8226;</button>
-                <button type="button" data-value="2">&#8226;</button>
-                <button type="button" data-value="3">&#8226;</button>
-            </div>
+            <h3>Enter { device.label } PIN</h3>
+            <p>The PIN layout is displayed on your TREZOR.</p>
+
             <div class="pin-input-row">
-                <input type="password" class="input" autocomplete="off" maxlength="9" data-lpignore="true" disabled />
-                <button type="button" class="pin-backspace">&#9003;</button>
+                <input type="password" autocomplete="off" max-length="9" disabled value={pin} />
+                <button type="button" class="pin-backspace transparent"></button>
             </div>
-            <div><button class="submit" type="button">Enter</button></div>
+
+            <div class="pin-row">
+                <button type="button" data-value="7">&#8226;</button><button type="button" data-value="8">&#8226;</button><button type="button" data-value="9">&#8226;</button>
+            </div>
+            <div class="pin-row">
+                <button type="button" data-value="4">&#8226;</button><button type="button" data-value="5">&#8226;</button><button type="button" data-value="6">&#8226;</button>
+            </div>
+            <div class="pin-row">
+                <button type="button" data-value="1">&#8226;</button><button type="button" data-value="2">&#8226;</button><button type="button" data-value="3">&#8226;</button>
+            </div>
+
+            <div><button class="submit-button" type="button">Enter PIN</button></div>
+            <p>Not sure how PIN works? <a href="http://doc.satoshilabs.com/trezor-user/enteringyourpin.html" target="_blank" rel="noreferrer noopener">Learn more</a></p>
         </div>
         <!-- Pin: END -->
 
@@ -169,30 +165,46 @@
 
         <!-- Passphrase -->
         <div class="passphrase">
-            <h3>Please enter your passphrase.</h3>
-            <h4>Note that passphrase is case-sensitive.</h4>
-            <div>
-                <input
-                    type="password"
-                    autocomplete="off"
-                    autocorrect="off"
-                    autocapitalize="off"
-                    spellcheck="false"
-                    data-lpignore="true"
-                    tabindex="1" />
+            <h3>Enter My TREZOR passphrase</h3>
+            <p>Note that passphrase is case-sensitive.</p>
+            <div class="row">
+                <label>Passphrase</label>
+                <div>
+                    <input
+                        type="password"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        data-lpignore="true"
+                        tabindex="1" />
+                </div>
             </div>
-            <div class="passphrase-options">
-                <label>
-                    <input type="checkbox" class="show-passphrase" tabindex="2" />
-                    <span>Show passphrase</span>
-                </label>
-                <label>
-                    <input type="checkbox" class="save-passphrase" tabindex="3" checked />
-                    <span>Save passphrase for future use</span>
-                </label>
+            <div class="row">
+                <label>Re-enter passphrase</label>
+                <div>
+                    <input
+                        class="confirm-password"
+                        type="password"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        data-lpignore="true"
+                        tabindex="2" />
+                </div>
+            </div>
+            <div class="row">
+                <label class="custom-checkbox">
+                    <input type="checkbox" tabindex="3" value="on" />
+                    <span class="indicator"></span>Show passphrase</label>
             </div>
             <div>
                 <button type="button" class="submit" tabindex="4">Enter</button>
+            </div>
+            <div>
+                <p>If you want to access your default account</p>
+                <p><a>Leave passphrase blank</a></p>
             </div>
         </div>
         <!-- Passphrase: END -->

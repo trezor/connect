@@ -1,0 +1,98 @@
+input[type="text"],
+input[type="password"] {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.42857143;
+    font-family: @font-family-monospace;
+    color: @color_text_primary;
+    background-color: @color_white;
+    border: 1px solid @color_divider;
+    border-radius: 2px;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    padding: 6px 12px;
+    width: 260px;
+
+    &:focus {
+        outline: 0;
+        box-shadow: 0 1px 2px 0 rgba(169, 169, 169, 0.25);
+    }
+
+
+}
+
+.custom-checkbox {
+    position: relative;
+    display: flex;
+    align-items: center;
+    line-height: 24px;
+    cursor: pointer;
+    color: @color_text_secondary;
+
+    input {
+        position: absolute;
+        left: -9999px;
+        z-index: -1;
+        opacity: 0;
+
+        &:checked + .indicator:after {
+            background-color: @color_green_primary;
+            border-color: @color_green_primary;
+        }
+        &:disabled + .indicator:after {
+            background-color: @color_text_secondary;
+        }
+    }
+
+    .indicator {
+        position: relative;
+        height: 24px;
+        width: 24px;
+        margin-right: 12px;
+
+        &:after {
+            .icomoon-checked;
+            .hover();
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            color: @color_white;
+            background-color: @color_white;
+            border: 1px solid @color_divider;
+            border-radius: 2px;
+        }
+
+        &:hover {
+            border-color: @color_text_secondary;
+        }
+    }
+
+    &.radio {
+        .indicator {
+            &:after {
+                border-radius: 50%;
+            }
+        }
+
+        input:checked + .indicator:after {
+            content: '';
+            background: @color_white;
+            border: 4px solid @color_green_primary;
+        }
+    }
+
+    &.align-left {
+        padding-left: 20px;
+        padding-right: 10px;
+        .indicator {
+            position: absolute;
+            left: 0;
+            top: 2px;
+            margin: 0;
+            &:after {
+                top: 0px;
+            }
+        }
+    }
+}

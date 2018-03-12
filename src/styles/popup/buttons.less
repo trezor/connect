@@ -1,0 +1,102 @@
+a,
+a:visited {
+    cursor: pointer;
+    position: relative;
+    color: @color_green_primary;
+    text-decoration: none;
+    .hover();
+
+    &:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        border-top: 1px solid @color_green_primary;
+        line-height: 1px;
+        left: 0px;
+        bottom: -1px;
+        transition: border-color 0.3s;
+    }
+
+    &:hover {
+        color: @color_green_secondary;
+    }
+
+    &:active {
+        color: @color_green_tertiary;
+    }
+
+    &:hover,
+    &:active {
+        &:after {
+            border-color: @color_white;
+        }
+    }
+}
+
+
+button {
+    padding: 12px 24px;
+    border-radius: 3px;
+    font-size: 14px;
+    font-weight: 300;
+    cursor: pointer;
+    background: @color_green_primary;
+    color: @color_white;
+    border: 0px;
+
+    .hover();
+
+    &:hover {
+        background: @color_green_secondary;
+    }
+
+    &:active {
+        background: @color_green_tertiary;
+    }
+
+    &:disabled {
+        pointer-events: none;
+        color: @color_text_secondary;
+        background: @color_gray_light;
+    }
+
+    &.blue {
+        background: transparent;
+        border: 1px solid @color_info_primary;
+        color: @color_info_primary;
+        padding: 12px 58px;
+
+        &:hover {
+            color: @color_white;
+            background: @color_info_primary;
+        }
+    }
+
+    &.white {
+        background: @color_white;
+        color: @color_text_secondary;
+        border: 1px solid @color_divider;
+        &:hover {
+            //color: @color_text_primary;
+            //border-color: @color_text_primary;
+            background: @color_divider;
+        }
+        &:active {
+            color: @color_text_primary;
+            background: @color_divider;
+        }
+    }
+
+    &.transparent {
+        background: transparent;
+        border: 0px;
+        color: @color_text_secondary;
+        .hover();
+
+        &:hover,
+        &:active {
+            color: @color_text_primary;
+            background: transparent;
+        }
+    }
+}

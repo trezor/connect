@@ -1,138 +1,71 @@
 .pin {
-  padding: 24px 48px;
-  .pin-row {
-    button {
-      width: 80px;
-      height: 80px;
-      margin-top: 13px;
-      margin-left: 6px;
-      font-size: 22px;
-      font-weight: 600;
-      color: @color_text_primary;
-      border: 1px solid @color_divider;
-      background: @color_white;
-      transition: all 0.3s;
 
-      &:first-child {
-        margin-left: 0;
-      }
-
-      &:hover {
-        color: @color_text_primary;
-        border-color: @color_text_secondary;
-      }
-
-      &:active {
-        color: @color_text_primary;
-        background: @color_divider;
-        border-color: @color_divider;
-      }
-    }
-  }
-
-  .pin-input-row {
-    margin-top: 24px;
-    display: inline-block;
-    position: relative;
-  }
-
-  input {
-    width: 260px;
-    letter-spacing: 6px;
-    line-height: 48px;
-    font-weight: 600;
-    font-size: 32px;
-    height: auto;
-    padding: 0 31px;
-    color: @color_text_primary;
-    border: 1px solid @color_divider;
-    background: transparent;
-  }
-
-  .pin-backspace {
-    border: none;
-    position: absolute;
-    right: 14px;
-    top: 0;
-    bottom: 0;
-    margin: auto 0;
-    padding: 0;
-
-    &:after {
-      .icomoon-back;
+    p {
+        margin: 5px 0;
+        font-size: 12px;
+        color: @color_text_secondary;
     }
 
-    &:hover {
-      color: @color_header;
+    .pin-row {
+        button {
+            width: 80px;
+            height: 80px;
+            margin-top: 15px;
+            margin-left: 10px;
+            font-size: 22px;
+            font-weight: 600;
+            color: @color_text_primary;
+            border: 1px solid @color_divider;
+            background: @color_white;
+            transition: all 0.3s;
+            &:first-child {
+                margin-left: 0px;
+            }
+            &:hover {
+                color: @color_text_primary;
+                border-color: @color_text_secondary;
+            }
+            &:active {
+                color: @color_text_primary;
+                background: @color_divider;
+                border-color: @color_divider;
+            }
+        }
     }
-  }
 
-  a.green,
-  a.green:visited {
-    position: relative;
-    color: @color_green_primary;
-    text-decoration: none;
+    .pin-input-row {
+        margin-top: 24px;
+        display: inline-block;
+        position: relative;
 
-    &:after {
-      .hover();
-      content: '';
-      position: absolute;
-      width: 100%;
-      border-top: 1px solid @color_green_primary;
-      line-height: 1px;
-      left: 0;
-      bottom: -1px;
+        input {
+            letter-spacing: 6px;
+            line-height: 48px;
+            font-weight: 600;
+            font-size: 32px;
+            height: auto;
+            padding: 0px 31px;
+            color: @color_text_primary;
+            background: transparent;
+        }
+
+        .pin-backspace {
+            position: absolute;
+            right: 14px;
+            top: 0;
+            bottom: 0;
+            margin: auto 0;
+            padding: 0;
+            &:after {
+                .icomoon-back;
+            }
+        }
     }
 
-    &:active {
-      color: @color_green_tertiary;
+    .submit-button {
+        width: 100%;
+        margin-top: 24px;
+        margin-bottom: 14px;
     }
 
-    &:hover,
-    &:active {
-      &:after {
-        border-color: transparent;
-      }
-    }
-  }
-
-  .submit-button {
-    position: relative;
-    margin-top: 24px;
-    margin-bottom: 19px;
-    width: 260px;
-    height: 40px;
-    font-size: 14px;
-    color: @color_white;
-    border-color: @color_white;
-    background-color: @color_green_primary;
-    &:hover {
-      background-color: @color_green_secondary;
-    }
-  }
 }
-
-.little-hint {
-  font-family: 'roboto';
-  color: #757575;
-  font-size: 12px;
-  position: relative;
-  font-style: normal;
-  font-weight: normal;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
-  content: "\E90A";
-}
-
-.learn-more {
-  &:extend(.little-hint);
-  margin: 5px 0;
-}
-
-.pin-layout {
-  &:extend(.little-hint);
-  margin: 5px 0;
-}
-
