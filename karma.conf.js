@@ -23,22 +23,39 @@ module.exports = function(config) {
             //'src/js/index-npm.js',
             'src/__tests__/*.test.js',
             //{ pattern: 'src/js/index-npm.js', included: true, served: true, nocache: true },
-            { pattern: 'src/html/coins.json', included: false, served: true, nocache: true },
-            { pattern: './src/html/latest.txt', included: false, served: true, nocache: true },
-            { pattern: 'src/html/iframe.html', included: false, served: true, nocache: true },
+            //{ pattern: './src/data/coins.json', included: false, served: true, nocache: true },
+            //{ pattern: './src/data/latest.txt', included: false, served: true, nocache: true },
+            //{ pattern: './src/html/iframe.html', included: false, served: true, nocache: true },
         ],
 
         proxies: {
-            "/iframe2.html": "http://localhost:9876/base/src/html/iframe.html",
+            //"/iframe2.html": "http://localhost:9876/base/src/html/iframe.html",
         },
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'src/__tests__/*.test.js': ['webpack', 'sourcemap'],
+            './src/js/entrypoints/connect.js': ['webpack', 'sourcemap'],
+            // './src/__tests__/*.test.js': ['babel'],
+            // './src/__tests__/*.test.js': ['babel'],
+            './src/__tests__/*.test.js': ['babel'],
+            './src/__tests__/**/*.test.js': ['babel'],
             //'src/js/*.js': ['webpack', 'sourcemap'],
             //'src/js/*.js': ['webpack', 'sourcemap'],
-            //'src/js/index-npm.js': ['webpack', 'sourcemap'],
+            // './src/js/iframe/iframe.js': ['webpack', 'sourcemap'],
+        },
+
+        babelPreprocessor: {
+            options: {
+                presets: ['env'],
+                sourceMap: 'inline'
+            },
+            filename: function (file) {
+                return file.originalPath.replace(/\.js$/, '.es5.js');
+            },
+            sourceFileName: function (file) {
+                return file.originalPath;
+            }
         },
 
         // test results reporter to use
@@ -77,8 +94,8 @@ module.exports = function(config) {
         },
 
         client: {
-            //captureConsole: false,
-            clearContext: false,
+            captureConsole: true,
+            clearContext: true,
             useIframe: false,
             runInParent: true
         },
@@ -91,23 +108,28 @@ module.exports = function(config) {
         // how many browser should be started simultaneous
         concurrency: Infinity,
 
+        hostname: 'tc.localhost',
+
         webpack: {
             cache: true,
             devtool: 'inline-source-map',
             entry: {
-                'iframe': './src/js/iframe/iframe.js',
+                'iframe': './src/js/popup/popup.js',
             },
             output: {
                 filename: '[name].js',
-                path: '/', //path.resolve(__dirname, 'src/__tests__'),
-                publicPath: '/webpack',
+                path: './', //path.resolve(__dirname, 'src/__tests__'),
+                publicPath: './webpack',
             },
             module: {
                 rules: [
                     {
                         test: /\.jsx?$/,
                         //include: path.resolve(__dirname, '../src'),
-                        exclude: /node_modules/,
+                        exclude: [
+                            /node_modules/,
+                            /.test.js$/
+                        ],
                         use: {
                             loader: 'babel-loader',
                             options: {
@@ -151,12 +173,12 @@ module.exports = function(config) {
 
             plugins: [
                 extractLess,
-                new HtmlWebpackPlugin({
-                    chunks: ['iframe'],
-                    filename: 'iframe.html',
-                    template: `./src/html/iframe.html`,
-                    inject: true
-                }),
+                // new HtmlWebpackPlugin({
+                //     chunks: ['iframe'],
+                //     filename: 'iframe.html',
+                //     template: `./src/html/iframe.html`,
+                //     inject: true
+                // }),
             ]
 
 
@@ -196,8 +218,13 @@ module.exports = function(config) {
         },
 
         webpackServer: {
-        	noInfo: true //please don’t spam the console when running in karma!
+            noInfo: true //please don’t spam the console when running in karma!
         },
+
+        // httpsServerOptions: {
+        //     key: fs.readFileSync('server.key', 'utf8'),
+        //     cert: fs.readFileSync('server.crt', 'utf8')
+        // },
 
 
 

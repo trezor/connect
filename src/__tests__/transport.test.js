@@ -1,41 +1,105 @@
 /*global require, global, describe, it, beforeEach, expect, jasmine*/
 
-import Trezor from '../js/entrypoints/connect';
+//import Trezor from '../js/entrypoints/connect';
 
 describe('Initializing', async () => {
-    'use strict';
 
-    // initialize device
-    try {
-        await Trezor.init({
-            //iframe_src: 'http://localhost:8081/iframe.html'
-        })
-    } catch(error) {
-        throw error;
-    }
+    let defaultTimeout;
+    beforeEach(() => {
+        defaultTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = 25000;
 
-    const handleUiEvent = (event) => {
-        switch(event) {
-            case 'ui_request_window' :
-                Trezor.uiMessage({ type: 'popup_handshake' });
-            break;
-            case 'ui_request_permission' :
-                Trezor.uiMessage({ type: 'ui_receive_permission', data: 'true' });
-            break;
+        const handleUiEvent = (event) => {
+            // console.log("ui event", event)
+            // switch(event) {
+            //     case 'ui_request_window' :
+            //         Trezor.uiMessage({ type: 'popup_handshake' });
+            //     break;
+            //     case 'ui_request_permission' :
+            //         Trezor.uiMessage({ type: 'ui_receive_permission', data: 'true' });
+            //     break;
+            // }
         }
-    }
 
-    it('Call function', async (done) => {
+        const handleDeviceEvent = (event) => {
+            // console.log("device event", event)
+        }
 
-        await Trezor.getPublicKey({
-            account: 0,
-            confirmation: true
-        });
 
-        // let resp = { xpub: 1 };
-        // expect(resp.xpub).toEqual(1);
-        done();
+
+        // Trezor.on('UI_EVENT', handleUiEvent);
+        // Trezor.on('DEVICE_EVENT', handleDeviceEvent);
+        //
+
     });
+
+
+    // it('TrezorConnect.init timeout', async (done) => {
+
+    //     try {
+    //         await Trezor.init({
+    //             iframe_src: 'https://wrong-domain.trezor.io/iframe.html',
+    //             popup_src: 'https://sisyfos.trezor.io/popup.html',
+    //             webusb: false,
+    //         });
+    //     } catch(error) {
+    //         done();
+    //     }
+
+    // });
+
+
+    // // initialize connect
+    // it('TrezorConnect.init', async (done) => {
+
+    //     try {
+
+    //         const handleTransportEvent = (event) => {
+    //             console.log("transport event", event)
+    //             Trezor.off('TRANSPORT_EVENT', handleTransportEvent);
+    //             expect(event.type).toBe('transport__start');
+    //             done();
+    //         }
+    //         Trezor.on('TRANSPORT_EVENT', handleTransportEvent);
+
+    //         await Trezor.init({
+    //             iframe_src: 'https://sisyfos.trezor.io/iframe.html',
+    //             popup_src: 'https://sisyfos.trezor.io/popup.html',
+    //             webusb: false,
+    //             debug: true
+    //         });
+    //     } catch(error) {
+    //         throw error;
+    //     }
+
+    // });
+
+
+
+    afterEach(function() {
+        jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout;
+    });
+
+
+    // it('TrezorConnect.getPublicKey', async (done) => {
+
+    //     let resp = await Trezor.cipherKeyValue({
+    //         path: "m/1'/2'/3'",
+    //         key: "My key",
+    //         value: "1c0ffeec0ffeec0ffeec0ffeec0ffee1",
+    //         encrypt: true,
+    //         askOnEncrypt: true,
+    //         askOnDecrypt: true,
+    //         useEmptyPassphrase: true,
+    //         override: true
+    //     });
+
+    //     console.log("TEST 22222", resp)
+
+    //     // let resp = { xpub: 1 };
+    //     // expect(resp.xpub).toEqual(1);
+    //     done();
+    // });
 
     //it('Get public key', async (done) => {
 
