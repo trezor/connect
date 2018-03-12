@@ -3632,7 +3632,7 @@ hawk@~6.0.2:
     hoek "4.x.x"
     sntp "2.x.x"
 
-hd-wallet@^7.7.8:
+hd-wallet@^7.11.3:
   version "7.11.3"
   resolved "https://registry.yarnpkg.com/hd-wallet/-/hd-wallet-7.11.3.tgz#28cbc0ff9c787a687c65554d7bb06c75371cf6db"
   dependencies:

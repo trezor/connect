@@ -116,14 +116,16 @@ export default class DeviceList extends EventEmitter {
     }
 
     async _configTransport(transport: Transport): Promise<void> {
-        if (typeof this.options.config === 'string') {
+        let config: string;
+        if (typeof this.options.config !== 'undefined') {
+            config = this.options.config;
             _log.debug('Configuring transports: config from options');
-            await transport.configure(this.options.config); // TODO!!
+            await transport.configure(config); // TODO!!
         } else {
             _log.debug('Configuring transports: config from fetch');
             const url: string = `${ DataManager.getSettings('transportConfigSrc') }?${ Date.now() }`;
             try {
-                const config: string = await httpRequest(url, 'text');
+                config = await httpRequest(url, 'text');
                 await transport.configure(config);
             } catch (error) {
                 throw ERROR.WRONG_TRANSPORT_CONFIG;
@@ -253,6 +255,7 @@ export default class DeviceList extends EventEmitter {
                 return null;
             }
 
+            // $FlowIssue - this all is going around Flow :/
             const activeTransport = transport.activeTransport;
             if (activeTransport == null || activeTransport.name !== 'ParallelTransport') {
                 return null;

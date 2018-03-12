@@ -134,7 +134,7 @@ export default class Device extends EventEmitter {
                 this.commands.dispose();
             }
             try {
-                await this.transport.release(this.activitySessionID);
+                await this.transport.release(this.activitySessionID, false);
             } catch (err) {
                 // empty
             }
@@ -439,7 +439,7 @@ export default class Device extends EventEmitter {
     onBeforeUnload() {
         if (this.isUsedHere()) {
             try {
-                this.transport.release(this.activitySessionID);
+                this.transport.release(this.activitySessionID, true);
             } catch (err) {
                 // empty
             }

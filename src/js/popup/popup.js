@@ -29,7 +29,7 @@ const initLoaderView = (message: any): void => {
 
 const handleMessage = (event: MessageEvent): void => {
     // ignore messages from origin other then parent.window or white listed
-    if (getOrigin(event.origin) !== getOrigin(document.referrer) && DataManager.config.whitelist.indexOf(event.origin) < 0) return;
+    if (getOrigin(event.origin) !== getOrigin(document.referrer) && DataManager.getConfig().whitelist.indexOf(event.origin) < 0) return;
 
     console.log('handleMessage', event.data);
 

@@ -184,11 +184,18 @@ export default class DeviceCommands {
         );
     }
 
-    async ethereumGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<any> {
-        return await this.typedCall('EthereumGetAddress', 'EthereumAddress', {
+    async ethereumGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<MessageResponse<trezor.EthereumAddress>> {
+        const response: Object = await this.typedCall('EthereumGetAddress', 'EthereumAddress', {
             address_n: address_n,
             show_display: !!showOnTrezor,
         });
+        return {
+            type: response.type,
+            message: {
+                path: address_n || [],
+                address: response.message.address
+            }
+        };
     }
 
     async cipherKeyValue(

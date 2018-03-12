@@ -173,6 +173,11 @@ export type EthereumTxRequest = {
     signature_s?: string,
 };
 
+export type EthereumAddress = {
+    address: string;
+    path: Array<number>;
+}
+
 export type Identity = {
     proto?: string,
     user?: string,

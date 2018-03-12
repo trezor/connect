@@ -9,6 +9,10 @@
 .*/node_modules/protobufjs-old-fixed-webpack/src/bower.json
 .*/node_modules/node-uuid/lib/.*
 .*/_old/.*
+.*/src/js/device/helpers/signtx.js
+.*/src/js/core/methods/account-composetx.js
+.*/src/js/core/methods/composetx.js
+.*/src/js/core/methods/discovery.js
 
 
 [libs]

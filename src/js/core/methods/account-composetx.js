@@ -27,7 +27,7 @@ import {
 } from 'bitcoinjs-lib-zcash';
 
 import type {
-    Result as BuildTxResult,
+    BuildTxResult,
 } from 'hd-wallet';
 
 import * as trezor from '../../device/trezorTypes';

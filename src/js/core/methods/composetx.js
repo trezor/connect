@@ -27,7 +27,7 @@ import {
 } from 'bitcoinjs-lib-zcash';
 
 import type {
-    Result as BuildTxResult,
+    BuildTxResult,
 } from 'hd-wallet';
 
 import * as trezor from '../../device/trezorTypes';
@@ -135,7 +135,7 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
 
     // handle error from discovery function
     const onError = (error: Error): void => {
-        callbacks.getUiPromise().reject(error);
+        // callbacks.getUiPromise().reject(error);
     };
 
     // start discovering
@@ -251,30 +251,31 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
     // 2. fee selection
     // 3. (optional) change account button (back to account discovery view)
     // 4. (optional) change custom fee value
-    const composingCycle = async (): Promise<BuildTxResult> => {
-        // wait for user action
-        const uiResponse: UiPromiseResponse = await callbacks.getUiPromise().promise;
+    const composingCycle = async (event: string): Promise<BuildTxResult> => {
+        // wait for user action (pick account)
+        const uiResponse: UiPromiseResponse = await callbacks.createUiPromise(event, callbacks.device).promise;
         // filter incoming UI promise,
         // in corner-case there could be a situation where session will expire
-        // and this response will be a pin or passphrase
-        if (uiResponse.event !== UI.RECEIVE_ACCOUNT && uiResponse.event !== UI.RECEIVE_FEE && uiResponse.event !== UI.CHANGE_ACCOUNT) {
-            return await composingCycle();
-        }
+        // and this response could be a pin or passphrase
+        // if (uiResponse.event !== UI.RECEIVE_ACCOUNT && uiResponse.event !== UI.RECEIVE_FEE && uiResponse.event !== UI.CHANGE_ACCOUNT) {
+        //     return await composingCycle();
+        // }
 
         const responseData: any = uiResponse.payload;
 
-        if (uiResponse.event === UI.RECEIVE_ACCOUNT) {
+        if (event === UI.RECEIVE_ACCOUNT) {
             // if ui promise reject we need to stop discovering
+            // TODO:
             stopDiscovering();
             // account selection
             await onAccountSelection(parseInt(responseData));
             // wait for user action
-            return await composingCycle();
-        } else if (uiResponse.event === UI.CHANGE_ACCOUNT) {
+            return await composingCycle(UI.RECEIVE_FEE);
+        } else if (event === UI.CHANGE_ACCOUNT) {
             // back to discovery view
             restoreDiscovery();
             // wait for user action
-            return await composingCycle();
+            return await composingCycle(UI.RECEIVE_ACCOUNT);
         } else if (responseData.type === 'custom') {
             if (!txComposer) {
                 // make flow happy
@@ -287,7 +288,7 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
             // update fee selection view
             callbacks.postMessage(new UiMessage(UI.UPDATE_CUSTOM_FEE, { ...simple, coinInfo }));
             // wait for user action
-            return await composingCycle();
+            return await composingCycle(UI.RECEIVE_FEE);
         } else if (responseData.type === 'fee') {
             // return selected fee
             // TODO: double check if composed fee is OK.
@@ -300,7 +301,7 @@ const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise
         }
     };
 
-    const tx: BuildTxResult = await composingCycle();
+    const tx: BuildTxResult = await composingCycle(UI.RECEIVE_ACCOUNT);
     // TODO: double check if tx is final
 
     const refTx: Array<BitcoinJsTransaction> = txComposer ? await txComposer.getReferencedTx(tx.transaction.inputs) : [];

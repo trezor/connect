@@ -59,6 +59,10 @@ export default class DataManager {
         return false;
     }
 
+    static getConfig(): any {
+        return this.config;
+    }
+
     static getTransportConfigURL(): string {
         // if (this.json && this.json.app && this.json.app.transport_url) {
         //     return this.json.app.transport_url;

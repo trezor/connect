@@ -1,13 +1,15 @@
 /* @flow */
 'use strict';
 
+import type { MessageResponse } from '../../device/DeviceCommands';
+import type { EthereumAddress } from '../../device/trezorTypes';
 import { checkPermissions } from './permissions';
 import type { MethodParams, MethodCallbacks } from './parameters';
 
 const method = async (params: MethodParams, callbacks: MethodCallbacks): Promise<Object> => {
     const input: Object = params.input;
 
-    const res: MessageResponse<EthereumSignature> = await callbacks.device.getCommands().ethereumGetAddress(
+    const res: MessageResponse<EthereumAddress> = await callbacks.device.getCommands().ethereumGetAddress(
         input.address_n,
         input.showOnTrezor
     );
