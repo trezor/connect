@@ -24,7 +24,7 @@
   },
   "scripts": {
     "dev": "babel-node ./webpack/server.js",
-    "dev:popup": "babel-node ./webpack/server.js",
+    "dev:popup": "babel-node ./webpack/server.js --config popup",
     "build": "rm -rf dist && webpack --config ./webpack/webpack.config.prod.babel.js",
     "stats": "webpack --config ./webpack/webpack.config.prod.babel.js --json > dist/stats.json",
     "test": "karma start karma.conf.js",

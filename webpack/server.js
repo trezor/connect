@@ -1,7 +1,6 @@
 import { JS_SRC, HTML_SRC, DIST, PORT } from './constants';
 import express from 'express';
 import webpack from 'webpack';
-import config from './webpack.config.popup';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import open from 'open';
@@ -11,7 +10,16 @@ import chokidar from 'chokidar';
 import stylesheet from './stylesheet';
 
 
-let index = null;
+let config = null;
+
+switch(argv.config){
+    case 'popup' :
+        config = require('./webpack.config.popup');
+        break;
+    default :
+        config = require('./webpack.config.dev');
+        break;
+}
 
 const app = express();
 const compiler = webpack(config);
