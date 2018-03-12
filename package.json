@@ -23,6 +23,7 @@
     "karma": "./node_modules/karma/bin/karma"
   },
   "scripts": {
+    "dev": "babel-node ./webpack/server.js",
     "dev:popup": "babel-node ./webpack/server.js",
     "build": "rm -rf dist && webpack --config ./webpack/webpack.config.prod.babel.js",
     "stats": "webpack --config ./webpack/webpack.config.prod.babel.js --json > dist/stats.json",
@@ -87,7 +88,7 @@
   "dependencies": {
     "bip44-constants": "^4.0.1",
     "bitcoinjs-lib-zcash": "^3.0.0",
-    "hd-wallet": "^7.7.8",
+    "hd-wallet": "^7.11.3",
     "trezor-link": "^1.3.0",
     "whatwg-fetch": "^2.0.3",
     "window-or-global": "^1.0.1"
