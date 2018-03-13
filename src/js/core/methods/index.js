@@ -1,6 +1,7 @@
 /* @flow */
 'use strict';
 
+import type { CoreMessage, UiPromiseResponse } from '../CoreMessage';
 import type { MethodCollection } from './parameters';
 
 // import getxpub from './getxpub';
@@ -15,8 +16,11 @@ import type { MethodCollection } from './parameters';
 // import accountComposetx from './account-composetx';
 
 import getFeatures from './getFeatures';
-import cipherKeyValue from './cipherKeyValue';
+// import cipherKeyValue from './cipherKeyValue';
+import CipherKeyValue from './CipherKeyValue';
 import requestDevice from './requestDevice';
+import AbstractMethod, { MethodInterface } from './AbstractMethod';
+
 
 const methods: {[k: string]: MethodCollection} = {
 
@@ -31,27 +35,32 @@ const methods: {[k: string]: MethodCollection} = {
     // 'ethereumGetAddress': ethereumGetAddress,
 
     'getFeatures': getFeatures,
-    'cipherKeyValue': cipherKeyValue,
+    // 'cipherKeyValue': cipherKeyValue,
     'requestDevice': requestDevice,
 };
 
-export const find = (name: string): ?MethodCollection => {
-    if (methods[name]) {
-        return methods[name];
+const classes: {[k: string]: any} = {
+    'cipherKeyValue': CipherKeyValue
+}
+
+export const find = (message: CoreMessage): AbstractMethod => {
+    if (!message.payload) {
+        throw new Error('Message payload not found');
     }
-    return null;
-};
+
+    if (!message.payload.method || typeof message.payload.method !== 'string') {
+        throw new Error('Message method is not set');
+    }
+
+    if (classes[message.payload.method]) {
+        return new classes[message.payload.method](message);
+    }
+
+    throw new Error(`Method ${message.payload.method} not found`);
+}
+
 
 export default find;
 
 
-export const find2 = (params: Object): ?AbstractMethod => {
-
-}
-
-export class AbstractMethod {
-    constructor(params: Object) {
-
-    }
-}
 

@@ -10,9 +10,9 @@ export const initPermissionsView = (data: any, origin: string): void => {
 
     const h3: HTMLElement = container.getElementsByTagName('h3')[0];
     const hostName: HTMLElement = h3.getElementsByTagName('span')[0];
-    const list: HTMLElement = container.getElementsByClassName('permissions_list')[0];
-    const confirmButton: HTMLElement = container.getElementsByClassName('confirm_button')[0];
-    const cancelButton: HTMLElement = container.getElementsByClassName('cancel_button')[0];
+    const list: HTMLElement = container.getElementsByClassName('permissions-list')[0];
+    const confirmButton: HTMLElement = container.getElementsByClassName('confirm-button')[0];
+    const cancelButton: HTMLElement = container.getElementsByClassName('cancel-button')[0];
 
     hostName.innerHTML = origin;
     if (data && Array.isArray(data)) {

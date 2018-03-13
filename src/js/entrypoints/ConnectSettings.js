@@ -4,6 +4,7 @@
 export type ConnectSettings = {
     // debug: boolean | {[k: string]: boolean};
     debug: boolean,
+    host: string,
     trustedHost: boolean,
     iframeSrc: string,
     popup: boolean;
@@ -25,6 +26,7 @@ export type ConnectSettings = {
 const initialSettings: ConnectSettings = {
     configSrc: 'data/config.json', // constant
     debug: false,
+    host: 'unknown',
     trustedHost: false,
     iframeSrc: 'iframe.html',
     popup: true,
@@ -55,6 +57,8 @@ export const parse = (input: ?Object): ConnectSettings => {
 
     const hostname: string = window.location.hostname;
     const host: string = hostname.substring(hostname.lastIndexOf('.', hostname.lastIndexOf('.') - 1) + 1);
+
+    settings.host = host;
     settings.trustedHost = host === 'localhost' || host === 'trezor.io';
 
     if (typeof input.iframeSrc === 'string') {

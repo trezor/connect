@@ -17,8 +17,8 @@ import * as ERROR from '../constants/errors';
 import { UiMessage, DeviceMessage, TransportMessage, ResponseMessage, CoreMessage } from './CoreMessage';
 import type { UiPromiseResponse } from './CoreMessage';
 
-import { parse as parseParams, parseGeneral as parseGeneralParams } from './methods/parameters';
-import type { GeneralParams, MethodParams, MethodCallbacks } from './methods/parameters';
+import AbstractMethod from './methods/AbstractMethod';
+import { find as findMethod } from './methods';
 import { requestPermissions } from './methods/permissions';
 
 import { create as createDeferred } from '../utils/deferred';
@@ -38,7 +38,7 @@ let _deviceList: ?DeviceList; // Instance of DeviceList
 let _popupPromise: ?Deferred<void>; // Waiting for popup handshake
 let _uiPromises: Array<Deferred<UiPromiseResponse>> = []; // Waiting for ui response
 let _waitForFirstRun: boolean = false; // used in corner-case, where device.isRunning() === true but it isn't loaded yet.
-const _callParameters: Array<GeneralParams> = [];
+const _callMethods: Array<AbstractMethod> = [];
 
 export const CORE_EVENT: string = 'CORE_EVENT';
 
@@ -97,7 +97,12 @@ const postMessage = (message: CoreMessage): void => {
 export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = false): void => {
     _log.log('handle message in core', isTrustedOrigin, message);
 
-    const safeMessages: Array<string> = [ IFRAME.CALL, POPUP.CLOSED, UI.CHANGE_SETTINGS, TRANSPORT.REQUEST ];
+    const safeMessages: Array<string> = [
+        IFRAME.CALL,
+        POPUP.CLOSED,
+        UI.CHANGE_SETTINGS,
+        TRANSPORT.REQUEST
+    ];
 
     if (!isTrustedOrigin && safeMessages.indexOf(message.type) === -1) {
         console.error('Message not trusted', message);
@@ -162,14 +167,14 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
  * @returns {Promise<Device>}
  * @memberof Core
  */
-const initDevice = async (parameters: GeneralParams): Promise<Device> => {
+const initDevice = async (method: AbstractMethod): Promise<Device> => {
     if (!_deviceList) {
         throw ERROR.NO_TRANSPORT;
     }
 
     let device: ?Device;
-    if (parameters.deviceHID) {
-        device = _deviceList.getDevice(parameters.deviceHID);
+    if (method.devicePath) {
+        device = _deviceList.getDevice(method.devicePath);
     } else {
         let devicesCount: number = _deviceList.length();
         let selectedDevicePath: string;
@@ -199,7 +204,7 @@ const initDevice = async (parameters: GeneralParams): Promise<Device> => {
                 postMessage(new UiMessage(UI.SELECT_DEVICE, _deviceList.asArray()));
 
                 // wait for device selection
-                const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(parameters.responseID, UI.RECEIVE_DEVICE);
+                const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(method.responseID, UI.RECEIVE_DEVICE);
                 if (uiPromise) {
                     const uiResp: UiPromiseResponse = await uiPromise.promise;
                     selectedDevicePath = uiResp.payload;
@@ -285,24 +290,28 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     const responseID: number = message.id;
 
-    // parse incoming params
-
-    let parameters: MethodParams;
+    // find method and parse incoming params
+    let method: AbstractMethod;
     try {
-        parameters = parseParams(message);
+        method = findMethod(message);
+        // bind callbacks
+        method.postMessage = postMessage;
+        method.getPopupPromise = getPopupPromise;
+        method.createUiPromise = createUiPromise;
+        method.findUiPromise = findUiPromise;
+        method.removeUiPromise = removeUiPromise;
     } catch (error) {
         postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
         postMessage(new ResponseMessage(responseID, false, { error: ERROR.INVALID_PARAMETERS.message + ': ' + error.message }));
         throw ERROR.INVALID_PARAMETERS;
     }
 
-    const gParameters: GeneralParams = parseGeneralParams(message, parameters);
-    _callParameters[responseID] = gParameters;
+    _callMethods[responseID] = method;
 
     let messageResponse: ?ResponseMessage;
 
-    // if method is using device (there could be just calls to backend or hd-wallet)
-    if (!parameters.useDevice) {
+    // method is not using device, there is no need to acquire
+    if (!method.useDevice) {
         // TODO: call function and handle interruptions
         // const response: Object = await _parameters.method.apply(this, [ parameters, callbacks ]);
         // messageResponse = new ResponseMessage(_parameters.responseID, true, response);
@@ -328,7 +337,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     // find device
     let device: Device;
     try {
-        device = await initDevice(gParameters);
+        device = await initDevice(method);
     } catch (error) {
         if (error === ERROR.NO_TRANSPORT) {
             // wait for popup handshake
@@ -342,27 +351,24 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         throw error;
     }
 
-    parameters.deviceHID = device.getDevicePath();
+    method.device = device;
+    method.devicePath = device.getDevicePath();
 
-    let unexpectedStateVerified: boolean = false;
-    if (!device.isUnacquired()) {
-        const unexpectedState: ?string = await checkUnexpectedState(device, parameters.requiredFirmware);
-        if (unexpectedState) {
-            // wait for popup handshake
-            await getPopupPromise().promise;
-            // show unexpected state information
-            postMessage(new UiMessage(unexpectedState));
-
-            await createUiPromise(DEVICE.DISCONNECT, device).promise;
-
-            postMessage(new ResponseMessage(responseID, false, { error: unexpectedState }));
-            throw unexpectedState;
-        }
-        unexpectedStateVerified = true;
-    }
+    // const unexpectedState: ?string = device.hasUnexpectedState(method.requiredFirmware);
+    // if (unexpectedState) {
+    //     // wait for popup handshake
+    //     await getPopupPromise().promise;
+    //     // show unexpected state information
+    //     postMessage(new UiMessage(unexpectedState));
+    //     // wait for device disconnect
+    //     await createUiPromise(DEVICE.DISCONNECT, device).promise;
+    //     // return response
+    //     postMessage(new ResponseMessage(responseID, false, { error: unexpectedState }));
+    //     throw unexpectedState;
+    // }
 
     // TODO: nicer
-    device.setInstance(gParameters.deviceInstance);
+    device.setInstance(method.deviceInstance);
 
     // if device is currently busy
     if (device.isRunning()) {
@@ -374,9 +380,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             await device.waitForFirstRun();
             _waitForFirstRun = false;
         } else {
-            if (gParameters.overridePreviousCall) {
+            if (method.overridePreviousCall) {
                 // resolve previous call before this one
-                // const previous: ?GeneralParams = _callParameters.find(p => p && p.methodParams.deviceHID === device.getDevicePath());
                 await device.override(new Error('Override!'));
             } else {
                 postMessage(new ResponseMessage(responseID, false, { error: ERROR.DEVICE_CALL_IN_PROGRESS.message }));
@@ -388,16 +393,16 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     // device is available
     // set public variables, listeners and run method
     device.on(DEVICE.PIN, onDevicePinHandler);
-    device.on(DEVICE.PASSPHRASE, parameters.useEmptyPassphrase ? onEmptyPassphraseHandler : onDevicePassphraseHandler);
+    device.on(DEVICE.PASSPHRASE, method.useEmptyPassphrase ? onEmptyPassphraseHandler : onDevicePassphraseHandler);
     // device.on(DEVICE.PASSPHRASE, onDevicePassphraseHandler);
     device.on(DEVICE.BUTTON, onDeviceButtonHandler);
     device.on(DEVICE.AUTHENTICATED, () => {
-        if (!parameters.useUi) { postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST)); }
+        if (!method.useUi) { postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST)); }
     });
 
     // before acquire session, check if UI will be needed in future
     // and if device is already authenticated
-    if (!parameters.useUi && device.isAuthenticated(parameters.useEmptyPassphrase)) {
+    if (!method.useUi && device.isAuthenticated(method.useEmptyPassphrase)) {
         // TODO ???
         postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
     }
@@ -405,18 +410,17 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     try {
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
-            // check if device is in unexpected state (bootloader, not-initialized, old firmware)
-            const unexpectedState: ?string = await checkUnexpectedState(device, parameters.requiredFirmware);
+            // check AGAIN if device is in unexpected state (bootloader, not-initialized, old firmware)
+            // this just a duplicate of above function, but before inner call device could be unacquired
+            const unexpectedState: ?string = device.hasUnexpectedState(method.requiredFirmware);
             if (unexpectedState) {
                 // wait for popup handshake
                 await getPopupPromise().promise;
                 // show unexpected state information
                 postMessage(new UiMessage(unexpectedState));
 
-                device.clearPassphrase();
-
+                // wait for device disconnect
                 await createUiPromise(DEVICE.DISCONNECT, device).promise;
-
                 // interrupt running process and go to "final" block
                 return Promise.resolve();
             }
@@ -426,61 +430,50 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             // this variable will be cleared in cleanup()
 
             // check if device state is correct (correct checksum)
-            const correctState: boolean = await checkDeviceState(device, gParameters.deviceState);
-            if (!correctState) {
-                // wait for popup handshake
-                await getPopupPromise().promise;
+            // const correctState: boolean = await checkDeviceState(device, method.deviceState);
+            // if (!correctState) {
+            //     // wait for popup handshake
+            //     await getPopupPromise().promise;
 
-                device.clearPassphrase();
+            //     device.clearPassphrase();
 
-                messageResponse = new ResponseMessage(gParameters.responseID, false, { error: 'Device state is incorrect' });
-                closePopup();
-                // interrupt running process and go to "final" block
-                return Promise.resolve();
-            }
-
-            // create callbacks collection
-            // this will be used inside methods to communicate with Device or UI
-            const callbacks: MethodCallbacks = {
-                device,
-                postMessage,
-                getPopupPromise,
-                createUiPromise,
-                findUiPromise,
-                removeUiPromise,
-            };
+            //     messageResponse = new ResponseMessage(responseID, false, { error: 'Device state is incorrect' });
+            //     closePopup();
+            //     // interrupt running process and go to "final" block
+            //     return Promise.resolve();
+            // }
 
             const trustedHost: boolean = DataManager.getSettings('trustedHost');
 
             // check and request permissions
-            if (parameters.requiredPermissions.length > 0 && !trustedHost) {
+            //if (method.requiredPermissions.length > 0 && !trustedHost) {
+            method.checkPermissions();
+            if (method.requiredPermissions.length > 0) {
                 // show permissions in UI
-                const permitted: boolean = await requestPermissions(parameters.requiredPermissions, callbacks);
+                //const permitted: boolean = await requestPermissions(method.requiredPermissions, callbacks);
+                const permitted: boolean = await method.requestPermissions();
                 if (!permitted) {
-                    postMessage(new ResponseMessage(parameters.responseID, false, { error: ERROR.PERMISSIONS_NOT_GRANTED.message }));
+                    postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.PERMISSIONS_NOT_GRANTED.message }));
                     closePopup();
-
-                    device.clearPassphrase();
 
                     return Promise.resolve();
                 }
             }
 
             // before authentication, ask for confirmation if needed [export xpub, sign message]
-            if (typeof parameters.confirmation === 'function' && !trustedHost) {
+            //  && !trustedHost
+            if (typeof method.confirmation === 'function') {
                 // show confirmation in UI
-                const confirmed: boolean = await parameters.confirmation.apply(this, [ parameters, callbacks ]);
+                const confirmed: boolean = await method.confirmation();
                 if (!confirmed) {
-                    postMessage(new ResponseMessage(parameters.responseID, false, { error: 'Cancelled' }));
+                    postMessage(new ResponseMessage(method.responseID, false, { error: 'Cancelled' }));
                     closePopup();
-
-                    device.clearPassphrase();
 
                     return Promise.resolve();
                 }
             }
 
-            if (!device.isAuthenticated(parameters.useEmptyPassphrase)) { // TODO: check if auth is needed (getFeatures)
+            if (!device.isAuthenticated(method.useEmptyPassphrase)) { // TODO: check if auth is needed (getFeatures)
                 try {
                     await requestAuthentication(device);
                 } catch (error) {
@@ -489,7 +482,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                         postMessage(new UiMessage(UI.INVALID_PIN, { device: device.toMessageObject() }));
                         return inner();
                     } else {
-                        postMessage(new ResponseMessage(parameters.responseID, false, { error: error.message }));
+                        // other error
+                        postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
                         closePopup();
 
                         device.clearPassphrase();
@@ -500,26 +494,26 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             }
 
             // wait for popup handshake
-            if (parameters.useUi) {
+            if (method.useUi) {
                 await getPopupPromise().promise;
             }
 
             // run method
             try {
-                const response: Object = await parameters.method.apply(this, [ parameters, callbacks ]);
-                messageResponse = new ResponseMessage(parameters.responseID, true, response);
+                const response: Object = await method.run();
+                messageResponse = new ResponseMessage(method.responseID, true, response);
             } catch (error) {
                 // device.clearPassphrase();
 
-                if (!parameters) {
+                if (!method) {
                     return Promise.resolve();
                 }
 
                 if (error.custom) {
                     delete error.custom;
-                    postMessage(new ResponseMessage(parameters.responseID, false, error));
+                    postMessage(new ResponseMessage(method.responseID, false, error));
                 } else {
-                    postMessage(new ResponseMessage(parameters.responseID, false, { error: error.message }));
+                    postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
                 }
 
                 // device.release();
@@ -531,12 +525,13 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             }
             closePopup();
         };
-        // run inner function
 
-        await device.run(inner, { keepSession: parameters.keepSession });
+        // run inner function
+        await device.run(inner, { keepSession: method.keepSession });
+
     } catch (error) {
-        if (parameters) {
-            postMessage(new ResponseMessage(parameters.responseID, false, { error: error.message || error }));
+        if (method) {
+            postMessage(new ResponseMessage(method.responseID, false, { error: error.message || error }));
         }
     } finally {
         // Work done

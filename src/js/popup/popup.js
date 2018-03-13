@@ -38,7 +38,7 @@ const handleMessage = (event: MessageEvent): void => {
     // TODO parse incoming strings to avoid string injections !!!
 
     switch (message.type) {
-        case 'request_device' :
+        case 'request-device' :
             view.requestDevice(message.payload);
             break;
         case UI.LOADING :
@@ -67,7 +67,7 @@ const handleMessage = (event: MessageEvent): void => {
             view.updateCustomFee(message.payload);
             break;
         case UI.INSUFFICIENT_FUNDS :
-            showView('insufficient_funds');
+            showView('insufficient-funds');
             break;
         case UI.REQUEST_BUTTON :
             view.requestButton(message.payload);
@@ -93,7 +93,7 @@ const handleMessage = (event: MessageEvent): void => {
             view.initPinView(message.payload);
             break;
         case UI.INVALID_PIN :
-            showView('invalid_pin');
+            showView('invalid-pin');
             break;
         case UI.REQUEST_PASSPHRASE :
             view.initPassphraseView(message.payload);

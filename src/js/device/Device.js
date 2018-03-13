@@ -436,6 +436,21 @@ export default class Device extends EventEmitter {
         return (pin && pass);
     }
 
+    hasUnexpectedState(requiredFirmware: string): ?string {
+        if (this.features) {
+            if (this.isBootloader()) {
+                return UI.BOOTLOADER;
+            }
+            if (!this.isInitialized()) {
+                return UI.INITIALIZE;
+            }
+            if (!this.atLeast(requiredFirmware)) {
+                return UI.FIRMWARE;
+            }
+        }
+        return null;
+    }
+
     onBeforeUnload() {
         if (this.isUsedHere()) {
             try {

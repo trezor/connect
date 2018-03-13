@@ -8,7 +8,7 @@ import type { UiPromiseResponse } from '../CoreMessage';
 
 import { load as loadStorage, save as saveStorage } from '../../iframe/storage';
 
-const PERMISSIONS_KEY: string = 'trezorjs_permissions';
+const PERMISSIONS_KEY: string = 'trezorconnect_permissions';
 
 export const checkPermissions = (permissions: Array<string>): Array<string> => {
     // TODO: no permission needed while used as NPM
@@ -16,7 +16,7 @@ export const checkPermissions = (permissions: Array<string>): Array<string> => {
     const notPermitted: Array<string> = [ ...permissions ];
     if (savedPermissions && Array.isArray(savedPermissions)) {
         let p: string;
-        // clear not permitted array
+        // clear not permitted from array
         notPermitted.splice(0, notPermitted.length);
         // filter only not permitted
         for (p of permissions) {
