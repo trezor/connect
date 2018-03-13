@@ -2,9 +2,9 @@
 'use strict';
 
 import EventEmitter from 'events';
-import { CLOSED } from '../constants/popup';
+import { HANDSHAKE, CLOSED } from '../constants/popup';
 import { showPopupRequest } from './showPopupRequest';
-
+import type { ConnectSettings } from '../entrypoints/ConnectSettings';
 import type { CoreMessage } from '../core/CoreMessage';
 
 const POPUP_WIDTH: number = 600;
@@ -15,6 +15,7 @@ const POPUP_OPEN_TIMEOUT: number = 2000;
 
 export default class PopupManager extends EventEmitter {
     _window: any; // Window
+    settings: ConnectSettings;
     src: string;
     locked: boolean;
     requestTimeout: number = 0;
@@ -22,9 +23,10 @@ export default class PopupManager extends EventEmitter {
     closeInterval: number = 0;
     currentMethod: string;
 
-    constructor(src: string) {
+    constructor(settings: ConnectSettings) {
         super();
-        this.src = src;
+        this.settings = settings;
+        this.src = settings.popupSrc;
     }
 
     request(params: Object): void {
@@ -84,6 +86,14 @@ export default class PopupManager extends EventEmitter {
         // pass method name before popup is loaded
         if (this._window) {
             this._window.name = this.currentMethod;
+        }
+
+        this._window.onload = () => {
+            this._window.postMessage({
+                type: HANDSHAKE,
+                settings: this.settings,
+                method: this.currentMethod
+            }, '*');
         }
 
         this.closeInterval = window.setInterval(() => {

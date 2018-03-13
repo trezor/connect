@@ -31,6 +31,12 @@ const handleMessage = (event: MessageEvent): void => {
     // ignore messages from origin other then parent.window or white listed
     if (getOrigin(event.origin) !== getOrigin(document.referrer) && DataManager.getConfig().whitelist.indexOf(event.origin) < 0) return;
 
+    // first message from connect.js (parent window)
+    if (event.data && event.data.type === POPUP.HANDSHAKE && event.data.settings) {
+        init(event.data.settings);
+        return;
+    }
+
     console.log('handleMessage', event.data);
 
     const message: CoreMessage = parseMessage(event.data);
@@ -42,7 +48,6 @@ const handleMessage = (event: MessageEvent): void => {
             view.requestDevice(message.payload);
             break;
         case UI.LOADING :
-            // showView('loader');
             initLoaderView(message.payload);
             break;
         case UI.SET_OPERATION :
@@ -101,22 +106,23 @@ const handleMessage = (event: MessageEvent): void => {
     }
 };
 
-window.addEventListener('load', async () => {
+const init = async (settings: any) => {
     view.init();
+    await DataManager.loadConfig(parseSettings(settings));
 
-    await DataManager.loadConfig(parseSettings({}));
-
-    window.addEventListener('message', handleMessage);
     postMessage(new UiMessage(POPUP.HANDSHAKE));
 
     // pass popup console to iframe
     popupConsole(POPUP.LOG, postMessage);
 
-    // view.selectFee({ list: [] });
-
     // global method used in html-inline elements
     window.closeWindow = () => {
         window.close();
     };
-}, false);
+}
+
+window.addEventListener('message', handleMessage, false);
+window.addEventListener('beforeunload', () => {
+
+});
 

@@ -123,7 +123,7 @@ const injectStyleSheet = (): void => {
 };
 
 const initPopupManager = (): PopupManager => {
-    const pm: PopupManager = new PopupManager(_settings.popupSrc);
+    const pm: PopupManager = new PopupManager(_settings);
     pm.on(POPUP.CLOSED, () => {
         postMessage({ type: POPUP.CLOSED }, false);
     });
