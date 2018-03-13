@@ -446,11 +446,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             const trustedHost: boolean = DataManager.getSettings('trustedHost');
 
             // check and request permissions
-            //if (method.requiredPermissions.length > 0 && !trustedHost) {
             method.checkPermissions();
-            if (method.requiredPermissions.length > 0) {
+            if (method.requiredPermissions.length > 0 && !trustedHost) {
                 // show permissions in UI
-                //const permitted: boolean = await requestPermissions(method.requiredPermissions, callbacks);
+                // const permitted: boolean = await requestPermissions(method.requiredPermissions, callbacks);
                 const permitted: boolean = await method.requestPermissions();
                 if (!permitted) {
                     postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.PERMISSIONS_NOT_GRANTED.message }));
@@ -461,8 +460,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             }
 
             // before authentication, ask for confirmation if needed [export xpub, sign message]
-            //  && !trustedHost
-            if (typeof method.confirmation === 'function') {
+            if (typeof method.confirmation === 'function' && !trustedHost) {
                 // show confirmation in UI
                 const confirmed: boolean = await method.confirmation();
                 if (!confirmed) {
