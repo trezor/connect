@@ -279,7 +279,7 @@ class TrezorConnect extends TrezorBase {
             const response: ?Object = await postMessage({ type: IFRAME.CALL, payload: params });
             if (response) {
                 // TODO: unlock popupManager request only if there wasn't error "in progress"
-                if (response.error !== DEVICE_CALL_IN_PROGRESS.message) { _popupManager.unlock(); }
+                if (response.payload.error !== DEVICE_CALL_IN_PROGRESS.message) { _popupManager.unlock(); }
                 return response;
             } else {
                 _popupManager.unlock();

@@ -83,10 +83,6 @@ export default class PopupManager extends EventEmitter {
             ,status=no`;
 
         this._window = window.open(this.src, '_blank', opts);
-        // pass method name before popup is loaded
-        if (this._window) {
-            this._window.name = this.currentMethod;
-        }
 
         this._window.onload = () => {
             this._window.postMessage({
@@ -105,7 +101,6 @@ export default class PopupManager extends EventEmitter {
 
         this.openTimeout = window.setTimeout(() => {
             if (!(this._window && !this._window.closed)) {
-                console.log('OPEN TIME OUT!!!!');
                 this.close();
 
                 showPopupRequest(this.open.bind(this), () => { this.emit(CLOSED); });
@@ -145,7 +140,7 @@ export default class PopupManager extends EventEmitter {
         if (!this._window && message.type !== 'ui_request_window' && this.openTimeout) {
             this.close();
             showPopupRequest(this.open.bind(this), () => { this.emit(CLOSED); });
-            console.error('TODO ---- render alert in page!', this.closeInterval, this.openTimeout, this.requestTimeout);
+            console.warn('TODO: render alert in page!', this.closeInterval, this.openTimeout, this.requestTimeout);
             return;
         }
 
