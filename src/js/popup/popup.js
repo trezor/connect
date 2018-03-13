@@ -90,13 +90,13 @@ const handleMessage = (event: MessageEvent): void => {
             view.initConfirmationView(message.payload);
             break;
         case UI.REQUEST_PIN :
-            view.initPinView();
+            view.initPinView(message.payload);
             break;
         case UI.INVALID_PIN :
             showView('invalid_pin');
             break;
         case UI.REQUEST_PASSPHRASE :
-            view.initPassphraseView();
+            view.initPassphraseView(message.payload);
             break;
     }
 };

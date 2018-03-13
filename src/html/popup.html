@@ -32,8 +32,8 @@
                 <img src="https://www.myetherwallet.com/images/myetherwallet-logo.png" width="auto" height="100%" alt="" />
             </figure>
             <div class="description">
-                <div class="operation">oper_ation</div>
-                <div class="origin">http:/trezor.io</div>
+                <div class="operation"></div>
+                <div class="origin"></div>
             </div>
         </aside>
     </header>
@@ -47,10 +47,6 @@
             </svg>
         </div>
     </main>
-    <footer>
-        <span>© 2017</span>
-        <a href="http://satoshilabs.com" target="_blank">SatoshiLabs</a>
-    </footer>
 
     <!-- Views -->
     <div id="views" style="display: none;">
@@ -88,11 +84,11 @@
 
         <!-- Pin -->
         <div class="pin">
-            <h3>Enter { device.label } PIN</h3>
+            <h3>Enter #TREZOR PIN</h3>
             <p>The PIN layout is displayed on your TREZOR.</p>
 
             <div class="pin-input-row">
-                <input type="password" autocomplete="off" max-length="9" disabled value={pin} />
+                <input class="pin-input" type="password" autocomplete="off" max-length="9" disabled />
                 <button type="button" class="pin-backspace transparent"></button>
             </div>
 
@@ -106,7 +102,7 @@
                 <button type="button" data-value="1">&#8226;</button><button type="button" data-value="2">&#8226;</button><button type="button" data-value="3">&#8226;</button>
             </div>
 
-            <div><button class="submit-button" type="button">Enter PIN</button></div>
+            <div><button class="submit" type="button">Enter PIN</button></div>
             <p>Not sure how PIN works? <a href="http://doc.satoshilabs.com/trezor-user/enteringyourpin.html" target="_blank" rel="noreferrer noopener">Learn more</a></p>
         </div>
         <!-- Pin: END -->
@@ -119,7 +115,7 @@
 
         <!-- Passphrase -->
         <div class="passphrase">
-            <h3>Enter My TREZOR passphrase</h3>
+            <h3>Enter #TREZOR passphrase</h3>
             <p>Note that passphrase is case-sensitive.</p>
             <div class="row">
                 <label>Passphrase</label>
@@ -138,7 +134,6 @@
                 <label>Re-enter passphrase</label>
                 <div>
                     <input
-                        class="confirm-password"
                         type="password"
                         autocomplete="off"
                         autocorrect="off"
@@ -147,10 +142,11 @@
                         data-lpignore="true"
                         tabindex="2" />
                 </div>
+                <span class="error">Passphrases do not match</span>
             </div>
             <div class="row">
                 <label class="custom-checkbox">
-                    <input type="checkbox" tabindex="3" value="on" />
+                    <input class="show-passphrase" type="checkbox" tabindex="3" value="on" />
                     <span class="indicator"></span>Show passphrase</label>
             </div>
             <div>

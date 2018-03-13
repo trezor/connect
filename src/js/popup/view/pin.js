@@ -11,12 +11,12 @@ const submit = (): void => {
 };
 
 const addPinFromKeyboard = (nr: number): void => {
-    const input: HTMLInputElement = (container.getElementsByClassName('input')[0]: any);
+    const input: HTMLInputElement = (container.getElementsByClassName('pin-input')[0]: any);
     if (input.value.length < 9) { input.value += nr; }
 };
 
 const backspacePin = (): void => {
-    const input: HTMLInputElement = (container.getElementsByClassName('input')[0]: any);
+    const input: HTMLInputElement = (container.getElementsByClassName('pin-input')[0]: any);
     const pin = input.value;
     input.value = pin.substring(0, pin.length - 1);
 };
@@ -73,13 +73,16 @@ const pinKeyboardHandler = (event: KeyboardEvent): void => {
     }
 };
 
-export const initPinView = (): void => {
+export const initPinView = (payload: any): void => {
     showView('pin');
 
-    const input: HTMLInputElement = (container.getElementsByClassName('input')[0]: any);
+    const header: HTMLElement = container.getElementsByTagName('h3')[0];
+    const input: HTMLInputElement = (container.getElementsByClassName('pin-input')[0]: any);
     const enter: HTMLElement = container.getElementsByClassName('submit')[0];
-    const backspace: HTMLElement = container.getElementsByClassName('pin_backspace')[0];
+    const backspace: HTMLElement = container.getElementsByClassName('pin-backspace')[0];
     const buttons: NodeList<HTMLElement> = container.querySelectorAll('[data-value]');
+
+    header.innerHTML = header.innerHTML.replace('#TREZOR', payload.device.label);
 
     let i: number;
     const len: number = buttons.length;

@@ -5,29 +5,34 @@ import { UiMessage } from '../../core/CoreMessage';
 import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
 
-export const initPassphraseView = (): void => {
+export const initPassphraseView = (payload: any): void => {
     showView('passphrase');
-    const input: HTMLInputElement = container.getElementsByTagName('input')[0];
-    const show_passphrase: HTMLElement = container.getElementsByClassName('show_passphrase')[0];
-    const save_passphrase: HTMLInputElement = (container.getElementsByClassName('save_passphrase')[0]: any);
-    const enter: HTMLElement = container.getElementsByClassName('submit')[0];
+    const view: HTMLElement = container.getElementsByClassName('passphrase')[0];
+    const header: HTMLElement = container.getElementsByTagName('h3')[0];
+    const input1: HTMLInputElement = container.getElementsByTagName('input')[0];
+    const input2: HTMLInputElement = container.getElementsByTagName('input')[1];
+    const toggle: HTMLElement = container.getElementsByClassName('show-passphrase')[0];
+    const enter: HTMLButtonElement = ( container.getElementsByClassName('submit')[0]: any);
 
     const DOT: string = '•';
-    let password: boolean = true;
-    let passValue: string = '';
+    let inputType: string = 'password';
+    let passphrase: string = '';
+    let passphraseRevision: string = '';
 
-    const onFocusIn = (): void => {
-        input.setAttribute('type', 'password');
-        input.value = passValue;
-    };
-    const onFocusOut = (): void => {
-        passValue = input.value;
-        input.setAttribute('type', 'text');
-        input.value = passValue.replace(/./g, DOT);
-    };
+    header.innerHTML = header.innerHTML.replace('#TREZOR', payload.device.label);
 
-    input.addEventListener('focusin', onFocusIn, false);
-    input.addEventListener('focusout', onFocusOut, false);
+    const validation = () => {
+        if (input1.value !== input2.value) {
+            enter.disabled = true;
+            view.classList.add('not-valid');
+        } else {
+            enter.disabled = false;
+            view.classList.remove('not-valid');
+        }
+    }
+
+    input1.addEventListener('input', validation, false);
+    input2.addEventListener('input', validation, false);
 
     const submit = (): void => {
         const button = container.getElementsByClassName('submit')[0];
@@ -37,40 +42,31 @@ export const initPassphraseView = (): void => {
     const passKeyboardHandler = (event: KeyboardEvent): void => {
         if (event.keyCode === 13) {
             event.preventDefault();
-            input.blur();
+            input1.blur();
+            input2.blur();
             submit();
         }
     };
 
-    show_passphrase.addEventListener('click', () => {
-        if (password) {
-            password = false;
-            input.setAttribute('type', 'text');
-            input.value = passValue;
-            input.removeEventListener('focusin', onFocusIn, false);
-            input.removeEventListener('focusout', onFocusOut, false);
-        } else {
-            password = true;
-            input.value = passValue.replace(/./g, DOT);
-            input.addEventListener('focusin', onFocusIn, false);
-            input.addEventListener('focusout', onFocusOut, false);
-        }
-        input.focus();
+    toggle.addEventListener('click', () => {
+        inputType = inputType === 'text' ? 'password' : 'text';
+        input1.setAttribute('type', inputType);
+        input2.setAttribute('type', inputType);
     });
 
     enter.addEventListener('click', () => {
-        input.blur();
+        input1.blur();
         window.removeEventListener('keydown', passKeyboardHandler);
-        input.removeEventListener('focusin', onFocusIn, false);
-        input.removeEventListener('focusout', onFocusOut, false);
+        input1.removeEventListener('input', validation, false);
+        input2.removeEventListener('input', validation, false);
 
         showView('loader');
         postMessage(new UiMessage(UI.RECEIVE_PASSPHRASE, {
-            save: save_passphrase.checked,
-            value: passValue,
+            save: true,
+            value: input1.value,
         }));
     });
 
     window.addEventListener('keydown', passKeyboardHandler, false);
-    input.focus();
+    input1.focus();
 };

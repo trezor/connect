@@ -4,7 +4,7 @@
 import { container, showView } from './common';
 
 export const requestButton = (data: Object): void => {
-    showView('simple_message');
+    showView('simple-message');
 
     const h3: HTMLElement = container.getElementsByTagName('h3')[0];
     const div: HTMLElement = container.getElementsByClassName('message')[0];
