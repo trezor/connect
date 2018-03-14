@@ -60,10 +60,6 @@ export default class CipherKeyValue extends AbstractMethod {
             throw new Error('Parameter "askOnDecrypt" has invalid type. Boolean expected.');
         }
 
-        if (payload.hasOwnProperty('useEmptyPassphrase') && typeof payload.useEmptyPassphrase !== 'boolean') {
-            throw new Error('Parameter "useEmptyPassphrase" has invalid type. Boolean expected.');
-        }
-
         if (payload.hasOwnProperty('iv') && typeof payload.iv !== 'string') {
             throw new Error('Parameter "iv" has invalid type. String expected.');
         }
