@@ -39,4 +39,6 @@ npm:
 	cp README.md ./dist-npm/README.md
 	cp COPYING ./dist-npm/COPYING
 	cp ./dist/js/trezor-connect.*.js ./dist-npm/index.js
+	mkdir -p dist-npm/flowtype
+	cp ./src/flowtype/connect.js ./dist-npm/flowtype/connect.js
 	cd ./dist-npm && npm publish
