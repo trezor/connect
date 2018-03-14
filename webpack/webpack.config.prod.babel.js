@@ -108,11 +108,16 @@ module.exports = env => {
                     use: ['babel-loader']
                 },
                 {
-                    test: /\.(png|gif|jpg|ttf|eot|svg|woff|woff2)$/,
-                    loader: 'file-loader',
-                    query: {
-                        name: '[name].[hash].[ext]',
-                    },
+                    test: /\.json($|\?)/,
+                    loader: 'json-loader'
+                },
+                {
+                    test: /\.(ttf|eot|svg|woff|woff2)$/,
+                    loader: 'file-loader?publicPath=../&name=fonts/[name].[hash].[ext]',
+                },
+                {
+                    test: /\.(png|gif|jpg)$/,
+                    loader: 'file-loader?publicPath=../&name=images/[name].[hash].[ext]',
                 },
                 {
                     test: /\.less$/,
