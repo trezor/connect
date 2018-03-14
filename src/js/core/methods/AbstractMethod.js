@@ -48,7 +48,7 @@ export default class AbstractMethod implements MethodInterface {
 
     constructor(message: CoreMessage) {
         const payload: any = message.payload;
-        this.name = payload.name;
+        this.name = payload.method;
         this.responseID = message.id || 0;
         this.devicePath = payload.device ? payload.device.path : null;
         this.deviceInstance = payload.device ? payload.device.instance : 0;
