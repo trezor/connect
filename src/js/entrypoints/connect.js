@@ -111,7 +111,7 @@ const injectStyleSheet = (): void => {
     const head: HTMLElement = doc.head || doc.getElementsByTagName('head')[0];
     const style: HTMLStyleElement = document.createElement('style');
     style.setAttribute('type', 'text/css');
-    style.setAttribute('id', 'TrezorjsStylesheet');
+    style.setAttribute('id', 'TrezorConnectStylesheet');
 
     if (style.styleSheet) { // IE
         // $FlowIssue
