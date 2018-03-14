@@ -85,7 +85,7 @@ const removeUiPromise = (promise: Deferred<UiPromiseResponse>): void => {
  */
 const postMessage = (message: CoreMessage): void => {
     if (message instanceof ResponseMessage) {
-        const index: any = _callMethods.findIndex(call => call && call.responseID === message.id);
+        const index: number = _callMethods.findIndex(call => call && call.responseID === message.id);
         _callMethods.splice(index, 1);
     }
     _core.emit(CORE_EVENT, message);

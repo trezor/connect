@@ -21,6 +21,7 @@
 ./node_modules/trezor-link/flowtype/node-hid.js
 ./src/flowtype/bitcoinjs-lib-zcash.js
 ./src/flowtype/connect.js
+./src/flowtype/css.js
 
 
 [options]
