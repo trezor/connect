@@ -119,7 +119,7 @@ export default class AbstractMethod implements MethodInterface {
     }
 
     __hash(permission: string): string {
-        const host: string = DataManager.getSettings('host');
+        const host: string = DataManager.getSettings('origin');
         const secret: string = `${permission}#${this.device.features.device_id}#${host}`;
         const hash: Buffer = crypto.hash256(new Buffer(secret, 'binary'));
         return hash.toString('hex');

@@ -3,17 +3,17 @@
 
 export type ConnectSettings = {
     // debug: boolean | {[k: string]: boolean};
-    debug: boolean,
-    host: string,
-    trustedHost: boolean,
-    iframeSrc: string,
+    debug: boolean;
+    origin: string;
+    trustedHost: boolean;
+    iframeSrc: string;
     popup: boolean;
-    popupSrc: string,
-    +configSrc: string,
-    coinsSrc: string,
-    firmwareReleasesSrc: string,
-    transportConfigSrc: string,
-    latestBridgeSrc: string,
+    popupSrc: string;
+    +configSrc: string;
+    coinsSrc: string;
+    firmwareReleasesSrc: string;
+    transportConfigSrc: string;
+    latestBridgeSrc: string;
     transportReconnect: boolean;
     webusb: boolean;
 }
@@ -23,19 +23,21 @@ export type ConnectSettings = {
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
+const DEFAULT_DOMAIN: string = '';
+
 const initialSettings: ConnectSettings = {
     configSrc: 'data/config.json', // constant
     debug: false,
-    host: 'unknown',
+    origin: window.location.origin,
     trustedHost: false,
-    iframeSrc: 'iframe.html',
+    iframeSrc: `${ DEFAULT_DOMAIN }iframe.html`,
     popup: true,
-    popupSrc: 'popup.html',
+    popupSrc: `${ DEFAULT_DOMAIN }popup.html`,
     coinsSrc: 'data/coins.json',
     firmwareReleasesSrc: 'data/releases-1.json',
     transportConfigSrc: 'data/config_signed.bin',
     latestBridgeSrc: 'data/latest.txt',
-    transportReconnect: true,
+    transportReconnect: false,
     webusb: true,
 };
 
@@ -55,10 +57,13 @@ export const parse = (input: ?Object): ConnectSettings => {
         }
     }
 
+    if (input.hasOwnProperty('origin')) {
+        settings.origin = input.origin;
+    }
+
     const hostname: string = window.location.hostname;
     const host: string = hostname.substring(hostname.lastIndexOf('.', hostname.lastIndexOf('.') - 1) + 1);
 
-    settings.host = host;
     settings.trustedHost = host === 'localhost' || host === 'trezor.io';
 
     if (typeof input.iframeSrc === 'string') {
