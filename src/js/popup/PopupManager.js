@@ -89,7 +89,7 @@ export default class PopupManager extends EventEmitter {
                 type: HANDSHAKE,
                 settings: this.settings,
                 method: this.currentMethod
-            }, '*');
+            }, this._window.location.origin);
         }
 
         this.closeInterval = window.setInterval(() => {
@@ -145,7 +145,7 @@ export default class PopupManager extends EventEmitter {
         }
 
         // post message to popup window
-        if (this._window) { this._window.postMessage(message, '*'); }
+        if (this._window) { this._window.postMessage(message, this._window.location.origin); }
     }
 
     onBeforeUnload() {
