@@ -5,7 +5,7 @@ import { LOG } from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
 import * as TRANSPORT from '../constants/transport';
 
-import { parse as parseSettings } from '../entrypoints/ConnectSettings';
+import { parse as parseSettings, ConnectSettings } from '../entrypoints/ConnectSettings';
 import DataManager from '../data/DataManager';
 
 import { Core, CORE_EVENT, init as initCore } from '../core/Core';
@@ -18,8 +18,8 @@ let _core: Core;
 let _origin: string;
 
 // custom log
-const logger: Log = initLog('IFrame');
-const loggerPopup: Log = initLog('Popup');
+const _log: Log = initLog('IFrame');
+const _logFromPopup: Log = initLog('Popup');
 
 // Wrapper which listen events from Core
 
@@ -65,8 +65,8 @@ const handleMessage = (event: MessageEvent): void => {
             if (typeof message.args === 'string') {
                 const args = JSON.parse(message.args);
                 // console[message.level].apply(this, args);
-                // logger.debug.apply(this, args);
-                loggerPopup.debug(...args);
+                // _log.debug.apply(this, args);
+                _logFromPopup.debug(...args);
             }
             break;
     }
@@ -78,16 +78,18 @@ const handleMessage = (event: MessageEvent): void => {
 // communication with parent window
 const postMessage = (message: CoreMessage): void => {
     if (!window.top) {
-        logger.error('Cannot reach window.top');
+        _log.error('Cannot reach window.top');
         return;
     }
-    logger.debug('postMessage', message);
+    _log.debug('postMessage', message);
     window.top.postMessage(message, _origin);
 };
 
 const init = async (settings: any) => {
     try {
-        _core = await initCore(parseSettings(settings));
+        const parsedSettings: ConnectSettings = parseSettings(settings);
+        _log.enabled = _logFromPopup.enabled = parsedSettings.debug;
+        _core = await initCore(parsedSettings);
         _core.on(CORE_EVENT, postMessage);
         postMessage(new UiMessage(IFRAME.HANDSHAKE));
     } catch (error) {
