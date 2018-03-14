@@ -14,64 +14,10 @@ const extractLess = new ExtractTextPlugin({
     filename: 'css/[name].[contenthash].css'
 });
 
-module.exports = {
-    entry: {
-        'trezor-connect': `${JS_SRC}entrypoints/connect.js`,
-        'iframe': ['babel-polyfill', `${JS_SRC}iframe/iframe.js`], // babel-polyfill is not compiled into trezor-link
-        'popup': `${JS_SRC}popup/popup.js`
-    },
-    output: {
-        filename: 'js/[name].[hash].js',
-        path: DIST,
-        publicPath: './',
-        library: LIB_NAME,
-        libraryTarget: 'umd',
-        libraryExport: 'default'
-    },
-    module: {
-        rules: [
-            {
-                test: /(\.jsx|\.js)$/,
-                exclude: /node_modules/,
-                use: ['babel-loader']
-            },
-            {
-                test: /\.(png|gif|jpg|ttf|eot|svg|woff|woff2)$/,
-                loader: 'file-loader',
-                query: {
-                    name: '[name].[hash].[ext]',
-                },
-            },
-            {
-                test: /\.less$/,
-                include: STYLE_SRC,
-                loader: extractLess.extract({
-                    use: [
-                        { loader: 'css-loader' },
-                        { loader: 'less-loader' }
-                    ],
-                    fallback: 'style-loader'
-                })
-            },
-            {
-                test: /\.wasm$/,
-                loader: 'file-loader',
-                query: {
-                    name: 'js/[name].[hash].[ext]',
-                },
-            },
-        ]
-    },
-    resolve: {
-        modules: [SRC, NODE_MODULES]
-    },
-    plugins: [
+module.exports = env => {
 
-        new WebpackPreBuildPlugin(() => {
-            downloadDependencies();
-            compileInlineCss();
-        }),
 
+    const plugins = [
         extractLess,
         new webpack.IgnorePlugin(/\/iconv-loader$/),
         // new HtmlWebpackPlugin({
@@ -104,36 +50,100 @@ module.exports = {
         ]),
 
         new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('umd-lib'),
+            'process.env.NODE_ENV': JSON.stringify('production'),
             PRODUCTION: JSON.stringify(true)
         }),
-
-        //bitcoinjs-lib: NOTE: When uglifying the javascript, you must exclude the following variable names from being mangled: Array, BigInteger, Boolean, ECPair, Function, Number, Point and Script. This is because of the function-name-duck-typing used in typeforce.
-        new UglifyJsPlugin({
-            uglifyOptions: {
-                compress: {
-                    warnings: false,
-                },
-                ie8: false,
-                mangle: {
-                    reserved: [
-                        'Array', 'BigInteger', 'Boolean', 'Buffer',
-                        'ECPair', 'Function', 'Number', 'Point', 'Script',
-                    ],
-                },
-            }
-        }),
-
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.LoaderOptionsPlugin({
             minimize: true,
             debug: false
         })
-    ],
+    ];
 
-    // ignoring "fs" import in fastxpub
-    node: {
-        fs: "empty",
-        path: "empty",
+    if (env !== 'quick') {
+        plugins.push(
+            new WebpackPreBuildPlugin(() => {
+                downloadDependencies();
+                compileInlineCss();
+            }),
+            //bitcoinjs-lib: NOTE: When uglifying the javascript, you must exclude the following variable names from being mangled: Array, BigInteger, Boolean, ECPair, Function, Number, Point and Script. This is because of the function-name-duck-typing used in typeforce.
+            new UglifyJsPlugin({
+                uglifyOptions: {
+                    compress: {
+                        warnings: false,
+                    },
+                    ie8: false,
+                    mangle: {
+                        reserved: [
+                            'Array', 'BigInteger', 'Boolean', 'Buffer',
+                            'ECPair', 'Function', 'Number', 'Point', 'Script',
+                        ],
+                    },
+                }
+            })
+        )
+    }
+
+
+    return {
+        entry: {
+            'trezor-connect': `${JS_SRC}entrypoints/connect.js`,
+            'iframe': ['babel-polyfill', `${JS_SRC}iframe/iframe.js`], // babel-polyfill is not compiled into trezor-link
+            'popup': `${JS_SRC}popup/popup.js`
+        },
+        output: {
+            filename: 'js/[name].[hash].js',
+            path: DIST,
+            publicPath: './',
+            library: LIB_NAME,
+            libraryTarget: 'umd',
+            libraryExport: 'default'
+        },
+
+        module: {
+            rules: [
+                {
+                    test: /(\.jsx|\.js)$/,
+                    exclude: /node_modules/,
+                    use: ['babel-loader']
+                },
+                {
+                    test: /\.(png|gif|jpg|ttf|eot|svg|woff|woff2)$/,
+                    loader: 'file-loader',
+                    query: {
+                        name: '[name].[hash].[ext]',
+                    },
+                },
+                {
+                    test: /\.less$/,
+                    include: STYLE_SRC,
+                    loader: extractLess.extract({
+                        use: [
+                            { loader: 'css-loader' },
+                            { loader: 'less-loader' }
+                        ],
+                        fallback: 'style-loader'
+                    })
+                },
+                {
+                    test: /\.wasm$/,
+                    loader: 'file-loader',
+                    query: {
+                        name: 'js/[name].[hash].[ext]',
+                    },
+                },
+            ]
+        },
+        resolve: {
+            modules: [SRC, NODE_MODULES]
+        },
+
+        plugins,
+
+        // ignoring "fs" import in fastxpub
+        node: {
+            fs: "empty",
+            path: "empty",
+        }
     }
 }
