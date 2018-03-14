@@ -28,14 +28,15 @@ const initLoaderView = (message: any): void => {
 };
 
 const handleMessage = (event: MessageEvent): void => {
-    // ignore messages from origin other then parent.window or white listed
-    if (getOrigin(event.origin) !== getOrigin(document.referrer) && DataManager.getConfig().whitelist.indexOf(event.origin) < 0) return;
 
     // first message from connect.js (parent window)
     if (event.data && event.data.type === POPUP.HANDSHAKE && event.data.settings) {
         init(event.data.settings);
         return;
     }
+
+    // ignore messages from origin other then parent.window or white listed
+    if (getOrigin(event.origin) !== getOrigin(document.referrer) && DataManager.getConfig().whitelist.indexOf(event.origin) < 0) return;
 
     console.log('handleMessage', event.data);
 
@@ -120,6 +121,14 @@ const init = async (settings: any) => {
         window.close();
     };
 }
+
+
+window.addEventListener('load', () => {
+    // say hello to the window.opener and wait for POPUP.HANDSHAKE with settings
+    if (window.opener) {
+        window.opener.postMessage(POPUP.OPENED, '*');
+    }
+}, false);
 
 window.addEventListener('message', handleMessage, false);
 window.addEventListener('beforeunload', () => {

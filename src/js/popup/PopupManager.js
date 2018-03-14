@@ -2,10 +2,11 @@
 'use strict';
 
 import EventEmitter from 'events';
-import { HANDSHAKE, CLOSED } from '../constants/popup';
+import { OPENED, HANDSHAKE, CLOSED } from '../constants/popup';
 import { showPopupRequest } from './showPopupRequest';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
 import type { CoreMessage } from '../core/CoreMessage';
+import { getOrigin } from '../utils/networkUtils';
 
 const POPUP_WIDTH: number = 600;
 const POPUP_HEIGHT: number = 500;
@@ -17,6 +18,7 @@ export default class PopupManager extends EventEmitter {
     _window: any; // Window
     settings: ConnectSettings;
     src: string;
+    origin: string;
     locked: boolean;
     requestTimeout: number = 0;
     openTimeout: number;
@@ -27,6 +29,7 @@ export default class PopupManager extends EventEmitter {
         super();
         this.settings = settings;
         this.src = settings.popupSrc;
+        this.origin = getOrigin(settings.popupSrc);
     }
 
     request(params: Object): void {
@@ -82,15 +85,19 @@ export default class PopupManager extends EventEmitter {
             ,personalbar=no
             ,status=no`;
 
-        this._window = window.open(this.src, '_blank', opts);
-
-        this._window.onload = () => {
-            this._window.postMessage({
-                type: HANDSHAKE,
-                settings: this.settings,
-                method: this.currentMethod
-            }, this._window.location.origin);
+        const popupOpenedHandler = (event: MessageEvent): void => {
+            if (event.data === OPENED) {
+                this._window.postMessage({
+                    type: HANDSHAKE,
+                    settings: this.settings,
+                    method: this.currentMethod
+                }, this.origin);
+                window.removeEventListener('message', popupOpenedHandler, false);
+            }
         }
+        window.addEventListener('message', popupOpenedHandler, false);
+
+        this._window = window.open(this.src, '_blank', opts);
 
         this.closeInterval = window.setInterval(() => {
             if (this._window && this._window.closed) {
@@ -145,7 +152,7 @@ export default class PopupManager extends EventEmitter {
         }
 
         // post message to popup window
-        if (this._window) { this._window.postMessage(message, this._window.location.origin); }
+        if (this._window) { this._window.postMessage(message, this.origin); }
     }
 
     onBeforeUnload() {
