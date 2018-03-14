@@ -37,7 +37,6 @@ let _core: Core; // Class with event emitter
 let _deviceList: ?DeviceList; // Instance of DeviceList
 let _popupPromise: ?Deferred<void>; // Waiting for popup handshake
 let _uiPromises: Array<Deferred<UiPromiseResponse>> = []; // Waiting for ui response
-let _waitForFirstRun: boolean = false; // used in corner-case, where device.isRunning() === true but it isn't loaded yet.
 const _callMethods: Array<AbstractMethod> = [];
 
 export const CORE_EVENT: string = 'CORE_EVENT';
@@ -85,6 +84,10 @@ const removeUiPromise = (promise: Deferred<UiPromiseResponse>): void => {
  * @memberof Core
  */
 const postMessage = (message: CoreMessage): void => {
+    if (message instanceof ResponseMessage) {
+        const index: any = _callMethods.findIndex(call => call && call.responseID === message.id);
+        _callMethods.splice(index, 1);
+    }
     _core.emit(CORE_EVENT, message);
 };
 
@@ -306,7 +309,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         throw ERROR.INVALID_PARAMETERS;
     }
 
-    _callMethods[responseID] = method;
+    //_callMethods[responseID] = method;
+    _callMethods.push(method);
 
     let messageResponse: ?ResponseMessage;
 
@@ -372,13 +376,13 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     // if device is currently busy
     if (device.isRunning()) {
-        // corner case
-        // device didn't finish loading for the first time. @see DeviceList._createAndSaveDevice
-        // wait for self-release and then carry on
-        if (!_waitForFirstRun && !device.isLoaded()) {
-            _waitForFirstRun = true;
+
+        const previousCall = _callMethods.filter(call => call && call !== method && call.devicePath === method.devicePath);
+        if (!previousCall.length && !device.isLoaded()) {
+            // corner case
+            // device didn't finish loading for the first time. @see DeviceList._createAndSaveDevice
+            // wait for self-release and then carry on
             await device.waitForFirstRun();
-            _waitForFirstRun = false;
         } else {
             if (method.overridePreviousCall) {
                 // resolve previous call before this one
