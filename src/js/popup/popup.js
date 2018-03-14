@@ -108,8 +108,9 @@ const handleMessage = (event: MessageEvent): void => {
 };
 
 const init = async (settings: any) => {
+
+    await DataManager.load(parseSettings(settings));
     view.init();
-    await DataManager.loadConfig(parseSettings(settings));
 
     postMessage(new UiMessage(POPUP.HANDSHAKE));
 

@@ -3,6 +3,7 @@
 
 import type { CoreMessage } from '../../core/CoreMessage';
 import { getOrigin } from '../../utils/networkUtils';
+import DataManager from '../../data/DataManager';
 
 export const header: HTMLElement = document.getElementsByTagName('header')[0];
 export const container: HTMLElement = (document.getElementById('container'): any);
@@ -45,9 +46,9 @@ export const init = (): void => {
         }
 
         const originLabel: HTMLElement = header.getElementsByClassName('origin')[0];
-        originLabel.innerHTML = getOrigin(document.referrer); // window.opener.location.origin;
+        originLabel.innerHTML = DataManager.getSettings('origin');
 
-        setOperation(window.name);
+        // setOperation(window.name);
     }
 };
 
