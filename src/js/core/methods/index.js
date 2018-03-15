@@ -10,6 +10,7 @@ import requestDevice from './requestDevice';
 import AbstractMethod, { MethodInterface } from './AbstractMethod';
 import CipherKeyValue from './CipherKeyValue';
 import EthereumGetAddress from './EthereumGetAddress';
+import EthereumSignTx from './EthereumSignTx';
 
 
 const methods: {[k: string]: MethodCollection} = {
@@ -20,6 +21,7 @@ const methods: {[k: string]: MethodCollection} = {
 const classes: {[k: string]: any} = {
     'cipherKeyValue': CipherKeyValue,
     'ethereumGetAddress': EthereumGetAddress,
+    'ethereumSignTx': EthereumSignTx,
 }
 
 export const find = (message: CoreMessage): AbstractMethod => {
