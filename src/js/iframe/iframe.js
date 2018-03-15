@@ -42,12 +42,9 @@ const handleMessage = (event: MessageEvent): void => {
     // if (!event.isTrusted) return;
 
     // is message from popup or extension
-    // const isTrustedDomain: boolean = (event.origin === window.location.origin || event.origin === 'chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk');
     const isTrustedDomain: boolean = (event.origin === window.location.origin || DataManager.getConfig().whitelist.indexOf(event.origin) >= 0);
 
     // ignore messages from domain other then parent.window or popup.window or chrome extension
-    // if (event.origin !== window.top.location.origin && event.origin !== window.location.origin) return;
-    // if (getOrigin(event.origin) !== getOrigin(document.referrer) && event.origin !== window.location.origin && event.origin !== 'chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk') return;
     if (getOrigin(event.origin) !== getOrigin(document.referrer) && !isTrustedDomain) return;
 
     const message: CoreMessage = parseMessage(event.data);
