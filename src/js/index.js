@@ -38,6 +38,14 @@ export default class Trezor {
         return await this.__call({ method: 'ethereumSignTx', ...params });
     }
 
+    static async ethereumSignMessage(params: Object): Promise<Object> {
+        return await this.__call({ method: 'ethereumSignMessage', ...params });
+    }
+
+    static async ethereumVerifyMessage(params: Object): Promise<Object> {
+        return await this.__call({ method: 'ethereumVerifyMessage', ...params });
+    }
+
     /*
     static requestDevice(): void {
         // to override

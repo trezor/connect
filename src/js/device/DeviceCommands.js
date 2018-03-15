@@ -198,6 +198,21 @@ export default class DeviceCommands {
         };
     }
 
+    async ethereumSignMessage(address_n: Array<number>, message: string): Promise<MessageResponse<trezor.MessageSignature>> {
+        return await this.typedCall('EthereumSignMessage', 'EthereumMessageSignature', {
+            address_n,
+            message,
+        });
+    }
+
+    async ethereumVerifyMessage(address: string, signature: string, message: string): Promise<MessageResponse<trezor.Success>> {
+        return await this.typedCall('EthereumVerifyMessage', 'Success', {
+            address,
+            signature,
+            message,
+        });
+    }
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,

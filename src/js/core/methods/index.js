@@ -11,6 +11,8 @@ import AbstractMethod, { MethodInterface } from './AbstractMethod';
 import CipherKeyValue from './CipherKeyValue';
 import EthereumGetAddress from './EthereumGetAddress';
 import EthereumSignTx from './EthereumSignTx';
+import EthereumSignMessage from './EthereumSignMessage';
+import EthereumVerifyMessage from './EthereumVerifyMessage';
 
 
 const methods: {[k: string]: MethodCollection} = {
@@ -22,6 +24,8 @@ const classes: {[k: string]: any} = {
     'cipherKeyValue': CipherKeyValue,
     'ethereumGetAddress': EthereumGetAddress,
     'ethereumSignTx': EthereumSignTx,
+    'ethereumSignMessage': EthereumSignMessage,
+    'ethereumVerifyMessage': EthereumVerifyMessage,
 }
 
 export const find = (message: CoreMessage): AbstractMethod => {
