@@ -4,43 +4,22 @@
 import type { CoreMessage, UiPromiseResponse } from '../CoreMessage';
 import type { MethodCollection } from './parameters';
 
-// import getxpub from './getxpub';
-// import discovery from './discovery';
-// import composetx from './composetx';
-// import signtx from './signtx';
-// import custom from './custom';
-
-// import ethereumSignTx from './ethereumSignTx';
-// import ethereumGetAddress from './ethereumGetAddress';
-
-// import accountComposetx from './account-composetx';
-
 import getFeatures from './getFeatures';
-// import cipherKeyValue from './cipherKeyValue';
-import CipherKeyValue from './CipherKeyValue';
 import requestDevice from './requestDevice';
+
 import AbstractMethod, { MethodInterface } from './AbstractMethod';
+import CipherKeyValue from './CipherKeyValue';
+import EthereumGetAddress from './EthereumGetAddress';
 
 
 const methods: {[k: string]: MethodCollection} = {
-
-    // 'getxpub': getxpub,
-    // 'composetx': composetx,
-    // 'signtx': signtx,
-    // 'account-composetx': accountComposetx,
-    // 'custom': custom,
-    // 'discovery': discovery,
-
-    // 'ethereumSignTx': ethereumSignTx,
-    // 'ethereumGetAddress': ethereumGetAddress,
-
     'getFeatures': getFeatures,
-    // 'cipherKeyValue': cipherKeyValue,
     'requestDevice': requestDevice,
 };
 
 const classes: {[k: string]: any} = {
-    'cipherKeyValue': CipherKeyValue
+    'cipherKeyValue': CipherKeyValue,
+    'ethereumGetAddress': EthereumGetAddress,
 }
 
 export const find = (message: CoreMessage): AbstractMethod => {
