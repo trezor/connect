@@ -10,10 +10,11 @@ import DataManager from '../data/DataManager';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
 
 import { Core, CORE_EVENT, init as initCore } from '../core/Core';
-import { parseMessage, UiMessage, ErrorMessage, ResponseMessage, TransportMessage, CoreMessage } from '../core/CoreMessage';
+import { parseMessage, UiMessage, ErrorMessage, ResponseMessage, TransportMessage, CoreMessage, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, DeviceMessage } from '../core/CoreMessage';
 
 import Log, { init as initLog, getLog } from '../utils/debug';
 import { getOrigin } from '../utils/networkUtils';
+import { load as loadStorage, PERMISSIONS_KEY } from './storage';
 
 let _core: Core;
 
@@ -78,9 +79,31 @@ const postMessage = (message: CoreMessage): void => {
         return;
     }
     // check if permissions to read is granted
+    const trustedHost: boolean = DataManager.getSettings('trustedHost');
+    const handshake: boolean = message.type === IFRAME.HANDSHAKE;
+    if (!trustedHost && !handshake && (message.event === TRANSPORT_EVENT)) {
+        return;
+    }
+    if (!trustedHost && message instanceof DeviceMessage && !filterDeviceEvent(message)) {
+        return;
+    }
     _log.debug('postMessage', message);
     window.top.postMessage(message, DataManager.getSettings('origin'));
 };
+
+const filterDeviceEvent = (message: DeviceMessage): boolean => {
+    if (message.payload && message.payload.features) {
+        const savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY);
+        const features: any = message.payload.features;
+        if (savedPermissions && Array.isArray(savedPermissions)) {
+            const devicePermissions: Array<Object> = savedPermissions.filter(p => {
+                return (p.origin === DataManager.getSettings('origin') && p.type === 'read' && p.device === features.device_id)
+            });
+            return (devicePermissions.length > 0);
+        }
+    }
+    return false;
+}
 
 const init = async (settings: any, origin: string) => {
     try {

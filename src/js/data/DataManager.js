@@ -79,10 +79,6 @@ export default class DataManager {
         return false;
     }
 
-    static hasPermissionToRead(): boolean {
-        return false;
-    }
-
     static getRequiredFirmware(): string {
         return '1.5.1';
     }

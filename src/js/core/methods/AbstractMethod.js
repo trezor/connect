@@ -4,12 +4,13 @@
 import Device from '../../device/Device';
 
 import * as UI from '../../constants/ui';
-import { UiMessage } from '../CoreMessage';
+import * as DEVICE from '../../constants/device';
+import { UiMessage, DeviceMessage } from '../CoreMessage';
 import type { CoreMessage, UiPromiseResponse } from '../CoreMessage';
 import type { Deferred } from '../../utils/deferred';
 
 // import { checkPermissions, savePermissions } from './permissions';
-import { load as loadStorage, save as saveStorage } from '../../iframe/storage';
+import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../iframe/storage';
 import { crypto } from 'bitcoinjs-lib-zcash';
 import DataManager from '../../data/DataManager';
 
@@ -18,8 +19,6 @@ export interface MethodInterface {
     +responseID: number;
     +device: Device;
 }
-
-const PERMISSIONS_KEY: string = 'trezorconnect_permissions';
 
 export default class AbstractMethod implements MethodInterface {
 
@@ -84,38 +83,59 @@ export default class AbstractMethod implements MethodInterface {
 
     checkPermissions(): void {
         const savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY);
-        const notPermitted: Array<string> = [ ...this.requiredPermissions ];
+        let notPermitted: Array<string> = [ ...this.requiredPermissions ];
         if (savedPermissions && Array.isArray(savedPermissions)) {
-            let p: string;
-            // clear not permitted from array
-            notPermitted.splice(0, notPermitted.length);
-            // filter only not permitted
-            for (p of this.requiredPermissions) {
-                const hash: string = this.__hash(p);
-                if (savedPermissions.indexOf(hash) < 0) {
-                    notPermitted.push(p);
-                }
+            // find permissions for this origin
+            const originPermissions: Array<Object> = savedPermissions.filter(p => p.origin === DataManager.getSettings('origin'));
+            if (originPermissions.length > 0) {
+                // check if permission was granted
+                notPermitted = notPermitted.filter(np => {
+                    const granted = originPermissions.find(p => p.type === np && p.device === this.device.features.device_id);
+                    return !granted;
+                });
             }
         }
         this.requiredPermissions = notPermitted;
     }
 
-    savePermissions(): void {
-        const savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY);
-        let perms: Array<string>;
-        if (savedPermissions && Array.isArray(savedPermissions)) {
-            // save unique permissions
-            let p: string;
-            for (p of this.requiredPermissions) {
-                const hash: string = this.__hash(p);
-                if (savedPermissions.indexOf(hash) < 0) {
-                    savedPermissions.push(hash);
-                }
+    savePermissions() {
+        let savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY);
+        if (!savedPermissions || !Array.isArray(savedPermissions)) {
+            savedPermissions = JSON.parse("[]");
+        }
+
+        let permissionsToSave: Array<Object> = this.requiredPermissions.map(p => {
+            return {
+                origin: DataManager.getSettings('origin'),
+                type: p,
+                device: this.device.features.device_id
             }
-            saveStorage(PERMISSIONS_KEY, savedPermissions);
-        } else {
-            const hashed: Array<string> = this.requiredPermissions.map(p => this.__hash(p));
-            saveStorage(PERMISSIONS_KEY, hashed);
+        });
+
+        // check if this will be first time granted permission to read this device
+        // if so, emit "device_connect" event because this wasn't send before
+        let emitEvent: boolean = false;
+        if (this.requiredPermissions.indexOf('read') >= 0) {
+            const wasAlreadyGranted = savedPermissions.filter(p => p.origin === DataManager.getSettings('origin') && p.type === 'read' && p.device === this.device.features.device_id);
+            if (wasAlreadyGranted.length < 1) {
+                emitEvent = true;
+            }
+        }
+
+
+        // find permissions for this origin
+        const originPermissions: Array<Object> = savedPermissions.filter(p => p.origin === DataManager.getSettings('origin'));
+        if (originPermissions.length > 0) {
+            permissionsToSave = permissionsToSave.filter(p2s => {
+                const granted = originPermissions.find(p => p.type === p2s.type && p.device === p2s.device);
+                return !granted;
+            });
+        }
+
+        saveStorage(PERMISSIONS_KEY, savedPermissions.concat(permissionsToSave));
+
+        if (emitEvent) {
+            this.postMessage(new DeviceMessage(DEVICE.CONNECT, this.device.toMessageObject()))
         }
     }
 

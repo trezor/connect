@@ -1,6 +1,9 @@
 /* @flow */
 'use strict';
 
+export const PERMISSIONS_KEY: string = 'trezorconnect_permissions';
+export const CONFIRMATION_KEY: string = 'trezorconnect_confirmations';
+
 export const save = (storageKey: string, value: any): void => {
     try {
         window.localStorage[storageKey] = JSON.stringify(value);
