@@ -117,22 +117,8 @@ export default class TrezorConnect extends TrezorBase {
         _core.handleMessage({ type: UI.CHANGE_SETTINGS, data: parseSettings(settings) }, true);
     }
 
-    // static async getPublicKey(params: Object): Promise<Object> {
-    //     return await TrezorConnect.__call( { method: 'getxpub', ...params } );
-    // }
-
-    // // TODO
-    // static async customCall(params: Object): Promise<Object> {
-    //     return await TrezorConnect.__call(params);
-    // }
-
-    static async accountDiscovery(params: Object): Promise<Object> {
-        return await this.__call({ method: 'discovery', ...params });
-    }
-
-    static uiMessage(message: Object): void {
+    static uiResponse(message: Object): void {
         // TODO: parse and validate incoming data injections
-        //
         _core.handleMessage({ event: UI_EVENT, ...message }, true);
     }
 
