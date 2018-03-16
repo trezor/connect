@@ -1,6 +1,6 @@
 /*global require, global, describe, it, beforeEach, expect, jasmine*/
 
-//import Trezor from '../js/entrypoints/connect';
+import Trezor from './connect.js';
 
 describe('Initializing', async () => {
 

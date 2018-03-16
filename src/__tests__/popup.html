@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>TrezorConnect | TREZOR</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="TREZOR info@trezor.io" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="title" content="TREZOR Connect" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="-1" />
+    <link href="./popup.css" rel="stylesheet"></head>
+</head>
+<body>
+    <header>
+        <figure>
+            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 163.7 41.9" width="100%" height="100%" preserveAspectRatio="xMinYMin meet">
+                <polygon points="101.1,12.8 118.2,12.8 118.2,17.3 108.9,29.9 118.2,29.9 118.2,35.2 101.1,35.2 101.1,30.7 110.4,18.1 101.1,18.1"/>
+                <path d="M158.8,26.9c2.1-0.8,4.3-2.9,4.3-6.6c0-4.5-3.1-7.4-7.7-7.4h-10.5v22.3h5.8v-7.5h2.2l4.1,7.5h6.7L158.8,26.9z M154.7,22.5 h-4V18h4c1.5,0,2.5,0.9,2.5,2.2C157.2,21.6,156.2,22.5,154.7,22.5z"/>
+                <path d="M130.8,12.5c-6.8,0-11.6,4.9-11.6,11.5s4.9,11.5,11.6,11.5s11.7-4.9,11.7-11.5S137.6,12.5,130.8,12.5z M130.8,30.3 c-3.4,0-5.7-2.6-5.7-6.3c0-3.8,2.3-6.3,5.7-6.3c3.4,0,5.8,2.6,5.8,6.3C136.6,27.7,134.2,30.3,130.8,30.3z"/>
+                <polygon points="82.1,12.8 98.3,12.8 98.3,18 87.9,18 87.9,21.3 98,21.3 98,26.4 87.9,26.4 87.9,30 98.3,30 98.3,35.2 82.1,35.2 "/>
+                <path d="M24.6,9.7C24.6,4.4,20,0,14.4,0S4.2,4.4,4.2,9.7v3.1H0v22.3h0l14.4,6.7l14.4-6.7h0V12.9h-4.2V9.7z M9.4,9.7 c0-2.5,2.2-4.5,5-4.5s5,2,5,4.5v3.1H9.4V9.7z M23,31.5l-8.6,4l-8.6-4V18.1H23V31.5z"/>
+                <path d="M79.4,20.3c0-4.5-3.1-7.4-7.7-7.4H61.2v22.3H67v-7.5h2.2l4.1,7.5H80l-4.9-8.3C77.2,26.1,79.4,24,79.4,20.3z M71,22.5h-4V18 h4c1.5,0,2.5,0.9,2.5,2.2C73.5,21.6,72.5,22.5,71,22.5z"/>
+                <polygon points="40.5,12.8 58.6,12.8 58.6,18.1 52.4,18.1 52.4,35.2 46.6,35.2 46.6,18.1 40.5,18.1 "/>
+            </svg>
+        </figure>
+        <aside>
+            <figure class="icon">
+                <img src="https://www.myetherwallet.com/images/myetherwallet-logo.png" width="auto" height="100%" alt="" />
+            </figure>
+            <div class="description">
+                <div class="operation"></div>
+                <div class="origin"></div>
+            </div>
+        </aside>
+    </header>
+    <main id="container">
+        <!-- default view: loader -->
+        <div class="loader">
+            <p></p>
+            <svg class="circular" viewBox="25 25 50 50" preserveAspectRatio="xMidYMid">
+                <circle class="route" cx="50" cy="50" r="20" fill="none" stroke="" stroke-width="1" stroke-miterlimit="10" />
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="1" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </main>
+
+    <!-- Views -->
+    <div id="views" style="display: none;">
+
+        <div class="unknown">
+            <h3>Unknown view</h3>
+            <p>view_name</p>
+        </div>
+
+        <!-- Loader -->
+        <div class="loader">
+            <p>Loading...</p>
+            <svg class="circular" viewBox="25 25 50 50" preserveAspectRatio="xMidYMid">
+                <circle class="route" cx="50" cy="50" r="20" fill="none" stroke="" stroke-width="1" stroke-miterlimit="10" />
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="1" stroke-miterlimit="10" />
+            </svg>
+        </div>
+        <!-- Loader: END -->
+
+        <!-- Connect -->
+        <div class="connect">
+            <div class="icon">
+                <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 110.000000 110.000000" preserveAspectRatio="xMidYMid meet">
+                    <g transform="translate(0.000000,110.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                        <path d="M412 875 c-75 -33 -212 -190 -212 -244 0 -18 39 -64 158 -184 86 -87 169 -165 184 -173 14 -7 61 -25 103 -39 70 -22 79 -23 104 -10 35 17 121 112 121 131 0 20 -39 142 -58 179 -18 37 -297 321 -334 341 -32 17 -25 17 -66 -1z m201 -193 c153 -153 158 -160 182 -231 14 -40 25 -78 25 -85 0 -6 -22 -33 -49 -60 l-49 -48 -73 23 c-84 26 -112 50 -294 238 -126 130 -124 121 -56 196 45 51 132 125 146 125 5 0 81 -71 168 -158z"/>
+                        <path d="M410 665 l-84 -84 45 -50 c24 -27 51 -49 60 -50 8 -1 53 37 99 84 l83 86 -48 49 c-27 28 -54 50 -60 50 -6 0 -48 -38 -95 -85z m147 8 c7 -6 13 -15 13 -20 0 -5 -31 -40 -70 -78 l-70 -69 -30 29 c-16 16 -30 33 -30 39 0 6 30 41 67 78 73 74 65 72 120 21z"/>
+                        <path d="M825 250 l-29 -30 27 -27 27 -28 32 32 32 32 -24 26 c-13 14 -26 25 -30 25 -3 0 -19 -14 -35 -30z m45 -19 c0 -12 -20 -25 -27 -18 -7 7 6 27 18 27 5 0 9 -4 9 -9z"/>
+                        <path d="M898 183 l-52 -53 34 -35 c19 -19 37 -35 40 -35 3 0 30 21 59 48 l53 47 -40 41 -41 41 -53 -54z m81 -12 c8 -14 4 -24 -17 -45 -32 -30 -44 -32 -62 -11 -11 13 -8 21 15 45 33 35 50 38 64 11z"/>
+                    </g>
+                </svg>
+            </div>
+            <p>Connect your <strong class="smallcaps">TREZOR</strong> device.</p>
+        </div>
+        <!-- Connect: END -->
+
+        <!-- Pin -->
+        <div class="pin">
+            <h3>Enter #TREZOR PIN</h3>
+            <p>The PIN layout is displayed on your TREZOR.</p>
+
+            <div class="pin-input-row">
+                <input class="pin-input" type="password" autocomplete="off" max-length="9" disabled />
+                <button type="button" class="pin-backspace transparent"></button>
+            </div>
+
+            <div class="pin-row">
+                <button type="button" data-value="7">&#8226;</button><button type="button" data-value="8">&#8226;</button><button type="button" data-value="9">&#8226;</button>
+            </div>
+            <div class="pin-row">
+                <button type="button" data-value="4">&#8226;</button><button type="button" data-value="5">&#8226;</button><button type="button" data-value="6">&#8226;</button>
+            </div>
+            <div class="pin-row">
+                <button type="button" data-value="1">&#8226;</button><button type="button" data-value="2">&#8226;</button><button type="button" data-value="3">&#8226;</button>
+            </div>
+
+            <div><button class="submit" type="button">Enter PIN</button></div>
+            <p>Not sure how PIN works? <a href="http://doc.satoshilabs.com/trezor-user/enteringyourpin.html" target="_blank" rel="noreferrer noopener">Learn more</a></p>
+        </div>
+        <!-- Pin: END -->
+
+        <!-- Pin invalid -->
+        <div class="invalid-pin">
+            <h3>Entered PIN is not correct. Retrying...</h3>
+        </div>
+        <!-- Pin invalid: END -->
+
+        <!-- Passphrase -->
+        <div class="passphrase">
+            <h3>Enter #TREZOR passphrase</h3>
+            <p>Note that passphrase is case-sensitive.</p>
+            <div class="row">
+                <label>Passphrase</label>
+                <div>
+                    <input
+                        type="password"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        data-lpignore="true"
+                        tabindex="1" />
+                </div>
+            </div>
+            <div class="row">
+                <label>Re-enter passphrase</label>
+                <div>
+                    <input
+                        type="password"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        data-lpignore="true"
+                        tabindex="2" />
+                </div>
+                <span class="error">Passphrases do not match</span>
+            </div>
+            <div class="row">
+                <label class="custom-checkbox">
+                    <input class="show-passphrase" type="checkbox" tabindex="3" value="on" />
+                    <span class="indicator"></span>Show passphrase</label>
+            </div>
+            <div>
+                <button type="button" class="submit" tabindex="4">Enter</button>
+            </div>
+            <div>
+                <p>If you want to access your default account</p>
+                <p><a>Leave passphrase blank</a></p>
+            </div>
+        </div>
+        <!-- Passphrase: END -->
+
+        <!-- Permissions -->
+        <div class="permissions">
+            <h3><span>HOST</span> is requesting permissions to:</h3>
+            <div class="permissions-list"></div>
+            <button class="confirm-button">Accept</button>
+            <button class="cancel-button">Cancel</button>
+        </div>
+        <!-- Permissions: END -->
+
+        <!-- Export xpub confirmation -->
+        <div class="export-xpub">
+            <h3>getxpubConfirmation</h3>
+            <button class="confirm-button">Export</button>
+            <button class="cancel-button">Cancel</button>
+        </div>
+        <!-- Export xpub confirmation: END -->
+
+        <!-- Device selection -->
+        <div class="select-device">
+            <h3>Select device:</h3>
+            <div class="select-device-list"></div>
+        </div>
+        <!-- Device selection: END -->
+
+        <!-- Account selection -->
+        <div class="select-account normal">
+            <h3>Select account:</h3>
+            <div class="account-type-tabs">
+                <div data-tab="normal" class="account-type-tab account-type-normal active">Accounts</div>
+                <div data-tab="legacy" class="account-type-tab account-type-legacy">Legacy Accounts</div>
+            </div>
+            <div class="accounts-list">
+                <div class="accounts-normal">
+                    <div class="account account-default">
+                        <button disabled>
+                            <span class="account-title">Account #1</span>
+                            <span class="account-status">Loading...</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="accounts-legacy">
+                    <div class="account account-default">
+                        <button disabled>
+                            <span class="account-title">Account #1</span>
+                            <span class="account-status">Loading...</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Account selection: END -->
+
+        <!-- Device selection -->
+        <div class="select-fee">
+            <h3>Select fee:</h3>
+            <div class="change-account">
+                <span>Change account</span>
+            </div>
+            <div class="select-fee-list">
+
+                <div class="fee">
+                    <button class="fee-custom-opener untouched">
+                        <span class="fee-name">custom</span>
+                        <span class="fee-insufficient-funds"></span>
+                        <span class="fee-size"></span>
+                        <span class="fee-minutes"></span>
+                    </button>
+                    <div class="fee-custom hidden">
+                        <div class="fee-custom-wrapper">
+                            <input type="text" name="custom-fee" value="1" data-lpignore="true" />
+                            <div class="fee-custom-label">sat/B</div>
+                            <button class="fee-custom-button" disabled="disabled">SEND</button>
+                        </div>
+                        <div class="fee-custom-warning">
+                            <strong>Setting custom fee is not recommended.</strong>
+                            If you set too low fee, it might get stuck forever.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Device selection: END -->
+
+        <div class="insufficient-funds">
+            <h3>Account funds are insufficient. Retrying...</h3>
+        </div>
+
+        <div class="amount-too-low">
+            <div class="alert-heading">Amount too low. Retrying...</div>
+        </div>
+
+        <!-- Simple message -->
+        <div class="simple-message">
+            <h3>Header</h3>
+            <div class="message">Message</div>
+        </div>
+        <!-- Simple message: END -->
+
+
+        <!-- Device in bootloader mode -->
+        <div class="bootloader">
+            <div>
+              Connected device is in<br> firmware update mode.<br> Please re-connect it.
+            </div>
+        </div>
+        <!-- Device in bootloader mode: END -->
+
+        <div class="initialize">
+            <div>
+                Your device needs to be initialized first. Please try again after
+                initializing at
+                <a href="https://wallet.trezor.io" onclick="closeWindow();" target="_blank">TREZOR Wallet</a>.
+            </div>
+        </div>
+
+        <div class="firmware">
+            <div>
+                The firmware of your device needs to be upgraded. Please try again after
+                upgrading at
+                <a href="https://wallet.trezor.io" onclick="closeWindow();" target="_blank">TREZOR Wallet</a>.
+            </div>
+        </div>
+
+        <div class="browser-not-supported">
+            <div>
+                Only Chrome, Firefox, Safari and Microsoft Edge browsers are supported. Sorry!
+            </div>
+            <button onclick="closeWindow();">CLOSE</button>
+        </div>
+
+        <div class="browser-mobile">
+            <div>
+                We are sorry, mobile phones are not yet supported. Please, try again on your computer.
+            </div>
+            <button onclick="closeWindow();">CLOSE</button>
+        </div>
+
+        <div class="transport">
+            <p>
+                To use your <strong class="smallcaps">TREZOR</strong> device, proceed
+                with instructions at
+                <a href="https://wallet.trezor.io" onclick="closeWindow();" target="_blank">TREZOR Wallet</a>
+                and try again afterwards.
+            </p>
+            <p>
+                <a href="https://trezor.io" onclick="closeWindow();" target="_blank">What is <span class="smallcaps">TREZOR</span>?</a>
+            </p>
+        </div>
+    </div>
+    <script type="text/javascript" src="./popup.js"></script>
+</body>
+</html>

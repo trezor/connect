@@ -17,29 +17,21 @@ module.exports = function(config) {
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ['jasmine'],
 
-        // list of files / patterns to load in the browser
-        files: [
-            //'src/js/trezorjs-npm.js',
-            //'src/js/index-npm.js',
-            'src/__tests__/*.test.js',
-            //{ pattern: 'src/js/index-npm.js', included: true, served: true, nocache: true },
-            //{ pattern: './src/data/coins.json', included: false, served: true, nocache: true },
-            //{ pattern: './src/data/latest.txt', included: false, served: true, nocache: true },
-            //{ pattern: './src/html/iframe.html', included: false, served: true, nocache: true },
-        ],
+        // plugins: ['karma-webpack', 'karma-jasmine', 'karma-chrome-launcher', 'karma-babel-preprocessor'],
 
-        proxies: {
-            //"/iframe2.html": "http://localhost:9876/base/src/html/iframe.html",
-        },
+        // list of files / patterns to load in the browser
+
 
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            './src/js/entrypoints/connect.js': ['webpack', 'sourcemap'],
+            //'./src/js/entrypoints/connect.js': ['webpack'],
+            // './src/js/iframe/iframe.js': ['webpack'],
+            // './src/js/popup/popup.js': ['webpack'],
+            './src/__tests__/*.test.js': ['webpack'],
+            //'./src/__tests__/*.test.js': ['webpack'],
             // './src/__tests__/*.test.js': ['babel'],
-            // './src/__tests__/*.test.js': ['babel'],
-            './src/__tests__/*.test.js': ['babel'],
-            './src/__tests__/**/*.test.js': ['babel'],
+            // './src/__tests__/**/*.test.js': ['babel'],
             //'src/js/*.js': ['webpack', 'sourcemap'],
             //'src/js/*.js': ['webpack', 'sourcemap'],
             // './src/js/iframe/iframe.js': ['webpack', 'sourcemap'],
@@ -58,13 +50,36 @@ module.exports = function(config) {
             }
         },
 
+        files: [
+            //'src/js/trezorjs-npm.js',
+            //'src/js/index-npm.js',
+            'src/__tests__/*.test.js',
+            //{ pattern: 'src/js/index-npm.js', included: true, served: true, nocache: true },
+            //'src/js/entrypoints/connect.js',
+
+            // { pattern: './src/__tests__/iframe.js', included: false, served: true },
+            { pattern: './src/js/iframe/iframe.js', included: false, served: true },
+            { pattern: './src/js/popup/popup.js', included: false, served: true },
+            { pattern: './src/data/coins.json', included: false, served: true, nocache: true },
+            { pattern: './src/data/latest.txt', included: false, served: true, nocache: true },
+            { pattern: './src/__tests__/iframe.html', included: false, served: true },
+            { pattern: './src/__tests__/popup.html', included: false, served: true },
+        ],
+
+        proxies: {
+            "/iframe.js": "http://localhost:8099/base/src/js/iframe/iframe.js",
+            "/iframe.html": "http://localhost:8099/base/src/__tests__/iframe.html",
+            "/popup.js": "http://localhost:8099/base/src/js/popup/popup.js",
+            "/popup.html": "http://localhost:8099/base/src/__tests__/popup.html",
+        },
+
         // test results reporter to use
         // possible values: 'dots', 'progress'
         // available reporters: https://npmjs.org/browse/keyword/karma-reporter
         reporters: ['progress'],
 
         // web server port
-        port: 9876,
+
 
         // enable / disable colors in the output (reporters and logs)
         colors: true,
@@ -108,41 +123,29 @@ module.exports = function(config) {
         // how many browser should be started simultaneous
         concurrency: Infinity,
 
-        hostname: 'tc.localhost',
+        hostname: 'test.localhost',
+        port: 8099,
 
         webpack: {
             cache: true,
             devtool: 'inline-source-map',
             entry: {
-                'iframe': './src/js/popup/popup.js',
+                'src/js/entrypoints/connect.js': './src/js/entrypoints/connect.js',
+                'src/js/iframe/iframe.js': ['babel-polyfill', './src/js/iframe/iframe.js'],
             },
-            output: {
-                filename: '[name].js',
-                path: './', //path.resolve(__dirname, 'src/__tests__'),
-                publicPath: './webpack',
-            },
+            // output: {
+            //     filename: 'js/[name].js',
+            //     path: './src/__tests__/'
+            // },
             module: {
-                rules: [
+                loaders: [
                     {
-                        test: /\.jsx?$/,
-                        //include: path.resolve(__dirname, '../src'),
-                        exclude: [
-                            /node_modules/,
-                            /.test.js$/
-                        ],
+                        test: /\.(js|jsx)$/,
+                        exclude: /(node_modules)/,
                         use: {
                             loader: 'babel-loader',
                             options: {
-                                presets: ['env'],
-                                plugins: [
-                                    "transform-class-properties",
-                                    "transform-object-rest-spread",
-                                    "transform-flow-strip-types",
-                                    ["transform-runtime", {
-                                      "polyfill": false,
-                                      "regenerator": true
-                                    }]
-                                ]
+
                             }
                         }
                     },
@@ -158,68 +161,22 @@ module.exports = function(config) {
                         })
                     },
                     {
-                        test: /\.(wasm)$/,
+                        test: /\.(ttf|eot|svg|woff|woff2)$/,
                         loader: 'file-loader',
                         query: {
-                            name: 'js/[name].[ext]',
+                            name: './fonts/[name].[hash].[ext]',
                         },
                     },
                 ]
             },
-            // ignoring "fs" import in fastxpub
-            node: {
-                fs: "empty"
-            },
-
             plugins: [
                 extractLess,
-                // new HtmlWebpackPlugin({
-                //     chunks: ['iframe'],
-                //     filename: 'iframe.html',
-                //     template: `./src/html/iframe.html`,
-                //     inject: true
-                // }),
             ]
-
-
-            // module: {
-            //     // preloaders: [
-            //     //     {
-            //     //         test: /-test\.js$/,
-            //     //         include: /src/,
-            //     //         exclude: /node_modules/,
-            //     //         loader: 'babel',
-            //     //         query: {
-            //     //             cacheDirectory: true,
-            //     //         },
-            //     //     },
-            //     //     {
-            //     //         test: /\.js?$/,
-            //     //         include: /src/,
-            //     //         exclude: /(node_modules|__tests__)/,
-            //     //         loader: 'babel-istanbul',
-            //     //         query: {
-            //     //             cacheDirectory: true,
-            //     //         },
-            //     //     },
-            //     // ],
-            //     loaders: [
-            //         {
-            //             test: /\.js$/,
-            //             include: path.resolve(__dirname, '../src'),
-            //             exclude: /(node_modules|__tests__)/,
-            //             loader: 'babel',
-            //             query: {
-            //                 cacheDirectory: true,
-            //             },
-            //         },
-            //     ],
-            // },
         },
 
-        webpackServer: {
-            noInfo: true //please don’t spam the console when running in karma!
-        },
+        // webpackServer: {
+        //     noInfo: false //please don’t spam the console when running in karma!
+        // },
 
         // httpsServerOptions: {
         //     key: fs.readFileSync('server.key', 'utf8'),
