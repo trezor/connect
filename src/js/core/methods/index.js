@@ -1,26 +1,20 @@
 /* @flow */
 'use strict';
 
-import type { CoreMessage, UiPromiseResponse } from '../CoreMessage';
-import type { MethodCollection } from './parameters';
-
-import getFeatures from './getFeatures';
-import requestDevice from './requestDevice';
+import type { CoreMessage } from '../CoreMessage';
 
 import AbstractMethod, { MethodInterface } from './AbstractMethod';
+import GetFeatures from './GetFeaturesNew';
+import GetPublicKey from './GetPublicKey';
 import CipherKeyValue from './CipherKeyValue';
 import EthereumGetAddress from './EthereumGetAddress';
 import EthereumSignTx from './EthereumSignTx';
 import EthereumSignMessage from './EthereumSignMessage';
 import EthereumVerifyMessage from './EthereumVerifyMessage';
 
-
-const methods: {[k: string]: MethodCollection} = {
-    'getFeatures': getFeatures,
-    'requestDevice': requestDevice,
-};
-
 const classes: {[k: string]: any} = {
+    'getFeatures': GetFeatures,
+    'getPublicKey': GetPublicKey,
     'cipherKeyValue': CipherKeyValue,
     'ethereumGetAddress': EthereumGetAddress,
     'ethereumSignTx': EthereumSignTx,
@@ -44,8 +38,4 @@ export const find = (message: CoreMessage): AbstractMethod => {
     throw new Error(`Method ${message.payload.method} not found`);
 }
 
-
 export default find;
-
-
-
