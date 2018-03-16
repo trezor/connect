@@ -198,6 +198,18 @@ export type PublicKey = {
     xpub: string,
 };
 
+// combined PublicKey and bitcoin.HDNode
+export type HDNodeResponse = {
+    path: Array<number>,
+    childNum: number,
+    xpub: string,
+    xpubFormatted: string,
+    chainCode: string,
+    publicKey: string,
+    fingerprint: number,
+    depth: number,
+};
+
 // this is what Trezor asks for
 export type SignTxInfoToTrezor = {
     inputs: Array<TransactionInput>,

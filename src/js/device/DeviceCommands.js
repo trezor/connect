@@ -113,27 +113,21 @@ export default class DeviceCommands {
     }
 
     async getPublicKey(
-        address: Array<number> | string,
+        address_n: Array<number>,
         coin?: string
-    ): Promise<DefaultMessageResponse> {
-        // const coin_name = coin ? coinName(coin) : 'Bitcoin';
-        if (typeof address === 'string') {
-            address = getHDPath(address);
-        }
-
-        const resp: DefaultMessageResponse = await this.typedCall('GetPublicKey', 'PublicKey', {
-            address_n: address,
+    ): Promise<MessageResponse<trezor.PublicKey>> {
+        const response: MessageResponse<trezor.PublicKey> = await this.typedCall('GetPublicKey', 'PublicKey', {
+            address_n: address_n,
             coin_name: coin,
         });
-        resp.message.node.path = address || [];
-        return resp;
+        return response;
     }
 
     // Validation of xpub
     async getHDNode(
         path: Array<number>,
         coinInfo: CoinInfo
-    ): Promise<bitcoin.HDNode> {
+    ): Promise<trezor.HDNodeResponse> {
         const suffix: number = 0;
         const childPath: Array<number> = path.concat([suffix]);
 
@@ -143,12 +137,23 @@ export default class DeviceCommands {
         const resKey: MessageResponse<trezor.PublicKey> = await this.getPublicKey(path, 'Bitcoin');
         const childKey: MessageResponse<trezor.PublicKey> = await this.getPublicKey(childPath, 'Bitcoin');
 
-        const resNode: bitcoin.HDNode = hdnodeUtils.pubKey2bjsNode(resKey, coinInfo.network);
-        const childNode: bitcoin.HDNode = hdnodeUtils.pubKey2bjsNode(childKey, coinInfo.network);
+        const resNode: bitcoin.HDNode = hdnodeUtils.pubKey2bjsNode(resKey.message, coinInfo.network);
+        const childNode: bitcoin.HDNode = hdnodeUtils.pubKey2bjsNode(childKey.message, coinInfo.network);
 
         hdnodeUtils.checkDerivation(resNode, childNode, suffix);
 
-        return resNode;
+        const publicKey: trezor.PublicKey = resKey.message;
+
+        return {
+            path,
+            childNum: publicKey.node.child_num,
+            xpub: publicKey.xpub,
+            xpubFormatted: hdnodeUtils.convertXpub(publicKey.xpub, coinInfo.network),
+            chainCode: publicKey.node.chain_code,
+            publicKey: publicKey.node.public_key,
+            fingerprint: publicKey.node.fingerprint,
+            depth: publicKey.node.depth,
+        }
     }
 
     async signTx(

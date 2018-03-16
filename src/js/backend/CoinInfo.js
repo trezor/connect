@@ -131,21 +131,26 @@ export const getCoinInfoByHash = (hash: string, networkInfo: any): CoinInfo => {
     return result;
 };
 
-export const getCoinInfoByCurrency = (currency: string): ?CoinInfo => {
-    // TODO: Ethereum & NEM
+export const getCoinInfoByCurrency = (currency: string): CoinInfo => {
     const lower: string = currency.toLowerCase();
-    return getCoins().find((coin: CoinInfo) => (
+    const coinInfo: ?CoinInfo = getCoins().find((coin: CoinInfo) => (
         coin.name.toLowerCase() === lower ||
         coin.shortcut.toLowerCase() === lower ||
         coin.label.toLowerCase() === lower
     ));
+    if (!coinInfo) {
+        return cloneCoinInfo(coins[0]);
+    }
+    return coinInfo;
 };
 
-// returned CoinInfo could be generated not from coins.json
 export const getCoinInfoFromPath = (path: Array<number>): ?CoinInfo => {
     const coinInfo: ?CoinInfo = getCoins().find((coin: CoinInfo) => toHardened(coin.bip44) === path[1]);
     if (coinInfo && fromHardened(path[0]) === 44) {
         coinInfo.network.bip32.public = parseInt(coinInfo.legacyPubMagic, 16);
+    }
+    if (!coinInfo) {
+        return cloneCoinInfo(coins[0]);
     }
     return coinInfo;
 };

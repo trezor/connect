@@ -26,6 +26,10 @@ export default class Trezor {
         return await this.__call({ method: 'cipherKeyValue', ...params });
     }
 
+    static async getPublicKey(params: Object): Promise<Object> {
+        return await this.__call({ method: 'getPublicKey', ...params });
+    }
+
     static async getFeatures(params: Object): Promise<Object> {
         return await this.__call({ method: 'getFeatures', ...params });
     }
@@ -55,9 +59,7 @@ export default class Trezor {
         return await this.__call({ method: 'requestLogin', ...params });
     }
 
-    static async getPublicKey(params: Object): Promise<Object> {
-        return await this.__call({ method: 'getxpub', ...params });
-    }
+
 
     static async composeTransaction(params: Object): Promise<Object> {
         return await this.__call({ method: 'composetx', ...params });
