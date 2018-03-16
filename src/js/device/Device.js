@@ -8,6 +8,7 @@ import DeviceCommands from './DeviceCommands';
 import type { Features } from './trezorTypes';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
+import * as UI from '../constants/ui';
 import * as DEVICE from '../constants/device';
 import * as ERROR from '../constants/errors';
 import { create as createDeferred } from '../utils/deferred';
@@ -18,7 +19,7 @@ import Log, { init as initLog } from '../utils/debug';
 const FEATURES_LIFETIME: number = 10 * 60 * 1000; // 10 minutes
 
 // custom log
-const _log: Log = initLog('Device', true);
+const _log: Log = initLog('Device');
 
 export type RunOptions = {
 
