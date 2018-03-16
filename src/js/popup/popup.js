@@ -6,6 +6,7 @@ import { parseMessage, UiMessage } from '../core/CoreMessage';
 import type { CoreMessage } from '../core/CoreMessage';
 import DataManager from '../data/DataManager';
 import { parse as parseSettings } from '../entrypoints/ConnectSettings';
+import type { ConnectSettings } from '../entrypoints/ConnectSettings';
 
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
@@ -29,16 +30,16 @@ const initLoaderView = (message: any): void => {
 
 const handleMessage = (event: MessageEvent): void => {
 
-    // first message from connect.js (parent window)
-    if (event.data && event.data.type === POPUP.HANDSHAKE && event.data.settings) {
-        init(event.data.settings);
+    console.log('handleMessage', event.data);
+
+    // catch first message from connect.js (parent window)
+    if (!DataManager.getSettings('origin') && event.data && event.data.type === POPUP.HANDSHAKE && event.data.settings) {
+        init(event.data.settings, event.origin);
         return;
     }
 
     // ignore messages from origin other then parent.window or white listed
-    if (getOrigin(event.origin) !== getOrigin(document.referrer) && DataManager.getConfig().whitelist.indexOf(event.origin) < 0) return;
-
-    console.log('handleMessage', event.data);
+    if (getOrigin(event.origin) !== getOrigin(document.referrer) && !DataManager.isWhitelisted(event.origin)) return;
 
     const message: CoreMessage = parseMessage(event.data);
 
@@ -107,9 +108,12 @@ const handleMessage = (event: MessageEvent): void => {
     }
 };
 
-const init = async (settings: any) => {
+const init = async (settings: any, origin: string) => {
 
-    await DataManager.load(parseSettings(settings));
+    const parsedSettings: ConnectSettings = parseSettings(settings);
+    parsedSettings.origin = origin;
+
+    await DataManager.load(parsedSettings);
     view.init();
 
     postMessage(new UiMessage(POPUP.HANDSHAKE));

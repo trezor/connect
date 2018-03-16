@@ -16,7 +16,6 @@ import Log, { init as initLog, getLog } from '../utils/debug';
 import { getOrigin } from '../utils/networkUtils';
 
 let _core: Core;
-let _origin: string;
 
 // custom log
 const _log: Log = initLog('IFrame');
@@ -31,10 +30,9 @@ const handleMessage = (event: MessageEvent): void => {
     // ignore messages from myself (chrome bug?)
     if (event.source === window) return;
 
-    // first message from connect.js (parent window)
-    if (!_origin && event.data && event.data.type === IFRAME.HANDSHAKE && event.data.settings) {
-        _origin = event.origin;
-        init(event.data.settings);
+    // catch first message from connect.js (parent window)
+    if (!DataManager.getSettings('origin') && event.data && event.data.type === IFRAME.HANDSHAKE && event.data.settings) {
+        init(event.data.settings, event.origin);
         return;
     }
 
@@ -42,7 +40,7 @@ const handleMessage = (event: MessageEvent): void => {
     // if (!event.isTrusted) return;
 
     // is message from popup or extension
-    const isTrustedDomain: boolean = (event.origin === window.location.origin || DataManager.getConfig().whitelist.indexOf(event.origin) >= 0);
+    const isTrustedDomain: boolean = (event.origin === window.location.origin || DataManager.isWhitelisted(event.origin));
 
     // ignore messages from domain other then parent.window or popup.window or chrome extension
     if (getOrigin(event.origin) !== getOrigin(document.referrer) && !isTrustedDomain) return;
@@ -79,13 +77,16 @@ const postMessage = (message: CoreMessage): void => {
         _log.error('Cannot reach window.top');
         return;
     }
+    // check if permissions to read is granted
     _log.debug('postMessage', message);
-    window.top.postMessage(message, _origin);
+    window.top.postMessage(message, DataManager.getSettings('origin'));
 };
 
-const init = async (settings: any) => {
+const init = async (settings: any, origin: string) => {
     try {
         const parsedSettings: ConnectSettings = parseSettings(settings);
+        parsedSettings.origin = origin; // set origin manually to avoid injection from settings
+
         _log.enabled = _logFromPopup.enabled = parsedSettings.debug;
         _core = await initCore(parsedSettings);
         _core.on(CORE_EVENT, postMessage);

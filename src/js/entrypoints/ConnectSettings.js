@@ -4,7 +4,7 @@
 export type ConnectSettings = {
     // debug: boolean | {[k: string]: boolean};
     debug: boolean;
-    origin: string;
+    origin: ?string;
     trustedHost: boolean;
     iframeSrc: string;
     popup: boolean;
@@ -28,7 +28,7 @@ const DEFAULT_DOMAIN: string = '';
 const initialSettings: ConnectSettings = {
     configSrc: 'data/config.json', // constant
     debug: false,
-    origin: window.location.origin,
+    origin: null,
     trustedHost: false,
     iframeSrc: `${ DEFAULT_DOMAIN }iframe.html`,
     popup: true,
@@ -56,15 +56,6 @@ export const parse = (input: ?Object): ConnectSettings => {
             settings.debug = input.debug === 'true';
         }
     }
-
-    if (input.hasOwnProperty('origin')) {
-        settings.origin = input.origin;
-    }
-
-    const hostname: string = window.location.hostname;
-    const host: string = hostname.substring(hostname.lastIndexOf('.', hostname.lastIndexOf('.') - 1) + 1);
-
-    settings.trustedHost = host === 'localhost' || host === 'trezor.io';
 
     if (typeof input.iframeSrc === 'string') {
         // TODO: escape string
