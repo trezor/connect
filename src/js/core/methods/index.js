@@ -4,7 +4,7 @@
 import type { CoreMessage } from '../CoreMessage';
 
 import AbstractMethod, { MethodInterface } from './AbstractMethod';
-import GetFeatures from './GetFeaturesNew';
+import GetFeatures from './GetFeatures';
 import GetPublicKey from './GetPublicKey';
 import CipherKeyValue from './CipherKeyValue';
 import EthereumGetAddress from './EthereumGetAddress';
