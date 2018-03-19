@@ -28,7 +28,7 @@ export type DefaultMessageResponse = MessageResponse<Object>;
 
 function assertType(res: DefaultMessageResponse, resType: string) {
     if (res.type !== resType) {
-        throw new TypeError(`Response of unexpected type: ${res.type}`);
+        throw new TypeError(`Response of unexpected type: ${res.type}. Should be ${resType}`);
     }
 }
 
