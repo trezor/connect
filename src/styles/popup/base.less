@@ -25,6 +25,7 @@ html {
 }
 
 body {
+    border: 1px solid @color_text_primary;
     position: relative;
     min-width: 450px;
     max-width: 640px;
@@ -38,8 +39,8 @@ body {
 main {
     width: 100%;
     min-height: 100%;
-    padding-top: 54px;
-    padding-bottom: 28px;
+    //padding-top: 54px;
+    //padding-bottom: 28px;
     text-align: center;
     display: flex;
     align-items: center;
@@ -50,9 +51,20 @@ main {
     display: none;
 }
 
+p {
+    margin: 5px 0;
+    font-size: 12px;
+    color: @color_text_secondary;
+}
+
+h2 {
+    font-weight: 600;
+    font-size: 22px;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
 
 h3 {
-    font-weight: 500;
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
