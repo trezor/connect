@@ -6,6 +6,7 @@ export type ConnectSettings = {
     debug: boolean;
     origin: ?string;
     trustedHost: boolean;
+    connectSrc: string;
     iframeSrc: string;
     popup: boolean;
     popupSrc: string;
@@ -23,13 +24,14 @@ export type ConnectSettings = {
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
-const DEFAULT_DOMAIN: string = '';
+const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/5/';
 
 const initialSettings: ConnectSettings = {
     configSrc: 'data/config.json', // constant
     debug: false,
     origin: null,
     trustedHost: false,
+    connectSrc: DEFAULT_DOMAIN,
     iframeSrc: `${ DEFAULT_DOMAIN }iframe.html`,
     popup: true,
     popupSrc: `${ DEFAULT_DOMAIN }popup.html`,
@@ -57,15 +59,22 @@ export const parse = (input: ?Object): ConnectSettings => {
         }
     }
 
-    if (typeof input.iframeSrc === 'string') {
-        // TODO: escape string
-        settings.iframeSrc = input.iframeSrc;
+    if (typeof input.connectSrc === 'string') {
+        // TODO: escape string, validate url
+        settings.connectSrc = input.connectSrc;
+        settings.iframeSrc = `${ input.connectSrc }iframe.html`;
+        settings.popupSrc = `${ input.connectSrc }popup.html`;
     }
 
-    if (typeof input.popupSrc === 'string') {
-        // TODO: escape string
-        settings.popupSrc = input.popupSrc;
-    }
+    // if (typeof input.iframeSrc === 'string') {
+    //     // TODO: escape string
+    //     settings.iframeSrc = input.iframeSrc;
+    // }
+
+    // if (typeof input.popupSrc === 'string') {
+    //     // TODO: escape string
+    //     settings.popupSrc = input.popupSrc;
+    // }
 
     if (typeof input.coinsSrc === 'string') {
         // TODO: escape string
