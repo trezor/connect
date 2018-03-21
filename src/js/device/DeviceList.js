@@ -17,6 +17,9 @@ import Log, { init as initLog } from '../utils/debug';
 import { resolveAfter } from '../utils/promiseUtils';
 import { httpRequest } from '../utils/networkUtils';
 
+/* $FlowIssue loader notation */
+import SharedConnectionWorker from 'sharedworker-loader?name=js/shared-connection-worker.[hash].js!trezor-link/lib/lowlevel/sharedConnectionWorker';
+
 const { BridgeV1, BridgeV2, Extension, Lowlevel, WebUsb, Fallback, Parallel } = TrezorLink;
 
 export type DeviceListOptions = {
@@ -41,10 +44,10 @@ export function setSharedWorkerFactory(swf: ?() => ?SharedWorker) {
 }
 
 function sharedWorkerFactoryWrap() {
-    if (sharedWorkerFactory == null) {
-        return null;
+    if (typeof window.SharedWorker !== 'undefined') {
+        return new SharedConnectionWorker();
     } else {
-        return sharedWorkerFactory();
+        return null;
     }
 }
 

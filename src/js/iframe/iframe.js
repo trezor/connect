@@ -2,6 +2,7 @@
 'use strict';
 
 import { LOG } from '../constants/popup';
+import * as POPUP from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
 import * as TRANSPORT from '../constants/transport';
 
@@ -9,7 +10,7 @@ import { parse as parseSettings } from '../entrypoints/ConnectSettings';
 import DataManager from '../data/DataManager';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
 
-import { Core, CORE_EVENT, init as initCore } from '../core/Core';
+import { Core, CORE_EVENT, init as initCore, initTransport } from '../core/Core';
 import { parseMessage, UiMessage, ErrorMessage, ResponseMessage, TransportMessage, CoreMessage, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, DeviceMessage } from '../core/CoreMessage';
 
 import Log, { init as initLog, getLog } from '../utils/debug';
@@ -30,6 +31,13 @@ const _logFromPopup: Log = initLog('Popup');
 const handleMessage = (event: MessageEvent): void => {
     // ignore messages from myself (chrome bug?)
     if (event.source === window) return;
+
+    // respond to call
+    if (!_core && event.data && event.data.type === IFRAME.CALL && typeof event.data.id === 'number') {
+        postMessage(new ResponseMessage(event.data.id, false, { error: "Core not initialized yet!"} ) );
+        postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
+        return;
+    }
 
     // catch first message from connect.js (parent window)
     if (!DataManager.getSettings('origin') && event.data && event.data.type === IFRAME.HANDSHAKE && event.data.settings) {
@@ -113,6 +121,7 @@ const init = async (settings: any, origin: string) => {
         _log.enabled = _logFromPopup.enabled = parsedSettings.debug;
         _core = await initCore(parsedSettings);
         _core.on(CORE_EVENT, postMessage);
+        await initTransport(parsedSettings);
         postMessage(new UiMessage(IFRAME.HANDSHAKE));
     } catch (error) {
         // TODO: kill app

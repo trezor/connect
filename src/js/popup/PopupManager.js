@@ -8,7 +8,7 @@ import type { ConnectSettings } from '../entrypoints/ConnectSettings';
 import type { CoreMessage } from '../core/CoreMessage';
 import { getOrigin } from '../utils/networkUtils';
 
-const POPUP_WIDTH: number = 600;
+const POPUP_WIDTH: number = 640;
 const POPUP_HEIGHT: number = 500;
 const POPUP_REQUEST_TIMEOUT: number = 400;
 const POPUP_CLOSE_INTERVAL: number = 500;
@@ -97,7 +97,9 @@ export default class PopupManager extends EventEmitter {
         }
         window.addEventListener('message', popupOpenedHandler, false);
 
-        this._window = window.open(this.src, '_blank', opts);
+        this._window = window.open('', '_blank', opts);
+        // this._window.foo = function() { console.log("foo!") } // not sure if needed
+        this._window.location.href = this.src; // otherwise android/chrome loose window.opener reference
 
         this.closeInterval = window.setInterval(() => {
             if (this._window && this._window.closed) {

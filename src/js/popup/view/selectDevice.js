@@ -3,30 +3,77 @@
 
 import { UiMessage } from '../../core/CoreMessage';
 import * as UI from '../../constants/ui';
-import { container, showView, postMessage } from './common';
+import { container, iframe, showView, postMessage } from './common';
+import DataManager from '../../data/DataManager';
 
-export const selectDevice = (list: ?Object): void => {
-    if (!list) return;
 
-    if (list.length === 0) {
+const initWebUsbButton = (webusb: boolean): void => {
+    if (!webusb || !iframe) return;
+
+    const webusbContainer: HTMLElement = container.getElementsByClassName('webusb')[0];
+    webusbContainer.style.display = 'block';
+    const button: HTMLButtonElement = webusbContainer.getElementsByTagName('button')[0];
+    button.onclick = async () => {
+        const x = window.screenLeft;
+        const y = window.screenTop;
+        const restorePosition = (): void => {
+            window.resizeTo(640, 500);
+            window.moveTo(x, y);
+        }
+
+        window.resizeTo(100, 100);
+        window.moveTo(screen.width, screen.height);
+
+        var usb = iframe.clientInformation.usb;
+        try {
+            await usb.requestDevice( { filters: DataManager.getConfig().webusb } );
+            restorePosition();
+        } catch (error) {
+            console.log("ERROR", error)
+            restorePosition();
+        }
+    }
+}
+
+export const selectDevice = (payload: ?Object): void => {
+    if (!payload) return;
+
+    if (payload.devices.length === 0) {
         showView('connect');
+        initWebUsbButton(payload.webusb);
         return;
     }
-    showView('select_device');
 
-    const buttonsContainer: HTMLElement = container.getElementsByClassName('select_device_list')[0];
+    showView('select-device');
+    initWebUsbButton(payload.webusb);
+
+    const buttonsContainer: HTMLElement = container.getElementsByClassName('select-device-list')[0];
+    buttonsContainer.innerHTML = '';
+
+    const checkbox: ?HTMLElement = container.querySelector('input[type=checkbox]');
+
 
     const handleClick = (event: MouseEvent) => {
         if (event.target instanceof HTMLElement) {
-            postMessage(new UiMessage(UI.RECEIVE_DEVICE, event.target.getAttribute('data-path')));
+
         }
-        showView('loader');
+
     };
-    for (const dev of list) {
+    for (const dev of payload.devices) {
         const button: HTMLButtonElement = document.createElement('button');
         button.innerHTML = dev.label;
-        button.onclick = handleClick;
-        button.setAttribute('data-path', dev.path);
+        button.onclick = (event: MouseEvent) => {
+            postMessage(new UiMessage(UI.RECEIVE_DEVICE, {
+                remember: (checkbox && checkbox.checked),
+                device: dev
+            }));
+            showView('loader');
+        }
+        button.className = 'white';
+        if (dev.features && dev.features.major_version === 2) {
+            button.className = 'white trezorT';
+        }
+        // button.setAttribute('data-path', dev.path);
 
         // create new device button
         const div: HTMLDivElement = document.createElement('div');

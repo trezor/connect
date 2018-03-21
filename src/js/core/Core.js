@@ -38,6 +38,7 @@ let _deviceList: ?DeviceList; // Instance of DeviceList
 let _popupPromise: ?Deferred<void>; // Waiting for popup handshake
 let _uiPromises: Array<Deferred<UiPromiseResponse>> = []; // Waiting for ui response
 const _callMethods: Array<AbstractMethod> = [];
+let _preferredDevice: any; // TODO: type
 
 export const CORE_EVENT: string = 'CORE_EVENT';
 
@@ -175,13 +176,15 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
         throw ERROR.NO_TRANSPORT;
     }
 
+    const isWebUsb: boolean = _deviceList.transportVersion().indexOf('webusb') >= 0;
+
     let device: ?Device;
     if (method.devicePath) {
         device = _deviceList.getDevice(method.devicePath);
     } else {
         let devicesCount: number = _deviceList.length();
         let selectedDevicePath: string;
-        if (devicesCount === 1) {
+        if (devicesCount === 1 && !isWebUsb) {
             // there is only one device available. use it
             selectedDevicePath = _deviceList.getFirstDevicePath();
             device = _deviceList.getDevice(selectedDevicePath);
@@ -198,19 +201,25 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
             // check again for available devices
             // there is a possible race condition before popup open
             devicesCount = _deviceList.length();
-            if (devicesCount === 1) {
+            if (devicesCount === 1 && !isWebUsb) {
                 // there is one device available. use it
                 selectedDevicePath = _deviceList.getFirstDevicePath();
                 device = _deviceList.getDevice(selectedDevicePath);
             } else {
                 // request select device view
-                postMessage(new UiMessage(UI.SELECT_DEVICE, _deviceList.asArray()));
+                postMessage(new UiMessage(UI.SELECT_DEVICE, {
+                    webusb: isWebUsb,
+                    devices: _deviceList.asArray()
+                }));
 
                 // wait for device selection
                 const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(method.responseID, UI.RECEIVE_DEVICE);
                 if (uiPromise) {
                     const uiResp: UiPromiseResponse = await uiPromise.promise;
-                    selectedDevicePath = uiResp.payload;
+                    if (uiResp.payload.remember) {
+                        _preferredDevice = uiResp.payload.device;
+                    }
+                    selectedDevicePath = uiResp.payload.device.path;
                     device = _deviceList.getDevice(selectedDevicePath);
                 }
             }
@@ -293,6 +302,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     const responseID: number = message.id;
 
+    if (_preferredDevice && !message.payload.device) {
+        message.payload.device = _preferredDevice;
+    }
+
     // find method and parse incoming params
     let method: AbstractMethod;
     try {
@@ -351,6 +364,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         } else {
             postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
         }
+        // TODO: this should not be returned before user agrees on "read" perms...
         postMessage(new ResponseMessage(responseID, false, { error: error.message }));
         throw error;
     }
@@ -637,9 +651,14 @@ const onPopupClosed = (): void => {
                 const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, DEVICE.DISCONNECT);
                 if (uiPromise) {
                     uiPromise.resolve({ event: ERROR.POPUP_CLOSED.message, payload: null });
+                } else {
+                    _callMethods.forEach(m => {
+                        postMessage(new ResponseMessage(m.responseID, false, { error: ERROR.POPUP_CLOSED.message }));
+                    });
                 }
             }
         });
+
         cleanup();
     // Waiting for device. Throw error before onCall try/catch block
     } else {
@@ -667,14 +686,19 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceDescription = null
     const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, UI.RECEIVE_DEVICE);
     if (uiPromise && _deviceList) {
         const list: Array<Object> = _deviceList.asArray();
-        if (list.length === 1) {
+        const isWebUsb: boolean = _deviceList.transportVersion().indexOf('webusb') >= 0;
+
+        if (list.length === 1 && !isWebUsb) {
             // there is only one device. use it
             // resolve uiPromise to looks like it's a user choice (see: handleMessage function)
-            uiPromise.resolve({ event: UI.RECEIVE_DEVICE, payload: list[0].path });
+            uiPromise.resolve({ event: UI.RECEIVE_DEVICE, payload: { device: list[0].path } });
             removeUiPromise(uiPromise);
         } else {
             // update device selection list view
-            postMessage(new UiMessage(UI.SELECT_DEVICE, list));
+            postMessage(new UiMessage(UI.SELECT_DEVICE, {
+                webusb: isWebUsb,
+                devices: list
+            }));
         }
     }
 
@@ -690,6 +714,10 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceDescription = null
                 shouldClosePopup = true;
             }
         });
+
+        if (_preferredDevice && _preferredDevice.path === path) {
+            _preferredDevice = null;
+        }
 
         if (shouldClosePopup) {
             closePopup();
@@ -782,7 +810,7 @@ export class Core extends EventEmitter {
  * @returns {Core}
  * @memberof Core
  */
-const initCore = (): Core => {
+export const initCore = (): Core => {
     _core = new Core();
     return _core;
 };
@@ -800,13 +828,6 @@ export const init = async (settings: ConnectSettings): Promise<Core> => {
         _log.enabled = settings.debug;
         await DataManager.load(settings);
         await initCore();
-        if (!settings.transportReconnect) {
-            // try only once, if it fails kill and throw initialization error
-            await initDeviceList(settings);
-        } else {
-            // don't wait for DeviceList result, further communication will be thru TRANSPORT events
-            initDeviceList(settings);
-        }
         return _core;
     } catch (error) {
         // TODO: kill app
@@ -814,3 +835,18 @@ export const init = async (settings: ConnectSettings): Promise<Core> => {
         throw error;
     }
 };
+
+export const initTransport = async (settings: ConnectSettings): Promise<void> => {
+    try {
+        if (!settings.transportReconnect) {
+            // try only once, if it fails kill and throw initialization error
+            await initDeviceList(settings);
+        } else {
+            // don't wait for DeviceList result, further communication will be thru TRANSPORT events
+            initDeviceList(settings);
+        }
+    } catch (error) {
+        _log.log('initTransport', error);
+        throw error;
+    }
+}

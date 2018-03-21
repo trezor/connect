@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>TrezorConnect | TREZOR</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <meta name="author" content="TREZOR info@trezor.io" />
+    <meta name="robots" content="index, follow" />
+    <meta name="title" content="TrezorConnect | TREZOR" />
+    <meta http-equiv="Cache-control" content="no-cache" />
+    <meta http-equiv="pragma" content="no-cache" />
+</head>
+<body>
+    <button id="webusb">WEBUSB</button>
+    <script>
+        document.getElementById('webusb').onclick = function(){
+            console.log("click!")
+
+            var TREZOR_DESCS = [
+                // TREZOR v1
+                { vendorId: 0x534c, productId: 0x0001 },
+                // TREZOR v2 Bootloader
+                { vendorId: 0x1209, productId: 0x53c0 },
+                // TREZOR v2 Firmware
+                { vendorId: 0x1209, productId: 0x53c1 },
+            ];
+
+            var usb = navigator.usb;
+            try {
+                usb.requestDevice({filters: TREZOR_DESCS}).then(function(r){
+                    console.log("REQ", r);
+                });
+
+                //const devices = await usb.getDevices();
+                //postMessage(new UiMessage('WEBUSB'));
+            } catch (error) {
+                //postMessage(new UiMessage('WEBUSB-ERROR'));
+                console.log("ERROR")
+            }
+        }
+    </script>
+</body>
+</html>
