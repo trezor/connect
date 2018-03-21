@@ -62,6 +62,7 @@ module.exports = {
     },
     plugins: [
         extractLess,
+        new webpack.IgnorePlugin(/\/iconv-loader$/),
         new HtmlWebpackPlugin({
             chunks: ['iframe'],
             filename: `iframe.html`,
