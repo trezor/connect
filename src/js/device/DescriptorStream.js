@@ -8,6 +8,7 @@ import * as TRANSPORT from '../constants/transport';
 import * as DEVICE from '../constants/device';
 
 import Log, { init as initLog } from '../utils/debug';
+import DataManager from '../data/DataManager';
 
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
@@ -32,8 +33,7 @@ export default class DescriptorStream extends EventEmitter {
     listening: boolean = false;
 
     // if transport fetch API rejects (when computer goes to sleep)
-    failedToFetchTries: number = 0;
-    failedToFetchTriesLimit: number = 2;
+    failedToFetchTimestamp: number = 0;
 
     // null if nothing
     current: ?Array<DeviceDescriptor> = null;
@@ -42,6 +42,7 @@ export default class DescriptorStream extends EventEmitter {
     constructor(transport: Transport) {
         super();
         this.transport = transport;
+        logger.enabled = DataManager.getSettings('debug');
     }
 
     // emits changes
@@ -62,11 +63,13 @@ export default class DescriptorStream extends EventEmitter {
             this.upcoming = descriptors;
             logger.debug('Listen result', descriptors);
             this._reportChanges();
-            this.failedToFetchTries = 0;
+            this.failedToFetchTimestamp = 0;
             if (this.listening) this.listen(); // handlers might have called stop()
         } catch (error) {
-            if (error && typeof error.message === 'string' && error.message.toLowerCase() === 'failed to fetch' && this.failedToFetchTries < this.failedToFetchTriesLimit) {
-                this.failedToFetchTries++;
+            const ts: number = new Date().getTime();
+            logger.debug('Listen error', error.message, this.failedToFetchTimestamp, ts - this.failedToFetchTimestamp);
+            if (error && typeof error.message === 'string' && error.message.toLowerCase() === 'failed to fetch' && ts - this.failedToFetchTimestamp > 500) {
+                this.failedToFetchTimestamp = ts;
                 if (this.listening) this.listen();
             } else {
                 this.emit(TRANSPORT.ERROR, error);
