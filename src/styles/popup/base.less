@@ -37,14 +37,18 @@ body {
 }
 
 main {
-    width: 100%;
-    min-height: 100%;
-    //padding-top: 54px;
-    //padding-bottom: 28px;
+    min-width: 640px;
+    max-width: 640px;
+    height: 100%;
+    display: flex;
+}
+
+section {
+    width: 50%;
     text-align: center;
     display: flex;
-    align-items: center;
     justify-content: center;
+    padding: 24px 0px;
 }
 
 #views {
@@ -82,31 +86,3 @@ textarea:focus {
 #__lpform_input_idx_0 {
     display: none;
 }
-
-.connect {
-    font-size: 32px;
-    font-weight: 100;
-    line-height: 1.3;
-    .icon {
-        display: inline-block;
-        width: 90px;
-        height: 90px;
-        border: 1px solid #333333; // FIXME: no such color in colors.less, add it?
-        border-radius: 50%;
-        overflow: hidden;
-    }
-}
-
-.permissions {
-    h3 {
-        span {
-            display: block;
-            font-weight: 400;
-        }
-    }
-}
-
-.permissions_list {
-    list-style-type: none;
-}
-

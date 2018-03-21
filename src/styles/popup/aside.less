@@ -1,0 +1,52 @@
+aside {
+    display: flex;
+    flex-flow: column;
+    width: 50%;
+    height: 100%;
+    padding: 24px;
+    border-right: 1px solid @color_divider;
+    background-color: @color_landing;
+
+    svg {
+        width: auto;
+        height: 24px;
+    }
+
+    .info-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+
+        h2, p {
+            word-break: break-word;
+        }
+    }
+
+    .dropbox-button {
+        display: flex;
+        justify-content: center;
+        cursor: pointer;
+
+        svg {
+            margin-right: 12px;
+            width: 26px;
+            height: 24px;
+        }
+
+        p, svg {
+            color: @color_text_secondary;
+            fill: @color_text_secondary;
+            transition: color 0.3s ease-in-out, fill 0.3s ease-in-out;
+        }
+
+        &:hover {
+            p, svg {
+                color: @color_text_primary;
+                fill: @color_text_primary;
+            }
+        }
+    }
+}
+

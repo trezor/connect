@@ -1,4 +1,5 @@
-a,
+
+a:not(.button),
 a:visited {
     cursor: pointer;
     position: relative;
@@ -33,7 +34,15 @@ a:visited {
     }
 }
 
+a.button {
+    text-decoration: none;
+    &:hover,
+    &:active {
+        color: @color_white;
+    }
+}
 
+a.button,
 button {
     padding: 12px 24px;
     border-radius: 3px;

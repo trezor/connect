@@ -41,12 +41,14 @@ module.exports = env => {
 
         new CopyWebpackPlugin([
             { from: `${HTML_SRC}index.html`, to: `${DIST}index.html` },
+            { from: `${HTML_SRC}webusb.html`, to: `${DIST}webusb.html` },
             { from: `${DATA_SRC}config.json`, to: `${DIST}data/config.json` },
             { from: `${DATA_SRC}coins.json`, to: `${DIST}data/coins.json` },
             { from: `${DATA_SRC}config_signed.bin`, to: `${DIST}data/config_signed.bin` },
             { from: `${DATA_SRC}latest.txt`, to: `${DIST}data/latest.txt` },
             { from: `${DATA_SRC}releases-1.json`, to: `${DIST}data/releases-1.json` },
             { from: `${DATA_SRC}releases-2.json`, to: `${DIST}data/releases-2.json` },
+            { from: `${SRC}images`, to: 'images' },
         ]),
 
         new webpack.DefinePlugin({

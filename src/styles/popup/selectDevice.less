@@ -1,0 +1,204 @@
+.connect {
+    justify-content: center;
+    p {
+        color: @color_green_primary;
+        font-size: 16px;
+        font-weight: 500;
+        animation: pulsate 1.3s ease-out infinite;
+        margin: 16px 0px 0px 0px;
+    }
+    svg {
+        align-self: center;
+    }
+
+    .connect-usb-pin,
+    .connect-usb-cable {
+        animation: connect 1.3s ease-out infinite;
+    }
+}
+
+@keyframes pulsate {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1.0;
+    }
+}
+
+@keyframes connect {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-4px)
+    }
+}
+
+.connect,
+.select-device {
+
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .webusb {
+        display: none;
+        padding: 0px 30px;
+        .webusb-divider {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            color: @color_text_secondary;
+            font-size: 14px;
+            padding: 24px 0px;
+
+            &:before, &:after {
+                content: '';
+                // display: inline-block;
+                flex: 1;
+                border-top: 1px solid @color_divider;
+            }
+
+            &:before {
+                margin-right: 24px;
+            }
+            &:after {
+                margin-left: 24px;
+            }
+        }
+
+        button {
+            width: 100%;
+        }
+    }
+}
+
+.select-device {
+
+    .what-is-it {
+        position: relative;
+        margin-left: 10px;
+
+        &:after {
+            .icomoon-help;
+            .hover();
+            font-size: 24px;
+            position: relative;
+            top: 4px;
+            cursor: pointer;
+        }
+        &:hover {
+            &:after {
+                color: @color_text_primary;
+            }
+            .explanation {
+                display: block;
+            }
+        }
+        // http://www.cssarrowplease.com/
+        .explanation {
+            display: none;
+            position: absolute;
+            background: @color_white;
+            top: 0px;
+            left: -68px;
+            width: 160px;
+            border: 1px solid @color_divider;
+            border-radius: 3px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+            transform: translateY(-100%);
+            color: @color_text_secondary;
+            line-height: 1.5;
+            font-size: 10px;
+            padding: 8px 10px;
+
+            &:before, &:after {
+                content: '';
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                border: solid transparent;
+                pointer-events: none;
+            }
+            &:before {
+                border-color: rgba(194, 225, 245, 0);
+                border-top-color: @color_white;
+                border-width: 6px;
+                margin-left: -6px;
+                z-index: 1;
+            }
+            &:after {
+                border-color: rgba(194, 225, 245, 0);
+                border-top-color: @color_divider;
+                border-width: 8px;
+                margin-left: -8px;
+            }
+        }
+    }
+
+
+
+
+    .select-device-list {
+        width: 100%;
+        overflow-y: scroll;
+        margin-top: 18px;
+        max-height: 250px; // 5 devices
+
+        button {
+            width: 260px;
+            height: 50px;
+            border: 1px solid @color_divider;
+            border-radius: 0px;
+            border-top-width: 0px;
+            text-align: left;
+            line-height: 1;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            padding: 0px 24px;
+
+            &:before {
+                content: '';
+                width: 17px;
+                height: 50px;
+                display: inline-block;
+                vertical-align: middle;
+                background-image: url('../../images/icon-trezor.png');
+                background-repeat: no-repeat;
+                background-size: 13px 25px;
+                background-position: center 11px;
+                margin-right: 18px;
+            }
+
+            &.trezorT {
+                &:before {
+                    width: 17px;
+                    background-image: url('../../images/icon-trezorT.png');
+                    background-size: 17px 25px;
+                }
+            }
+
+            &:first-child {
+                border-top-left-radius: 2px;
+                border-top-right-radius: 2px;
+                border-top-width: 1px;
+            }
+
+            &:last-child {
+                border-bottom-left-radius: 2px;
+                border-bottom-right-radius: 2px;
+            }
+        }
+    }
+
+    .remember {
+        padding: 0px 30px;
+        padding-top: 18px;
+    }
+
+
+}

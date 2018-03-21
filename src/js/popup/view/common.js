@@ -45,8 +45,8 @@ export const init = (): void => {
             }
         }
 
-        const originLabel: HTMLElement = header.getElementsByClassName('origin')[0];
-        originLabel.innerHTML = DataManager.getSettings('origin');
+        // const originLabel: HTMLElement = header.getElementsByClassName('origin')[0];
+        // originLabel.innerHTML = DataManager.getSettings('origin');
 
         // setOperation(window.name);
     }

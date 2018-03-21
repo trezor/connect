@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>TrezorConnect | TREZOR</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -15,10 +15,9 @@
     <meta http-equiv="Expires" content="-1" />
 </head>
 <body>
-    <!--
-    <header>
-        <figure>
-            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 163.7 41.9" width="100%" height="100%" preserveAspectRatio="xMinYMin meet">
+    <main>
+        <aside>
+            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 163.7 41.9" width="94.5px" height="24px" preserveAspectRatio="xMinYMin meet">
                 <polygon points="101.1,12.8 118.2,12.8 118.2,17.3 108.9,29.9 118.2,29.9 118.2,35.2 101.1,35.2 101.1,30.7 110.4,18.1 101.1,18.1"/>
                 <path d="M158.8,26.9c2.1-0.8,4.3-2.9,4.3-6.6c0-4.5-3.1-7.4-7.7-7.4h-10.5v22.3h5.8v-7.5h2.2l4.1,7.5h6.7L158.8,26.9z M154.7,22.5 h-4V18h4c1.5,0,2.5,0.9,2.5,2.2C157.2,21.6,156.2,22.5,154.7,22.5z"/>
                 <path d="M130.8,12.5c-6.8,0-11.6,4.9-11.6,11.5s4.9,11.5,11.6,11.5s11.7-4.9,11.7-11.5S137.6,12.5,130.8,12.5z M130.8,30.3 c-3.4,0-5.7-2.6-5.7-6.3c0-3.8,2.3-6.3,5.7-6.3c3.4,0,5.8,2.6,5.8,6.3C136.6,27.7,134.2,30.3,130.8,30.3z"/>
@@ -27,71 +26,28 @@
                 <path d="M79.4,20.3c0-4.5-3.1-7.4-7.7-7.4H61.2v22.3H67v-7.5h2.2l4.1,7.5H80l-4.9-8.3C77.2,26.1,79.4,24,79.4,20.3z M71,22.5h-4V18 h4c1.5,0,2.5,0.9,2.5,2.2C73.5,21.6,72.5,22.5,71,22.5z"/>
                 <polygon points="40.5,12.8 58.6,12.8 58.6,18.1 52.4,18.1 52.4,35.2 46.6,35.2 46.6,18.1 40.5,18.1 "/>
             </svg>
-        </figure>
-        <aside>
-            <figure class="icon">
-                <img src="https://www.myetherwallet.com/images/myetherwallet-logo.png" width="auto" height="100%" alt="" />
-            </figure>
-            <div class="description">
-                <div class="operation"></div>
-                <div class="origin"></div>
-            </div>
-        </aside>
-    </header>
-    -->
-
-    <main id="container">
-        <div class="info-panel">
-            <figure>
-                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 163.7 41.9" width="94.5px" height="24px" preserveAspectRatio="xMinYMin meet">
-                    <polygon points="101.1,12.8 118.2,12.8 118.2,17.3 108.9,29.9 118.2,29.9 118.2,35.2 101.1,35.2 101.1,30.7 110.4,18.1 101.1,18.1"/>
-                    <path d="M158.8,26.9c2.1-0.8,4.3-2.9,4.3-6.6c0-4.5-3.1-7.4-7.7-7.4h-10.5v22.3h5.8v-7.5h2.2l4.1,7.5h6.7L158.8,26.9z M154.7,22.5 h-4V18h4c1.5,0,2.5,0.9,2.5,2.2C157.2,21.6,156.2,22.5,154.7,22.5z"/>
-                    <path d="M130.8,12.5c-6.8,0-11.6,4.9-11.6,11.5s4.9,11.5,11.6,11.5s11.7-4.9,11.7-11.5S137.6,12.5,130.8,12.5z M130.8,30.3 c-3.4,0-5.7-2.6-5.7-6.3c0-3.8,2.3-6.3,5.7-6.3c3.4,0,5.8,2.6,5.8,6.3C136.6,27.7,134.2,30.3,130.8,30.3z"/>
-                    <polygon points="82.1,12.8 98.3,12.8 98.3,18 87.9,18 87.9,21.3 98,21.3 98,26.4 87.9,26.4 87.9,30 98.3,30 98.3,35.2 82.1,35.2 "/>
-                    <path d="M24.6,9.7C24.6,4.4,20,0,14.4,0S4.2,4.4,4.2,9.7v3.1H0v22.3h0l14.4,6.7l14.4-6.7h0V12.9h-4.2V9.7z M9.4,9.7 c0-2.5,2.2-4.5,5-4.5s5,2,5,4.5v3.1H9.4V9.7z M23,31.5l-8.6,4l-8.6-4V18.1H23V31.5z"/>
-                    <path d="M79.4,20.3c0-4.5-3.1-7.4-7.7-7.4H61.2v22.3H67v-7.5h2.2l4.1,7.5H80l-4.9-8.3C77.2,26.1,79.4,24,79.4,20.3z M71,22.5h-4V18 h4c1.5,0,2.5,0.9,2.5,2.2C73.5,21.6,72.5,22.5,71,22.5z"/>
-                    <polygon points="40.5,12.8 58.6,12.8 58.6,18.1 52.4,18.1 52.4,35.2 46.6,35.2 46.6,18.1 40.5,18.1 "/>
-                </svg>
-            </figure>
-            <div class="info-panel-wrapper">
+            <div class="info-panel">
                 <h2>Send 0.00001 BTC</h2>
                 <p>connect.trezor.io</p>
-                <div>
-                    <figure>
-                        <svg width="26px" height="24px" viewBox="0 0 26 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <title>enable Dropbox labeling</title>
-                                <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <g id="Left-side" transform="translate(-101.000000, -445.000000)" fill="#757575">
-                                <g id="Labeling" transform="translate(101.000000, 445.000000)">
-                                <path d="M12.7999848,13.8843933 L20.39264,9.15845812 L25.59984,13.3619678 L18.06944,18.3178032 L12.79984,13.8844834 L7.5304,18.3177226 L0,13.3618871 L5.2072,9.15918384 L12.7999848,13.8843933 Z M7.53056,0 L12.80016,4.43331978 L5.20736,9.15853876 L0.00016,4.95583546 L7.53056,0 Z M12.81544,14.8382358 L18.10024,19.258654 L20.36184,17.7701294 L20.36184,19.4384704 L12.81544,24 L5.26904,19.4384704 L5.26904,17.7701294 L7.53064,19.258654 L12.81544,14.8382358 Z M25.6,4.9559161 L18.0696,8.06351361e-05 L12.8,4.43340042 L20.3928,9.15861939 L25.6,4.9559161 Z" id="Dropbox"></path>
-                                </g></g></g>
-                        </svg>
-                    </figure>
-                    <p class='dropbox-label'>Enable labeling</p>
-                </div>
             </div>
-        </div>
-        <div class="pin">
-            <h3>Enter your #TREZOR PIN</h3>
-            <p>The PIN layout is displayed on your TREZOR.</p>
-
-            <div class="pin-input-row">
-                <input class="pin-input" type="password" autocomplete="off" max-length="9" disabled />
-                <button type="button" class="pin-backspace transparent"></button>
+            <div class="dropbox-button">
+                <svg width="26px" height="24px" viewBox="0 0 26 24" version="1.1">
+                    <g stroke="none">
+                        <path d="M12.7999848,13.8843933 L20.39264,9.15845812 L25.59984,13.3619678 L18.06944,18.3178032 L12.79984,13.8844834 L7.5304,18.3177226 L0,13.3618871 L5.2072,9.15918384 L12.7999848,13.8843933 Z M7.53056,0 L12.80016,4.43331978 L5.20736,9.15853876 L0.00016,4.95583546 L7.53056,0 Z M12.81544,14.8382358 L18.10024,19.258654 L20.36184,17.7701294 L20.36184,19.4384704 L12.81544,24 L5.26904,19.4384704 L5.26904,17.7701294 L7.53064,19.258654 L12.81544,14.8382358 Z M25.6,4.9559161 L18.0696,8.06351361e-05 L12.8,4.43340042 L20.3928,9.15861939 L25.6,4.9559161 Z"></path>
+                    </g>
+                </svg>
+                <p>Enable labeling</p>
             </div>
-
-            <div class="pin-row">
-                <button type="button" data-value="7">&#8226;</button><button type="button" data-value="8">&#8226;</button><button type="button" data-value="9">&#8226;</button>
+        </aside>
+        <section id="container">
+            <div class="loader">
+                <p>Loading...</p>
+                <svg class="circular" viewBox="25 25 50 50" preserveAspectRatio="xMidYMid">
+                    <circle class="route" cx="50" cy="50" r="20" fill="none" stroke="" stroke-width="1" stroke-miterlimit="10" />
+                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="1" stroke-miterlimit="10" />
+                </svg>
             </div>
-            <div class="pin-row">
-                <button type="button" data-value="4">&#8226;</button><button type="button" data-value="5">&#8226;</button><button type="button" data-value="6">&#8226;</button>
-            </div>
-            <div class="pin-row">
-                <button type="button" data-value="1">&#8226;</button><button type="button" data-value="2">&#8226;</button><button type="button" data-value="3">&#8226;</button>
-            </div>
-
-            <div><button class="submit" type="button">Enter PIN</button></div>
-        </div>
+        </section>
     </main>
 
     <!-- Views -->
@@ -114,23 +70,52 @@
 
         <!-- Connect -->
         <div class="connect">
-            <div class="icon">
-                <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 110.000000 110.000000" preserveAspectRatio="xMidYMid meet">
-                    <g transform="translate(0.000000,110.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
-                        <path d="M412 875 c-75 -33 -212 -190 -212 -244 0 -18 39 -64 158 -184 86 -87 169 -165 184 -173 14 -7 61 -25 103 -39 70 -22 79 -23 104 -10 35 17 121 112 121 131 0 20 -39 142 -58 179 -18 37 -297 321 -334 341 -32 17 -25 17 -66 -1z m201 -193 c153 -153 158 -160 182 -231 14 -40 25 -78 25 -85 0 -6 -22 -33 -49 -60 l-49 -48 -73 23 c-84 26 -112 50 -294 238 -126 130 -124 121 -56 196 45 51 132 125 146 125 5 0 81 -71 168 -158z"/>
-                        <path d="M410 665 l-84 -84 45 -50 c24 -27 51 -49 60 -50 8 -1 53 37 99 84 l83 86 -48 49 c-27 28 -54 50 -60 50 -6 0 -48 -38 -95 -85z m147 8 c7 -6 13 -15 13 -20 0 -5 -31 -40 -70 -78 l-70 -69 -30 29 c-16 16 -30 33 -30 39 0 6 30 41 67 78 73 74 65 72 120 21z"/>
-                        <path d="M825 250 l-29 -30 27 -27 27 -28 32 32 32 32 -24 26 c-13 14 -26 25 -30 25 -3 0 -19 -14 -35 -30z m45 -19 c0 -12 -20 -25 -27 -18 -7 7 6 27 18 27 5 0 9 -4 9 -9z"/>
-                        <path d="M898 183 l-52 -53 34 -35 c19 -19 37 -35 40 -35 3 0 30 21 59 48 l53 47 -40 41 -41 41 -53 -54z m81 -12 c8 -14 4 -24 -17 -45 -32 -30 -44 -32 -62 -11 -11 13 -8 21 15 45 33 35 50 38 64 11z"/>
-                    </g>
-                </svg>
+            <svg width="12px" height="35px" viewBox="0 0 20 57">
+                <g stroke="none" stroke-width="1" fill="none" transform="translate(1, 1)">
+                    <rect class="connect-usb-pin" fill="#01B757" x="6" y="39" width="6" height="5"></rect>
+                    <rect class="connect-usb-cable" stroke="#01B757" stroke-width="1" x="8.5" y="44.5" width="1" height="11"></rect>
+                    <path stroke="#01B757" d="M8.90856859,33.9811778 L6.43814432,33.9811778 C5.45301486,34.0503113 4.69477081,33.6889084 4.1634122,32.8969691 C3.36637428,31.7090602 -0.000402169348,26.3761977 0.0748097911,23.2982514 C0.124878873,21.2492429 0.0999525141,14.5598149 3.07156595e-05,3.22996744 C-0.000274213164,3.1963928 0.00243636275,3.162859 0.00812115776,3.12976773 C0.28477346,1.51937083 1.22672004,0.617538852 2.8339609,0.424271782 C4.45813658,0.228968338 6.54411954,0.0875444105 9.09190977,0 L9.09190977,0.0169167084 C11.5566027,0.104886477 13.5814718,0.244169993 15.1665175,0.434768145 C16.7530267,0.625542287 17.6912941,1.50671985 17.9813196,3.07830083 C17.9943481,3.14889902 18.0005888,3.22058224 17.9999563,3.29236974 L17.9999901,3.29237004 C17.9004498,14.5907444 17.875676,21.2628703 17.9256686,23.3087478 C18.0008805,26.3866941 14.6341041,31.7195566 13.8370662,32.9074655 C13.3057075,33.6994047 12.5474635,34.0608076 11.562334,33.9916742 L8.90856859,33.9916742 L8.90856859,33.9811778 Z"></path>
+                    <rect fill="#01B757" x="2" y="7" width="14" height="7" rx="0.5625"></rect>
+                </g>
+            </svg>
+            <p>Connect TREZOR to continue</p>
+            <div class="webusb">
+                <div class="webusb-divider">And</div>
+                <button>Check for devices</button>
             </div>
-            <p>Connect your <strong class="smallcaps">TREZOR</strong> device.</p>
         </div>
         <!-- Connect: END -->
 
+        <!-- Device selection -->
+        <div class="select-device">
+            <h3>Select device:</h3>
+            <div class="select-device-list">
+                <button class="white">MY TREZOR</button>
+            </div>
+            <div class="remember">
+                <label class="custom-checkbox">
+                    <input type="checkbox" checked />
+                    <span class="indicator"></span>Remember my choice
+                    <span class="what-is-it">
+                        <div class="explanation">
+                            TREZOR Connect will remember your choice during this session.
+                            It will be reset after page reload.
+                        </div>
+                    </span>
+                </label>
+            </div>
+            <div class="webusb">
+                <div class="webusb-divider">Or</div>
+                <button>Check for devices</button>
+            </div>
+        </div>
+        <!-- Device selection: END -->
+
+
+
         <!-- Pin -->
         <div class="pin">
-            <h3>Enter #TREZOR PIN</h3>
+            <h3>Enter your<span>#TREZOR</span>PIN</h3>
             <p>The PIN layout is displayed on your TREZOR.</p>
 
             <div class="pin-input-row">
@@ -149,19 +134,25 @@
             </div>
 
             <div><button class="submit" type="button">Enter PIN</button></div>
-            <p>Not sure how PIN works? <a href="http://doc.satoshilabs.com/trezor-user/enteringyourpin.html" target="_blank" rel="noreferrer noopener">Learn more</a></p>
         </div>
         <!-- Pin: END -->
 
         <!-- Pin invalid -->
         <div class="invalid-pin">
-            <h3>Entered PIN is not correct. Retrying...</h3>
+            <h3>Entered PIN is not correct</h3>
+            <div class="loader">
+                    <p>Retrying...</p>
+                    <svg class="circular" viewBox="25 25 50 50" preserveAspectRatio="xMidYMid">
+                        <circle class="route" cx="50" cy="50" r="20" fill="none" stroke="" stroke-width="1" stroke-miterlimit="10" />
+                        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="1" stroke-miterlimit="10" />
+                    </svg>
+                </div>
         </div>
         <!-- Pin invalid: END -->
 
         <!-- Passphrase -->
         <div class="passphrase">
-            <h3>Enter #TREZOR passphrase</h3>
+            <h3>Enter <span>#TREZOR</span> passphrase</h3>
             <p>Note that passphrase is case-sensitive.</p>
             <div class="row">
                 <label>Passphrase</label>
@@ -192,7 +183,7 @@
             </div>
             <div class="row">
                 <label class="custom-checkbox">
-                    <input class="show-passphrase" type="checkbox" tabindex="3" value="on" />
+                    <input class="show-passphrase" type="checkbox" tabindex="3" />
                     <span class="indicator"></span>Show passphrase</label>
             </div>
             <div>
@@ -222,12 +213,7 @@
         </div>
         <!-- Export xpub confirmation: END -->
 
-        <!-- Device selection -->
-        <div class="select-device">
-            <h3>Select device:</h3>
-            <div class="select-device-list"></div>
-        </div>
-        <!-- Device selection: END -->
+
 
         <!-- Account selection -->
         <div class="select-account normal">
@@ -344,15 +330,10 @@
         </div>
 
         <div class="transport">
-            <p>
-                To use your <strong class="smallcaps">TREZOR</strong> device, proceed
-                with instructions at
-                <a href="https://wallet.trezor.io" onclick="closeWindow();" target="_blank">TREZOR Wallet</a>
-                and try again afterwards.
-            </p>
-            <p>
-                <a href="https://trezor.io" onclick="closeWindow();" target="_blank">What is <span class="smallcaps">TREZOR</span>?</a>
-            </p>
+            <h3>Install Bridge</h3>
+            <p>New communication tool to facilitate the connection between your TREZOR and your internet browser.</p>
+            <div class="image"></div>
+            <a class="button" href="https://wallet.trezor.io/#/bridge" onclick="closeWindow();" target="_blank" rel="noreferrer noopener">Go to TREZOR wallet and install bridge</a>
         </div>
     </div>
 </body>

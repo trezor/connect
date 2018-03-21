@@ -31,6 +31,10 @@ module.exports = {
                 use: ['babel-loader']
             },
             {
+                test: /\.(png|gif|jpg)$/,
+                loader: 'file-loader?name=./images/[name].[ext]'
+            },
+            {
                 test: /\.less$/,
                 exclude: /node_modules/,
                 loader: extractLess.extract({
@@ -77,6 +81,7 @@ module.exports = {
             { from: `${DATA_SRC}latest.txt`, to: `data/latest.txt` },
             { from: `${DATA_SRC}releases-1.json`, to: `data/releases-1.json` },
             { from: `${DATA_SRC}releases-2.json`, to: `data/releases-2.json` },
+            { from: `${SRC}images`, to: 'images' },
         ]),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
