@@ -2,10 +2,10 @@
 'use strict';
 
 export class TrezorError extends Error {
-    code: number;
+    code: number | string;
     message: string;
 
-    constructor(code: number, message: string) {
+    constructor(code: number | string, message: string) {
         super(message);
         this.code = code;
         this.message = message;
@@ -31,7 +31,7 @@ export const PERMISSIONS_NOT_GRANTED: TrezorError = new TrezorError(600, 'Permis
 export const DEVICE_USED_ELSEWHERE: TrezorError = new TrezorError(700, 'Device is used in another window');
 export const INITIALIZATION_FAILED: TrezorError = new TrezorError(701, 'Initialization failed');
 
-export const CALL_OVERRIDE: TrezorError = new TrezorError(703, 'override');
+export const CALL_OVERRIDE: TrezorError = new TrezorError('Failure_ActionOverride', 'override');
 
 // a slight hack
 // this error string is hard-coded

@@ -30,6 +30,7 @@ export default class AbstractMethod implements MethodInterface {
     deviceState: ?string;
     keepSession: boolean;
     overridePreviousCall: boolean;
+    overridden: boolean;
     name: string; // method name
     useUi: boolean; // should use popup?
     useDevice: boolean; // use device
@@ -54,6 +55,7 @@ export default class AbstractMethod implements MethodInterface {
         this.deviceState = payload.device ? payload.device.state : null;
         this.keepSession = typeof payload.keepSession === 'boolean' ? payload.keepSession : false;
         this.overridePreviousCall =  typeof payload.override === 'boolean' ? payload.override : false;
+        this.overridden = false;
         this.useEmptyPassphrase =  typeof payload.useEmptyPassphrase === 'boolean' ? payload.useEmptyPassphrase : false;
     }
 
