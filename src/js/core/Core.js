@@ -389,11 +389,16 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     // TODO: nicer
     device.setInstance(method.deviceInstance);
 
-    const previousCall = _callMethods.find(call => call && call !== method && call.devicePath === method.devicePath);
+    // const previousCall = _callMethods.find(call => call && call !== method && call.devicePath === method.devicePath);
+    const previousCall: Array<AbstractMethod> = _callMethods.filter(call => call && call !== method && call.devicePath === method.devicePath);
 
-    if (previousCall && method.overridePreviousCall) {
-        postMessage(new ResponseMessage(previousCall.responseID, false, { error: ERROR.CALL_OVERRIDE.message }));
+    if (previousCall.length > 0 && method.overridePreviousCall) {
+        previousCall.forEach(call => { call.overridden = true } );
         await device.override(ERROR.CALL_OVERRIDE);
+        if (method.overridden) {
+            postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.CALL_OVERRIDE.message, code: ERROR.CALL_OVERRIDE.code }));
+            throw ERROR.CALL_OVERRIDE;
+        }
     } else if (device.isRunning()) {
         if (!device.isLoaded()) {
             // corner case
@@ -527,7 +532,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     delete error.custom;
                     postMessage(new ResponseMessage(method.responseID, false, error));
                 } else {
-                    postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
+                    postMessage(new ResponseMessage(method.responseID, false, { error: error.message, code: error.code }));
                 }
 
                 // device.release();
@@ -545,7 +550,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     } catch (error) {
         if (method) {
-            postMessage(new ResponseMessage(method.responseID, false, { error: error.message || error }));
+            postMessage(new ResponseMessage(method.responseID, false, { error: error.message || error, code: error.code }));
         }
     } finally {
         // Work done
