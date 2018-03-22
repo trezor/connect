@@ -337,7 +337,7 @@ class CreateDeviceHandler {
                 // this should not happen actually - karel (it is happening - szymon)
                 // await this._handleWrongSession();
                 await this._handleUsedElsewhere();
-            } else if (error.message === ERROR.INITIALIZATION_FAILED.message) {
+            } else if (error.code === ERROR.INITIALIZATION_FAILED.code) {
                 // firmware bug - device is in "show address" state which cannot be cancelled
                 await this._handleUsedElsewhere();
             } else if (error.message === ERROR.DEVICE_USED_ELSEWHERE.message) {
