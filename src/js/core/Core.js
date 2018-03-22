@@ -328,7 +328,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     let messageResponse: ?ResponseMessage;
 
-    // method is not using device, there is no need to acquire
+    // this method is not using device, there is no need to acquire
     if (!method.useDevice) {
         // TODO: call function and handle interruptions
         // const response: Object = await _parameters.method.apply(this, [ parameters, callbacks ]);
@@ -363,9 +363,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             // show message about transport
             postMessage(new UiMessage(UI.TRANSPORT));
         } else {
+            // cancel popup request
             postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
         }
-        // TODO: this should not be returned before user agrees on "read" perms...
+        // TODO: this should not be returned here before user agrees on "read" perms...
         postMessage(new ResponseMessage(responseID, false, { error: error.message }));
         throw error;
     }
@@ -390,11 +391,16 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     device.setInstance(method.deviceInstance);
 
     // const previousCall = _callMethods.find(call => call && call !== method && call.devicePath === method.devicePath);
+    // find pending calls to this device
     const previousCall: Array<AbstractMethod> = _callMethods.filter(call => call && call !== method && call.devicePath === method.devicePath);
-
     if (previousCall.length > 0 && method.overridePreviousCall) {
+        // set flag for each pending method
         previousCall.forEach(call => { call.overridden = true } );
+        // interrupt potential communication with device. this should throw error in try/catch block below
+        // this error will apply to the last item of pending methods
         await device.override(ERROR.CALL_OVERRIDE);
+        // if current method was overridden while waiting for device.override result
+        // return response with status false
         if (method.overridden) {
             postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.CALL_OVERRIDE.message, code: ERROR.CALL_OVERRIDE.code }));
             throw ERROR.CALL_OVERRIDE;
