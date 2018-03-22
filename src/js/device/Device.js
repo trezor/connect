@@ -163,6 +163,8 @@ export default class Device extends EventEmitter {
     }
 
     async override(error: Error): Promise<void> {
+        await this.deferredActions[ DEVICE.ACQUIRE ].promise;
+
         if (this.runPromise) {
             this.runPromise.reject(error);
             this.runPromise = null;

@@ -87,7 +87,8 @@ const removeUiPromise = (promise: Deferred<UiPromiseResponse>): void => {
 const postMessage = (message: CoreMessage): void => {
     if (message instanceof ResponseMessage) {
         const index: number = _callMethods.findIndex(call => call && call.responseID === message.id);
-        _callMethods.splice(index, 1);
+        if (index >= 0)
+            _callMethods.splice(index, 1);
     }
     _core.emit(CORE_EVENT, message);
 };
@@ -388,23 +389,20 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     // TODO: nicer
     device.setInstance(method.deviceInstance);
 
-    // if device is currently busy
-    if (device.isRunning()) {
+    const previousCall = _callMethods.find(call => call && call !== method && call.devicePath === method.devicePath);
 
-        const previousCall = _callMethods.filter(call => call && call !== method && call.devicePath === method.devicePath);
-        if (!previousCall.length && !device.isLoaded()) {
+    if (previousCall && method.overridePreviousCall) {
+        postMessage(new ResponseMessage(previousCall.responseID, false, { error: ERROR.CALL_OVERRIDE.message }));
+        await device.override(ERROR.CALL_OVERRIDE);
+    } else if (device.isRunning()) {
+        if (!device.isLoaded()) {
             // corner case
             // device didn't finish loading for the first time. @see DeviceList._createAndSaveDevice
             // wait for self-release and then carry on
             await device.waitForFirstRun();
         } else {
-            if (method.overridePreviousCall) {
-                // resolve previous call before this one
-                await device.override(new Error('Override!'));
-            } else {
-                postMessage(new ResponseMessage(responseID, false, { error: ERROR.DEVICE_CALL_IN_PROGRESS.message }));
-                throw ERROR.DEVICE_CALL_IN_PROGRESS;
-            }
+            postMessage(new ResponseMessage(responseID, false, { error: ERROR.DEVICE_CALL_IN_PROGRESS.message }));
+            throw ERROR.DEVICE_CALL_IN_PROGRESS;
         }
     }
 
