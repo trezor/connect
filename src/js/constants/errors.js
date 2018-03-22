@@ -31,6 +31,8 @@ export const PERMISSIONS_NOT_GRANTED: TrezorError = new TrezorError(600, 'Permis
 export const DEVICE_USED_ELSEWHERE: TrezorError = new TrezorError(700, 'Device is used in another window');
 export const INITIALIZATION_FAILED: TrezorError = new TrezorError(701, 'Initialization failed');
 
+export const CALL_OVERRIDE: TrezorError = new TrezorError(703, 'override');
+
 // a slight hack
 // this error string is hard-coded
 // in both bridge and extension

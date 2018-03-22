@@ -132,14 +132,16 @@ const initPopupManager = (): PopupManager => {
 
 // post messages to iframe
 const postMessage = (message: any, usePromise: boolean = true): ?Promise<void> => {
-    _messageID++;
-    message.id = _messageID;
-    _iframe.contentWindow.postMessage(message, _iframeOrigin);
 
     if (usePromise) {
+        _messageID++;
+        message.id = _messageID;
         _messagePromises[_messageID] = createDeferred();
+        _iframe.contentWindow.postMessage(message, _iframeOrigin);
         return _messagePromises[_messageID].promise;
     }
+
+    _iframe.contentWindow.postMessage(message, _iframeOrigin);
     return null;
 };
 
@@ -188,7 +190,9 @@ const handleMessage = (messageEvent: MessageEvent): void => {
             if (type === UI.REQUEST_UI_WINDOW) {
                 // popup handshake is resolved automatically
                 //if (eventEmitter.listeners(UI_EVENT).length > 0) { postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }); }
-                if (!_settings.popup) { postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }); }
+                if (!_settings.popup) {
+                    postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, false);
+                }
             } else if (type === IFRAME.HANDSHAKE) {
                 if (_iframeHandshakePromise) { _iframeHandshakePromise.resolve(); }
                 _iframeHandshakePromise = null;
