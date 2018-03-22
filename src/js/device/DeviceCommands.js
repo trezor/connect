@@ -2,6 +2,7 @@
 'use strict';
 
 import * as DEVICE from '../constants/device';
+import * as ERROR from '../constants/errors';
 import randombytes from 'randombytes';
 
 import * as trezor from './trezorTypes';
@@ -251,11 +252,9 @@ export default class DeviceCommands {
             throw new Error('DeviceCommands already disposed');
         }
 
-        // console.warn("+++++++INITIALIZEEEEEEEE", this.device.getState() )
-
-        if (!this.device.getState()) {
-            // await this.clearSession({});
-        }
+        // if (!this.device.getState()) {
+        //    await this.clearSession({});
+        // }
 
         const response = await this.call('Initialize', { state: this.device.getState() });
         assertType(response, 'Features');
@@ -336,14 +335,13 @@ export default class DeviceCommands {
         }
 
         if (res.type === 'PassphraseStateRequest') {
-            // if (this.session.device) {
-            // const currentState = this.session.device.passphraseState;
-            // const receivedState = res.message.state;
-            // if (currentState != null && currentState !== receivedState) {
-            //     return Promise.reject(new Error('Device has entered inconsistent state. Please reconnect the device.'));
-            // }
-            // this.session.device.passphraseState = receivedState;
-            // }
+            const state: string = res.message.state;
+            const currentState: ?string = this.device.getState();
+            if (currentState && currentState !== state) {
+                throw ERROR.INVALID_STATE;
+            }
+
+            this.device.setState(state);
             return this._commonCall('PassphraseStateAck', { });
         }
 

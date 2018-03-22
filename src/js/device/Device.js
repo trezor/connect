@@ -78,6 +78,8 @@ export default class Device extends EventEmitter {
 
     instance: number = 0;
 
+    state: ?string;
+
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
         super();
 
@@ -163,7 +165,7 @@ export default class Device extends EventEmitter {
     }
 
     async override(error: Error): Promise<void> {
-        await this.deferredActions[ DEVICE.ACQUIRE ].promise;
+        if (this.deferredActions[ DEVICE.ACQUIRE ]) { await this.deferredActions[ DEVICE.ACQUIRE ].promise; }
 
         if (this.runPromise) {
             this.runPromise.reject(error);
@@ -213,11 +215,12 @@ export default class Device extends EventEmitter {
 
             // update features
             try {
-                await this.init();
+                await this.initialize();
             } catch (error) {
                 this.inconsistent = true;
                 await this.deferredActions[ DEVICE.ACQUIRE ].promise;
                 this.runPromise = null;
+                ERROR.INITIALIZATION_FAILED.message = `Initialize failed: ${ error.message }`;
                 return Promise.reject(ERROR.INITIALIZATION_FAILED);
             }
         }
@@ -284,7 +287,7 @@ export default class Device extends EventEmitter {
         this.keepSession = false;
     }
 
-    async init(): Promise<void> {
+    async initialize(): Promise<void> {
         const { message } : { message: Features } = await this.commands.initialize();
         this.features = message;
         this.featuresNeedsReload = false;
@@ -298,15 +301,18 @@ export default class Device extends EventEmitter {
     }
 
     getState(): ?string {
-        return this.features ? this.features.state : null;
-        // return null;
+        return this.state ? this.state : null;
+    }
+
+    setState(state: string): void {
+        this.state = state;
     }
 
     async _reloadFeatures(): Promise<void> {
         if (this.atLeast('1.3.3')) {
             await this.getFeatures();
         } else {
-            await this.init();
+            await this.initialize();
         }
     }
 
