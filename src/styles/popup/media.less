@@ -1,0 +1,36 @@
+@media screen and (max-width: 500px) {
+    main {
+        flex-direction: column;
+    }
+    section, aside {
+        width: 100%;
+        height: auto;
+    }
+
+    aside {
+        flex-direction: row;
+        .info-panel {
+            text-align: right;
+            h2 {
+                font-size: 16px;
+                padding-top: 5px;
+            }
+
+        }
+        .dropbox-button {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100vh;
+            padding: 12px 24px;
+            background-color: @color_landing;
+            justify-content: start;
+            align-items: center;
+        }
+    }
+
+    section {
+        flex: 1;
+        padding-bottom: 50px; // dropbox button
+    }
+}

@@ -2,6 +2,8 @@
 
 .pin {
     width: 100%;
+    max-width: 300px;
+    padding: 0px 24px;
 
     h3 {
         display: flex;
@@ -17,11 +19,13 @@
     }
 
     .pin-row {
+        display: flex;
+        justify-content: space-between;
         button {
-            width:  @button_size;
+            width: 30%;
             height: @button_size;
             margin-top: 10px;
-            margin-left: 10px;
+            //margin-left: 10px;
             font-size: 22px;
             font-weight: 600;
             color: @color_text_primary;
@@ -54,6 +58,7 @@
             line-height: 48px;
             font-weight: 600;
             font-size: 32px;
+            width: 100%;
             height: auto;
             padding: 0px 31px;
             color: @color_text_primary;

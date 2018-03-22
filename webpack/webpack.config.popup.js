@@ -29,6 +29,10 @@ module.exports = {
                 use: ['babel-loader']
             },
             {
+                test: /\.(png|gif|jpg)$/,
+                loader: 'file-loader?name=./images/[name].[ext]'
+            },
+            {
                 test: /\.less$/,
                 exclude: /node_modules/,
                 loader: extractLess.extract({
@@ -56,6 +60,7 @@ module.exports = {
     },
     plugins: [
         extractLess,
+        new webpack.IgnorePlugin(/\/iconv-loader$/),
         new HtmlWebpackPlugin({
             chunks: ['popup'],
             filename: 'index.html',
