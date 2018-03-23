@@ -347,10 +347,10 @@ export default class DeviceCommands {
 
         if (res.type === 'PassphraseRequest') {
             if (res.message.on_device) {
+                this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE, this.device);
                 return this._commonCall('PassphraseAck', { state: this.device.getState() });
             }
 
-            // console.warn("PassphraseRequest STATE!", this.device.getState(), res.message.on_device)
             const cachedPassphrase: ?string = this.device.getPassphrase();
             if (typeof cachedPassphrase === 'string') {
                 return this._commonCall('PassphraseAck', { passphrase: cachedPassphrase, state: this.device.getState() });

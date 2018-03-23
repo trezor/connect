@@ -26,6 +26,7 @@ import type { Deferred } from '../utils/deferred';
 
 import { resolveAfter } from '../utils/promiseUtils'; // TODO: just tmp. remove
 import { getPathFromIndex } from '../utils/pathUtils';
+import { state as browserState } from '../utils/browser';
 
 import Log, { init as initLog, enable as enableLog } from '../utils/debug';
 
@@ -149,7 +150,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         case UI.RECEIVE_ACCOUNT :
         case UI.CHANGE_ACCOUNT :
         case UI.RECEIVE_FEE :
-            // TODO: throw error if not string
+        case UI.RECEIVE_BROWSER :
             const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, message.type);
             if (uiPromise) {
                 uiPromise.resolve({ event: message.type, payload: message.payload });
@@ -303,6 +304,24 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     const responseID: number = message.id;
 
+    if (!browserState.supported) {
+        // wait for popup handshake
+        await getPopupPromise().promise;
+        // show message about browser
+        postMessage(new UiMessage(UI.BROWSER_NOT_SUPPORTED, browserState));
+        throw ERROR.BROWSER;
+    } else if (browserState.outdated) {
+        // wait for popup handshake
+        await getPopupPromise().promise;
+        // show message about browser
+        postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));
+        // wait for user interaction
+        const uiPromise: Deferred<UiPromiseResponse> = createUiPromise(UI.RECEIVE_BROWSER);
+        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        console.log("UIPROMIS!", uiResp);
+
+    }
+
     if (_preferredDevice && !message.payload.device) {
         message.payload.device = _preferredDevice;
     }
@@ -421,6 +440,9 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     // set public variables, listeners and run method
     device.on(DEVICE.PIN, onDevicePinHandler);
     device.on(DEVICE.PASSPHRASE, method.useEmptyPassphrase ? onEmptyPassphraseHandler : onDevicePassphraseHandler);
+    device.on(DEVICE.PASSPHRASE_ON_DEVICE, () => {
+        postMessage(new UiMessage(UI.REQUEST_PASSPHRASE_ON_DEVICE, { device: device.toMessageObject() }));
+    });
     // device.on(DEVICE.PASSPHRASE, onDevicePassphraseHandler);
     device.on(DEVICE.BUTTON, onDeviceButtonHandler);
     device.on(DEVICE.AUTHENTICATED, () => {
@@ -444,7 +466,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 // wait for popup handshake
                 await getPopupPromise().promise;
                 // show unexpected state information
-                postMessage(new UiMessage(unexpectedState));
+                postMessage(new UiMessage(unexpectedState, device.toMessageObject()));
 
                 // wait for device disconnect
                 await createUiPromise(DEVICE.DISCONNECT, device).promise;

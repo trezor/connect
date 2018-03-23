@@ -11,7 +11,7 @@ const colors: {[k: string]: string} = {
     'DeviceList': 'color: #36802d',
     'Device': 'color: #bada55',
     'Core': 'color: #c9df8a',
-    'IFrame': 'color: #f4a742',
+    'IFrame': 'color: #FFFFFF; background: #f4a742;',
     'Popup': 'color: #f48a00',
 };
 
@@ -32,7 +32,7 @@ export default class Log {
         this.prefix = prefix;
         this.enabled = enabled;
         this.messages = [];
-        this.css = colors[prefix] || 'color: #000000';
+        this.css = colors[prefix] || 'color: #000000; background: #FFFFFF;';
     }
 
     addMessage(level: string, prefix: string, ...args: Array<any>): void {

@@ -89,6 +89,10 @@ const handleMessage = (event: MessageEvent): void => {
         case UI.FIRMWARE :
             showView('firmware');
             break;
+        case UI.BROWSER_NOT_SUPPORTED :
+        case UI.BROWSER_OUTDATED :
+            view.initBrowserView(message.payload);
+            break;
 
         case UI.REQUEST_PERMISSION :
             view.initPermissionsView(message.payload, event.origin);
@@ -104,6 +108,9 @@ const handleMessage = (event: MessageEvent): void => {
             break;
         case UI.REQUEST_PASSPHRASE :
             view.initPassphraseView(message.payload);
+            break;
+        case UI.REQUEST_PASSPHRASE_ON_DEVICE :
+            showView('passphrase-on-device');
             break;
     }
 };
