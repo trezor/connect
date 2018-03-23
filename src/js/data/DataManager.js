@@ -12,9 +12,15 @@ type WebUSB = {
     vendorId: string;
     productId: string;
 }
+type Browser = {
+    version: number;
+    download: string;
+    update: string;
+}
 type Config = {
     whitelist: Array<string>;
     webusb: Array<WebUSB>;
+    supportedBrowsers: { [key: string]: Browser };
 }
 
 // transform json into flow typed object
@@ -22,12 +28,19 @@ const parseConfig = (json: JSON): Config => {
     const config: Config = {
         whitelist: [],
         webusb: [],
+        supportedBrowsers: {},
     }
     if (json.hasOwnProperty('whitelist') && typeof json.whitelist === 'object' && Array.isArray(json.whitelist)) {
         config.whitelist = json.whitelist;
     }
     if (json.hasOwnProperty('webusb') && typeof json.webusb === 'object' && Array.isArray(json.webusb)) {
         config.webusb = json.webusb;
+    }
+    if (json.hasOwnProperty('supportedBrowsers')) {
+        const sb: any = Object.getOwnPropertyDescriptor(json, 'supportedBrowsers').value;
+        if (sb.constructor === Object) {
+            config.supportedBrowsers = sb;
+        }
     }
     return config;
 }

@@ -19,6 +19,7 @@ const initWebUsbButton = (webusb: boolean): void => {
         const restorePosition = (): void => {
             window.resizeTo(640, 500);
             window.moveTo(x, y);
+            window.focus();
         }
 
         window.resizeTo(100, 100);
@@ -29,7 +30,6 @@ const initWebUsbButton = (webusb: boolean): void => {
             await usb.requestDevice( { filters: DataManager.getConfig().webusb } );
             restorePosition();
         } catch (error) {
-            console.log("ERROR", error)
             restorePosition();
         }
     }

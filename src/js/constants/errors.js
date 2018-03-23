@@ -17,6 +17,7 @@ export const NO_IFRAME: TrezorError = new TrezorError(100, 'Trezor.js not yet in
 export const IFRAME_INITIALIZED: TrezorError = new TrezorError(101, 'Trezor.js has been already initialized');
 export const IFRAME_TIMEOUT: TrezorError = new TrezorError(102, 'Iframe timeout');
 export const POPUP_TIMEOUT: TrezorError = new TrezorError(103, 'Popup timeout');
+export const BROWSER: TrezorError = new TrezorError(104, 'Browser not supported');
 
 export const NO_TRANSPORT: TrezorError = new TrezorError(500, 'Transport is missing');
 export const WRONG_TRANSPORT_CONFIG: TrezorError = new TrezorError(5002, 'Wrong config response'); // config_signed

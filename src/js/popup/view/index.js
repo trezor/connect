@@ -8,3 +8,4 @@ export { selectFee, updateCustomFee } from './selectFee';
 export { requestButton } from './requestButton';
 export { initPermissionsView } from './permissions';
 export { initConfirmationView } from './confirmation';
+export { initBrowserView } from './browser';

@@ -13,7 +13,7 @@ import * as DEVICE from '../constants/device';
 import * as ERROR from '../constants/errors';
 import { create as createDeferred } from '../utils/deferred';
 import type { Deferred } from '../utils/deferred';
-
+import DataManager from '../data/DataManager';
 import Log, { init as initLog } from '../utils/debug';
 
 const FEATURES_LIFETIME: number = 10 * 60 * 1000; // 10 minutes
@@ -82,6 +82,8 @@ export default class Device extends EventEmitter {
 
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
         super();
+
+        _log.enabled = DataManager.getSettings('debug');
 
         // === immutable properties
         this.transport = transport;
@@ -172,7 +174,7 @@ export default class Device extends EventEmitter {
             this.runPromise = null;
         }
 
-        if (this.deferredActions[ DEVICE.RELEASE ]) { await this.deferredActions[ DEVICE.RELEASE ].promise; }
+        if (!this.keepSession && this.deferredActions[ DEVICE.RELEASE ]) { await this.deferredActions[ DEVICE.RELEASE ].promise; }
     }
 
     interruptionFromUser(error: Error): void {

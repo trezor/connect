@@ -317,8 +317,16 @@
 
         <div class="browser-not-supported">
             <div>
-                Only Chrome, Firefox, Safari and Microsoft Edge browsers are supported. Sorry!
+                Only Chrome and Firefox are supported. Sorry!
             </div>
+            <button onclick="closeWindow();">CLOSE</button>
+        </div>
+
+        <div class="browser-outdated">
+            <div>
+                Browser outdated
+            </div>
+            <button>AGREE</button>
             <button onclick="closeWindow();">CLOSE</button>
         </div>
 
@@ -334,6 +342,10 @@
             <p>New communication tool to facilitate the connection between your TREZOR and your internet browser.</p>
             <div class="image"></div>
             <a class="button" href="https://wallet.trezor.io/#/bridge" onclick="closeWindow();" target="_blank" rel="noreferrer noopener">Go to TREZOR wallet and install bridge</a>
+        </div>
+
+        <div class="passphrase-on-device">
+            <h3>Enter your passphrase on TREZOR</h3>
         </div>
     </div>
 </body>

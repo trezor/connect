@@ -2,9 +2,12 @@
 'use strict';
 
 export const TRANSPORT: string = 'ui-no_transport';
-export const BOOTLOADER: string = 'ui-bootloader';
-export const INITIALIZE: string = 'ui-initialize';
-export const FIRMWARE: string = 'ui-firmware';
+export const BOOTLOADER: string = 'ui-device_bootloader_mode';
+export const INITIALIZE: string = 'ui-device_not_initialized';
+export const FIRMWARE: string = 'ui-device_firmware_old';
+export const BROWSER_NOT_SUPPORTED: string = 'ui-browser_not_supported';
+export const BROWSER_OUTDATED: string = 'ui-browser_outdated';
+export const RECEIVE_BROWSER: string = 'ui-receive_browser';
 
 export const REQUEST_UI_WINDOW: string = 'ui-request_window';
 export const CLOSE_UI_WINDOW: string = 'ui-close_window';
@@ -14,6 +17,7 @@ export const REQUEST_CONFIRMATION: string = 'ui-request_confirmation';
 export const REQUEST_PIN: string = 'ui-request_pin';
 export const INVALID_PIN: string = 'ui-invalid_pin';
 export const REQUEST_PASSPHRASE: string = 'ui-request_passphrase';
+export const REQUEST_PASSPHRASE_ON_DEVICE: string = 'ui-request_passphrase_on_device';
 export const CONNECT: string = 'ui-connect';
 export const LOADING: string = 'ui-loading';
 export const SET_OPERATION: string = 'ui-set_operation';

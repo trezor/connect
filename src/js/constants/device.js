@@ -20,6 +20,7 @@ export const LOADING: string = 'device__loading';
 export const BUTTON: string = 'button';
 export const PIN: string = 'pin';
 export const PASSPHRASE: string = 'passphrase';
+export const PASSPHRASE_ON_DEVICE: string = 'passphrase_on_device';
 export const WORD: string = 'word';
 
 // custom

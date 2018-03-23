@@ -14,6 +14,7 @@ import { Core, CORE_EVENT, init as initCore, initTransport } from '../core/Core'
 import { parseMessage, UiMessage, ErrorMessage, ResponseMessage, TransportMessage, CoreMessage, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, DeviceMessage } from '../core/CoreMessage';
 
 import Log, { init as initLog, getLog } from '../utils/debug';
+import { checkBrowser } from '../utils/browser';
 import { getOrigin } from '../utils/networkUtils';
 import { load as loadStorage, PERMISSIONS_KEY } from './storage';
 
@@ -121,6 +122,7 @@ const init = async (settings: any, origin: string) => {
         _log.enabled = _logFromPopup.enabled = parsedSettings.debug;
         _core = await initCore(parsedSettings);
         _core.on(CORE_EVENT, postMessage);
+        checkBrowser();
         await initTransport(parsedSettings);
         postMessage(new UiMessage(IFRAME.HANDSHAKE));
     } catch (error) {
