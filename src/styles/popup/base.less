@@ -25,7 +25,6 @@ html {
 }
 
 body {
-    border: 1px solid @color_text_primary;
     position: relative;
     color: @color_text_primary;
     font-family: @font-default;
@@ -35,7 +34,13 @@ body {
 
 main {
     width: 100%;
-    min-height: 100%;
+    min-width: 300px;
+    height: 100%;
+    display: flex;
+}
+
+section {
+    width: 50%;
     text-align: center;
     display: flex;
     justify-content: center;
