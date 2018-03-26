@@ -23,12 +23,12 @@ export const checkBrowser = (): State => {
     state.name = `${bowser.name}: ${bowser.version}; ${bowser.osname}: ${bowser.osversion};`;
     state.mobile = bowser.mobile;
     if (bowser.mobile && typeof navigator.usb === 'undefined') {
-        state.supported = true;
+        state.supported = false;
     } else {
         const isSupported: any = supported[ bowser.name.toLowerCase() ];
         if (isSupported) {
             state.supported = true;
-            state.outdated = isSupported.version > parseInt(bowser.version, 10);
+            state.outdated = true; //isSupported.version > parseInt(bowser.version, 10);
         }
     }
     return state;

@@ -302,29 +302,13 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         throw ERROR.INVALID_PARAMETERS;
     }
 
-    const responseID: number = message.id;
-
-    if (!browserState.supported) {
-        // wait for popup handshake
-        await getPopupPromise().promise;
-        // show message about browser
-        postMessage(new UiMessage(UI.BROWSER_NOT_SUPPORTED, browserState));
-        throw ERROR.BROWSER;
-    } else if (browserState.outdated) {
-        // wait for popup handshake
-        await getPopupPromise().promise;
-        // show message about browser
-        postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));
-        // wait for user interaction
-        const uiPromise: Deferred<UiPromiseResponse> = createUiPromise(UI.RECEIVE_BROWSER);
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
-        console.log("UIPROMIS!", uiResp);
-
-    }
-
     if (_preferredDevice && !message.payload.device) {
         message.payload.device = _preferredDevice;
     }
+
+    const responseID: number = message.id;
+    const trustedHost: boolean = DataManager.getSettings('trustedHost');
+    const isUsingPopup: boolean = DataManager.getSettings('popup');
 
     // find method and parse incoming params
     let method: AbstractMethod;
@@ -346,6 +330,27 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     _callMethods.push(method);
 
     let messageResponse: ?ResponseMessage;
+
+    if (!browserState.supported) {
+        // wait for popup handshake
+        await getPopupPromise().promise;
+        // show message about browser
+        postMessage(new UiMessage(UI.BROWSER_NOT_SUPPORTED, browserState));
+        throw ERROR.BROWSER;
+    } else if (browserState.outdated) {
+        if (isUsingPopup) {
+            // wait for popup handshake
+            await getPopupPromise().promise;
+            // show message about browser
+            postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));
+            // wait for user interaction
+            const uiPromise: Deferred<UiPromiseResponse> = createUiPromise(UI.RECEIVE_BROWSER);
+            const uiResp: UiPromiseResponse = await uiPromise.promise;
+        } else {
+            // just show message about browser
+            postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));
+        }
+    }
 
     // this method is not using device, there is no need to acquire
     if (!method.useDevice) {
@@ -492,7 +497,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             //     return Promise.resolve();
             // }
 
-            const trustedHost: boolean = DataManager.getSettings('trustedHost');
+
 
             // check and request permissions
             method.checkPermissions();

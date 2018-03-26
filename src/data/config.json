@@ -16,6 +16,11 @@
             "download": "https://www.google.com/chrome/",
             "update": "https://support.google.com/chrome/answer/95414"
         },
+        "chromium": {
+            "version": 59,
+            "download": "https://www.chromium.org/",
+            "update": "https://www.chromium.org/"
+        },
         "firefox": {
             "version": 54,
             "download": "https://www.mozilla.org/en-US/firefox/new/",
