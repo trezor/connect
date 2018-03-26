@@ -1,40 +1,24 @@
 .select-account {
     width: 100%;
     height: 100%;
-
-    ::-webkit-scrollbar {
-            width: 5px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-            background:  @color_text_secondary;
-            border-radius: 3px;
-            &:hover {
-                background: @color_text_primary;
-            }
-    }
-
-    // remove scrollbar's arrow buttons
-    ::-webkit-scrollbar-button:decrement,
-    ::-webkit-scrollbar-button:increment {
-          width: 0px;
-    }
+    display: flex;
+    flex-direction: column;
 
     h3 {
-        margin-top: 10%;
-        margin-bottom: 5%;
+        margin-bottom: 16px;
+        padding: 0px 24px;
     }
 
     .tabs {
-        display: flex;
+        display: none;
         flex-direction: row;
+        transform: translateY(-24px); // container padding top
     }
 
     .tab-selection {
         width: 50%;
-        display: inline-block;
         border-bottom: 2px solid @color_divider;
-        padding-bottom: 10px;
+        padding: 16px 0px;
         font-weight: 600;
         position: relative;
 
@@ -60,10 +44,10 @@
 
     .select-account-list {
         width: 100%;
+        flex: 1;
         overflow-y: scroll;
-        margin-top: 18px;
-        max-height: 250px; // 5 devices
         padding: 0px 24px;
+        position: relative;
 
         &.normal {
             //display: none;
@@ -76,25 +60,37 @@
         button {
             width: 100%;
             height: 50px;
-
-            span {
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-
-            }
-            .account-title {
-                width: 60%;
-            }
-
-            text-align: left;
-            line-height: 1;
-            overflow: hidden;
-            white-space: nowrap;
-
+            display: flex;
             border: 1px solid @color_divider;
             border-radius: 0px;
             border-top-width: 0px;
+            text-align: left;
+            align-items: center;
+
+
+            .account-title {
+                flex: 1;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                margin-right: 10px;
+                font-weight: 500;
+                font-size: 14px;
+                color: @color_text_primary;
+            }
+
+            .account-status {
+                text-align: right;
+                font-size: 12px;
+                color: @color_text_secondary;
+            }
+
+            // text-align: left;
+            // line-height: 1;
+            // overflow: hidden;
+            // white-space: nowrap;
+
+
 
             &:active {
                 border-left-width: 3px;
@@ -102,12 +98,8 @@
             }
             &:hover {
                 border-left-width: 3px;
+                padding-left: 22px;
                 border-left-color: @color_green_tertiary;
-            }
-
-            &:before {
-                display: inline-block;
-                vertical-align: middle;
             }
 
             &:first-child {
@@ -122,19 +114,6 @@
             }
         }
 
-        .account-title {
-            color: @color_text_primary;
-            float: left;
-            font-weight: 500;
-            font-size: 14px;
-
-        }
-        .account-status {
-            color: @color_text_primary;
-            font-weight: 500;
-            font-size: 14px;
-            float: right;
-        }
         .low-balance {
             color: @color_text_secondary;
         }
