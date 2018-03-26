@@ -10,12 +10,20 @@
 clean:
 	rm -rf dist/
 
+node_modules:
+	yarn
+
+submodules:
+	git submodule update --init
+
 build:
+	yarn
 	yarn run build
 
 dist-%:
 	git fetch
 	git checkout $*
+	git submodule update --init
 	make clean
 	make build
 	make .copy-$*
