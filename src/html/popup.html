@@ -152,7 +152,7 @@
 
         <!-- Passphrase -->
         <div class="passphrase">
-            <h3>Enter <span>#TREZOR</span> passphrase</h3>
+            <h3>Enter<span>#TREZOR</span>passphrase</h3>
             <p>Note that passphrase is case-sensitive.</p>
             <div class="row">
                 <label>Passphrase</label>
@@ -214,31 +214,28 @@
         <!-- Export xpub confirmation: END -->
 
 
-
         <!-- Account selection -->
         <div class="select-account normal">
-            <h3>Select account:</h3>
-            <div class="account-type-tabs">
-                <div data-tab="normal" class="account-type-tab account-type-normal active">Accounts</div>
-                <div data-tab="legacy" class="account-type-tab account-type-legacy">Legacy Accounts</div>
+            <div class="tabs">
+                <div data-tab="normal" class="tab-selection active">
+                    Accounts
+                </div>
+                <div data-tab="legacy" class="tab-selection">
+                    Legacy accounts
+                </div>
             </div>
-            <div class="accounts-list">
-                <div class="accounts-normal">
-                    <div class="account account-default">
-                        <button disabled>
-                            <span class="account-title">Account #1</span>
-                            <span class="account-status">Loading...</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="accounts-legacy">
-                    <div class="account account-default">
-                        <button disabled>
-                            <span class="account-title">Account #1</span>
-                            <span class="account-status">Loading...</span>
-                        </button>
-                    </div>
-                </div>
+            <h3>Select <span>#COIN</span> account</h3>
+            <div class="select-account-list normal">
+               <button class="white account-default">
+                   <span class="account-title">Account #1</span>
+                   <span class="account-status">Loading...</span>
+               </button>
+            </div>
+            <div class="select-account-list legacy">
+               <button class="white account-default">
+                   <span class="account-title">Account #1</span>
+                   <span class="account-status">Loading...</span>
+               </button>
             </div>
         </div>
         <!-- Account selection: END -->
