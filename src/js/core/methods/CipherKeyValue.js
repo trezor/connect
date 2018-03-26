@@ -34,7 +34,7 @@ export default class CipherKeyValue extends AbstractMethod {
         this.requiredPermissions = ['read', 'write'];
         this.requiredFirmware = '1.0.0';
         this.useDevice = true;
-        this.useUi = true;
+        this.useUi = true; // this.useUi = payload.askOnEncrypt || payload.askOnDecrypt;
 
         const payload: any = message.payload;
 
