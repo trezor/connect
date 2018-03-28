@@ -6,6 +6,7 @@ import DataManager from '../data/DataManager';
 
 type State = {
     name: string;
+    osname: string;
     supported: boolean;
     outdated: boolean;
     mobile: boolean;
@@ -13,6 +14,7 @@ type State = {
 
 export const state: State = {
     name: 'unknown',
+    osname: 'unknown',
     supported: false,
     outdated: false,
     mobile: false,
@@ -22,13 +24,14 @@ export const checkBrowser = (): State => {
     const supported = DataManager.getConfig().supportedBrowsers;
     state.name = `${bowser.name}: ${bowser.version}; ${bowser.osname}: ${bowser.osversion};`;
     state.mobile = bowser.mobile;
+    state.osname = bowser.osname;
     if (bowser.mobile && typeof navigator.usb === 'undefined') {
         state.supported = false;
     } else {
         const isSupported: any = supported[ bowser.name.toLowerCase() ];
         if (isSupported) {
             state.supported = true;
-            state.outdated = true; //isSupported.version > parseInt(bowser.version, 10);
+            state.outdated = isSupported.version > parseInt(bowser.version, 10);
         }
     }
     return state;
