@@ -10,6 +10,7 @@ export type ConnectSettings = {
     iframeSrc: string;
     popup: boolean;
     popupSrc: string;
+    webusbSrc: string;
     +configSrc: string;
     coinsSrc: string;
     firmwareReleasesSrc: string;
@@ -35,6 +36,7 @@ const initialSettings: ConnectSettings = {
     iframeSrc: `${ DEFAULT_DOMAIN }iframe.html`,
     popup: true,
     popupSrc: `${ DEFAULT_DOMAIN }popup.html`,
+    webusbSrc: `${ DEFAULT_DOMAIN }webusb.html`,
     coinsSrc: 'data/coins.json',
     firmwareReleasesSrc: 'data/releases-1.json',
     transportConfigSrc: 'data/config_signed.bin',
@@ -64,6 +66,7 @@ export const parse = (input: ?Object): ConnectSettings => {
         settings.connectSrc = input.connectSrc;
         settings.iframeSrc = `${ input.connectSrc }iframe.html`;
         settings.popupSrc = `${ input.connectSrc }popup.html`;
+        settings.webusbSrc = `${ input.connectSrc }webusb.html`;
     }
 
     // if (typeof input.iframeSrc === 'string') {

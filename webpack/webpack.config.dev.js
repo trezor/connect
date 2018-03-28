@@ -12,7 +12,8 @@ module.exports = {
     entry: {
         'trezor-connect': `${JS_SRC}entrypoints/connect.js`,
         'iframe': ['babel-polyfill', `${JS_SRC}iframe/iframe.js`], // babel-polyfill is not compiled into trezor-link
-        'popup': `${JS_SRC}popup/popup.js`
+        'popup': `${JS_SRC}popup/popup.js`,
+        'webusb': `${JS_SRC}entrypoints/webusb.js`
     },
     output: {
         filename: '[name].js',
@@ -73,6 +74,12 @@ module.exports = {
             chunks: ['popup'],
             filename: 'popup.html',
             template: `${HTML_SRC}popup.html`,
+            inject: true
+        }),
+        new HtmlWebpackPlugin({
+            chunks: ['webusb'],
+            filename: `webusb.html`,
+            template: `${HTML_SRC}webusb.html`,
             inject: true
         }),
         new CopyWebpackPlugin([

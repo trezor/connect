@@ -20,12 +20,6 @@ module.exports = env => {
     const plugins = [
         extractLess,
         new webpack.IgnorePlugin(/\/iconv-loader$/),
-        // new HtmlWebpackPlugin({
-        //     chunks: ['trezor-connect'],
-        //     filename: 'index.html',
-        //     template: `${HTML_SRC}index.php`,
-        //     inject: true
-        // }),
         new HtmlWebpackPlugin({
             chunks: ['iframe'],
             filename: `iframe.html`,
@@ -36,6 +30,12 @@ module.exports = env => {
             chunks: ['popup'],
             filename: 'popup.html',
             template: `${HTML_SRC}popup.html`,
+            inject: true
+        }),
+        new HtmlWebpackPlugin({
+            chunks: ['webusb'],
+            filename: 'webusb.html',
+            template: `${HTML_SRC}webusb.html`,
             inject: true
         }),
 
@@ -91,7 +91,8 @@ module.exports = env => {
         entry: {
             'trezor-connect': `${JS_SRC}entrypoints/connect.js`,
             'iframe': ['babel-polyfill', `${JS_SRC}iframe/iframe.js`], // babel-polyfill is not compiled into trezor-link
-            'popup': `${JS_SRC}popup/popup.js`
+            'popup': `${JS_SRC}popup/popup.js`,
+            'webusb': `${JS_SRC}entrypoints/webusb.js`,
         },
         output: {
             filename: 'js/[name].[hash].js',

@@ -305,6 +305,38 @@ class TrezorConnect extends TrezorBase {
             type: 'connect',
         };
     }
+
+    static renderWebUSBButton(className: ?string): void {
+        const query = className ? className : '.trezor-webusb-button';
+        const buttons = document.querySelectorAll(query);
+        const iframeSrc: string = `${_settings.webusbSrc}?${ Date.now() }`;
+
+        buttons.forEach(b => {
+            if (b.getElementsByTagName('iframe').length < 1) {
+                const bounds = b.getBoundingClientRect();
+                const iframe = document.createElement('iframe');
+                iframe.frameBorder = '0';
+                iframe.width = Math.round(bounds.width) + 'px';
+                iframe.height = Math.round(bounds.height) + 'px';
+                iframe.style.position = 'absolute';
+                iframe.style.top = '0px';
+                iframe.style.left = '0px';
+                iframe.style.zIndex = '1';
+                iframe.setAttribute('allow', 'usb');
+                iframe.onload = () => {
+                    iframe.contentWindow.postMessage({
+                        // style: JSON.stringify( window.getComputedStyle(b) ),
+                        // outer: b.outerHTML,
+                        // inner: b.innerHTML
+                    }, _iframeOrigin);
+                }
+                iframe.src = iframeSrc;
+
+                // inject iframe into button
+                b.append(iframe);
+            }
+        });
+    }
 }
 
 // auto init
