@@ -117,20 +117,33 @@ export default class Device extends EventEmitter {
     async acquire(): Promise<void> {
         // will be resolved after trezor-link acquire event
         this.deferredActions[ DEVICE.ACQUIRE ] = createDeferred();
+        this.deferredActions[ DEVICE.ACQUIRED ] = createDeferred();
+        const _this: Device = this;
+        try {
+            const sessionID: string = await this.transport.acquire({
+                path: this.originalDescriptor.path,
+                previous: this.originalDescriptor.session,
+                checkPrevious: true,
+            });
+            _log.warn('Expected session id:', sessionID);
+            this.activitySessionID = sessionID;
+            this.deferredActions[ DEVICE.ACQUIRED ].resolve();
+            delete this.deferredActions[ DEVICE.ACQUIRED ];
 
-        const sessionID: string = await this.transport.acquire({
-            path: this.originalDescriptor.path,
-            previous: this.originalDescriptor.session,
-            checkPrevious: true,
-        });
-        this.activitySessionID = sessionID;
-        if (this.commands) {
-            this.commands.dispose();
+            if (this.commands) {
+                this.commands.dispose();
+            }
+            this.commands = new DeviceCommands(_this, this.transport, sessionID);
+
+            // future defer for trezor-link release event
+            this.deferredActions[ DEVICE.RELEASE ] = createDeferred();
+
+        } catch (error) {
+            this.deferredActions[ DEVICE.ACQUIRED ].resolve();
+            delete this.deferredActions[ DEVICE.ACQUIRED ];
+            throw error;
         }
-        this.commands = new DeviceCommands(this, this.transport, sessionID);
 
-        // future defer for trezor-link release event
-        this.deferredActions[ DEVICE.RELEASE ] = createDeferred();
     }
 
     async release(): Promise<void> {
@@ -151,12 +164,7 @@ export default class Device extends EventEmitter {
         options?: RunOptions
     ): Promise<void> {
         if (this.runPromise) {
-            // TODO: check if this method is called twice
-            // wait or return nothing?
-            _log.debug('++++++Wait for prev');
-            // await this.runPromise.promise;
-            _log.debug('TODO: is this will be called?');
-            // throw new Error('Call in progress');
+            _log.debug('Previous call is still running');
             throw ERROR.DEVICE_CALL_IN_PROGRESS;
         }
 
@@ -324,6 +332,9 @@ export default class Device extends EventEmitter {
 
     async updateDescriptor(descriptor: DeviceDescriptor): Promise<void> {
         _log.debug('updateDescriptor', 'currentSession', this.originalDescriptor.session, 'upcoming', descriptor.session, 'lastUsedID', this.activitySessionID);
+
+        if (this.deferredActions[ DEVICE.ACQUIRED ])
+            await this.deferredActions[ DEVICE.ACQUIRED ].promise;
 
         if (descriptor.session === null) {
             // released
