@@ -9,6 +9,7 @@ import * as DEVICE from '../constants/device';
 
 import Log, { init as initLog } from '../utils/debug';
 import DataManager from '../data/DataManager';
+import { httpRequest } from '../utils/networkUtils';
 
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
@@ -67,11 +68,28 @@ export default class DescriptorStream extends EventEmitter {
             if (this.listening) this.listen(); // handlers might have called stop()
         } catch (error) {
             const ts: number = new Date().getTime();
-            logger.debug('Listen error', error.message, this.failedToFetchTimestamp, ts - this.failedToFetchTimestamp);
-            if (error && typeof error.message === 'string' && error.message.toLowerCase() === 'failed to fetch' && ts - this.failedToFetchTimestamp > 500) {
+            logger.debug('Listen error', error.message, this.failedToFetchTimestamp, ts, ts - this.failedToFetchTimestamp, window.navigator.onLine);
+            if (error && typeof error.message === 'string' && error.message.toLowerCase() === 'failed to fetch') {
+                // workaround for windows
+                // to make sure that this error was caused by "err_network_io_suspended"
+                // try to fetch resource that is definitely present, if this request is also failing it means that computer is in hibernate state
+                try {
+                    await httpRequest('data/config.json', 'json');
+                    // this wasn't the reason, bridge is probably missing. Throw error
+                    console.log("config fetched!");
+                    this.emit(TRANSPORT.ERROR, error);
+                } catch (fetchError) {
+                    console.log("Failed to load", fetchError);
+                    // wait one second and try again
+                    window.setTimeout(() => {
+                        if (this.listening) this.listen();
+                    }, 1000)
+                }
+
                 this.failedToFetchTimestamp = ts;
-                if (this.listening) this.listen();
+
             } else {
+                logger.log("Transport error catched... emit");
                 this.emit(TRANSPORT.ERROR, error);
             }
         }
