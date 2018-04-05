@@ -296,6 +296,10 @@ class TrezorConnect extends TrezorBase {
         }
     }
 
+    static transportConnect(): void {
+        postMessage({ type: TRANSPORT.RECONNECT, payload: {} }, false);
+    }
+
     static dispose(): void {
         // TODO
     }

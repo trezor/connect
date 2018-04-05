@@ -107,7 +107,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         IFRAME.CALL,
         POPUP.CLOSED,
         UI.CHANGE_SETTINGS,
-        TRANSPORT.REQUEST
+        TRANSPORT.RECONNECT
     ];
 
     if (!isTrustedOrigin && safeMessages.indexOf(message.type) === -1) {
@@ -131,6 +131,10 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
 
         case UI.CHANGE_SETTINGS :
             enableLog(parseSettings(message.payload).debug);
+            break;
+
+        case TRANSPORT.RECONNECT :
+            reconnectTransport();
             break;
 
         // TODO: webusb response from popup
@@ -885,5 +889,17 @@ export const initTransport = async (settings: ConnectSettings): Promise<void> =>
     } catch (error) {
         _log.log('initTransport', error);
         throw error;
+    }
+}
+
+const reconnectTransport = async (): Promise<void> => {
+    if (DataManager.getSettings('transportReconnect')) {
+        return;
+    }
+
+    try {
+        initDeviceList(DataManager.getSettings());
+    } catch (error) {
+        postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
     }
 }

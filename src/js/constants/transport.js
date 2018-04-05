@@ -7,3 +7,4 @@ export const UPDATE: string = 'transport__update';
 export const STREAM: string = 'transport__stream';
 export const REQUEST: string = 'transport__request_device';
 export const UNREADABLE: string = 'transport__unreadable_hid_device';
+export const RECONNECT: string = 'transport__reconnect';
