@@ -5,6 +5,7 @@ import type { CoreMessage } from '../CoreMessage';
 
 import AbstractMethod, { MethodInterface } from './AbstractMethod';
 import GetFeatures from './GetFeatures';
+import GetDeviceState from './GetDeviceState';
 import GetPublicKey from './GetPublicKey';
 import CipherKeyValue from './CipherKeyValue';
 import EthereumGetAddress from './EthereumGetAddress';
@@ -15,6 +16,7 @@ import EthereumVerifyMessage from './EthereumVerifyMessage';
 const classes: {[k: string]: any} = {
     'getFeatures': GetFeatures,
     'getPublicKey': GetPublicKey,
+    'getDeviceState': GetDeviceState,
     'cipherKeyValue': CipherKeyValue,
     'ethereumGetAddress': EthereumGetAddress,
     'ethereumSignTx': EthereumSignTx,

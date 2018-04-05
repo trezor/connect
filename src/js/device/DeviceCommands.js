@@ -10,6 +10,7 @@ import { getHDPath } from '../utils/pathUtils';
 import Device from './Device';
 import DataManager from '../data/DataManager';
 
+import { getCoinInfoByCurrency } from '../backend/CoinInfo';
 import type { CoinInfo } from '../backend/CoinInfo';
 
 import * as bitcoin from 'bitcoinjs-lib-zcash';
@@ -157,6 +158,20 @@ export default class DeviceCommands {
         }
     }
 
+    async getDeviceState(): Promise<string> {
+        const coinInfo: CoinInfo = getCoinInfoByCurrency('Bitcoin');
+        const response: trezor.HDNodeResponse = await this.getHDNode(
+            [1, 0, 0],
+            coinInfo
+        );
+
+        let state: string = this.device.state ? this.device.state : Buffer.from(response.xpub).toString('hex');
+        if (!this.device.state && state.length > 64) {
+            state = state.substring(0, 64);
+        }
+        return state;
+    }
+
     async signTx(
         tx: BuildTxResult,
         refTxs: Array<bitcoin.Transaction>,
@@ -256,7 +271,7 @@ export default class DeviceCommands {
         //    await this.clearSession({});
         // }
 
-        const response = await this.call('Initialize', { state: this.device.getState() });
+        const response = await this.call('Initialize', { state: this.device.getExpectedState() || this.device.getState() });
         assertType(response, 'Features');
         return response;
     }
@@ -334,26 +349,15 @@ export default class DeviceCommands {
             );
         }
 
-        if (res.type === 'PassphraseStateRequest') {
-            const state: string = res.message.state;
-            const currentState: ?string = this.device.getState();
-            if (currentState && currentState !== state) {
-                throw ERROR.INVALID_STATE;
-            }
-
-            this.device.setState(state);
-            return this._commonCall('PassphraseStateAck', { });
-        }
-
         if (res.type === 'PassphraseRequest') {
             if (res.message.on_device) {
                 this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE, this.device);
-                return this._commonCall('PassphraseAck', { state: this.device.getState() });
+                return this._commonCall('PassphraseAck', { state: this.device.getExpectedState() || this.device.getState() });
             }
 
             const cachedPassphrase: ?string = this.device.getPassphrase();
             if (typeof cachedPassphrase === 'string') {
-                return this._commonCall('PassphraseAck', { passphrase: cachedPassphrase, state: this.device.getState() });
+                return this._commonCall('PassphraseAck', { passphrase: cachedPassphrase, state: this.device.getExpectedState() || this.device.getState() });
             }
 
             return this._promptPassphrase().then(
@@ -364,7 +368,7 @@ export default class DeviceCommands {
                         this.device.setPassphrase(null);
                     }
                     // this.device.setPassphrase(null);
-                    return this._commonCall('PassphraseAck', { passphrase: passphrase, state: this.device.getState() });
+                    return this._commonCall('PassphraseAck', { passphrase: passphrase, state: this.device.getExpectedState() || this.device.getState() });
                 },
                 err => {
                     return this._commonCall('Cancel', {}).catch(e => {
@@ -372,6 +376,17 @@ export default class DeviceCommands {
                     });
                 }
             );
+        }
+
+        if (res.type === 'PassphraseStateRequest') {
+            const state: string = res.message.state;
+            const currentState: ?string = this.device.getExpectedState() || this.device.getState();
+            if (currentState && currentState !== state) {
+                throw ERROR.INVALID_STATE;
+            }
+
+            this.device.setState(state);
+            return this._commonCall('PassphraseStateAck', { });
         }
 
         if (res.type === 'WordRequest') {

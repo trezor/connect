@@ -79,6 +79,7 @@ export default class Device extends EventEmitter {
     instance: number = 0;
 
     state: ?string;
+    expectedState: ?string;
 
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
         super();
@@ -282,6 +283,14 @@ export default class Device extends EventEmitter {
 
     getInstance(): number {
         return this.instance;
+    }
+
+    setExpectedState(state: ?string): void {
+        this.expectedState = state;
+    }
+
+    getExpectedState(): ?string {
+        return this.expectedState;
     }
 
     setPassphrase(pass: ?string): void {
@@ -501,6 +510,7 @@ export default class Device extends EventEmitter {
             return {
                 path: this.originalDescriptor.path,
                 label: label,
+                state: this.state,
                 isUsedElsewhere: this.isUsedElsewhere(),
                 featuresNeedsReload: this.featuresNeedsReload,
                 features: this.features,

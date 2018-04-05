@@ -52,7 +52,7 @@ export default class AbstractMethod implements MethodInterface {
         this.responseID = message.id || 0;
         this.devicePath = payload.device ? payload.device.path : null;
         this.deviceInstance = payload.device ? payload.device.instance : 0;
-        this.deviceState = payload.device ? payload.device.state : null;
+        this.deviceState = payload.device ? payload.device.state : null; // expected state (call param). This is not current device state!
         this.keepSession = typeof payload.keepSession === 'boolean' ? payload.keepSession : false;
         this.overridePreviousCall =  typeof payload.override === 'boolean' ? payload.override : false;
         this.overridden = false;

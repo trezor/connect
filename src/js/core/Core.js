@@ -281,9 +281,8 @@ const checkDeviceState = async (device: Device, state: ?string): Promise<boolean
     // wait for popup handshake
     await getPopupPromise().promise;
 
-    // request 0 xpub
-    const path: Array<number> = getPathFromIndex(1, 0, 0);
-    const response = await device.getCommands().getPublicKey(path, 'Bitcoin');
+    // request 0 xpub (same as in GetDeviceState method)
+    const response = await device.getCommands().getPublicKey([1, 0, 0], 'Bitcoin');
 
     // console.warn("::::STATE COMPARE:", response.message.xpub, "expected to be:", state)
 
@@ -398,23 +397,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     method.device = device;
     method.devicePath = device.getDevicePath();
 
-    // const unexpectedState: ?string = device.hasUnexpectedState(method.requiredFirmware);
-    // if (unexpectedState) {
-    //     // wait for popup handshake
-    //     await getPopupPromise().promise;
-    //     // show unexpected state information
-    //     postMessage(new UiMessage(unexpectedState));
-    //     // wait for device disconnect
-    //     await createUiPromise(DEVICE.DISCONNECT, device).promise;
-    //     // return response
-    //     postMessage(new ResponseMessage(responseID, false, { error: unexpectedState }));
-    //     throw unexpectedState;
-    // }
-
-    // TODO: nicer
-    device.setInstance(method.deviceInstance);
-
-    // const previousCall = _callMethods.find(call => call && call !== method && call.devicePath === method.devicePath);
     // find pending calls to this device
     const previousCall: Array<AbstractMethod> = _callMethods.filter(call => call && call !== method && call.devicePath === method.devicePath);
     if (previousCall.length > 0 && method.overridePreviousCall) {
@@ -439,6 +421,14 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             postMessage(new ResponseMessage(responseID, false, { error: ERROR.DEVICE_CALL_IN_PROGRESS.message }));
             throw ERROR.DEVICE_CALL_IN_PROGRESS;
         }
+    }
+
+    // TODO: nicer
+    if (method.deviceInstance) {
+        device.setInstance(method.deviceInstance);
+    }
+    if (method.deviceState) {
+        device.setExpectedState(method.deviceState);
     }
 
     // device is available
@@ -479,29 +469,27 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 return Promise.resolve();
             }
 
-            // device is ready
-            // set parameters as public variable, from now on this is reference to work with
-            // this variable will be cleared in cleanup()
+            // device is ready to go
 
             // check if device state is correct (correct checksum)
             // const correctState: boolean = await checkDeviceState(device, method.deviceState);
             // if (!correctState) {
-            //     // wait for popup handshake
-            //     await getPopupPromise().promise;
+                // wait for popup handshake
+                // await getPopupPromise().promise;
 
-            //     device.clearPassphrase();
+                // device.clearPassphrase();
 
-            //     messageResponse = new ResponseMessage(responseID, false, { error: 'Device state is incorrect' });
-            //     closePopup();
-            //     // interrupt running process and go to "final" block
-            //     return Promise.resolve();
+                // messageResponse = new ResponseMessage(responseID, false, { error: 'Device state is incorrect' });
+                // closePopup();
+                // // interrupt running process and go to "final" block
+                // return Promise.resolve();
             // }
 
 
 
             // check and request permissions
             method.checkPermissions();
-            if (method.requiredPermissions.length > 0 && !trustedHost) {
+            if (!trustedHost && method.requiredPermissions.length > 0) {
                 // show permissions in UI
                 // const permitted: boolean = await requestPermissions(method.requiredPermissions, callbacks);
                 const permitted: boolean = await method.requestPermissions();
@@ -514,7 +502,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             }
 
             // before authentication, ask for confirmation if needed [export xpub, sign message]
-            if (typeof method.confirmation === 'function' && !trustedHost) {
+            if (!trustedHost && typeof method.confirmation === 'function') {
                 // show confirmation in UI
                 const confirmed: boolean = await method.confirmation();
                 if (!confirmed) {
@@ -525,9 +513,18 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 }
             }
 
-            if (!device.isAuthenticated(method.useEmptyPassphrase)) { // TODO: check if auth is needed (getFeatures)
+            // Make sure that device will display pin/passphrase
+            if (method.deviceState || !device.isAuthenticated(method.useEmptyPassphrase)) {
+                // wait for popup handshake
+                await getPopupPromise().promise;
+
                 try {
-                    await requestAuthentication(device);
+                    const deviceState: string = await device.getCommands().getDeviceState();
+                    // validate expected state (fallback for T1, T2 will throw this error in DeviceCommands 'PassphraseStateRequest')
+                    console.log("ELO!", deviceState, method.deviceState, device.getState() )
+                    if (method.deviceState && method.deviceState !== deviceState) {
+                        throw new Error('Device passphrase is incorrect!!!');
+                    }
                 } catch (error) {
                     // catch wrong pin
                     if (error.message === ERROR.INVALID_PIN_ERROR_MESSAGE) {
@@ -537,8 +534,9 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                         // other error
                         postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
                         closePopup();
-
+                        // clear cached passphrase. its nod valid
                         device.clearPassphrase();
+                        device.setState(null);
 
                         return Promise.resolve();
                     }
@@ -771,7 +769,10 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
     try {
         _deviceList = await getDeviceList();
 
-        postMessage(new TransportMessage(TRANSPORT.START, `${_deviceList.transportType()} ${_deviceList.transportVersion()}`));
+        postMessage(new TransportMessage(TRANSPORT.START, {
+            type: _deviceList.transportType(),
+            version: _deviceList.transportVersion()
+        }));
 
         _deviceList.on(DEVICE.CONNECT, (device: DeviceDescription) => {
             handleDeviceSelectionChanges();

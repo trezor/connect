@@ -100,7 +100,10 @@ export default class DeviceList extends EventEmitter {
             if (webUsbPlugin) {
                 webUsbPlugin.unreadableHidDeviceChange.on('change', () => this.emit(TRANSPORT.UNREADABLE));
             }
-            this.emit(TRANSPORT.START, `${this.transportType()} ${this.transportVersion()}`);
+            this.emit(TRANSPORT.START, {
+                type: this.transportType(),
+                version: this.transportVersion()
+            });
         } catch (error) {
             throw error;
         }

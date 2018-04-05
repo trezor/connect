@@ -50,6 +50,10 @@ export default class Trezor {
         return await this.__call({ method: 'ethereumVerifyMessage', ...params });
     }
 
+    static async getDeviceState(params: Object): Promise<Object> {
+        return await this.__call({ method: 'getDeviceState', ...params });
+    }
+
     /*
     static requestDevice(): void {
         // to override
