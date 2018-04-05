@@ -149,7 +149,6 @@ export default class PopupManager extends EventEmitter {
         if (!this._window && message.type !== 'ui_request_window' && this.openTimeout) {
             this.close();
             showPopupRequest(this.open.bind(this), () => { this.emit(CLOSED); });
-            console.warn('TODO: render alert in page!', this.closeInterval, this.openTimeout, this.requestTimeout);
             return;
         }
 

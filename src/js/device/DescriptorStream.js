@@ -68,7 +68,7 @@ export default class DescriptorStream extends EventEmitter {
             if (this.listening) this.listen(); // handlers might have called stop()
         } catch (error) {
             const ts: number = new Date().getTime();
-            logger.debug('Listen error', error.message, this.failedToFetchTimestamp, ts, ts - this.failedToFetchTimestamp, window.navigator.onLine);
+            logger.debug('Listen error', error.message, this.failedToFetchTimestamp, ts - this.failedToFetchTimestamp);
             if (error && typeof error.message === 'string' && error.message.toLowerCase() === 'failed to fetch') {
                 // workaround for windows
                 // to make sure that this error was caused by "err_network_io_suspended"
@@ -76,10 +76,9 @@ export default class DescriptorStream extends EventEmitter {
                 try {
                     await httpRequest('data/config.json', 'json');
                     // this wasn't the reason, bridge is probably missing. Throw error
-                    console.log("config fetched!");
                     this.emit(TRANSPORT.ERROR, error);
                 } catch (fetchError) {
-                    console.log("Failed to load", fetchError);
+                    logger.log("Failed to load static resource");
                     // wait one second and try again
                     window.setTimeout(() => {
                         if (this.listening) this.listen();
@@ -89,7 +88,7 @@ export default class DescriptorStream extends EventEmitter {
                 this.failedToFetchTimestamp = ts;
 
             } else {
-                logger.log("Transport error catched... emit");
+                logger.log("Transport error");
                 this.emit(TRANSPORT.ERROR, error);
             }
         }
