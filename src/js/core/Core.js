@@ -803,6 +803,8 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
 
         _deviceList.on(TRANSPORT.ERROR, async (error) => {
             _log.error('TRANSPORT ERROR', error);
+            if (_deviceList)
+                _deviceList.disconnectDevices();
             _deviceList = null;
             postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
             // if transport fails during app lifetime, try to reconnect

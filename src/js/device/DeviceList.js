@@ -289,6 +289,13 @@ export default class DeviceList extends EventEmitter {
 
         this.allDevices().forEach(device => device.onBeforeUnload());
     }
+
+    disconnectDevices(){
+        this.allDevices().forEach(device => {
+            // device.disconnect();
+            this.emit(DEVICE.DISCONNECT, device.toMessageObject());
+        })
+    }
 }
 
 /**

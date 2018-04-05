@@ -10,7 +10,7 @@ import * as DEVICE from '../constants/device';
 import Log, { init as initLog } from '../utils/debug';
 import DataManager from '../data/DataManager';
 import { httpRequest } from '../utils/networkUtils';
-
+import { resolveAfter } from '../utils/promiseUtils';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
 export type DeviceDescriptorDiff = {
@@ -80,9 +80,8 @@ export default class DescriptorStream extends EventEmitter {
                 } catch (fetchError) {
                     logger.log("Failed to load static resource");
                     // wait one second and try again
-                    window.setTimeout(() => {
-                        if (this.listening) this.listen();
-                    }, 1000)
+                    await resolveAfter(1000, null);
+                    if (this.listening) this.listen();
                 }
 
                 this.failedToFetchTimestamp = ts;
