@@ -898,7 +898,7 @@ const reconnectTransport = async (): Promise<void> => {
     }
 
     try {
-        initDeviceList(DataManager.getSettings());
+        await initDeviceList(DataManager.getSettings());
     } catch (error) {
         postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
     }
