@@ -37,7 +37,7 @@ sync-%:
 .sync-%:
 	# Before first use: Install awscli (pip install awscli)
 	# Configure access credentials (aws configure), region is "eu-central-1"
-	aws s3 sync --delete --cache-control 'public, max-age=3600' dist/$* s3://connect.trezor.io/$*/
+	aws s3 sync --delete --cache-control 'public, max-age=3600' dist/ s3://connect.trezor.io/$*/
 
 npm:
 	yarn bump
