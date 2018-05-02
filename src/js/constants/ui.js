@@ -1,6 +1,8 @@
 /* @flow */
 'use strict';
 
+export const IFRAME_HANDSHAKE: string = 'iframe_handshake';
+
 export const TRANSPORT: string = 'ui-no_transport';
 export const BOOTLOADER: string = 'ui-device_bootloader_mode';
 export const INITIALIZE: string = 'ui-device_not_initialized';

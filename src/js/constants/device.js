@@ -1,6 +1,11 @@
 /* @flow */
 'use strict';
 
+// Regexp for flowtype
+// replace ": string = '(.*)';" to ": '$1',"
+// replace "export const " to ""
+
+
 // device list events
 export const CONNECT: string = 'device__connect';
 export const CONNECT_UNACQUIRED: string = 'device__connect_unacquired';
