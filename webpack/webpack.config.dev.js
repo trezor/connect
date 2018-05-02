@@ -53,6 +53,13 @@ module.exports = {
                     name: './fonts/[name].[hash].[ext]',
                 },
             },
+            {
+                test: /\.wasm$/,
+                loader: 'file-loader',
+                query: {
+                    name: 'js/[name].[hash].[ext]',
+                },
+            },
         ]
     },
     resolve: {
