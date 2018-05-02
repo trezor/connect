@@ -327,6 +327,7 @@ class TrezorConnect extends TrezorBase {
                 iframe.style.left = '0px';
                 iframe.style.zIndex = '1';
                 iframe.setAttribute('allow', 'usb');
+                iframe.setAttribute('scrolling', 'no');
                 iframe.onload = () => {
                     iframe.contentWindow.postMessage({
                         // style: JSON.stringify( window.getComputedStyle(b) ),
