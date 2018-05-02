@@ -323,7 +323,7 @@ export default class Device extends EventEmitter {
         return this.state ? this.state : null;
     }
 
-    setState(state: string): void {
+    setState(state: ?string): void {
         this.state = state;
     }
 
