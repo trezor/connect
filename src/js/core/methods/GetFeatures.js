@@ -11,7 +11,7 @@ export default class GetPublicKey extends AbstractMethod {
         this.requiredPermissions = [];
         this.requiredFirmware = '1.0.0';
         this.useDevice = true;
-        this.useUi = true;
+        this.useUi = false;
     }
 
     async run(): Promise<Object> {
