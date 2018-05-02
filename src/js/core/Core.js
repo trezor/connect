@@ -428,9 +428,9 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     }
 
     // TODO: nicer
-    if (method.deviceInstance) {
+    //if (method.deviceInstance) {
         device.setInstance(method.deviceInstance);
-    }
+    //}
     if (method.deviceState) {
         device.setExpectedState(method.deviceState);
     }
@@ -518,14 +518,13 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             }
 
             // Make sure that device will display pin/passphrase
-            if (method.deviceState || !device.isAuthenticated(method.useEmptyPassphrase)) {
+            if (method.useUi && (method.deviceState || !device.isAuthenticated(method.useEmptyPassphrase))) {
                 // wait for popup handshake
                 await getPopupPromise().promise;
 
                 try {
                     const deviceState: string = await device.getCommands().getDeviceState();
                     // validate expected state (fallback for T1, T2 will throw this error in DeviceCommands 'PassphraseStateRequest')
-                    console.log("ELO!", deviceState, method.deviceState, device.getState() )
                     if (method.deviceState && method.deviceState !== deviceState) {
                         throw new Error('Device passphrase is incorrect!!!');
                     }
@@ -547,7 +546,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 }
             }
 
-            // wait for popup handshake
+            // make sure that popup is opened
             if (method.useUi) {
                 await getPopupPromise().promise;
             }
