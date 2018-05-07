@@ -350,14 +350,19 @@ export default class DeviceCommands {
         }
 
         if (res.type === 'PassphraseRequest') {
+
+            const state: ?string = this.device.features && this.device.features.major_version > 1 ? (this.device.getExpectedState() || this.device.getState()) : null;
+
             if (res.message.on_device) {
                 this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE, this.device);
-                return this._commonCall('PassphraseAck', { state: this.device.getExpectedState() || this.device.getState() });
+                //return this._commonCall('PassphraseAck', { state: this.device.getExpectedState() || this.device.getState() });
+                return this._commonCall('PassphraseAck', { state });
             }
 
             const cachedPassphrase: ?string = this.device.getPassphrase();
             if (typeof cachedPassphrase === 'string') {
-                return this._commonCall('PassphraseAck', { passphrase: cachedPassphrase, state: this.device.getExpectedState() || this.device.getState() });
+                // return this._commonCall('PassphraseAck', { passphrase: cachedPassphrase, state: this.device.getExpectedState() || this.device.getState() });
+                return this._commonCall('PassphraseAck', { passphrase: cachedPassphrase, state });
             }
 
             return this._promptPassphrase().then(
@@ -368,7 +373,8 @@ export default class DeviceCommands {
                         this.device.setPassphrase(null);
                     }
                     // this.device.setPassphrase(null);
-                    return this._commonCall('PassphraseAck', { passphrase: passphrase, state: this.device.getExpectedState() || this.device.getState() });
+                    // return this._commonCall('PassphraseAck', { passphrase: passphrase, state: this.device.getExpectedState() || this.device.getState() });
+                    return this._commonCall('PassphraseAck', { passphrase: passphrase, state });
                 },
                 err => {
                     return this._commonCall('Cancel', {}).catch(e => {
