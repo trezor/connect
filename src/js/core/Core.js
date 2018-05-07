@@ -434,7 +434,9 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     // if (method.deviceState) {
     if (method.expectedDeviceState) {
         device.setExpectedState(method.deviceState);
-        device.setState(method.deviceState);
+        // reset state (T2)
+        if (method.deviceState === null)
+            device.setState(method.deviceState);
     }
 
     // device is available
