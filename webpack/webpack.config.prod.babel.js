@@ -100,7 +100,7 @@ module.exports = env => {
             publicPath: './',
             library: LIB_NAME,
             libraryTarget: 'umd',
-            libraryExport: 'default'
+            // libraryExport: 'default'
         },
 
         module: {

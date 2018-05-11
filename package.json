@@ -26,6 +26,7 @@
     "dev": "babel-node ./webpack/server.js",
     "dev:popup": "babel-node ./webpack/server.js --config popup",
     "build": "rm -rf dist && webpack --config ./webpack/webpack.config.prod.babel.js --progress",
+    "build:npm": "rm -rf dist && webpack --config ./webpack/webpack.config.npm.babel.js --progress",
     "build:quick": "rm -rf dist && webpack --config ./webpack/webpack.config.prod.babel.js --env=quick --progress",
     "stats": "webpack --config ./webpack/webpack.config.prod.babel.js --json > dist/stats.json",
     "test": "karma start karma.conf.js",

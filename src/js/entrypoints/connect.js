@@ -29,16 +29,6 @@ import type { CoreMessage } from '../core/CoreMessage';
 import { parse as parseSettings, setDataAttributes } from './ConnectSettings';
 import type { ConnectSettings } from './ConnectSettings';
 
-export {
-    TRANSPORT,
-    UI,
-    DEVICE,
-    UI_EVENT,
-    DEVICE_EVENT,
-    TRANSPORT_EVENT,
-    RESPONSE_EVENT,
-};
-
 const _log: Log = initLog('[trezor-connect.js]');
 
 let _settings: ConnectSettings;
@@ -354,8 +344,17 @@ if (queryString === 'init') {
     TrezorConnect.init();
 }
 
-// module.exports = TrezorConnect;
 export default TrezorConnect;
+
+export {
+    TRANSPORT,
+    UI,
+    DEVICE,
+    UI_EVENT,
+    DEVICE_EVENT,
+    TRANSPORT_EVENT,
+    RESPONSE_EVENT,
+};
 
 // expose as window
 window.TrezorConnect = TrezorConnect;
