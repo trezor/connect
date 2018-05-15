@@ -5,7 +5,7 @@ import * as DEVICE from '../constants/device';
 import * as ERROR from '../constants/errors';
 import randombytes from 'randombytes';
 
-import * as trezor from './trezorTypes';
+import * as trezor from 'flowtype/trezor';
 import { getHDPath } from '../utils/pathUtils';
 import Device from './Device';
 import DataManager from '../data/DataManager';
@@ -16,7 +16,7 @@ import type { CoinInfo } from '../backend/CoinInfo';
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as hdnodeUtils from '../utils/hdnode';
 
-import * as signtxHelper from './helpers/signtx';
+import { signTx as signTxHelper } from './helpers/signtx';
 import * as ethereumSignTxHelper from './helpers/ethereumSignTx';
 import type { BuildTxResult } from 'hd-wallet';
 import type { Transport } from 'trezor-link';
@@ -178,7 +178,7 @@ export default class DeviceCommands {
         coinInfo: CoinInfo,
         locktime: ?number,
     ): Promise<MessageResponse<trezor.SignedTx>> {
-        return await signtxHelper.signTx(this.typedCall.bind(this), tx, refTxs, coinInfo, locktime);
+        return await signTxHelper(this.typedCall.bind(this), tx, refTxs, coinInfo, locktime);
     }
 
     async ethereumSignTx(
@@ -190,7 +190,6 @@ export default class DeviceCommands {
         value: string,
         data?: string,
         chain_id?: number
-    // ): Promise<MessageResponse<ethereumSignTxHelper.EthereumSignature>> {
     ): Promise<ethereumSignTxHelper.EthereumSignature> {
         return await ethereumSignTxHelper.ethereumSignTx(
             this.typedCall.bind(this),

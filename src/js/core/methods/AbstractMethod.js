@@ -9,7 +9,6 @@ import { UiMessage, DeviceMessage } from '../CoreMessage';
 import type { CoreMessage, UiPromiseResponse } from '../CoreMessage';
 import type { Deferred } from '../../utils/deferred';
 
-// import { checkPermissions, savePermissions } from './permissions';
 import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../iframe/storage';
 import { crypto } from 'bitcoinjs-lib-zcash';
 import DataManager from '../../data/DataManager';

@@ -4,7 +4,7 @@
 import AbstractMethod from './AbstractMethod';
 import { validatePath } from '../../utils/pathUtils';
 import type { MessageResponse } from '../../device/DeviceCommands';
-import type { EthereumAddress } from '../../device/trezorTypes';
+import type { EthereumAddress } from 'flowtype/trezor';
 import type { CoreMessage } from '../CoreMessage';
 
 type Params = {

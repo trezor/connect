@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import * as trezor from '../device/trezorTypes';
+import * as trezor from 'flowtype/trezor';
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as ecurve from 'ecurve';
 
@@ -23,6 +23,7 @@ export function pubNode2bjsNode(
     node: trezor.HDPubNode,
     network: bitcoin.Network
 ): bitcoin.HDNode {
+
     const chainCode = new Buffer(node.chain_code, 'hex');
     const publicKey = new Buffer(node.public_key, 'hex');
 

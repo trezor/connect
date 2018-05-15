@@ -8,6 +8,7 @@ import Account from './Account';
 import { getPathFromIndex } from '../utils/pathUtils';
 import type { CoinInfo } from '../backend/CoinInfo';
 import { HDNode } from 'bitcoinjs-lib-zcash';
+import type { HDNodeResponse } from 'flowtype/trezor';
 
 let interrupted: boolean = false;
 export const stopDiscovering = () => {
@@ -78,8 +79,8 @@ export const discover = async (options: DiscoveryOptions): Promise<Array<Account
         if (comm.isDisposed() || interrupted) return accounts;
 
         const path: Array<number> = getPathFromIndex(coinInfo.segwit ? 49 : 44, coinInfo.bip44, index);
-        const node: HDNode = await comm.getHDNode(path, coinInfo);
-        const account: Account = new Account(index, path, node.toBase58(), backend, coinInfo);
+        const node: HDNodeResponse = await comm.getHDNode(path, coinInfo);
+        const account: Account = new Account(index, path, node.xpub, backend, coinInfo);
 
         // check if not interrupted
         if (comm.isDisposed() || interrupted) return accounts;

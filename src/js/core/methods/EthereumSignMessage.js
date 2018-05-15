@@ -4,7 +4,7 @@
 import AbstractMethod from './AbstractMethod';
 import { validatePath } from '../../utils/pathUtils';
 import type { MessageResponse } from '../../device/DeviceCommands';
-import type { MessageSignature } from '../../device/trezorTypes';
+import type { MessageSignature } from 'flowtype/trezor';
 import type { CoreMessage } from '../CoreMessage';
 
 type Params = {

@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import * as trezor from '../trezorTypes';
+import * as trezor from 'flowtype/trezor';
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import type { MessageResponse, DefaultMessageResponse } from '../DeviceCommands';
 import type { Input, Output } from '../../tx/TransactionComposer';
@@ -188,18 +188,20 @@ const processTxRequest = async (
     );
 };
 
-export const signTx = async (
-    typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
+export const signTx = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     tx: BuildTxResult,
     refTxs: Array<bitcoin.Transaction>,
     coinInfo: CoinInfo,
     locktime: ?number,
 ): Promise<MessageResponse<trezor.SignedTx>> => {
+
     // TODO rbf
     const sequence: number = locktime ? (0xffffffff - 1) : 0xffffffff;
 
     // format hd-wallet formats into trezor formats
+    // $FlowIssue
     const inputs: Array<trezor.TransactionInput> = tx.transaction.inputs.map(i => input2trezor(i, sequence));
+    // $FlowIssue
     const outputs: Array<trezor.TransactionOutput> = tx.transaction.outputs.sorted.map(o => output2trezor(o, coinInfo.network));
 
     const index: {[key: string]: trezor.RefTransaction} = indexTxsForSign(refTxs);
@@ -279,9 +281,11 @@ function verifyTx(
     coinInfo: CoinInfo,
 ) {
     const bitcoinTx: bitcoin.Transaction = bitcoin.Transaction.fromHex(signedTx.message.serialized.serialized_tx, coinInfo.zcash);
+    // $FlowIssue
     if (tx.transaction.inputs.length !== bitcoinTx.ins.length) {
         throw new Error('Signed transaction has wrong length.');
     }
+    // $FlowIssue
     if (tx.transaction.outputs.sorted.length !== bitcoinTx.outs.length) {
         throw new Error('Signed transaction has wrong length.');
     }

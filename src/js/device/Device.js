@@ -5,7 +5,7 @@ import EventEmitter from 'events';
 import semvercmp from 'semver-compare';
 import DeviceCommands from './DeviceCommands';
 
-import type { Features } from './trezorTypes';
+import type { Features } from 'flowtype/trezor';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
 import * as UI from '../constants/ui';

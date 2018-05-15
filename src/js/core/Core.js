@@ -19,7 +19,6 @@ import type { UiPromiseResponse } from './CoreMessage';
 
 import AbstractMethod from './methods/AbstractMethod';
 import { find as findMethod } from './methods';
-import { requestPermissions } from './methods/permissions';
 
 import { create as createDeferred } from '../utils/deferred';
 import type { Deferred } from '../utils/deferred';
@@ -501,7 +500,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             method.checkPermissions();
             if (!trustedHost && method.requiredPermissions.length > 0) {
                 // show permissions in UI
-                // const permitted: boolean = await requestPermissions(method.requiredPermissions, callbacks);
                 const permitted: boolean = await method.requestPermissions();
                 if (!permitted) {
                     postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.PERMISSIONS_NOT_GRANTED.message }));

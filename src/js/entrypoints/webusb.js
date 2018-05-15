@@ -34,8 +34,8 @@ const handleMessage = (event: MessageEvent): void => {
             // TREZOR v2 Firmware
             { vendorId: 0x1209, productId: 0x53c1 },
         ];
-
-        var usb = navigator.usb;
+        // $FlowIssue
+        const usb = navigator.usb;
         try {
             await usb.requestDevice({filters: TREZOR_DESCS});
         } catch (error) {

@@ -50,7 +50,7 @@ export const selectDevice = (payload: ?Object): void => {
     const buttonsContainer: HTMLElement = container.getElementsByClassName('select-device-list')[0];
     buttonsContainer.innerHTML = '';
 
-    const checkbox: ?HTMLElement = container.querySelector('input[type=checkbox]');
+    const checkbox: HTMLInputElement = (container.querySelector('input[type=checkbox]') : any);
 
 
     const handleClick = (event: MouseEvent) => {

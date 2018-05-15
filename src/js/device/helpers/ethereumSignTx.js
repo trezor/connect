@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import type { EthereumTxRequest } from '../trezorTypes';
+import type { EthereumTxRequest } from 'flowtype/trezor';
 import type { MessageResponse, DefaultMessageResponse } from '../DeviceCommands';
 
 export type EthereumSignature = {
