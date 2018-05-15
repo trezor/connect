@@ -434,9 +434,12 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     if (method.expectedDeviceState) {
         device.setExpectedState(method.deviceState);
-        // reset state (T2)
-        if (!method.deviceState)
+        // reset state (for T2) and reset cachedPassphrase
+        if (!method.deviceState) {
             device.setState(null);
+            device.setPassphrase(null);
+        }
+
     }
 
     // device is available
@@ -529,7 +532,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     const deviceState: string = await device.getCommands().getDeviceState();
                     // validate expected state (fallback for T1, T2 will throw this error in DeviceCommands 'PassphraseStateRequest')
                     if (method.deviceState && method.deviceState !== deviceState) {
-                        throw new Error('Device passphrase is incorrect!!!');
+                        throw new Error('Passphrase is incorrect');
                     }
                 } catch (error) {
                     // catch wrong pin
