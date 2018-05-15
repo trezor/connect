@@ -142,7 +142,12 @@ export default class Device extends EventEmitter {
         } catch (error) {
             this.deferredActions[ DEVICE.ACQUIRED ].resolve();
             delete this.deferredActions[ DEVICE.ACQUIRED ];
-            throw error;
+            if (this.runPromise){
+                this.runPromise.reject(error);
+            } else {
+                throw error;
+            }
+            this.runPromise = null;
         }
 
     }
@@ -463,11 +468,11 @@ export default class Device extends EventEmitter {
         let pass: boolean = this.features.passphrase_protection ? this.features.passphrase_cached : true;
         if (typeof this.cachedPassphrase[ this.instance ] === 'string') pass = true;
         if (useEmptyPassphrase) pass = true;
-        _log.debug('isAuthenticated', pin, pass, this.cachedPassphrase);
+        _log.debug('isAuthenticated', pin, pass);
         return (pin && pass);
     }
 
-    hasUnexpectedState(requiredFirmware: string): ?string {
+    hasUnexpectedMode(requiredFirmware: string): ?string {
         if (this.features) {
             if (this.isBootloader()) {
                 return UI.BOOTLOADER;

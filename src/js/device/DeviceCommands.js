@@ -165,8 +165,8 @@ export default class DeviceCommands {
             coinInfo
         );
 
-        let state: string = this.device.state ? this.device.state : Buffer.from(response.xpub).toString('hex');
-        if (!this.device.state && state.length > 64) {
+        let state: string = this.device.getState() || Buffer.from(response.xpub).toString('hex');
+        if (!this.device.getState() && state.length > 64) {
             state = state.substring(0, 64);
         }
         return state;
@@ -355,13 +355,11 @@ export default class DeviceCommands {
 
             if (res.message.on_device) {
                 this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE, this.device);
-                //return this._commonCall('PassphraseAck', { state: this.device.getExpectedState() || this.device.getState() });
                 return this._commonCall('PassphraseAck', { state });
             }
 
             const cachedPassphrase: ?string = this.device.getPassphrase();
             if (typeof cachedPassphrase === 'string') {
-                // return this._commonCall('PassphraseAck', { passphrase: cachedPassphrase, state: this.device.getExpectedState() || this.device.getState() });
                 return this._commonCall('PassphraseAck', { passphrase: cachedPassphrase, state });
             }
 
@@ -372,8 +370,6 @@ export default class DeviceCommands {
                     } else {
                         this.device.setPassphrase(null);
                     }
-                    // this.device.setPassphrase(null);
-                    // return this._commonCall('PassphraseAck', { passphrase: passphrase, state: this.device.getExpectedState() || this.device.getState() });
                     return this._commonCall('PassphraseAck', { passphrase: passphrase, state });
                 },
                 err => {

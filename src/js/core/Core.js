@@ -431,12 +431,12 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     //if (method.deviceInstance) {
         device.setInstance(method.deviceInstance);
     //}
-    // if (method.deviceState) {
+
     if (method.expectedDeviceState) {
         device.setExpectedState(method.deviceState);
         // reset state (T2)
-        if (method.deviceState === null)
-            device.setState(method.deviceState);
+        if (!method.deviceState)
+            device.setState(null);
     }
 
     // device is available
@@ -462,14 +462,13 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     try {
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
-            // check AGAIN if device is in unexpected state (bootloader, not-initialized, old firmware)
-            // this just a duplicate of above function, but before inner call device could be unacquired
-            const unexpectedState: ?string = device.hasUnexpectedState(method.requiredFirmware);
-            if (unexpectedState) {
+            // check if device is in unexpected mode (bootloader, not-initialized, old firmware)
+            const unexpectedMode: ?string = device.hasUnexpectedMode(method.requiredFirmware);
+            if (unexpectedMode) {
                 // wait for popup handshake
                 await getPopupPromise().promise;
                 // show unexpected state information
-                postMessage(new UiMessage(unexpectedState, device.toMessageObject()));
+                postMessage(new UiMessage(unexpectedMode, device.toMessageObject()));
 
                 // wait for device disconnect
                 await createUiPromise(DEVICE.DISCONNECT, device).promise;

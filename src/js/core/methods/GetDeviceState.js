@@ -19,14 +19,14 @@ export default class GetDeviceState extends AbstractMethod {
 
     async run(): Promise<Object> {
 
-        if (this.device.state) {
+        if (this.device.getState()) {
             return {
-                state: this.device.state
+                state: this.device.getState()
             }
         }
 
         const response: string = await this.device.getCommands().getDeviceState();
-        const state: string = this.device.state ? this.device.state : response;
+        const state: string = this.device.getState() || response;
 
         return {
             state
