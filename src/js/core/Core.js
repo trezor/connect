@@ -530,8 +530,9 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
                 try {
                     const deviceState: string = await device.getCommands().getDeviceState();
-                    // validate expected state (fallback for T1, T2 will throw this error in DeviceCommands 'PassphraseStateRequest')
-                    if (method.deviceState && method.deviceState !== deviceState) {
+                    // validate expected state (fallback for T1. T2 will throw this error in DeviceCommands 'PassphraseStateRequest')
+                    const isT1: boolean = (device.features && device.features.major_version === 1)
+                    if (isT1 && method.deviceState && method.deviceState !== deviceState) {
                         throw new Error('Passphrase is incorrect');
                     }
                 } catch (error) {
