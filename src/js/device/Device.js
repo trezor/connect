@@ -261,7 +261,9 @@ export default class Device extends EventEmitter {
         }
 
         // reload features
-        if (this.features && !this.features.bootloader_mode && this.features.initialized) { await this.getFeatures(); }
+        if (this.features && !this.features.bootloader_mode && this.features.initialized) {
+            await this.getFeatures();
+        }
 
         // await resolveAfter(2000, null);
         if ((!this.keepSession && typeof options.keepSession !== 'boolean') || options.keepSession === false) {
@@ -316,6 +318,13 @@ export default class Device extends EventEmitter {
         this.features = message;
         this.featuresNeedsReload = false;
         this.featuresTimestamp = new Date().getTime();
+
+        // corner-case: if device was unacquired but some call to this device was made
+        // this will automatically change unacquired device to acquired (without deviceList)
+        // emit ACQUIRED event to deviceList which will propagate DEVICE.CONNECT event
+        if (this.listeners(DEVICE.ACQUIRED).length > 0) {
+            this.emit(DEVICE.ACQUIRED);
+        }
     }
 
     async getFeatures(): Promise<void> {

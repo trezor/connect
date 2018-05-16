@@ -174,7 +174,11 @@ export default class DeviceList extends EventEmitter {
     ): Promise<Device> {
         _log.debug('Creating Unacquired Device', descriptor);
         try {
-            return await Device.createUnacquired(this.transport, descriptor);
+            const device = await Device.createUnacquired(this.transport, descriptor);
+            device.once(DEVICE.ACQUIRED, () =>{
+                this.emit(DEVICE.CONNECT, device.toMessageObject());
+            })
+            return device;
         } catch (error) {
             throw error;
         }
@@ -388,7 +392,7 @@ class DiffHandler {
     handle() {
         _log.debug('Update DescriptorStream', this.diff);
 
-        // note - this intentionaly does not wait for connected devices
+        // note - this intentionally does not wait for connected devices
         // createDevice inside waits for the updateDescriptor event
         this._createConnectedDevices();
         this._createReleasedDevices();
