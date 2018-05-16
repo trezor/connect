@@ -38,7 +38,7 @@ module.exports = {
     resolve: {
         modules: [SRC, NODE_MODULES],
         alias: {
-            'flowtype/trezor': `${SRC}flowtype/index.js`,
+            'flowtype/trezor': `${SRC}flowtype/empty.js`,
         }
     },
 

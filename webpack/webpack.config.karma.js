@@ -51,7 +51,7 @@ module.exports = {
     resolve: {
         modules: [ constants.SRC, constants.NODE_MODULES ],
         alias: {
-            'flowtype/trezor': `${constants.SRC}flowtype/index.js`,
+            'flowtype/trezor': `${SRC}flowtype/empty.js`,
         }
     },
     performance: {

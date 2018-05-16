@@ -5,7 +5,7 @@ import * as DEVICE from '../constants/device';
 import * as ERROR from '../constants/errors';
 import randombytes from 'randombytes';
 
-import * as trezor from 'flowtype/trezor';
+
 import { getHDPath } from '../utils/pathUtils';
 import Device from './Device';
 import DataManager from '../data/DataManager';
@@ -20,6 +20,7 @@ import { signTx as signTxHelper } from './helpers/signtx';
 import * as ethereumSignTxHelper from './helpers/ethereumSignTx';
 import type { BuildTxResult } from 'hd-wallet';
 import type { Transport } from 'trezor-link';
+import * as trezor from 'flowtype/trezor'; // flowtype
 
 export type MessageResponse<T> = {
     type: string,
