@@ -318,13 +318,6 @@ export default class Device extends EventEmitter {
         this.features = message;
         this.featuresNeedsReload = false;
         this.featuresTimestamp = new Date().getTime();
-
-        // corner-case: if device was unacquired but some call to this device was made
-        // this will automatically change unacquired device to acquired (without deviceList)
-        // emit ACQUIRED event to deviceList which will propagate DEVICE.CONNECT event
-        if (this.listeners(DEVICE.ACQUIRED).length > 0) {
-            this.emit(DEVICE.ACQUIRED);
-        }
     }
 
     async getFeatures(): Promise<void> {
@@ -368,6 +361,14 @@ export default class Device extends EventEmitter {
                     this.deferredActions[ DEVICE.RELEASE ].resolve();
                     delete this.deferredActions[ DEVICE.RELEASE ];
                 }
+
+                // corner-case: if device was unacquired but some call to this device was made
+                // this will automatically change unacquired device to acquired (without deviceList)
+                // emit ACQUIRED event to deviceList which will propagate DEVICE.CONNECT event
+                if (this.listeners(DEVICE.ACQUIRED).length > 0) {
+                    this.emit(DEVICE.ACQUIRED);
+                }
+
             } else {
                 // by other application
                 _log.debug('RELEASED BY OTHER APP');
