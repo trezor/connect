@@ -165,10 +165,8 @@ export default class DeviceCommands {
             coinInfo
         );
 
-        let state: string = this.device.getState() || Buffer.from(response.xpub).toString('hex');
-        if (!this.device.getState() && state.length > 64) {
-            state = state.substring(0, 64);
-        }
+        const secret: string = `${response.xpub}#${this.device.features.device_id}`;
+        const state: string = this.device.getState() || bitcoin.crypto.hash256(new Buffer(secret, 'binary')).toString('hex');
         return state;
     }
 
@@ -269,8 +267,9 @@ export default class DeviceCommands {
         // if (!this.device.getState()) {
         //    await this.clearSession({});
         // }
+        const state: ?string = this.device.features && this.device.features.major_version > 1 ? (this.device.getExpectedState() || this.device.getState()) : null;
 
-        const response = await this.call('Initialize', { state: this.device.getExpectedState() || this.device.getState() });
+        const response = await this.call('Initialize', { state });
         assertType(response, 'Features');
         return response;
     }

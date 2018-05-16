@@ -134,7 +134,7 @@ export default class Device extends EventEmitter {
             if (this.commands) {
                 this.commands.dispose();
             }
-            this.commands = new DeviceCommands(_this, this.transport, sessionID);
+            this.commands = new DeviceCommands(this, this.transport, sessionID);
 
             // future defer for trezor-link release event
             this.deferredActions[ DEVICE.RELEASE ] = createDeferred();
