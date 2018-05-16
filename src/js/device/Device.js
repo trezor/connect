@@ -165,6 +165,13 @@ export default class Device extends EventEmitter {
         }
     }
 
+    cleanup(): void {
+        this.release();
+        this.removeAllListeners();
+        // make sure that DEVICE_CALL_IN_PROGRESS will not be thrown
+        this.runPromise = null;
+    }
+
     async run(
         fn?: () => Promise<void>,
         options?: RunOptions

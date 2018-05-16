@@ -594,8 +594,9 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     } finally {
         // Work done
         _log.log('onCall::finally', messageResponse);
-        device.release();
-        device.removeAllListeners();
+        // device.release();
+        // device.removeAllListeners();
+        device.cleanup();
         cleanup();
 
         if (messageResponse) {
