@@ -5,10 +5,10 @@
         { "vendorId": "0x1209", "productId": "0x53c1" }
     ],
     "whitelist": [
-        "chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk",
-        "chrome-extension://niebkpllfhmpfbffbfifagfgoamhpflf",
-        "trezor.io",
-        "localhost"
+        { "origin": "chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk", "priority": 1 },
+        { "origin": "chrome-extension://niebkpllfhmpfbffbfifagfgoamhpflf", "priority": 1 },
+        { "origin": "trezor.io", "priority": 0 },
+        { "origin": "localhost", "priority": 0 }
     ],
     "supportedBrowsers": {
         "chrome": {

@@ -348,8 +348,6 @@ class CreateDeviceHandler {
                 // do nothing
                 // it's a race condition between "device_changed" and "device_disconnected"
             } else if (error.message === ERROR.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE || error.toString() === ERROR.WEBUSB_ERROR_MESSAGE) {
-                // this should not happen actually - karel (it is happening - szymon)
-                // await this._handleWrongSession();
                 await this._handleUsedElsewhere();
             } else if (error.code === ERROR.INITIALIZATION_FAILED.code) {
                 // firmware bug - device is in "show address" state which cannot be cancelled
@@ -443,7 +441,11 @@ class DiffHandler {
     async _createConnectedDevices() {
         for (const descriptor of this.diff.connected) {
             const path: string = descriptor.path.toString();
-            _log.debug('Connected', descriptor.session, this.list.devices);
+            const priority: number = DataManager.getSettings('priority')
+            _log.debug('Connected', priority, descriptor.session, this.list.devices);
+            if (priority) {
+                await resolveAfter(201 * priority, null);
+            }
             if (descriptor.session == null) {
                 await this.list._createAndSaveDevice(descriptor);
             } else {

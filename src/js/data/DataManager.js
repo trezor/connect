@@ -2,12 +2,18 @@
 'use strict';
 
 import { httpRequest } from '../utils/networkUtils';
-import type { ConnectSettings } from '../entrypoints/ConnectSettings';
+import { DEFAULT_PRIORITY } from '../entrypoints/ConnectSettings';
 import { parseCoinsJson } from '../backend/CoinInfo';
 import { Promise } from 'es6-promise';
 import { getOrigin } from '../utils/networkUtils';
 import parseUri from 'parse-uri';
 
+import type { ConnectSettings } from '../entrypoints/ConnectSettings';
+
+type WhiteList = {
+    priority: number;
+    origin: string;
+}
 type WebUSB = {
     vendorId: string;
     productId: string;
@@ -18,7 +24,7 @@ type Browser = {
     update: string;
 }
 type Config = {
-    whitelist: Array<string>;
+    whitelist: Array<WhiteList>;
     webusb: Array<WebUSB>;
     supportedBrowsers: { [key: string]: Browser };
 }
@@ -52,9 +58,10 @@ export default class DataManager {
     static cachePassphrase: boolean = false;
 
     static async load(settings: ConnectSettings): Promise<void> {
-        const configUrl: string = `${settings.configSrc}?r=${ new Date().getTime() }`;
-        const coinsUrl: string = settings.coinsSrc;
-        const releasesUrl: string = settings.firmwareReleasesSrc;
+        const ts: number = new Date().getTime();
+        const configUrl: string = `${settings.configSrc}?r=${ ts }`;
+        const coinsUrl: string = `${settings.coinsSrc}?r=${ ts }`;
+        const releasesUrl: string = `${settings.firmwareReleasesSrc}?r=${ ts }`;
 
         try {
             const config: JSON = await httpRequest(configUrl, 'json');
@@ -67,7 +74,9 @@ export default class DataManager {
 
             // check if origin is trusted
             // settings.origin = "chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk";
-            this.settings.trustedHost = DataManager.isWhitelisted(this.settings.origin || "");
+            const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || "");
+            this.settings.trustedHost = !!(whitelist);
+            this.settings.priority = DataManager.getPriority(whitelist);
 
             parseCoinsJson(coins);
         } catch (error) {
@@ -76,7 +85,7 @@ export default class DataManager {
         }
     }
 
-    static isWhitelisted(origin: string): boolean {
+    static isWhitelisted(origin: string): ?WhiteList {
         const uri = parseUri(origin);
         if (uri && typeof uri.host === 'string') {
             const parts: Array<string> = uri.host.split('.');
@@ -84,12 +93,15 @@ export default class DataManager {
                 // subdomain
                 uri.host = parts.slice(parts.length - 2, parts.length).join('.');
             }
-            const isWhitelisted: ?string = this.config.whitelist.find(url => (url === origin || url === uri.host));
-            if (isWhitelisted) {
-                return true;
-            }
+            return this.config.whitelist.find(item => (item.origin === origin || item.origin === uri.host));
         }
-        return false;
+    }
+
+    static getPriority(whitelist: ?WhiteList): number {
+        if (whitelist) {
+            return whitelist.priority;
+        }
+        return DEFAULT_PRIORITY;
     }
 
     static getRequiredFirmware(): string {

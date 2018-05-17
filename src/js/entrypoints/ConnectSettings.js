@@ -5,6 +5,7 @@ export type ConnectSettings = {
     // debug: boolean | {[k: string]: boolean};
     debug: boolean;
     origin: ?string;
+    priority: number;
     trustedHost: boolean;
     connectSrc: string;
     iframeSrc: string;
@@ -26,11 +27,13 @@ export type ConnectSettings = {
  */
 
 const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/5/';
+export const DEFAULT_PRIORITY: number = 2;
 
 const initialSettings: ConnectSettings = {
     configSrc: 'data/config.json', // constant
     debug: false,
     origin: null,
+    priority: DEFAULT_PRIORITY,
     trustedHost: false,
     connectSrc: DEFAULT_DOMAIN,
     iframeSrc: `${ DEFAULT_DOMAIN }iframe.html`,
