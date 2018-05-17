@@ -50,7 +50,8 @@ const handleMessage = (event: MessageEvent): void => {
     // if (!event.isTrusted) return;
 
     // is message from popup or extension
-    const isTrustedDomain: boolean = (event.origin === window.location.origin || DataManager.isWhitelisted(event.origin));
+    const whitelist = DataManager.isWhitelisted(event.origin);
+    const isTrustedDomain: boolean = (event.origin === window.location.origin || !!whitelist);
 
     // ignore messages from domain other then parent.window or popup.window or chrome extension
     if (getOrigin(event.origin) !== getOrigin(document.referrer) && !isTrustedDomain) return;

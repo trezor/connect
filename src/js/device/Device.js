@@ -460,7 +460,7 @@ export default class Device extends EventEmitter {
     }
 
     isRunning(): boolean {
-        return !!(this.runPromise);
+        return !!this.runPromise;
     }
 
     isLoaded(): boolean {

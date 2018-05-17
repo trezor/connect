@@ -75,7 +75,7 @@ export default class DataManager {
             // check if origin is trusted
             // settings.origin = "chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk";
             const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || "");
-            this.settings.trustedHost = !!(whitelist);
+            this.settings.trustedHost = !!whitelist;
             this.settings.priority = DataManager.getPriority(whitelist);
 
             parseCoinsJson(coins);
