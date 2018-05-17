@@ -444,7 +444,7 @@ class DiffHandler {
             const priority: number = DataManager.getSettings('priority')
             _log.debug('Connected', priority, descriptor.session, this.list.devices);
             if (priority) {
-                await resolveAfter(201 * priority, null);
+                await resolveAfter(501 + 100 * priority, null);
             }
             if (descriptor.session == null) {
                 await this.list._createAndSaveDevice(descriptor);
