@@ -39,14 +39,13 @@ sync-%:
 	# Configure access credentials (aws configure), region is "eu-central-1"
 	aws s3 sync --delete --cache-control 'public, max-age=3600' dist/ s3://connect.trezor.io/$*/
 
+# Build only for npm
 npm:
 	yarn bump
-	rm -rf dist-npm
-	mkdir -p dist-npm
-	cp ./package.npm.connect.json ./dist-npm/package.json
-	cp README.md ./dist-npm/README.md
-	cp COPYING ./dist-npm/COPYING
-	cp ./dist/js/trezor-connect.*.js ./dist-npm/index.js
-	mkdir -p dist-npm/flowtype
-	cp ./src/flowtype/connect.js ./dist-npm/flowtype/connect.js
-	cd ./dist-npm && npm publish
+	yarn run build:npm
+	cp ./package.npm.connect.json ./dist/package.json
+	cp README.md ./dist/README.md
+	cp COPYING ./dist/COPYING
+	mkdir -p ./dist/flowtype
+	cp ./src/flowtype/trezor-connect.js ./dist/flowtype/index.js
+	cd ./dist && npm publish

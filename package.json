@@ -1,6 +1,6 @@
 {
   "name": "trezor-connect",
-  "version": "5.0.10",
+  "version": "5.0.11",
   "author": "TREZOR <info@trezor.io>",
   "homepage": "https://github.com/trezor/connect",
   "description": "High-level javascript interface for TREZOR hardware wallet.",
@@ -25,7 +25,8 @@
   "scripts": {
     "dev": "babel-node ./webpack/server.js",
     "dev:popup": "babel-node ./webpack/server.js --config popup",
-    "build": "rm -rf dist && webpack --config ./webpack/webpack.config.prod.babel.js --progress",
+    "build": "rm -rf dist && webpack --config ./webpack/webpack.config.npm.babel.js --progress && webpack --config ./webpack/webpack.config.prod.babel.js --progress",
+    "build:prod": "rm -rf dist && webpack --config ./webpack/webpack.config.prod.babel.js --progress",
     "build:npm": "rm -rf dist && webpack --config ./webpack/webpack.config.npm.babel.js --progress",
     "build:quick": "rm -rf dist && webpack --config ./webpack/webpack.config.prod.babel.js --env=quick --progress",
     "stats": "webpack --config ./webpack/webpack.config.prod.babel.js --json > dist/stats.json",
