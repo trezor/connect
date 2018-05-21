@@ -100,10 +100,10 @@ export default class DeviceList extends EventEmitter {
             if (webUsbPlugin) {
                 webUsbPlugin.unreadableHidDeviceChange.on('change', () => this.emit(TRANSPORT.UNREADABLE));
             }
-            this.emit(TRANSPORT.START, {
-                type: this.transportType(),
-                version: this.transportVersion()
-            });
+            // this.emit(TRANSPORT.START, {
+            //     type: this.transportType(),
+            //     version: this.transportVersion()
+            // });
         } catch (error) {
             throw error;
         }
@@ -139,6 +139,15 @@ export default class DeviceList extends EventEmitter {
         }
     }
 
+    transportStartPending: boolean;
+
+    resolveTransportEvent() {
+        if (this.transportStartPending) {
+            this.transportStartPending = false;
+            this.stream.emit(TRANSPORT.START);
+        }
+    }
+
     /**
      * Transport events handler
      * @param {Transport} transport
@@ -146,6 +155,17 @@ export default class DeviceList extends EventEmitter {
      */
     async _initStream(): Promise<void> {
         const stream: DescriptorStream = new DescriptorStream(this.transport);
+
+        stream.on(TRANSPORT.START_PENDING, (): void => {
+            this.transportStartPending = true;
+        });
+
+        stream.on(TRANSPORT.START, (): void => {
+            this.emit(TRANSPORT.START, {
+                type: this.transportType(),
+                version: this.transportVersion()
+            })
+        });
 
         stream.on(TRANSPORT.UPDATE, (diff: DeviceDescriptorDiff): void => {
             new DiffHandler(this, diff).handle();
@@ -367,12 +387,14 @@ class CreateDeviceHandler {
         const device = await Device.fromDescriptor(this.list.transport, this.descriptor);
         this.list.devices[this.path] = device;
         await device.run();
+        this.list.resolveTransportEvent();
         this.list.emit(DEVICE.CONNECT, device.toMessageObject());
     }
 
     async _handleUsedElsewhere() {
         const device = await this.list._createUnacquiredDevice(this.list.creatingDevicesDescriptors[this.path]);
         this.list.devices[this.path] = device;
+        this.list.resolveTransportEvent();
         this.list.emit(DEVICE.CONNECT_UNACQUIRED, device.toMessageObject());
     }
 }

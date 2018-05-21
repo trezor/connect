@@ -778,10 +778,10 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
     try {
         _deviceList = await getDeviceList();
 
-        postMessage(new TransportMessage(TRANSPORT.START, {
-            type: _deviceList.transportType(),
-            version: _deviceList.transportVersion()
-        }));
+        // postMessage(new TransportMessage(TRANSPORT.START, {
+        //     type: _deviceList.transportType(),
+        //     version: _deviceList.transportVersion()
+        // }));
 
         _deviceList.on(DEVICE.CONNECT, (device: DeviceDescription) => {
             handleDeviceSelectionChanges();
