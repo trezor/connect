@@ -100,10 +100,10 @@ export default class DeviceList extends EventEmitter {
             if (webUsbPlugin) {
                 webUsbPlugin.unreadableHidDeviceChange.on('change', () => this.emit(TRANSPORT.UNREADABLE));
             }
-            // this.emit(TRANSPORT.START, {
-            //     type: this.transportType(),
-            //     version: this.transportVersion()
-            // });
+
+            // listen for self emitted events and resolve pending transport event if needed
+            this.on(DEVICE.CONNECT, this.resolveTransportEvent.bind(this));
+            this.on(DEVICE.CONNECT_UNACQUIRED, this.resolveTransportEvent.bind(this));
         } catch (error) {
             throw error;
         }
@@ -387,14 +387,12 @@ class CreateDeviceHandler {
         const device = await Device.fromDescriptor(this.list.transport, this.descriptor);
         this.list.devices[this.path] = device;
         await device.run();
-        this.list.resolveTransportEvent();
         this.list.emit(DEVICE.CONNECT, device.toMessageObject());
     }
 
     async _handleUsedElsewhere() {
         const device = await this.list._createUnacquiredDevice(this.list.creatingDevicesDescriptors[this.path]);
         this.list.devices[this.path] = device;
-        this.list.resolveTransportEvent();
         this.list.emit(DEVICE.CONNECT_UNACQUIRED, device.toMessageObject());
     }
 }
