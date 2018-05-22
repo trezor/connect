@@ -11,6 +11,11 @@ const handleMessage = (event: MessageEvent): void => {
     if (!event.data) return;
     const data: any = event.data;
 
+    const exists = document.getElementsByTagName('button');
+    if (exists && exists.length > 0) {
+        return;
+    }
+
     const button = document.createElement('button');
 
     if (data.style) {
