@@ -4,6 +4,7 @@
 import { LOG } from '../constants/popup';
 import * as POPUP from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
+import * as UI from '../constants/ui';
 import * as TRANSPORT from '../constants/transport';
 
 import { parse as parseSettings } from '../entrypoints/ConnectSettings';
@@ -41,7 +42,7 @@ const handleMessage = (event: MessageEvent): void => {
     }
 
     // catch first message from connect.js (parent window)
-    if (!DataManager.getSettings('origin') && event.data && event.data.type === IFRAME.HANDSHAKE && event.data.settings) {
+    if (!DataManager.getSettings('origin') && event.data && event.data.type === UI.IFRAME_HANDSHAKE && event.data.settings) {
         init(event.data.settings, event.origin);
         return;
     }
@@ -90,7 +91,7 @@ const postMessage = (message: CoreMessage): void => {
     }
     // check if permissions to read is granted
     const trustedHost: boolean = DataManager.getSettings('trustedHost');
-    const handshake: boolean = message.type === IFRAME.HANDSHAKE;
+    const handshake: boolean = message.type === UI.IFRAME_HANDSHAKE;
     if (!trustedHost && !handshake && (message.event === TRANSPORT_EVENT)) {
         return;
     }
@@ -125,12 +126,12 @@ const init = async (settings: any, origin: string) => {
         _core.on(CORE_EVENT, postMessage);
         checkBrowser();
         await initTransport(parsedSettings);
-        postMessage(new UiMessage(IFRAME.HANDSHAKE, {
+        postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {
             browser: browserState
         }));
     } catch (error) {
         // TODO: kill app
-        postMessage(new UiMessage(IFRAME.HANDSHAKE, {
+        postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {
             browser: browserState
         }));
         postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));

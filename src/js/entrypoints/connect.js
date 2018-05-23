@@ -81,7 +81,7 @@ const initIframe = async (settings: Object): Promise<void> => {
         }
 
         _iframe.contentWindow.postMessage({
-            type: IFRAME.HANDSHAKE,
+            type: UI.IFRAME_HANDSHAKE,
             settings: _settings,
         }, _iframeOrigin);
 
@@ -183,7 +183,7 @@ const handleMessage = (messageEvent: MessageEvent): void => {
                 if (!_settings.popup) {
                     postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, false);
                 }
-            } else if (type === IFRAME.HANDSHAKE) {
+            } else if (type === UI.IFRAME_HANDSHAKE) {
                 if (_iframeHandshakePromise) { _iframeHandshakePromise.resolve(); }
                 _iframeHandshakePromise = null;
                 injectStyleSheet();
