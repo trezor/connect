@@ -19,6 +19,7 @@ export type ConnectSettings = {
     latestBridgeSrc: string;
     transportReconnect: boolean;
     webusb: boolean;
+    pendingTransportEvent: boolean;
 }
 
 /*
@@ -46,6 +47,7 @@ const initialSettings: ConnectSettings = {
     latestBridgeSrc: 'data/latest.txt',
     transportReconnect: false,
     webusb: true,
+    pendingTransportEvent: true,
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -112,6 +114,10 @@ export const parse = (input: ?Object): ConnectSettings => {
 
     if (input.hasOwnProperty('popup') && typeof input.popup === 'boolean') {
         settings.popup = input.popup;
+    }
+
+    if (typeof input.pendingTransportEvent === 'boolean') {
+        settings.pendingTransportEvent = input.pendingTransportEvent;
     }
 
     currentSettings = settings;

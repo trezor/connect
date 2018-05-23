@@ -62,7 +62,7 @@ export default class DescriptorStream extends EventEmitter {
             if (this.listening && !waitForEvent) {
                 // enumerate returns some value
                 // TRANSPORT.START will be emitted from DeviceList after device will be available (either acquired or unacquired)
-                if (descriptors.length > 0) {
+                if (descriptors.length > 0 && DataManager.getSettings('pendingTransportEvent')) {
                     this.emit(TRANSPORT.START_PENDING);
                 } else {
                     this.emit(TRANSPORT.START);
