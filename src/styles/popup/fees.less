@@ -1,6 +1,50 @@
 .select-fee {
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    h3 {
+        margin-bottom: 16px;
+        padding: 0px 24px;
+
+        font-size: 16px;
+    }
+
+    .select-fee-list {
+        width: 100%;
+        flex: 1;
+        overflow-y: scroll;
+        padding: 0px 24px;
+        position: relative;
+
+        button {
+            width: 100%;
+            height: 50px;
+            display: flex;
+            border: 1px solid @color_divider;
+            border-radius: 0px;
+            border-top-width: 0px;
+            text-align: left;
+            align-items: center;
+
+            &:first-child {
+                border-top-left-radius: 2px;
+                border-top-right-radius: 2px;
+                border-top-width: 1px;
+            }
+
+            &:last-child {
+                border-bottom-left-radius: 2px;
+                border-bottom-right-radius: 2px;
+            }
+        }
+    }
+}
+
+
+/* .select_fee {
+    height: 100%;
     padding: 30px;
 
     display: flex;
@@ -122,3 +166,4 @@
         flex: 1;
     }
 }
+ */
