@@ -54,11 +54,11 @@
         overflow-y: scroll;
 
         &.normal {
-            display: none;
+            //display: none;
         }
 
         &.legacy {
-            //display: none;
+            display: none;
         }
 
         button {
@@ -89,18 +89,15 @@
             }
         }
 
-        .low-balance {
-            color: @color_text_secondary;
-        }
-    }
-
-    .enable-labeling {
-        padding: 0;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
+            &:active {
+                border-left-width: 3px;
+                border-left-color: @color_green_tertiary;
+            }
+            &:hover {
+                border-left-width: 3px;
+                padding-left: 22px;
+                border-left-color: @color_green_tertiary;
+            }
 
         background: transparent;
 
