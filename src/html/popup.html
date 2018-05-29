@@ -33,34 +33,43 @@
         </aside>
         <section id="container">
             <div class="passphrase">
-                <h3>Enter
-                    <span>#TREZOR</span>passphrase</h3>
-                <p><b>Note:</b> Passphrase is case-sensitive.</p>
-                <div class="row">
-                    <label>Passphrase</label>
-                    <div>
-                        <input type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true"
-                            tabindex="1" />
+                <div>
+                    <h3>Enter
+                        <span>#TREZOR</span>passphrase</h3>
+                    <p><b>Note:</b> Passphrase is case-sensitive.</p>
+                </div>
+
+                <div>
+                    <div class="row">
+                        <label>Passphrase</label>
+                        <div>
+                            <input type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true"
+                                tabindex="1" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label>Confirm passphrase again</label>
+                        <div>
+                            <input type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true"
+                                tabindex="2" />
+                        </div>
+                        <span class="error">Passphrases do not match</span>
+                    </div>
+                    <div class="row">
+                        <label class="custom-checkbox">
+                            <input class="show-passphrase" type="checkbox" tabindex="3" />
+                            <span class="indicator"></span>Show passphrase</label>
                     </div>
                 </div>
-                <div class="row">
-                    <label>Confirm passphrase again</label>
+
+
+                <div>
                     <div>
-                        <input type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true"
-                            tabindex="2" />
+                        <button type="button" class="submit" tabindex="4">Enter</button>
                     </div>
-                    <span class="error">Passphrases do not match</span>
-                </div>
-                <div class="row">
-                    <label class="custom-checkbox">
-                        <input class="show-passphrase" type="checkbox" tabindex="3" />
-                        <span class="indicator"></span>Show passphrase</label>
-                </div>
-                <div>
-                    <button type="button" class="submit" tabindex="4">Enter</button>
-                </div>
-                <div>
-                    <p>Leave passphrase blank to access your default wallet</p>
+                    <div>
+                        <p>Leave passphrase blank to access your default wallet</p>
+                    </div>
                 </div>
             </div>
         </section>
