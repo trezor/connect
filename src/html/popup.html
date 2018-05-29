@@ -40,49 +40,45 @@
             </div>
         </aside>
         <section id="container">
-            <div class="select-account normal">
-                <div class="tabs">
-                    <div data-tab="normal" class="tab-selection active">
-                        Accounts
+            <div class="select-fee">
+                <div>
+                    <h3>Select Fee</h3>
+                    <div class="select-fee-list">
+                        <button class="white">
+                            <p class="fee-title">Normal</p>
+                            <div class="fee-info">
+                                <span class="fee-amount">0.000034 BTC</span>
+                                <span class="fee-time">No time estimated</span>
+                            </div>
+                        </button>
+
+                        <button class="white active">
+                            <p class="fee-title">High</p>
+                            <div class="fee-info">
+                                <span class="fee-amount">0.000034 BTC</span>
+                                <span class="fee-time">No time estimated</span>
+                            </div>
+                        </button>
+
+                        <button class="white">
+                            <p class="fee-title">Low</p>
+                            <div class="fee-info">
+                                <span class="fee-amount">0.000034 BTC</span>
+                                <span class="fee-time">No time estimated</span>
+                            </div>
+                        </button>
+
+                        <button class="white">
+                            <p class="fee-title">Custom</p>
+                            <div class="fee-info">
+                                <span class="fee-amount">0.000034 BTC</span>
+                                <span class="fee-time">No time estimated</span>
+                            </div>
+                        </button>
                     </div>
-                    <div data-tab="legacy" class="tab-selection">
-                        Legacy accounts
-                    </div>
                 </div>
-                <h3>Select
-                    <span>#COIN</span> account</h3>
-                <div class="select-account-list normal">
-                    <button class="white account-default">
-                        <span class="account-title">Account #1</span>
-                        <span class="account-status">Loading...</span>
-                    </button>
 
-                    <button class="white account-default disabled">
-                        <span class="account-title">Account #1</span>
-                        <span class="account-status">Loading...</span>
-                    </button>
-
-                    <button class="white account-default">
-                        <span class="account-title">Account #1</span>
-                        <span class="account-status">Loading...</span>
-                    </button>
-                </div>
-                <div class="select-account-list legacy">
-                    <button class="white account-default">
-                        <span class="account-title">Account #1</span>
-                        <span class="account-status">Loading...</span>
-                    </button>
-
-                    <button class="white account-default disabled">
-                        <span class="account-title">Account #1</span>
-                        <span class="account-status">Loading...</span>
-                    </button>
-
-                    <button class="white account-default">
-                        <span class="account-title">Account #1</span>
-                        <span class="account-status">Loading...</span>
-                    </button>
-                </div>
+                <button class="confirm-button">Send <span>#AMOUNT</span></button>
             </div>
         </section>
     </main>
@@ -353,37 +349,50 @@
         </div>
         <!-- Account selection: END -->
 
-        <!-- Device selection -->
+        <!-- Fee selection -->
         <div class="select-fee">
-            <h3>Select fee:</h3>
-            <div class="change-account">
-                <span>Change account</span>
-            </div>
-            <div class="select-fee-list">
-
-                <div class="fee">
-                    <button class="fee-custom-opener untouched">
-                        <span class="fee-name">custom</span>
-                        <span class="fee-insufficient-funds"></span>
-                        <span class="fee-size"></span>
-                        <span class="fee-minutes"></span>
+            <div>
+                <h3>Select Fee</h3>
+                <div class="select-fee-list">
+                    <button class="white">
+                        <p class="fee-title">Normal</p>
+                        <div class="fee-info">
+                            <span class="fee-amount">0.000034 BTC</span>
+                            <span class="fee-time">No time estimated</span>
+                        </div>
                     </button>
-                    <div class="fee-custom hidden">
-                        <div class="fee-custom-wrapper">
-                            <input type="text" name="custom-fee" value="1" data-lpignore="true" />
-                            <div class="fee-custom-label">sat/B</div>
-                            <button class="fee-custom-button" disabled="disabled">SEND</button>
-                        </div>
-                        <div class="fee-custom-warning">
-                            <strong>Setting custom fee is not recommended.</strong>
-                            If you set too low fee, it might get stuck forever.
-                        </div>
-                    </div>
-                </div>
 
+                    <button class="white active">
+                        <p class="fee-title">High</p>
+                        <div class="fee-info">
+                            <span class="fee-amount">0.000034 BTC</span>
+                            <span class="fee-time">No time estimated</span>
+                        </div>
+                    </button>
+
+                    <button class="white">
+                        <p class="fee-title">Low</p>
+                        <div class="fee-info">
+                            <span class="fee-amount">0.000034 BTC</span>
+                            <span class="fee-time">No time estimated</span>
+                        </div>
+                    </button>
+
+                    <button class="white">
+                        <p class="fee-title">Custom</p>
+                        <div class="fee-info">
+                            <span class="fee-amount">0.000034 BTC</span>
+                            <span class="fee-time">No time estimated</span>
+                        </div>
+                    </button>
+                </div>
             </div>
+
+            <button class="confirm-button">Send
+                <span>#AMOUNT</span>
+            </button>
         </div>
-        <!-- Device selection: END -->
+        <!-- Fee selection: END -->
 
         <div class="insufficient-funds">
             <h3>Account funds are insufficient. Retrying...</h3>
