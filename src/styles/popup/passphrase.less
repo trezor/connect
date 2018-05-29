@@ -1,29 +1,38 @@
 .passphrase {
     width: 100%;
+    max-width: 370px;
     padding: 0px 30px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
 
-    h3 {
-        display: flex;
-        justify-content: center;
-        white-space: nowrap;
-        span {
-            text-overflow: ellipsis;
-            overflow: hidden;
+    .title, .inputs {
+        width: 100%;
+    }
+
+    .title {
+        h3 {
+            display: flex;
+            justify-content: center;
             white-space: nowrap;
-            margin: 0px 4px;
+            font-size: 16px;
+            span {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                margin: 0px 4px;
+            }
+        }
+
+        p {
+            margin: 5px 0;
+            font-size: 12px;
+            color: @color_text_secondary;
         }
     }
 
-    p {
-        margin: 5px 0;
-        font-size: 12px;
-        color: @color_text_secondary;
-    }
 
     label:not(.custom-checkbox) {
         display: block;
@@ -36,12 +45,23 @@
         text-align: left;
         padding-top: 24px;
 
+        font-weight: 300;
+        font-size: 14px;
+
         .error {
             position: absolute;
             padding-top: 4px;
             font-size: 12px;
             color: @color_error_primary;
             display: none;
+        }
+
+        input {
+            width: 100%;
+
+            font-size: 21px;
+            font-weight: bold;
+            letter-spacing: 8px;
         }
     }
 
@@ -55,5 +75,9 @@
         .error {
             display: block;
         }
+    }
+
+    .bottom-note {
+        font-size: 12px;
     }
 }
