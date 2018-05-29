@@ -1,4 +1,9 @@
 .select-account {
+    width: 100%;
+    height: 100%;
+
+    padding: 30px;
+
     display: flex;
     flex-direction: column;
 
@@ -49,6 +54,8 @@
     }
 
     .select-account-list {
+        width: 100%;
+
         flex: 1;
         margin: 0 30px 30px;
         overflow-y: scroll;
@@ -93,13 +100,23 @@
                 border-left-width: 3px;
                 border-left-color: @color_green_tertiary;
             }
-            &:hover {
+
+            &:not(.disabled):hover {
                 border-left-width: 3px;
                 padding-left: 22px;
                 border-left-color: @color_green_tertiary;
             }
 
-        background: transparent;
+            &.disabled:hover {
+                cursor: not-allowed;
+                background-color: white;
+            }
+
+            &:first-child {
+                border-top-left-radius: 2px;
+                border-top-right-radius: 2px;
+                border-top-width: 1px;
+            }
 
         svg {
             margin-right: 12px;
