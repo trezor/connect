@@ -40,8 +40,8 @@
             </div>
         </aside>
         <section id="container">
-            <div class="insufficient-funds">
-                <h3>Account funds are insufficient. Retrying...</h3>
+            <div class="amount-too-low">
+                <div class="alert-heading">Amount too low. Retrying...</div>
             </div>
         </section>
     </main>
@@ -371,9 +371,18 @@
         </div>
         <!-- Insufficient funds -->
 
+        <!-- Amount too low -->
         <div class="amount-too-low">
-            <div class="alert-heading">Amount too low. Retrying...</div>
+            <h3>Amount too low</h3>
+            <div class="loader">
+                <p>Retrying...</p>
+                <svg class="circular" viewBox="25 25 50 50" preserveAspectRatio="xMidYMid">
+                    <circle class="route" cx="50" cy="50" r="20" fill="none" stroke="" stroke-width="1" stroke-miterlimit="10" />
+                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="1" stroke-miterlimit="10" />
+                </svg>
+            </div>
         </div>
+        <!-- Amount too low: END -->
 
         <!-- Simple message -->
         <div class="simple-message">
