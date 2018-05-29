@@ -10,7 +10,7 @@
     }
 
     .tabs {
-        display: none;
+        display: flex;
         flex-direction: row;
         transform: translateY(-24px); // container padding top
     }
@@ -19,7 +19,8 @@
         width: 50%;
         border-bottom: 2px solid @color_divider;
         padding: 16px 0px;
-        font-weight: 600;
+        font-size: 14px;
+
         position: relative;
 
         &:after {
@@ -33,12 +34,17 @@
             transition: border-color 0.3s, color 0.3s;
         }
         &:hover,
-        &:active {
+        &:active,
+        &.active {
             cursor: pointer;
             color: @color_green_primary;
             &:after {
                 border-color: @color_green_primary;
             }
+        }
+
+        &:not(.active) {
+            color: @color_text_secondary;
         }
     }
 
@@ -50,11 +56,11 @@
         position: relative;
 
         &.normal {
-            //display: none;
+            display: none;
         }
 
         &.legacy {
-            display: none;
+            //display: none;
         }
 
         button {
