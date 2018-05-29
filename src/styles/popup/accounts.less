@@ -1,12 +1,14 @@
 .select-account {
     width: 100%;
     height: 100%;
+
+    padding: 30px;
+
     display: flex;
     flex-direction: column;
 
     h3 {
         margin-bottom: 16px;
-        padding: 0px 24px;
     }
 
     .tabs {
@@ -50,6 +52,7 @@
 
     .select-account-list {
         width: 100%;
+
         flex: 1;
         overflow-y: scroll;
         padding: 0px 24px;
@@ -100,10 +103,16 @@
                 border-left-width: 3px;
                 border-left-color: @color_green_tertiary;
             }
-            &:hover {
+
+            &:not(.disabled):hover {
                 border-left-width: 3px;
                 padding-left: 22px;
                 border-left-color: @color_green_tertiary;
+            }
+
+            &.disabled:hover {
+                cursor: not-allowed;
+                background-color: white;
             }
 
             &:first-child {
