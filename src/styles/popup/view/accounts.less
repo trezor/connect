@@ -7,9 +7,6 @@
     }
 
     .tabs {
-        position: relative;
-        top: -24px;
-
         display: flex;
         flex-direction: row;
     }
@@ -18,6 +15,9 @@
         position: relative;
         width: 50%;
         padding: 16px 0px;
+        font-size: 14px;
+
+        position: relative;
 
         // Grey border
         border-bottom: 2px solid @color_divider;
@@ -54,11 +54,11 @@
         overflow-y: scroll;
 
         &.normal {
-            // display: none;
+            display: none;
         }
 
         &.legacy {
-            display: none;
+            //display: none;
         }
 
         button {
