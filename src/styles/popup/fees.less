@@ -1,8 +1,12 @@
 .select-fee {
     width: 100%;
     height: 100%;
+    padding: 0px 24px;
+
     display: flex;
     flex-direction: column;
+
+    justify-content: space-between;
 
     h3 {
         margin-bottom: 16px;
@@ -15,7 +19,6 @@
         width: 100%;
         flex: 1;
         overflow-y: scroll;
-        padding: 0px 24px;
         position: relative;
 
         button {
@@ -65,5 +68,12 @@
                 border-bottom-right-radius: 2px;
             }
         }
+    }
+
+    .confirm-button {
+        margin-bottom: 15px;
+
+        font-size: 14px;
+        color: @color_white;
     }
 }
