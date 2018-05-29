@@ -71,6 +71,7 @@
                 </div>
 
                 <button class="confirm-button">Send <span>#AMOUNT</span></button>
+            </div>
         </section>
     </main>
 
@@ -381,64 +382,46 @@
 
         <!-- Fee selection -->
         <div class="select-fee">
-            <div class="back-button">
-                <span class="arrow"></span>
-                <span class="text">Change Account</span>
-            </div>
-            <h3>Select Fee</h3>
-
-            <div class="wrapper">
+            <div>
+                <h3>Select Fee</h3>
                 <div class="select-fee-list">
-                    <button class="list">
-                        <span class="fee-title">Normal</span>
-                        <span class="fee-info">
+                    <button class="white">
+                        <p class="fee-title">Normal</p>
+                        <div class="fee-info">
                             <span class="fee-amount">0.000034 BTC</span>
                             <span class="fee-time">No time estimated</span>
-                        </span>
-                    </button>
-
-                    <button class="list">
-                        <span class="fee-title">Normal</span>
-                        <span class="fee-info">
-                            <span class="fee-amount">0.000034 BTC</span>
-                            <span class="fee-time">No time estimated</span>
-                        </span>
-                    </button>
-
-                    <button class="list">
-                        <span class="fee-title">Normal</span>
-                        <span class="fee-info">
-                            <span class="fee-amount">0.000034 BTC</span>
-                            <span class="fee-time">No time estimated</span>
-                        </span>
-                    </button>
-
-                    <button class="list">
-                        <span class="fee-title">Normal</span>
-                        <span class="fee-info">
-                            <span class="fee-amount">0.000034 BTC</span>
-                            <span class="fee-time">No time estimated</span>
-                        </span>
-                    </button>
-
-                    <!-- Display this when custom fee is selected -->
-                    <!-- <button class="custom-fee-active list active">
-                        <div class="top">
-                            <span class="fee-title">Custom</span>
-                            <div class="fee-info">
-                                <span class="fee-amount">0.000034 BTC</span>
-                                <span class="fee-time">No time estimated</span>
-                            </div>
                         </div>
+                    </button>
 
-                        <input class="fee-input" type="number" autocomplete="off"/>
+                    <button class="white active">
+                        <p class="fee-title">High</p>
+                        <div class="fee-info">
+                            <span class="fee-amount">0.000034 BTC</span>
+                            <span class="fee-time">No time estimated</span>
+                        </div>
+                    </button>
 
-                        <p class="note">Setting custom fee is not recommended.
-                            If you set too low fee, it might get stuck forever.
-                        </p>
-                    </button> -->
+                    <button class="white">
+                        <p class="fee-title">Low</p>
+                        <div class="fee-info">
+                            <span class="fee-amount">0.000034 BTC</span>
+                            <span class="fee-time">No time estimated</span>
+                        </div>
+                    </button>
+
+                    <button class="white">
+                        <p class="fee-title">Custom</p>
+                        <div class="fee-info">
+                            <span class="fee-amount">0.000034 BTC</span>
+                            <span class="fee-time">No time estimated</span>
+                        </div>
+                    </button>
                 </div>
             </div>
+
+            <button class="confirm-button">Send
+                <span>#AMOUNT</span>
+            </button>
         </div>
         <!-- Fee selection: END -->
 
