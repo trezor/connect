@@ -10,7 +10,7 @@
     }
 
     .tabs {
-        display: none;
+        display: flex;
         flex-direction: row;
         transform: translateY(-24px); // container padding top
     }
@@ -19,7 +19,8 @@
         width: 50%;
         border-bottom: 2px solid @color_divider;
         padding: 16px 0px;
-        font-weight: 600;
+        font-size: 14px;
+
         position: relative;
 
         &:after {
@@ -33,12 +34,17 @@
             transition: border-color 0.3s, color 0.3s;
         }
         &:hover,
-        &:active {
+        &:active,
+        &.active {
             cursor: pointer;
             color: @color_green_primary;
             &:after {
                 border-color: @color_green_primary;
             }
+        }
+
+        &:not(.active) {
+            color: @color_text_secondary;
         }
     }
 
@@ -67,6 +73,11 @@
             text-align: left;
             align-items: center;
 
+            &.disabled {
+                .account-title, .account-status {
+                    color: fade(@color_divider, 50%);
+                }
+            }
 
             .account-title {
                 flex: 1;
@@ -84,13 +95,6 @@
                 font-size: 12px;
                 color: @color_text_secondary;
             }
-
-            // text-align: left;
-            // line-height: 1;
-            // overflow: hidden;
-            // white-space: nowrap;
-
-
 
             &:active {
                 border-left-width: 3px;
