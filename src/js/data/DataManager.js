@@ -75,7 +75,8 @@ export default class DataManager {
             // check if origin is trusted
             // settings.origin = "chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk";
             const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || "");
-            this.settings.trustedHost = !!whitelist;
+            this.settings.trustedHost = !!whitelist && !this.settings.popup;
+            this.settings.debug = !!this.settings.trustedHost;
             this.settings.priority = DataManager.getPriority(whitelist);
 
             parseCoinsJson(coins);
@@ -122,14 +123,6 @@ export default class DataManager {
 
     static getConfig(): Config {
         return this.config;
-    }
-
-    static getTransportConfigURL(): string {
-        // if (this.json && this.json.app && this.json.app.transport_url) {
-        //     return this.json.app.transport_url;
-        // }
-        // return "https://wallet.trezor.io/data/config_signed.bin";
-        return 'config_signed.bin';
     }
 
     static isPassphraseCached(status: ?boolean): boolean {
