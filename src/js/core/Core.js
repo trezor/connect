@@ -734,7 +734,7 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceDescription = null
         if (list.length === 1 && !isWebUsb) {
             // there is only one device. use it
             // resolve uiPromise to looks like it's a user choice (see: handleMessage function)
-            uiPromise.resolve({ event: UI.RECEIVE_DEVICE, payload: { device: list[0].path } });
+            uiPromise.resolve({ event: UI.RECEIVE_DEVICE, payload: { device: list[0] } });
             removeUiPromise(uiPromise);
         } else {
             // update device selection list view
