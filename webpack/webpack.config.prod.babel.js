@@ -45,6 +45,7 @@ module.exports = env => {
             { from: `${DATA_SRC}config.json`, to: `${DIST}data/config.json` },
             { from: `${DATA_SRC}coins.json`, to: `${DIST}data/coins.json` },
             { from: `${DATA_SRC}config_signed.bin`, to: `${DIST}data/config_signed.bin` },
+            { from: `${DATA_SRC}messages.json`, to: `${DIST}data/messages.json` },
             { from: `${DATA_SRC}latest.txt`, to: `${DIST}data/latest.txt` },
             { from: `${DATA_SRC}releases-1.json`, to: `${DIST}data/releases-1.json` },
             { from: `${DATA_SRC}releases-2.json`, to: `${DIST}data/releases-2.json` },

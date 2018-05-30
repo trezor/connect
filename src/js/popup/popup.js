@@ -12,7 +12,7 @@ import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
 import { getOrigin } from '../utils/networkUtils';
 
-import { showView, postMessage, setOperation } from './view/common';
+import { showView, postMessage, setOperation, channel } from './view/common';
 
 import * as view from './view';
 // eslint-disable-next-line no-unused-vars
@@ -32,24 +32,25 @@ const handleMessage = (event: MessageEvent): void => {
 
     console.log('handleMessage', event.data);
 
-    // catch first message from connect.js (parent window)
-    if (!DataManager.getSettings('origin') && event.data && event.data.type === POPUP.HANDSHAKE && event.data.settings) {
-        init(event.data.settings, event.origin);
+    const isMessagePort: boolean = event.target instanceof MessagePort;
+
+    // catch first message from iframe.js and gain settings
+    if (isMessagePort && !DataManager.getSettings('origin') && event.data && event.data.payload && event.data.type === POPUP.HANDSHAKE && event.data.payload.settings) {
+        // $FlowIssue
+        init(event.data.payload.settings);
         return;
     }
 
     // ignore messages from origin other then parent.window or white listed
-    if (getOrigin(event.origin) !== getOrigin(document.referrer) && !DataManager.isWhitelisted(event.origin)) return;
+    if (!isMessagePort && getOrigin(event.origin) !== getOrigin(document.referrer) && !DataManager.isWhitelisted(event.origin)) return;
 
     const message: CoreMessage = parseMessage(event.data);
 
     // TODO parse incoming strings to avoid string injections !!!
 
     switch (message.type) {
-        case 'request-device' :
-            view.requestDevice(message.payload);
-            break;
         case UI.LOADING :
+        case UI.REQUEST_UI_WINDOW :
             initLoaderView(message.payload);
             break;
         case UI.SET_OPERATION :
@@ -115,13 +116,9 @@ const handleMessage = (event: MessageEvent): void => {
     }
 };
 
-const init = async (settings: any, origin: string) => {
+const init = async (settings: ConnectSettings) => {
 
-    const parsedSettings: ConnectSettings = parseSettings(settings);
-    parsedSettings.origin = origin;
-
-    await DataManager.load(parsedSettings);
-    view.init();
+    await DataManager.load(settings);
 
     postMessage(new UiMessage(POPUP.HANDSHAKE));
 
@@ -136,10 +133,16 @@ const init = async (settings: any, origin: string) => {
 
 
 window.addEventListener('load', () => {
-    // say hello to the window.opener and wait for POPUP.HANDSHAKE with settings
-    if (window.opener) {
-        window.opener.postMessage(POPUP.OPENED, '*');
+
+    view.init();
+
+    // $FlowIssue (Event !== MessageEvent)
+    channel.port1.onmessage = (event: MessageEvent) => {
+        handleMessage(event);
     }
+
+    postMessage(new UiMessage(POPUP.OPENED));
+
 }, false);
 
 window.addEventListener('message', handleMessage, false);

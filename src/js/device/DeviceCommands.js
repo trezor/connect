@@ -260,17 +260,20 @@ export default class DeviceCommands {
         return await this.typedCall('ClearSession', 'Success', settings);
     }
 
-    async initialize() {
+    async initialize(useEmptyPassphrase: boolean = false) {
         if (this.disposed) {
             throw new Error('DeviceCommands already disposed');
         }
 
-        // if (!this.device.getState()) {
-        //    await this.clearSession({});
-        // }
-        const state: ?string = this.device.features && this.device.features.major_version > 1 ? (this.device.getExpectedState() || this.device.getState()) : null;
+        const payload = {};
+        if (this.device.features && this.device.features.major_version > 1) {
+            // T2 features
+            payload.state = this.device.getExpectedState() || this.device.getState();
+            if (useEmptyPassphrase)
+                payload.skip_passphrase = useEmptyPassphrase;
+        }
 
-        const response = await this.call('Initialize', { state });
+        const response = await this.call('Initialize', payload);
         assertType(response, 'Features');
         return response;
     }

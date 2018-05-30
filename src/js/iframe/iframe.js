@@ -18,12 +18,13 @@ import Log, { init as initLog, getLog } from '../utils/debug';
 import { checkBrowser, state as browserState } from '../utils/browser';
 import { getOrigin } from '../utils/networkUtils';
 import { load as loadStorage, PERMISSIONS_KEY } from './storage';
-
 let _core: Core;
 
 // custom log
 const _log: Log = initLog('IFrame');
 const _logFromPopup: Log = initLog('Popup');
+
+let _popupMessagePort: ?MessagePort;
 
 // Wrapper which listen events from Core
 
@@ -32,23 +33,40 @@ const _logFromPopup: Log = initLog('Popup');
 
 const handleMessage = (event: MessageEvent): void => {
     // ignore messages from myself (chrome bug?)
-    if (event.source === window) return;
+    if (event.source === window || !event.data) return;
+    const data = event.data;
 
     // respond to call
-    if (!_core && event.data && event.data.type === IFRAME.CALL && typeof event.data.id === 'number') {
-        postMessage(new ResponseMessage(event.data.id, false, { error: "Core not initialized yet!"} ) );
+    // TODO: instead of error _core should be initialized automatically
+    if (!_core && data.type === IFRAME.CALL && typeof data.id === 'number') {
+        postMessage(new ResponseMessage(data.id, false, { error: "Core not initialized yet!"} ) );
         postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
         return;
     }
 
     // catch first message from connect.js (parent window)
-    if (!DataManager.getSettings('origin') && event.data && event.data.type === UI.IFRAME_HANDSHAKE && event.data.settings) {
-        init(event.data.settings, event.origin);
+    if (!DataManager.getSettings('origin') && data.type === UI.IFRAME_HANDSHAKE && data.settings) {
+        init(data.settings, event.origin);
         return;
     }
 
-    // ignore not trusted (not working in FF)
-    // if (!event.isTrusted) return;
+    // handle popup handshake event to get reference to popup MessagePort
+    if (data.type === POPUP.OPENED) {
+        // $FlowIssue
+        if (event.ports.length > 0) {
+            // $FlowIssue
+            _popupMessagePort = event.ports[0];
+            postMessage(new UiMessage(POPUP.HANDSHAKE, {
+                settings: DataManager.getSettings(),
+                method: "FOO"
+            }))
+        }
+    }
+
+    // clear reference to popup MessagePort
+    if (data.type === POPUP.CLOSED) {
+        _popupMessagePort = null;
+    }
 
     // is message from popup or extension
     const whitelist = DataManager.isWhitelisted(event.origin);
@@ -57,7 +75,7 @@ const handleMessage = (event: MessageEvent): void => {
     // ignore messages from domain other then parent.window or popup.window or chrome extension
     if (getOrigin(event.origin) !== getOrigin(document.referrer) && !isTrustedDomain) return;
 
-    const message: CoreMessage = parseMessage(event.data);
+    const message: CoreMessage = parseMessage(data);
 
     // prevent from passing event up
     event.preventDefault();
@@ -89,6 +107,12 @@ const postMessage = (message: CoreMessage): void => {
         _log.error('Cannot reach window.top');
         return;
     }
+
+    if (message.type === UI.REQUEST_UI_WINDOW && !DataManager.getSettings('popup')) {
+        // popup handshake is resolved automatically
+        _core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, true);
+        return;
+    }
     // check if permissions to read is granted
     const trustedHost: boolean = DataManager.getSettings('trustedHost');
     const handshake: boolean = message.type === UI.IFRAME_HANDSHAKE;
@@ -99,7 +123,13 @@ const postMessage = (message: CoreMessage): void => {
         return;
     }
     _log.debug('postMessage', message);
-    window.top.postMessage(message, DataManager.getSettings('origin'));
+    // window.top.postMessage(message, DataManager.getSettings('origin'));
+
+    if (_popupMessagePort && message.event === UI_EVENT && message.type !== UI.CLOSE_UI_WINDOW && message.type !== POPUP.CANCEL_POPUP_REQUEST) {
+        _popupMessagePort.postMessage(message);
+    } else {
+        window.top.postMessage(message, DataManager.getSettings('origin'));
+    }
 };
 
 const filterDeviceEvent = (message: DeviceMessage): boolean => {

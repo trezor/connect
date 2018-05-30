@@ -65,7 +65,13 @@ export default class DeviceList extends EventEmitter {
         _log.enabled = DataManager.getSettings('debug');
         if (!this.options.transport) {
             const bridgeLatestSrc: string = `${ DataManager.getSettings('latestBridgeSrc') }?${ Date.now() }`;
-            const transportTypes: Array<Transport> = [ new BridgeV2() ];
+            const transportTypes: Array<Transport> = [
+                new BridgeV2(),
+                // new Lowlevel(
+                //     new WebUsb(),
+                //     () => sharedWorkerFactoryWrap()
+                // )
+            ];
 
             if (DataManager.getSettings('webusb')) {
                 transportTypes.push(new Parallel({
@@ -75,13 +81,6 @@ export default class DeviceList extends EventEmitter {
                             () => sharedWorkerFactoryWrap()
                         ),
                         mandatory: true,
-                    },
-                    hid: {
-                        transport: new Fallback([
-                            new Extension(),
-                            new BridgeV1(bridgeLatestSrc),
-                        ]),
-                        mandatory: false,
                     },
                 }));
             }
@@ -122,20 +121,12 @@ export default class DeviceList extends EventEmitter {
     }
 
     async _configTransport(transport: Transport): Promise<void> {
-        let config: string;
-        if (typeof this.options.config !== 'undefined') {
-            config = this.options.config;
-            _log.debug('Configuring transports: config from options');
-            await transport.configure(config); // TODO!!
-        } else {
-            _log.debug('Configuring transports: config from fetch');
+        try {
             const url: string = `${ DataManager.getSettings('transportConfigSrc') }?${ Date.now() }`;
-            try {
-                config = await httpRequest(url, 'text');
-                await transport.configure(config);
-            } catch (error) {
-                throw ERROR.WRONG_TRANSPORT_CONFIG;
-            }
+            const config = await httpRequest(url, 'json');
+            await transport.configure(JSON.stringify(config));
+        } catch (error) {
+            throw ERROR.WRONG_TRANSPORT_CONFIG;
         }
     }
 

@@ -177,13 +177,8 @@ const handleMessage = (messageEvent: MessageEvent): void => {
             // pass UI event up
             eventEmitter.emit(event, message);
             eventEmitter.emit(type, payload);
-            if (type === UI.REQUEST_UI_WINDOW) {
-                // popup handshake is resolved automatically
-                //if (eventEmitter.listeners(UI_EVENT).length > 0) { postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }); }
-                if (!_settings.popup) {
-                    postMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, false);
-                }
-            } else if (type === UI.IFRAME_HANDSHAKE) {
+
+            if (type === UI.IFRAME_HANDSHAKE) {
                 if (_iframeHandshakePromise) { _iframeHandshakePromise.resolve(); }
                 _iframeHandshakePromise = null;
                 injectStyleSheet();
@@ -191,8 +186,6 @@ const handleMessage = (messageEvent: MessageEvent): void => {
                 _popupManager.cancel();
             } else if (type === UI.CLOSE_UI_WINDOW) {
                 _popupManager.close();
-            } else {
-                _popupManager.postMessage(new UiMessage(type, payload));
             }
             break;
 
