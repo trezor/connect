@@ -11,8 +11,9 @@
     .back {
         display: flex;
         align-items: center;
-        text-align: left;
+        margin-bottom: 26px;
 
+        text-align: left;
         color: @color_text_secondary;
 
         .arrow {
@@ -103,5 +104,21 @@
 
         font-size: 14px;
         color: @color_white;
+    }
+}
+
+.insufficient-funds {
+    display: flex;
+    flex-direction: column;
+    .loader {
+        flex: 1;
+    }
+}
+
+.amount-too-low {
+    display: flex;
+    flex-direction: column;
+    .loader {
+        flex: 1;
     }
 }
