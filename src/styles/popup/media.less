@@ -1,4 +1,6 @@
-@media screen and (max-width: 768px) {
+@default_popup_width: 640px;
+
+@media screen and (max-width: calc(@default_popup_width - 1px)) {
     main {
         flex-direction: column;
         min-height: none;
@@ -35,8 +37,8 @@
         flex: 1;
         padding-bottom: 50px; // dropbox button
 
-        /* .passphrase, .pin {
-            justify-content: flex-start;
-        } */
+        &.pin {
+
+        }
     }
 }
