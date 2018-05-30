@@ -18,33 +18,25 @@
             }
 
         }
-        .labeling {
-            display: none;
+        .dropbox-button {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 12px 24px;
+            background-color: @color_landing;
+            justify-content: start;
+            align-items: center;
+            z-index: 100;
         }
     }
 
     section {
         flex: 1;
+        padding-bottom: 50px; // dropbox button
 
-        div.pin {
-            /* the .pin view is the only that overflows on mobile */
-            min-height: 528px;
-        }
-
-        div.passphrase {
-            padding: 20px 30px;
-        }
-
-        div.permissions {
-            .permissions-list {
-                max-height: 161px;
-            }
-        }
-    }
-
-    // Fee selection is scrollable on mobile
-    // if custom fee is selected
-    .confirm {
-        margin-top: 25px;
+        /* .passphrase, .pin {
+            justify-content: flex-start;
+        } */
     }
 }
