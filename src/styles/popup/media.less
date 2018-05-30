@@ -21,16 +21,21 @@
             position: fixed;
             bottom: 0;
             left: 0;
-            width: 100vh;
+            width: 100%;
             padding: 12px 24px;
             background-color: @color_landing;
             justify-content: start;
             align-items: center;
+            z-index: 100;
         }
     }
 
     section {
         flex: 1;
         padding-bottom: 50px; // dropbox button
+
+        /* .passphrase, .pin {
+            justify-content: flex-start;
+        } */
     }
 }

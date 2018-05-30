@@ -36,15 +36,39 @@ main {
     width: 100%;
     min-width: 300px;
     height: 100%;
+    min-height: 640px;
+
     display: flex;
 }
 
 section {
-    width: 50%;
-    text-align: center;
     display: flex;
     justify-content: center;
-    padding: 24px 0px;
+
+    width: 50%;
+
+    text-align: center;
+
+    // View div
+    & > div {
+        padding: 30px 0;
+        max-width: 320px;
+
+        &.select-account {
+            padding: 24px 0;
+            max-width: none;
+        }
+
+        &.select-fee {
+            padding: 30px;
+            max-width: none;
+        }
+
+        &.bootloader {
+            padding: 30px;
+            max-width: 380px;
+        }
+    }
 }
 
 #views {
