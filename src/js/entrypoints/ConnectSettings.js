@@ -1,8 +1,21 @@
 /* @flow */
 'use strict';
 
+export type CustomMessageField = {
+    rule: string,
+    options: Object,
+    type: string,
+    name: string,
+    id: number
+}
+export type CustomMessage = {
+    name: string;
+    fields: Array<CustomMessageField>;
+}
+
 export type ConnectSettings = {
     // debug: boolean | {[k: string]: boolean};
+    +configSrc: string;
     debug: boolean;
     origin: ?string;
     priority: number;
@@ -12,9 +25,9 @@ export type ConnectSettings = {
     popup: boolean;
     popupSrc: string;
     webusbSrc: string;
-    +configSrc: string;
     coinsSrc: string;
     firmwareReleasesSrc: string;
+    customMessages: Array<CustomMessage>;
     transportConfigSrc: string;
     latestBridgeSrc: string;
     transportReconnect: boolean;
@@ -43,7 +56,8 @@ const initialSettings: ConnectSettings = {
     webusbSrc: `${ DEFAULT_DOMAIN }webusb.html`,
     coinsSrc: 'data/coins.json',
     firmwareReleasesSrc: 'data/releases-1.json',
-    transportConfigSrc: 'data/config_signed.bin',
+    transportConfigSrc: 'data/messages.json',
+    customMessages: [],
     latestBridgeSrc: 'data/latest.txt',
     transportReconnect: false,
     webusb: true,
@@ -74,16 +88,6 @@ export const parse = (input: ?Object): ConnectSettings => {
         settings.webusbSrc = `${ input.connectSrc }webusb.html`;
     }
 
-    // if (typeof input.iframeSrc === 'string') {
-    //     // TODO: escape string
-    //     settings.iframeSrc = input.iframeSrc;
-    // }
-
-    // if (typeof input.popupSrc === 'string') {
-    //     // TODO: escape string
-    //     settings.popupSrc = input.popupSrc;
-    // }
-
     if (typeof input.coinsSrc === 'string') {
         // TODO: escape string
         settings.coinsSrc = input.coinsSrc;
@@ -108,11 +112,11 @@ export const parse = (input: ?Object): ConnectSettings => {
         settings.transportReconnect = input.transportReconnect;
     }
 
-    if (input.hasOwnProperty('webusb') && typeof input.webusb === 'boolean') {
+    if (typeof input.webusb === 'boolean') {
         settings.webusb = input.webusb;
     }
 
-    if (input.hasOwnProperty('popup') && typeof input.popup === 'boolean') {
+    if (typeof input.popup === 'boolean') {
         settings.popup = input.popup;
     }
 

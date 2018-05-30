@@ -96,6 +96,7 @@ module.exports = {
             { from: `${DATA_SRC}config.json`, to: `data/config.json` },
             { from: `${DATA_SRC}coins.json`, to: `data/coins.json` },
             { from: `${DATA_SRC}config_signed.bin`, to: `data/config_signed.bin` },
+            { from: `${DATA_SRC}messages.json`, to: `data/messages.json` },
             { from: `${DATA_SRC}latest.txt`, to: `data/latest.txt` },
             { from: `${DATA_SRC}releases-1.json`, to: `data/releases-1.json` },
             { from: `${DATA_SRC}releases-2.json`, to: `data/releases-2.json` },
