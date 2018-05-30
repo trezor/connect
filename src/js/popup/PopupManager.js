@@ -85,20 +85,7 @@ export default class PopupManager extends EventEmitter {
             ,personalbar=no
             ,status=no`;
 
-        const popupOpenedHandler = (event: MessageEvent): void => {
-            if (event.data === OPENED) {
-                this._window.postMessage({
-                    type: HANDSHAKE,
-                    settings: this.settings,
-                    method: this.currentMethod
-                }, this.origin);
-                window.removeEventListener('message', popupOpenedHandler, false);
-            }
-        }
-        window.addEventListener('message', popupOpenedHandler, false);
-
         this._window = window.open('', '_blank', opts);
-        // this._window.foo = function() { console.log("foo!") } // not sure if needed
         this._window.location.href = this.src; // otherwise android/chrome loose window.opener reference
 
         this.closeInterval = window.setInterval(() => {

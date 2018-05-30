@@ -4,11 +4,14 @@
 import type { CoreMessage } from '../../core/CoreMessage';
 import { getOrigin } from '../../utils/networkUtils';
 import DataManager from '../../data/DataManager';
+import * as POPUP from '../../constants/popup';
 
 export const header: HTMLElement = document.getElementsByTagName('header')[0];
 export const container: HTMLElement = (document.getElementById('container'): any);
 export const views: HTMLElement = (document.getElementById('views'): any);
 export let iframe: any; // Window type
+
+export const channel = new MessageChannel();
 
 export const setOperation = (operation: string, update: boolean = false): void => {
     const label: HTMLElement = header.getElementsByClassName('operation')[0];
@@ -73,9 +76,12 @@ export const postMessage = (message: CoreMessage): void => {
     if (!window.opener || !iframe) return;
 
     if (iframe) {
-        // iframe.postMessage(message, '*');
-        iframe.postMessage(message, window.location.origin);
-        // _iframe.contentWindow.postMessage(message, '*');
+        if (message.type && message.type === POPUP.OPENED) {
+            iframe.postMessage(message, window.location.origin, [channel.port2]);
+        } else {
+            iframe.postMessage(message, window.location.origin);
+        }
+        // iframe.postMessage(message, window.location.origin);
     } else {
         // TODO: post CoreMessage
         window.opener.postMessage({ type: 'error', message: "Popup couldn't establish connection with iframe." }, '*');
