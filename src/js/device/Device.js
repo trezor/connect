@@ -38,6 +38,7 @@ export type RunOptions = {
     cancelPopupRequest?: Function,
 
     keepSession?: boolean,
+    useEmptyPassphrase?: boolean,
 }
 
 const parseRunOptions = (options?: RunOptions): RunOptions => {
@@ -238,7 +239,7 @@ export default class Device extends EventEmitter {
 
             // update features
             try {
-                await this.initialize();
+                await this.initialize(options.useEmptyPassphrase ? true : false);
             } catch (error) {
                 this.inconsistent = true;
                 await this.deferredActions[ DEVICE.ACQUIRE ].promise;
@@ -320,8 +321,8 @@ export default class Device extends EventEmitter {
         this.keepSession = false;
     }
 
-    async initialize(): Promise<void> {
-        const { message } : { message: Features } = await this.commands.initialize();
+    async initialize(useEmptyPassphrase: boolean): Promise<void> {
+        const { message } : { message: Features } = await this.commands.initialize(useEmptyPassphrase);
         this.features = message;
         this.featuresNeedsReload = false;
         this.featuresTimestamp = new Date().getTime();
@@ -339,14 +340,6 @@ export default class Device extends EventEmitter {
 
     setState(state: ?string): void {
         this.state = state;
-    }
-
-    async _reloadFeatures(): Promise<void> {
-        if (this.atLeast('1.3.3')) {
-            await this.getFeatures();
-        } else {
-            await this.initialize();
-        }
     }
 
     isUnacquired(): boolean {
