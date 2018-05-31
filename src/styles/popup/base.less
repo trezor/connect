@@ -1,5 +1,4 @@
-// If view is smaller than this size
-// the scroller appears
+// If the view is smaller than smallest supported size the scroller appears
 @smallest_supported_height: 500px;
 @smallest_supported_width: 328px;
 
@@ -39,28 +38,28 @@ body {
     font-family: @font-default;
     font-weight: 400;
     font-size: 14px;
-
-    min-height: @smallest_supported_height;
-    min-width: @smallest_supported_width;
+    color: @color_text_primary;
 }
 
 main {
     width: 100%;
     height: 100%;
+    min-width: 300px;
     min-height: none;
 
     display: flex;
 }
 
 section {
+    width: 50%;
+
     display: flex;
     justify-content: center;
 
-    width: 50%;
 
     text-align: center;
 
-    // View div
+    /* // View div
     & > div {
         padding: 30px;
         max-width: 320px;
@@ -79,7 +78,7 @@ section {
         &.follow-device {
             padding: 30px 24px;
         }
-    }
+    } */
 }
 
 #views {
