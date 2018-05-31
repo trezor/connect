@@ -19,4 +19,41 @@ section > div {
   &.follow-device {
       padding: 30px 24px;
   }
+
+  .divider {
+    display: block;
+    margin: 20px 0;
+
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+
+    span {
+      position: relative;
+      display: inline-block;
+
+      font-size: 14px;
+      color: @color_text_secondary;
+
+      &:before, &:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 9999px;
+        height: 1px;
+        background: @color_divider;
+      }
+
+      &:before {
+        right: 100%;
+        margin-right: 15px;
+      }
+
+      &:after {
+        left: 100%;
+        margin-left: 15px;
+      }
+    }
+  }
 }
+
