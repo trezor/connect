@@ -84,27 +84,43 @@
         <!-- Connect: END -->
 
         <!-- Device selection -->
-        <div class="select-device">
-            <h3>Select device:</h3>
-            <div class="select-device-list">
-                <button class="white">MY TREZOR</button>
-            </div>
-            <div class="remember">
+        <div class="permissions select-device">
+            <h3>Choose from devices</h3>
+
+            <div class="wrapper">
+                <div class="select-device-list">
+                    <button class="white">
+                        <span class="icon"></span>
+                        <span class="device-name">#DEVICE NAME</span>
+                    </button>
+                    <button class="white">
+                        <span class="icon"></span>
+                        <span class="device-name">#DEVICE NAME</span>
+                    </button>
+                    <button class="white active">
+                        <span class="icon model-t"></span>
+                        <span class="device-name">#DEVICE NAME</span>
+                    </button>
+                    <button class="white">
+                        <span class="icon model-t"></span>
+                        <span class="device-name">#DEVICE NAME</span>
+                    </button>
+                </div>
+
                 <label class="custom-checkbox">
-                    <input type="checkbox" checked />
-                    <span class="indicator"></span>Remember my choice
-                    <span class="what-is-it">
-                        <div class="explanation">
-                            TREZOR Connect will remember your choice during this session.
-                            It will be reset after page reload.
-                        </div>
-                    </span>
-                </label>
+                <input class="show-passphrase" type="checkbox"/>
+                <span class="indicator"></span>Remember device for now</label>
+
+                <button class="check-devices-button">
+                    <span class="plus"></span>
+                    <span class="text">Check for devices</span>
+                </button>
             </div>
-            <div class="webusb">
+
+            <!-- <div class="webusb">
                 <div class="webusb-divider">Or</div>
                 <button>Check for devices</button>
-            </div>
+            </div> -->
         </div>
         <!-- Device selection: END -->
 
@@ -370,7 +386,7 @@
         <!-- Account selection: END -->
 
         <!-- Fee selection -->
-        <div class="permissions select-fee">
+        <div class="select-fee">
             <div class="back">
                 <span class="arrow"></span>
                 <span class="text">Change Account</span>
