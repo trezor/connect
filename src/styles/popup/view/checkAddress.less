@@ -1,4 +1,7 @@
 .check-address {
+  height: 100%;
+  width: 100%;
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -6,14 +9,24 @@
   svg {
     width: auto;
     height: 49px;
+
+    align-self: center;
   }
 
   p {
-    margin: 8px 0px 0px 0px;
-
-    font-weight: 600;
     color: @color_green_primary;
-
-    .animation-pulsate();
+    font-size: 16px;
+    font-weight: 300;
+    animation: pulsate 1.3s ease-out infinite;
+    margin: 8px 0px 0px 0px;
   }
+}
+
+@keyframes pulsate {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1.0;
+    }
 }

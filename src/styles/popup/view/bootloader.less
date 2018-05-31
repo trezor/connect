@@ -1,4 +1,7 @@
 .bootloader {
+  height: 100%;
+  width: 100%;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -14,18 +17,67 @@
       height: auto;
       width: 25px;
 
+      align-self: center;
       .connect-usb-pin,
       .connect-usb-cable {
-          .animation-connect();
+          animation: connect 1.3s ease-out infinite;
       }
     }
 
     p {
       margin: 15px 0 0 0;
 
-      font-weight: 600;
+      font-size: 16px;
+      font-weight: 300;
       color: @color_green_primary;
-      .animation-pulsate();
+
+      animation: pulsate 1.3s ease-out infinite;
+    }
+
+
+    .divider {
+      display: block;
+      margin: 20px 0;
+
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+
+      span {
+        position: relative;
+        display: inline-block;
+
+        font-size: 14px;
+        color: @color_text_secondary;
+
+        &:before, &:after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          width: 9999px;
+          height: 1px;
+          background: @color_divider;
+        }
+
+        &:before {
+          right: 100%;
+          margin-right: 15px;
+        }
+
+        &:after {
+          left: 100%;
+          margin-left: 15px;
+        }
+      }
     }
   }
+}
+
+@keyframes pulsate {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1.0;
+    }
 }
