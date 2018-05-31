@@ -1,8 +1,6 @@
 @button_size: 80px;
-
 .pin {
     min-width: 260px;
-    width: 100%;
 
     display: flex;
     flex-direction: column;
@@ -89,19 +87,8 @@
             }
         }
     }
-
-    .submit {
-        position: relative;
-        min-width: 100%;
-        /* margin-top: 24px;
-        margin-bottom: 14px; */
-    }
 }
 
 .invalid-pin {
-    display: flex;
-    flex-direction: column;
-    .loader {
-        flex: 1;
-    }
+    .loader-layout();
 }
