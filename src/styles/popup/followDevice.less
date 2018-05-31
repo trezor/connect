@@ -2,24 +2,34 @@
   height: 100%;
   width: 100%;
 
-  /* padding: 30px; */
-
   display: flex;
   flex-direction: column;
   justify-content: center;
 
   svg {
     width: auto;
-    height: 55px;
+    height: 50px;
 
     align-self: center;
   }
 
   p {
-      color: @color_green_primary;
+      margin: 0 auto;
+
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 300;
+      color: @color_green_primary;
+
       animation: pulsate 1.3s ease-out infinite;
-      margin: 8px auto 0;
     }
 }
+
+@keyframes pulsate {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1.0;
+    }
+}
+
