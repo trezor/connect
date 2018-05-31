@@ -32,35 +32,12 @@
             </div>
         </aside>
         <section id="container">
-            <div class="pin">
-                <h3>Enter your
-                    <span>#TREZOR</span>PIN</h3>
-                <p>The PIN layout is displayed on your TREZOR.</p>
-
-                <div class="pin-input-row">
-                    <input class="pin-input" type="password" autocomplete="off" max-length="9" disabled />
-                    <button type="button" class="pin-backspace transparent"></button>
-                </div>
-
-                <div class="pin-row">
-                    <button type="button" data-value="7">&#8226;</button>
-                    <button type="button" data-value="8">&#8226;</button>
-                    <button type="button" data-value="9">&#8226;</button>
-                </div>
-                <div class="pin-row">
-                    <button type="button" data-value="4">&#8226;</button>
-                    <button type="button" data-value="5">&#8226;</button>
-                    <button type="button" data-value="6">&#8226;</button>
-                </div>
-                <div class="pin-row">
-                    <button type="button" data-value="1">&#8226;</button>
-                    <button type="button" data-value="2">&#8226;</button>
-                    <button type="button" data-value="3">&#8226;</button>
-                </div>
-
-                <div>
-                    <button class="submit" type="button">Enter PIN</button>
-                </div>
+            <div class="loader">
+                <p>Loading...</p>
+                <svg class="circular" viewBox="25 25 50 50" preserveAspectRatio="xMidYMid">
+                    <circle class="route" cx="50" cy="50" r="20" fill="none" stroke="" stroke-width="1" stroke-miterlimit="10" />
+                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="1" stroke-miterlimit="10" />
+                </svg>
             </div>
         </section>
     </main>
@@ -98,7 +75,7 @@
                 <div class="divider">
                     <span>And</span>
                 </div>
-                <button class="check-devices">
+                <button class="check-devices-button">
                     <span class="plus"></span>
                     <span class="text">Check for devices</span>
                 </button>
@@ -169,7 +146,7 @@
                 </div>
             </div>
 
-            <button class="confirm submit" type="button">Enter PIN</button>
+            <button class="submit" type="button">Enter PIN</button>
         </div>
         <!-- Pin: END -->
 
@@ -188,11 +165,11 @@
 
         <!-- Passphrase -->
         <div class="passphrase">
-            <h3>Enter
-                <span>#TREZOR</span>passphrase</h3>
-            <p>
-                <b>Note:</b> Passphrase is case-sensitive.</p>
             <div class="inputs">
+                <div class="title">
+                    <h3>Enter<span>#TREZOR</span>passphrase</h3>
+                    <p>Note: Passphrase is case-sensitive.</p>
+                </div>
                 <div class="row">
                     <label>Passphrase</label>
                     <div>
@@ -213,18 +190,16 @@
                         <input class="show-passphrase" type="checkbox" tabindex="3" />
                         <span class="indicator"></span>Show passphrase</label>
                 </div>
-                <div>
-                    <button type="button" class="submit" tabindex="4">Enter</button>
-                </div>
-                <div>
-                    <p class="bottom-note">Leave passphrase blank to access your default wallet</p>
-                </div>
+            </div>
+            <div>
+                <button class="confirm-button submit" tabindex="4">Enter</button>
+                <p class="bottom-note">Leave passphrase blank to access your default wallet</p>
             </div>
         </div>
         <!-- Passphrase: END -->
 
         <!-- Permissions -->
-        <div class="permissions">
+        <div class="permissions-tmp">
             <h3><span>HOST</span> is requesting permissions to:</h3>
 
             <div class="wrapper">
@@ -250,7 +225,7 @@
 
         <!-- Export xpub confirmation -->
         <div class="export-xpub">
-            <h3>Export public key for Bitcoin Account #1?</h3>
+            <h3>Export public key for <span>Bitcoin Account #1?</span></h3>
 
             <svg width="118px" height="171px" viewBox="0 0 118 171" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <title>Keys</title>
@@ -328,8 +303,8 @@
                     Legacy accounts
                 </div>
             </div>
-            <h3>Select
-                <span>#COIN</span> account</h3>
+
+            <h3>Select <span>#COIN</span> account</h3>
             <div class="select-account-list normal">
                 <button class="white account-default">
                     <span class="account-title">Account #1</span>
@@ -345,6 +320,58 @@
                     <span class="account-title">Account #1</span>
                     <span class="account-status">Loading...</span>
                 </button>
+
+                <button class="white account-default">
+                    <span class="account-title">Account #1</span>
+                    <span class="account-status">Loading...</span>
+                </button>
+
+                <button class="white account-default">
+                    <span class="account-title">Account #1</span>
+                    <span class="account-status">Loading...</span>
+                </button>
+
+                <button class="white account-default">
+                    <span class="account-title">Account #1</span>
+                    <span class="account-status">Loading...</span>
+                </button>
+
+                <button class="white account-default">
+                    <span class="account-title">Account #1</span>
+                    <span class="account-status">Loading...</span>
+                </button>
+
+                <button class="white account-default">
+                    <span class="account-title">Account #1</span>
+                    <span class="account-status">Loading...</span>
+                </button>
+
+                <button class="white account-default">
+                    <span class="account-title">Account #1</span>
+                    <span class="account-status">Loading...</span>
+                </button>
+
+                <button class="white account-default">
+                    <span class="account-title">Account #1</span>
+                    <span class="account-status">Loading...</span>
+                </button>
+
+                <button class="white account-default">
+                    <span class="account-title">Account #1</span>
+                    <span class="account-status">Loading...</span>
+                </button>
+
+                <button class="white account-default">
+                    <span class="account-title">Account #1</span>
+                    <span class="account-status">Loading...</span>
+                </button>
+
+                <button class="white account-default">
+                    <span class="account-title">Account #1</span>
+                    <span class="account-status">Loading...</span>
+                </button>
+
+
             </div>
             <div class="select-account-list legacy">
                 <button class="white account-default">
@@ -362,17 +389,27 @@
                     <span class="account-status">Loading...</span>
                 </button>
             </div>
+
+            <div class="dropbox-button">
+                <svg width="26px" height="24px" viewBox="0 0 26 24" version="1.1">
+                    <g stroke="none">
+                        <path d="M12.7999848,13.8843933 L20.39264,9.15845812 L25.59984,13.3619678 L18.06944,18.3178032 L12.79984,13.8844834 L7.5304,18.3177226 L0,13.3618871 L5.2072,9.15918384 L12.7999848,13.8843933 Z M7.53056,0 L12.80016,4.43331978 L5.20736,9.15853876 L0.00016,4.95583546 L7.53056,0 Z M12.81544,14.8382358 L18.10024,19.258654 L20.36184,17.7701294 L20.36184,19.4384704 L12.81544,24 L5.26904,19.4384704 L5.26904,17.7701294 L7.53064,19.258654 L12.81544,14.8382358 Z M25.6,4.9559161 L18.0696,8.06351361e-05 L12.8,4.43340042 L20.3928,9.15861939 L25.6,4.9559161 Z"></path>
+                    </g>
+                </svg>
+                <p>Enable labeling</p>
+            </div>
         </div>
         <!-- Account selection: END -->
 
         <!-- Fee selection -->
-        <div class="select-fee">
-            <div>
-                <div class="back">
-                    <span class="arrow"></span>
-                    <span class="text">Change Account</span>
-                </div>
-                <h3>Select Fee</h3>
+        <div class="permissions select-fee">
+            <div class="back">
+                <span class="arrow"></span>
+                <span class="text">Change Account</span>
+            </div>
+            <h3>Select Fee</h3>
+
+            <div class="wrapper">
                 <div class="select-fee-list">
                     <button class="white">
                         <p class="fee-title">Normal</p>
@@ -382,7 +419,7 @@
                         </div>
                     </button>
 
-                    <button class="white active">
+                    <button class="white">
                         <p class="fee-title">High</p>
                         <div class="fee-info">
                             <span class="fee-amount">0.000034 BTC</span>
@@ -398,19 +435,36 @@
                         </div>
                     </button>
 
-                    <button class="white">
+                    <button class="custom-fee white">
                         <p class="fee-title">Custom</p>
                         <div class="fee-info">
                             <span class="fee-amount">0.000034 BTC</span>
                             <span class="fee-time">No time estimated</span>
                         </div>
                     </button>
-                </div>
-            </div>
 
-            <button class="confirm-button">Send
-                <span>#AMOUNT</span>
-            </button>
+                    <!-- Display this when custom fee is selected -->
+                    <!-- <button class="custom-fee-active white">
+                        <div class="top">
+                            <p class="fee-title">Custom</p>
+                            <div class="fee-info">
+                                <span class="fee-amount">0.000034 BTC</span>
+                                <span class="fee-time">No time estimated</span>
+                            </div>
+                        </div>
+
+                        <input class="fee-input" type="number" autocomplete="off"/>
+
+                        <p class="note">Setting custom fee is not recommended.
+                            If you set too low fee, it might get stuck forever.
+                        </p>
+                    </button> -->
+                </div>
+
+                <button class="confirm-button">Send
+                    <span>#AMOUNT</span>
+                </button>
+            </div>
         </div>
         <!-- Fee selection: END -->
 
@@ -488,8 +542,7 @@
 
         <!-- Export account info -->
         <div class="export-account-info">
-            <h3>Export account info for
-                <span>Bitcoin Account #1</span>?</h3>
+            <h3>Export account info for<span>Bitcoin Account #1</span>?</h3>
 
             <!-- SVG -->
             <svg width="146px" height="202px" viewBox="0 0 146 202" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -700,7 +753,7 @@
             <div>
                 <h3>Firmware needs upgrade</h3>
                 <p>
-                    The firmware of your device need to be upgraded. Please try again after upgrading at TREZOR Wallet.
+                    The firmware of your device need to be upgraded, please try again after upgrading at TREZOR Wallet.
                 </p>
             </div>
             <div>
@@ -765,7 +818,10 @@
                 </svg>
             </div>
 
-            <button class="confirm-button">Go to the wallet &amp; update firmware</button>
+            <div>
+                <button class="confirm-button">Go to the wallet &amp; update firmware</button>
+                <a class="skip-update">I'll take the risk, skip the update.</a>
+            </div>
         </div>
         <!-- Firmware upgrade: END -->
 
@@ -959,7 +1015,7 @@
         <!-- Smartphones not supported: END -->
 
         <!-- Install bridge -->
-        <div class="install-bridge">
+        <div class="transport">
             <div>
                 <h3>Install Bridge</h3>
                 <p>New communication tool to faciliate the connection between your TREZOR and your internet browser</p>
