@@ -1,3 +1,8 @@
+// If view is smaller than this size
+// the scroller appears
+@smallest_supported_height: 500px;
+@smallest_supported_width: 328px;
+
 * , *:before , *:after {
     box-sizing: border-box;
 }
@@ -30,6 +35,9 @@ body {
     font-family: @font-default;
     font-weight: 400;
     font-size: 14px;
+
+    min-height: @smallest_supported_height;
+    min-width: @smallest_supported_width;
 }
 
 main {
@@ -51,17 +59,17 @@ section {
 
     // View div
     & > div {
-        padding: 30px 0;
+        padding: 30px;
         max-width: 320px;
 
-        &.select-account {
-            padding: 24px 0;
-            max-width: none;
+        h3 {
+            font-weight: 400;
         }
 
-        &.select-fee {
-            padding: 30px;
+        &.select-account {
+            padding: 30px 0;
             max-width: none;
+            min-width: 320px;
         }
 
         &.bootloader {
