@@ -13,16 +13,7 @@
 
       font-weight: 600;
       color: @color_green_primary;
-      animation: pulsate 1.3s ease-out infinite;
+
+      .animation-pulsate();
     }
 }
-
-@keyframes pulsate {
-    0%, 100% {
-      opacity: 0.5;
-    }
-    50% {
-      opacity: 1.0;
-    }
-}
-

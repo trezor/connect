@@ -4,3 +4,76 @@
   border-color 0.3s ease-in-out;
 }
 
+.animation-pulsate() {
+  animation: pulsate 1.3s ease-out infinite;
+}
+
+.animation-connect() {
+  animation: connect 1.3s ease-out infinite;
+}
+
+.animation-rotate() {
+  animation: rotate 2s linear infinite;
+}
+
+.animation-dash-color() {
+  animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
+}
+
+.animation-color() {
+
+}
+
+@keyframes pulsate {
+    0%, 100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1.0;
+    }
+}
+
+@keyframes connect {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-4px)
+    }
+}
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -35;
+    }
+    100% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -124;
+    }
+}
+
+@keyframes color {
+    100%, 0% {
+        stroke: @color_green_primary;
+    }
+    40% {
+        stroke: @color_green_primary;
+    }
+    66% {
+        stroke: @color_green_secondary;
+    }
+    80%, 90% {
+        stroke: @color_green_tertiary;
+    }
+}
