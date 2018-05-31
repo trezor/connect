@@ -4,6 +4,14 @@
   border-color 0.3s ease-in-out;
 }
 
+.loader-layout() {
+  display: flex;
+  flex-direction: column;
+  .loader {
+      flex: 1;
+  }
+}
+
 .animation-pulsate() {
   animation: pulsate 1.3s ease-out infinite;
 }
@@ -18,10 +26,6 @@
 
 .animation-dash-color() {
   animation: dash 1.5s ease-in-out infinite, color 6s ease-in-out infinite;
-}
-
-.animation-color() {
-
 }
 
 @keyframes pulsate {

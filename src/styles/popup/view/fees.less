@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
 
-    .back {
+    .back-button {
         display: flex;
         align-items: center;
         margin-bottom: 26px;
@@ -31,7 +31,6 @@
             color: @color_text_primary;
         }
     }
-
 
     h3 {
         margin-bottom: 16px;
@@ -141,26 +140,6 @@
     }
 }
 
-.insufficient-funds {
-    display: flex;
-    flex-direction: column;
-    .loader {
-        flex: 1;
-    }
-}
-
-.amount-too-low {
-    display: flex;
-    flex-direction: column;
-    .loader {
-        flex: 1;
-    }
-}
-
-@media screen and (max-width: 638px) {
-    // Fee selection is scrollable on mobile
-    // if custom fee is selected
-    .confirm-button {
-        margin-top: 25px;
-    }
+.insufficient-funds, .amount-too-low {
+    .loader-layout();
 }
