@@ -49,12 +49,9 @@
     }
 
     .select-account-list {
-        width: 100%;
-
         flex: 1;
+        margin: 0 30px 30px;
         overflow-y: scroll;
-        padding: 0px 24px;
-        position: relative;
 
         &.normal {
             //display: none;
@@ -67,12 +64,15 @@
         button {
             width: 100%;
             height: 50px;
+            padding: 0 15px;
+
             display: flex;
+            align-items: center;
+
             border: 1px solid @color_divider;
             border-radius: 0px;
             border-top-width: 0px;
             text-align: left;
-            align-items: center;
 
             &.disabled {
                 .account-title, .account-status {
@@ -129,5 +129,36 @@
             color: @color_text_secondary;
         }
     }
-}
 
+    .dropbox-button {
+        display: flex;
+        justify-content: center;
+        cursor: pointer;
+
+        &.active {
+            svg, p {
+                color: #1E7FF0;
+                fill: #1E7FF0;
+            }
+        }
+
+        svg {
+            margin-right: 12px;
+            width: 26px;
+            height: 24px;
+        }
+
+        svg, p {
+            color: @color_text_secondary;
+            fill: @color_text_secondary;
+            transition: color 0.3s ease-in-out, fill 0.3s ease-in-out;
+        }
+
+        &:hover {
+            svg, p {
+                color: #1E7FF0;
+                fill: #1E7FF0;
+            }
+        }
+    }
+}
