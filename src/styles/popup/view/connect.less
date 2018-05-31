@@ -9,14 +9,15 @@
   }
 
   p {
-    color: @color_green_primary;
-    animation: pulsate 1.3s ease-out infinite;
     margin: 8px 0px 0px 0px;
+    color: @color_green_primary;
+
+    .animation-pulsate();
   }
 
   .connect-usb-pin,
   .connect-usb-cable {
-      animation: connect 1.3s ease-out infinite;
+      .animation-connect();
   }
 
   .webusb {
@@ -40,7 +41,7 @@
         color: @color_text_secondary;
 
         &:before, &:after {
-          content: "";
+          content: '';
           position: absolute;
           top: 50%;
           width: 9999px;
@@ -60,22 +61,4 @@
       }
     }
   }
-}
-
-@keyframes pulsate {
-    0%, 100% {
-      opacity: 0.5;
-    }
-    50% {
-      opacity: 1.0;
-    }
-}
-
-@keyframes connect {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-        transform: translateY(-4px)
-    }
 }
