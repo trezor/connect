@@ -1,7 +1,4 @@
 .select-device {
-    height: 100%;
-    width: 100%;
-
     .wrapper {
         height: 100%;
 
@@ -64,6 +61,11 @@
 
         .check-devices-button {
             margin-top: 18px;
+        }
+
+        input:checked + .indicator:after {
+            background-color: @color_green_primary;
+            border-color: @color_green_primary;
         }
     }
 }
