@@ -1,6 +1,7 @@
-@default_popup_width: 640px;
+@default_popup_width: 639px;
+@mobile_break: calc(@default_popup_width - 1px);
 
-@media screen and (max-width: calc(@default_popup_width - 1px)) {
+@media screen and (max-width: @default_popup_width) {
     main {
         flex-direction: column;
         min-height: none;
@@ -21,24 +22,20 @@
 
         }
         .dropbox-button {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 12px 24px;
-            background-color: @color_landing;
-            justify-content: start;
-            align-items: center;
-            z-index: 100;
+            display: none;
         }
     }
 
     section {
         flex: 1;
-        padding-bottom: 50px; // dropbox button
 
-        &.pin {
+        div.pin {
+            /* the .pin view is the only that overflows on mobile */
+            min-height: 528px;
+        }
 
+        div.passphrase {
+            padding: 20px 30px;
         }
     }
 }
