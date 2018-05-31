@@ -1,0 +1,46 @@
+.permissions {
+  height: 100%;
+  width: 100%;
+
+  .wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .list-wrapper {
+      flex: 1;
+
+      .permissions-list {
+        max-height: 260px;
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+
+        padding: 26px;
+        margin: 24px 0 20px;
+
+        border-radius: 4px;
+        background-color: @color_info_secondary;
+
+        text-align: left;
+      }
+
+      input:checked + .indicator:after {
+        background-color: @color_info_primary;
+        border-color: @color_info_primary;
+      }
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+
+      .confirm-button {
+        margin-bottom: 10px;
+
+        background-color: @color_info_primary;
+      }
+    }
+  }
+
+}
