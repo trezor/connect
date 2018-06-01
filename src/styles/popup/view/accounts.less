@@ -94,18 +94,15 @@
         }
     }
 
-    .dropbox-button {
+    .enable-labeling {
+        padding: 0;
+
         display: flex;
         justify-content: center;
         align-items: center;
         cursor: pointer;
 
-        &.active {
-            svg, p {
-                color: #1E7FF0;
-                fill: #1E7FF0;
-            }
-        }
+        background: transparent;
 
         svg {
             margin-right: 12px;
@@ -119,10 +116,12 @@
             transition: color 0.3s ease-in-out, fill 0.3s ease-in-out;
         }
 
-        &:hover {
+        &:hover,
+        &:active,
+        &.active {
             svg, p {
-                color: #1E7FF0;
-                fill: #1E7FF0;
+                color: @color_info_primary;
+                fill: @color_info_primary;
             }
         }
     }
