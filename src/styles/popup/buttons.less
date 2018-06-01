@@ -107,7 +107,7 @@ button {
         }
     }
 
-    &.confirm {
+    &.confirm-button {
         width: 100%;
         padding: 12px;
 
@@ -116,7 +116,7 @@ button {
         background-color: @color_green_primary;
     }
 
-    &.cancel {
+    &.cancel-button {
         padding: 12px;
 
         font-size: 14px;
@@ -132,7 +132,7 @@ button {
         }
     }
 
-    &.check-devices {
+    &.check-devices-button {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -196,47 +196,3 @@ button {
     }
 }
 
-.confirm-button {
-    width: 100%;
-    padding: 12px;
-
-    font-size: 14px;
-    color: @color_white;
-    background-color: @color_green_primary;
-}
-
-.cancel-button {
-    padding: 12px;
-
-    font-size: 14px;
-    color: @color_text_secondary;
-
-    background-color: transparent;
-    border: 1px solid @color_text_secondary;
-
-    &:hover,
-    &:active {
-        color: @color_text_primary;
-        background: transparent;
-    }
-}
-
-.check-devices-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 15px;
-
-    line-height: 1;
-    .plus {
-        margin-right: 10px;
-        &::after {
-            .icomoon-plus;
-        }
-    }
-
-    .text {
-        font-size: 14px;
-        color: @color_white;
-    }
-}
