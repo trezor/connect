@@ -65,8 +65,11 @@ button {
 
     &:disabled {
         pointer-events: none;
-        color: @color_text_secondary;
-        background: @color_gray_light;
+        opacity: 0.7;
+    }
+
+    &:disabled:hover {
+        cursor: not-allowed;
     }
 
     &.blue {
@@ -80,19 +83,6 @@ button {
             background: @color_info_primary;
         }
     }
-
-    /* &.white {
-        background: @color_white;
-        color: @color_text_secondary;
-        border: 1px solid @color_divider;
-        &:hover {
-            background: @color_landing;
-        }
-        &:active {
-            color: @color_text_primary;
-            background: @color_landing;
-        }
-    } */
 
     &.transparent {
         background: transparent;
