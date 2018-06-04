@@ -38,7 +38,11 @@ const initWebUsbButton = (webusb: boolean): void => {
 export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): void => {
     if (!payload) return;
 
-    if (payload.devices.length === 0) {
+    if (!payload) {
+        return;
+    }
+
+    if (!payload.devices || !Array.isArray(payload.devices) || payload.devices.length === 0) {
         showView('connect');
         initWebUsbButton(payload.webusb);
         return;
@@ -47,39 +51,38 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
     showView('select-device');
     initWebUsbButton(payload.webusb);
 
-    const buttonsContainer: HTMLElement = container.getElementsByClassName('select-device-list')[0];
-    buttonsContainer.innerHTML = '';
+    const deviceList: HTMLElement = container.getElementsByClassName('select-device-list')[0];
+    deviceList.innerHTML = '';
+    const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName('remember-device')[0]: any);
 
-    const checkbox: HTMLInputElement = (container.querySelector('input[type=checkbox]') : any);
+    payload.devices.forEach(device => {
+        const deviceButton: HTMLButtonElement = document.createElement('button');
+        deviceButton.className = 'list';
 
-
-    const handleClick = (event: MouseEvent) => {
-        if (event.target instanceof HTMLElement) {
-
-        }
-
-    };
-    for (const dev of payload.devices) {
-        const button: HTMLButtonElement = document.createElement('button');
-        button.innerHTML = dev.label;
-        button.onclick = (event: MouseEvent) => {
+        deviceButton.addEventListener('click', () => {
             postMessage(new UiMessage(UI.RECEIVE_DEVICE, {
-                remember: (checkbox && checkbox.checked),
-                device: dev
+                remember: (rememberCheckbox && rememberCheckbox.checked),
+                device
             }));
             showView('loader');
-        }
-        button.className = 'white';
-        if (dev.features && dev.features.major_version === 2) {
-            button.className = 'white trezorT';
-        }
-        // button.setAttribute('data-path', dev.path);
+        });
 
-        // create new device button
-        const div: HTMLDivElement = document.createElement('div');
-        div.className = 'device';
-        div.appendChild(button);
+        const deviceIcon: HTMLSpanElement = document.createElement('span');
+        deviceIcon.className = 'icon';
 
-        buttonsContainer.appendChild(div);
-    }
+        if (device.features) {
+            if (device.features.model === 'T') {
+                deviceIcon.classList.add('model-t');
+            }
+        }
+
+        const deviceName: HTMLSpanElement = document.createElement('span');
+        deviceName.className = 'device-name';
+        deviceName.textContent = device.label;
+
+        deviceButton.appendChild(deviceIcon);
+        deviceButton.appendChild(deviceName);
+
+        deviceList.appendChild(deviceButton);
+    });
 };
