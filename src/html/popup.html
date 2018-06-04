@@ -200,26 +200,27 @@
 
         <!-- Permissions -->
         <div class="permissions">
-            <h3><span>HOST</span> is requesting permissions to:</h3>
+            <h3><span>#HOST</span> is requesting permissions to:</h3>
+            <div class="list-wrapper">
+                <ul class="permissions-list">
+                    <!-- <li>
+                        <div class="info-icon">
+                            <div class="tooltip">
+                                <span>Hello, I'm a tooltip</span>
+                            </div>
+                        </div>
+                        Write data from TREZOR
+                    </li> -->
+                </ul>
 
-            <div class="wrapper">
-                <div class="list-wrapper">
-                    <ul class="permissions-list">
-                        <li><span class="info-icon"></span>Read data from TREZOR</li>
-                        <li><span class="info-icon"></span>Write data from TREZOR</li>
-                        <li><span class="info-icon"></span>Read metadata</li>
-                    </ul>
-
-                    <label class="custom-checkbox">
-                    <input class="show-passphrase" type="checkbox" />
-                    <span class="indicator"></span>Don't ask me again</label>
-                </div>
-                <div class="buttons">
-                    <button class="confirm">Allow once for this session</button>
-                    <button class="cancel">Cancel</button>
-                </div>
+                <label class="custom-checkbox">
+                <input class="show-passphrase" type="checkbox" />
+                <span class="indicator"></span>Don't ask me again</label>
             </div>
-
+            <div class="buttons">
+                <button class="confirm">Allow once for this session</button>
+                <button class="cancel">Cancel</button>
+            </div>
         </div>
         <!-- Permissions: END -->
 
