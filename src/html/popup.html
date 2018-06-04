@@ -623,7 +623,7 @@
         <!-- Export account info: END -->
 
         <!-- Initialization -->
-        <div class="initialization">
+        <div class="initialize">
             <div>
                 <h3>Initialization failed</h3>
                 <p>
@@ -783,7 +783,11 @@
             </div>
 
             <div>
-                <button class="confirm">Go to the wallet &amp; update firmware</button>
+                <a class="button confirm"
+                href="https://trezor.io/start/"
+                target="_blank">
+                    Go to the wallet &amp; update firmware
+                </a>
                 <a class="skip-update">I'll take the risk, skip the update.</a>
             </div>
         </div>
@@ -1062,7 +1066,7 @@
 
             <a class="button confirm"
             href="https://wallet.trezor.io/"
-            target="_">
+            target="_blank">
                 Go to the wallet &amp; install bridge
             </a>
         </div>
@@ -1173,10 +1177,18 @@
         </div>
         <!-- Check address on device: END -->
 
-        <!-- TODO: No designed view for this -->
+        <!-- Passphrase on device -->
         <div class="passphrase-on-device">
-            <h3>Enter your passphrase on TREZOR</h3>
+            <h3>Enter your passphrase on <span>#TREZOR</span></h3>
+            <div class="loader">
+                <p>Retrying...</p>
+                <svg class="circular" viewBox="25 25 50 50" preserveAspectRatio="xMidYMid">
+                    <circle class="route" cx="50" cy="50" r="20" fill="none" stroke="" stroke-width="1" stroke-miterlimit="10" />
+                    <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="1" stroke-miterlimit="10" />
+                </svg>
+            </div>
         </div>
+        <!-- Passphrase on device: END -->
     </div>
 </body>
 </html>
