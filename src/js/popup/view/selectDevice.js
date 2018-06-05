@@ -32,6 +32,7 @@ const initWebUsbButton = (webusb: boolean): void => {
         const usb = iframe.clientInformation.usb;
         try {
             await usb.requestDevice( { filters: DataManager.getConfig().webusb } );
+            showView('loader');
             restorePosition(currentWidth, currentHeight);
         } catch (error) {
             restorePosition(currentWidth, currentHeight);
@@ -56,6 +57,7 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
     showView('select-device');
     initWebUsbButton(payload.webusb);
 
+    // Populate device list
     const deviceList: HTMLElement = container.getElementsByClassName('select-device-list')[0];
     deviceList.innerHTML = '';
     const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName('remember-device')[0]: any);
