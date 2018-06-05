@@ -49,3 +49,14 @@ npm:
 	mkdir -p ./dist/flowtype
 	cp ./src/flowtype/trezor-connect.js ./dist/flowtype/index.js
 	cd ./dist && npm publish
+
+
+protobuf:
+	sed 's/\(google\/protobuf\)/\.\/\1/' ./submodules/trezor-common/protob/messages.proto > ./submodules/trezor-common/protob/messages_fixed.proto
+	./node_modules/.bin/proto2js ./submodules/trezor-common/protob/messages_fixed.proto > ./src/data/messages.json
+	rm ./submodules/trezor-common/protob/messages_fixed.proto
+
+coins:
+#	./submodules/trezor-common/defs/coins/tools/build_coins.py connect
+	./submodules/trezor-common/defs/coins/tools/build_coins.py
+	mv coins.json ./src/data/coins.json
