@@ -78,7 +78,7 @@ export default class GetPublicKey extends AbstractMethod {
     }
 
     async confirmation(): Promise<boolean> {
-        if (this.confirmed || !this.params.confirmation) return true;
+        if (this.confirmed) return true;
         // wait for popup window
         await this.getPopupPromise().promise;
 
