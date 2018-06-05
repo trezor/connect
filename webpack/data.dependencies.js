@@ -19,10 +19,10 @@ const dependencies = [
         url: 'https://raw.githubusercontent.com/trezor/webwallet-data/master/firmware/2/releases.json',
         destination: `${DATA_SRC}releases-2.json`
     },
-    {
-        url: 'https://raw.githubusercontent.com/trezor/trezor-common/master/coins.json',
-        destination: `${DATA_SRC}coins.json`
-    },
+    // {
+    //     url: 'https://raw.githubusercontent.com/trezor/trezor-common/master/coins.json',
+    //     destination: `${DATA_SRC}coins.json`
+    // },
 ];
 
 function getFile(callback) {
