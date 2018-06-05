@@ -147,10 +147,10 @@ const filterDeviceEvent = (message: DeviceMessage): boolean => {
 }
 
 const init = async (settings: any, origin: string) => {
-    try {
-        const parsedSettings: ConnectSettings = parseSettings(settings);
-        parsedSettings.origin = origin; // set origin manually to avoid injection from settings
+    const parsedSettings: ConnectSettings = parseSettings(settings);
+    parsedSettings.origin = origin; // set origin manually to avoid injection from settings
 
+    try {
         _log.enabled = _logFromPopup.enabled = parsedSettings.debug;
         _core = await initCore(parsedSettings);
         _core.on(CORE_EVENT, postMessage);
