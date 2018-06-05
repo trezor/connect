@@ -510,17 +510,25 @@ export default class Device extends EventEmitter {
 
     // simplified object to pass via postMessage
     toMessageObject(): DeviceDescription {
-        const defaultLabel: string = 'My TREZOR';
-        if (this.isUnacquired()) {
+
+        if (this.originalDescriptor.path === DEVICE.UNREADABLE) {
             return {
                 path: this.originalDescriptor.path,
-                label: defaultLabel,
+                label: 'Unreadable device',
+                isUsedElsewhere: false,
+                featuresNeedsReload: false,
+                unreadable: true
+            };
+        } else if (this.isUnacquired()) {
+            return {
+                path: this.originalDescriptor.path,
+                label: 'Unacquired device',
                 isUsedElsewhere: this.isUsedElsewhere(),
                 featuresNeedsReload: this.featuresNeedsReload,
                 unacquired: true,
-                features: this.features,
             };
         } else {
+            const defaultLabel: string = 'My TREZOR';
             const label = this.features.label === '' || this.features.label === null ? defaultLabel : this.features.label;
             return {
                 path: this.originalDescriptor.path,

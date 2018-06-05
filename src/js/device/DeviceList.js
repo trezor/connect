@@ -97,7 +97,18 @@ export default class DeviceList extends EventEmitter {
             await this._initStream();
             const webUsbPlugin = this.getWebUsbPlugin();
             if (webUsbPlugin) {
-                webUsbPlugin.unreadableHidDeviceChange.on('change', () => this.emit(TRANSPORT.UNREADABLE));
+                webUsbPlugin.unreadableHidDeviceChange.on('change', async () => {
+                    if (webUsbPlugin.unreadableHidDevice) {
+                        const device = await this._createUnacquiredDevice( { path: DEVICE.UNREADABLE, session: null });
+                        this.devices[DEVICE.UNREADABLE] = device;
+                        this.emit(DEVICE.CONNECT_UNACQUIRED, device.toMessageObject());
+                    } else {
+                        const device = this.devices[DEVICE.UNREADABLE];
+                        delete this.devices[DEVICE.UNREADABLE];
+                        this.emit(DEVICE.DISCONNECT, device.toMessageObject());
+                    }
+                    // this.emit(TRANSPORT.UNREADABLE, { connected: webUsbPlugin.unreadableHidDevice } )
+                });
             }
 
             // listen for self emitted events and resolve pending transport event if needed
@@ -242,21 +253,6 @@ export default class DeviceList extends EventEmitter {
             return '';
         }
         return this.transport.version;
-    }
-
-    // This method should be called directly ONLY in library mode.
-    // otherwise will throw error: Require user gesture to request notification permissions
-    async requestUSBDevice(): Promise<string> {
-        if (this.transport == null) {
-            return Promise.reject();
-        }
-        try {
-            const req = await this.transport.requestDevice();
-            return this.getWebUsbPlugin().unreadableHidDevice ? 'unreadable' : 'success';
-        } catch (error) {
-            console.error(error);
-            return 'cancelled';
-        }
     }
 
     transportOutdated(): boolean {
