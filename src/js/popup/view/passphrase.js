@@ -9,8 +9,8 @@ export const initPassphraseView = (payload: any): void => {
     showView('passphrase');
     const view: HTMLElement = container.getElementsByClassName('passphrase')[0];
     const header: HTMLElement = container.getElementsByTagName('h3')[0];
-    const input1: HTMLInputElement = container.getElementsByTagName('input')[0];
-    const input2: HTMLInputElement = container.getElementsByTagName('input')[1];
+    const input1: HTMLInputElement = (container.getElementsByClassName('pass')[0]: any);
+    const input2: HTMLInputElement = (container.getElementsByClassName('pass-check')[0]: any);
     const toggle: HTMLElement = container.getElementsByClassName('show-passphrase')[0];
     const enter: HTMLButtonElement = ( container.getElementsByClassName('submit')[0]: any);
 
