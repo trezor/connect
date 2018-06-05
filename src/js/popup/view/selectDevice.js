@@ -11,13 +11,17 @@ const initWebUsbButton = (webusb: boolean): void => {
     if (!webusb || !iframe) return;
 
     const webusbContainer: HTMLElement = container.getElementsByClassName('webusb')[0];
-    webusbContainer.style.display = 'block';
+    webusbContainer.style.display = 'flex';
     const button: HTMLButtonElement = webusbContainer.getElementsByTagName('button')[0];
     button.onclick = async () => {
         const x = window.screenLeft;
         const y = window.screenTop;
-        const restorePosition = (): void => {
-            window.resizeTo(640, 500);
+
+        const currentWidth = window.outerWidth;
+        const currentHeight = window.outerHeight;
+
+        const restorePosition = (originalWidth: number, originalHeight: number): void => {
+            window.resizeTo(originalWidth, originalHeight);
             window.moveTo(x, y);
             window.focus();
         }
@@ -25,12 +29,12 @@ const initWebUsbButton = (webusb: boolean): void => {
         window.resizeTo(100, 100);
         window.moveTo(screen.width, screen.height);
 
-        var usb = iframe.clientInformation.usb;
+        const usb = iframe.clientInformation.usb;
         try {
             await usb.requestDevice( { filters: DataManager.getConfig().webusb } );
-            restorePosition();
+            restorePosition(currentWidth, currentHeight);
         } catch (error) {
-            restorePosition();
+            restorePosition(currentWidth, currentHeight);
         }
     }
 }
@@ -43,6 +47,7 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
     }
 
     if (!payload.devices || !Array.isArray(payload.devices) || payload.devices.length === 0) {
+        // No device connected
         showView('connect');
         initWebUsbButton(payload.webusb);
         return;
