@@ -213,12 +213,9 @@ export const getAccountType = (path: Array<number>): string => {
 };
 
 export const parseCoinsJson = (json: JSON): void => {
-    if (!Array.isArray(json)) {
-        throw new Error('coins.json is not an array');
-    }
-
-    const coinsJSON: Array<any> = json;
-    coinsJSON.map(coin => {
+    const coinsObject: Object = json;
+    Object.keys(coinsObject).forEach(key => {
+        const coin = coinsObject[key];
         let networkPublic: string = coin.xpub_magic;
         if (typeof coin.xpub_magic_segwit_p2sh === 'string' && coin.segwit) {
             networkPublic = coin.xpub_magic_segwit_p2sh;
