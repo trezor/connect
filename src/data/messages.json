@@ -1412,8 +1412,15 @@
                     "rule": "optional",
                     "options": {},
                     "type": "uint32",
-                    "name": "decred_expiry",
+                    "name": "expiry",
                     "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "overwintered",
+                    "id": 7
                 }
             ],
             "enums": [],
@@ -1471,6 +1478,20 @@
                     "type": "uint32",
                     "name": "lock_time",
                     "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "expiry",
+                    "id": 7
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "overwintered",
+                    "id": 8
                 }
             ],
             "enums": [],
@@ -4069,7 +4090,7 @@
                             "rule": "optional",
                             "options": {},
                             "type": "uint32",
-                            "name": "decred_expiry",
+                            "name": "expiry",
                             "id": 10
                         },
                         {
