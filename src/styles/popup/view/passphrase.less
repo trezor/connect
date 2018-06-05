@@ -55,20 +55,17 @@
             padding-top: 24px;
         }
 
-        .error {
-            position: absolute;
-            padding-top: 4px;
-            font-size: 12px;
-            color: @color_error_primary;
-            display: none;
-        }
-
         input {
             width: 100%;
 
             font-size: 21px;
             font-weight: bold;
             letter-spacing: 8px;
+
+            &:focus {
+                box-shadow: none;
+                border: 1px solid @color_text_primary;
+            }
         }
     }
 
@@ -78,8 +75,20 @@
         }
     }
 
+    .error-container {
+        height: 16px;
+        margin-bottom: 10px;
+    }
+
+    .error {
+        display: none;
+
+        font-weight: 400;
+        color: @color_error_primary;
+    }
+
     .confirm {
-        margin-bottom: 20px;
+        margin-bottom: 10px;
     }
 }
 

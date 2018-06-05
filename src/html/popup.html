@@ -171,16 +171,15 @@
                     <label>Passphrase</label>
                     <div>
                         <input type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true"
-                            tabindex="1" />
+                            tabindex="1" maxlength="50"/>
                     </div>
                 </div>
                 <div class="row">
                     <label>Confirm passphrase again</label>
                     <div>
                         <input type="password" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-lpignore="true"
-                            tabindex="2" />
+                            tabindex="2" maxlength="50"/>
                     </div>
-                    <span class="error">Passphrases do not match</span>
                 </div>
                 <div class="row">
                     <label class="custom-checkbox">
@@ -190,6 +189,9 @@
             </div>
             <div>
                 <button class="confirm submit" tabindex="4">Enter</button>
+                <div class="error-container">
+                    <p class="error">Passphrases do not match!</p>
+                </div>
                 <p>Leave passphrase blank to access your default wallet</p>
             </div>
         </div>
