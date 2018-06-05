@@ -115,12 +115,6 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
     }
 
     switch (message.type) {
-        // case TRANSPORT.REQUEST :
-        //     _deviceList.requestUSBDevice().then(response => {
-        //         postMessage(new ResponseMessage(message.id, true, response));
-        //     });
-        //     break;
-
         case POPUP.HANDSHAKE :
             getPopupPromise(false).resolve();
             break;
@@ -135,14 +129,6 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         case TRANSPORT.RECONNECT :
             reconnectTransport();
             break;
-
-        // TODO: webusb response from popup
-        // case 'WEBUSB' :
-        //     navigator.usb.getDevices().then((d) => {
-        //         console.warn("GETDEVICES!", d)
-        //     })
-        //     console.warn("WEBUSB! Reload device list", _deviceList.getWebUsbPlugin() );
-        //     break;
 
         // messages from UI (popup/modal...)
         case UI.RECEIVE_DEVICE :

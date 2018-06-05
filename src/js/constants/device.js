@@ -32,3 +32,5 @@ export const WORD: string = 'word';
 export const AUTHENTICATED: string = 'device__authenticated';
 
 export const WAIT_FOR_SELECTION: string = 'device__wait_for_selection';
+
+export const UNREADABLE: string = 'unreadable-device'; // this string has different form than other constants because it is used as unreadable device path
