@@ -58,9 +58,6 @@ const handleMessage = (event: Message): void => {
         case UI.TRANSPORT :
             showView('transport');
             break;
-        case UI.CONNECT :
-            showView('connect');
-            break;
         case UI.SELECT_DEVICE :
             view.selectDevice(message.payload);
             break;
