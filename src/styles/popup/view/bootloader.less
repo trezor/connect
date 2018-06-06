@@ -1,0 +1,31 @@
+.bootloader {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .wrapper {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    svg {
+      height: auto;
+      width: 25px;
+
+      .connect-usb-pin,
+      .connect-usb-cable {
+          .animation-connect();
+      }
+    }
+
+    p {
+      margin: 15px 0 0 0;
+
+      font-weight: 600;
+      color: @color_green_primary;
+      .animation-pulsate();
+    }
+  }
+}

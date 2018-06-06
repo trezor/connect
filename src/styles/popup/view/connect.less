@@ -1,0 +1,30 @@
+.connect {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  svg {
+    width: auto;
+    height: 49px;
+  }
+
+  p {
+    margin: 8px 0px 0px 0px;
+
+    font-weight: 600;
+    color: @color_green_primary;
+
+    .animation-pulsate();
+  }
+
+  .connect-usb-pin,
+  .connect-usb-cable {
+      .animation-connect();
+  }
+
+  .webusb {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

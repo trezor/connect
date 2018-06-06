@@ -81,20 +81,18 @@ button {
         }
     }
 
-    &.white {
+    /* &.white {
         background: @color_white;
         color: @color_text_secondary;
         border: 1px solid @color_divider;
         &:hover {
-            //color: @color_text_primary;
-            //border-color: @color_text_primary;
-            background: @color_divider;
+            background: @color_landing;
         }
         &:active {
             color: @color_text_primary;
-            background: @color_divider;
+            background: @color_landing;
         }
-    }
+    } */
 
     &.transparent {
         background: transparent;
@@ -108,4 +106,93 @@ button {
             background: transparent;
         }
     }
+
+    &.confirm {
+        width: 100%;
+        padding: 12px;
+
+        font-size: 14px;
+        color: @color_white;
+        background-color: @color_green_primary;
+    }
+
+    &.cancel {
+        padding: 12px;
+
+        font-size: 14px;
+        color: @color_text_secondary;
+
+        background-color: transparent;
+        border: 1px solid @color_text_secondary;
+
+        &:hover,
+        &:active {
+            color: @color_text_primary;
+            background: transparent;
+        }
+    }
+
+    &.check-devices {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+
+        line-height: 1;
+        .plus {
+            margin-right: 10px;
+            &::after {
+                .icomoon-plus;
+            }
+        }
+
+        .text {
+            font-size: 14px;
+            color: @color_white;
+        }
+    }
+
+    &.list {
+        width: 100%;
+        height: 50px;
+
+        padding: 0 15px;
+
+        border: 1px solid @color_divider;
+        border-radius: 0px;
+        border-top-width: 0px;
+
+        text-align: left;
+        color: @color_text_secondary;
+
+        background: @color_white;
+
+        &:first-child {
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            border-top-width: 1px;
+        }
+
+        &:last-child {
+            border-bottom-left-radius: 2px;
+            border-bottom-right-radius: 2px;
+        }
+
+        &:not(.disabled):hover,
+        &:active,
+        &.active {
+            // Leave the border but make it transparent so the
+            // inner elements don't move
+            border-left: 1px solid transparent;
+            // Changing the border on hover moves inner elements
+            // use box-shadow isntead
+            box-shadow: 3px 0 0 @color_green_tertiary inset;
+        }
+
+        &.disabled:hover {
+            cursor: not-allowed;
+            background-color: white;
+        }
+    }
 }
+

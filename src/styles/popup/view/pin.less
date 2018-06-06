@@ -1,15 +1,16 @@
 @button_size: 80px;
-
 .pin {
-    width: 100%;
-    max-width: 300px;
-    padding: 0px 24px;
+    min-width: 260px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
     h3 {
         display: flex;
         justify-content: center;
         white-space: nowrap;
-        padding: 0px 24px;
+        padding: 0;
         span {
             text-overflow: ellipsis;
             overflow: hidden;
@@ -18,12 +19,22 @@
         }
     }
 
+    .wrapper {
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+    }
+
     .pin-row {
         display: flex;
         justify-content: space-between;
         button {
             width: 30%;
             height: @button_size;
+
             margin-top: 10px;
             font-size: 22px;
             font-weight: 600;
@@ -53,10 +64,9 @@
         position: relative;
 
         input {
-            letter-spacing: 6px;
-            line-height: 48px;
-            font-weight: 600;
-            font-size: 32px;
+            letter-spacing: 14px;
+            line-height: 40px;
+            font-size: 26px;
             width: 100%;
             height: auto;
             padding: 0px 31px;
@@ -77,21 +87,8 @@
             }
         }
     }
-
-    .submit {
-        position: relative;
-        width: 260px;
-        margin-top: 24px;
-        margin-bottom: 14px;
-    }
 }
-
 
 .invalid-pin {
-    display: flex;
-    flex-direction: column;
-    .loader {
-        flex: 1;
-    }
+    .loader-layout();
 }
-
