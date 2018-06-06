@@ -74,14 +74,15 @@ export default class AbstractMethod implements MethodInterface {
         // wait for response
         const uiResp: UiPromiseResponse = await this.createUiPromise(UI.RECEIVE_PERMISSION, this.device).promise;
 
-        const permissionsResponse: string = uiResp.payload;
-        const permissionsGranted: boolean = (permissionsResponse === 'true');
+        const permissionsResponse: any = uiResp.payload;
 
-        if (permissionsGranted) {
-            this.savePermissions();
+        if (permissionsResponse.granted) {
+            if (permissionsResponse.remember) {
+                this.savePermissions();
+                return true;
+            }
             return true;
         }
-
         return false;
     }
 
