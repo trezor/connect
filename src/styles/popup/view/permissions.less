@@ -30,13 +30,21 @@
     overflow-y: scroll;
 
     list-style: none;
-    padding: 26px;
+    padding: 26px 26px 0;
     margin: 24px 0 20px;
 
     border-radius: 4px;
     background-color: @color_info_secondary;
 
     text-align: left;
+
+    // Workaround for Firefox's bug ignoring padding-bottom
+    // see: https://bugzilla.mozilla.org/show_bug.cgi?id=748518
+    &:after {
+      content: '';
+      height: 26px;
+      display: block;
+    }
 
     li {
       display: flex;
