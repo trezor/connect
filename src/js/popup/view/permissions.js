@@ -43,6 +43,8 @@ export const initPermissionsView = (data: any, origin: string): void => {
     const permissionsList: HTMLElement = container.getElementsByClassName('permissions-list')[0];
     const confirmButton: HTMLElement = container.getElementsByClassName('confirm')[0];
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
+    const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName('remember-permissions')[0]: any);
+    console.log(rememberCheckbox.checked);
 
     hostName.innerHTML = origin;
     if (data && Array.isArray(data)) {
@@ -61,12 +63,18 @@ export const initPermissionsView = (data: any, origin: string): void => {
     }
 
     confirmButton.onclick = () => {
-        postMessage(new UiMessage(UI.RECEIVE_PERMISSION, 'true'));
+        postMessage(new UiMessage(UI.RECEIVE_PERMISSION, {
+            remember: (rememberCheckbox && rememberCheckbox.checked),
+            granted: true,
+        }));
         showView('loader');
     };
 
     cancelButton.onclick = () => {
-        postMessage(new UiMessage(UI.RECEIVE_PERMISSION, 'false'));
+        postMessage(new UiMessage(UI.RECEIVE_PERMISSION, {
+            remember: (rememberCheckbox && rememberCheckbox.checked),
+            granted: false,
+        }));
         showView('loader');
     };
 };
