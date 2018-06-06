@@ -12,9 +12,14 @@ const getPermissionText = (permissionType: string, deviceName: string): string =
         case 'read':
             text = `Read data from ${deviceName}`;
             break;
+        case 'read-meta':
+            text = `Read metadata to ${deviceName}`;
         case 'write':
             text = `Write data to ${deviceName}`;
             break;
+        case 'write-meta':
+            text = `Write metadata to ${deviceName}`;
+
     }
     return text;
 };
@@ -44,7 +49,6 @@ export const initPermissionsView = (data: any, origin: string): void => {
     const confirmButton: HTMLElement = container.getElementsByClassName('confirm')[0];
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
     const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName('remember-permissions')[0]: any);
-    console.log(rememberCheckbox.checked);
 
     hostName.innerHTML = origin;
     if (data && Array.isArray(data)) {
@@ -58,6 +62,7 @@ export const initPermissionsView = (data: any, origin: string): void => {
             listItem.appendChild(
                 document.createTextNode(permissionText)
             );
+
             permissionsList.appendChild(listItem);
         });
     }
