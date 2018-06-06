@@ -54,6 +54,10 @@ const handleInputCopyOrPaste = (e: Event) => {
     e.preventDefault();
 };
 
+const isAscii = (str: string) => {
+    return /^[\x08\x00-\x7F]$/.test(str);
+};
+
 export const initPassphraseView = (payload: any): void => {
     showView('passphrase');
 
@@ -61,7 +65,7 @@ export const initPassphraseView = (payload: any): void => {
     const header: HTMLElement = container.getElementsByTagName('h3')[0];
     const input1: HTMLInputElement = (container.getElementsByClassName('pass')[0]: any);
     const input2: HTMLInputElement = (container.getElementsByClassName('pass-check')[0]: any);
-    const toggle: HTMLElement = container.getElementsByClassName('show-passphrase')[0];
+    const toggle: HTMLInputElement = (container.getElementsByClassName('show-passphrase')[0]: any);
     const enter: HTMLButtonElement = ( container.getElementsByClassName('submit')[0]: any);
 
     const DOT: string = '•';
@@ -82,7 +86,21 @@ export const initPassphraseView = (payload: any): void => {
         caretStart = input.selectionStart;
         caretEnd = input.selectionEnd;
     };
-    const handleInput = (newData: string, input: HTMLInputElement, isPassphrase: boolean): void => {
+    const handleInput = (input: HTMLInputElement, isPassphrase: boolean): void => {
+        // The input valie is either '••••X•••' where 'X' is newData or '•••••••'
+        // The second case happens only when user deleted a substring
+        const findAllDotsRegex = new RegExp(DOT, 'g');
+        const newData = input.value.replace(findAllDotsRegex, '');
+
+        if (newData && !isAscii(newData)) {
+            // Don't let use add non-ascii chars
+            input.value = isPassphrase ? passphrase : passphraseRevision;
+            if (inputType === 'password') {
+                input.value = DOT.repeat(input.value.length);
+            }
+            return;
+        }
+
         if (isPassphrase) {
             if (newData) {
                 // User added character(s)
@@ -103,27 +121,21 @@ export const initPassphraseView = (payload: any): void => {
 
         // Value was changed - caret must be refreshed
         updateCaretForInput(input);
+        input.value = isPassphrase ? passphrase : passphraseRevision;
         if (inputType === 'password') {
             input.value = DOT.repeat(input.value.length);
 
-            // Caret must be set manually because setting an input.value will caret move at the end
+            // Caret must be set manually because setting an input.value will move caret at the end
             input.selectionStart = caretStart;
             input.selectionEnd = caretEnd;
         }
     };
     const handleInputKeyUp = (e: KeyboardEvent) => {
         const input: HTMLInputElement = (e.target: any);
-        switch (e.code) {
-            case ('ArrowLeft' || 'ArrowUp' || 'ArrowRight' || 'ArrowDown' || 'Backspace'):
-                updateCaretForInput(input);
-                break;
-            default:
-                updateCaretForInput(input);
-                break;
-        }
+        updateCaretForInput(input);
     };
     const validation = () => {
-        if (input1.value !== input2.value) {
+        if (passphrase !== passphraseRevision) {
             enter.disabled = true;
             view.classList.add('not-valid');
         } else {
@@ -150,10 +162,7 @@ export const initPassphraseView = (payload: any): void => {
         input1.blur();
         input2.blur();
 
-        // TODO: Cleanup
         window.removeEventListener('keydown', handleWindowKeydown);
-        input1.removeEventListener('input', validation, false);
-        input2.removeEventListener('input', validation, false);
 
         showView('loader');
         postMessage(new UiMessage(UI.RECEIVE_PASSPHRASE, {
@@ -162,11 +171,20 @@ export const initPassphraseView = (payload: any): void => {
         }));
     };
     const handleWindowKeydown = (e: KeyboardEvent) => {
-        if (event.keyCode === 13) {
-            event.preventDefault();
+        if (e.key === 'Enter') {
+            e.preventDefault();
             enter.click();
         }
     };
+    const handleInputFocus = (e: Event) => {
+        const input: HTMLInputElement = (e.target: any);
+        updateCaretForInput(input);
+
+        if (inputType === 'text') {
+            // Hide passphrase if visible
+            toggle.click();
+        }
+    }
     /* Functions: END */
 
     input1.addEventListener('copy', handleInputCopyOrPaste);
@@ -175,16 +193,16 @@ export const initPassphraseView = (payload: any): void => {
     input1.addEventListener('paste', handleInputCopyOrPaste);
     input2.addEventListener('paste', handleInputCopyOrPaste);
 
-    input1.addEventListener('input', (e: any) => handleInput(e.data, input1, true));
-    input2.addEventListener('input', (e: any) => handleInput(e.data, input2, false));
+    input1.addEventListener('input', () => handleInput(input1, true));
+    input2.addEventListener('input', () => handleInput(input2, false));
     input1.addEventListener('input', validation, false);
     input2.addEventListener('input', validation, false);
 
     input1.addEventListener('click', (e: any) => updateCaretForInput(e.target));
     input2.addEventListener('click', (e: any) => updateCaretForInput(e.target));
 
-    input2.addEventListener('focus', (e: any) => updateCaretForInput(e.target));
-    input1.addEventListener('focus', (e: any) => updateCaretForInput(e.target));
+    input2.addEventListener('focus', handleInputFocus);
+    input1.addEventListener('focus', handleInputFocus);
 
     input1.addEventListener('keyup', handleInputKeyUp)
     input2.addEventListener('keyup', handleInputKeyUp)
