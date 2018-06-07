@@ -11,43 +11,27 @@ import parseUri from 'parse-uri';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
 
 type WhiteList = {
-    priority: number;
-    origin: string;
+    +priority: number;
+    +origin: string;
 }
 type WebUSB = {
-    vendorId: string;
-    productId: string;
+    +vendorId: string;
+    +productId: string;
 }
 type Browser = {
-    version: number;
-    download: string;
-    update: string;
+    +version: number;
+    +download: string;
+    +update: string;
 }
 type Config = {
-    whitelist: Array<WhiteList>;
-    webusb: Array<WebUSB>;
-    supportedBrowsers: { [key: string]: Browser };
+    +whitelist: Array<WhiteList>;
+    +webusb: Array<WebUSB>;
+    +supportedBrowsers: { [key: string]: Browser };
 }
 
-// transform json into flow typed object
-const parseConfig = (json: JSON): Config => {
-    const config: Config = {
-        whitelist: [],
-        webusb: [],
-        supportedBrowsers: {},
-    }
-    if (json.hasOwnProperty('whitelist') && typeof json.whitelist === 'object' && Array.isArray(json.whitelist)) {
-        config.whitelist = json.whitelist;
-    }
-    if (json.hasOwnProperty('webusb') && typeof json.webusb === 'object' && Array.isArray(json.webusb)) {
-        config.webusb = json.webusb;
-    }
-    if (json.hasOwnProperty('supportedBrowsers')) {
-        const sb: any = Object.getOwnPropertyDescriptor(json, 'supportedBrowsers').value;
-        if (sb.constructor === Object) {
-            config.supportedBrowsers = sb;
-        }
-    }
+// TODO: transform json to flow typed object
+const parseConfig = (json: any): Config => {
+    const config: Config = json;
     return config;
 }
 
@@ -76,7 +60,7 @@ export default class DataManager {
             // settings.origin = "chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk";
             const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || "");
             this.settings.trustedHost = !!whitelist && !this.settings.popup;
-            this.settings.debug = !!this.settings.trustedHost;
+            // this.settings.debug = !!this.settings.trustedHost;
             this.settings.priority = DataManager.getPriority(whitelist);
 
             parseCoinsJson(coins);

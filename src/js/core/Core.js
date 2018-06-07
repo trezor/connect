@@ -15,13 +15,11 @@ import * as IFRAME from '../constants/iframe';
 import * as ERROR from '../constants/errors';
 
 import { UiMessage, DeviceMessage, TransportMessage, ResponseMessage, CoreMessage } from './CoreMessage';
-import type { UiPromiseResponse } from './CoreMessage';
 
 import AbstractMethod from './methods/AbstractMethod';
 import { find as findMethod } from './methods';
 
 import { create as createDeferred } from '../utils/deferred';
-import type { Deferred } from '../utils/deferred';
 
 import { resolveAfter } from '../utils/promiseUtils'; // TODO: just tmp. remove
 import { getPathFromIndex } from '../utils/pathUtils';
@@ -31,6 +29,7 @@ import Log, { init as initLog, enable as enableLog } from '../utils/debug';
 
 import { parse as parseSettings } from '../entrypoints/ConnectSettings';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
+import type { Deferred, UiPromiseResponse } from 'flowtype';
 
 // Public variables
 let _core: Core; // Class with event emitter

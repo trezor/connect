@@ -146,6 +146,7 @@ export const selectFee = (data: ?Object): void => {
     };
 
     input.oninput = handleCustomFeeChange;
+    // $FlowIssue: onpropertychange not found in HTMLInputElement
     if (typeof input.onpropertychange === 'function') {
         // $FlowIssue: onpropertychange not found in HTMLInputElement
         input.onpropertychange = input.oninput; // for IE8

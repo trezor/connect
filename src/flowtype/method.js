@@ -1,3 +1,5 @@
+import type { Deferred, UiPromiseResponse, CoreMessage } from 'flowtype';
+
 declare module 'flowtype/method' {
 
     declare export type MethodParams = {
