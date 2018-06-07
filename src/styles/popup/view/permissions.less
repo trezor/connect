@@ -25,12 +25,13 @@
   }
 
   .permissions-list {
+
     max-height: 260px;
 
     overflow-y: scroll;
 
     list-style: none;
-    padding: 26px 26px 0;
+    padding: 33px 33px 0;
     margin: 24px 0 20px;
 
     border-radius: 4px;
@@ -42,7 +43,7 @@
     // see: https://bugzilla.mozilla.org/show_bug.cgi?id=748518
     &:after {
       content: '';
-      height: 26px;
+      height: 33px;
       display: block;
     }
 
@@ -63,7 +64,7 @@
       width: 28px;
       height: 28px;
 
-      &::after {
+      &::before {
         .icomoon-info;
         width: 28px;
         height: 28px;
@@ -79,12 +80,13 @@
 
     .tooltip {
       visibility: hidden;
-      position: absolute;
       border-radius: 4px;
+      width: 200px;
+
       span {
         position: relative;
         text-align: center;
-        top: 40px;
+        top: 10px;
         padding: 10px 10px;
 
         color: white;
