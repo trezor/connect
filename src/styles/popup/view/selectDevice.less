@@ -11,6 +11,26 @@
             overflow-y: scroll;
 
             button {
+                padding: 0;
+
+                &.device-explain {
+                    height: auto;
+                    pointer-events: auto;
+
+                    &:hover {
+                        cursor: default;
+                    }
+                }
+
+                .wrapper {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+
+                    padding: 10px 15px;
+                }
+
                 .icon {
                     width: 24px;
                     height: 24px;
@@ -18,13 +38,26 @@
                     vertical-align: middle;
                     background-repeat: no-repeat;
 
-                    background-image: url('../../../images/icon-trezorT.png');
+                    background-image: url('../../../images/icon-trezor.png');
                     background-size: 14px 24px;
 
                     &.model-t {
-                        background-image: url('../../../images/icon-trezor.png');
-                        background-size: 14px 24px;
+                        background-image: url('../../../images/icon-trezorT.png');
                     }
+
+                    &.unknown {
+                        background-image: url('../../../images/icon-unknown.png');
+                    }
+                }
+
+
+                .explain {
+                    padding: 15px 10px;
+
+                    font-weight: 400;
+                    font-size: 12px;
+                    color: @color_warning_primary;
+                    background-color: @color_warning_secondary;
                 }
             }
         }
