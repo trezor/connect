@@ -1,27 +1,35 @@
-// import css/less module
+/* @flow */
+
+// empty module for css/less imports
 declare module 'CSSModule' {
     declare var exports: { [key: string]: string };
 }
 
-// Override MessageEvent to have access to "ports" and typed "data"
+// this needs to be toplevel
+declare type $Core$Message = {
+    +event: string,
+    +type: string,
+    +payload: any,
+
+    id?: number, // response id in ResponseMessage
+    success?: boolean, // response status in ResponseMessage
+}
+
+// Override MessageEvent to have access to "ports" field and typed "data"
 declare class Message extends Event {
-    origin: string;
-    lastEventId: string;
-    source: WindowProxy;
-    ports: Array<MessagePort>;
-    data: {
-        event: string;
-        type: string;
-        payload: any;
-    }
+    +origin: string;
+    +lastEventId: string;
+    +source: WindowProxy;
+    +ports: Array<MessagePort>;
+    +data: ?$Core$Message;
 }
 
 // Override Navigator to have access to "usb" field
 declare var navigator: Navigator & {
-    usb?: USB;
+    +usb?: USB;
 };
 
-// Types
+// Common types used across library
 declare module 'flowtype' {
     declare export type Deferred<T> = {
         id?: string,
@@ -42,11 +50,7 @@ declare module 'flowtype' {
         payload?: any
     }
 
-    declare export type CoreMessage = {
-        event: string,
-        type: string,
-        payload: any
-    }
+    declare export type CoreMessage = $Core$Message;
 
     declare export type BrowserState = {
         name: string;

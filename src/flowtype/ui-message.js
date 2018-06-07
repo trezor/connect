@@ -1,59 +1,43 @@
-import type { Device } from 'trezor-connect';
-import type { CoreMessage, BrowserState } from 'flowtype';
+/* @flow */
 
 declare module 'flowtype/ui-message' {
 
-    declare type T_UI_EVENT = 'UI_EVENT';
-    declare type T_UI = {
-        IFRAME_HANDSHAKE: 'iframe_handshake',
-        POPUP_HANDSHAKE: 'popup_handshake', // from popup constants
-        CANCEL_POPUP_REQUEST: 'ui_cancel-popup-request', // from popup constants
-        POPUP_OPENED: 'popup_opened', // from popup constants
+    import type { Device, T_POPUP, T_UI_EVENT, T_UI } from 'trezor-connect';
+    import type { CoreMessage, BrowserState } from 'flowtype';
 
-        TRANSPORT: 'ui-no_transport',
-        BOOTLOADER: 'ui-device_bootloader_mode',
-        INITIALIZE: 'ui-device_not_initialized',
-        FIRMWARE: 'ui-device_firmware_old',
-        BROWSER_NOT_SUPPORTED: 'ui-browser_not_supported',
-        BROWSER_OUTDATED: 'ui-browser_outdated',
-        RECEIVE_BROWSER: 'ui-receive_browser',
-        REQUEST_UI_WINDOW: 'ui-request_window',
-        CLOSE_UI_WINDOW: 'ui-close_window',
-        REQUEST_PERMISSION: 'ui-request_permission',
-        REQUEST_CONFIRMATION: 'ui-request_confirmation',
-        REQUEST_PIN: 'ui-request_pin',
-        INVALID_PIN: 'ui-invalid_pin',
-        REQUEST_PASSPHRASE: 'ui-request_passphrase',
-        REQUEST_PASSPHRASE_ON_DEVICE: 'ui-request_passphrase_on_device',
-        CONNECT: 'ui-connect',
-        LOADING: 'ui-loading',
-        SET_OPERATION: 'ui-set_operation',
-        SELECT_DEVICE: 'ui-select_device',
-        SELECT_ACCOUNT: 'ui-select_account',
-        SELECT_FEE: 'ui-select_fee',
-        UPDATE_CUSTOM_FEE: 'ui-update_custom_fee',
-        INSUFFICIENT_FUNDS: 'ui-insufficient_funds',
-        REQUEST_BUTTON: 'ui-button',
-        RECEIVE_PERMISSION: 'ui-receive_permission',
-        RECEIVE_CONFIRMATION: 'ui-receive_confirmation',
-        RECEIVE_PIN: 'ui-receive_pin',
-        RECEIVE_PASSPHRASE: 'ui-receive_passphrase',
-        RECEIVE_DEVICE: 'ui-receive_device',
-        CHANGE_ACCOUNT: 'ui-change_account',
-        RECEIVE_ACCOUNT: 'ui-receive_account',
-        RECEIVE_FEE: 'ui-receive_fee',
-        CHANGE_SETTINGS: 'ui-change_settings',
-    };
+    /*
+    * Messages without payload
+    */
 
-    declare type WithoutPayload = {
+    declare type MessageWithoutPayload = {
         +type: $PropertyType<T_UI, 'REQUEST_UI_WINDOW'> |
-            $PropertyType<T_UI, 'CANCEL_POPUP_REQUEST'> |
+            $PropertyType<T_POPUP, 'CANCEL_POPUP_REQUEST'> |
             $PropertyType<T_UI, 'TRANSPORT'> |
-            $PropertyType<T_UI, 'POPUP_OPENED'> |
+            $PropertyType<T_POPUP, 'OPENED'> |
             $PropertyType<T_UI, 'RECEIVE_BROWSER'> |
             $PropertyType<T_UI, 'CHANGE_ACCOUNT'> |
             $PropertyType<T_UI, 'CLOSE_UI_WINDOW'>
     }
+
+    /*
+    * Common message to UI with assigned device
+    */
+
+    declare type DeviceMessage = {
+        +type:
+            $PropertyType<T_UI, 'REQUEST_BUTTON'> |
+            $PropertyType<T_UI, 'REQUEST_PIN'> |
+            $PropertyType<T_UI, 'INVALID_PIN'> |
+            $PropertyType<T_UI, 'REQUEST_PASSPHRASE_ON_DEVICE'> |
+            $PropertyType<T_UI, 'REQUEST_PASSPHRASE'>,
+        payload: {
+            device: Device
+        }
+    }
+
+    /*
+    * Messages to UI
+    */
 
     declare type IFrameHandshake = {
         +type: $PropertyType<T_UI, 'IFRAME_HANDSHAKE'>,
@@ -63,7 +47,7 @@ declare module 'flowtype/ui-message' {
     }
 
     declare type PopupHandshake = {
-        +type: $PropertyType<T_UI, 'POPUP_HANDSHAKE'>,
+        +type: $PropertyType<T_POPUP, 'HANDSHAKE'>,
         payload?: {
             settings: any, // TODO
             method: any // TODO
@@ -87,40 +71,6 @@ declare module 'flowtype/ui-message' {
         }
     }
 
-    declare type ReceiveConfirmation = {
-        +type: $PropertyType<T_UI, 'RECEIVE_CONFIRMATION'> | $PropertyType<T_UI, 'RECEIVE_PERMISSION'>,
-        payload: string // TODO: boolean
-    }
-
-    declare type ReceivePassphrase = {
-        +type: $PropertyType<T_UI, 'RECEIVE_PASSPHRASE'>,
-        payload: {
-            save: boolean;
-            value: string
-        }
-    }
-
-    declare type ReceivePin = {
-        +type: $PropertyType<T_UI, 'RECEIVE_PIN'>,
-        payload: string
-    }
-
-    declare type BrowserMessage = {
-        +type: $PropertyType<T_UI, 'BROWSER_NOT_SUPPORTED'> | $PropertyType<T_UI, 'BROWSER_OUTDATED'>,
-        payload: BrowserState
-    }
-
-    declare type PassphraseOnDevice = {
-        +type: $PropertyType<T_UI, 'REQUEST_PASSPHRASE_ON_DEVICE'> |
-            $PropertyType<T_UI, 'REQUEST_BUTTON'> |
-            $PropertyType<T_UI, 'REQUEST_PIN'> |
-            $PropertyType<T_UI, 'REQUEST_PASSPHRASE'> |
-            $PropertyType<T_UI, 'INVALID_PIN'>,
-        payload: {
-            device: Device
-        }
-    }
-
     declare type SelectDevice = {
         +type: $PropertyType<T_UI, 'SELECT_DEVICE'>,
         payload: {
@@ -129,11 +79,43 @@ declare module 'flowtype/ui-message' {
         }
     }
 
+    declare type BrowserMessage = {
+        +type: $PropertyType<T_UI, 'BROWSER_NOT_SUPPORTED'> | $PropertyType<T_UI, 'BROWSER_OUTDATED'>,
+        payload: BrowserState
+    }
+
+    declare type UnexpectedDeviceMode = {
+        +type: $PropertyType<T_UI, 'BOOTLOADER'> | $PropertyType<T_UI, 'INITIALIZE'> | $PropertyType<T_UI, 'FIRMWARE'>,
+        payload: Device
+    }
+
+    /*
+    * Messages from UI
+    */
+
+    declare type ReceiveConfirmation = {
+        +type: $PropertyType<T_UI, 'RECEIVE_CONFIRMATION'> | $PropertyType<T_UI, 'RECEIVE_PERMISSION'>,
+        payload: string // TODO: boolean
+    }
+
     declare type ReceiveDevice = {
         +type: $PropertyType<T_UI, 'RECEIVE_DEVICE'>,
         payload: {
-            device: boolean;
+            device: Device;
             remember: boolean;
+        }
+    }
+
+    declare type ReceivePin = {
+        +type: $PropertyType<T_UI, 'RECEIVE_PIN'>,
+        payload: string
+    }
+
+    declare type ReceivePassphrase = {
+        +type: $PropertyType<T_UI, 'RECEIVE_PASSPHRASE'>,
+        payload: {
+            save: boolean;
+            value: string
         }
     }
 
@@ -150,24 +132,31 @@ declare module 'flowtype/ui-message' {
         }
     }
 
-    declare type UnexpectedDeviceMode = {
-        +type: $PropertyType<T_UI, 'BOOTLOADER'> | $PropertyType<T_UI, 'INITIALIZE'> | $PropertyType<T_UI, 'FIRMWARE'>,
-        payload: Device
-    }
-
-    declare export type UiMessage = IFrameHandshake
+    declare export type UiMessage =
+        MessageWithoutPayload
+        | DeviceMessage
+        | IFrameHandshake
         | PopupHandshake
+        | RequestPermission
+        | RequestConfirmation
         | SelectDevice
-        | ReceiveDevice;
+        | BrowserMessage
+        | UnexpectedDeviceMode
+        | ReceiveConfirmation
+        | ReceiveDevice
+        | ReceivePin
+        | ReceivePassphrase
+        | ReceiveAccount
+        | ReceiveFee
 
-
-    declare function MessageFactory(type: $PropertyType<WithoutPayload, 'type'>): CoreMessage;
+    declare function MessageFactory(type: $PropertyType<MessageWithoutPayload, 'type'>): CoreMessage;
 
     declare function MessageFactory(type: $PropertyType<IFrameHandshake, 'type'>, payload: $PropertyType<IFrameHandshake, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<PopupHandshake, 'type'>, payload: $PropertyType<PopupHandshake, 'payload'>): CoreMessage;
 
     declare function MessageFactory(type: $PropertyType<BrowserMessage, 'type'>, payload: $PropertyType<BrowserMessage, 'payload'>): CoreMessage;
-    declare function MessageFactory(type: $PropertyType<PassphraseOnDevice, 'type'>, payload: $PropertyType<PassphraseOnDevice, 'payload'>): CoreMessage;
+    declare function MessageFactory(type: $PropertyType<DeviceMessage, 'type'>, payload: $PropertyType<DeviceMessage, 'payload'>): CoreMessage;
+
     declare function MessageFactory(type: $PropertyType<RequestPermission, 'type'>, payload: $PropertyType<RequestPermission, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<RequestConfirmation, 'type'>, payload: $PropertyType<RequestConfirmation, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceiveConfirmation, 'type'>, payload: $PropertyType<ReceiveConfirmation, 'payload'>): CoreMessage;

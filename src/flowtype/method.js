@@ -1,6 +1,10 @@
-import type { Deferred, UiPromiseResponse, CoreMessage } from 'flowtype';
+
+/* @flow */
 
 declare module 'flowtype/method' {
+
+    import type { Device } from 'trezor-connect';
+    import type { Deferred, UiPromiseResponse, CoreMessage } from 'flowtype';
 
     declare export type MethodParams = {
         responseID: number, // call id

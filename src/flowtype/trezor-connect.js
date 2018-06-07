@@ -1,6 +1,18 @@
+/* @flow */
+
 declare module 'trezor-connect' {
 
     // CONSTANTS (from trezor-connect/src/js/constants)
+
+    declare export type T_POPUP = {
+        // LOG: 'popup_log',
+        OPENED: 'popup_opened',
+        // OPEN_TIMEOUT: 'popup_open_timeout',
+        HANDSHAKE: 'popup_handshake',
+        // CLOSE: 'popup_close',
+        // CLOSED: 'popup_closed',
+        CANCEL_POPUP_REQUEST: 'ui_cancel-popup-request',
+    }
 
     declare type T_DEVICE_EVENT = 'DEVICE_EVENT';
     declare type T_DEVICE = {
@@ -30,8 +42,8 @@ declare module 'trezor-connect' {
         // WAIT_FOR_SELECTION: 'device__wait_for_selection',
     };
 
-    declare type T_UI_EVENT = 'UI_EVENT';
-    declare type T_UI = {
+    declare export type T_UI_EVENT = 'UI_EVENT';
+    declare export type T_UI = {
         IFRAME_HANDSHAKE: 'iframe_handshake',
         TRANSPORT: 'ui-no_transport',
         BOOTLOADER: 'ui-device_bootloader_mode',
