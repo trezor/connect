@@ -1,42 +1,42 @@
 /* @flow */
 'use strict';
 
-export const IFRAME_HANDSHAKE: string = 'iframe_handshake';
+export const IFRAME_HANDSHAKE: 'iframe_handshake' = 'iframe_handshake';
 
-export const TRANSPORT: string = 'ui-no_transport';
-export const BOOTLOADER: string = 'ui-device_bootloader_mode';
-export const INITIALIZE: string = 'ui-device_not_initialized';
-export const FIRMWARE: string = 'ui-device_firmware_old';
-export const BROWSER_NOT_SUPPORTED: string = 'ui-browser_not_supported';
-export const BROWSER_OUTDATED: string = 'ui-browser_outdated';
-export const RECEIVE_BROWSER: string = 'ui-receive_browser';
+export const TRANSPORT: 'ui-no_transport' = 'ui-no_transport';
+export const BOOTLOADER: 'ui-device_bootloader_mode' = 'ui-device_bootloader_mode';
+export const INITIALIZE: 'ui-device_not_initialized' = 'ui-device_not_initialized';
+export const FIRMWARE: 'ui-device_firmware_old' = 'ui-device_firmware_old';
+export const BROWSER_NOT_SUPPORTED: 'ui-browser_not_supported' = 'ui-browser_not_supported';
+export const BROWSER_OUTDATED: 'ui-browser_outdated' = 'ui-browser_outdated';
+export const RECEIVE_BROWSER: 'ui-receive_browser' = 'ui-receive_browser';
 
-export const REQUEST_UI_WINDOW: string = 'ui-request_window';
-export const CLOSE_UI_WINDOW: string = 'ui-close_window';
+export const REQUEST_UI_WINDOW: 'ui-request_window' = 'ui-request_window';
+export const CLOSE_UI_WINDOW: 'ui-close_window' = 'ui-close_window';
 
-export const REQUEST_PERMISSION: string = 'ui-request_permission';
-export const REQUEST_CONFIRMATION: string = 'ui-request_confirmation';
-export const REQUEST_PIN: string = 'ui-request_pin';
-export const INVALID_PIN: string = 'ui-invalid_pin';
-export const REQUEST_PASSPHRASE: string = 'ui-request_passphrase';
-export const REQUEST_PASSPHRASE_ON_DEVICE: string = 'ui-request_passphrase_on_device';
-export const CONNECT: string = 'ui-connect';
-export const LOADING: string = 'ui-loading';
-export const SET_OPERATION: string = 'ui-set_operation';
-export const SELECT_DEVICE: string = 'ui-select_device';
-export const SELECT_ACCOUNT: string = 'ui-select_account';
-export const SELECT_FEE: string = 'ui-select_fee';
-export const UPDATE_CUSTOM_FEE: string = 'ui-update_custom_fee';
-export const INSUFFICIENT_FUNDS: string = 'ui-insufficient_funds';
-export const REQUEST_BUTTON: string = 'ui-button';
+export const REQUEST_PERMISSION: 'ui-request_permission' = 'ui-request_permission';
+export const REQUEST_CONFIRMATION: 'ui-request_confirmation' = 'ui-request_confirmation';
+export const REQUEST_PIN: 'ui-request_pin' = 'ui-request_pin';
+export const INVALID_PIN: 'ui-invalid_pin' = 'ui-invalid_pin';
+export const REQUEST_PASSPHRASE: 'ui-request_passphrase' = 'ui-request_passphrase';
+export const REQUEST_PASSPHRASE_ON_DEVICE: 'ui-request_passphrase_on_device' = 'ui-request_passphrase_on_device';
+export const CONNECT: 'ui-connect' = 'ui-connect';
+export const LOADING: 'ui-loading' = 'ui-loading';
+export const SET_OPERATION: 'ui-set_operation' = 'ui-set_operation';
+export const SELECT_DEVICE: 'ui-select_device' = 'ui-select_device';
+export const SELECT_ACCOUNT: 'ui-select_account' = 'ui-select_account';
+export const SELECT_FEE: 'ui-select_fee' = 'ui-select_fee';
+export const UPDATE_CUSTOM_FEE: 'ui-update_custom_fee' = 'ui-update_custom_fee';
+export const INSUFFICIENT_FUNDS: 'ui-insufficient_funds' = 'ui-insufficient_funds';
+export const REQUEST_BUTTON: 'ui-button' = 'ui-button';
 
-export const RECEIVE_PERMISSION: string = 'ui-receive_permission';
-export const RECEIVE_CONFIRMATION: string = 'ui-receive_confirmation';
-export const RECEIVE_PIN: string = 'ui-receive_pin';
-export const RECEIVE_PASSPHRASE: string = 'ui-receive_passphrase';
-export const RECEIVE_DEVICE: string = 'ui-receive_device';
-export const CHANGE_ACCOUNT: string = 'ui-change_account';
-export const RECEIVE_ACCOUNT: string = 'ui-receive_account';
-export const RECEIVE_FEE: string = 'ui-receive_fee';
+export const RECEIVE_PERMISSION: 'ui-receive_permission' = 'ui-receive_permission';
+export const RECEIVE_CONFIRMATION: 'ui-receive_confirmation' = 'ui-receive_confirmation';
+export const RECEIVE_PIN: 'ui-receive_pin' = 'ui-receive_pin';
+export const RECEIVE_PASSPHRASE: 'ui-receive_passphrase' = 'ui-receive_passphrase';
+export const RECEIVE_DEVICE: 'ui-receive_device' = 'ui-receive_device';
+export const CHANGE_ACCOUNT: 'ui-change_account' = 'ui-change_account';
+export const RECEIVE_ACCOUNT: 'ui-receive_account' = 'ui-receive_account';
+export const RECEIVE_FEE: 'ui-receive_fee' = 'ui-receive_fee';
 
-export const CHANGE_SETTINGS: string = 'ui-change_settings';
+export const CHANGE_SETTINGS: 'ui-change_settings' = 'ui-change_settings';
