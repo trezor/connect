@@ -4,6 +4,7 @@
 import { UiMessage } from '../../core/CoreMessage';
 import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
+import type { RequestPin } from 'flowtype/ui-message';
 
 const isSubmitButtonDisabled = (isDisabled: boolean) => {
     const submitButton: HTMLElement = container.getElementsByClassName('submit')[0];
@@ -95,7 +96,7 @@ const pinKeyboardHandler = (event: KeyboardEvent): void => {
     }
 };
 
-export const initPinView = (payload: any): void => {
+export const initPinView = (payload: $PropertyType<RequestPin, 'payload'>): void => {
     showView('pin');
 
     const header: HTMLElement = container.getElementsByTagName('h3')[0];
