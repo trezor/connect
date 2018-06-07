@@ -120,8 +120,9 @@ declare module 'trezor-connect' {
         label: string,
         isUsedElsewhere: boolean,
         featuresNeedsReload: boolean,
+        features?: Features,
         unacquired?: boolean,
-        features: Features,
+        unreadable?: boolean,
     }
 
     declare export type Features = {
