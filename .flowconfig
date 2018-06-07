@@ -2,10 +2,8 @@
 .*/node_modules/hd-wallet
 .*/node_modules/trezor-link
 
-
 [ignore]
 .*/node_modules/bitcoinjs-lib-zcash/.*
-.*/node_modules/bitcoinjs-lib/.*
 .*/node_modules/protobufjs-old-fixed-webpack/src/bower.json
 .*/node_modules/node-uuid/lib/.*
 .*/_old/.*
@@ -15,7 +13,6 @@
 ./node_modules/trezor-link/flowtype/webusb.js
 ./node_modules/trezor-link/flowtype/node-hid.js
 ./src/flowtype/
-
 
 [options]
 esproposal.class_static_fields=enable
