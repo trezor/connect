@@ -4,6 +4,7 @@
 import { UiMessage } from '../../core/CoreMessage';
 import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
+import type { RequestPassphrase } from 'flowtype/ui-message';
 
 const addStringAt = (original: string, toAdd: string, startCaret: number, endCaret: number): string => {
     let newString = '';
@@ -22,7 +23,7 @@ const addStringAt = (original: string, toAdd: string, startCaret: number, endCar
         // the new string may be longer than the selection
 
         // original: 'Hello World', toAdd: 'Hello', startCaret: 6, endCaret: 8
-        // selected part: 'World'
+        // selected part: 'Wo'
         // new string: 'Hello Hellorld'
 
         newString = original.substr(0, startCaret) + toAdd + original.substr(endCaret);
@@ -58,7 +59,7 @@ const isAscii = (str: string) => {
     return /^[\x08\x00-\x7F]$/.test(str);
 };
 
-export const initPassphraseView = (payload: any): void => {
+export const initPassphraseView = (payload: $PropertyType<RequestPassphrase, 'payload'>): void => {
     showView('passphrase');
 
     const view: HTMLElement = container.getElementsByClassName('passphrase')[0];
@@ -87,13 +88,13 @@ export const initPassphraseView = (payload: any): void => {
         caretEnd = input.selectionEnd;
     };
     const handleInput = (input: HTMLInputElement, isPassphrase: boolean): void => {
-        // The input valie is either '••••X•••' where 'X' is newData or '•••••••'
+        // The input value is either '••••X•••' where 'X' is newData or '•••••••'
         // The second case happens only when user deleted a substring
         const findAllDotsRegex = new RegExp(DOT, 'g');
         const newData = input.value.replace(findAllDotsRegex, '');
 
         if (newData && !isAscii(newData)) {
-            // Don't let use add non-ascii chars
+            // Don't let user add non-ascii chars
             input.value = isPassphrase ? passphrase : passphraseRevision;
             if (inputType === 'password') {
                 input.value = DOT.repeat(input.value.length);
