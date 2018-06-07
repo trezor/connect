@@ -83,7 +83,8 @@ export default class PopupManager extends EventEmitter {
             ,toolbar=no
             ,location=no
             ,personalbar=no
-            ,status=no`;
+            ,status=no
+            ,scrollbars=yes`;
 
         this._window = window.open('', '_blank', opts);
         this._window.location.href = this.src; // otherwise android/chrome loose window.opener reference
