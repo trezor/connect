@@ -482,7 +482,7 @@ export default class Device extends EventEmitter {
         return (pin && pass);
     }
 
-    hasUnexpectedMode(requiredFirmware: string): ?string {
+    hasUnexpectedMode(requiredFirmware: string): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE) {
         if (this.features) {
             if (this.isBootloader()) {
                 return UI.BOOTLOADER;

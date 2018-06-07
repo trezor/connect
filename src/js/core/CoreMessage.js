@@ -1,23 +1,20 @@
 /* @flow */
 'use strict';
 
-export const UI_EVENT: string = 'UI_EVENT';
-export const DEVICE_EVENT: string = 'DEVICE_EVENT';
-export const TRANSPORT_EVENT: string = 'TRANSPORT_EVENT';
-export const RESPONSE_EVENT: string = 'RESPONSE_EVENT';
-export const ERROR_EVENT: string = 'ERROR_EVENT';
+import type { UiMessageFactory } from 'flowtype/ui-message';
+
+export const UI_EVENT: 'UI_EVENT' = 'UI_EVENT';
+export const DEVICE_EVENT: 'DEVICE_EVENT' = 'DEVICE_EVENT';
+export const TRANSPORT_EVENT: 'TRANSPORT_EVENT' = 'TRANSPORT_EVENT';
+export const RESPONSE_EVENT: 'RESPONSE_EVENT' = 'RESPONSE_EVENT';
+export const ERROR_EVENT: 'ERROR_EVENT' = 'ERROR_EVENT';
 
 export interface CoreMessage {
     +event: string,
     +type: string,
-    id?: number, // response id
+    id?: number, // response id in ResponseMessage
     success?: boolean,
     payload?: any,
-}
-
-export type UiPromiseResponse = {
-    event: string,
-    payload: any,
 }
 
 // parse MessageEvent .data object into CoreMessage
@@ -42,14 +39,11 @@ export const parseMessage = (messageData: any): CoreMessage => {
     return message;
 };
 
-export class UiMessage implements CoreMessage {
-    event: string;
-    type: string;
-    payload: Object;
-    constructor(type: string, payload: any = null) {
-        this.event = UI_EVENT;
-        this.type = type;
-        this.payload = payload;
+export const UiMessage: UiMessageFactory = (type, payload) => {
+    return {
+        event: UI_EVENT,
+        type,
+        payload,
     }
 }
 

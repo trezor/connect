@@ -450,7 +450,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
             // check if device is in unexpected mode (bootloader, not-initialized, old firmware)
-            const unexpectedMode: ?string = device.hasUnexpectedMode(method.requiredFirmware);
+            const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE) = device.hasUnexpectedMode(method.requiredFirmware);
             if (unexpectedMode) {
                 // wait for popup handshake
                 await getPopupPromise().promise;
