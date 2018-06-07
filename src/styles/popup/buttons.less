@@ -15,7 +15,7 @@ a:visited {
         line-height: 1px;
         left: 0px;
         bottom: -1px;
-        transition: border-color 0.3s;
+        transition: all 0.3s;
     }
 
     &:hover {
@@ -126,8 +126,13 @@ button {
         margin-bottom: 15px;
 
         line-height: 1;
+
+        background-color: transparent;
+        border: 1px solid @color_green_secondary;
         .plus {
             margin-right: 10px;
+
+            color: @color_green_secondary;
             &::after {
                 .icomoon-plus;
             }
@@ -135,7 +140,15 @@ button {
 
         .text {
             font-size: 14px;
-            color: @color_white;
+            color: @color_green_secondary;
+        }
+
+        &:hover {
+            background-color: @color_green_secondary;
+
+            .plus, .text {
+                color: white;
+            }
         }
     }
 

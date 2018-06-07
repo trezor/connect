@@ -105,15 +105,30 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
         wrapper.appendChild(deviceName);
         deviceButton.appendChild(wrapper);
 
-        if (device.unreadable) {
-            deviceButton.disabled = true;
+        if (device.unreadable || device.unacquired) {
             deviceIcon.classList.add('unknown');
 
             deviceButton.classList.add('device-explain');
 
             const explanation: HTMLDivElement = document.createElement('div');
             explanation.className = 'explain';
-            explanation.innerHTML = 'Please install <a href="https://wallet.trezor.io" target="_blank">Bridge</a> to use TREZOR ONE';
+
+            const htmlUnreadable: string = 'Please install <a href="https://wallet.trezor.io" target="_blank">Bridge</a> to use TREZOR device.';
+            const htmlUnacquired: string = 'Click to activate. This device is used by another application.';
+
+            if (device.unreadable) {
+                deviceButton.disabled = true;
+                deviceName.textContent = 'Unrecognized device';
+                explanation.innerHTML = htmlUnreadable;
+            }
+
+            if (device.unacquired) {
+                deviceName.textContent = 'Inactive device';
+                deviceButton.classList.add('unacquired');
+                explanation.classList.add('unacquired');
+                explanation.innerHTML = htmlUnacquired;
+            }
+
             deviceButton.appendChild(explanation);
         }
 

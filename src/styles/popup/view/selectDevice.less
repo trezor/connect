@@ -17,7 +17,7 @@
                     height: auto;
                     pointer-events: auto;
 
-                    &:hover {
+                    &:hover:not(.unacquired) {
                         cursor: default;
                     }
                 }
@@ -58,6 +58,13 @@
                     font-size: 12px;
                     color: @color_warning_primary;
                     background-color: @color_warning_secondary;
+
+                    &.unacquired {
+                        box-shadow: inherit;
+
+                        color: @color_info_primary;
+                        background-color: @color_info_secondary;
+                    }
                 }
             }
         }
