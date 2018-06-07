@@ -65,8 +65,8 @@ declare module 'flowtype/ui-message' {
     declare type PopupHandshake = {
         +type: $PropertyType<T_UI, 'POPUP_HANDSHAKE'>,
         payload?: {
-            settings: any,
-            method: any
+            settings: any, // TODO
+            method: any // TODO
         }
     }
 
@@ -124,7 +124,7 @@ declare module 'flowtype/ui-message' {
     declare type SelectDevice = {
         +type: $PropertyType<T_UI, 'SELECT_DEVICE'>,
         payload: {
-            devices: Array<any>;
+            devices: Array<Device>;
             webusb: boolean;
         }
     }
@@ -160,11 +160,6 @@ declare module 'flowtype/ui-message' {
         | SelectDevice
         | ReceiveDevice;
 
-    // declare export type CoreMessage = {
-    //     event: T_UI_EVENT,
-    //     type: string,
-    //     payload: any
-    // }
 
     declare function MessageFactory(type: $PropertyType<WithoutPayload, 'type'>): CoreMessage;
 
