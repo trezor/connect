@@ -28,7 +28,7 @@ const initLoaderView = (message: any): void => {
     }
 };
 
-const handleMessage = (event: MessageEvent): void => {
+const handleMessage = (event: Message): void => {
 
     console.log('handleMessage', event.data);
 
@@ -36,7 +36,6 @@ const handleMessage = (event: MessageEvent): void => {
 
     // catch first message from iframe.js and gain settings
     if (isMessagePort && !DataManager.getSettings('origin') && event.data && event.data.payload && event.data.type === POPUP.HANDSHAKE && event.data.payload.settings) {
-        // $FlowIssue
         init(event.data.payload.settings);
         return;
     }
@@ -45,8 +44,6 @@ const handleMessage = (event: MessageEvent): void => {
     if (!isMessagePort && getOrigin(event.origin) !== getOrigin(document.referrer) && !DataManager.isWhitelisted(event.origin)) return;
 
     const message: CoreMessage = parseMessage(event.data);
-
-    // TODO parse incoming strings to avoid string injections !!!
 
     switch (message.type) {
         case UI.LOADING :
@@ -137,7 +134,7 @@ window.addEventListener('load', () => {
     view.init();
 
     // $FlowIssue (Event !== MessageEvent)
-    channel.port1.onmessage = (event: MessageEvent) => {
+    channel.port1.onmessage = (event: Message) => {
         handleMessage(event);
     }
 
