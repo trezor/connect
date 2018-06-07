@@ -33,7 +33,7 @@ declare class $npm$bigi$BigInteger {
 }
 
 declare module 'bigi' {
-    declare var exports: typeof $npm$bigi$BigInteger;
+    declare export default typeof $npm$bigi$BigInteger;
 }
 
 declare class $npm$ecurve$Curve {
@@ -138,56 +138,56 @@ declare module 'bitcoinjs-lib-zcash' {
     declare type Stack = Array<Buffer | number>;
 
     declare var script: {
-      scriptHash: {
-        input: {
-          check: (script: Buffer, allowIncomplete: boolean) => boolean;
-          decode: (script: Buffer) => {
-            redeemScriptStack: Stack,
-            redeemScript: Buffer
-          };
-          encode: (redeemScriptSig: Buffer, redeemScript: Buffer) => Buffer;
+        scriptHash: {
+            input: {
+                check: (script: Buffer, allowIncomplete: boolean) => boolean;
+                decode: (script: Buffer) => {
+                    redeemScriptStack: Stack,
+                    redeemScript: Buffer
+                };
+                encode: (redeemScriptSig: Buffer, redeemScript: Buffer) => Buffer;
+            };
+            output: {
+                check: (script: Stack) => boolean;
+                encode: (scriptHash: Buffer) => Buffer;
+                decode: (script: Buffer) => Buffer;
+            };
         };
-        output: {
-          check: (script: Stack) => boolean;
-          encode: (scriptHash: Buffer) => Buffer;
-          decode: (script: Buffer) => Buffer;
+        pubKeyHash: {
+            input: {
+                check: (script: Buffer, allowIncomplete: boolean) => boolean;
+                decode: (script: Buffer) => {
+                    signature: Buffer,
+                    pubKey: Buffer
+                };
+                encode: (signature: Buffer, pubKey: Buffer) => Buffer;
+            };
+            output: {
+                check: (script: Stack) => boolean;
+                encode: (pubKeyHash: Buffer) => Buffer;
+                decode: (script: Buffer) => Buffer;
+            };
         };
-      };
-      pubKeyHash: {
-        input: {
-          check: (script: Buffer, allowIncomplete: boolean) => boolean;
-          decode: (script: Buffer) => {
-            signature: Buffer,
-            pubKey: Buffer
-          };
-          encode: (signature: Buffer, pubKey: Buffer) => Buffer;
+        witnessPubKeyHash: {
+            input: {
+                check: (script: Buffer) => boolean;
+            };
+            output: {
+                check: (script: Stack) => boolean;
+                encode: (pubkeyHash: Buffer) => Buffer;
+                decode: (buffer: Buffer) => Buffer;
+            };
         };
-        output: {
-          check: (script: Stack) => boolean;
-          encode: (pubKeyHash: Buffer) => Buffer;
-          decode: (script: Buffer) => Buffer;
+        witnessScriptHash: {
+            input: {
+                check: (script: Buffer, allowIncomplete: boolean) => boolean;
+            };
+            output: {
+                check: (script: Stack) => boolean;
+                encode: (scriptHash: Buffer) => Buffer;
+                decode: (script: Buffer) => Buffer;
+            };
         };
-      };
-      witnessPubKeyHash: {
-        input: {
-          check: (script: Buffer) => boolean;
-        };
-        output: {
-          check: (script: Stack) => boolean;
-          encode: (pubkeyHash: Buffer) => Buffer;
-          decode: (buffer: Buffer) => Buffer;
-        };
-      };
-      witnessScriptHash: {
-        input: {
-          check: (script: Buffer, allowIncomplete: boolean) => boolean;
-        };
-        output: {
-          check: (script: Stack) => boolean;
-          encode: (scriptHash: Buffer) => Buffer;
-          decode: (script: Buffer) => Buffer;
-        };
-      };
     };
 
     declare var crypto: {
@@ -198,6 +198,11 @@ declare module 'bitcoinjs-lib-zcash' {
         ripemd160(buffer: Buffer): Buffer;
     }
 
+    declare type ECPairOptions = {
+        compressed?: boolean;
+        network?: Network;
+    }
+
     declare class ECPair {
         d: ?$npm$bigi$BigInteger;
         Q: $npm$ecurve$Point;
@@ -205,7 +210,7 @@ declare module 'bitcoinjs-lib-zcash' {
         network: Network;
         getNetwork(): Network;
 
-        constructor(d: ?$npm$bigi$BigInteger, Q: ?$npm$ecurve$Point, options: ?Object): void;
+        constructor(d: ?$npm$bigi$BigInteger, Q: ?$npm$ecurve$Point, options: ECPairOptions): void;
         getAddress(): string;
         getPublicKeyBuffer(): Buffer;
         static fromPublicKeyBuffer(buffer: Buffer): ECPair;
@@ -224,8 +229,7 @@ declare module 'bitcoinjs-lib-zcash' {
         chainCode: Buffer;
         static fromBase58(
             str: string,
-            networks: ?(Array<Network> | Network),
-            skipCheck: boolean
+            networks: ?(Array<Network> | Network)
         ): HDNode;
         derive(index: number): HDNode;
         deriveHardened(index: number): HDNode;
@@ -237,7 +241,7 @@ declare module 'bitcoinjs-lib-zcash' {
         getNetwork(): Network;
         constructor(keyPair: ECPair, chainCode: Buffer): void;
 
-        static fromBase58(base: string, network?: ?(Network | Array<Network>)): HDNode;
+        static fromBase58(base: string, network?: ?(Network | Array<Network>), skipValidation?: boolean): HDNode;
         static fromSeedHex(seed: string, network?: ?Network): HDNode;
         static fromSeedBuffer(seed: Buffer, network?: ?Network): HDNode;
         getPublicKeyBuffer(): Buffer;
