@@ -433,6 +433,105 @@ this.TrezorConnect = (function () {
         };
 
         /**
+         * Sign a Cardano message
+         *
+         * @param {string|array} path
+         * @param {string} message to sign (ascii)
+         * @param {string|function(SignMessageResult)} callback
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.adaSignMessage = function (
+            path,
+            message,
+            callback,
+            requiredFirmware
+        ) {
+            if (typeof path === 'string') {
+                path = parseHDPath(path);
+            }
+            if (!callback) {
+                throw new TypeError('TrezorConnect: callback not found');
+            }
+
+            manager.sendWithChannel(_fwStrFix({
+                type: 'signadamsg',
+                path: path,
+                message: message,
+            }, requiredFirmware), callback);
+        };
+
+        /**
+         * Sign a Cardano transaction
+         *
+         * @param {array} inputs
+         * @param {array} outputs
+         * @param {array} transactions
+         * @param {string|function(CardanoSignedTransaction)} callback
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.adaSignTransaction = function (
+            inputs,
+            outputs,
+            transactions,
+            callback,
+            requiredFirmware
+        ) {
+            if (!callback) {
+                throw new TypeError('TrezorConnect: callback not found');
+            }
+
+            inputs = inputs.map(item => {
+                if (typeof item.address_n === 'string') {
+                    item.address_n = parseHDPath(item.address_n);
+                }
+
+                return item;
+            });
+
+            outputs = outputs.map(item => {
+                if (item.address_n && typeof item.address_n === 'string') {
+                    item.address_n = parseHDPath(item.address_n);
+                }
+                return item;
+            });
+
+            manager.sendWithChannel(_fwStrFix({
+                type: 'signadatransaction',
+                inputs,
+                outputs,
+                transactions,
+            }, requiredFirmware), callback);
+        };
+
+        /**
+         * Get a Cardano public key
+         *
+         * @param {string|array} path
+         * @param {string|function(string)} callback
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.adaGetPublicKey = function (
+            path,
+            callback,
+            requiredFirmware
+        ) {
+            if (typeof path === 'string') {
+                path = parseHDPath(path);
+            }
+            if (!callback) {
+                throw new TypeError('TrezorConnect: callback not found');
+            }
+
+            manager.sendWithChannel(_fwStrFix({
+                type: 'adagetpublickey',
+                address_n: path,
+            }, requiredFirmware), callback);
+        };
+
+        /**
          * Verify message
          *
          * @param {string} address
@@ -489,6 +588,34 @@ this.TrezorConnect = (function () {
             manager.sendWithChannel(_fwStrFix({
                 type: 'verifyethmsg',
                 address: address,
+                signature: signature,
+                message: message,
+            }, requiredFirmware), callback);
+        };
+
+        /**
+         * Verify cardano message
+         *
+         * @param {string} publicKey (string)
+         * @param {string} signature (base64)
+         * @param {string} message (string)
+         * @param {string|function()} callback
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.adaVerifyMessage = function (
+            publicKey,
+            signature,
+            message,
+            callback,
+            requiredFirmware
+        ) {
+            if (!callback) {
+                throw new TypeError('TrezorConnect: callback not found');
+            }
+            manager.sendWithChannel(_fwStrFix({
+                type: 'verifyadamsg',
+                public_key: publicKey,
                 signature: signature,
                 message: message,
             }, requiredFirmware), callback);
@@ -638,6 +765,25 @@ this.TrezorConnect = (function () {
             manager.sendWithChannel(_fwStrFix({
                 type: 'ethgetaddress',
                 address_n: address,
+            }, requiredFirmware), callback);
+        }
+
+        /**
+         * Get cardano address
+         *
+         * @param {array} path
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.adaGetAddress = function (path, show_display, callback, requiredFirmware) {
+            if (typeof path === 'string') {
+                path = parseHDPath(path)
+            }
+
+            manager.sendWithChannel(_fwStrFix({
+                type: 'adagetaddress',
+                address_n: path,
+                show_display
             }, requiredFirmware), callback);
         }
 

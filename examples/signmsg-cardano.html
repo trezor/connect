@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <title>TREZOR Cardano Sign Message Test</title>
+    <style>
+      table {
+        display: inline-block;
+        width: 49%;
+        vertical-align: top;
+      }
+      table tr:first-child {
+        font-weight: bold;
+        font-size: 18px;
+        text-indent: 100px;
+      }
+      table td {
+        vertical-align: top;
+        box-sizing: border-box;
+        clear: both;
+      }
+      table tr td:first-child {
+        width: 100px;
+      }
+      input {
+        width: 350px;
+      }
+      textarea {
+        width: 350px;
+        height: 100px;
+      }
+    </style>
+    <script>
+
+    function trezorSignMessage() {
+
+      var path = document.getElementById("path");
+      var message = document.getElementById("message");
+      var messageV = document.getElementById("messageV");
+      var signature = document.getElementById("signature");
+      var publicKey = document.getElementById("publicKey");
+
+
+      TrezorConnect.adaSignMessage(path.value, message.value, function (response) {
+          if (response.success) {
+              messageV.value = message.value;
+              signature.value = response.signature;
+              publicKey.value = response.public_key;
+          } else {
+              messageV.value = "";
+              signature.value = "";
+          }
+          document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+      }, '1.5.1');
+    }
+
+    function trezorVerifyMessage() {
+      var messageV = document.getElementById("messageV");
+      var publicKey = document.getElementById("publicKey");
+      var signature = document.getElementById("signature");
+
+      TrezorConnect.adaVerifyMessage(publicKey.value, signature.value, messageV.value, function (response) {
+          document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+      }, '1.5.1');
+    }
+
+    </script>
+  </head>
+  <body>
+
+  <table>
+    <tr>
+      <td colspan="2" style="font-weight:bold">Sign</td>
+    </tr>
+    <tr>
+      <td>Path:</td>
+      <td><input id="path" value="m/44'/1815'/0'/0'" /></td>
+    </tr>
+    <tr>
+      <td>Message:</td>
+      <td><input id="message" value="Example message" size="64" /></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <button onclick="trezorSignMessage()">Sign Message</button>
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <td colspan="2" style="font-weight:bold">Verify</td>
+    </tr>
+    <tr>
+      <td>Message:</td>
+      <td><input id="messageV" value="Example message" /></td>
+    </tr>
+    <tr>
+      <td>Signature:</td>
+      <td><textarea id="signature">ac979a384a5eacebdcb11770d1202ca19791bff5fca95d64eb287d15009cfb4808ed95025ebf1b4abf394fba683ffab85321e588d4982ac99a6ad69017139d00</textarea></td>
+    </tr>
+    <tr>
+      <td>Public key:</td>
+      <td><input id="publicKey" value="e34e53a1ef72f0493a227e051b0f223fa27aab2ee98af48fc2a8cb29407c2f27" /></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <button onclick="trezorVerifyMessage()">Verify Message</button>
+      </td>
+    </tr>
+  </table>
+
+  <hr>
+
+  <pre id="response"></pre>
+
+  <script src="../connect.js"></script>
+
+  </body>
+</html>

@@ -149,7 +149,7 @@ export const getCoinInfoByCurrency = (coinInfoUrl: string, currency: string): Pr
 
 
 const parseCoinsJson = (coins: JSON): Array<CoinInfo> => {
-    return coins.map(coin => {
+    return Object.values(coins).map(coin => {
         const name = coin.coin_name;
         const shortcut = coin.coin_shortcut;
         const label = coin.coin_label;
@@ -165,14 +165,14 @@ const parseCoinsJson = (coins: JSON): Array<CoinInfo> => {
             dustThreshold: 0, // doesn't matter, for type correctness
         };
         const hashGenesisBlock = coin.hash_genesis_block;
-        const bip44 = coin.bip44;
+        const bip44 = coin.slip44;
         const defaultFees = coin.default_fee_b;
         const dustLimit = coin.dust_limit;
         const zcash = coin.coin_name.startsWith('Zcash');
         const maxFeeSatoshiKb = coin.maxfee_kb;
         const minFeeSatoshiKb = coin.minfee_kb;
-        const blocktime = coin.blocktime_minutes;
-        const forkid = coin.forkid;
+        const blocktime = coin.blocktime_seconds / 60;
+        const forkid = coin.fork_id;
         const segwit = coin.segwit;
         const hasSegwit = coin.segwit;
         const isBitcoin = shortcut === 'BTC' || shortcut === 'TEST';
