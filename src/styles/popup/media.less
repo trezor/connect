@@ -12,7 +12,6 @@
     }
 
     aside {
-        flex-direction: row;
         .info-panel {
             text-align: right;
             h2 {
@@ -28,6 +27,11 @@
 
     section {
         flex: 1;
+
+        div > svg {
+            width: auto;
+            height: 70px;
+        }
 
         div.pin {
             /* the .pin view is the only that overflows on mobile */

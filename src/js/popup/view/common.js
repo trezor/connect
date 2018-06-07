@@ -59,8 +59,50 @@ export const clearView = (): void => {
     container.innerHTML = '';
 };
 
+const shouldShowFirmwareUpdateInfo = (shouldShow: boolean): void => {
+    const updateContainer: HTMLElement = document.getElementsByClassName('firmware-update-info')[0];
+    const isEmpty: boolean = updateContainer.childElementCount === 0;
+    if (!shouldShow || !isEmpty) {
+        return;
+    }
+
+    const left: HTMLElement = document.createElement('left');
+    left.className= 'left';
+    left.innerHTML = `<span class="warning-icon"></span><h3>New firmware update</h3>`;
+
+    const closeIcon: HTMLElement = document.createElement('span');
+    closeIcon.className = 'close-icon';
+    closeIcon.addEventListener('click', () => {
+        updateContainer.style.display = 'none';
+    });
+
+    const text: HTMLElement = document.createElement('p');
+    text.innerText = 'New firmware for your device is available';
+
+    const updateButton: HTMLElement = document.createElement('a');
+    updateButton.classList.add('button', 'firmware');
+    updateButton.appendChild(
+        document.createTextNode('Update my firmware')
+    )
+
+    const header: HTMLElement = document.createElement('div');
+    header.className = 'header';
+    header.appendChild(left);
+    header.appendChild(closeIcon);
+
+    updateContainer.appendChild(header);
+    updateContainer.appendChild(text);
+    updateContainer.appendChild(updateButton);
+
+    updateContainer.style.display = 'flex';
+};
+
 export const showView = (className: string): HTMLElement => {
     clearView();
+
+    // TODO: Check if new firmware is available
+    const isNewFirmware: boolean = true;
+    shouldShowFirmwareUpdateInfo(isNewFirmware);
 
     const view: HTMLCollection<HTMLElement> = views.getElementsByClassName(className);
     if (view) {
