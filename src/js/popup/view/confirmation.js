@@ -13,13 +13,12 @@ export const initConfirmationView = (data: any): void => {
     // TODO: Check if correct class names for HTML views
     showView(data.view);
 
-    const span: HTMLElement = container.getElementsByTagName('span')[0];
+    const h3: HTMLElement = container.getElementsByTagName('h3')[0];
     const confirmButton: HTMLElement = container.getElementsByClassName('confirm')[0];
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
 
-
     // TODO: Check if data.accountType.label exists --> concrete type for data
-    span.innerText = data.accountType.label
+    h3.innerText = `Export ${data.accountType.label}`;
 
     confirmButton.onclick = () => {
         postMessage(new UiMessage(UI.RECEIVE_CONFIRMATION, 'true'));
