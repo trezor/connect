@@ -82,7 +82,7 @@ const handleMessage = (event: Message): void => {
             showView('initialize');
             break;
         case UI.FIRMWARE :
-            showView('firmware-upgrade');
+            showView('firmware-update');
             break;
         case UI.BROWSER_NOT_SUPPORTED :
         case UI.BROWSER_OUTDATED :
