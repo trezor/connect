@@ -5,7 +5,7 @@ import EventEmitter from 'events';
 import { OPENED, HANDSHAKE, CLOSED } from '../constants/popup';
 import { showPopupRequest } from './showPopupRequest';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
-import type { CoreMessage } from '../core/CoreMessage';
+import type { CoreMessage } from 'flowtype';
 import { getOrigin } from '../utils/networkUtils';
 
 const POPUP_WIDTH: number = 640;

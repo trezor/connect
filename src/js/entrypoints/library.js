@@ -20,8 +20,7 @@ import { create as createDeferred } from '../utils/deferred';
 
 import { Core, CORE_EVENT, init as initCore } from '../core/Core';
 import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT } from '../core/CoreMessage';
-import type { CoreMessage } from '../core/CoreMessage';
-import type { Deferred } from 'flowtype';
+import type { Deferred, CoreMessage } from 'flowtype';
 
 import { parse as parseSettings } from './ConnectSettings';
 

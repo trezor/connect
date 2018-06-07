@@ -23,11 +23,10 @@ import css from '../iframe/inline-styles';
 import { create as createDeferred } from '../utils/deferred';
 
 import { parseMessage, UiMessage, UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from '../core/CoreMessage';
-import type { CoreMessage } from '../core/CoreMessage';
 
 import { parse as parseSettings, setDataAttributes } from './ConnectSettings';
 import type { ConnectSettings } from './ConnectSettings';
-import type { Deferred } from 'flowtype';
+import type { Deferred, CoreMessage } from 'flowtype';
 
 const _log: Log = initLog('[trezor-connect.js]');
 

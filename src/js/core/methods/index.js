@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import type { CoreMessage } from '../CoreMessage';
+import type { CoreMessage } from 'flowtype';
 
 import AbstractMethod, { MethodInterface } from './AbstractMethod';
 import GetFeatures from './GetFeatures';

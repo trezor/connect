@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import type { CoreMessage } from '../CoreMessage';
+import type { CoreMessage } from 'flowtype';
 
 export default class GetPublicKey extends AbstractMethod {
 

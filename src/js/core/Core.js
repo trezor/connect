@@ -5,7 +5,7 @@ import EventEmitter from 'events';
 import DataManager from '../data/DataManager';
 import DeviceList, { getDeviceList } from '../device/DeviceList';
 import Device from '../device/Device';
-import type { DeviceDescription } from '../device/Device';
+
 
 import * as TRANSPORT from '../constants/transport';
 import * as DEVICE from '../constants/device';
@@ -14,7 +14,7 @@ import * as UI from '../constants/ui';
 import * as IFRAME from '../constants/iframe';
 import * as ERROR from '../constants/errors';
 
-import { UiMessage, DeviceMessage, TransportMessage, ResponseMessage, CoreMessage } from './CoreMessage';
+import { RESPONSE_EVENT, UiMessage, DeviceMessage, TransportMessage, ResponseMessage } from './CoreMessage';
 
 import AbstractMethod from './methods/AbstractMethod';
 import { find as findMethod } from './methods';
@@ -28,8 +28,10 @@ import { state as browserState } from '../utils/browser';
 import Log, { init as initLog, enable as enableLog } from '../utils/debug';
 
 import { parse as parseSettings } from '../entrypoints/ConnectSettings';
+
+import type { Device as DeviceTyped } from 'trezor-connect';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
-import type { Deferred, UiPromiseResponse } from 'flowtype';
+import type { Deferred, UiPromiseResponse, CoreMessage } from 'flowtype';
 
 // Public variables
 let _core: Core; // Class with event emitter
@@ -84,7 +86,7 @@ const removeUiPromise = (promise: Deferred<UiPromiseResponse>): void => {
  * @memberof Core
  */
 const postMessage = (message: CoreMessage): void => {
-    if (message instanceof ResponseMessage) {
+    if (message.event === RESPONSE_EVENT) {
         const index: number = _callMethods.findIndex(call => call && call.responseID === message.id);
         if (index >= 0)
             _callMethods.splice(index, 1);
@@ -709,7 +711,7 @@ const onPopupClosed = (): void => {
  * @returns {void}
  * @memberof Core
  */
-const handleDeviceSelectionChanges = (interruptDevice: ?DeviceDescription = null): void => {
+const handleDeviceSelectionChanges = (interruptDevice: ?DeviceTyped = null): void => {
     // update list of devices in popup
     const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, UI.RECEIVE_DEVICE);
     if (uiPromise && _deviceList) {
@@ -768,26 +770,26 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
         //     version: _deviceList.transportVersion()
         // }));
 
-        _deviceList.on(DEVICE.CONNECT, (device: DeviceDescription) => {
+        _deviceList.on(DEVICE.CONNECT, (device: DeviceTyped) => {
             handleDeviceSelectionChanges();
             postMessage(new DeviceMessage(DEVICE.CONNECT, device));
         });
 
-        _deviceList.on(DEVICE.CONNECT_UNACQUIRED, (device: DeviceDescription) => {
+        _deviceList.on(DEVICE.CONNECT_UNACQUIRED, (device: DeviceTyped) => {
             handleDeviceSelectionChanges();
             postMessage(new DeviceMessage(DEVICE.CONNECT_UNACQUIRED, device));
         });
 
-        _deviceList.on(DEVICE.DISCONNECT, (device: DeviceDescription) => {
+        _deviceList.on(DEVICE.DISCONNECT, (device: DeviceTyped) => {
             handleDeviceSelectionChanges(device);
             postMessage(new DeviceMessage(DEVICE.DISCONNECT, device));
         });
 
-        _deviceList.on(DEVICE.DISCONNECT_UNACQUIRED, (device: DeviceDescription) => {
+        _deviceList.on(DEVICE.DISCONNECT_UNACQUIRED, (device: DeviceTyped) => {
             postMessage(new DeviceMessage(DEVICE.DISCONNECT_UNACQUIRED, device));
         });
 
-        _deviceList.on(DEVICE.CHANGED, (device: DeviceDescription) => {
+        _deviceList.on(DEVICE.CHANGED, (device: DeviceTyped) => {
             postMessage(new DeviceMessage(DEVICE.CHANGED, device));
         });
 

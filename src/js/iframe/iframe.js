@@ -12,7 +12,9 @@ import DataManager from '../data/DataManager';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
 
 import { Core, CORE_EVENT, init as initCore, initTransport } from '../core/Core';
-import { parseMessage, UiMessage, ErrorMessage, ResponseMessage, TransportMessage, CoreMessage, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, DeviceMessage } from '../core/CoreMessage';
+import { parseMessage, UiMessage, ResponseMessage, TransportMessage, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT } from '../core/CoreMessage';
+
+import type { CoreMessage } from 'flowtype';
 
 import Log, { init as initLog, getLog } from '../utils/debug';
 import { checkBrowser, state as browserState } from '../utils/browser';
@@ -120,7 +122,7 @@ const postMessage = (message: CoreMessage): void => {
     if (!trustedHost && !handshake && (message.event === TRANSPORT_EVENT)) {
         return;
     }
-    if (!trustedHost && message instanceof DeviceMessage && !filterDeviceEvent(message)) {
+    if (!trustedHost && message.event === DEVICE_EVENT && !filterDeviceEvent(message)) {
         return;
     }
     _log.debug('postMessage', message);
@@ -133,7 +135,7 @@ const postMessage = (message: CoreMessage): void => {
     }
 };
 
-const filterDeviceEvent = (message: DeviceMessage): boolean => {
+const filterDeviceEvent = (message: CoreMessage): boolean => {
     if (message.payload && message.payload.features) {
         const savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY);
         const features: any = message.payload.features;

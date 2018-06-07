@@ -9,7 +9,7 @@ import DescriptorStream from './DescriptorStream';
 import type { DeviceDescriptorDiff } from './DescriptorStream';
 // import Device from './Device';
 import Device from './Device';
-import type { DeviceDescription } from './Device';
+import type { Device as DeviceTyped } from 'trezor-connect';
 import TrezorLink from 'trezor-link';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 import DataManager from '../data/DataManager';
@@ -217,8 +217,8 @@ export default class DeviceList extends EventEmitter {
         return this.asArray()[0].path;
     }
 
-    asArray(): Array<DeviceDescription> {
-        const list: Array<DeviceDescription> = this.allDevices().map(device => device.toMessageObject());
+    asArray(): Array<DeviceTyped> {
+        const list: Array<DeviceTyped> = this.allDevices().map(device => device.toMessageObject());
         return list;
     }
 

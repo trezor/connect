@@ -5,7 +5,7 @@ import AbstractMethod from './AbstractMethod';
 import { validatePath } from '../../utils/pathUtils';
 import type { MessageResponse } from '../../device/DeviceCommands';
 import type { Success } from 'flowtype/trezor';
-import type { CoreMessage } from '../CoreMessage';
+import type { CoreMessage } from 'flowtype';
 
 type Params = {
     address: string;

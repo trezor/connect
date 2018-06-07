@@ -2,7 +2,7 @@
 'use strict';
 // do not import Device here
 // import Device from '../device/Device';
-
+import type { Deferred } from 'flowtype';
 
 export type AsyncDeferred<T> = {
     promise: Promise<T>,

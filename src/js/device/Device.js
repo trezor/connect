@@ -7,6 +7,7 @@ import DeviceCommands from './DeviceCommands';
 
 import type { Deferred } from 'flowtype';
 import type { Features } from 'flowtype/trezor';
+import type { Device as DeviceTyped } from 'trezor-connect';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
 import * as UI from '../constants/ui';
@@ -509,7 +510,7 @@ export default class Device extends EventEmitter {
     }
 
     // simplified object to pass via postMessage
-    toMessageObject(): DeviceDescription {
+    toMessageObject(): DeviceTyped {
 
         if (this.originalDescriptor.path === DEVICE.UNREADABLE) {
             return {
@@ -540,12 +541,4 @@ export default class Device extends EventEmitter {
             };
         }
     }
-}
-
-export type DeviceDescription = {
-    path: string,
-    label: string,
-    isUsedElsewhere: boolean,
-    featuresNeedsReload: boolean,
-    unacquired?: boolean,
 }
