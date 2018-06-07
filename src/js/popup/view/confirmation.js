@@ -4,8 +4,9 @@
 import { UiMessage } from '../../core/CoreMessage';
 import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
+import type { RequestConfirmation } from 'flowtype/ui-message';
 
-export const initConfirmationView = (data: any): void => {
+export const initConfirmationView = (data: $PropertyType<RequestConfirmation, 'payload'>): void => {
     // Confirmation views:
     // - export xpub
     // - export account info
@@ -17,7 +18,6 @@ export const initConfirmationView = (data: any): void => {
     const confirmButton: HTMLElement = container.getElementsByClassName('confirm')[0];
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
 
-    // TODO: Check if data.accountType.label exists --> concrete type for data
     h3.innerText = `Export ${data.accountType.label}`;
 
     confirmButton.onclick = () => {
