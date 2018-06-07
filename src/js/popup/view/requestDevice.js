@@ -30,12 +30,12 @@ export const requestDevice = (): void => {
                 await usb.requestDevice({filters: TREZOR_DESCS});
 
                 const devices = await usb.getDevices();
-                postMessage(new UiMessage('WEBUSB'));
+                // postMessage(new UiMessage('WEBUSB'));
             } catch (error) {
-                postMessage(new UiMessage('WEBUSB-ERROR'));
+                // postMessage(new UiMessage('WEBUSB-ERROR'));
             }
         } else {
-            postMessage(new UiMessage('WEBUSB-ERROR'));
+            // postMessage(new UiMessage('WEBUSB-ERROR'));
             return;
         }
     };

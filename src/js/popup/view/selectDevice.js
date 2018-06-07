@@ -5,7 +5,7 @@ import { UiMessage } from '../../core/CoreMessage';
 import * as UI from '../../constants/ui';
 import { container, iframe, showView, postMessage } from './common';
 import DataManager from '../../data/DataManager';
-
+import type { SelectDevice } from 'flowtype/ui-message';
 
 const initWebUsbButton = (webusb: boolean): void => {
     if (!webusb || !iframe) return;
@@ -35,7 +35,7 @@ const initWebUsbButton = (webusb: boolean): void => {
     }
 }
 
-export const selectDevice = (payload: ?Object): void => {
+export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): void => {
     if (!payload) return;
 
     if (payload.devices.length === 0) {
