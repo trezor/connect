@@ -108,6 +108,13 @@ declare module 'flowtype/ui-message' {
         }
     }
 
+    declare type RequestPin = {
+        +type: $PropertyType<T_UI, 'REQUEST_PIN'>,
+        payload: {
+            device: Device
+        }
+    }
+
     declare type ReceivePin = {
         +type: $PropertyType<T_UI, 'RECEIVE_PIN'>,
         payload: string
@@ -181,6 +188,7 @@ declare module 'flowtype/ui-message' {
     declare function MessageFactory(type: $PropertyType<ReceiveConfirmation, 'type'>, payload: $PropertyType<ReceiveConfirmation, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceivePermission, 'type'>, payload: $PropertyType<ReceivePermission, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceivePassphrase, 'type'>, payload: $PropertyType<ReceivePassphrase, 'payload'>): CoreMessage;
+    declare function MessageFactory(type: $PropertyType<RequestPin, 'type'>, payload: $PropertyType<RequestPin, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceivePin, 'type'>, payload: $PropertyType<ReceivePin, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceiveAccount, 'type'>, payload: $PropertyType<ReceiveAccount, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceiveFee, 'type'>, payload: $PropertyType<ReceiveFee, 'payload'>): CoreMessage;
