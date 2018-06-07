@@ -1,0 +1,72 @@
+.firmware-update-info {
+  display: none;
+
+  width: 100%;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+
+
+  background-color: @color_warning_secondary;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  h3 {
+    font-weight: 600;
+    font-size: 14px;
+    color: @color_warning_primary;
+  }
+
+  p {
+    font-weight: 300;
+    font-size: 14px;
+    color: @color_warning_primary;
+  }
+
+  .warning-icon {
+    width: 30px;
+    height: 30px;
+
+    &::before {
+      .icomoon-warning;
+      width: 30px;
+      height: 30px;
+
+      color: @color_warning_primary;
+      font-size: 30px;
+    }
+  }
+
+  .close-icon {
+    width: 20px;
+    height: 20px;
+
+    &::before {
+      .icomoon-close;
+      width: 20px;
+      height: 20px;
+
+      color: @color_warning_primary;
+      font-size: 20px;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .button {
+    margin-top: 13px;
+  }
+}
+

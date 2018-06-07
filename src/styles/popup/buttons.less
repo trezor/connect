@@ -1,4 +1,3 @@
-
 a:not(.button),
 a:visited {
     cursor: pointer;
@@ -191,6 +190,22 @@ button {
 
         &.disabled:hover {
             background-color: white;
+        }
+    }
+
+    &.firmware {
+        width: 100%;
+
+        border: 1px solid @color_warning_primary;
+        background-color: transparent;
+
+        text-align: center;
+        color: @color_warning_primary;
+
+        transition: all 0.15s;
+        &:hover {
+            color: white;
+            background-color: @color_warning_primary;
         }
     }
 }
