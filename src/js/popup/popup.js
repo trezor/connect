@@ -18,16 +18,6 @@ import * as view from './view';
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/popup.less';
 
-const initLoaderView = (message: any): void => {
-    const container: HTMLElement = showView('loader');
-
-    if (typeof message === 'string') {
-        const label: HTMLElement = container.getElementsByTagName('p')[0];
-        label.style.display = 'block';
-        label.innerHTML = message;
-    }
-};
-
 const handleMessage = (event: Message): void => {
 
     console.log('handleMessage', event.data);
@@ -50,7 +40,7 @@ const handleMessage = (event: Message): void => {
     switch (message.type) {
         case UI.LOADING :
         case UI.REQUEST_UI_WINDOW :
-            initLoaderView(message.payload);
+            showView('loader');
             break;
         case UI.SET_OPERATION :
             if (typeof message.payload === 'string') { setOperation(message.payload, true); }
