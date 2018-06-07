@@ -88,6 +88,7 @@ const handleMessage = (event: MessageEvent): void => {
             postMessage(new ResponseMessage(message.id || 0, true, getLog()));
             break;
         case LOG :
+            // $FlowIssue
             if (typeof message.args === 'string') {
                 const args = JSON.parse(message.args);
                 // console[message.level].apply(this, args);

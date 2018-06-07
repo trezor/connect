@@ -3,13 +3,6 @@
 // do not import Device here
 // import Device from '../device/Device';
 
-export type Deferred<T> = {
-    id?: string,
-    device: ?any,
-    promise: Promise<T>,
-    resolve: (t: T) => void,
-    reject: (e: Error) => void,
-};
 
 export type AsyncDeferred<T> = {
     promise: Promise<T>,

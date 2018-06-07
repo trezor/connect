@@ -4,13 +4,13 @@
 import AbstractMethod from './AbstractMethod';
 import { validatePath, getPathFromIndex } from '../../utils/pathUtils';
 import type { MessageResponse } from '../../device/DeviceCommands';
-import type { CoreMessage, UiPromiseResponse } from '../CoreMessage';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../CoreMessage';
 
 import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../backend/CoinInfo';
 import type { CoinInfo } from '../../backend/CoinInfo';
+import type { UiPromiseResponse, CoreMessage } from 'flowtype';
 import type { Success, HDNodeResponse } from 'flowtype/trezor';
 
 type Params = {

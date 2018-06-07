@@ -5,6 +5,7 @@ import EventEmitter from 'events';
 import semvercmp from 'semver-compare';
 import DeviceCommands from './DeviceCommands';
 
+import type { Deferred } from 'flowtype';
 import type { Features } from 'flowtype/trezor';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
@@ -12,7 +13,6 @@ import * as UI from '../constants/ui';
 import * as DEVICE from '../constants/device';
 import * as ERROR from '../constants/errors';
 import { create as createDeferred } from '../utils/deferred';
-import type { Deferred } from '../utils/deferred';
 import DataManager from '../data/DataManager';
 import Log, { init as initLog } from '../utils/debug';
 

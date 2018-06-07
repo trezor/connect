@@ -6,8 +6,7 @@ import Device from '../../device/Device';
 import * as UI from '../../constants/ui';
 import * as DEVICE from '../../constants/device';
 import { UiMessage, DeviceMessage } from '../CoreMessage';
-import type { CoreMessage, UiPromiseResponse } from '../CoreMessage';
-import type { Deferred } from '../../utils/deferred';
+import type { Deferred, UiPromiseResponse, CoreMessage } from 'flowtype';
 
 import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../iframe/storage';
 import { crypto } from 'bitcoinjs-lib-zcash';
@@ -38,6 +37,8 @@ export default class AbstractMethod implements MethodInterface {
 
     requiredFirmware: string;
     requiredPermissions: Array<string>;
+
+    +confirmation: () => Promise<boolean>;
 
     // // callbacks
     postMessage: (message: CoreMessage) => void;

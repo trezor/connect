@@ -9,9 +9,7 @@ import type { MethodParams, MethodCallbacks } from 'flowtype/method';
 import type { DefaultMessageResponse, MessageResponse } from '../../device/DeviceCommands';
 
 import Device from '../../device/Device';
-
-import type { CoreMessage, UiPromiseResponse } from '../CoreMessage';
-import type { Deferred } from '../../utils/deferred';
+import type { UiPromiseResponse, CoreMessage } from 'flowtype';
 
 type Params = {
     path: Array<number>;

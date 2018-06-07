@@ -21,13 +21,13 @@ import Log, { init as initLog, getLog } from '../utils/debug';
 import css from '../iframe/inline-styles';
 
 import { create as createDeferred } from '../utils/deferred';
-import type { Deferred } from '../utils/deferred';
 
 import { parseMessage, UiMessage, UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from '../core/CoreMessage';
 import type { CoreMessage } from '../core/CoreMessage';
 
 import { parse as parseSettings, setDataAttributes } from './ConnectSettings';
 import type { ConnectSettings } from './ConnectSettings';
+import type { Deferred } from 'flowtype';
 
 const _log: Log = initLog('[trezor-connect.js]');
 
@@ -103,6 +103,7 @@ const injectStyleSheet = (): void => {
     style.setAttribute('type', 'text/css');
     style.setAttribute('id', 'TrezorConnectStylesheet');
 
+    // $FlowIssue
     if (style.styleSheet) { // IE
         // $FlowIssue
         style.styleSheet.cssText = css;
