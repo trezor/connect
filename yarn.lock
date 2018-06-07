@@ -7399,9 +7399,9 @@ tough-cookie@~2.3.0, tough-cookie@~2.3.3:
   version "0.3.9"
   resolved "https://registry.yarnpkg.com/traverse/-/traverse-0.3.9.tgz#717b8f220cc0bb7b44e40514c22b2e8bbc70d8b9"
 
-trezor-link@1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/trezor-link/-/trezor-link-1.4.0.tgz#e274c5aa6e01a283dca7752216cd6ec7b4eb268c"
+trezor-link@1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/trezor-link/-/trezor-link-1.5.0.tgz#7cda659a8774d1054ea951845fc1dc2e38c9c605"
   dependencies:
     bigi "^1.4.1"
     bitcoinjs-lib-zcash "^3.0.0"
