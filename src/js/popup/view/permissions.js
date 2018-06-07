@@ -4,6 +4,7 @@
 import { UiMessage } from '../../core/CoreMessage';
 import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
+import type { RequestPermission } from 'flowtype/ui-message';
 
 const getPermissionText = (permissionType: string, deviceName: string): string => {
     let text: string = '';
@@ -40,7 +41,7 @@ const createTooltip = (text: string): HTMLDivElement => {
     return infoIcon;
 };
 
-export const initPermissionsView = (data: any, origin: string): void => {
+export const initPermissionsView = (data: $PropertyType<RequestPermission, 'payload'>, origin: string): void => {
     showView('permissions');
 
     const h3: HTMLElement = container.getElementsByTagName('h3')[0];
