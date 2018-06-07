@@ -75,6 +75,14 @@ declare module 'flowtype/ui-message' {
         payload: Array<string>
     }
 
+    declare type ReceivePermission = {
+        +type: $PropertyType<T_UI, 'RECEIVE_PERMISSION'>,
+        payload: {
+            granted: boolean;
+            remember: boolean;
+        }
+    }
+
     declare type RequestConfirmation = {
         +type: $PropertyType<T_UI, 'REQUEST_CONFIRMATION'>,
         payload: {
@@ -88,8 +96,8 @@ declare module 'flowtype/ui-message' {
     }
 
     declare type ReceiveConfirmation = {
-        +type: $PropertyType<T_UI, 'RECEIVE_CONFIRMATION'> | $PropertyType<T_UI, 'RECEIVE_PERMISSION'>,
-        payload: string // TODO: boolean
+        +type: $PropertyType<T_UI, 'RECEIVE_CONFIRMATION'>,
+        payload: string; // TODO: boolean
     }
 
     declare type ReceivePassphrase = {
@@ -171,6 +179,7 @@ declare module 'flowtype/ui-message' {
     declare function MessageFactory(type: $PropertyType<RequestPermission, 'type'>, payload: $PropertyType<RequestPermission, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<RequestConfirmation, 'type'>, payload: $PropertyType<RequestConfirmation, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceiveConfirmation, 'type'>, payload: $PropertyType<ReceiveConfirmation, 'payload'>): CoreMessage;
+    declare function MessageFactory(type: $PropertyType<ReceivePermission, 'type'>, payload: $PropertyType<ReceivePermission, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceivePassphrase, 'type'>, payload: $PropertyType<ReceivePassphrase, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceivePin, 'type'>, payload: $PropertyType<ReceivePin, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceiveAccount, 'type'>, payload: $PropertyType<ReceiveAccount, 'payload'>): CoreMessage;
