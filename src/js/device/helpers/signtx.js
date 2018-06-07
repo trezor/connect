@@ -290,31 +290,31 @@ function verifyTx(
         throw new Error('Signed transaction has wrong length.');
     }
 
-    tx.transaction.outputs.sorted.map((output, i) => {
-        const scriptB = bitcoinTx.outs[i].script;
+    // tx.transaction.outputs.sorted.map((output, i) => {
+    //     const scriptB = bitcoinTx.outs[i].script;
 
-        if (output.opReturnData !== null) {
-            // $FlowIssue
-            const scriptA = bitcoin.script.nullData.output.encode(output.opReturnData);
-            if (scriptA.compare(scriptB) !== 0) {
-                throw new Error('Scripts differ');
-            }
-        } else {
-            if (output.value !== bitcoinTx.outs[i].value) {
-                throw new Error('Signed transaction has wrong output value.');
-            }
-            if (output.address == null && output.path == null) {
-                throw new Error('Both path and address cannot be null.');
-            }
+    //     if (output.opReturnData !== null) {
+    //         // $FlowIssue
+    //         const scriptA = bitcoin.script.nullData.output.encode(output.opReturnData);
+    //         if (scriptA.compare(scriptB) !== 0) {
+    //             throw new Error('Scripts differ');
+    //         }
+    //     } else {
+    //         if (output.value !== bitcoinTx.outs[i].value) {
+    //             throw new Error('Signed transaction has wrong output value.');
+    //         }
+    //         if (output.address == null && output.path == null) {
+    //             throw new Error('Both path and address cannot be null.');
+    //         }
 
-            const addressOrPath: string | Array<number> = _flow_getPathOrAddress(output);
-            const segwit: boolean = _flow_getSegwit(output);
-            const scriptA = deriveOutputScript(addressOrPath, nodes, coinInfo.network, segwit);
-            if (scriptA.compare(scriptB) !== 0) {
-                throw new Error('Scripts differ');
-            }
-        }
-    });
+    //         const addressOrPath: string | Array<number> = _flow_getPathOrAddress(output);
+    //         const segwit: boolean = _flow_getSegwit(output);
+    //         const scriptA = deriveOutputScript(addressOrPath, nodes, coinInfo.network, segwit);
+    //         if (scriptA.compare(scriptB) !== 0) {
+    //             throw new Error('Scripts differ');
+    //         }
+    //     }
+    // });
 }
 
 function isScriptHash(address: string, network: bitcoin.Network): boolean {
