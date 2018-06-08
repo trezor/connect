@@ -1,8 +1,11 @@
 // https://raw.githubusercontent.com/zyml/es6-karma-jasmine-webpack-boilerplate/master/karma.config.js
 
-var path = require('path');
-var HtmlWebpackPlugin =  require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import webpack from 'webpack';
+import { SRC, NODE_MODULES } from './webpack/constants';
+
 const extractLess = new ExtractTextPlugin({
     filename: './[name].css'
 });
@@ -25,16 +28,7 @@ module.exports = function(config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            //'./src/js/entrypoints/connect.js': ['webpack'],
-            // './src/js/iframe/iframe.js': ['webpack'],
-            // './src/js/popup/popup.js': ['webpack'],
-            './src/__tests__/*.test.js': ['webpack'],
-            //'./src/__tests__/*.test.js': ['webpack'],
-            // './src/__tests__/*.test.js': ['babel'],
-            // './src/__tests__/**/*.test.js': ['babel'],
-            //'src/js/*.js': ['webpack', 'sourcemap'],
-            //'src/js/*.js': ['webpack', 'sourcemap'],
-            // './src/js/iframe/iframe.js': ['webpack', 'sourcemap'],
+            './src/__tests__/core/*.test.js': ['webpack'],
         },
 
         babelPreprocessor: {
@@ -51,26 +45,18 @@ module.exports = function(config) {
         },
 
         files: [
-            //'src/js/trezorjs-npm.js',
-            //'src/js/index-npm.js',
-            'src/__tests__/*.test.js',
-            //{ pattern: 'src/js/index-npm.js', included: true, served: true, nocache: true },
-            //'src/js/entrypoints/connect.js',
-
-            // { pattern: './src/__tests__/iframe.js', included: false, served: true },
-            { pattern: './src/js/iframe/iframe.js', included: false, served: true },
-            { pattern: './src/js/popup/popup.js', included: false, served: true },
-            { pattern: './src/data/coins.json', included: false, served: true, nocache: true },
-            { pattern: './src/data/latest.txt', included: false, served: true, nocache: true },
-            { pattern: './src/__tests__/iframe.html', included: false, served: true },
-            { pattern: './src/__tests__/popup.html', included: false, served: true },
+            // 'src/flowtype/empty.js',
+            // 'src/js/core/Core.js',
+            'src/__tests__/core/*.test.js',
+            { pattern: 'src/data/config.json', included: false, served: true, nocache: true },
+            { pattern: 'src/data/coins.json', included: false, served: true, nocache: true },
+            { pattern: 'src/data/releases-1.json', included: false, served: true, nocache: true },
+            { pattern: 'src/data/messages.json', included: false, served: true, nocache: true },
+            { pattern: 'src/data/latest.txt', included: false, served: true, nocache: true },
         ],
 
         proxies: {
-            "/iframe.js": "http://localhost:8099/base/src/js/iframe/iframe.js",
-            "/iframe.html": "http://localhost:8099/base/src/__tests__/iframe.html",
-            "/popup.js": "http://localhost:8099/base/src/js/popup/popup.js",
-            "/popup.html": "http://localhost:8099/base/src/__tests__/popup.html",
+            // "/iframe.js": "http://localhost:8099/base/src/js/iframe/iframe.js",
         },
 
         // test results reporter to use
@@ -94,19 +80,19 @@ module.exports = function(config) {
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
         //browsers: ['chrome_without_security'],
-        browsers: ['ChromeCanary'],
-        //browsers: ['Chrome'],
+        //browsers: ['ChromeCanary'],
+        browsers: ['Chrome'],
         //browsers: ['Firefox'],
 
-        customLaunchers: {
-            chrome_without_security: {
-                base: 'Chrome',
-                flags: [
-                    '--load-extension=/Users/szymon.lesisz/Library/Application Support/Google/Chrome/Default/Extensions/jcjjhjgimijdkoamemaghajlhegmoclj'
-                ],
-                displayName: 'Chrome w/o security'
-            }
-        },
+        // customLaunchers: {
+        //     chrome_without_security: {
+        //         base: 'Chrome',
+        //         flags: [
+        //             '--load-extension=/Users/szymon.lesisz/Library/Application Support/Google/Chrome/Default/Extensions/jcjjhjgimijdkoamemaghajlhegmoclj'
+        //         ],
+        //         displayName: 'Chrome w/o security'
+        //     }
+        // },
 
         client: {
             captureConsole: true,
@@ -123,20 +109,12 @@ module.exports = function(config) {
         // how many browser should be started simultaneous
         concurrency: Infinity,
 
-        hostname: 'test.localhost',
+        hostname: 'localhost',
         port: 8099,
 
         webpack: {
             cache: true,
             devtool: 'inline-source-map',
-            entry: {
-                'src/js/entrypoints/connect.js': './src/js/entrypoints/connect.js',
-                'src/js/iframe/iframe.js': ['babel-polyfill', './src/js/iframe/iframe.js'],
-            },
-            // output: {
-            //     filename: 'js/[name].js',
-            //     path: './src/__tests__/'
-            // },
             module: {
                 loaders: [
                     {
@@ -171,20 +149,18 @@ module.exports = function(config) {
             },
             plugins: [
                 extractLess,
-            ]
+                new webpack.IgnorePlugin(/\/iconv-loader$/),
+            ],
+            resolve: {
+                modules: ['./src/js', './node_modules'],
+                alias: {
+                    'flowtype/trezor': `${ SRC }/flowtype/empty.js`,
+                }
+            },
+            node: {
+                fs: "empty"
+            }
         },
-
-        // webpackServer: {
-        //     noInfo: false //please don’t spam the console when running in karma!
-        // },
-
-        // httpsServerOptions: {
-        //     key: fs.readFileSync('server.key', 'utf8'),
-        //     cert: fs.readFileSync('server.crt', 'utf8')
-        // },
-
-
-
 
     })
 }
