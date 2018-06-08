@@ -28,6 +28,26 @@ const getPermissionText = (permissionType: string, deviceName: string): string =
     return text;
 };
 
+const getPermissionTooltipText = (permissionType: string): string => {
+    // TODO: Change returned text
+
+    let text: string = '';
+
+    switch (permissionType) {
+        case 'read':
+            text = 'Application needs permission to read data';
+            break;
+        case 'read-meta':
+            text = 'Application needs permission to read metadata';
+        case 'write':
+            text = 'Application needs permission to write data';
+            break;
+        case 'write-meta':
+            text = 'Application needs permission to read metadata';
+    }
+    return text;
+}
+
 const createTooltip = (text: string): HTMLDivElement => {
     const infoIcon: HTMLDivElement = document.createElement('div');
     infoIcon.className = 'info-icon';
@@ -59,13 +79,21 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
         payload.permissions.forEach(p => {
             const listItem: HTMLLIElement = document.createElement('li');
 
-            const tooltip = createTooltip('TODO: Change text here');
+            const tooltip = createTooltip(
+                getPermissionTooltipText(p)
+            );
             listItem.appendChild(tooltip);
 
             const permissionText = getPermissionText(p, payload.device.label);
             listItem.appendChild(
                 document.createTextNode(permissionText)
             );
+
+            // TODO: Debug only - delete
+            for (let i = 0; i < 40; i++) {
+                const tmp = listItem.cloneNode(true);
+                permissionsList.appendChild(tmp);
+            }
 
             permissionsList.appendChild(listItem);
         });
