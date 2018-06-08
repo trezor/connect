@@ -54,6 +54,11 @@ export default class Trezor {
         return await this.__call({ method: 'getDeviceState', ...params });
     }
 
+
+    static async customMessage(params: Object): Promise<Object> {
+        return await this.__call({ method: 'customMessage', ...params });
+    }
+
     /*
     static requestDevice(): void {
         // to override

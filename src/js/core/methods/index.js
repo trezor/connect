@@ -12,6 +12,7 @@ import EthereumGetAddress from './EthereumGetAddress';
 import EthereumSignTx from './EthereumSignTx';
 import EthereumSignMessage from './EthereumSignMessage';
 import EthereumVerifyMessage from './EthereumVerifyMessage';
+import CustomMessage from './CustomMessage';
 
 const classes: {[k: string]: any} = {
     'getFeatures': GetFeatures,
@@ -22,6 +23,7 @@ const classes: {[k: string]: any} = {
     'ethereumSignTx': EthereumSignTx,
     'ethereumSignMessage': EthereumSignMessage,
     'ethereumVerifyMessage': EthereumVerifyMessage,
+    'customMessage': CustomMessage,
 }
 
 export const find = (message: CoreMessage): AbstractMethod => {
