@@ -9,6 +9,7 @@
 
 import TrezorBase, { eventEmitter } from '../index';
 
+import { CORE_EVENT, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, RESPONSE_EVENT } from '../constants';
 import * as TRANSPORT from '../constants/transport';
 import * as POPUP from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
@@ -18,8 +19,7 @@ import * as DEVICE from '../constants/device';
 
 import { create as createDeferred } from '../utils/deferred';
 
-import { Core, CORE_EVENT, init as initCore } from '../core/Core';
-import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT } from '../core/CoreMessage';
+import { Core, init as initCore } from '../core/Core';
 import type { Deferred, CoreMessage } from 'flowtype';
 
 import { parse as parseSettings } from './ConnectSettings';
