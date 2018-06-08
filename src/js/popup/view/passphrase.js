@@ -83,6 +83,20 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
     header.innerHTML = header.innerHTML.replace('#TREZOR', payload.device.label);
 
     /* Functions */
+    const toggleInputFontStyle = (input: HTMLInputElement) => {
+        if (inputType === 'text') {
+            // Was text now dots
+            input.style.fontSize = '21px';
+            input.style.letterSpacing = '8px';
+        } else if (inputType === 'password') {
+            // Was dots now text
+            input.style.fontSize = '18px';
+            input.style.letterSpacing = 'normal';
+        }
+        // We want to input have a same size for both cases
+        input.style.lineHeight = '30px';
+    }
+
     const updateCaretForInput = (input: HTMLInputElement) => {
         caretStart = input.selectionStart;
         caretEnd = input.selectionEnd;
@@ -145,6 +159,9 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
         }
     };
     const handleToggleClick = () => {
+        toggleInputFontStyle(input1);
+        toggleInputFontStyle(input2);
+
         if (inputType === 'text') {
             // Was plain text, now show dots
             input1.value = DOT.repeat(input1.value.length);
