@@ -89,7 +89,7 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
         deviceIcon.className = 'icon';
 
         if (device.features) {
-            if (device.features.model === 'T') {
+            if (device.features.major_version === 2) {
                 deviceIcon.classList.add('model-t');
             }
         }

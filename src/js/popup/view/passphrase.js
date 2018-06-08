@@ -4,7 +4,7 @@
 import { UiMessage } from '../../core/CoreMessage';
 import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
-import type { RequestPassphrase } from 'flowtype/ui-message';
+import type { DeviceMessage } from 'flowtype/ui-message';
 
 const addStringAt = (original: string, toAdd: string, startCaret: number, endCaret: number): string => {
     let newString = '';
@@ -59,7 +59,7 @@ const isAscii = (str: string) => {
     return /^[\x08\x00-\x7F]$/.test(str);
 };
 
-export const initPassphraseView = (payload: $PropertyType<RequestPassphrase, 'payload'>): void => {
+export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payload'>): void => {
     showView('passphrase');
 
     const view: HTMLElement = container.getElementsByClassName('passphrase')[0];

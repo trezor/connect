@@ -59,12 +59,4 @@ declare module 'flowtype' {
         outdated: boolean;
         mobile: boolean;
     }
-
-    declare export type BrowserState = {
-        name: string;
-        osname: string;
-        supported: boolean;
-        outdated: boolean;
-        mobile: boolean;
-    }
 }
