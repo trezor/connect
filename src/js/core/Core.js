@@ -6,7 +6,7 @@ import DataManager from '../data/DataManager';
 import DeviceList, { getDeviceList } from '../device/DeviceList';
 import Device from '../device/Device';
 
-
+import { CORE_EVENT, RESPONSE_EVENT } from '../constants';
 import * as TRANSPORT from '../constants/transport';
 import * as DEVICE from '../constants/device';
 import * as POPUP from '../constants/popup';
@@ -14,7 +14,7 @@ import * as UI from '../constants/ui';
 import * as IFRAME from '../constants/iframe';
 import * as ERROR from '../constants/errors';
 
-import { RESPONSE_EVENT, UiMessage, DeviceMessage, TransportMessage, ResponseMessage } from './CoreMessage';
+import { UiMessage, DeviceMessage, TransportMessage, ResponseMessage } from './CoreMessage';
 
 import AbstractMethod from './methods/AbstractMethod';
 import { find as findMethod } from './methods';
@@ -40,8 +40,6 @@ let _popupPromise: ?Deferred<void>; // Waiting for popup handshake
 let _uiPromises: Array<Deferred<UiPromiseResponse>> = []; // Waiting for ui response
 const _callMethods: Array<AbstractMethod> = [];
 let _preferredDevice: any; // TODO: type
-
-export const CORE_EVENT: string = 'CORE_EVENT';
 
 // custom log
 const _log: Log = initLog('Core');

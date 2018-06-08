@@ -1,6 +1,7 @@
 /* @flow */
 'use strict';
 
+import { CORE_EVENT, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT } from '../constants';
 import { LOG } from '../constants/popup';
 import * as POPUP from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
@@ -11,8 +12,8 @@ import { parse as parseSettings } from '../entrypoints/ConnectSettings';
 import DataManager from '../data/DataManager';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
 
-import { Core, CORE_EVENT, init as initCore, initTransport } from '../core/Core';
-import { parseMessage, UiMessage, ResponseMessage, TransportMessage, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT } from '../core/CoreMessage';
+import { Core, init as initCore, initTransport } from '../core/Core';
+import { parseMessage, UiMessage, ResponseMessage, TransportMessage } from '../core/CoreMessage';
 
 import type { CoreMessage } from 'flowtype';
 
