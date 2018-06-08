@@ -84,19 +84,15 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
 
     /* Functions */
     const toggleInputFontStyle = (input: HTMLInputElement) => {
+        // By default input has a passphrase font style
         if (inputType === 'text') {
             // Was text now dots
-            input.style.fontSize = '21px';
-            input.style.letterSpacing = '8px';
+            input.classList.remove('text');
         } else if (inputType === 'password') {
             // Was dots now text
-            input.style.fontSize = '18px';
-            input.style.letterSpacing = 'normal';
+            input.classList.add('text');
         }
-        // We want to input have a same size for both cases
-        input.style.lineHeight = '30px';
     }
-
     const updateCaretForInput = (input: HTMLInputElement) => {
         caretStart = input.selectionStart;
         caretEnd = input.selectionEnd;
