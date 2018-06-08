@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<svg viewBox="0 0 160 400" version="1.1"
+     xmlns="http://www.w3.org/2000/svg">
+    <path d="
+        M 80, 240
+        m -60, 0
+        a 60,60 0 1,0 120,0
+        a 60,60 0 1,0 -120,0
+        "
+      fill-rule="evenodd"/>
+</svg>
