@@ -74,29 +74,6 @@ export default class CipherKeyValue extends AbstractMethod {
         }
     }
 
-    async confirmation(): Promise<boolean> {
-        if (this.confirmed) return true;
-        // wait for popup window
-        await this.getPopupPromise().promise;
-
-        // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'export-xpub',
-            accountType: {
-                account: 1,
-                legacy: true,
-                label: "public key of bitcoin legacy Account #1"
-            },
-        }));
-
-        // wait for user action
-        const uiResp: UiPromiseResponse = await this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device).promise;
-        const resp: string = uiResp.payload;
-
-        this.confirmed = (resp === 'true');
-        return this.confirmed;
-    }
-
     async run(): Promise<Object> {
         const response: MessageResponse<{value: string}> = await this.device.getCommands().cipherKeyValue(
             this.params.path,
