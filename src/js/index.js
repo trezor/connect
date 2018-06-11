@@ -62,6 +62,10 @@ export default class Trezor {
         });
     }
 
+    static async nemGetAddress(params: Object): Promise<Object> {
+        return await this.__call({ method: 'nemGetAddress', ...params });
+    }
+
     /*
     static requestDevice(): void {
         // to override

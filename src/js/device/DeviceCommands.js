@@ -232,6 +232,21 @@ export default class DeviceCommands {
         });
     }
 
+    async nemGetAddress(address_n: Array<number>, network: number, showOnTrezor: boolean): Promise<MessageResponse<trezor.NEMAddress>> {
+        const response: Object = await this.typedCall('NEMGetAddress', 'NEMAddress', {
+            address_n,
+            network,
+            show_display: !!showOnTrezor,
+        });
+        return {
+            type: response.type,
+            message: {
+                path: address_n || [],
+                address: response.message.address
+            }
+        };
+    }
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,

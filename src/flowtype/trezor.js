@@ -179,6 +179,11 @@ declare module 'flowtype/trezor' {
         path: Array<number>;
     }
 
+    declare export type NEMAddress = {
+        address: string;
+        path: Array<number>;
+    }
+
     declare export type Identity = {
         proto?: string,
         user?: string,
