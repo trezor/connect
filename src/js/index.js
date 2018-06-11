@@ -56,7 +56,10 @@ export default class Trezor {
 
 
     static async customMessage(params: Object): Promise<Object> {
-        return await this.__call({ method: 'customMessage', ...params });
+        return await this.__call({
+            method: 'customMessage',
+            customFunction: encodeURI( params.customFunction.toString() )
+        });
     }
 
     /*
