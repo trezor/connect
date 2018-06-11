@@ -838,6 +838,9 @@ export class Core extends EventEmitter {
             _deviceList.onBeforeUnload();
         }
     }
+    getCurrentMethod(): Array<AbstractMethod> {
+        return _callMethods;
+    }
 }
 
 /**

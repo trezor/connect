@@ -7,6 +7,7 @@ import type { CoreMessage } from 'flowtype';
 import DataManager from '../data/DataManager';
 import { parse as parseSettings } from '../entrypoints/ConnectSettings';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
+import type { PopupHandshake } from 'flowtype/ui-message';
 
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
@@ -22,13 +23,14 @@ const handleMessage = (event: Message): void => {
 
     console.log('handleMessage', event.data);
 
-    if (!event.data) return;
+    const data: any = event.data;
+    if (!data) return;
 
     const isMessagePort: boolean = event.target instanceof MessagePort;
 
     // catch first message from iframe.js and gain settings
-    if (isMessagePort && !DataManager.getSettings('origin') && event.data.payload && event.data.type === POPUP.HANDSHAKE && event.data.payload.settings) {
-        init(event.data.payload.settings);
+    if (isMessagePort && !DataManager.getSettings('origin') && data.type === POPUP.HANDSHAKE && data.payload) {
+        init(data.payload);
         return;
     }
 
@@ -43,7 +45,7 @@ const handleMessage = (event: Message): void => {
             showView('loader');
             break;
         case UI.SET_OPERATION :
-            if (typeof message.payload === 'string') { setOperation(message.payload, true); }
+            if (typeof message.payload === 'string') { setOperation(message.payload); }
             break;
         case UI.TRANSPORT :
             showView('transport');
@@ -82,7 +84,7 @@ const handleMessage = (event: Message): void => {
             break;
 
         case UI.REQUEST_PERMISSION :
-            view.initPermissionsView(message.payload, event.origin);
+            view.initPermissionsView(message.payload);
             break;
         case UI.REQUEST_CONFIRMATION :
             view.initConfirmationView(message.payload);
@@ -102,9 +104,12 @@ const handleMessage = (event: Message): void => {
     }
 };
 
-const init = async (settings: ConnectSettings) => {
+//const init = async (settings: ConnectSettings) => {
+const init = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
+    if (!payload) return;
 
-    await DataManager.load(settings);
+    await DataManager.load(payload.settings);
+    setOperation(payload.method);
 
     postMessage(new UiMessage(POPUP.HANDSHAKE));
 

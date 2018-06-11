@@ -59,9 +59,11 @@ const handleMessage = (event: MessageEvent): void => {
         if (event.ports.length > 0) {
             // $FlowIssue
             _popupMessagePort = event.ports[0];
+            const method = _core.getCurrentMethod()[0];
+
             postMessage(new UiMessage(POPUP.HANDSHAKE, {
                 settings: DataManager.getSettings(),
-                method: "FOO"
+                method: method ? method.info : ""
             }))
         }
     }

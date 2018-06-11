@@ -13,25 +13,12 @@ export let iframe: any; // Window type
 
 export const channel = new MessageChannel();
 
-export const setOperation = (operation: string, update: boolean = false): void => {
-    const label: HTMLElement = header.getElementsByClassName('operation')[0];
-    let value: string;
-    if (update) {
-        label.innerHTML = operation;
-        return;
-    }
-
-    switch (operation) {
-        case 'getxpub' :
-            value = 'Export public key';
-            break;
-        case 'composetx' :
-            value = 'Payment request';
-            break;
-        default:
-            value = '';
-    }
-    label.innerHTML = value;
+export const setOperation = (operation: string): void => {
+    const infoPanel: HTMLElement = document.getElementsByClassName('info-panel')[0];
+    const h2: HTMLElement = infoPanel.getElementsByTagName('h2')[0];
+    const p: HTMLElement = infoPanel.getElementsByTagName('p')[0];
+    h2.innerHTML = operation;
+    p.innerHTML = DataManager.getSettings('origin');
 };
 
 export const init = (): void => {
