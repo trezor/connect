@@ -30,7 +30,8 @@ export default class GetPublicKey extends AbstractMethod {
         this.requiredPermissions = ['read'];
         this.requiredFirmware = '1.0.0';
         this.useDevice = true;
-        this.useUi = true; // If permission is granted and export confirmed, set to flase
+        this.useUi = true; // If permission is granted and export confirmed, set to false
+        this.info = 'Export public key';
 
         const payload: any = message.payload;
 

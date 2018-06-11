@@ -33,6 +33,7 @@ export default class CipherKeyValue extends AbstractMethod {
         this.requiredFirmware = '1.0.0';
         this.useDevice = true;
         this.useUi = true; // this.useUi = payload.askOnEncrypt || payload.askOnDecrypt;
+        this.info = 'Cypher key value';
 
         const payload: any = message.payload;
 

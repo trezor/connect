@@ -24,6 +24,7 @@ export default class EthereumVerifyMessage extends AbstractMethod {
         this.requiredFirmware = '1.0.0';
         this.useDevice = true;
         this.useUi = true;
+        this.info = 'Verify Ethereum message';
 
         const payload: any = message.payload;
 

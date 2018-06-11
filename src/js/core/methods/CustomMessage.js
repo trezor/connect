@@ -20,6 +20,7 @@ export default class CustomMessage extends AbstractMethod {
         this.requiredFirmware = '1.0.0';
         this.useDevice = true;
         this.useUi = true;
+        this.info = 'Custom message';
 
         const payload: any = message.payload;
         if (typeof payload.customFunction !== 'string') {

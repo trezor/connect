@@ -32,6 +32,7 @@ export default class NEMGetAddress extends AbstractMethod {
         this.requiredPermissions = ['read'];
         this.requiredFirmware = '1.6.0';
         this.useDevice = true;
+        this.info = 'Export NEM address';
 
         const payload: any = message.payload;
 
