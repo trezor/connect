@@ -86,11 +86,7 @@ export default class GetPublicKey extends AbstractMethod {
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-xpub',
-            accountType: {
-                account: 1,
-                legacy: true,
-                label: "public key of bitcoin legacy Account #1"
-            },
+            label: 'Export public key of bitcoin legacy Account #1',
         }));
 
         // wait for user action

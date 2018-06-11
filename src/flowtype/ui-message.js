@@ -74,11 +74,7 @@ declare module 'flowtype/ui-message' {
         +type: $PropertyType<T_UI, 'REQUEST_CONFIRMATION'>,
         payload: {
             view: string,
-            accountType: {
-                account: number;
-                legacy: boolean;
-                label: string;
-            }
+            label: string,
         }
     }
 

@@ -90,11 +90,7 @@ export default class NEMGetAddress extends AbstractMethod {
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-xpub',
-            accountType: {
-                account: 1,
-                legacy: true,
-                label: `NEM address for Account#${ (fromHardened(this.params.path[2]) + 1) } on ${ network } network`
-            },
+            label: `Export NEM address for Account#${ (fromHardened(this.params.path[2]) + 1) } on ${ network } network`
         }));
 
         // wait for user action
