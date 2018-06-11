@@ -3,6 +3,7 @@
 
 import { UiMessage } from '../../core/CoreMessage';
 import * as UI from '../../constants/ui';
+import DataManager from '../../data/DataManager';
 import { container, showView, postMessage } from './common';
 import type { RequestPermission } from 'flowtype/ui-message';
 
@@ -20,6 +21,8 @@ const getPermissionText = (permissionType: string, deviceName: string): string =
             break;
         case 'write-meta':
             text = `Write metadata to ${deviceName}`;
+        case 'custom-message':
+            text = `Call custom message on ${deviceName}`;
 
     }
     return text;
@@ -41,7 +44,7 @@ const createTooltip = (text: string): HTMLDivElement => {
     return infoIcon;
 };
 
-export const initPermissionsView = (data: $PropertyType<RequestPermission, 'payload'>, origin: string): void => {
+export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'payload'>): void => {
     showView('permissions');
 
     const h3: HTMLElement = container.getElementsByTagName('h3')[0];
@@ -51,15 +54,15 @@ export const initPermissionsView = (data: $PropertyType<RequestPermission, 'payl
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
     const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName('remember-permissions')[0]: any);
 
-    hostName.innerHTML = origin;
-    if (data && Array.isArray(data)) {
-        data.forEach(p => {
+    hostName.innerHTML = DataManager.getSettings('origin');
+    if (payload && Array.isArray(payload.permissions)) {
+        payload.permissions.forEach(p => {
             const listItem: HTMLLIElement = document.createElement('li');
 
             const tooltip = createTooltip('TODO: Change text here');
             listItem.appendChild(tooltip);
 
-            const permissionText = getPermissionText(p, '#TREZOR');
+            const permissionText = getPermissionText(p, payload.device.label);
             listItem.appendChild(
                 document.createTextNode(permissionText)
             );

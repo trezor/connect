@@ -56,7 +56,10 @@ declare module 'flowtype/ui-message' {
 
     declare type RequestPermission = {
         +type: $PropertyType<T_UI, 'REQUEST_PERMISSION'>,
-        payload: Array<string>
+        payload: {
+            permissions: Array<string>,
+            device: Device
+        }
     }
 
     declare type ReceivePermission = {

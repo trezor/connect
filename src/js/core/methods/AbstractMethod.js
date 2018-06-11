@@ -31,6 +31,7 @@ export default class AbstractMethod implements MethodInterface {
     overridePreviousCall: boolean;
     overridden: boolean;
     name: string; // method name
+    info: string; // method info, displayed in popup info-panel
     useUi: boolean; // should use popup?
     useDevice: boolean; // use device
     useEmptyPassphrase: boolean;
@@ -70,7 +71,10 @@ export default class AbstractMethod implements MethodInterface {
         // wait for popup window
         await this.getPopupPromise().promise;
         // post to view
-        this.postMessage(new UiMessage(UI.REQUEST_PERMISSION, this.requiredPermissions));
+        this.postMessage(new UiMessage(UI.REQUEST_PERMISSION, {
+            permissions: this.requiredPermissions,
+            device: this.device.toMessageObject(),
+        }));
         // wait for response
         const uiResp: UiPromiseResponse = await this.createUiPromise(UI.RECEIVE_PERMISSION, this.device).promise;
 
