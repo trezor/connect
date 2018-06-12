@@ -247,6 +247,10 @@ export default class DeviceCommands {
         };
     }
 
+    async nemSignTx(transaction: any): Promise<MessageResponse<trezor.NEMSignedTx>> {
+        return this.typedCall('NEMSignTx', 'NEMSignedTx', transaction);
+    }
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,

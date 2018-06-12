@@ -14,6 +14,7 @@ import EthereumSignMessage from './EthereumSignMessage';
 import EthereumVerifyMessage from './EthereumVerifyMessage';
 import CustomMessage from './CustomMessage';
 import NEMGetAddress from './NEMGetAddress';
+import NEMSignTransaction from './NEMSignTransaction';
 
 const classes: {[k: string]: any} = {
     'getFeatures': GetFeatures,
@@ -26,6 +27,7 @@ const classes: {[k: string]: any} = {
     'ethereumVerifyMessage': EthereumVerifyMessage,
     'customMessage': CustomMessage,
     'nemGetAddress': NEMGetAddress,
+    'nemSignTransaction': NEMSignTransaction,
 }
 
 export const find = (message: CoreMessage): AbstractMethod => {

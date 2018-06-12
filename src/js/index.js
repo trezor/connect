@@ -66,6 +66,10 @@ export default class Trezor {
         return await this.__call({ method: 'nemGetAddress', ...params });
     }
 
+    static async nemSignTransaction(params: Object): Promise<Object> {
+        return await this.__call({ method: 'nemSignTransaction', ...params });
+    }
+
     /*
     static requestDevice(): void {
         // to override
