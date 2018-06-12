@@ -179,11 +179,6 @@ declare module 'flowtype/trezor' {
         path: Array<number>;
     }
 
-    declare export type NEMAddress = {
-        address: string;
-        path: Array<number>;
-    }
-
     declare export type Identity = {
         proto?: string,
         user?: string,
@@ -232,4 +227,139 @@ declare module 'flowtype/trezor' {
         outputs_cnt: number,
         extra_data_len?: number,
     };
+
+
+
+    // NEM types
+    declare export type NEMAddress = {
+        address: string;
+        path: Array<number>;
+    }
+
+    declare export type NEMSignedTx = {
+        data: string;
+        signature: string;
+    }
+
+    declare export type NEMSignTxMessage = {
+        transaction?: NEMTransactionCommon;
+        cosigning?: boolean;
+        multisig?: NEMTransactionCommon;
+        transfer?: NEMTransfer;
+        provision_namespace?: NEMProvisionNamespace;
+        mosaic_creation?: NEMMosaicCreation;
+        supply_change?: NEMMosaicSupplyChange;
+        aggregate_modification?: NEMAggregateModification;
+        importance_transfer?: NEMImportanceTransfer;
+    }
+
+    declare type NEMTransactionCommon = {
+        address_n: ?Array<number>;
+        network: ?number;
+        timestamp: ?number;
+        fee: ?number;
+        deadline: ?number;
+        signer: ?string;
+    }
+
+    declare type NEMTransfer = {
+        mosaics: ?Array<NEMMosaic>;
+        public_key: ?string;
+        recipient: ?string;
+        amount: ?number;
+        payload: ?string;
+    }
+
+    declare type NEMMosaic = {
+        namespace: ?string;
+        mosaic: ?string;
+        quantity: ?number;
+    }
+
+    declare type NEMProvisionNamespace = {
+        namespace: ?string;
+        sink: ?string;
+        fee: ?number;
+        parent: ?string;
+    }
+
+    declare type NEMMosaicCreation = {
+        definition: ?NEMMosaicDefinition;
+        sink: ?string;
+        fee: ?number;
+    }
+
+    declare type NEMMosaicDefinition = {
+        name?: string;
+        ticker?: string;
+        namespace?: string;
+        mosaic?: string;
+        divisibility?: number;
+        fee?: number;
+        levy?: NEMMosaicLevyType;
+        levy_address?: string;
+        levy_namespace?: string;
+        levy_mosaic?: string;
+        supply?: number;
+        mutable_supply?: boolean;
+        transferable?: boolean;
+        description?: string;
+        networks?: number;
+    }
+
+    declare type NEMMosaicSupplyChange = {
+        namespace?: string;
+        type?: NEMSupplyChangeType;
+        mosaic?: string;
+        delta?: number;
+    }
+
+    declare type NEMAggregateModification = {
+        modifications: ?Array<NEMCosignatoryModification>;
+        relative_change: ?number; // TODO: "sint32"
+    }
+
+    declare type NEMCosignatoryModification = {
+        type?: NEMModificationType;
+        public_key?: string;
+    }
+
+    declare type NEMImportanceTransfer = {
+        mode?: NEMImportanceTransferMode;
+        public_key?: string;
+    }
+
+    declare type NEMMosaicLevyType = {
+        id: 1,
+        name: 'MosaicLevy_Absolute'
+    } | {
+        id: 2,
+        name: 'MosaicLevy_Percentile'
+    }
+
+    declare type NEMSupplyChangeType = {
+        id: 1,
+        name: 'SupplyChange_Increase'
+    } | {
+        id: 2,
+        name: 'SupplyChange_Decrease'
+    }
+
+    declare type NEMModificationType = {
+        id: 1,
+        name: 'CosignatoryModification_Add',
+    } | {
+        id: 2,
+        name: 'CosignatoryModification_Delete',
+    }
+
+    declare type NEMImportanceTransferMode = {
+        id: 1,
+        name: 'ImportanceTransfer_Activate'
+    } | {
+        id: 2,
+        name: 'ImportanceTransfer_Deactivate'
+    }
+
+
 }
