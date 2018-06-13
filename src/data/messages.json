@@ -2262,6 +2262,13 @@
                     "type": "uint32",
                     "name": "address_n",
                     "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
                 }
             ],
             "enums": [],
@@ -2277,6 +2284,45 @@
                     "options": {},
                     "type": "bytes",
                     "name": "public_key",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "StellarGetAddress",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "StellarAddress",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "address",
                     "id": 1
                 }
             ],
@@ -3011,6 +3057,82 @@
             "oneofs": {}
         },
         {
+            "name": "LiskSignMessage",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "message",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "LiskMessageSignature",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "public_key",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "LiskVerifyMessage",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "public_key",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "message",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "DebugLinkDecision",
             "fields": [
                 {
@@ -3619,6 +3741,18 @@
                     "id": 117
                 },
                 {
+                    "name": "MessageType_LiskSignMessage",
+                    "id": 118
+                },
+                {
+                    "name": "MessageType_LiskMessageSignature",
+                    "id": 119
+                },
+                {
+                    "name": "MessageType_LiskVerifyMessage",
+                    "id": 120
+                },
+                {
                     "name": "MessageType_LiskGetPublicKey",
                     "id": 121
                 },
@@ -3641,6 +3775,14 @@
                 {
                     "name": "MessageType_StellarTxOpRequest",
                     "id": 203
+                },
+                {
+                    "name": "MessageType_StellarGetAddress",
+                    "id": 207
+                },
+                {
+                    "name": "MessageType_StellarAddress",
+                    "id": 208
                 },
                 {
                     "name": "MessageType_StellarCreateAccountOp",
