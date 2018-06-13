@@ -60,3 +60,6 @@ coins:
 #	./submodules/trezor-common/defs/coins/tools/build_coins.py connect
 	./submodules/trezor-common/defs/coins/tools/build_coins.py
 	mv coins.json ./src/data/coins.json
+
+submodule:
+	git submodule update --remote --merge
