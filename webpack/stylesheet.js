@@ -28,6 +28,8 @@ export default function compile() {
             fs.writeFile(INLINE_STYLESHEET + "inline-styles.js", wrapper, { encoding: 'utf8' }, () =>{
                 console.log("CSS compiled. Saved as " + INLINE_STYLESHEET + "inline-styles.js");
             });
+        }).catch(function(error) {
+            console.log(error);
         });
 
     });
