@@ -1,14 +1,8 @@
 /* @flow */
 'use strict';
 
-import type { EthereumTxRequest } from 'flowtype/trezor';
+import type { EthereumTxRequest, EthereumSignedTx } from 'flowtype/trezor';
 import type { MessageResponse, DefaultMessageResponse } from '../DeviceCommands';
-
-export type EthereumSignature = {
-  v: number,
-  r: string,
-  s: string,
-};
 
 const splitString = (str: ?string, len: number): [string, string] => {
     if (str == null) {
@@ -23,7 +17,7 @@ const processTxRequest = async (
     typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     request: EthereumTxRequest,
     data: ?string
-): Promise<EthereumSignature> => {
+): Promise<EthereumSignedTx> => {
     if (!request.data_length) {
         const v = request.signature_v;
         const r = request.signature_r;
@@ -64,7 +58,7 @@ export const ethereumSignTx = async (
     value: string,
     data?: string,
     chain_id?: number
-): Promise<EthereumSignature> => {
+): Promise<EthereumSignedTx> => {
     const length = data == null ? 0 : data.length / 2;
 
     const [first, rest] = splitString(data, 1024 * 2);

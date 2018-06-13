@@ -189,7 +189,7 @@ export default class DeviceCommands {
         value: string,
         data?: string,
         chain_id?: number
-    ): Promise<ethereumSignTxHelper.EthereumSignature> {
+    ): Promise<trezor.EthereumSignedTx> {
         return await ethereumSignTxHelper.ethereumSignTx(
             this.typedCall.bind(this),
             address_n,

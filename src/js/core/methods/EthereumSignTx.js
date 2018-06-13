@@ -4,8 +4,8 @@
 import AbstractMethod from './AbstractMethod';
 import { validatePath } from '../../utils/pathUtils';
 import type { MessageResponse } from '../../device/DeviceCommands';
-import type { EthereumSignature } from '../../device/helpers/ethereumSigntx';
 import type { CoreMessage } from 'flowtype';
+import type { EthereumSignedTx } from 'flowtype/trezor';
 
 type Params = {
     path: Array<number>;
@@ -99,8 +99,8 @@ export default class EthereumSignTx extends AbstractMethod {
         }
     }
 
-    async run(): Promise<Object> {
-        const response: EthereumSignature = await this.device.getCommands().ethereumSignTx(
+    async run(): Promise<EthereumSignedTx> {
+        const response: EthereumSignedTx = await this.device.getCommands().ethereumSignTx(
             this.params.path,
             this.params.nonce,
             this.params.gasPrice,
