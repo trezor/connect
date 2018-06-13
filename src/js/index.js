@@ -22,16 +22,15 @@ export default class Trezor {
         // to override
     }
 
+    static async customMessage(params: Object): Promise<Object> {
+        return await this.__call({
+            method: 'customMessage',
+            customFunction: encodeURI( params.customFunction.toString() )
+        });
+    }
+
     static async cipherKeyValue(params: Object): Promise<Object> {
         return await this.__call({ method: 'cipherKeyValue', ...params });
-    }
-
-    static async getPublicKey(params: Object): Promise<Object> {
-        return await this.__call({ method: 'getPublicKey', ...params });
-    }
-
-    static async getFeatures(params: Object): Promise<Object> {
-        return await this.__call({ method: 'getFeatures', ...params });
     }
 
     static async ethereumGetAddress(params: Object): Promise<Object> {
@@ -54,12 +53,12 @@ export default class Trezor {
         return await this.__call({ method: 'getDeviceState', ...params });
     }
 
+    static async getFeatures(params: Object): Promise<Object> {
+        return await this.__call({ method: 'getFeatures', ...params });
+    }
 
-    static async customMessage(params: Object): Promise<Object> {
-        return await this.__call({
-            method: 'customMessage',
-            customFunction: encodeURI( params.customFunction.toString() )
-        });
+    static async getPublicKey(params: Object): Promise<Object> {
+        return await this.__call({ method: 'getPublicKey', ...params });
     }
 
     static async nemGetAddress(params: Object): Promise<Object> {
@@ -83,15 +82,10 @@ export default class Trezor {
     }
 
     /*
-    static requestDevice(): void {
-        // to override
-    }
 
     static async requestLogin(params: Object): Promise<Object> {
         return await this.__call({ method: 'requestLogin', ...params });
     }
-
-
 
     static async composeTransaction(params: Object): Promise<Object> {
         return await this.__call({ method: 'composetx', ...params });
@@ -101,17 +95,8 @@ export default class Trezor {
         return await this.__call({ method: 'signtx', ...params });
     }
 
-
-
-
-
     static async accountComposeTransaction(params: Object): Promise<Object> {
         return await this.__call({ method: 'account-composetx', ...params });
-    }
-
-    // TODO
-    static async customCall(params: Object): Promise<Object> {
-        return await this.__call({ method: 'custom', ...params });
     }
     */
 
