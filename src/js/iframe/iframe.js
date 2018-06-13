@@ -34,7 +34,7 @@ let _popupMessagePort: ?MessagePort;
 // since iframe.html needs to send message via window.postMessage
 // we need to listen events from Core and convert it to simple objects possible to send over window.postMessage
 
-const handleMessage = (event: MessageEvent): void => {
+const handleMessage = (event: Message): void => {
     // ignore messages from myself (chrome bug?)
     if (event.source === window || !event.data) return;
     const data = event.data;
@@ -48,15 +48,20 @@ const handleMessage = (event: MessageEvent): void => {
     }
 
     // catch first message from connect.js (parent window)
-    if (!DataManager.getSettings('origin') && data.type === UI.IFRAME_HANDSHAKE && data.settings) {
-        init(data.settings, event.origin);
+    if (!DataManager.getSettings('origin') && data.type === UI.IFRAME_HANDSHAKE && data.payload) {
+        init(data.payload, event.origin);
         return;
     }
 
     // handle popup handshake event to get reference to popup MessagePort
-    if (data.type === POPUP.OPENED) {
+    if (data.type === POPUP.OPENED && event.origin === window.location.origin) {
         // $FlowIssue
         if (event.ports.length > 0) {
+            if (!_core) {
+                event.ports[0].postMessage(POPUP.CLOSE);
+                return;
+            }
+
             // $FlowIssue
             _popupMessagePort = event.ports[0];
             const method = _core.getCurrentMethod()[0];

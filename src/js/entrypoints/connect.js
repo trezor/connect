@@ -82,7 +82,7 @@ const initIframe = async (settings: Object): Promise<void> => {
 
         _iframe.contentWindow.postMessage({
             type: UI.IFRAME_HANDSHAKE,
-            settings: _settings,
+            payload: _settings,
         }, _iframeOrigin);
 
         _iframe.onload = undefined;
@@ -137,7 +137,7 @@ const postMessage = (message: any, usePromise: boolean = true): ?Promise<void> =
 };
 
 // handle message received from iframe
-const handleMessage = (messageEvent: MessageEvent): void => {
+const handleMessage = (messageEvent: Message): void => {
     // ignore messages from domain other then iframe origin
     if (messageEvent.origin !== _iframeOrigin) return;
 

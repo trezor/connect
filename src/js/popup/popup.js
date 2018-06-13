@@ -2,7 +2,7 @@
 'use strict';
 
 import { popupConsole } from '../utils/debug';
-import { parseMessage, UiMessage } from '../core/CoreMessage';
+import { parseMessage, UiMessage, ResponseMessage } from '../core/CoreMessage';
 import type { CoreMessage } from 'flowtype';
 import DataManager from '../data/DataManager';
 import { parse as parseSettings } from '../entrypoints/ConnectSettings';
@@ -28,6 +28,13 @@ const handleMessage = (event: Message): void => {
 
     const isMessagePort: boolean = event.target instanceof MessagePort;
 
+    if (isMessagePort && data === POPUP.CLOSE) {
+        if (window.opener) {
+            window.opener.postMessage( new ResponseMessage(0, false, "Popup couldn't establish connection with iframe."), '*');
+        }
+        window.close();
+        return;
+    }
     // catch first message from iframe.js and gain settings
     if (isMessagePort && !DataManager.getSettings('origin') && data.type === POPUP.HANDSHAKE && data.payload) {
         init(data.payload);

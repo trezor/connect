@@ -1,6 +1,7 @@
 /* @flow */
 'use strict';
 
+import { ResponseMessage } from '../../core/CoreMessage';
 import type { CoreMessage } from 'flowtype';
 import { getOrigin } from '../../utils/networkUtils';
 import DataManager from '../../data/DataManager';
@@ -34,11 +35,6 @@ export const init = (): void => {
                 // empty
             }
         }
-
-        // const originLabel: HTMLElement = header.getElementsByClassName('origin')[0];
-        // originLabel.innerHTML = DataManager.getSettings('origin');
-
-        // setOperation(window.name);
     }
 };
 
@@ -115,7 +111,7 @@ export const postMessage = (message: CoreMessage): void => {
         // iframe.postMessage(message, window.location.origin);
     } else {
         // TODO: post CoreMessage
-        window.opener.postMessage({ type: 'error', message: "Popup couldn't establish connection with iframe." }, '*');
+        window.opener.postMessage( new ResponseMessage(0, false, "Popup couldn't establish connection with iframe."), '*');
+        window.close();
     }
 };
-
