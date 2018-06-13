@@ -178,58 +178,18 @@ declare module 'trezor-connect' {
     declare type TransportEventListener = (type: T_TRANSPORT_EVENT, handler: (event: TransportMessage) => void) => void;
 
 
-    declare type ResponseUnsuccessful = {
-        success: false;
-        payload: {
-            error: string;
-        }
-    }
+    import type {
+        R_GetDeviceState,
+        R_GetFeatures,
+        R_GetPublicKey,
+        R_EthereumGetAddress,
+        R_EthereumSignTransaction,
+    } from 'trezor-connect/response';
 
-    declare type ResponseEthereumSignTransaction = {
-        success: true;
-        payload: {
-            r: string;
-            s: string;
-            v: string;
-        }
-    } | ResponseUnsuccessful;
-
-    declare type ResponseEthereumGetAddress = {
-        success: true;
-        payload: {
-            address: string,
-            path: Array <number>
-        }
-    } | ResponseUnsuccessful;
-
-    declare type ResponseGetDeviceState = {
-        success: true;
-        payload: {
-            state: string;
-        }
-    } | ResponseUnsuccessful;
-
-    declare type ResponseGetFeatures = {
-        success: true;
-        payload: {
-            // TODO
-        }
-    } | ResponseUnsuccessful;
-
-    declare type ResponseGetPublicKey = {
-        success: true;
-        payload: {
-            chainCode: string,
-            childNum: number,
-            depth: number,
-            fingerprint: number,
-            path: Array <number>,
-            publicKey: string,
-            xpub: string,
-            xpubFormatted: string
-        }
-    } | ResponseUnsuccessful;
-
+    import type {
+        P_EthereumGetAddress,
+        P_EthereumSignTransaction
+    } from 'trezor-connect/params';
 
     declare module.exports: {
         init: (options: Object) => Promise<Object>;
@@ -237,18 +197,25 @@ declare module 'trezor-connect' {
         off: (type: string, handler: (event: any) => void) => void;
         getVersion: () => any;
         renderWebUSBButton: (className?: string) => void;
-
-        getDeviceState: (options: Object) => Promise<ResponseGetDeviceState>;
-        getFeatures: (options: Object) => Promise<ResponseGetFeatures>;
-        getPublicKey: (options: Object) => Promise<ResponseGetPublicKey>;
-        ethereumGetAddress: (options: Object) => Promise<ResponseEthereumGetAddress>;
         uiResponse: (options: Object) => void;
 
-        ethereumSignTransaction: (options: Object) => Promise<ResponseEthereumSignTransaction>;
+        customMessage: (options: Object) => Promise<Object>;
+        cipherKeyValue: (options: Object) => Promise<Object>;
+        ethereumGetAddress: (options: P_EthereumGetAddress) => Promise<R_EthereumGetAddress>;
+        ethereumSignTransaction: (options: P_EthereumSignTransaction) => Promise<R_EthereumSignTransaction>;
+        ethereumSignMessage: (options: Object) => Promise<Object>;
+        ethereumVerifyMessage: (options: Object) => Promise<Object>;
+        getDeviceState: (options: Object) => Promise<R_GetDeviceState>;
+        getFeatures: (options: Object) => Promise<R_GetFeatures>;
+        getPublicKey: (options: Object) => Promise<R_GetPublicKey>;
+        nemGetAddress: (options: Object) => Promise<Object>;
+        nemSignTransaction: (options: Object) => Promise<Object>;
+        stellarGetAddress: (options: Object) => Promise<Object>;
+        stellarGetPublicKey: (options: Object) => Promise<Object>;
+        stellarSignTransaction: (options: Object) => Promise<Object>;
 
         DEVICE_EVENT: T_DEVICE_EVENT;
         DEVICE: T_DEVICE;
-
 
         UI_EVENT: T_UI_EVENT;
         UI: T_UI;

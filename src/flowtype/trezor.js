@@ -179,6 +179,12 @@ declare module 'flowtype/trezor' {
         path: Array<number>;
     }
 
+    declare export type EthereumSignedTx = {
+        v: number,
+        r: string,
+        s: string,
+    };
+
     declare export type Identity = {
         proto?: string,
         user?: string,
