@@ -47,9 +47,11 @@ npm:
 	cp README.md ./dist/README.md
 	cp COPYING ./dist/COPYING
 	mkdir -p ./dist/flowtype
-	cp ./src/flowtype/trezor-connect.js ./dist/flowtype/index.js
+	cp ./src/flowtype/trezor.js ./dist/flowtype/trezor.js
+	cp ./src/flowtype/trezor-connect.js ./dist/flowtype/trezor-connect.js
+	cp ./src/flowtype/trezor-connect-params.js ./dist/flowtype/trezor-connect-params.js
+	cp ./src/flowtype/trezor-connect-response.js ./dist/flowtype/trezor-connect-response.js
 	cd ./dist && npm publish
-
 
 protobuf:
 	sed 's/\(google\/protobuf\)/\.\/\1/' ./submodules/trezor-common/protob/messages.proto > ./submodules/trezor-common/protob/messages_fixed.proto
