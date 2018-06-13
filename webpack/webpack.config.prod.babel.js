@@ -65,10 +65,10 @@ module.exports = env => {
 
     if (env !== 'quick') {
         plugins.push(
-            new WebpackPreBuildPlugin(() => {
-                downloadDependencies();
-                compileInlineCss();
-            }),
+            // new WebpackPreBuildPlugin(() => {
+            //     downloadDependencies();
+            //     compileInlineCss();
+            // }),
             //bitcoinjs-lib: NOTE: When uglifying the javascript, you must exclude the following variable names from being mangled: Array, BigInteger, Boolean, ECPair, Function, Number, Point and Script. This is because of the function-name-duck-typing used in typeforce.
             new UglifyJsPlugin({
                 uglifyOptions: {
