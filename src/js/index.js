@@ -70,6 +70,18 @@ export default class Trezor {
         return await this.__call({ method: 'nemSignTransaction', ...params });
     }
 
+    static async stellarGetAddress(params: Object): Promise<Object> {
+        return await this.__call({ method: 'stellarGetAddress', ...params });
+    }
+
+    static async stellarGetPublicKey(params: Object): Promise<Object> {
+        return await this.__call({ method: 'stellarGetPublicKey', ...params });
+    }
+
+    static async stellarSignTransaction(params: Object): Promise<Object> {
+        return await this.__call({ method: 'stellarSignTx', ...params });
+    }
+
     /*
     static requestDevice(): void {
         // to override

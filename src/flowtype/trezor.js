@@ -361,5 +361,19 @@ declare module 'flowtype/trezor' {
         name: 'ImportanceTransfer_Deactivate'
     }
 
+    // Stellar types
+    declare export type StellarAddress = {
+        address: string;
+        path: Array<number>;
+    }
 
+    declare export type StellarPublicKey = {
+        public_key: string;
+        path: Array<number>;
+    }
+
+    declare export type StellarSignedTx = {
+        public_key: string;
+        signature: string;
+    }
 }

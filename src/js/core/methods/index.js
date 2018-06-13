@@ -15,6 +15,9 @@ import EthereumVerifyMessage from './EthereumVerifyMessage';
 import CustomMessage from './CustomMessage';
 import NEMGetAddress from './NEMGetAddress';
 import NEMSignTransaction from './NEMSignTransaction';
+import StellarGetPublicKey from './StellarGetPublicKey';
+import StellarGetAddress from './StellarGetAddress';
+import StellarSignTx from './StellarSignTx';
 
 const classes: {[k: string]: any} = {
     'getFeatures': GetFeatures,
@@ -28,6 +31,9 @@ const classes: {[k: string]: any} = {
     'customMessage': CustomMessage,
     'nemGetAddress': NEMGetAddress,
     'nemSignTransaction': NEMSignTransaction,
+    'stellarGetPublicKey': StellarGetPublicKey,
+    'stellarGetAddress': StellarGetAddress,
+    'stellarSignTx': StellarSignTx,
 }
 
 export const find = (message: CoreMessage): AbstractMethod => {
