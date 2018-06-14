@@ -19,6 +19,7 @@ submodules:
 build:
 	yarn
 	yarn run build
+	cp dist/js/trezor-connect.*.js dist/trezor-connect.js
 
 dist-%:
 	git fetch
@@ -26,10 +27,6 @@ dist-%:
 	git submodule update --init
 	make clean
 	make build
-	make .copy-$*
-
-.copy-%:
-	cp dist/js/trezor-connect.*.js dist/trezor-connect.js
 
 sync-%:
 	make .sync-$*
