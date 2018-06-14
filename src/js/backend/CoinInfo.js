@@ -67,6 +67,18 @@ export const cloneCoinInfo = (ci: CoinInfo): CoinInfo => {
     return JSON.parse(JSON.stringify(ci));
 };
 
+export const getSegwitNetwork = (coin: CoinInfo): ?BitcoinJsNetwork => {
+    if (coin.segwit && typeof coin.xPubMagicSegwit === 'number') {
+        return {
+            ...coin.network,
+            bip32: {
+                ...coin.network.bip32,
+                public: coin.xPubMagicSegwit
+            }
+        }
+    }
+    return null;
+};
 
 const detectBtcVersion = (data): string => {
     if (data.subversion == null) {
@@ -126,48 +138,6 @@ export const getCoinInfoFromPath = (path: Array<number>): ?CoinInfo => {
     return coinInfo;
 };
 
-export type AccountType = {
-    label: string,
-    legacy: boolean,
-    account: number,
-}
-
-export const getAccountLabelFromPath = (coinLabel: string, path: Array<number>, segwit: boolean): AccountType => {
-    // let hardened = (i) => path[i] & ~HD_HARDENED;
-    // return hardened(0) === 44 ? 'legacy' : 'segwit';
-    const p1: number = fromHardened(path[0]);
-    let label: string;
-    let account: number = fromHardened(path[2]);
-    let realAccountId: number = account + 1;
-    let legacy: boolean = false;
-    // Copay id
-    if (p1 === 45342) {
-        const p2: number = fromHardened(path[1]);
-        account = fromHardened(path[3]);
-        realAccountId = account + 1;
-        label = `Copay ID of account #${realAccountId}`;
-        if (p2 === 48) {
-            label = `Copay ID of multisig account #${realAccountId}`;
-        } else if (p2 === 44) {
-            label = `Copay ID of legacy account #${realAccountId}`;
-            legacy = true;
-        }
-    } else if (p1 === 48) {
-        label = `public key for multisig <strong>${coinLabel}</strong> account #${realAccountId}`;
-    } else if (p1 === 44 && segwit) {
-        label = `public key for legacy <strong>${coinLabel}</strong> account #${realAccountId}`;
-        legacy = true;
-    } else {
-        label = `public key for <strong>${coinLabel}</strong> account #${realAccountId}`;
-    }
-
-    return {
-        label: label,
-        account: account,
-        legacy: legacy,
-    };
-};
-
 export const getCoinName = (path: Array<number>): string => {
     for (const name of Object.keys(BIP_44)) {
         const number = parseInt(BIP_44[name]);
@@ -178,28 +148,15 @@ export const getCoinName = (path: Array<number>): string => {
     return 'Unknown coin';
 };
 
-export const getAccountType = (path: Array<number>): string => {
-    const hardened = (i) => path[i] & ~HD_HARDENED; // TODO: from utils
-    return hardened(0) === 44 ? 'legacy' : 'segwit';
-};
-
 export const parseCoinsJson = (json: JSON): void => {
     const coinsObject: Object = json;
     Object.keys(coinsObject).forEach(key => {
         const coin = coinsObject[key];
-        let networkPublic: number = coin.xpub_magic;
-        if (typeof coin.xpub_magic_segwit_p2sh === 'string' && coin.segwit) {
-            networkPublic = coin.xpub_magic_segwit_p2sh;
-        }
-
         const network: BitcoinJsNetwork = {
             messagePrefix: coin.signed_message_header,
-            // messagePrefix: 'N/A',
             bip32: {
-                public: networkPublic,
+                public: coin.xpub_magic,
                 private: coin.xprv_magic,
-                //public: parseInt(networkPublic, 16),
-
             },
             pubKeyHash: coin.address_type,
             scriptHash: coin.address_type_p2sh,
@@ -219,17 +176,17 @@ export const parseCoinsJson = (json: JSON): void => {
             // bech32_prefix in Network
             bitcore: coin.bitcore,
             blockbook: coin.blockbook,
-            blocktime: coin.blocktime_seconds,
+            blocktime: Math.round(coin.blocktime_seconds / 60),
             cashAddrPrefix: coin.cashaddr_prefix,
             label: coin.coin_label,
             name: coin.coin_name,
-            shortcut: coin.coin_shortcut,
+            shortcut,
             curveName: coin.curve_name,
             decred: coin.decred,
             defaultFees: coin.default_fee_b,
             dustLimit: coin.dust_limit,
             forceBip143: coin.force_bip143,
-            forkid: coin.forkid,
+            forkid: coin.fork_id,
             // github not used
             hashGenesisBlock: coin.hash_genesis_block,
             // maintainer not used

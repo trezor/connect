@@ -78,7 +78,7 @@ export const discover = async (options: DiscoveryOptions): Promise<Array<Account
         // check if not interrupted
         if (comm.isDisposed() || interrupted) return accounts;
 
-        const path: Array<number> = getPathFromIndex(coinInfo.segwit ? 49 : 44, coinInfo.bip44, index);
+        const path: Array<number> = getPathFromIndex(coinInfo.segwit ? 49 : 44, coinInfo.slip44, index);
         const node: HDNodeResponse = await comm.getHDNode(path, coinInfo);
         const account: Account = new Account(index, path, node.xpub, backend, coinInfo);
 
@@ -105,7 +105,7 @@ export const discover = async (options: DiscoveryOptions): Promise<Array<Account
             // discovered account is fresh
             if (coinInfo.segwit && discoverLegacyAccounts) {
                 coinInfo.segwit = false;
-                coinInfo.network.bip32.public = parseInt(coinInfo.legacyPubMagic, 16); // TODO: this changes permanently TO FIX!!!!, make CoiniInfo read only array
+                coinInfo.network.bip32.public = parseInt(coinInfo.xPubMagic, 16); // TODO: this changes permanently TO FIX!!!!, make CoiniInfo read only array
                 return loop(0);
             } else {
                 options.onComplete(accounts);
