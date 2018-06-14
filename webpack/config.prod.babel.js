@@ -13,6 +13,7 @@ import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 
 module.exports = {
     mode: 'production',
@@ -54,7 +55,7 @@ module.exports = {
                 loader: 'file-loader?name=./images/[name].[ext]',
                 query: {
                     outputPath: './images',
-                    name: '[name].[ext]',
+                    name: '[name].[hash].[ext]',
                 }
             },
             {
@@ -62,7 +63,7 @@ module.exports = {
                 loader: 'file-loader',
                 query: {
                     outputPath: './fonts',
-                    name: '[name].[ext]',
+                    name: '[name].[hash].[ext]',
                 },
             },
             {
@@ -79,7 +80,7 @@ module.exports = {
                 loader: 'file-loader',
                 query: {
                     outputPath: './data',
-                    name: '[name].[ext]',
+                    name: '[name].[hash].[ext]',
                 },
             },
         ]
@@ -95,7 +96,7 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: 'css/[name].css',
+            filename: 'css/[name].[hash].css',
             chunkFilename: '[id].css',
         }),
 
@@ -128,15 +129,37 @@ module.exports = {
             { from: `${DATA_SRC}latest.txt`, to: `${DIST}data/latest.txt` },
             { from: `${DATA_SRC}releases-1.json`, to: `${DIST}data/releases-1.json` },
             { from: `${DATA_SRC}releases-2.json`, to: `${DIST}data/releases-2.json` },
-            { from: `${SRC}images`, to: 'images' },
+            //{ from: `${SRC}images`, to: 'images' },
         ]),
-
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.NamedModulesPlugin(),
 
         // ignore Node.js lib from trezor-link
         new webpack.IgnorePlugin(/\/iconv-loader$/),
     ],
+
+    // bitcoinjs-lib NOTE:
+    // When uglifying the javascript, you must exclude the following variable names from being mangled:
+    // Array, BigInteger, Boolean, ECPair, Function, Number, Point and Script.
+    // This is because of the function-name-duck-typing used in typeforce.
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                parallel: true,
+                uglifyOptions: {
+                    compress: {
+                        warnings: false,
+                    },
+                    mangle: {
+                        reserved: [
+                            'Array', 'BigInteger', 'Boolean', 'Buffer',
+                            'ECPair', 'Function', 'Number', 'Point', 'Script',
+                        ],
+                    }
+                }
+            })
+        ]
+    },
+
+
 
     // ignoring Node.js import in fastxpub (hd-wallet)
     node: {
