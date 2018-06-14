@@ -9,10 +9,13 @@ import * as UI from '../../js/constants/ui';
 
 import { getPublicKeyTests } from './getPublicKey.spec.js';
 import { ethereumGetAddressTests } from './ethereumGetAddress.spec.js';
+import { ethereumSignMessageTests } from './ethereumSignMessage.spec.js';
 
+// todo: generate this object automatically
 const testFunctions = {
     getPublicKey: getPublicKeyTests,
     ethereumGetAddress: ethereumGetAddressTests,
+    ethereumSignMessage: ethereumSignMessageTests,
 };
 
 const testToRun = __karma__.config.test;
