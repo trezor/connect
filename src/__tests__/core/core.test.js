@@ -12,6 +12,7 @@ import { ethereumGetAddressTests } from './ethereumGetAddress.spec.js';
 
 const testFunctions = {
     getPublicKey: getPublicKeyTests,
+    ethereumGetAddress: ethereumGetAddressTests,
 };
 
 const testToRun = __karma__.config.test;
