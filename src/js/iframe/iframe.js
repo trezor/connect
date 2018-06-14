@@ -48,7 +48,7 @@ const handleMessage = (event: Message): void => {
     }
 
     // catch first message from connect.js (parent window)
-    if (!DataManager.getSettings('origin') && data.type === UI.IFRAME_HANDSHAKE && data.payload) {
+    if (!DataManager.getSettings('origin') && data.type === UI.IFRAME_HANDSHAKE) {
         init(data.payload, event.origin);
         return;
     }
