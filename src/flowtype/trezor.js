@@ -210,7 +210,7 @@ declare module 'flowtype/trezor' {
         path: Array<number>,
         childNum: number,
         xpub: string,
-        xpubFormatted: string,
+        xpubLegacy: string,
         chainCode: string,
         publicKey: string,
         fingerprint: number,
