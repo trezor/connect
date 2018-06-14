@@ -2,13 +2,12 @@ import fs from 'fs';
 import less from 'less';
 import LessPluginAutoPrefix from 'less-plugin-autoprefix';
 import LessPluginCleanCSS from 'less-plugin-clean-css';
-import { argv } from 'yargs';
 import { STYLE_SRC, INLINE_STYLESHEET } from './constants';
 
 export default function compile() {
 
     const file = STYLE_SRC + "iframe/index.less";
-    console.log("READDD", file)
+    console.log("Read less file:", file)
 
     fs.readFile(file, {encoding: 'utf8'}, function(err, data) {
         if(err) throw err;

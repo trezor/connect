@@ -1,14 +1,7 @@
 // https://raw.githubusercontent.com/zyml/es6-karma-jasmine-webpack-boilerplate/master/karma.config.js
 
 import path from 'path';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import webpack from 'webpack';
-import { SRC, NODE_MODULES } from './webpack/constants';
-
-const extractLess = new ExtractTextPlugin({
-    filename: './[name].css'
-});
+import webpackConfig from './webpack/config.karma.babel';
 
 module.exports = function(config) {
     config.set({
@@ -112,55 +105,7 @@ module.exports = function(config) {
         hostname: 'localhost',
         port: 8099,
 
-        webpack: {
-            cache: true,
-            devtool: 'inline-source-map',
-            module: {
-                loaders: [
-                    {
-                        test: /\.(js|jsx)$/,
-                        exclude: /(node_modules)/,
-                        use: {
-                            loader: 'babel-loader',
-                            options: {
-
-                            }
-                        }
-                    },
-                    {
-                        test: /\.less$/,
-                        exclude: /node_modules/,
-                        loader: extractLess.extract({
-                            use: [
-                                { loader: 'css-loader' },
-                                { loader: 'less-loader' }
-                            ],
-                            fallback: 'style-loader'
-                        })
-                    },
-                    {
-                        test: /\.(ttf|eot|svg|woff|woff2)$/,
-                        loader: 'file-loader',
-                        query: {
-                            name: './fonts/[name].[hash].[ext]',
-                        },
-                    },
-                ]
-            },
-            plugins: [
-                extractLess,
-                new webpack.IgnorePlugin(/\/iconv-loader$/),
-            ],
-            resolve: {
-                modules: ['./src/js', './node_modules'],
-                alias: {
-                    'flowtype/trezor': `${ SRC }/flowtype/empty.js`,
-                }
-            },
-            node: {
-                fs: "empty"
-            }
-        },
+        webpack: webpackConfig
 
     })
 }
