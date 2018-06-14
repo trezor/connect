@@ -8,32 +8,50 @@ import type {
     Network as BitcoinJsNetwork,
 } from 'bitcoinjs-lib-zcash';
 
+type Support = {
+    connect: boolean,
+    // "electrum": "https://electrum.org/",
+    trezor1: string,
+    trezor2: string,
+    // "webwallet": true
+}
+
 export type CoinInfo = {
+    addressPrefix: string,
+    // address_type in Network
+    // address_type_p2sh in Network
+    bitcore: Array<string>,
+    blockbook: Array<string>,
+    blocktime: number,
+    cashAddrPrefix: ?string,
+    label: string,
     name: string,
     shortcut: string,
-    label: string,
-    network: BitcoinJsNetwork,
+    curveName: string,
+    decred: boolean,
+    defaultFees: {[level: string]: number},
+    dustLimit: number,
+    forceBip143: boolean,
+    forkid: ?number,
     hashGenesisBlock: string,
-    bip44: number,
+    maxAddressLength: number,
+    maxFeeSatoshiKb: number,
+    minAddressLength: number,
+    minFeeSatoshiKb: number,
     segwit: boolean,
-    legacyPubMagic: string,
-    segwitPubMagic: ?string,
-    hasSegwit: boolean,
+    slip44: number,
+    support: Support,
+    xPubMagic: string,
+    xPubMagicSegwit: ?string,
+    xPubMagicSegwitNative: ?string,
+
+    network: BitcoinJsNetwork,
     zcash: boolean,
     isBitcoin: boolean,
-    forkid: ?number,
-    defaultFees: {[level: string]: number},
+    hasSegwit: boolean,
     minFee: number,
     maxFee: number,
-    dustLimit: number,
-    minFeeSatoshiKb: number,
-    maxFeeSatoshiKb: number,
     blocktime: number,
-    bitcore: Array<string>,
-    addressPrefix: string,
-    minAddressLength: number,
-    maxAddressLength: number,
-
     // used in backend
     blocks?: number,
 };
@@ -49,53 +67,6 @@ export const cloneCoinInfo = (ci: CoinInfo): CoinInfo => {
     return JSON.parse(JSON.stringify(ci));
 };
 
-export const generateCoinInfo = (coinName: string): CoinInfo => {
-    switch (coinName) {
-        case 'Ether' :
-            coinName = 'Ethereum';
-            break;
-        case 'Ether Classic' :
-            coinName = 'Ethereum Classic';
-            break;
-    }
-
-    return {
-        name: coinName,
-        shortcut: 'N/A',
-        label: coinName,
-        network: {
-            messagePrefix: 'N/A',
-            bip32: {
-                private: 0,
-                public: 0,
-            },
-            pubKeyHash: 0,
-            scriptHash: 0,
-            wif: 0x80, // doesn't matter, for type correctness
-            dustThreshold: 0, // doesn't matter, for type correctness
-        },
-        hashGenesisBlock: 'N/A',
-        bip44: 149,
-        segwit: false,
-        legacyPubMagic: 'N/A',
-        segwitPubMagic: null,
-        hasSegwit: false,
-        zcash: false,
-        isBitcoin: false,
-        forkid: null,
-        defaultFees: { },
-        minFee: 0,
-        maxFee: 0,
-        dustLimit: 0,
-        minFeeSatoshiKb: 0,
-        maxFeeSatoshiKb: 0,
-        blocktime: 0,
-        bitcore: [],
-        addressPrefix: 'N/A',
-        minAddressLength: 0,
-        maxAddressLength: 0,
-    };
-};
 
 const detectBtcVersion = (data): string => {
     if (data.subversion == null) {
@@ -145,9 +116,9 @@ export const getCoinInfoByCurrency = (currency: string): CoinInfo => {
 };
 
 export const getCoinInfoFromPath = (path: Array<number>): ?CoinInfo => {
-    const coinInfo: ?CoinInfo = getCoins().find((coin: CoinInfo) => toHardened(coin.bip44) === path[1]);
+    const coinInfo: ?CoinInfo = getCoins().find((coin: CoinInfo) => toHardened(coin.slip44) === path[1]);
     if (coinInfo && fromHardened(path[0]) === 44) {
-        coinInfo.network.bip32.public = parseInt(coinInfo.legacyPubMagic, 16);
+        coinInfo.network.bip32.public = parseInt(coinInfo.xPubMagic, 16);
     }
     if (!coinInfo) {
         return cloneCoinInfo(coins[0]);
@@ -216,7 +187,7 @@ export const parseCoinsJson = (json: JSON): void => {
     const coinsObject: Object = json;
     Object.keys(coinsObject).forEach(key => {
         const coin = coinsObject[key];
-        let networkPublic: string = coin.xpub_magic;
+        let networkPublic: number = coin.xpub_magic;
         if (typeof coin.xpub_magic_segwit_p2sh === 'string' && coin.segwit) {
             networkPublic = coin.xpub_magic_segwit_p2sh;
         }
@@ -225,13 +196,16 @@ export const parseCoinsJson = (json: JSON): void => {
             messagePrefix: coin.signed_message_header,
             // messagePrefix: 'N/A',
             bip32: {
-                private: parseInt(coin.xprv_magic, 16),
-                public: parseInt(networkPublic, 16),
+                public: networkPublic,
+                private: coin.xprv_magic,
+                //public: parseInt(networkPublic, 16),
+
             },
             pubKeyHash: coin.address_type,
             scriptHash: coin.address_type_p2sh,
             wif: 0x80, // doesn't matter, for type correctness
-            dustThreshold: 0, // doesn't matter, for type correctness
+            dustThreshold: 0, // doesn't matter, for type correctness,
+            bech32: coin.bech32_prefix,
         };
 
         const zcash = coin.coin_name.startsWith('Zcash');
@@ -239,30 +213,48 @@ export const parseCoinsJson = (json: JSON): void => {
         const isBitcoin = shortcut === 'BTC' || shortcut === 'TEST';
 
         coins.push({
+            addressPrefix: coin.address_prefix,
+            // address_type in Network
+            // address_type_p2sh in Network
+            // bech32_prefix in Network
+            bitcore: coin.bitcore,
+            blockbook: coin.blockbook,
+            blocktime: coin.blocktime_seconds,
+            cashAddrPrefix: coin.cashaddr_prefix,
+            label: coin.coin_label,
             name: coin.coin_name,
             shortcut: coin.coin_shortcut,
-            label: coin.coin_label,
-            network,
+            curveName: coin.curve_name,
+            decred: coin.decred,
+            defaultFees: coin.default_fee_b,
+            dustLimit: coin.dust_limit,
+            forceBip143: coin.force_bip143,
+            forkid: coin.forkid,
+            // github not used
             hashGenesisBlock: coin.hash_genesis_block,
-            bip44: coin.bip44,
+            // maintainer not used
+            maxAddressLength: coin.max_address_length,
+            maxFeeSatoshiKb: coin.maxfee_kb,
+            minAddressLength: coin.min_address_length,
+            minFeeSatoshiKb: coin.minfee_kb,
             segwit: coin.segwit,
-            legacyPubMagic: coin.xpub_magic,
-            segwitPubMagic: coin.xpub_magic_segwit_p2sh || null,
-            hasSegwit: coin.segwit,
+            // signed_message_header in Network
+            slip44: coin.slip44,
+            support: coin.support,
+            // version_group_id not used
+            // website not used
+            // xprv_magic in Network
+            xPubMagic: coin.xpub_magic,
+            xPubMagicSegwit: coin.xpub_magic_segwit_p2sh,
+            xPubMagicSegwitNative: coin.xpub_magic_segwit_native,
+
+            // custom
+            network,
             zcash,
             isBitcoin,
-            forkid: coin.forkid,
-            defaultFees: coin.default_fee_b,
-            minFee: Math.round(coin.minfee_kb / 1000),
+            hasSegwit: coin.segwit,
             maxFee: Math.round(coin.maxfee_kb / 1000),
-            dustLimit: coin.dust_limit,
-            maxFeeSatoshiKb: coin.maxfee_kb,
-            minFeeSatoshiKb: coin.minfee_kb,
-            blocktime: coin.blocktime_minutes,
-            bitcore: coin.bitcore,
-            addressPrefix: coin.address_prefix,
-            minAddressLength: coin.min_address_length,
-            maxAddressLength: coin.max_address_length,
+            minFee: Math.round(coin.minfee_kb / 1000),
         });
     });
 };
