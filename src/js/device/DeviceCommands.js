@@ -6,11 +6,11 @@ import * as ERROR from '../constants/errors';
 import randombytes from 'randombytes';
 
 
-import { getHDPath } from '../utils/pathUtils';
+import { getHDPath, isSegwitPath } from '../utils/pathUtils';
 import Device from './Device';
 import DataManager from '../data/DataManager';
 
-import { getCoinInfoByCurrency } from '../backend/CoinInfo';
+import { getCoinInfoByCurrency, getSegwitNetwork } from '../backend/CoinInfo';
 import type { CoinInfo } from '../backend/CoinInfo';
 
 import * as bitcoin from 'bitcoinjs-lib-zcash';
@@ -107,7 +107,6 @@ export default class DeviceCommands {
             address = getHDPath(address);
         }
 
-        // coinName(coin)
         return await this.typedCall('SignMessage', 'MessageSignature', {
             address_n: address,
             message: message,
@@ -121,7 +120,7 @@ export default class DeviceCommands {
     ): Promise<MessageResponse<trezor.PublicKey>> {
         const response: MessageResponse<trezor.PublicKey> = await this.typedCall('GetPublicKey', 'PublicKey', {
             address_n: address_n,
-            coin_name: coin,
+            coin_name: coin || 'Bitcoin',
         });
         return response;
     }
@@ -137,26 +136,28 @@ export default class DeviceCommands {
         // To keep it backward compatible** this keys are exported in BTC format
         // and converted to proper format in hdnodeUtils
         // **  old firmware didn't return keys with proper prefix (xpub, Ltub.. and so on)
-        const resKey: MessageResponse<trezor.PublicKey> = await this.getPublicKey(path, 'Bitcoin');
-        const childKey: MessageResponse<trezor.PublicKey> = await this.getPublicKey(childPath, 'Bitcoin');
+        const resKey: MessageResponse<trezor.PublicKey> = await this.getPublicKey(path);
+        const childKey: MessageResponse<trezor.PublicKey> = await this.getPublicKey(childPath);
+        const publicKey: trezor.PublicKey = hdnodeUtils.xpubDerive(resKey.message, childKey.message, suffix);
 
-        const resNode: bitcoin.HDNode = hdnodeUtils.pubKey2bjsNode(resKey.message, coinInfo.network);
-        const childNode: bitcoin.HDNode = hdnodeUtils.pubKey2bjsNode(childKey.message, coinInfo.network);
-
-        hdnodeUtils.checkDerivation(resNode, childNode, suffix);
-
-        const publicKey: trezor.PublicKey = resKey.message;
-
-        return {
+        const response: trezor.HDNodeResponse = {
             path,
             childNum: publicKey.node.child_num,
-            xpub: publicKey.xpub,
-            xpubFormatted: hdnodeUtils.convertXpub(publicKey.xpub, coinInfo.network),
+            xpub: hdnodeUtils.convertXpub(publicKey.xpub, coinInfo.network),
             chainCode: publicKey.node.chain_code,
             publicKey: publicKey.node.public_key,
             fingerprint: publicKey.node.fingerprint,
             depth: publicKey.node.depth,
         }
+
+        // if requested path is a segwit
+        // convert xpub to new format
+        const segwitNetwork = getSegwitNetwork(coinInfo);
+        if (segwitNetwork && isSegwitPath(path)) {
+            response.xpubSegwit = hdnodeUtils.convertXpub(publicKey.xpub, segwitNetwork)
+        }
+
+        return response;
     }
 
     async getDeviceState(): Promise<string> {

@@ -27,6 +27,10 @@ export const getHDPath = (path: string): Array<number> => {
         });
 };
 
+export const isSegwitPath = (path: Array<number>): boolean => {
+    return path[0] === toHardened(49);
+}
+
 export const validatePath = (path: string | Array<number>): Array<number> => {
     let valid: ?Array<number>;
     if (typeof path === 'string') {
@@ -81,3 +85,45 @@ export function getIndexFromPath(path: Array<number>) {
     return ((path[2] & ~HD_HARDENED) >>> 0);
 }
 
+
+export type AccountType = {
+    label: string,
+    legacy: boolean,
+    account: number,
+}
+
+export const getAccountLabelFromPath = (coinLabel: string, path: Array<number>, segwit: boolean): AccountType => {
+    // let hardened = (i) => path[i] & ~HD_HARDENED;
+    // return hardened(0) === 44 ? 'legacy' : 'segwit';
+    const p1: number = fromHardened(path[0]);
+    let label: string;
+    let account: number = fromHardened(path[2]);
+    let realAccountId: number = account + 1;
+    let legacy: boolean = false;
+    // Copay id
+    if (p1 === 45342) {
+        const p2: number = fromHardened(path[1]);
+        account = fromHardened(path[3]);
+        realAccountId = account + 1;
+        label = `Copay ID of account #${realAccountId}`;
+        if (p2 === 48) {
+            label = `Copay ID of multisig account #${realAccountId}`;
+        } else if (p2 === 44) {
+            label = `Copay ID of legacy account #${realAccountId}`;
+            legacy = true;
+        }
+    } else if (p1 === 48) {
+        label = `public key for multisig <strong>${coinLabel}</strong> account #${realAccountId}`;
+    } else if (p1 === 44 && segwit) {
+        label = `public key for legacy <strong>${coinLabel}</strong> account #${realAccountId}`;
+        legacy = true;
+    } else {
+        label = `public key for <strong>${coinLabel}</strong> account #${realAccountId}`;
+    }
+
+    return {
+        label: label,
+        account: account,
+        legacy: legacy,
+    };
+};

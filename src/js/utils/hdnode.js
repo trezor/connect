@@ -93,3 +93,14 @@ export function checkDerivation(
                     'Computed received: ' + compXpub);
     }
 }
+
+
+export const xpubDerive = (resXpub: trezor.PublicKey, childXPub: trezor.PublicKey, suffix: number): trezor.PublicKey => {
+
+    const resNode: bitcoin.HDNode = pubKey2bjsNode(resXpub, bitcoin.networks.bitcoin);
+    const childNode: bitcoin.HDNode = pubKey2bjsNode(childXPub, bitcoin.networks.bitcoin);
+
+    checkDerivation(resNode, childNode, suffix);
+
+    return resXpub;
+}
