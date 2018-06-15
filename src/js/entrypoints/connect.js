@@ -156,6 +156,8 @@ const handleMessage = (messageEvent: Message): void => {
         case RESPONSE_EVENT :
             if (_messagePromises[id]) {
                 // _messagePromises[id].resolve(data);
+                delete message.type;
+                delete message.event;
                 _messagePromises[id].resolve(message);
                 delete _messagePromises[id];
             } else {
