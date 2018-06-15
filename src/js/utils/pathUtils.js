@@ -107,40 +107,30 @@ export const getAccountLabelFromPath = (path: Array<number>, coin: ?CoinInfo | ?
             coinLabel = coin;
         }
     }
-    // let hardened = (i) => path[i] & ~HD_HARDENED;
-    // return hardened(0) === 44 ? 'legacy' : 'segwit';
+
     const p1: number = fromHardened(path[0]);
-    let label: string;
     let account: number = fromHardened(path[2]);
     let realAccountId: number = account + 1;
-    let legacy: boolean = false;
+    let prefix: string = 'Export public key of';
+    let accountType: string = '';
+
     // Copay id
     if (p1 === 45342) {
         const p2: number = fromHardened(path[1]);
         account = fromHardened(path[3]);
         realAccountId = account + 1;
-        label = 'Export Copay ID of';
+        prefix = 'Export Copay ID of';
         if (p2 === 48) {
-            label = ' multisig';
+            accountType = 'multisig';
         } else if (p2 === 44) {
-            label = ' legacy';
-            legacy = true;
+            accountType = 'legacy';
         }
-        label += ` account #${realAccountId}`;
     } else if (p1 === 48) {
-        label = `Export public key for multisig ${coinLabel} account #${realAccountId}`;
+        accountType = `multisig ${coinLabel}`;
     } else if (p1 === 44 && hasSegwit) {
-        label = `Export public key for legacy ${coinLabel} account #${realAccountId}`;
-        legacy = true;
+        accountType = `legacy ${coinLabel}`;
     } else {
-        label = `Export public key of ${coinLabel} account #${realAccountId}`;
+        accountType = coinLabel;
     }
-
-    return label;
-
-    // return {
-    //     label: label,
-    //     account: account,
-    //     legacy: legacy,
-    // };
+    return `${ prefix } ${ accountType } <span>account #${realAccountId}</span>`;
 };
