@@ -32,6 +32,7 @@ export default class NEMGetAddress extends AbstractMethod {
         this.requiredPermissions = ['read'];
         this.requiredFirmware = '1.6.0';
         this.useDevice = true;
+        this.useUi = true;
         this.info = 'Export NEM address';
 
         const payload: any = message.payload;
@@ -60,7 +61,7 @@ export default class NEMGetAddress extends AbstractMethod {
             }
         }
 
-        this.useUi = showOnTrezor;
+
 
         this.params = {
             path: payload.path,
