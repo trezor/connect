@@ -1,3 +1,11 @@
+# 5.0.16
+__added__
+- Added `TrezorConnect.stellarSignTransaction`
+__changed__
+- Changed `TrezorConnect.ethereumSignTransaction` parameters
+__removed__
+- Removed type and event fields from RESPONSE
+
 # 5.0.15
 __fixed__
 - Library exports
