@@ -6,7 +6,7 @@ import DeviceCommands from '../device/DeviceCommands';
 import BitcoreBackend, { create as createBackend } from '../backend/BitcoreBackend';
 import Account from './Account';
 import { getPathFromIndex } from '../utils/pathUtils';
-import type { CoinInfo } from '../backend/CoinInfo';
+import type { CoinInfo } from 'flowtype';
 import { HDNode } from 'bitcoinjs-lib-zcash';
 import type { HDNodeResponse } from 'flowtype/trezor';
 

@@ -7,7 +7,7 @@ import type { MessageResponse, DefaultMessageResponse } from '../DeviceCommands'
 import type { Input, Output } from '../../tx/TransactionComposer';
 
 import type { BuildTxResult } from 'hd-wallet';
-import type { CoinInfo } from '../../backend/CoinInfo';
+import type { CoinInfo } from 'flowtype';
 
 import { reverseBuffer } from '../../utils/bufferUtils';
 import { derivePubKeyHash } from '../../utils/hdnode';

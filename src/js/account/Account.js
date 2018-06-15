@@ -7,7 +7,7 @@ import type {
 } from 'hd-wallet';
 
 import BitcoreBackend from '../backend/BitcoreBackend';
-import type { CoinInfo } from '../backend/CoinInfo';
+import type { CoinInfo } from 'flowtype';
 
 export default class Account {
     // Account variables

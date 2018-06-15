@@ -15,7 +15,7 @@ import {
 } from 'bitcoinjs-lib-zcash';
 
 import Account from '../account/Account';
-import type { CoinInfo } from '../backend/CoinInfo';
+import type { CoinInfo } from 'flowtype';
 
 import { init as initFees, feeLevels, getActualFee, getBlocks } from './fees/index';
 import type { CustomFeeLevel, FeeLevel } from './fees/index';

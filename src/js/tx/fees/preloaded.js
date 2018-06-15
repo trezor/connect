@@ -3,7 +3,7 @@
 
 import type { FeeLevel, FeeLevelInfo, FeeHandler } from './index';
 import BitcoreBackend from '../../backend/BitcoreBackend';
-import type { CoinInfo } from '../../backend/CoinInfo';
+import type { CoinInfo } from 'flowtype';
 
 export type PreloadedFeeLevelInfo = {
     +type: 'preloaded',
