@@ -26,7 +26,7 @@
     "build": "rm -rf dist && webpack --config ./webpack/config.prod.babel.js --progress",
     "build:npm": "rm -rf npm && babel-node ./tools/build.js && babel ./npm/lib --out-dir ./npm/lib",
     "stats": "webpack --config ./webpack/config.prod.babel.js --json > dist/stats.json",
-    "test": "babel-node ./node_modules/karma/bin/karma start karma.conf.js",
+    "test": "sh ./src/__tests__/run.sh",
     "flow": "flow check src/js",
     "eslint": "eslint src/js",
     "eslint-fix": "eslint --fix src/js",
