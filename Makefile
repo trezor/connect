@@ -43,6 +43,7 @@ npm:
 	cp ./package.npm.connect.json ./dist/package.json
 	cp README.md ./dist/README.md
 	cp COPYING ./dist/COPYING
+	cp CHANGELOG.md ./dist/CHANGELOG.md
 	mkdir -p ./dist/flowtype
 	cp ./src/flowtype/trezor.js ./dist/flowtype/trezor.js
 	cp ./src/flowtype/trezor-connect.js ./dist/flowtype/trezor-connect.js
