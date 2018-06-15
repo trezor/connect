@@ -2,7 +2,7 @@
 'use strict';
 
 import type { EthereumTxRequest, EthereumSignedTx } from 'flowtype/trezor';
-import type { MessageResponse, DefaultMessageResponse } from '../DeviceCommands';
+import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
 
 const splitString = (str: ?string, len: number): [string, string] => {
     if (str == null) {
@@ -48,14 +48,13 @@ function stripLeadingZeroes(str: string) {
     return str;
 }
 
-export const ethereumSignTx = async (
-    typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
+export const ethereumSignTx = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     address_n: Array<number>,
-    nonce: string,
-    gas_price: string,
-    gas_limit: string,
     to: string,
     value: string,
+    gas_limit: string,
+    gas_price: string,
+    nonce: string,
     data?: string,
     chain_id?: number
 ): Promise<EthereumSignedTx> => {
@@ -88,9 +87,6 @@ export const ethereumSignTx = async (
     }
 
     const response: DefaultMessageResponse = await typedCall('EthereumSignTx', 'EthereumTxRequest', message);
-    // return session.typedCall('EthereumSignTx', 'EthereumTxRequest', message).then((res) =>
-    //     processTxRequest(session, res.message, rest)
-    // );
 
     return await processTxRequest(
         typedCall,

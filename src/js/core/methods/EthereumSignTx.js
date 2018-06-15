@@ -3,19 +3,15 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validatePath } from '../../utils/pathUtils';
+import * as helper from './helpers/ethereumSignTx';
 import type { MessageResponse } from '../../device/DeviceCommands';
 import type { CoreMessage } from 'flowtype';
 import type { EthereumSignedTx } from 'flowtype/trezor';
+import type { Transaction as EthereumTransaction } from 'flowtype/Ethereum';
 
 type Params = {
     path: Array<number>;
-    nonce: string;
-    gasPrice: string;
-    gasLimit: string;
-    to: string;
-    value: string;
-    data: string;
-    chainId: number;
+    transaction: EthereumTransaction;
 }
 
 export default class EthereumSignTx extends AbstractMethod {
@@ -39,77 +35,108 @@ export default class EthereumSignTx extends AbstractMethod {
             payload.path = validatePath(payload.path);
         }
 
-        if (!payload.hasOwnProperty('nonce')) {
-            throw new Error('Parameter "nonce" is missing');
+        // incoming transaction should be in EthereumTx format
+        // https://github.com/ethereumjs/ethereumjs-tx
+
+        const tx: ?EthereumTransaction = payload.transaction;
+        if (!tx) {
+            throw new Error('Parameter "transaction" is missing');
         } else {
-            if (typeof payload.nonce !== 'string') {
-                throw new Error('Parameter "nonce" has invalid type. String expected.');
+
+            if (!tx.hasOwnProperty('to')) {
+                throw new Error('Parameter "transaction.to" is missing');
+            } else if (typeof tx.to !== 'string') {
+                throw new Error('Parameter "transaction.to" has invalid type. String expected.');
+            }
+
+            if (!tx.hasOwnProperty('value')) {
+                throw new Error('Parameter "transaction.value" is missing');
+            } else if (typeof tx.value !== 'string') {
+                throw new Error('Parameter "transaction.value" has invalid type. Hexadecimal string expected.');
+            }
+
+            if (!tx.hasOwnProperty('gasLimit')) {
+                throw new Error('Parameter "transaction.gasLimit" is missing');
+            } else if (typeof tx.gasLimit !== 'string') {
+                throw new Error('Parameter "transaction.gasLimit" has invalid type. String expected.');
+            }
+
+            if (!tx.hasOwnProperty('gasPrice')) {
+                throw new Error('Parameter "transaction.gasPrice" is missing');
+            } else if (typeof tx.gasPrice !== 'string') {
+                throw new Error('Parameter "transaction.gasPrice" has invalid type. String expected.');
+            }
+
+            if (!tx.hasOwnProperty('nonce')) {
+                throw new Error('Parameter "transaction.nonce" is missing');
+            } else if (typeof tx.nonce !== 'string') {
+                throw new Error('Parameter "transaction.nonce" has invalid type. String expected.');
+            }
+
+            if (tx.hasOwnProperty('data') && typeof tx.data !== 'string') {
+                throw new Error('Parameter "transaction.data" has invalid type. String expected.');
+            }
+
+            if (tx.hasOwnProperty('chainId') && typeof tx.chainId !== 'number') {
+                throw new Error('Parameter "transaction.chainId" has invalid type. Number expected.');
             }
         }
 
-        if (!payload.hasOwnProperty('gasPrice')) {
-            throw new Error('Parameter "gasPrice" is missing');
-        } else {
-            if (typeof payload.gasPrice !== 'string') {
-                throw new Error('Parameter "gasPrice" has invalid type. String expected.');
+        // strip '0x' from values
+        Object.keys(tx).map(key => {
+            if (typeof tx[key] === 'string') {
+                let value: string = tx[key];
+                if (value.indexOf('0x') === 0) {
+                    value = value.substring(2, value.length);
+                    // pad left even
+                    if (value.length % 2 !== 0)
+                        value = '0' + value;
+                    // $FlowIssue
+                    tx[key] = value;
+                }
             }
-        }
-
-        if (!payload.hasOwnProperty('gasLimit')) {
-            throw new Error('Parameter "gasLimit" is missing');
-        } else {
-            if (typeof payload.gasLimit !== 'string') {
-                throw new Error('Parameter "gasLimit" has invalid type. String expected.');
-            }
-        }
-
-        if (!payload.hasOwnProperty('to')) {
-            throw new Error('Parameter "to" is missing');
-        } else {
-            if (typeof payload.to !== 'string') {
-                throw new Error('Parameter "to" has invalid type. String expected.');
-            }
-        }
-
-        if (!payload.hasOwnProperty('value')) {
-            throw new Error('Parameter "value" is missing');
-        } else {
-            if (typeof payload.value !== 'string') {
-                throw new Error('Parameter "value" has invalid type. String expected.');
-            }
-        }
-
-        if (payload.hasOwnProperty('data') && typeof payload.data !== 'string') {
-            throw new Error('Parameter "data" has invalid type. String expected.');
-        }
-
-        if (payload.hasOwnProperty('chainId') && typeof payload.chainId !== 'number') {
-            throw new Error('Parameter "chainId" has invalid type. Number expected.');
-        }
+        });
 
         this.params = {
             path: payload.path,
-            nonce: payload.nonce,
-            gasPrice: payload.gasPrice,
-            gasLimit: payload.gasLimit,
-            to: payload.to,
-            value: payload.value,
-            data: payload.data,
-            chainId: payload.chainId
+            transaction: tx,
         }
     }
 
     async run(): Promise<EthereumSignedTx> {
-        const response: EthereumSignedTx = await this.device.getCommands().ethereumSignTx(
+
+        const tx = this.params.transaction;
+        return await helper.ethereumSignTx(
+            this.device.getCommands().typedCall.bind( this.device.getCommands() ),
             this.params.path,
-            this.params.nonce,
-            this.params.gasPrice,
-            this.params.gasLimit,
-            this.params.to,
-            this.params.value,
-            this.params.data,
-            this.params.chainId
+            tx.to,
+            tx.value,
+            tx.gasLimit,
+            tx.gasPrice,
+            tx.nonce,
+            tx.data,
+            tx.chainId
         );
-        return response;
+
+        // const signedTx: EthereumTransaction = {
+        //     to: '0x' + tx.to,
+        //     value: '0x' + tx.value,
+        //     gasLimit: '0x' + tx.gasLimit,
+        //     gasPrice: '0x' + tx.gasPrice,
+        //     nonce: '0x' + tx.nonce,
+        //     r: '0x' + response.r,
+        //     s: '0x' + response.s,
+        //     v: '0x' + response.v.toString(16)
+        // }
+
+        // if (tx.data) {
+        //     signedTx.data = '0x' + tx.data;
+        // }
+
+        // if (tx.chainId) {
+        //     signedTx.chainId = tx.chainId;
+        // }
+
+        // return signedTx;
     }
 }
