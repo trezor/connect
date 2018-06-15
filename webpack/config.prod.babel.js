@@ -29,7 +29,7 @@ module.exports = {
         publicPath: './',
         library: LIB_NAME,
         libraryTarget: 'umd',
-        libraryExport: 'default'
+        // libraryExport: 'default'
     },
     module: {
         rules: [
