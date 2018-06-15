@@ -3,7 +3,7 @@
 
 import { httpRequest } from '../utils/networkUtils';
 import { DEFAULT_PRIORITY } from '../entrypoints/ConnectSettings';
-import { parseCoinsJson } from '../backend/CoinInfo';
+import { parseCoinsJson } from './CoinInfo';
 import { Promise } from 'es6-promise';
 import { getOrigin } from '../utils/networkUtils';
 import parseUri from 'parse-uri';

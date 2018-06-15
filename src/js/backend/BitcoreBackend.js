@@ -17,7 +17,7 @@ import {
     Transaction as BitcoinJsTransaction,
 } from 'bitcoinjs-lib-zcash';
 
-import { getCoinInfoByHash, getCoinInfoByCurrency } from './CoinInfo';
+import { getCoinInfoByHash, getCoinInfoByCurrency } from '../data/CoinInfo';
 import type { CoinInfo } from 'flowtype';
 
 import { httpRequest } from '../utils/networkUtils';

@@ -10,7 +10,7 @@ import { getHDPath, isSegwitPath } from '../utils/pathUtils';
 import Device from './Device';
 import DataManager from '../data/DataManager';
 
-import { getCoinInfoByCurrency, getSegwitNetwork } from '../backend/CoinInfo';
+import { getCoinInfoByCurrency, getSegwitNetwork } from '../data/CoinInfo';
 import type { CoinInfo } from 'flowtype';
 
 import * as bitcoin from 'bitcoinjs-lib-zcash';
