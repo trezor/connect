@@ -1,3 +1,7 @@
+# 5.0.15
+__fixed__
+- Library exports
+
 # 5.0.14
 __added__
 - Added `TrezorConnect.nemGetAddress`
