@@ -8,15 +8,15 @@ import type { MessageResponse } from '../../device/DeviceCommands';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../CoreMessage';
 
-import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../backend/CoinInfo';
-import type { CoinInfo } from '../../backend/CoinInfo';
+import { getCoinInfoByCurrency, getCoinInfoFromPath, getCoinName } from '../../backend/CoinInfo';
+import { getAccountLabelFromPath, isSegwitPath } from '../../utils/pathUtils';
+import type { CoinInfo } from 'flowtype';
 import type { UiPromiseResponse, CoreMessage } from 'flowtype';
 import type { Success, HDNodeResponse } from 'flowtype/trezor';
 
 type Params = {
     path: Array<number>;
-    coinInfo: CoinInfo;
-    confirmation?: boolean;
+    coinInfo: ?CoinInfo;
 }
 
 export default class GetPublicKey extends AbstractMethod {
@@ -38,7 +38,7 @@ export default class GetPublicKey extends AbstractMethod {
         let path: Array<number>;
         let coinInfo: ?CoinInfo;
 
-        if (payload.hasOwnProperty('coin')) {
+        if (payload.hasOwnProperty('coin') && payload.coin) {
             if (typeof payload.coin === 'string') {
                 coinInfo = getCoinInfoByCurrency(payload.coin);
             } else {
@@ -46,30 +46,14 @@ export default class GetPublicKey extends AbstractMethod {
             }
         }
 
-        /*
-        if (payload.hasOwnProperty('account')) {
-            if (!payload.hasOwnProperty('coin')) {
-                throw new Error('Parameter "account" cannot be has invalid type. String expected.');
-            }
-            if (payload.hasOwnProperty('accountLegacy')) {
-
-            }
-            path = [1];
-        } else
-        */
-
         if (payload.hasOwnProperty('path')) {
             path = validatePath(payload.path);
         } else {
-            throw new Error('Parameters "path" or "account" are missing');
+            throw new Error('Parameters "path" is missing');
         }
 
         if (!coinInfo) {
             coinInfo = getCoinInfoFromPath(path);
-        }
-
-        if (!coinInfo) {
-            throw new Error(`CoinInfo for path: ${ path.toString() } could not be found`);
         }
 
         this.params = {
@@ -83,10 +67,13 @@ export default class GetPublicKey extends AbstractMethod {
         // wait for popup window
         await this.getPopupPromise().promise;
 
+        const coinName: string = getCoinName(this.params.path);
+        const label = getAccountLabelFromPath(this.params.path, this.params.coinInfo || coinName);
+
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-xpub',
-            label: 'Export public key of bitcoin legacy Account #1',
+            label,
         }));
 
         // wait for user action

@@ -11,7 +11,7 @@ import Device from './Device';
 import DataManager from '../data/DataManager';
 
 import { getCoinInfoByCurrency, getSegwitNetwork } from '../backend/CoinInfo';
-import type { CoinInfo } from '../backend/CoinInfo';
+import type { CoinInfo } from 'flowtype';
 
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as hdnodeUtils from '../utils/hdnode';
@@ -128,7 +128,7 @@ export default class DeviceCommands {
     // Validation of xpub
     async getHDNode(
         path: Array<number>,
-        coinInfo: CoinInfo
+        coinInfo: ?CoinInfo
     ): Promise<trezor.HDNodeResponse> {
         const suffix: number = 0;
         const childPath: Array<number> = path.concat([suffix]);
@@ -143,7 +143,7 @@ export default class DeviceCommands {
         const response: trezor.HDNodeResponse = {
             path,
             childNum: publicKey.node.child_num,
-            xpub: hdnodeUtils.convertXpub(publicKey.xpub, coinInfo.network),
+            xpub: coinInfo ? hdnodeUtils.convertXpub(publicKey.xpub, coinInfo.network) : publicKey.xpub,
             chainCode: publicKey.node.chain_code,
             publicKey: publicKey.node.public_key,
             fingerprint: publicKey.node.fingerprint,
@@ -152,21 +152,17 @@ export default class DeviceCommands {
 
         // if requested path is a segwit
         // convert xpub to new format
-        const segwitNetwork = getSegwitNetwork(coinInfo);
-        if (segwitNetwork && isSegwitPath(path)) {
-            response.xpubSegwit = hdnodeUtils.convertXpub(publicKey.xpub, segwitNetwork)
+        if (coinInfo) {
+            const segwitNetwork = getSegwitNetwork(coinInfo);
+            if (segwitNetwork && isSegwitPath(path)) {
+                response.xpubSegwit = hdnodeUtils.convertXpub(publicKey.xpub, segwitNetwork)
+            }
         }
-
         return response;
     }
 
     async getDeviceState(): Promise<string> {
-        const coinInfo: CoinInfo = getCoinInfoByCurrency('Bitcoin');
-        const response: trezor.HDNodeResponse = await this.getHDNode(
-            [1, 0, 0],
-            coinInfo
-        );
-
+        const response: trezor.HDNodeResponse = await this.getHDNode([1, 0, 0]);
         const secret: string = `${response.xpub}#${this.device.features.device_id}`;
         const state: string = this.device.getState() || bitcoin.crypto.hash256(new Buffer(secret, 'binary')).toString('hex');
         return state;

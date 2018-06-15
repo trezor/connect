@@ -1,6 +1,8 @@
 /* @flow */
 'use strict';
 
+import type { CoinInfo } from 'flowtype';
+
 export const HD_HARDENED: number = 0x80000000;
 export const toHardened = (n: number): number => (n | HD_HARDENED) >>> 0;
 export const fromHardened = (n: number): number => (n & ~HD_HARDENED) >>> 0;
@@ -92,7 +94,19 @@ export type AccountType = {
     account: number,
 }
 
-export const getAccountLabelFromPath = (coinLabel: string, path: Array<number>, segwit: boolean): AccountType => {
+// export const getAccountLabelFromPath = (coinLabel: string, path: Array<number>, segwit: boolean): AccountType => {
+export const getAccountLabelFromPath = (path: Array<number>, coin: ?CoinInfo | ?string): string => {
+
+    let hasSegwit: boolean = false;
+    let coinLabel: string = 'Unknown coin';
+    if (coin) {
+        if (typeof coin !== 'string') {
+            coinLabel = coin.label;
+            hasSegwit = coin.segwit;
+        } else {
+            coinLabel = coin;
+        }
+    }
     // let hardened = (i) => path[i] & ~HD_HARDENED;
     // return hardened(0) === 44 ? 'legacy' : 'segwit';
     const p1: number = fromHardened(path[0]);
@@ -105,25 +119,28 @@ export const getAccountLabelFromPath = (coinLabel: string, path: Array<number>, 
         const p2: number = fromHardened(path[1]);
         account = fromHardened(path[3]);
         realAccountId = account + 1;
-        label = `Copay ID of account #${realAccountId}`;
+        label = 'Export Copay ID of';
         if (p2 === 48) {
-            label = `Copay ID of multisig account #${realAccountId}`;
+            label = ' multisig';
         } else if (p2 === 44) {
-            label = `Copay ID of legacy account #${realAccountId}`;
+            label = ' legacy';
             legacy = true;
         }
+        label += ` account #${realAccountId}`;
     } else if (p1 === 48) {
-        label = `public key for multisig <strong>${coinLabel}</strong> account #${realAccountId}`;
-    } else if (p1 === 44 && segwit) {
-        label = `public key for legacy <strong>${coinLabel}</strong> account #${realAccountId}`;
+        label = `Export public key for multisig ${coinLabel} account #${realAccountId}`;
+    } else if (p1 === 44 && hasSegwit) {
+        label = `Export public key for legacy ${coinLabel} account #${realAccountId}`;
         legacy = true;
     } else {
-        label = `public key for <strong>${coinLabel}</strong> account #${realAccountId}`;
+        label = `Export public key of ${coinLabel} account #${realAccountId}`;
     }
 
-    return {
-        label: label,
-        account: account,
-        legacy: legacy,
-    };
+    return label;
+
+    // return {
+    //     label: label,
+    //     account: account,
+    //     legacy: legacy,
+    // };
 };

@@ -7,6 +7,7 @@ import BIP_44 from 'bip44-constants';
 import type {
     Network as BitcoinJsNetwork,
 } from 'bitcoinjs-lib-zcash';
+import type { CoinInfo } from 'flowtype';
 
 type Support = {
     connect: boolean,
@@ -16,7 +17,7 @@ type Support = {
     // "webwallet": true
 }
 
-export type CoinInfo = {
+export type CoinInfo2 = {
     addressPrefix: string,
     // address_type in Network
     // address_type_p2sh in Network
@@ -114,16 +115,13 @@ export const getCoinInfoByHash = (hash: string, networkInfo: any): CoinInfo => {
     return result;
 };
 
-export const getCoinInfoByCurrency = (currency: string): CoinInfo => {
+export const getCoinInfoByCurrency = (currency: string): ?CoinInfo => {
     const lower: string = currency.toLowerCase();
     const coinInfo: ?CoinInfo = getCoins().find((coin: CoinInfo) => (
         coin.name.toLowerCase() === lower ||
         coin.shortcut.toLowerCase() === lower ||
         coin.label.toLowerCase() === lower
     ));
-    if (!coinInfo) {
-        return cloneCoinInfo(coins[0]);
-    }
     return coinInfo;
 };
 
@@ -131,9 +129,6 @@ export const getCoinInfoFromPath = (path: Array<number>): ?CoinInfo => {
     const coinInfo: ?CoinInfo = getCoins().find((coin: CoinInfo) => toHardened(coin.slip44) === path[1]);
     if (coinInfo && fromHardened(path[0]) === 44) {
         coinInfo.network.bip32.public = parseInt(coinInfo.xPubMagic, 16);
-    }
-    if (!coinInfo) {
-        return cloneCoinInfo(coins[0]);
     }
     return coinInfo;
 };
