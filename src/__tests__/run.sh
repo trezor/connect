@@ -256,18 +256,16 @@ echo "Specified tests to run: "$tests_to_run""
 
 if [ -z "$tests_to_run" ]
 then
+    echo "========"
+    echo "========"
     # Will run either all tests or all but specified tests
     if [ -z "$tests_not_to_run" ]
     then
-        echo "========"
-        echo "========"
         echo "Running all test\n"
         for t in $available_tests; do
             run_test $t
         done
     else
-        echo "========"
-        echo "========"
         echo "Running all tests excluding: ${tests_not_to_run}\n"
         for t in $available_tests; do
             is_excluded=""

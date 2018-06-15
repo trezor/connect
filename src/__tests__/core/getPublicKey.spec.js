@@ -65,6 +65,7 @@ export const getPublicKeyTests = (): void => {
             it(`for derivation path: "[${path}]"`, async (done) => {
                 const payload = {
                     method: 'getPublicKey',
+                    coin: 'btc',
                     path,
                 };
 
