@@ -17,7 +17,7 @@
         "trezor-connect",
         "javascript"
     ],
-    "main": "index.js",
+    "main": "index.min.js",
     "dependencies": {
 
     }
