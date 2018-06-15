@@ -9,54 +9,6 @@ import type {
 } from 'bitcoinjs-lib-zcash';
 import type { CoinInfo } from 'flowtype';
 
-type Support = {
-    connect: boolean,
-    // "electrum": "https://electrum.org/",
-    trezor1: string,
-    trezor2: string,
-    // "webwallet": true
-}
-
-export type CoinInfo2 = {
-    addressPrefix: string,
-    // address_type in Network
-    // address_type_p2sh in Network
-    bitcore: Array<string>,
-    blockbook: Array<string>,
-    blocktime: number,
-    cashAddrPrefix: ?string,
-    label: string,
-    name: string,
-    shortcut: string,
-    curveName: string,
-    decred: boolean,
-    defaultFees: {[level: string]: number},
-    dustLimit: number,
-    forceBip143: boolean,
-    forkid: ?number,
-    hashGenesisBlock: string,
-    maxAddressLength: number,
-    maxFeeSatoshiKb: number,
-    minAddressLength: number,
-    minFeeSatoshiKb: number,
-    segwit: boolean,
-    slip44: number,
-    support: Support,
-    xPubMagic: string,
-    xPubMagicSegwit: ?string,
-    xPubMagicSegwitNative: ?string,
-
-    network: BitcoinJsNetwork,
-    zcash: boolean,
-    isBitcoin: boolean,
-    hasSegwit: boolean,
-    minFee: number,
-    maxFee: number,
-    blocktime: number,
-    // used in backend
-    blocks?: number,
-};
-
 const coins: Array<CoinInfo> = [];
 
 export const getCoins = (): $ReadOnlyArray<CoinInfo> => {
