@@ -3,9 +3,6 @@
 
 import AbstractMethod from './AbstractMethod';
 import type { CoreMessage } from 'flowtype';
-import { validatePath } from '../../utils/pathUtils';
-import { getCoinInfoByCurrency } from '../../backend/CoinInfo';
-import type { HDNodeResponse } from 'flowtype/trezor';
 
 export default class GetDeviceState extends AbstractMethod {
 
