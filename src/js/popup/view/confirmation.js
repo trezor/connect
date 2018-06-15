@@ -18,7 +18,7 @@ export const initConfirmationView = (data: $PropertyType<RequestConfirmation, 'p
     const confirmButton: HTMLElement = container.getElementsByClassName('confirm')[0];
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
 
-    h3.innerText = data.label;
+    h3.innerHTML = data.label;
 
     confirmButton.onclick = () => {
         postMessage(new UiMessage(UI.RECEIVE_CONFIRMATION, 'true'));
