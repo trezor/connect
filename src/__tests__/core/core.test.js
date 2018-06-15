@@ -17,6 +17,7 @@ const testFunctions = {
     ethereumGetAddress: ethereumGetAddressTests,
     ethereumSignMessage: ethereumSignMessageTests,
     ethereumVerifyMessage: ethereumVerifyMessageTests,
+    nemGetAddress: nemGetAddressTests,
 };
 
 const testToRun = __karma__.config.test;
