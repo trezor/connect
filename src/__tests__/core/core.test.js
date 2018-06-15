@@ -16,6 +16,7 @@ const testFunctions = {
     getPublicKey: getPublicKeyTests,
     ethereumGetAddress: ethereumGetAddressTests,
     ethereumSignMessage: ethereumSignMessageTests,
+    ethereumSignTx: ethereumSignTxTests, // TODO
     ethereumVerifyMessage: ethereumVerifyMessageTests,
     nemGetAddress: nemGetAddressTests,
 };

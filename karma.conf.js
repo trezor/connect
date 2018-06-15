@@ -5,6 +5,7 @@ import webpackConfig from './webpack/config.karma.babel';
 
 module.exports = function(config) {
     config.set({
+        browserNoActivityTimeout: 1000000,
         // base path that will be used to resolve all patterns (eg. files, exclude)
         basePath: '',
 
@@ -94,6 +95,7 @@ module.exports = function(config) {
             runInParent: true,
             // Put the parameters here
             test: config.test,
+            subtest: config.subtest,
         },
 
         // Continuous Integration mode
