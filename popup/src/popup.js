@@ -176,6 +176,14 @@ function onMessage(event) {
         handleNEMSignTx(event);
         break;
 
+    case 'tezosGetAddress':
+        handleTezosGetAddress(event);
+        break;
+
+    case 'tezosSignTx':
+        handleTezosSignTx(event);
+        break;
+
     default:
         console.warn('Unknown message', request);
     }
@@ -699,6 +707,55 @@ function handleNEMSignTx(event) {
         });
 }
 
+/*
+* Get Tezos address from device
+*/
+
+function handleTezosGetAddress(event) {
+
+    let address = event.data.address_n;
+
+    initDevice()
+        .then((device) => {
+            device.session.tezosGetAddress(address, true)
+                .then(response => {
+                    respondToEvent(event, {
+                        success: true,
+                        type: 'tezosGetAddress',
+                        address: response.message.address,
+                    });
+                });
+        })
+        .catch((error) => {
+            respondToEvent(event, { success: false, error: error.message });
+        });
+}
+
+/*
+* Sign Tezos transaction from device
+*/
+
+function handleTezosSignTx(event) {
+
+    const { address_n, to, fee, amount, operation } = event.data;
+
+    initDevice()
+        .then((device) => {
+            device.session.tezosSignTx(address_n, to, fee, amount, operation)
+                .then(response => {
+                    respondToEvent(event, {
+                        success: true,
+                        type: 'tezosSignTx',
+                        operation_hash: response.message.operation_hash,
+                        sig_op_contents: response.message.sig_op_contents,
+                        signature: response.message.signature
+                    });
+                });
+        })
+        .catch((error) => {
+            respondToEvent(event, { success: false, error: error.message });
+        });
+}
 
 /*
  * xpubkey
