@@ -226,7 +226,7 @@ while getopts "t:x:le:b:" opt; do
                 then
                     tests_not_to_run="$test_name"
                 else
-                    tests_not_to_run="$tests_to_run $test_name"
+                    tests_not_to_run="$tests_not_to_run $test_name"
                 fi
             done
         ;;
