@@ -193,7 +193,7 @@ available_tests=$(ls ./src/__tests__/core/*.spec.js | xargs -n 1 basename | cut 
 # Delete the trailing whitespace (one character)
 available_tests=$(echo $available_tests | rev | cut -c 1- | rev)
 
-# If no argument specified (i.e. "yarn test") run all tests
+# If no argument specified (i.e. "./run.sh") run all tests
 # otherwise run only specified tests
 
 # The emulator device is configured for each specific test automatically
