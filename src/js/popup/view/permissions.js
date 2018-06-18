@@ -44,6 +44,9 @@ const getPermissionTooltipText = (permissionType: string): string => {
             break;
         case 'write-meta':
             text = 'Application needs permission to read metadata';
+        case 'custom-message':
+            text = 'Custom message';
+            break;
     }
     return text;
 }
@@ -89,12 +92,6 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
                 document.createTextNode(permissionText)
             );
 
-            // TODO: Debug only - delete
-            for (let i = 0; i < 40; i++) {
-                const tmp = listItem.cloneNode(true);
-                permissionsList.appendChild(tmp);
-            }
-
             permissionsList.appendChild(listItem);
         });
     }
@@ -113,5 +110,9 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
             granted: false,
         }));
         showView('loader');
+    };
+
+    rememberCheckbox.onchange = (e) => {
+        confirmButton.innerText = e.target.checked ? 'Remember permissions' : 'Allow once for this session';
     };
 };
