@@ -51,6 +51,10 @@ export default class CipherKeyValue extends AbstractMethod {
             throw new Error('Parameter "value" has invalid type. String expected.');
         }
 
+        if (payload.hasOwnProperty('encrypt') && typeof payload.encrypt !== 'boolean') {
+            throw new Error('Parameter "encrypt" has invalid type. Boolean expected.');
+        }
+
         if (payload.hasOwnProperty('askOnEncrypt') && typeof payload.askOnDecrypt !== 'boolean') {
             throw new Error('Parameter "askOnEncrypt" has invalid type. Boolean expected.');
         }
