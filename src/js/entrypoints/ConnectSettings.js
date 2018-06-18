@@ -1,18 +1,6 @@
 /* @flow */
 'use strict';
 
-export type CustomMessageField = {
-    rule: string,
-    options: Object,
-    type: string,
-    name: string,
-    id: number
-}
-export type CustomMessage = {
-    name: string;
-    fields: Array<CustomMessageField>;
-}
-
 export type ConnectSettings = {
     // debug: boolean | {[k: string]: boolean};
     +configSrc: string;
@@ -25,11 +13,10 @@ export type ConnectSettings = {
     popup: boolean;
     popupSrc: string;
     webusbSrc: string;
-    coinsSrc: string;
-    firmwareReleasesSrc: string;
-    customMessages: Array<CustomMessage>;
-    transportConfigSrc: string;
-    latestBridgeSrc: string;
+    +coinsSrc: string;
+    +firmwareReleasesSrc: string;
+    +transportConfigSrc: string;
+    +latestBridgeSrc: string;
     transportReconnect: boolean;
     webusb: boolean;
     pendingTransportEvent: boolean;
@@ -54,11 +41,10 @@ const initialSettings: ConnectSettings = {
     popup: true,
     popupSrc: `${ DEFAULT_DOMAIN }popup.html`,
     webusbSrc: `${ DEFAULT_DOMAIN }webusb.html`,
-    coinsSrc: 'data/coins.json',
-    firmwareReleasesSrc: 'data/releases-1.json',
-    transportConfigSrc: 'data/messages.json',
-    customMessages: [],
-    latestBridgeSrc: 'data/latest.txt',
+    coinsSrc: 'data/coins.json', // constant
+    firmwareReleasesSrc: 'data/releases-1.json', // constant
+    transportConfigSrc: 'data/messages.json', // constant
+    latestBridgeSrc: 'data/latest.txt', // constant
     transportReconnect: false,
     webusb: true,
     pendingTransportEvent: true,
@@ -88,26 +74,6 @@ export const parse = (input: ?Object): ConnectSettings => {
         settings.webusbSrc = `${ input.connectSrc }webusb.html`;
     }
 
-    if (typeof input.coinsSrc === 'string') {
-        // TODO: escape string
-        settings.coinsSrc = input.coinsSrc;
-    }
-
-    if (typeof input.firmwareReleasesSrc === 'string') {
-        // TODO: escape string
-        settings.firmwareReleasesSrc = input.firmwareReleasesSrc;
-    }
-
-    if (typeof input.transportConfigSrc === 'string') {
-        // TODO: escape string
-        settings.transportConfigSrc = input.transportConfigSrc;
-    }
-
-    if (typeof input.latestBridgeSrc === 'string') {
-        // TODO: escape string
-        settings.latestBridgeSrc = input.latestBridgeSrc;
-    }
-
     if (typeof input.transportReconnect === 'boolean') {
         settings.transportReconnect = input.transportReconnect;
     }
@@ -126,36 +92,4 @@ export const parse = (input: ?Object): ConnectSettings => {
 
     currentSettings = settings;
     return currentSettings;
-};
-
-export type ValidSettings = {
-    [ key: string ]: string,
-}
-
-export type IFrameDataAttributes = {
-    [ key: string ]: string,
-}
-
-export const validate = (input: Object): ValidSettings => {
-    // parse(input);
-    const valid: ValidSettings = {};
-
-    for (const key of Object.keys(input)) {
-        if (typeof initialSettings[key] !== 'undefined') {
-            valid[key] = input[key];
-        }
-    }
-    return valid;
-};
-
-export const setDataAttributes = (iframe: Element, input: Object): IFrameDataAttributes => {
-    const settings: ValidSettings = validate(input);
-    const attrs: IFrameDataAttributes = {};
-    const ignored: Array<string> = ['iframeSrc', 'popupSrc'];
-    for (const key of Object.keys(settings)) {
-        if (ignored.indexOf(key) < 0) {
-            iframe.setAttribute(`data-${key}`, encodeURI(settings[key].toString()));
-        }
-    }
-    return attrs;
 };
