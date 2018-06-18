@@ -1,16 +1,24 @@
 .browser {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   h3 {
     margin-bottom: 3px;
   }
 
   .wrapper {
     display: flex;
-    justify-content: center;
-    align-items: center;
-
-    height: 100%;
-    width: 120px;
+    justify-content: space-around;
+    width: 100%;
     margin: auto;
+
+    a {
+      &::after {
+        content: none;
+      }
+    }
 
     .icon {
       margin: 10px;
