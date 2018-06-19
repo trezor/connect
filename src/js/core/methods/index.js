@@ -7,6 +7,7 @@ import AbstractMethod, { MethodInterface } from './AbstractMethod';
 import GetFeatures from './GetFeatures';
 import GetDeviceState from './GetDeviceState';
 import GetPublicKey from './GetPublicKey';
+import SignMessage from './SignMessage';
 import CipherKeyValue from './CipherKeyValue';
 import EthereumGetAddress from './EthereumGetAddress';
 import EthereumSignTx from './EthereumSignTx';
@@ -21,6 +22,7 @@ import StellarSignTx from './StellarSignTx';
 
 const classes: {[k: string]: any} = {
     'getFeatures': GetFeatures,
+    'signMessage': SignMessage,
     'getPublicKey': GetPublicKey,
     'getDeviceState': GetDeviceState,
     'cipherKeyValue': CipherKeyValue,

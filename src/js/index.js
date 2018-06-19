@@ -26,6 +26,14 @@ export default class Trezor {
         return await this.__call({ method: 'cipherKeyValue', ...params });
     }
 
+    static async signMessage(params: Object): Promise<Object> {
+        return await this.__call({ method: 'signMessage', ...params });
+    }
+
+    static async verifyMessage(params: Object): Promise<Object> {
+        return await this.__call({ method: 'verifyMessage', ...params });
+    }
+
     static async ethereumGetAddress(params: Object): Promise<Object> {
         return await this.__call({ method: 'ethereumGetAddress', ...params });
     }

@@ -97,22 +97,6 @@ export default class DeviceCommands {
         return this.disposed;
     }
 
-    async signMessage(
-        address: Array<number> | string,
-        message: string,
-        coin: trezor.CoinType | string
-    ): Promise<DefaultMessageResponse> {
-        if (typeof address === 'string') {
-            address = getHDPath(address);
-        }
-
-        return await this.typedCall('SignMessage', 'MessageSignature', {
-            address_n: address,
-            message: message,
-            coin_name: 'Bitcoin',
-        });
-    }
-
     async getPublicKey(
         address_n: Array<number>,
         coin?: string
@@ -174,6 +158,19 @@ export default class DeviceCommands {
         locktime: ?number,
     ): Promise<MessageResponse<trezor.SignedTx>> {
         return await signTxHelper(this.typedCall.bind(this), tx, refTxs, coinInfo, locktime);
+    }
+
+    async signMessage(
+        address_n: Array<number>,
+        message: string,
+        coin: ?string
+    ): Promise<DefaultMessageResponse> {
+        return await this.typedCall('SignMessage', 'MessageSignature', {
+            address_n,
+            message,
+            coin_name: coin || 'Bitcoin',
+            script_type: isSegwitPath(address_n) ? 'SPENDP2SHWITNESS' : undefined,
+        });
     }
 
     async ethereumGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<MessageResponse<trezor.EthereumAddress>> {
