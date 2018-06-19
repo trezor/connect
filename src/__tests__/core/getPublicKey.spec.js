@@ -1,9 +1,6 @@
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
-import * as POPUP from '../../js/constants/popup';
-import * as UI from '../../js/constants/ui';
-
-import { settings, AbstractCoreEventHandler, CoreEventHandler } from './common.js';
+import { settings, CoreEventHandler } from './common.js';
 
 export const getPublicKeyTests = (): void => {
     describe(`GetPublicKey`, () => {
