@@ -4,6 +4,8 @@ import { checkBrowser } from '../../js/utils/browser';
 import * as POPUP from '../../js/constants/popup';
 import * as UI from '../../js/constants/ui';
 
+import { AbstractCoreEventHandler } from './common.js';
+
 import { getPublicKeyTests } from './getPublicKey.spec.js';
 import { ethereumGetAddressTests } from './ethereumGetAddress.spec.js';
 import { ethereumSignMessageTests } from './ethereumSignMessage.spec.js';
@@ -24,15 +26,6 @@ const testFunctions = {
 const testToRun = __karma__.config.test;
 
 describe(`Testing method`, () => {
-    let defaultTimeout;
-    beforeEach(() => {
-        defaultTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = 250000;
-    });
-
-    afterEach(() => {
-        jasmine.DEFAULT_TIMEOUT_INTERVAL = defaultTimeout;
-    });
-
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 250000;
     testFunctions[testToRun]();
 });

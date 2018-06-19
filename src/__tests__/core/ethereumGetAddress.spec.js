@@ -1,29 +1,61 @@
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 
-import { settings, AbstractCoreEventHandler } from './common.js';
-
-class EthereumGetAddressHandler extends AbstractCoreEventHandler {
-    expectedAddress: string;
-    done: any;
-
-    constructor(core: Core, payload: any, expectedAddress: string, done: any) {
-        super(core, payload);
-        this.expectedAddress = expectedAddress;
-        this.done = done;
-    }
-
-    handleResponseEvent(event: any): void {
-        if (event.payload.address) {
-            expect(event.payload.address).toEqual(this.expectedAddress);
-            this.done();
-        }
-    }
-}
+import { settings, CoreEventHandler } from './common.js';
 
 export const ethereumGetAddressTests = () => {
     describe('EthereumGetAddress', () => {
         let core: Core;
+
+        const testPayloads = [
+            {
+                method: 'ethereumGetAddress',
+                path: [],
+            },
+            {
+                method: 'ethereumGetAddress',
+                path: [1],
+            },
+            {
+                method: 'ethereumGetAddress',
+                path: [0, -1],
+            },
+            {
+                method: 'ethereumGetAddress',
+                path: [-9, 0],
+            },
+            {
+                method: 'ethereumGetAddress',
+                path: [0, 9999999],
+            },
+        ];
+        const expectedResponses = [
+            {
+                payload: {
+                    address: '1d1c328764a41bda0492b66baa30c4a339ff85ef',
+                },
+            },
+            {
+                payload: {
+                    address: '437207ca3cf43bf2e47dea0756d736c5df4f597a',
+                },
+            },
+            {
+                payload: {
+                    address: 'e5d96dfa07bcf1a3ae43677840c31394258861bf',
+                },
+            },
+            {
+                payload: {
+                    address: 'f68804ac9eca9483ab4241d3e4751590d2c05102',
+                },
+            },
+            {
+                payload: {
+                    address: '7a6366ecfcaf0d5dcc1539c171696c6cdd1eb8ed',
+                },
+            },
+        ];
 
         beforeEach(async (done) => {
             core = await initCore(settings);
@@ -35,36 +67,16 @@ export const ethereumGetAddressTests = () => {
             core.onBeforeUnload();
         });
 
-        const expectedAddresses: Array<string> = [
-            '1d1c328764a41bda0492b66baa30c4a339ff85ef',
-            '437207ca3cf43bf2e47dea0756d736c5df4f597a',
-            'e5d96dfa07bcf1a3ae43677840c31394258861bf',
-            'f68804ac9eca9483ab4241d3e4751590d2c05102',
-            '7a6366ecfcaf0d5dcc1539c171696c6cdd1eb8ed',
-        ];
-        const paths: Array<Array<number>> = [
-            [],
-            [1],
-            [0, -1],
-            [-9, 0],
-            [0, 9999999],
-        ];
-
-        if (expectedAddresses.length !== paths.length) {
-            throw new Error('Different number of expected addresses and paths to test');
+        if (testPayloads.length !== expectedResponses.length) {
+            throw new Error('Different number of payloads and expected responses');
         }
 
-        for (let i = 0; i < expectedAddresses.length; i++) {
-            const expectedAddress = expectedAddresses[i];
-            const path = paths[i];
+        for (let i = 0; i < testPayloads.length; i++) {
+            const payload = testPayloads[i];
+            const expectedResponse = expectedResponses[i];
 
-            it(`for derivation path: "[${path}]"`, async (done) => {
-                const payload = {
-                    method: 'ethereumGetAddress',
-                    path,
-                };
-
-                const handler = new EthereumGetAddressHandler(core, payload, expectedAddress, done);
+            it(`for derivation path: "[${payload.path}]"`, async (done) => {
+                const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
                 handler.startListening();
                 await initTransport(settings);
             });

@@ -1,29 +1,37 @@
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
+import { NEM_MAINNET, NEM_TESTNET } from '../../js/core/methods/helpers/nemSignTx.js'
 
-import { settings, AbstractCoreEventHandler } from './common.js';
-
-class NEMGetAddressHandler extends AbstractCoreEventHandler {
-    done: any;
-    expectedAddress: string;
-
-    constructor(core: Core, payload: any, expectedAddress: string, done: any) {
-        super(core, payload);
-        this.expectedAddress = expectedAddress;
-        this.done = done;
-    }
-
-    handleResponseEvent(event: any): void {
-        if (event.payload.address) {
-            expect(event.payload.address).toEqual(this.expectedAddress)
-            this.done();
-        }
-    }
-}
+import { settings, CoreEventHandler } from './common.js';
 
 export const nemGetAddressTests = () => {
     describe('NEMGetAddress', () => {
         let core: Core;
+
+        const testPayloads = [
+            {
+                method: 'nemGetAddress',
+                path: "m/44'/1'/0'/0'/0'",
+                network: NEM_MAINNET,
+            },
+            {
+                method: 'nemGetAddress',
+                path: "m/44'/1'/0'/0'/0'",
+                network: NEM_TESTNET,
+            },
+        ];
+        const expectedResponses = [
+            {
+                payload: {
+                    address: 'NB3JCHVARQNGDS3UVGAJPTFE22UQFGMCQGHUBWQN',
+                },
+            },
+            {
+                payload: {
+                    address: 'TB3JCHVARQNGDS3UVGAJPTFE22UQFGMCQHSBNBMF',
+                },
+            },
+        ];
 
         beforeEach(async (done) => {
             core = await initCore(settings);
@@ -35,42 +43,19 @@ export const nemGetAddressTests = () => {
             core.onBeforeUnload();
         });
 
-        const config = [
-            {
-                path: "m/44'/1'/0'/0'/0'",
-                network: 0x68,
-                expectedAddress: 'NB3JCHVARQNGDS3UVGAJPTFE22UQFGMCQGHUBWQN',
-            },
-            {
-                path: "m/44'/1'/0'/0'/0'",
-                network: 0x98,
-                expectedAddress: 'TB3JCHVARQNGDS3UVGAJPTFE22UQFGMCQHSBNBMF',
-            },
-        ];
+        if (testPayloads.length !== expectedResponses.length) {
+            throw new Error('Different number of payloads and expected responses');
+        }
 
-        config.forEach(c => {
-            let networkName: string;
-            if (c.network === 0x68) {
-                networkName = 'MAINNET';
-            } else if (c.network === 0x98) {
-                networkName = 'TESTNET';
-            } else if (c.network === 0x60) {
-                networkName = 'MIJIN';
-            } else {
-                networkName = 'Unknown Network';
-            }
+        for (let i = 0; i < testPayloads.length; i++) {
+            const payload = testPayloads[i];
+            const expectedResponse = expectedResponses[i];
 
-            it(`for path ${c.path} on '${networkName}'`, async (done) => {
-                const payload = {
-                    method: 'nemGetAddress',
-                    path: c.path,
-                    network: c.network,
-                };
-
-                const handler = new NEMGetAddressHandler(core, payload, c.expectedAddress, done);
+            it(`for path: ${payload.path} on network: ${payload.network}`, async (done) => {
+                const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
                 handler.startListening();
                 await initTransport(settings);
             });
-        });
+        }
     });
 };
