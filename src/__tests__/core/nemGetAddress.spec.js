@@ -1,7 +1,6 @@
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { NEM_MAINNET, NEM_TESTNET } from '../../js/core/methods/helpers/nemSignTx.js'
-
 import { settings, CoreEventHandler } from './common.js';
 
 export const nemGetAddressTests = () => {

@@ -4,8 +4,6 @@ import { checkBrowser } from '../../js/utils/browser';
 import * as POPUP from '../../js/constants/popup';
 import * as UI from '../../js/constants/ui';
 
-import { AbstractCoreEventHandler } from './common.js';
-
 import { getPublicKeyTests } from './getPublicKey.spec.js';
 import { ethereumGetAddressTests } from './ethereumGetAddress.spec.js';
 import { ethereumSignMessageTests } from './ethereumSignMessage.spec.js';
