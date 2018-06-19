@@ -139,6 +139,18 @@ declare module 'flowtype/ui-message' {
         }
     }
 
+    /*
+    * Callback message for CustomMessage method
+    */
+
+    declare type CustomMessageRequest = {
+        +type: $PropertyType<T_UI, 'CUSTOM_MESSAGE_REQUEST'>,
+        payload: {
+            type: string;
+            message: Object;
+        }
+    }
+
     declare export type UiMessage =
         MessageWithoutPayload
         | DeviceMessage
@@ -156,6 +168,7 @@ declare module 'flowtype/ui-message' {
         | ReceivePassphrase
         | ReceiveAccount
         | ReceiveFee
+        | CustomMessageRequest
 
     declare function MessageFactory(type: $PropertyType<MessageWithoutPayload, 'type'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<DeviceMessage, 'type'>, payload: $PropertyType<DeviceMessage, 'payload'>): CoreMessage;
@@ -173,6 +186,7 @@ declare module 'flowtype/ui-message' {
     declare function MessageFactory(type: $PropertyType<ReceivePassphrase, 'type'>, payload: $PropertyType<ReceivePassphrase, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceiveAccount, 'type'>, payload: $PropertyType<ReceiveAccount, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceiveFee, 'type'>, payload: $PropertyType<ReceiveFee, 'payload'>): CoreMessage;
+    declare function MessageFactory(type: $PropertyType<CustomMessageRequest, 'type'>, payload: $PropertyType<CustomMessageRequest, 'payload'>): CoreMessage;
 
     declare export type UiMessageFactory = typeof MessageFactory;
 }

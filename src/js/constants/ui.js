@@ -40,3 +40,6 @@ export const RECEIVE_ACCOUNT: 'ui-receive_account' = 'ui-receive_account';
 export const RECEIVE_FEE: 'ui-receive_fee' = 'ui-receive_fee';
 
 export const CHANGE_SETTINGS: 'ui-change_settings' = 'ui-change_settings';
+
+export const CUSTOM_MESSAGE_REQUEST: 'ui-custom_request' = 'ui-custom_request';
+export const CUSTOM_MESSAGE_RESPONSE: 'ui-custom_response' = 'ui-custom_response';

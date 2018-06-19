@@ -78,6 +78,8 @@ declare module 'trezor-connect' {
         RECEIVE_ACCOUNT: 'ui-receive_account',
         RECEIVE_FEE: 'ui-receive_fee',
         CHANGE_SETTINGS: 'ui-change_settings',
+        CUSTOM_MESSAGE_REQUEST: 'ui-custom_request',
+        CUSTOM_MESSAGE_RESPONSE: 'ui-custom_response',
     };
 
     declare type T_TRANSPORT_EVENT = 'TRANSPORT_EVENT';
