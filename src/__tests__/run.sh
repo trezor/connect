@@ -1,6 +1,9 @@
 #!/bin/sh
 trap 'cleanup' INT
 
+#################
+# Variables
+
 # todo: put this config vars in its own file?
 mnemonic_12="alcohol woman abuse must during monitor noble actual mixed trade anger aisle"
 mnemonic_18="owner little vague addict embark decide pink prosper true fork panda embody mixture exchange choose canoe electric jewel"
@@ -11,6 +14,14 @@ pin_0=""
 pin_4="1234"
 pin_6="789456"
 pin_8="45678978"
+
+# Assuming this script is called from the root of "trezor-connect"
+base_path=`pwd`
+
+trezord_path="../trezord-go"
+emulator_path="../trezor-core"
+# Variables: END
+#################
 
 #################
 # Functions
@@ -144,7 +155,7 @@ test_ethereumSignTx() {
     # EthereumSignTx has multiple tests with a different device setup
     # - subtest specifies what type of test should be called
     #subtests="knownErc20Token unknownErc20Token signTxNoData signTxData signTxMessage signTxNewContract sanityChecks signTxNoDataEip155 signTxDataEip155"
-    subtests="knownErc20Token"
+    subtests="signTxNoData signTxData signTxMessage signTxNewContract sanityChecks signTxNoDataEip155 signTxDataEip155"
 
     for subtest in $subtests; do
         start_emulator
@@ -157,6 +168,9 @@ test_ethereumSignTx() {
 
         start_transport
         run_karma "ethereumSignTx" $subtest
+
+        kill -TERM $pid_emul
+        kill -TERM $pid_transport
     done;
 }
 
@@ -180,12 +194,6 @@ test_nemGetAddress() {
 
 
 # todo: add usage of this script
-
-# Assuming this script is called from the root of "trezor-connect"
-base_path=`pwd`
-
-trezord_path="../trezord-go"
-emulator_path="../trezor-core"
 
 # Generate all possible tests that can run
 # Valid test name is any file with name ./src/__tests__/core/*.spec.js
