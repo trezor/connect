@@ -66,7 +66,7 @@ module.exports = function(config) {
 
         // level of logging
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        logLevel: config.LOG_DISABLE,
+        logLevel: config.LOG_ERROR,
 
         // enable / disable watching file and executing tests whenever any file changes
         autoWatch: false,
@@ -109,7 +109,9 @@ module.exports = function(config) {
         hostname: 'localhost',
         port: 8099,
 
-        webpack: webpackConfig
-
-    })
+        webpackMiddleware: {
+            stats: 'errors-only',
+        },
+        webpack: webpackConfig,
+    });
 }
