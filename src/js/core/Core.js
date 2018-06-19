@@ -139,6 +139,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         case UI.CHANGE_ACCOUNT :
         case UI.RECEIVE_FEE :
         case UI.RECEIVE_BROWSER :
+        case UI.CUSTOM_MESSAGE_RESPONSE :
             const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, message.type);
             if (uiPromise) {
                 uiPromise.resolve({ event: message.type, payload: message.payload });
@@ -292,6 +293,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     if (_preferredDevice && !message.payload.device) {
         message.payload.device = _preferredDevice;
     }
+
+    // restore default messages
+    if (_deviceList)
+        await _deviceList.reconfigure();
 
     const responseID: number = message.id;
     const trustedHost: boolean = DataManager.getSettings('trustedHost');
@@ -479,8 +484,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 // return Promise.resolve();
             // }
 
-
-
             // check and request permissions
             method.checkPermissions();
             if (!trustedHost && method.requiredPermissions.length > 0) {
@@ -543,6 +546,11 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
             // run method
             try {
+                // for CustomMessage method reconfigure transport with custom messages definitions
+                const customMessages = method.getCustomMessages();
+                if (_deviceList && customMessages) {
+                    await _deviceList.reconfigure(customMessages);
+                }
                 const response: Object = await method.run();
                 messageResponse = new ResponseMessage(method.responseID, true, response);
             } catch (error) {
@@ -585,6 +593,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         // device.removeAllListeners();
         device.cleanup();
         cleanup();
+
+        // restore default messages
+        if (_deviceList)
+            await _deviceList.reconfigure();
 
         if (messageResponse) {
             postMessage(messageResponse);

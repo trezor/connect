@@ -25,7 +25,7 @@ import { create as createDeferred } from '../utils/deferred';
 
 import { parseMessage, UiMessage } from '../core/CoreMessage';
 
-import { parse as parseSettings, setDataAttributes } from './ConnectSettings';
+import { parse as parseSettings } from './ConnectSettings';
 import type { ConnectSettings } from './ConnectSettings';
 import type { Deferred, CoreMessage } from 'flowtype';
 
@@ -242,6 +242,42 @@ class TrezorConnect extends TrezorBase {
         const parsedSettings: ConnectSettings = parseSettings(settings);
         _log.enabled = parsedSettings.debug;
         postMessage({ type: UI.CHANGE_SETTINGS, payload: parsedSettings }, false);
+    }
+
+    static async customMessage(params: Object): Promise<Object | void> {
+        if (typeof params.callback !== 'function') {
+            return {
+                success: false,
+                payload: {
+                    error: 'Parameter "callback" is not a function'
+                }
+            }
+        }
+        const callback = params.callback;
+        delete params.callback;
+        const customMessageListener = async (event: Message) => {
+            const data = event.data;
+            if (data && data.type == UI.CUSTOM_MESSAGE_REQUEST) {
+                const response = await callback(data.payload);
+                if (response) {
+                    this.__customMessageResponse(response);
+                } else {
+                    this.__customMessageResponse({ message: 'release' });
+                }
+            }
+        }
+        window.addEventListener('message', customMessageListener, false);
+        const response = await this.__call({ method: 'customMessage', ...params });
+        window.removeEventListener('message', customMessageListener);
+        return response;
+    }
+
+    static __customMessageResponse(message: Object): void {
+        postMessage({
+            event: UI_EVENT,
+            type: UI.CUSTOM_MESSAGE_RESPONSE,
+            payload: message
+        });
     }
 
     // static async requestDevice() {

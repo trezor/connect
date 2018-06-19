@@ -136,8 +136,13 @@ const postMessage = (message: CoreMessage): void => {
     _log.debug('postMessage', message);
     // window.top.postMessage(message, DataManager.getSettings('origin'));
 
-    if (_popupMessagePort && message.event === UI_EVENT && message.type !== UI.CLOSE_UI_WINDOW && message.type !== POPUP.CANCEL_POPUP_REQUEST) {
-        _popupMessagePort.postMessage(message);
+    const parentMessages = [ UI.IFRAME_HANDSHAKE, UI.CLOSE_UI_WINDOW, POPUP.CANCEL_POPUP_REQUEST, UI.CUSTOM_MESSAGE_REQUEST ];
+    if (message.event === UI_EVENT && parentMessages.indexOf(message.type) < 0) {
+        if (_popupMessagePort) {
+            _popupMessagePort.postMessage(message);
+        } else {
+            // TODO: communication error
+        }
     } else {
         window.top.postMessage(message, DataManager.getSettings('origin'));
     }

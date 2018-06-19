@@ -148,6 +148,10 @@ export default class AbstractMethod implements MethodInterface {
         }
     }
 
+    getCustomMessages(): ?JSON {
+        return null;
+    }
+
     __hash(permission: string): string {
         const host: string = DataManager.getSettings('origin');
         const secret: string = `${permission}#${this.device.features.device_id}#${host}`;

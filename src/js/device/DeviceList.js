@@ -58,6 +58,10 @@ export default class DeviceList extends EventEmitter {
     devices: {[k: string]: Device} = {};
     creatingDevicesDescriptors: {[k: string]: DeviceDescriptor} = {};
 
+    defaultMessages: JSON;
+    hasCustomMessages: boolean = false;
+    transportStartPending: boolean;
+
     constructor(options: ?DeviceListOptions) {
         super();
         this.options = options || {};
@@ -134,14 +138,32 @@ export default class DeviceList extends EventEmitter {
     async _configTransport(transport: Transport): Promise<void> {
         try {
             const url: string = `${ DataManager.getSettings('transportConfigSrc') }?${ Date.now() }`;
-            const config = await httpRequest(url, 'json');
-            await transport.configure(JSON.stringify(config));
+            this.defaultMessages = await httpRequest(url, 'json');
+            await transport.configure(JSON.stringify(this.defaultMessages));
         } catch (error) {
             throw ERROR.WRONG_TRANSPORT_CONFIG;
         }
     }
 
-    transportStartPending: boolean;
+    async reconfigure(json?: JSON): Promise<void> {
+        try {
+            let config: string;
+            if (!json) {
+                if (!this.hasCustomMessages) {
+                    return;
+                }
+                // back to default messages
+                config = JSON.stringify(this.defaultMessages);
+            } else {
+                // custom messages as JSON
+                config = JSON.stringify(json);
+            }
+            await this.transport.configure(config);
+            this.hasCustomMessages = !!(json);
+        } catch (error) {
+            throw ERROR.WRONG_TRANSPORT_CONFIG;
+        }
+    }
 
     resolveTransportEvent() {
         if (this.transportStartPending) {

@@ -22,13 +22,6 @@ export default class Trezor {
         // to override
     }
 
-    static async customMessage(params: Object): Promise<Object> {
-        return await this.__call({
-            method: 'customMessage',
-            customFunction: encodeURI( params.customFunction.toString() )
-        });
-    }
-
     static async cipherKeyValue(params: Object): Promise<Object> {
         return await this.__call({ method: 'cipherKeyValue', ...params });
     }

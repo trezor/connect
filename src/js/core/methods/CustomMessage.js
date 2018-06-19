@@ -2,11 +2,15 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import type { CoreMessage } from 'flowtype';
+import * as UI from '../../constants/ui';
+
+import { UiMessage } from '../CoreMessage';
+import type { UiPromiseResponse, CoreMessage } from 'flowtype';
 
 type Params = {
-    //fn: (message: (type: string, msg: Object) => Promise<any>) => Promise<any>;
-    fn: string;
+    customMessages: JSON;
+    message: string;
+    params: any;
 }
 
 export default class CustomMessage extends AbstractMethod {
@@ -23,18 +27,63 @@ export default class CustomMessage extends AbstractMethod {
         this.info = 'Custom message';
 
         const payload: any = message.payload;
-        if (typeof payload.customFunction !== 'string') {
-            // throw new Error('Parameter "customFunction" has invalid type. Function expected.');
+
+        if (payload.hasOwnProperty('messages')){
+            try {
+                JSON.parse( JSON.stringify(payload.messages) );
+            } catch (error) {
+                throw new Error('Parameter "messages" has invalid type. JSON expected.');
+            }
+        }
+
+        if (typeof payload.message !== 'string') {
+            throw new Error('Parameter "message" has invalid type. String expected.');
+        }
+
+        if (typeof payload.params !== 'object') {
+            throw new Error('Parameter "params" has invalid type. Object expected.');
         }
 
         this.params = {
-            fn: payload.customFunction,
+            customMessages: payload.messages,
+            message: payload.message,
+            params: payload.params
         }
     }
 
+    getCustomMessages(): ?JSON {
+        return this.params.customMessages;
+    }
+
     async run(): Promise<Object> {
-        let fn = eval('(' + decodeURI(this.params.fn) + ');');
-        // return await fn( this.device.getCommands().call.bind( this.device.getCommands() ) );
-        return await fn( this.device.getCommands()._commonCall.bind( this.device.getCommands() ) );
+
+        // call message
+        const response = await this.device.getCommands()._commonCall(this.params.message, this.params.params);
+
+        // send result to developer
+        this.postMessage(new UiMessage(UI.CUSTOM_MESSAGE_REQUEST, response));
+
+        // wait for response from developer
+        const uiResp: UiPromiseResponse = await this.createUiPromise(UI.CUSTOM_MESSAGE_RESPONSE, this.device).promise;
+        const payload = uiResp.payload;
+
+        // validate again
+        if (typeof payload.message !== 'string') {
+            throw new Error('Parameter "message" has invalid type. String expected.');
+        }
+
+        if (typeof payload.params !== 'object') {
+            payload.params = {};
+        }
+
+        if (payload.message.toLowerCase() === 'release') {
+            // release device
+            return response;
+        } else {
+            // change local params and make another call to device
+            this.params.message = payload.message;
+            this.params.params = payload.params;
+            return await this.run();
+        }
     }
 }
