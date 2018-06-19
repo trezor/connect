@@ -44,5 +44,9 @@ module.exports = {
         }),
 
         new webpack.optimize.OccurrenceOrderPlugin()
-    ]
+    ],
+
+    // optimization: {
+    //     minimize: false
+    // }
 }
