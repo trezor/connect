@@ -10,6 +10,10 @@ import { ethereumSignMessageTests } from './ethereumSignMessage.spec.js';
 import { ethereumSignTxTests } from './ethereumSignTx.spec.js';
 import { ethereumVerifyMessageTests } from './ethereumVerifyMessage.spec.js';
 import { nemGetAddressTests } from './nemGetAddress.spec.js';
+import { nemSignTransactionMosaicTests } from './nemSignTransactionMosaic.spec.js';
+import { nemSignTransactionMultisigTests } from './nemSignTransactionMultisig.spec.js';
+import { nemSignTransactionOthersTests } from './nemSignTransactionOthers.spec.js';
+import { nemSignTransactionTransfersTests } from './nemSignTransactionTransfers.spec.js';
 
 const testFunctions = {
     getPublicKey: getPublicKeyTests,
@@ -18,6 +22,10 @@ const testFunctions = {
     ethereumSignTx: ethereumSignTxTests,
     ethereumVerifyMessage: ethereumVerifyMessageTests,
     nemGetAddress: nemGetAddressTests,
+    nemSignTransactionMosaic: nemSignTransactionMosaicTests,
+    nemSignTransactionMultisig: nemSignTransactionMultisigTests,
+    nemSignTransactionOthers: nemSignTransactionOthersTests,
+    nemSignTransactionTransfers: nemSignTransactionTransfersTests,
 };
 
 const testToRun = __karma__.config.test;
