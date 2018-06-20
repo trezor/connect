@@ -53,6 +53,11 @@ export default class GetPublicKey extends AbstractMethod {
 
         if (!coinInfo) {
             coinInfo = getCoinInfoFromPath(path);
+        } else {
+            const coinInfoFromPath: ?CoinInfo = getCoinInfoFromPath(path);
+            if (coinInfoFromPath && coinInfo.shortcut !== coinInfoFromPath.shortcut) {
+                throw new Error('Parameters "path" and "coin" dont match');
+            }
         }
 
         this.params = {

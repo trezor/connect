@@ -29,16 +29,14 @@ export default class VerifyMessage extends AbstractMethod {
         this.info = 'Verify message';
 
         const payload: any = message.payload;
-        let coinInfo: ?CoinInfo;
 
-        if (payload.hasOwnProperty('coin') && payload.coin) {
-            if (typeof payload.coin === 'string') {
-                coinInfo = getCoinInfoByCurrency(payload.coin);
-            } else {
-                throw new Error('Parameter "coin" has invalid type. String expected.');
-            }
+        if (!payload.hasOwnProperty('coin')) {
+            throw new Error('Parameter "coin" is missing.');
+        } else if (typeof payload.coin !== 'string') {
+            throw new Error('Parameter "coin" has invalid type. String expected.');
         }
 
+        const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
         if (!coinInfo) {
             throw new Error('Coin not found.');
         }
