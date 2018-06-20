@@ -173,6 +173,20 @@ export default class DeviceCommands {
         });
     }
 
+    async verifyMessage(
+        address: string,
+        signature: string,
+        message: string,
+        coin: string
+    ): Promise<DefaultMessageResponse> {
+        return await this.typedCall('VerifyMessage', 'Success', {
+            address,
+            signature,
+            message,
+            coin_name: coin || 'Bitcoin'
+        });
+    }
+
     async ethereumGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<MessageResponse<trezor.EthereumAddress>> {
         const response: Object = await this.typedCall('EthereumGetAddress', 'EthereumAddress', {
             address_n: address_n,

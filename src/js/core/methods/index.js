@@ -8,6 +8,7 @@ import GetFeatures from './GetFeatures';
 import GetDeviceState from './GetDeviceState';
 import GetPublicKey from './GetPublicKey';
 import SignMessage from './SignMessage';
+import VerifyMessage from './VerifyMessage';
 import CipherKeyValue from './CipherKeyValue';
 import EthereumGetAddress from './EthereumGetAddress';
 import EthereumSignTx from './EthereumSignTx';
@@ -23,6 +24,7 @@ import StellarSignTx from './StellarSignTx';
 const classes: {[k: string]: any} = {
     'getFeatures': GetFeatures,
     'signMessage': SignMessage,
+    'verifyMessage': VerifyMessage,
     'getPublicKey': GetPublicKey,
     'getDeviceState': GetDeviceState,
     'cipherKeyValue': CipherKeyValue,
