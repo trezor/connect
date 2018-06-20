@@ -350,6 +350,108 @@ test_nemGetAddress() {
 
     run_karma "nemGetAddress"
 }
+
+test_nemSignTransactionMosaic() {
+    # todo: emulator firmware
+
+    subtests="supplyChange creation creationProperties creationLevy"
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_nopin_nopassphrase
+        start_transport
+
+        run_karma "nemSignTransactionMosaic" $subtest
+
+        kill -TERM $pid_emul
+        wait $pid_emul > /dev/null 2>&1
+
+        kill -TERM $pid_transport
+        wait $pid_transport > /dev/null 2>&1
+    done;
+
+    start_emulator
+    setup_mnemonic_nopin_nopassphrase
+    start_transport
+}
+
+test_nemSignTransactionMultisig() {
+    # todo: emulator firmware
+
+    subtests="aggregateModification multisig multisigSigner"
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_nopin_nopassphrase
+        start_transport
+
+        run_karma "nemSignTransactionMultisig" $subtest
+
+        kill -TERM $pid_emul
+        wait $pid_emul > /dev/null 2>&1
+
+        kill -TERM $pid_transport
+        wait $pid_transport > /dev/null 2>&1
+    done;
+
+    start_emulator
+    setup_mnemonic_nopin_nopassphrase
+    start_transport
+}
+
+test_nemSignTransactionOthers() {
+    # todo: emulator firmware
+
+    subtests="importanceTransfer provisionNamespace"
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_nopin_nopassphrase
+        start_transport
+
+        run_karma "nemSignTransactionOthers" $subtest
+
+        kill -TERM $pid_emul
+        wait $pid_emul > /dev/null 2>&1
+
+        kill -TERM $pid_transport
+        wait $pid_transport > /dev/null 2>&1
+    done;
+
+    start_emulator
+    setup_mnemonic_nopin_nopassphrase
+    start_transport
+}
+
+test_nemSignTransactionTransfers() {
+    subtests="simple encryptedPayload xemAsMosaic unknownMosaic knownMosaic knownMosaicWithLevy multipleMosaics"
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_nopin_nopassphrase
+        start_transport
+
+        run_karma "nemSignTransactionTransfers" $subtest
+
+        kill -TERM $pid_emul
+        wait $pid_emul > /dev/null 2>&1
+
+        kill -TERM $pid_transport
+        wait $pid_transport > /dev/null 2>&1
+    done;
+
+    start_emulator
+    setup_mnemonic_nopin_nopassphrase
+    start_transport
+}
 ################# Functions: END
 
 # Show help if no option provided
