@@ -69,7 +69,7 @@ export class CoreEventHandler {
                 await this._releaseDevice();
                 await this._handleButtonRequest();
             } catch(e) {
-                //console.error('Error handling button', e);
+                console.error('Error handling button', e);
                 return;
             }
         }
@@ -124,7 +124,7 @@ export class CoreEventHandler {
             // 3. Call the method
             return this._httpPost(this._urlCall(session), protoButtonPressYes);
         } catch (e) {
-            //console.error(e);
+            console.error(e);
             return;
         }
     };
@@ -140,8 +140,6 @@ export class CoreEventHandler {
 
         if (session !== null) {
             return this._httpPost(this._urlRelease(session));
-        } else {
-            //console.warn('Cannot release device with null session')
         }
     }
 
