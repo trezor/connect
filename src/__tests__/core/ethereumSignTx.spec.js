@@ -2,7 +2,71 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-const signTxNoDataSubtest = () => {
+const knownErc20TokenSubtest = () => {
+    const testPayloads = [
+        {
+            method: 'ethereumSignTx',
+            path: [0, 0],
+            transaction: {
+                nonce: '0x0',
+                gasPrice: '0x14',
+                gasLimit: '0x14',
+                to: '0xd0d6d6c5fe4a677d343cc433536bb717bae167dd',
+                chainId: 1,
+                value: '0x0',
+                data: '0xa9059cbb000000000000000000000000574bbb36871ba6b78e27f4b4dcfb76ea0091880b000000000000000000000000000000000000000000000000000000000bebc200',
+            },
+        },
+    ];
+    const expectedResponses = [
+        {
+            payload: {
+                r: '75cf48fa173d8ceb68af9e4fb6b78ef69e6ed5e7679ba6f8e3e91d74b2fb0f96',
+                s: '65de4a8c35263b2cfff3954b12146e8e568aa67a1c2461d6865e74ef75c7e190',
+            },
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/knownErc20Token',
+    };
+};
+
+const unknownErc20TokenSubtest = () => {
+    const testPayloads = [
+        {
+            method: 'ethereumSignTx',
+            path: [0, 0],
+            transaction: {
+                nonce: '0x0',
+                gasPrice: '0x14',
+                gasLimit: '0x14',
+                to: '0xfc6b5d6af8a13258f7cbd0d39e11b35e01a32f93',
+                chainId: 1,
+                value: '0x0',
+                data: '0xa9059cbb000000000000000000000000574bbb36871ba6b78e27f4b4dcfb76ea0091880b0000000000000000000000000000000000000000000000000000000000000123',
+            },
+        },
+    ];
+    const expectedResponses = [
+        {
+            payload: {
+                r: '1707471fbf632e42d18144157aaf4cde101cd9aa9782ad8e30583cfc95ddeef6',
+                s: '3d2e52ba5904a4bf131abde3f79db826199f5d6f4d241d531d7e8a30a3b9cfd9',
+            },
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/unknownErc20Token',
+    };
+};
+
+const noDataSubtest = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -47,11 +111,11 @@ const signTxNoDataSubtest = () => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '- signTxNoData',
+        specName: '/noData',
     };
 };
 
-const signTxDataSubtest = () => {
+const dataSubtest = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -99,11 +163,11 @@ const signTxDataSubtest = () => {
     return {
         testPayloads,
         expectedResponses,
-        specName: 'signTxData'
+        specName: '/data'
     };
 };
 
-const signTxMessageSubtest = () => {
+const messageSubtest = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -132,11 +196,11 @@ const signTxMessageSubtest = () => {
     return {
         testPayloads,
         expectedResponses,
-        specName: 'signTxMessage',
+        specName: '/message',
     };
 };
 
-const signTxNewContractSubtest = () => {
+const newContractSubtest = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -176,7 +240,7 @@ const signTxNewContractSubtest = () => {
     return {
         testPayloads,
         expectedResponses,
-        specName: 'signTxNewContract',
+        specName: '/newContract',
     };
 };
 
@@ -237,11 +301,11 @@ const sanityChecksSubtest = () => {
     return {
         testPayloads,
         expectedResponses,
-        specName: 'sanityChecks',
+        specName: '/sanityChecks',
     };
 };
 
-const signTxNoDataEip155Subtest = () => {
+const noDataEip155Subtest = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -288,11 +352,11 @@ const signTxNoDataEip155Subtest = () => {
     return {
         testPayloads,
         expectedResponses,
-        specName: 'signTxNoDataEip155',
+        specName: '/noDataEip155',
     }
 };
 
-const signTxDataEip155Subtest = () => {
+const dataEip155Subtest = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -381,22 +445,22 @@ const signTxDataEip155Subtest = () => {
     return {
         testPayloads,
         expectedResponses,
-        specName: 'signTxDataEip155',
+        specName: '/dataEip155',
     };
 };
 
 export const ethereumSignTxTests = () => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
-        /* knownErc20Token: knownErc20TokenSubtest,
-        unknownErc20Token: unknownErc20TokenSubtest, */
-        signTxNoData: signTxNoDataSubtest,
-        signTxData: signTxDataSubtest,
-        signTxMessage: signTxMessageSubtest,
-        signTxNewContract: signTxNewContractSubtest,
+        knownErc20Token: knownErc20TokenSubtest,
+        unknownErc20Token: unknownErc20TokenSubtest,
+        noData: noDataSubtest,
+        data: dataSubtest,
+        message: messageSubtest,
+        newContract: newContractSubtest,
         sanityChecks: sanityChecksSubtest,
-        signTxNoDataEip155: signTxNoDataEip155Subtest,
-        signTxDataEip155: signTxDataEip155Subtest,
+        noDataEip155: noDataEip155Subtest,
+        dataEip155: dataEip155Subtest,
     };
 
     describe('EthereumSignTx', () => {
@@ -420,6 +484,8 @@ export const ethereumSignTxTests = () => {
         for (let i = 0; i < testPayloads.length; i++) {
             const payload = testPayloads[i];
             const expectedResponse = expectedResponses[i];
+
+            console.warn(payload);
 
             it(specName, async (done) => {
                 const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
