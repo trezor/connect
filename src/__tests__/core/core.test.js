@@ -11,12 +11,11 @@ import { ethereumSignTxTests } from './ethereumSignTx.spec.js';
 import { ethereumVerifyMessageTests } from './ethereumVerifyMessage.spec.js';
 import { nemGetAddressTests } from './nemGetAddress.spec.js';
 
-// todo: generate this object automatically
 const testFunctions = {
     getPublicKey: getPublicKeyTests,
     ethereumGetAddress: ethereumGetAddressTests,
     ethereumSignMessage: ethereumSignMessageTests,
-    ethereumSignTx: ethereumSignTxTests, // TODO
+    ethereumSignTx: ethereumSignTxTests,
     ethereumVerifyMessage: ethereumVerifyMessageTests,
     nemGetAddress: nemGetAddressTests,
 };
