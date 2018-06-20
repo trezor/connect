@@ -181,13 +181,13 @@ show_results() {
         test_name=$(echo $r | cut -d"@" -f1)
         test_result=$(echo $r | cut -d"@" -f2)
 
-        printf '%s' "$test_name"
+        printf '%s' "- $test_name"
         printf '%*.*s' 0 $((padlength - ${#test_name} )) "$pad"
         printf '%s\n' "$test_result"
     done;
     IFS=$reset_ifs
 
-    echo "\n\n\n"
+    echo "\n"
 }
 
 validate_test_names() {
@@ -312,13 +312,13 @@ test_ethereumSignMessage() {
 test_ethereumSignTx() {
     # EthereumSignTx has multiple tests with a different device setup
     # - subtest specifies what type of test should be called
-    subtests="signTxNoData signTxData signTxMessage signTxNewContract sanityChecks signTxNoDataEip155 signTxDataEip155"
+    subtests="knownErc20Token unknownErc20Token noData data message newContract sanityChecks noDataEip155 dataEip155"
 
     for subtest in $subtests; do
         echo "${green}   - subtest: ${subtest}${reset}"
         start_emulator
 
-        if [ $subtest == "signTxNoDataEip155" ] || [ $subtest == "signTxDataEip155" ]; then
+        if [ $subtest == "noDataEip155" ] || [ $subtest == "dataEip155" ]; then
             setup_mnemonic_allallall
         else
             setup_mnemonic_nopin_nopassphrase
