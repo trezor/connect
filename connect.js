@@ -1,7 +1,7 @@
 /**
  * (C) 2017 SatoshiLabs
  *
- * GPLv3
+ * LGPLv3
  */
 var TREZOR_CONNECT_VERSION = 4;
 
