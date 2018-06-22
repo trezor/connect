@@ -48,7 +48,6 @@ export default class SignMessage extends AbstractMethod {
             coinInfo = getCoinInfoFromPath(payload.path);
         } else {
             const coinInfoFromPath: ?CoinInfo = getCoinInfoFromPath(payload.path);
-            console.warn("SIGN", coinInfoFromPath, coinInfo);
             if (coinInfoFromPath && coinInfo.shortcut !== coinInfoFromPath.shortcut) {
                 throw new Error('Parameters "path" and "coin" don\'t match');
             }
