@@ -15,6 +15,7 @@ available_tests=$(ls ./src/__tests__/core/*.spec.js | xargs -n 1 basename | cut 
 # Delete the trailing whitespace (one character)
 available_tests=$(echo $available_tests | rev | cut -c 1- | rev)
 tests_to_run=""
+tests_not_to_run=""
 
 should_print_debug=0
 karma_log_level="error" # "disable", "error", "warn", "info", "debug"
@@ -43,6 +44,17 @@ pin_6="789456"
 pin_8="45678978"
 ################# Device config vars: END
 
+################# Possible subtests
+signMessage_subtests="sign signTestnet signBch signLong signUtf"
+verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind verifyUtf"
+ethereumSignTx_subtests="knownErc20Token unknownErc20Token noData data message newContract sanityChecks noDataEip155 dataEip155"
+nemSignTransactionMosaic_subtests="supplyChange creation creationProperties creationLevy"
+nemSignTransactionMultisig_subtests="aggregateModification multisig multisigSigner"
+nemSignTransactionOthers_subtests="importanceTransfer provisionNamespace"
+nemSignTransactionTransfers_subtests="simple encryptedPayload xemAsMosaic unknownMosaic knownMosaic knownMosaicWithLevy multipleMosaics"
+################# Possible subtests: END
+
+
 ################# Functions
 cleanup() {
     cd $base_path
@@ -59,11 +71,26 @@ cleanup() {
     exit
 }
 
+kill_emul_transport() {
+    is_running_emul=$(ps $pid_emul > /dev/null && echo 0 || echo 1)
+    is_running_transport=$(ps $pid_transport > /dev/null && echo 0 || echo 1)
+
+        kill -TERM $pid_emul
+        wait $pid_emul > /dev/null 2>&1
+    #if [ $is_running_transport -eq 0 ]; then
+    #fi;
+
+        kill -TERM $pid_transport
+        wait $pid_transport > /dev/null 2>&1
+    #if [ $is_running_emul -eq 0 ]; then
+    #fi;
+}
+
 log_error() {
     description=$1
     error_message=$2
 
-    echo "❗️ ${red}${bold}Error - $description:$reset $error_message"
+    echo "${red}${bold}Error - $description:$reset $error_message"
 }
 
 show_usage() {
@@ -71,16 +98,17 @@ show_usage() {
     echo ""
     echo "Options:"
 
-    echo "  -a                  Run all available tests"
-    echo "  -t <test_name>      Run <test_names>"
-    echo "  -x <test_name>      Run all tests but <test_name>"
-    echo "  -l                  Show available tests and exit"
-    echo "  -e                  Specify path to emulator"
-    echo "  -b                  Specify path to transport"
-    echo "  -p                  Show default paths to emulator and transport and exit"
-    echo "  -d                  Print debug messages while running tests"
-    echo "  -k <logl_level>     todo: Set Karma's log-level ('disable', 'error' - default, 'warn', 'info', 'debug')"
-    echo "  -h                  Show this message and exit"
+    echo "  -a                                  Run all available tests"
+    echo "  -t \"<,TEST_NAME/SUBTEST_NAME>\"    Run specified tests/subtest"
+    echo "  -x \"<,TEST_NAME>\"                 Run all but specified tests"
+    echo "  -l                                  Show all available tests and exit."
+    echo "  -s <TEST_NAME>                      Show all available subtests for the specified test name and exit."
+    echo "  -e                                  Specify path to emulator"
+    echo "  -b                                  Specify path to transport"
+    echo "  -p                                  Show default paths to emulator and transport and exit"
+    echo "  -d                                  Print debug messages while running tests"
+    echo "  -k <LOG_LEVEL>                      (todo) Set Karma's log-level ('disable', 'error' - default, 'warn', 'info', 'debug')"
+    echo "  -h                                  Show this message and exit"
 }
 
 start_emulator() {
@@ -156,11 +184,33 @@ setup_mnemonic_pin_passphrase() {
     init_device "$mnemonic_12" "$pin_4" "True"
 }
 
+show_available_subtests_for_test() {
+    test_name=$1
+    subtests=${test_name}_subtests
+
+    if [ -n "${!subtests}" ]; then
+        echo "Following subtests for '${test_name}' are available:"
+        for subtest in ${!subtests}; do
+            echo "  ${green}-${reset} $subtest"
+        done;
+        echo "Usage to run specific test: 'run -t \"[testName/subtestName]\"'"
+    else
+        echo " ${yellow}-${reset} Test '${test_name}' has no subtests."
+    fi;
+}
+
 show_available_tests() {
     echo "Following tests are available:"
     for test in $available_tests; do
-        echo "  $green-$reset $test"
+        echo "${green}-${reset} $test"
+
+        subtests=${test}_subtests
+        for subtest in ${!subtests}; do
+            echo "  ${green}-${reset} $subtest"
+        done;
     done;
+
+    echo "Usage to run specific test: 'run -t \"[testName/subtestName]\"'"
 }
 
 show_default_paths() {
@@ -190,25 +240,57 @@ show_results() {
     echo "\n"
 }
 
+validate_subtest_name_for_test() {
+    subtest_name=$1
+    test_name=$2
+
+    # First check whether test has any subtests at all
+    subtests=${test_name}_subtests
+    if [ -n "${!subtests}" ]; then
+        # Test has some subtests
+        # Now check whether subtest name is valid
+        subtest_name_checked=$(echo "${!subtests}" | grep -ow "$subtest_name")
+        if [ -z "${subtest_name_checked}" ]; then
+            log_error "Invalid subtest name" "'${subtest_name}'"
+            echo "Use ${yellow}-l${reset} option too see all available tests"
+            cleanup
+        fi;
+    else
+        log_error "Specified test doesn't have any subtests" "'${test_name}'"
+        echo "Use ${yellow}-l${reset} option too see all available tests"
+        cleanup
+    fi;
+}
+
 validate_test_names() {
     test_names=$1
 
     # Checks whether 'test_names' are actually name of available tests
-    for test_name in $test_names; do
+    for test in $test_names; do
+        # Add trailing '/' so the cut command works for $subtest_name
+        # if $test is only name of the test without '/' (i.e.: test=ethereumSignTx)
+        # the $subtest_name would be same as the $test_name
+        test_name=$(echo ${test}/ | cut -d"/" -f1)
+        subtest_name=$(echo ${test}/ | cut -d"/" -f2)
+
+        # Validate test name
         test_name_checked=$(echo "$available_tests" | grep -ow "$test_name")
-        if [ -n "$test_name_checked" ]
-        then
-            if [ -z "$tests_to_run" ]
-            then
-                tests_to_run="$test_name"
-            else
-                tests_to_run="$tests_to_run $test_name"
-            fi
+        if [ -n "$test_name_checked" ]; then
+            # If the subtest name is present validate it
+            if [ -n "$subtest_name" ]; then
+                validate_subtest_name_for_test $subtest_name $test_name
+            fi;
+
+            if [ "$run_type" = "specified" ]; then
+                tests_to_run="$tests_to_run $test"
+            elif [ "$run_type" = "excluded" ]; then
+                tests_not_to_run="$tests_not_to_run $test"
+            fi;
         else
             log_error "invalid test name" "'$test_name'"
-            echo "  Use $yellow-l$reset option too see all available tests"
+            echo "Use ${yellow}-l${reset} option too see all available tests"
             cleanup
-        fi
+        fi;
     done;
 }
 
@@ -237,7 +319,7 @@ run_karma() {
 
     delimiter1="@"
     delimiter2=";"
-    test_name=$1
+    test_name=${green}${bold}$1${reset}
     if [ -n "$2" ]; then
         test_name="${green}${bold}$1/${reset}${green}$2${reset}"
     fi;
@@ -258,15 +340,15 @@ run_specified_tests() {
 }
 
 run_excluded_tests() {
-    echo "${yellow}${bold}Excluded tests: ${tests_not_to_run}${reset}"
-    echo "${green}${bold}Running all other tests...${reset}"
+    not_to_run="$1"
 
-    # No need to validate whether names of tests in $tests_not_to_run
-    # are valid. Just ignore invalid test name.
+    echo "${yellow}${bold}Excluded tests: ${not_to_run}${reset}"
+    echo "${green}${bold}Running all other tests...${reset}"
 
     for t in $available_tests; do
         is_excluded=""
-        is_excluded=$(echo "$tests_not_to_run" | grep -ow "$t")
+        is_excluded=$(echo "$not_to_run" | grep -ow "$t")
+
         if [ -z "$is_excluded" ]
         then
             run_test $t
@@ -275,17 +357,20 @@ run_excluded_tests() {
 }
 
 run_test() {
-    echo "${green}${bold} - Current test: $1${reset}"
+    # Check whether specified test has any subtest
+    # - add trailing '/' so the cut command works for $subtest_name
+    # - if $test is only name of the test without '/' (i.e.: test=ethereumSignTx)
+    # the $subtest_name would be same as the $test_name
+    test_name=$(echo ${1}/ | cut -d"/" -f1)
+    subtest_name=$(echo ${1}/ | cut -d"/" -f2)
+
+    echo "${green}${bold} - Current test: ${test_name}${reset}"
 
     # Since test functions are named like this: test_nameOfTest
-    # the following line will call desired test function
-    test_$1
+    # the following line will call the desired test function
+    test_$test_name $subtest_name
 
-    kill -TERM $pid_emul
-    wait $pid_emul > /dev/null 2>&1
-
-    kill -TERM $pid_transport
-    wait $pid_transport > /dev/null 2>&1
+    kill_emul_transport
 }
 
 test_getPublicKey() {
@@ -293,6 +378,52 @@ test_getPublicKey() {
     setup_mnemonic_nopin_nopassphrase
     start_transport
     run_karma "getPublicKey"
+}
+
+test_signMessage() {
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$signMessage_subtests
+    fi;
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_nopin_nopassphrase
+        start_transport
+
+        run_karma "signMessage" $subtest
+
+        kill_emul_transport
+    done;
+}
+
+test_verifyMessage() {
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$verifyMessage_subtests
+    fi;
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_nopin_nopassphrase
+        start_transport
+
+        run_karma "verifyMessage" $subtest
+
+        kill_emul_transport
+    done;
 }
 
 test_ethereumGetAddress() {
@@ -310,28 +441,30 @@ test_ethereumSignMessage() {
 }
 
 test_ethereumSignTx() {
-    # EthereumSignTx has multiple tests with a different device setup
-    # - subtest specifies what type of test should be called
-    subtests="knownErc20Token unknownErc20Token noData data message newContract sanityChecks noDataEip155 dataEip155"
+    specified_subtest=$1
+
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$ethereumSignTx_subtests
+    fi;
 
     for subtest in $subtests; do
         echo "${green}   - subtest: ${subtest}${reset}"
-        start_emulator
 
+        start_emulator
         if [ $subtest == "noDataEip155" ] || [ $subtest == "dataEip155" ]; then
             setup_mnemonic_allallall
         else
             setup_mnemonic_nopin_nopassphrase
         fi;
-
         start_transport
+
         run_karma "ethereumSignTx" $subtest
 
-        kill -TERM $pid_emul
-        wait $pid_emul > /dev/null 2>&1
-
-        kill -TERM $pid_transport
-        wait $pid_transport > /dev/null 2>&1
+        kill_emul_transport
     done;
 }
 
@@ -353,8 +486,14 @@ test_nemGetAddress() {
 
 test_nemSignTransactionMosaic() {
     # todo: emulator firmware
-
-    subtests="supplyChange creation creationProperties creationLevy"
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtests
+    else
+        # Run all possible subtests
+        subtests=$nemSignTransactionMosaic_subtests
+    fi;
 
     for subtest in $subtests; do
         echo "${green}   - subtest: ${subtest}${reset}"
@@ -365,22 +504,20 @@ test_nemSignTransactionMosaic() {
 
         run_karma "nemSignTransactionMosaic" $subtest
 
-        kill -TERM $pid_emul
-        wait $pid_emul > /dev/null 2>&1
-
-        kill -TERM $pid_transport
-        wait $pid_transport > /dev/null 2>&1
+        kill_emul_transport
     done;
-
-    start_emulator
-    setup_mnemonic_nopin_nopassphrase
-    start_transport
 }
 
 test_nemSignTransactionMultisig() {
     # todo: emulator firmware
-
-    subtests="aggregateModification multisig multisigSigner"
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtests
+    else
+        # Run all possible subtests
+        subtests=$nemSignTransactionMultisig_subtests
+    fi;
 
     for subtest in $subtests; do
         echo "${green}   - subtest: ${subtest}${reset}"
@@ -391,22 +528,20 @@ test_nemSignTransactionMultisig() {
 
         run_karma "nemSignTransactionMultisig" $subtest
 
-        kill -TERM $pid_emul
-        wait $pid_emul > /dev/null 2>&1
-
-        kill -TERM $pid_transport
-        wait $pid_transport > /dev/null 2>&1
+        kill_emul_transport
     done;
-
-    start_emulator
-    setup_mnemonic_nopin_nopassphrase
-    start_transport
 }
 
 test_nemSignTransactionOthers() {
     # todo: emulator firmware
-
-    subtests="importanceTransfer provisionNamespace"
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtests
+    else
+        # Run all possible subtests
+        subtests=$nemSignTransactionOthers_subtests
+    fi;
 
     for subtest in $subtests; do
         echo "${green}   - subtest: ${subtest}${reset}"
@@ -417,20 +552,20 @@ test_nemSignTransactionOthers() {
 
         run_karma "nemSignTransactionOthers" $subtest
 
-        kill -TERM $pid_emul
-        wait $pid_emul > /dev/null 2>&1
-
-        kill -TERM $pid_transport
-        wait $pid_transport > /dev/null 2>&1
+        kill_emul_transport
     done;
-
-    start_emulator
-    setup_mnemonic_nopin_nopassphrase
-    start_transport
 }
 
 test_nemSignTransactionTransfers() {
-    subtests="simple encryptedPayload xemAsMosaic unknownMosaic knownMosaic knownMosaicWithLevy multipleMosaics"
+    # todo: emulator firmware
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$nemSignTransactionTransfers_subtests
+    fi;
 
     for subtest in $subtests; do
         echo "${green}   - subtest: ${subtest}${reset}"
@@ -441,16 +576,18 @@ test_nemSignTransactionTransfers() {
 
         run_karma "nemSignTransactionTransfers" $subtest
 
-        kill -TERM $pid_emul
-        wait $pid_emul > /dev/null 2>&1
-
-        kill -TERM $pid_transport
-        wait $pid_transport > /dev/null 2>&1
+        kill_emul_transport
     done;
+}
+
+test_stellarGetPublicKey() {
+    # todo: emulator firmware
 
     start_emulator
     setup_mnemonic_nopin_nopassphrase
     start_transport
+
+    run_karma "stellarGetPublicKey"
 }
 ################# Functions: END
 
@@ -462,21 +599,26 @@ fi;
 
 # The emulator device is configured for each specific test automatically
 OPTIND=1
-while getopts ":at:x:le:b:k:pdh" opt; do
+while getopts ":at:x:ls:e:b:k:pdh" opt; do
     case $opt in
         a) # Run all tests
             run_type="all"
         ;;
         t) # Run specified tests
-            validate_test_names "$OPTARG"
             run_type="specified"
+            validate_test_names "$OPTARG"
         ;;
         x) # Exclude tests that shouldn't run (i.e. run all but specified tests)
             run_type="excluded"
-            tests_not_to_run="$OPTARG"
+            validate_test_names "$OPTARG"
+            #tests_not_to_run="$OPTARG"
         ;;
         l) # Show available tests
             show_available_tests
+            cleanup
+        ;;
+        s) # Show subtests for the specified test
+            show_available_subtests_for_test "$OPTARG"
             cleanup
         ;;
         e) # Path to emulator
@@ -512,7 +654,7 @@ if [ "$run_type" = "all" ]; then
 elif [ "$run_type" = "specified" ]; then
     run_specified_tests "$tests_to_run"
 elif [ "$run_type" = "excluded" ]; then
-    run_excluded_tests
+    run_excluded_tests "$tests_not_to_run"
 fi;
 
 show_results
