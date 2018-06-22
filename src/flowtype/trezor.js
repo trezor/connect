@@ -396,4 +396,10 @@ declare module 'flowtype/trezor' {
         balance: number;
         confirmed: number;
     }
+
+    // GetAddress response
+    declare export type Address = {
+        address: string;
+        path: Array<number>;
+    }
 }
