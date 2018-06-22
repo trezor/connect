@@ -158,4 +158,8 @@ export default class AbstractMethod implements MethodInterface {
         const hash: Buffer = crypto.hash256(new Buffer(secret, 'binary'));
         return hash.toString('hex');
     }
+
+    dispose() {
+        // to override
+    }
 }

@@ -594,6 +594,9 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         device.cleanup();
         cleanup();
 
+        if (method)
+            method.dispose();
+
         // restore default messages
         if (_deviceList)
             await _deviceList.reconfigure();

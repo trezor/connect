@@ -33,7 +33,7 @@ export const isSegwitPath = (path: Array<number>): boolean => {
     return path[0] === toHardened(49);
 }
 
-export const validatePath = (path: string | Array<number>): Array<number> => {
+export const validatePath = (path: string | Array<number>, base: boolean = false): Array<number> => {
     let valid: ?Array<number>;
     if (typeof path === 'string') {
         valid = getHDPath(path);
@@ -48,7 +48,7 @@ export const validatePath = (path: string | Array<number>): Array<number> => {
         });
     }
     if (!valid) throw new Error('Not a valid path.');
-    return valid;
+    return base ? valid.splice(0, 3) : valid;
 };
 
 export const getAccountIndexFromPath = (path: Array<number>): number => {
@@ -74,29 +74,38 @@ export const getPathFromIndex = (bip44purpose: number, bip44cointype: number, in
     ];
 };
 
-export function getIndexFromPath(path: Array<number>) {
-    if (path.length !== 3) {
-        throw new Error();
+export function getIndexFromPath(path: Array<number>): number {
+    if (path.length < 3) {
+        throw new Error(`getIndexFromPath: invalid path length ${ path.toString() }`);
     }
-    if ((path[0] >>> 0) !== ((44 | HD_HARDENED) >>> 0)) {
-        throw new Error();
-    }
-    if ((path[1] >>> 0) !== ((0 | HD_HARDENED) >>> 0)) {
-        throw new Error();
-    }
-    return ((path[2] & ~HD_HARDENED) >>> 0);
+    // if ((path[0] >>> 0) !== ((44 | HD_HARDENED) >>> 0)) {
+    //     throw new Error("2");
+    // }
+    // if ((path[1] >>> 0) !== ((0 | HD_HARDENED) >>> 0)) {
+    //     throw new Error("3");
+    // }
+    return fromHardened(path[2]);
 }
 
+export const getAccountLabel = (path: Array<number>, coinInfo: CoinInfo): string => {
+    let coinLabel: string = coinInfo.label;
+    const p1: number = fromHardened(path[0]);
+    let account: number = fromHardened(path[2]);
+    let realAccountId: number = account + 1;
+    let prefix: string = 'Export info of';
+    let accountType: string = '';
 
-export type AccountType = {
-    label: string,
-    legacy: boolean,
-    account: number,
-}
+    if (p1 === 48) {
+        accountType = `multisig ${coinLabel}`;
+    } else if (p1 === 44 && coinInfo.segwit) {
+        accountType = `legacy ${coinLabel}`;
+    } else {
+        accountType = coinLabel;
+    }
+    return `${ prefix } ${ accountType } <span>account #${realAccountId}</span>`;
+};
 
-// export const getAccountLabelFromPath = (coinLabel: string, path: Array<number>, segwit: boolean): AccountType => {
-export const getAccountLabelFromPath = (path: Array<number>, coin: ?CoinInfo | ?string): string => {
-
+export const getPublicKeyLabel = (path: Array<number>, coin: ?CoinInfo | ?string): string => {
     let hasSegwit: boolean = false;
     let coinLabel: string = 'Unknown coin';
     if (coin) {
@@ -133,4 +142,4 @@ export const getAccountLabelFromPath = (path: Array<number>, coin: ?CoinInfo | ?
         accountType = coinLabel;
     }
     return `${ prefix } ${ accountType } <span>account #${realAccountId}</span>`;
-};
+}

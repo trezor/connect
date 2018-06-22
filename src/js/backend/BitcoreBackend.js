@@ -25,7 +25,7 @@ import { httpRequest } from '../utils/networkUtils';
 /* $FlowIssue loader notation */
 import FastXpubWasm from 'hd-wallet/lib/fastxpub/fastxpub.wasm';
 /* $FlowIssue loader notation */
-import FastXpubWorker from 'worker-loader?name=js/fastxpub-worker.[hash].js!hd-wallet/lib/fastxpub/fastxpub';
+import FastXpubWorker from 'worker-loader?name=js/fastxpub-worker.[hash].js!hd-wallet/lib/fastxpub/fastxpub.js';
 /* $FlowIssue loader notation */
 import DiscoveryWorker from 'worker-loader?name=js/discovery-worker.[hash].js!hd-wallet/lib/discovery/worker/inside';
 /* $FlowIssue loader notation */
@@ -36,12 +36,11 @@ export type Options = {
     coinInfo?: CoinInfo,
 };
 
-export default class BitcoreBackend {
+export default class BlockBook {
     options: Options;
     blockchain: BitcoreBlockchain;
 
     lastError: boolean;
-    coinInfo: CoinInfo;
     discovery: Discovery;
 
     constructor(options: Options) {
@@ -51,9 +50,9 @@ export default class BitcoreBackend {
         const blockchain: BitcoreBlockchain = new BitcoreBlockchain(this.options.bitcoreURL, () => new SocketWorker());
         this.blockchain = blockchain;
 
-        this.lastError = false;
+        // this.lastError = false;
 
-        // $FlowIssue WebAssembly
+        // // $FlowIssue WebAssembly
         const filePromise = typeof WebAssembly !== 'undefined' ? httpRequest(FastXpubWasm, 'binary') : Promise.reject();
 
         this.blockchain.errors.values.attach(() => { this._setError(); });
@@ -71,67 +70,57 @@ export default class BitcoreBackend {
 
     async loadCoinInfo(coinInfo: ?CoinInfo): Promise<void> {
         const socket: any = await this.blockchain.socket.promise; // socket from hd-wallet TODO: type
-        const info: any = await socket.send({ method: 'getInfo', params: [] }); // TODO: what type is it?
+        const networkInfo: any = await socket.send({ method: 'getInfo', params: [] }); // TODO: what type is it?
 
         if (!coinInfo) {
             const hash: string = await this.blockchain.lookupBlockHash(0);
-            coinInfo = getCoinInfoByHash(hash, info);
+            coinInfo = getCoinInfoByHash(hash, networkInfo);
             if (!coinInfo) {
                 throw new Error('Failed to load coinInfo ' + hash);
             }
         }
-        coinInfo.blocks = info.blocks; // TODO: where is this used?
 
         // set vars
-        this.coinInfo = coinInfo;
         this.blockchain.zcash = coinInfo.zcash;
     }
 
-    setCoinInfo(coinInfo: CoinInfo): void {
-        this.coinInfo = coinInfo;
-    }
-
-    updateCoinInfo(field: string, value: any): void {
-        this.coinInfo[field] = value;
-    }
-
-    loadAccountInfo(
+    async loadAccountInfo(
         xpub: string,
         data: ?AccountInfo,
+        coinInfo: CoinInfo,
         progress: (progress: AccountLoadStatus) => void,
-        setDisposer: (disposer: () => void) => void,
-        segwit: boolean
+        setDisposer: (disposer: () => void) => void
     ): Promise<AccountInfo> {
-        if (this.coinInfo == null) {
-            return Promise.reject(new Error('Address version not set.'));
-        }
-        const segwit_s: 'p2sh' | 'off' = segwit ? 'p2sh' : 'off';
 
-        const discovery = this.discovery.discoverAccount(data, xpub, this.coinInfo.network, segwit_s);
+        const segwit_s: 'p2sh' | 'off' = coinInfo.segwit ? 'p2sh' : 'off';
 
-        this.blockchain.errors.values.attach((e) => {
-            discovery.dispose(e);
-        });
+        const discovery = this.discovery.discoverAccount(data, xpub, coinInfo.network, segwit_s);
+        setDisposer(() => discovery.dispose(new Error('Interrupted by user')));
 
         discovery.stream.values.attach(status => {
             progress(status);
         });
 
-        setDisposer(() => discovery.dispose(new Error('Interrupted by user')));
+        // discovery.stream.
 
-        return discovery.ending;
+        this.blockchain.errors.values.attach((e) => {
+            discovery.dispose(e);
+            throw e;
+        });
+
+        const info: AccountInfo = await discovery.ending;
+        discovery.stream.dispose();
+
+        return info;
     }
 
     monitorAccountActivity(
         xpub: string,
         data: AccountInfo,
-        segwit: boolean
+        coinInfo: CoinInfo,
     ): Stream<AccountInfo | Error> {
-        if (this.coinInfo == null) {
-            throw new Error('Address version not set.');
-        }
-        const segwit_s = segwit ? 'p2sh' : 'off';
-        const res = this.discovery.monitorAccountActivity(data, xpub, this.coinInfo.network, segwit_s);
+        const segwit_s = coinInfo.segwit ? 'p2sh' : 'off';
+        const res = this.discovery.monitorAccountActivity(data, xpub, coinInfo.network, segwit_s);
 
         this.blockchain.errors.values.attach(() => {
             res.dispose();
@@ -161,73 +150,3 @@ export default class BitcoreBackend {
         // TODO!
     }
 }
-
-const instances: Array<BitcoreBackend> = [];
-
-export const findBackend = (urls: Array<string>): ?BitcoreBackend => {
-    for (let i: number = 0; i < instances.length; i++) {
-        if (instances[i].options.bitcoreURL === urls) {
-            return instances[i];
-        }
-    }
-    return null;
-};
-
-export const createFromCurrency = async (currency: string): Promise<BitcoreBackend> => {
-    const coinInfo: ?CoinInfo = getCoinInfoByCurrency(currency);
-    if (!coinInfo) {
-        throw new Error('Currency not found for ' + currency);
-    }
-    // get bitcore urls from coins.json using currency name/shortcut
-    if (coinInfo.bitcore.length < 1) {
-        throw new Error('Bitcore urls not found for ' + currency);
-    }
-
-    let backend: ?BitcoreBackend = findBackend(coinInfo.bitcore);
-    if (!backend) {
-        backend = new BitcoreBackend({ bitcoreURL: coinInfo.bitcore, coinInfo: coinInfo });
-        instances.push(backend);
-    }
-    // const backend: BitcoreBackend = new BitcoreBackend({ bitcoreURL: coinInfo.bitcore, coinInfo: coinInfo });
-    await backend.loadCoinInfo(coinInfo);
-    // instances.push(backend);
-    return backend;
-};
-
-export const createFromCoinInfo = async (coinInfo: CoinInfo): Promise<BitcoreBackend> => {
-    let backend: ?BitcoreBackend = findBackend(coinInfo.bitcore);
-    if (!backend) {
-        backend = new BitcoreBackend({ bitcoreURL: coinInfo.bitcore, coinInfo: coinInfo });
-        instances.push(backend);
-    }
-    await backend.loadCoinInfo();
-    backend.setCoinInfo(coinInfo);
-    return backend;
-};
-
-// CoinInfo will be find by network hash
-export const createFromUrl = async (urls: Array<string>): Promise<BitcoreBackend> => {
-    let backend: ?BitcoreBackend = findBackend(urls);
-    if (!backend) {
-        backend = new BitcoreBackend({ bitcoreURL: urls });
-        instances.push(backend);
-    }
-    await backend.loadCoinInfo();
-    return backend;
-};
-
-export const create = async (urlsOrCurrency: CoinInfo | Array<string> | string): Promise<BitcoreBackend> => {
-    if (Array.isArray(urlsOrCurrency)) {
-        return await createFromUrl(urlsOrCurrency);
-    } else if (typeof urlsOrCurrency === 'object') {
-        return await createFromCoinInfo(urlsOrCurrency);
-    } else if (typeof urlsOrCurrency === 'string') {
-        return await createFromCurrency(urlsOrCurrency);
-    } else {
-        throw new Error('Invalid params ' + urlsOrCurrency);
-    }
-};
-
-export const disposeBackend = (): void => {
-
-};

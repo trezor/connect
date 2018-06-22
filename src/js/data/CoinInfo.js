@@ -33,6 +33,19 @@ export const getSegwitNetwork = (coin: CoinInfo): ?BitcoinJsNetwork => {
     return null;
 };
 
+export const getAccountCoinInfo = (ci: CoinInfo, path: Array<number>): CoinInfo => {
+    const coinInfo: CoinInfo = cloneCoinInfo(ci);
+    if (path[0] === toHardened(49)) {
+        const segwitNetwork = getSegwitNetwork(coinInfo);
+        if (segwitNetwork) {
+            coinInfo.network = segwitNetwork;
+        }
+    } else {
+        coinInfo.segwit = false;
+    }
+    return coinInfo;
+}
+
 const detectBtcVersion = (data): string => {
     if (data.subversion == null) {
         return 'btc';
@@ -58,10 +71,12 @@ export const getCoinInfoByHash = (hash: string, networkInfo: any): CoinInfo => {
         if (btcVersion === 'bch') {
             fork = coins.find(info => info.name === 'Bcash');
         } else if (btcVersion === 'btg') {
-            fork = coins.find(info => info.name === 'Bitcoin Gold');
+            fork = coins.find(info => info.name === 'Bgold');
         }
         if (fork) {
             return fork;
+        } else {
+            throw new Error('Coin info not found for hash: ' + hash + ' ' + networkInfo.hashGenesisBlock + ' BTC version:' + btcVersion);
         }
     }
     return result;

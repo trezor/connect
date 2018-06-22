@@ -82,6 +82,12 @@ export default class Trezor {
         return await this.__call({ method: 'stellarSignTx', ...params });
     }
 
+
+
+    static async getAccountInfo(params: Object): Promise<Object> {
+        return await this.__call({ method: 'getAccountInfo', ...params });
+    }
+
     /*
 
     static async requestLogin(params: Object): Promise<Object> {
