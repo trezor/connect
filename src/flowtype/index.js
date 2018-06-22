@@ -7,12 +7,12 @@ declare module 'CSSModule' {
 
 // this needs to be toplevel
 declare type $Core$Message = {
-    +event: string,
-    +type: string,
-    +payload: any,
+    +event: string;
+    +type: string;
+    +payload: any;
 
-    id?: number, // response id in ResponseMessage
-    success?: boolean, // response status in ResponseMessage
+    id?: number; // response id in ResponseMessage
+    success?: boolean; // response status in ResponseMessage
 }
 
 // Override MessageEvent to have access to "ports" field and typed "data"
@@ -111,5 +111,15 @@ declare module 'flowtype' {
         blocktime: number,
         // used in backend
         blocks?: number,
-    };
+    }
+
+    declare export type SimpleAccount = {
+        id: number;
+        path: Array<number>;
+        coinInfo: CoinInfo;
+        xpub: string;
+        label: string,
+        balance: number;
+        transactions: number;
+    }
 }

@@ -29,4 +29,10 @@ declare module 'trezor-connect/params' {
         data: string;
         chainId: number;
     }
+
+    declare export type P_GetAccountInfo = Common & {
+        path?: $Path;
+        xpub?: string;
+        coin: string;
+    }
 }

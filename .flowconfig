@@ -1,6 +1,7 @@
 [include]
-.*/node_modules/hd-wallet
+.*/node_modules/hd-wallet/lib
 .*/node_modules/trezor-link
+.*/node_modules/bchaddrjs/
 
 [ignore]
 .*/node_modules/bitcoinjs-lib-zcash/.*

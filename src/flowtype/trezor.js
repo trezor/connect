@@ -382,4 +382,18 @@ declare module 'flowtype/trezor' {
         public_key: string;
         signature: string;
     }
+
+    // GetAccountInfo response
+    declare type AccountInfo = {
+        id: number;
+        path: Array<number>;
+        serializedPath: string;
+        xpub: string;
+        address: string;
+        addressLegacy?: string;
+        addressId: number;
+        addressPath: Array<number>;
+        balance: number;
+        confirmed: number;
+    }
 }

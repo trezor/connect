@@ -186,11 +186,13 @@ declare module 'trezor-connect' {
         R_GetPublicKey,
         R_EthereumGetAddress,
         R_EthereumSignTransaction,
+        R_GetAccountInfo
     } from 'trezor-connect/response';
 
     import type {
         P_EthereumGetAddress,
-        P_EthereumSignTransaction
+        P_EthereumSignTransaction,
+        P_GetAccountInfo,
     } from 'trezor-connect/params';
 
     declare module.exports: {
@@ -207,6 +209,7 @@ declare module 'trezor-connect' {
         ethereumSignTransaction: (options: P_EthereumSignTransaction) => Promise<R_EthereumSignTransaction>;
         ethereumSignMessage: (options: Object) => Promise<Object>;
         ethereumVerifyMessage: (options: Object) => Promise<Object>;
+        getAccountInfo: (options: P_GetAccountInfo) => Promise<R_GetAccountInfo>;
         getDeviceState: (options: Object) => Promise<R_GetDeviceState>;
         getFeatures: (options: Object) => Promise<R_GetFeatures>;
         getPublicKey: (options: Object) => Promise<R_GetPublicKey>;

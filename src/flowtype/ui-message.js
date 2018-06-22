@@ -3,7 +3,7 @@
 declare module 'flowtype/ui-message' {
 
     import type { Device, T_POPUP, T_UI_EVENT, T_UI } from 'trezor-connect';
-    import type { CoreMessage, BrowserState } from 'flowtype';
+    import type { CoinInfo, CoreMessage, BrowserState, SimpleAccount } from 'flowtype';
 
     /*
     * Messages without payload
@@ -96,6 +96,15 @@ declare module 'flowtype/ui-message' {
         payload: Device
     }
 
+    declare type SelectAccount = {
+        +type: $PropertyType<T_UI, 'SELECT_ACCOUNT'>,
+        payload: {
+            accounts: Array<SimpleAccount>;
+            coinInfo: CoinInfo;
+            complete?: boolean;
+        }
+    }
+
     /*
     * Messages from UI
     */
@@ -161,6 +170,7 @@ declare module 'flowtype/ui-message' {
         | SelectDevice
         | BrowserMessage
         | UnexpectedDeviceMode
+        | SelectAccount
         | ReceivePermission
         | ReceiveConfirmation
         | ReceiveDevice
@@ -179,6 +189,7 @@ declare module 'flowtype/ui-message' {
     declare function MessageFactory(type: $PropertyType<SelectDevice, 'type'>, payload: $PropertyType<SelectDevice, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<BrowserMessage, 'type'>, payload: $PropertyType<BrowserMessage, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<UnexpectedDeviceMode, 'type'>, payload: $PropertyType<UnexpectedDeviceMode, 'payload'>): CoreMessage;
+    declare function MessageFactory(type: $PropertyType<SelectAccount, 'type'>, payload: $PropertyType<SelectAccount, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceivePermission, 'type'>, payload: $PropertyType<ReceivePermission, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceiveConfirmation, 'type'>, payload: $PropertyType<ReceiveConfirmation, 'payload'>): CoreMessage;
     declare function MessageFactory(type: $PropertyType<ReceiveDevice, 'type'>, payload: $PropertyType<ReceiveDevice, 'payload'>): CoreMessage;

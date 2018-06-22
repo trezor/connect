@@ -3,7 +3,8 @@
 declare module 'trezor-connect/response' {
 
     import type {
-        EthereumSignedTx // TODO: rename to EthereumSignedTx?
+        EthereumSignedTx,
+        AccountInfo
     } from 'flowtype/trezor';
 
     declare type Unsuccessful = {
@@ -38,6 +39,11 @@ declare module 'trezor-connect/response' {
         payload: {
             // TODO
         }
+    } | Unsuccessful;
+
+    declare type R_GetAccountInfo = {
+        success: true;
+        payload: AccountInfo,
     } | Unsuccessful;
 
     declare type R_GetPublicKey = {
