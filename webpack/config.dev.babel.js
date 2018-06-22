@@ -76,10 +76,11 @@ module.exports = {
                 },
             },
             {
+                type: 'javascript/auto',
                 test: /\.wasm$/,
                 loader: 'file-loader',
                 query: {
-                    name: 'js/[name].[hash].[ext]',
+                    name: 'js/[name].[ext]',
                 },
             },
             {

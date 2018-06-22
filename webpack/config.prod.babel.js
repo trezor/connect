@@ -67,6 +67,7 @@ module.exports = {
                 },
             },
             {
+                type: 'javascript/auto',
                 test: /\.wasm$/,
                 loader: 'file-loader',
                 query: {
