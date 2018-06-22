@@ -5,6 +5,7 @@ import type { CoreMessage } from 'flowtype';
 
 import AbstractMethod, { MethodInterface } from './AbstractMethod';
 import GetAccountInfo from './GetAccountInfo';
+import GetAddress from './GetAddress';
 import GetFeatures from './GetFeatures';
 import GetDeviceState from './GetDeviceState';
 import GetPublicKey from './GetPublicKey';
@@ -24,6 +25,7 @@ import StellarSignTx from './StellarSignTx';
 
 const classes: {[k: string]: any} = {
     'getAccountInfo': GetAccountInfo,
+    'getAddress': GetAddress,
     'getFeatures': GetFeatures,
     'signMessage': SignMessage,
     'verifyMessage': VerifyMessage,

@@ -151,6 +151,23 @@ export default class DeviceCommands {
         return state;
     }
 
+    async getAddress(address_n: Array<number>, coinInfo: CoinInfo, showOnTrezor: boolean): Promise<MessageResponse<trezor.Address>> {
+        const response: Object = await this.typedCall('GetAddress', 'Address', {
+            address_n,
+            coin_name: coinInfo.name,
+            show_display: !!showOnTrezor,
+            script_type: isSegwitPath(address_n) ? 'SPENDP2SHWITNESS' : 'SPENDADDRESS',
+        });
+
+        return {
+            type: response.type,
+            message: {
+                path: address_n || [],
+                address: response.message.address
+            }
+        };
+    }
+
     async signTx(
         tx: BuildTxResult,
         refTxs: Array<bitcoin.Transaction>,

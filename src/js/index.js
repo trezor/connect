@@ -88,6 +88,10 @@ export default class Trezor {
         return await this.__call({ method: 'getAccountInfo', ...params });
     }
 
+    static async getAddress(params: Object): Promise<Object> {
+        return await this.__call({ method: 'getAddress', ...params });
+    }
+
     /*
 
     static async requestLogin(params: Object): Promise<Object> {
