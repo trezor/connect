@@ -80,6 +80,7 @@
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
+    "bchaddrjs": "^0.2.1",
     "bip44-constants": "^5.0.0",
     "bitcoinjs-lib-zcash": "^3.4.1",
     "bowser": "^1.9.3",
