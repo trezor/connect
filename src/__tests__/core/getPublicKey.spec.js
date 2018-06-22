@@ -3,7 +3,7 @@ import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 export const getPublicKeyTests = (): void => {
-    describe(`GetPublicKey`, () => {
+    describe('GetPublicKey', () => {
         let core: Core;
 
         const testPayloads = [

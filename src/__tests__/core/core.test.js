@@ -5,27 +5,33 @@ import * as POPUP from '../../js/constants/popup';
 import * as UI from '../../js/constants/ui';
 
 import { getPublicKeyTests } from './getPublicKey.spec.js';
+import { signMessageTests } from './signMessage.spec.js';
+import { verifyMessageTests } from './verifyMessage.spec.js';
 import { ethereumGetAddressTests } from './ethereumGetAddress.spec.js';
 import { ethereumSignMessageTests } from './ethereumSignMessage.spec.js';
 import { ethereumSignTxTests } from './ethereumSignTx.spec.js';
 import { ethereumVerifyMessageTests } from './ethereumVerifyMessage.spec.js';
 import { nemGetAddressTests } from './nemGetAddress.spec.js';
-import { nemSignTransactionMosaicTests } from './nemSignTransactionMosaic.spec.js';
+/* import { nemSignTransactionMosaicTests } from './nemSignTransactionMosaic.spec.js';
 import { nemSignTransactionMultisigTests } from './nemSignTransactionMultisig.spec.js';
 import { nemSignTransactionOthersTests } from './nemSignTransactionOthers.spec.js';
-import { nemSignTransactionTransfersTests } from './nemSignTransactionTransfers.spec.js';
+import { nemSignTransactionTransfersTests } from './nemSignTransactionTransfers.spec.js'; */
+
 
 const testFunctions = {
     getPublicKey: getPublicKeyTests,
+    signMessage: signMessageTests,
+    verifyMessage: verifyMessageTests,
     ethereumGetAddress: ethereumGetAddressTests,
     ethereumSignMessage: ethereumSignMessageTests,
     ethereumSignTx: ethereumSignTxTests,
     ethereumVerifyMessage: ethereumVerifyMessageTests,
     nemGetAddress: nemGetAddressTests,
-    nemSignTransactionMosaic: nemSignTransactionMosaicTests,
+    /* nemSignTransactionMosaic: nemSignTransactionMosaicTests,
     nemSignTransactionMultisig: nemSignTransactionMultisigTests,
     nemSignTransactionOthers: nemSignTransactionOthersTests,
-    nemSignTransactionTransfers: nemSignTransactionTransfersTests,
+    nemSignTransactionTransfers: nemSignTransactionTransfersTests, */
+
 };
 
 const testToRun = __karma__.config.test;
