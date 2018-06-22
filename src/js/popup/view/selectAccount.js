@@ -8,37 +8,42 @@ import { formatAmount } from '../../utils/formatUtils';
 
 import { container, showView, postMessage } from './common';
 
-export const selectAccount = (data: ?Object): void => {
-    if (!data || !Array.isArray(data.accounts)) return;
+import type { SimpleAccount } from 'flowtype';
+import type { SelectAccount } from 'flowtype/ui-message';
+
+export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>): void => {
+    if (!payload || !Array.isArray(payload.accounts)) return;
 
     // first render
     // configure buttons
-    if (container.getElementsByClassName('accounts_normal').length < 1) {
-        showView('select_account');
+    if (payload.accounts.length < 1) {
+        showView('select-account');
 
-        if (data.coinInfo.segwit) {
-            const tabs: HTMLElement = container.getElementsByClassName('account_type_tabs')[0];
-            tabs.style.display = 'block';
+        if (payload.coinInfo.segwit) {
+            const tabs: HTMLElement = container.getElementsByClassName('tabs')[0];
+            tabs.style.display = 'flex';
 
-            const selectAccountContainer: HTMLElement = container.getElementsByClassName('select_account')[0];
-            const buttons: HTMLCollection<HTMLElement> = tabs.getElementsByClassName('account_type_tab');
+            const selectAccountContainer: HTMLElement = container.getElementsByClassName('select-account')[0];
+            const buttons: HTMLCollection<HTMLElement> = tabs.getElementsByClassName('tab-selection');
             let button: HTMLElement;
             for (button of buttons) {
                 const type: ?string = button.getAttribute('data-tab');
                 if (type) {
                     button.onclick = (event: MouseEvent) => {
-                        selectAccountContainer.className = 'select_account ' + type;
+                        selectAccountContainer.className = 'select-account ' + type;
                     };
                 }
             }
         }
     }
 
+    // set header
     const h3: HTMLElement = container.getElementsByTagName('h3')[0];
-    h3.innerHTML = data.complete ? `Select ${ data.coinInfo.label } account` : `Loading ${ data.coinInfo.label } accounts...`;
+    h3.innerHTML = payload.complete ? `Select ${ payload.coinInfo.label } account` : `Loading ${ payload.coinInfo.label } accounts...`;
 
-    const buttonsContainer: HTMLElement = container.getElementsByClassName('accounts_normal')[0];
-    const legacyButtonsContainer: HTMLElement = container.getElementsByClassName('accounts_legacy')[0];
+
+    const buttonsContainer: HTMLElement = container.querySelectorAll('.select-account-list.normal')[0];
+    const legacyButtonsContainer: HTMLElement = container.querySelectorAll('.select-account-list.legacy')[0];
 
     const handleClick = (event: MouseEvent): void => {
         if (event.currentTarget instanceof HTMLElement) {
@@ -48,54 +53,49 @@ export const selectAccount = (data: ?Object): void => {
     };
 
     const removeEmptyButton = (buttonContainer: HTMLElement): void => {
-        const defaultButton: HTMLElement = buttonContainer.querySelectorAll('.account_default')[0];
+        const defaultButton: HTMLElement = buttonContainer.querySelectorAll('.account-default')[0];
         if (defaultButton) { buttonContainer.removeChild(defaultButton); }
     };
 
-    const updateButtonValue = (button: HTMLElement, label: string, accountStatus: string): void => {
+    const updateButtonValue = (button: HTMLElement, account: SimpleAccount): void => {
         if (button.innerHTML.length < 1) {
             button.innerHTML = `
-                <span class="account_title"></span>
-                <span class="account_status"></span>`;
+                <span class="account-title"></span>
+                <span class="account-status"></span>`;
         }
-        const title: HTMLElement = button.getElementsByClassName('account_title')[0];
-        const status: HTMLElement = button.getElementsByClassName('account_status')[0];
-        title.innerHTML = label;
-        status.innerHTML = accountStatus;
+        const title: HTMLElement = button.getElementsByClassName('account-title')[0];
+        const status: HTMLElement = button.getElementsByClassName('account-status')[0];
+        title.innerHTML = account.label;
+
+        if (account.balance < 0) {
+            status.innerHTML = account.transactions ? `${ account.transactions } transactions` : 'Loading...';
+            button.setAttribute('disabled', 'disabled');
+        } else {
+            status.innerHTML = account.transactions === 0 ? 'Fresh account' : formatAmount(account.balance, payload.coinInfo);
+            button.removeAttribute('disabled');
+            button.onclick = handleClick;
+        }
     };
 
-    for (const [ index, account ] of data.accounts.entries()) {
+    for (const [ index, account ] of payload.accounts.entries()) {
         const existed: HTMLElement = container.querySelectorAll(`[data-index="${index}"]`)[0];
         if (!existed) {
             const button: HTMLButtonElement = document.createElement('button');
-            button.setAttribute('data-index', index);
-            if (!account.discovered) {
-                button.setAttribute('disabled', 'disabled');
-                updateButtonValue(button, account.label, 'Loading...');
-            } else {
-                const accountStatus: string = account.fresh ? 'Fresh account' : formatAmount(account.balance, data.coinInfo);
-                updateButtonValue(button, account.label, accountStatus);
-                button.onclick = handleClick;
-            }
+            button.className = 'list';
+            button.setAttribute('data-index', index.toString());
 
-            // create new loading button
-            const div: HTMLDivElement = document.createElement('div');
-            div.className = 'account';
-            div.appendChild(button);
+            updateButtonValue(button, account, );
 
             // add to proper container
-            if (data.coinInfo.hasSegwit && !account.segwit) {
+            if (payload.coinInfo.segwit && !account.coinInfo.segwit) {
                 removeEmptyButton(legacyButtonsContainer);
-                legacyButtonsContainer.appendChild(div);
+                legacyButtonsContainer.appendChild(button);
             } else {
                 removeEmptyButton(buttonsContainer);
-                buttonsContainer.appendChild(div);
+                buttonsContainer.appendChild(button);
             }
         } else {
-            const accountStatus: string = account.fresh ? 'Fresh account' : formatAmount(account.balance, data.coinInfo); // + 'btc';
-            existed.removeAttribute('disabled');
-            updateButtonValue(existed, account.label, accountStatus);
-            existed.onclick = handleClick;
+            updateButtonValue(existed, account);
         }
     }
 };

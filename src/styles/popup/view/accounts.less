@@ -10,7 +10,7 @@
         position: relative;
         top: -24px;
 
-        display: flex;
+        display: none;
         flex-direction: row;
     }
 
@@ -48,18 +48,37 @@
         }
     }
 
+    &.normal {
+        .select-account-list.normal {
+            display: block;
+        }
+        .tab-selection.normal {
+            cursor: pointer;
+            color: @color_green_primary;
+            &:after {
+                border-color: @color_green_primary;
+            }
+        }
+    }
+
+    &.legacy {
+        .select-account-list.legacy {
+            display: block;
+        }
+        .tab-selection.legacy {
+            cursor: pointer;
+            color: @color_green_primary;
+            &:after {
+                border-color: @color_green_primary;
+            }
+        }
+    }
+
     .select-account-list {
         flex: 1;
         margin: 0 30px 30px;
         overflow-y: scroll;
-
-        &.normal {
-            // display: none;
-        }
-
-        &.legacy {
-            display: none;
-        }
+        display: none;
 
         button {
             display: flex;
