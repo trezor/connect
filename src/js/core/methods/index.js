@@ -23,6 +23,8 @@ import StellarGetPublicKey from './StellarGetPublicKey';
 import StellarGetAddress from './StellarGetAddress';
 import StellarSignTx from './StellarSignTx';
 
+import SignTx from './SignTx';
+
 const classes: {[k: string]: any} = {
     'getAccountInfo': GetAccountInfo,
     'getAddress': GetAddress,
@@ -42,6 +44,8 @@ const classes: {[k: string]: any} = {
     'stellarGetPublicKey': StellarGetPublicKey,
     'stellarGetAddress': StellarGetAddress,
     'stellarSignTx': StellarSignTx,
+
+    'signTransaction': SignTx,
 }
 
 export const find = (message: CoreMessage): AbstractMethod => {

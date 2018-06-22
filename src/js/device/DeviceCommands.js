@@ -5,19 +5,16 @@ import * as DEVICE from '../constants/device';
 import * as ERROR from '../constants/errors';
 import randombytes from 'randombytes';
 
-
-import { getHDPath, isSegwitPath } from '../utils/pathUtils';
+import * as bitcoin from 'bitcoinjs-lib-zcash';
+import * as hdnodeUtils from '../utils/hdnode';
+import { isSegwitPath } from '../utils/pathUtils';
 import Device from './Device';
 import DataManager from '../data/DataManager';
 
 import { getCoinInfoByCurrency, getSegwitNetwork } from '../data/CoinInfo';
+
+
 import type { CoinInfo } from 'flowtype';
-
-import * as bitcoin from 'bitcoinjs-lib-zcash';
-import * as hdnodeUtils from '../utils/hdnode';
-
-import { signTx as signTxHelper } from './helpers/signtx';
-import type { BuildTxResult } from 'hd-wallet';
 import type { Transport } from 'trezor-link';
 import * as trezor from 'flowtype/trezor'; // flowtype
 
@@ -166,15 +163,6 @@ export default class DeviceCommands {
                 address: response.message.address
             }
         };
-    }
-
-    async signTx(
-        tx: BuildTxResult,
-        refTxs: Array<bitcoin.Transaction>,
-        coinInfo: CoinInfo,
-        locktime: ?number,
-    ): Promise<MessageResponse<trezor.SignedTx>> {
-        return await signTxHelper(this.typedCall.bind(this), tx, refTxs, coinInfo, locktime);
     }
 
     async signMessage(

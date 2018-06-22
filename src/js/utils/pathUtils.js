@@ -29,8 +29,8 @@ export const getHDPath = (path: string): Array<number> => {
         });
 };
 
-export const isSegwitPath = (path: Array<number>): boolean => {
-    return path[0] === toHardened(49);
+export const isSegwitPath = (path: Array<number> | any): boolean => {
+    return Array.isArray(path) && path[0] === toHardened(49);
 }
 
 export const validatePath = (path: string | Array<number>, base: boolean = false): Array<number> => {

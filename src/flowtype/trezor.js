@@ -103,14 +103,37 @@ declare module 'flowtype/trezor' {
         signature: string,
     }
 
+    declare type MultisigRedeemScriptType = {
+        pubkeys: Array<{ node: string, address_n: Array<number>}>;
+        signatures: Array<string>;
+        m?: number;
+    }
+
+    // declare type TransactionInputBase = {
+    //     address_n?: Array<number>,
+    //     prev_hash: string,
+    //     prev_index: number,
+    // }
+
+    // declare export type TransactionInput = TransactionInputBase & {
+    //     script_type: 'SPENDMULTISIG',
+    //     multisig: MultisigRedeemScriptType,
+    // } | TransactionInputBase & {
+    //     script_type: 'SPENDP2SHWITNESS',
+    //     amount: number,
+    // }
+
     declare export type TransactionInput = {
         address_n?: Array<number>,
-        prev_index: number,
-        sequence?: number,
         prev_hash: string,
+        prev_index: number,
         script_sig?: string,
+        sequence?: number,
         script_type?: 'SPENDADDRESS' | 'SPENDMULTISIG' | 'EXTERNAL' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS',
+        multisig?: MultisigRedeemScriptType,
         amount?: number, // only with segwit
+        decred_tree?: number,
+        decred_script_version?: number,
     };
 
     declare export type TransactionOutput = {
@@ -126,6 +149,9 @@ declare module 'flowtype/trezor' {
         amount: 0, // fixed
         script_type: 'PAYTOOPRETURN',
     }
+    // TODO:
+    // "multisig": MultisigRedeemScriptType field, where?
+    // "decred_script_version": number field, where?
 
     declare export type TransactionBinOutput = {
         amount: number,

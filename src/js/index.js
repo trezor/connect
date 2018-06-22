@@ -92,6 +92,10 @@ export default class Trezor {
         return await this.__call({ method: 'getAddress', ...params });
     }
 
+    static async signTransaction(params: Object): Promise<Object> {
+        return await this.__call({ method: 'signTransaction', ...params });
+    }
+
     /*
 
     static async requestLogin(params: Object): Promise<Object> {

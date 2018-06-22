@@ -128,6 +128,12 @@ export default class BlockBook {
         return res;
     }
 
+    async loadTransactions(txs: Array<string>): Promise<Array<BitcoinJsTransaction>> {
+        return Promise.all(
+            txs.map(id => this.loadTransaction(id))
+        );
+    }
+
     async loadTransaction(id: string): Promise<BitcoinJsTransaction> {
         const tx = await this.blockchain.lookupTransaction(id);
         return BitcoinJsTransaction.fromHex(tx.hex, tx.zcash);

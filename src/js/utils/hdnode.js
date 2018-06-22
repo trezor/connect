@@ -104,3 +104,14 @@ export const xpubDerive = (resXpub: trezor.PublicKey, childXPub: trezor.PublicKe
 
     return resXpub;
 }
+
+export const xpubToHDNodeType = (xpub: string, network: bitcoin.Network): trezor.HDPubNode => {
+    let hd = bitcoin.HDNode.fromBase58(xpub, network);
+    return {
+        depth: hd.depth,
+        child_num: hd.index,
+        fingerprint: hd.parentFingerprint,
+        public_key: hd.keyPair.getPublicKeyBuffer().toString('hex'),
+        chain_code: hd.chainCode.toString('hex')
+    };
+}
