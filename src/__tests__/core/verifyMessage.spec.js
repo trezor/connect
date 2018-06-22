@@ -74,7 +74,7 @@ const verifySubtest = (): void => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/verify'
+        specName: '/verify',
     };
 };
 
@@ -95,7 +95,7 @@ const verifyLongSubtest = (): void => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/verifyLong'
+        specName: '/verifyLong',
     };
 };
 
@@ -116,7 +116,7 @@ const verifyTestnetSubtest = (): void => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/verifyTestnet'
+        specName: '/verifyTestnet',
     };
 };
 
@@ -137,7 +137,7 @@ const verifyBcashSubtest = (): void => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/verifyBcash'
+        specName: '/verifyBcash',
     };
 };
 
@@ -158,7 +158,7 @@ const verifyBitcoindSubtest = (): void => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/verifyBitcoind'
+        specName: '/verifyBitcoind',
     };
 };
 
@@ -187,7 +187,7 @@ const verifyUtfSubtest = (): void => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/verifyUtf'
+        specName: '/verifyUtf',
     };
 };
 
@@ -202,7 +202,7 @@ export const verifyMessageTests = (): void => {
         verifyUtf: verifyUtfSubtest
     };
 
-    describe('SignMessage', () => {
+    describe('VerifyMessage', () => {
         let core: Core;
 
         beforeEach(async (done) => {

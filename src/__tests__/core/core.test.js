@@ -7,6 +7,8 @@ import * as UI from '../../js/constants/ui';
 import { getPublicKeyTests } from './getPublicKey.spec.js';
 import { signMessageTests } from './signMessage.spec.js';
 import { verifyMessageTests } from './verifyMessage.spec.js';
+import { verifyMessageSegwitTests } from './verifyMessageSegwit.spec.js';
+import { verifyMessageSegwitNativeTests } from './verifyMessageSegwitNative.spec.js';
 import { ethereumGetAddressTests } from './ethereumGetAddress.spec.js';
 import { ethereumSignMessageTests } from './ethereumSignMessage.spec.js';
 import { ethereumSignTxTests } from './ethereumSignTx.spec.js';
@@ -16,12 +18,15 @@ import { nemGetAddressTests } from './nemGetAddress.spec.js';
 import { nemSignTransactionMultisigTests } from './nemSignTransactionMultisig.spec.js';
 import { nemSignTransactionOthersTests } from './nemSignTransactionOthers.spec.js';
 import { nemSignTransactionTransfersTests } from './nemSignTransactionTransfers.spec.js'; */
+/* import { stellarGetPublicKeyTests } from './stellarGetPublicKey.spec.js'; */
 
 
 const testFunctions = {
     getPublicKey: getPublicKeyTests,
     signMessage: signMessageTests,
     verifyMessage: verifyMessageTests,
+    verifyMessageSegwit: verifyMessageSegwitTests,
+    verifyMessageSegwitNative: verifyMessageSegwitNativeTests,
     ethereumGetAddress: ethereumGetAddressTests,
     ethereumSignMessage: ethereumSignMessageTests,
     ethereumSignTx: ethereumSignTxTests,
@@ -31,6 +36,7 @@ const testFunctions = {
     nemSignTransactionMultisig: nemSignTransactionMultisigTests,
     nemSignTransactionOthers: nemSignTransactionOthersTests,
     nemSignTransactionTransfers: nemSignTransactionTransfersTests, */
+    /* stellarGetPublicKey: stellarGetPublicKeyTests, */
 
 };
 

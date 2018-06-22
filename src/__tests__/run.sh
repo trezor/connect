@@ -16,6 +16,7 @@ available_tests=$(ls ./src/__tests__/core/*.spec.js | xargs -n 1 basename | cut 
 available_tests=$(echo $available_tests | rev | cut -c 1- | rev)
 tests_to_run=""
 tests_not_to_run=""
+subtests_not_to_run=""
 
 should_print_debug=0
 karma_log_level="error" # "disable", "error", "warn", "info", "debug"
@@ -47,6 +48,8 @@ pin_8="45678978"
 ################# Possible subtests
 signMessage_subtests="sign signTestnet signBch signLong signUtf"
 verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind verifyUtf"
+verifyMessageSegwit_subtests="verify verifyLong verifyTestnet verifyUtf"
+verifyMessageSegwitNative_subtests="verify verifyLong verifyTestnet verifyUtf"
 ethereumSignTx_subtests="knownErc20Token unknownErc20Token noData data message newContract sanityChecks noDataEip155 dataEip155"
 nemSignTransactionMosaic_subtests="supplyChange creation creationProperties creationLevy"
 nemSignTransactionMultisig_subtests="aggregateModification multisig multisigSigner"
@@ -284,7 +287,11 @@ validate_test_names() {
             if [ "$run_type" = "specified" ]; then
                 tests_to_run="$tests_to_run $test"
             elif [ "$run_type" = "excluded" ]; then
-                tests_not_to_run="$tests_not_to_run $test"
+                if [ -n "$subtest_name" ]; then
+                    subtests_not_to_run="$subtests_not_to_run $test"
+                else
+                    tests_not_to_run="$tests_not_to_run $test"
+                fi;
             fi;
         else
             log_error "invalid test name" "'$test_name'"
@@ -345,15 +352,27 @@ run_excluded_tests() {
     echo "${yellow}${bold}Excluded tests: ${not_to_run}${reset}"
     echo "${green}${bold}Running all other tests...${reset}"
 
-    for t in $available_tests; do
-        is_excluded=""
-        is_excluded=$(echo "$not_to_run" | grep -ow "$t")
+    # Filter tests
+    echo "${available_tests}" | tr " " "\n" | sort > "./tmp1.$$.txt"
+    echo "${not_to_run}" | tr " " "\n" | sort > "./tmp2.$$.txt"
+    to_run=$(comm -23 "./tmp1.$$.txt" "./tmp2.$$.txt" | tr "\n" " ")
+    rm -f "./tmp1.$$.txt"
+    rm -f "./tmp2.$$.txt"
 
-        if [ -z "$is_excluded" ]
-        then
-            run_test $t
-        fi
-    done
+    echo "TESTS TO RUN: ${to_run}"
+
+    for t in $to_run; do
+        run_test $t
+    done;
+
+    #for t in $available_tests; do
+    #    is_excluded=""
+    #    is_excluded=$(echo "$not_to_run" | grep -ow "$t")
+    #    if [ -z "$is_excluded" ]
+    #    then
+    #        run_test $t
+    #    fi
+    #done
 }
 
 run_test() {
@@ -388,6 +407,15 @@ test_signMessage() {
     else
         # Run all possible subtests
         subtests=$signMessage_subtests
+
+        # Filter subtests
+        #excluded_subtests=$(echo ${subtests_not_to_run} | tr " " "\n" | grep -w "signMessage" | cut -d"/" -f2)
+
+        #echo "${excluded_subtests}" | sort > "./tmp1.$$.txt"
+        #echo "${signMessage_subtests}" | tr " " "\n" | sort > "./tmp2.$$.txt"
+        #subtests=$(comm -23 "./tmp1.$$.txt" "./tmp2.$$.txt" | tr "\n" " ")
+        #rm -f "./tmp1.$$.txt"
+        #rm -f "./tmp2.$$.txt"
     fi;
 
     for subtest in $subtests; do
@@ -421,6 +449,52 @@ test_verifyMessage() {
         start_transport
 
         run_karma "verifyMessage" $subtest
+
+        kill_emul_transport
+    done;
+}
+
+test_verifyMessageSegwit() {
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$verifyMessageSegwit_subtests
+    fi;
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_nopin_nopassphrase
+        start_transport
+
+        run_karma "verifyMessageSegwit" $subtest
+
+        kill_emul_transport
+    done;
+}
+
+test_verifyMessageSegwitNative() {
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$verifyMessageSegwitNative_subtests
+    fi;
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_nopin_nopassphrase
+        start_transport
+
+        run_karma "verifyMessageSegwitNative" $subtest
 
         kill_emul_transport
     done;
@@ -611,7 +685,6 @@ while getopts ":at:x:ls:e:b:k:pdh" opt; do
         x) # Exclude tests that shouldn't run (i.e. run all but specified tests)
             run_type="excluded"
             validate_test_names "$OPTARG"
-            #tests_not_to_run="$OPTARG"
         ;;
         l) # Show available tests
             show_available_tests
