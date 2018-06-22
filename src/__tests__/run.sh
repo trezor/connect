@@ -47,10 +47,13 @@ pin_8="45678978"
 
 ################# Possible subtests
 signMessage_subtests="sign signTestnet signBch signLong signUtf"
+
 verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind verifyUtf"
 verifyMessageSegwit_subtests="verify verifyLong verifyTestnet verifyUtf"
 verifyMessageSegwitNative_subtests="verify verifyLong verifyTestnet verifyUtf"
+
 ethereumSignTx_subtests="knownErc20Token unknownErc20Token noData data message newContract sanityChecks noDataEip155 dataEip155"
+
 nemSignTransactionMosaic_subtests="supplyChange creation creationProperties creationLevy"
 nemSignTransactionMultisig_subtests="aggregateModification multisig multisigSigner"
 nemSignTransactionOthers_subtests="importanceTransfer provisionNamespace"
