@@ -6,6 +6,7 @@ import * as UI from '../../js/constants/ui';
 
 import { getPublicKeyTests } from './getPublicKey.spec.js';
 import { signMessageTests } from './signMessage.spec.js';
+import { signMessageSegwitTests } from './signMessageSegwit.spec.js';
 import { verifyMessageTests } from './verifyMessage.spec.js';
 import { verifyMessageSegwitTests } from './verifyMessageSegwit.spec.js';
 import { verifyMessageSegwitNativeTests } from './verifyMessageSegwitNative.spec.js';
@@ -24,6 +25,7 @@ import { nemSignTransactionTransfersTests } from './nemSignTransactionTransfers.
 const testFunctions = {
     getPublicKey: getPublicKeyTests,
     signMessage: signMessageTests,
+    signMessageSegwit: signMessageSegwitTests,
     verifyMessage: verifyMessageTests,
     verifyMessageSegwit: verifyMessageSegwitTests,
     verifyMessageSegwitNative: verifyMessageSegwitNativeTests,

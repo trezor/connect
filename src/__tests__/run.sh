@@ -47,6 +47,7 @@ pin_8="45678978"
 
 ################# Possible subtests
 signMessage_subtests="sign signTestnet signBch signLong"
+signMessageSegwit_subtests="sign signLong"
 
 verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind"
 verifyMessageSegwit_subtests="verify verifyLong verifyTestnet"
@@ -323,7 +324,9 @@ run_karma() {
 
     # Grab last summary line after test has finished
     # so we can show summary for all tests later
-    result=$(cat $logs_path | grep -E "SUCCESS|FAILED" | cut -d ":" -f2 | tail -1 | rev | cut -d " " -f6- | rev)
+    # todo: doesn't work when running 'signMessage/sign' and test fails
+    result=$(cat $logs_path | grep -E TOTAL | cut -d ":" -f2)
+    echo "RESULT: ${result}"
 
     finished_test_results="${finished_test_results}${result};"
 
@@ -429,6 +432,29 @@ test_signMessage() {
         start_transport
 
         run_karma "signMessage" $subtest
+
+        kill_emul_transport
+    done;
+}
+
+test_signMessageSegwit() {
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$signMessageSegwit_subtests
+    fi;
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_nopin_nopassphrase
+        start_transport
+
+        run_karma "signMessageSegwit" $subtest
 
         kill_emul_transport
     done;
