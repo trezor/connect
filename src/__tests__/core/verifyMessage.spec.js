@@ -148,7 +148,7 @@ const verifyBitcoindSubtest = (): void => {
             coin: 'Bitcoin',
             address: '1KzXE97kV7DrpxCViCN3HbGbiKhzzPM7TQ',
             signature: '1cc694f0f23901dfe3603789142f36a3fc582d0d5c0ec7215cf2ccd641e4e37228504f3d4dc3eea28bbdbf5da27c49d4635c097004d9f228750ccd836a8e1460c0',
-            message: '\u017elu\u0165ou\u010dk\xfd k\u016f\u0148 \xfap\u011bl \u010f\xe1belsk\xe9 \xf3dy',
+            message: 'žluťoučký kůň úpěl ďábelské ódy',
         },
     ];
     const expectedResponses = [
@@ -162,35 +162,6 @@ const verifyBitcoindSubtest = (): void => {
     };
 };
 
-const verifyUtfSubtest = (): void => {
-    const testPayloads = [
-        {
-            method: 'verifyMessage',
-            coin: 'Bitcoin',
-            address: '14LmW5k4ssUrtbAB4255zdqv3b4w1TuX9e',
-            signature: '20d0ec02ed8da8df23e7fe9e680e7867cc290312fe1c970749d8306ddad1a1eda41c6a771b13d495dd225b13b0a9d0f915a984ee3d0703f92287bf8009fbb9f7d6',
-            message: 'Pr\u030ci\u0301s\u030cerne\u030c z\u030clut\u030couc\u030cky\u0301 ku\u030an\u030c u\u0301pe\u030cl d\u030ca\u0301belske\u0301 o\u0301dy za\u0301ker\u030cny\u0301 uc\u030cen\u030c be\u030cz\u030ci\u0301 pode\u0301l zo\u0301ny u\u0301lu\u030a',
-        },
-        {
-            method: 'verifyMessage',
-            coin: 'Bitcoin',
-            address: '14LmW5k4ssUrtbAB4255zdqv3b4w1TuX9e',
-            signature: '20d0ec02ed8da8df23e7fe9e680e7867cc290312fe1c970749d8306ddad1a1eda41c6a771b13d495dd225b13b0a9d0f915a984ee3d0703f92287bf8009fbb9f7d6',
-            message: 'P\u0159\xed\u0161ern\u011b \u017elu\u0165ou\u010dk\xfd k\u016f\u0148 \xfap\u011bl \u010f\xe1belsk\xe9 \xf3dy z\xe1ke\u0159n\xfd u\u010de\u0148 b\u011b\u017e\xed pod\xe9l z\xf3ny \xfal\u016f',
-        },
-    ];
-    const expectedResponses = [
-        { success: true },
-        { success: true },
-    ];
-
-    return {
-        testPayloads,
-        expectedResponses,
-        specName: '/verifyUtf',
-    };
-};
-
 export const verifyMessageTests = (): void => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
@@ -199,7 +170,6 @@ export const verifyMessageTests = (): void => {
         verifyTestnet: verifyTestnetSubtest,
         verifyBcash: verifyBcashSubtest,
         verifyBitcoind: verifyBitcoindSubtest,
-        verifyUtf: verifyUtfSubtest
     };
 
     describe('VerifyMessage', () => {
