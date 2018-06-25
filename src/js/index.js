@@ -77,7 +77,7 @@ export default class Trezor {
     }
 
     static async ethereumSignTransaction(params: P_EthereumSignTransaction): Promise<R_EthereumSignTransaction> {
-        return await this.__call({ method: 'ethereumSignTx', ...params });
+        return await this.__call({ method: 'ethereumSignTransaction', ...params });
     }
 
     static async ethereumVerifyMessage(params: P_EthereumVerifyMessage): Promise<Object> {
@@ -129,7 +129,7 @@ export default class Trezor {
     }
 
     static async stellarSignTransaction(params: P_StellarSignTransaction): Promise<R_StellarSignTransaction> {
-        return await this.__call({ method: 'stellarSignTx', ...params });
+        return await this.__call({ method: 'stellarSignTransaction', ...params });
     }
 
     static async verifyMessage(params: P_VerifyMessage): Promise<R_VerifyMessage> {

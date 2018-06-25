@@ -10,7 +10,7 @@ import CipherKeyValue from './CipherKeyValue';
 import CustomMessage from './CustomMessage';
 import EthereumGetAddress from './EthereumGetAddress';
 import EthereumSignMessage from './EthereumSignMessage';
-import EthereumSignTx from './EthereumSignTx';
+import EthereumSignTransaction from './EthereumSignTransaction';
 import EthereumVerifyMessage from './EthereumVerifyMessage';
 import GetAccountInfo from './GetAccountInfo';
 import GetAddress from './GetAddress';
@@ -21,10 +21,10 @@ import RequestLogin from './RequestLogin';
 import NEMGetAddress from './NEMGetAddress';
 import NEMSignTransaction from './NEMSignTransaction';
 import SignMessage from './SignMessage';
-import SignTx from './SignTx';
+import SignTransaction from './SignTransaction';
 import StellarGetAddress from './StellarGetAddress';
 import StellarGetPublicKey from './StellarGetPublicKey';
-import StellarSignTx from './StellarSignTx';
+import StellarSignTransaction from './StellarSignTransaction';
 import VerifyMessage from './VerifyMessage';
 
 const classes: {[k: string]: any} = {
@@ -33,7 +33,7 @@ const classes: {[k: string]: any} = {
     'customMessage': CustomMessage,
     'ethereumGetAddress': EthereumGetAddress,
     'ethereumSignMessage': EthereumSignMessage,
-    'ethereumSignTx': EthereumSignTx,
+    'ethereumSignTransaction': EthereumSignTransaction,
     'ethereumVerifyMessage': EthereumVerifyMessage,
     'getAccountInfo': GetAccountInfo,
     'getAddress': GetAddress,
@@ -44,10 +44,10 @@ const classes: {[k: string]: any} = {
     'nemGetAddress': NEMGetAddress,
     'nemSignTransaction': NEMSignTransaction,
     'signMessage': SignMessage,
-    'signTransaction': SignTx,
+    'signTransaction': SignTransaction,
     'stellarGetAddress': StellarGetAddress,
     'stellarGetPublicKey': StellarGetPublicKey,
-    'stellarSignTx': StellarSignTx,
+    'stellarSignTransaction': StellarSignTransaction,
     'verifyMessage': VerifyMessage,
 }
 
