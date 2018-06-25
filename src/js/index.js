@@ -60,10 +60,6 @@ export default class Trezor {
         eventEmitter.removeListener(type, fn);
     }
 
-    static async init(settings: Object): Promise<void> {
-        // to override
-    }
-
     static async cipherKeyValue(params: P_CipherKeyValue): Promise<R_CipherKeyValue> {
         return await this.__call({ method: 'cipherKeyValue', ...params });
     }
