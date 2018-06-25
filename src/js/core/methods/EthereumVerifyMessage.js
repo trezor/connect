@@ -54,12 +54,12 @@ export default class EthereumVerifyMessage extends AbstractMethod {
         }
     }
 
-    async run(): Promise<Object> {
+    async run(): Promise<Success> {
         const response: MessageResponse<Success> = await this.device.getCommands().ethereumVerifyMessage(
             this.params.address,
             this.params.signature,
             this.params.message,
         );
-        return { ...response.message };
+        return response.message;
     }
 }

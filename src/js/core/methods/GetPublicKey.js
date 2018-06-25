@@ -88,13 +88,13 @@ export default class GetPublicKey extends AbstractMethod {
         return this.confirmed;
     }
 
-    async run(): Promise<Object> {
+    async run(): Promise<HDNodeResponse> {
 
         const response: HDNodeResponse = await this.device.getCommands().getHDNode(
             this.params.path,
             this.params.coinInfo
         );
 
-        return { ...response };
+        return response;
     }
 }

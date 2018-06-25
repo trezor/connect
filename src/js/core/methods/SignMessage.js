@@ -68,14 +68,12 @@ export default class SignMessage extends AbstractMethod {
         }
     }
 
-    async run(): Promise<Object> {
+    async run(): Promise<MessageSignature> {
         const response: MessageResponse<MessageSignature> = await this.device.getCommands().signMessage(
             this.params.path,
             this.params.message,
             this.params.coinInfo ? this.params.coinInfo.name : null
         );
-        return {
-            ...response.message
-        }
+        return response.message;
     }
 }

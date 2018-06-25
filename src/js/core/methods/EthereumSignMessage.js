@@ -46,13 +46,11 @@ export default class EthereumSignMessage extends AbstractMethod {
         }
     }
 
-    async run(): Promise<Object> {
+    async run(): Promise<MessageSignature> {
         const response: MessageResponse<MessageSignature> = await this.device.getCommands().ethereumSignMessage(
             this.params.path,
             this.params.message
         );
-        return {
-            ...response.message
-        }
+        return response.message;
     }
 }
