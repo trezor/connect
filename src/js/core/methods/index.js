@@ -4,50 +4,51 @@
 import type { CoreMessage } from 'flowtype';
 
 import AbstractMethod, { MethodInterface } from './AbstractMethod';
+
+import CipherKeyValue from './CipherKeyValue';
+// import ComposeTransaction from './ComposeTransaction';
+import CustomMessage from './CustomMessage';
+import EthereumGetAddress from './EthereumGetAddress';
+import EthereumSignMessage from './EthereumSignMessage';
+import EthereumSignTx from './EthereumSignTx';
+import EthereumVerifyMessage from './EthereumVerifyMessage';
 import GetAccountInfo from './GetAccountInfo';
 import GetAddress from './GetAddress';
-import GetFeatures from './GetFeatures';
 import GetDeviceState from './GetDeviceState';
+import GetFeatures from './GetFeatures';
 import GetPublicKey from './GetPublicKey';
-import SignMessage from './SignMessage';
-import VerifyMessage from './VerifyMessage';
-import CipherKeyValue from './CipherKeyValue';
-import EthereumGetAddress from './EthereumGetAddress';
-import EthereumSignTx from './EthereumSignTx';
-import EthereumSignMessage from './EthereumSignMessage';
-import EthereumVerifyMessage from './EthereumVerifyMessage';
-import CustomMessage from './CustomMessage';
+import RequestLogin from './RequestLogin';
 import NEMGetAddress from './NEMGetAddress';
 import NEMSignTransaction from './NEMSignTransaction';
-import StellarGetPublicKey from './StellarGetPublicKey';
-import StellarGetAddress from './StellarGetAddress';
-import StellarSignTx from './StellarSignTx';
-
+import SignMessage from './SignMessage';
 import SignTx from './SignTx';
-import RequestLogin from './RequestLogin';
+import StellarGetAddress from './StellarGetAddress';
+import StellarGetPublicKey from './StellarGetPublicKey';
+import StellarSignTx from './StellarSignTx';
+import VerifyMessage from './VerifyMessage';
 
 const classes: {[k: string]: any} = {
+    'cipherKeyValue': CipherKeyValue,
+    // 'composeTransaction': ComposeTransaction,
+    'customMessage': CustomMessage,
+    'ethereumGetAddress': EthereumGetAddress,
+    'ethereumSignMessage': EthereumSignMessage,
+    'ethereumSignTx': EthereumSignTx,
+    'ethereumVerifyMessage': EthereumVerifyMessage,
     'getAccountInfo': GetAccountInfo,
     'getAddress': GetAddress,
-    'getFeatures': GetFeatures,
-    'signMessage': SignMessage,
-    'verifyMessage': VerifyMessage,
-    'getPublicKey': GetPublicKey,
     'getDeviceState': GetDeviceState,
-    'cipherKeyValue': CipherKeyValue,
-    'ethereumGetAddress': EthereumGetAddress,
-    'ethereumSignTx': EthereumSignTx,
-    'ethereumSignMessage': EthereumSignMessage,
-    'ethereumVerifyMessage': EthereumVerifyMessage,
-    'customMessage': CustomMessage,
+    'getFeatures': GetFeatures,
+    'getPublicKey': GetPublicKey,
+    'requestLogin': RequestLogin,
     'nemGetAddress': NEMGetAddress,
     'nemSignTransaction': NEMSignTransaction,
-    'stellarGetPublicKey': StellarGetPublicKey,
-    'stellarGetAddress': StellarGetAddress,
-    'stellarSignTx': StellarSignTx,
-
+    'signMessage': SignMessage,
     'signTransaction': SignTx,
-    'requestLogin': RequestLogin
+    'stellarGetAddress': StellarGetAddress,
+    'stellarGetPublicKey': StellarGetPublicKey,
+    'stellarSignTx': StellarSignTx,
+    'verifyMessage': VerifyMessage,
 }
 
 export const find = (message: CoreMessage): AbstractMethod => {
