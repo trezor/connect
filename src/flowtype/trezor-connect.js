@@ -228,11 +228,19 @@ declare module 'trezor-connect' {
         R_VerifyMessage
     } from 'trezor-connect/response';
 
+    declare export type Settings = {
+        priority?: number;
+        connectSrc?: string;
+        popup?: boolean;
+        transportReconnect?: boolean;
+        webusb?: boolean;
+        pendingTransportEvent?: boolean;
+    }
+
     declare module.exports: {
-        init: (options: Object) => Promise<Object>;
+        init: (options: Settings) => Promise<Object>;
         on: DeviceEventListener & DeviceEventListenerByType & UiEventListener & TransportEventListener;
         off: (type: string, handler: (event: any) => void) => void;
-        getVersion: () => any;
         renderWebUSBButton: (className?: string) => void;
         uiResponse: (options: Object) => void;
 
