@@ -6,7 +6,7 @@ import { getCoinInfoByCurrency } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 
 import BlockBook, { create as createBackend } from '../../backend';
-import * as helper from './helpers/signTx';
+import * as helper from './helpers/signtx';
 import {
     validateInputs,
     validateOutputs,
@@ -95,13 +95,13 @@ export default class SignTransaction extends AbstractMethod {
         }
     }
 
-    async run(): Promise<any> {
+    async run(): Promise<SignedTx> {
         // initialize backend
         this.backend = await createBackend(this.params.coinInfo);
         const bjsRefTxs = await this.backend.loadTransactions( getReferencedTransactions(this.params.hdInputs) );
         const refTxs = transformReferencedTransactions(bjsRefTxs);
 
-        const resp = await helper.signTx(
+        const response = await helper.signTx(
             this.device.getCommands().typedCall.bind( this.device.getCommands() ),
             this.params.inputs,
             this.params.outputs,
@@ -109,9 +109,6 @@ export default class SignTransaction extends AbstractMethod {
             this.params.coinInfo,
         );
 
-        return {
-            foo: 1,
-            resp
-        }
+        return response.message
     }
 }
