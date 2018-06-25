@@ -52,6 +52,7 @@ signMessage_subtests="sign signTestnet signBch signLong"
 signMessageSegwit_subtests="sign signLong"
 
 signTx_subtests="oneOneFee oneTwoFee oneThreeFee twoTwo testnetOneTwoFee testnetFeeTooHigh lotsOfOutputs feeTooHigh notEnoughFunds attackChangeOutputs attackChangeInputAddress spendCoinbase twoChanges p2sh changeOnMainChainAllowed"
+signTxSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
 
 verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind"
 verifyMessageSegwit_subtests="verify verifyLong verifyTestnet"
@@ -524,6 +525,29 @@ test_signTx() {
         start_transport
 
         run_karma "signTx" $subtest
+
+        kill_emul_transport
+    done;
+}
+
+test_signTxSegwit() {
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$signTxSegwit_subtests
+    fi;
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_allallall
+        start_transport
+
+        run_karma "signTxSegwit" $subtest
 
         kill_emul_transport
     done;
