@@ -7,11 +7,13 @@ import type { MessageResponse } from '../../device/DeviceCommands';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../CoreMessage';
+import DataManager from '../../data/DataManager';
 
 import { getCoinInfoByCurrency, getCoinInfoFromPath, getCoinName } from '../../data/CoinInfo';
 import { getPublicKeyLabel, isSegwitPath } from '../../utils/pathUtils';
 import type { CoinInfo, UiPromiseResponse, CoreMessage } from 'flowtype';
 import type { Identity, SignedIdentity } from 'flowtype/trezor';
+import type { ConnectSettings } from '../../entrypoints/ConnectSettings';
 
 type Params = {
     asyncChallenge: boolean;
@@ -35,10 +37,16 @@ export default class RequestLogin extends AbstractMethod {
 
         const payload: any = message.payload;
 
-        if (payload.hasOwnProperty('identity')) {
-            if (typeof payload.identity !== 'object') {
-                throw new Error('Parameter "identity" has invalid type. Object expected.');
+        const identity: Identity = { };
+        const settings: ConnectSettings = DataManager.getSettings();
+        if (settings.origin) {
+            const uri: Array<string> = settings.origin.split(':');
+            identity.proto = uri[0];
+            identity.host = uri[1].substring(2);
+            if (uri[2]) {
+                identity.port = uri[2];
             }
+            identity.index = 0;
         }
 
         if (payload.hasOwnProperty('challengeHidden') && typeof payload.challengeHidden !== 'string') {
@@ -51,7 +59,7 @@ export default class RequestLogin extends AbstractMethod {
 
         this.params = {
             asyncChallenge: payload.asyncChallenge,
-            identity: payload.identity || {},
+            identity,
             challengeHidden: payload.challengeHidden || '',
             challengeVisual: payload.challengeVisual || '',
         }

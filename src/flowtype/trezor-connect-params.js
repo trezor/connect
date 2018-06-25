@@ -15,7 +15,6 @@ declare module 'trezor-connect/params' {
     } from 'flowtype/Stellar';
 
     import type {
-        Identity,
         TransactionInput,
         TransactionOutput
     } from 'flowtype/trezor';
@@ -96,7 +95,6 @@ declare module 'trezor-connect/params' {
     }
 
     declare export type P_RequestLogin = Common & {
-       identity?: Identity;
        challengeHidden?: string;
        challengeVisible?: string;
        callback?: () => void;
