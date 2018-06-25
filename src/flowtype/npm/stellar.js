@@ -50,7 +50,7 @@ declare module 'flowtype/Stellar' {
         destination: string; // Proto: "destination_account"
         destAsset?: Asset;   // Proto: "destination_asset"
         destAmount?: string; // Proto "destination_amount" > parse to number
-        path?: Array<Asset>; // (?) Proto: "paths" > only 1 asset, not an Array?
+        path?: Array<Asset>; // Proto: "paths"
     }
 
     declare export type ManageOfferOperation = {
@@ -74,10 +74,10 @@ declare module 'flowtype/Stellar' {
     }
 
     declare export type SetOptionsOperation = {
-        +type: 'setOptions';    // Proto: "StellarCreatePassiveOfferOp"
+        +type: 'setOptions';    // Proto: "StellarSetOptionsOp"
         source: string;        // Proto: "source_account"
         signer: {
-            type: number;      // (?) Missing in stellar API, Proto: "signer_key"
+            type: number;      // (?) Missing in stellar API, Proto: "signer_type"
             key?: string;      // Proto: "signer_key"
             weight: number;    // Proto: "signer_weight"
         };
@@ -86,7 +86,7 @@ declare module 'flowtype/Stellar' {
         masterWeight: number;  // Proto: "master_weight"
         lowThreshold: number;  // Proto: "low_threshold"
         medThreshold: number;  // Proto: "medium_threshold"
-        highThreshold: number; // Proto: "hign_threshold"
+        highThreshold: number; // Proto: "high_threshold"
         homeDomain?: string;   // Proto: "home_domain"
         inflationDest: string; // Proto: "inflation_destination_account"
     }
