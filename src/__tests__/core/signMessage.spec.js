@@ -102,43 +102,6 @@ const signLongSubtest = (): void => {
     };
 };
 
-const signUtfSubtest = (): void => {
-    const testPayloads = [
-        {
-            method: 'signMessage',
-            coin: 'Bitcoin',
-            path: [0],
-            message: 'Pr\u030ci\u0301s\u030cerne\u030c z\u030clut\u030couc\u030cky\u0301 ku\u030an\u030c u\u0301pe\u030cl d\u030ca\u0301belske\u0301 o\u0301dy za\u0301ker\u030cny\u0301 uc\u030cen\u030c be\u030cz\u030ci\u0301 pode\u0301l zo\u0301ny u\u0301lu\u030a',
-        },
-        {
-            method: 'signMessage',
-            coin: 'Bitcoin',
-            path: [0],
-            message: 'P\u0159\xed\u0161ern\u011b \u017elu\u0165ou\u010dk\xfd k\u016f\u0148 \xfap\u011bl \u010f\xe1belsk\xe9 \xf3dy z\xe1ke\u0159n\xfd u\u010de\u0148 b\u011b\u017e\xed pod\xe9l z\xf3ny \xfal\u016f',
-        },
-    ];
-    const expectedResponses = [
-        {
-            payload: {
-                address: '14LmW5k4ssUrtbAB4255zdqv3b4w1TuX9e',
-                signature: '20d0ec02ed8da8df23e7fe9e680e7867cc290312fe1c970749d8306ddad1a1eda41c6a771b13d495dd225b13b0a9d0f915a984ee3d0703f92287bf8009fbb9f7d6',
-            },
-        },
-        {
-            payload: {
-                address: '14LmW5k4ssUrtbAB4255zdqv3b4w1TuX9e',
-                signature: '20d0ec02ed8da8df23e7fe9e680e7867cc290312fe1c970749d8306ddad1a1eda41c6a771b13d495dd225b13b0a9d0f915a984ee3d0703f92287bf8009fbb9f7d6',
-            },
-        },
-    ];
-
-    return {
-        testPayloads,
-        expectedResponses,
-        specName: '/utf',
-    };
-};
-
 export const signMessageTests = (): void => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
@@ -146,7 +109,6 @@ export const signMessageTests = (): void => {
         signTestnet: signTestnetSubtest,
         signBch: signBchSubtest,
         signLong: signLongSubtest,
-        signUtf: signUtfSubtest,
     };
 
     describe('SignMessage', () => {
