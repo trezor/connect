@@ -48,7 +48,7 @@ pin_8="45678978"
 ################# Possible subtests
 signMessage_subtests="sign signTestnet signBch signLong"
 
-verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind verifyUtf"
+verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind"
 verifyMessageSegwit_subtests="verify verifyLong verifyTestnet verifyUtf"
 verifyMessageSegwitNative_subtests="verify verifyLong verifyTestnet verifyUtf"
 
