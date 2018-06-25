@@ -136,7 +136,7 @@ const postMessage = (message: CoreMessage): void => {
     _log.debug('postMessage', message);
     // window.top.postMessage(message, DataManager.getSettings('origin'));
 
-    const parentMessages = [ UI.IFRAME_HANDSHAKE, UI.CLOSE_UI_WINDOW, POPUP.CANCEL_POPUP_REQUEST, UI.CUSTOM_MESSAGE_REQUEST ];
+    const parentMessages = [ UI.IFRAME_HANDSHAKE, UI.CLOSE_UI_WINDOW, POPUP.CANCEL_POPUP_REQUEST, UI.CUSTOM_MESSAGE_REQUEST, UI.LOGIN_CHALLENGE_REQUEST ];
     if (message.event === UI_EVENT && parentMessages.indexOf(message.type) < 0) {
         if (_popupMessagePort) {
             _popupMessagePort.postMessage(message);

@@ -140,6 +140,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         case UI.RECEIVE_FEE :
         case UI.RECEIVE_BROWSER :
         case UI.CUSTOM_MESSAGE_RESPONSE :
+        case UI.LOGIN_CHALLENGE_RESPONSE :
             const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, message.type);
             if (uiPromise) {
                 uiPromise.resolve({ event: message.type, payload: message.payload });

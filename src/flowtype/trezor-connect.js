@@ -80,6 +80,8 @@ declare module 'trezor-connect' {
         CHANGE_SETTINGS: 'ui-change_settings',
         CUSTOM_MESSAGE_REQUEST: 'ui-custom_request',
         CUSTOM_MESSAGE_RESPONSE: 'ui-custom_response',
+        LOGIN_CHALLENGE_REQUEST: 'ui-login_challenge_request',
+        LOGIN_CHALLENGE_RESPONSE: 'ui-login_challenge_response',
     };
 
     declare type T_TRANSPORT_EVENT = 'TRANSPORT_EVENT';

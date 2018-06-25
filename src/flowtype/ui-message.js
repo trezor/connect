@@ -16,7 +16,9 @@ declare module 'flowtype/ui-message' {
             $PropertyType<T_POPUP, 'OPENED'> |
             $PropertyType<T_UI, 'RECEIVE_BROWSER'> |
             $PropertyType<T_UI, 'CHANGE_ACCOUNT'> |
-            $PropertyType<T_UI, 'CLOSE_UI_WINDOW'>
+            $PropertyType<T_UI, 'CLOSE_UI_WINDOW'> |
+            $PropertyType<T_UI, 'LOGIN_CHALLENGE_REQUEST'>
+
     }
 
     /*

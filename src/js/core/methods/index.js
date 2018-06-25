@@ -24,6 +24,7 @@ import StellarGetAddress from './StellarGetAddress';
 import StellarSignTx from './StellarSignTx';
 
 import SignTx from './SignTx';
+import RequestLogin from './RequestLogin';
 
 const classes: {[k: string]: any} = {
     'getAccountInfo': GetAccountInfo,
@@ -46,6 +47,7 @@ const classes: {[k: string]: any} = {
     'stellarSignTx': StellarSignTx,
 
     'signTransaction': SignTx,
+    'requestLogin': RequestLogin
 }
 
 export const find = (message: CoreMessage): AbstractMethod => {

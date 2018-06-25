@@ -292,6 +292,18 @@ export default class DeviceCommands {
         });
     }
 
+    async signIdentity(
+        identity: trezor.Identity,
+        challenge_hidden: string,
+        challenge_visual: string
+    ): Promise<MessageResponse<trezor.SignedIdentity>> {
+        return this.typedCall('SignIdentity', 'SignedIdentity', {
+            identity,
+            challenge_hidden,
+            challenge_visual,
+        });
+    }
+
     // async clearSession(): Promise<MessageResponse<trezor.Success>> {
     async clearSession(settings: Object): Promise<any> {
         return await this.typedCall('ClearSession', 'Success', settings);

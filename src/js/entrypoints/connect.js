@@ -280,6 +280,36 @@ class TrezorConnect extends TrezorBase {
         });
     }
 
+    static async requestLogin(params: Object): Promise<Object> {
+
+        if (typeof params.callback === 'function') {
+            const callback: Function = params.callback;
+            delete params.callback;
+            params.asyncChallenge = true; // replace value for callback (cannot be function)
+
+            const loginChallengeListener = async (event: Message) => {
+                const data = event.data;
+                console.warn("HEREEE loginChallengeListener", data)
+                if (data && data.type == UI.LOGIN_CHALLENGE_REQUEST) {
+                    const response = await callback();
+                    console.warn("HEREEE loginChallengeListener2", response)
+                    postMessage({
+                        event: UI_EVENT,
+                        type: UI.LOGIN_CHALLENGE_RESPONSE,
+                        payload: response
+                    });
+                }
+            }
+
+            window.addEventListener('message', loginChallengeListener, false);
+            const response = await this.__call({ method: 'requestLogin', ...params });
+            window.removeEventListener('message', loginChallengeListener);
+            return response;
+        } else {
+            return await this.__call({ method: 'requestLogin', ...params });
+        }
+    }
+
     // static async requestDevice() {
     //     return await this.__call({ method: 'requestDevice' });
     // }
