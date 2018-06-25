@@ -12,6 +12,7 @@ import { signMessageSegwitTests } from './signMessageSegwit.spec.js';
 import { signTxTests } from './signTx.spec.js';
 import { signTxSegwitTests } from './signTxSegwit.spec.js';
 import { signTxBgoldTests } from './signTxBgold.spec.js';
+import { signTxBcashTests } from './signTxBcash.spec.js';
 import { verifyMessageTests } from './verifyMessage.spec.js';
 import { verifyMessageSegwitTests } from './verifyMessageSegwit.spec.js';
 import { verifyMessageSegwitNativeTests } from './verifyMessageSegwitNative.spec.js';
@@ -36,6 +37,7 @@ const testFunctions = {
     signTx: signTxTests,
     signTxSegwit: signTxSegwitTests,
     signTxBgold: signTxBgoldTests,
+    signTxBcash: signTxBcashTests,
     verifyMessage: verifyMessageTests,
     verifyMessageSegwit: verifyMessageSegwitTests,
     verifyMessageSegwitNative: verifyMessageSegwitNativeTests,
