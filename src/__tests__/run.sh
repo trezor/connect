@@ -46,6 +46,8 @@ pin_8="45678978"
 ################# Device config vars: END
 
 ################# Possible subtests
+getAddress_subtests="btc ltc tbtc bch"
+
 signMessage_subtests="sign signTestnet signBch signLong"
 signMessageSegwit_subtests="sign signLong"
 
@@ -403,6 +405,34 @@ test_getPublicKey() {
     setup_mnemonic_nopin_nopassphrase
     start_transport
     run_karma "getPublicKey"
+}
+
+test_getAddress() {
+    specified_subtest=$1
+
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$ethereumSignTx_subtests
+    fi;
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        if [ $subtest == "bch" ] || [ $subtest == "bchMultisig" ]; then
+            setup_mnemonic_allallall
+        else
+            setup_mnemonic_nopin_nopassphrase
+        fi;
+        start_transport
+
+        run_karma "getAddress" $subtest
+
+        kill_emul_transport
+    done;
 }
 
 test_signMessage() {
