@@ -2,6 +2,8 @@
 
 declare module 'trezor-connect/params' {
 
+    import type { Transaction } from 'flowtype/Stellar';
+
     declare type Common = {
         device?: {
             path: string;
@@ -34,5 +36,12 @@ declare module 'trezor-connect/params' {
         path?: $Path;
         xpub?: string;
         coin: string;
+    }
+
+    declare export type P_StellarSignTransaction = Common & {
+        path?: $Path;
+        ledgerVersion?: number;
+        networkPassphrase?: string;
+        transaction: Transaction;
     }
 }

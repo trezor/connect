@@ -4,9 +4,6 @@
 
 declare module 'flowtype/Stellar' {
 
-    declare type PUBLIC = 'Public Global Stellar Network ; September 2015';
-    declare type TESTNET = 'Test SDF Network ; September 2015';
-
     declare type Asset = {
         type: string;
         code?: string;
@@ -14,24 +11,20 @@ declare module 'flowtype/Stellar' {
     }
 
     declare export type Transaction = {
-        path: Array<number> | string; // Missing in stellar API, Proto: address_n
-        protocol_version: number; // Proto: ok
-        network_passphrase: PUBLIC | TESTNET; // Are there other values?, Proto: ok (string)
-
-        sequence: number; // Proto: "sequence_number"
-        timebounds: {
+        source: string;   // Proto: "source_account"
+        fee?: number;      // Proto: ok
+        sequence?: number; // Proto: "sequence_number"
+        timebounds?: {
             minTime: number; // Proto: "timebounds_start"
             maxTime: number; // Proto: "timebounds_end"
         };
-        memo: {
+        memo?: {
             id?: number;   // Proto: "memo_id"
             type: number;  // Proto: "memo_type"
             text?: string; // Proto: "memo_text"
             hash?: string; // Proto: "memo_hash"
         };
         operations: Array<Operation>; // Proto: calculated array length > "num_operations"
-        source: string; // Proto: "source_account"
-        fee: number;    // Proto: ok
     }
 
     declare export type CreateAccountOperation = {
