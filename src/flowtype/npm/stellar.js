@@ -60,7 +60,7 @@ declare module 'flowtype/Stellar' {
         amount: string;      // Proto: parse to number
         buying: Asset;       // Proto: "buying_asset"
         selling: Asset;      // Proto: "selling_asset"
-        price: string;       // (?) Proto: "price_n" or "price_d" > parse to number
+        price: { n: number, d: number }; // Proto: "price_n" and "price_d"
     }
 
     declare export type PassiveOfferOperation = {
@@ -70,7 +70,7 @@ declare module 'flowtype/Stellar' {
         amount: string;      // Proto: parse to number
         buying: Asset;       // Proto: "buying_asset"
         selling: Asset;      // Proto: "selling_asset"
-        price: string;       // (?) Proto: "price_n" or "price_d" > parse to number
+        price: { n: number, d: number }; // Proto: "price_n" and "price_d"
     }
 
     declare export type SetOptionsOperation = {
