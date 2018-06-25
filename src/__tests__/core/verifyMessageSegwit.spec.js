@@ -87,42 +87,12 @@ const verifyTestnetSubtest = (): void => {
     };
 };
 
-const verifyUtfSubtest = (): void => {
-    const testPayloads = [
-        {
-            method: 'verifyMessage',
-            coin: 'Bitcoin',
-            address: '3CwYaeWxhpXXiHue3ciQez1DLaTEAXcKa1',
-            signature: '24d0ec02ed8da8df23e7fe9e680e7867cc290312fe1c970749d8306ddad1a1eda41c6a771b13d495dd225b13b0a9d0f915a984ee3d0703f92287bf8009fbb9f7d6',
-            message: 'P\u0159\xed\u0161ern\u011b \u017elu\u0165ou\u010dk\xfd k\u016f\u0148 \xfap\u011bl \u010f\xe1belsk\xe9 \xf3dy z\xe1ke\u0159n\xfd u\u010de\u0148 b\u011b\u017e\xed pod\xe9l z\xf3ny \xfal\u016f',
-        },
-        {
-            method: 'verifyMessage',
-            coin: 'Bitcoin',
-            address: '3CwYaeWxhpXXiHue3ciQez1DLaTEAXcKa1',
-            signature: '24d0ec02ed8da8df23e7fe9e680e7867cc290312fe1c970749d8306ddad1a1eda41c6a771b13d495dd225b13b0a9d0f915a984ee3d0703f92287bf8009fbb9f7d6',
-            message: 'P\u0159\xed\u0161ern\u011b \u017elu\u0165ou\u010dk\xfd k\u016f\u0148 \xfap\u011bl \u010f\xe1belsk\xe9 \xf3dy z\xe1ke\u0159n\xfd u\u010de\u0148 b\u011b\u017e\xed pod\xe9l z\xf3ny \xfal\u016f',
-        },
-    ];
-    const expectedResponses = [
-        { success: true },
-        { success: true },
-    ];
-
-    return {
-        testPayloads,
-        expectedResponses,
-        specName: '/verifyUtf',
-    };
-};
-
 export const verifyMessageSegwitTests = (): void => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
         verify: verifySubtest,
         verifyLong: verifyLongSubtest,
         verifyTestnet: verifyTestnetSubtest,
-        verifyUtf: verifyUtfSubtest,
     };
 
     describe('VerifyMessageSegwit', () => {

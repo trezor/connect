@@ -49,7 +49,7 @@ pin_8="45678978"
 signMessage_subtests="sign signTestnet signBch signLong"
 
 verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind"
-verifyMessageSegwit_subtests="verify verifyLong verifyTestnet verifyUtf"
+verifyMessageSegwit_subtests="verify verifyLong verifyTestnet"
 verifyMessageSegwitNative_subtests="verify verifyLong verifyTestnet verifyUtf"
 
 ethereumSignTx_subtests="knownErc20Token unknownErc20Token noData data message newContract sanityChecks noDataEip155 dataEip155"
