@@ -183,19 +183,50 @@ declare module 'trezor-connect' {
 
 
     import type {
+        P_CipherKeyValue,
+        P_ComposeTransaction,
+        P_CustomMessage,
+        P_EthereumGetAddress,
+        P_EthereumSignMessage,
+        P_EthereumSignTransaction,
+        P_EthereumVerifyMessage,
+        P_GetAccountInfo,
+        P_GetAddress,
+        P_GetDeviceState,
+        P_GetFeatures,
+        P_GetPublicKey,
+        P_RequestLogin,
+        P_NEMGetAddress,
+        P_NEMSignTransaction,
+        P_SignMessage,
+        P_SignTransaction,
+        P_StellarGetAddress,
+        P_StellarSignTransaction,
+        P_VerifyMessage
+    } from 'trezor-connect/params';
+
+    import type {
+        R_CipherKeyValue,
+        R_ComposeTransaction,
+        R_CustomMessage,
+        R_EthereumGetAddress,
+        R_EthereumSignMessage,
+        R_EthereumSignTransaction,
+        R_EthereumVerifyMessage,
+        R_GetAccountInfo,
+        R_GetAddress,
         R_GetDeviceState,
         R_GetFeatures,
         R_GetPublicKey,
-        R_EthereumGetAddress,
-        R_EthereumSignTransaction,
-        R_GetAccountInfo
+        R_RequestLogin,
+        R_NEMGetAddress,
+        R_NEMSignTransaction,
+        R_SignMessage,
+        R_SignTransaction,
+        R_StellarGetAddress,
+        R_StellarSignTransaction,
+        R_VerifyMessage
     } from 'trezor-connect/response';
-
-    import type {
-        P_EthereumGetAddress,
-        P_EthereumSignTransaction,
-        P_GetAccountInfo,
-    } from 'trezor-connect/params';
 
     declare module.exports: {
         init: (options: Object) => Promise<Object>;
@@ -205,21 +236,26 @@ declare module 'trezor-connect' {
         renderWebUSBButton: (className?: string) => void;
         uiResponse: (options: Object) => void;
 
-        customMessage: (options: Object) => Promise<Object>;
-        cipherKeyValue: (options: Object) => Promise<Object>;
+        cipherKeyValue: (options: P_CipherKeyValue) => Promise<R_CipherKeyValue>;
+        composeTransaction: (options: P_ComposeTransaction) => Promise<R_ComposeTransaction>;
+        customMessage: (options: P_CustomMessage) => Promise<R_CustomMessage>;
         ethereumGetAddress: (options: P_EthereumGetAddress) => Promise<R_EthereumGetAddress>;
+        ethereumSignMessage: (options: P_EthereumSignMessage) => Promise<R_EthereumSignMessage>;
         ethereumSignTransaction: (options: P_EthereumSignTransaction) => Promise<R_EthereumSignTransaction>;
-        ethereumSignMessage: (options: Object) => Promise<Object>;
-        ethereumVerifyMessage: (options: Object) => Promise<Object>;
+        ethereumVerifyMessage: (options: P_EthereumVerifyMessage) => Promise<R_EthereumVerifyMessage>;
         getAccountInfo: (options: P_GetAccountInfo) => Promise<R_GetAccountInfo>;
-        getDeviceState: (options: Object) => Promise<R_GetDeviceState>;
-        getFeatures: (options: Object) => Promise<R_GetFeatures>;
-        getPublicKey: (options: Object) => Promise<R_GetPublicKey>;
-        nemGetAddress: (options: Object) => Promise<Object>;
-        nemSignTransaction: (options: Object) => Promise<Object>;
-        stellarGetAddress: (options: Object) => Promise<Object>;
-        stellarGetPublicKey: (options: Object) => Promise<Object>;
-        stellarSignTransaction: (options: Object) => Promise<Object>;
+        getAddress: (options: P_GetAddress) => Promise<R_GetAddress>;
+        getDeviceState: (options: P_GetDeviceState) => Promise<R_GetDeviceState>;
+        getFeatures: (options: P_GetFeatures) => Promise<R_GetFeatures>;
+        getPublicKey: (options: P_GetPublicKey) => Promise<R_GetPublicKey>;
+        requestLogin: (options: P_RequestLogin) => Promise<R_RequestLogin>;
+        nemGetAddress: (options: P_NEMGetAddress) => Promise<R_NEMGetAddress>;
+        nemSignTransaction: (options: P_NEMSignTransaction) => Promise<R_NEMSignTransaction>;
+        signMessage: (options: P_SignMessage) => Promise<R_SignMessage>;
+        signTransaction: (options: P_SignTransaction) => Promise<R_SignTransaction>;
+        stellarGetAddress: (options: P_StellarGetAddress) => Promise<R_StellarGetAddress>;
+        stellarSignTransaction: (options: P_StellarSignTransaction) => Promise<R_StellarSignTransaction>;
+        verifyMessage: (options: P_VerifyMessage) => Promise<R_VerifyMessage>;
 
         DEVICE_EVENT: T_DEVICE_EVENT;
         DEVICE: T_DEVICE;
