@@ -2,31 +2,31 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-export const btcSubtest = (): void => {
+const btcSubtest = (): void => {
     const testPayloads = [
         {
             method: 'getAddress',
             coin: 'Bitcoin',
             path: [],
-            showOnTrezor: false,
+            showOnTrezor: true,
         },
         {
             method: 'getAddress',
             coin: 'Bitcoin',
             path: [1],
-            showOnTrezor: false,
+            showOnTrezor: true,
         },
         {
             method: 'getAddress',
             coin: 'Bitcoin',
             path: [-9, 0],
-            showOnTrezor: false,
+            showOnTrezor: true,
         },
         {
             method: 'getAddress',
             coin: 'Bitcoin',
             path: [0, 9999999],
-            showOnTrezor: false,
+            showOnTrezor: true,
         },
     ];
 
@@ -60,31 +60,31 @@ export const btcSubtest = (): void => {
     };
 };
 
-export const ltcSubtest = (): void => {
+const ltcSubtest = (): void => {
     const testPayloads = [
         {
             method: 'getAddress',
             coin: 'Litecoin',
             path: [],
-            showOnTrezor: false,
+            showOnTrezor: true,
         },
         {
             method: 'getAddress',
             coin: 'Litecoin',
             path: [1],
-            showOnTrezor: false,
+            showOnTrezor: true,
         },
         {
             method: 'getAddress',
             coin: 'Litecoin',
             path: [-9, 0],
-            showOnTrezor: false,
+            showOnTrezor: true,
         },
         {
             method: 'getAddress',
             coin: 'Litecoin',
             path: [0, 9999999],
-            showOnTrezor: false,
+            showOnTrezor: true,
         },
     ];
 
@@ -118,13 +118,13 @@ export const ltcSubtest = (): void => {
     };
 };
 
-export const tbtcSubtest = (): void => {
+const tbtcSubtest = (): void => {
     const testPayloads = [
         {
             method: 'getAddress',
             coin: 'Testnet',
             path: [111, 42],
-            showOnTrezor: false,
+            showOnTrezor: true,
         },
     ];
 
@@ -143,25 +143,25 @@ export const tbtcSubtest = (): void => {
     };
 };
 
-export const bchSubtest = (): void => {
+const bchSubtest = (): void => {
     const testPayloads = [
         {
             method: 'getAddress',
             coin: 'Bcash',
             path: "44'/145'/0'/0/0",
-            showOnTrezor: false,
+            showOnTrezor: true,
         },
         {
             method: 'getAddress',
             coin: 'Bcash',
             path: "44'/145'/0'/0/1",
-            showOnTrezor: false,
+            showOnTrezor: true,
         },
         {
             method: 'getAddress',
             coin: 'Bcash',
             path: "44'/145'/0'/1/0",
-            showOnTrezor: false,
+            showOnTrezor: true,
         },
     ];
 

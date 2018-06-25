@@ -415,7 +415,7 @@ test_getAddress() {
         subtests=$specified_subtest
     else
         # Run all possible subtests
-        subtests=$ethereumSignTx_subtests
+        subtests=$getAddress_subtests
     fi;
 
     for subtest in $subtests; do
@@ -433,6 +433,13 @@ test_getAddress() {
 
         kill_emul_transport
     done;
+}
+
+test_getAddressSegwit() {
+    start_emulator
+    setup_mnemonic_nopin_nopassphrase
+    start_transport
+    run_karma "getAddressSegwit"
 }
 
 test_signMessage() {
