@@ -105,8 +105,8 @@ show_usage() {
     echo "Options:"
 
     echo "  -a                                  Run all available tests"
-    echo "  -t \"<,TEST_NAME/SUBTEST_NAME>\"    Run specified tests/subtest"
-    echo "  -x \"<,TEST_NAME>\"                 Run all but specified tests"
+    echo "  -t \"<,TEST_NAME/SUBTEST_NAME>\"      Run specified tests/subtest"
+    echo "  -x \"<,TEST_NAME>\"                   Run all but specified tests"
     echo "  -l                                  Show all available tests and exit."
     echo "  -s <TEST_NAME>                      Show all available subtests for the specified test name and exit."
     echo "  -e                                  Specify path to emulator"
@@ -380,8 +380,8 @@ run_excluded_tests() {
 
 run_test() {
     # Check whether specified test has any subtest
-    # - add trailing '/' so the cut command works for $subtest_name
-    # - if $test is only name of the test without '/' (i.e.: test=ethereumSignTx)
+    # - trailing '/' must be added so the cut command works for $subtest_name
+    # - if $test is only name of the test without '/' (i.e.: 'test=ethereumSignTx' not 'test=ethereumSignTx/')
     # the $subtest_name would be same as the $test_name
     test_name=$(echo ${1}/ | cut -d"/" -f1)
     subtest_name=$(echo ${1}/ | cut -d"/" -f2)
