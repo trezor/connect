@@ -198,13 +198,6 @@ const handleMessage = (messageEvent: Message): void => {
 };
 
 class TrezorConnect extends TrezorBase {
-    // static on(type: string, fn: Function): void {
-    //     eventEmitter.on(type, fn);
-    // }
-
-    // static off(type: string, fn: Function): void {
-    //     eventEmitter.removeListener(type, fn);
-    // }
 
     static async init(settings: Object = {}): Promise<void> {
         if (_iframe) { throw IFRAME_INITIALIZED; }
@@ -310,16 +303,6 @@ class TrezorConnect extends TrezorBase {
         }
     }
 
-    // static async requestDevice() {
-    //     return await this.__call({ method: 'requestDevice' });
-    // }
-
-    // static async getLog(args: ?Array<string>): Array<any> {
-    //     const iframeLogs: ?Object = await postMessage({ type: 'getlog', payload: args });
-    //     const localLogs = getLog(args);
-    //     return []; //localLogs.concat(iframeLogs);
-    // }
-
     static async __call(params: Object): Promise<Object> {
         if (_iframeHandshakePromise) {
             return { success: false, message: NO_IFRAME.message };
@@ -354,12 +337,6 @@ class TrezorConnect extends TrezorBase {
 
     static dispose(): void {
         // TODO
-    }
-
-    static getVersion(): Object {
-        return {
-            type: 'connect',
-        };
     }
 
     static renderWebUSBButton(className: ?string): void {

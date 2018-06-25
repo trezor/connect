@@ -64,10 +64,6 @@ export default class Trezor {
         // to override
     }
 
-    static changeSettings(settings: Object): void {
-        // to override
-    }
-
     static async cipherKeyValue(params: P_CipherKeyValue): Promise<R_CipherKeyValue> {
         return await this.__call({ method: 'cipherKeyValue', ...params });
     }
@@ -151,10 +147,5 @@ export default class Trezor {
 
     static dispose(): void {
         // TODO!
-    }
-
-    static getVersion(): Object {
-        // to override
-        return {};
     }
 }
