@@ -46,7 +46,7 @@ pin_8="45678978"
 ################# Device config vars: END
 
 ################# Possible subtests
-signMessage_subtests="sign signTestnet signBch signLong signUtf"
+signMessage_subtests="sign signTestnet signBch signLong"
 
 verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind verifyUtf"
 verifyMessageSegwit_subtests="verify verifyLong verifyTestnet verifyUtf"
