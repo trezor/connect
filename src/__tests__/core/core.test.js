@@ -9,6 +9,7 @@ import { getAddressTests } from './getAddress.spec.js';
 import { getAddressSegwitTests } from './getAddressSegwit.spec.js';
 import { signMessageTests } from './signMessage.spec.js';
 import { signMessageSegwitTests } from './signMessageSegwit.spec.js';
+import { signTxTests } from './signTx.spec.js'
 import { verifyMessageTests } from './verifyMessage.spec.js';
 import { verifyMessageSegwitTests } from './verifyMessageSegwit.spec.js';
 import { verifyMessageSegwitNativeTests } from './verifyMessageSegwitNative.spec.js';
@@ -30,6 +31,7 @@ const testFunctions = {
     getAddressSegwit: getAddressSegwitTests,
     signMessage: signMessageTests,
     signMessageSegwit: signMessageSegwitTests,
+    signTx: signTxTests,
     verifyMessage: verifyMessageTests,
     verifyMessageSegwit: verifyMessageSegwitTests,
     verifyMessageSegwitNative: verifyMessageSegwitNativeTests,

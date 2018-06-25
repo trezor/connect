@@ -51,6 +51,8 @@ getAddress_subtests="btc ltc tbtc bch"
 signMessage_subtests="sign signTestnet signBch signLong"
 signMessageSegwit_subtests="sign signLong"
 
+signTx_subtests="oneOneFee oneTwoFee oneThreeFee twoTwo testnetOneTwoFee testnetFeeTooHigh lotsOfOutputs feeTooHigh notEnoughFunds attackChangeOutputs attackChangeInputAddress spendCoinbase twoChanges p2sh changeOnMainChainAllowed"
+
 verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind"
 verifyMessageSegwit_subtests="verify verifyLong verifyTestnet"
 verifyMessageSegwitNative_subtests="verify verifyLong verifyTestnet"
@@ -328,7 +330,6 @@ run_karma() {
     # so we can show summary for all tests later
     # todo: doesn't work when running 'signMessage/sign' and test fails
     result=$(cat $logs_path | grep -E TOTAL | cut -d ":" -f2)
-    echo "RESULT: ${result}"
 
     finished_test_results="${finished_test_results}${result};"
 
@@ -492,6 +493,37 @@ test_signMessageSegwit() {
         start_transport
 
         run_karma "signMessageSegwit" $subtest
+
+        kill_emul_transport
+    done;
+}
+
+test_signTx() {
+   specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$signTx_subtests
+    fi;
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        if [ $subtest == "oneTwoFee" ] ||
+        [ $subtest == "testnetOneTwoFee" ] ||
+        [ $subtest == "attackChangeOutputs" ] ||
+        [ $subtest == "changeOnmainChainAllowed" ] ||
+        [ $subtest == "twoChanges" ]; then
+            setup_mnemonic_allallall
+        else
+            setup_mnemonic_nopin_nopassphrase
+        fi;
+        start_transport
+
+        run_karma "signTx" $subtest
 
         kill_emul_transport
     done;
