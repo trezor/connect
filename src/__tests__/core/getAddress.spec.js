@@ -11,7 +11,7 @@ import type {
     Subtest,
     TestAddressPayload,
     ExpectedAddressResponse,
-} from 'flowtype/tests';
+} from 'flowtype/tests/get-address';
 
 const btc = (): Subtest => {
     const testPayloads: Array<TestAddressPayload> = [

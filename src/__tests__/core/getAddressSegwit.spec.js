@@ -9,7 +9,7 @@ import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 import type {
     TestAddressPayload,
     ExpectedAddressResponse,
-} from 'flowtype/tests';
+} from 'flowtype/tests/get-address';
 
 export const getAddressSegwit = (): void => {
     describe('GetAddressSegwit', () => {
