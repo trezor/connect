@@ -7,10 +7,12 @@ import { settings, CoreEventHandler } from './common.js';
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 import { __karma__ } from 'flowtype/karma';
 
-import type {
-    Subtest,
-    TestAddressPayload,
-    ExpectedAddressResponse,
+import {
+    type Subtest,
+} from 'flowtype/tests';
+import {
+    type TestAddressPayload,
+    type ExpectedAddressResponse,
 } from 'flowtype/tests/get-address';
 
 const btc = (): Subtest => {
@@ -71,8 +73,8 @@ const btc = (): Subtest => {
     };
 };
 
-const ltc = () => {
-    const testPayloads = [
+const ltc = (): Subtest => {
+    const testPayloads: Array<TestAddressPayload> = [
         {
             method: 'getAddress',
             coin: 'Litecoin',
@@ -99,7 +101,7 @@ const ltc = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedAddressResponse> = [
         {
             payload: {
                 address: 'LYtGrdDeqYUQnTkr5sHT2DKZLG7Hqg7HTK',
@@ -129,8 +131,8 @@ const ltc = () => {
     };
 };
 
-const tbtc = () => {
-    const testPayloads = [
+const tbtc = (): Subtest => {
+    const testPayloads: Array<TestAddressPayload> = [
         {
             method: 'getAddress',
             coin: 'Testnet',
@@ -139,7 +141,7 @@ const tbtc = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedAddressResponse> = [
         {
             payload: {
                 address: 'moN6aN6NP1KWgnPSqzrrRPvx2x1UtZJssa',
@@ -154,8 +156,8 @@ const tbtc = () => {
     };
 };
 
-const bch = () => {
-    const testPayloads = [
+const bch = (): Subtest => {
+    const testPayloads: Array<TestAddressPayload> = [
         {
             method: 'getAddress',
             coin: 'Bcash',
@@ -176,7 +178,7 @@ const bch = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedAddressResponse> = [
         {
             payload: {
                 address: 'bitcoincash:qr08q88p9etk89wgv05nwlrkm4l0urz4cyl36hh9sv',

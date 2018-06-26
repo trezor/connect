@@ -6,9 +6,9 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 
-import type {
-    TestAddressPayload,
-    ExpectedAddressResponse,
+import {
+    type TestAddressPayload,
+    type ExpectedAddressResponse,
 } from 'flowtype/tests/get-address';
 
 export const getAddressSegwit = (): void => {
