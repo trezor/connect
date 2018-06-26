@@ -7,15 +7,13 @@ import { settings, CoreEventHandler } from './common.js';
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 import { __karma__ } from 'flowtype/karma';
 
-import {
-    type Subtest
-} from 'flowtype/tests';
-import {
-    type TestSignMessagePayload,
-    type ExpectedSignMessageResponse,
+import type {
+    SubtestSignMessage,
+    TestSignMessagePayload,
+    ExpectedSignMessageResponse,
 } from 'flowtype/tests/sign-message';
 
-const sign = (): Subtest => {
+const sign = (): SubtestSignMessage => {
     const testPayloads: Array<TestSignMessagePayload> = [
         {
             method: 'signMessage',
@@ -40,7 +38,7 @@ const sign = (): Subtest => {
     };
 };
 
-const signTestnet = (): Subtest => {
+const signTestnet = (): SubtestSignMessage => {
     const testPayloads: Array<TestSignMessagePayload> = [
         {
             method: 'signMessage',
@@ -65,7 +63,7 @@ const signTestnet = (): Subtest => {
     };
 };
 
-const signBch = (): Subtest => {
+const signBch = (): SubtestSignMessage => {
     const testPayloads: Array<TestSignMessagePayload> = [
         {
             method: 'signMessage',
@@ -90,7 +88,7 @@ const signBch = (): Subtest => {
     };
 };
 
-const signLong = (): Subtest => {
+const signLong = (): SubtestSignMessage => {
     const testPayloads: Array<TestSignMessagePayload> = [
         {
             method: 'signMessage',

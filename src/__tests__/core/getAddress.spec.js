@@ -7,15 +7,13 @@ import { settings, CoreEventHandler } from './common.js';
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 import { __karma__ } from 'flowtype/karma';
 
-import {
-    type Subtest,
-} from 'flowtype/tests';
-import {
-    type TestAddressPayload,
-    type ExpectedAddressResponse,
+import type {
+    SubtestAddress,
+    TestAddressPayload,
+    ExpectedAddressResponse,
 } from 'flowtype/tests/get-address';
 
-const btc = (): Subtest => {
+const btc = (): SubtestAddress => {
     const testPayloads: Array<TestAddressPayload> = [
         {
             method: 'getAddress',
@@ -73,7 +71,7 @@ const btc = (): Subtest => {
     };
 };
 
-const ltc = (): Subtest => {
+const ltc = (): SubtestAddress => {
     const testPayloads: Array<TestAddressPayload> = [
         {
             method: 'getAddress',
@@ -131,7 +129,7 @@ const ltc = (): Subtest => {
     };
 };
 
-const tbtc = (): Subtest => {
+const tbtc = (): SubtestAddress => {
     const testPayloads: Array<TestAddressPayload> = [
         {
             method: 'getAddress',
@@ -156,7 +154,7 @@ const tbtc = (): Subtest => {
     };
 };
 
-const bch = (): Subtest => {
+const bch = (): SubtestAddress => {
     const testPayloads: Array<TestAddressPayload> = [
         {
             method: 'getAddress',

@@ -7,11 +7,16 @@ declare module 'flowtype/tests/sign-message' {
         message: string,
         coin?: string,
     };
-
     declare export type ExpectedSignMessageResponse = {
         payload: {
             address: string,
             signature: string,
         },
+    };
+
+    declare export type SubtestSignMessage = {
+        testPayloads: Array<TestSignMessagePayload>,
+        expectedResponses: Array<ExpectedSignMessageResponse>,
+        specName: string,
     };
 }

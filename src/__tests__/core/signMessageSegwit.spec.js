@@ -7,8 +7,14 @@ import { settings, CoreEventHandler } from './common.js';
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 import { __karma__ } from 'flowtype/karma';
 
-const sign = () => {
-    const testPayloads = [
+import type {
+    SubtestSignMessage,
+    TestSignMessagePayload,
+    ExpectedSignMessageResponse,
+} from 'flowtype/tests/sign-message';
+
+const sign = (): SubtestSignMessage => {
+    const testPayloads: Array<TestSignMessagePayload> = [
         {
             method: 'signMessage',
             coin: 'Bitcoin',
@@ -16,7 +22,7 @@ const sign = () => {
             message: 'This is an example of a signed message.',
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignMessageResponse> = [
         {
             payload: {
                 address: '3Pm1J6dXuugmkTgM5PdidR9UssSWwdy5Vh',
@@ -32,7 +38,7 @@ const sign = () => {
     };
 };
 
-const signLong = () => {
+const signLong = (): SubtestSignMessage => {
     const testPayloads = [
         {
             method: 'signMessage',
