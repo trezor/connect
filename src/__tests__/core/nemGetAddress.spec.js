@@ -1,7 +1,11 @@
+/* @flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { NEM_MAINNET, NEM_TESTNET } from '../../js/core/methods/helpers/nemSignTx.js'
 import { settings, CoreEventHandler } from './common.js';
+
+import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 
 export const nemGetAddress = () => {
     describe('NEMGetAddress', () => {
@@ -50,7 +54,7 @@ export const nemGetAddress = () => {
             const payload = testPayloads[i];
             const expectedResponse = expectedResponses[i];
 
-            it(`for path: ${payload.path} on network: ${payload.network}`, async (done) => {
+            it(`for path: ${payload.path.toString()} on network: ${payload.network}`, async (done) => {
                 const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
                 handler.startListening();
                 await initTransport(settings);

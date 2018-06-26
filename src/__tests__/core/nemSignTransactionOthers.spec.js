@@ -1,9 +1,14 @@
+/* todo: flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
 import { settings, CoreEventHandler } from './common.js';
 
-const importanceTransferSubtest = (): void => {
+import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
+import { __karma__ } from 'flowtype/karma';
+
+const importanceTransferSubtest = () => {
     const testPayloads = [
         {
             method: 'nemSignTransaction',
@@ -38,7 +43,7 @@ const importanceTransferSubtest = (): void => {
     };
 };
 
-const provisionNamespaceSubtest = (): void => {
+const provisionNamespaceSubtest = () => {
     const testPayloads = [
         method: 'nemSignTransaction',
         path: "m/44'/1'/0'/0'/0'",

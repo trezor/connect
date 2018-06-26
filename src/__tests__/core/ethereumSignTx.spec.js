@@ -1,6 +1,11 @@
+/* @flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
+
+import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
+import { __karma__ } from 'flowtype/karma';
 
 const knownErc20Token = () => {
     const testPayloads = [

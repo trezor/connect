@@ -1,10 +1,15 @@
+/* @flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
-const oneOneFee = (): void => {
+import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
+import { __karma__ } from 'flowtype/karma';
+
+const oneOneFee = () => {
     // See tx d5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882
     const testPayloads = [
         {
@@ -44,7 +49,7 @@ const oneOneFee = (): void => {
     };
 };
 
-const oneTwoFee = (): void => {
+const oneTwoFee = () => {
     // See tx c275c333fd1b36bef4af316226c66a8b3693fbfcc081a5e16a2ae5fcb09e92bf
     const testPayloads = [
         {
@@ -89,7 +94,7 @@ const oneTwoFee = (): void => {
     };
 };
 
-const oneThreeFee = (): void => {
+const oneThreeFee = () => {
     // See tx d5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882
     const testPayloads = [
         {
@@ -139,7 +144,7 @@ const oneThreeFee = (): void => {
     };
 };
 
-const twoTwo = (): void => {
+const twoTwo = () => {
     // See tx c6be22d34946593bcad1d2b013e12f74159e69574ffea21581dad115572e031c
     // See tx 58497a7757224d1ff1941488d23087071103e5bf855f4c1c44e5c8d9d82ca46e
     const testPayloads = [
@@ -190,7 +195,7 @@ const twoTwo = (): void => {
     };
 };
 
-const testnetOneTwoFee = (): void => {
+const testnetOneTwoFee = () => {
     // See tx e5040e1bc1ae7667ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd
     const testPayloads = [
         {
@@ -235,7 +240,7 @@ const testnetOneTwoFee = (): void => {
     };
 };
 
-const testnetFeeTooHigh = (): void => {
+const testnetFeeTooHigh = () => {
     // See tx 6f90f3c7cbec2258b0971056ef3fe34128dbde30daa9c0639a898f9977299d54
     const testPayloads = [
         {
@@ -280,7 +285,7 @@ const testnetFeeTooHigh = (): void => {
     };
 };
 
-const lotsOfOutputs = (): void => {
+const lotsOfOutputs = () => {
     // Tests if device implements serialization of len(outputs) correctly
 
     // See tx c63e24ed820c5851b60c54613fbc4bcb37df6cd49b4c96143e99580a472f79fb
@@ -337,7 +342,7 @@ const lotsOfOutputs = (): void => {
     };
 };
 
-const feeTooHigh = (): void => {
+const feeTooHigh = () => {
     // See tx 1570416eb4302cf52979afd5e6909e37d8fdd874301f7cc87e547e509cb1caa6
     const testPayloads = [
         {
@@ -377,7 +382,7 @@ const feeTooHigh = (): void => {
     };
 };
 
-const notEnoughFunds = (): void => {
+const notEnoughFunds = () => {
     // See tx d5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882
     const testPayloads = [
         {
@@ -415,7 +420,7 @@ const notEnoughFunds = (): void => {
     };
 };
 
-const attackChangeOutputs = (): void => {
+const attackChangeOutputs = () => {
     // This unit test attempts to modify data sent during ping-pong of streaming signing.
     // Because device is asking for human confirmation only during first pass(first input),
     // device must detect that data has been modified during other passes and fail to sign
@@ -432,7 +437,7 @@ const attackChangeOutputs = (): void => {
     }
 };
 
-const attackChangeInputAddress = (): void => {
+const attackChangeInputAddress = () => {
     // This unit test attempts to modify input address after the Trezor checked
     // that it matches the change output
 
@@ -444,7 +449,7 @@ const attackChangeInputAddress = (): void => {
     };
 };
 
-const spendCoinbase = (): void => {
+const spendCoinbase = () => {
     // 25 TEST generated to m/1 (mfiGQVPcRcaEvQPYDErR34DcCovtxYvUUV)
     // See tx d6da21677d7cca5f42fbc7631d062c9ae918a0254f7c6c22de8e8cb7fd5b8236
     const testPayloads = [
@@ -485,7 +490,7 @@ const spendCoinbase = (): void => {
     };
 };
 
-const twoChanges = (): void => {
+const twoChanges = () => {
     // tx e5040e1bc1ae7667ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd
     const testPayloads = [
         {
@@ -531,7 +536,7 @@ const twoChanges = (): void => {
     };
 };
 
-const p2sh = (): void => {
+const p2sh = () => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -570,7 +575,7 @@ const p2sh = (): void => {
     };
 };
 
-const changeOnMainChainAllowed = (): void => {
+const changeOnMainChainAllowed = () => {
     const testPayloads = [
         {
             method: 'signTransaction',

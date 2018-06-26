@@ -1,6 +1,10 @@
+/* @flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
+
+import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 
 export const ethereumSignMessage = () => {
     describe('EthereumSignMessage', () => {
@@ -51,7 +55,7 @@ export const ethereumSignMessage = () => {
             const payload = testPayloads[i];
             const expectedResponse = expectedResponses[i];
 
-            it(`for path: ${payload.path}, message: ${payload.message}`, async (done) => {
+            it(`for path: ${payload.path.toString()}, message: ${payload.message}`, async (done) => {
                 const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
                 handler.startListening();
                 await initTransport(settings);

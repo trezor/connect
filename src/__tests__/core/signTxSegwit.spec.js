@@ -1,10 +1,15 @@
+/* @flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
-const sendP2sh = (): void => {
+import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
+import { __karma__ } from 'flowtype/karma';
+
+const sendP2sh = () => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -50,7 +55,7 @@ const sendP2sh = (): void => {
     };
 };
 
-const sendP2shChange = (): void => {
+const sendP2shChange = () => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -96,7 +101,7 @@ const sendP2shChange = (): void => {
     };
 };
 
-const sendMultisig1 = (): void => {
+const sendMultisig1 = () => {
     const testPayloads = [
         {
             method: 'signTransaction',
