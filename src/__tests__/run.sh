@@ -235,7 +235,7 @@ show_default_paths() {
 }
 
 show_results() {
-    echo "\n\n"
+    echo "\n"
 
     pad=$(printf '%0.1s' "."{1..80})
     pad_length=60
@@ -252,12 +252,28 @@ show_results() {
         full_name="${test_name}${subtest_name}"
         full_name_color="${bold}${green}${test_name}${reset}${green}${subtest_name}${reset}"
 
-
         test_result=$(echo $r | cut -d"@" -f2)
 
         printf '%s' "- ${full_name_color}"
         printf '%0.*s' $(($pad_length - ${#full_name})) "$pad"
-        printf '%s\n' "$test_result"
+
+        #success=$(echo ,${test_result} | cut -d"," -f2)
+        #failed=$(echo ,${test_result} | cut -d"," -f1)
+        #printf '%s\n' "${red}${failed} ${green}${success}${reset}"
+        is_fail=$(echo ${test_result} | grep "FAILED" >/dev/null && echo 1 || echo 0)
+        if [ $is_fail -eq 1 ]; then
+            printf '%s\n' "${red}${test_result}${reset}"
+        else
+            printf '%s\n' "${green}${test_result}${reset}"
+        fi;
+
+        #is_success=$(echo ${test_result} | grep "SUCCESS" >/dev/null && echo 1 || echo 0)
+        #if [ $is_success -eq 1 ]; then
+        #    printf '%s\n' "${green}${success}${reset}"
+        #else
+        #    printf '%s\n' "${red}${test_result}${reset}"
+        #fi;
+
     done;
     IFS=$reset_ifs
 
@@ -342,7 +358,13 @@ run_karma() {
     # Grab last summary line after test has finished
     # so we can show summary for all tests later
     # todo: doesn't work when running 'signMessage/sign' and test fails
-    result=$(cat $logs_path | grep -E TOTAL | cut -d ":" -f2)
+    result=$(cat $logs_path | grep Executed | cut -d ":" -f2 | tail -1)
+    is_fail=$(echo ${result} | grep FAILED >/dev/null && echo 1 || echo 0)
+    if [ $is_fail -eq 1 ]; then
+        echo "${red}${result}${reset}"
+    else
+        echo "${green}${result}${reset}"
+    fi;
 
     finished_test_results="${finished_test_results}${result};"
 
