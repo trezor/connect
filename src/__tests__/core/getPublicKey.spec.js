@@ -1,6 +1,10 @@
+/* @flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
+
+import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 
 export const getPublicKey = (): void => {
     describe('GetPublicKey', () => {
@@ -69,7 +73,7 @@ export const getPublicKey = (): void => {
             const payload = testPayloads[i];
             const expectedResponse = expectedResponses[i];
 
-            it(`for derivation path: "[${payload.path}]"`, async (done) => {
+            it(`for derivation path: "[${payload.path.toString()}]"`, async (done) => {
                 const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
                 handler.startListening();
                 await initTransport(settings);

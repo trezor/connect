@@ -1,10 +1,15 @@
+/* @flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
-const change = (): void => {
+import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
+import { __karma__ } from 'flowtype/karma';
+
+const change = () => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -51,7 +56,7 @@ const change = (): void => {
     };
 };
 
-const noChange = (): void => {
+const noChange = () => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -100,7 +105,7 @@ const noChange = (): void => {
     };
 };
 
-const p2sh = (): void => {
+const p2sh = () => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -147,7 +152,7 @@ const p2sh = (): void => {
     };
 };
 
-const p2shWitnessChange = (): void => {
+const p2shWitnessChange = () => {
     const testPayloads = [
         {
             method: 'signTransaction',

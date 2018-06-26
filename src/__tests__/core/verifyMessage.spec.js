@@ -1,8 +1,13 @@
+/* @flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-const verify = (): void => {
+import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
+import { __karma__ } from 'flowtype/karma';
+
+const verify = () => {
     const testPayloads = [
         {
             // uncompressed pubkey - ok
@@ -78,7 +83,7 @@ const verify = (): void => {
     };
 };
 
-const verifyLong = (): void => {
+const verifyLong = () => {
     const testPayloads = [
         {
             method: 'verifyMessage',
@@ -99,7 +104,7 @@ const verifyLong = (): void => {
     };
 };
 
-const verifyTestnet = (): void => {
+const verifyTestnet = () => {
     const testPayloads = [
         {
             method: 'verifyMessage',
@@ -120,7 +125,7 @@ const verifyTestnet = (): void => {
     };
 };
 
-const verifyBcash = (): void => {
+const verifyBcash = () => {
     const testPayloads = [
         {
             method: 'verifyMessage',
@@ -141,7 +146,7 @@ const verifyBcash = (): void => {
     };
 };
 
-const verifyBitcoind = (): void => {
+const verifyBitcoind = () => {
     const testPayloads = [
         {
             method: 'verifyMessage',

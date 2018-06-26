@@ -1,8 +1,13 @@
+/* @flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-const btc = (): void => {
+import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
+import { __karma__ } from 'flowtype/karma';
+
+const btc = () => {
     const testPayloads = [
         {
             method: 'getAddress',
@@ -60,7 +65,7 @@ const btc = (): void => {
     };
 };
 
-const ltc = (): void => {
+const ltc = () => {
     const testPayloads = [
         {
             method: 'getAddress',
@@ -118,7 +123,7 @@ const ltc = (): void => {
     };
 };
 
-const tbtc = (): void => {
+const tbtc = () => {
     const testPayloads = [
         {
             method: 'getAddress',
@@ -143,7 +148,7 @@ const tbtc = (): void => {
     };
 };
 
-const bch = (): void => {
+const bch = () => {
     const testPayloads = [
         {
             method: 'getAddress',

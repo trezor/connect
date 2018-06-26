@@ -1,7 +1,12 @@
+/* todo: flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
 import { settings, CoreEventHandler } from './common.js';
+
+import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
+import { __karma__ } from 'flowtype/karma';
 
 const simpleSubtest = (): void => {
     const testPayloads = [

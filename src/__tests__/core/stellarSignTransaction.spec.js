@@ -1,6 +1,11 @@
+/* todo: flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
+
+import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
+import { __karma__ } from 'flowtype/karma';
 
 export const stellarSignTransactionTests = (): void => {
     const subtest = __karma__.config.subtest;
