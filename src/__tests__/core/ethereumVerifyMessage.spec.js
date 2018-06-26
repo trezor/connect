@@ -2,7 +2,7 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-export const ethereumVerifyMessageTests = () => {
+export const ethereumVerifyMessage = () => {
     describe('EthereumVerifyMessage', () => {
         let core: Core;
 

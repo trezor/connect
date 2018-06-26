@@ -2,7 +2,7 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-const knownErc20TokenSubtest = () => {
+const knownErc20Token = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -34,7 +34,7 @@ const knownErc20TokenSubtest = () => {
     };
 };
 
-const unknownErc20TokenSubtest = () => {
+const unknownErc20Token = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -66,7 +66,7 @@ const unknownErc20TokenSubtest = () => {
     };
 };
 
-const noDataSubtest = () => {
+const noData = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -115,7 +115,7 @@ const noDataSubtest = () => {
     };
 };
 
-const dataSubtest = () => {
+const data = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -167,7 +167,7 @@ const dataSubtest = () => {
     };
 };
 
-const messageSubtest = () => {
+const message = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -200,7 +200,7 @@ const messageSubtest = () => {
     };
 };
 
-const newContractSubtest = () => {
+const newContract = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -244,7 +244,7 @@ const newContractSubtest = () => {
     };
 };
 
-const sanityChecksSubtest = () => {
+const sanityChecks = () => {
     const testPayloads = [
         {
             // Gas overflow
@@ -305,7 +305,7 @@ const sanityChecksSubtest = () => {
     };
 };
 
-const noDataEip155Subtest = () => {
+const noDataEip155 = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -356,7 +356,7 @@ const noDataEip155Subtest = () => {
     }
 };
 
-const dataEip155Subtest = () => {
+const dataEip155 = () => {
     const testPayloads = [
         {
             method: 'ethereumSignTx',
@@ -449,18 +449,18 @@ const dataEip155Subtest = () => {
     };
 };
 
-export const ethereumSignTxTests = () => {
+export const ethereumSignTx = () => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
-        knownErc20Token: knownErc20TokenSubtest,
-        unknownErc20Token: unknownErc20TokenSubtest,
-        noData: noDataSubtest,
-        data: dataSubtest,
-        message: messageSubtest,
-        newContract: newContractSubtest,
-        sanityChecks: sanityChecksSubtest,
-        noDataEip155: noDataEip155Subtest,
-        dataEip155: dataEip155Subtest,
+        knownErc20Token,
+        unknownErc20Token,
+        noData,
+        data,
+        message,
+        newContract,
+        sanityChecks,
+        noDataEip155,
+        dataEip155,
     };
 
     describe('EthereumSignTx', () => {

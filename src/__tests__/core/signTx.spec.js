@@ -4,7 +4,7 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
-const oneOneFeeSubtest = (): void => {
+const oneOneFee = (): void => {
     // See tx d5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882
     const testPayloads = [
         {
@@ -44,7 +44,7 @@ const oneOneFeeSubtest = (): void => {
     };
 };
 
-const oneTwoFeeSubtest = (): void => {
+const oneTwoFee = (): void => {
     // See tx c275c333fd1b36bef4af316226c66a8b3693fbfcc081a5e16a2ae5fcb09e92bf
     const testPayloads = [
         {
@@ -89,7 +89,7 @@ const oneTwoFeeSubtest = (): void => {
     };
 };
 
-const oneThreeFeeSubtest = (): void => {
+const oneThreeFee = (): void => {
     // See tx d5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882
     const testPayloads = [
         {
@@ -139,7 +139,7 @@ const oneThreeFeeSubtest = (): void => {
     };
 };
 
-const twoTwoSubtest = (): void => {
+const twoTwo = (): void => {
     // See tx c6be22d34946593bcad1d2b013e12f74159e69574ffea21581dad115572e031c
     // See tx 58497a7757224d1ff1941488d23087071103e5bf855f4c1c44e5c8d9d82ca46e
     const testPayloads = [
@@ -190,7 +190,7 @@ const twoTwoSubtest = (): void => {
     };
 };
 
-const testnetOneTwoFeeSubtest = (): void => {
+const testnetOneTwoFee = (): void => {
     // See tx e5040e1bc1ae7667ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd
     const testPayloads = [
         {
@@ -235,7 +235,7 @@ const testnetOneTwoFeeSubtest = (): void => {
     };
 };
 
-const testnetFeeTooHighSubtest = (): void => {
+const testnetFeeTooHigh = (): void => {
     // See tx 6f90f3c7cbec2258b0971056ef3fe34128dbde30daa9c0639a898f9977299d54
     const testPayloads = [
         {
@@ -280,7 +280,7 @@ const testnetFeeTooHighSubtest = (): void => {
     };
 };
 
-const lotsOfOutputsSubtest = (): void => {
+const lotsOfOutputs = (): void => {
     // Tests if device implements serialization of len(outputs) correctly
 
     // See tx c63e24ed820c5851b60c54613fbc4bcb37df6cd49b4c96143e99580a472f79fb
@@ -337,7 +337,7 @@ const lotsOfOutputsSubtest = (): void => {
     };
 };
 
-const feeTooHighSubtest = (): void => {
+const feeTooHigh = (): void => {
     // See tx 1570416eb4302cf52979afd5e6909e37d8fdd874301f7cc87e547e509cb1caa6
     const testPayloads = [
         {
@@ -377,7 +377,7 @@ const feeTooHighSubtest = (): void => {
     };
 };
 
-const notEnoughFundsSubtest = (): void => {
+const notEnoughFunds = (): void => {
     // See tx d5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882
     const testPayloads = [
         {
@@ -415,7 +415,7 @@ const notEnoughFundsSubtest = (): void => {
     };
 };
 
-const attackChangeOutputsSubtest = (): void => {
+const attackChangeOutputs = (): void => {
     // This unit test attempts to modify data sent during ping-pong of streaming signing.
     // Because device is asking for human confirmation only during first pass(first input),
     // device must detect that data has been modified during other passes and fail to sign
@@ -432,7 +432,7 @@ const attackChangeOutputsSubtest = (): void => {
     }
 };
 
-const attackChangeInputAddressSubtest = (): void => {
+const attackChangeInputAddress = (): void => {
     // This unit test attempts to modify input address after the Trezor checked
     // that it matches the change output
 
@@ -444,7 +444,7 @@ const attackChangeInputAddressSubtest = (): void => {
     };
 };
 
-const spendCoinbaseSubtest = (): void => {
+const spendCoinbase = (): void => {
     // 25 TEST generated to m/1 (mfiGQVPcRcaEvQPYDErR34DcCovtxYvUUV)
     // See tx d6da21677d7cca5f42fbc7631d062c9ae918a0254f7c6c22de8e8cb7fd5b8236
     const testPayloads = [
@@ -485,7 +485,7 @@ const spendCoinbaseSubtest = (): void => {
     };
 };
 
-const twoChangesSubtest = (): void => {
+const twoChanges = (): void => {
     // tx e5040e1bc1ae7667ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd
     const testPayloads = [
         {
@@ -531,7 +531,7 @@ const twoChangesSubtest = (): void => {
     };
 };
 
-const p2shSubtest = (): void => {
+const p2sh = (): void => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -570,7 +570,7 @@ const p2shSubtest = (): void => {
     };
 };
 
-const changeOnMainChainAllowedSubtest = (): void => {
+const changeOnMainChainAllowed = (): void => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -609,24 +609,24 @@ const changeOnMainChainAllowedSubtest = (): void => {
     };
 };
 
-export const signTxTests = (): void => {
+export const signTx = (): void => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
-        oneOneFee: oneOneFeeSubtest,
-        oneTwoFee: oneTwoFeeSubtest,
-        oneThreeFee: oneThreeFeeSubtest,
-        twoTwo: twoTwoSubtest,
-        testnetOneTwoFee: testnetOneTwoFeeSubtest,
-        testnetFeeTooHigh: testnetFeeTooHighSubtest,
-        lotsOfOutputs: lotsOfOutputsSubtest,
-        feeTooHigh: feeTooHighSubtest,
-        notEnoughFunds: notEnoughFundsSubtest,
-        attackChangeOutputs: attackChangeOutputsSubtest,
-        attackChangeInputAddress: attackChangeInputAddressSubtest,
-        spendCoinbase: spendCoinbaseSubtest,
-        twoChanges: twoChangesSubtest,
-        p2sh: p2shSubtest,
-        changeOnMainChainAllowed: changeOnMainChainAllowedSubtest,
+        oneOneFee,
+        oneTwoFee,
+        oneThreeFee,
+        twoTwo,
+        testnetOneTwoFee,
+        testnetFeeTooHigh,
+        lotsOfOutputs,
+        feeTooHigh,
+        notEnoughFunds,
+        attackChangeOutputs,
+        attackChangeInputAddress,
+        spendCoinbase,
+        twoChanges,
+        p2sh,
+        changeOnMainChainAllowed,
     };
 
     describe('SignTx', () => {

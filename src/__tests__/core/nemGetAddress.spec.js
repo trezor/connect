@@ -3,7 +3,7 @@ import { checkBrowser } from '../../js/utils/browser';
 import { NEM_MAINNET, NEM_TESTNET } from '../../js/core/methods/helpers/nemSignTx.js'
 import { settings, CoreEventHandler } from './common.js';
 
-export const nemGetAddressTests = () => {
+export const nemGetAddress = () => {
     describe('NEMGetAddress', () => {
         let core: Core;
 

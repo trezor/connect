@@ -2,7 +2,7 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-const btcSubtest = (): void => {
+const btc = (): void => {
     const testPayloads = [
         {
             method: 'getAddress',
@@ -60,7 +60,7 @@ const btcSubtest = (): void => {
     };
 };
 
-const ltcSubtest = (): void => {
+const ltc = (): void => {
     const testPayloads = [
         {
             method: 'getAddress',
@@ -118,7 +118,7 @@ const ltcSubtest = (): void => {
     };
 };
 
-const tbtcSubtest = (): void => {
+const tbtc = (): void => {
     const testPayloads = [
         {
             method: 'getAddress',
@@ -143,7 +143,7 @@ const tbtcSubtest = (): void => {
     };
 };
 
-const bchSubtest = (): void => {
+const bch = (): void => {
     const testPayloads = [
         {
             method: 'getAddress',
@@ -190,13 +190,13 @@ const bchSubtest = (): void => {
     };
 };
 
-export const getAddressTests = (): void => {
+export const getAddress = (): void => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
-        btc: btcSubtest,
-        ltc: ltcSubtest,
-        tbtc: tbtcSubtest,
-        bch: bchSubtest,
+        btc,
+        ltc,
+        tbtc,
+        bch,
     };
 
     describe('GetAddress', () => {
