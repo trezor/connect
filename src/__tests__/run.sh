@@ -52,7 +52,8 @@ signMessage_subtests="sign signTestnet signBch signLong"
 signMessageSegwit_subtests="sign signLong"
 
 signTx_subtests="oneOneFee oneTwoFee oneThreeFee twoTwo testnetOneTwoFee testnetFeeTooHigh lotsOfOutputs feeTooHigh notEnoughFunds attackChangeOutputs attackChangeInputAddress spendCoinbase twoChanges p2sh changeOnMainChainAllowed"
-signTxSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
+#signTxSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
+signTxSegwit_subtests="sendP2sh sendP2shChange"
 signTxBgold_subtests="change noChange p2sh p2shWitnessChange"
 signTxBcash_subtests="change noChange oldAddr"
 
@@ -86,18 +87,18 @@ cleanup() {
 }
 
 kill_emul_transport() {
-    is_running_emul=$(ps $pid_emul > /dev/null && echo 0 || echo 1)
-    is_running_transport=$(ps $pid_transport > /dev/null && echo 0 || echo 1)
+    is_running_emul=$(ps $pid_emul > /dev/null && echo 1 || echo 0)
+    is_running_transport=$(ps $pid_transport > /dev/null && echo 1 || echo 0)
 
-        kill -TERM $pid_emul
-        wait $pid_emul > /dev/null 2>&1
-    #if [ $is_running_transport -eq 0 ]; then
-    #fi;
-
+    if [ $is_running_transport -eq 1 ]; then
         kill -TERM $pid_transport
         wait $pid_transport > /dev/null 2>&1
-    #if [ $is_running_emul -eq 0 ]; then
-    #fi;
+    fi;
+
+    if [ $is_running_emul -eq 1 ]; then
+        kill -TERM $pid_emul
+        wait $pid_emul > /dev/null 2>&1
+    fi;
 }
 
 log_error() {
@@ -234,7 +235,7 @@ show_default_paths() {
 }
 
 show_results() {
-    echo "\n\n\n"
+    echo "\n\n"
 
     pad=$(printf '%0.1s' "."{1..200})
     padlength=100
