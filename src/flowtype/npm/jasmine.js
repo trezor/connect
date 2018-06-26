@@ -18,5 +18,5 @@ declare module 'flowtype/jasmine' {
     declare export function it(expectation: string, assertion?: AssertionFn, timeout?: number): void;
 
     // todo?
-    declare export function expect(): Function;
+    declare export function expect(): any;
 }

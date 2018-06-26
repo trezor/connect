@@ -6,9 +6,9 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 
-import {
-    type TestSignMessagePayload,
-    type ExpectedSignMessageResponse,
+import type  {
+    TestSignMessagePayload,
+    ExpectedSignMessageResponse,
 } from 'flowtype/tests/sign-message';
 
 export const ethereumSignMessage = () => {

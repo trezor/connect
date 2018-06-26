@@ -6,9 +6,9 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 
-import {
-    type TestAddressPayload,
-    type ExpectedAddressResponse,
+import type {
+    TestAddressPayload,
+    ExpectedAddressResponse,
 } from 'flowtype/tests/get-address';
 
 export const getAddressSegwit = (): void => {
@@ -82,7 +82,7 @@ export const getAddressSegwit = (): void => {
             const payload = testPayloads[i];
             const expectedResponse = expectedResponses[i];
 
-            it(`for derivation path: "[${payload.path}]"`, async (done) => {
+            it(`for derivation path: "[${payload.path.toString()}]"`, async (done) => {
                 const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
                 handler.startListening();
                 await initTransport(settings);

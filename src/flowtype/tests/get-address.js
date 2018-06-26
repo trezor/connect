@@ -6,11 +6,17 @@ declare module 'flowtype/tests/get-address' {
         path: string | Array<number>,
         coin?: string,
         showOnTrezor?: boolean,
-        network?: string,
+        network?: number,
     };
     declare export type ExpectedAddressResponse = {
         payload: {
             address: string,
         },
+    };
+
+    declare export type SubtestAddress = {
+        testPayloads: Array<TestAddressPayload>,
+        expectedResponses: Array<ExpectedAddressResponse>,
+        specName: string,
     };
 }
