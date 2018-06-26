@@ -6,11 +6,16 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 
+import type {
+    TestAddressPayload,
+    ExpectedAddressResponse,
+} from 'flowtype/tests';
+
 export const getAddressSegwit = (): void => {
     describe('GetAddressSegwit', () => {
         let core: Core;
 
-        const testPayloads = [
+        const testPayloads: Array<TestAddressPayload> = [
             {
                 method: 'getAddress',
                 coin: 'Bitcoin',
@@ -36,7 +41,7 @@ export const getAddressSegwit = (): void => {
                 showOnTrezor: true,
             },
         ];
-        const expectedResponses = [
+        const expectedResponses: Array<ExpectedAddressResponse> = [
             {
                 payload: {
                     address: '3AnYTd2FGxJLNKL1AzxfW3FJMntp9D2KKX',

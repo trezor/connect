@@ -7,8 +7,14 @@ import { settings, CoreEventHandler } from './common.js';
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 import { __karma__ } from 'flowtype/karma';
 
-const btc = () => {
-    const testPayloads = [
+import type {
+    Subtest,
+    TestAddressPayload,
+    ExpectedAddressResponse,
+} from 'flowtype/tests';
+
+const btc = (): Subtest => {
+    const testPayloads: Array<TestAddressPayload> = [
         {
             method: 'getAddress',
             coin: 'Bitcoin',
@@ -35,7 +41,7 @@ const btc = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedAddressResponse> = [
         {
             payload: {
                 address: '1EfKbQupktEMXf4gujJ9kCFo83k1iMqwqK',

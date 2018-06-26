@@ -6,11 +6,16 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 
+import {
+    TestAddressPayload,
+    ExpectedAddressResponse,
+} from 'flowtype/tests';
+
 export const ethereumGetAddress = () => {
     describe('EthereumGetAddress', () => {
         let core: Core;
 
-        const testPayloads = [
+        const testPayloads: Array<TestAddressPayload> = [
             {
                 method: 'ethereumGetAddress',
                 path: [],
@@ -32,7 +37,9 @@ export const ethereumGetAddress = () => {
                 path: [0, 9999999],
             },
         ];
-        const expectedResponses = [
+
+
+        const expectedResponses: Array<ExpectedAddressResponse> = [
             {
                 payload: {
                     address: '1d1c328764a41bda0492b66baa30c4a339ff85ef',
