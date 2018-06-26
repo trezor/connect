@@ -7,8 +7,16 @@ import { settings, CoreEventHandler } from './common.js';
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 import { __karma__ } from 'flowtype/karma';
 
-const sign = () => {
-    const testPayloads = [
+import {
+    type Subtest
+} from 'flowtype/tests';
+import {
+    type TestSignMessagePayload,
+    type ExpectedSignMessageResponse,
+} from 'flowtype/tests/sign-message';
+
+const sign = (): Subtest => {
+    const testPayloads: Array<TestSignMessagePayload> = [
         {
             method: 'signMessage',
             coin: 'Bitcoin',
@@ -16,7 +24,7 @@ const sign = () => {
             message: 'This is an example of a signed message.',
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignMessageResponse> = [
         {
             payload: {
                 address: '14LmW5k4ssUrtbAB4255zdqv3b4w1TuX9e',
@@ -32,8 +40,8 @@ const sign = () => {
     };
 };
 
-const signTestnet = () => {
-    const testPayloads = [
+const signTestnet = (): Subtest => {
+    const testPayloads: Array<TestSignMessagePayload> = [
         {
             method: 'signMessage',
             coin: 'Testnet',
@@ -41,7 +49,7 @@ const signTestnet = () => {
             message: 'This is an example of a signed message.',
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignMessageResponse> = [
         {
             payload: {
                 address: 'mirio8q3gtv7fhdnmb3TpZ4EuafdzSs7zL',
@@ -57,8 +65,8 @@ const signTestnet = () => {
     };
 };
 
-const signBch = () => {
-    const testPayloads = [
+const signBch = (): Subtest => {
+    const testPayloads: Array<TestSignMessagePayload> = [
         {
             method: 'signMessage',
             coin: 'Bcash',
@@ -66,7 +74,7 @@ const signBch = () => {
             message: 'This is an example of a signed message.',
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignMessageResponse> = [
         {
             payload: {
                 address: 'bitcoincash:qqj22md58nm09vpwsw82fyletkxkq36zxyxh322pru',
@@ -82,8 +90,8 @@ const signBch = () => {
     };
 };
 
-const signLong = () => {
-    const testPayloads = [
+const signLong = (): Subtest => {
+    const testPayloads: Array<TestSignMessagePayload> = [
         {
             method: 'signMessage',
             coin: 'Bitcoin',
@@ -91,7 +99,7 @@ const signLong = () => {
             message: 'VeryLongMessage!'.repeat(64),
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignMessageResponse> = [
         {
             payload: {
                 address: '14LmW5k4ssUrtbAB4255zdqv3b4w1TuX9e',
