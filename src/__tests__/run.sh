@@ -237,17 +237,26 @@ show_default_paths() {
 show_results() {
     echo "\n\n"
 
-    pad=$(printf '%0.1s' "."{1..200})
-    padlength=100
+    pad=$(printf '%0.1s' "."{1..80})
+    pad_length=60
 
     reset_ifs=$IFS
     IFS=";"
     for r in $test_results; do
-        test_name=$(echo $r | cut -d"@" -f1)
+        test=$(echo ${r} | cut -d"@" -f1)
+        test_name=$(echo ${test}/ | cut -d"/" -f1)
+        subtest_name=$(echo ${test}/ | cut -d"/" -f2)
+        if [ -n "${subtest_name}" ]; then
+            subtest_name="/${subtest_name}"
+        fi;
+        full_name="${test_name}${subtest_name}"
+        full_name_color="${bold}${green}${test_name}${reset}${green}${subtest_name}${reset}"
+
+
         test_result=$(echo $r | cut -d"@" -f2)
 
-        printf '%s' "- $test_name"
-        printf '%*.*s' 0 $((padlength - ${#test_name} )) "$pad"
+        printf '%s' "- ${full_name_color}"
+        printf '%0.*s' $(($pad_length - ${#full_name})) "$pad"
         printf '%s\n' "$test_result"
     done;
     IFS=$reset_ifs
@@ -339,9 +348,9 @@ run_karma() {
 
     delimiter1="@"
     delimiter2=";"
-    test_name=${green}${bold}$1${reset}
+    test_name="$1"
     if [ -n "$2" ]; then
-        test_name="${green}${bold}$1/${reset}${green}$2${reset}"
+        test_name="$1/$2"
     fi;
     test_results="${test_results}${test_name}${delimiter1}${result}${delimiter2}"
 }
