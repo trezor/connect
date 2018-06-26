@@ -1,6 +1,5 @@
 /* @flow */
 
-
 declare module 'flowtype/tests' {
     declare export type Subtest = {
         testPayloads: Array<TestPayload>,
@@ -8,10 +7,14 @@ declare module 'flowtype/tests' {
         specName: string,
     };
 
-    import type {
-        TestAddressPayload,
-        ExpectedAddressResponse,
+    import {
+        type TestAddressPayload,
+        type ExpectedAddressResponse,
     } from 'flowtype/tests/get-address';
-    declare type TestPayload = TestAddressPayload;
-    declare type ExpectedResponse = ExpectedAddressResponse;
+    import type {
+        TestSignMessagePayload,
+        ExpectedSignMessageResponse,
+    } from 'flowtype/tests/sign-message';
+    declare type TestPayload = TestAddressPayload | TestSignMessagePayload;
+    declare type ExpectedResponse = ExpectedAddressResponse | ExpectedSignMessageResponse;
 }

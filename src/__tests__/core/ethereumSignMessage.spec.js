@@ -6,11 +6,16 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 
+import {
+    type TestSignMessagePayload,
+    type ExpectedSignMessageResponse,
+} from 'flowtype/tests/sign-message';
+
 export const ethereumSignMessage = () => {
     describe('EthereumSignMessage', () => {
         let core: Core;
 
-        const testPayloads = [
+        const testPayloads: Array<TestSignMessagePayload> = [
             {
                 method: 'ethereumSignMessage',
                 path: [0],
@@ -22,7 +27,7 @@ export const ethereumSignMessage = () => {
                 message: 'VeryLongMessage!'.repeat(64),
             },
         ];
-        const expectedResponses = [
+        const expectedResponses: Array<ExpectedSignMessageResponse> = [
             {
                 payload: {
                     address: 'cb3864960e8db1a751212c580af27ee8867d688f',
