@@ -7,11 +7,16 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 
+import {
+    type TestAddressPayload,
+    type ExpectedAddressResponse,
+} from 'flowtype/tests/get-address';
+
 export const nemGetAddress = () => {
     describe('NEMGetAddress', () => {
         let core: Core;
 
-        const testPayloads = [
+        const testPayloads: Array<TestAddressPayload> = [
             {
                 method: 'nemGetAddress',
                 path: "m/44'/1'/0'/0'/0'",
@@ -23,7 +28,7 @@ export const nemGetAddress = () => {
                 network: NEM_TESTNET,
             },
         ];
-        const expectedResponses = [
+        const expectedResponses: Array<ExpectedAddressResponse> = [
             {
                 payload: {
                     address: 'NB3JCHVARQNGDS3UVGAJPTFE22UQFGMCQGHUBWQN',

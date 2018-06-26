@@ -7,8 +7,8 @@ import { settings, CoreEventHandler } from './common.js';
 import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
 
 import {
-    TestAddressPayload,
-    ExpectedAddressResponse,
+    type TestAddressPayload,
+    type ExpectedAddressResponse,
 } from 'flowtype/tests/get-address';
 
 export const ethereumGetAddress = () => {
