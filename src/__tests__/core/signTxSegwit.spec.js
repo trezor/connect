@@ -4,7 +4,7 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
-const sendP2shSubtest = (): void => {
+const sendP2sh = (): void => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -50,7 +50,7 @@ const sendP2shSubtest = (): void => {
     };
 };
 
-const sendP2shChangeSubtest = (): void => {
+const sendP2shChange = (): void => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -96,7 +96,7 @@ const sendP2shChangeSubtest = (): void => {
     };
 };
 
-const sendMultisig1Subtest = (): void => {
+const sendMultisig1 = (): void => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -155,12 +155,12 @@ const sendMultisig1Subtest = (): void => {
     };
 };
 
-export const signTxSegwitTests = (): void => {
+export const signTxSegwit = (): void => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
-        sendP2sh: sendP2shSubtest,
-        sendP2shChange: sendP2shChangeSubtest,
-        sendMultisig1: sendMultisig1Subtest,
+        sendP2sh,
+        sendP2shChange,
+        sendMultisig1,
     };
 
     describe('SignTxSegwit', () => {

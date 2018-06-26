@@ -2,7 +2,7 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-const verifySubtest = (): void => {
+const verify = (): void => {
     const testPayloads = [
         {
             // trezor pubkey - OK
@@ -43,7 +43,7 @@ const verifySubtest = (): void => {
     };
 };
 
-const verifyLongSubtest = (): void => {
+const verifyLong = (): void => {
     const testPayloads = [
         {
             method: 'verifyMessage',
@@ -65,7 +65,7 @@ const verifyLongSubtest = (): void => {
     };
 };
 
-const verifyTestnetSubtest = (): void => {
+const verifyTestnet = (): void => {
     const testPayloads = [
         {
             method: 'verifyMessage',
@@ -87,12 +87,12 @@ const verifyTestnetSubtest = (): void => {
     };
 };
 
-export const verifyMessageSegwitNativeTests = (): void => {
+export const verifyMessageSegwitNative = (): void => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
-        verify: verifySubtest,
-        verifyLong: verifyLongSubtest,
-        verifyTestnet: verifyTestnetSubtest,
+        verify,
+        verifyLong,
+        verifyTestnet,
     };
 
     describe('verifyMessageSegwitNative', () => {

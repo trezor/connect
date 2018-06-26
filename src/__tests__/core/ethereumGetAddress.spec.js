@@ -2,7 +2,7 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-export const ethereumGetAddressTests = () => {
+export const ethereumGetAddress = () => {
     describe('EthereumGetAddress', () => {
         let core: Core;
 

@@ -2,7 +2,7 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-const signSubtest = (): void => {
+const sign = (): void => {
     const testPayloads = [
         {
             method: 'signMessage',
@@ -27,7 +27,7 @@ const signSubtest = (): void => {
     };
 };
 
-const signLongSubtest = (): void => {
+const signLong = (): void => {
     const testPayloads = [
         {
             method: 'signMessage',
@@ -52,11 +52,11 @@ const signLongSubtest = (): void => {
     };
 };
 
-export const signMessageSegwitTests = (): void => {
+export const signMessageSegwit = (): void => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
-        sign: signSubtest,
-        signLong: signLongSubtest,
+        sign,
+        signLong,
     };
 
     describe('SignMessageSegwit', () => {

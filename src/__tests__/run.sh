@@ -835,6 +835,7 @@ test_stellarGetPublicKey() {
 }
 ################# Functions: END
 
+################# Scripts starts here #################
 # Show help if no option provided
 if [ $# -eq 0 ]; then
     show_usage

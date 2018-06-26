@@ -4,7 +4,7 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
-const changeSubtest = (): void => {
+const change = (): void => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -51,7 +51,7 @@ const changeSubtest = (): void => {
     };
 };
 
-const noChangeSubtest = (): void => {
+const noChange = (): void => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -100,7 +100,7 @@ const noChangeSubtest = (): void => {
     };
 };
 
-const p2shSubtest = (): void => {
+const p2sh = (): void => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -147,7 +147,7 @@ const p2shSubtest = (): void => {
     };
 };
 
-const p2shWitnessChangeSubtest = (): void => {
+const p2shWitnessChange = (): void => {
     const testPayloads = [
         {
             method: 'signTransaction',
@@ -194,13 +194,13 @@ const p2shWitnessChangeSubtest = (): void => {
     };
 };
 
-export const signTxBgoldTests = (): void => {
+export const signTxBgold = (): void => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
-        change: changeSubtest,
-        noChange: noChangeSubtest,
-        p2sh: p2shSubtest,
-        p2shWitnessChange: p2shWitnessChangeSubtest,
+        change,
+        noChange,
+        p2sh,
+        p2shWitnessChange,
     };
 
     describe('SignTxBGold', () => {

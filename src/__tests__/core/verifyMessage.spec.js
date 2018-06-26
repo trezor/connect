@@ -2,7 +2,7 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-const verifySubtest = (): void => {
+const verify = (): void => {
     const testPayloads = [
         {
             // uncompressed pubkey - ok
@@ -78,7 +78,7 @@ const verifySubtest = (): void => {
     };
 };
 
-const verifyLongSubtest = (): void => {
+const verifyLong = (): void => {
     const testPayloads = [
         {
             method: 'verifyMessage',
@@ -99,7 +99,7 @@ const verifyLongSubtest = (): void => {
     };
 };
 
-const verifyTestnetSubtest = (): void => {
+const verifyTestnet = (): void => {
     const testPayloads = [
         {
             method: 'verifyMessage',
@@ -120,7 +120,7 @@ const verifyTestnetSubtest = (): void => {
     };
 };
 
-const verifyBcashSubtest = (): void => {
+const verifyBcash = (): void => {
     const testPayloads = [
         {
             method: 'verifyMessage',
@@ -141,7 +141,7 @@ const verifyBcashSubtest = (): void => {
     };
 };
 
-const verifyBitcoindSubtest = (): void => {
+const verifyBitcoind = (): void => {
     const testPayloads = [
         {
             method: 'verifyMessage',
@@ -162,14 +162,14 @@ const verifyBitcoindSubtest = (): void => {
     };
 };
 
-export const verifyMessageTests = (): void => {
+export const verifyMessage = (): void => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
-        verify: verifySubtest,
-        verifyLong: verifyLongSubtest,
-        verifyTestnet: verifyTestnetSubtest,
-        verifyBcash: verifyBcashSubtest,
-        verifyBitcoind: verifyBitcoindSubtest,
+        verify,
+        verifyLong,
+        verifyTestnet,
+        verifyBcash,
+        verifyBitcoind,
     };
 
     describe('VerifyMessage', () => {
