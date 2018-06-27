@@ -6,8 +6,17 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
-const change = () => {
-    const testPayloads = [
+import type {
+    SubtestSignTx,
+    SignTxBcashAvailableSubtests,
+} from 'flowtype/tests';
+import type {
+    TestSignTxPayload,
+    ExpectedSignTxResponse,
+} from 'flowtype/tests/sign-tx';
+
+const change = (): SubtestSignTx => {
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bcash',
@@ -36,7 +45,7 @@ const change = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -53,8 +62,8 @@ const change = () => {
     };
 };
 
-const noChange = () => {
-    const testPayloads = [
+const noChange = (): SubtestSignTx => {
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bcash',
@@ -85,7 +94,7 @@ const noChange = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -102,8 +111,8 @@ const noChange = () => {
     };
 };
 
-const oldAddr = () => {
-    const testPayloads = [
+const oldAddr = (): SubtestSignTx => {
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bcash',
@@ -134,7 +143,7 @@ const oldAddr = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -152,7 +161,7 @@ const oldAddr = () => {
 };
 
 export const signTxBcash = (): void => {
-    const subtest = __karma__.config.subtest;
+    const subtest: SignTxBcashAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         change,
         noChange,

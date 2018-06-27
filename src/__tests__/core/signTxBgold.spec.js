@@ -6,8 +6,17 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
-const change = () => {
-    const testPayloads = [
+import type {
+    SubtestSignTx,
+    SignTxBgoldAvailableSubtests,
+} from 'flowtype/tests';
+import type {
+    TestSignTxPayload,
+    ExpectedSignTxResponse,
+} from 'flowtype/tests/sign-tx';
+
+const change = (): SubtestSignTx => {
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -36,7 +45,7 @@ const change = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -53,8 +62,8 @@ const change = () => {
     };
 };
 
-const noChange = () => {
-    const testPayloads = [
+const noChange = (): SubtestSignTx => {
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -85,7 +94,7 @@ const noChange = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -102,8 +111,8 @@ const noChange = () => {
     };
 };
 
-const p2sh = () => {
-    const testPayloads = [
+const p2sh = (): SubtestSignTx => {
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -132,7 +141,7 @@ const p2sh = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -149,8 +158,8 @@ const p2sh = () => {
     };
 };
 
-const p2shWitnessChange = () => {
-    const testPayloads = [
+const p2shWitnessChange = (): SubtestSignTx => {
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -179,7 +188,7 @@ const p2shWitnessChange = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -197,7 +206,7 @@ const p2shWitnessChange = () => {
 };
 
 export const signTxBgold = (): void => {
-    const subtest = __karma__.config.subtest;
+    const subtest: SignTxBgoldAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         change,
         noChange,

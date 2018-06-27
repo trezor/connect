@@ -6,8 +6,17 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
-const sendP2sh = () => {
-    const testPayloads = [
+import type {
+    SubtestSignTx,
+    SignTxSegwitAvailableSubtests,
+} from 'flowtype/tests';
+import type {
+    TestSignTxPayload,
+    ExpectedSignTxResponse,
+} from 'flowtype/tests/sign-tx';
+
+const sendP2sh = (): SubtestSignTx => {
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -35,7 +44,7 @@ const sendP2sh = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -52,8 +61,8 @@ const sendP2sh = () => {
     };
 };
 
-const sendP2shChange = () => {
-    const testPayloads = [
+const sendP2shChange = (): SubtestSignTx => {
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -81,7 +90,7 @@ const sendP2shChange = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -98,8 +107,9 @@ const sendP2shChange = () => {
     };
 };
 
-const sendMultisig1 = () => {
-    const testPayloads = [
+// TODO
+/* const sendMultisig1 = (): SubtestSignTx => {
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -140,7 +150,7 @@ const sendMultisig1 = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -155,14 +165,14 @@ const sendMultisig1 = () => {
         expectedResponses,
         specName: '/sendMultisig1',
     };
-};
+}; */
 
 export const signTxSegwit = (): void => {
-    const subtest = __karma__.config.subtest;
+    const subtest: SignTxSegwitAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         sendP2sh,
         sendP2shChange,
-        sendMultisig1,
+        /* sendMultisig1, */
     };
 
     describe('SignTxSegwit', () => {
