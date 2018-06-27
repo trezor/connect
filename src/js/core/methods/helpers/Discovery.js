@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 import EventEmitter from 'events';
-import Account, { create as createAccount } from '../../../account';
+import Account, { create as createAccount, remove as removeAccount } from '../../../account';
 import BlockBook from '../../../backend';
 import { cloneCoinInfo, getAccountCoinInfo } from '../../../data/CoinInfo';
 import {
@@ -51,8 +51,9 @@ export default class Discovery extends EventEmitter {
     }
 
     async start(): Promise<void> {
-        while (!this.completed) {
-            const prevAccount: ?Account = this.accounts[ this.accounts.length - 1];
+        this.interrupted = false;
+        while (!this.completed && !this.interrupted) {
+            const prevAccount: ?Account = this.accounts[ this.accounts.length - 1 ];
             let index = prevAccount ? prevAccount.id + 1 : 0;
             const coinInfo = cloneCoinInfo(prevAccount ? prevAccount.coinInfo : this.options.coinInfo);
 
@@ -69,7 +70,7 @@ export default class Discovery extends EventEmitter {
             }
 
             const path: Array<number> = getPathFromIndex(coinInfo.segwit ? 49 : 44, coinInfo.slip44, index);
-            const account = await this.discoverAccount(path, getAccountCoinInfo(coinInfo, path));
+            await this.discoverAccount(path, getAccountCoinInfo(coinInfo, path));
         }
     }
 
@@ -77,17 +78,21 @@ export default class Discovery extends EventEmitter {
         this.interrupted = !this.completed;
         if (this.disposer)
             this.disposer();
-        // this.dispose();
+
+        // if last account was not completely loaded
+        // remove it from list
+        const lastAccount: ?Account = this.accounts[ this.accounts.length - 1 ];
+        if (lastAccount && !lastAccount.info) {
+            this.accounts.splice(this.accounts.length - 1, 1);
+            removeAccount(lastAccount);
+        }
     }
 
     dispose() {
-        // TODO: clear up references
+        // TODO: clear up all references
+        this.accounts.forEach(a => removeAccount(a));
         delete this.accounts;
         delete this.options;
-    }
-
-    restore() {
-        // check if last account was loaded
     }
 
     async discoverAccount(path: Array<number>, coinInfo: CoinInfo): Promise<?Account> {
@@ -105,6 +110,7 @@ export default class Discovery extends EventEmitter {
 
         const info = await this.getAccountInfo(account);
         if (this.interrupted) return null;
+        account.info = info;
 
         this.emit('update', this.accounts);
 
@@ -125,8 +131,6 @@ export default class Discovery extends EventEmitter {
                 this.disposer = disposer;
             }
         )
-
-        account.info = info;
         return info;
     }
 }
