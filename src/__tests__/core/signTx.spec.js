@@ -6,9 +6,18 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
-const oneOneFee = () => {
+import type {
+    SubtestSignTx,
+    SignTxAvailableSubtests,
+} from 'flowtype/tests';
+import type {
+    TestSignTxPayload,
+    ExpectedSignTxResponse,
+} from 'flowtype/tests/sign-tx';
+
+const oneOneFee = (): SubtestSignTx => {
     // See tx d5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882
-    const testPayloads = [
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bitcoin',
@@ -29,7 +38,7 @@ const oneOneFee = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -46,9 +55,9 @@ const oneOneFee = () => {
     };
 };
 
-const oneTwoFee = () => {
+const oneTwoFee = (): SubtestSignTx => {
     // See tx c275c333fd1b36bef4af316226c66a8b3693fbfcc081a5e16a2ae5fcb09e92bf
-    const testPayloads = [
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bitcoin',
@@ -74,7 +83,7 @@ const oneTwoFee = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -91,9 +100,9 @@ const oneTwoFee = () => {
     };
 };
 
-const oneThreeFee = () => {
+const oneThreeFee = (): SubtestSignTx => {
     // See tx d5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882
-    const testPayloads = [
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bitcoin',
@@ -124,7 +133,7 @@ const oneThreeFee = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -141,10 +150,10 @@ const oneThreeFee = () => {
     };
 };
 
-const twoTwo = () => {
+const twoTwo = (): SubtestSignTx => {
     // See tx c6be22d34946593bcad1d2b013e12f74159e69574ffea21581dad115572e031c
     // See tx 58497a7757224d1ff1941488d23087071103e5bf855f4c1c44e5c8d9d82ca46e
-    const testPayloads = [
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bitcoin',
@@ -175,7 +184,7 @@ const twoTwo = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -192,9 +201,9 @@ const twoTwo = () => {
     };
 };
 
-const testnetOneTwoFee = () => {
+const testnetOneTwoFee = (): SubtestSignTx => {
     // See tx e5040e1bc1ae7667ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd
-    const testPayloads = [
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -220,7 +229,7 @@ const testnetOneTwoFee = () => {
         }
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -237,9 +246,9 @@ const testnetOneTwoFee = () => {
     };
 };
 
-const testnetFeeTooHigh = () => {
+const testnetFeeTooHigh = (): SubtestSignTx => {
     // See tx 6f90f3c7cbec2258b0971056ef3fe34128dbde30daa9c0639a898f9977299d54
-    const testPayloads = [
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -265,7 +274,7 @@ const testnetFeeTooHigh = () => {
         }
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -282,7 +291,7 @@ const testnetFeeTooHigh = () => {
     };
 };
 
-const lotsOfOutputs = () => {
+const lotsOfOutputs = (): SubtestSignTx => {
     // Tests if device implements serialization of len(outputs) correctly
 
     // See tx c63e24ed820c5851b60c54613fbc4bcb37df6cd49b4c96143e99580a472f79fb
@@ -299,7 +308,7 @@ const lotsOfOutputs = () => {
         outputs.push(output);
     }
 
-    const testPayloads = [
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bitcoin',
@@ -322,7 +331,7 @@ const lotsOfOutputs = () => {
     let serializedTx = '0100000002fb792f470a58993e14964c9bd46cdf37cb4bbc3f61540cb651580c82ed243ec6010000006b483045022100969da46f94a81f34f3717b014e0c3e1826eda1b0022ec2f9ce39f3d750ab9235022026da269770993211a1503413566a339bbb4389a482fffcf8e1f76713fc3b94f5012103477b9f0f34ae85434ce795f0c5e1e90c9420e5b5fad084d7cce9a487b94a7902ffffffffe56582d2119100cb1d3da8232291e053f71e25fb669c87b32a667749959ea239010000006a473044022052e1419bb237b9db400ab5e3df16db6355619d545fde9030924a360763ae9ad40220704beab04d72ecaeb42eca7d98faca7a0941e65f2e1341f183be2b83e6b09e1c012103477b9f0f34ae85434ce795f0c5e1e90c9420e5b5fad084d7cce9a487b94a7902fffffffffdff00';
     serializedTx = serializedTx + 'd8270000000000001976a914f0a2b64e56ee2ff57126232f84af6e3a41d4055088ac'.repeat(total);
     serializedTx = serializedTx + '00000000';
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -339,9 +348,9 @@ const lotsOfOutputs = () => {
     };
 };
 
-const feeTooHigh = () => {
+const feeTooHigh = (): SubtestSignTx => {
     // See tx 1570416eb4302cf52979afd5e6909e37d8fdd874301f7cc87e547e509cb1caa6
-    const testPayloads = [
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bitcoin',
@@ -362,7 +371,7 @@ const feeTooHigh = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -379,9 +388,9 @@ const feeTooHigh = () => {
     };
 };
 
-const notEnoughFunds = () => {
+const notEnoughFunds = (): SubtestSignTx => {
     // See tx d5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882
-    const testPayloads = [
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bitcoin',
@@ -402,7 +411,7 @@ const notEnoughFunds = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 code: 'Failure_NotEnoughFunds',
@@ -417,7 +426,8 @@ const notEnoughFunds = () => {
     };
 };
 
-const attackChangeOutputs = () => {
+// TODO
+/* const attackChangeOutputs = (): SubtestSignTx => {
     // This unit test attempts to modify data sent during ping-pong of streaming signing.
     // Because device is asking for human confirmation only during first pass(first input),
     // device must detect that data has been modified during other passes and fail to sign
@@ -432,9 +442,10 @@ const attackChangeOutputs = () => {
         expectedResponses: { },
         specName: '/attackChangeOutputs',
     }
-};
+}; */
 
-const attackChangeInputAddress = () => {
+// TODO
+/* const attackChangeInputAddress = (): SubtestSignTx => {
     // This unit test attempts to modify input address after the Trezor checked
     // that it matches the change output
 
@@ -444,12 +455,12 @@ const attackChangeInputAddress = () => {
         expectedResponses: { },
         specName: '/attackChangeInputAddress',
     };
-};
+}; */
 
-const spendCoinbase = () => {
+const spendCoinbase = (): SubtestSignTx => {
     // 25 TEST generated to m/1 (mfiGQVPcRcaEvQPYDErR34DcCovtxYvUUV)
     // See tx d6da21677d7cca5f42fbc7631d062c9ae918a0254f7c6c22de8e8cb7fd5b8236
-    const testPayloads = [
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -470,7 +481,7 @@ const spendCoinbase = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -487,9 +498,9 @@ const spendCoinbase = () => {
     };
 };
 
-const twoChanges = () => {
+const twoChanges = (): SubtestSignTx => {
     // tx e5040e1bc1ae7667ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd
-    const testPayloads = [
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -522,7 +533,7 @@ const twoChanges = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         { success: true, },
     ];
 
@@ -533,8 +544,8 @@ const twoChanges = () => {
     };
 };
 
-const p2sh = () => {
-    const testPayloads = [
+const p2sh = (): SubtestSignTx => {
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bitcoin',
@@ -555,7 +566,7 @@ const p2sh = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         {
             payload: {
                 serialized: {
@@ -572,8 +583,8 @@ const p2sh = () => {
     };
 };
 
-const changeOnMainChainAllowed = () => {
-    const testPayloads = [
+const changeOnMainChainAllowed = (): SubtestSignTx => {
+    const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -600,7 +611,7 @@ const changeOnMainChainAllowed = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedSignTxResponse> = [
         { success: true, },
     ];
 
@@ -612,7 +623,7 @@ const changeOnMainChainAllowed = () => {
 };
 
 export const signTx = (): void => {
-    const subtest = __karma__.config.subtest;
+    const subtest: SignTxAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         oneOneFee,
         oneTwoFee,
@@ -623,8 +634,8 @@ export const signTx = (): void => {
         lotsOfOutputs,
         feeTooHigh,
         notEnoughFunds,
-        attackChangeOutputs,
-        attackChangeInputAddress,
+        /* attackChangeOutputs, */
+        /* attackChangeInputAddress, */
         spendCoinbase,
         twoChanges,
         p2sh,

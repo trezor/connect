@@ -15,6 +15,11 @@ import type {
     ExpectedEthereumSignTxResponse,
 } from 'flowtype/tests/ethereum-sign-tx';
 
+import type {
+    TestSignTxPayload,
+    ExpectedSignTxResponse,
+} from 'flowtype/tests/sign-tx';
+
 declare module 'flowtype/tests' {
     declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
     declare export type SignMessageAvailableSubtests = 'sign' | 'signTestnet' | 'signBch' | 'signLong';
@@ -29,8 +34,8 @@ declare module 'flowtype/tests' {
         | 'lotsOfOutputs'
         | 'feeTooHigh'
         | 'notEnoughFunds'
-        | 'attackChangeOutputs'
-        | 'attackChangeInputAddress'
+        /* | 'attackChangeOutputs' */
+        /* | 'attackChangeInputAddress' */
         | 'spendCoinbase'
         | 'twoChanges'
         | 'p2sh'
@@ -89,4 +94,5 @@ declare module 'flowtype/tests' {
     declare export type SubtestGetAddress = Subtest<TestGetAddressPayload, ExpectedGetAddressResponse>;
     declare export type SubtestSignMessage = Subtest<TestSignMessagePayload, ExpectedSignMessageResponse>;
     declare export type SubtestEthereumSignTx = Subtest<TestEthereumSignTxPayload, ExpectedEthereumSignTxResponse>;
+    declare export type SubtestSignTx = Subtest<TestSignTxPayload, ExpectedSignTxResponse>;
 }
