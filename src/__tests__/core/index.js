@@ -11,7 +11,7 @@ import { signTxBgold } from './signTxBgold.spec.js';
 import { signTxBcash } from './signTxBcash.spec.js';
 import { verifyMessage } from './verifyMessage.spec.js';
 import { verifyMessageSegwit } from './verifyMessageSegwit.spec.js';
-/* export { verifyMessageSegwitNative } from './verifyMessageSegwitNative.spec.js'; */
+import { verifyMessageSegwitNative } from './verifyMessageSegwitNative.spec.js';
 import { ethereumGetAddress } from './ethereumGetAddress.spec.js';
 import { ethereumSignMessage } from './ethereumSignMessage.spec.js';
 import { ethereumSignTx } from './ethereumSignTx.spec.js';
@@ -35,6 +35,7 @@ export default {
     signTxBcash,
     verifyMessage,
     verifyMessageSegwit,
+    verifyMessageSegwitNative,
     ethereumGetAddress,
     ethereumSignMessage,
     ethereumSignTx,
