@@ -5,6 +5,9 @@ import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 import type {
+    GetAddressSubtests,
+} from 'flowtype/tests';
+import type {
     SubtestAddress,
     TestAddressPayload,
     ExpectedAddressResponse,
@@ -199,7 +202,7 @@ const bch = (): SubtestAddress => {
 };
 
 export const getAddress = (): void => {
-    const subtest = __karma__.config.subtest;
+    const subtest: GetAddressSubtests = __karma__.config.subtest;
     const availableSubtests = {
         btc,
         ltc,
