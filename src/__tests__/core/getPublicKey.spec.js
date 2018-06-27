@@ -4,11 +4,16 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
+import type {
+    TestGetPublicKeyPayload,
+    ExpectedGetPublicKeyResponse,
+} from 'flowtype/tests/get-public-key';
+
 export const getPublicKey = (): void => {
     describe('GetPublicKey', () => {
         let core: Core;
 
-        const testPayloads = [
+        const testPayloads: Array<TestGetPublicKeyPayload> = [
             {
                 method: 'getPublicKey',
                 coin: 'btc',
@@ -30,7 +35,7 @@ export const getPublicKey = (): void => {
                 path: [0, 9999999],
             },
         ];
-        const expectedResponses = [
+        const expectedResponses: Array<ExpectedGetPublicKeyResponse> = [
             {
                 payload: {
                     xpub: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
