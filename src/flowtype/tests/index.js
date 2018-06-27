@@ -20,6 +20,11 @@ import type {
     ExpectedSignTxResponse,
 } from 'flowtype/tests/sign-tx';
 
+import type {
+    TestVerifyMessagePayload,
+    ExpectedVerifyMessageResponse,
+} from 'flowtype/tests/verify-message';
+
 declare module 'flowtype/tests' {
     declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
     declare export type SignMessageAvailableSubtests = 'sign' | 'signTestnet' | 'signBch' | 'signLong';
@@ -64,6 +69,7 @@ declare module 'flowtype/tests' {
         | 'signTxBcash'
         | 'verifyMessage'
         | 'verifyMessageSegwit'
+        | 'verifyMessageSegwitNative'
         | 'ethereumGetAddress'
         | 'ethereumSignMessage'
         | 'ethereumSignTx'
@@ -95,4 +101,5 @@ declare module 'flowtype/tests' {
     declare export type SubtestSignMessage = Subtest<TestSignMessagePayload, ExpectedSignMessageResponse>;
     declare export type SubtestEthereumSignTx = Subtest<TestEthereumSignTxPayload, ExpectedEthereumSignTxResponse>;
     declare export type SubtestSignTx = Subtest<TestSignTxPayload, ExpectedSignTxResponse>;
+    declare export type SubtestVerifyMessage = Subtest<TestVerifyMessagePayload, ExpectedVerifyMessageResponse>;
 }

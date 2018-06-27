@@ -4,8 +4,17 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-const verify = () => {
-    const testPayloads = [
+import type {
+    SubtestVerifyMessage,
+    VerifyMessageAvailableSubtests,
+} from 'flowtype/tests';
+import type {
+    TestVerifyMessagePayload,
+    ExpectedVerifyMessageResponse,
+} from 'flowtype/tests/verify-message';
+
+const verify = (): SubtestVerifyMessage => {
+    const testPayloads: Array<TestVerifyMessagePayload> = [
         {
             // uncompressed pubkey - ok
             method: 'verifyMessage',
@@ -15,7 +24,7 @@ const verify = () => {
             message: 'This is an example of a signed message.',
         },
         {
-            // wcompressed pubkey - rong sig
+            // compressed pubkey - wrong sig
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T',
@@ -63,7 +72,7 @@ const verify = () => {
             message: 'This is an example of a signed message!',
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedVerifyMessageResponse> = [
         { success: true },
         { success: false },
         { success: false },
@@ -80,8 +89,8 @@ const verify = () => {
     };
 };
 
-const verifyLong = () => {
-    const testPayloads = [
+const verifyLong = (): SubtestVerifyMessage => {
+    const testPayloads: Array<TestVerifyMessagePayload> = [
         {
             method: 'verifyMessage',
             coin: 'Bitcoin',
@@ -90,7 +99,7 @@ const verifyLong = () => {
             message: 'VeryLongMessage!'.repeat(64),
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedVerifyMessageResponse> = [
         { success: true },
     ];
 
@@ -101,8 +110,8 @@ const verifyLong = () => {
     };
 };
 
-const verifyTestnet = () => {
-    const testPayloads = [
+const verifyTestnet = (): SubtestVerifyMessage => {
+    const testPayloads: Array<TestVerifyMessagePayload> = [
         {
             method: 'verifyMessage',
             coin: 'Testnet',
@@ -111,7 +120,7 @@ const verifyTestnet = () => {
             message: 'This is an example of a signed message.',
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedVerifyMessageResponse> = [
         { success: true },
     ];
 
@@ -122,8 +131,8 @@ const verifyTestnet = () => {
     };
 };
 
-const verifyBcash = () => {
-    const testPayloads = [
+const verifyBcash = (): SubtestVerifyMessage => {
+    const testPayloads: Array<TestVerifyMessagePayload> = [
         {
             method: 'verifyMessage',
             coin: 'Bcash',
@@ -132,7 +141,7 @@ const verifyBcash = () => {
             message: 'This is an example of a signed message.',
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedVerifyMessageResponse> = [
         { success: true },
     ];
 
@@ -143,8 +152,8 @@ const verifyBcash = () => {
     };
 };
 
-const verifyBitcoind = () => {
-    const testPayloads = [
+const verifyBitcoind = (): SubtestVerifyMessage => {
+    const testPayloads: Array<TestVerifyMessagePayload> = [
         {
             method: 'verifyMessage',
             coin: 'Bitcoin',
@@ -153,7 +162,7 @@ const verifyBitcoind = () => {
             message: 'žluťoučký kůň úpěl ďábelské ódy',
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedVerifyMessageResponse> = [
         { success: true },
     ];
 
@@ -165,7 +174,7 @@ const verifyBitcoind = () => {
 };
 
 export const verifyMessage = (): void => {
-    const subtest = __karma__.config.subtest;
+    const subtest: VerifyMessageAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         verify,
         verifyLong,

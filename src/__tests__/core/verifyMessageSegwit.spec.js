@@ -4,8 +4,17 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-const verify = () => {
-    const testPayloads = [
+import type {
+    SubtestVerifyMessage,
+    VerifyMessageSegwitAvailableSubtests,
+} from 'flowtype/tests';
+import type {
+    TestVerifyMessagePayload,
+    ExpectedVerifyMessageResponse,
+} from 'flowtype/tests/verify-message';
+
+const verify = (): SubtestVerifyMessage => {
+    const testPayloads: Array<TestVerifyMessagePayload> = [
         {
             // trezor pubkey - OK
             method: 'verifyMessage',
@@ -32,7 +41,7 @@ const verify = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedVerifyMessageResponse> = [
         { success: true },
         { success: false },
         { success: false },
@@ -45,8 +54,8 @@ const verify = () => {
     };
 };
 
-const verifyLong = () => {
-    const testPayloads = [
+const verifyLong = (): SubtestVerifyMessage => {
+    const testPayloads: Array<TestVerifyMessagePayload> = [
         {
             method: 'verifyMessage',
             coin: 'Bitcoin',
@@ -56,7 +65,7 @@ const verifyLong = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedVerifyMessageResponse> = [
         { success: true },
     ];
 
@@ -67,8 +76,8 @@ const verifyLong = () => {
     };
 };
 
-const verifyTestnet = () => {
-    const testPayloads = [
+const verifyTestnet = (): SubtestVerifyMessage => {
+    const testPayloads: Array<TestVerifyMessagePayload> = [
         {
             method: 'verifyMessage',
             coin: 'Testnet',
@@ -78,7 +87,7 @@ const verifyTestnet = () => {
         },
     ];
 
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedVerifyMessageResponse> = [
         { success: true },
     ];
 
@@ -90,7 +99,7 @@ const verifyTestnet = () => {
 };
 
 export const verifyMessageSegwit = (): void => {
-    const subtest = __karma__.config.subtest;
+    const subtest: VerifyMessageSegwitAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         verify,
         verifyLong,
