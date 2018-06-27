@@ -6,9 +6,6 @@ import { settings, CoreEventHandler } from './common.js';
 
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
-import { describe, beforeEach, afterEach, it, expect } from 'flowtype/jasmine';
-import { __karma__ } from 'flowtype/karma';
-
 const sendP2sh = () => {
     const testPayloads = [
         {

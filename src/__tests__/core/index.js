@@ -1,22 +1,43 @@
-export { getPublicKey } from './getPublicKey.spec.js';
-export { getAddress } from './getAddress.spec.js';
-export { getAddressSegwit } from './getAddressSegwit.spec.js';
-export { signMessage } from './signMessage.spec.js';
-export { signMessageSegwit } from './signMessageSegwit.spec.js';
-export { signTx } from './signTx.spec.js';
-export { signTxSegwit } from './signTxSegwit.spec.js';
-export { signTxBgold } from './signTxBgold.spec.js';
-export { signTxBcash } from './signTxBcash.spec.js';
-export { verifyMessage } from './verifyMessage.spec.js';
-export { verifyMessageSegwit } from './verifyMessageSegwit.spec.js';
+/* @flow */
+
+import { getPublicKey } from './getPublicKey.spec.js';
+import { getAddress } from './getAddress.spec.js';
+import { getAddressSegwit } from './getAddressSegwit.spec.js';
+import { signMessage } from './signMessage.spec.js';
+import { signMessageSegwit } from './signMessageSegwit.spec.js';
+import { signTx } from './signTx.spec.js';
+import { signTxSegwit } from './signTxSegwit.spec.js';
+import { signTxBgold } from './signTxBgold.spec.js';
+import { signTxBcash } from './signTxBcash.spec.js';
+import { verifyMessage } from './verifyMessage.spec.js';
+import { verifyMessageSegwit } from './verifyMessageSegwit.spec.js';
 /* export { verifyMessageSegwitNative } from './verifyMessageSegwitNative.spec.js'; */
-export { ethereumGetAddress } from './ethereumGetAddress.spec.js';
-export { ethereumSignMessage } from './ethereumSignMessage.spec.js';
-export { ethereumSignTx } from './ethereumSignTx.spec.js';
-export { ethereumVerifyMessage } from './ethereumVerifyMessage.spec.js';
-export { nemGetAddress } from './nemGetAddress.spec.js';
+import { ethereumGetAddress } from './ethereumGetAddress.spec.js';
+import { ethereumSignMessage } from './ethereumSignMessage.spec.js';
+import { ethereumSignTx } from './ethereumSignTx.spec.js';
+import { ethereumVerifyMessage } from './ethereumVerifyMessage.spec.js';
+import { nemGetAddress } from './nemGetAddress.spec.js';
 /* export { nemSignTransactionMosaicTests } from './nemSignTransactionMosaic.spec.js';
 export { nemSignTransactionMultisigTests } from './nemSignTransactionMultisig.spec.js';
 export { nemSignTransactionOthersTests } from './nemSignTransactionOthers.spec.js';
 export { nemSignTransactionTransfersTests } from './nemSignTransactionTransfers.spec.js'; */
 /* export { stellarGetPublicKeyTests } from './stellarGetPublicKey.spec.js'; */
+
+export default {
+    getPublicKey,
+    getAddress,
+    getAddressSegwit,
+    signMessage,
+    signMessageSegwit,
+    signTx,
+    signTxSegwit,
+    signTxBgold,
+    signTxBcash,
+    verifyMessage,
+    verifyMessageSegwit,
+    ethereumGetAddress,
+    ethereumSignMessage,
+    ethereumSignTx,
+    ethereumVerifyMessage,
+    nemGetAddress,
+}
