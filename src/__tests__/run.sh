@@ -208,7 +208,7 @@ show_available_subtests_for_test() {
         for subtest in ${!subtests}; do
             echo "  ${green}-${reset} $subtest"
         done;
-        echo "Usage to run specific test: 'run -t \"[testName/subtestName]\"'"
+        echo "Usage to run specific test: 'run -t \"testName/subtestName\"'"
     else
         echo " ${yellow}-${reset} Test '${test_name}' has no subtests."
     fi;
@@ -260,7 +260,7 @@ show_results() {
         #success=$(echo ,${test_result} | cut -d"," -f2)
         #failed=$(echo ,${test_result} | cut -d"," -f1)
         #printf '%s\n' "${red}${failed} ${green}${success}${reset}"
-        is_fail=$(echo ${test_result} | grep "FAILED" >/dev/null && echo 1 || echo 0)
+        is_fail=$(echo ${test_result} | grep -E "FAILED|ERROR" >/dev/null && echo 1 || echo 0)
         if [ $is_fail -eq 1 ]; then
             printf '%s\n' "${red}${test_result}${reset}"
         else
@@ -359,7 +359,7 @@ run_karma() {
     # so we can show summary for all tests later
     # todo: doesn't work when running 'signMessage/sign' and test fails
     result=$(cat $logs_path | grep Executed | cut -d ":" -f2 | tail -1)
-    is_fail=$(echo ${result} | grep FAILED >/dev/null && echo 1 || echo 0)
+    is_fail=$(echo ${result} | grep -E "FAILED|ERROR" >/dev/null && echo 1 || echo 0)
     if [ $is_fail -eq 1 ]; then
         echo "${red}${result}${reset}"
     else
