@@ -4,11 +4,16 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
+import type {
+    TestEthereumVerifyMessagePayload,
+    ExpectedEthereumVerifyMessageResponse,
+} from 'flowtype/tests/ethereum-verify-message';
+
 export const ethereumVerifyMessage = () => {
     describe('EthereumVerifyMessage', () => {
         let core: Core;
 
-        const testPayloads = [
+        const testPayloads: Array<TestEthereumVerifyMessagePayload> = [
             {
                 method: 'ethereumVerifyMessage',
                 address: 'cb3864960e8db1a751212c580af27ee8867d688f',
@@ -22,7 +27,7 @@ export const ethereumVerifyMessage = () => {
                 message: 'VeryLongMessage!'.repeat(64),
             },
         ];
-        const expectedResponses = [
+        const expectedResponses: Array<ExpectedEthereumVerifyMessageResponse> = [
             { success: true },
             { success: true },
         ];
