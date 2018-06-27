@@ -4,6 +4,11 @@ import { checkBrowser } from '../../js/utils/browser';
 import * as POPUP from '../../js/constants/popup';
 import * as UI from '../../js/constants/ui';
 
+import type {
+    TestPayload,
+    ExpectedResponse,
+} from 'flowtype/tests';
+
 export const settings = {
     configSrc: 'base/src/data/config.json', // constant
     debug: false,
@@ -27,8 +32,8 @@ export const settings = {
 
 export class CoreEventHandler {
     _core: Core;
-    _payload: any;
-    _expectedResponse: any;
+    _payload: TestPayload;
+    _expectedResponse: ExpectedResponse;
 
     _doneFn: any;
     _expectFn: any;
@@ -39,7 +44,7 @@ export class CoreEventHandler {
     _urlCall = (session: any) => `${this._urlBase}/call/${session}`;
     _urlRelease = (session: any) => `${this._urlBase}/release/${session}`;
 
-    constructor(core: Core, payload: any, expectedResponse: any, expectFn: any, doneFn: any) {
+    constructor(core: Core, payload: TestPayload, expectedResponse: ExpectedResponse, expectFn: any, doneFn: any) {
         this._core = core;
         this._payload = payload;
         this._expectedResponse = expectedResponse;
