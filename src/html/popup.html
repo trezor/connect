@@ -349,57 +349,22 @@
 
             <div class="wrapper">
                 <div class="select-fee-list">
-                    <button class="list">
-                        <span class="fee-title">Normal</span>
-                        <span class="fee-info">
-                            <span class="fee-amount">0.000034 BTC</span>
-                            <span class="fee-time">No time estimated</span>
-                        </span>
-                    </button>
 
-                    <button class="list">
-                        <span class="fee-title">Normal</span>
-                        <span class="fee-info">
-                            <span class="fee-amount">0.000034 BTC</span>
-                            <span class="fee-time">No time estimated</span>
-                        </span>
-                    </button>
-
-                    <button class="list">
-                        <span class="fee-title">Normal</span>
-                        <span class="fee-info">
-                            <span class="fee-amount">0.000034 BTC</span>
-                            <span class="fee-time">No time estimated</span>
-                        </span>
-                    </button>
-
-                    <button class="list">
-                        <span class="fee-title">Normal</span>
-                        <span class="fee-info">
-                            <span class="fee-amount">0.000034 BTC</span>
-                            <span class="fee-time">No time estimated</span>
-                        </span>
-                    </button>
-
-                    <!-- Display this when custom fee is selected -->
-                    <!-- <button class="custom-fee-active list active">
-                        <div class="top">
+                    <button class="list custom-fee">
+                        <div class="opener">
                             <span class="fee-title">Custom</span>
-                            <div class="fee-info">
-                                <span class="fee-amount">0.000034 BTC</span>
-                                <span class="fee-time">No time estimated</span>
-                            </div>
+                            <div class="fee-info"></div>
                         </div>
-
-                        <input class="fee-input" type="number" autocomplete="off"/>
-
-                        <p class="note">Setting custom fee is not recommended.
-                            If you set too low fee, it might get stuck forever.
-                        </p>
-                    </button> -->
+                        <div class="bottom">
+                            <input class="fee-input" type="number" autocomplete="off"/>
+                            <p class="note">Setting custom fee is not recommended.
+                                If you set too low fee, it might get stuck forever.
+                            </p>
+                        </div>
+                    </button>
                 </div>
 
-                <button class="confirm">Send
+                <button class="send-button" disabled="disabled">Send
                     <span>#AMOUNT</span>
                 </button>
             </div>

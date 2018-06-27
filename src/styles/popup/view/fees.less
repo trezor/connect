@@ -51,10 +51,17 @@
         button {
             display: flex;
             align-items: center;
+            justify-content: space-between;
 
             .fee-title {
                 font-size: 16px;
                 color: @color_text_primary;
+            }
+
+            .fee-subtitle {
+                font-size: 12px;
+                color: @color_text_secondary;
+                display: block;
             }
 
             .fee-info {
@@ -64,31 +71,45 @@
 
                 text-align: right;
                 font-size: 12px;
+                white-space: nowrap;
                 color: @color_text_secondary;
+            }
+
+            &.custom-fee {
+                cursor: initial;
+                .opener {
+                    cursor: pointer;
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    height: 30px;
+
+                    .fee-info {
+                        visibility: hidden;
+                        height: auto;
+                    }
+                }
+                .bottom {
+                    display: none;
+                }
             }
         }
 
-        button:not(.custom-fee-active) {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        button.custom-fee-active {
+        button.custom-fee.active {
             height: 140px;
-            padding: 10px 15px 2px;
+            padding: 9px 15px;
 
-            display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            align-items: unset;
 
-            .top {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+            .fee-info {
+                visibility: visible;
+                padding-top: 1px;
+            }
 
-                // Make it full column width
-                width: 229px;
+            .bottom {
+                display: block;
             }
 
             .fee-input, .note {
@@ -104,10 +125,18 @@
                 padding-left: 9px;
             }
 
+            .fee-input::-webkit-outer-spin-button,
+            .fee-input::-webkit-inner-spin-button {
+                /* display: none; <- Crashes Chrome on hover */
+                -webkit-appearance: none;
+                margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+            }
+
             .note {
                 text-align: center;
                 font-size: 12px;
                 color: @color_text_secondary;
+                padding-top: 4px;
             }
         }
     }

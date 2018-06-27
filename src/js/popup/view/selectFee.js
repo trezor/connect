@@ -6,172 +6,246 @@ import * as UI from '../../constants/ui';
 
 import { container, showView, postMessage } from './common';
 import { formatAmount, formatTime } from '../../utils/formatUtils';
+import type { SelectFee, UpdateCustomFee } from 'flowtype/ui-message';
+import type { SelectFeeLevel } from 'flowtype/fee';
 
-const onFeeSelect = (event: MouseEvent): void => {
-    if (event.currentTarget instanceof HTMLElement) {
-        const val: ?string = event.currentTarget.getAttribute('data-fee');
-        if (val) {
-            postMessage(new UiMessage(UI.RECEIVE_FEE, { value: val, type: 'fee' }));
-            showView('loader');
+const fees: Array<SelectFeeLevel> = [];
+// reference to currently selected button
+let selectedFee: ?HTMLElement;
+
+/*
+ * Update custom fee view.
+ */
+export const updateCustomFee = (payload: $PropertyType<UpdateCustomFee, 'payload'>) => {
+    const custom: HTMLElement = container.getElementsByClassName('custom-fee')[0];
+    const opener: HTMLElement = container.getElementsByClassName('opener')[0];
+    const customFeeLabel = opener.getElementsByClassName('fee-info')[0];
+
+    if (custom.className.indexOf('active') < 0) {
+        return;
+    }
+
+    const lastFee = fees[fees.length - 1];
+    if (lastFee.name === 'custom') {
+        fees[fees.length - 1] = payload.level;
+    } else {
+        fees.push(payload.level);
+    }
+
+    if (payload.level.fee > 0) {
+        customFeeLabel.innerHTML = formatAmount(payload.level.fee, payload.coinInfo);
+    } else {
+        customFeeLabel.innerHTML = 'Insufficient funds';
+    }
+
+    validation();
+};
+
+const validation = () => {
+    if (selectedFee) {
+        const selectedName: ?string = selectedFee.getAttribute("data-fee");
+        const selectedValue = fees.find(f => f.name === selectedName || 'custom');
+        const sendButton: HTMLElement = container.getElementsByClassName('send-button')[0];
+
+        if (selectedValue && selectedValue.fee > 0) {
+            sendButton.removeAttribute('disabled');
+        } else {
+            sendButton.setAttribute('disabled', 'disabled');
         }
     }
-};
+}
+
+
 
 /*
  * Show select fee view.
  */
-export const selectFee = (data: ?Object): void => {
-    if (!data || !Array.isArray(data.list)) return;
+export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
+    if (!data || !Array.isArray(data.feeLevels)) return; // TODO: back to accounts?
 
-    showView('select_fee');
+    showView('select-fee');
 
+    // remove old references
+    selectedFee = null;
+    fees.splice(0, fees.length);
+    // add new fees from message
+    fees.push( ...data.feeLevels );
+
+    // build innerHTML string with fee buttons
     const feesComponents: Array<string> = [];
-    for (const [ feeIndex, feeItem ] of data.list.entries()) {
-        // skip custom
-        if (feeItem.name === 'custom') continue;
+    fees.forEach((level, index) => {
+        // ignore custom
+        if (level.name === 'custom') return;
 
-        let feeName: string = '';
-        if (feeItem.name === 'normal' && feeItem.bytes > 0) {
-            feeName = `
-                <span class="fee-name-normal">${feeItem.name}</span>
-                <span class="fee-name-subtitle">recommended</span>
-                `;
-        } else {
-            feeName = `<span class="fee-name">${feeItem.name}</span>`;
+        let feeName: string = level.name;
+        if (level.name === 'normal' && level.fee > 0) {
+            feeName = `<span>${level.name}</span>
+                <span class="fee-subtitle">recommended</span>`;
         }
 
-        if (feeItem.fee > 0) {
+        if (level.fee > 0) {
             feesComponents.push(`
-                <div class="fee">
-                    <button data-fee="${feeIndex}">
-                        ${feeName}
-                        <span class="fee-size">${formatAmount(feeItem.fee, data.coinInfo)}</span>
-                        <span class="fee-minutes">${formatTime(feeItem.minutes)}</span>
-                    </button>
-                </div>
+                <button data-fee="${level.name}" class="list">
+                    <span class="fee-title">${feeName}</span>
+                    <span class="fee-info">
+                        <span class="fee-amount">${formatAmount(level.fee, data.coinInfo)}</span>
+                        <span class="fee-time">${formatTime(level.minutes)}</span>
+                    </span>
+                </button>
             `);
         } else {
             feesComponents.push(`
-                <div class="fee insufficient-funds">
-                    <button disabled>
-                        ${feeName}
-                        <span class="fee-insufficient-funds">Insufficient funds</span>
-                    </button>
-                </div>
+                <button disabled class="list">
+                    <span class="fee-title">${feeName}</span>
+                    <span class="fee-info">Insufficient funds</span>
+                </button>
             `);
         }
-    }
+    });
 
-    const changeAccountButton: HTMLElement = container.getElementsByClassName('change_account')[0];
-    const feeList: HTMLElement = container.getElementsByClassName('select_fee_list')[0];
-
+    const feeList: HTMLElement = container.getElementsByClassName('select-fee-list')[0];
+    // append custom fee button
     feesComponents.push(feeList.innerHTML);
+    // render all buttons
     feeList.innerHTML = feesComponents.join('');
 
-    // find all fee buttons
+    // references to html elements
+    const sendButton: HTMLElement = container.getElementsByClassName('send-button')[0];
+    const opener: HTMLElement = container.getElementsByClassName('opener')[0];
+    const custom: HTMLElement = container.getElementsByClassName('custom-fee')[0];
+    const customFeeLabel = opener.getElementsByClassName('fee-info')[0];
+
+
+    const onFeeSelect = (event: MouseEvent): void => {
+        if (event.currentTarget instanceof HTMLElement) {
+            if (selectedFee) {
+                selectedFee.classList.remove('active');
+            }
+            selectedFee = event.currentTarget;
+            selectedFee.classList.add('active');
+
+            validation();
+        }
+    };
+
+    // find all buttons excluding custom fee button
     const feeButtons: NodeList<HTMLElement> = feeList.querySelectorAll('[data-fee]');
     for (let i = 0; i < feeButtons.length; i++) {
         feeButtons.item(i).addEventListener('click', onFeeSelect);
     }
 
-    const opener: HTMLElement = container.getElementsByClassName('fee-custom-opener')[0];
-    const custom: HTMLElement = container.getElementsByClassName('fee-custom')[0];
-    const input: HTMLInputElement = custom.getElementsByTagName('input')[0];
-    const label = opener.getElementsByClassName('fee-insufficient-funds')[0];
-    const labelSize = opener.getElementsByClassName('fee-size')[0];
-    const labelTime = opener.getElementsByClassName('fee-minutes')[0];
-    const customSendButton: HTMLElement = custom.getElementsByClassName('fee-custom-button')[0];
-    customSendButton.setAttribute('data-fee', (data.list.length - 1).toString());
+    // custom fee button logic
+    let composingTimeout: number = 0;
+    opener.onclick = () => {
+        if (custom.className.indexOf('active') >= 0) return;
+
+        if (selectedFee) {
+            selectedFee.classList.remove('active');
+        }
+
+        const composedCustomFee = fees.find(f => f.name === 'custom');
+        let customFeeDefaultValue: number = 0;
+        if (!composedCustomFee) {
+            if (selectedFee) {
+                const selectedName: ?string = selectedFee.getAttribute("data-fee");
+                const selectedValue = fees.find(f => f.name === selectedName);
+                if (selectedValue) {
+                    customFeeDefaultValue = selectedValue.feePerByte;
+                }
+            }
+
+            if (!customFeeDefaultValue) {
+                customFeeDefaultValue = 1; // TODO: get normal
+            }
+        } else {
+            customFeeDefaultValue = composedCustomFee.feePerByte;
+        }
+
+        custom.classList.add('active');
+        selectedFee = custom;
+
+        focusInput(customFeeDefaultValue);
+    }
+
+    const focusInput = (defaultValue: number) => {
+        const input: HTMLInputElement = container.getElementsByTagName('input')[0];
+        setTimeout(() => {
+            input.oninput = handleCustomFeeChange;
+            if (defaultValue) {
+                input.value = defaultValue.toString();
+                const event = document.createEvent('Event');
+                event.initEvent('input', true, true);
+                input.dispatchEvent(event);
+            }
+            input.focus();
+        }, 1);
+    }
 
     const minFee: number = data.coinInfo.minFeeSatoshiKb / 1000;
     const maxFee: number = data.coinInfo.maxFeeSatoshiKb / 1000;
 
-    let composingTimeout: number = 0;
-    let firstComposing: boolean = true;
+    const handleCustomFeeChange = (event: Event): void => {
 
-    opener.onclick = () => {
-        opener.classList.remove('untouched');
-        if (opener.className.indexOf('opened') >= 0) {
-            opener.classList.remove('opened');
-            custom.classList.add('hidden');
+        window.clearTimeout(composingTimeout);
+
+        sendButton.setAttribute('disabled', 'disabled');
+        // $FlowIssue value not found on Event target
+        const value = event.currentTarget.value;
+        const valueNum: number = parseInt(value);
+
+        if (isNaN(valueNum)) {
+            if (value.length > 0) {
+                customFeeLabel.innerHTML = 'Incorrect fee';
+            } else {
+                customFeeLabel.innerHTML = 'Missing fee';
+            }
+        } else if (valueNum < minFee) {
+            customFeeLabel.innerHTML = 'Fee is too low';
+        } else if (valueNum > maxFee) {
+            customFeeLabel.innerHTML = 'Fee is too big';
         } else {
-            opener.classList.add('opened');
-            custom.classList.remove('hidden');
-            setTimeout(function () {
-                input.focus();
-                if (input.setSelectionRange) {
-                    input.setSelectionRange(input.value.length, input.value.length);
-                }
-                // window.scrollTo(0, 0);
-                if (firstComposing) {
-                    firstComposing = false;
-                    const event = document.createEvent('Event');
-                    event.initEvent('input', true, true);
-                    input.dispatchEvent(event);
-                }
-            }, 1);
-        }
-    };
+            customFeeLabel.innerHTML = 'Composing...';
 
+            const composeCustomFeeTimeoutHandler = () => {
+                postMessage(new UiMessage(UI.RECEIVE_FEE, {
+                    type: 'compose-custom',
+                    value: valueNum,
+                }));
+
+                // updateCustomFee({
+                //     fee: {
+                //         name: "custom",
+                //         minutes: 10,
+                //         fee: 123,
+                //         bytes: 200,
+                //         feePerByte: 30
+                //     },
+                //     coinInfo: data.coinInfo,
+                // })
+            }
+
+            composingTimeout = window.setTimeout(composeCustomFeeTimeoutHandler, 800);
+        }
+    }
+
+    const changeAccountButton: HTMLElement = container.getElementsByClassName('back-button')[0];
     changeAccountButton.onclick = () => {
-        postMessage(new UiMessage(UI.CHANGE_ACCOUNT));
+        postMessage(new UiMessage(UI.RECEIVE_FEE, {
+            type: 'change-account'
+        }));
         showView('loader');
     };
 
-    const handleCustomFeeChange = (event): void => {
-        const value: number = parseInt(input.value);
-        customSendButton.onclick = null;
-        customSendButton.setAttribute('disabled', 'disabled');
-        label.innerHTML = labelSize.innerHTML = labelTime.innerHTML = '';
-        window.clearTimeout(composingTimeout);
-
-        if (isNaN(value)) {
-            if (input.value.length > 0) {
-                label.innerHTML = 'Incorrect fee';
-            } else {
-                label.innerHTML = 'Missing fee';
-            }
-        } else {
-            if (value >= maxFee) {
-                label.innerHTML = 'Fee is too big';
-            } else if (value >= minFee) {
-                label.innerHTML = 'Composing...';
-                composingTimeout = window.setTimeout(function () {
-                    postMessage(new UiMessage(UI.RECEIVE_FEE, { value: value, type: 'custom' }));
-                }, 800);
-            } else {
-                label.innerHTML = 'Fee is too low';
-            }
-        }
-    };
-
-    input.oninput = handleCustomFeeChange;
-    // $FlowIssue: onpropertychange not found in HTMLInputElement
-    if (typeof input.onpropertychange === 'function') {
-        // $FlowIssue: onpropertychange not found in HTMLInputElement
-        input.onpropertychange = input.oninput; // for IE8
+    sendButton.onclick = () => {
+        if (!selectedFee) return;
+        const selectedName: ?string = selectedFee.getAttribute("data-fee");
+        postMessage(new UiMessage(UI.RECEIVE_FEE, {
+            type: 'send',
+            value: selectedName || 'custom',
+        }));
     }
 };
 
-/*
- * Update custom fee view.
- */
-export const updateCustomFee = (data: Object) => {
-    const opener: HTMLElement = container.getElementsByClassName('fee-custom-opener')[0];
-    const custom: HTMLElement = container.getElementsByClassName('fee-custom')[0];
-    const label = opener.getElementsByClassName('fee-insufficient-funds')[0];
-    const labelSize = opener.getElementsByClassName('fee-size')[0];
-    const labelTime = opener.getElementsByClassName('fee-minutes')[0];
-    const customSendButton: HTMLElement = custom.getElementsByClassName('fee-custom-button')[0];
 
-    label.innerHTML = '';
-    if (data.fee > 0) {
-        customSendButton.removeAttribute('disabled');
-        labelSize.innerHTML = formatAmount(data.fee, data.coinInfo);
-        labelTime.innerHTML = formatTime(data.minutes);
 
-        customSendButton.onclick = onFeeSelect;
-    } else {
-        label.innerHTML = 'Insufficient funds';
-    }
-};
+

@@ -16,7 +16,7 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>):
 
     // first render
     // configure buttons
-    if (payload.accounts.length < 1) {
+    if (payload.start) {
         showView('select-account');
 
         if (payload.coinInfo.segwit) {
