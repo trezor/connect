@@ -67,7 +67,8 @@ module.exports = {
     resolve: {
         modules: [ JS_SRC, './node_modules' ],
         alias: {
-
+            'flowtype/tests/get-address': `${ SRC }/flowtype/tests/get-address.js`,
+            'flowtype/tests/sign-message': `${ SRC }/flowtype/tests/sign-message.js`,
         }
     },
 
