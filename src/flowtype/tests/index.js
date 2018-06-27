@@ -4,6 +4,7 @@ import type {
     TestGetAddressPayload,
     ExpectedGetAddressResponse,
 } from 'flowtype/tests/get-address';
+
 import type {
     TestSignMessagePayload,
     ExpectedSignMessageResponse,
