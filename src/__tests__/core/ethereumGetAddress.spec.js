@@ -5,15 +5,15 @@ import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 import type {
-    TestAddressPayload,
-    ExpectedAddressResponse,
+    TestGetAddressPayload,
+    ExpectedGetAddressResponse,
 } from 'flowtype/tests/get-address';
 
 export const ethereumGetAddress = () => {
     describe('EthereumGetAddress', () => {
         let core: Core;
 
-        const testPayloads: Array<TestAddressPayload> = [
+        const testPayloads: Array<TestGetAddressPayload> = [
             {
                 method: 'ethereumGetAddress',
                 path: [],
@@ -37,7 +37,7 @@ export const ethereumGetAddress = () => {
         ];
 
 
-        const expectedResponses: Array<ExpectedAddressResponse> = [
+        const expectedResponses: Array<ExpectedGetAddressResponse> = [
             {
                 payload: {
                     address: '1d1c328764a41bda0492b66baa30c4a339ff85ef',

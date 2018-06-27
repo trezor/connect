@@ -5,15 +5,15 @@ import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 import type {
-    TestAddressPayload,
-    ExpectedAddressResponse,
+    TestGetAddressPayload,
+    ExpectedGetAddressResponse,
 } from 'flowtype/tests/get-address';
 
 export const getAddressSegwit = (): void => {
     describe('GetAddressSegwit', () => {
         let core: Core;
 
-        const testPayloads: Array<TestAddressPayload> = [
+        const testPayloads: Array<TestGetAddressPayload> = [
             {
                 method: 'getAddress',
                 coin: 'Bitcoin',
@@ -39,7 +39,7 @@ export const getAddressSegwit = (): void => {
                 showOnTrezor: true,
             },
         ];
-        const expectedResponses: Array<ExpectedAddressResponse> = [
+        const expectedResponses: Array<ExpectedGetAddressResponse> = [
             {
                 payload: {
                     address: '3AnYTd2FGxJLNKL1AzxfW3FJMntp9D2KKX',
