@@ -5,15 +5,15 @@ import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 import type  {
-    TestSignMessagePayload,
-    ExpectedSignMessageResponse,
-} from 'flowtype/tests/sign-message';
+    TestEthereumSignMessagePayload,
+    ExpectedEthereumSignMessageResponse,
+} from 'flowtype/tests/ethereum-sign-message';
 
 export const ethereumSignMessage = () => {
     describe('EthereumSignMessage', () => {
         let core: Core;
 
-        const testPayloads: Array<TestSignMessagePayload> = [
+        const testPayloads: Array<TestEthereumSignMessagePayload> = [
             {
                 method: 'ethereumSignMessage',
                 path: [0],
@@ -25,7 +25,7 @@ export const ethereumSignMessage = () => {
                 message: 'VeryLongMessage!'.repeat(64),
             },
         ];
-        const expectedResponses: Array<ExpectedSignMessageResponse> = [
+        const expectedResponses: Array<ExpectedEthereumSignMessageResponse> = [
             {
                 payload: {
                     address: 'cb3864960e8db1a751212c580af27ee8867d688f',

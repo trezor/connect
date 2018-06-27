@@ -1,13 +1,12 @@
 /* @flow */
 
-declare module 'flowtype/tests/sign-message' {
-    declare export type TestSignMessagePayload = {
+declare module 'flowtype/tests/ethereum-sign-message' {
+    declare export type TestEthereumSignMessagePayload = {
         method: string,
         path: string | Array<number>,
         message: string,
-        coin: string,
     };
-    declare export type ExpectedSignMessageResponse = {
+    declare export type ExpectedEthereumSignMessageResponse = {
         payload: {
             address: string,
             signature: string,
