@@ -1,26 +1,13 @@
 /* @flow */
 
-type AvailableTests =
-    | 'getPublicKey'
-    | 'getAddress'
-    | 'getAddressSegwit'
-    | 'signMessage'
-    | 'signMessageSegwit'
-    | 'signTx'
-    | 'signTxSegwit'
-    | 'signTxBgold'
-    | 'signTxBcash'
-    | 'verifyMessage'
-    | 'verifyMessageSegwit'
-    | 'ethereumGetAddress'
-    | 'ethereumSignMessage'
-    | 'ethereumSignTx'
-    | 'ethereumVerifyMessage'
-    | 'nemGetAddress';
+import type {
+    AvailableTests,
+    AvailableSubtests,
+} from 'flowtype/tests';
 
 declare var __karma__: {
     config: {
         test: AvailableTests,
-        subtest: string,
+        subtest: AvailableSubtests,
     },
 };
