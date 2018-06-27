@@ -1,10 +1,20 @@
 /* @flow */
 
+import type {
+    TestAddressPayload,
+    ExpectedAddressResponse,
+} from 'flowtype/tests/get-address';
+import type {
+    TestSignMessagePayload,
+    ExpectedSignMessageResponse,
+} from 'flowtype/tests/sign-message';
+
 declare module 'flowtype/tests' {
-    declare export type GetAddressSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
-    declare export type SignMessageSubtests = 'sign' | 'signTestnet' | 'signBch' | 'signLong';
-    declare export type SignMessageSegwitSubtests = 'sign' | 'signLong';
-    declare export type SignTxSubtests = 'oneOneFee'
+    declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
+    declare export type SignMessageAvailableSubtests = 'sign' | 'signTestnet' | 'signBch' | 'signLong';
+    declare export type SignMessageSegwitAvailableSubtests = 'sign' | 'signLong';
+    declare export type SignTxAvailableSubtests =
+        'oneOneFee'
         | 'oneTwoFee'
         | 'oneThreeFee'
         | 'twoTwo'
@@ -19,19 +29,20 @@ declare module 'flowtype/tests' {
         | 'twoChanges'
         | 'p2sh'
         | 'changeOnMainChainAllowed';
-    declare export type SignTxSegwitSubtests = 'sendP2Sh' | 'sendP2shChange';
-    declare export type SignTxBgoldSubtests = 'change' | 'noChange' | 'p2sh' | 'p2shWitnessChange';
-    declare export type SignTxBcashSubtests = 'change' | 'noChange' | 'oldAddr';
-    declare export type VerifyMessageSubtests = 'verify' | 'verifyLong' | 'verifyTestnet' | 'verifyBcash' | 'verifyBitcoind';
-    declare export type VerifyMessageSegwitSubtests = 'verify' | 'verifyLong' | 'verifyTestnet';
-    declare export type VerifyMessageSegwitNativeSubtests = 'verify' | 'verifyLong' | 'verifyTestnet';
-    declare export type EthereumSignTxSubtests = 'knownErc20Token' | 'unknownErc20Token' | 'noData' | 'data' | 'message' | 'newContract' | 'sanityChecks' | 'noDataEip155' | 'dataEip155';
-    declare export type NemSignTransactionMosaicSubtests = 'supplyChange' | 'creation' | 'creationProperties' | 'creationLevy';
-    declare export type NemSignTransactionMultisigSubtests = 'aggregatedModification' | 'multisig' | 'multisigSigner';
-    declare export type NemSignTransactionOthersSubtests = 'importanceTransfer' | 'provisionNamespace';
-    declare export type NemSignTransactionTransfersSubtests = 'simple' | 'encryptedPayload' | 'xemAsMosaic' | 'unknownMosaic' | 'knownMosaic' | 'knownMosaicWithLevy' | 'multipleMosaics';
+    declare export type SignTxSegwitAvailableSubtests = 'sendP2Sh' | 'sendP2shChange';
+    declare export type SignTxBgoldAvailableSubtests = 'change' | 'noChange' | 'p2sh' | 'p2shWitnessChange';
+    declare export type SignTxBcashAvailableSubtests = 'change' | 'noChange' | 'oldAddr';
+    declare export type VerifyMessageAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet' | 'verifyBcash' | 'verifyBitcoind';
+    declare export type VerifyMessageSegwitAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet';
+    declare export type VerifyMessageSegwitNativeAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet';
+    declare export type EthereumSignTxAvailableSubtests = 'knownErc20Token' | 'unknownErc20Token' | 'noData' | 'data' | 'message' | 'newContract' | 'sanityChecks' | 'noDataEip155' | 'dataEip155';
+    declare export type NemSignTransactionMosaicAvailableSubtests = 'supplyChange' | 'creation' | 'creationProperties' | 'creationLevy';
+    declare export type NemSignTransactionMultisigAvailableSubtests = 'aggregatedModification' | 'multisig' | 'multisigSigner';
+    declare export type NemSignTransactionOthersAvailableSubtests = 'importanceTransfer' | 'provisionNamespace';
+    declare export type NemSignTransactionTransfersAvailableSubtests = 'simple' | 'encryptedPayload' | 'xemAsMosaic' | 'unknownMosaic' | 'knownMosaic' | 'knownMosaicWithLevy' | 'multipleMosaics';
 
-    declare export type AvailableTests = 'getPublicKey'
+    declare export type AvailableTests =
+        'getPublicKey'
         | 'getAddress'
         | 'getAddressSegwit'
         | 'signMessage'
@@ -47,19 +58,28 @@ declare module 'flowtype/tests' {
         | 'ethereumSignTx'
         | 'ethereumVerifyMessage'
         | 'nemGetAddress';
-    declare export type AvailableSubtests = GetAddressSubtests
-        | SignMessageSubtests
-        | SignMessageSegwitSubtests
-        | SignTxSubtests
-        | SignTxSegwitSubtests
-        | SignTxBgoldSubtests
-        | SignTxBcashSubtests
-        | VerifyMessageSubtests
-        | VerifyMessageSegwitSubtests
-        | VerifyMessageSegwitNativeSubtests
-        | EthereumSignTxSubtests
-        | NemSignTransactionMosaicSubtests
-        | NemSignTransactionMultisigSubtests
-        | NemSignTransactionOthersSubtests
-        | NemSignTransactionTransfersSubtests;
+    declare export type AvailableSubtests =
+        GetAddressAvailableSubtests
+        | SignMessageAvailableSubtests
+        | SignMessageSegwitAvailableSubtests
+        | SignTxAvailableSubtests
+        | SignTxSegwitAvailableSubtests
+        | SignTxBgoldAvailableSubtests
+        | SignTxBcashAvailableSubtests
+        | VerifyMessageAvailableSubtests
+        | VerifyMessageSegwitAvailableSubtests
+        | VerifyMessageSegwitNativeAvailableSubtests
+        | EthereumSignTxAvailableSubtests
+        | NemSignTransactionMosaicAvailableSubtests
+        | NemSignTransactionMultisigAvailableSubtests
+        | NemSignTransactionOthersAvailableSubtests
+        | NemSignTransactionTransfersAvailableSubtests;
+
+    declare type Subtest<T, R> = {
+        testPayloads: Array<T>,
+        expectedResponses: Array<R>,
+        specName: string,
+    };
+    declare export type SubtestGetAddress = Subtest<TestAddressPayload, ExpectedAddressResponse>;
+    declare export type SubtestSignMessage = Subtest<TestSignMessagePayload, ExpectedSignMessageResponse>;
 }

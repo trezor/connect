@@ -13,10 +13,4 @@ declare module 'flowtype/tests/get-address' {
             address: string,
         },
     };
-
-    declare export type SubtestAddress = {
-        testPayloads: Array<TestAddressPayload>,
-        expectedResponses: Array<ExpectedAddressResponse>,
-        specName: string,
-    };
 }
