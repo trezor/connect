@@ -1,19 +1,39 @@
 /* @flow */
 
 import type {
-    TestGetAddressPayload,
-    ExpectedGetAddressResponse,
-} from 'flowtype/tests/get-address';
+    TestEthereumGetAddressPayload,
+    ExpectedEthereumGetAddressResponse,
+} from 'flowtype/tests/ethereum-get-address';
 
 import type {
-    TestSignMessagePayload,
-    ExpectedSignMessageResponse,
-} from 'flowtype/tests/sign-message';
+    TestEthereumSignMessagePayload,
+    ExpectedEthereumSignMessageResponse,
+} from 'flowtype/tests/ethereum-sign-message';
 
 import type {
     TestEthereumSignTxPayload,
     ExpectedEthereumSignTxResponse,
 } from 'flowtype/tests/ethereum-sign-tx';
+
+import type {
+    TestGetAddressPayload,
+    ExpectedGetAddressResponse,
+} from 'flowtype/tests/get-address';
+
+import type {
+    TestGetPublicKeyPayload,
+    ExpectedGetPublicKeyResponse,
+} from 'flowtype/tests/get-public-key';
+
+import type {
+    TestNemGetAddressPayload,
+    ExpectedNemGetAddressResponse,
+} from 'flowtype/tests/nem-get-address';
+
+import type {
+    TestSignMessagePayload,
+    ExpectedSignMessageResponse,
+} from 'flowtype/tests/sign-message';
 
 import type {
     TestSignTxPayload,
@@ -102,4 +122,26 @@ declare module 'flowtype/tests' {
     declare export type SubtestEthereumSignTx = Subtest<TestEthereumSignTxPayload, ExpectedEthereumSignTxResponse>;
     declare export type SubtestSignTx = Subtest<TestSignTxPayload, ExpectedSignTxResponse>;
     declare export type SubtestVerifyMessage = Subtest<TestVerifyMessagePayload, ExpectedVerifyMessageResponse>;
+
+
+    declare export type TestPayload =
+        TestEthereumGetAddressPayload
+        | TestEthereumSignMessagePayload
+        | TestEthereumSignTxPayload
+        | TestGetAddressPayload
+        | TestGetPublicKeyPayload
+        | TestNemGetAddressPayload
+        | TestSignMessagePayload
+        | TestSignTxPayload
+        | TestVerifyMessagePayload;
+    declare export type ExpectedResponse =
+        ExpectedEthereumGetAddressResponse
+        | ExpectedEthereumSignMessageResponse
+        | ExpectedEthereumSignTxResponse
+        | ExpectedGetAddressResponse
+        | ExpectedGetPublicKeyResponse
+        | ExpectedNemGetAddressResponse
+        | ExpectedSignMessageResponse
+        | ExpectedSignTxResponse
+        | ExpectedVerifyMessageResponse;
 }
