@@ -9,12 +9,12 @@ import type {
     GetAddressAvailableSubtests,
 } from 'flowtype/tests';
 import type {
-    TestAddressPayload,
-    ExpectedAddressResponse,
+    TestGetAddressPayload,
+    ExpectedGetAddressResponse,
 } from 'flowtype/tests/get-address';
 
 const btc = (): SubtestGetAddress => {
-    const testPayloads: Array<TestAddressPayload> = [
+    const testPayloads: Array<TestGetAddressPayload> = [
         {
             method: 'getAddress',
             coin: 'Bitcoin',
@@ -41,7 +41,7 @@ const btc = (): SubtestGetAddress => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedAddressResponse> = [
+    const expectedResponses: Array<ExpectedGetAddressResponse> = [
         {
             payload: {
                 address: '1EfKbQupktEMXf4gujJ9kCFo83k1iMqwqK',
@@ -72,7 +72,7 @@ const btc = (): SubtestGetAddress => {
 };
 
 const ltc = (): SubtestGetAddress => {
-    const testPayloads: Array<TestAddressPayload> = [
+    const testPayloads: Array<TestGetAddressPayload> = [
         {
             method: 'getAddress',
             coin: 'Litecoin',
@@ -99,7 +99,7 @@ const ltc = (): SubtestGetAddress => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedAddressResponse> = [
+    const expectedResponses: Array<ExpectedGetAddressResponse> = [
         {
             payload: {
                 address: 'LYtGrdDeqYUQnTkr5sHT2DKZLG7Hqg7HTK',
@@ -130,7 +130,7 @@ const ltc = (): SubtestGetAddress => {
 };
 
 const tbtc = (): SubtestGetAddress => {
-    const testPayloads: Array<TestAddressPayload> = [
+    const testPayloads: Array<TestGetAddressPayload> = [
         {
             method: 'getAddress',
             coin: 'Testnet',
@@ -139,7 +139,7 @@ const tbtc = (): SubtestGetAddress => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedAddressResponse> = [
+    const expectedResponses: Array<ExpectedGetAddressResponse> = [
         {
             payload: {
                 address: 'moN6aN6NP1KWgnPSqzrrRPvx2x1UtZJssa',
@@ -155,7 +155,7 @@ const tbtc = (): SubtestGetAddress => {
 };
 
 const bch = (): SubtestGetAddress => {
-    const testPayloads: Array<TestAddressPayload> = [
+    const testPayloads: Array<TestGetAddressPayload> = [
         {
             method: 'getAddress',
             coin: 'Bcash',
@@ -176,7 +176,7 @@ const bch = (): SubtestGetAddress => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedAddressResponse> = [
+    const expectedResponses: Array<ExpectedGetAddressResponse> = [
         {
             payload: {
                 address: 'bitcoincash:qr08q88p9etk89wgv05nwlrkm4l0urz4cyl36hh9sv',

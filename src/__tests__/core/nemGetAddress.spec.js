@@ -6,15 +6,15 @@ import { NEM_MAINNET, NEM_TESTNET } from '../../js/core/methods/helpers/nemSignT
 import { settings, CoreEventHandler } from './common.js';
 
 import type {
-    TestAddressPayload,
-    ExpectedAddressResponse,
+    TestGetAddressPayload,
+    ExpectedGetAddressResponse,
 } from 'flowtype/tests/get-address';
 
 export const nemGetAddress = () => {
     describe('NEMGetAddress', () => {
         let core: Core;
 
-        const testPayloads: Array<TestAddressPayload> = [
+        const testPayloads: Array<TestGetAddressPayload> = [
             {
                 method: 'nemGetAddress',
                 path: "m/44'/1'/0'/0'/0'",
@@ -26,7 +26,7 @@ export const nemGetAddress = () => {
                 network: NEM_TESTNET,
             },
         ];
-        const expectedResponses: Array<ExpectedAddressResponse> = [
+        const expectedResponses: Array<ExpectedGetAddressResponse> = [
             {
                 payload: {
                     address: 'NB3JCHVARQNGDS3UVGAJPTFE22UQFGMCQGHUBWQN',
