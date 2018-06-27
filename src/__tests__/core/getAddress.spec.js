@@ -5,15 +5,15 @@ import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 import type {
-    GetAddressSubtests,
+    SubtestGetAddress,
+    GetAddressAvailableSubtests,
 } from 'flowtype/tests';
 import type {
-    SubtestAddress,
     TestAddressPayload,
     ExpectedAddressResponse,
 } from 'flowtype/tests/get-address';
 
-const btc = (): SubtestAddress => {
+const btc = (): SubtestGetAddress => {
     const testPayloads: Array<TestAddressPayload> = [
         {
             method: 'getAddress',
@@ -71,7 +71,7 @@ const btc = (): SubtestAddress => {
     };
 };
 
-const ltc = (): SubtestAddress => {
+const ltc = (): SubtestGetAddress => {
     const testPayloads: Array<TestAddressPayload> = [
         {
             method: 'getAddress',
@@ -129,7 +129,7 @@ const ltc = (): SubtestAddress => {
     };
 };
 
-const tbtc = (): SubtestAddress => {
+const tbtc = (): SubtestGetAddress => {
     const testPayloads: Array<TestAddressPayload> = [
         {
             method: 'getAddress',
@@ -154,7 +154,7 @@ const tbtc = (): SubtestAddress => {
     };
 };
 
-const bch = (): SubtestAddress => {
+const bch = (): SubtestGetAddress => {
     const testPayloads: Array<TestAddressPayload> = [
         {
             method: 'getAddress',
@@ -202,7 +202,7 @@ const bch = (): SubtestAddress => {
 };
 
 export const getAddress = (): void => {
-    const subtest: GetAddressSubtests = __karma__.config.subtest;
+    const subtest: GetAddressAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         btc,
         ltc,

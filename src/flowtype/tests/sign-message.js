@@ -13,10 +13,4 @@ declare module 'flowtype/tests/sign-message' {
             signature: string,
         },
     };
-
-    declare export type SubtestSignMessage = {
-        testPayloads: Array<TestSignMessagePayload>,
-        expectedResponses: Array<ExpectedSignMessageResponse>,
-        specName: string,
-    };
 }

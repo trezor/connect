@@ -6,6 +6,9 @@ import { settings, CoreEventHandler } from './common.js';
 
 import type {
     SubtestSignMessage,
+    SignMessageSegwitAvailableSubtests,
+} from 'flowtype/tests';
+import type {
     TestSignMessagePayload,
     ExpectedSignMessageResponse,
 } from 'flowtype/tests/sign-message';
@@ -61,7 +64,7 @@ const signLong = (): SubtestSignMessage => {
 };
 
 export const signMessageSegwit = (): void => {
-    const subtest = __karma__.config.subtest;
+    const subtest: SignMessageSegwitAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         sign,
         signLong,
