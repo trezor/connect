@@ -12,8 +12,13 @@
     }
 
     aside {
+
+        .wrapper {
+            flex-direction: column;
+            align-items: center;
+        }
+
         .info-panel {
-            text-align: right;
             h2 {
                 font-size: 16px;
                 padding-top: 5px;
@@ -58,5 +63,13 @@
     // if custom fee is selected
     .confirm {
         margin-top: 25px;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    aside {
+        .wrapper {
+            flex-direction: column;
+        }
     }
 }
