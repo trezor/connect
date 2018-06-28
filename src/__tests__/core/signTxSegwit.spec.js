@@ -5,6 +5,8 @@ import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 import { getHDPath } from '../../js/utils/pathUtils.js';
+import * as bitcoin from 'bitcoinjs-lib-zcash';
+
 
 import type {
     SubtestSignTx,
@@ -107,15 +109,16 @@ const sendP2shChange = (): SubtestSignTx => {
     };
 };
 
-// TODO
-/* const sendMultisig1 = (): SubtestSignTx => {
+const sendMultisig1 = (): SubtestSignTx => {
+        const address = getHDPath("999'/1'/1'/2/0");
+        address[2] = 0x80000003
     const testPayloads: Array<TestSignTxPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
             inputs: [
                 {
-                    address_n: getHDPath("999'/1'/1'/2/0"),
+                    address_n: address,
                     amount: 1610436,
                     prev_hash: '9c31922be756c06d02167656465c8dc83bb553bf386a3f478ae65b5c021002be',
                     prev_index: 1,
@@ -123,19 +126,19 @@ const sendP2shChange = (): SubtestSignTx => {
                     multisig: {
                         pubkeys: [
                             {
-                                node: "999'/1'/1'",
+                                node: 'tpubDD6wzrQrGNt7XttZcK8cK93fUzyNbkFnzf8QKXdY94ugLMg8GfZVH7KiyNHoYoatCBteb8K4NYjfdLqpVh3pa2UqzYQ6Qhxk8e5hdG1U41v',
                                 address_n: [2, 0],
                             },
                             {
-                                node: "999'/1'/2'",
+                                node: 'tpubDD6wzrQrGNt7aUu5CyGJCL8dB57hGEbqvKr1nqDcGPiB9iMhHPhypMJnCVcrVtai6rqdbF3VBFinjtibv9A7WwxxmY7ZprNo3k4dKNKYDdm',
                                 address_n: [2, 0],
                             },
                             {
-                                node: "999'/1'/3'",
+                                node: 'tpubDD6wzrQrGNt7dT4MJ59xLxAJaEVsr29pFQuCZVubCUHC1SoC85XPvWSyzDs6mjDeYoHYPiMrSUmknSqELasqmUiZ4y388mZboC3aHqPCPts',
                                 address_n: [2, 0],
                             },
                         ],
-                        signatures: ['', '', ''],
+                        signatures: ['304402205b44c20cf2681690edaaf7cd2e30d4704124dd8b7eb1fb7f459d3906c3c374a602205ca359b6544ce2c101c979899c782f7d141c3b0454ea69202b1fb4c09d3b7157', '', ''],
                         m: 2,
                     },
                 },
@@ -165,14 +168,14 @@ const sendP2shChange = (): SubtestSignTx => {
         expectedResponses,
         specName: '/sendMultisig1',
     };
-}; */
+};
 
 export const signTxSegwit = (): void => {
     const subtest: SignTxSegwitAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         sendP2sh,
         sendP2shChange,
-        /* sendMultisig1, */
+        sendMultisig1,
     };
 
     describe('SignTxSegwit', () => {
