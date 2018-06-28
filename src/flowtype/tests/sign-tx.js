@@ -19,6 +19,7 @@ declare module 'flowtype/tests/sign-tx' {
             code?: string,
             serialized?: {
                 serialized_tx: string,
+                signatures?: Array<string>,
             },
         }
     };

@@ -68,6 +68,7 @@ declare module 'flowtype/tests' {
     declare export type SignTxSegwitAvailableSubtests = 'sendP2sh' | 'sendP2shChange' | 'sendMultisig1';
     declare export type SignTxBgoldAvailableSubtests = 'change' | 'noChange' | 'p2sh' | 'p2shWitnessChange';
     declare export type SignTxBcashAvailableSubtests = 'change' | 'noChange' | 'oldAddr';
+    declare export type SignTxMultisigAvailableSubtests = 'twoOfThree' | 'fifteenOfFifteen' | 'missingPubkey';
     declare export type VerifyMessageAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet' | 'verifyBcash' | 'verifyBitcoind';
     declare export type VerifyMessageSegwitAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet';
     declare export type VerifyMessageSegwitNativeAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet';
@@ -87,6 +88,7 @@ declare module 'flowtype/tests' {
         | 'signTxSegwit'
         | 'signTxBgold'
         | 'signTxBcash'
+        | 'signTxMultisig'
         | 'verifyMessage'
         | 'verifyMessageSegwit'
         | 'verifyMessageSegwitNative'
