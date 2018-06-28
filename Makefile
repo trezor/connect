@@ -54,9 +54,11 @@ protobuf:
 	rm ./submodules/trezor-common/protob/messages_fixed.proto
 
 coins:
+	make submodule
 #	./submodules/trezor-common/defs/coins/tools/build_coins.py connect
 	./submodules/trezor-common/defs/coins/tools/build_coins.py
 	mv coins.json ./src/data/coins.json
+	cp ./submodules/trezor-common/defs/ethereum/networks.json ./src/data/ethereumNetworks.json
 
 submodule:
 	git submodule update --remote --merge --recursive
