@@ -7,6 +7,7 @@ import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
 import { formatAmount, formatTime } from '../../utils/formatUtils';
 import type { SelectFee, UpdateCustomFee } from 'flowtype/ui-message';
+import type { CoinInfo } from 'flowtype';
 import type { SelectFeeLevel } from 'flowtype/fee';
 
 const fees: Array<SelectFeeLevel> = [];
@@ -32,25 +33,27 @@ export const updateCustomFee = (payload: $PropertyType<UpdateCustomFee, 'payload
         fees.push(payload.level);
     }
 
-    if (payload.level.fee > 0) {
+    if (payload.level.fee) {
         customFeeLabel.innerHTML = formatAmount(payload.level.fee, payload.coinInfo);
     } else {
         customFeeLabel.innerHTML = 'Insufficient funds';
     }
 
-    validation();
+    validation(payload.coinInfo);
 };
 
-const validation = () => {
+const validation = (coinInfo: CoinInfo) => {
     if (selectedFee) {
-        const selectedName: ?string = selectedFee.getAttribute("data-fee");
-        const selectedValue = fees.find(f => f.name === selectedName || 'custom');
+        const selectedName: string = selectedFee.getAttribute("data-fee") || 'custom';
+        const selectedValue = fees.find(f => f.name === selectedName);
         const sendButton: HTMLElement = container.getElementsByClassName('send-button')[0];
 
-        if (selectedValue && selectedValue.fee > 0) {
+        if (selectedValue && selectedValue.fee !== 0) {
             sendButton.removeAttribute('disabled');
+            sendButton.innerHTML = `Send ${ formatAmount(selectedValue.total, coinInfo) }`;
         } else {
             sendButton.setAttribute('disabled', 'disabled');
+            sendButton.innerHTML = 'Send';
         }
     }
 }
@@ -78,12 +81,12 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         if (level.name === 'custom') return;
 
         let feeName: string = level.name;
-        if (level.name === 'normal' && level.fee > 0) {
+        if (level.name === 'normal' && level.fee) {
             feeName = `<span>${level.name}</span>
                 <span class="fee-subtitle">recommended</span>`;
         }
 
-        if (level.fee > 0) {
+        if (level.fee) {
             feesComponents.push(`
                 <button data-fee="${level.name}" class="list">
                     <span class="fee-title">${feeName}</span>
@@ -115,7 +118,6 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
     const custom: HTMLElement = container.getElementsByClassName('custom-fee')[0];
     const customFeeLabel = opener.getElementsByClassName('fee-info')[0];
 
-
     const onFeeSelect = (event: MouseEvent): void => {
         if (event.currentTarget instanceof HTMLElement) {
             if (selectedFee) {
@@ -124,7 +126,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
             selectedFee = event.currentTarget;
             selectedFee.classList.add('active');
 
-            validation();
+            validation( data.coinInfo );
         }
     };
 
@@ -149,7 +151,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
             if (selectedFee) {
                 const selectedName: ?string = selectedFee.getAttribute("data-fee");
                 const selectedValue = fees.find(f => f.name === selectedName);
-                if (selectedValue) {
+                if (selectedValue && selectedValue.fee !== 0) {
                     customFeeDefaultValue = selectedValue.feePerByte;
                 }
             }
@@ -157,7 +159,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
             if (!customFeeDefaultValue) {
                 customFeeDefaultValue = 1; // TODO: get normal
             }
-        } else {
+        } else if (composedCustomFee.fee) {
             customFeeDefaultValue = composedCustomFee.feePerByte;
         }
 
