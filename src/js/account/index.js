@@ -14,4 +14,11 @@ export const create = (path: Array<number>, xpub: string, coinInfo: CoinInfo): A
     return account;
 }
 
+export const remove = (account: Account): void => {
+    const index: number = accounts.indexOf(account);
+    if (index >= 0) {
+        accounts.splice(index, 1);
+    }
+}
+
 export default Account;
