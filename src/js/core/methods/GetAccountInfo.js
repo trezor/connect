@@ -1,6 +1,5 @@
 /* @flow */
 'use strict';
-import bchaddr from 'bchaddrjs';
 
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
@@ -200,6 +199,7 @@ export default class GetAccountInfo extends AbstractMethod {
         this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
             coinInfo: this.params.coinInfo,
             accounts: [],
+            start: true
         }));
 
         // wait for user action
@@ -220,17 +220,11 @@ export default class GetAccountInfo extends AbstractMethod {
             }
         }
 
-        const address = account.getNextAddress();
-        const addresses = this.params.coinInfo.cashAddrPrefix ? {
-            address: bchaddr.toCashAddress( address ),
-            addressLegacy: address
-        } : { address };
-
         return {
             id: account.id,
             path: account.path,
             serializedPath: getSerializedPath(account.path),
-            ...addresses,
+            address: account.getNextAddress(),
             addressId: account.getNextAddressId(),
             addressPath: account.getAddressPath( account.getNextAddress() ),
             xpub: account.xpub,
