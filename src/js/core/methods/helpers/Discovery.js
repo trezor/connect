@@ -110,7 +110,6 @@ export default class Discovery extends EventEmitter {
 
         const info = await this.getAccountInfo(account);
         if (this.interrupted) return null;
-        account.info = info;
 
         this.emit('update', this.accounts);
 
@@ -131,6 +130,8 @@ export default class Discovery extends EventEmitter {
                 this.disposer = disposer;
             }
         )
+        account.info = info;
+
         return info;
     }
 }
