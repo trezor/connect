@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import BlockBook from './BitcoreBackend';
+import BlockBook from './BlockBook';
 
 import { getCoinInfoByHash, getCoinInfoByCurrency } from '../data/CoinInfo';
 import type { CoinInfo } from 'flowtype';
@@ -10,7 +10,7 @@ const instances: Array<any> = [];
 
 export const find = (urls: Array<string>): ?BlockBook => {
     for (let i: number = 0; i < instances.length; i++) {
-        if (instances[i].options.bitcoreURL === urls) {
+        if (instances[i].options.urls === urls) {
             return instances[i];
         }
     }
@@ -22,26 +22,25 @@ export const createFromCurrency = async (currency: string): Promise<BlockBook> =
     if (!coinInfo) {
         throw new Error('Currency not found for ' + currency);
     }
-    // get bitcore urls from coins.json using currency name/shortcut
-    if (coinInfo.bitcore.length < 1) {
-        throw new Error('Bitcore urls not found for ' + currency);
+    // get urls from coins.json using currency name/shortcut
+    if (coinInfo.blockbook.length < 1) {
+        throw new Error('Blockbook urls not found for ' + currency);
     }
 
-    let backend: ?BlockBook = find(coinInfo.bitcore);
+    let backend: ?BlockBook = find(coinInfo.blockbook);
     if (!backend) {
-        backend = new BlockBook({ bitcoreURL: coinInfo.bitcore, coinInfo: coinInfo });
+        backend = new BlockBook({ urls: coinInfo.blockbook, coinInfo: coinInfo });
         instances.push(backend);
     }
-    // const backend: BitcoreBackend = new BitcoreBackend({ bitcoreURL: coinInfo.bitcore, coinInfo: coinInfo });
     await backend.loadCoinInfo(coinInfo);
     // instances.push(backend);
     return backend;
 };
 
 export const createFromCoinInfo = async (coinInfo: CoinInfo): Promise<BlockBook> => {
-    let backend: ?BlockBook = find(coinInfo.bitcore);
+    let backend: ?BlockBook = find(coinInfo.blockbook);
     if (!backend) {
-        backend = new BlockBook({ bitcoreURL: coinInfo.bitcore, coinInfo: coinInfo });
+        backend = new BlockBook({ urls: coinInfo.blockbook, coinInfo: coinInfo });
         instances.push(backend);
     }
     // await backend.loadCoinInfo();
@@ -52,7 +51,7 @@ export const createFromCoinInfo = async (coinInfo: CoinInfo): Promise<BlockBook>
 export const createFromUrl = async (urls: Array<string>): Promise<BlockBook> => {
     let backend: ?BlockBook = find(urls);
     if (!backend) {
-        backend = new BlockBook({ bitcoreURL: urls });
+        backend = new BlockBook({ urls: urls });
         instances.push(backend);
     }
     await backend.loadCoinInfo();

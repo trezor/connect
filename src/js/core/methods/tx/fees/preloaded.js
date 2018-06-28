@@ -2,7 +2,7 @@
 'use strict';
 
 
-import BlockBook from '../../../../backend/BitcoreBackend';
+import BlockBook from '../../../../backend';
 import type { FeeHandler } from './index';
 import type { CoinInfo } from 'flowtype';
 import type { FeeLevel, FeeLevelInfo, PreloadedFeeLevelInfo } from 'flowtype/fee';

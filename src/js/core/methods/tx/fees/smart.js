@@ -2,7 +2,7 @@
 'use strict';
 
 import { btckb2satoshib } from '../../../../utils/formatUtils';
-import BitcoreBackend from '../../../../backend';
+import BlockBook from '../../../../backend';
 import type { FeeHandler} from './index';
 import type { FeeLevel, FeeLevelInfo, SmartBitcoreFeeLevel } from 'flowtype/fee';
 
@@ -40,7 +40,7 @@ const feeLevels: $ReadOnlyArray<SmartBitcoreFeeLevel> = [
 
 type Fees = {[i: number]: number};
 let fees: Fees = {};
-let bitcore: BitcoreBackend;
+let backend: BlockBook;
 
 function range(from: number, length: number): Array<number> {
     const res = [];
@@ -51,7 +51,7 @@ function range(from: number, length: number): Array<number> {
 }
 
 async function _refreshQuery(query: Array<number>, res: Fees): Promise<boolean> {
-    const fees = await bitcore.blockchain.estimateSmartTxFees(query, true);
+    const fees = await backend.blockchain.estimateSmartTxFees(query, true);
     for (const blocksS in fees) {
         const blocks = parseInt(blocksS);
         const fee = fees[blocks];
@@ -96,12 +96,12 @@ async function refresh(first: boolean): Promise<void> {
     fees = res;
 }
 
-async function detectWorking(backend: BitcoreBackend): Promise<boolean> {
-    bitcore = backend;
-    if (!bitcore.blockchain.hasSmartTxFees) {
+async function detectWorking(backend: BlockBook): Promise<boolean> {
+    backend = backend;
+    if (!backend.blockchain.hasSmartTxFees) {
         return false;
     }
-    const lfees = await bitcore.blockchain.estimateSmartTxFees([1007], true);
+    const lfees = await backend.blockchain.estimateSmartTxFees([1007], true);
     if (lfees[1007] < 0) {
         return false;
     }

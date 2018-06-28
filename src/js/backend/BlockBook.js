@@ -32,7 +32,7 @@ import DiscoveryWorker from 'worker-loader?name=js/discovery-worker.[hash].js!hd
 import SocketWorker from 'worker-loader?name=js/socketio-worker.[hash].js!hd-wallet/lib/socketio-worker/inside';
 
 export type Options = {
-    bitcoreURL: Array<string>,
+    urls: Array<string>,
     coinInfo?: CoinInfo,
 };
 
@@ -47,7 +47,7 @@ export default class BlockBook {
         this.options = options;
 
         const worker: FastXpubWorker = new FastXpubWorker();
-        const blockchain: BitcoreBlockchain = new BitcoreBlockchain(this.options.bitcoreURL, () => new SocketWorker());
+        const blockchain: BitcoreBlockchain = new BitcoreBlockchain(this.options.urls, () => new SocketWorker());
         this.blockchain = blockchain;
 
         // this.lastError = false;

@@ -31,7 +31,7 @@ export type CustomFeeLevel = {
 
 export type FeeHandler = {
     refresh(backend: BlockBook): Promise<any>,
-    detectWorking(bitcore: BlockBook, coinInfo: CoinInfo): Promise<boolean>, // should not reject
+    detectWorking(backend: BlockBook, coinInfo: CoinInfo): Promise<boolean>, // should not reject
     getFeeList(): $ReadOnlyArray<FeeLevel>,
     getFee(level: FeeLevelInfo): number,
     getBlocks(fee: number): ?number,
@@ -66,7 +66,7 @@ export const init = async (backend: BlockBook, coinInfo: CoinInfo): Promise<void
     //         feeLevels().forEach( (level: FeeLevel) => {
     //             level.refreshHack = level.refreshHack == null ? 1 : level.refreshHack + 1;
     //         });
-    //         feeHandler.refresh(bitcore);
+    //         feeHandler.refresh(backend);
     //     }
     // }, 20 * 60 * 1000);
 };

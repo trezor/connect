@@ -2,7 +2,7 @@
 'use strict';
 
 import Account from './Account';
-import BlockBook from '../backend/BitcoreBackend';
+import BlockBook from '../backend';
 import type { CoinInfo } from 'flowtype';
 
 const accounts: Array<Account> = [];
