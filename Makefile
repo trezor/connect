@@ -13,9 +13,6 @@ clean:
 node_modules:
 	yarn
 
-submodules:
-	git submodule update --init
-
 build:
 	yarn
 	yarn run build
@@ -62,4 +59,4 @@ coins:
 	mv coins.json ./src/data/coins.json
 
 submodule:
-	git submodule update --remote --merge
+	git submodule update --remote --merge --recursive
