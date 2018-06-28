@@ -34,12 +34,24 @@ export default class Account {
         return (this.info && this.info.transactions.length > 0);
     }
 
+    getPath(): Array<number> {
+        return this.path;
+    }
+
     getNextAddress(): string {
         return this.info ? this.info.unusedAddresses[0] : 'unknown';
     }
 
     getNextAddressId(): number {
         return this.info ? this.info.usedAddresses.length : -1;
+    }
+
+    getChangeIndex(): number {
+        return this.info ? this.info.changeIndex : 0;
+    }
+
+    getNextChangeAddress(): string {
+        return this.info ? this.info.changeAddresses[ this.info.changeIndex ] : 'unknown';
     }
 
     getAddressPath(address: string): Array<number> {
