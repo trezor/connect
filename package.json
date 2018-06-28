@@ -84,9 +84,9 @@
     "bip44-constants": "^5.0.0",
     "bitcoinjs-lib-zcash": "^3.4.1",
     "bowser": "^1.9.3",
-    "hd-wallet": "^7.11.5",
+    "hd-wallet": "7.14.1",
     "parse-uri": "^1.0.0",
-    "trezor-link": "1.5.0",
+    "trezor-link": "1.5.2",
     "whatwg-fetch": "^2.0.4",
     "window-or-global": "^1.0.1"
   }

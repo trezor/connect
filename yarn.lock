@@ -3403,11 +3403,12 @@ hawk@~3.1.3:
     hoek "2.x.x"
     sntp "1.x.x"
 
-hd-wallet@^7.11.5:
-  version "7.11.5"
-  resolved "https://registry.yarnpkg.com/hd-wallet/-/hd-wallet-7.11.5.tgz#df81677e6fec4c5ac135a6eb8f63723294881f82"
+hd-wallet@7.14.1:
+  version "7.14.1"
+  resolved "https://registry.yarnpkg.com/hd-wallet/-/hd-wallet-7.14.1.tgz#12a6ac8c40acb1f35454db9795c9ff8d42905eb1"
   dependencies:
     babel-cli "^6.26.0"
+    bchaddrjs "^0.2.1"
     bitcoinjs-lib-zcash "^3.4.1"
     queue "^4.4.2"
     socket.io-client "^1.7.3"
@@ -6941,9 +6942,9 @@ tough-cookie@~2.3.0, tough-cookie@~2.3.3:
   dependencies:
     punycode "^1.4.1"
 
-trezor-link@1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/trezor-link/-/trezor-link-1.5.0.tgz#7cda659a8774d1054ea951845fc1dc2e38c9c605"
+trezor-link@1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/trezor-link/-/trezor-link-1.5.2.tgz#a87defc5ea4d0e882c5a8623b554673d62cdabbb"
   dependencies:
     bigi "^1.4.1"
     bitcoinjs-lib-zcash "^3.0.0"
