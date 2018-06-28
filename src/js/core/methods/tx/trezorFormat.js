@@ -3,6 +3,7 @@
 
 import { reverseBuffer } from '../../../utils/bufferUtils';
 import { address as BitcoinJSAddress } from 'bitcoinjs-lib-zcash';
+import bchaddrjs from 'bchaddrjs';
 
 import type {
     BuildTxInput,
@@ -14,6 +15,8 @@ import type {
     TransactionOutput,
     RefTransaction
 } from 'flowtype/trezor';
+
+import type { CoinInfo } from 'flowtype';
 
 import type {
     Network as BitcoinJsNetwork,
@@ -34,7 +37,7 @@ export const input = (input: BuildTxInput, sequence: number): TransactionInput =
 }
 
 // transform from hd-wallet format to TREZOR
-export const output = (output: BuildTxOutput, network: BitcoinJsNetwork, isCashaddress: ?boolean): TransactionOutput => {
+export const output = (output: BuildTxOutput, coinInfo: CoinInfo): TransactionOutput => {
     if (output.address == null) {
         if (output.opReturnData != null) {
             if (output.value != null) {
@@ -66,18 +69,21 @@ export const output = (output: BuildTxOutput, network: BitcoinJsNetwork, isCasha
     }
     const address = output.address;
     if (typeof address !== 'string') {
-        throw new Error('Wrong type.');
+        throw new Error('Wrong address type.');
     }
 
     // $FlowIssue
     const amount: number = output.value;
 
-    isScriptHash(address, network, isCashaddress);
+    const isCashAddress: boolean = !!(coinInfo.cashAddrPrefix);
 
-    // cashaddr hack, internally we work only with legacy addresses, but we output cashaddr
+
+    isScriptHash(address, coinInfo.network, isCashAddress);
+
+    // make sure that cashaddr has prefix
     return {
-        //address: isCashaddress ? bchaddr.toCashAddress(address) : address,
-        address: address,
+        address: isCashAddress ? bchaddrjs.toCashAddress(address) : address,
+        //address: address,
         amount: amount,
         script_type: 'PAYTOADDRESS',
     };
@@ -92,18 +98,15 @@ function isBech32(address: string): boolean {
     }
 }
 
-const isScriptHash = (address: string, network: BitcoinJsNetwork, isCashaddress: ?boolean): boolean  => {
-    // cashaddr hack
-    // Cashaddr format (with prefix) is neither base58 nor bech32, so it would fail
-    // in bitcoinjs-lib-zchash. For this reason, we use legacy format here
-    // try {
-    //     if (isCashaddress) {
-    //         address = bchaddr.toLegacyAddress(address);
-    //     }
-    // } catch (err) {
-    //     throw new Error('Received cashaddr address could not be translated to legacy format for purpose of internal checks');
-    // }
+const isScriptHash = (address: string, network: BitcoinJsNetwork, isCashAddress: boolean): boolean  => {
     if (!isBech32(address)) {
+        // cashaddr hack
+        // Cashaddr format (with prefix) is neither base58 nor bech32, so it would fail
+        // in bitcoinjs-lib-zchash. For this reason, we use legacy format here
+        if (isCashAddress) {
+            address = bchaddrjs.toLegacyAddress(address);
+        }
+
         const decoded = BitcoinJSAddress.fromBase58Check(address);
         if (decoded.version === network.pubKeyHash) {
             return false;

@@ -226,7 +226,7 @@ export default class ComposeTransaction extends AbstractMethod {
         const response = await helper.signTx(
             this.device.getCommands().typedCall.bind( this.device.getCommands() ),
             tx.transaction.inputs.map(inp => transformInput(inp, 0)),
-            tx.transaction.outputs.sorted.map(out => transformOutput(out, coinInfo.network)),
+            tx.transaction.outputs.sorted.map(out => transformOutput(out, coinInfo)),
             refTxs,
             coinInfo,
         );
