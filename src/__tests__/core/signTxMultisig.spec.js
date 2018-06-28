@@ -2,9 +2,6 @@ import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
-import { getHDPath } from '../../js/utils/pathUtils.js';
-
-
 import type {
     SubtestSignTx,
     SignTxMultisigAvailableSubtests,
