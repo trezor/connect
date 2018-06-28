@@ -72,6 +72,7 @@ export default class DataManager {
     }
 
     static isWhitelisted(origin: string): ?WhiteList {
+        if (!this.config) return null;
         const uri = parseUri(origin);
         if (uri && typeof uri.host === 'string') {
             const parts: Array<string> = uri.host.split('.');
