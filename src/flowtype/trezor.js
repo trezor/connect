@@ -416,7 +416,6 @@ declare module 'flowtype/trezor' {
         serializedPath: string;
         xpub: string;
         address: string;
-        addressLegacy?: string;
         addressId: number;
         addressPath: Array<number>;
         balance: number;

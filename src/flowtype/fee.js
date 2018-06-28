@@ -44,9 +44,14 @@ declare module 'flowtype/fee' {
 
     declare export type SelectFeeLevel = {
         +name: string;
+        +fee: 0;
+        +disabled: true;
+    } | {
+        +name: string;
         +fee: number;
         +feePerByte: number;
         +minutes: number;
+        +total: number;
     }
 
     declare export type FeeLevel = {
