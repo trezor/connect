@@ -5,6 +5,8 @@ import { uniq, reverseBuffer } from '../../../utils/bufferUtils';
 import { xpubToHDNodeType } from '../../../utils/hdnode';
 import { isSegwitPath } from '../../../utils/pathUtils'
 
+import { address as BitcoinJSAddress } from 'bitcoinjs-lib-zcash';
+
 import type {
     Transaction as BitcoinJsTransaction,
     Network as BitcoinJsNetwork,
