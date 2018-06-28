@@ -56,6 +56,7 @@ signTxSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
 signTxBgold_subtests="change noChange p2sh p2shWitnessChange"
 signTxBcash_subtests="change noChange oldAddr"
 signTxMultisig_subtests="twoOfThree fifteenOfFifteen missingPubkey"
+signTxMultisigChange_subtests="externalExternal"
 
 verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind"
 verifyMessageSegwit_subtests="verify verifyLong verifyTestnet"
@@ -651,6 +652,29 @@ test_signTxMultisig() {
         start_transport
 
         run_karma "signTxMultisig" $subtest
+
+        kill_emul_transport
+    done;
+}
+
+test_signTxMultisigChange() {
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$signTxMultisigChange_subtests
+    fi;
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_nopin_nopassphrase
+        start_transport
+
+        run_karma "signTxMultisigChange" $subtest
 
         kill_emul_transport
     done;
