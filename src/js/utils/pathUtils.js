@@ -43,8 +43,7 @@ export const validatePath = (path: string | Array<number>, base: boolean = false
             if (isNaN(p)) {
                 throw new Error('Not a valid path.');
             }
-            // return (n | HD_HARDENED) >>> 0;
-            return n;
+            return Math.abs(n);
         });
     }
     if (!valid) throw new Error('Not a valid path.');
