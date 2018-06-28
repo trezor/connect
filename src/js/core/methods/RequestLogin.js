@@ -9,9 +9,7 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../CoreMessage';
 import DataManager from '../../data/DataManager';
 
-import { getCoinInfoByCurrency, getCoinInfoFromPath, getCoinName } from '../../data/CoinInfo';
-import { getPublicKeyLabel, isSegwitPath } from '../../utils/pathUtils';
-import type { CoinInfo, UiPromiseResponse, CoreMessage } from 'flowtype';
+import type { UiPromiseResponse, CoreMessage } from 'flowtype';
 import type { Identity, SignedIdentity } from 'flowtype/trezor';
 import type { ConnectSettings } from '../../entrypoints/ConnectSettings';
 
