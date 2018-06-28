@@ -22,25 +22,28 @@ import type {
     SignedTx
 } from 'flowtype/trezor';
 
-export const verifyTx = (tx: BuildTxResult,
+export const verifyTx = (tx: ?BuildTxResult,
     inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>,
-    nodes: Array<bitcoin.HDNode>,
+    nodes: ?Array<bitcoin.HDNode>,
     signedTx: SignedTx,
     coinInfo: CoinInfo,
 ): void => {
     const bitcoinTx: bitcoin.Transaction = bitcoin.Transaction.fromHex(signedTx.serialized.serialized_tx, coinInfo.zcash);
     // $FlowIssue
-    if (tx.transaction.inputs.length !== bitcoinTx.ins.length) {
-        throw new Error('Signed transaction has wrong length.');
-    }
-    // $FlowIssue
-    if (tx.transaction.outputs.sorted.length !== bitcoinTx.outs.length) {
-        throw new Error('Signed transaction has wrong length.');
-    }
+    // if (tx.transaction.inputs.length !== bitcoinTx.ins.length) {
+    //     throw new Error('Signed transaction has wrong length.');
+    // }
+    // // $FlowIssue
+    // if (tx.transaction.outputs.sorted.length !== bitcoinTx.outs.length) {
+    //     throw new Error('Signed transaction has wrong length.');
+    // }
+
+
 
     // outputs.sorted.map((output, i) => {
     outputs.map((output, i) => {
+
         const scriptB = bitcoinTx.outs[i].script;
 
         // if (output.opReturnData !== null) {

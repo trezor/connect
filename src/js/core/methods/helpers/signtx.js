@@ -197,7 +197,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
         lock_time: locktime,
     });
 
-    return await processTxRequest(
+    const signed: MessageResponse<SignedTx> = await processTxRequest(
         typedCall,
         response.message,
         serializedTx,
@@ -208,5 +208,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
     );
 
     // TODO: validate tx
-    // verifyTx(tx,)
+    // verifyTx(null, inputs, outputs, null, signed.message, coinInfo);
+
+    return signed;
 };
