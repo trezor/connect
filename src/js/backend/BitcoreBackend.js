@@ -55,6 +55,7 @@ export default class BlockBook {
         // // $FlowIssue WebAssembly
         const filePromise = typeof WebAssembly !== 'undefined' ? httpRequest(FastXpubWasm, 'binary') : Promise.reject();
 
+
         this.blockchain.errors.values.attach(() => { this._setError(); });
         this.discovery = new WorkerDiscovery(
             () => new DiscoveryWorker(),
@@ -94,7 +95,7 @@ export default class BlockBook {
 
         const segwit_s: 'p2sh' | 'off' = coinInfo.segwit ? 'p2sh' : 'off';
 
-        const discovery = this.discovery.discoverAccount(data, xpub, coinInfo.network, segwit_s);
+        const discovery = this.discovery.discoverAccount(data, xpub, coinInfo.network, segwit_s, !!(coinInfo.cashAddrPrefix));
         setDisposer(() => discovery.dispose(new Error('Interrupted by user')));
 
         discovery.stream.values.attach(status => {
@@ -120,7 +121,7 @@ export default class BlockBook {
         coinInfo: CoinInfo,
     ): Stream<AccountInfo | Error> {
         const segwit_s = coinInfo.segwit ? 'p2sh' : 'off';
-        const res = this.discovery.monitorAccountActivity(data, xpub, coinInfo.network, segwit_s);
+        const res = this.discovery.monitorAccountActivity(data, xpub, coinInfo.network, segwit_s, !!(coinInfo.cashAddrPrefix));
 
         this.blockchain.errors.values.attach(() => {
             res.dispose();
