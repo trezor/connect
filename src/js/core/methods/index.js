@@ -6,7 +6,7 @@ import type { CoreMessage } from 'flowtype';
 import AbstractMethod, { MethodInterface } from './AbstractMethod';
 
 import CipherKeyValue from './CipherKeyValue';
-// import ComposeTransaction from './ComposeTransaction';
+import ComposeTransaction from './ComposeTransaction';
 import CustomMessage from './CustomMessage';
 import EthereumGetAddress from './EthereumGetAddress';
 import EthereumSignMessage from './EthereumSignMessage';
@@ -29,7 +29,7 @@ import VerifyMessage from './VerifyMessage';
 
 const classes: {[k: string]: any} = {
     'cipherKeyValue': CipherKeyValue,
-    // 'composeTransaction': ComposeTransaction,
+    'composeTransaction': ComposeTransaction,
     'customMessage': CustomMessage,
     'ethereumGetAddress': EthereumGetAddress,
     'ethereumSignMessage': EthereumSignMessage,
