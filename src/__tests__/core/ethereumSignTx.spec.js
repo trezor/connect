@@ -10,7 +10,7 @@ import type {
 } from 'flowtype/tests';
 import type {
     TestEthereumSignTxPayload,
-    ExpectedEthereumSignTxResponse
+    ExpectedEthereumSignTxResponse,
 } from 'flowtype/tests/ethereum-sign-tx';
 
 const knownErc20Token = (): SubtestEthereumSignTx => {
