@@ -1,6 +1,7 @@
 /* @flow */
 'use strict';
 
+import { getCoinName } from '../data/CoinInfo';
 import type { CoinInfo } from 'flowtype';
 
 export const HD_HARDENED: number = 0x80000000;
@@ -104,16 +105,14 @@ export const getAccountLabel = (path: Array<number>, coinInfo: CoinInfo): string
     return `${ prefix } ${ accountType } <span>account #${realAccountId}</span>`;
 };
 
-export const getPublicKeyLabel = (path: Array<number>, coin: ?CoinInfo | ?string): string => {
+export const getPublicKeyLabel = (path: Array<number>, coinInfo: ?CoinInfo): string => {
     let hasSegwit: boolean = false;
     let coinLabel: string = 'Unknown coin';
-    if (coin) {
-        if (typeof coin !== 'string') {
-            coinLabel = coin.label;
-            hasSegwit = coin.segwit;
-        } else {
-            coinLabel = coin;
-        }
+    if (coinInfo) {
+        coinLabel = coinInfo.label;
+        hasSegwit = coinInfo.segwit;
+    } else {
+        coinLabel = getCoinName(path);
     }
 
     const p1: number = fromHardened(path[0]);

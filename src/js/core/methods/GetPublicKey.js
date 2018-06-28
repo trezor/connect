@@ -8,7 +8,7 @@ import type { MessageResponse } from '../../device/DeviceCommands';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../CoreMessage';
 
-import { getCoinInfoByCurrency, getCoinInfoFromPath, getCoinName } from '../../data/CoinInfo';
+import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../data/CoinInfo';
 import { getPublicKeyLabel, isSegwitPath } from '../../utils/pathUtils';
 import type { CoinInfo, UiPromiseResponse, CoreMessage } from 'flowtype';
 import type { Success, HDNodeResponse } from 'flowtype/trezor';
@@ -71,8 +71,7 @@ export default class GetPublicKey extends AbstractMethod {
         // wait for popup window
         await this.getPopupPromise().promise;
 
-        const coinName: string = getCoinName(this.params.path);
-        const label = getPublicKeyLabel(this.params.path, this.params.coinInfo || coinName);
+        const label = getPublicKeyLabel(this.params.path, this.params.coinInfo);
 
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
