@@ -105,6 +105,8 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         IFRAME.CALL,
         POPUP.CLOSED,
         UI.CHANGE_SETTINGS,
+        UI.CUSTOM_MESSAGE_RESPONSE,
+        UI.LOGIN_CHALLENGE_RESPONSE,
         TRANSPORT.RECONNECT
     ];
 
