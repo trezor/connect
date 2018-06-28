@@ -248,7 +248,7 @@ export const signTxMultisig = (): void => {
         missingPubkey,
     };
 
-    describe('SignTx', () => {
+    describe('SignTxMultisig', () => {
         let core: Core;
 
         beforeEach(async (done) => {
