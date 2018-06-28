@@ -65,7 +65,7 @@ declare module 'flowtype/tests' {
         | 'twoChanges'
         | 'p2sh'
         | 'changeOnMainChainAllowed';
-    declare export type SignTxSegwitAvailableSubtests = 'sendP2sh' | 'sendP2shChange' /* | 'sendMultisig1' */;
+    declare export type SignTxSegwitAvailableSubtests = 'sendP2sh' | 'sendP2shChange' | 'sendMultisig1';
     declare export type SignTxBgoldAvailableSubtests = 'change' | 'noChange' | 'p2sh' | 'p2shWitnessChange';
     declare export type SignTxBcashAvailableSubtests = 'change' | 'noChange' | 'oldAddr';
     declare export type VerifyMessageAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet' | 'verifyBcash' | 'verifyBitcoind';
