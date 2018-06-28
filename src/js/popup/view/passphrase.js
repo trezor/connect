@@ -10,7 +10,6 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
     showView('passphrase');
 
     const view: HTMLElement = container.getElementsByClassName('passphrase')[0];
-    //const header: HTMLElement = container.getElementsByTagName('h3')[0];
     const deviceNameSpan: HTMLElement = container.getElementsByClassName('device-name')[0];
     const input1: HTMLInputElement = (container.getElementsByClassName('pass')[0]: any);
     const input2: HTMLInputElement = (container.getElementsByClassName('pass-check')[0]: any);
@@ -19,13 +18,9 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
 
     let inputType: string = 'password';
 
-    //header.innerHTML = header.innerHTML.replace('#TREZOR', payload.device.label);
-    deviceNameSpan.innerText = deviceNameSpan.innerText.replace('#TREZOR', payload.device.label);
+    deviceNameSpan.innerText = payload.device.label;
 
     /* Functions */
-    const handleInputCopyOrPaste = (e: Event) => {
-        e.preventDefault();
-    };
     const toggleInputFontStyle = (input: HTMLInputElement) => {
         if (inputType === 'text') {
             input.classList.add('text');
@@ -67,13 +62,6 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
         }
     };
     /* Functions: END */
-
-    input1.addEventListener('copy', handleInputCopyOrPaste);
-    input2.addEventListener('copy', handleInputCopyOrPaste);
-
-    input1.addEventListener('paste', handleInputCopyOrPaste);
-    input2.addEventListener('paste', handleInputCopyOrPaste);
-
     input1.addEventListener('input', validation, false);
     input2.addEventListener('input', validation, false);
 
