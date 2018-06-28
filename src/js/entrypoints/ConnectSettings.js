@@ -14,6 +14,7 @@ export type ConnectSettings = {
     popupSrc: string;
     webusbSrc: string;
     +coinsSrc: string;
+    +ethereumNetworksSrc: string;
     +firmwareReleasesSrc: string;
     +transportConfigSrc: string;
     +latestBridgeSrc: string;
@@ -42,6 +43,7 @@ const initialSettings: ConnectSettings = {
     popupSrc: `${ DEFAULT_DOMAIN }popup.html`,
     webusbSrc: `${ DEFAULT_DOMAIN }webusb.html`,
     coinsSrc: 'data/coins.json', // constant
+    ethereumNetworksSrc: 'data/ethereumNetworks.json', // constant
     firmwareReleasesSrc: 'data/releases-1.json', // constant
     transportConfigSrc: 'data/messages.json', // constant
     latestBridgeSrc: 'data/latest.txt', // constant

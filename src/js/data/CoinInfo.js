@@ -9,6 +9,15 @@ import type {
 } from 'bitcoinjs-lib-zcash';
 import type { CoinInfo } from 'flowtype';
 
+type EthereumNetworkInfo = {
+    chainId: number;
+    slip44: number;
+    shortcut: string;
+    name: string;
+    rskip60: boolean;
+    url: string;
+}
+
 const coins: Array<CoinInfo> = [];
 
 export const getCoins = (): $ReadOnlyArray<CoinInfo> => {
@@ -101,6 +110,13 @@ export const getCoinInfoFromPath = (path: Array<number>): ?CoinInfo => {
 };
 
 export const getCoinName = (path: Array<number>): string => {
+    const slip44: number = fromHardened(path[1]);
+    for (const network of ethereumNetworks) {
+        if (network.slip44 === slip44) {
+            return network.name;
+        }
+    };
+
     for (const name of Object.keys(BIP_44)) {
         const number = parseInt(BIP_44[name]);
         if (number === path[1]) {
@@ -177,3 +193,20 @@ export const parseCoinsJson = (json: JSON): void => {
         });
     });
 };
+
+const ethereumNetworks: Array<EthereumNetworkInfo> = [];
+
+export const parseEthereumNetworksJson = (json: JSON): void => {
+    const networksObject: Object = json;
+    Object.keys(networksObject).forEach(key => {
+        const network = networksObject[key];
+        ethereumNetworks.push({
+            chainId: network.chain_id,
+            slip44: network.slip44,
+            shortcut: network.shortcut,
+            name: network.name,
+            rskip60: network.rskip60,
+            url: network.url,
+        });
+    });
+}

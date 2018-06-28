@@ -3,7 +3,7 @@
 
 import { httpRequest } from '../utils/networkUtils';
 import { DEFAULT_PRIORITY } from '../entrypoints/ConnectSettings';
-import { parseCoinsJson } from './CoinInfo';
+import { parseCoinsJson, parseEthereumNetworksJson } from './CoinInfo';
 import { Promise } from 'es6-promise';
 import { getOrigin } from '../utils/networkUtils';
 import parseUri from 'parse-uri';
@@ -45,11 +45,13 @@ export default class DataManager {
         const ts: number = new Date().getTime();
         const configUrl: string = `${settings.configSrc}?r=${ ts }`;
         const coinsUrl: string = `${settings.coinsSrc}?r=${ ts }`;
+        const ethereumNetworksUrl: string = `${settings.ethereumNetworksSrc}?r=${ ts }`;
         const releasesUrl: string = `${settings.firmwareReleasesSrc}?r=${ ts }`;
 
         try {
             const config: JSON = await httpRequest(configUrl, 'json');
             const coins: JSON = await httpRequest(coinsUrl, 'json');
+            const ethereumNetworks: JSON = await httpRequest(ethereumNetworksUrl, 'json');
             const releases: JSON = await httpRequest(releasesUrl, 'json');
 
             this.config = parseConfig(config);
@@ -65,6 +67,7 @@ export default class DataManager {
             this.settings.priority = DataManager.getPriority(whitelist);
 
             parseCoinsJson(coins);
+            parseEthereumNetworksJson(ethereumNetworks);
         } catch (error) {
             // throw new Error('Cannot load config', error);
             throw error;
