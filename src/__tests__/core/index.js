@@ -9,6 +9,7 @@ import { signTx } from './signTx.spec.js';
 import { signTxSegwit } from './signTxSegwit.spec.js';
 import { signTxBgold } from './signTxBgold.spec.js';
 import { signTxBcash } from './signTxBcash.spec.js';
+import { signTxMultisig } from './signTxMultisig.spec.js';
 import { verifyMessage } from './verifyMessage.spec.js';
 import { verifyMessageSegwit } from './verifyMessageSegwit.spec.js';
 import { verifyMessageSegwitNative } from './verifyMessageSegwitNative.spec.js';
@@ -33,6 +34,7 @@ export default {
     signTxSegwit,
     signTxBgold,
     signTxBcash,
+    signTxMultisig,
     verifyMessage,
     verifyMessageSegwit,
     verifyMessageSegwitNative,
