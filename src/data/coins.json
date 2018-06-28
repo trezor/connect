@@ -4,10 +4,15 @@
         "address_type": 0,
         "address_type_p2sh": 5,
         "bech32_prefix": null,
-        "bitcore": [
-            "https://bch-bitcore2.trezor.io"
+        "bip115": false,
+        "bitcore": [],
+        "blockbook": [
+            "https://bch1.trezor.io",
+            "https://bch2.trezor.io",
+            "https://bch3.trezor.io",
+            "https://bch4.trezor.io",
+            "https://bch5.trezor.io"
         ],
-        "blockbook": [],
         "blocktime_seconds": 600,
         "cashaddr_prefix": "bitcoincash",
         "coin_label": "Bitcoin Cash",
@@ -37,8 +42,8 @@
         "support": {
             "connect": true,
             "electrum": "https://electroncash.org",
-            "trezor1": "1.5.2",
-            "trezor2": "2.0.5",
+            "trezor1": "1.6.2",
+            "trezor2": "2.0.7",
             "webwallet": true
         },
         "version_group_id": null,
@@ -53,6 +58,7 @@
         "address_type": 111,
         "address_type_p2sh": 196,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [],
         "blockbook": [],
         "blocktime_seconds": 600,
@@ -81,8 +87,8 @@
         "support": {
             "connect": null,
             "electrum": null,
-            "trezor1": "1.5.2",
-            "trezor2": "2.0.5",
+            "trezor1": "1.6.2",
+            "trezor2": "2.0.7",
             "webwallet": null
         },
         "version_group_id": null,
@@ -97,10 +103,15 @@
         "address_type": 38,
         "address_type_p2sh": 23,
         "bech32_prefix": "btg",
-        "bitcore": [
-            "https://btg-bitcore2.trezor.io"
+        "bip115": false,
+        "bitcore": [],
+        "blockbook": [
+            "https://btg1.trezor.io",
+            "https://btg2.trezor.io",
+            "https://btg3.trezor.io",
+            "https://btg4.trezor.io",
+            "https://btg5.trezor.io"
         ],
-        "blockbook": [],
         "blocktime_seconds": 600,
         "cashaddr_prefix": null,
         "coin_label": "Bitcoin Gold",
@@ -129,9 +140,9 @@
         "slip44": 156,
         "support": {
             "connect": true,
-            "electrum": null,
-            "trezor1": "1.6.0",
-            "trezor2": "2.0.5",
+            "electrum": "https://github.com/BTCGPU/electrum",
+            "trezor1": "1.6.2",
+            "trezor2": "2.0.7",
             "webwallet": true
         },
         "version_group_id": null,
@@ -146,15 +157,15 @@
         "address_type": 0,
         "address_type_p2sh": 5,
         "bech32_prefix": "bc",
-        "bitcore": [
-            "https://btc-bitcore1.trezor.io",
-            "https://btc-bitcore2.trezor.io",
-            "https://btc-bitcore3.trezor.io",
-            "https://btc-bitcore4.trezor.io",
-            "https://btc-bitcore5.trezor.io",
-            "https://btc-bitcore6.trezor.io"
+        "bip115": false,
+        "bitcore": [],
+        "blockbook": [
+            "https://btc1.trezor.io",
+            "https://btc2.trezor.io",
+            "https://btc3.trezor.io",
+            "https://btc4.trezor.io",
+            "https://btc5.trezor.io"
         ],
-        "blockbook": [],
         "blocktime_seconds": 600,
         "cashaddr_prefix": null,
         "coin_label": "Bitcoin",
@@ -183,7 +194,7 @@
         "slip44": 0,
         "support": {
             "connect": true,
-            "electrum": "https://electrum.org/",
+            "electrum": "https://electrum.org",
             "trezor1": "1.5.2",
             "trezor2": "2.0.5",
             "webwallet": true
@@ -200,6 +211,7 @@
         "address_type": 0,
         "address_type_p2sh": 5,
         "bech32_prefix": "bc",
+        "bip115": false,
         "bitcore": [
             "https://insight.bitcore.cc"
         ],
@@ -226,7 +238,7 @@
         "minfee_kb": 1000,
         "segwit": true,
         "signed_message_header": "Bitcore Signed Message:\n",
-        "slip44": 0,
+        "slip44": 160,
         "support": {
             "connect": null,
             "electrum": null,
@@ -246,6 +258,7 @@
         "address_type": 4901,
         "address_type_p2sh": 5039,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [
             "https://explorer.btcprivate.org"
         ],
@@ -275,10 +288,10 @@
         "slip44": 183,
         "support": {
             "connect": null,
-            "electrum": null,
-            "trezor1": null,
-            "trezor2": null,
-            "webwallet": null
+            "electrum": "https://github.com/BTCPrivate/electrum-btcp",
+            "trezor1": "1.6.2",
+            "trezor2": "2.0.7",
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "https://btcprivate.org",
@@ -292,6 +305,7 @@
         "address_type": 0,
         "address_type_p2sh": 28,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [
             "https://crw-bitcore.crown.tech",
             "https://crw2-bitcore.crown.tech"
@@ -339,11 +353,15 @@
         "address_type": 76,
         "address_type_p2sh": 16,
         "bech32_prefix": null,
-        "bitcore": [
-            "https://dash-bitcore1.trezor.io",
-            "https://dash-bitcore3.trezor.io"
+        "bip115": false,
+        "bitcore": [],
+        "blockbook": [
+            "https://dash1.trezor.io",
+            "https://dash2.trezor.io",
+            "https://dash3.trezor.io",
+            "https://dash4.trezor.io",
+            "https://dash5.trezor.io"
         ],
-        "blockbook": [],
         "blocktime_seconds": 150,
         "cashaddr_prefix": null,
         "coin_label": "Dash",
@@ -386,6 +404,7 @@
         "address_type": 140,
         "address_type_p2sh": 19,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [],
         "blockbook": [],
         "blocktime_seconds": 150,
@@ -414,7 +433,7 @@
         "support": {
             "connect": null,
             "electrum": null,
-            "trezor1": null,
+            "trezor1": "1.6.2",
             "trezor2": null,
             "webwallet": null
         },
@@ -430,6 +449,7 @@
         "address_type": 1855,
         "address_type_p2sh": 1818,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [
             "https://mainnet.decred.org"
         ],
@@ -460,9 +480,9 @@
         "support": {
             "connect": null,
             "electrum": null,
-            "trezor1": null,
+            "trezor1": "1.6.2",
             "trezor2": null,
-            "webwallet": null
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "https://www.decred.org",
@@ -476,6 +496,7 @@
         "address_type": 3873,
         "address_type_p2sh": 3836,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [
             "https://testnet.decred.org"
         ],
@@ -506,9 +527,9 @@
         "support": {
             "connect": null,
             "electrum": null,
-            "trezor1": "1.6.1",
+            "trezor1": "1.6.2",
             "trezor2": null,
-            "webwallet": null
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "https://www.decred.org",
@@ -522,6 +543,7 @@
         "address_type": 30,
         "address_type_p2sh": 90,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [],
         "blockbook": [],
         "blocktime_seconds": 30,
@@ -566,6 +588,7 @@
         "address_type": 30,
         "address_type_p2sh": 63,
         "bech32_prefix": "dgb",
+        "bip115": false,
         "bitcore": [
             "https://explorer.digibyteprojects.com"
         ],
@@ -601,7 +624,7 @@
             "electrum": null,
             "trezor1": "1.6.0",
             "trezor2": "2.0.5",
-            "webwallet": null
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "https://digibyte.io",
@@ -615,8 +638,15 @@
         "address_type": 30,
         "address_type_p2sh": 22,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [],
-        "blockbook": [],
+        "blockbook": [
+            "https://doge1.trezor.io",
+            "https://doge2.trezor.io",
+            "https://doge3.trezor.io",
+            "https://doge4.trezor.io",
+            "https://doge5.trezor.io"
+        ],
         "blocktime_seconds": 60,
         "cashaddr_prefix": null,
         "coin_label": "Dogecoin",
@@ -625,7 +655,7 @@
         "curve_name": "secp256k1",
         "decred": false,
         "default_fee_b": {
-            "Normal": 10
+            "Normal": 100000
         },
         "dust_limit": 10000000,
         "force_bip143": false,
@@ -645,7 +675,7 @@
             "electrum": null,
             "trezor1": "1.5.2",
             "trezor2": "2.0.5",
-            "webwallet": null
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "http://dogecoin.com",
@@ -659,6 +689,7 @@
         "address_type": 14,
         "address_type_p2sh": 5,
         "bech32_prefix": "fc",
+        "bip115": false,
         "bitcore": [
             "https://bitcore.feathercoin.com"
         ],
@@ -705,6 +736,7 @@
         "address_type": 68,
         "address_type_p2sh": 130,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [
             "https://explorer.flashcoin.io"
         ],
@@ -751,6 +783,7 @@
         "address_type": 36,
         "address_type_p2sh": 16,
         "bech32_prefix": "fc",
+        "bip115": false,
         "bitcore": [
             "http://explorer.fujicoin.org"
         ],
@@ -786,7 +819,7 @@
             "electrum": null,
             "trezor1": "1.6.1",
             "trezor2": "2.0.5",
-            "webwallet": null
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "http://fujicoin.org",
@@ -800,6 +833,7 @@
         "address_type": 36,
         "address_type_p2sh": 5,
         "bech32_prefix": "grs",
+        "bip115": false,
         "bitcore": [
             "https://groestlsight.groestlcoin.org"
         ],
@@ -829,23 +863,71 @@
         "slip44": 17,
         "support": {
             "connect": null,
-            "electrum": null,
-            "trezor1": null,
+            "electrum": "https://www.groestlcoin.org/groestlcoin-electrum-wallet/",
+            "trezor1": "1.6.2",
             "trezor2": null,
-            "webwallet": null
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "https://www.groestlcoin.org",
         "xprv_magic": 76066276,
         "xpub_magic": 76067358,
-        "xpub_magic_segwit_native": null,
+        "xpub_magic_segwit_native": 78792518,
         "xpub_magic_segwit_p2sh": 77429938
+    },
+    "Groestlcoin Testnet": {
+        "address_prefix": "groestlcoin:",
+        "address_type": 111,
+        "address_type_p2sh": 196,
+        "bech32_prefix": "tgrs",
+        "bip115": false,
+        "bitcore": [
+            "https://groestlsight-test.groestlcoin.org"
+        ],
+        "blockbook": [],
+        "blocktime_seconds": 60,
+        "cashaddr_prefix": null,
+        "coin_label": "Groestlcoin Testnet",
+        "coin_name": "Groestlcoin Testnet",
+        "coin_shortcut": "tGRS",
+        "curve_name": "secp256k1_groestl",
+        "decred": false,
+        "default_fee_b": {
+            "Normal": 10
+        },
+        "dust_limit": 546,
+        "force_bip143": false,
+        "fork_id": null,
+        "github": "https://github.com/Groestlcoin/groestlcoin",
+        "hash_genesis_block": "000000ffbb50fc9898cdd36ec163e6ba23230164c0052a28876255b7dcf2cd36",
+        "maintainer": "Yura Pakhuchiy <pakhuchiy@gmail.com>",
+        "max_address_length": 34,
+        "maxfee_kb": 100000,
+        "min_address_length": 27,
+        "minfee_kb": 1000,
+        "segwit": true,
+        "signed_message_header": "GroestlCoin Signed Message:\n",
+        "slip44": 1,
+        "support": {
+            "connect": null,
+            "electrum": null,
+            "trezor1": "1.6.2",
+            "trezor2": null,
+            "webwallet": true
+        },
+        "version_group_id": null,
+        "website": "https://www.groestlcoin.org",
+        "xprv_magic": 70615956,
+        "xpub_magic": 70617039,
+        "xpub_magic_segwit_native": 73342198,
+        "xpub_magic_segwit_p2sh": 71979618
     },
     "Koto": {
         "address_prefix": "koto:",
-        "address_type": 7352,
-        "address_type_p2sh": 7357,
+        "address_type": 6198,
+        "address_type_p2sh": 6203,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [
             "https://insight.kotocoin.info"
         ],
@@ -863,9 +945,9 @@
         "dust_limit": 546,
         "force_bip143": false,
         "fork_id": null,
-        "github": "https://github.com/koto-dev/koto",
+        "github": "https://github.com/KotoDevelopers/koto",
         "hash_genesis_block": "6d424c350729ae633275d51dc3496e16cd1b1d195c164da00f39c499a2e9959e",
-        "maintainer": "WO <wo@kotocoin.info>",
+        "maintainer": "WO <wo@ko-to.org>",
         "max_address_length": 95,
         "maxfee_kb": 1000000,
         "min_address_length": 35,
@@ -875,13 +957,13 @@
         "slip44": 510,
         "support": {
             "connect": null,
-            "electrum": null,
+            "electrum": "https://electrum.kotocoin.info",
             "trezor1": null,
             "trezor2": null,
             "webwallet": null
         },
-        "version_group_id": null,
-        "website": "https://koto.cash",
+        "version_group_id": 48748912,
+        "website": "https://ko-to.org",
         "xprv_magic": 76066276,
         "xpub_magic": 76067358,
         "xpub_magic_segwit_native": null,
@@ -892,10 +974,15 @@
         "address_type": 48,
         "address_type_p2sh": 50,
         "bech32_prefix": "ltc",
-        "bitcore": [
-            "https://ltc-bitcore3.trezor.io"
+        "bip115": false,
+        "bitcore": [],
+        "blockbook": [
+            "https://ltc1.trezor.io",
+            "https://ltc2.trezor.io",
+            "https://ltc3.trezor.io",
+            "https://ltc4.trezor.io",
+            "https://ltc5.trezor.io"
         ],
-        "blockbook": [],
         "blocktime_seconds": 150,
         "cashaddr_prefix": null,
         "coin_label": "Litecoin",
@@ -938,6 +1025,7 @@
         "address_type": 111,
         "address_type_p2sh": 58,
         "bech32_prefix": "tltc",
+        "bip115": false,
         "bitcore": [
             "https://testnet.litecore.io"
         ],
@@ -968,9 +1056,9 @@
         "support": {
             "connect": null,
             "electrum": null,
-            "trezor1": null,
-            "trezor2": null,
-            "webwallet": null
+            "trezor1": "1.6.2",
+            "trezor2": "2.0.7",
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "https://litecoin.org",
@@ -984,6 +1072,7 @@
         "address_type": 50,
         "address_type_p2sh": 55,
         "bech32_prefix": "mona",
+        "bip115": false,
         "bitcore": [
             "https://mona.chainsight.info"
         ],
@@ -1013,10 +1102,10 @@
         "slip44": 22,
         "support": {
             "connect": null,
-            "electrum": null,
+            "electrum": "https://electrum-mona.org",
             "trezor1": "1.6.0",
             "trezor2": "2.0.5",
-            "webwallet": null
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "https://monacoin.org",
@@ -1030,6 +1119,7 @@
         "address_type": 16,
         "address_type_p2sh": 76,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [],
         "blockbook": [],
         "blocktime_seconds": 40,
@@ -1054,7 +1144,7 @@
         "minfee_kb": 1000,
         "segwit": false,
         "signed_message_header": "MonetaryUnit Signed Message:\n",
-        "slip44": 5,
+        "slip44": 31,
         "support": {
             "connect": null,
             "electrum": null,
@@ -1074,6 +1164,7 @@
         "address_type": 50,
         "address_type_p2sh": 9,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [],
         "blockbook": [],
         "blocktime_seconds": 60,
@@ -1121,6 +1212,7 @@
         "address_type": 52,
         "address_type_p2sh": 5,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [],
         "blockbook": [],
         "blocktime_seconds": 600,
@@ -1148,7 +1240,7 @@
         "slip44": 7,
         "support": {
             "connect": null,
-            "electrum": null,
+            "electrum": "https://github.com/namecoin/electrum-nmc",
             "trezor1": "1.5.2",
             "trezor2": "2.0.5",
             "webwallet": null
@@ -1165,6 +1257,7 @@
         "address_type": 0,
         "address_type_p2sh": 5,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [
             "https://insight.terracoin.io"
         ],
@@ -1191,7 +1284,7 @@
         "minfee_kb": 10000,
         "segwit": false,
         "signed_message_header": "DarkCoin Signed Message:\n",
-        "slip44": 0,
+        "slip44": 83,
         "support": {
             "connect": null,
             "electrum": null,
@@ -1211,10 +1304,8 @@
         "address_type": 111,
         "address_type_p2sh": 196,
         "bech32_prefix": "tb",
-        "bitcore": [
-            "https://testnet-bitcore1.trezor.io",
-            "https://testnet-bitcore2.trezor.io"
-        ],
+        "bip115": false,
+        "bitcore": [],
         "blockbook": [],
         "blocktime_seconds": 600,
         "cashaddr_prefix": null,
@@ -1240,11 +1331,11 @@
         "signed_message_header": "Bitcoin Signed Message:\n",
         "slip44": 1,
         "support": {
-            "connect": null,
+            "connect": true,
             "electrum": null,
             "trezor1": "1.5.2",
             "trezor2": "2.0.5",
-            "webwallet": null
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "https://bitcoin.org",
@@ -1258,8 +1349,15 @@
         "address_type": 71,
         "address_type_p2sh": 5,
         "bech32_prefix": "vtc",
+        "bip115": false,
         "bitcore": [],
-        "blockbook": [],
+        "blockbook": [
+            "https://vtc1.trezor.io",
+            "https://vtc2.trezor.io",
+            "https://vtc3.trezor.io",
+            "https://vtc4.trezor.io",
+            "https://vtc5.trezor.io"
+        ],
         "blocktime_seconds": 150,
         "cashaddr_prefix": null,
         "coin_label": "Vertcoin",
@@ -1288,7 +1386,7 @@
             "electrum": null,
             "trezor1": "1.6.1",
             "trezor2": "2.0.5",
-            "webwallet": null
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "https://vertcoin.org",
@@ -1302,6 +1400,7 @@
         "address_type": 71,
         "address_type_p2sh": 33,
         "bech32_prefix": "via",
+        "bip115": false,
         "bitcore": [
             "https://explorer.viacoin.org"
         ],
@@ -1334,10 +1433,10 @@
         "slip44": 14,
         "support": {
             "connect": null,
-            "electrum": null,
-            "trezor1": null,
-            "trezor2": null,
-            "webwallet": null
+            "electrum": "https://vialectrum.org",
+            "trezor1": "1.6.2",
+            "trezor2": "2.0.7",
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "https://viacoin.org",
@@ -1351,10 +1450,15 @@
         "address_type": 7352,
         "address_type_p2sh": 7357,
         "bech32_prefix": null,
-        "bitcore": [
-            "https://zec-bitcore1.trezor.io"
+        "bip115": false,
+        "bitcore": [],
+        "blockbook": [
+            "https://zec1.trezor.io",
+            "https://zec2.trezor.io",
+            "https://zec3.trezor.io",
+            "https://zec4.trezor.io",
+            "https://zec5.trezor.io"
         ],
-        "blockbook": [],
         "blocktime_seconds": 150,
         "cashaddr_prefix": null,
         "coin_label": "Zcash",
@@ -1381,8 +1485,8 @@
         "support": {
             "connect": true,
             "electrum": null,
-            "trezor1": "1.5.2",
-            "trezor2": "2.0.5",
+            "trezor1": "1.6.2",
+            "trezor2": "2.0.7",
             "webwallet": true
         },
         "version_group_id": 63210096,
@@ -1397,6 +1501,7 @@
         "address_type": 7461,
         "address_type_p2sh": 7354,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [
             "https://explorer.testnet.z.cash"
         ],
@@ -1427,9 +1532,9 @@
         "support": {
             "connect": null,
             "electrum": null,
-            "trezor1": "1.5.2",
-            "trezor2": "2.0.5",
-            "webwallet": null
+            "trezor1": "1.6.2",
+            "trezor2": "2.0.7",
+            "webwallet": true
         },
         "version_group_id": 63210096,
         "website": "https://z.cash",
@@ -1443,6 +1548,7 @@
         "address_type": 82,
         "address_type_p2sh": 7,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [
             "https://insight.zcoin.io"
         ],
@@ -1475,10 +1581,10 @@
         "slip44": 136,
         "support": {
             "connect": null,
-            "electrum": null,
-            "trezor1": null,
-            "trezor2": null,
-            "webwallet": null
+            "electrum": "https://github.com/zcoinofficial/electrum-xzc",
+            "trezor1": "1.6.2",
+            "trezor2": "2.0.7",
+            "webwallet": true
         },
         "version_group_id": null,
         "website": "https://zcoin.io",
@@ -1492,6 +1598,7 @@
         "address_type": 65,
         "address_type_p2sh": 178,
         "bech32_prefix": null,
+        "bip115": false,
         "bitcore": [],
         "blockbook": [],
         "blocktime_seconds": 600,
@@ -1523,14 +1630,61 @@
         "support": {
             "connect": null,
             "electrum": null,
-            "trezor1": null,
-            "trezor2": null,
+            "trezor1": "1.6.2",
+            "trezor2": "2.0.7",
             "webwallet": null
         },
         "version_group_id": null,
         "website": "https://zcoin.io",
         "xprv_magic": 70615956,
         "xpub_magic": 70617039,
+        "xpub_magic_segwit_native": null,
+        "xpub_magic_segwit_p2sh": null
+    },
+    "Zencash": {
+        "address_prefix": "zencash:",
+        "address_type": 8329,
+        "address_type_p2sh": 8342,
+        "bech32_prefix": null,
+        "bip115": true,
+        "bitcore": [
+            "https://explorer.zen-solutions.io"
+        ],
+        "blockbook": [],
+        "blocktime_seconds": 150,
+        "cashaddr_prefix": null,
+        "coin_label": "Zencash",
+        "coin_name": "Zencash",
+        "coin_shortcut": "ZEN",
+        "curve_name": "secp256k1",
+        "decred": false,
+        "default_fee_b": {
+            "Normal": 10
+        },
+        "dust_limit": 546,
+        "force_bip143": false,
+        "fork_id": 0,
+        "github": "https://github.com/ZencashOfficial/zen",
+        "hash_genesis_block": "0007104ccda289427919efc39dc9e4d499804b7bebc22df55f8b834301260602",
+        "maintainer": "Zencash <support@zencash.com>",
+        "max_address_length": 95,
+        "maxfee_kb": 2000000,
+        "min_address_length": 35,
+        "minfee_kb": 1000,
+        "segwit": false,
+        "signed_message_header": "Zencash Signed Message:\n",
+        "slip44": 121,
+        "support": {
+            "connect": null,
+            "electrum": null,
+            "trezor1": null,
+            "trezor2": "2.0.8",
+            "webwallet": null
+        },
+        "version_group_id": null,
+        "website": "https://zencash.com",
+        "xprv_magic": 76066276,
+        "xpub_magic": 76067358,
         "xpub_magic_segwit_native": null,
         "xpub_magic_segwit_p2sh": null
     }
