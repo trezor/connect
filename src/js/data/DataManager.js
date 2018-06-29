@@ -81,8 +81,6 @@ export default class DataManager {
             parseFirmware( this.assets['firmware-t1'] );
             parseFirmware( this.assets['firmware-t2'] );
         } catch (error) {
-            console.warn(error);
-            // throw new Error('Cannot load config', error);
             throw error;
         }
     }
@@ -109,10 +107,6 @@ export default class DataManager {
             return whitelist.priority;
         }
         return DEFAULT_PRIORITY;
-    }
-
-    static getRequiredFirmware(): string {
-        return '1.5.1';
     }
 
     static getSettings(key: ?string): any {
