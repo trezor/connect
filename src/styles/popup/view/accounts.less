@@ -1,6 +1,15 @@
 .select-account {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+
+    .wrapper {
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
     h3 {
         margin-bottom: 16px;
@@ -75,14 +84,33 @@
     }
 
     .select-account-list {
-        flex: 1;
         margin: 0 30px 30px;
         overflow-y: scroll;
         display: none;
 
+        // Must be specifically set for Firefox
+        // otherwise table will overflow from the view
+        max-height: 315px;
+
+        border-top: 1px solid @color_divider;
+        border-bottom: 1px solid @color_divider;
+
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+        border-bottom-left-radius: 2px;
+        border-bottom-right-radius: 2px;
+
+        button.list:first-child {
+            border-top: transparent;
+        }
+
+        button.list:last-child {
+            border-bottom: transparent;
+        }
+
         button {
-            display: flex;
             align-items: center;
+            transition: 0s;
 
             &.disabled {
                 .account-title, .account-status {
@@ -154,6 +182,19 @@
                 color: @color_info_primary;
                 fill: @color_info_primary;
             }
+        }
+    }
+}
+
+@media screen and (max-width: 639px) {
+    .select-account {
+        .select-account-list {
+            overflow: visible;
+            max-height: none;
+        }
+
+        .enable-labeling {
+            margin-bottom: 24px;
         }
     }
 }
