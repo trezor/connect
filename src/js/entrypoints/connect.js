@@ -57,9 +57,10 @@ const initIframe = async (settings: Object): Promise<void> => {
         _iframe.style.height = '0px';
         _iframe.id = 'trezorconnect';
     }
-
-    _settings = parseSettings(settings);
-    _popupManager = initPopupManager();
+    if (!_settings)
+        _settings = parseSettings(settings);
+    if (!_popupManager)
+        _popupManager = initPopupManager();
     _log.enabled = _settings.debug;
 
     const src: string = `${_settings.iframeSrc}?${ Date.now() }`;
@@ -282,10 +283,8 @@ class TrezorConnect extends TrezorBase {
 
             const loginChallengeListener = async (event: Message) => {
                 const data = event.data;
-                console.warn("HEREEE loginChallengeListener", data)
                 if (data && data.type == UI.LOGIN_CHALLENGE_REQUEST) {
                     const response = await callback();
-                    console.warn("HEREEE loginChallengeListener2", response)
                     postMessage({
                         event: UI_EVENT,
                         type: UI.LOGIN_CHALLENGE_RESPONSE,
@@ -304,6 +303,19 @@ class TrezorConnect extends TrezorBase {
     }
 
     static async __call(params: Object): Promise<Object> {
+
+        if (!_iframe) {
+            const dc = { connectSrc: 'https://sisyfos.trezor.io/next/', popup: true, debug: false }
+            _settings = parseSettings(dc);
+            _popupManager = initPopupManager();
+            _popupManager.request(params);
+            try {
+                await this.init(dc);
+            } catch (error) {
+                return { success: false, message: error };
+            }
+        }
+
         if (_iframeHandshakePromise) {
             return { success: false, message: NO_IFRAME.message };
             // return new ResponseMessage();
