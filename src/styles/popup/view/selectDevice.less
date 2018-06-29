@@ -13,6 +13,11 @@
             border-top: 1px solid @color_divider;
             border-bottom: 1px solid @color_divider;
 
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            border-bottom-left-radius: 2px;
+            border-bottom-right-radius: 2px;
+
             button.list:first-child {
                 border-top: transparent;
             }
@@ -22,6 +27,7 @@
             }
 
             button {
+                transition: 0s;
                 padding: 0;
 
                 &.device-explain {
