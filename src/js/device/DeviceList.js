@@ -15,7 +15,6 @@ import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 
 import DataManager from '../data/DataManager';
 import Log, { init as initLog } from '../utils/debug';
 import { resolveAfter } from '../utils/promiseUtils';
-import { httpRequest } from '../utils/networkUtils';
 
 /* $FlowIssue loader notation */
 import SharedConnectionWorker from 'sharedworker-loader?name=js/shared-connection-worker.[hash].js!trezor-link/lib/lowlevel/sharedConnectionWorker';
@@ -137,8 +136,7 @@ export default class DeviceList extends EventEmitter {
 
     async _configTransport(transport: Transport): Promise<void> {
         try {
-            const url: string = `${ DataManager.getSettings('transportConfigSrc') }?${ Date.now() }`;
-            this.defaultMessages = await httpRequest(url, 'json');
+            this.defaultMessages = DataManager.getMessages();
             await transport.configure(JSON.stringify(this.defaultMessages));
         } catch (error) {
             throw ERROR.WRONG_TRANSPORT_CONFIG;

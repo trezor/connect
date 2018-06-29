@@ -4,6 +4,7 @@
 import { httpRequest } from '../utils/networkUtils';
 import { DEFAULT_PRIORITY } from '../entrypoints/ConnectSettings';
 import { parseCoinsJson, parseEthereumNetworksJson } from './CoinInfo';
+import { parseFirmware } from './FirmwareInfo';
 import { Promise } from 'es6-promise';
 import { getOrigin } from '../utils/networkUtils';
 import parseUri from 'parse-uri';
@@ -23,11 +24,19 @@ type Browser = {
     +download: string;
     +update: string;
 }
+type Asset = {
+    name: string;
+    type?: string;
+    url: string;
+}
 type Config = {
     +whitelist: Array<WhiteList>;
     +webusb: Array<WebUSB>;
+    +assets: Array<Asset>;
     +supportedBrowsers: { [key: string]: Browser };
 }
+
+type AssetCollection = { [key: string] : JSON };
 
 // TODO: transform json to flow typed object
 const parseConfig = (json: any): Config => {
@@ -37,25 +46,23 @@ const parseConfig = (json: any): Config => {
 
 export default class DataManager {
     static config: Config;
-    static releases: JSON;
+    static assets: AssetCollection = {};
     static settings: ConnectSettings;
     static cachePassphrase: boolean = false;
 
     static async load(settings: ConnectSettings): Promise<void> {
         const ts: number = new Date().getTime();
         const configUrl: string = `${settings.configSrc}?r=${ ts }`;
-        const coinsUrl: string = `${settings.coinsSrc}?r=${ ts }`;
-        const ethereumNetworksUrl: string = `${settings.ethereumNetworksSrc}?r=${ ts }`;
-        const releasesUrl: string = `${settings.firmwareReleasesSrc}?r=${ ts }`;
 
         try {
             const config: JSON = await httpRequest(configUrl, 'json');
-            const coins: JSON = await httpRequest(coinsUrl, 'json');
-            const ethereumNetworks: JSON = await httpRequest(ethereumNetworksUrl, 'json');
-            const releases: JSON = await httpRequest(releasesUrl, 'json');
-
             this.config = parseConfig(config);
-            this.releases = releases;
+
+            for (const asset of this.config.assets) {
+                const json: JSON = await httpRequest(`${asset.url}?r=${ ts }`, asset.type || 'json');
+                this.assets[ asset.name ] = json;
+            }
+
             this.settings = settings;
 
             // check if origin is trusted
@@ -66,12 +73,22 @@ export default class DataManager {
             }
             this.settings.priority = DataManager.getPriority(whitelist);
 
-            parseCoinsJson(coins);
-            parseEthereumNetworksJson(ethereumNetworks);
+            // parse coins definitions
+            parseCoinsJson( this.assets['coins'] );
+            parseEthereumNetworksJson(this.assets['ethereumNetworks']);
+
+            // parse firmware definitions
+            parseFirmware( this.assets['firmware-t1'] );
+            parseFirmware( this.assets['firmware-t2'] );
         } catch (error) {
+            console.warn(error);
             // throw new Error('Cannot load config', error);
             throw error;
         }
+    }
+
+    static getMessages(): JSON {
+        return this.assets['messages'];
     }
 
     static isWhitelisted(origin: string): ?WhiteList {

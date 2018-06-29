@@ -3,7 +3,7 @@
 
 export type ConnectSettings = {
     // debug: boolean | {[k: string]: boolean};
-    +configSrc: string;
+    +configSrc: string; // constant
     debug: boolean;
     origin: ?string;
     priority: number;
@@ -13,11 +13,6 @@ export type ConnectSettings = {
     popup: boolean;
     popupSrc: string;
     webusbSrc: string;
-    +coinsSrc: string;
-    +ethereumNetworksSrc: string;
-    +firmwareReleasesSrc: string;
-    +transportConfigSrc: string;
-    +latestBridgeSrc: string;
     transportReconnect: boolean;
     webusb: boolean;
     pendingTransportEvent: boolean;
@@ -42,11 +37,6 @@ const initialSettings: ConnectSettings = {
     popup: true,
     popupSrc: `${ DEFAULT_DOMAIN }popup.html`,
     webusbSrc: `${ DEFAULT_DOMAIN }webusb.html`,
-    coinsSrc: 'data/coins.json', // constant
-    ethereumNetworksSrc: 'data/ethereumNetworks.json', // constant
-    firmwareReleasesSrc: 'data/releases-1.json', // constant
-    transportConfigSrc: 'data/messages.json', // constant
-    latestBridgeSrc: 'data/latest.txt', // constant
     transportReconnect: false,
     webusb: true,
     pendingTransportEvent: true,
