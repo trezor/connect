@@ -12,18 +12,22 @@
     }
 
     aside {
-
         .wrapper {
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: space-between;
             align-items: center;
         }
 
+        svg {
+            align-self: auto;
+        }
+
         .info-panel {
+            text-align: right;
             h2 {
                 font-size: 16px;
                 padding-top: 5px;
             }
-
         }
         .labeling {
             display: none;
@@ -63,13 +67,5 @@
     // if custom fee is selected
     .confirm {
         margin-top: 25px;
-    }
-}
-
-@media screen and (max-width: 425px) {
-    aside {
-        .wrapper {
-            flex-direction: column;
-        }
     }
 }
