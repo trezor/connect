@@ -34,7 +34,7 @@
         {
             "name": "bridge",
             "type": "text",
-            "url": "./data/latest.txt"
+            "url": "./data/bridge/latest.txt"
         }
     ],
     "supportedBrowsers": {
