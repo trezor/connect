@@ -52,19 +52,37 @@ const getPermissionTooltipText = (permissionType: string): string => {
 }
 
 const createTooltip = (text: string): HTMLDivElement => {
-    const infoIcon: HTMLDivElement = document.createElement('div');
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.setAttribute('tooltip', text);
+    tooltip.setAttribute('tooltip-position', 'bottom');
+
+    return tooltip;
+};
+
+const createPermissionItem = (permissionText: string, tooltipText: string): HTMLDivElement => {
+    const permissionItem = document.createElement('div');
+    permissionItem.className = 'permission-item';
+
+    // Tooltip
+    const tooltip = createTooltip(tooltipText);
+    permissionItem.appendChild(tooltip);
+    //
+
+    // Permission content (icon & text)
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'content';
+    const infoIcon = document.createElement('span');
     infoIcon.className = 'info-icon';
 
-    const tooltip: HTMLDivElement = document.createElement('div');
-    tooltip.className = 'tooltip';
-    const tooltipText = document.createElement('span')
-    tooltipText.appendChild(
-        document.createTextNode(text)
-    );
-    tooltip.appendChild(tooltipText);
+    const permissionTextSpan = document.createElement('span');
+    permissionTextSpan.innerText = permissionText;
+    contentDiv.appendChild(infoIcon);
+    contentDiv.appendChild(permissionTextSpan);
+    permissionItem.appendChild(contentDiv);
+    //
 
-    infoIcon.appendChild(tooltip);
-    return infoIcon;
+    return permissionItem;
 };
 
 export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'payload'>): void => {
@@ -77,22 +95,14 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
     const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName('remember-permissions')[0]: any);
 
-    hostName.innerHTML = DataManager.getSettings('origin');
+    //hostName.innerHTML = DataManager.getSettings('origin');
     if (payload && Array.isArray(payload.permissions)) {
         payload.permissions.forEach(p => {
-            const listItem: HTMLLIElement = document.createElement('li');
-
-            const tooltip = createTooltip(
-                getPermissionTooltipText(p)
-            );
-            listItem.appendChild(tooltip);
-
             const permissionText = getPermissionText(p, payload.device.label);
-            listItem.appendChild(
-                document.createTextNode(permissionText)
-            );
+            const tooltipText = getPermissionTooltipText(p);
 
-            permissionsList.appendChild(listItem);
+            const permissionItem = createPermissionItem(permissionText, tooltipText);
+            permissionsList.appendChild(permissionItem);
         });
     }
 
@@ -113,6 +123,6 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
     };
 
     rememberCheckbox.onchange = (e) => {
-        confirmButton.innerText = e.target.checked ? 'Remember permissions' : 'Allow once for this session';
+        confirmButton.innerText = e.target.checked ? 'Remember' : 'Allow once';
     };
 };

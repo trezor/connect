@@ -1,4 +1,5 @@
 .permissions {
+  padding: 24px 24px 5px 24px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -19,11 +20,55 @@
 
   .list-wrapper {
     flex: 1;
+  }
 
+  .permissions-list {
+    list-style: none;
+
+    padding: 10px 0;
+    margin: 24px 0 20px;
+
+    border-radius: 4px;
+    background-color: @color_info_secondary;
+
+    text-align: left;
+  }
+
+  .permission-item {
     display: flex;
-    flex-direction: column;
+    margin: 15px auto;
+    padding: 0 10px;
+    justify-content: flex-start;
+    align-items: center;
 
-    margin-bottom: 24px;
+    .content {
+      right: 28px;
+      display: flex;
+      align-items: center;
+
+      color: @color_info_primary;
+      font-weight: 300;
+      font-size: 12px;
+    }
+  }
+
+  .info-icon {
+    //top: 2px;
+    width: 28px;
+    height: 28px;
+
+    &::before {
+      .icomoon-info;
+      width: 28px;
+      height: 28px;
+
+      color: @color_info_primary;
+      font-size: 28px;
+    }
+
+    &:hover .tooltip {
+      //visibility: visible;
+    }
   }
 
   input:checked + .indicator:after {
@@ -31,102 +76,31 @@
     border-color: @color_info_primary;
   }
 
-  .permissions-list {
-    overflow-y: scroll;
+  .buttons {
+    display: block;
 
-    list-style: none;
-    padding: 33px 33px 20px;
-    margin: 24px 0 20px;
+    .confirm {
+      margin-bottom: 10px;
+      margin-right: 0px;
 
-    border-radius: 4px;
-    background-color: @color_info_secondary;
-
-    text-align: left;
-
-    // Workaround for Firefox's bug ignoring padding-bottom
-    // see: https://bugzilla.mozilla.org/show_bug.cgi?id=748518
-    &:after {
-      content: '';
-      height: 33px;
-      display: block;
-    }
-
-    li {
-      display: flex;
-      align-items: center;
-
-      line-height: 1;
-
-      font-weight: 300;
-      font-size: 12px;
-      color: @color_info_primary;
-
-      &:not(:first-child) {
-        margin-top: 26px;
-      }
-    }
-
-    .info-icon {
-      width: 28px;
-      height: 28px;
-
-      &::before {
-        .icomoon-info;
-        width: 28px;
-        height: 28px;
-
-        color: @color_info_primary;
-        font-size: 28px;
-      }
-
-      &:hover .tooltip {
-        visibility: visible;
-      }
-    }
-
-    .tooltip {
-      visibility: hidden;
-      min-width: 200px;
-
-      position: relative;
-      top: -7px;
-      left: -1px;
-      border-radius: 4px;
-
-      span {
-        position: absolute;
-        text-align: center;
-        top: 10px;
-        padding: 10px 10px;
-
-        color: white;
-        background-color: fade(@color_tooltip, 80%);
-
-        &::before {
-          content: '';
-          bottom: 100%;
-          border: solid transparent;
-          height: 0;
-          width: 0;
-          position: absolute;
-          pointer-events: none;
-          border-color: transparent;
-          border-bottom-color: fade(@color_tooltip, 80%);
-          border-width: 6px;
-          margin-left: -2px;
-        }
-
-        &:hover .tooltip {
-          visibility: visible;
-        }
-      }
+      border: 1px solid @color_info_primary;
+      background-color: @color_info_primary;
     }
   }
+}
 
-  .buttons {
-    .confirm {
-      background-color: @color_info_primary;
-      margin-bottom: 10px;
+@media screen and (max-width: 639px) {
+  .permissions {
+    .buttons {
+      min-height: 40px;
+      margin: 6px 0 5px 0;
+
+      display: flex;
+      flex-direction: row;
+
+      .confirm {
+        margin: 0 10px 0 0;
+      }
     }
   }
 }
