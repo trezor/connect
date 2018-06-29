@@ -43,10 +43,6 @@ const initWebUsbButton = (webusb: boolean): void => {
 export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): void => {
     if (!payload) return;
 
-    if (!payload) {
-        return;
-    }
-
     if (!payload.devices || !Array.isArray(payload.devices) || payload.devices.length === 0) {
         // No device connected
         showView('connect');
@@ -56,6 +52,13 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
 
     showView('select-device');
     initWebUsbButton(payload.webusb);
+
+    // If only 'remember device for now' toggle and no webusb button is available
+    // show it right under the table
+    if (!payload.webusb) {
+        const wrapper = container.getElementsByClassName('wrapper')[0];
+        wrapper.style.justifyContent = 'normal';
+    }
 
     // Populate device list
     const deviceList: HTMLElement = container.getElementsByClassName('select-device-list')[0];

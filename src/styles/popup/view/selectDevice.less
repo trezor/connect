@@ -4,10 +4,22 @@
 
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
 
         .select-device-list {
             margin: 17px 0 29px;
             overflow-y: scroll;
+
+            border-top: 1px solid @color_divider;
+            border-bottom: 1px solid @color_divider;
+
+            button.list:first-child {
+                border-top: transparent;
+            }
+
+            button.list:last-child {
+                border-bottom: transparent;
+            }
 
             button {
                 padding: 0;
