@@ -1,11 +1,21 @@
+
 [
 	{
 		"required": false,
+		"version": [1, 6, 2],
+		"min_bridge_version": [1, 1, 5],
+		"url": "data/firmware/1/trezor-1.6.2.bin.hex",
+		"fingerprint": "d31304f793854e343df6ccf1804f7e2abf48ddcd82a379ca2d3711d54127e138",
+		"changelog": "* Stable release, optional update\n* Add possibility to set custom auto-lock delay\n* Bitcoin Cash cashaddr support\n* Zcash Overwinter hardfork support\n* Support for new coins:\n  - Decred, Bitcoin Private, Fujicoin, Groestlcoin, Vertcoin, Viacoin, Zcoin\n* Support for new Ethereum networks:\n  - EOS Classic, Ethereum Social, Ellaism, Callisto, EtherGem, Wanchain\n* Support for 500+ new Ethereum tokens",
+		"notes": "https://blog.trezor.io/june-updates-trezor-devices-one-modelt-wallet-zcash-cashaddr-doge-8d98c2a73036"
+	},
+	{
+		"required": true,
 		"version": [1, 6, 1],
 		"min_bridge_version": [1, 1, 5],
 		"url": "data/firmware/1/trezor-1.6.1.bin.hex",
 		"fingerprint": "83c3190a94e524ac83a1704eb584a2ab53f8a65a893b1ab52e7135812857c807",
-		"changelog": "* Stable release, optional update\n* Use fixed-width font for addresses\n* Lots of under-the-hood improvements\n* Fixed issue with write-protection settings",
+		"changelog": "* Stable release, required update\n* Use fixed-width font for addresses\n* Lots of under-the-hood improvements\n* Fixed issue with write-protection settings",
 		"notes": "https://blog.trezor.io/trezor-one-firmware-update-1-6-1-eecd0534ab95"
 	},
 	{

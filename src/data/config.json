@@ -10,6 +10,33 @@
         { "origin": "trezor.io", "priority": 0 },
         { "origin": "localhost", "priority": 0 }
     ],
+    "assets": [
+        {
+            "name": "coins",
+            "url": "./data/coins.json"
+        },
+        {
+            "name": "ethereumNetworks",
+            "url": "./data/ethereumNetworks.json"
+        },
+        {
+            "name": "firmware-t1",
+            "url": "./data/firmware/1/releases.json"
+        },
+        {
+            "name": "firmware-t2",
+            "url": "./data/firmware/2/releases.json"
+        },
+        {
+            "name": "messages",
+            "url": "./data/messages.json"
+        },
+        {
+            "name": "bridge",
+            "type": "text",
+            "url": "./data/latest.txt"
+        }
+    ],
     "supportedBrowsers": {
         "chrome": {
             "version": 59,
