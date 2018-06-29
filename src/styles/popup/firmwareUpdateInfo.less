@@ -5,10 +5,10 @@
 
   padding: 20px;
 
-
   background-color: @color_warning_secondary;
 
   .header {
+    margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -26,6 +26,8 @@
   }
 
   p {
+    padding-left: 30px;
+
     font-weight: 300;
     font-size: 14px;
     color: @color_warning_primary;
@@ -37,6 +39,9 @@
 
     &::before {
       .icomoon-warning;
+      position: relative;
+      top: 2px;
+      right: 5px;
       width: 30px;
       height: 30px;
 
@@ -51,6 +56,9 @@
 
     &::before {
       .icomoon-close;
+      position: relative;
+      top: 1px;
+      left: 5px;
       width: 20px;
       height: 20px;
 
@@ -68,3 +76,11 @@
   }
 }
 
+@media screen and (max-width: 639px) {
+  .firmware-update-info {
+    padding: 10px 20px;
+    .header {
+      margin-bottom: 0;
+    }
+  }
+}
