@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
-    <title>TrezorConnect | TREZOR</title>
+    <title>TrezorConnect | Trezor</title>
     <meta name="description" content="" />
     <meta name="keywords" content="" />
-    <meta name="author" content="TREZOR info@trezor.io" />
+    <meta name="author" content="Trezor info@trezor.io" />
     <meta name="robots" content="noindex, nofollow" />
-    <meta name="title" content="TREZOR Connect" />
+    <meta name="title" content="Trezor Connect" />
     <meta name="theme-color" content="#ffffff" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="-1" />
@@ -87,7 +87,7 @@
                     <rect fill="#01B757" x="2" y="7" width="14" height="7" rx="0.5625"></rect>
                 </g>
             </svg>
-            <p>Connect TREZOR to continue</p>
+            <p>Connect Trezor to continue</p>
             <div class="webusb">
                 <div class="divider">
                     <span>And</span>
@@ -112,7 +112,7 @@
                             <span class="device-name">#DEVICE NAME</span>
                         </div>
                         <div class="explain">
-                            Please install <a href="wallet.trezor.io">Bridge</a> to use TREZOR ONE
+                            Please install <a href="wallet.trezor.io">Bridge</a> to use Trezor
                         </div>
                     </button> -->
                 </div>
@@ -135,8 +135,8 @@
         <!-- Pin -->
         <div class="pin">
             <div class="wrapper">
-                <h3>Enter your<span>#TREZOR</span>PIN</h3>
-                <p>The PIN layout is displayed on your TREZOR.</p>
+                <h3>Enter PIN for <span>#TREZOR</span></h3>
+                <p>The PIN layout is displayed on your Trezor.</p>
 
                 <div class="pin-input-row">
                     <input class="pin-input" type="password" autocomplete="off" max-length="9" disabled/>
@@ -154,13 +154,13 @@
                 </div>
             </div>
 
-            <button class="confirm submit" type="button" disabled>Enter PIN</button>
+            <button class="confirm submit" type="button" disabled>Enter</button>
         </div>
         <!-- Pin: END -->
 
         <!-- Pin invalid -->
         <div class="invalid-pin">
-            <h3>Entered PIN is not correct</h3>
+            <h3>Incorrect PIN</h3>
             <div class="loader">
                 <p>Retrying...</p>
                 <svg class="circular" viewBox="25 25 50 50" preserveAspectRatio="xMidYMid">
@@ -210,7 +210,7 @@
 
         <!-- Permissions -->
         <div class="permissions">
-            <h3>Requesting permissions</h3>
+            <h3>Would like to receive permissions</h3>
 
             <div class="list-wrapper">
                 <div class="permissions-list">
@@ -226,10 +226,10 @@
                 </div>
                 <label class="custom-checkbox">
                 <input class="remember-permissions" type="checkbox" />
-                <span class="indicator"></span>Don't ask me again</label>
+                <span class="indicator"></span>Remember permissions</label>
             </div>
             <div class="buttons">
-                <button class="confirm">Allow once</button>
+                <button class="confirm">Allow once for this session</button>
                 <button class="cancel">Cancel</button>
             </div>
         </div>
@@ -350,7 +350,7 @@
         <div class="select-fee">
             <div class="back-button">
                 <span class="arrow"></span>
-                <span class="text">Change Account</span>
+                <span class="text">Accounts</span>
             </div>
             <h3>Select Fee</h3>
 
@@ -414,7 +414,7 @@
 
         <!-- Device in bootloader mode -->
         <div class="bootloader">
-            <h3>Device is in bootloader mode</h3>
+            <h3>Device in bootloader mode</h3>
             <div class="wrapper">
                 <svg width="15px" height="35px" viewBox="0 0 20 57">
                     <g stroke="none" stroke-width="1" fill="none" transform="translate(1, 1)">
@@ -565,9 +565,9 @@
         <!-- Initialization -->
         <div class="initialize">
             <div>
-                <h3>Initialization failed</h3>
+                <h3>Trezor not initialized</h3>
                 <p>
-                    Your device needs to be initialized first. Please try again after initializing at TREZOR Wallet.
+                     Please set up your device before using this service.
                 </p>
             </div>
 
@@ -649,7 +649,7 @@
             </div>
 
             <a class="confirm button" href="https://www.trezor.io/start" target="_blank">
-                Go to the wallet &amp; initialize device
+                Initialize device
             </a>
         </div>
         <!-- Initialization: END -->
@@ -657,9 +657,8 @@
         <!-- Firmware upgrade -->
         <div class="firmware-update">
             <div>
-                <h3>Firmware needs upgrade</h3>
-                <p>
-                    The firmware of your device need to be upgraded, please try again after upgrading at TREZOR Wallet.
+                <h3>Firmware update available</h3>
+                <p> A new firmware update is available for your Trezor device.
                 </p>
             </div>
             <div>
@@ -728,7 +727,7 @@
                 <a class="button confirm"
                 href="https://wallet.trezor.io/"
                 target="_blank">
-                    Go to the wallet &amp; update firmware
+                    Update firmware
                 </a>
             </div>
         </div>
@@ -738,7 +737,7 @@
         <div class="browser">
             <div>
                 <h3></h3>
-                <p>Please choose one of the supported browsers.</p>
+                <p></p>
             </div>
 
             <div class="wrapper">
@@ -924,7 +923,7 @@
         <div class="transport">
             <div>
                 <h3>Install Bridge</h3>
-                <p>New communication tool to facilitate the connection between your TREZOR and your internet browser</p>
+                <p>New communication tool to facilitate the connection between your Trezor and your internet browser</p>
             </div>
 
             <div>
@@ -1005,7 +1004,7 @@
             <a class="button confirm"
             href="https://wallet.trezor.io/"
             target="_blank">
-                Go to the wallet &amp; install bridge
+                Install Bridge
             </a>
         </div>
         <!-- Install bridge: END -->

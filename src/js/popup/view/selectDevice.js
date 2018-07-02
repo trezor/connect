@@ -97,7 +97,6 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
             }
         }
 
-        // TODO: Different icon when device is unreadable (doesn't necessary need to be a TREZOR device)
         const deviceName: HTMLSpanElement = document.createElement('span');
         deviceName.className = 'device-name';
         deviceName.textContent = device.label;
@@ -116,7 +115,7 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
             const explanation: HTMLDivElement = document.createElement('div');
             explanation.className = 'explain';
 
-            const htmlUnreadable: string = 'Please install <a href="https://wallet.trezor.io" target="_blank">Bridge</a> to use TREZOR device.';
+            const htmlUnreadable: string = 'Please install <a href="https://wallet.trezor.io" target="_blank">Bridge</a> to use Trezor device.';
             const htmlUnacquired: string = 'Click to activate. This device is used by another application.';
 
             if (device.unreadable) {

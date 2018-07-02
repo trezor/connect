@@ -12,40 +12,36 @@ const getPermissionText = (permissionType: string, deviceName: string): string =
 
     switch (permissionType) {
         case 'read':
-            text = `Read data from ${deviceName}`;
+            text = 'Read public keys from Trezor device';
             break;
         case 'read-meta':
-            text = `Read metadata to ${deviceName}`;
+            text = 'Read metadata from Trezor device';
         case 'write':
-            text = `Write data to ${deviceName}`;
+            text = 'Use Trezor device to sign transactions';
             break;
         case 'write-meta':
-            text = `Write metadata to ${deviceName}`;
+            text = 'Write metadata to Trezor device'
+
         case 'custom-message':
-            text = `Call custom message on ${deviceName}`;
+            text = 'Run custom operations';
+            break;
 
     }
     return text;
 };
 
 const getPermissionTooltipText = (permissionType: string): string => {
-    // TODO: Change returned text
-
     let text: string = '';
 
     switch (permissionType) {
         case 'read':
-            text = 'Application needs permission to read data';
+            text = 'The service needs this permission to read your account balance.';
             break;
-        case 'read-meta':
-            text = 'Application needs permission to read metadata';
         case 'write':
-            text = 'Application needs permission to write data';
+            text = 'The service needs this permission to compose a transaction for you.';
             break;
-        case 'write-meta':
-            text = 'Application needs permission to read metadata';
         case 'custom-message':
-            text = 'Custom message';
+            text = 'Development tool. Use at your own risk. Allows service to send arbitrary data to your Trezor device.';
             break;
     }
     return text;
@@ -65,8 +61,10 @@ const createPermissionItem = (permissionText: string, tooltipText: string): HTML
     permissionItem.className = 'permission-item';
 
     // Tooltip
-    const tooltip = createTooltip(tooltipText);
-    permissionItem.appendChild(tooltip);
+    if (tooltipText !== '') {
+        const tooltip = createTooltip(tooltipText);
+        permissionItem.appendChild(tooltip);
+    }
     //
 
     // Permission content (icon & text)
@@ -122,6 +120,6 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
     };
 
     rememberCheckbox.onchange = (e) => {
-        confirmButton.innerText = e.target.checked ? 'Remember' : 'Allow once';
+        confirmButton.innerText = e.target.checked ? 'Allow forever for this service' : 'Allow once for this session';
     };
 };
