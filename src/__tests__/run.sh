@@ -56,7 +56,7 @@ signTxSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
 signTxBgold_subtests="change noChange p2sh p2shWitnessChange"
 signTxBcash_subtests="change noChange oldAddr"
 signTxMultisig_subtests="twoOfThree fifteenOfFifteen missingPubkey"
-signTxMultisigChange_subtests="externalExternal"
+signTxMultisigChange_subtests="externalExternal externalInternal internalExternal multisigExternalExternal"
 
 verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind"
 verifyMessageSegwit_subtests="verify verifyLong verifyTestnet"
