@@ -58,8 +58,6 @@ const validation = (coinInfo: CoinInfo) => {
     }
 }
 
-
-
 /*
  * Show select fee view.
  */
@@ -134,6 +132,11 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
     const feeButtons: NodeList<HTMLElement> = feeList.querySelectorAll('[data-fee]');
     for (let i = 0; i < feeButtons.length; i++) {
         feeButtons.item(i).addEventListener('click', onFeeSelect);
+
+        // Select normal fee on default
+        if  (feeButtons.item(i).dataset.fee === 'normal') {
+            feeButtons.item(i).click();
+        }
     }
 
     // custom fee button logic
