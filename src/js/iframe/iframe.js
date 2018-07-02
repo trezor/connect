@@ -168,19 +168,24 @@ const init = async (settings: any, origin: string) => {
 
     try {
         _log.enabled = _logFromPopup.enabled = parsedSettings.debug;
+
+        // initialize core
         _core = await initCore(parsedSettings);
         _core.on(CORE_EVENT, postMessage);
+
+        // check if browser is supported
         checkBrowser();
+
+        // initialize transport and wait for the first transport event (start or error)
         await initTransport(parsedSettings);
         postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {
             browser: browserState
         }));
     } catch (error) {
-        // TODO: kill app
         postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {
-            browser: browserState
+            browser: browserState,
+            error: error.message,
         }));
-        postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
     }
 }
 

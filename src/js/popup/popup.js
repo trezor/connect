@@ -23,6 +23,12 @@ const handleMessage = (event: Message): void => {
 
     console.log('handleMessage', event.data);
 
+    if (event.data === POPUP.INIT) {
+        window.location.hash = '';
+        onLoad();
+        return;
+    }
+
     const data: any = event.data;
     if (!data) return;
 
@@ -129,22 +135,26 @@ const init = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
     };
 }
 
-
-window.addEventListener('load', () => {
-
+const onLoad = () => {
+    if (window.location.hash.length > 0) {
+        if (window.opener)
+            window.opener.postMessage(POPUP.INIT, '*');
+        return;
+    }
+    window.location.hash = '';
     view.init();
-
     // $FlowIssue (Event !== MessageEvent)
     channel.port1.onmessage = (event: Message) => {
         handleMessage(event);
     }
 
     postMessage(new UiMessage(POPUP.OPENED));
+}
 
-}, false);
-
+window.addEventListener('load', onLoad, false);
 window.addEventListener('message', handleMessage, false);
-window.addEventListener('beforeunload', () => {
 
+window.addEventListener('beforeunload', () => {
+    // TODO
 });
 

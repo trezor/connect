@@ -22,7 +22,7 @@ export const setOperation = (operation: string): void => {
     p.innerHTML = DataManager.getSettings('origin');
 };
 
-export const init = (): void => {
+export const init = (): any => {
     // find iframe
     if (window.opener) {
         const iframes: HTMLCollection<any> = window.opener.frames;
@@ -36,6 +36,7 @@ export const init = (): void => {
             }
         }
     }
+    return iframe;
 };
 
 export const clearView = (): void => {
@@ -102,16 +103,9 @@ export const showView = (className: string): HTMLElement => {
 export const postMessage = (message: CoreMessage): void => {
     if (!window.opener || !iframe) return;
 
-    if (iframe) {
-        if (message.type && message.type === POPUP.OPENED) {
-            iframe.postMessage(message, window.location.origin, [channel.port2]);
-        } else {
-            iframe.postMessage(message, window.location.origin);
-        }
-        // iframe.postMessage(message, window.location.origin);
+    if (message.type && message.type === POPUP.OPENED) {
+        iframe.postMessage(message, window.location.origin, [channel.port2]);
     } else {
-        // TODO: post CoreMessage
-        window.opener.postMessage( new ResponseMessage(0, false, "Popup couldn't establish connection with iframe."), '*');
-        window.close();
+        iframe.postMessage(message, window.location.origin);
     }
 };

@@ -35,7 +35,9 @@ let _settings: ConnectSettings;
 let _popupManager: PopupManager;
 let _iframe: HTMLIFrameElement;
 let _iframeOrigin: string;
-let _iframeHandshakePromise: ?Deferred<void>;
+let _iframePromise: Deferred<void>;
+let _iframeTimeout: number;
+let _iframeError: ?string;
 let _messageID: number = 0;
 
 // every postMessage to iframe has its own promise to resolve
@@ -74,7 +76,7 @@ const initIframe = async (settings: Object): Promise<void> => {
     if (iframeSrcHost && iframeSrcHost.length > 0) { _iframeOrigin = iframeSrcHost[0]; }
 
     _iframe.onload = () => {
-
+        // TODO: check if loaded iframe is not 404/500 etc.
         if (typeof window.chrome !== 'undefined' && window.chrome.runtime && window.chrome.runtime.onConnect) {
             window.chrome.runtime.onConnect.addListener(() => {
                 _log.log('chrome.runtime.onConnect');
@@ -93,8 +95,21 @@ const initIframe = async (settings: Object): Promise<void> => {
         document.body.appendChild(_iframe);
     }
 
-    _iframeHandshakePromise = createDeferred();
-    return _iframeHandshakePromise.promise;
+    _iframePromise = createDeferred();
+    _iframeTimeout = window.setTimeout(() => {
+        _iframePromise.reject( IFRAME_TIMEOUT );
+    }, 10000);
+
+    try {
+        await _iframePromise.promise;
+    } catch(error) {
+        _iframeError = error.message;
+        throw error;
+    } finally {
+        window.clearTimeout(_iframeTimeout);
+        _iframeTimeout = 0;
+    }
+
 };
 
 const injectStyleSheet = (): void => {
@@ -183,8 +198,11 @@ const handleMessage = (messageEvent: Message): void => {
             eventEmitter.emit(type, payload);
 
             if (type === UI.IFRAME_HANDSHAKE) {
-                if (_iframeHandshakePromise) { _iframeHandshakePromise.resolve(); }
-                _iframeHandshakePromise = null;
+                if (payload.error) {
+                    _iframePromise.reject( new Error(payload.error) );
+                } else {
+                    _iframePromise.resolve();
+                }
                 injectStyleSheet();
             } else if (type === POPUP.CANCEL_POPUP_REQUEST) {
                 _popupManager.cancel();
@@ -201,18 +219,10 @@ const handleMessage = (messageEvent: Message): void => {
 class TrezorConnect extends TrezorBase {
 
     static async init(settings: Object = {}): Promise<void> {
+
         if (_iframe) { throw IFRAME_INITIALIZED; }
 
-        // TODO: check browser support
-
         window.addEventListener('message', handleMessage);
-        const iframeTimeout = window.setTimeout(() => {
-            throw IFRAME_TIMEOUT;
-        }, 20000);
-
-        await initIframe(settings);
-        window.clearTimeout(iframeTimeout);
-
         window.addEventListener('beforeunload', () => {
             if (_popupManager) {
                 _popupManager.onBeforeUnload();
@@ -220,11 +230,10 @@ class TrezorConnect extends TrezorBase {
 
             if (_iframe) {
                 _iframe.setAttribute('src', _iframeOrigin);
-                // if (_iframe.parentNode) {
-                //     _iframe.parentNode.removeChild(_iframe);
-                // }
             }
         });
+
+        await initIframe(settings);
     }
 
     static uiResponse(message: Object): void {
@@ -304,26 +313,32 @@ class TrezorConnect extends TrezorBase {
 
     static async __call(params: Object): Promise<Object> {
 
-        if (!_iframe) {
-            const dc = { connectSrc: 'https://sisyfos.trezor.io/next/', popup: true, debug: false }
-            _settings = parseSettings(dc);
+        if (!_iframe && !_iframePromise) {
+            //const dc = { connectSrc: 'https://sisyfos.trezor.io/next/', popup: true, debug: true }
+            // const dc = { connectSrc: 'http://localhost:8082/', popup: true, debug: true }
+            _settings = parseSettings({});
             _popupManager = initPopupManager();
-            _popupManager.request(params);
+            _popupManager.request(true);
             try {
-                await this.init(dc);
+                await this.init(_settings);
+                _popupManager.resolveLazyLoad();
             } catch (error) {
+                _popupManager.close();
                 return { success: false, message: error };
             }
         }
 
-        if (_iframeHandshakePromise) {
+        if (_iframeTimeout) {
+            // this.init was called, but iframe doesn't return handshake yet
             return { success: false, message: NO_IFRAME.message };
-            // return new ResponseMessage();
+        } else if(_iframeError) {
+            // iframe was initialized with error
+            return { success: false, message: _iframeError };
         }
 
-        // request popup. it might be used in the future
+        // request popup window it might be used in the future
         // if (eventEmitter.listeners(UI_EVENT).length < 1) { _popupManager.request(params); }
-        if (_settings.popup) { _popupManager.request(params); }
+        if (_settings.popup) { _popupManager.request(); }
 
         // post message to iframe
         try {

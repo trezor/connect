@@ -1,6 +1,7 @@
 /* @flow */
 'use strict';
 
+export const INIT: 'popup_init' = 'popup_init';
 export const LOG: 'popup_log' = 'popup_log';
 export const OPENED: 'popup_opened' = 'popup_opened';
 export const OPEN_TIMEOUT: 'popup_open_timeout' = 'popup_open_timeout';

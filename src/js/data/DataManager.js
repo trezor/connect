@@ -55,16 +55,8 @@ export default class DataManager {
         const configUrl: string = `${settings.configSrc}?r=${ ts }`;
 
         try {
-            const config: JSON = await httpRequest(configUrl, 'json');
-            this.config = parseConfig(config);
-
-            for (const asset of this.config.assets) {
-                const json: JSON = await httpRequest(`${asset.url}?r=${ ts }`, asset.type || 'json');
-                this.assets[ asset.name ] = json;
-            }
 
             this.settings = settings;
-
             // check if origin is trusted
             const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || "");
             this.settings.trustedHost = !!whitelist && !this.settings.popup;
@@ -72,6 +64,14 @@ export default class DataManager {
                 this.settings.debug = false;
             }
             this.settings.priority = DataManager.getPriority(whitelist);
+
+            const config: JSON = await httpRequest(configUrl, 'json');
+            this.config = parseConfig(config);
+
+            for (const asset of this.config.assets) {
+                const json: JSON = await httpRequest(`${asset.url}?r=${ ts }`, asset.type || 'json');
+                this.assets[ asset.name ] = json;
+            }
 
             // parse coins definitions
             parseCoinsJson( this.assets['coins'] );

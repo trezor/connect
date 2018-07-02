@@ -163,11 +163,23 @@ export default class DeviceList extends EventEmitter {
         }
     }
 
-    resolveTransportEvent() {
+    resolveTransportEvent(): void {
         if (this.transportStartPending) {
             this.transportStartPending = false;
             this.stream.emit(TRANSPORT.START);
         }
+    }
+
+    async waitForTransportFirstEvent(): Promise<void> {
+        await new Promise(resolve => {
+            const handler = () => {
+                this.removeListener(TRANSPORT.START, handler)
+                this.removeListener(TRANSPORT.START, handler);
+                resolve();
+            }
+            this.on(TRANSPORT.START, handler);
+            this.on(TRANSPORT.ERROR, handler);
+        });
     }
 
     /**

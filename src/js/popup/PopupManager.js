@@ -2,11 +2,12 @@
 'use strict';
 
 import EventEmitter from 'events';
-import { OPENED, HANDSHAKE, CLOSED } from '../constants/popup';
+import { INIT, OPENED, HANDSHAKE, CLOSED } from '../constants/popup';
 import { showPopupRequest } from './showPopupRequest';
 import type { ConnectSettings } from '../entrypoints/ConnectSettings';
-import type { CoreMessage } from 'flowtype';
+import type { CoreMessage, Deferred } from 'flowtype';
 import { getOrigin } from '../utils/networkUtils';
+import { create as createDeferred } from '../utils/deferred';
 
 const POPUP_WIDTH: number = 640;
 const POPUP_HEIGHT: number = 500;
@@ -23,16 +24,18 @@ export default class PopupManager extends EventEmitter {
     requestTimeout: number = 0;
     openTimeout: number;
     closeInterval: number = 0;
-    currentMethod: string;
+    lazyLoad: ?Deferred<boolean>;
+    handleLazyLoading: () => void;
 
     constructor(settings: ConnectSettings) {
         super();
         this.settings = settings;
         this.src = settings.popupSrc;
         this.origin = getOrigin(settings.popupSrc);
+        this.handleLazyLoading = this.handleLazyLoading.bind(this);
     }
 
-    request(params: Object): void {
+    request(lazyLoad: boolean = false): void {
         // popup request
         // TODO: ie - open imediately and hide it but post handshake after timeout
 
@@ -42,8 +45,9 @@ export default class PopupManager extends EventEmitter {
             return;
         }
 
-        if (params && typeof params.method === 'string') {
-            this.currentMethod = params.method;
+        this.lazyLoad = lazyLoad ? createDeferred(INIT) : null;
+        if (this.lazyLoad) {
+            window.addEventListener('message', this.handleLazyLoading, false);
         }
 
         const openFn: Function = this.open.bind(this);
@@ -87,7 +91,9 @@ export default class PopupManager extends EventEmitter {
             ,scrollbars=yes`;
 
         this._window = window.open('', '_blank', opts);
-        this._window.location.href = this.src; // otherwise android/chrome loose window.opener reference
+        if (this._window) {
+            this._window.location.href = this.lazyLoad ? this.src +'#loading' : this.src; // otherwise android/chrome loose window.opener reference
+        }
 
         this.closeInterval = window.setInterval(() => {
             if (this._window && this._window.closed) {
@@ -103,6 +109,20 @@ export default class PopupManager extends EventEmitter {
                 showPopupRequest(this.open.bind(this), () => { this.emit(CLOSED); });
             }
         }, POPUP_OPEN_TIMEOUT);
+    }
+
+    handleLazyLoading(event: MessageEvent) {
+        if (this.lazyLoad && event.data && event.data === INIT) {
+            this.lazyLoad.resolve(true);
+            window.removeEventListener('message', this.handleLazyLoading, false);
+        }
+    }
+
+    async resolveLazyLoad(): Promise<void> {
+        if (this.lazyLoad) {
+            await this.lazyLoad.promise;
+        }
+        this._window.postMessage(INIT, this.origin);
     }
 
     close(): void {
