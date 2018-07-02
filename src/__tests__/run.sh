@@ -47,14 +47,16 @@ pin_8="45678978"
 
 ################# Possible subtests
 getAddress_subtests="btc ltc tbtc bch"
+#getAddressSegwit_subtests="showSegwit showMultisig3"
+getAddressSegwit_subtests="showSegwit"
 
 signMessage_subtests="sign signTestnet signBch signLong"
 signMessageSegwit_subtests="sign signLong"
 
 signTx_subtests="oneOneFee oneTwoFee oneThreeFee twoTwo testnetOneTwoFee testnetFeeTooHigh lotsOfOutputs feeTooHigh notEnoughFunds attackChangeOutputs attackChangeInputAddress spendCoinbase twoChanges p2sh changeOnMainChainAllowed"
 signTxSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
-signTxBgold_subtests="change noChange p2sh p2shWitnessChange"
-signTxBcash_subtests="change noChange oldAddr"
+signTxBgold_subtests="change noChange p2sh p2shWitnessChange sendMultisig1"
+signTxBcash_subtests="change noChange oldAddr sendMultisigWrongChange"
 signTxMultisig_subtests="twoOfThree fifteenOfFifteen missingPubkey"
 signTxMultisigChange_subtests="externalExternal externalInternal internalExternal multisigExternalExternal"
 
@@ -473,10 +475,27 @@ test_getAddress() {
 }
 
 test_getAddressSegwit() {
-    start_emulator
-    setup_mnemonic_nopin_nopassphrase
-    start_transport
-    run_karma "getAddressSegwit"
+    specified_subtest=$1
+
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$getAddressSegwit_subtests
+    fi;
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_nopin_nopassphrase
+        start_transport
+
+        run_karma "getAddressSegwit" $subtest
+
+        kill_emul_transport
+    done;
 }
 
 test_signMessage() {
