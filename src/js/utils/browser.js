@@ -34,9 +34,6 @@ export const checkBrowser = (): State => {
             state.outdated = isSupported.version > parseInt(bowser.version, 10);
         }
     }
-    if (!state.supported) {
-        throw new Error('Browser is not supported');
-    }
 
     return state;
 }
