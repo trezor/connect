@@ -118,7 +118,7 @@ export default class DeviceList extends EventEmitter {
             this.on(DEVICE.CONNECT, this.resolveTransportEvent.bind(this));
             this.on(DEVICE.CONNECT_UNACQUIRED, this.resolveTransportEvent.bind(this));
         } catch (error) {
-            throw error;
+            this.emit(TRANSPORT.ERROR, error);
         }
     }
 

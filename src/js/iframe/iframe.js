@@ -175,9 +175,11 @@ const init = async (settings: any, origin: string) => {
 
         // check if browser is supported
         checkBrowser();
+        if (browserState.supported) {
+            // initialize transport and wait for the first transport event (start or error)
+            await initTransport(parsedSettings);
+        }
 
-        // initialize transport and wait for the first transport event (start or error)
-        await initTransport(parsedSettings);
         postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {
             browser: browserState
         }));

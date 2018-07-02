@@ -297,9 +297,13 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         message.payload.device = _preferredDevice;
     }
 
-    // restore default messages
-    if (_deviceList)
+    if (!_deviceList && !DataManager.getSettings('transportReconnect')) {
+        // transport is missing try to initialize it once again
+        await initTransport( DataManager.getSettings() );
+    } else if (_deviceList) {
+        // restore default messages
         await _deviceList.reconfigure();
+    }
 
     const responseID: number = message.id;
     const trustedHost: boolean = DataManager.getSettings('trustedHost');
@@ -331,6 +335,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         await getPopupPromise().promise;
         // show message about browser
         postMessage(new UiMessage(UI.BROWSER_NOT_SUPPORTED, browserState));
+        postMessage(new ResponseMessage(responseID, false, { error: ERROR.BROWSER.message }));
         throw ERROR.BROWSER;
     } else if (browserState.outdated) {
         if (isUsingPopup) {
@@ -781,12 +786,10 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceTyped = null): voi
  */
 const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
     try {
-        _deviceList = await getDeviceList();
-
-        // postMessage(new TransportMessage(TRANSPORT.START, {
-        //     type: _deviceList.transportType(),
-        //     version: _deviceList.transportVersion()
-        // }));
+        // _deviceList = await getDeviceList();
+        _deviceList = new DeviceList({
+            rememberDevicePassphrase: true,
+        });
 
         _deviceList.on(DEVICE.CONNECT, (device: DeviceTyped) => {
             handleDeviceSelectionChanges();
@@ -813,8 +816,11 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
 
         _deviceList.on(TRANSPORT.ERROR, async (error) => {
             _log.error('TRANSPORT ERROR', error);
-            if (_deviceList)
+            if (_deviceList) {
                 _deviceList.disconnectDevices();
+                _deviceList.removeAllListeners();
+            }
+
             _deviceList = null;
             postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
             // if transport fails during app lifetime, try to reconnect
@@ -827,7 +833,10 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
         _deviceList.on(TRANSPORT.START, (transportType) => postMessage(new TransportMessage(TRANSPORT.START, transportType)));
         _deviceList.on(TRANSPORT.UNREADABLE, () => postMessage(new TransportMessage(TRANSPORT.UNREADABLE)));
 
-        await _deviceList.waitForTransportFirstEvent();
+        await _deviceList.init();
+        if (_deviceList) {
+            await _deviceList.waitForTransportFirstEvent();
+        }
 
     } catch (error) {
         _deviceList = null;
