@@ -205,6 +205,71 @@ const p2shWitnessChange = (): SubtestSignTx => {
     };
 };
 
+const sendMultisig1 = (): SubtestSignTx => {
+    const address_n = getHDPath("999'/1'/1'/2/0");
+    address_n[2] = 0x80000003;
+
+    const testPayloads: Array<TestSignTxPayload> = [
+        {
+            method: 'signTransaction',
+            coin: 'Bgold',
+            inputs: [
+                {
+                    address_n,
+                    prev_hash: '25526bf06c76ad3082bba930cf627cdd5f1b3cd0b9907dd7ff1a07e14addc985',
+                    prev_index: 1,
+                    script_type: 'SPENDP2SHWITNESS',
+                    amount: 1610436,
+                    multisig: {
+                        pubkeys: [
+                            {
+                                node: 'xpub6CjKUcbAZ6vfG6hiA89X7DiJ9ssicMkjT2Y6xyaPoA9nb51RCSiQ8fetjLD22JdeQHMjyYoBqSucwAMD6qCagb2YvwenjBJWYgVHsK1fzzd',
+                                address_n: [2, 0],
+                            },
+                            {
+                                node: 'xpub6CjKUcbAZ6vfJgiDknHCzQoFqx23Gr6nNhFiSHATvUxHQRgzDArtfudwxTY4yPdUJxJiyfXce9tk3iDzXHJsdWWfhwNG9KiZTnUDZHmV1mX',
+                                address_n: [2, 0],
+                            },
+                            {
+                                node: 'xpub6CjKUcbAZ6vfMesVqtAs92pwF7QDrdekhnJuCwrSrZXJGA8V3rgJn4n9kBnKFEGQktkdn8qyuNwi6GLcwj2bt3GG1NHpTEuNDETAXt4cZqw',
+                                address_n: [2, 0],
+                            },
+                        ],
+                        signatures: ['3045022100e728485c8337f9a09ebbf36edc0fef10f8bcf5c1ba601b7d8ba43a9250a898f002206b9e3401c297f9ab9afb7f1be59bb342db53b5b65aff7c557e3109679697df0f', '', ''],
+                        m: 2,
+                    }
+                },
+            ],
+            outputs: [
+                {
+                    address: 'GfDB1tvjfm3bukeoBTtfNqrJVFohS2kCTe',
+                    amount: 1605000,
+                    script_type: 'PAYTOADDRESS',
+                },
+            ],
+        },
+    ];
+    const expectedResponses: Array <ExpectedSignTxResponse> = [
+        {
+            payload: {
+                serialized: {
+                    serialized_tx: '0100000000010185c9dd4ae1071affd77d90b9d03c1b5fdd7c62cf30a9bb8230ad766cf06b522501000000232200201e8dda334f11171190b3da72e526d441491464769679a319a2f011da5ad312a1ffffffff01887d1800000000001976a914ea5f904d195079a350b534db4446433b3cec222e88ac0400483045022100e728485c8337f9a09ebbf36edc0fef10f8bcf5c1ba601b7d8ba43a9250a898f002206b9e3401c297f9ab9afb7f1be59bb342db53b5b65aff7c557e3109679697df0f41473044022062ea69ecdc07d0dadc1971fbda50a629a56dd30f431db26327428f4992601ce602204a1c8ab9c7d81c36cb6f819109a26f9baaa9607b8d37bff5e24eee6fab4a04e441695221038e81669c085a5846e68e03875113ddb339ecbb7cb11376d4163bca5dc2e2a0c1210348c5c3be9f0e6cf1954ded1c0475beccc4d26aaa9d0cce2dd902538ff1018a112103931140ebe0fbbb7df0be04ed032a54e9589e30339ba7bbb8b0b71b15df1294da53ae00000000',
+                },
+            },
+        },
+    ];
+
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/sendMultisig1',
+    };
+};
+
+
+// TODO: test_send_bch_multisig_change, requires multisig in output
+
 export const signTxBgold = (): void => {
     const subtest: SignTxBgoldAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
@@ -212,6 +277,7 @@ export const signTxBgold = (): void => {
         noChange,
         p2sh,
         p2shWitnessChange,
+        sendMultisig1,
     };
 
     describe('SignTxBGold', () => {

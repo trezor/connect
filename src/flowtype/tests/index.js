@@ -47,6 +47,7 @@ import type {
 
 declare module 'flowtype/tests' {
     declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
+    declare export type GetAddressSegwitAvailableSubtests = 'showSegwit' /* | 'showMultisig3' */;
     declare export type SignMessageAvailableSubtests = 'sign' | 'signTestnet' | 'signBch' | 'signLong';
     declare export type SignMessageSegwitAvailableSubtests = 'sign' | 'signLong';
     declare export type SignTxAvailableSubtests =
@@ -66,8 +67,8 @@ declare module 'flowtype/tests' {
         | 'p2sh'
         | 'changeOnMainChainAllowed';
     declare export type SignTxSegwitAvailableSubtests = 'sendP2sh' | 'sendP2shChange' | 'sendMultisig1';
-    declare export type SignTxBgoldAvailableSubtests = 'change' | 'noChange' | 'p2sh' | 'p2shWitnessChange';
-    declare export type SignTxBcashAvailableSubtests = 'change' | 'noChange' | 'oldAddr';
+    declare export type SignTxBgoldAvailableSubtests = 'change' | 'noChange' | 'p2sh' | 'p2shWitnessChange' | 'sendMultisig1';
+    declare export type SignTxBcashAvailableSubtests = 'change' | 'noChange' | 'oldAddr' /* | 'sendMultisigWrongChange' */;
     declare export type SignTxMultisigAvailableSubtests = 'twoOfThree' | 'fifteenOfFifteen' | 'missingPubkey';
     declare export type SignTxMultisigChangeAvailableSubtests = 'externalExternal' | 'externalInternal' | 'internalExternal' | 'multisigExternalExternal';
     declare export type VerifyMessageAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet' | 'verifyBcash' | 'verifyBitcoind';
