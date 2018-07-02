@@ -1,8 +1,14 @@
+body {
+  overflow-y: hidden;
+}
+
 .permissions {
-  padding: 24px;
+  padding: 24px 24px 0;
   height: 100%;
   display: flex;
   flex-direction: column;
+
+  overflow-y: scroll;
 
   h3 {
     display: flex;
@@ -77,6 +83,9 @@
   }
 
   .buttons {
+    margin-top: 18px;
+    padding-bottom: 24px;
+
     display: block;
 
     .confirm {
@@ -90,18 +99,18 @@
 }
 
 @media screen and (max-width: 639px) {
+  body {
+    overflow-y: visible;
+  }
+
   .permissions {
-    //padding: 24px 24px 5px 24px;
+    overflow: visible;
+
     .buttons {
-      min-height: 40px;
-      margin: 6px 0 5px 0;
-
-      display: flex;
-      flex-direction: row;
-
       .confirm {
-        margin: 0 10px 0 0;
+        margin-top: 0;
       }
+      padding-bottom: 24px;
     }
   }
 }
