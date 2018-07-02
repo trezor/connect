@@ -23,7 +23,9 @@ export type ConnectSettings = {
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
-const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/5/';
+// const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/5/';
+// $FlowIssue
+const DEFAULT_DOMAIN: string = typeof LOCAL === 'string' ? 'http://localhost:8082/' : 'https://sisyfos.trezor.io/next/';
 export const DEFAULT_PRIORITY: number = 2;
 
 const initialSettings: ConnectSettings = {
