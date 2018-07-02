@@ -7,7 +7,7 @@
         justify-content: space-between;
 
         .select-device-list {
-            margin: 17px 0 29px;
+            margin: 17px 0 15px;
             overflow-y: scroll;
 
             border-top: 1px solid @color_divider;
@@ -86,6 +86,10 @@
             }
         }
 
+        .remember-check-device {
+            margin-bottom: 40px;
+        }
+
         .check-devices {
             margin-top: 18px;
         }
@@ -98,5 +102,14 @@
 
     .webusb {
         .webUsbBase()
+    }
+}
+
+@media screen and (max-width: 639px) {
+    .select-device {
+        .wrapper > .select-device-list {
+            overflow: visible;
+            max-height: none;
+        }
     }
 }
