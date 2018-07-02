@@ -57,7 +57,7 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>):
         if (defaultButton) { buttonContainer.removeChild(defaultButton); }
     };
 
-    const updateButtonValue = (button: HTMLElement, account: SimpleAccount): void => {
+    const updateButtonValue = (button: HTMLButtonElement, account: SimpleAccount): void => {
         if (button.innerHTML.length < 1) {
             button.innerHTML = `
                 <span class="account-title"></span>
@@ -67,18 +67,20 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>):
         const status: HTMLElement = button.getElementsByClassName('account-status')[0];
         title.innerHTML = account.label;
 
+        // TODO: Disable button once an account is fully loaded and its balance is 0
+
         if (account.balance < 0) {
             status.innerHTML = account.transactions ? `${ account.transactions } transactions` : 'Loading...';
-            button.setAttribute('disabled', 'disabled');
+            button.disabled = true;
         } else {
             status.innerHTML = account.transactions === 0 ? 'Fresh account' : formatAmount(account.balance, payload.coinInfo);
-            button.removeAttribute('disabled');
+            button.disabled = account.transactions === 0;
             button.onclick = handleClick;
         }
     };
 
     for (const [ index, account ] of payload.accounts.entries()) {
-        const existed: HTMLElement = container.querySelectorAll(`[data-index="${index}"]`)[0];
+        const existed: HTMLButtonElement = (container.querySelectorAll(`[data-index="${index}"]`)[0]: any);
         if (!existed) {
             const button: HTMLButtonElement = document.createElement('button');
             button.className = 'list';

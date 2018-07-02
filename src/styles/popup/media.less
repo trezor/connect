@@ -12,10 +12,14 @@
     }
 
     aside {
-
         .wrapper {
-            flex-direction: column;
+            flex-direction: row;
+            justify-content: space-between;
             align-items: center;
+        }
+
+        svg {
+            align-self: auto;
         }
 
         .info-panel {
@@ -23,7 +27,6 @@
                 font-size: 16px;
                 padding-top: 5px;
             }
-
         }
         .labeling {
             display: none;
@@ -34,24 +37,16 @@
         flex: 1;
 
         div > svg {
-            width: auto;
-            height: 70px;
+            padding-top: 15px;
         }
 
         div.pin {
             // The .pin view is the only that overflows on mobile
-            min-height: 528px;
+            min-height: 480px;
         }
 
         div.passphrase {
             padding: 20px 30px;
-        }
-
-        div.select-device {
-            div.select-device-list {
-                // Firefox
-                max-height: 161px;
-            }
         }
 
         div.browser {

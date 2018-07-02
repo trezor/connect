@@ -43,10 +43,6 @@ const initWebUsbButton = (webusb: boolean): void => {
 export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): void => {
     if (!payload) return;
 
-    if (!payload) {
-        return;
-    }
-
     if (!payload.devices || !Array.isArray(payload.devices) || payload.devices.length === 0) {
         // No device connected
         showView('connect');
@@ -56,6 +52,13 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
 
     showView('select-device');
     initWebUsbButton(payload.webusb);
+
+    // If only 'remember device for now' toggle and no webusb button is available
+    // show it right under the table
+    if (!payload.webusb) {
+        const wrapper = container.getElementsByClassName('wrapper')[0];
+        wrapper.style.justifyContent = 'normal';
+    }
 
     // Populate device list
     const deviceList: HTMLElement = container.getElementsByClassName('select-device-list')[0];
@@ -94,7 +97,6 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
             }
         }
 
-        // TODO: Different icon when device is unreadable (doesn't necessary need to be a TREZOR device)
         const deviceName: HTMLSpanElement = document.createElement('span');
         deviceName.className = 'device-name';
         deviceName.textContent = device.label;
@@ -113,7 +115,7 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
             const explanation: HTMLDivElement = document.createElement('div');
             explanation.className = 'explain';
 
-            const htmlUnreadable: string = 'Please install <a href="https://wallet.trezor.io" target="_blank">Bridge</a> to use TREZOR device.';
+            const htmlUnreadable: string = 'Please install <a href="https://wallet.trezor.io" target="_blank">Bridge</a> to use Trezor device.';
             const htmlUnacquired: string = 'Click to activate. This device is used by another application.';
 
             if (device.unreadable) {

@@ -4,13 +4,30 @@
 
         display: flex;
         flex-direction: column;
+        justify-content: space-between;
 
         .select-device-list {
-            flex: 1;
-            margin: 17px 0 29px;
+            margin: 17px 0 15px;
             overflow-y: scroll;
 
+            border-top: 1px solid @color_divider;
+            border-bottom: 1px solid @color_divider;
+
+            border-top-left-radius: 2px;
+            border-top-right-radius: 2px;
+            border-bottom-left-radius: 2px;
+            border-bottom-right-radius: 2px;
+
+            button.list:first-child {
+                border-top: transparent;
+            }
+
+            button.list:last-child {
+                border-bottom: transparent;
+            }
+
             button {
+                transition: 0s;
                 padding: 0;
 
                 &.device-explain {
@@ -69,6 +86,10 @@
             }
         }
 
+        .remember-check-device {
+            margin-bottom: 40px;
+        }
+
         .check-devices {
             margin-top: 18px;
         }
@@ -81,5 +102,14 @@
 
     .webusb {
         .webUsbBase()
+    }
+}
+
+@media screen and (max-width: 639px) {
+    .select-device {
+        .wrapper > .select-device-list {
+            overflow: visible;
+            max-height: none;
+        }
     }
 }

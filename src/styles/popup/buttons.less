@@ -25,12 +25,12 @@ a:visited {
         color: @color_green_tertiary;
     }
 
-    &:hover,
+    /* &:hover,
     &:active {
         &:after {
             border-color: @color_white;
         }
-    }
+    } */
 }
 
 a.button {
@@ -180,16 +180,17 @@ button {
         &:not(:disabled):hover,
         &:not(:disabled):active,
         &:not(:disabled).active {
-            // Leave the border but make it transparent so the
-            // inner elements don't move
-            border-left: 1px solid transparent;
-            // Changing the border on hover moves inner elements
-            // use box-shadow isntead
-            box-shadow: 3px 0 0 @color_green_tertiary inset;
+            // Leave the border same width so the inner elements don't move
+            border-left: 1px solid @color_green_tertiary;
+            // Changing the border on hover moves inner elements use box-shadow instead
+            box-shadow: 2px 0 0 @color_green_tertiary inset;
+
+            border-radius: 0px;
+            background: @color_landing;
         }
 
         &.disabled:hover {
-            background-color: white;
+            background: white;
         }
     }
 
