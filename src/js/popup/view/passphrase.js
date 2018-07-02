@@ -29,9 +29,14 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
             // - disable input2
             // - write automatically into input2 as the user is writing into input1 (listen to input event)
             input2.disabled = true;
+            input2.value = input1.value;
+            validation();
         } else if (inputType === 'password') {
             input.classList.remove('text');
+
             input2.disabled = false;
+            input2.value = '';
+            validation();
         }
     }
     const validation = () => {
