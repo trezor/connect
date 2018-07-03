@@ -53,6 +53,7 @@ button:focus {
 
 button[disabled] {
     opacity: 0.8;
+    pointer-events: none;
 }
 
 input[type="text"],
@@ -62,6 +63,7 @@ input[type="password"] {
     border-bottom: 1px solid #bbbbbb;
     background: transparent;
     font-size: 18px;
+    outline: 0;
 }
 
 .smallcaps {
@@ -153,21 +155,79 @@ input[type="password"] {
     text-align: left;
 }
 
+.alert_heading p {
+    margin: 0px;
+}
+
 .alert_heading strong {
     font-weight: 400;
 }
 
 #alert_connect {
-    margin-top: 120px;
+    margin-top: 120px; /* 70px */
+}
+
+#alert_connect.webusb {
+    margin-top: 80px;
+}
+
+#alert_connect .connect_wrapper {
+    display: inline-block;
+}
+
+.webusb_option {
+    display: none;
+}
+
+#alert_connect.webusb .webusb_option {
+    display: block;
+}
+
+.webusb_option p {
+    margin: 20px 0px 30px 0px;
+}
+
+.webusb_option button {
+    width: 100%;
 }
 
 
-#alert_fees {
-    margin-top: 60px;
+
+#alert_fees .alert_heading {
+    margin-bottom: 10px;
 }
 
-.fee button
-{
+#alert_fees .change-account {
+    position: absolute;
+    font-size: 14px;
+    top: 10px;
+    left: 0px;
+    cursor: pointer;
+    color: #555555;
+    transition: color 0.5s;
+}
+
+#alert_fees .change-account span {
+    display: inline-block;
+    padding-top: 1px;
+    padding-bottom: 2px;
+    transition: border 0.5s;
+    border-bottom: 1px solid #FFFFFF;
+}
+
+#alert_fees .change-account:hover span {
+    color: #000000;
+    border-bottom: 1px solid #000000;
+}
+
+#alert_fees .change-account:before {
+    content: '\2190';
+    display: inline-block;
+    padding-right: 2px;
+    vertical-align: top;
+}
+
+.fee button {
     width: 250px;
     margin-bottom: -1px;
     border-radius: 0;
@@ -175,8 +235,7 @@ input[type="password"] {
     height: 50px;
 }
 
-.fee:first-child button
-{
+.fee:first-child button {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
@@ -188,12 +247,14 @@ input[type="password"] {
 
 .fee-name {
     position: absolute;
+    text-transform: capitalize;
     top: 15px;
     left: 14px;
 }
 
 .fee-name-normal {
     position: absolute;
+    text-transform: capitalize;
     top: 9px;
     left: 14px;
 }
@@ -207,7 +268,8 @@ input[type="password"] {
 }
 
 .fee-size,
-.fee-minutes {
+.fee-minutes,
+.fee-insufficient-funds {
 	font-size: 13px;
 	opacity: 0.8;
   position: absolute;
@@ -222,10 +284,153 @@ input[type="password"] {
   top: 24px;
 }
 
+.fee-insufficient-funds {
+    top: 18px;
+}
+
+.fee button.opened {
+    border-bottom: 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.fee-custom-opener.untouched:after {
+    content: '\2303';
+    position: absolute;
+    top: 13px;
+    right: 10px;
+    transform: rotate(180deg) translateY(2px);
+}
+
+.fee-custom {
+    width: 250px;
+    margin: 0px auto;
+    border: 1px solid #777777;
+    text-align: left;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 10px 6px;
+    padding-top: 0px;
+    border-top: 0px;
+    margin-bottom: 10px;
+}
+
+.fee-custom.hidden {
+    display: none;
+}
+
+.fee-custom input {
+    width: 80px;
+    outline: none;
+    padding-left: 0px;
+}
+
+.fee-custom .fee-custom-wrapper {
+    display: flex;
+    padding-left: 10px;
+    padding-right: 5px;
+}
+
+.fee-custom .fee-custom-label {
+    flex: 1;
+    padding: 9px;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1;
+    color: #424242;
+    text-align: left;
+    align-self: flex-end;
+}
+
+.fee-custom .fee-custom-button {
+    text-align: center;
+    vertical-align: middle;
+    width: 70px;
+    height: 34px;
+    padding: 0px;
+    border-radius: 5px;
+}
+
+.fee-custom button[disabled] {
+    background: #777777;
+    color: #FFFFFF;
+    opacity: 0.2;
+}
+
+.fee-custom .fee-custom-warning {
+    display: block;
+    font-size: 14px;
+    padding: 14px 10px;
+    padding-bottom: 0px;
+}
+
+.fee-custom .fee-custom-warning strong {
+    display: block;
+}
 
 
-#alert_accounts {
-    margin-top: 60px;
+
+#alert_accounts, 
+#alert_fees {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+#alert_accountinfo,
+#alert_nemaddress,
+#alert_xpubkey {
+    margin-top: 110px;
+}
+
+
+
+/* #alert_accounts.loading #accounts,
+#alert_accounts.loading #accounts-legacy {
+    pointer-events: none;
+} */
+
+#alert_accounts .alert_heading {
+    margin: 0px;
+}
+
+#alert_accounts .alert_heading strong {
+    font-weight: 300;
+}
+
+#alert_accounts.no-segwit .alert_heading {
+    margin-bottom: 10px;
+}
+
+#alert_accounts.no-segwit .accounts_tab {
+    display: none;
+}
+
+#accounts-legacy {
+    display: none;
+}
+
+.accounts_tab {
+    padding-bottom: 14px;
+    width: 250px;
+    margin: 0px auto;
+}
+
+.accounts_tab div {
+    float: left;
+    cursor: pointer;
+}
+
+.accounts_tab div.accounts_legacy_tab {
+    float: right;
+}
+
+.accounts_tab div.accounts_tab_active {
+    border-bottom: 3px solid #4cc148;
+}
+
+.accounts_tab:after {
+    content: "\00a0";
+    clear: both;
 }
 
 .account button
@@ -287,6 +492,22 @@ input[type="password"] {
 #passphrase_input_row input,
 #passphrase_enter button {
     width: 250px;
+}
+
+#passphrase_dialog .warning {
+    color: #fa3e3e;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+#passphrase_dialog.not-valid .warning {
+    display: block;
+}
+
+#passphrase_dialog.not-valid button {
+    border-color: #c5c5c5;
+    color: #c5c5c5;
+    pointer-events: none;
 }
 
 /*

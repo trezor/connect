@@ -4,15 +4,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width">
-
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
     <title>TREZOR Connect</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
     <link rel="stylesheet" href="./css/popup.css">
   </head>
   <body>
     <div id="header">
-      <img id="logo" src="img/trezor_horizontal.png" alt="TREZOR">
+      <img id="logo" src="./img/trezor_horizontal.png" alt="TREZOR">
 
       <div id="header_right">
         <img id="header_icon" src="" style="display: none">
@@ -27,8 +28,9 @@
           <div id="operation_accountinfo" style="display: none">Export account info</div>
           <div id="operation_balance" style="display: none">Get balance</div>
           <div id="operation_signtx" style="display: none">Sign transaction</div>
-          <div id="operation_cipherkeyvalue_encrypt" style="display: none">Encode value</div>
-          <div id="operation_cipherkeyvalue_decrypt" style="display: none">Decode value</div>
+          <div id="operation_cipherkeyvalue_encrypt" style="display: none">Encrypt value</div>
+          <div id="operation_cipherkeyvalue_decrypt" style="display: none">Decrypt value</div>
+          <div id="operation_nemaddress" style="display: none">Export NEM address</div>
           <div id="operation_composetx" style="display: none">
             Send <span id="composetx_amount"></span>
           </div>
@@ -46,11 +48,20 @@
     </div>
 
     <div id="alert_connect" class="alert fadeout">
-      <img class="alert_icon" src="img/trezor_connect.png">
-      <div class="alert_heading">
-        Connect your <strong class="smallcaps">TREZOR</strong> device.
+        <div class="connect_wrapper">
+          <div class="connect_row">
+              <img class="alert_icon" src="./img/trezor_connect.png">
+              <div class="alert_heading">
+                <p>Connect <strong class="smallcaps">TREZOR</strong></p>
+                <p>to continue.</p>
+              </div>
+          </div>
+          <div class="connect_row webusb_option">
+              <p>&amp;</p>
+              <button id="webusb_button">Check for devices</button>
+          </div>
+        </div>
       </div>
-    </div>
 
     <div id="alert_reconnect" class="alert fadeout">
       <div class="alert_heading">
@@ -76,10 +87,8 @@
 
     <div id="alert_transport_missing" class="alert fadeout">
       <p>
-        To use your <strong class="smallcaps">TREZOR</strong> device, proceed
-        with instructions at
-        <a href="https://wallet.trezor.io" target="_blank" onclick="closeWindow();">TREZOR Wallet</a>
-        and try again afterwards.
+          TREZOR Connect needs the <a href="https://blog.trezor.io/introducing-new-trezor-bridge-v2-2b7ea5478d65" target="_blank" onclick="closeWindow();">TREZOR Bridge</a> to communicate with your device. 
+          Please install the tool from <a href="https://wallet.trezor.io/#/bridge" target="_blank" onclick="closeWindow();">TREZOR Wallet</a> and try again.  
       </p>
       <p>
         <a href="https://trezor.io"
@@ -116,17 +125,43 @@
     <div id="alert_insufficient_funds" class="alert fadeout">
       <div class="alert_heading">Account funds are insufficient. Retrying...</div>
     </div>
+    <div id="alert_amount_too_low" class="alert fadeout">
+        <div class="alert_heading">Amount too low. Retrying...</div>
+    </div>
 
     <div id="alert_accounts" class="alert fadeout">
       <!-- content filled dynamically -->
       <p class="alert_heading"></p>
-      <div id="accounts"></div>
+      <div class="accounts_tab">
+        <div class="accounts_segwit_tab accounts_tab_active" onclick="switchAccountsTab('segwit')">Accounts</div>
+        <div class="accounts_legacy_tab" onclick="switchAccountsTab('legacy')">Legacy Accounts</div>
+      </div>
+      <div id="accounts">
+          <div class="account">
+              <button disabled>
+                  <span class="account-title">Account #1</span>
+                  <span class="account-status">Loading...</span>
+              </button>
+          </div>
+      </div>
+      <div id="accounts-legacy">
+          <div class="account">
+              <button disabled>
+                  <span class="account-title">Legacy Account #1</span>
+                  <span class="account-status">Loading...</span>
+              </button>
+          </div>
+      </div>
     </div>
 
     <div id="alert_fees" class="alert fadeout">
       <!-- content filled dynamically -->
       <p class="alert_heading"></p>
-      <div id="fees"></div>
+      <div class="change-account" onclick="selectFee('change_account')">
+        <span>Change account</span>
+      </div>
+      <div id="fees">
+      </div>
     </div>
 
     <div id="alert_xpubkey" class="alert fadeout">
@@ -147,7 +182,7 @@
     <div id="alert_accountinfo" class="alert fadeout">
       <p class="alert_heading">
         Export account info for<br>
-        <strong>Account #<span id="accountinfo_id"></span></strong>?
+        <strong id="accountinfo_id"></strong>?
       </p>
       <div>
         <button type="button" onclick="exportInfo();">
@@ -158,6 +193,21 @@
         </button>
       </div>
     </div>
+
+    <div id="alert_nemaddress" class="alert fadeout">
+        <p class="alert_heading">
+          Export <strong>NEM address</strong> for<br>
+          <strong id="nem_account"></strong> on network <strong id="nem_network"></strong>?
+        </p>
+        <div>
+          <button type="button" onclick="exportNEMAddress();">
+            Export
+          </button>
+          <button type="button" onclick="cancelNEMAddress();">
+            Cancel
+          </button>
+        </div>
+      </div>
 
 
     <div id="pin_dialog" class="alert fadeout">
@@ -199,7 +249,11 @@
       <div id="passphrase_subheader">Note that passphrase is case-sensitive.</div>
 
       <div id="passphrase_input_row">
-        <input type="password" id="passphrase" name="passphrase" autocomplete="off">
+          <input type="password" id="passphrase" name="passphrase" autocomplete="off" data-lpignore="true">
+      </div>
+      
+      <div id="passphrase_input_row">
+          <input type="password" id="passphrase2" name="passphrase2" autocomplete="off" data-lpignore="true" placeholder="Re-type for control">
       </div>
 
       <div id="passphrase_show_row">
@@ -208,11 +262,20 @@
           <span id="passphrase_show_label">Show passphrase</span>
         </label>
       </div>
+      <div class="warning">Passphrases do not match!</div>
       <div id="passphrase_enter">
         <button type="button" onclick="passphraseEnter();">Enter</button>
       </div>
     </div>
 
-    <script src="./js/popup-dist.js"></script>
+    <!-- <script src="./js/popup-dist.js"></script> -->
+    <script language="JavaScript">
+      var s = document.getElementsByTagName('script')[0];
+      var sc = document.createElement('script');
+      sc.type = 'text/javascript';
+      sc.async = true;
+      sc.src = './js/popup-dist.js?v=' + Math.random(); 
+      s.parentNode.insertBefore(sc, s);
+    </script>
   </body>
 </html>
