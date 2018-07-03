@@ -17,6 +17,7 @@ build:
 	yarn
 	yarn run build
 	cp dist/js/trezor-connect.*.js dist/trezor-connect.js
+	cp robots.txt dist/robots.txt
 
 dist-%:
 	git fetch
