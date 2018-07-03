@@ -1023,5 +1023,5 @@ elif [ "$run_type" = "excluded" ]; then
     run_excluded_tests "$tests_not_to_run"
 fi;
 
-#show_results
-#cleanup
+show_results
+cleanup

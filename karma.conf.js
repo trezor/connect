@@ -40,13 +40,15 @@ module.exports = function(config) {
         files: [
             // 'src/flowtype/empty.js',
             // 'src/js/core/Core.js',
-            'node_modules/babel-polyfill/browser.js',
+            //'node_modules/babel-polyfill/browser.js',
             'src/__tests__/core/core.test.js',
-            { pattern: 'src/data/config.json', included: false, served: true, nocache: true },
+            { pattern: 'src/__tests__/config.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/coins.json', included: false, served: true, nocache: true },
-            { pattern: 'src/data/releases-1.json', included: false, served: true, nocache: true },
+            { pattern: 'src/data/firmware/1/releases.json', included: false, served: true, nocache: true },
+            { pattern: 'src/data/firmware/2/releases.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/messages.json', included: false, served: true, nocache: true },
-            { pattern: 'src/data/latest.txt', included: false, served: true, nocache: true },
+            { pattern: 'src/data/bridge/latest.txt', included: false, served: true, nocache: true },
+            { pattern: 'src/data/ethereumNetworks.json', included: false, served: true, nocache: true },
         ],
 
         proxies: {

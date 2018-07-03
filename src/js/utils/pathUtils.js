@@ -40,14 +40,11 @@ export const validatePath = (path: string | Array<number>, base: boolean = false
         valid = getHDPath(path);
     } else if (Array.isArray(path)) {
         valid = path.map((p: any) => {
-            let n: number = parseInt(p);
+            const n: number = parseInt(p);
             if (isNaN(p)) {
                 throw new Error('Not a valid path.');
-            } else if (n < 0) {
-                n *= -1;
-                return (n | HD_HARDENED) >>> 0;
             }
-            return n;
+            return Math.abs(n);
         });
     }
     if (!valid) throw new Error('Not a valid path.');
