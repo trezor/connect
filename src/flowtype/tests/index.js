@@ -120,7 +120,8 @@ declare module 'flowtype/tests' {
         | NemSignTransactionMosaicAvailableSubtests
         | NemSignTransactionMultisigAvailableSubtests
         | NemSignTransactionOthersAvailableSubtests
-        | NemSignTransactionTransfersAvailableSubtests;
+        | NemSignTransactionTransfersAvailableSubtests
+        | GetAccountInfoAvailableSubtests;
 
     declare type Subtest<T, R> = {
         testPayloads: Array<T>,
@@ -143,7 +144,8 @@ declare module 'flowtype/tests' {
         | TestNemGetAddressPayload
         | TestSignMessagePayload
         | TestSignTxPayload
-        | TestVerifyMessagePayload;
+        | TestVerifyMessagePayload
+        | TestGetAccountInfoPayload;
     declare export type ExpectedResponse =
         ExpectedEthereumGetAddressResponse
         | ExpectedEthereumSignMessageResponse
@@ -153,5 +155,6 @@ declare module 'flowtype/tests' {
         | ExpectedNemGetAddressResponse
         | ExpectedSignMessageResponse
         | ExpectedSignTxResponse
-        | ExpectedVerifyMessageResponse;
+        | ExpectedVerifyMessageResponse
+        | ExpectedGetAccountInfoResponse;
 }

@@ -18,8 +18,9 @@ import { ethereumGetAddress } from './ethereumGetAddress.spec.js';
 import { ethereumSignMessage } from './ethereumSignMessage.spec.js';
 import { ethereumSignTx } from './ethereumSignTx.spec.js';
 import { ethereumVerifyMessage } from './ethereumVerifyMessage.spec.js';
-import { nemGetAddress } from './nemGetAddress.spec.js';
 import { getAccountInfo } from './getAccountInfo.spec.js';
+import { nemGetAddress } from './nemGetAddress.spec.js';
+import { nemSignTransactionMosaic } from './nemSignTransactionMosaic.spec.js';
 /* export { nemSignTransactionMosaicTests } from './nemSignTransactionMosaic.spec.js';
 export { nemSignTransactionMultisigTests } from './nemSignTransactionMultisig.spec.js';
 export { nemSignTransactionOthersTests } from './nemSignTransactionOthers.spec.js';
@@ -45,6 +46,7 @@ export default {
     ethereumSignMessage,
     ethereumSignTx,
     ethereumVerifyMessage,
-    nemGetAddress,
     getAccountInfo,
+    nemGetAddress,
+    nemSignTransactionMosaic,
 }

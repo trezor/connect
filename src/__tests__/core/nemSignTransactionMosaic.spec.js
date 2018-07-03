@@ -1,16 +1,16 @@
-/* todo: flow */
+/* @flow */
 
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
 import { settings, CoreEventHandler } from './common.js';
 
-const supplyChangeSubtest = () => {
+const supplyChange = () => {
     const testPayloads = [
         {
             method: 'nemSignTransaction',
-            path: "m/44'/1'/0'/0'/0'",
-            transaction: {
+            path: "m/44'/43'/0'",
+            /* transaction: {
                 timeStamp: 74649215,
                 fee: 2000000,
                 type: TX_TYPES.supplyChange,
@@ -23,8 +23,23 @@ const supplyChangeSubtest = () => {
                 supplyType: 1,
                 delta: 1,
                 version: -1744830464,
-                creationFeeSink: '0xTALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
+                creationFeeSink: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                 creationFee: 1500,
+            }, */
+            transaction: {
+                "type": 16386,
+                "mosaicId": {
+                    "namespaceId": "hellom",
+                    "name": "Hello mosaic"
+                },
+                "version": -1744830464,
+                "deadline": 74735615,
+                "fee": 2000000,
+                "timeStamp": 74649215,
+                "supplyType": 1,
+                "delta": 1,
+                "creationFee": 1500,
+                "creationFeeSink": "TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J",
             },
         },
     ];
@@ -44,7 +59,7 @@ const supplyChangeSubtest = () => {
     };
 };
 
-const creationSubtest = () => {
+const creation = () => {
     const testPayloads = [
         {
             method: 'nemSignTransaction',
@@ -52,7 +67,7 @@ const creationSubtest = () => {
             transaction: {
                 timeStamp: 74649215,
                 fee: 2000000,
-                type: TX_TYPES.creation,
+                type: TX_TYPES.supplyChange,
                 deadline: 74735615,
                 message: { },
                 mosaicDefinition: {
@@ -64,7 +79,7 @@ const creationSubtest = () => {
                     properties: { } ,
                     description: 'lorem',
                 },
-                version: -1744830464, // testnet
+                version: (0x98 << 24), // testnet // 2550136832
                 creationFeeSink: '0xTALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                 creationFee: 1500,
             },
@@ -86,7 +101,7 @@ const creationSubtest = () => {
     };
 };
 
-const creationPropertiesSubtest = () => {
+const creationProperties = () => {
     const testPayloads = [
         {
             method: 'nemSignTransaction',
@@ -145,7 +160,7 @@ const creationPropertiesSubtest = () => {
     };
 };
 
-const creationLevySubtest = () => {
+const creationLevy = () => {
     const testPayloads = [
         {
             method: 'nemSignTransaction',
@@ -212,13 +227,13 @@ const creationLevySubtest = () => {
     };
 };
 
-export const nemSignTransactionMosaicTests = (): void => {
+export const nemSignTransactionMosaic = (): void => {
     const subtest = __karma__.config.subtest;
     const availableSubtests = {
-        supplyChange: supplyChangeSubtest,
-        creation: creationSubtest,
-        creationProperties: creationPropertiesSubtest,
-        creationLevy: creationLevySubtest,
+        supplyChange,
+        creation,
+        creationProperties,
+        creationLevy,
     };
 
     describe('NEMSignTransactionMosaic', () => {
