@@ -1699,7 +1699,23 @@ function parseRequiredFirmware(firmware) {
 
 function waitForFirstDevice(list) {
     let res;
-    if (!(list.hasDeviceOrUnacquiredDevice())) {
+
+    if (list.unreadableHidDevice()) {
+        res = Promise.reject(NO_TRANSPORT);
+    } else if (!(list.hasDeviceOrUnacquiredDevice())) {
+        const webusbButton = document.getElementById('webusb_button');
+        const alert = document.getElementById('alert_connect');
+        if (list.requestNeeded) {
+            alert.classList.add('webusb');
+            // webusbButton.style.display = 'block';
+            webusbButton.onclick = function() {
+                list.requestDevice()
+                webusbButton.onclick = null;
+            }
+        } else {
+            alert.classList.remove('webusb');
+            // webusbButton.style.display = 'none';
+        }
         res = Promise.reject(NO_CONNECTED_DEVICES);
     } else {
         res = list.acquireFirstDevice(true)
@@ -2420,7 +2436,26 @@ function passphraseCallback(callback) {
     document.querySelector('#passphrase_dialog').callback = callback;
     document.querySelector('#passphrase').focus();
     window.addEventListener('keydown', passphraseKeydownHandler);
+
+    document.querySelector('#passphrase').oninput = passphraseValidation;
+    document.querySelector('#passphrase2').oninput = passphraseValidation;
+
     showAlert('#passphrase_dialog');
+}
+
+function passphraseValidation() {
+    var p1 = document.querySelector('#passphrase').value;
+    var p2 = document.querySelector('#passphrase2').value;
+    var dialog = document.querySelector('#passphrase_dialog');
+    var button = document.querySelector('#passphrase_enter button');
+
+    if (p1 !== p2) {
+        button.disabled = true;
+        dialog.classList.add('not-valid');
+    } else {
+        button.disabled = false;
+        dialog.classList.remove('not-valid');
+    }
 }
 
 function passphraseKeydownHandler(ev) {
@@ -2430,8 +2465,11 @@ function passphraseKeydownHandler(ev) {
 }
 
 function passphraseToggle() {
-    let e = document.querySelector('#passphrase');
-    e.type = (e.type === 'text') ? 'password' : 'text';
+    var p1 = document.querySelector('#passphrase');
+    var p2 = document.querySelector('#passphrase2');
+    var type = (p1.type === 'text') ? 'password' : 'text'
+    p1.type = type;
+    p2.type = type;
 }
 
 window.passphraseToggle = passphraseToggle;
