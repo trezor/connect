@@ -70,6 +70,8 @@ nemSignTransactionMosaic_subtests="supplyChange creation creationProperties crea
 nemSignTransactionMultisig_subtests="aggregateModification multisig multisigSigner"
 nemSignTransactionOthers_subtests="importanceTransfer provisionNamespace"
 nemSignTransactionTransfers_subtests="simple encryptedPayload xemAsMosaic unknownMosaic knownMosaic knownMosaicWithLevy multipleMosaics"
+
+getAccountInfo_subtests="firstAccount zeroBalance pathInvalid noAddressIndex zeroBalance xpubInsteadOfPath"
 ################# Possible subtests: END
 
 
@@ -929,6 +931,30 @@ test_stellarGetPublicKey() {
     start_transport
 
     run_karma "stellarGetPublicKey"
+}
+
+test_getAccountInfo() {
+    # todo: emulator firmware
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$getAccountInfo_subtests
+    fi;
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_allallall
+        start_transport
+
+        run_karma "getAccountInfo" $subtest
+
+        kill_emul_transport
+    done;
 }
 ################# Functions: END
 
