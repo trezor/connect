@@ -86,7 +86,9 @@ export class CoreEventHandler {
             // TODO: Workaround for a 'Device call in progress' error when device is waiting for a button response
             const payload = event.payload;
             if (payload) {
-                if (payload.error === 'Device call in progress') return;
+                if (payload.error === 'Device call in progress' || payload.error === 'session not found') {
+                    return;
+                }
             }
             //
 
