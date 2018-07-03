@@ -53,7 +53,7 @@ getAddressSegwit_subtests="showSegwit"
 signMessage_subtests="sign signTestnet signBch signLong"
 signMessageSegwit_subtests="sign signLong"
 
-signTx_subtests="oneOneFee oneTwoFee oneThreeFee twoTwo testnetOneTwoFee testnetFeeTooHigh lotsOfOutputs feeTooHigh notEnoughFunds attackChangeOutputs attackChangeInputAddress spendCoinbase twoChanges p2sh changeOnMainChainAllowed"
+signTx_subtests="oneOneFee oneTwoFee oneThreeFee twoTwo testnetOneTwoFee testnetFeeTooHigh lotsOfOutputs feeTooHigh notEnoughFunds spendCoinbase twoChanges p2sh changeOnMainChainAllowed"
 signTxSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
 signTxBgold_subtests="change noChange p2sh p2shWitnessChange sendMultisig1"
 signTxBcash_subtests="change noChange oldAddr sendMultisigWrongChange"
@@ -569,7 +569,6 @@ test_signTx() {
         start_emulator
         if [ $subtest == "oneTwoFee" ] ||
         [ $subtest == "testnetOneTwoFee" ] ||
-        [ $subtest == "attackChangeOutputs" ] ||
         [ $subtest == "changeOnmainChainAllowed" ] ||
         [ $subtest == "twoChanges" ]; then
             setup_mnemonic_allallall

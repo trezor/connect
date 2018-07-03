@@ -60,8 +60,6 @@ declare module 'flowtype/tests' {
         | 'lotsOfOutputs'
         | 'feeTooHigh'
         | 'notEnoughFunds'
-        /* | 'attackChangeOutputs' */
-        /* | 'attackChangeInputAddress' */
         | 'spendCoinbase'
         | 'twoChanges'
         | 'p2sh'
