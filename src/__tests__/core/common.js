@@ -9,7 +9,7 @@ import type {
 } from 'flowtype/tests';
 
 export const settings = {
-    configSrc: 'base/src/data/config.json', // constant
+    configSrc: 'base/src/__tests__/config.json', // constant
     debug: true,
     origin: 'localhost',
     priority: 0,
@@ -19,11 +19,6 @@ export const settings = {
     popup: false,
     popupSrc: `popup.html`,
     webusbSrc: `webusb.html`,
-    coinsSrc: 'base/src/data/coins.json',
-    firmwareReleasesSrc: 'base/src/data/releases-1.json',
-    transportConfigSrc: 'base/src/data/messages.json',
-    customMessages: [],
-    latestBridgeSrc: 'base/src/data/latest.txt',
     transportReconnect: false,
     webusb: true,
     pendingTransportEvent: true,
@@ -87,7 +82,7 @@ export class CoreEventHandler {
             const payload = event.payload;
             if (payload) {
                 if (payload.error === 'Device call in progress' || payload.error === 'session not found') {
-                    return;
+                    //return;
                 }
             }
             //

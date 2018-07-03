@@ -1,0 +1,78 @@
+{
+    "webusb": [
+        {
+            "vendorId": "0x534c",
+            "productId": "0x0001"
+        },
+        {
+            "vendorId": "0x1209",
+            "productId": "0x53c0"
+        },
+        {
+            "vendorId": "0x1209",
+            "productId": "0x53c1"
+        }
+    ],
+    "whitelist": [
+        {
+            "origin": "chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk",
+            "priority": 1
+        },
+        {
+            "origin": "chrome-extension://niebkpllfhmpfbffbfifagfgoamhpflf",
+            "priority": 1
+        },
+        {
+            "origin": "trezor.io",
+            "priority": 0
+        },
+        {
+            "origin": "localhost",
+            "priority": 0
+        }
+    ],
+    "assets": [
+        {
+            "name": "coins",
+            "url": "base/src/data/coins.json"
+        },
+        {
+            "name": "ethereumNetworks",
+            "url": "base/src/data/ethereumNetworks.json"
+        },
+        {
+            "name": "firmware-t1",
+            "url": "base/src/data/firmware/1/releases.json"
+        },
+        {
+            "name": "firmware-t2",
+            "url": "base/src/data/firmware/2/releases.json"
+        },
+        {
+            "name": "messages",
+            "url": "base/src/data/messages.json"
+        },
+        {
+            "name": "bridge",
+            "type": "text",
+            "url": "base/src/data/bridge/latest.txt"
+        }
+    ],
+    "supportedBrowsers": {
+        "chrome": {
+            "version": 59,
+            "download": "https://www.google.com/chrome/",
+            "update": "https://support.google.com/chrome/answer/95414"
+        },
+        "chromium": {
+            "version": 59,
+            "download": "https://www.chromium.org/",
+            "update": "https://www.chromium.org/"
+        },
+        "firefox": {
+            "version": 54,
+            "download": "https://www.mozilla.org/en-US/firefox/new/",
+            "update": "https://support.mozilla.org/en-US/kb/update-firefox-latest-version"
+        }
+    }
+}
