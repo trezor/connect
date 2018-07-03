@@ -828,11 +828,11 @@ test_nemGetAddress() {
 }
 
 test_nemSignTransactionMosaic() {
-    # todo: emulator firmware
     specified_subtest=$1
+
     if [ -n "$specified_subtest" ]; then
         # Run only specified subtest
-        subtests=$specified_subtests
+        subtests=$specified_subtest
     else
         # Run all possible subtests
         subtests=$nemSignTransactionMosaic_subtests
@@ -934,7 +934,6 @@ test_stellarGetPublicKey() {
 }
 
 test_getAccountInfo() {
-    # todo: emulator firmware
     specified_subtest=$1
     if [ -n "$specified_subtest" ]; then
         # Run only specified subtest
@@ -1024,5 +1023,5 @@ elif [ "$run_type" = "excluded" ]; then
     run_excluded_tests "$tests_not_to_run"
 fi;
 
-show_results
-cleanup
+#show_results
+#cleanup
