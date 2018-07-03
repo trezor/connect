@@ -426,37 +426,6 @@ const notEnoughFunds = (): SubtestSignTx => {
     };
 };
 
-// TODO
-/* const attackChangeOutputs = (): SubtestSignTx => {
-    // This unit test attempts to modify data sent during ping-pong of streaming signing.
-    // Because device is asking for human confirmation only during first pass(first input),
-    // device must detect that data has been modified during other passes and fail to sign
-    // such modified data(which has not been confirmed by the user).
-
-    // Test firstly prepare normal transaction and send it to device.Then it send the same
-    // transaction again, but change amount of output 1 during signing the second input.
-
-    console.log('TODO');
-    return {
-        testPayloads: { },
-        expectedResponses: { },
-        specName: '/attackChangeOutputs',
-    }
-}; */
-
-// TODO
-/* const attackChangeInputAddress = (): SubtestSignTx => {
-    // This unit test attempts to modify input address after the Trezor checked
-    // that it matches the change output
-
-    console.log('TODO');
-    return {
-        testPayloads: { },
-        expectedResponses: { },
-        specName: '/attackChangeInputAddress',
-    };
-}; */
-
 const spendCoinbase = (): SubtestSignTx => {
     // 25 TEST generated to m/1 (mfiGQVPcRcaEvQPYDErR34DcCovtxYvUUV)
     // See tx d6da21677d7cca5f42fbc7631d062c9ae918a0254f7c6c22de8e8cb7fd5b8236
@@ -634,8 +603,6 @@ export const signTx = (): void => {
         lotsOfOutputs,
         feeTooHigh,
         notEnoughFunds,
-        /* attackChangeOutputs, */
-        /* attackChangeInputAddress, */
         spendCoinbase,
         twoChanges,
         p2sh,
