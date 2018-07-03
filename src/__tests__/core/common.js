@@ -83,6 +83,14 @@ export class CoreEventHandler {
         }
 
         if (event.type === 'RESPONSE_EVENT') {
+            // TODO: Workaround for a 'Device call in progress' error when device is waiting for a button response
+            const payload = event.payload;
+            if (payload) {
+                if (payload.error === 'Device call in progress') return;
+            }
+            //
+
+            console.warn(event);
             this._compareExpectedResponseToActual(this._expectedResponse, event);
             this._doneFn();
         }

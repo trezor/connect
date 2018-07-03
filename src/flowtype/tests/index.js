@@ -45,6 +45,11 @@ import type {
     ExpectedVerifyMessageResponse,
 } from 'flowtype/tests/verify-message';
 
+import type {
+    TestGetAccountInfoPayload,
+    ExpectedGetAccountInfoResponse,
+} from 'flowtype/tests/get-account-info';
+
 declare module 'flowtype/tests' {
     declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
     declare export type GetAddressSegwitAvailableSubtests = 'showSegwit' /* | 'showMultisig3' */;
@@ -77,6 +82,7 @@ declare module 'flowtype/tests' {
     declare export type NemSignTransactionMultisigAvailableSubtests = 'aggregatedModification' | 'multisig' | 'multisigSigner';
     declare export type NemSignTransactionOthersAvailableSubtests = 'importanceTransfer' | 'provisionNamespace';
     declare export type NemSignTransactionTransfersAvailableSubtests = 'simple' | 'encryptedPayload' | 'xemAsMosaic' | 'unknownMosaic' | 'knownMosaic' | 'knownMosaicWithLevy' | 'multipleMosaics';
+    declare export type GetAccountInfoAvailableSubtests = 'firstAccount' | 'zeroBalance' | 'pathInvalid' | 'noAddressIndex' | 'zeroBalance' | 'xpubInsteadOfPath';
 
     declare export type AvailableTests =
         'getPublicKey'
@@ -97,7 +103,8 @@ declare module 'flowtype/tests' {
         | 'ethereumSignMessage'
         | 'ethereumSignTx'
         | 'ethereumVerifyMessage'
-        | 'nemGetAddress';
+        | 'nemGetAddress'
+        | 'getAccountInfo';
     declare export type AvailableSubtests =
         GetAddressAvailableSubtests
         | SignMessageAvailableSubtests
@@ -125,7 +132,7 @@ declare module 'flowtype/tests' {
     declare export type SubtestEthereumSignTx = Subtest<TestEthereumSignTxPayload, ExpectedEthereumSignTxResponse>;
     declare export type SubtestSignTx = Subtest<TestSignTxPayload, ExpectedSignTxResponse>;
     declare export type SubtestVerifyMessage = Subtest<TestVerifyMessagePayload, ExpectedVerifyMessageResponse>;
-
+    declare export type SubtestGetAccountInfo = Subtest<TestGetAccountInfoPayload, ExpectedGetAccountInfoResponse>;
 
     declare export type TestPayload =
         TestEthereumGetAddressPayload
