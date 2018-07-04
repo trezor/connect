@@ -24,6 +24,9 @@ type Browser = {
     +download: string;
     +update: string;
 }
+type Resources = {
+    bridge: string;
+}
 type Asset = {
     name: string;
     type?: string;
@@ -32,6 +35,7 @@ type Asset = {
 type Config = {
     +whitelist: Array<WhiteList>;
     +webusb: Array<WebUSB>;
+    +resources: Resources;
     +assets: Array<Asset>;
     +supportedBrowsers: { [key: string]: Browser };
 }
@@ -55,8 +59,8 @@ export default class DataManager {
         const configUrl: string = `${settings.configSrc}?r=${ ts }`;
 
         try {
-
             this.settings = settings;
+            // load config.json
             const config: JSON = await httpRequest(configUrl, 'json');
             this.config = parseConfig(config);
 
@@ -68,8 +72,7 @@ export default class DataManager {
             }
             this.settings.priority = DataManager.getPriority(whitelist);
 
-
-
+            // load assets
             for (const asset of this.config.assets) {
                 const json: JSON = await httpRequest(`${asset.url}?r=${ ts }`, asset.type || 'json');
                 this.assets[ asset.name ] = json;

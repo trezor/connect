@@ -10,6 +10,9 @@
         { "origin": "trezor.io", "priority": 0 },
         { "origin": "localhost", "priority": 0 }
     ],
+    "resources": {
+        "bridge": "./data/bridge/latest.txt"
+    },
     "assets": [
         {
             "name": "coins",
@@ -30,11 +33,6 @@
         {
             "name": "messages",
             "url": "./data/messages.json"
-        },
-        {
-            "name": "bridge",
-            "type": "text",
-            "url": "./data/bridge/latest.txt"
         }
     ],
     "supportedBrowsers": {

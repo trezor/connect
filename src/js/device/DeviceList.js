@@ -67,13 +67,8 @@ export default class DeviceList extends EventEmitter {
 
         _log.enabled = DataManager.getSettings('debug');
         if (!this.options.transport) {
-            const bridgeLatestSrc: string = `${ DataManager.getSettings('latestBridgeSrc') }?${ Date.now() }`;
             const transportTypes: Array<Transport> = [
-                new BridgeV2(),
-                // new Lowlevel(
-                //     new WebUsb(),
-                //     () => sharedWorkerFactoryWrap()
-                // )
+                new BridgeV2(null, DataManager.getConfig().resources.bridge),
             ];
 
             if (DataManager.getSettings('webusb')) {
