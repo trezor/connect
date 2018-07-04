@@ -35,10 +35,17 @@ fs.copySync( path.resolve(npm, '../COPYING') , path.resolve(npm, 'COPYING'));
 // fs.copySync( path.resolve(npm, '../LICENSE.txt') , path.resolve(npm, 'LICENSE.txt'));
 fs.copySync( path.resolve(npm, '../CHANGELOG.md') , path.resolve(npm, 'CHANGELOG.md'));
 
-fs.copySync( path.resolve(flowtypeSrc, 'trezor.js') , path.resolve(flowtypeNpm, 'trezor.js'));
-fs.copySync( path.resolve(flowtypeSrc, 'trezor-connect.js') , path.resolve(flowtypeNpm, 'trezor-connect.js'));
-fs.copySync( path.resolve(flowtypeSrc, 'params.js') , path.resolve(flowtypeNpm, 'params.js'));
-fs.copySync( path.resolve(flowtypeSrc, 'response.js') , path.resolve(flowtypeNpm, 'response.js'));
+fs.copySync(flowtypeSrc, flowtypeNpm);
+fs.copySync(path.resolve(__dirname, '../node_modules/trezor-link/flowtype/webusb.js'), path.resolve(flowtypeNpm, 'webusb.js') ); //
+
+fs.remove(path.resolve(flowtypeNpm, 'empty.js'))
+fs.remove(path.resolve(flowtypeNpm, 'fee.js'))
+fs.remove(path.resolve(flowtypeNpm, 'ui-message.js'))
+// fs.remove(path.resolve(flowtypeNpm, 'trezor-connect.js'))
+// fs.copySync( path.resolve(flowtypeSrc, 'trezor.js') , path.resolve(flowtypeNpm, 'trezor.js'));
+// fs.copySync( path.resolve(flowtypeSrc, 'trezor-connect.js') , path.resolve(flowtypeNpm, 'trezor-connect.js'));
+// fs.copySync( path.resolve(flowtypeSrc, 'params.js') , path.resolve(flowtypeNpm, 'params.js'));
+// fs.copySync( path.resolve(flowtypeSrc, 'response.js') , path.resolve(flowtypeNpm, 'response.js'));
 
 /*
 cp README.md ./dist/README.md
