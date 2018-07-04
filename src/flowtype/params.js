@@ -22,8 +22,8 @@ declare module 'flowtype/params' {
     declare type Common = {
         device?: {
             path: string;
-            instance: ?number;
-            state: ?string;
+            instance?: ?number;
+            state?: ?string;
         },
         useEmptyPassphrase?: boolean;
         keepSession?: boolean;
@@ -45,7 +45,7 @@ declare module 'flowtype/params' {
         messages?: JSON;
         message: string;
         params: JSON;
-        callback: (request: any) => void;
+        callback: (request: any) => Promise<?{ message: string, params?: Object }>;
     }
 
     declare export type P_ComposeTransaction = Common & {
@@ -97,7 +97,8 @@ declare module 'flowtype/params' {
     declare export type P_RequestLogin = Common & {
        challengeHidden?: string;
        challengeVisible?: string;
-       callback?: () => void;
+       asyncChallenge?: boolean;
+       callback?: () => Promise<?{ hidden: string, visual: string}>;
     }
 
     declare export type P_NEMGetAddress = Common & {
