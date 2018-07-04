@@ -1,7 +1,7 @@
 # Builds
 _old
 dist
-dist-npm
+npm
 
 # Dependency directory
 node_modules

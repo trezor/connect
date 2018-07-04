@@ -8,6 +8,7 @@
 .*/node_modules/protobufjs-old-fixed-webpack/src/bower.json
 .*/node_modules/node-uuid/lib/.*
 .*/_old/.*
+.*/npm/.*
 
 [libs]
 ./node_modules/trezor-link/flowtype/chrome.js
