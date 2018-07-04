@@ -24,7 +24,7 @@
   "scripts": {
     "dev": "webpack-dev-server --config ./webpack/config.dev.babel.js --mode development",
     "build": "rm -rf dist && webpack --config ./webpack/config.prod.babel.js --progress",
-    "build:npm": "rm -rf dist && webpack --config ./webpack/config.npm.babel.js --progress",
+    "build:npm": "rm -rf npm && babel-node ./tools/build.js && babel ./npm/lib --out-dir ./npm/lib",
     "stats": "webpack --config ./webpack/config.prod.babel.js --json > dist/stats.json",
     "test": "babel-node ./node_modules/karma/bin/karma start karma.conf.js",
     "flow": "flow check src/js",
@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-collect-imports": "^1.1.0",
     "babel-eslint": "^8.2.3",
     "babel-loader": "^7.1.4",
     "babel-plugin-add-module-exports": "^0.2.1",
