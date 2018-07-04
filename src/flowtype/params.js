@@ -1,6 +1,6 @@
 /* @flow */
 
-declare module 'trezor-connect/params' {
+declare module 'flowtype/params' {
 
     import type {
         Transaction as EthereumTransaction

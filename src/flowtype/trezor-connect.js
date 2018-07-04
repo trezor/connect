@@ -203,7 +203,7 @@ declare module 'trezor-connect' {
         P_StellarGetAddress,
         P_StellarSignTransaction,
         P_VerifyMessage
-    } from 'trezor-connect/params';
+    } from 'flowtype/params';
 
     import type {
         R_CipherKeyValue,
@@ -226,7 +226,7 @@ declare module 'trezor-connect' {
         R_StellarGetAddress,
         R_StellarSignTransaction,
         R_VerifyMessage
-    } from 'trezor-connect/response';
+    } from 'flowtype/response';
 
     declare export type Settings = {
         priority?: number;

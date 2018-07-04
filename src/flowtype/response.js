@@ -1,6 +1,6 @@
 /* @flow */
 
-declare module 'trezor-connect/response' {
+declare module 'flowtype/response' {
 
     import type {
         AccountInfo,
