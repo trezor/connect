@@ -38,7 +38,7 @@
     "bowser": "^1.0.0",
     "cb-insight": "^0.1.0",
     "es6-promise": "^2.3.0",
-    "hd-wallet": "^3.5.2",
+    "hd-wallet": "3.5.4",
     "trezor.js": "^6.15.8",
     "whatwg-fetch": "^0.11.0"
   },
