@@ -18,14 +18,59 @@ import { NO_IFRAME, IFRAME_INITIALIZED, DEVICE_CALL_IN_PROGRESS } from './consta
 
 import PopupManager from './popup/PopupManager';
 import * as iframe from './iframe/builder';
+import webUSBButton from './webusb/button';
 import Log, { init as initLog, getLog } from './utils/debug';
 import { parseMessage, UiMessage } from './core/CoreMessage';
 import { parse as parseSettings } from './data/ConnectSettings';
 
 import type { ConnectSettings } from './data/ConnectSettings';
 import type { CoreMessage } from 'flowtype';
-import * as Params from 'flowtype/params';
-import * as Response from 'flowtype/response';
+
+import type {
+    P_CipherKeyValue,
+    P_ComposeTransaction,
+    P_CustomMessage,
+    P_EthereumGetAddress,
+    P_EthereumSignMessage,
+    P_EthereumSignTransaction,
+    P_EthereumVerifyMessage,
+    P_GetAccountInfo,
+    P_GetAddress,
+    P_GetDeviceState,
+    P_GetFeatures,
+    P_GetPublicKey,
+    P_RequestLogin,
+    P_NEMGetAddress,
+    P_NEMSignTransaction,
+    P_SignMessage,
+    P_SignTransaction,
+    P_StellarGetAddress,
+    P_StellarSignTransaction,
+    P_VerifyMessage
+} from 'flowtype/params';
+
+import type {
+    R_CipherKeyValue,
+    R_ComposeTransaction,
+    R_CustomMessage,
+    R_EthereumGetAddress,
+    R_EthereumSignMessage,
+    R_EthereumSignTransaction,
+    R_EthereumVerifyMessage,
+    R_GetAccountInfo,
+    R_GetAddress,
+    R_GetDeviceState,
+    R_GetFeatures,
+    R_GetPublicKey,
+    R_RequestLogin,
+    R_NEMGetAddress,
+    R_NEMSignTransaction,
+    R_SignMessage,
+    R_SignTransaction,
+    R_StellarGetAddress,
+    R_StellarSignTransaction,
+    R_VerifyMessage
+} from 'flowtype/response';
 
 
 const eventEmitter: EventEmitter = new EventEmitter();
@@ -267,67 +312,67 @@ class TrezorConnect {
         }
     }
 
-    static async cipherKeyValue(params: Params.P_CipherKeyValue): Promise<Response.R_CipherKeyValue> {
+    static async cipherKeyValue(params: P_CipherKeyValue): Promise<R_CipherKeyValue> {
         return await this.__call({ method: 'cipherKeyValue', ...params });
     }
 
-    static async composeTransaction(params: Params.P_ComposeTransaction): Promise<Response.R_ComposeTransaction> {
+    static async composeTransaction(params: P_ComposeTransaction): Promise<R_ComposeTransaction> {
         return await this.__call({ method: 'composeTransaction', ...params });
     }
 
-    static async ethereumGetAddress(params: Params.P_EthereumGetAddress): Promise<Response.R_EthereumGetAddress> {
+    static async ethereumGetAddress(params: P_EthereumGetAddress): Promise<R_EthereumGetAddress> {
         return await this.__call({ method: 'ethereumGetAddress', ...params });
     }
 
-    static async ethereumSignMessage(params: Params.P_EthereumSignMessage): Promise<Object> {
+    static async ethereumSignMessage(params: P_EthereumSignMessage): Promise<Object> {
         return await this.__call({ method: 'ethereumSignMessage', ...params });
     }
 
-    static async ethereumSignTransaction(params: Params.P_EthereumSignTransaction): Promise<Response.R_EthereumSignTransaction> {
+    static async ethereumSignTransaction(params: P_EthereumSignTransaction): Promise<R_EthereumSignTransaction> {
         return await this.__call({ method: 'ethereumSignTransaction', ...params });
     }
 
-    static async ethereumVerifyMessage(params: Params.P_EthereumVerifyMessage): Promise<Object> {
+    static async ethereumVerifyMessage(params: P_EthereumVerifyMessage): Promise<Object> {
         return await this.__call({ method: 'ethereumVerifyMessage', ...params });
     }
 
-    static async getAccountInfo(params: Params.P_GetAccountInfo): Promise<Response.R_GetAccountInfo> {
+    static async getAccountInfo(params: P_GetAccountInfo): Promise<R_GetAccountInfo> {
         return await this.__call({ method: 'getAccountInfo', ...params });
     }
 
-    static async getAddress(params: Params.P_GetAddress): Promise<Response.R_GetAddress> {
+    static async getAddress(params: P_GetAddress): Promise<R_GetAddress> {
         return await this.__call({ method: 'getAddress', ...params });
     }
 
-    static async getDeviceState(params: Params.P_GetDeviceState): Promise<Response.R_GetDeviceState> {
+    static async getDeviceState(params: P_GetDeviceState): Promise<R_GetDeviceState> {
         return await this.__call({ method: 'getDeviceState', ...params });
     }
 
-    static async getFeatures(params: Params.P_GetFeatures): Promise<Response.R_GetFeatures> {
+    static async getFeatures(params: P_GetFeatures): Promise<R_GetFeatures> {
         return await this.__call({ method: 'getFeatures', ...params });
     }
 
-    static async getPublicKey(params: Params.P_GetPublicKey): Promise<Response.R_GetPublicKey> {
+    static async getPublicKey(params: P_GetPublicKey): Promise<R_GetPublicKey> {
         return await this.__call({ method: 'getPublicKey', ...params });
     }
 
-    static async nemGetAddress(params: Params.P_NEMGetAddress): Promise<Response.R_NEMGetAddress> {
+    static async nemGetAddress(params: P_NEMGetAddress): Promise<R_NEMGetAddress> {
         return await this.__call({ method: 'nemGetAddress', ...params });
     }
 
-    static async nemSignTransaction(params: Params.P_NEMSignTransaction): Promise<Response.R_NEMSignTransaction> {
+    static async nemSignTransaction(params: P_NEMSignTransaction): Promise<R_NEMSignTransaction> {
         return await this.__call({ method: 'nemSignTransaction', ...params });
     }
 
-    static async signMessage(params: Params.P_SignMessage): Promise<Response.R_SignMessage> {
+    static async signMessage(params: P_SignMessage): Promise<R_SignMessage> {
         return await this.__call({ method: 'signMessage', ...params });
     }
 
-    static async signTransaction(params: Params.P_SignTransaction): Promise<Response.R_SignTransaction> {
+    static async signTransaction(params: P_SignTransaction): Promise<R_SignTransaction> {
         return await this.__call({ method: 'signTransaction', ...params });
     }
 
-    static async stellarGetAddress(params: Params.P_StellarGetAddress): Promise<Response.R_StellarGetAddress> {
+    static async stellarGetAddress(params: P_StellarGetAddress): Promise<R_StellarGetAddress> {
         return await this.__call({ method: 'stellarGetAddress', ...params });
     }
 
@@ -335,11 +380,11 @@ class TrezorConnect {
         return await this.__call({ method: 'stellarGetPublicKey', ...params });
     }
 
-    static async stellarSignTransaction(params: Params.P_StellarSignTransaction): Promise<Response.R_StellarSignTransaction> {
+    static async stellarSignTransaction(params: P_StellarSignTransaction): Promise<R_StellarSignTransaction> {
         return await this.__call({ method: 'stellarSignTransaction', ...params });
     }
 
-    static async verifyMessage(params: Params.P_VerifyMessage): Promise<Response.R_VerifyMessage> {
+    static async verifyMessage(params: P_VerifyMessage): Promise<R_VerifyMessage> {
         return await this.__call({ method: 'verifyMessage', ...params });
     }
 
@@ -348,37 +393,7 @@ class TrezorConnect {
     }
 
     static renderWebUSBButton(className: ?string): void {
-        const query = className ? className : '.trezor-webusb-button';
-        const buttons = document.querySelectorAll(query);
-        const iframeSrc: string = `${_settings.webusbSrc}?${ Date.now() }`;
-
-        buttons.forEach(b => {
-            if (b.getElementsByTagName('iframe').length < 1) {
-                const bounds = b.getBoundingClientRect();
-                const btnIframe = document.createElement('iframe');
-                btnIframe.frameBorder = '0';
-                btnIframe.width = Math.round(bounds.width) + 'px';
-                btnIframe.height = Math.round(bounds.height) + 'px';
-                btnIframe.style.position = 'absolute';
-                btnIframe.style.top = '0px';
-                btnIframe.style.left = '0px';
-                btnIframe.style.zIndex = '1';
-                btnIframe.style.opacity = '0';
-                btnIframe.setAttribute('allow', 'usb');
-                btnIframe.setAttribute('scrolling', 'no');
-                btnIframe.onload = () => {
-                    btnIframe.contentWindow.postMessage({
-                        // style: JSON.stringify( window.getComputedStyle(b) ),
-                        // outer: b.outerHTML,
-                        // inner: b.innerHTML
-                    }, iframe.origin);
-                }
-                btnIframe.src = iframeSrc;
-
-                // inject iframe into button
-                b.append(btnIframe);
-            }
-        });
+        webUSBButton(className, _settings.webusbSrc, iframe.origin);
     }
 }
 

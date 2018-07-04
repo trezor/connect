@@ -22,7 +22,7 @@ module.exports = {
         'trezor-connect': `${JS_SRC}index.js`,
         'iframe': `${JS_SRC}iframe/iframe.js`,
         'popup': `${JS_SRC}popup/popup.js`,
-        'webusb': `${JS_SRC}entrypoints/webusb.js`
+        'webusb': `${JS_SRC}webusb/webusb.js`
     },
     output: {
         filename: '[name].js',
