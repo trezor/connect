@@ -26,7 +26,7 @@ promise = promise.then(() => del(['lib/*']));
 // ['es', 'cjs', 'umd'].forEach((format) => {
 ['cjs'].forEach((format) => {
   promise = promise.then(() => rollup.rollup({
-    input: './src/js/entrypoints/connect.js',
+    input: './src/js/index.js',
     // external: Object.keys(pkg.dependencies),
     // plugins: [babel(Object.assign(pkg.babel, {
     //   babelrc: false,

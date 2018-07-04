@@ -8,9 +8,9 @@ import * as IFRAME from '../constants/iframe';
 import * as UI from '../constants/ui';
 import * as TRANSPORT from '../constants/transport';
 
-import { parse as parseSettings } from '../entrypoints/ConnectSettings';
+import { parse as parseSettings } from '../data/ConnectSettings';
 import DataManager from '../data/DataManager';
-import type { ConnectSettings } from '../entrypoints/ConnectSettings';
+import type { ConnectSettings } from '../data/ConnectSettings';
 
 import { Core, init as initCore, initTransport } from '../core/Core';
 import { parseMessage, UiMessage, ResponseMessage, TransportMessage } from '../core/CoreMessage';

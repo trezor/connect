@@ -13,7 +13,7 @@ import { default as compileInlineCss } from './stylesheet';
 module.exports = {
     mode: 'production',
     entry: {
-        'trezor-connect': `${JS_SRC}entrypoints/connect.js`,
+        'trezor-connect': `${JS_SRC}index.js`,
     },
     output: {
         filename: 'index.min.js',

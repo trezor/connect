@@ -4,7 +4,7 @@ import { exec } from 'child_process';
 import { collectImportsSync } from 'babel-collect-imports';
 import packageJSON from '../package.json';
 
-let { internal, external } = collectImportsSync( path.resolve(__dirname, '../src/js/entrypoints/connect.js') );
+let { internal, external } = collectImportsSync( path.resolve(__dirname, '../src/js/index.js') );
 
 console.log("EXTERNAL", external)
 
@@ -27,7 +27,7 @@ delete packageJSON.scripts;
 delete packageJSON.bin;
 
 packageJSON.dependencies = {};
-packageJSON.main = "lib/entrypoints/connect.js";
+packageJSON.main = "lib/index.js";
 fs.writeFileSync(path.resolve(npm, 'package.json'), JSON.stringify(packageJSON, null, '  '), 'utf-8');
 
 

@@ -66,6 +66,8 @@ module.exports = {
     resolve: {
         modules: [ JS_SRC, './node_modules' ],
         alias: {
+            'flowtype/params': `${SRC}flowtype/empty.js`,
+            'flowtype/response': `${SRC}flowtype/empty.js`,
             'flowtype/trezor': `${ SRC }/flowtype/empty.js`,
         }
     },

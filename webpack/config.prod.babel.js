@@ -18,7 +18,7 @@ import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 module.exports = {
     mode: 'production',
     entry: {
-        'trezor-connect': `${JS_SRC}entrypoints/connect.js`,
+        'trezor-connect': `${JS_SRC}index.js`,
         'iframe': `${JS_SRC}iframe/iframe.js`,
         'popup': `${JS_SRC}popup/popup.js`,
         'webusb': `${JS_SRC}entrypoints/webusb.js`
@@ -89,6 +89,8 @@ module.exports = {
     resolve: {
         modules: [ SRC, NODE_MODULES ],
         alias: {
+            'flowtype/params': `${SRC}flowtype/empty.js`,
+            'flowtype/response': `${SRC}flowtype/empty.js`,
             'flowtype/trezor': `${SRC}flowtype/empty.js`,
         }
     },

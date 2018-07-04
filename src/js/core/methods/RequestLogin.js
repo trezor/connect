@@ -11,7 +11,7 @@ import DataManager from '../../data/DataManager';
 
 import type { UiPromiseResponse, CoreMessage } from 'flowtype';
 import type { Identity, SignedIdentity } from 'flowtype/trezor';
-import type { ConnectSettings } from '../../entrypoints/ConnectSettings';
+import type { ConnectSettings } from '../../data/ConnectSettings';
 
 type Params = {
     asyncChallenge: boolean;

@@ -2,14 +2,14 @@
 'use strict';
 
 import { httpRequest } from '../utils/networkUtils';
-import { DEFAULT_PRIORITY } from '../entrypoints/ConnectSettings';
+import { DEFAULT_PRIORITY } from '../data/ConnectSettings';
 import { parseCoinsJson, parseEthereumNetworksJson } from './CoinInfo';
 import { parseFirmware } from './FirmwareInfo';
 import { Promise } from 'es6-promise';
 import { getOrigin } from '../utils/networkUtils';
 import parseUri from 'parse-uri';
 
-import type { ConnectSettings } from '../entrypoints/ConnectSettings';
+import type { ConnectSettings } from '../data/ConnectSettings';
 
 type WhiteList = {
     +priority: number;

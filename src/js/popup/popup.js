@@ -5,8 +5,8 @@ import { popupConsole } from '../utils/debug';
 import { parseMessage, UiMessage, ResponseMessage } from '../core/CoreMessage';
 import type { CoreMessage } from 'flowtype';
 import DataManager from '../data/DataManager';
-import { parse as parseSettings } from '../entrypoints/ConnectSettings';
-import type { ConnectSettings } from '../entrypoints/ConnectSettings';
+import { parse as parseSettings } from '../data/ConnectSettings';
+import type { ConnectSettings } from '../data/ConnectSettings';
 import type { PopupHandshake } from 'flowtype/ui-message';
 
 import * as POPUP from '../constants/popup';
