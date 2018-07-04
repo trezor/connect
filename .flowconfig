@@ -7,6 +7,7 @@
 .*/node_modules/bitcoinjs-lib-zcash/.*
 .*/node_modules/protobufjs-old-fixed-webpack/src/bower.json
 .*/node_modules/node-uuid/lib/.*
+.*/node_modules/babel-errors/.*
 .*/_old/.*
 .*/npm/.*
 
