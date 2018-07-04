@@ -29,7 +29,7 @@ import Log, { init as initLog, enable as enableLog } from '../utils/debug';
 
 import { parse as parseSettings } from '../data/ConnectSettings';
 
-import type { Device as DeviceTyped } from 'trezor-connect';
+import type { Device as DeviceTyped } from '../types';
 import type { ConnectSettings } from '../data/ConnectSettings';
 import type { Deferred, UiPromiseResponse, CoreMessage } from 'flowtype';
 

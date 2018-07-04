@@ -9,7 +9,7 @@ import DescriptorStream from './DescriptorStream';
 import type { DeviceDescriptorDiff } from './DescriptorStream';
 // import Device from './Device';
 import Device from './Device';
-import type { Device as DeviceTyped } from 'trezor-connect';
+import type { Device as DeviceTyped } from '../types';
 import TrezorLink from 'trezor-link';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 import DataManager from '../data/DataManager';

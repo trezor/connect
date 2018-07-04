@@ -7,7 +7,7 @@ import DeviceCommands from './DeviceCommands';
 
 import type { Deferred } from 'flowtype';
 import type { Features } from 'flowtype/trezor';
-import type { Device as DeviceTyped } from 'trezor-connect';
+import type { Device as DeviceTyped } from '../types';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
 import * as UI from '../constants/ui';
