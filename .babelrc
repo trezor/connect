@@ -1,18 +1,18 @@
 {
-  "presets": [
-      ["env", {
-          "useBuiltIns": true,
-          "loose": true
-      }]
-  ],
-  "plugins": [
-      "transform-class-properties",
-      "transform-object-rest-spread",
-      "transform-flow-strip-types",
-      "add-module-exports",
-      ["transform-runtime", {
-          "polyfill": false,
-          "regenerator": true
-      }]
-  ]
+    "presets": [
+        ["env", {
+            "useBuiltIns": true,
+            "loose": true
+        }]
+    ],
+    "plugins": [
+        "transform-class-properties",
+        "transform-object-rest-spread",
+        "transform-flow-strip-types",
+        "add-module-exports",
+        ["transform-runtime", {
+            "polyfill": false,
+            "regenerator": true
+        }]
+    ]
 }
