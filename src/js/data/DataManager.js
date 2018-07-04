@@ -57,6 +57,9 @@ export default class DataManager {
         try {
 
             this.settings = settings;
+            const config: JSON = await httpRequest(configUrl, 'json');
+            this.config = parseConfig(config);
+
             // check if origin is trusted
             const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || "");
             this.settings.trustedHost = !!whitelist && !this.settings.popup;
@@ -65,8 +68,7 @@ export default class DataManager {
             }
             this.settings.priority = DataManager.getPriority(whitelist);
 
-            const config: JSON = await httpRequest(configUrl, 'json');
-            this.config = parseConfig(config);
+
 
             for (const asset of this.config.assets) {
                 const json: JSON = await httpRequest(`${asset.url}?r=${ ts }`, asset.type || 'json');
