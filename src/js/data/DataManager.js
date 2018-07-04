@@ -60,7 +60,6 @@ export default class DataManager {
 
         try {
             this.settings = settings;
-            // load config.json
             const config: JSON = await httpRequest(configUrl, 'json');
             this.config = parseConfig(config);
 
@@ -72,7 +71,6 @@ export default class DataManager {
             }
             this.settings.priority = DataManager.getPriority(whitelist);
 
-            // load assets
             for (const asset of this.config.assets) {
                 const json: JSON = await httpRequest(`${asset.url}?r=${ ts }`, asset.type || 'json');
                 this.assets[ asset.name ] = json;
