@@ -26,7 +26,6 @@ delete packageJSON.devDependencies;
 delete packageJSON.scripts;
 delete packageJSON.bin;
 
-packageJSON.dependencies = {};
 packageJSON.main = "lib/index.js";
 fs.writeFileSync(path.resolve(npm, 'package.json'), JSON.stringify(packageJSON, null, '  '), 'utf-8');
 
@@ -38,8 +37,8 @@ fs.copySync( path.resolve(npm, '../CHANGELOG.md') , path.resolve(npm, 'CHANGELOG
 
 fs.copySync( path.resolve(flowtypeSrc, 'trezor.js') , path.resolve(flowtypeNpm, 'trezor.js'));
 fs.copySync( path.resolve(flowtypeSrc, 'trezor-connect.js') , path.resolve(flowtypeNpm, 'trezor-connect.js'));
-fs.copySync( path.resolve(flowtypeSrc, 'trezor-connect-params.js') , path.resolve(flowtypeNpm, 'trezor-connect-params.js'));
-fs.copySync( path.resolve(flowtypeSrc, 'trezor-connect-response.js') , path.resolve(flowtypeNpm, 'trezor-connect-response.js'));
+fs.copySync( path.resolve(flowtypeSrc, 'params.js') , path.resolve(flowtypeNpm, 'params.js'));
+fs.copySync( path.resolve(flowtypeSrc, 'response.js') , path.resolve(flowtypeNpm, 'response.js'));
 
 /*
 cp README.md ./dist/README.md
