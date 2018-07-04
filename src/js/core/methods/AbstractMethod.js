@@ -150,10 +150,6 @@ export default class AbstractMethod implements MethodInterface {
         }
 
         saveStorage(PERMISSIONS_KEY, savedPermissions.concat(permissionsToSave));
-
-        if (emitEvent) {
-            this.postMessage(new DeviceMessage(DEVICE.CONNECT, this.device.toMessageObject()))
-        }
     }
 
     getCustomMessages(): ?JSON {
