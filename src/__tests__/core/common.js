@@ -2,6 +2,7 @@
 import { Core } from '../../js/core/Core.js';
 import * as POPUP from '../../js/constants/popup';
 import * as UI from '../../js/constants/ui';
+import * as DEVICE from '../../js/constants/device';
 
 import type {
     TestPayload,
@@ -34,7 +35,7 @@ export class CoreEventHandler {
 
     _urlBase: string = 'http://127.0.0.1:21325';
     _urlEnumerate: string = `${this._urlBase}/enumerate`;
-    _urlAcquire = (devicePath: string, session: string = 'null') => `${this._urlBase}/acquire/${devicePath}/${session}`;
+    _urlAcquire = (devicePath: string, previousSession: string = 'null') => `${this._urlBase}/acquire/${devicePath}/${previousSession}`;
     _urlCall = (session: any) => `${this._urlBase}/call/${session}`;
     _urlRelease = (session: any) => `${this._urlBase}/release/${session}`;
 
@@ -56,25 +57,42 @@ export class CoreEventHandler {
 
     // Private Functions
     async _handleCoreEvents(event: any): Promise<void> {
-        //console.log(`[CORE EVENT - ${event.type}]`, event);
-        if (event.type === 'device__connect' && event.payload.path === 'emulator21324' && event.payload.features) {
+        //console.log('[Core Event]', event.type);
+        /* if (event.type === DEVICE.CONNECT) {
             console.error('DEVICE CONNECTED', event);
-            //console.warn('CALLING CORE METHOD WITH PAYLOAD', this._payload);
+        }         */
+        if (event.type === DEVICE.CONNECT && event.payload.path === 'emulator21324' && event.payload.features) {
             this._core.handleMessage({
                 type: 'iframe_call',
                 id: 1,
                 payload: {...this._payload, device: { path: 'emulator21324' }},
-                //payload: this._payload,
             }, true);
         }
 
+        if (event.type === DEVICE.CONNECT_UNACQUIRED && event.payload.path === 'emulator21325') {
+            console.log('===[Core connect unacquired]===', event);
+            try {
+                //await this._releaseDevice();
+                //await this._acquireDevice();
+                await this._handleButtonRequest();
+            } catch(e) {
+                console.error('Error on connect unacquired', [e, event]);
+                //return;
+            }
+        }
+
         if (event.type === UI.REQUEST_BUTTON) {
+            console.log('===[Core request button]===', event);
             try {
                 //await this._releaseDevice();
                 //await this._handleButtonRequest();
+                //await this._releaseDevice();
+                //console.error('Device Released');
+                await this._acquireDevice();
+                //console.error('Device Acquired');
             } catch(e) {
-                console.error('Error handling button', e);
-                return;
+                console.error('Error on request button', [e, event]);
+                //return;
             }
         }
 
@@ -89,28 +107,16 @@ export class CoreEventHandler {
             };
 
             this._core.handleMessage({ event: 'UI_EVENT', type: UI.RECEIVE_PERMISSION, payload }, true);
-            /* setTimeout(() => {
-                this._core.handleMessage({ event: 'UI_EVENT', type: UI.RECEIVE_PERMISSION, payload }, true);
-            }, 1000) */
         }
 
         if (event.type === 'RESPONSE_EVENT') {
-            // TODO: Workaround for a 'Device call in progress' error when device is waiting for a button response
-            const payload = event.payload;
-            if (payload) {
-                if (payload.error === 'Device call in progress' || payload.error === 'session not found') {
-                    //return;
-                }
-            }
-            //
-
             console.warn(event);
             this._compareExpectedResponseToActual(this._expectedResponse, event);
-            //this._doneFn();
+            this._doneFn();
         }
     }
 
-    // 'expected' keys (and associated types) must be a subset (same set) of the 'actual' keys
+    // 'expected' keys (and associated types) must be a subset (or same set) of 'actual' keys
     // i.e. 'expected' is the ancestor of the 'actual'
     // this function doesn't compare whether two objects have same keys
     // the premise is that both objects have same keys but may have different values
@@ -145,7 +151,7 @@ export class CoreEventHandler {
             });
 
             // 2. Acquire this device using saved session value
-            session = JSON.parse(await this._httpPost(this._urlAcquire(path, session))).session;
+            //session = JSON.parse(await this._httpPost(this._urlAcquire(path, session))).session;
 
             // 3. Call the method
             return this._httpPost(this._urlCall(session), protoButtonPressYes);
@@ -154,6 +160,25 @@ export class CoreEventHandler {
             return;
         }
     };
+
+    async _acquireDevice(): Promise<any> {
+        try {
+            let session;
+            let path = '';
+            const devices: Array<any> = JSON.parse(await this._httpPost(this._urlEnumerate));
+            devices.forEach(d => {
+                if (d.path === 'emulator21325') {
+                    session = d.session;
+                    path = d.path;
+                }
+            });
+
+            return this._httpPost(this._urlAcquire(path, session));
+        } catch (e) {
+            console.error(e);
+            return;
+        }
+    }
 
     async _releaseDevice(): Promise<any> {
         let session = null;
