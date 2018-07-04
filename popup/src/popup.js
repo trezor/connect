@@ -696,12 +696,20 @@ function handleRecoverSignTx(event) {
                 bitcoreBackend.coinInfo.segwit = account.segwit;
 
                 const coinInfo = bitcoreBackend.coinInfo;
+                let coinName = coinInfo.name;
+                // issue with new firmware where BitcoinGold name is different (Bgold)
+                if (coinInfo.shortcut === 'BTG') {
+                    const bGoldFirmware = device.features.major_version === 1 ? '1.6.2' : '2.0.6';
+                    if (device.atLeast(bGoldFirmware)) {
+                        coinName = 'Bgold';
+                    }
+                }
                 const tx = new ComposingTransaction(coinInfo, account.basePath, inputs, outputs);
 
                 return tx.getReferencedTx(bitcoreBackend, account)
                 .then(refTxs => {
                     const node = bitcoin.HDNode.fromBase58(account.xpub, coinInfo.network);
-                    return device.session.signBjsTx(tx.getTx(), refTxs, [node.derive(0), node.derive(1)], coinInfo.name, coinInfo.network)
+                    return device.session.signBjsTx(tx.getTx(), refTxs, [node.derive(0), node.derive(1)], coinName, coinInfo.network)
                         .catch(handler);
                 });
             };
@@ -814,7 +822,9 @@ function handleRecoverCoins(event) {
                                     if (destination.id === 'btcX' || destination.id === 'btc2xX')
                                        account.backend.coinInfo.segwit = false;
 
-                                    return account.discover().then(discovered => {
+                                    const gap: number = a.info.usedAddresses.length + 20;
+
+                                    return account.discover(gap).then(discovered => {
                                         list.push({
                                             id: discovered.id,
                                             xpub: discovered.xpub,

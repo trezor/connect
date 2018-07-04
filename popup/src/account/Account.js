@@ -59,13 +59,14 @@ export default class Account {
         this.backend = backend;
     }
 
-    discover() {
+    discover(gap?: number) {
         return this.backend.loadAccountInfo(
                 this.xpub,
                 null,
                 () => { },
                 (disposer) => { },
-                this.backend.coinInfo.segwit
+                this.backend.coinInfo.segwit,
+                gap
             ).then(
                 (info) => {
                     this.info = info;

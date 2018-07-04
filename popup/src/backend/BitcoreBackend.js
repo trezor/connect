@@ -108,14 +108,15 @@ export default class BitcoreBackend {
         data: ?AccountInfo,
         progress: (progress: AccountLoadStatus) => void,
         setDisposer: (disposer: () => void) => void,
-        segwit: boolean
+        segwit: boolean,
+        gap?: number
     ): Promise<AccountInfo> {
         if (this.coinInfo == null) {
             return Promise.reject(new Error('Address version not set.'));
         }
         const segwit_s = segwit ? 'p2sh' : 'off';
 
-        const discovery = this.discovery.discoverAccount(data, xpub, this.coinInfo.network, segwit_s);
+        const discovery = this.discovery.discoverAccount(data, xpub, this.coinInfo.network, segwit_s, gap);
 
         this.blockchain.errors.values.attach((e) => {
             discovery.dispose(e);
