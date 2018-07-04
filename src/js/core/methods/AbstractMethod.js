@@ -70,13 +70,15 @@ export default class AbstractMethod implements MethodInterface {
     async requestPermissions(): Promise<boolean> {
         // wait for popup window
         await this.getPopupPromise().promise;
+        // initialize user response promise
+        const uiPromise = this.createUiPromise(UI.RECEIVE_PERMISSION, this.device);
         // post to view
         this.postMessage(new UiMessage(UI.REQUEST_PERMISSION, {
             permissions: this.requiredPermissions,
             device: this.device.toMessageObject(),
         }));
         // wait for response
-        const uiResp: UiPromiseResponse = await this.createUiPromise(UI.RECEIVE_PERMISSION, this.device).promise;
+        const uiResp: UiPromiseResponse = await uiPromise.promise;
 
         const permissionsResponse: any = uiResp.payload;
 
