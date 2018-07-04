@@ -49,24 +49,29 @@ export class CoreEventHandler {
 
     // Public Functions
     startListening() {
+        console.log('[Start listening to Core]');
         this._core.on('CORE_EVENT', this._handleCoreEvents.bind(this));
     }
     // Public Functions: END
 
     // Private Functions
     async _handleCoreEvents(event: any): Promise<void> {
-        if (event.type === 'device__connect') {
+        //console.log(`[CORE EVENT - ${event.type}]`, event);
+        if (event.type === 'device__connect' && event.payload.path === 'emulator21324' && event.payload.features) {
+            console.error('DEVICE CONNECTED', event);
+            //console.warn('CALLING CORE METHOD WITH PAYLOAD', this._payload);
             this._core.handleMessage({
                 type: 'iframe_call',
                 id: 1,
                 payload: {...this._payload, device: { path: 'emulator21324' }},
+                //payload: this._payload,
             }, true);
         }
 
         if (event.type === UI.REQUEST_BUTTON) {
             try {
-                await this._releaseDevice();
-                await this._handleButtonRequest();
+                //await this._releaseDevice();
+                //await this._handleButtonRequest();
             } catch(e) {
                 console.error('Error handling button', e);
                 return;
@@ -75,6 +80,18 @@ export class CoreEventHandler {
 
         if (event.type === UI.REQUEST_UI_WINDOW) {
             this._core.handleMessage({ event: 'UI_EVENT', type: POPUP.HANDSHAKE }, true);
+        }
+
+        if (event.type === UI.REQUEST_PERMISSION) {
+            const payload = {
+                remember: true,
+                granted: true,
+            };
+
+            this._core.handleMessage({ event: 'UI_EVENT', type: UI.RECEIVE_PERMISSION, payload }, true);
+            /* setTimeout(() => {
+                this._core.handleMessage({ event: 'UI_EVENT', type: UI.RECEIVE_PERMISSION, payload }, true);
+            }, 1000) */
         }
 
         if (event.type === 'RESPONSE_EVENT') {
@@ -89,7 +106,7 @@ export class CoreEventHandler {
 
             console.warn(event);
             this._compareExpectedResponseToActual(this._expectedResponse, event);
-            this._doneFn();
+            //this._doneFn();
         }
     }
 
