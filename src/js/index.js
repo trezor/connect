@@ -20,58 +20,13 @@ import PopupManager from './popup/PopupManager';
 import * as iframe from './iframe/builder';
 import webUSBButton from './webusb/button';
 import Log, { init as initLog, getLog } from './utils/debug';
-import { parseMessage, UiMessage } from './core/CoreMessage';
+import { parseMessage } from './message';
 import { parse as parseSettings } from './data/ConnectSettings';
 
 import type { ConnectSettings } from './data/ConnectSettings';
 import type { CoreMessage } from 'flowtype';
 
-import type {
-    P_CipherKeyValue,
-    P_ComposeTransaction,
-    P_CustomMessage,
-    P_EthereumGetAddress,
-    P_EthereumSignMessage,
-    P_EthereumSignTransaction,
-    P_EthereumVerifyMessage,
-    P_GetAccountInfo,
-    P_GetAddress,
-    P_GetDeviceState,
-    P_GetFeatures,
-    P_GetPublicKey,
-    P_RequestLogin,
-    P_NEMGetAddress,
-    P_NEMSignTransaction,
-    P_SignMessage,
-    P_SignTransaction,
-    P_StellarGetAddress,
-    P_StellarSignTransaction,
-    P_VerifyMessage
-} from 'flowtype/params';
-
-import type {
-    R_CipherKeyValue,
-    R_ComposeTransaction,
-    R_CustomMessage,
-    R_EthereumGetAddress,
-    R_EthereumSignMessage,
-    R_EthereumSignTransaction,
-    R_EthereumVerifyMessage,
-    R_GetAccountInfo,
-    R_GetAddress,
-    R_GetDeviceState,
-    R_GetFeatures,
-    R_GetPublicKey,
-    R_RequestLogin,
-    R_NEMGetAddress,
-    R_NEMSignTransaction,
-    R_SignMessage,
-    R_SignTransaction,
-    R_StellarGetAddress,
-    R_StellarSignTransaction,
-    R_VerifyMessage
-} from 'flowtype/response';
-
+import * as $T from './types';
 
 const eventEmitter: EventEmitter = new EventEmitter();
 const _log: Log = initLog('[trezor-connect.js]');
@@ -151,53 +106,111 @@ const handleMessage = (messageEvent: Message): void => {
     }
 };
 
-class TrezorConnect {
+const init = async (settings: Object = {}): Promise<void> => {
+    if (iframe.instance) { throw IFRAME_INITIALIZED; }
 
-    static async init(settings: Object = {}): Promise<void> {
-
-        if (iframe.instance) { throw IFRAME_INITIALIZED; }
-
-        if (!_settings) {
-            _settings = parseSettings(settings);
-        }
-
-        if (!_popupManager) {
-            _popupManager = initPopupManager();
-        }
-
-        _log.enabled = _settings.debug;
-
-        window.addEventListener('message', handleMessage);
-        window.addEventListener('beforeunload', () => {
-            if (_popupManager) {
-                _popupManager.onBeforeUnload();
-            }
-
-            iframe.dispose();
-        });
-
-        await iframe.init(settings);
+    if (!_settings) {
+        _settings = parseSettings(settings);
     }
 
-    static on(type: string, fn: Function): void {
+    if (!_popupManager) {
+        _popupManager = initPopupManager();
+    }
+
+    _log.enabled = _settings.debug;
+
+    window.addEventListener('message', handleMessage);
+    window.addEventListener('beforeunload', () => {
+        if (_popupManager) {
+            _popupManager.onBeforeUnload();
+        }
+
+        iframe.dispose();
+    });
+
+    await iframe.init(settings);
+}
+
+const call = async (params: Object): Promise<Object> => {
+    if (!iframe.instance && !iframe.timeout) {
+        // init popup with lazy loading before iframe initialization
+        _settings = parseSettings({});
+        _popupManager = initPopupManager();
+        _popupManager.request(true);
+        // auto init with default settings
+        try {
+            await init(_settings);
+            _popupManager.resolveLazyLoad();
+        } catch (error) {
+            _popupManager.close();
+            return { success: false, message: error };
+        }
+    }
+
+    if (iframe.timeout) {
+        // this.init was called, but iframe doesn't return handshake yet
+        return { success: false, message: NO_IFRAME.message };
+    } else if (iframe.error) {
+        // iframe was initialized with error
+        return { success: false, message: iframe.error };
+    }
+
+    // request popup window it might be used in the future
+    // if (eventEmitter.listeners(UI_EVENT).length < 1) { _popupManager.request(params); }
+    if (_settings.popup) { _popupManager.request(); }
+
+    // post message to iframe
+    try {
+        const response: ?Object = await iframe.postMessage({ type: IFRAME.CALL, payload: params });
+        if (response) {
+            // TODO: unlock popupManager request only if there wasn't error "in progress"
+            if (response.payload.error !== DEVICE_CALL_IN_PROGRESS.message) { _popupManager.unlock(); }
+            return response;
+        } else {
+            _popupManager.unlock();
+            // TODO
+            return { success: false };
+        }
+    } catch (error) {
+        _log.error('__call error', error);
+        return error;
+    }
+}
+
+const customMessageResponse = (payload: ?{ message: string, params?: Object }): void => {
+    iframe.postMessage({
+        event: UI_EVENT,
+        type: UI.CUSTOM_MESSAGE_RESPONSE,
+        payload
+    });
+}
+
+class TrezorConnect {
+
+    static init = async (settings: $T.Settings): Promise<void> => {
+        return await init(settings);
+    }
+
+    static on: $T.EventListener = (type, fn): void => {
         eventEmitter.on(type, fn);
     }
 
-    static off(type: string, fn: Function): void {
+    static off: $T.EventListener = (type, fn): void => {
         eventEmitter.removeListener(type, fn);
     }
 
-    static uiResponse(message: Object): void {
-        iframe.postMessage({ event: UI_EVENT, ...message });
+    static uiResponse = (response: $T.UiResponse): void => {
+        iframe.postMessage({ event: UI_EVENT, ...response });
     }
 
-    static changeSettings(settings: Object) {
+    // deprecated
+    static changeSettings = (settings: $T.Settings): void => {
         const parsedSettings: ConnectSettings = parseSettings(settings);
         _log.enabled = parsedSettings.debug;
         iframe.postMessage({ type: UI.CHANGE_SETTINGS, payload: parsedSettings }, false);
     }
 
-    static async customMessage(params: Object): Promise<Object | void> {
+    static customMessage = async (params: $T.P_CustomMessage): Promise<$T.R_CustomMessage> => {
         if (typeof params.callback !== 'function') {
             return {
                 success: false,
@@ -213,186 +226,132 @@ class TrezorConnect {
         const customMessageListener = async (event: Message) => {
             const data = event.data;
             if (data && data.type == UI.CUSTOM_MESSAGE_REQUEST) {
-                const response = await callback(data.payload);
-                if (response) {
-                    this.__customMessageResponse(response);
+                const payload = await callback(data.payload);
+                if (payload) {
+                    customMessageResponse(payload);
                 } else {
-                    this.__customMessageResponse({ message: 'release' });
+                    customMessageResponse({ message: 'release' });
                 }
             }
         }
         window.addEventListener('message', customMessageListener, false);
-        const response = await this.__call({ method: 'customMessage', ...params });
+
+        const response = await call({ method: 'customMessage', ...params });
         window.removeEventListener('message', customMessageListener);
         return response;
     }
 
-    static __customMessageResponse(message: Object): void {
-        iframe.postMessage({
-            event: UI_EVENT,
-            type: UI.CUSTOM_MESSAGE_RESPONSE,
-            payload: message
-        });
-    }
-
-    static async requestLogin(params: Object): Promise<Object> {
-
+    static requestLogin = async (params: $T.P_RequestLogin): Promise<$T.R_RequestLogin> => {
         if (typeof params.callback === 'function') {
-            const callback: Function = params.callback;
-            delete params.callback;
-            params.asyncChallenge = true; // replace value for callback (this field cannot be function)
+            const callback = params.callback;
+            // delete params.callback;
+            //params.asyncChallenge = true; // replace value for callback (this field cannot be function)
 
             // TODO: set message listener only if iframe is loaded correctly
             const loginChallengeListener = async (event: Message) => {
                 const data = event.data;
                 if (data && data.type == UI.LOGIN_CHALLENGE_REQUEST) {
-                    const response = await callback();
+                    const payload = await callback();
                     iframe.postMessage({
                         event: UI_EVENT,
                         type: UI.LOGIN_CHALLENGE_RESPONSE,
-                        payload: response
+                        payload
                     });
                 }
             }
 
             window.addEventListener('message', loginChallengeListener, false);
-            const response = await this.__call({ method: 'requestLogin', ...params });
+
+            const response = await call({ method: 'requestLogin', ...params });
             window.removeEventListener('message', loginChallengeListener);
             return response;
         } else {
-            return await this.__call({ method: 'requestLogin', ...params });
+            return await call({ method: 'requestLogin', ...params });
         }
     }
 
-    static async __call(params: Object): Promise<Object> {
-
-
-        if (!iframe.instance && !iframe.timeout) {
-            // init popup with lazy loading before iframe initialization
-            _settings = parseSettings({});
-            _popupManager = initPopupManager();
-            _popupManager.request(true);
-            // auto init with default settings
-            try {
-                await this.init(_settings);
-                _popupManager.resolveLazyLoad();
-            } catch (error) {
-                _popupManager.close();
-                return { success: false, message: error };
-            }
-        }
-
-        if (iframe.timeout) {
-            // this.init was called, but iframe doesn't return handshake yet
-            return { success: false, message: NO_IFRAME.message };
-        } else if (iframe.error) {
-            // iframe was initialized with error
-            return { success: false, message: iframe.error };
-        }
-
-        // request popup window it might be used in the future
-        // if (eventEmitter.listeners(UI_EVENT).length < 1) { _popupManager.request(params); }
-        if (_settings.popup) { _popupManager.request(); }
-
-        // post message to iframe
-        try {
-            const response: ?Object = await iframe.postMessage({ type: IFRAME.CALL, payload: params });
-            if (response) {
-                // TODO: unlock popupManager request only if there wasn't error "in progress"
-                if (response.payload.error !== DEVICE_CALL_IN_PROGRESS.message) { _popupManager.unlock(); }
-                return response;
-            } else {
-                _popupManager.unlock();
-                // TODO
-                return { success: false };
-            }
-        } catch (error) {
-            _log.error('__call error', error);
-            return error;
-        }
+    static cipherKeyValue = async (params: $T.P_CipherKeyValue): Promise<$T.R_CipherKeyValue> => {
+        return await call({ method: 'cipherKeyValue', ...params });
     }
 
-    static async cipherKeyValue(params: P_CipherKeyValue): Promise<R_CipherKeyValue> {
-        return await this.__call({ method: 'cipherKeyValue', ...params });
+    static composeTransaction = async (params: $T.P_ComposeTransaction): Promise<$T.R_ComposeTransaction> => {
+        return await call({ method: 'composeTransaction', ...params });
     }
 
-    static async composeTransaction(params: P_ComposeTransaction): Promise<R_ComposeTransaction> {
-        return await this.__call({ method: 'composeTransaction', ...params });
+    static ethereumGetAddress = async (params: $T.P_EthereumGetAddress): Promise<$T.R_EthereumGetAddress> => {
+        return await call({ method: 'ethereumGetAddress', ...params });
     }
 
-    static async ethereumGetAddress(params: P_EthereumGetAddress): Promise<R_EthereumGetAddress> {
-        return await this.__call({ method: 'ethereumGetAddress', ...params });
+    static ethereumSignMessage = async (params: $T.P_EthereumSignMessage): Promise<$T.R_EthereumSignMessage> => {
+        return await call({ method: 'ethereumSignMessage', ...params });
     }
 
-    static async ethereumSignMessage(params: P_EthereumSignMessage): Promise<Object> {
-        return await this.__call({ method: 'ethereumSignMessage', ...params });
+    static ethereumSignTransaction = async (params: $T.P_EthereumSignTransaction): Promise<$T.R_EthereumSignTransaction> => {
+        return await call({ method: 'ethereumSignTransaction', ...params });
     }
 
-    static async ethereumSignTransaction(params: P_EthereumSignTransaction): Promise<R_EthereumSignTransaction> {
-        return await this.__call({ method: 'ethereumSignTransaction', ...params });
+    static ethereumVerifyMessage = async (params: $T.P_EthereumVerifyMessage): Promise<$T.R_EthereumVerifyMessage> => {
+        return await call({ method: 'ethereumVerifyMessage', ...params });
     }
 
-    static async ethereumVerifyMessage(params: P_EthereumVerifyMessage): Promise<Object> {
-        return await this.__call({ method: 'ethereumVerifyMessage', ...params });
+    static getAccountInfo = async (params: $T.P_GetAccountInfo): Promise<$T.R_GetAccountInfo> => {
+        return await call({ method: 'getAccountInfo', ...params });
     }
 
-    static async getAccountInfo(params: P_GetAccountInfo): Promise<R_GetAccountInfo> {
-        return await this.__call({ method: 'getAccountInfo', ...params });
+    static getAddress = async (params: $T.P_GetAddress): Promise<$T.R_GetAddress> => {
+        return await call({ method: 'getAddress', ...params });
     }
 
-    static async getAddress(params: P_GetAddress): Promise<R_GetAddress> {
-        return await this.__call({ method: 'getAddress', ...params });
+    static getDeviceState = async (params: $T.P_GetDeviceState): Promise<$T.R_GetDeviceState> => {
+        return await call({ method: 'getDeviceState', ...params });
     }
 
-    static async getDeviceState(params: P_GetDeviceState): Promise<R_GetDeviceState> {
-        return await this.__call({ method: 'getDeviceState', ...params });
+    static getFeatures = async (params: $T.P_GetFeatures): Promise<$T.R_GetFeatures> => {
+        return await call({ method: 'getFeatures', ...params });
     }
 
-    static async getFeatures(params: P_GetFeatures): Promise<R_GetFeatures> {
-        return await this.__call({ method: 'getFeatures', ...params });
+    static getPublicKey = async (params: $T.P_GetPublicKey): Promise<$T.R_GetPublicKey> => {
+        return await call({ method: 'getPublicKey', ...params });
     }
 
-    static async getPublicKey(params: P_GetPublicKey): Promise<R_GetPublicKey> {
-        return await this.__call({ method: 'getPublicKey', ...params });
+    static nemGetAddress = async (params: $T.P_NEMGetAddress): Promise<$T.R_NEMGetAddress> => {
+        return await call({ method: 'nemGetAddress', ...params });
     }
 
-    static async nemGetAddress(params: P_NEMGetAddress): Promise<R_NEMGetAddress> {
-        return await this.__call({ method: 'nemGetAddress', ...params });
+    static nemSignTransaction = async (params: $T.P_NEMSignTransaction): Promise<$T.R_NEMSignTransaction> => {
+        return await call({ method: 'nemSignTransaction', ...params });
     }
 
-    static async nemSignTransaction(params: P_NEMSignTransaction): Promise<R_NEMSignTransaction> {
-        return await this.__call({ method: 'nemSignTransaction', ...params });
+    static signMessage = async (params: $T.P_SignMessage): Promise<$T.R_SignMessage> => {
+        return await call({ method: 'signMessage', ...params });
     }
 
-    static async signMessage(params: P_SignMessage): Promise<R_SignMessage> {
-        return await this.__call({ method: 'signMessage', ...params });
+    static signTransaction = async (params: $T.P_SignTransaction): Promise<$T.R_SignTransaction> => {
+        return await call({ method: 'signTransaction', ...params });
     }
 
-    static async signTransaction(params: P_SignTransaction): Promise<R_SignTransaction> {
-        return await this.__call({ method: 'signTransaction', ...params });
+    static stellarGetAddress = async (params: $T.P_StellarGetAddress): Promise<$T.R_StellarGetAddress> => {
+        return await call({ method: 'stellarGetAddress', ...params });
     }
 
-    static async stellarGetAddress(params: P_StellarGetAddress): Promise<R_StellarGetAddress> {
-        return await this.__call({ method: 'stellarGetAddress', ...params });
+    // deprecated
+    static stellarGetPublicKey = async (params: $T.P_StellarGetAddress): Promise<$T.R_StellarGetAddress> => {
+        return await call({ method: 'stellarGetPublicKey', ...params });
     }
 
-    static async stellarGetPublicKey(params: Object): Promise<Object> {
-        return await this.__call({ method: 'stellarGetPublicKey', ...params });
+    static stellarSignTransaction = async (params: $T.P_StellarSignTransaction): Promise<$T.R_StellarSignTransaction> => {
+        return await call({ method: 'stellarSignTransaction', ...params });
     }
 
-    static async stellarSignTransaction(params: P_StellarSignTransaction): Promise<R_StellarSignTransaction> {
-        return await this.__call({ method: 'stellarSignTransaction', ...params });
+    static verifyMessage = async (params: $T.P_VerifyMessage): Promise<$T.R_VerifyMessage> => {
+        return await call({ method: 'verifyMessage', ...params });
     }
 
-    static async verifyMessage(params: P_VerifyMessage): Promise<R_VerifyMessage> {
-        return await this.__call({ method: 'verifyMessage', ...params });
-    }
-
-    static dispose(): void {
+    static dispose = (): void => {
         // TODO
     }
 
-    static renderWebUSBButton(className: ?string): void {
+    static renderWebUSBButton = (className: ?string): void => {
         webUSBButton(className, _settings.webusbSrc, iframe.origin);
     }
 }
@@ -406,8 +365,20 @@ export {
     UI_EVENT,
     DEVICE_EVENT,
     TRANSPORT_EVENT,
-    RESPONSE_EVENT,
+    // RESPONSE_EVENT,
 };
 
 // expose as window
 window.TrezorConnect = TrezorConnect;
+
+// reexport types
+export type {
+    Device,
+    Features,
+    DeviceMessageType,
+    DeviceMessage,
+    UiMessageType,
+    UiMessage,
+    TransportMessageType,
+    TransportMessage,
+ } from './types';
