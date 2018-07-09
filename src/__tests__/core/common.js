@@ -1,8 +1,10 @@
 /* @flow */
 import { Core } from '../../js/core/Core.js';
 import * as POPUP from '../../js/constants/popup';
+import { CORE_EVENT, RESPONSE_EVENT, UI_EVENT } from '../../js/constants';
 import * as UI from '../../js/constants/ui';
 import * as DEVICE from '../../js/constants/device';
+
 
 import type {
     TestPayload,
@@ -35,9 +37,11 @@ export class CoreEventHandler {
 
     _urlBase: string = 'http://127.0.0.1:21325';
     _urlEnumerate: string = `${this._urlBase}/enumerate`;
-    _urlAcquire = (devicePath: string, previousSession: string = 'null') => `${this._urlBase}/acquire/${devicePath}/${previousSession}`;
-    _urlCall = (session: any) => `${this._urlBase}/call/${session}`;
-    _urlRelease = (session: any) => `${this._urlBase}/release/${session}`;
+    _urlAcquire = (devicePath: string, previousSession: number | string = 'null') => `${this._urlBase}/acquire/${devicePath}/${previousSession}`;
+    _urlCall = (session: number | string) => `${this._urlBase}/post/${session}`;
+    _urlRelease = (session: number | string) => `${this._urlBase}/release/${session}`;
+
+    _isHandlingButtonRequest = false;
 
     constructor(core: Core, payload: TestPayload, expectedResponse: ExpectedResponse, expectFn: any, doneFn: any) {
         this._core = core;
@@ -50,17 +54,12 @@ export class CoreEventHandler {
 
     // Public Functions
     startListening() {
-        console.log('[Start listening to Core]');
         this._core.on('CORE_EVENT', this._handleCoreEvents.bind(this));
     }
     // Public Functions: END
 
     // Private Functions
     async _handleCoreEvents(event: any): Promise<void> {
-        //console.log('[Core Event]', event.type);
-        /* if (event.type === DEVICE.CONNECT) {
-            console.error('DEVICE CONNECTED', event);
-        }         */
         if (event.type === DEVICE.CONNECT && event.payload.path === 'emulator21324' && event.payload.features) {
             this._core.handleMessage({
                 type: 'iframe_call',
@@ -69,35 +68,32 @@ export class CoreEventHandler {
             }, true);
         }
 
-        if (event.type === DEVICE.CONNECT_UNACQUIRED && event.payload.path === 'emulator21325') {
-            console.log('===[Core connect unacquired]===', event);
+        if (event.type === DEVICE.CHANGED
+        && event.payload.path === 'emulator21325'
+        && this._isHandlingButtonRequest) {
             try {
-                //await this._releaseDevice();
-                //await this._acquireDevice();
-                await this._handleButtonRequest();
-            } catch(e) {
-                console.error('Error on connect unacquired', [e, event]);
-                //return;
+                setTimeout(async () => {
+                    this._isHandlingButtonRequest = false;
+                    const { session } = await this._getDebugLinkInfo();
+                    this._handleButtonRequest(session);
+                }, 1000);
+            } catch (error) {
+                console.error('Error on device changed', [error, event]);
             }
         }
 
         if (event.type === UI.REQUEST_BUTTON) {
-            console.log('===[Core request button]===', event);
             try {
-                //await this._releaseDevice();
-                //await this._handleButtonRequest();
-                //await this._releaseDevice();
-                //console.error('Device Released');
-                await this._acquireDevice();
-                //console.error('Device Acquired');
-            } catch(e) {
-                console.error('Error on request button', [e, event]);
-                //return;
+                this._isHandlingButtonRequest = true;
+                const { session, path } = await this._getDebugLinkInfo();
+                this._acquireDevice(session, path);
+            } catch(error) {
+                console.error('Error on request button', [error, event]);
             }
         }
 
         if (event.type === UI.REQUEST_UI_WINDOW) {
-            this._core.handleMessage({ event: 'UI_EVENT', type: POPUP.HANDSHAKE }, true);
+            this._core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, true);
         }
 
         if (event.type === UI.REQUEST_PERMISSION) {
@@ -105,13 +101,13 @@ export class CoreEventHandler {
                 remember: true,
                 granted: true,
             };
-
-            this._core.handleMessage({ event: 'UI_EVENT', type: UI.RECEIVE_PERMISSION, payload }, true);
+            this._core.handleMessage({ event: UI_EVENT, type: UI.RECEIVE_PERMISSION, payload }, true);
         }
 
-        if (event.type === 'RESPONSE_EVENT') {
+        if (event.type === RESPONSE_EVENT) {
             console.warn(event);
             this._compareExpectedResponseToActual(this._expectedResponse, event);
+
             this._doneFn();
         }
     }
@@ -136,11 +132,9 @@ export class CoreEventHandler {
         });
     }
 
-    async _handleButtonRequest(): Promise<any> {
-        const protoButtonPressYes = '0064000000020801';
+    async _getDebugLinkInfo(): Promise<any> {
         try {
-            // 1. Enumerate, pick a device with name emulator21325 and save its 'session' value
-            let session;
+            let session: number | string = 'null';
             let path = '';
             const devices: Array<any> = JSON.parse(await this._httpPost(this._urlEnumerate));
             devices.forEach(d => {
@@ -149,48 +143,30 @@ export class CoreEventHandler {
                     path = d.path;
                 }
             });
-
-            // 2. Acquire this device using saved session value
-            //session = JSON.parse(await this._httpPost(this._urlAcquire(path, session))).session;
-
-            // 3. Call the method
-            return this._httpPost(this._urlCall(session), protoButtonPressYes);
-        } catch (e) {
-            console.error(e);
-            return;
-        }
-    };
-
-    async _acquireDevice(): Promise<any> {
-        try {
-            let session;
-            let path = '';
-            const devices: Array<any> = JSON.parse(await this._httpPost(this._urlEnumerate));
-            devices.forEach(d => {
-                if (d.path === 'emulator21325') {
-                    session = d.session;
-                    path = d.path;
-                }
-            });
-
-            return this._httpPost(this._urlAcquire(path, session));
-        } catch (e) {
-            console.error(e);
-            return;
+            return { session, path };
+        } catch (error) {
+            throw error;
         }
     }
 
-    async _releaseDevice(): Promise<any> {
-        let session = null;
-        const devices: Array<any> = JSON.parse(await this._httpPost(this._urlEnumerate));
-        devices.forEach(d => {
-            if (d.path === 'emulator21325') {
-                session = d.session;
+    async _handleButtonRequest(session: number | string): Promise<any> {
+        const protoButtonPressYes = '0064000000020801';
+        try {
+            if (session !== 'null') {
+                await this._httpPost(this._urlCall(session), protoButtonPressYes);
+            } else {
+                throw new Error('Cannot call method when session is null');
             }
-        });
+        } catch (error) {
+            throw error;
+        }
+    };
 
-        if (session !== null) {
-            return this._httpPost(this._urlRelease(session));
+    async _acquireDevice(session: number | string, path: string): Promise<any> {
+        try {
+            await this._httpPost(this._urlAcquire(path, session));
+        } catch (error) {
+            throw error;
         }
     }
 
