@@ -181,53 +181,6 @@ declare module 'trezor-connect' {
     declare type UiEventListener = (type: T_UI_EVENT, handler: (event: UiMessage) => void) => void;
     declare type TransportEventListener = (type: T_TRANSPORT_EVENT, handler: (event: TransportMessage) => void) => void;
 
-
-    import type {
-        P_CipherKeyValue,
-        P_ComposeTransaction,
-        P_CustomMessage,
-        P_EthereumGetAddress,
-        P_EthereumSignMessage,
-        P_EthereumSignTransaction,
-        P_EthereumVerifyMessage,
-        P_GetAccountInfo,
-        P_GetAddress,
-        P_GetDeviceState,
-        P_GetFeatures,
-        P_GetPublicKey,
-        P_RequestLogin,
-        P_NEMGetAddress,
-        P_NEMSignTransaction,
-        P_SignMessage,
-        P_SignTransaction,
-        P_StellarGetAddress,
-        P_StellarSignTransaction,
-        P_VerifyMessage
-    } from 'flowtype/params';
-
-    import type {
-        R_CipherKeyValue,
-        R_ComposeTransaction,
-        R_CustomMessage,
-        R_EthereumGetAddress,
-        R_EthereumSignMessage,
-        R_EthereumSignTransaction,
-        R_EthereumVerifyMessage,
-        R_GetAccountInfo,
-        R_GetAddress,
-        R_GetDeviceState,
-        R_GetFeatures,
-        R_GetPublicKey,
-        R_RequestLogin,
-        R_NEMGetAddress,
-        R_NEMSignTransaction,
-        R_SignMessage,
-        R_SignTransaction,
-        R_StellarGetAddress,
-        R_StellarSignTransaction,
-        R_VerifyMessage
-    } from 'flowtype/response';
-
     declare export type Settings = {
         priority?: number;
         connectSrc?: string;
@@ -239,39 +192,6 @@ declare module 'trezor-connect' {
 
     declare module.exports: {
         init: (options: Settings) => Promise<Object>;
-        on: DeviceEventListener & DeviceEventListenerByType & UiEventListener & TransportEventListener;
-        off: (type: string, handler: (event: any) => void) => void;
-        renderWebUSBButton: (className?: string) => void;
-        uiResponse: (options: Object) => void;
 
-        cipherKeyValue: (options: P_CipherKeyValue) => Promise<R_CipherKeyValue>;
-        composeTransaction: (options: P_ComposeTransaction) => Promise<R_ComposeTransaction>;
-        customMessage: (options: P_CustomMessage) => Promise<R_CustomMessage>;
-        ethereumGetAddress: (options: P_EthereumGetAddress) => Promise<R_EthereumGetAddress>;
-        ethereumSignMessage: (options: P_EthereumSignMessage) => Promise<R_EthereumSignMessage>;
-        ethereumSignTransaction: (options: P_EthereumSignTransaction) => Promise<R_EthereumSignTransaction>;
-        ethereumVerifyMessage: (options: P_EthereumVerifyMessage) => Promise<R_EthereumVerifyMessage>;
-        getAccountInfo: (options: P_GetAccountInfo) => Promise<R_GetAccountInfo>;
-        getAddress: (options: P_GetAddress) => Promise<R_GetAddress>;
-        getDeviceState: (options: P_GetDeviceState) => Promise<R_GetDeviceState>;
-        getFeatures: (options: P_GetFeatures) => Promise<R_GetFeatures>;
-        getPublicKey: (options: P_GetPublicKey) => Promise<R_GetPublicKey>;
-        requestLogin: (options: P_RequestLogin) => Promise<R_RequestLogin>;
-        nemGetAddress: (options: P_NEMGetAddress) => Promise<R_NEMGetAddress>;
-        nemSignTransaction: (options: P_NEMSignTransaction) => Promise<R_NEMSignTransaction>;
-        signMessage: (options: P_SignMessage) => Promise<R_SignMessage>;
-        signTransaction: (options: P_SignTransaction) => Promise<R_SignTransaction>;
-        stellarGetAddress: (options: P_StellarGetAddress) => Promise<R_StellarGetAddress>;
-        stellarSignTransaction: (options: P_StellarSignTransaction) => Promise<R_StellarSignTransaction>;
-        verifyMessage: (options: P_VerifyMessage) => Promise<R_VerifyMessage>;
-
-        DEVICE_EVENT: T_DEVICE_EVENT;
-        DEVICE: T_DEVICE;
-
-        UI_EVENT: T_UI_EVENT;
-        UI: T_UI;
-
-        TRANSPORT_EVENT: T_TRANSPORT_EVENT;
-        TRANSPORT: T_TRANSPORT;
     };
 }
