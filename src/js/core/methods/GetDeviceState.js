@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import type { CoreMessage } from 'flowtype';
+import type { CoreMessage } from '../../types';
 
 export default class GetDeviceState extends AbstractMethod {
 

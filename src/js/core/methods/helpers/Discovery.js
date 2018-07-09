@@ -9,7 +9,7 @@ import {
     getPathFromIndex
 } from '../../../utils/pathUtils';
 import type { CoinInfo } from 'flowtype';
-import type { HDNodeResponse } from 'flowtype/trezor';
+import type { HDNodeResponse } from '../../../types/trezor';
 import type {
     AccountInfo
 } from 'hd-wallet';

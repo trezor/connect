@@ -6,7 +6,8 @@ import Device from '../../device/Device';
 import * as UI from '../../constants/ui';
 import * as DEVICE from '../../constants/device';
 import { UiMessage, DeviceMessage } from '../CoreMessage';
-import type { Deferred, UiPromiseResponse, CoreMessage } from 'flowtype';
+import type { UiPromiseResponse } from 'flowtype';
+import type { Deferred, CoreMessage } from '../../types';
 
 import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../iframe/storage';
 import { crypto } from 'bitcoinjs-lib-zcash';

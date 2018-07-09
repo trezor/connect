@@ -14,7 +14,7 @@ import type {
     TransactionInput,
     TransactionOutput,
     RefTransaction
-} from 'flowtype/trezor';
+} from '../../../types/trezor';
 
 import type { CoinInfo } from 'flowtype';
 

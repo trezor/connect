@@ -2,8 +2,8 @@
 'use strict';
 
 import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, RESPONSE_EVENT } from '../constants';
-import type { CoreMessage } from 'flowtype';
 import type { UiMessageFactory } from 'flowtype/ui-message';
+import type { CoreMessage } from '../types';
 
 // parse MessageEvent .data object into CoreMessage
 export const parseMessage = (messageData: any): CoreMessage => {

@@ -5,7 +5,7 @@ import { create as createDeferred } from '../utils/deferred';
 import { IFRAME_HANDSHAKE } from '../constants/ui';
 import { IFRAME_TIMEOUT } from '../constants/errors';
 import css from './inline-styles';
-import type { Deferred } from 'flowtype';
+import type { Deferred } from '../types';
 
 export let instance: HTMLIFrameElement;
 export let origin: string;

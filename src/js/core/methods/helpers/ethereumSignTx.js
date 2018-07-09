@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import type { EthereumTxRequest, EthereumSignedTx } from 'flowtype/trezor';
+import type { EthereumTxRequest, EthereumSignedTx } from '../../../types/trezor';
 import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
 
 const splitString = (str: ?string, len: number): [string, string] => {

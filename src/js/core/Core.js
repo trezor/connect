@@ -31,7 +31,8 @@ import { parse as parseSettings } from '../data/ConnectSettings';
 
 import type { Device as DeviceTyped } from '../types';
 import type { ConnectSettings } from '../data/ConnectSettings';
-import type { Deferred, UiPromiseResponse, CoreMessage } from 'flowtype';
+import type { UiPromiseResponse } from 'flowtype';
+import type { Deferred, CoreMessage } from '../types';
 
 // Public variables
 let _core: Core; // Class with event emitter
@@ -436,7 +437,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             device.setState(null);
             device.setPassphrase(null);
         }
-
     }
 
     // device is available

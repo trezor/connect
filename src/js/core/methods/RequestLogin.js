@@ -9,9 +9,10 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../CoreMessage';
 import DataManager from '../../data/DataManager';
 
-import type { UiPromiseResponse, CoreMessage } from 'flowtype';
-import type { Identity, SignedIdentity } from 'flowtype/trezor';
+import type { UiPromiseResponse } from 'flowtype';
+import type { Identity, SignedIdentity } from '../../types/trezor';
 import type { ConnectSettings } from '../../data/ConnectSettings';
+import type { CoreMessage } from '../../types';
 
 type Params = {
     asyncChallenge: boolean;

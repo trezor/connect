@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import type { CoreMessage } from 'flowtype';
+import type { CoreMessage } from '../types';
 
 // parse MessageEvent .data into CoreMessage
 export const parseMessage = (messageData: any): CoreMessage => {

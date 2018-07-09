@@ -5,9 +5,9 @@ import AbstractMethod from './AbstractMethod';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/nemSignTx';
 
-import type { NEMSignTxMessage, NEMSignedTx } from 'flowtype/trezor';
-import type { Transaction as $NEMTransaction } from 'flowtype/NEM';
-import type { CoreMessage } from 'flowtype';
+import type { NEMSignTxMessage, NEMSignedTx } from '../../types/trezor';
+import type { Transaction as $NEMTransaction } from '../../types/nem';
+import type { CoreMessage } from '../../types';
 
 export default class NEMSignTransaction extends AbstractMethod {
 

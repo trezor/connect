@@ -8,8 +8,9 @@ import type { MessageResponse } from '../../device/DeviceCommands';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../CoreMessage';
 
-import type { UiPromiseResponse, CoreMessage } from 'flowtype';
-import type { StellarPublicKey } from 'flowtype/trezor';
+import type { UiPromiseResponse } from 'flowtype';
+import type { StellarPublicKey } from '../../types/trezor';
+import type { CoreMessage } from '../../types';
 
 type Params = {
     path: Array<number>;

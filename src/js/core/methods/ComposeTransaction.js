@@ -27,13 +27,10 @@ import {
     transformReferencedTransactions
 } from './tx';
 import { UiMessage } from '../CoreMessage';
-import type { Deferred, CoinInfo, UiPromiseResponse, CoreMessage } from 'flowtype';
 
-import type {
-    TransactionInput,
-    TransactionOutput,
-    SignedTx
-} from 'flowtype/trezor';
+import type { CoinInfo, UiPromiseResponse } from 'flowtype';
+import type { Deferred, CoreMessage } from '../../types';
+import type { TransactionInput, TransactionOutput, SignedTx } from '../../types/trezor';
 
 import type {
     BuildTxOutputRequest,

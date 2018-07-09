@@ -18,14 +18,15 @@ import type {
     TransactionInput,
     TransactionOutput,
     SignedTx
-} from 'flowtype/trezor';
+} from '../../types/trezor';
 
 import type {
     BuildTxInput,
     BuildTxOutput
 } from 'hd-wallet';
 
-import type { CoinInfo, CoreMessage } from 'flowtype';
+import type { CoinInfo } from 'flowtype';
+import type { CoreMessage } from '../../types';
 
 
 

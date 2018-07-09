@@ -5,7 +5,8 @@ import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 
 import { UiMessage } from '../CoreMessage';
-import type { UiPromiseResponse, CoreMessage } from 'flowtype';
+import type { UiPromiseResponse } from 'flowtype';
+import type { CoreMessage } from '../../types';
 
 type Params = {
     customMessages: JSON;

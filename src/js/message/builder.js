@@ -2,7 +2,7 @@
 'use strict';
 
 import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, RESPONSE_EVENT } from '../constants';
-import type { CoreMessage } from 'flowtype';
+import type { CoreMessage } from '../types';
 import type { UiMessageFactory } from 'flowtype/ui-message';
 
 export const UiMessage: UiMessageFactory = (type, payload) => {

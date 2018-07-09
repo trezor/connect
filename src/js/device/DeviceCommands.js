@@ -16,7 +16,7 @@ import { getCoinInfoByCurrency, getSegwitNetwork } from '../data/CoinInfo';
 
 import type { CoinInfo } from 'flowtype';
 import type { Transport } from 'trezor-link';
-import * as trezor from 'flowtype/trezor'; // flowtype
+import * as trezor from '../types/trezor'; // flowtype
 
 export type MessageResponse<T> = {
     type: string,

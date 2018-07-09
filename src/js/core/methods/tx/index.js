@@ -23,7 +23,7 @@ import type {
     TransactionInput,
     TransactionOutput,
     RefTransaction
-} from 'flowtype/trezor';
+} from '../../../types/trezor';
 
 // Get array of referenced transactions ids
 export const getReferencedTransactions = (inputs: Array<BuildTxInput>): Array<string> => {

@@ -8,8 +8,9 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../CoreMessage';
 
 import type { MessageResponse } from '../../device/DeviceCommands';
-import type { NEMAddress } from 'flowtype/trezor';
-import type { UiPromiseResponse, CoreMessage } from 'flowtype';
+import type { NEMAddress } from '../../types/trezor';
+import type { UiPromiseResponse } from 'flowtype';
+import type { CoreMessage } from '../../types';
 
 type Params = {
     path: Array<number>;

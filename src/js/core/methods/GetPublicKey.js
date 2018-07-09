@@ -10,8 +10,9 @@ import { UiMessage } from '../CoreMessage';
 
 import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../data/CoinInfo';
 import { getPublicKeyLabel, isSegwitPath } from '../../utils/pathUtils';
-import type { CoinInfo, UiPromiseResponse, CoreMessage } from 'flowtype';
-import type { Success, HDNodeResponse } from 'flowtype/trezor';
+import type { CoinInfo, UiPromiseResponse } from 'flowtype';
+import type { Success, HDNodeResponse } from '../../types/trezor';
+import type { CoreMessage } from '../../types';
 
 type Params = {
     path: Array<number>;

@@ -15,8 +15,9 @@ import Account, { create as createAccount } from '../../account';
 import BlockBook, { create as createBackend } from '../../backend';
 import { getCoinInfoByCurrency, getAccountCoinInfo } from '../../data/CoinInfo';
 import { UiMessage } from '../CoreMessage';
-import type { Deferred, CoinInfo, UiPromiseResponse, CoreMessage } from 'flowtype';
-import type { AccountInfo, HDNodeResponse } from 'flowtype/trezor'; // flowtype
+import type { CoinInfo, UiPromiseResponse } from 'flowtype';
+import type { AccountInfo, HDNodeResponse } from '../../types/trezor';
+import type { Deferred, CoreMessage } from '../../types';
 
 type Params = {
     path: ?Array<number>;

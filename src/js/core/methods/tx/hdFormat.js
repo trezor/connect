@@ -14,7 +14,7 @@ import type {
     TransactionInput,
     TransactionOutput,
     RefTransaction
-} from 'flowtype/trezor';
+} from '../../../types/trezor';
 
 // transform from TREZOR format to hd-wallet
 export const input = (input: TransactionInput, sequence: number): BuildTxInput => {

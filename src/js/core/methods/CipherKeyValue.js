@@ -8,7 +8,8 @@ import { validatePath } from '../../utils/pathUtils';
 import type { DefaultMessageResponse, MessageResponse } from '../../device/DeviceCommands';
 
 import Device from '../../device/Device';
-import type { UiPromiseResponse, CoreMessage } from 'flowtype';
+import type { UiPromiseResponse } from 'flowtype';
+import type { CoreMessage } from '../../types';
 
 type Params = {
     path: Array<number>;

@@ -5,9 +5,9 @@ import AbstractMethod from './AbstractMethod';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/ethereumSignTx';
 import type { MessageResponse } from '../../device/DeviceCommands';
-import type { CoreMessage } from 'flowtype';
-import type { EthereumSignedTx } from 'flowtype/trezor';
-import type { Transaction as EthereumTransaction } from 'flowtype/Ethereum';
+import type { CoreMessage } from '../../types';
+import type { EthereumSignedTx } from '../../types/trezor';
+import type { Transaction as EthereumTransaction } from '../../types/ethereum';
 
 type Params = {
     path: Array<number>;

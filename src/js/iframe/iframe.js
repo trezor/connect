@@ -15,7 +15,7 @@ import type { ConnectSettings } from '../data/ConnectSettings';
 import { Core, init as initCore, initTransport } from '../core/Core';
 import { parseMessage, UiMessage, ResponseMessage, TransportMessage } from '../core/CoreMessage';
 
-import type { CoreMessage } from 'flowtype';
+import type { CoreMessage, PostMessageEvent } from '../types';
 
 import Log, { init as initLog, getLog } from '../utils/debug';
 import { checkBrowser, state as browserState } from '../utils/browser';
@@ -34,7 +34,7 @@ let _popupMessagePort: ?MessagePort;
 // since iframe.html needs to send message via window.postMessage
 // we need to listen events from Core and convert it to simple objects possible to send over window.postMessage
 
-const handleMessage = (event: Message): void => {
+const handleMessage = (event: PostMessageEvent): void => {
     // ignore messages from myself (chrome bug?)
     if (event.source === window || !event.data) return;
     const data = event.data;

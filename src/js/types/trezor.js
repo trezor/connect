@@ -283,7 +283,7 @@ export type NEMSignTxMessage = {
     importance_transfer?: NEMImportanceTransfer;
 }
 
-type NEMTransactionCommon = {
+export type NEMTransactionCommon = {
     address_n: ?Array<number>;
     network: ?number;
     timestamp: ?number;
@@ -292,7 +292,7 @@ type NEMTransactionCommon = {
     signer: ?string;
 }
 
-type NEMTransfer = {
+export type NEMTransfer = {
     mosaics: ?Array<NEMMosaic>;
     public_key: ?string;
     recipient: ?string;
@@ -300,26 +300,26 @@ type NEMTransfer = {
     payload: ?string;
 }
 
-type NEMMosaic = {
+export type NEMMosaic = {
     namespace: ?string;
     mosaic: ?string;
     quantity: ?number;
 }
 
-type NEMProvisionNamespace = {
+export type NEMProvisionNamespace = {
     namespace: ?string;
     sink: ?string;
     fee: ?number;
     parent: ?string;
 }
 
-type NEMMosaicCreation = {
+export type NEMMosaicCreation = {
     definition: ?NEMMosaicDefinition;
     sink: ?string;
     fee: ?number;
 }
 
-type NEMMosaicDefinition = {
+export type NEMMosaicDefinition = {
     name?: string;
     ticker?: string;
     namespace?: string;
@@ -337,29 +337,29 @@ type NEMMosaicDefinition = {
     networks?: number;
 }
 
-type NEMMosaicSupplyChange = {
+export type NEMMosaicSupplyChange = {
     namespace?: string;
     type?: NEMSupplyChangeType;
     mosaic?: string;
     delta?: number;
 }
 
-type NEMAggregateModification = {
+export type NEMAggregateModification = {
     modifications: ?Array<NEMCosignatoryModification>;
     relative_change: ?number; // TODO: "sint32"
 }
 
-type NEMCosignatoryModification = {
+export type NEMCosignatoryModification = {
     type?: NEMModificationType;
     public_key?: string;
 }
 
-type NEMImportanceTransfer = {
+export type NEMImportanceTransfer = {
     mode?: NEMImportanceTransferMode;
     public_key?: string;
 }
 
-type NEMMosaicLevyType = {
+export type NEMMosaicLevyType = {
     id: 1,
     name: 'MosaicLevy_Absolute'
 } | {
@@ -367,7 +367,7 @@ type NEMMosaicLevyType = {
     name: 'MosaicLevy_Percentile'
 }
 
-type NEMSupplyChangeType = {
+export type NEMSupplyChangeType = {
     id: 1,
     name: 'SupplyChange_Increase'
 } | {
@@ -375,7 +375,7 @@ type NEMSupplyChangeType = {
     name: 'SupplyChange_Decrease'
 }
 
-type NEMModificationType = {
+export type NEMModificationType = {
     id: 1,
     name: 'CosignatoryModification_Add',
 } | {
@@ -383,7 +383,7 @@ type NEMModificationType = {
     name: 'CosignatoryModification_Delete',
 }
 
-type NEMImportanceTransferMode = {
+export type NEMImportanceTransferMode = {
     id: 1,
     name: 'ImportanceTransfer_Activate'
 } | {

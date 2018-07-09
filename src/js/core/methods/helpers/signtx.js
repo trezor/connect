@@ -11,7 +11,7 @@ import type {
     SignTxInfoToTrezor,
     TxRequestSerialized,
     SignedTx
-} from 'flowtype/trezor';
+} from '../../../types/trezor';
 
 // requests information about a transaction
 // can be either signed transaction iteslf of prev transaction

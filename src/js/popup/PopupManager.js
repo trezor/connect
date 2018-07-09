@@ -5,7 +5,7 @@ import EventEmitter from 'events';
 import { INIT, OPENED, HANDSHAKE, CLOSED } from '../constants/popup';
 import { showPopupRequest } from './showPopupRequest';
 import type { ConnectSettings } from '../data/ConnectSettings';
-import type { CoreMessage, Deferred } from 'flowtype';
+import type { CoreMessage, Deferred } from '../types';
 import { getOrigin } from '../utils/networkUtils';
 import { create as createDeferred } from '../utils/deferred';
 

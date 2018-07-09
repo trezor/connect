@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import * as trezor from 'flowtype/trezor';
+import * as trezor from '../types/trezor';
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as ecurve from 'ecurve';
 

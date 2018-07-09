@@ -98,9 +98,7 @@ module.exports = {
     resolve: {
         modules: [ SRC, NODE_MODULES ],
         alias: {
-            'flowtype/params': `${SRC}flowtype/empty.js`,
-            'flowtype/response': `${SRC}flowtype/empty.js`,
-            'flowtype/trezor': `${SRC}flowtype/empty.js`,
+            // 'flowtype/params': `${SRC}flowtype/empty.js`,
         }
     },
     performance: {

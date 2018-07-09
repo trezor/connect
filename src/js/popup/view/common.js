@@ -2,7 +2,7 @@
 'use strict';
 
 import { ResponseMessage } from '../../core/CoreMessage';
-import type { CoreMessage } from 'flowtype';
+import type { CoreMessage } from '../../types';
 import { getOrigin } from '../../utils/networkUtils';
 import DataManager from '../../data/DataManager';
 import * as POPUP from '../../constants/popup';

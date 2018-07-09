@@ -3,7 +3,7 @@
 
 import { popupConsole } from '../utils/debug';
 import { parseMessage, UiMessage, ResponseMessage } from '../core/CoreMessage';
-import type { CoreMessage } from 'flowtype';
+import type { CoreMessage, PostMessageEvent } from '../types';
 import DataManager from '../data/DataManager';
 import { parse as parseSettings } from '../data/ConnectSettings';
 import type { ConnectSettings } from '../data/ConnectSettings';
@@ -19,7 +19,7 @@ import * as view from './view';
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/popup.less';
 
-const handleMessage = (event: Message): void => {
+const handleMessage = (event: PostMessageEvent): void => {
 
     console.log('handleMessage', event.data);
 

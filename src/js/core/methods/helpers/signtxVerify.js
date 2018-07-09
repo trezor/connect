@@ -20,7 +20,7 @@ import type {
     TransactionOutput,
     RefTransaction,
     SignedTx
-} from 'flowtype/trezor';
+} from '../../../types/trezor';
 
 export const verifyTx = (tx: ?BuildTxResult,
     inputs: Array<TransactionInput>,

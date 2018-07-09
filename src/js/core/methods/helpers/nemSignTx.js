@@ -13,18 +13,16 @@ import type {
     NEMMosaicCreation,
     NEMMosaicDefinition,
     NEMMosaicSupplyChange,
-
-
     NEMMosaicLevyType,
     NEMSupplyChangeType,
     NEMModificationType,
     NEMImportanceTransferMode,
-} from 'flowtype/trezor';
+} from '../../../types/trezor';
 
 import type {
     Transaction as $NEMTransaction,
     Mosaic as $NEMMosaic,
-} from 'flowtype/NEM';
+} from '../../../types/nem';
 
 export const NEM_MAINNET: number = 0x68;
 export const NEM_TESTNET: number = 0x98;
