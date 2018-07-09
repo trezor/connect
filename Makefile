@@ -50,8 +50,8 @@ protobuf:
 
 coins:
 	make submodules
-#	./submodules/trezor-common/defs/coins/tools/build_coins.py connect
-	./submodules/trezor-common/defs/coins/tools/build_coins.py
+	./submodules/trezor-common/defs/coins/tools/build_coins.py connect
+#	./submodules/trezor-common/defs/coins/tools/build_coins.py
 	mv coins.json ./src/data/coins.json
 	cp ./submodules/trezor-common/defs/ethereum/networks.json ./src/data/ethereumNetworks.json
 
