@@ -2,7 +2,7 @@
 'use strict';
 
 import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, RESPONSE_EVENT } from '../constants';
-import type { UiMessageFactory } from 'flowtype/ui-message';
+import type { UiMessageFactory } from '../types/ui-request';
 import type { CoreMessage } from '../types';
 
 // parse MessageEvent .data object into CoreMessage

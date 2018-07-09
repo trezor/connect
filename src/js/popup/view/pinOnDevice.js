@@ -1,7 +1,7 @@
 /* @flow */
 'use strict'
 import { container, showView } from './common';
-import type { DeviceMessage } from 'flowtype/ui-message';
+import type { DeviceMessage } from '../../types/ui-request';
 
 export const initPinOnDeviceView = (payload: $PropertyType<DeviceMessage, 'payload'>): void => {
     showView('passphrase-on-device');

@@ -3,7 +3,7 @@
 
 import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, RESPONSE_EVENT } from '../constants';
 import type { CoreMessage } from '../types';
-import type { UiMessageFactory } from 'flowtype/ui-message';
+import type { UiMessageFactory } from '../types/ui-request';
 
 export const UiMessage: UiMessageFactory = (type, payload) => {
     return {

@@ -4,7 +4,7 @@
 import { UiMessage } from '../../core/CoreMessage';
 import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
-import type { RequestConfirmation } from 'flowtype/ui-message';
+import type { RequestConfirmation } from '../../types/ui-request';
 
 export const initConfirmationView = (data: $PropertyType<RequestConfirmation, 'payload'>): void => {
     // Confirmation views:

@@ -5,7 +5,7 @@ import { UiMessage } from '../../core/CoreMessage';
 import * as UI from '../../constants/ui';
 import { container, iframe, showView, postMessage } from './common';
 import DataManager from '../../data/DataManager';
-import type { SelectDevice } from 'flowtype/ui-message';
+import type { SelectDevice } from '../../types/ui-request';
 
 const initWebUsbButton = (webusb: boolean): void => {
     if (!webusb || !iframe) return;

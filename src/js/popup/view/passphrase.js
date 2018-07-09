@@ -4,7 +4,7 @@
 import { UiMessage } from '../../core/CoreMessage';
 import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
-import type { DeviceMessage } from 'flowtype/ui-message';
+import type { DeviceMessage } from '../../types/ui-request';
 
 export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payload'>): void => {
     showView('passphrase');

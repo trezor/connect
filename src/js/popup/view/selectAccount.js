@@ -9,7 +9,7 @@ import { formatAmount } from '../../utils/formatUtils';
 import { container, showView, postMessage } from './common';
 
 import type { SimpleAccount } from 'flowtype';
-import type { SelectAccount } from 'flowtype/ui-message';
+import type { SelectAccount } from '../../types/ui-request';
 
 export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>): void => {
     if (!payload || !Array.isArray(payload.accounts)) return;

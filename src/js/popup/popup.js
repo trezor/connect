@@ -7,7 +7,7 @@ import type { CoreMessage, PostMessageEvent } from '../types';
 import DataManager from '../data/DataManager';
 import { parse as parseSettings } from '../data/ConnectSettings';
 import type { ConnectSettings } from '../data/ConnectSettings';
-import type { PopupHandshake } from 'flowtype/ui-message';
+import type { PopupHandshake } from '../types/ui-request';
 
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';

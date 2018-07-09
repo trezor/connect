@@ -6,7 +6,7 @@ import * as UI from '../../constants/ui';
 
 import { container, showView, postMessage } from './common';
 import { formatAmount, formatTime } from '../../utils/formatUtils';
-import type { SelectFee, UpdateCustomFee } from 'flowtype/ui-message';
+import type { SelectFee, UpdateCustomFee } from '../../types/ui-request';
 import type { CoinInfo } from 'flowtype';
 import type { SelectFeeLevel } from 'flowtype/fee';
 

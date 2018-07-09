@@ -102,11 +102,7 @@ export type UiMessage = {
     }
 }
 
-export type UiResponse = {
-    type: UiMessageType;
-    payload: any;
-}
-
+export type { UiResponse } from './ui-response';
 
 export type TransportMessageType = $Values<typeof TRANSPORT>;
 export type TransportMessage = {
