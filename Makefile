@@ -37,7 +37,7 @@ sync-%:
 	aws s3 sync --delete --cache-control 'public, max-age=3600' dist/ s3://connect.trezor.io/$*/
 
 # Build only for npm
-npm:
+npm-lib:
 	yarn bump
 	yarn run build:npm
 	cd ./npm && npm publish

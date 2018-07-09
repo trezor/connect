@@ -1,6 +1,6 @@
 {
   "name": "trezor-connect",
-  "version": "5.0.17",
+  "version": "5.0.18",
   "author": "TREZOR <info@trezor.io>",
   "homepage": "https://github.com/trezor/connect",
   "description": "High-level javascript interface for TREZOR hardware wallet.",
@@ -30,7 +30,7 @@
     "flow": "flow check src/js",
     "eslint": "eslint src/js",
     "eslint-fix": "eslint --fix src/js",
-    "bump": "bump --patch --grep ./package.npm.connect.json"
+    "bump": "bump --patch"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

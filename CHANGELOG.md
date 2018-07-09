@@ -1,3 +1,12 @@
+# 5.0.18
+__added__
+- Added iframe lazy loading
+__fixed__
+- Build script for npm module
+- Ultimate flow type
+- Reorganized files and imports
+- Minor fixes in code
+
 # 5.0.17
 __added__
 - Added `TrezorConnect.getAccountInfo` method
