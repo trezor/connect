@@ -127,7 +127,7 @@ const init = async (settings: Object = {}): Promise<void> => {
         iframe.dispose();
     });
 
-    await iframe.init(settings);
+    await iframe.init(_settings);
 }
 
 const call = async (params: Object): Promise<Object> => {
