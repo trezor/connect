@@ -4,7 +4,7 @@
 import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 
-import { UiMessage } from '../CoreMessage';
+import { UiMessage } from '../../message/builder';
 import type { UiPromiseResponse } from 'flowtype';
 import type { CoreMessage } from '../../types';
 

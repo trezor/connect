@@ -5,7 +5,7 @@ import AbstractMethod from './AbstractMethod';
 import { validatePath, fromHardened } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
-import { UiMessage } from '../CoreMessage';
+import { UiMessage } from '../../message/builder';
 
 import type { MessageResponse } from '../../device/DeviceCommands';
 import type { NEMAddress } from '../../types/trezor';

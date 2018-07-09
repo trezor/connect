@@ -14,7 +14,7 @@ import * as UI from '../constants/ui';
 import * as IFRAME from '../constants/iframe';
 import * as ERROR from '../constants/errors';
 
-import { UiMessage, DeviceMessage, TransportMessage, ResponseMessage } from './CoreMessage';
+import { UiMessage, DeviceMessage, TransportMessage, ResponseMessage } from '../message/builder';
 
 import AbstractMethod from './methods/AbstractMethod';
 import { find as findMethod } from './methods';

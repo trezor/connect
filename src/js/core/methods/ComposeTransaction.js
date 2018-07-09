@@ -26,7 +26,7 @@ import {
     getReferencedTransactions,
     transformReferencedTransactions
 } from './tx';
-import { UiMessage } from '../CoreMessage';
+import { UiMessage } from '../../message/builder';
 
 import type { CoinInfo, UiPromiseResponse } from 'flowtype';
 import type { Deferred, CoreMessage } from '../../types';

@@ -14,7 +14,7 @@ import { create as createDeferred } from '../../utils/deferred';
 import Account, { create as createAccount } from '../../account';
 import BlockBook, { create as createBackend } from '../../backend';
 import { getCoinInfoByCurrency, getAccountCoinInfo } from '../../data/CoinInfo';
-import { UiMessage } from '../CoreMessage';
+import { UiMessage } from '../../message/builder';
 import type { CoinInfo, UiPromiseResponse } from 'flowtype';
 import type { AccountInfo, HDNodeResponse } from '../../types/trezor';
 import type { Deferred, CoreMessage } from '../../types';

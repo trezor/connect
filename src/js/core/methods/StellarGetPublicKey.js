@@ -6,7 +6,7 @@ import { validatePath, fromHardened } from '../../utils/pathUtils';
 import type { MessageResponse } from '../../device/DeviceCommands';
 
 import * as UI from '../../constants/ui';
-import { UiMessage } from '../CoreMessage';
+import { UiMessage } from '../../message/builder';
 
 import type { UiPromiseResponse } from 'flowtype';
 import type { StellarPublicKey } from '../../types/trezor';

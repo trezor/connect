@@ -2,7 +2,8 @@
 'use strict';
 
 import { popupConsole } from '../utils/debug';
-import { parseMessage, UiMessage, ResponseMessage } from '../core/CoreMessage';
+import { parseMessage } from '../message';
+import { UiMessage, ResponseMessage } from '../message/builder';
 import type { CoreMessage, PostMessageEvent } from '../types';
 import DataManager from '../data/DataManager';
 import { parse as parseSettings } from '../data/ConnectSettings';

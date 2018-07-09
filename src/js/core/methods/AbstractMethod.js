@@ -5,7 +5,7 @@ import Device from '../../device/Device';
 
 import * as UI from '../../constants/ui';
 import * as DEVICE from '../../constants/device';
-import { UiMessage, DeviceMessage } from '../CoreMessage';
+import { UiMessage, DeviceMessage } from '../../message/builder';
 import type { UiPromiseResponse } from 'flowtype';
 import type { Deferred, CoreMessage } from '../../types';
 

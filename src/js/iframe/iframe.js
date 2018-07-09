@@ -13,7 +13,8 @@ import DataManager from '../data/DataManager';
 import type { ConnectSettings } from '../data/ConnectSettings';
 
 import { Core, init as initCore, initTransport } from '../core/Core';
-import { parseMessage, UiMessage, ResponseMessage, TransportMessage } from '../core/CoreMessage';
+import { parseMessage } from '../message';
+import { UiMessage, ResponseMessage, TransportMessage } from '../message/builder';
 
 import type { CoreMessage, PostMessageEvent } from '../types';
 

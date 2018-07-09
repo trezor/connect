@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import { UiMessage } from '../../core/CoreMessage';
+import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
 import { container, iframe, showView, postMessage } from './common';
 import DataManager from '../../data/DataManager';

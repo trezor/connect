@@ -2,7 +2,7 @@
 'use strict';
 
 import * as UI from '../../constants/ui';
-import { UiMessage } from '../CoreMessage';
+import { UiMessage } from '../../message/builder';
 import AbstractMethod from './AbstractMethod';
 import { validatePath } from '../../utils/pathUtils';
 import type { DefaultMessageResponse, MessageResponse } from '../../device/DeviceCommands';
