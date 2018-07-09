@@ -155,6 +155,11 @@ start_transport() {
     cd $trezord_path
     #./trezord-go -e 21324 > /dev/null 2>&1 &
     ./trezord-go -e 21324 -e 21325 > /dev/null 2>&1 &
+
+    # You can disable all USB in order to run on some virtuaized environments, for example Travis
+    # doesn't check for devices connected via USB, only for emulator
+    # ./trezord -e 21324 -u=false
+
     #./trezord-go -e 21324 -e 21325 2>&1 > /dev/null &
     pid_transport=$!
 

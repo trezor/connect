@@ -16,7 +16,7 @@ import type {
 const knownErc20Token = (): SubtestEthereumSignTx => {
     const testPayloads: Array<TestEthereumSignTxPayload>  = [
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 nonce: '0x0',
@@ -48,7 +48,7 @@ const knownErc20Token = (): SubtestEthereumSignTx => {
 const unknownErc20Token = (): SubtestEthereumSignTx => {
     const testPayloads: Array<TestEthereumSignTxPayload> = [
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 nonce: '0x0',
@@ -80,7 +80,7 @@ const unknownErc20Token = (): SubtestEthereumSignTx => {
 const noData = (): SubtestEthereumSignTx => {
     const testPayloads: Array<TestEthereumSignTxPayload> = [
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 nonce: '0x0',
@@ -91,7 +91,7 @@ const noData = (): SubtestEthereumSignTx => {
             },
         },
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 nonce: '0x1e240',
@@ -129,7 +129,7 @@ const noData = (): SubtestEthereumSignTx => {
 const data = (): SubtestEthereumSignTx => {
     const testPayloads: Array<TestEthereumSignTxPayload> = [
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 nonce: '0x0',
@@ -142,7 +142,7 @@ const data = (): SubtestEthereumSignTx => {
 
         },
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 nonce: '0x1e240',
@@ -181,7 +181,7 @@ const data = (): SubtestEthereumSignTx => {
 const message = (): SubtestEthereumSignTx => {
     const testPayloads: Array<TestEthereumSignTxPayload> = [
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 nonce: '0x0',
@@ -214,7 +214,7 @@ const message = (): SubtestEthereumSignTx => {
 const newContract = (): SubtestEthereumSignTx => {
     const testPayloads: Array<TestEthereumSignTxPayload> = [
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 nonce: '0x1e240',
@@ -225,7 +225,7 @@ const newContract = (): SubtestEthereumSignTx => {
             },
         },
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 nonce: '0x0',
@@ -259,7 +259,7 @@ const sanityChecks = (): SubtestEthereumSignTx => {
     const testPayloads: Array<TestEthereumSignTxPayload> = [
         {
             // Gas overflow
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 nonce: '0x1e240',
@@ -271,7 +271,7 @@ const sanityChecks = (): SubtestEthereumSignTx => {
         },
         {
             // No gas price
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 nonce: '0x1e240',
@@ -282,7 +282,7 @@ const sanityChecks = (): SubtestEthereumSignTx => {
         },
         {
             // No gas limit
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 nonce: '0x1e240',
@@ -293,7 +293,7 @@ const sanityChecks = (): SubtestEthereumSignTx => {
         },
         {
             // No nonce
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [0, 0],
             transaction: {
                 gasLimit: '0x2710',
@@ -319,7 +319,7 @@ const sanityChecks = (): SubtestEthereumSignTx => {
 const noDataEip155 = (): SubtestEthereumSignTx => {
     const testPayloads: Array<TestEthereumSignTxPayload> = [
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [2147483692, 2147483649, 2147483648, 0, 0],
             transaction: {
                 nonce: '0x0',
@@ -331,7 +331,7 @@ const noDataEip155 = (): SubtestEthereumSignTx => {
             },
         },
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [2147483692, 2147483649, 2147483648, 0, 0],
             transaction: {
                 nonce: '0x1',
@@ -370,7 +370,7 @@ const noDataEip155 = (): SubtestEthereumSignTx => {
 const dataEip155 = (): SubtestEthereumSignTx => {
     const testPayloads: Array<TestEthereumSignTxPayload> = [
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [2147483692, 2147483649, 2147483648, 0, 0],
             transaction: {
                 nonce: '0x2',
@@ -383,7 +383,7 @@ const dataEip155 = (): SubtestEthereumSignTx => {
             },
         },
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [2147483692, 2147483649, 2147483648, 0, 0],
             transaction: {
                 nonce: '0x3',
@@ -396,7 +396,7 @@ const dataEip155 = (): SubtestEthereumSignTx => {
             },
         },
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [2147483692, 2147483649, 2147483648, 0, 0],
             transaction: {
                 nonce: '0x4',
@@ -409,7 +409,7 @@ const dataEip155 = (): SubtestEthereumSignTx => {
             },
         },
         {
-            method: 'ethereumSignTx',
+            method: 'ethereumSignTransaction',
             path: [2147483692, 2147483649, 2147483648, 0, 0],
             transaction: {
                 nonce: '0x5',
