@@ -31,6 +31,9 @@
             "priority": 0
         }
     ],
+    "resources": {
+        "bridge": "base/src/data/bridge/latest.txt"
+    },
     "assets": [
         {
             "name": "coins",
@@ -51,11 +54,6 @@
         {
             "name": "messages",
             "url": "base/src/data/messages.json"
-        },
-        {
-            "name": "bridge",
-            "type": "text",
-            "url": "base/src/data/bridge/latest.txt"
         }
     ],
     "supportedBrowsers": {
