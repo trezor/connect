@@ -1,12 +1,42 @@
 /* @flow */
 'use strict';
 
-import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from './constants';
-import * as TRANSPORT from './constants/transport';
-import * as POPUP from './constants/popup';
-import * as IFRAME from './constants/iframe';
-import * as UI from './constants/ui';
-import * as DEVICE from './constants/device';
+/*
+* Public types accessible from npm library
+*/
+
+import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from '../constants';
+import * as TRANSPORT from '../constants/transport';
+import * as POPUP from '../constants/popup';
+import * as IFRAME from '../constants/iframe';
+import * as UI from '../constants/ui';
+import * as DEVICE from '../constants/device';
+
+export type CoreMessage = {
+    +event: string;
+    +type: string;
+    +payload: any;
+
+    id?: number; // response id in ResponseMessage
+    success?: boolean; // response status in ResponseMessage
+}
+
+// Override MessageEvent type to have access to "ports" field and typed "data"
+export class PostMessageEvent extends Event {
+    +origin: string;
+    +lastEventId: string;
+    +source: WindowProxy;
+    +ports: Array<MessagePort>;
+    +data: ?CoreMessage;
+}
+
+export type Deferred<T> = {
+    id?: string,
+    device: ?any,
+    promise: Promise<T>,
+    resolve: (t: T) => void,
+    reject: (e: Error) => void,
+};
 
 export type Device = {
     path: string,
@@ -94,47 +124,47 @@ declare function F_EventListener(type: DeviceMessageType, handler: (device: Devi
 export type EventListener = typeof F_EventListener;
 
 export type {
-    P_CipherKeyValue,
-    P_ComposeTransaction,
-    P_CustomMessage,
-    P_EthereumGetAddress,
-    P_EthereumSignMessage,
-    P_EthereumSignTransaction,
-    P_EthereumVerifyMessage,
-    P_GetAccountInfo,
-    P_GetAddress,
-    P_GetDeviceState,
-    P_GetFeatures,
-    P_GetPublicKey,
-    P_RequestLogin,
-    P_NEMGetAddress,
-    P_NEMSignTransaction,
-    P_SignMessage,
-    P_SignTransaction,
-    P_StellarGetAddress,
-    P_StellarSignTransaction,
-    P_VerifyMessage
-} from 'flowtype/params';
+    $CipherKeyValue,
+    $ComposeTransaction,
+    $CustomMessage,
+    $EthereumGetAddress,
+    $EthereumSignMessage,
+    $EthereumSignTransaction,
+    $EthereumVerifyMessage,
+    $GetAccountInfo,
+    $GetAddress,
+    $GetDeviceState,
+    $GetFeatures,
+    $GetPublicKey,
+    $RequestLogin,
+    $NEMGetAddress,
+    $NEMSignTransaction,
+    $SignMessage,
+    $SignTransaction,
+    $StellarGetAddress,
+    $StellarSignTransaction,
+    $VerifyMessage
+} from './params';
 
 export type {
-    R_CipherKeyValue,
-    R_ComposeTransaction,
-    R_CustomMessage,
-    R_EthereumGetAddress,
-    R_EthereumSignMessage,
-    R_EthereumSignTransaction,
-    R_EthereumVerifyMessage,
-    R_GetAccountInfo,
-    R_GetAddress,
-    R_GetDeviceState,
-    R_GetFeatures,
-    R_GetPublicKey,
-    R_RequestLogin,
-    R_NEMGetAddress,
-    R_NEMSignTransaction,
-    R_SignMessage,
-    R_SignTransaction,
-    R_StellarGetAddress,
-    R_StellarSignTransaction,
-    R_VerifyMessage
-} from 'flowtype/response';
+    CipherKeyValue$,
+    ComposeTransaction$,
+    CustomMessage$,
+    EthereumGetAddress$,
+    EthereumSignMessage$,
+    EthereumSignTransaction$,
+    EthereumVerifyMessage$,
+    GetAccountInfo$,
+    GetAddress$,
+    GetDeviceState$,
+    GetFeatures$,
+    GetPublicKey$,
+    RequestLogin$,
+    NEMGetAddress$,
+    NEMSignTransaction$,
+    SignMessage$,
+    SignTransaction$,
+    StellarGetAddress$,
+    StellarSignTransaction$,
+    VerifyMessage$
+} from './response';
