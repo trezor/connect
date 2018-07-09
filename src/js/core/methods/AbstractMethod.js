@@ -77,8 +77,6 @@ export default class AbstractMethod implements MethodInterface {
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_PERMISSION, this.device);
-        // post to view
-        const uiPromise = this.createUiPromise(UI.RECEIVE_PERMISSION, this.device);
         this.postMessage(new UiMessage(UI.REQUEST_PERMISSION, {
             permissions: this.requiredPermissions,
             device: this.device.toMessageObject(),
