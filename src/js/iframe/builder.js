@@ -44,7 +44,7 @@ export const init = async (settings: Object): Promise<void> => {
     const iframeSrcHost: ?Array<string> = instance.src.match(/^.+\:\/\/[^\‌​/]+/);
     if (iframeSrcHost && iframeSrcHost.length > 0) { origin = iframeSrcHost[0]; }
 
-    instance.onload = () => {
+    const onLoad = () => {
         // TODO: check if loaded iframe is not 404/500 etc.
         if (typeof window.chrome !== 'undefined' && window.chrome.runtime && window.chrome.runtime.onConnect) {
             window.chrome.runtime.onConnect.addListener(() => { });
@@ -58,13 +58,21 @@ export const init = async (settings: Object): Promise<void> => {
         instance.onload = undefined;
     }
 
+    // IE hack
+    if (instance.attachEvent) {
+        instance.attachEvent("onload", onLoad);
+    } else {
+        instance.onload = onLoad;
+    }
+
+    // inject iframe into host document body
     if (document.body) {
         document.body.appendChild(instance);
     }
 
     timeout = window.setTimeout(() => {
         initPromise.reject( IFRAME_TIMEOUT );
-    }, 10000);
+    }, 30000);
 
     try {
         await initPromise.promise;
