@@ -96,9 +96,9 @@ export const getAccountLabel = (path: Array<number>, coinInfo: CoinInfo): string
     let accountType: string = '';
 
     if (p1 === 48) {
-        accountType = `multisig ${coinLabel}`;
+        accountType = `${coinLabel} multisig`;
     } else if (p1 === 44 && coinInfo.segwit) {
-        accountType = `legacy ${coinLabel}`;
+        accountType = `${coinLabel} legacy`;
     } else {
         accountType = coinLabel;
     }
@@ -133,9 +133,9 @@ export const getPublicKeyLabel = (path: Array<number>, coinInfo: ?CoinInfo): str
             accountType = 'legacy';
         }
     } else if (p1 === 48) {
-        accountType = `multisig ${coinLabel}`;
+        accountType = `${coinLabel} multisig`;
     } else if (p1 === 44 && hasSegwit) {
-        accountType = `legacy ${coinLabel}`;
+        accountType = `${coinLabel} legacy`;
     } else {
         accountType = coinLabel;
     }
