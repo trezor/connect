@@ -54,6 +54,9 @@ export default class GetAccountInfo extends AbstractMethod {
 
         if (!coinInfo) {
             throw new Error('Coin not found');
+        } else {
+            // check required firmware with coinInfo support
+            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
 
         if (payload.hasOwnProperty('path')) {

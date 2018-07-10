@@ -47,8 +47,13 @@ export default class SignMessage extends AbstractMethod {
         } else {
             const coinInfoFromPath: ?CoinInfo = getCoinInfoFromPath(payload.path);
             if (coinInfoFromPath && coinInfo.shortcut !== coinInfoFromPath.shortcut) {
-                throw new Error('Parameters "path" and "coin" don\'t match');
+                throw new Error('Parameters "path" and "coin" do not match');
             }
+        }
+
+        if (coinInfo) {
+            // check required firmware with coinInfo support
+            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
 
         if (!payload.hasOwnProperty('message')){

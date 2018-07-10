@@ -76,6 +76,9 @@ export default class ComposeTransaction extends AbstractMethod {
 
         if (!coinInfo) {
             throw new Error('Coin not found');
+        } else {
+            // check required firmware with coinInfo support
+            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
 
         const outputs: Array<BuildTxOutputRequest> = payload.outputs.map(out => validateOutput(out));

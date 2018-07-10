@@ -61,7 +61,7 @@ export default class GetPublicKey extends AbstractMethod {
         }
 
         if (coinInfo) {
-             // check required firmware with coinInfo support
+            // check required firmware with coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
 

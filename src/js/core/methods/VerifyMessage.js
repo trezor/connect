@@ -37,6 +37,9 @@ export default class VerifyMessage extends AbstractMethod {
         const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
         if (!coinInfo) {
             throw new Error('Coin not found.');
+        } else {
+            // check required firmware with coinInfo support
+            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
 
         if (!payload.hasOwnProperty('address')) {
