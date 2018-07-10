@@ -2,7 +2,6 @@
 'use strict';
 
 import { HD_HARDENED, toHardened, fromHardened } from '../utils/pathUtils';
-import BIP_44 from 'bip44-constants';
 
 import type {
     Network as BitcoinJsNetwork,
@@ -116,13 +115,6 @@ export const getCoinName = (path: Array<number>): string => {
             return network.name;
         }
     };
-
-    for (const name of Object.keys(BIP_44)) {
-        const number = parseInt(BIP_44[name]);
-        if (number === path[1]) {
-            return name;
-        }
-    }
     return 'Unknown coin';
 };
 
