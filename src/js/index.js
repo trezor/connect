@@ -243,7 +243,7 @@ class TrezorConnect {
     static requestLogin = async (params: $T.$RequestLogin): Promise<$T.RequestLogin$> => {
         if (typeof params.callback === 'function') {
             const callback = params.callback;
-            // delete params.callback;
+            delete params.callback;
             //params.asyncChallenge = true; // replace value for callback (this field cannot be function)
 
             // TODO: set message listener only if iframe is loaded correctly
