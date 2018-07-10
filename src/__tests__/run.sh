@@ -56,7 +56,7 @@ signMessageSegwit_subtests="sign signLong"
 signTx_subtests="oneOneFee oneTwoFee oneThreeFee twoTwo testnetOneTwoFee testnetFeeTooHigh lotsOfOutputs feeTooHigh notEnoughFunds spendCoinbase twoChanges p2sh changeOnMainChainAllowed"
 signTxSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
 signTxBgold_subtests="change noChange p2sh p2shWitnessChange sendMultisig1"
-signTxBcash_subtests="change noChange oldAddr sendMultisigWrongChange"
+signTxBcash_subtests="change noChange oldAddr"
 signTxMultisig_subtests="twoOfThree fifteenOfFifteen missingPubkey"
 signTxMultisigChange_subtests="externalExternal externalInternal internalExternal multisigExternalExternal"
 
