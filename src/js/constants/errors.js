@@ -13,8 +13,8 @@ export class TrezorError extends Error {
 }
 
 // level 100 error during initialization
-export const NO_IFRAME: TrezorError = new TrezorError(100, 'Trezor.js not yet initialized');
-export const IFRAME_INITIALIZED: TrezorError = new TrezorError(101, 'Trezor.js has been already initialized');
+export const NO_IFRAME: TrezorError = new TrezorError(100, 'TrezorConnect not yet initialized');
+export const IFRAME_INITIALIZED: TrezorError = new TrezorError(101, 'TrezorConnect has been already initialized');
 export const IFRAME_TIMEOUT: TrezorError = new TrezorError(102, 'Iframe timeout');
 export const POPUP_TIMEOUT: TrezorError = new TrezorError(103, 'Popup timeout');
 export const BROWSER: TrezorError = new TrezorError(104, 'Browser not supported');
@@ -41,4 +41,8 @@ export const INVALID_STATE: TrezorError = new TrezorError('Failure_PassphraseSta
 export const WRONG_PREVIOUS_SESSION_ERROR_MESSAGE: string = 'wrong previous session';
 export const INVALID_PIN_ERROR_MESSAGE: string = 'PIN invalid';
 export const WEBUSB_ERROR_MESSAGE: string = 'NetworkError: Unable to claim interface.';
+
+
+// BlockBook
+export const BACKEND_NO_URL: TrezorError = new TrezorError('Backend_init', 'Url not found');
 
