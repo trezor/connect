@@ -270,7 +270,7 @@
         "bech32_prefix": "tb",
         "bip115": false,
         "bitcore": [],
-        "blockbook": [],
+        "blockbook": ["https://testnet-bitcore1.trezor.io"],
         "blocktime_seconds": 600,
         "cashaddr_prefix": null,
         "coin_label": "Testnet",
