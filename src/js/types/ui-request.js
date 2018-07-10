@@ -101,6 +101,7 @@ export type SelectAccount = {
         coinInfo: CoinInfo;
         complete?: boolean;
         start?: boolean;
+        checkBalance?: boolean;
     }
 }
 

@@ -118,6 +118,7 @@ export default class ComposeTransaction extends AbstractMethod {
             this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
                 coinInfo: this.params.coinInfo,
                 accounts: accounts.map(a => a.toMessage()),
+                checkBalance: true
             }));
         });
 
@@ -125,6 +126,7 @@ export default class ComposeTransaction extends AbstractMethod {
             this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
                 coinInfo: this.params.coinInfo,
                 accounts: accounts.map(a => a.toMessage()),
+                checkBalance: true,
                 complete: true
             }));
         });
@@ -139,6 +141,7 @@ export default class ComposeTransaction extends AbstractMethod {
         this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
             coinInfo: this.params.coinInfo,
             accounts: discovery.accounts.map(a => a.toMessage()),
+            checkBalance: true,
             start: true,
             complete: discovery.completed
         }));

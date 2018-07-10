@@ -74,8 +74,12 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>):
             button.disabled = true;
         } else {
             status.innerHTML = account.transactions === 0 ? 'Fresh account' : formatAmount(account.balance, payload.coinInfo);
-            button.disabled = account.transactions === 0;
-            button.onclick = handleClick;
+            if (payload.checkBalance) {
+                button.disabled = account.transactions === 0 || account.balance === 0;
+            } else {
+                button.disabled = false;
+                button.onclick = handleClick;
+            }
         }
     };
 
