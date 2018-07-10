@@ -15,15 +15,14 @@ export const ethereumGetAddress = () => {
     describe('EthereumGetAddress', () => {
         let core: Core;
         const testPayloads: Array<TestEthereumGetAddressPayload> = [
-            // TODO: Try these tests with connect-explorer
-            /* {
+            {
                 method: 'ethereumGetAddress',
                 path: [],
             },
             {
                 method: 'ethereumGetAddress',
                 path: [1],
-            }, */
+            },
             {
                 method: 'ethereumGetAddress',
                 path: [0, -1],
@@ -40,7 +39,7 @@ export const ethereumGetAddress = () => {
 
 
         const expectedResponses: Array<ExpectedEthereumGetAddressResponse> = [
-            /* {
+            {
                 payload: {
                     address: '1d1c328764a41bda0492b66baa30c4a339ff85ef',
                 },
@@ -49,7 +48,7 @@ export const ethereumGetAddress = () => {
                 payload: {
                     address: '437207ca3cf43bf2e47dea0756d736c5df4f597a',
                 },
-            }, */
+            },
             {
                 payload: {
                     address: 'e5d96dfa07bcf1a3ae43677840c31394258861bf',
