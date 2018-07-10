@@ -135,7 +135,7 @@ const init = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
 
     // global method used in html-inline elements
     window.closeWindow = () => {
-        window.close();
+        setTimeout(window.close, 100);
     };
 }
 

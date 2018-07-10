@@ -71,6 +71,7 @@ export const showFirmwareUpdateInfo = (): void => {
     updateButton.appendChild(
         document.createTextNode('Update my firmware')
     )
+    updateButton.onclick = window.closeWindow;
 
     const header: HTMLElement = document.createElement('div');
     header.className = 'header';
