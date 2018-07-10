@@ -9,9 +9,6 @@ export default class GetDeviceState extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = [];
-        this.requiredFirmware = '1.0.0';
-        this.useDevice = true;
-        this.useUi = false;
     }
 
     async run(): Promise<Object> {

@@ -23,9 +23,6 @@ export default class SignMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['write'];
-        this.requiredFirmware = '1.0.0';
-        this.useDevice = true;
-        this.useUi = true;
         this.info = 'Sign message';
 
         const payload: any = message.payload;

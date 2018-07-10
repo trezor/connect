@@ -26,9 +26,6 @@ export default class StellarGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = '1.0.0';
-        this.useDevice = true;
-        this.useUi = true;
         this.info = 'Export Stellar public key';
 
         const payload: any = message.payload;

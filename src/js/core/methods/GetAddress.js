@@ -24,8 +24,6 @@ export default class GetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = '1.0.0';
-        this.useDevice = true;
         this.info = 'Export address';
 
         const payload: Object = message.payload;
@@ -67,8 +65,6 @@ export default class GetAddress extends AbstractMethod {
                 showOnTrezor = payload.showOnTrezor;
             }
         }
-
-        this.useUi = showOnTrezor;
 
         this.params = {
             path: payload.path,

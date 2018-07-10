@@ -20,9 +20,7 @@ export default class EthereumGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = '1.0.0';
-        this.useDevice = true;
-        this.useUi = true;
+        this.requiredFirmware = ['1.6.2', '2.0.7'];
         this.info = 'Export Ethereum address';
 
         const payload: any = message.payload;

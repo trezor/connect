@@ -22,9 +22,6 @@ export default class CustomMessage extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['custom-message'];
-        this.requiredFirmware = '1.0.0';
-        this.useDevice = true;
-        this.useUi = true;
         this.info = 'Custom message';
 
         const payload: any = message.payload;

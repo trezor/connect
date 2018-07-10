@@ -45,9 +45,6 @@ export default class SignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = '1.6.0';
-        this.useDevice = true;
-        this.useUi = true;
         this.info = 'Sign transaction';
 
         const payload: any = message.payload;

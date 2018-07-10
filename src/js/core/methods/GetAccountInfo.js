@@ -39,9 +39,6 @@ export default class GetAccountInfo extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = '1.0.0';
-        this.useDevice = true;
-        this.useUi = true;
         this.info = 'Export account info';
 
         const payload: Object = message.payload;

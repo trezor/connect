@@ -17,9 +17,6 @@ export default class NEMSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = '1.6.0';
-        this.useDevice = true;
-        this.useUi = true;
         this.info = 'Sign NEM transaction';
 
         const payload: any = message.payload;

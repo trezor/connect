@@ -24,9 +24,6 @@ export default class VerifyMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = '1.0.0';
-        this.useDevice = true;
-        this.useUi = true;
         this.info = 'Verify message';
 
         const payload: any = message.payload;

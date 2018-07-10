@@ -29,9 +29,6 @@ export default class RequestLogin extends AbstractMethod {
         super(message);
         this.useEmptyPassphrase = true;
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = '1.0.0';
-        this.useDevice = true;
-        this.useUi = true;
         this.info = 'Login';
 
         const payload: any = message.payload;

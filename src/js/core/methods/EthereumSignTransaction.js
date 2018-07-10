@@ -22,9 +22,7 @@ export default class EthereumSignTx extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['write'];
-        this.requiredFirmware = '1.0.0';
-        this.useDevice = true;
-        this.useUi = true;
+        this.requiredFirmware = ['1.6.2', '2.0.7'];
         this.info = 'Sign Ethereum transaction';
 
         const payload: any = message.payload;

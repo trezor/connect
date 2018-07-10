@@ -37,7 +37,7 @@ export default class AbstractMethod implements MethodInterface {
     useDevice: boolean; // use device
     useEmptyPassphrase: boolean;
 
-    requiredFirmware: string;
+    requiredFirmware: Array<string>;
     requiredPermissions: Array<string>;
 
     +confirmation: () => Promise<boolean>;
@@ -58,9 +58,13 @@ export default class AbstractMethod implements MethodInterface {
         this.deviceState = payload.device ? payload.device.state : null; // expected state (call param). This is not current device state!
         this.expectedDeviceState = payload.device ? payload.device.hasOwnProperty('state') : false;
         this.keepSession = typeof payload.keepSession === 'boolean' ? payload.keepSession : false;
-        this.overridePreviousCall =  typeof payload.override === 'boolean' ? payload.override : false;
+        this.overridePreviousCall = typeof payload.override === 'boolean' ? payload.override : false;
         this.overridden = false;
-        this.useEmptyPassphrase =  typeof payload.useEmptyPassphrase === 'boolean' ? payload.useEmptyPassphrase : false;
+        this.useEmptyPassphrase = typeof payload.useEmptyPassphrase === 'boolean' ? payload.useEmptyPassphrase : false;
+        // default values for all methods
+        this.requiredFirmware = ['1.0.0', '2.0.0'];
+        this.useDevice = true;
+        this.useUi = true;
     }
 
     async run(): Promise<Object> {
