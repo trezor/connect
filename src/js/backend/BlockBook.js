@@ -1,6 +1,8 @@
 /* @flow */
 'use strict';
 
+import * as ERROR from '../constants/errors';
+
 import {
     BitcoreBlockchain,
     WorkerDiscovery,
@@ -33,30 +35,32 @@ import SocketWorker from 'worker-loader?name=js/socketio-worker.[hash].js!hd-wal
 
 export type Options = {
     urls: Array<string>,
-    coinInfo?: CoinInfo,
+    coinInfo: CoinInfo,
 };
 
 export default class BlockBook {
     options: Options;
     blockchain: BitcoreBlockchain;
 
-    lastError: boolean;
+    error: ?Error;
     discovery: Discovery;
 
     constructor(options: Options) {
+
+        if (options.urls.length < 1) {
+            throw ERROR.BACKEND_NO_URL;
+        }
         this.options = options;
 
         const worker: FastXpubWorker = new FastXpubWorker();
         const blockchain: BitcoreBlockchain = new BitcoreBlockchain(this.options.urls, () => new SocketWorker());
         this.blockchain = blockchain;
 
-        // this.lastError = false;
-
         // // $FlowIssue WebAssembly
         const filePromise = typeof WebAssembly !== 'undefined' ? httpRequest(FastXpubWasm, 'binary') : Promise.reject();
 
-
-        this.blockchain.errors.values.attach(() => { this._setError(); });
+        //this.blockchain.errors.values.attach(() => { this._setError(); });
+        this.blockchain.errors.values.attach(this._setError.bind(this));
         this.discovery = new WorkerDiscovery(
             () => new DiscoveryWorker(),
             worker,
@@ -65,8 +69,8 @@ export default class BlockBook {
         );
     }
 
-    _setError() {
-        this.lastError = true;
+    _setError(error: Error) {
+        this.error = error;
     }
 
     async loadCoinInfo(coinInfo: ?CoinInfo): Promise<void> {
@@ -92,6 +96,7 @@ export default class BlockBook {
         progress: (progress: AccountLoadStatus) => void,
         setDisposer: (disposer: () => void) => void
     ): Promise<AccountInfo> {
+        if (this.error) { throw this.error; }
 
         const segwit_s: 'p2sh' | 'off' = coinInfo.segwit ? 'p2sh' : 'off';
 
@@ -102,11 +107,8 @@ export default class BlockBook {
             progress(status);
         });
 
-        // discovery.stream.
-
         this.blockchain.errors.values.attach((e) => {
             discovery.dispose(e);
-            throw e;
         });
 
         const info: AccountInfo = await discovery.ending;
@@ -120,6 +122,8 @@ export default class BlockBook {
         data: AccountInfo,
         coinInfo: CoinInfo,
     ): Stream<AccountInfo | Error> {
+        if (this.error) { throw this.error; }
+
         const segwit_s = coinInfo.segwit ? 'p2sh' : 'off';
         const res = this.discovery.monitorAccountActivity(data, xpub, coinInfo.network, segwit_s, !!(coinInfo.cashAddrPrefix));
 
@@ -130,30 +134,36 @@ export default class BlockBook {
     }
 
     async loadTransactions(txs: Array<string>): Promise<Array<BitcoinJsTransaction>> {
+        if (this.error) { throw this.error; }
+
         return Promise.all(
             txs.map(id => this.loadTransaction(id))
         );
     }
 
     async loadTransaction(id: string): Promise<BitcoinJsTransaction> {
+        if (this.error) { throw this.error; }
         const tx = await this.blockchain.lookupTransaction(id);
         return BitcoinJsTransaction.fromHex(tx.hex, tx.zcash);
     }
 
     async loadCurrentHeight(): Promise<number> {
+        if (this.error) { throw this.error; }
         const { height } = await this.blockchain.lookupSyncStatus();
         return height;
     }
 
     async sendTransaction(txBytes: Buffer): Promise<string> {
+        if (this.error) { throw this.error; }
         return await this.blockchain.sendTransaction(txBytes.toString('hex'));
     }
 
     async sendTransactionHex(txHex: string): Promise<string> {
+        if (this.error) { throw this.error; }
         return await this.blockchain.sendTransaction(txHex);
     }
 
     dispose() {
-        // TODO!
+
     }
 }
