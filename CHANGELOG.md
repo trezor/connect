@@ -1,3 +1,13 @@
+# 5.0.20
+__added__
+- Added firmware check against CoinInfo.support values
+- Added outdate firmware warning in popup
+__fixed__
+- Fixed `TrezorConnect.requestLogin` parameters
+- Fixed race condition in UI.REQUEST_CONFIRMATION
+- Fixed popup.html buttons click
+
+
 # 5.0.18
 __added__
 - Added iframe lazy loading
