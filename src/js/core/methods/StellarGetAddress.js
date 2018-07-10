@@ -56,6 +56,8 @@ export default class StellarGetAddress extends AbstractMethod {
         if (this.confirmed) return true;
         // wait for popup window
         await this.getPopupPromise().promise;
+        // initialize user response promise
+        const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
@@ -64,7 +66,7 @@ export default class StellarGetAddress extends AbstractMethod {
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device).promise;
+        const uiResp: UiPromiseResponse = await uiPromise.promise;
         const resp: string = uiResp.payload;
 
         this.confirmed = (resp === 'true');
