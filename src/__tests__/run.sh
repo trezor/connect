@@ -139,6 +139,7 @@ start_emulator() {
     # Start emulator
     cd $emulator_path
     PYOPT=0 ./emu.sh > /dev/null 2>&1 &
+    #PYOPT=0 ./emu.sh &
     pid_emul=$!
     #PYOPT=0 ./emu.sh 2>&1 > /dev/null &
 
@@ -155,6 +156,7 @@ start_transport() {
     cd $trezord_path
     #./trezord-go -e 21324 > /dev/null 2>&1 &
     ./trezord-go -e 21324 -e 21325 > /dev/null 2>&1 &
+    #./trezord-go -e 21325 > /dev/null 2>&1 &
 
     # You can disable all USB in order to run on some virtuaized environments, for example Travis
     # doesn't check for devices connected via USB, only for emulator
@@ -857,11 +859,10 @@ test_nemSignTransactionMosaic() {
 }
 
 test_nemSignTransactionMultisig() {
-    # todo: emulator firmware
     specified_subtest=$1
     if [ -n "$specified_subtest" ]; then
         # Run only specified subtest
-        subtests=$specified_subtests
+        subtests=$specified_subtest
     else
         # Run all possible subtests
         subtests=$nemSignTransactionMultisig_subtests
@@ -881,11 +882,10 @@ test_nemSignTransactionMultisig() {
 }
 
 test_nemSignTransactionOthers() {
-    # todo: emulator firmware
     specified_subtest=$1
     if [ -n "$specified_subtest" ]; then
         # Run only specified subtest
-        subtests=$specified_subtests
+        subtests=$specified_subtest
     else
         # Run all possible subtests
         subtests=$nemSignTransactionOthers_subtests
