@@ -21,11 +21,9 @@ import { ethereumVerifyMessage } from './ethereumVerifyMessage.spec.js';
 import { getAccountInfo } from './getAccountInfo.spec.js';
 import { nemGetAddress } from './nemGetAddress.spec.js';
 import { nemSignTransactionMosaic } from './nemSignTransactionMosaic.spec.js';
-/* export { nemSignTransactionMosaicTests } from './nemSignTransactionMosaic.spec.js';
-export { nemSignTransactionMultisigTests } from './nemSignTransactionMultisig.spec.js';
-export { nemSignTransactionOthersTests } from './nemSignTransactionOthers.spec.js';
-export { nemSignTransactionTransfersTests } from './nemSignTransactionTransfers.spec.js'; */
-/* export { stellarGetPublicKeyTests } from './stellarGetPublicKey.spec.js'; */
+import { nemSignTransactionMultisig } from './nemSignTransactionMultisig.spec.js';
+import { nemSignTransactionOthers } from './nemSignTransactionOthers.spec.js';
+import { nemSignTransactionTransfers } from './nemSignTransactionTransfers.spec.js';
 
 export default {
     getPublicKey,
@@ -49,4 +47,7 @@ export default {
     getAccountInfo,
     nemGetAddress,
     nemSignTransactionMosaic,
+    nemSignTransactionMultisig,
+    nemSignTransactionOthers,
+    nemSignTransactionTransfers,
 }

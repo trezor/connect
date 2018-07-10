@@ -1,12 +1,21 @@
-/* todo: flow */
+/* @flow */
 
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
 import { settings, CoreEventHandler } from './common.js';
 
-const aggregateModificationSubtest = () => {
-    const testPayloads = [
+import type {
+    SubtestNemSignTransaction,
+     NemSignTransactionMultisigAvailableSubtests,
+} from 'flowtype/tests';
+import type {
+    TestNemSignTransactionPayload,
+    ExpectedNemSignTransactionResponse,
+} from 'flowtype/tests/nem-sign-transaction';
+
+const aggregateModification = (): SubtestNemSignTransaction => {
+    const testPayloads: Array<TestNemSignTransactionPayload> = [
         {
             method: 'nemSignTransaction',
             path: "m/44'/1'/0'/0'/0'",
@@ -29,7 +38,8 @@ const aggregateModificationSubtest = () => {
             },
         },
     ];
-    const expectedResponses = [
+
+    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
             payload: {
                 data: '01100000020000987f0e730420000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b406208480841e0000000000ff5f740401000000280000000100000020000000c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f878440400000003000000',
@@ -45,29 +55,29 @@ const aggregateModificationSubtest = () => {
     };
 };
 
-const multisigSubtest = () => {
-    const testPayloads = [
+const multisig = (): SubtestNemSignTransaction => {
+    const testPayloads: Array<TestNemSignTransactionPayload> = [
         {
             method: 'nemSignTransaction',
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 1,
-                fee: 2000000,
-                type: 4100,
+                fee: 10000,
+                type: TX_TYPES.multisig,
                 deadline: 74735615,
                 otherTrans: {
                     timeStamp: 2,
                         amount: 2000000,
                         fee: 15000,
-                        recipient: '0xTALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
+                        recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                         type: TX_TYPES.transfer,
                         deadline: 67890,
                         message: {
-                            payload: '0x746573745f6e656d5f7472616e73616374696f6e5f7472616e73666572',
+                            payload: '746573745f6e656d5f7472616e73616374696f6e5f7472616e73666572',
                             type: 1,
                         },
-                        version: -1744830464,
-                        signer: '0xc5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
+                    version: -1744830464,
+                    signer: 'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
                 },
                 version: -1744830464,
             },
@@ -78,27 +88,26 @@ const multisigSubtest = () => {
             transaction: {
                 timeStamp: 74649215,
                 fee: 150,
-                type: 4100,
+                type: TX_TYPES.multisig,
                 deadline: 789,
                 otherTrans: {
-                    timeStamp: 2,
-                        amount: 123456,
-                        fee: 2000,
-                        recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
-                        type: TX_TYPES.provisionNamespace,
-                        deadline: 100,
-                        message: { },
-                        newPart: '0xABCDE',
-                        rentalFeeSink: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
-                        rentalFee: 1500,
-                        version: -1744830464,
-                        signer: '0xc5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
+                    timeStamp: 123456,
+                    fee: 2000,
+                    recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
+                    type: TX_TYPES.provisionNamespace,
+                    deadline: 100,
+                    message: { },
+                    newPart: 'ABCDE',
+                    rentalFeeSink: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
+                    rentalFee: 1500,
+                    version: -1744830464,
+                    signer: 'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
                 },
                 version: -1744830464,
             },
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
             payload: {
                 data: '04100000010000980100000020000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b40620841027000000000000ff5f74049900000001010000010000980200000020000000c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844983a000000000000320901002800000054414c49434532474d4133344358484437584c4a513533364e4d35554e4b5148544f524e4e54324a80841e000000000025000000010000001d000000746573745f6e656d5f7472616e73616374696f6e5f7472616e73666572',
@@ -120,29 +129,29 @@ const multisigSubtest = () => {
     };
 };
 
-const multisigSignerSubtest = () => {
-    const testPayloads = [
+const multisigSigner = (): SubtestNemSignTransaction => {
+    const testPayloads: Array<TestNemSignTransactionPayload> = [
         {
             method: 'nemSignTransaction',
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 333,
                 fee: 200,
-                type: 4098,
+                type: TX_TYPES.multisigSignature,
                 deadline: 444,
                 otherTrans: {
-                    timeStamp: 55,
+                    timeStamp: 555,
                     amount: 2000000,
                     fee: 2000000,
-                    recipient: '0xTALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
+                    recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                     type: TX_TYPES.transfer,
                     deadline: 666,
                     message: {
-                        payload: '0x746573745f6e656d5f7472616e73616374696f6e5f7472616e73666572',
+                        payload: '746573745f6e656d5f7472616e73616374696f6e5f7472616e73666572',
                         type: 1,
                     },
                     version: -1744830464,
-                    signer: '0xc5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
+                    signer: 'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
                 },
                 version: -1744830464,
             },
@@ -153,31 +162,31 @@ const multisigSignerSubtest = () => {
             transaction: {
                 timeStamp: 900000,
                 fee: 200000,
-                type: 4098,
+                type: TX_TYPES.multisigSignature,
                 deadline: 100,
                 otherTrans: {
                     timeStamp: 101111,
                     fee: 1000,
-                    recipient: '0xTALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
+                    recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                     type: TX_TYPES.supplyChange,
                     deadline: 13123,
                     message: { },
-                    mosaicID: {
+                    mosaicId: {
                         namespaceId: 'hellom',
                         name: 'Hello mosaic'
                     },
                     supplyType: 1,
                     delta: 1,
                     version: -1744830464,
-                    creationFeeSink: '0xTALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
+                    creationFeeSink: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                     creationFee: 1500,
-                    signer: '0xc5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
+                    signer: 'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
                 },
                 version: -1744830464,
             },
-        }
+        },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
             payload: {
                 data: '02100000010000984d01000020000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b4062084c800000000000000bc010000240000002000000087923cd4805f3babe6b5af9cbb2b08be4458e39531618aed73c911f160c8e38528000000544444324354364c514c49595135364b49584933454e544d36454b3344343450354b5a50464d4b32',
@@ -199,12 +208,12 @@ const multisigSignerSubtest = () => {
     };
 };
 
-export const nemSignTransactionMultisigTests = (): void => {
-    const subtest = __karma__.config.subtest;
+export const nemSignTransactionMultisig = (): void => {
+    const subtest: NemSignTransactionMultisigAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
-        aggregateModification: aggregateModificationSubtest,
-        multisig: multisigSubtest,
-        multisigSigner: multisigSignerSubtest,
+        aggregateModification,
+        multisig,
+        multisigSigner,
     };
 
     describe('NEMSignTransactionMultisig', () => {

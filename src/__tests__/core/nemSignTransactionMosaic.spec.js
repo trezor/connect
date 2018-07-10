@@ -5,12 +5,21 @@ import { checkBrowser } from '../../js/utils/browser';
 import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
 import { settings, CoreEventHandler } from './common.js';
 
-const supplyChange = () => {
-    const testPayloads = [
+import type {
+    SubtestNemSignTransaction,
+    NemSignTransactionMosaicAvailableSubtests,
+} from 'flowtype/tests';
+import type {
+    TestNemSignTransactionPayload,
+    ExpectedNemSignTransactionResponse,
+} from 'flowtype/tests/nem-sign-transaction';
+
+const supplyChange = (): SubtestNemSignTransaction => {
+    const testPayloads: Array<TestNemSignTransactionPayload> = [
         {
             method: 'nemSignTransaction',
-            path: "m/44'/43'/0'",
-            /* transaction: {
+            path: "m/44'/1'/0'/0'/0'",
+            transaction: {
                 timeStamp: 74649215,
                 fee: 2000000,
                 type: TX_TYPES.supplyChange,
@@ -25,25 +34,10 @@ const supplyChange = () => {
                 version: -1744830464,
                 creationFeeSink: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                 creationFee: 1500,
-            }, */
-            transaction: {
-                "type": 16386,
-                "mosaicId": {
-                    "namespaceId": "hellom",
-                    "name": "Hello mosaic"
-                },
-                "version": -1744830464,
-                "deadline": 74735615,
-                "fee": 2000000,
-                "timeStamp": 74649215,
-                "supplyType": 1,
-                "delta": 1,
-                "creationFee": 1500,
-                "creationFeeSink": "TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J",
             },
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
             payload: {
                 data: '02400000010000987f0e730420000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b406208480841e0000000000ff5f74041a0000000600000068656c6c6f6d0c00000048656c6c6f206d6f73616963010000000100000000000000',
@@ -59,15 +53,15 @@ const supplyChange = () => {
     };
 };
 
-const creation = () => {
-    const testPayloads = [
+const creation = (): SubtestNemSignTransaction => {
+    const testPayloads: Array<TestNemSignTransactionPayload> = [
         {
             method: 'nemSignTransaction',
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 74649215,
                 fee: 2000000,
-                type: TX_TYPES.supplyChange,
+                type: TX_TYPES.mosaicCreation,
                 deadline: 74735615,
                 message: { },
                 mosaicDefinition: {
@@ -80,12 +74,12 @@ const creation = () => {
                     description: 'lorem',
                 },
                 version: (0x98 << 24), // testnet // 2550136832
-                creationFeeSink: '0xTALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
+                creationFeeSink: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                 creationFee: 1500,
             },
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
             payload: {
                 data: '01400000010000987f0e730420000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b406208480841e0000000000ff5f7404c100000020000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b40620841a0000000600000068656c6c6f6d0c00000048656c6c6f206d6f73616963050000006c6f72656d04000000150000000c00000064697669736962696c6974790100000030160000000d000000696e697469616c537570706c7901000000301a0000000d000000737570706c794d757461626c650500000066616c7365190000000c0000007472616e7366657261626c650500000066616c7365000000002800000054414c49434532474d4133344358484437584c4a513533364e4d35554e4b5148544f524e4e54324adc05000000000000',
@@ -101,15 +95,15 @@ const creation = () => {
     };
 };
 
-const creationProperties = () => {
-    const testPayloads = [
+const creationProperties = (): SubtestNemSignTransaction => {
+    const testPayloads: Array<TestNemSignTransactionPayload> = [
         {
             method: 'nemSignTransaction',
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 74649215,
                 fee: 2000000,
-                type: TX_TYPES.creation,
+                type: TX_TYPES.mosaicCreation,
                 deadline: 74735615,
                 message: {},
                 mosaicDefinition: {
@@ -139,16 +133,16 @@ const creationProperties = () => {
                     description: 'lorem',
                 },
                 version: -1744830464,
-                creationFeeSink: '0xTALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
+                creationFeeSink: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                 creationFee: 1500,
             },
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
             payload: {
-                data: '01400000010000987f0e730420000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b406208480841e0000000000ff5f7404c100000020000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b40620841a0000000600000068656c6c6f6d0c00000048656c6c6f206d6f73616963050000006c6f72656d04000000150000000c00000064697669736962696c6974790100000030160000000d000000696e697469616c537570706c7901000000301a0000000d000000737570706c794d757461626c650500000066616c7365190000000c0000007472616e7366657261626c650500000066616c7365000000002800000054414c49434532474d4133344358484437584c4a513533364e4d35554e4b5148544f524e4e54324adc05000000000000',
-                signature: '537adf4fd9bd5b46e204b2db0a435257a951ed26008305e0aa9e1201dafa4c306d7601a8dbacabf36b5137724386124958d53202015ab31fb3d0849dfed2df0e',
+                data: '01400000010000987f0e730420000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b406208480841e0000000000ff5f7404c200000020000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b40620841a0000000600000068656c6c6f6d0c00000048656c6c6f206d6f73616963050000006c6f72656d04000000150000000c00000064697669736962696c6974790100000034180000000d000000696e697469616c537570706c79030000003230301a0000000d000000737570706c794d757461626c650500000066616c7365180000000c0000007472616e7366657261626c650400000074727565000000002800000054414c49434532474d4133344358484437584c4a513533364e4d35554e4b5148544f524e4e54324adc05000000000000',
+                signature: 'f17c859710060f2ea9a0ab740ef427431cf36bdc7d263570ca282bd66032e9f5737a921be9839429732e663be2bb74ccc16f34f5157ff2ef00a65796b54e800e',
             },
         },
     ];
@@ -160,15 +154,15 @@ const creationProperties = () => {
     };
 };
 
-const creationLevy = () => {
-    const testPayloads = [
+const creationLevy = (): SubtestNemSignTransaction => {
+    const testPayloads: Array<TestNemSignTransactionPayload> = [
         {
             method: 'nemSignTransaction',
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 74649215,
                 fee: 2000000,
-                type: TX_TYPES.creation,
+                type: TX_TYPES.mosaicCreation,
                 deadline: 74735615,
                 message: {},
                 mosaicDefinition: {
@@ -206,12 +200,12 @@ const creationLevy = () => {
                     description: 'lorem',
                 },
                 version: -1744830464,
-                creationFeeSink: '0xTALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
+                creationFeeSink: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                 creationFee: 1500,
             },
         },
     ];
-    const expectedResponses = [
+    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
             payload: {
                 data: '01400000010000987f0e730420000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b406208480841e0000000000ff5f74041801000020000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b40620841a0000000600000068656c6c6f6d0c00000048656c6c6f206d6f73616963050000006c6f72656d04000000150000000c00000064697669736962696c6974790100000034180000000d000000696e697469616c537570706c79030000003230301a0000000d000000737570706c794d757461626c650500000066616c7365180000000c0000007472616e7366657261626c65040000007472756556000000010000002800000054414c49434532474d4133344358484437584c4a513533364e4d35554e4b5148544f524e4e54324a1a0000000600000068656c6c6f6d0c00000048656c6c6f206d6f7361696302000000000000002800000054414c49434532474d4133344358484437584c4a513533364e4d35554e4b5148544f524e4e54324adc05000000000000',
@@ -228,7 +222,7 @@ const creationLevy = () => {
 };
 
 export const nemSignTransactionMosaic = (): void => {
-    const subtest = __karma__.config.subtest;
+    const subtest: NemSignTransactionMosaicAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         supplyChange,
         creation,
