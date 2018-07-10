@@ -13,7 +13,7 @@ import type {
 
 export const settings = {
     configSrc: 'base/src/__tests__/config.json', // constant
-    debug: true,
+    debug: false,
     origin: 'localhost',
     priority: 0,
     trustedHost: true,
@@ -75,10 +75,10 @@ export class CoreEventHandler {
                 setTimeout(async () => {
                     this._isHandlingButtonRequest = false;
                     const { session } = await this._getDebugLinkInfo();
-                    this._handleButtonRequest(session);
+                    this._pressButtonYes(session);
                 }, 1000);
             } catch (error) {
-                console.error('Error on device changed', [error, event]);
+                console.error('Error on device changed event', [error, event]);
             }
         }
 
@@ -88,7 +88,7 @@ export class CoreEventHandler {
                 const { session, path } = await this._getDebugLinkInfo();
                 this._acquireDevice(session, path);
             } catch(error) {
-                console.error('Error on request button', [error, event]);
+                console.error('Error on request button event', [error, event]);
             }
         }
 
@@ -107,7 +107,6 @@ export class CoreEventHandler {
         if (event.type === RESPONSE_EVENT) {
             console.warn(event);
             this._compareExpectedResponseToActual(this._expectedResponse, event);
-
             this._doneFn();
         }
     }
@@ -149,25 +148,38 @@ export class CoreEventHandler {
         }
     }
 
-    async _handleButtonRequest(session: number | string): Promise<any> {
+    async _pressButtonYes(session: number | string): Promise<any> {
         const protoButtonPressYes = '0064000000020801';
         try {
             if (session !== 'null') {
-                await this._httpPost(this._urlCall(session), protoButtonPressYes);
+                await this._callMethod(session, protoButtonPressYes);
             } else {
                 throw new Error('Cannot call method when session is null');
             }
         } catch (error) {
             throw error;
         }
-    };
+    }
 
-    async _acquireDevice(session: number | string, path: string): Promise<any> {
+    async _swipeDown(session: number | string): Promise<any> {
+        const protoSwipeDown = '0064000000021000';
         try {
-            await this._httpPost(this._urlAcquire(path, session));
+            if (session !== 'null') {
+                await this._callMethod(session, protoSwipeDown);
+            } else {
+                throw new Error('Cannot call method when session is null - unacquired device');
+            }
         } catch (error) {
             throw error;
         }
+    }
+
+    async _acquireDevice(session: number | string, path: string): Promise<any> {
+        return this._httpPost(this._urlAcquire(path, session));
+    }
+
+    async _callMethod(session: number | string, encodedMethod: string): Promise<any> {
+        return this._httpPost(this._urlCall(session), encodedMethod);
     }
 
     _httpPost(url: string, data?: any): Promise<any> {
