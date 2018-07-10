@@ -14,7 +14,7 @@ import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
 import { getOrigin } from '../utils/networkUtils';
 
-import { showView, postMessage, setOperation, channel } from './view/common';
+import { showView, showFirmwareUpdateInfo, postMessage, setOperation, channel } from './view/common';
 
 import * as view from './view';
 // eslint-disable-next-line no-unused-vars
@@ -91,6 +91,9 @@ const handleMessage = (event: PostMessageEvent): void => {
             break;
         case UI.FIRMWARE :
             showView('firmware-update');
+            break;
+        case UI.FIRMWARE_OUTDATED :
+            showFirmwareUpdateInfo();
             break;
         case UI.BROWSER_NOT_SUPPORTED :
         case UI.BROWSER_OUTDATED :

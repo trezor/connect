@@ -38,9 +38,12 @@ export type Deferred<T> = {
     reject: (e: Error) => void,
 };
 
+export type DeviceFirmwareStatus = 'valid' | 'outdated' | 'required';
+
 export type Device = {
     path: string,
     label: string,
+    firmware: DeviceFirmwareStatus,
     isUsedElsewhere: boolean,
     featuresNeedsReload: boolean,
     features?: Features,

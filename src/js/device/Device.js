@@ -5,7 +5,7 @@ import EventEmitter from 'events';
 import semvercmp from 'semver-compare';
 import DeviceCommands from './DeviceCommands';
 
-import type { Device as DeviceTyped, Deferred, Features } from '../types';
+import type { Device as DeviceTyped, DeviceFirmwareStatus, Features, Deferred } from '../types';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
 import * as UI from '../constants/ui';
@@ -13,6 +13,7 @@ import * as DEVICE from '../constants/device';
 import * as ERROR from '../constants/errors';
 import { create as createDeferred } from '../utils/deferred';
 import DataManager from '../data/DataManager';
+import { checkFirmware } from '../data/FirmwareInfo';
 import Log, { init as initLog } from '../utils/debug';
 
 const FEATURES_LIFETIME: number = 10 * 60 * 1000; // 10 minutes
@@ -55,6 +56,8 @@ const parseRunOptions = (options?: RunOptions): RunOptions => {
 export default class Device extends EventEmitter {
     transport: Transport;
     originalDescriptor: DeviceDescriptor;
+
+    firmwareStatus: DeviceFirmwareStatus;
     features: Features;
     featuresNeedsReload: boolean = false;
 
@@ -325,12 +328,14 @@ export default class Device extends EventEmitter {
         this.features = message;
         this.featuresNeedsReload = false;
         this.featuresTimestamp = new Date().getTime();
+
+        this.firmwareStatus = checkFirmware( [ this.features.major_version, this.features.minor_version, this.features.patch_version ] );
     }
 
     async getFeatures(): Promise<void> {
-        // const { message } : { message: Features } = await this.typedCall('GetFeatures', 'Features');
         const { message } : { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
         this.features = message;
+        this.firmwareStatus = checkFirmware( [ this.features.major_version, this.features.minor_version, this.features.patch_version ] );
     }
 
     getState(): ?string {
@@ -424,8 +429,9 @@ export default class Device extends EventEmitter {
         ].join('.');
     }
 
-    atLeast(version: string): boolean {
-        return semvercmp(this.getVersion(), version) >= 0;
+    atLeast(versions: Array<string>): boolean {
+        const modelVersion = versions[ this.features.major_version - 1 ];
+        return semvercmp(this.getVersion(), modelVersion) >= 0;
     }
 
     getCoin(name: string): Object {
@@ -481,7 +487,7 @@ export default class Device extends EventEmitter {
         return (pin && pass);
     }
 
-    hasUnexpectedMode(requiredFirmware: string): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE) {
+    hasUnexpectedMode(requiredFirmware: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE) {
         if (this.features) {
             if (this.isBootloader()) {
                 return UI.BOOTLOADER;
@@ -489,7 +495,7 @@ export default class Device extends EventEmitter {
             if (!this.isInitialized()) {
                 return UI.INITIALIZE;
             }
-            if (!this.atLeast(requiredFirmware)) {
+            if (this.firmwareStatus === 'required' || !this.atLeast(requiredFirmware)) {
                 return UI.FIRMWARE;
             }
         }
@@ -514,6 +520,7 @@ export default class Device extends EventEmitter {
             return {
                 path: this.originalDescriptor.path,
                 label: 'Unreadable device',
+                firmware: 'required',
                 isUsedElsewhere: false,
                 featuresNeedsReload: false,
                 unreadable: true
@@ -522,6 +529,7 @@ export default class Device extends EventEmitter {
             return {
                 path: this.originalDescriptor.path,
                 label: 'Unacquired device',
+                firmware: 'required',
                 isUsedElsewhere: this.isUsedElsewhere(),
                 featuresNeedsReload: this.featuresNeedsReload,
                 unacquired: true,
@@ -533,6 +541,7 @@ export default class Device extends EventEmitter {
                 path: this.originalDescriptor.path,
                 label: label,
                 state: this.state,
+                firmware: this.firmwareStatus,
                 isUsedElsewhere: this.isUsedElsewhere(),
                 featuresNeedsReload: this.featuresNeedsReload,
                 features: this.features,

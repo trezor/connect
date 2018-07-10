@@ -1,6 +1,8 @@
 /* @flow */
 'use strict';
 
+import type { DeviceFirmwareStatus } from '../types';
+
 type Release = {
     required: true,
     version: Array<number>,
@@ -21,17 +23,19 @@ export const parseFirmware = (json: JSON): void => {
     });
 }
 
-export const checkFirmware = (fw: Array<number>): void => {
+export const checkFirmware = (fw: Array<number>): DeviceFirmwareStatus => {
     // find all releases for device model
-    const major: Array<Release> = releases.filter(r => r.version[0] === fw[0]);
-    // find new firmware
-    const newFirmware: Array<Release> = releases.filter(r => r.version[1] > fw[1] || (r.version[1] === fw[1] && r.version[2] > fw[2]) );
-
-    // check if any of releases is required
-    if (newFirmware.length > 0) {
-        const isRequired: ?Release = newFirmware.find(r => r.required);
-        if (isRequired) {
-            // TODO:
+    const modelFirmware: Array<Release> = releases.filter(r => r.version[0] === fw[0]);
+    // find latest firmware for this model
+    const latestFirmware: Array<Release> = modelFirmware.filter(r => r.version[1] > fw[1] || (r.version[1] === fw[1] && r.version[2] > fw[2]) );
+    if (latestFirmware.length > 0) {
+        // check if any of releases is required
+        const requiredFirmware: ?Release = latestFirmware.find(r => r.required);
+        if (requiredFirmware) {
+            return 'required';
+        } else {
+            return 'outdated';
         }
     }
+    return 'valid';
 }

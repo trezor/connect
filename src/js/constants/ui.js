@@ -7,6 +7,7 @@ export const TRANSPORT: 'ui-no_transport' = 'ui-no_transport';
 export const BOOTLOADER: 'ui-device_bootloader_mode' = 'ui-device_bootloader_mode';
 export const INITIALIZE: 'ui-device_not_initialized' = 'ui-device_not_initialized';
 export const FIRMWARE: 'ui-device_firmware_old' = 'ui-device_firmware_old';
+export const FIRMWARE_OUTDATED: 'ui-device_firmware_outdated' = 'ui-device_firmware_outdated';
 export const BROWSER_NOT_SUPPORTED: 'ui-browser_not_supported' = 'ui-browser_not_supported';
 export const BROWSER_OUTDATED: 'ui-browser_outdated' = 'ui-browser_outdated';
 export const RECEIVE_BROWSER: 'ui-receive_browser' = 'ui-receive_browser';

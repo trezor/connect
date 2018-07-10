@@ -43,10 +43,10 @@ export const clearView = (): void => {
     container.innerHTML = '';
 };
 
-const shouldShowFirmwareUpdateInfo = (shouldShow: boolean): void => {
+export const showFirmwareUpdateInfo = (): void => {
     const updateContainer: HTMLElement = document.getElementsByClassName('firmware-update-info')[0];
     const isEmpty: boolean = updateContainer.childElementCount === 0;
-    if (!shouldShow || !isEmpty) {
+    if (!isEmpty) {
         return;
     }
 
@@ -86,10 +86,6 @@ const shouldShowFirmwareUpdateInfo = (shouldShow: boolean): void => {
 export const showView = (className: string): HTMLElement => {
     clearView();
 
-    // TODO: Check if new firmware is available
-    const isNewFirmware: boolean = false;
-    shouldShowFirmwareUpdateInfo(isNewFirmware);
-
     const view: HTMLCollection<HTMLElement> = views.getElementsByClassName(className);
     if (view) {
         container.innerHTML = view.item(0).outerHTML;
@@ -99,6 +95,10 @@ export const showView = (className: string): HTMLElement => {
     }
     return container;
 };
+
+export const showWarning = (className: string): ?HTMLElement => {
+
+}
 
 export const postMessage = (message: CoreMessage): void => {
     if (!window.opener || !iframe) return;

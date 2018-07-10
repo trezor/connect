@@ -28,9 +28,8 @@ export default class GetPublicKey extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = '1.0.0';
-        this.useDevice = true;
-        this.useUi = true; // If permission is granted and export confirmed, set to false
+        this.requiredFirmware = ['1.0.0', '2.0.0'];
+        // If permission is granted and export confirmed, set to false
         this.info = 'Export public key';
 
         const payload: any = message.payload;
@@ -57,8 +56,13 @@ export default class GetPublicKey extends AbstractMethod {
         } else {
             const coinInfoFromPath: ?CoinInfo = getCoinInfoFromPath(path);
             if (coinInfoFromPath && coinInfo.shortcut !== coinInfoFromPath.shortcut) {
-                throw new Error('Parameters "path" and "coin" dont match');
+                throw new Error('Parameters "path" and "coin" do not match');
             }
+        }
+
+        if (coinInfo) {
+             // check required firmware with coinInfo support
+            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
 
         this.params = {

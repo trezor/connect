@@ -228,26 +228,6 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
 };
 
 /**
- * Check device state.
- * @param {Device} device
- * @param {string} requiredFirmware
- * @returns {string|null}
- * @memberof Core
- */
-const checkUnexpectedState = (device: Device, requiredFirmware: string): ?string => {
-    if (device.isBootloader()) {
-        return UI.BOOTLOADER;
-    }
-    if (!device.isInitialized()) {
-        return UI.INITIALIZE;
-    }
-    if (!device.atLeast(requiredFirmware)) {
-        return UI.FIRMWARE;
-    }
-    return null;
-};
-
-/**
  * Force authentication by getting public key of first account
  * @param {Device} device
  * @returns {Promise<void>}
@@ -462,7 +442,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     try {
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
-            // check if device is in unexpected mode (bootloader, not-initialized, old firmware)
+            // check if device is in unexpected mode (bootloader, not-initialized, required firmware)
             const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE) = device.hasUnexpectedMode(method.requiredFirmware);
             if (unexpectedMode) {
                 // wait for popup handshake
@@ -476,21 +456,15 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 return Promise.resolve();
             }
 
-            // device is ready to go
-
-            // check if device state is correct (correct checksum)
-            // const correctState: boolean = await checkDeviceState(device, method.deviceState);
-            // if (!correctState) {
+            // warn if firmware is outdated but not required
+            if (device.firmwareStatus === 'outdated') {
                 // wait for popup handshake
-                // await getPopupPromise().promise;
+                await getPopupPromise().promise;
+                // show warning
+                postMessage(new UiMessage(UI.FIRMWARE_OUTDATED, device.toMessageObject()));
+            }
 
-                // device.clearPassphrase();
-
-                // messageResponse = new ResponseMessage(responseID, false, { error: 'Device state is incorrect' });
-                // closePopup();
-                // // interrupt running process and go to "final" block
-                // return Promise.resolve();
-            // }
+            // device is ready
 
             // check and request permissions
             method.checkPermissions();
