@@ -38,6 +38,8 @@ export const NEM_TRANSFER: 0x0101 = 0x0101;
 export const NEM_COSIGNING: 0x0102 = 0x0102;
 export const NEM_IMPORTANCE_TRANSFER: 0x0801 = 0x0801;
 export const NEM_AGGREGATE_MODIFICATION: 0x1001 = 0x1001;
+export const NEM_MULTISIG_SIGNATURE: 0x1002 = 0x1002;
+export const NEM_MULTISIG: 0x1004 = 0x1004;
 export const NEM_PROVISION_NAMESPACE: 0x2001 = 0x2001;
 export const NEM_MOSAIC_CREATION: 0x4001 = 0x4001;
 export const NEM_SUPPLY_CHANGE: 0x4002 = 0x4002;
@@ -47,6 +49,8 @@ export const TX_TYPES = {
     'cosigning': NEM_COSIGNING,
     'importanceTransfer': NEM_IMPORTANCE_TRANSFER,
     'aggregateModification': NEM_AGGREGATE_MODIFICATION,
+    'multisigSignature': NEM_MULTISIG_SIGNATURE,
+    'multisig': NEM_MULTISIG,
     'provisionNamespace': NEM_PROVISION_NAMESPACE,
     'mosaicCreation': NEM_MOSAIC_CREATION,
     'supplyChange': NEM_SUPPLY_CHANGE,

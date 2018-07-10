@@ -50,6 +50,11 @@ import type {
     ExpectedGetAccountInfoResponse,
 } from 'flowtype/tests/get-account-info';
 
+import type {
+    TestNemSignTransactionPayload,
+    ExpectedNemSignTransactionResponse,
+} from 'flowtype/tests/nem-sign-transaction';
+
 declare module 'flowtype/tests' {
     declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
     declare export type GetAddressSegwitAvailableSubtests = 'showSegwit' /* | 'showMultisig3' */;
@@ -79,7 +84,7 @@ declare module 'flowtype/tests' {
     declare export type VerifyMessageSegwitNativeAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet';
     declare export type EthereumSignTxAvailableSubtests = 'knownErc20Token' | 'unknownErc20Token' | 'noData' | 'data' | 'message' | 'newContract' | 'sanityChecks' | 'noDataEip155' | 'dataEip155';
     declare export type NemSignTransactionMosaicAvailableSubtests = 'supplyChange' | 'creation' | 'creationProperties' | 'creationLevy';
-    declare export type NemSignTransactionMultisigAvailableSubtests = 'aggregatedModification' | 'multisig' | 'multisigSigner';
+    declare export type NemSignTransactionMultisigAvailableSubtests = 'aggregateModification' | 'multisig' | 'multisigSigner';
     declare export type NemSignTransactionOthersAvailableSubtests = 'importanceTransfer' | 'provisionNamespace';
     declare export type NemSignTransactionTransfersAvailableSubtests = 'simple' | 'encryptedPayload' | 'xemAsMosaic' | 'unknownMosaic' | 'knownMosaic' | 'knownMosaicWithLevy' | 'multipleMosaics';
     declare export type GetAccountInfoAvailableSubtests = 'firstAccount' | 'zeroBalance' | 'pathInvalid' | 'noAddressIndex' | 'zeroBalance' | 'xpubInsteadOfPath';
@@ -104,7 +109,9 @@ declare module 'flowtype/tests' {
         | 'ethereumSignTx'
         | 'ethereumVerifyMessage'
         | 'nemGetAddress'
-        | 'getAccountInfo';
+        | 'getAccountInfo'
+        | 'nemSignTransactionMosaic'
+        | 'nemSignTransactionMultisig';
     declare export type AvailableSubtests =
         GetAddressAvailableSubtests
         | SignMessageAvailableSubtests
@@ -134,6 +141,7 @@ declare module 'flowtype/tests' {
     declare export type SubtestSignTx = Subtest<TestSignTxPayload, ExpectedSignTxResponse>;
     declare export type SubtestVerifyMessage = Subtest<TestVerifyMessagePayload, ExpectedVerifyMessageResponse>;
     declare export type SubtestGetAccountInfo = Subtest<TestGetAccountInfoPayload, ExpectedGetAccountInfoResponse>;
+    declare export type SubtestNemSignTransaction = Subtest<TestNemSignTransactionPayload, ExpectedNemSignTransactionResponse>;
 
     declare export type TestPayload =
         TestEthereumGetAddressPayload
@@ -145,7 +153,8 @@ declare module 'flowtype/tests' {
         | TestSignMessagePayload
         | TestSignTxPayload
         | TestVerifyMessagePayload
-        | TestGetAccountInfoPayload;
+        | TestGetAccountInfoPayload
+        | TestNemSignTransactionPayload;
     declare export type ExpectedResponse =
         ExpectedEthereumGetAddressResponse
         | ExpectedEthereumSignMessageResponse
@@ -156,5 +165,6 @@ declare module 'flowtype/tests' {
         | ExpectedSignMessageResponse
         | ExpectedSignTxResponse
         | ExpectedVerifyMessageResponse
-        | ExpectedGetAccountInfoResponse;
+        | ExpectedGetAccountInfoResponse
+        | ExpectedNemSignTransactionResponse;
 }
