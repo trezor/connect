@@ -66,6 +66,7 @@ export const showFirmwareUpdateInfo = (): void => {
     const updateButton: HTMLElement = document.createElement('a');
     updateButton.setAttribute('href', 'https://wallet.trezor.io/');
     updateButton.setAttribute('target', '_blank');
+    updateButton.setAttribute('rel', 'noreferrer noopener');
     updateButton.classList.add('button', 'firmware');
     updateButton.appendChild(
         document.createTextNode('Update my firmware')
