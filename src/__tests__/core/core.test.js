@@ -7,6 +7,6 @@ import { getPublicKey } from './getPublicKey.spec.js';
 const testToRun = __karma__.config.test;
 
 describe(`Testing method`, () => {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 250000;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 500000;
     testFunctions[testToRun]();
 });
