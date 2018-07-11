@@ -8,6 +8,13 @@ import type { CoinInfo, BrowserState, SimpleAccount } from 'flowtype';
 import type { SelectFeeLevel } from 'flowtype/fee';
 
 import type { UiResponseFactory } from './ui-response';
+import type { ConnectSettings } from '../data/ConnectSettings';
+
+export type TransportInfo = {
+    type: string;
+    version: string;
+    outdated: boolean;
+}
 
 /*
 * Messages without payload
@@ -55,8 +62,9 @@ export type IFrameHandshake = {
 export type PopupHandshake = {
     +type: typeof POPUP.HANDSHAKE,
     payload?: {
-        settings: any, // TODO
-        method: any // TODO
+        settings: ConnectSettings,
+        method: ?string,
+        transport: ?TransportInfo,
     }
 }
 

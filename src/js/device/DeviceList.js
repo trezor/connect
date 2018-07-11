@@ -19,7 +19,7 @@ import { resolveAfter } from '../utils/promiseUtils';
 /* $FlowIssue loader notation */
 import SharedConnectionWorker from 'sharedworker-loader?name=js/shared-connection-worker.[hash].js!trezor-link/lib/lowlevel/sharedConnectionWorker';
 
-const { BridgeV1, BridgeV2, Extension, Lowlevel, WebUsb, Fallback, Parallel } = TrezorLink;
+const { BridgeV2, Lowlevel, WebUsb, Fallback, Parallel } = TrezorLink;
 
 export type DeviceListOptions = {
     debug?: boolean,
@@ -168,8 +168,8 @@ export default class DeviceList extends EventEmitter {
     async waitForTransportFirstEvent(): Promise<void> {
         await new Promise(resolve => {
             const handler = () => {
-                this.removeListener(TRANSPORT.START, handler)
                 this.removeListener(TRANSPORT.START, handler);
+                this.removeListener(TRANSPORT.ERROR, handler);
                 resolve();
             }
             this.on(TRANSPORT.START, handler);

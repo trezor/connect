@@ -29,10 +29,10 @@ import Log, { init as initLog, enable as enableLog } from '../utils/debug';
 
 import { parse as parseSettings } from '../data/ConnectSettings';
 
-import type { Device as DeviceTyped } from '../types';
 import type { ConnectSettings } from '../data/ConnectSettings';
 import type { UiPromiseResponse } from 'flowtype';
-import type { Deferred, CoreMessage } from '../types';
+import type { Device as DeviceTyped, Deferred, CoreMessage } from '../types';
+import type { TransportInfo } from '../types/ui-request';
 
 // Public variables
 let _core: Core; // Class with event emitter
@@ -834,16 +834,30 @@ export class Core extends EventEmitter {
     constructor() {
         super();
     }
+
     handleMessage(message: Object, isTrustedOrigin: boolean): void {
         handleMessage(message, isTrustedOrigin);
     }
+
     onBeforeUnload(): void {
         if (_deviceList) {
             _deviceList.onBeforeUnload();
         }
     }
+
     getCurrentMethod(): Array<AbstractMethod> {
         return _callMethods;
+    }
+
+    getTransportInfo(): ?TransportInfo {
+        if (_deviceList) {
+            return {
+                type: _deviceList.transportType(),
+                version: _deviceList.transportVersion(),
+                outdated: _deviceList.transportOutdated()
+            }
+        }
+        return null;
     }
 }
 

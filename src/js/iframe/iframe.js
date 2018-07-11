@@ -69,7 +69,8 @@ const handleMessage = (event: PostMessageEvent): void => {
 
             postMessage(new UiMessage(POPUP.HANDSHAKE, {
                 settings: DataManager.getSettings(),
-                method: method ? method.info : ""
+                transport: _core.getTransportInfo(),
+                method: method ? method.info : null
             }))
         }
     }
