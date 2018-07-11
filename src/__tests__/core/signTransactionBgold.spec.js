@@ -7,16 +7,16 @@ import { settings, CoreEventHandler } from './common.js';
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
 import type {
-    SubtestSignTx,
-    SignTxBgoldAvailableSubtests,
+    SubtestSignTransaction,
+    SignTransactionBgoldAvailableSubtests,
 } from 'flowtype/tests';
 import type {
-    TestSignTxPayload,
-    ExpectedSignTxResponse,
-} from 'flowtype/tests/sign-tx';
+    TestSignTransactionPayload,
+    ExpectedSignTransactionResponse,
+} from 'flowtype/tests/sign-transaction';
 
-const change = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const change = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -45,7 +45,7 @@ const change = (): SubtestSignTx => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -62,8 +62,8 @@ const change = (): SubtestSignTx => {
     };
 };
 
-const noChange = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const noChange = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -94,7 +94,7 @@ const noChange = (): SubtestSignTx => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -111,8 +111,8 @@ const noChange = (): SubtestSignTx => {
     };
 };
 
-const p2sh = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const p2sh = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -141,7 +141,7 @@ const p2sh = (): SubtestSignTx => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -158,8 +158,8 @@ const p2sh = (): SubtestSignTx => {
     };
 };
 
-const p2shWitnessChange = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const p2shWitnessChange = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -188,7 +188,7 @@ const p2shWitnessChange = (): SubtestSignTx => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -205,11 +205,11 @@ const p2shWitnessChange = (): SubtestSignTx => {
     };
 };
 
-const sendMultisig1 = (): SubtestSignTx => {
+const sendMultisig1 = (): SubtestSignTransaction => {
     const address_n = getHDPath("999'/1'/1'/2/0");
     address_n[2] = 0x80000003;
 
-    const testPayloads: Array<TestSignTxPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -249,7 +249,7 @@ const sendMultisig1 = (): SubtestSignTx => {
             ],
         },
     ];
-    const expectedResponses: Array <ExpectedSignTxResponse> = [
+    const expectedResponses: Array <ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -267,11 +267,8 @@ const sendMultisig1 = (): SubtestSignTx => {
     };
 };
 
-
-// TODO: test_send_bch_multisig_change, requires multisig in output
-
-export const signTxBgold = (): void => {
-    const subtest: SignTxBgoldAvailableSubtests = __karma__.config.subtest;
+export const signTransactionBgold = (): void => {
+    const subtest: SignTransactionBgoldAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         change,
         noChange,
@@ -280,7 +277,7 @@ export const signTxBgold = (): void => {
         sendMultisig1,
     };
 
-    describe('SignTxBGold', () => {
+    describe('SignTransactionBgold', () => {
         let core: Core;
 
         beforeEach(async (done) => {
