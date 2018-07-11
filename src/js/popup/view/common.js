@@ -39,6 +39,14 @@ export const init = (): any => {
     return iframe;
 };
 
+export const createTooltip = (text: string): HTMLDivElement => {
+    const tooltip = document.createElement('div');
+    tooltip.setAttribute('tooltip', text);
+    tooltip.setAttribute('tooltip-position', 'bottom');
+
+    return tooltip;
+};
+
 export const clearView = (): void => {
     container.innerHTML = '';
 };

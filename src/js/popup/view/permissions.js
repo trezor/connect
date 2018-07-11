@@ -4,7 +4,7 @@
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
 import DataManager from '../../data/DataManager';
-import { container, showView, postMessage } from './common';
+import { container, showView, postMessage, createTooltip } from './common';
 import type { RequestPermission } from '../../types/ui-request';
 
 const getPermissionText = (permissionType: string, deviceName: string): string => {
@@ -46,14 +46,6 @@ const getPermissionTooltipText = (permissionType: string): string => {
     }
     return text;
 }
-
-const createTooltip = (text: string): HTMLDivElement => {
-    const tooltip = document.createElement('div');
-    tooltip.setAttribute('tooltip', text);
-    tooltip.setAttribute('tooltip-position', 'bottom');
-
-    return tooltip;
-};
 
 const createPermissionItem = (permissionText: string, tooltipText: string): HTMLDivElement => {
     const permissionItem = document.createElement('div');
