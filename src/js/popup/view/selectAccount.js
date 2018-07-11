@@ -78,6 +78,9 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>):
                 button.disabled = account.transactions === 0 || account.balance === 0;
             } else {
                 button.disabled = false;
+            }
+
+            if (!button.disabled) {
                 button.onclick = handleClick;
             }
         }
