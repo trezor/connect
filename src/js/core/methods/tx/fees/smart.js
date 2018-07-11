@@ -96,8 +96,8 @@ async function refresh(first: boolean): Promise<void> {
     fees = res;
 }
 
-async function detectWorking(backend: BlockBook): Promise<boolean> {
-    backend = backend;
+async function detectWorking($backend: BlockBook): Promise<boolean> {
+    backend = $backend;
     if (!backend.blockchain.hasSmartTxFees) {
         return false;
     }
