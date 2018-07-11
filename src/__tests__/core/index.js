@@ -8,7 +8,7 @@ import { signMessageSegwit } from './signMessageSegwit.spec.js';
 import { signTransaction } from './signTransaction.spec.js';
 import { signTxSegwit } from './signTxSegwit.spec.js';
 import { signTxBgold } from './signTxBgold.spec.js';
-import { signTxBcash } from './signTxBcash.spec.js';
+import { signTransactionBcash } from './signTransactionBcash.spec.js';
 import { signTxMultisig } from './signTxMultisig.spec.js';
 import { signTxMultisigChange } from './signTxMultisigChange.spec.js';
 import { verifyMessage } from './verifyMessage.spec.js';
@@ -34,7 +34,7 @@ export default {
     signTransaction,
     signTxSegwit,
     signTxBgold,
-    signTxBcash,
+    signTransactionBcash,
     signTxMultisig,
     signTxMultisigChange,
     verifyMessage,

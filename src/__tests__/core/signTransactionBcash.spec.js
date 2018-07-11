@@ -7,16 +7,16 @@ import { settings, CoreEventHandler } from './common.js';
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
 import type {
-    SubtestSignTx,
-    SignTxBcashAvailableSubtests,
+    SubtestSignTransaction,
+    SignTransactionBcashAvailableSubtests,
 } from 'flowtype/tests';
 import type {
-    TestSignTxPayload,
-    ExpectedSignTxResponse,
-} from 'flowtype/tests/sign-tx';
+    TestSignTransactionPayload,
+    ExpectedSignTransactionResponse,
+} from 'flowtype/tests/sign-transaction';
 
-const change = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const change = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bcash',
@@ -45,7 +45,7 @@ const change = (): SubtestSignTx => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -62,8 +62,8 @@ const change = (): SubtestSignTx => {
     };
 };
 
-const noChange = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const noChange = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bcash',
@@ -94,7 +94,7 @@ const noChange = (): SubtestSignTx => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -111,8 +111,8 @@ const noChange = (): SubtestSignTx => {
     };
 };
 
-const oldAddr = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const oldAddr = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bcash',
@@ -143,7 +143,7 @@ const oldAddr = (): SubtestSignTx => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -161,15 +161,15 @@ const oldAddr = (): SubtestSignTx => {
 };
 
 
-export const signTxBcash = (): void => {
-    const subtest: SignTxBcashAvailableSubtests = __karma__.config.subtest;
+export const signTransactionBcash = (): void => {
+    const subtest: SignTransactionBcashAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         change,
         noChange,
         oldAddr,
     };
 
-    describe('SignTxBCash', () => {
+    describe('SignTransactionBCash', () => {
         let core: Core;
 
         beforeEach(async (done) => {
