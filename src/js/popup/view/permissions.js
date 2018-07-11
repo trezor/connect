@@ -49,7 +49,6 @@ const getPermissionTooltipText = (permissionType: string): string => {
 
 const createTooltip = (text: string): HTMLDivElement => {
     const tooltip = document.createElement('div');
-    tooltip.className = 'tooltip';
     tooltip.setAttribute('tooltip', text);
     tooltip.setAttribute('tooltip-position', 'bottom');
 
