@@ -12,6 +12,7 @@
 .*/npm/.*
 
 [libs]
+./node_modules/trezor-link/flowtype/bitcoinjs-lib.js
 ./node_modules/trezor-link/flowtype/chrome.js
 ./node_modules/trezor-link/flowtype/webusb.js
 ./node_modules/trezor-link/flowtype/node-hid.js
