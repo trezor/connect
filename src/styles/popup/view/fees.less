@@ -48,7 +48,7 @@
         flex: 1;
         overflow-y: auto;
 
-        button {
+        button, .custom-fee {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -78,68 +78,115 @@
                 white-space: nowrap;
                 color: @color_text_secondary;
             }
-
-            &.custom-fee {
-                cursor: pointer;
-                .fee-data {
-                    width: 100%;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    height: 30px;
-
-                    .fee-info {
-                        visibility: hidden;
-                        height: auto;
-                    }
-                }
-                .bottom {
-                    display: none;
-                }
-            }
         }
 
-        button.custom-fee.active {
-            height: 140px;
-            padding: 9px 15px;
+        /* a button element cannot have any interactive element as a child (not valid HTML) */
+        /* therefore ".custom-fee" is a div styled as button  */
+        .custom-fee {
+            width: 100%;
+            height: 50px;
 
-            flex-direction: column;
-            align-items: unset;
+            padding: 0 15px;
 
-            .fee-info {
-                visibility: visible;
-                padding-top: 1px;
+            border: 1px solid @color_divider;
+            border-radius: 0px;
+            border-top-width: 0px;
+
+            text-align: left;
+            color: @color_text_secondary;
+
+            background: @color_white;
+
+            cursor: pointer;
+
+            &:first-child {
+                border-top-left-radius: 2px;
+                border-top-right-radius: 2px;
+                border-top-width: 1px;
+            }
+
+            &:last-child {
+                border-bottom-left-radius: 2px;
+                border-bottom-right-radius: 2px;
+            }
+
+            &:not(:disabled):hover,
+            &:not(:disabled):active,
+            &:not(:disabled).active {
+                // Leave the border same width so the inner elements don't move
+                border-left: 1px solid @color_green_tertiary;
+                // Changing the border on hover moves inner elements use box-shadow instead
+                box-shadow: 2px 0 0 @color_green_tertiary inset;
+
+                border-radius: 0px;
+                background: @color_landing;
+            }
+
+            &.disabled:hover {
+                background: white;
+            }
+
+            .fee-data {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 30px;
+
+                .fee-info {
+                    visibility: hidden;
+                    height: auto;
+                }
             }
 
             .bottom {
-                display: block;
+                display: none;
             }
 
-            .fee-input, .note {
-                width: 100%;
-            }
+            &.active {
+                height: 140px;
+                padding: 9px 15px;
 
-            .fee-input {
-                line-height: 30px;
-                border: 1px solid @color_divider;
-                border-radius: 2px;
+                flex-direction: column;
+                align-items: unset;
 
-                font-size: 14px;
-                padding-left: 9px;
-            }
+                cursor: text;
 
-            .fee-input::-webkit-outer-spin-button,
-            .fee-input::-webkit-inner-spin-button {
-                /* display: none; <- Crashes Chrome on hover */
-                -webkit-appearance: none;
-                margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
-            }
+                .fee-info {
+                    visibility: visible;
+                    padding-top: 1px;
+                }
 
-            .note {
-                text-align: center;
-                font-size: 12px;
-                color: @color_text_secondary;
-                padding-top: 4px;
+                .bottom {
+                    display: block;
+                }
+
+                .fee-input, .note {
+                    width: 100%;
+                }
+
+                .fee-input {
+                    line-height: 30px;
+                    border: 1px solid @color_divider;
+                    border-radius: 2px;
+
+                    font-size: 14px;
+                    padding-left: 9px;
+                }
+
+                .fee-input::-webkit-outer-spin-button,
+                .fee-input::-webkit-inner-spin-button {
+                    /* display: none; <- Crashes Chrome on hover */
+                    -webkit-appearance: none;
+                    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+                }
+
+                .note {
+                    text-align: center;
+                    font-size: 12px;
+                    color: @color_text_secondary;
+                    padding-top: 4px;
+                }
             }
         }
     }
