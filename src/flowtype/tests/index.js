@@ -89,47 +89,6 @@ declare module 'flowtype/tests' {
     declare export type NemSignTransactionTransfersAvailableSubtests = 'simple' | 'encryptedPayload' | 'xemAsMosaic' | 'unknownMosaic' | 'knownMosaic' | 'knownMosaicWithLevy' | 'multipleMosaics';
     declare export type GetAccountInfoAvailableSubtests = 'firstAccount' | 'zeroBalance' | 'pathInvalid' | 'noAddressIndex' | 'zeroBalance' | 'xpubInsteadOfPath';
 
-    declare export type AvailableTests =
-        'getPublicKey'
-        | 'getAddress'
-        | 'getAddressSegwit'
-        | 'signMessage'
-        | 'signMessageSegwit'
-        | 'signTransaction'
-        | 'signTransactionSegwit'
-        | 'signTransactionBgold'
-        | 'signTransactionBcash'
-        | 'signTransactionMultisig'
-        | 'signTransactionMultisigChange'
-        | 'verifyMessage'
-        | 'verifyMessageSegwit'
-        | 'verifyMessageSegwitNative'
-        | 'ethereumGetAddress'
-        | 'ethereumSignMessage'
-        | 'ethereumSignTransaction'
-        | 'ethereumVerifyMessage'
-        | 'nemGetAddress'
-        | 'getAccountInfo'
-        | 'nemSignTransactionMosaic'
-        | 'nemSignTransactionMultisig';
-    declare export type AvailableSubtests =
-        GetAddressAvailableSubtests
-        | SignMessageAvailableSubtests
-        | SignMessageSegwitAvailableSubtests
-        | SignTransactionAvailableSubtests
-        | SignTransactionSegwitAvailableSubtests
-        | SignTransactionBgoldAvailableSubtests
-        | SignTransactionBcashAvailableSubtests
-        | VerifyMessageAvailableSubtests
-        | VerifyMessageSegwitAvailableSubtests
-        | VerifyMessageSegwitNativeAvailableSubtests
-        | EthereumSignTransactionAvailableSubtests
-        | NemSignTransactionMosaicAvailableSubtests
-        | NemSignTransactionMultisigAvailableSubtests
-        | NemSignTransactionOthersAvailableSubtests
-        | NemSignTransactionTransfersAvailableSubtests
-        | GetAccountInfoAvailableSubtests;
-
     declare type Subtest<T, R> = {
         testPayloads: Array<T>,
         expectedResponses: Array<R>,
