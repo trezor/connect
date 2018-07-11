@@ -16,7 +16,7 @@ import { verifyMessageSegwit } from './verifyMessageSegwit.spec.js';
 import { verifyMessageSegwitNative } from './verifyMessageSegwitNative.spec.js';
 import { ethereumGetAddress } from './ethereumGetAddress.spec.js';
 import { ethereumSignMessage } from './ethereumSignMessage.spec.js';
-import { ethereumSignTx } from './ethereumSignTx.spec.js';
+import { ethereumSignTransaction } from './ethereumSignTransaction.spec.js';
 import { ethereumVerifyMessage } from './ethereumVerifyMessage.spec.js';
 import { getAccountInfo } from './getAccountInfo.spec.js';
 import { nemGetAddress } from './nemGetAddress.spec.js';
@@ -42,7 +42,7 @@ export default {
     verifyMessageSegwitNative,
     ethereumGetAddress,
     ethereumSignMessage,
-    ethereumSignTx,
+    ethereumSignTransaction,
     ethereumVerifyMessage,
     getAccountInfo,
     nemGetAddress,

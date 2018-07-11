@@ -64,7 +64,7 @@ verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoi
 verifyMessageSegwit_subtests="verify verifyLong verifyTestnet"
 verifyMessageSegwitNative_subtests="verify verifyLong verifyTestnet"
 
-ethereumSignTx_subtests="knownErc20Token unknownErc20Token noData data message newContract sanityChecks noDataEip155 dataEip155"
+ethereumSignTransaction_subtests="knownErc20Token unknownErc20Token noData data message newContract sanityChecks noDataEip155 dataEip155"
 
 nemSignTransactionMosaic_subtests="supplyChange creation creationProperties creationLevy"
 nemSignTransactionMultisig_subtests="aggregateModification multisig multisigSigner"
@@ -320,7 +320,7 @@ validate_test_names() {
     # Checks whether 'test_names' are actually name of available tests
     for test in $test_names; do
         # Add trailing '/' so the cut command works for $subtest_name
-        # if $test is only name of the test without '/' (i.e.: test=ethereumSignTx)
+        # if $test is only name of the test without '/' (i.e.: test=ethereumSignTransaction)
         # the $subtest_name would be same as the $test_name
         test_name=$(echo ${test}/ | cut -d"/" -f1)
         subtest_name=$(echo ${test}/ | cut -d"/" -f2)
@@ -434,7 +434,7 @@ run_excluded_tests() {
 run_test() {
     # Check whether specified test has any subtest
     # - trailing '/' must be added so the cut command works for $subtest_name
-    # - if $test is only name of the test without '/' (i.e.: 'test=ethereumSignTx' not 'test=ethereumSignTx/')
+    # - if $test is only name of the test without '/' (i.e.: 'test=ethereumSignTransaction' not 'test=ethereumSignTransaction/')
     # the $subtest_name would be same as the $test_name
     test_name=$(echo ${1}/ | cut -d"/" -f1)
     subtest_name=$(echo ${1}/ | cut -d"/" -f2)
@@ -790,7 +790,7 @@ test_ethereumSignMessage() {
     run_karma "ethereumSignMessage"
 }
 
-test_ethereumSignTx() {
+test_ethereumSignTransaction() {
     specified_subtest=$1
 
     if [ -n "$specified_subtest" ]; then
@@ -798,7 +798,7 @@ test_ethereumSignTx() {
         subtests=$specified_subtest
     else
         # Run all possible subtests
-        subtests=$ethereumSignTx_subtests
+        subtests=$ethereumSignTransaction_subtests
     fi;
 
     for subtest in $subtests; do
@@ -812,7 +812,7 @@ test_ethereumSignTx() {
         fi;
         start_transport
 
-        run_karma "ethereumSignTx" $subtest
+        run_karma "ethereumSignTransaction" $subtest
 
         kill_emul_transport
     done;
