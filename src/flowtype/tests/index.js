@@ -36,9 +36,9 @@ import type {
 } from 'flowtype/tests/sign-message';
 
 import type {
-    TestSignTxPayload,
-    ExpectedSignTxResponse,
-} from 'flowtype/tests/sign-tx';
+    TestSignTransactionPayload,
+    ExpectedSignTransactionResponse,
+} from 'flowtype/tests/sign-transaction';
 
 import type {
     TestVerifyMessagePayload,
@@ -60,7 +60,7 @@ declare module 'flowtype/tests' {
     declare export type GetAddressSegwitAvailableSubtests = 'showSegwit' /* | 'showMultisig3' */;
     declare export type SignMessageAvailableSubtests = 'sign' | 'signTestnet' | 'signBch' | 'signLong';
     declare export type SignMessageSegwitAvailableSubtests = 'sign' | 'signLong';
-    declare export type SignTxAvailableSubtests =
+    declare export type SignTransactionAvailableSubtests =
         'oneOneFee'
         | 'oneTwoFee'
         | 'oneThreeFee'
@@ -95,7 +95,7 @@ declare module 'flowtype/tests' {
         | 'getAddressSegwit'
         | 'signMessage'
         | 'signMessageSegwit'
-        | 'signTx'
+        | 'signTransaction'
         | 'signTxSegwit'
         | 'signTxBgold'
         | 'signTxBcash'
@@ -116,7 +116,7 @@ declare module 'flowtype/tests' {
         GetAddressAvailableSubtests
         | SignMessageAvailableSubtests
         | SignMessageSegwitAvailableSubtests
-        | SignTxAvailableSubtests
+        | SignTransactionAvailableSubtests
         | SignTxSegwitAvailableSubtests
         | SignTxBgoldAvailableSubtests
         | SignTxBcashAvailableSubtests
@@ -138,7 +138,7 @@ declare module 'flowtype/tests' {
     declare export type SubtestGetAddress = Subtest<TestGetAddressPayload, ExpectedGetAddressResponse>;
     declare export type SubtestSignMessage = Subtest<TestSignMessagePayload, ExpectedSignMessageResponse>;
     declare export type SubtestEthereumSignTransaction = Subtest<TestEthereumSignTransactionPayload, ExpectedEthereumSignTransactionResponse>;
-    declare export type SubtestSignTx = Subtest<TestSignTxPayload, ExpectedSignTxResponse>;
+    declare export type SubtestSignTransaction = Subtest<TestSignTransactionPayload, ExpectedSignTransactionResponse>;
     declare export type SubtestVerifyMessage = Subtest<TestVerifyMessagePayload, ExpectedVerifyMessageResponse>;
     declare export type SubtestGetAccountInfo = Subtest<TestGetAccountInfoPayload, ExpectedGetAccountInfoResponse>;
     declare export type SubtestNemSignTransaction = Subtest<TestNemSignTransactionPayload, ExpectedNemSignTransactionResponse>;
@@ -151,7 +151,7 @@ declare module 'flowtype/tests' {
         | TestGetPublicKeyPayload
         | TestNemGetAddressPayload
         | TestSignMessagePayload
-        | TestSignTxPayload
+        | TestSignTransactionPayload
         | TestVerifyMessagePayload
         | TestGetAccountInfoPayload
         | TestNemSignTransactionPayload;
@@ -163,7 +163,7 @@ declare module 'flowtype/tests' {
         | ExpectedGetPublicKeyResponse
         | ExpectedNemGetAddressResponse
         | ExpectedSignMessageResponse
-        | ExpectedSignTxResponse
+        | ExpectedSignTransactionResponse
         | ExpectedVerifyMessageResponse
         | ExpectedGetAccountInfoResponse
         | ExpectedNemSignTransactionResponse;

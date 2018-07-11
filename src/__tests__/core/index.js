@@ -5,7 +5,7 @@ import { getAddress } from './getAddress.spec.js';
 import { getAddressSegwit } from './getAddressSegwit.spec.js';
 import { signMessage } from './signMessage.spec.js';
 import { signMessageSegwit } from './signMessageSegwit.spec.js';
-import { signTx } from './signTx.spec.js';
+import { signTransaction } from './signTransaction.spec.js';
 import { signTxSegwit } from './signTxSegwit.spec.js';
 import { signTxBgold } from './signTxBgold.spec.js';
 import { signTxBcash } from './signTxBcash.spec.js';
@@ -31,7 +31,7 @@ export default {
     getAddressSegwit,
     signMessage,
     signMessageSegwit,
-    signTx,
+    signTransaction,
     signTxSegwit,
     signTxBgold,
     signTxBcash,
