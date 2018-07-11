@@ -3,7 +3,7 @@
 import type {
     TransactionInput,
     TransactionOutput,
-} from 'flowtype/trezor';
+} from '../../js/types/trezor.js';
 
 declare module 'flowtype/tests/sign-transaction' {
     declare export type TestSignTransactionPayload = {
@@ -18,7 +18,7 @@ declare module 'flowtype/tests/sign-transaction' {
         payload?: {
             code?: string,
             serialized?: {
-                serialized_tx: string,
+                serialized_tx?: string,
                 signatures?: Array<string>,
             },
         }
