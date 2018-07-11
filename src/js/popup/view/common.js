@@ -43,48 +43,6 @@ export const clearView = (): void => {
     container.innerHTML = '';
 };
 
-export const showFirmwareUpdateInfo = (): void => {
-    const updateContainer: HTMLElement = document.getElementsByClassName('firmware-update-info')[0];
-    const isEmpty: boolean = updateContainer.childElementCount === 0;
-    if (!isEmpty) {
-        return;
-    }
-
-    const left: HTMLElement = document.createElement('left');
-    left.className= 'left';
-    left.innerHTML = `<span class="warning-icon"></span><h3>New firmware update</h3>`;
-
-    const closeIcon: HTMLElement = document.createElement('span');
-    closeIcon.className = 'close-icon';
-    closeIcon.addEventListener('click', () => {
-        updateContainer.style.display = 'none';
-    });
-
-    const text: HTMLElement = document.createElement('p');
-    text.innerText = 'New firmware for your device is available';
-
-    const updateButton: HTMLElement = document.createElement('a');
-    updateButton.setAttribute('href', 'https://wallet.trezor.io/');
-    updateButton.setAttribute('target', '_blank');
-    updateButton.setAttribute('rel', 'noreferrer noopener');
-    updateButton.classList.add('button', 'firmware');
-    updateButton.appendChild(
-        document.createTextNode('Update my firmware')
-    )
-    updateButton.onclick = window.closeWindow;
-
-    const header: HTMLElement = document.createElement('div');
-    header.className = 'header';
-    header.appendChild(left);
-    header.appendChild(closeIcon);
-
-    updateContainer.appendChild(header);
-    updateContainer.appendChild(text);
-    updateContainer.appendChild(updateButton);
-
-    updateContainer.style.display = 'flex';
-};
-
 export const showView = (className: string): HTMLElement => {
     clearView();
 
@@ -97,10 +55,6 @@ export const showView = (className: string): HTMLElement => {
     }
     return container;
 };
-
-export const showWarning = (className: string): ?HTMLElement => {
-
-}
 
 export const postMessage = (message: CoreMessage): void => {
     if (!window.opener || !iframe) return;

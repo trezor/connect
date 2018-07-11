@@ -14,7 +14,8 @@ import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
 import { getOrigin } from '../utils/networkUtils';
 
-import { showView, showFirmwareUpdateInfo, postMessage, setOperation, channel } from './view/common';
+import { showView, postMessage, setOperation, channel } from './view/common';
+import { showFirmwareUpdateNotification, showBridgeUpdateNotification } from './view/notification';
 
 import * as view from './view';
 // eslint-disable-next-line no-unused-vars
@@ -93,7 +94,7 @@ const handleMessage = (event: PostMessageEvent): void => {
             showView('firmware-update');
             break;
         case UI.FIRMWARE_OUTDATED :
-            showFirmwareUpdateInfo();
+            showFirmwareUpdateNotification();
             break;
         case UI.BROWSER_NOT_SUPPORTED :
         case UI.BROWSER_OUTDATED :
@@ -126,7 +127,11 @@ const init = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
     if (!payload) return;
 
     await DataManager.load(payload.settings);
-    setOperation(payload.method);
+    setOperation(payload.method || "");
+
+    if (payload.transport && payload.transport.outdated) {
+        showBridgeUpdateNotification();
+    }
 
     postMessage(new UiMessage(POPUP.HANDSHAKE));
 

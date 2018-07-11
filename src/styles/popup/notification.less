@@ -1,11 +1,17 @@
-.firmware-update-info {
+.notification {
   width: 100%;
-  display: none;
-  flex-direction: column;
-
-  padding: 20px;
-
+  // display: flex;
+  // flex-direction: column;
+  // padding: 20px;
   background-color: @color_warning_secondary;
+
+  .notification-item {
+    padding: 20px;
+    border-top: 1px solid @color_warning_primary;
+    &:first-child {
+      border: 0px;
+    }
+  }
 
   .header {
     margin-bottom: 10px;
@@ -73,12 +79,15 @@
 
   .button {
     margin-top: 13px;
+    display: block;
   }
 }
 
 @media screen and (max-width: 639px) {
-  .firmware-update-info {
-    padding: 10px 20px;
+  .notification {
+    .notification-item {
+      padding: 10px 20px;
+    }
     .header {
       margin-bottom: 0;
     }

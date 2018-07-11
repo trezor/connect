@@ -17,21 +17,7 @@
 <body>
     <main>
         <aside>
-            <div class="firmware-update-info">
-                <!-- <div class="header">
-                    <div class="left">
-                        <span class="warning-icon"></span>
-                        <h3>New firmware update</h3>
-                    </div>
-                    <span class="close-icon"></span>
-                </div>
-                <p>
-                    New firmware for your device is available
-                </p>
-                <a class="button firmware">
-                    Update my firmware
-                </a> -->
-            </div>
+            <div class="notification"></div>
             <div class="wrapper">
                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 163.7 41.9" width="94.5px" height="24px" preserveAspectRatio="xMinYMin meet">
                     <polygon points="101.1,12.8 118.2,12.8 118.2,17.3 108.9,29.9 118.2,29.9 118.2,35.2 101.1,35.2 101.1,30.7 110.4,18.1 101.1,18.1"/>
@@ -1127,6 +1113,30 @@
             </div>
         </div>
         <!-- Passphrase on device: END -->
+
+        <div class="firmware-update-notification">
+            <div class="header">
+                <div class="left">
+                    <span class="warning-icon"></span>
+                    <h3>Firmware update</h3>
+                </div>
+                <span class="close-icon"></span>
+            </div>
+            <p>New firmware for your device is available</p>
+            <a class="button notification-button" href="https://wallet.trezor.io/" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">Update my firmware</a>
+        </div>
+
+        <div class="bridge-update-notification">
+            <div class="header">
+                <div class="left">
+                    <span class="warning-icon"></span>
+                    <h3>New bridge is available</h3>
+                </div>
+                <span class="close-icon"></span>
+            </div>
+            <a class="button notification-button" href="https://wallet.trezor.io/" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">Update bridge</a>
+        </div>
+
     </div>
 </body>
 </html>
