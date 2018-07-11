@@ -1,16 +1,18 @@
+/* @flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 import { getHDPath } from '../../js/utils/pathUtils.js';
 
 import type {
-    SubtestSignTx,
-    SignTxMultisigChangeAvailableSubtests,
+    SubtestSignTransaction,
+    SignTransactionMultisigChangeAvailableSubtests,
 } from 'flowtype/tests';
 import type {
-    TestSignTxPayload,
-    ExpectedSignTxResponse,
-} from 'flowtype/tests/sign-tx';
+    TestSignTransactionPayload,
+    ExpectedSignTransactionResponse,
+} from 'flowtype/tests/sign-transaction';
 
 const xpubExt1 = 'tpubDADHV9u9Y6gkggintTdMjJE3be58zKNLhpxBQyuEM6Pwx3sN9JVLmMCMN4DNVwL9AKec27z5TaWcWuHzMXiGAtcra5DjwWbvppGX4gaEGVN';
 const xpubExt2 = 'tpubDADHV9u9Y6gkhWXBmDJ6TUhZajLWjvKukRe2w9FfhdbQpUux8Z8jnPHNAZqFRgHPg9sR7YR93xThM32M7NfRu8S5WyDtext7S62sqxeJNkd';
@@ -94,8 +96,8 @@ const input3 = {
     multisig: multisig3,
 };
 
-const externalExternal = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const externalExternal = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -114,7 +116,7 @@ const externalExternal = (): SubtestSignTx => {
             ],
         },
     ];
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -131,8 +133,8 @@ const externalExternal = (): SubtestSignTx => {
     }
 };
 
-const externalInternal = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const externalInternal = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -151,7 +153,7 @@ const externalInternal = (): SubtestSignTx => {
             ],
         },
     ];
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -168,8 +170,8 @@ const externalInternal = (): SubtestSignTx => {
     }
 };
 
-const internalExternal = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const internalExternal = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -188,7 +190,7 @@ const internalExternal = (): SubtestSignTx => {
             ],
         },
     ];
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -205,8 +207,8 @@ const internalExternal = (): SubtestSignTx => {
     }
 };
 
-const multisigExternalExternal = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const multisigExternalExternal = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -225,7 +227,7 @@ const multisigExternalExternal = (): SubtestSignTx => {
             ],
         },
     ];
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -242,10 +244,8 @@ const multisigExternalExternal = (): SubtestSignTx => {
     }
 };
 
-/* TODO: Output needs multisig */
-/* test_multisig_change_match_first, test_multisig_change_match_second, test_multisig_mismatch_change, test_multisig_mismatch_inputs */
-export const signTxMultisigChange = (): void => {
-    const subtest: SignTxMultisigChangeAvailableSubtests = __karma__.config.subtest;
+export const signTransactionMultisigChange = (): void => {
+    const subtest: SignTransactionMultisigChangeAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         externalExternal,
         externalInternal,
@@ -253,7 +253,7 @@ export const signTxMultisigChange = (): void => {
         multisigExternalExternal,
     };
 
-    describe('SignTxMultisigChange', () => {
+    describe('SignTransactionMultisigChange', () => {
         let core: Core;
 
         beforeEach(async (done) => {
