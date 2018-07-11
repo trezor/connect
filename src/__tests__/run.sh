@@ -57,7 +57,7 @@ signTransaction_subtests="oneOneFee oneTwoFee oneThreeFee twoTwo testnetOneTwoFe
 signTransactionSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
 signTransactionBgold_subtests="change noChange p2sh p2shWitnessChange sendMultisig1"
 signTransactionBcash_subtests="change noChange oldAddr"
-signTxMultisig_subtests="twoOfThree fifteenOfFifteen missingPubkey"
+signTransactionMultisig_subtests="twoOfThree fifteenOfFifteen missingPubkey"
 signTxMultisigChange_subtests="externalExternal externalInternal internalExternal multisigExternalExternal"
 
 verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind"
@@ -661,14 +661,14 @@ test_signTransactionBcash() {
     done;
 }
 
-test_signTxMultisig() {
+test_signTransactionMultisig() {
     specified_subtest=$1
     if [ -n "$specified_subtest" ]; then
         # Run only specified subtest
         subtests=$specified_subtest
     else
         # Run all possible subtests
-        subtests=$signTxMultisig_subtests
+        subtests=$signTransactionMultisig_subtests
     fi;
 
     for subtest in $subtests; do
@@ -678,7 +678,7 @@ test_signTxMultisig() {
         setup_mnemonic_nopin_nopassphrase
         start_transport
 
-        run_karma "signTxMultisig" $subtest
+        run_karma "signTransactionMultisig" $subtest
 
         kill_emul_transport
     done;

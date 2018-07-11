@@ -1,17 +1,19 @@
+/* @flow */
+
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 import type {
-    SubtestSignTx,
-    SignTxMultisigAvailableSubtests,
+    SubtestSignTransaction,
+    SignTransactionMultisigAvailableSubtests,
 } from 'flowtype/tests';
 import type {
-    TestSignTxPayload,
-    ExpectedSignTxResponse,
-} from 'flowtype/tests/sign-tx';
-const twoOfThree = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+    TestSignTransactionPayload,
+    ExpectedSignTransactionResponse,
+} from 'flowtype/tests/sign-transaction';
+const twoOfThree = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bitcoin',
@@ -88,7 +90,7 @@ const twoOfThree = (): SubtestSignTx => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -117,7 +119,7 @@ const twoOfThree = (): SubtestSignTx => {
     };
 };
 
-const fifteenOfFifteen = (): SubtestSignTx => {
+const fifteenOfFifteen = (): SubtestSignTransaction => {
     let pubkeys: Array<{ node: string, address_n: Array<number>}> = [];
     let signatures: Array<string> = [
         '304502210098e23085ad7282de988bf98afa1e9add9c9830009132f8902a9fa4624d5dc98b0220733216e70ab67791aa64be5c83d2050cb4ed9ff7eda2a1acc35da024d2ab2a67',
@@ -145,7 +147,7 @@ const fifteenOfFifteen = (): SubtestSignTx => {
         );
     }
 
-    const testPayloads: Array<TestSignTxPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bitcoin',
@@ -171,7 +173,7 @@ const fifteenOfFifteen = (): SubtestSignTx => {
             ],
         },
     ];
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -188,8 +190,8 @@ const fifteenOfFifteen = (): SubtestSignTx => {
     }
 };
 
-const missingPubkey = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const missingPubkey = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Bitcoin',
@@ -229,7 +231,7 @@ const missingPubkey = (): SubtestSignTx => {
         }
     ];
 
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         { success: false },
     ];
 
@@ -240,15 +242,15 @@ const missingPubkey = (): SubtestSignTx => {
     }
 };
 
-export const signTxMultisig = (): void => {
-    const subtest: SignTxMultisigAvailableSubtests = __karma__.config.subtest;
+export const signTransactionMultisig = (): void => {
+    const subtest: SignTransactionMultisigAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         twoOfThree,
         fifteenOfFifteen,
         missingPubkey,
     };
 
-    describe('SignTxMultisig', () => {
+    describe('SignTransactionMultisig', () => {
         let core: Core;
 
         beforeEach(async (done) => {
