@@ -24,13 +24,13 @@ html, body {
 
 html {
     position: relative;
-    overflow-y: scroll;
 
     font-size: 100%;
 }
 
 body {
     position: relative;
+    overflow: hidden;
 
     min-height: @smallest_supported_height;
     min-width: @smallest_supported_width;
@@ -48,10 +48,13 @@ main {
     min-height: none;
 
     display: flex;
+
+    overflow-y: auto;
 }
 
 section {
     width: 50%;
+    overflow-y: auto;
 
     display: flex;
     justify-content: center;
