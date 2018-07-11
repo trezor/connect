@@ -74,7 +74,7 @@ declare module 'flowtype/tests' {
         | 'twoChanges'
         | 'p2sh'
         | 'changeOnMainChainAllowed';
-    declare export type SignTxSegwitAvailableSubtests = 'sendP2sh' | 'sendP2shChange' | 'sendMultisig1';
+    declare export type SignTransactionSegwitAvailableSubtests = 'sendP2sh' | 'sendP2shChange' | 'sendMultisig1';
     declare export type SignTransactionBgoldAvailableSubtests = 'change' | 'noChange' | 'p2sh' | 'p2shWitnessChange' | 'sendMultisig1';
     declare export type SignTransactionBcashAvailableSubtests = 'change' | 'noChange' | 'oldAddr';
     declare export type SignTxMultisigAvailableSubtests = 'twoOfThree' | 'fifteenOfFifteen' | 'missingPubkey';
@@ -96,7 +96,7 @@ declare module 'flowtype/tests' {
         | 'signMessage'
         | 'signMessageSegwit'
         | 'signTransaction'
-        | 'signTxSegwit'
+        | 'signTransactionSegwit'
         | 'signTransactionBgold'
         | 'signTransactionBcash'
         | 'signTxMultisig'
@@ -117,7 +117,7 @@ declare module 'flowtype/tests' {
         | SignMessageAvailableSubtests
         | SignMessageSegwitAvailableSubtests
         | SignTransactionAvailableSubtests
-        | SignTxSegwitAvailableSubtests
+        | SignTransactionSegwitAvailableSubtests
         | SignTransactionBgoldAvailableSubtests
         | SignTransactionBcashAvailableSubtests
         | VerifyMessageAvailableSubtests
