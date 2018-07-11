@@ -54,7 +54,7 @@ signMessage_subtests="sign signTestnet signBch signLong"
 signMessageSegwit_subtests="sign signLong"
 
 signTransaction_subtests="oneOneFee oneTwoFee oneThreeFee twoTwo testnetOneTwoFee testnetFeeTooHigh lotsOfOutputs feeTooHigh notEnoughFunds spendCoinbase twoChanges p2sh changeOnMainChainAllowed"
-signTxSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
+signTransactionSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
 signTransactionBgold_subtests="change noChange p2sh p2shWitnessChange sendMultisig1"
 signTransactionBcash_subtests="change noChange oldAddr"
 signTxMultisig_subtests="twoOfThree fifteenOfFifteen missingPubkey"
@@ -592,14 +592,14 @@ test_signTransaction() {
     done;
 }
 
-test_signTxSegwit() {
+test_signTransactionSegwit() {
     specified_subtest=$1
     if [ -n "$specified_subtest" ]; then
         # Run only specified subtest
         subtests=$specified_subtest
     else
         # Run all possible subtests
-        subtests=$signTxSegwit_subtests
+        subtests=$signTransactionSegwit_subtests
     fi;
 
     for subtest in $subtests; do
@@ -609,7 +609,7 @@ test_signTxSegwit() {
         setup_mnemonic_allallall
         start_transport
 
-        run_karma "signTxSegwit" $subtest
+        run_karma "signTransactionSegwit" $subtest
 
         kill_emul_transport
     done;

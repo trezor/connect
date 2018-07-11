@@ -9,16 +9,16 @@ import * as bitcoin from 'bitcoinjs-lib-zcash';
 
 
 import type {
-    SubtestSignTx,
-    SignTxSegwitAvailableSubtests,
+    SubtestSignTransaction,
+    SignTransactionSegwitAvailableSubtests,
 } from 'flowtype/tests';
 import type {
-    TestSignTxPayload,
-    ExpectedSignTxResponse,
-} from 'flowtype/tests/sign-tx';
+    TestSignTransactionPayload,
+    ExpectedSignTransactionResponse,
+} from 'flowtype/tests/sign-transaction';
 
-const sendP2sh = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const sendP2sh = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -46,7 +46,7 @@ const sendP2sh = (): SubtestSignTx => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -63,8 +63,8 @@ const sendP2sh = (): SubtestSignTx => {
     };
 };
 
-const sendP2shChange = (): SubtestSignTx => {
-    const testPayloads: Array<TestSignTxPayload> = [
+const sendP2shChange = (): SubtestSignTransaction => {
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -92,7 +92,7 @@ const sendP2shChange = (): SubtestSignTx => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -109,10 +109,10 @@ const sendP2shChange = (): SubtestSignTx => {
     };
 };
 
-const sendMultisig1 = (): SubtestSignTx => {
+const sendMultisig1 = (): SubtestSignTransaction => {
         const address = getHDPath("999'/1'/1'/2/0");
         address[2] = 0x80000003
-    const testPayloads: Array<TestSignTxPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -153,7 +153,7 @@ const sendMultisig1 = (): SubtestSignTx => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTxResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 serialized: {
@@ -170,15 +170,15 @@ const sendMultisig1 = (): SubtestSignTx => {
     };
 };
 
-export const signTxSegwit = (): void => {
-    const subtest: SignTxSegwitAvailableSubtests = __karma__.config.subtest;
+export const signTransactionSegwit = (): void => {
+    const subtest: SignTransactionSegwitAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         sendP2sh,
         sendP2shChange,
         sendMultisig1,
     };
 
-    describe('SignTxSegwit', () => {
+    describe('SignTransactionSegwit', () => {
         let core: Core;
 
         beforeEach(async (done) => {
