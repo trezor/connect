@@ -1,11 +1,11 @@
 /* @flow */
 
-import type { Transaction } from '../../js/types/nem';
+import type { Transaction as NEMTransaction } from '../../js/types/nem';
 declare module 'flowtype/tests/nem-sign-transaction' {
     declare export type TestNemSignTransactionPayload = {
         method: string,
         path: string | Array<number>,
-        transaction: Transaction,
+        transaction: NEMTransaction,
     };
     declare export type ExpectedNemSignTransactionResponse = {
         payload: {
