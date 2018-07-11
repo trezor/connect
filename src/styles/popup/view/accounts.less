@@ -9,6 +9,9 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+
+        // This should solve the Firefox issue with "select-account-list" described lower
+        overflow: hidden;
     }
 
     h3 {
@@ -86,12 +89,13 @@
     .select-account-list {
         margin: 0 30px 30px;
         position: relative;
-        overflow-y: scroll;
+        overflow-y: auto;
         display: none;
 
         // Must be specifically set for Firefox
         // otherwise table will overflow from the view
-        max-height: 315px;
+        // TODO: temporary disable max height because the labeling button is also disabled
+        // max-height: 315px;
 
         border-top: 1px solid @color_divider;
         border-bottom: 1px solid @color_divider;
