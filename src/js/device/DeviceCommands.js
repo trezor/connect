@@ -97,12 +97,12 @@ export default class DeviceCommands {
     async getPublicKey(
         address_n: Array<number>,
         coin?: string
-    ): Promise<MessageResponse<trezor.PublicKey>> {
+    ): Promise<trezor.PublicKey> {
         const response: MessageResponse<trezor.PublicKey> = await this.typedCall('GetPublicKey', 'PublicKey', {
             address_n: address_n,
             coin_name: coin || 'Bitcoin',
         });
-        return response;
+        return response.message;
     }
 
     // Validation of xpub
@@ -116,9 +116,9 @@ export default class DeviceCommands {
         // To keep it backward compatible** this keys are exported in BTC format
         // and converted to proper format in hdnodeUtils
         // **  old firmware didn't return keys with proper prefix (xpub, Ltub.. and so on)
-        const resKey: MessageResponse<trezor.PublicKey> = await this.getPublicKey(path);
-        const childKey: MessageResponse<trezor.PublicKey> = await this.getPublicKey(childPath);
-        const publicKey: trezor.PublicKey = hdnodeUtils.xpubDerive(resKey.message, childKey.message, suffix);
+        const resKey: trezor.PublicKey = await this.getPublicKey(path);
+        const childKey: trezor.PublicKey = await this.getPublicKey(childPath);
+        const publicKey: trezor.PublicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix);
 
         const response: trezor.HDNodeResponse = {
             path,
@@ -142,7 +142,8 @@ export default class DeviceCommands {
     }
 
     async getDeviceState(): Promise<string> {
-        const response: trezor.HDNodeResponse = await this.getHDNode([1, 0, 0]);
+        // const response: trezor.HDNodeResponse = await this.getHDNode([1, 0, 0]);
+        const response: trezor.PublicKey = await this.getPublicKey([1, 0, 0]);
         const secret: string = `${response.xpub}#${this.device.features.device_id}`;
         const state: string = this.device.getState() || bitcoin.crypto.hash256(new Buffer(secret, 'binary')).toString('hex');
         return state;
