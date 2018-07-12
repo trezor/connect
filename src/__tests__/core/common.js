@@ -78,7 +78,7 @@ export class CoreEventHandler {
                     this._isHandlingButtonRequest = false;
                     const { session } = await this._getDebugLinkInfo();
                     this._pressButtonYes(session);
-                }, 1000);
+                }, 501);
             } catch (error) {
                 console.error('Error on device changed event', [error, event]);
             }
@@ -109,7 +109,10 @@ export class CoreEventHandler {
         if (event.type === RESPONSE_EVENT) {
             console.warn(event);
             this._compareExpectedResponseToActual(this._expectedResponse, event);
-            this._doneFn();
+
+            setTimeout(() => {
+                this._doneFn();
+            }, 200);
         }
     }
 
