@@ -2,6 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams, validateCoinInfo } from './helpers/paramsValidator';
 import { validatePath, getPathFromIndex } from '../../utils/pathUtils';
 import type { MessageResponse } from '../../device/DeviceCommands';
 
@@ -32,36 +33,27 @@ export default class GetPublicKey extends AbstractMethod {
         // If permission is granted and export confirmed, set to false
         this.info = 'Export public key';
 
-        const payload: any = message.payload;
+        const payload: Object = message.payload;
 
-        let path: Array<number>;
+        // validate incoming parameters
+        validateParams(message.payload, [
+            { name: 'path', obligatory: true },
+            { name: 'coin', type: 'string' },
+        ]);
+
+        const path: Array<number> = validatePath(payload.path);
+        const coinInfoFromPath: ?CoinInfo = getCoinInfoFromPath(path);
         let coinInfo: ?CoinInfo;
 
-        if (payload.hasOwnProperty('coin') && payload.coin) {
-            if (typeof payload.coin === 'string') {
-                coinInfo = getCoinInfoByCurrency(payload.coin);
-            } else {
-                throw new Error('Parameter "coin" has invalid type. String expected.');
-            }
-        }
-
-        if (payload.hasOwnProperty('path')) {
-            path = validatePath(payload.path);
+        if (payload.coin) {
+            coinInfo = getCoinInfoByCurrency(payload.coin);
+            validateCoinInfo(coinInfoFromPath, coinInfo);
         } else {
-            throw new Error('Parameters "path" is missing');
+            coinInfo = coinInfoFromPath;
         }
 
-        if (!coinInfo) {
-            coinInfo = getCoinInfoFromPath(path);
-        } else {
-            const coinInfoFromPath: ?CoinInfo = getCoinInfoFromPath(path);
-            if (coinInfoFromPath && coinInfo.shortcut !== coinInfoFromPath.shortcut) {
-                throw new Error('Parameters "path" and "coin" do not match');
-            }
-        }
-
+        // set required firmware from coinInfo support
         if (coinInfo) {
-            // check required firmware with coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
 

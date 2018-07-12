@@ -4,6 +4,7 @@
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import AbstractMethod from './AbstractMethod';
+import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import type { DefaultMessageResponse, MessageResponse } from '../../device/DeviceCommands';
 
@@ -33,40 +34,23 @@ export default class CipherKeyValue extends AbstractMethod {
         // this.useUi = payload.askOnEncrypt || payload.askOnDecrypt;
         this.info = 'Cypher key value';
 
-        const payload: any = message.payload;
+        const payload: Object = message.payload;
 
-        if (!payload.hasOwnProperty('path')) {
-            throw new Error('Parameter "path" is missing');
-        } else {
-            payload.path = validatePath(payload.path);
-        }
+        // validate incoming parameters
+        validateParams(message.payload, [
+            { name: 'path', obligatory: true },
+            { name: 'key', type: 'string' },
+            { name: 'value', type: 'string' },
+            { name: 'encrypt', type: 'boolean' },
+            { name: 'askOnEncrypt', type: 'boolean' },
+            { name: 'askOnDecrypt', type: 'boolean' },
+            { name: 'iv', type: 'string' },
+        ]);
 
-        if (payload.hasOwnProperty('key') && typeof payload.key !== 'string') {
-            throw new Error('Parameter "key" has invalid type. String expected.');
-        }
-
-        if (payload.hasOwnProperty('value') && typeof payload.value !== 'string') {
-            throw new Error('Parameter "value" has invalid type. String expected.');
-        }
-
-        if (payload.hasOwnProperty('encrypt') && typeof payload.encrypt !== 'boolean') {
-            throw new Error('Parameter "encrypt" has invalid type. Boolean expected.');
-        }
-
-        if (payload.hasOwnProperty('askOnEncrypt') && typeof payload.askOnDecrypt !== 'boolean') {
-            throw new Error('Parameter "askOnEncrypt" has invalid type. Boolean expected.');
-        }
-
-        if (payload.hasOwnProperty('askOnDecrypt') && typeof payload.askOnDecrypt !== 'boolean') {
-            throw new Error('Parameter "askOnDecrypt" has invalid type. Boolean expected.');
-        }
-
-        if (payload.hasOwnProperty('iv') && typeof payload.iv !== 'string') {
-            throw new Error('Parameter "iv" has invalid type. String expected.');
-        }
+        const path: Array<number> = validatePath(payload.path);
 
         this.params = {
-            path: payload.path,
+            path,
             key: payload.key,
             value: payload.value,
             encrypt: payload.encrypt,
