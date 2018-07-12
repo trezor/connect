@@ -10,4 +10,4 @@ export { requestButton } from './requestButton';
 export { initPermissionsView } from './permissions';
 export { initConfirmationView } from './confirmation';
 export { initBrowserView } from './browser';
-export { initPinOnDeviceView } from './pinOnDevice';
+export { passphraseOnDeviceView } from './passphraseOnDevice';
