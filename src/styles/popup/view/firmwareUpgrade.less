@@ -18,4 +18,20 @@
       content: none;
     }
   }
+
+  a.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+
+    .exit {
+      position: relative;
+      top: 1px;
+
+      &::after {
+        .icomoon-exit();
+      }
+    }
+  }
 }
