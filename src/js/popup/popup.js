@@ -136,7 +136,7 @@ const init = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
     postMessage(new UiMessage(POPUP.HANDSHAKE));
 
     // pass popup console to iframe
-    popupConsole(POPUP.LOG, postMessage);
+    // popupConsole(POPUP.LOG, postMessage);
 
     // global method used in html-inline elements
     window.closeWindow = () => {
