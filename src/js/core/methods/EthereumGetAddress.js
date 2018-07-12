@@ -2,6 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import type { MessageResponse } from '../../device/DeviceCommands';
 import type { EthereumAddress } from '../../types/trezor';
@@ -23,27 +24,24 @@ export default class EthereumGetAddress extends AbstractMethod {
         this.requiredFirmware = ['1.6.2', '2.0.7'];
         this.info = 'Export Ethereum address';
 
-        const payload: any = message.payload;
+        const payload: Object = message.payload;
 
-        if (!payload.hasOwnProperty('path')) {
-            throw new Error('Parameter "path" is missing');
-        } else {
-            payload.path = validatePath(payload.path);
-        }
+        // validate incoming parameters
+        validateParams(payload, [
+            { name: 'path', obligatory: true },
+            { name: 'showOnTrezor', type: 'boolean' },
+        ]);
 
+        const path: Array<number> = validatePath(payload.path);
         let showOnTrezor: boolean = true;
         if (payload.hasOwnProperty('showOnTrezor')){
-            if (typeof payload.showOnTrezor !== 'boolean') {
-                throw new Error('Parameter "showOnTrezor" has invalid type. Boolean expected.');
-            } else {
-                showOnTrezor = payload.showOnTrezor;
-            }
+            showOnTrezor = payload.showOnTrezor;
         }
 
-
+        this.useUi = showOnTrezor;
 
         this.params = {
-            path: payload.path,
+            path,
             showOnTrezor
         }
     }
