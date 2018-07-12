@@ -11,7 +11,7 @@ import { create as createDeferred } from '../utils/deferred';
 
 const POPUP_WIDTH: number = 640;
 const POPUP_HEIGHT: number = 500;
-const POPUP_REQUEST_TIMEOUT: number = 400;
+const POPUP_REQUEST_TIMEOUT: number = 602;
 const POPUP_CLOSE_INTERVAL: number = 500;
 const POPUP_OPEN_TIMEOUT: number = 2000;
 
