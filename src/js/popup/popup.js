@@ -117,7 +117,7 @@ const handleMessage = (event: PostMessageEvent): void => {
             view.initPassphraseView(message.payload);
             break;
         case UI.REQUEST_PASSPHRASE_ON_DEVICE :
-            view.initPinOnDeviceView(message.payload);
+            view.passphraseOnDeviceView(message.payload);
             break;
         case UI.INVALID_PASSPHRASE :
             view.initInvalidPassphraseView(message.payload);
