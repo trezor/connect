@@ -316,7 +316,7 @@ export default class DeviceCommands {
         }
 
         const payload = {};
-        if (this.device.features && this.device.features.major_version > 1) {
+        if (!this.device.isT1()) {
             // T2 features
             payload.state = this.device.getExpectedState() || this.device.getState();
             if (useEmptyPassphrase)
@@ -403,7 +403,7 @@ export default class DeviceCommands {
 
         if (res.type === 'PassphraseRequest') {
 
-            const state: ?string = this.device.features && this.device.features.major_version > 1 ? (this.device.getExpectedState() || this.device.getState()) : null;
+            const state: ?string = !this.device.isT1() ? (this.device.getExpectedState() || this.device.getState()) : null;
 
             if (res.message.on_device) {
                 this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE, this.device);

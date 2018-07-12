@@ -229,41 +229,6 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
 };
 
 /**
- * Force authentication by getting public key of first account
- * @param {Device} device
- * @returns {Promise<void>}
- * @memberof Core
- */
-const requestAuthentication = async (device: Device): Promise<void> => {
-    // wait for popup handshake
-    await getPopupPromise().promise;
-
-    // show pin and passphrase
-    const path: Array<number> = getPathFromIndex(1, 0, 0);
-    const response = await device.getCommands().getPublicKey(path, 'Bitcoin');
-};
-
-/**
- * Force authentication by getting public key of first account
- * @param {Device} device
- * @returns {Promise<void>}
- * @memberof Core
- */
-const checkDeviceState = async (device: Device, state: ?string): Promise<boolean> => {
-    if (!state) return true;
-
-    // wait for popup handshake
-    await getPopupPromise().promise;
-
-    // request 0 xpub (same as in GetDeviceState method)
-    const response = await device.getCommands().getPublicKey([1, 0, 0], 'Bitcoin');
-
-    // console.warn("::::STATE COMPARE:", response.message.xpub, "expected to be:", state)
-
-    return response.message.xpub === state;
-};
-
-/**
  * Processing incoming message.
  * This method is async that's why it returns Promise but the real response is passed by postMessage(new ResponseMessage)
  * @param {Object} incomingData
@@ -425,28 +390,17 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     // device is available
     // set public variables, listeners and run method
+    device.on(DEVICE.BUTTON, onDeviceButtonHandler);
     device.on(DEVICE.PIN, onDevicePinHandler);
     device.on(DEVICE.PASSPHRASE, method.useEmptyPassphrase ? onEmptyPassphraseHandler : onDevicePassphraseHandler);
     device.on(DEVICE.PASSPHRASE_ON_DEVICE, () => {
         postMessage(new UiMessage(UI.REQUEST_PASSPHRASE_ON_DEVICE, { device: device.toMessageObject() }));
     });
-    // device.on(DEVICE.PASSPHRASE, onDevicePassphraseHandler);
-    device.on(DEVICE.BUTTON, onDeviceButtonHandler);
-    device.on(DEVICE.AUTHENTICATED, () => {
-        if (!method.useUi) { postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST)); }
-    });
-
-    // before acquire session, check if UI will be needed in future
-    // and if device is already authenticated
-    if (!method.useUi && device.isAuthenticated(method.useEmptyPassphrase)) {
-        // TODO ???
-        postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
-    }
 
     try {
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
-            // check if device is in unexpected mode (bootloader, not-initialized, required firmware)
+            // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
             const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE) = device.hasUnexpectedMode(method.requiredFirmware);
             if (unexpectedMode) {
                 // wait for popup handshake
@@ -456,21 +410,19 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
                 // wait for device disconnect
                 await createUiPromise(DEVICE.DISCONNECT, device).promise;
-                // interrupt running process and go to "final" block
+                // interrupt process and go to "final" block
                 return Promise.resolve();
             }
 
-            // warn if firmware is outdated but not required
+            // notify if firmware is outdated but not required
             if (device.firmwareStatus === 'outdated') {
                 // wait for popup handshake
                 await getPopupPromise().promise;
-                // show warning
+                // show notification
                 postMessage(new UiMessage(UI.FIRMWARE_OUTDATED, device.toMessageObject()));
             }
 
-            // device is ready
-
-            // check and request permissions
+            // check and request permissions [read, write...]
             method.checkPermissions();
             if (!trustedHost && method.requiredPermissions.length > 0) {
                 // show permissions in UI
@@ -478,56 +430,54 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 if (!permitted) {
                     postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.PERMISSIONS_NOT_GRANTED.message }));
                     closePopup();
-
+                    // interrupt process and go to "final" block
                     return Promise.resolve();
                 }
             }
 
-            // before authentication, ask for confirmation if needed [export xpub, sign message]
+            // ask for confirmation [export xpub, export info, sign message]
             if (!trustedHost && typeof method.confirmation === 'function') {
                 // show confirmation in UI
                 const confirmed: boolean = await method.confirmation();
                 if (!confirmed) {
                     postMessage(new ResponseMessage(method.responseID, false, { error: 'Cancelled' }));
                     closePopup();
-
+                    // interrupt process and go to "final" block
                     return Promise.resolve();
                 }
             }
 
-            // Make sure that device will display pin/passphrase
-            if (method.useUi && (method.deviceState || !device.isAuthenticated(method.useEmptyPassphrase))) {
-                // wait for popup handshake
-                await getPopupPromise().promise;
-
-                try {
-                    const deviceState: string = await device.getCommands().getDeviceState();
-                    // validate expected state (fallback for T1. T2 will throw this error in DeviceCommands 'PassphraseStateRequest')
-                    const isT1: boolean = (device.features && device.features.major_version === 1)
-                    if (isT1 && method.deviceState && method.deviceState !== deviceState) {
-                        throw new Error('Passphrase is incorrect');
-                    }
-                } catch (error) {
-                    // catch wrong pin
-                    if (error.message === ERROR.INVALID_PIN_ERROR_MESSAGE) {
-                        postMessage(new UiMessage(UI.INVALID_PIN, { device: device.toMessageObject() }));
-                        return inner();
-                    } else {
-                        // other error
-                        postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
-                        closePopup();
-                        // clear cached passphrase. its nod valid
-                        device.clearPassphrase();
-                        device.setState(null);
-
-                        return Promise.resolve();
-                    }
+            // Make sure that device will display pin/passphrase if needed
+            try {
+                const deviceState: string = await device.getCommands().getDeviceState();
+                // validate expected state
+                // fallback for T1. T2 will throw this error from DeviceCommands: 'PassphraseStateRequest'
+                if (device.isT1() && method.deviceState && method.deviceState !== deviceState) {
+                    throw new Error('Passphrase is incorrect');
+                }
+            } catch (error) {
+                // catch wrong pin error
+                if (error.message === ERROR.INVALID_PIN_ERROR_MESSAGE) {
+                    postMessage(new UiMessage(UI.INVALID_PIN, { device: device.toMessageObject() }));
+                    return inner();
+                } else {
+                    // other error
+                    postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
+                    closePopup();
+                    // clear cached passphrase. it's not valid
+                    device.clearPassphrase();
+                    device.setState(null);
+                    // interrupt process and go to "final" block
+                    return Promise.resolve();
                 }
             }
 
-            // make sure that popup is opened
             if (method.useUi) {
+                // make sure that popup is opened
                 await getPopupPromise().promise;
+            } else {
+                // popup is not required
+                postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
             }
 
             // run method
@@ -621,6 +571,9 @@ const closePopup = (): void => {
  * @memberof Core
  */
 const onDeviceButtonHandler = async (device: Device, code: string): Promise<void> => {
+    // wait for popup handshake
+    await getPopupPromise().promise;
+    // request view
     postMessage(new DeviceMessage(DEVICE.BUTTON, { device: device.toMessageObject(), code: code }));
     postMessage(new UiMessage(UI.REQUEST_BUTTON, { device: device.toMessageObject(), code: code }));
 };
@@ -633,6 +586,8 @@ const onDeviceButtonHandler = async (device: Device, code: string): Promise<void
  * @memberof Core
  */
 const onDevicePinHandler = async (device: Device, type: string, callback: (error: any, success: any) => void): Promise<void> => {
+    // wait for popup handshake
+    await getPopupPromise().promise;
     // request pin view
     postMessage(new UiMessage(UI.REQUEST_PIN, { device: device.toMessageObject() }));
     // wait for pin
@@ -643,12 +598,14 @@ const onDevicePinHandler = async (device: Device, type: string, callback: (error
 };
 
 /**
- * Handle pin request from Device.
+ * Handle passphrase request from Device.
  * @param {Function} callback // TODO: add params
  * @returns {Promise<void>}
  * @memberof Core
  */
 const onDevicePassphraseHandler = async (device: Device, callback: (error: any, success: any) => void): Promise<void> => {
+    // wait for popup handshake
+    await getPopupPromise().promise;
     // request passphrase view
     postMessage(new UiMessage(UI.REQUEST_PASSPHRASE, { device: device.toMessageObject() }));
     // wait for passphrase
@@ -657,7 +614,6 @@ const onDevicePassphraseHandler = async (device: Device, callback: (error: any, 
     const pass: string = uiResp.payload.value;
     const save: boolean = uiResp.payload.save;
     DataManager.isPassphraseCached(save);
-    // callback.apply(null, [null, pass]);
     callback(null, pass);
 };
 

@@ -16,8 +16,6 @@ import DataManager from '../data/DataManager';
 import { checkFirmware } from '../data/FirmwareInfo';
 import Log, { init as initLog } from '../utils/debug';
 
-const FEATURES_LIFETIME: number = 10 * 60 * 1000; // 10 minutes
-
 // custom log
 const _log: Log = initLog('Device');
 
@@ -257,11 +255,6 @@ export default class Device extends EventEmitter {
             this.keepSession = true;
         }
 
-        // try to cancel popup request, maybe it's not too late...
-        if (this.isAuthenticated()) {
-            this.emit(DEVICE.AUTHENTICATED);
-        }
-
         // wait for event from trezor-link
         await this.deferredActions[ DEVICE.ACQUIRE ].promise;
 
@@ -473,18 +466,16 @@ export default class Device extends EventEmitter {
         return this.originalDescriptor.path;
     }
 
-    isAuthenticated(useEmptyPassphrase: boolean = false): boolean {
-        if (this.isUnacquired() || this.isUsedElsewhere() || this.featuresNeedsReload) return false;
-        if (new Date().getTime() - this.featuresTimestamp > FEATURES_LIFETIME) return false;
-
-        if (this.features.bootloader_mode || !this.features.initialized) return false;
-
+    needAuthentication(): boolean {
+        if (this.isUnacquired() || this.isUsedElsewhere() || this.featuresNeedsReload) return true;
+        if (this.features.bootloader_mode || !this.features.initialized) return true;
         const pin: boolean = this.features.pin_protection ? this.features.pin_cached : true;
-        let pass: boolean = this.features.passphrase_protection ? this.features.passphrase_cached : true;
-        if (typeof this.cachedPassphrase[ this.instance ] === 'string') pass = true;
-        if (useEmptyPassphrase) pass = true;
-        _log.debug('isAuthenticated', pin, pass);
-        return (pin && pass);
+        const pass: boolean = this.features.passphrase_protection ? this.features.passphrase_cached : true;
+        return true;
+    }
+
+    isT1(): boolean {
+        return this.features ? this.features.major_version === 1 : false;
     }
 
     hasUnexpectedMode(requiredFirmware: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE) {
