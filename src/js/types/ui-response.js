@@ -16,7 +16,7 @@ declare type ReceivePermission = {
 
 declare type ReceiveConfirmation = {
     +type: typeof UI.RECEIVE_CONFIRMATION | typeof UI.RECEIVE_PERMISSION,
-    payload: string // TODO: boolean
+    payload: string; // TODO: boolean
 }
 
 declare type ReceiveDevice = {
@@ -29,20 +29,25 @@ declare type ReceiveDevice = {
 
 declare type ReceivePin = {
     +type: typeof UI.RECEIVE_PIN,
-    payload: string
+    payload: string;
 }
 
 declare type ReceivePassphrase = {
     +type: typeof UI.RECEIVE_PASSPHRASE,
     payload: {
         save: boolean;
-        value: string
+        value: string;
     }
+}
+
+declare type ReceivePassphraseAction = {
+    +type: typeof UI.INVALID_PASSPHRASE_ACTION,
+    payload: boolean;
 }
 
 declare type ReceiveAccount = {
     +type: typeof UI.RECEIVE_ACCOUNT,
-    payload: ?string
+    payload: ?string;
 }
 
 declare type ReceiveFee = {
@@ -76,6 +81,7 @@ export type UiResponse =
     | ReceiveDevice
     | ReceivePin
     | ReceivePassphrase
+    | ReceivePassphraseAction
     | ReceiveAccount
     | ReceiveFee
     | CustomMessageRequest;
@@ -85,6 +91,7 @@ declare function MessageFactory(type: $PropertyType<ReceiveConfirmation, 'type'>
 declare function MessageFactory(type: $PropertyType<ReceiveDevice, 'type'>, payload: $PropertyType<ReceiveDevice, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<ReceivePin, 'type'>, payload: $PropertyType<ReceivePin, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<ReceivePassphrase, 'type'>, payload: $PropertyType<ReceivePassphrase, 'payload'>): CoreMessage;
+declare function MessageFactory(type: $PropertyType<ReceivePassphraseAction, 'type'>, payload: $PropertyType<ReceivePassphraseAction, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<ReceiveAccount, 'type'>, payload: $PropertyType<ReceiveAccount, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<ReceiveFee, 'type'>, payload: $PropertyType<ReceiveFee, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<CustomMessageRequest, 'type'>, payload: $PropertyType<CustomMessageRequest, 'payload'>): CoreMessage;
