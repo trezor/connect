@@ -192,33 +192,32 @@ export default class DeviceCommands {
         });
     }
 
-    async ethereumGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<MessageResponse<trezor.EthereumAddress>> {
-        const response: Object = await this.typedCall('EthereumGetAddress', 'EthereumAddress', {
+    async ethereumGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.EthereumAddress> {
+        const response: MessageResponse<trezor.EthereumAddress> = await this.typedCall('EthereumGetAddress', 'EthereumAddress', {
             address_n: address_n,
             show_display: !!showOnTrezor,
         });
         return {
-            type: response.type,
-            message: {
-                path: address_n || [],
-                address: response.message.address
-            }
+            path: address_n,
+            address: response.message.address
         };
     }
 
-    async ethereumSignMessage(address_n: Array<number>, message: string): Promise<MessageResponse<trezor.MessageSignature>> {
-        return await this.typedCall('EthereumSignMessage', 'EthereumMessageSignature', {
+    async ethereumSignMessage(address_n: Array<number>, message: string): Promise<trezor.MessageSignature> {
+        const response: MessageResponse<trezor.MessageSignature> = await this.typedCall('EthereumSignMessage', 'EthereumMessageSignature', {
             address_n,
             message,
         });
+        return response.message;
     }
 
-    async ethereumVerifyMessage(address: string, signature: string, message: string): Promise<MessageResponse<trezor.Success>> {
-        return await this.typedCall('EthereumVerifyMessage', 'Success', {
+    async ethereumVerifyMessage(address: string, signature: string, message: string): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('EthereumVerifyMessage', 'Success', {
             address,
             signature,
             message,
         });
+        return response.message;
     }
 
     async nemGetAddress(address_n: Array<number>, network: number, showOnTrezor: boolean): Promise<MessageResponse<trezor.NEMAddress>> {

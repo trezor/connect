@@ -2,9 +2,8 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, validateEthereumPath } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
-import type { MessageResponse } from '../../device/DeviceCommands';
 import type { EthereumAddress } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
@@ -33,6 +32,8 @@ export default class EthereumGetAddress extends AbstractMethod {
         ]);
 
         const path: Array<number> = validatePath(payload.path);
+        validateEthereumPath(path);
+
         let showOnTrezor: boolean = true;
         if (payload.hasOwnProperty('showOnTrezor')){
             showOnTrezor = payload.showOnTrezor;
@@ -46,13 +47,10 @@ export default class EthereumGetAddress extends AbstractMethod {
         }
     }
 
-    async run(): Promise<Object> {
-        const response: MessageResponse<EthereumAddress> = await this.device.getCommands().ethereumGetAddress(
+    async run(): Promise<EthereumAddress> {
+        return await this.device.getCommands().ethereumGetAddress(
             this.params.path,
             this.params.showOnTrezor
         );
-        return {
-            ...response.message
-        };
     }
 }

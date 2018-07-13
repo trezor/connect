@@ -2,8 +2,8 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams, validateEthereumPath } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
-import type { MessageResponse } from '../../device/DeviceCommands';
 import type { MessageSignature } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
@@ -23,32 +23,28 @@ export default class EthereumSignMessage extends AbstractMethod {
         this.requiredFirmware = ['1.6.2', '2.0.7'];
         this.info = 'Sign Ethereum message';
 
-        const payload: any = message.payload;
+        const payload: Object = message.payload;
 
-        if (!payload.hasOwnProperty('path')) {
-            throw new Error('Parameter "path" is missing');
-        } else {
-            payload.path = validatePath(payload.path);
-        }
+        // validate incoming parameters
+        validateParams(payload, [
+            { name: 'path', obligatory: true },
+            { name: 'message', type: 'string', obligatory: true },
+        ]);
 
-        if (!payload.hasOwnProperty('message')){
-            throw new Error('Parameter "message" is missing');
-        } else if (typeof payload.message !== 'string') {
-            throw new Error('Parameter "message" has invalid type. String expected.');
-        }
-
+        const path: Array<number> = validatePath(payload.path);
+        validateEthereumPath(path);
+        // TODO: check if message is already in hex format
         const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
         this.params = {
-            path: payload.path,
+            path,
             message: messageHex
         }
     }
 
     async run(): Promise<MessageSignature> {
-        const response: MessageResponse<MessageSignature> = await this.device.getCommands().ethereumSignMessage(
+        return await this.device.getCommands().ethereumSignMessage(
             this.params.path,
             this.params.message
         );
-        return response.message;
     }
 }
