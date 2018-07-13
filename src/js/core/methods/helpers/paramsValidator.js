@@ -33,17 +33,16 @@ export const validateParams = (values: Object, fields: Array<Param>): void => {
     });
 }
 
-export const validateCoinPath = (coinInfo: ?CoinInfo, path: Array<number>) => {
+export const validateCoinPath = (coinInfo: ?CoinInfo, path: Array<number>): void => {
     if (coinInfo && coinInfo.slip44 !== fromHardened(path[1])) {
         throw invalidParameter('Parameters "path" and "coin" do not match.');
     }
 }
 
-export const validateEthereumPath = (path: Array<number>) => {
+export const validateEthereumPath = (path: Array<number>): void => {
     const slip44 = fromHardened(path[1]);
     let founded: boolean = false;
     ethereumNetworks.forEach(network => {
-        console.warn("Network", network.slip44, slip44)
         if (network.slip44 === slip44) {
             founded = true;
         }
