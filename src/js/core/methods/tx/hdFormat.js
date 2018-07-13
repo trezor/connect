@@ -3,6 +3,7 @@
 
 import { reverseBuffer } from '../../../utils/bufferUtils';
 import { isSegwitPath } from '../../../utils/pathUtils';
+import { isValidAddress } from '../../../utils/addressUtils';
 
 import type {
     BuildTxOutputRequest,
@@ -15,6 +16,8 @@ import type {
     TransactionOutput,
     RefTransaction
 } from '../../../types/trezor';
+
+import type { CoinInfo } from 'flowtype';
 
 // transform from TREZOR format to hd-wallet
 export const input = (input: TransactionInput, sequence: number): BuildTxInput => {
@@ -34,8 +37,15 @@ export const input = (input: TransactionInput, sequence: number): BuildTxInput =
     };
 }
 
+// validate
+export const validateOutput = (output: BuildTxOutputRequest, coinInfo: CoinInfo): BuildTxOutputRequest => {
 
-export const validateOutput = (output: BuildTxOutputRequest): BuildTxOutputRequest => {
+    if (output.hasOwnProperty('address') && typeof output.address === 'string') {
+        if (!isValidAddress(output.address, coinInfo)) {
+            throw new Error(`Invalid ${ coinInfo.label } output address format`);
+        }
+    }
+
     if (typeof output.type === 'string') {
 
         switch (output.type) {
@@ -65,10 +75,16 @@ export const validateOutput = (output: BuildTxOutputRequest): BuildTxOutputReque
         if (typeof output.amount !== 'number')
             throw new Error('Invalid amount in output');
 
+            if (output.address) {
+
+            }
+
         return {
             type: 'complete',
             address: output.address,
             amount: output.amount
         }
     }
+
+
 }

@@ -2,7 +2,7 @@
 'use strict';
 
 import { reverseBuffer } from '../../../utils/bufferUtils';
-import { address as BitcoinJSAddress } from 'bitcoinjs-lib-zcash';
+import { isScriptHash } from '../../../utils/addressUtils';
 import bchaddrjs from 'bchaddrjs';
 
 import type {
@@ -78,7 +78,7 @@ export const output = (output: BuildTxOutput, coinInfo: CoinInfo): TransactionOu
     const isCashAddress: boolean = !!(coinInfo.cashAddrPrefix);
 
 
-    isScriptHash(address, coinInfo.network, isCashAddress);
+    isScriptHash(address, coinInfo);
 
     // make sure that cashaddr has prefix
     return {
@@ -87,43 +87,6 @@ export const output = (output: BuildTxOutput, coinInfo: CoinInfo): TransactionOu
         amount: amount,
         script_type: 'PAYTOADDRESS',
     };
-}
-
-function isBech32(address: string): boolean {
-    try {
-        BitcoinJSAddress.fromBech32(address);
-        return true;
-    } catch (e) {
-        return false;
-    }
-}
-
-const isScriptHash = (address: string, network: BitcoinJsNetwork, isCashAddress: boolean): boolean  => {
-    if (!isBech32(address)) {
-        // cashaddr hack
-        // Cashaddr format (with prefix) is neither base58 nor bech32, so it would fail
-        // in bitcoinjs-lib-zchash. For this reason, we use legacy format here
-        if (isCashAddress) {
-            address = bchaddrjs.toLegacyAddress(address);
-        }
-
-        const decoded = BitcoinJSAddress.fromBase58Check(address);
-        if (decoded.version === network.pubKeyHash) {
-            return false;
-        }
-        if (decoded.version === network.scriptHash) {
-            return true;
-        }
-    } else {
-        const decoded = BitcoinJSAddress.fromBech32(address);
-        if (decoded.data.length === 20) {
-            return false;
-        }
-        if (decoded.data.length === 32) {
-            return true;
-        }
-    }
-    throw new Error('Unknown address type.');
 }
 
 function _flow_makeArray(a: mixed): Array<number> {

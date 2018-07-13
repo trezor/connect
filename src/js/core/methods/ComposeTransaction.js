@@ -5,6 +5,7 @@ import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import * as UI from '../../constants/ui';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
+import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { resolveAfter } from '../../utils/promiseUtils';
 
@@ -21,8 +22,6 @@ import {
 
 import * as helper from './helpers/signtx';
 import {
-    validateInputs,
-    validateOutputs,
     getReferencedTransactions,
     transformReferencedTransactions
 } from './tx';
@@ -56,32 +55,25 @@ export default class ComposeTransaction extends AbstractMethod {
         this.requiredPermissions = ['read', 'write'];
         this.info = 'Payment request';
 
-        const payload: any = message.payload;
-        if (!payload.hasOwnProperty('outputs')) {
-            throw new Error('Parameter "outputs" is missing');
-        } else if (!Array.isArray(payload.outputs)) {
-            throw new Error('Parameter "outputs" has invalid type. Array of BuildTxOutputRequest expected.');
-        }
+        const payload: Object = message.payload;
+        // validate incoming parameters
+        validateParams(payload, [
+            { name: 'outputs', type: 'array', obligatory: true },
+            { name: 'coin', type: 'string', obligatory: true },
+        ]);
 
-        let coinInfo: ?CoinInfo;
-        if (!payload.hasOwnProperty('coin')) {
-            throw new Error('Parameter "coin" is missing');
-        } else {
-            if (typeof payload.coin === 'string') {
-                coinInfo = getCoinInfoByCurrency(payload.coin);
-            } else {
-                throw new Error('Parameter "coin" has invalid type. String expected.');
-            }
-        }
-
+        const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
         if (!coinInfo) {
-            throw new Error('Coin not found');
-        } else {
-            // check required firmware with coinInfo support
-            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+            throw new Error('Coin not found.');
         }
 
-        const outputs: Array<BuildTxOutputRequest> = payload.outputs.map(out => validateOutput(out));
+        // set required firmware from coinInfo support
+        this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+
+        const outputs: Array<BuildTxOutputRequest> = payload.outputs.map(out => validateOutput(out, coinInfo));
+        if (outputs.length < 1) {
+            throw new Error('Minimum 1 output is required.');
+        }
 
         this.params = {
             outputs,
