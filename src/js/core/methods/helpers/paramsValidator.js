@@ -1,7 +1,8 @@
 /* @flow */
 'use strict';
 
-import { TrezorError } from '../../../constants/errors';
+import { invalidParameter } from '../../../constants/errors';
+import { fromHardened } from '../../../utils/pathUtils';
 import type { CoinInfo } from 'flowtype';
 
 type Param = {
@@ -15,19 +16,17 @@ export const validateParams = (values: Object, fields: Array<Param>): void => {
         if (values.hasOwnProperty(field.name)) {
             if (field.type && typeof values[field.name] !== field.type) {
                 // invalid type
-                throw new TrezorError('method_parameters', `Parameter "${field.name}" has invalid type. "${ field.type }" expected.`);
+                throw invalidParameter(`Parameter "${ field.name }" has invalid type. "${ field.type }" expected.`);
             }
         } else if (field.obligatory) {
             // not found
-            throw new TrezorError('method_parameters', `Parameter "${field.name}" is missing.`)
+            throw invalidParameter(`Parameter "${ field.name }" is missing.`)
         }
     });
 }
 
-export const validateCoinInfo = (coinInfoFromPath: ?CoinInfo, coinInfo: ?CoinInfo) => {
-    if (coinInfoFromPath && coinInfo) {
-        if (coinInfoFromPath.shortcut !== coinInfo.shortcut) {
-            throw new TrezorError('method_parameters', 'Parameters "path" and "coin" do not match');
-        }
+export const validateCoinInfo = (coinInfo: ?CoinInfo, path: Array<number>) => {
+    if (coinInfo && coinInfo.slip44 !== fromHardened(path[1])) {
+        throw invalidParameter('Parameters "path" and "coin" do not match.');
     }
 }

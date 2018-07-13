@@ -42,14 +42,13 @@ export default class GetPublicKey extends AbstractMethod {
         ]);
 
         const path: Array<number> = validatePath(payload.path);
-        const coinInfoFromPath: ?CoinInfo = getCoinInfoFromPath(path);
         let coinInfo: ?CoinInfo;
 
         if (payload.coin) {
             coinInfo = getCoinInfoByCurrency(payload.coin);
-            validateCoinInfo(coinInfoFromPath, coinInfo);
+            validateCoinInfo(coinInfo, path);
         } else {
-            coinInfo = coinInfoFromPath;
+            coinInfo = getCoinInfoFromPath(path);
         }
 
         // set required firmware from coinInfo support

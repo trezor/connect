@@ -2,17 +2,20 @@
 'use strict';
 
 import { getCoinName } from '../data/CoinInfo';
+import { invalidParameter } from '../constants/errors';
 import type { CoinInfo } from 'flowtype';
 
 export const HD_HARDENED: number = 0x80000000;
 export const toHardened = (n: number): number => (n | HD_HARDENED) >>> 0;
 export const fromHardened = (n: number): number => (n & ~HD_HARDENED) >>> 0;
 
+const PATH_NOT_VALID = invalidParameter('Not a valid path.');
+const PATH_NEGATIVE_VALUES = invalidParameter('Path cannot contain negative values.');
+
 export const getHDPath = (path: string): Array<number> => {
-    return path
-        .toLowerCase()
-        .split('/')
-        .filter((p: string) => p !== 'm')
+    const parts: Array<string> = path.toLowerCase().split('/');
+    if (parts[0] !== 'm' || parts.length < 2) throw PATH_NOT_VALID;
+    return parts.filter((p: string) => p !== 'm')
         .map((p: string) => {
             let hardened: boolean = false;
             if (p.substr(p.length - 1) === "'") {
@@ -20,8 +23,10 @@ export const getHDPath = (path: string): Array<number> => {
                 p = p.substr(0, p.length - 1);
             }
             let n: number = parseInt(p);
-            if (isNaN(p)) {
-                throw new Error('Not a valid path.');
+            if (isNaN(n)) {
+                throw PATH_NOT_VALID;
+            } else if (n < 0) {
+                throw PATH_NEGATIVE_VALUES;
             }
             if (hardened) { // hardened index
                 n = toHardened(n);
@@ -41,18 +46,16 @@ export const validatePath = (path: string | Array<number>, base: boolean = false
     } else if (Array.isArray(path)) {
         valid = path.map((p: any) => {
             const n: number = parseInt(p);
-            if (isNaN(p)) {
-                throw new Error('Not a valid path.');
+            if (isNaN(n)) {
+                throw PATH_NOT_VALID;
+            } else if (n < 0) {
+                throw PATH_NEGATIVE_VALUES;
             }
-            return Math.abs(n);
+            return n;
         });
     }
-    if (!valid) throw new Error('Not a valid path.');
+    if (!valid) throw PATH_NOT_VALID;
     return base ? valid.splice(0, 3) : valid;
-};
-
-export const getAccountIndexFromPath = (path: Array<number>): number => {
-    return path[2] & ~HD_HARDENED;
 };
 
 export function getSerializedPath(path: Array<number>): string {
@@ -76,14 +79,8 @@ export const getPathFromIndex = (bip44purpose: number, bip44cointype: number, in
 
 export function getIndexFromPath(path: Array<number>): number {
     if (path.length < 3) {
-        throw new Error(`getIndexFromPath: invalid path length ${ path.toString() }`);
+        throw invalidParameter(`getIndexFromPath: invalid path length ${ path.toString() }`);
     }
-    // if ((path[0] >>> 0) !== ((44 | HD_HARDENED) >>> 0)) {
-    //     throw new Error("2");
-    // }
-    // if ((path[1] >>> 0) !== ((0 | HD_HARDENED) >>> 0)) {
-    //     throw new Error("3");
-    // }
     return fromHardened(path[2]);
 }
 
