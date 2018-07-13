@@ -138,6 +138,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         case UI.RECEIVE_PERMISSION :
         case UI.RECEIVE_PIN :
         case UI.RECEIVE_PASSPHRASE :
+        case UI.INVALID_PASSPHRASE_ACTION :
         case UI.RECEIVE_ACCOUNT :
         case UI.CHANGE_ACCOUNT :
         case UI.RECEIVE_FEE :
@@ -145,7 +146,6 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         case UI.CUSTOM_MESSAGE_RESPONSE :
         case UI.LOGIN_CHALLENGE_RESPONSE :
             const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, message.type);
-            //console.error('HANDLING MESSAGE', uiPromise);
             if (uiPromise) {
                 uiPromise.resolve({ event: message.type, payload: message.payload });
                 removeUiPromise(uiPromise);
@@ -447,14 +447,31 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 }
             }
 
-            // Make sure that device will display pin/passphrase if needed
+            // Make sure that device will display pin/passphrase
             try {
                 const deviceState: string = await device.getCommands().getDeviceState();
-                // validate expected state
-                // fallback for T1. T2 will throw this error from DeviceCommands: 'PassphraseStateRequest'
-                if (device.isT1() && method.deviceState && method.deviceState !== deviceState) {
-                    throw new Error('Passphrase is incorrect');
+                const validState: boolean = device.validateExpectedState(deviceState);
+                if (!validState) {
+                    if (isUsingPopup) {
+                        // initialize user response promise
+                        const uiPromise = createUiPromise(UI.INVALID_PASSPHRASE_ACTION, device);
+                        // request action view
+                        postMessage(new UiMessage(UI.INVALID_PASSPHRASE, { device: device.toMessageObject() }));
+                        // wait for user response
+                        const uiResp: UiPromiseResponse = await uiPromise.promise;
+                        const resp: boolean = uiResp.payload;
+                        if (resp) {
+                            // initialize to reset device state
+                            await device.getCommands().initialize(method.useEmptyPassphrase);
+                            return inner();
+                        } else {
+                            device.setState(deviceState);
+                        }
+                    } else {
+                        throw ERROR.INVALID_STATE;
+                    }
                 }
+
             } catch (error) {
                 // catch wrong pin error
                 if (error.message === ERROR.INVALID_PIN_ERROR_MESSAGE) {

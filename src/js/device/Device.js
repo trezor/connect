@@ -81,6 +81,7 @@ export default class Device extends EventEmitter {
 
     state: ?string;
     expectedState: ?string;
+    temporaryState: ?string;
 
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
         super();
@@ -304,7 +305,9 @@ export default class Device extends EventEmitter {
     }
 
     setPassphrase(pass: ?string): void {
-        this.cachedPassphrase[ this.instance ] = pass;
+        if (this.isT1()) {
+            this.cachedPassphrase[ this.instance ] = pass;
+        }
     }
 
     getPassphrase(): ?string {
@@ -337,6 +340,14 @@ export default class Device extends EventEmitter {
 
     setState(state: ?string): void {
         this.state = state;
+    }
+
+    setTemporaryState(state: string): void {
+        this.temporaryState = state;
+    }
+
+    getTemporaryState(): ?string {
+        return this.temporaryState;
     }
 
     isUnacquired(): boolean {
@@ -491,6 +502,21 @@ export default class Device extends EventEmitter {
             }
         }
         return null;
+    }
+
+    validateExpectedState(state: string): boolean {
+        if (!this.isT1()) {
+            const currentState: ?string = this.getExpectedState() || this.getState();
+            if (!currentState) {
+                this.setState(state);
+                return true;
+            } else if (currentState !== state) {
+                return false;
+            }
+        } else if (this.getExpectedState() && this.getExpectedState() !== state) {
+            return false;
+        }
+        return true;
     }
 
     onBeforeUnload() {

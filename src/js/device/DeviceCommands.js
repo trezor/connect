@@ -142,10 +142,9 @@ export default class DeviceCommands {
     }
 
     async getDeviceState(): Promise<string> {
-        // const response: trezor.HDNodeResponse = await this.getHDNode([1, 0, 0]);
         const response: trezor.PublicKey = await this.getPublicKey([1, 0, 0]);
         const secret: string = `${response.xpub}#${this.device.features.device_id}`;
-        const state: string = this.device.getState() || bitcoin.crypto.hash256(new Buffer(secret, 'binary')).toString('hex');
+        const state: string = this.device.getTemporaryState() || bitcoin.crypto.hash256(new Buffer(secret, 'binary')).toString('hex');
         return state;
     }
 
@@ -434,12 +433,7 @@ export default class DeviceCommands {
 
         if (res.type === 'PassphraseStateRequest') {
             const state: string = res.message.state;
-            const currentState: ?string = this.device.getExpectedState() || this.device.getState();
-            if (currentState && currentState !== state) {
-                throw ERROR.INVALID_STATE;
-            }
-
-            this.device.setState(state);
+            this.device.setTemporaryState(state);
             return this._commonCall('PassphraseStateAck', { });
         }
 

@@ -1,6 +1,7 @@
 export { init, showView, postMessage } from './common';
 export { initPinView } from './pin';
 export { initPassphraseView } from './passphrase';
+export { initInvalidPassphraseView } from './invalidPassphrase';
 export { requestDevice } from './requestDevice';
 export { selectDevice } from './selectDevice';
 export { selectAccount } from './selectAccount';
