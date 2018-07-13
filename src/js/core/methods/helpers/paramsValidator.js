@@ -3,6 +3,7 @@
 
 import { invalidParameter } from '../../../constants/errors';
 import { fromHardened } from '../../../utils/pathUtils';
+import { ethereumNetworks } from '../../../data/CoinInfo';
 import type { CoinInfo } from 'flowtype';
 
 type Param = {
@@ -32,8 +33,22 @@ export const validateParams = (values: Object, fields: Array<Param>): void => {
     });
 }
 
-export const validateCoinInfo = (coinInfo: ?CoinInfo, path: Array<number>) => {
+export const validateCoinPath = (coinInfo: ?CoinInfo, path: Array<number>) => {
     if (coinInfo && coinInfo.slip44 !== fromHardened(path[1])) {
         throw invalidParameter('Parameters "path" and "coin" do not match.');
+    }
+}
+
+export const validateEthereumPath = (path: Array<number>) => {
+    const slip44 = fromHardened(path[1]);
+    let founded: boolean = false;
+    ethereumNetworks.forEach(network => {
+        console.warn("Network", network.slip44, slip44)
+        if (network.slip44 === slip44) {
+            founded = true;
+        }
+    });
+    if (!founded) {
+        throw invalidParameter('Unknown slip44 in ethereum "path".');
     }
 }

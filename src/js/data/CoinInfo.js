@@ -186,7 +186,7 @@ export const parseCoinsJson = (json: JSON): void => {
     });
 };
 
-const ethereumNetworks: Array<EthereumNetworkInfo> = [];
+export const ethereumNetworks: Array<EthereumNetworkInfo> = [];
 
 export const parseEthereumNetworksJson = (json: JSON): void => {
     const networksObject: Object = json;

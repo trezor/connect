@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinInfo } from './helpers/paramsValidator';
+import { validateParams, validateCoinPath } from './helpers/paramsValidator';
 import { validatePath, getPathFromIndex } from '../../utils/pathUtils';
 import type { MessageResponse } from '../../device/DeviceCommands';
 
@@ -46,7 +46,7 @@ export default class GetPublicKey extends AbstractMethod {
 
         if (payload.coin) {
             coinInfo = getCoinInfoByCurrency(payload.coin);
-            validateCoinInfo(coinInfo, path);
+            validateCoinPath(coinInfo, path);
         } else {
             coinInfo = getCoinInfoFromPath(path);
         }
