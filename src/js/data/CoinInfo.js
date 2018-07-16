@@ -41,6 +41,7 @@ export const getSegwitNetwork = (coin: CoinInfo): ?BitcoinJsNetwork => {
     return null;
 };
 
+// set coinInfo network values from path (segwit/legacy)
 export const getAccountCoinInfo = (ci: CoinInfo, path: Array<number>): CoinInfo => {
     const coinInfo: CoinInfo = cloneCoinInfo(ci);
     if (path[0] === toHardened(49)) {

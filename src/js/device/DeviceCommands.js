@@ -148,7 +148,7 @@ export default class DeviceCommands {
         return state;
     }
 
-    async getAddress(address_n: Array<number>, coinInfo: CoinInfo, showOnTrezor: boolean): Promise<MessageResponse<trezor.Address>> {
+    async getAddress(address_n: Array<number>, coinInfo: CoinInfo, showOnTrezor: boolean): Promise<trezor.Address> {
         const response: Object = await this.typedCall('GetAddress', 'Address', {
             address_n,
             coin_name: coinInfo.name,
@@ -157,11 +157,8 @@ export default class DeviceCommands {
         });
 
         return {
-            type: response.type,
-            message: {
-                path: address_n || [],
-                address: response.message.address
-            }
+            path: address_n,
+            address: response.message.address
         };
     }
 
@@ -304,11 +301,11 @@ export default class DeviceCommands {
     }
 
     // async clearSession(): Promise<MessageResponse<trezor.Success>> {
-    async clearSession(settings: Object): Promise<any> {
+    async clearSession(settings: Object): Promise<MessageResponse<trezor.Success>> {
         return await this.typedCall('ClearSession', 'Success', settings);
     }
 
-    async initialize(useEmptyPassphrase: boolean = false) {
+    async initialize(useEmptyPassphrase: boolean = false): Promise<DefaultMessageResponse> {
         if (this.disposed) {
             throw new Error('DeviceCommands already disposed');
         }
