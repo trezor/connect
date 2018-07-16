@@ -49,6 +49,8 @@ export default class EthereumSignTx extends AbstractMethod {
             { name: 'chainId', type: 'number' },
         ]);
 
+        // TODO: check if tx data is a valid hex
+
         // strip '0x' from values
         Object.keys(tx).map(key => {
             if (typeof tx[key] === 'string') {
