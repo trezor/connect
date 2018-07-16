@@ -2,6 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams } from './helpers/paramsValidator';
 import * as UI from '../../constants/ui';
 
 import { UiMessage } from '../../message/builder';
@@ -24,7 +25,13 @@ export default class CustomMessage extends AbstractMethod {
         this.requiredPermissions = ['custom-message'];
         this.info = 'Custom message';
 
-        const payload: any = message.payload;
+        const payload: Object = message.payload;
+
+        // validate incoming parameters
+        validateParams(message.payload, [
+            { name: 'message', type: 'string', obligatory: true },
+            { name: 'params', type: 'object', obligatory: true },
+        ]);
 
         if (payload.hasOwnProperty('messages')){
             try {
@@ -32,14 +39,6 @@ export default class CustomMessage extends AbstractMethod {
             } catch (error) {
                 throw new Error('Parameter "messages" has invalid type. JSON expected.');
             }
-        }
-
-        if (typeof payload.message !== 'string') {
-            throw new Error('Parameter "message" has invalid type. String expected.');
-        }
-
-        if (typeof payload.params !== 'object') {
-            throw new Error('Parameter "params" has invalid type. Object expected.');
         }
 
         this.params = {
@@ -65,14 +64,11 @@ export default class CustomMessage extends AbstractMethod {
         const uiResp: UiPromiseResponse = await this.createUiPromise(UI.CUSTOM_MESSAGE_RESPONSE, this.device).promise;
         const payload = uiResp.payload;
 
-        // validate again
-        if (typeof payload.message !== 'string') {
-            throw new Error('Parameter "message" has invalid type. String expected.');
-        }
-
-        if (typeof payload.params !== 'object') {
-            payload.params = {};
-        }
+        // validate incoming parameters
+        validateParams(payload, [
+            { name: 'message', type: 'string', obligatory: true },
+            { name: 'params', type: 'object', obligatory: true },
+        ]);
 
         if (payload.message.toLowerCase() === 'release') {
             // release device
