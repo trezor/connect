@@ -4,7 +4,7 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
-import { getCoinInfoByCurrency, getCoinInfoFromPath, getAccountCoinInfo } from '../../data/CoinInfo';
+import { getCoinInfoByCurrency, getCoinInfoFromPath, fixCoinInfoNetwork } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
 
 import type { Address } from '../../types/trezor';
@@ -53,8 +53,8 @@ export default class GetAddress extends AbstractMethod {
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
 
-        // set coinInfo network values (segwit/legacy)
-        coinInfo = getAccountCoinInfo(coinInfo, payload.path);
+        // fix coinInfo network values (segwit/legacy)
+        coinInfo = fixCoinInfoNetwork(coinInfo, payload.path);
 
         let showOnTrezor: boolean = true;
         if (payload.hasOwnProperty('showOnTrezor')){

@@ -13,7 +13,7 @@ import { create as createDeferred } from '../../utils/deferred';
 
 import Account, { create as createAccount } from '../../account';
 import BlockBook, { create as createBackend } from '../../backend';
-import { getCoinInfoByCurrency, getAccountCoinInfo } from '../../data/CoinInfo';
+import { getCoinInfoByCurrency, fixCoinInfoNetwork } from '../../data/CoinInfo';
 import { UiMessage } from '../../message/builder';
 import type { CoinInfo, UiPromiseResponse } from 'flowtype';
 import type { AccountInfo, HDNodeResponse } from '../../types/trezor';
@@ -120,7 +120,7 @@ export default class GetAccountInfo extends AbstractMethod {
     }
 
     async _getAccountFromPath(path: Array<number>): Promise<Response> {
-        const coinInfo: CoinInfo = getAccountCoinInfo(this.params.coinInfo, path);
+        const coinInfo: CoinInfo = fixCoinInfoNetwork(this.params.coinInfo, path);
         const node: HDNodeResponse = await this.device.getCommands().getHDNode(path, coinInfo);
         const account = createAccount(path, node.xpub, coinInfo);
 

@@ -3,7 +3,7 @@
 import EventEmitter from 'events';
 import Account, { create as createAccount, remove as removeAccount } from '../../../account';
 import BlockBook from '../../../backend';
-import { cloneCoinInfo, getAccountCoinInfo } from '../../../data/CoinInfo';
+import { cloneCoinInfo, fixCoinInfoNetwork } from '../../../data/CoinInfo';
 import {
     isSegwitPath,
     getPathFromIndex
@@ -70,7 +70,7 @@ export default class Discovery extends EventEmitter {
             }
 
             const path: Array<number> = getPathFromIndex(coinInfo.segwit ? 49 : 44, coinInfo.slip44, index);
-            await this.discoverAccount(path, getAccountCoinInfo(coinInfo, path));
+            await this.discoverAccount(path, fixCoinInfoNetwork(coinInfo, path));
         }
     }
 
