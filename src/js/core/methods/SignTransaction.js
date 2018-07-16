@@ -4,6 +4,7 @@
 import AbstractMethod from './AbstractMethod';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
+import { NO_COIN_INFO } from '../../constants/errors';
 
 import BlockBook, { create as createBackend } from '../../backend';
 import * as helper from './helpers/signtx';
@@ -70,7 +71,7 @@ export default class SignTransaction extends AbstractMethod {
         }
 
         if (!coinInfo) {
-            throw new Error('Coin not found');
+            throw NO_COIN_INFO;
         } else {
             // check required firmware with coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];

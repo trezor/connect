@@ -50,5 +50,5 @@ export const WEBUSB_ERROR_MESSAGE: string = 'NetworkError: Unable to claim inter
 // BlockBook
 export const BACKEND_NO_URL: TrezorError = new TrezorError('Backend_init', 'Url not found');
 
-export const NO_COIN_INFO: TrezorError = invalidParameter('Coin not found');
+export const NO_COIN_INFO: TrezorError = invalidParameter('Coin not found.');
 

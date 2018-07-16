@@ -8,6 +8,7 @@ import { getCoinInfoByCurrency } from '../../data/CoinInfo';
 import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { resolveAfter } from '../../utils/promiseUtils';
+import { NO_COIN_INFO } from '../../constants/errors';
 
 import BlockBook, { create as createBackend } from '../../backend';
 import Account from '../../account';
@@ -64,7 +65,7 @@ export default class ComposeTransaction extends AbstractMethod {
 
         const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
         if (!coinInfo) {
-            throw new Error('Coin not found.');
+            throw NO_COIN_INFO;
         }
 
         // set required firmware from coinInfo support

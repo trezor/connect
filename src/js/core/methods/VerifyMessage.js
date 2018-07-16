@@ -4,6 +4,8 @@
 import AbstractMethod from './AbstractMethod';
 import { validatePath } from '../../utils/pathUtils';
 import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../data/CoinInfo';
+import { NO_COIN_INFO } from '../../constants/errors';
+
 import type { MessageResponse } from '../../device/DeviceCommands';
 import type { MessageSignature } from '../../types/trezor';
 import type { CoinInfo } from 'flowtype';
@@ -36,7 +38,7 @@ export default class VerifyMessage extends AbstractMethod {
 
         const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
         if (!coinInfo) {
-            throw new Error('Coin not found.');
+            throw NO_COIN_INFO;
         } else {
             // check required firmware with coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];

@@ -4,6 +4,8 @@
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import * as UI from '../../constants/ui';
+import { NO_COIN_INFO } from '../../constants/errors';
+
 import {
     validatePath,
     getAccountLabel,
@@ -53,7 +55,7 @@ export default class GetAccountInfo extends AbstractMethod {
         }
 
         if (!coinInfo) {
-            throw new Error('Coin not found');
+            throw NO_COIN_INFO;
         } else {
             // check required firmware with coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
