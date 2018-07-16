@@ -46,8 +46,26 @@ export type $CustomMessage = $Common & {
     callback: (request: any) => Promise<?{ message: string, params?: Object }>;
 }
 
+type ComposeTransactionOutput = {
+    type: 'complete',
+    address: string,
+    amount: number, // in satoshis
+} | {
+    type: 'send-max', // only one in TX request
+    address: string,
+} | {
+    type: 'opreturn', // this is misnomer, since it doesn't need to have address
+    dataHex: string,
+} | {
+    type: 'noaddress',
+    amount: number,
+} | {
+    type: 'send-max-noaddress',
+}
+
 export type $ComposeTransaction = $Common & {
-    messages?: any // TODO
+    outputs: Array<ComposeTransactionOutput>;
+    coin: string;
 }
 
 export type $EthereumGetAddress = $Common & {

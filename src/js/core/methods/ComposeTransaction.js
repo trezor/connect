@@ -34,7 +34,6 @@ import type { TransactionInput, TransactionOutput, SignedTx } from '../../types/
 
 import type {
     BuildTxOutputRequest,
-    BuildTxInput,
     BuildTxOutput,
     BuildTxResult
 } from 'hd-wallet';
