@@ -166,13 +166,14 @@ export default class DeviceCommands {
         address_n: Array<number>,
         message: string,
         coin: ?string
-    ): Promise<DefaultMessageResponse> {
-        return await this.typedCall('SignMessage', 'MessageSignature', {
+    ): Promise<trezor.MessageSignature> {
+        const response: MessageResponse<trezor.MessageSignature> = await this.typedCall('SignMessage', 'MessageSignature', {
             address_n,
             message,
             coin_name: coin || 'Bitcoin',
             script_type: isSegwitPath(address_n) ? 'SPENDP2SHWITNESS' : undefined,
         });
+        return response.message;
     }
 
     async verifyMessage(

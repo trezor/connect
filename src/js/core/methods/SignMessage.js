@@ -2,6 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams, validateCoinPath } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../data/CoinInfo';
 import type { MessageResponse } from '../../device/DeviceCommands';
@@ -25,58 +26,43 @@ export default class SignMessage extends AbstractMethod {
         this.requiredPermissions = ['write'];
         this.info = 'Sign message';
 
-        const payload: any = message.payload;
+        const payload: Object = message.payload;
+
+        // validate incoming parameters for each batch
+        validateParams(payload, [
+            { name: 'coin', type: 'string' },
+            { name: 'message', type: 'string', obligatory: true },
+        ]);
+
+        const path: Array<number> = validatePath(payload.path)
         let coinInfo: ?CoinInfo;
-
-        if (payload.hasOwnProperty('coin') && payload.coin) {
-            if (typeof payload.coin === 'string') {
-                coinInfo = getCoinInfoByCurrency(payload.coin);
-            } else {
-                throw new Error('Parameter "coin" has invalid type. String expected.');
-            }
-        }
-
-        if (!payload.hasOwnProperty('path')) {
-            throw new Error('Parameter "path" is missing');
+        if (payload.coin) {
+            coinInfo = getCoinInfoByCurrency(payload.coin);
+            validateCoinPath(coinInfo, path);
         } else {
-            payload.path = validatePath(payload.path);
-        }
-
-        if (!coinInfo) {
-            coinInfo = getCoinInfoFromPath(payload.path);
-        } else {
-            const coinInfoFromPath: ?CoinInfo = getCoinInfoFromPath(payload.path);
-            if (coinInfoFromPath && coinInfo.shortcut !== coinInfoFromPath.shortcut) {
-                throw new Error('Parameters "path" and "coin" do not match');
-            }
+            coinInfo = getCoinInfoFromPath(path);
         }
 
         if (coinInfo) {
             // check required firmware with coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
-
-        if (!payload.hasOwnProperty('message')){
-            throw new Error('Parameter "message" is missing');
-        } else if (typeof payload.message !== 'string') {
-            throw new Error('Parameter "message" has invalid type. String expected.');
-        }
-
+        // TODO: check if it's already a hex
         const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
 
         this.params = {
-            path: payload.path,
+            path,
             message: messageHex,
             coinInfo
         }
     }
 
     async run(): Promise<MessageSignature> {
-        const response: MessageResponse<MessageSignature> = await this.device.getCommands().signMessage(
+        const response: MessageSignature = await this.device.getCommands().signMessage(
             this.params.path,
             this.params.message,
             this.params.coinInfo ? this.params.coinInfo.name : null
         );
-        return response.message;
+        return response;
     }
 }
