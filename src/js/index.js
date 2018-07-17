@@ -63,6 +63,8 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
                 // clear unnecessary fields from message object
                 delete message.type;
                 delete message.event;
+                // delete message.id;
+                // message.__id = id;
                 // resolve message promise (send result of call method)
                 iframe.messagePromises[id].resolve(message);
                 delete iframe.messagePromises[id];
