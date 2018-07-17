@@ -1,10 +1,12 @@
 /* @flow */
 
 import type {
+    CipheredKeyValue,
     AccountInfo,
     Address,
 
     EthereumSignedTx,
+    EthereumAddress,
     Features,
     HDNodeResponse,
 
@@ -29,9 +31,7 @@ export type Unsuccessful$ = {
 
 export type CipherKeyValue$ = {
     success: true;
-    payload: {
-        value: string,
-    }
+    payload: CipheredKeyValue | Array<CipheredKeyValue>;
 } | Unsuccessful$;
 
 export type CustomMessage$ = {
@@ -46,10 +46,7 @@ export type ComposeTransaction$ = {
 
 export type EthereumGetAddress$ = {
     success: true;
-    payload: {
-        address: string,
-        path: Array <number>
-    }
+    payload: EthereumAddress | Array<EthereumAddress>;
 } | Unsuccessful$;
 
 export type EthereumSignMessage$ = {
@@ -74,7 +71,7 @@ export type GetAccountInfo$ = {
 
 export type GetAddress$ = {
     success: true;
-    payload: Address,
+    payload: Address | Array<Address>,
 } | Unsuccessful$;
 
 export type GetDeviceState$ = {
@@ -91,7 +88,7 @@ export type GetFeatures$ = {
 
 export type GetPublicKey$ = {
     success: true;
-    payload: HDNodeResponse;
+    payload: HDNodeResponse | Array<HDNodeResponse>;
 } | Unsuccessful$;
 
 export type RequestLogin$ = {
@@ -101,7 +98,7 @@ export type RequestLogin$ = {
 
 export type NEMGetAddress$ = {
     success: true;
-    payload: NEMAddress;
+    payload: NEMAddress | Array<NEMAddress>;
 } | Unsuccessful$;
 
 export type NEMSignTransaction$ = {
@@ -121,7 +118,7 @@ export type SignTransaction$ = {
 
 export type StellarGetAddress$ = {
     success: true;
-    payload: StellarAddress;
+    payload: StellarAddress | Array<StellarAddress>;
 } | Unsuccessful$;
 
 export type StellarSignTransaction$ = {

@@ -39,14 +39,7 @@ type $CipherKeyValueBatch = {
     iv?: string;
 }
 
-export type $CipherKeyValue = $Common & $CipherKeyValueBatch | $Common & { bundle: Array<$CipherKeyValueBatch> }
-
-export type $CustomMessage = $Common & {
-    messages?: JSON;
-    message: string;
-    params: JSON;
-    callback: (request: any) => Promise<?{ message: string, params?: Object }>;
-}
+export type $CipherKeyValue = $Common & ( $CipherKeyValueBatch | { bundle: Array<$CipherKeyValueBatch> } );
 
 type ComposeTransactionOutput = {
     type: 'complete',
@@ -70,10 +63,19 @@ export type $ComposeTransaction = $Common & {
     coin: string;
 }
 
-export type $EthereumGetAddress = $Common & {
+export type $CustomMessage = $Common & {
+    messages?: JSON;
+    message: string;
+    params: JSON;
+    callback: (request: any) => Promise<?{ message: string, params?: Object }>;
+}
+
+type $EthereumGetAddressBatch = {
     path: $Path;
     showOnTrezor?: boolean;
 }
+
+export type $EthereumGetAddress = $Common & ($EthereumGetAddressBatch | { bundle: Array<$EthereumGetAddressBatch>; } );
 
 export type $EthereumSignMessage = $Common & {
     path: $Path;
@@ -97,12 +99,14 @@ export type $GetAccountInfo = $Common & {
     coin: string;
 }
 
-export type $GetAddress = $Common & {
+type $GetAddressBatch = {
     path: $Path;
     coin?: string;
     showOnTrezor?: boolean;
     crossChain?: boolean;
 }
+
+export type $GetAddress = $Common & ($GetAddressBatch | { bundle: Array<$GetAddressBatch>; } );
 
 export type $GetDeviceState = $Common;
 
@@ -116,23 +120,24 @@ type $GetPublicKeyBatch = {
 
 export type $GetPublicKey = $Common & ( $GetPublicKeyBatch | { bundle: Array<$GetPublicKeyBatch>; } );
 
-export type $RequestLogin = $Common & {
-   challengeHidden?: string;
-   challengeVisible?: string;
-   asyncChallenge?: boolean;
-   callback?: () => Promise<?{ hidden: string, visual: string}>;
-}
-
-export type $NEMGetAddress = $Common & {
+type $NEMGetAddressBatch = {
     path: $Path;
     network: number;
     showOnTrezor?: boolean;
 }
+export type $NEMGetAddress = $Common & ( $NEMGetAddressBatch | { bundle: Array<$NEMGetAddressBatch>; } );
 
 export type $NEMSignTransaction = $Common & {
     path: $Path;
     transaction: NEMTransaction;
 }
+
+export type $RequestLogin = $Common & $Exact<{
+    challengeHidden: string;
+    challengeVisible: string;
+}> | $Common & $Exact<{
+    callback: () => Promise<?{ hidden: string, visual: string}>;
+}>
 
 export type $SignMessage = $Common & {
     path: $Path;
