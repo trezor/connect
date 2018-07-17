@@ -180,13 +180,14 @@ export default class DeviceCommands {
         signature: string,
         message: string,
         coin: string
-    ): Promise<DefaultMessageResponse> {
-        return await this.typedCall('VerifyMessage', 'Success', {
+    ): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('VerifyMessage', 'Success', {
             address,
             signature,
             message,
-            coin_name: coin || 'Bitcoin'
+            coin_name: coin
         });
+        return response.message;
     }
 
     async ethereumGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.EthereumAddress> {

@@ -2,12 +2,12 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
-import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../data/CoinInfo';
+import { getCoinInfoByCurrency } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
 
-import type { MessageResponse } from '../../device/DeviceCommands';
-import type { MessageSignature } from '../../types/trezor';
+import type { Success } from '../../types/trezor';
 import type { CoinInfo } from 'flowtype';
 import type { CoreMessage } from '../../types';
 
@@ -28,13 +28,15 @@ export default class VerifyMessage extends AbstractMethod {
         this.requiredPermissions = ['read'];
         this.info = 'Verify message';
 
-        const payload: any = message.payload;
+        const payload: Object = message.payload;
 
-        if (!payload.hasOwnProperty('coin')) {
-            throw new Error('Parameter "coin" is missing.');
-        } else if (typeof payload.coin !== 'string') {
-            throw new Error('Parameter "coin" has invalid type. String expected.');
-        }
+        // validate incoming parameters for each batch
+        validateParams(payload, [
+            { name: 'address', type: 'string', obligatory: true },
+            { name: 'signature', type: 'string', obligatory: true },
+            { name: 'message', type: 'string', obligatory: true },
+            { name: 'coin', type: 'string', obligatory: true },
+        ]);
 
         const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
         if (!coinInfo) {
@@ -43,25 +45,7 @@ export default class VerifyMessage extends AbstractMethod {
             // check required firmware with coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
-
-        if (!payload.hasOwnProperty('address')) {
-            throw new Error('Parameter "address" is missing');
-        } else if (typeof payload.address !== 'string') {
-            throw new Error('Parameter "address" has invalid type. String expected.');
-        }
-
-        if (!payload.hasOwnProperty('signature')){
-            throw new Error('Parameter "signature" is missing');
-        } else if (typeof payload.signature !== 'string') {
-            throw new Error('Parameter "signature" has invalid type. String expected.');
-        }
-
-        if (!payload.hasOwnProperty('message')){
-            throw new Error('Parameter "message" is missing');
-        } else if (typeof payload.message !== 'string') {
-            throw new Error('Parameter "message" has invalid type. String expected.');
-        }
-
+        // TODO: check if message is already a hex
         const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
 
         this.params = {
@@ -72,15 +56,12 @@ export default class VerifyMessage extends AbstractMethod {
         }
     }
 
-    async run(): Promise<Object> {
-        const response: MessageResponse<MessageSignature> = await this.device.getCommands().verifyMessage(
+    async run(): Promise<Success> {
+        return await this.device.getCommands().verifyMessage(
             this.params.address,
             this.params.signature,
             this.params.message,
             this.params.coinInfo.name
         );
-        return {
-            ...response.message
-        }
     }
 }
