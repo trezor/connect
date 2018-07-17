@@ -102,11 +102,7 @@ export const getCoinInfoByCurrency = (currency: string): ?CoinInfo => {
 };
 
 export const getCoinInfoFromPath = (path: Array<number>): ?CoinInfo => {
-    const coinInfo: ?CoinInfo = getCoins().find((coin: CoinInfo) => toHardened(coin.slip44) === path[1]);
-    if (coinInfo && fromHardened(path[0]) === 44) {
-        coinInfo.network.bip32.public = parseInt(coinInfo.xPubMagic, 16);
-    }
-    return coinInfo;
+    return getCoins().find((coin: CoinInfo) => toHardened(coin.slip44) === path[1]);
 };
 
 export const getCoinName = (path: Array<number>): string => {
@@ -145,6 +141,7 @@ export const parseCoinsJson = (json: JSON): void => {
             // address_type in Network
             // address_type_p2sh in Network
             // bech32_prefix in Network
+            // bip115: not used
             bitcore: coin.bitcore,
             blockbook: coin.blockbook,
             blocktime: Math.round(coin.blocktime_seconds / 60),
@@ -183,6 +180,9 @@ export const parseCoinsJson = (json: JSON): void => {
             hasSegwit: coin.segwit,
             maxFee: Math.round(coin.maxfee_kb / 1000),
             minFee: Math.round(coin.minfee_kb / 1000),
+
+            // used in backend ?
+            blocks: Math.round(coin.blocktime_seconds / 60),
         });
     });
 };
