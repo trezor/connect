@@ -16,8 +16,9 @@ import type { Success, HDNodeResponse } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    path: Array<number>;
+    bundle: Array< Array<number> >;
     coinInfo: ?CoinInfo;
+    bundledResponse: boolean;
 }
 
 export default class GetPublicKey extends AbstractMethod {
@@ -34,21 +35,37 @@ export default class GetPublicKey extends AbstractMethod {
         this.info = 'Export public key';
 
         const payload: Object = message.payload;
+        let bundledResponse: boolean = true;
+        // create a bundle with only one batch
+        if (!payload.hasOwnProperty('bundle')) {
+            payload.bundle = [ payload.path ];
+            bundledResponse = false;
+        }
 
-        // validate incoming parameters
-        validateParams(message.payload, [
-            { name: 'path', obligatory: true },
+        // validate types
+        validateParams(payload, [
+            { name: 'bundle', type: 'array' },
             { name: 'coin', type: 'string' },
+            { name: 'crossChain', type: 'boolean' },
         ]);
 
-        const path: Array<number> = validatePath(payload.path);
         let coinInfo: ?CoinInfo;
-
         if (payload.coin) {
             coinInfo = getCoinInfoByCurrency(payload.coin);
-            validateCoinPath(coinInfo, path);
-        } else {
-            coinInfo = getCoinInfoFromPath(path);
+        }
+
+        const bundle = [];
+        payload.bundle.forEach(batch => {
+            // validate incoming parameters for each batch
+            const path: Array<number> = validatePath(batch);
+            if (coinInfo && !payload.crossChain) {
+                validateCoinPath(coinInfo, path);
+            }
+            bundle.push(path);
+        });
+
+        if (!coinInfo) {
+            // coinInfo = getCoinInfoFromPath(path);
         }
 
         // set required firmware from coinInfo support
@@ -57,8 +74,9 @@ export default class GetPublicKey extends AbstractMethod {
         }
 
         this.params = {
-            path,
+            bundle,
             coinInfo,
+            bundledResponse,
         }
     }
 
@@ -69,7 +87,8 @@ export default class GetPublicKey extends AbstractMethod {
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
-        const label = getPublicKeyLabel(this.params.path, this.params.coinInfo);
+        // const label = getPublicKeyLabel(this.params.path, this.params.coinInfo);
+        const label = getPublicKeyLabel(this.params.bundle[0], this.params.coinInfo);
 
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
@@ -85,13 +104,15 @@ export default class GetPublicKey extends AbstractMethod {
         return this.confirmed;
     }
 
-    async run(): Promise<HDNodeResponse> {
-
-        const response: HDNodeResponse = await this.device.getCommands().getHDNode(
-            this.params.path,
-            this.params.coinInfo
-        );
-
-        return response;
+    async run(): Promise<HDNodeResponse | Array<HDNodeResponse>> {
+        const responses: Array<HDNodeResponse> = [];
+        for (let i = 0; i < this.params.bundle.length; i++) {
+            const response: HDNodeResponse = await this.device.getCommands().getHDNode(
+                this.params.bundle[i],
+                this.params.coinInfo
+            );
+            responses.push(response);
+        }
+        return this.params.bundledResponse ? responses : responses[0];
     }
 }

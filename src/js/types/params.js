@@ -101,6 +101,7 @@ export type $GetAddress = $Common & {
     path: $Path;
     coin?: string;
     showOnTrezor?: boolean;
+    crossChain?: boolean;
 }
 
 export type $GetDeviceState = $Common;
@@ -108,9 +109,9 @@ export type $GetDeviceState = $Common;
 export type $GetFeatures = $Common;
 
 export type $GetPublicKey = $Common & {
-    path: $Path;
     coin?: string;
-}
+    crossChain?: boolean;
+} & ( { path: $Path; } | { bundle: Array<$Path>; })
 
 export type $RequestLogin = $Common & {
    challengeHidden?: string;
