@@ -8,7 +8,6 @@ import { validatePath, fromHardened } from '../../utils/pathUtils';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { MessageResponse } from '../../device/DeviceCommands';
 import type { NEMAddress } from '../../types/trezor';
 import type { UiPromiseResponse } from 'flowtype';
 import type { CoreMessage } from '../../types';
@@ -54,7 +53,6 @@ export default class NEMGetAddress extends AbstractMethod {
         ]);
 
         const bundle = [];
-        let shouldUseUi: boolean = false;
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
@@ -67,9 +65,6 @@ export default class NEMGetAddress extends AbstractMethod {
             let showOnTrezor: boolean = true;
             if (batch.hasOwnProperty('showOnTrezor')){
                 showOnTrezor = batch.showOnTrezor;
-            }
-            if (showOnTrezor) {
-                shouldUseUi = true;
             }
 
             bundle.push({
