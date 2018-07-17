@@ -4,7 +4,7 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath } from './helpers/paramsValidator';
 import { validatePath, getPathFromIndex } from '../../utils/pathUtils';
-import type { MessageResponse } from '../../device/DeviceCommands';
+import semvercmp from 'semver-compare';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
@@ -73,16 +73,18 @@ export default class GetPublicKey extends AbstractMethod {
                 path,
                 coinInfo,
             });
+
+            // set required firmware from coinInfo support
+            if (coinInfo) {
+                if (semvercmp(coinInfo.support.trezor1, this.requiredFirmware[0]) > 0) {
+                    this.requiredFirmware[0] = coinInfo.support.trezor1;
+                }
+
+                if (semvercmp(coinInfo.support.trezor2, this.requiredFirmware[1]) > 0) {
+                    this.requiredFirmware[1] = coinInfo.support.trezor2;
+                }
+            }
         });
-
-        // if (!coinInfo) {
-        //     // coinInfo = getCoinInfoFromPath(path);
-        // }
-
-        // set required firmware from coinInfo support
-        // if (coinInfo) {
-        //     this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
-        // }
 
         this.params = {
             bundle,
@@ -100,7 +102,7 @@ export default class GetPublicKey extends AbstractMethod {
         // const label = getPublicKeyLabel(this.params.path, this.params.coinInfo);
         let label: string;
         if (this.params.bundle.length > 1) {
-            label = 'Export multiple keys';
+            label = 'Export multiple public keys';
         } else {
             label = getPublicKeyLabel(this.params.bundle[0].path, this.params.bundle[0].coinInfo);
         }
@@ -122,12 +124,19 @@ export default class GetPublicKey extends AbstractMethod {
     async run(): Promise<HDNodeResponse | Array<HDNodeResponse>> {
         const responses: Array<HDNodeResponse> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
-            console.warn("CI",this.params.bundle[i].coinInfo )
             const response: HDNodeResponse = await this.device.getCommands().getHDNode(
                 this.params.bundle[i].path,
                 this.params.bundle[i].coinInfo
             );
             responses.push(response);
+
+            if (this.params.bundledResponse) {
+                // send progress
+                this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+                    progress: i,
+                    response
+                }));
+            }
         }
         return this.params.bundledResponse ? responses : responses[0];
     }
