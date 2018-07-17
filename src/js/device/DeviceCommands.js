@@ -273,11 +273,11 @@ export default class DeviceCommands {
         ask_on_encrypt: boolean,
         ask_on_decrypt: boolean,
         iv: ?(string | Buffer) // in hexadecimal
-    ): Promise<MessageResponse<{value: string}>> {
+    ): Promise<trezor.CipheredKeyValue> {
         const valueString: string = value instanceof Buffer ? value.toString('hex') : value;
         const ivString: ?string = iv instanceof Buffer ? iv.toString('hex') : iv;
 
-        return await this.typedCall('CipherKeyValue', 'CipheredKeyValue', {
+        const response: MessageResponse<trezor.CipheredKeyValue> = await this.typedCall('CipherKeyValue', 'CipheredKeyValue', {
             address_n: address_n,
             key: key,
             value: valueString,
@@ -286,6 +286,7 @@ export default class DeviceCommands {
             ask_on_decrypt: ask_on_decrypt,
             iv: ivString,
         });
+        return response.message;
     }
 
     async signIdentity(

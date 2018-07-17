@@ -29,7 +29,7 @@ declare type $Common = {
 
 declare type $Path = string | Array<number>;
 
-export type $CipherKeyValue = $Common & {
+type $CipherKeyValueBatch = {
     path: $Path;
     key?: string;
     value?: string;
@@ -38,6 +38,8 @@ export type $CipherKeyValue = $Common & {
     askOnDecrypt?: boolean;
     iv?: string;
 }
+
+export type $CipherKeyValue = $Common & $CipherKeyValueBatch | $Common & { bundle: Array<$CipherKeyValueBatch> }
 
 export type $CustomMessage = $Common & {
     messages?: JSON;

@@ -2,6 +2,10 @@
 
 // This file has all various types that go into TREZOR or out of it.
 
+export type CipheredKeyValue = {
+    value: string;
+}
+
 export type Success = {};
 
 export type CoinType = {

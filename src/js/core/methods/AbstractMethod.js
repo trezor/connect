@@ -21,7 +21,6 @@ export interface MethodInterface {
 
 export default class AbstractMethod implements MethodInterface {
 
-    //+root: AbstractMethod;
     responseID: number;
     device: Device;
     devicePath: ?string;
@@ -67,7 +66,7 @@ export default class AbstractMethod implements MethodInterface {
         this.useUi = true;
     }
 
-    async run(): Promise<Object> {
+    async run(): Promise<Object | Array<Object>> {
         // to override
         return new Promise(r => r({}));
     }
