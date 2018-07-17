@@ -32,7 +32,6 @@ export default class GetPublicKey extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['1.0.0', '2.0.0'];
         this.info = 'Export public key';
 
         const payload: Object = message.payload;
