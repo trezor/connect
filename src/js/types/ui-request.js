@@ -130,6 +130,14 @@ export type UpdateCustomFee = {
     }
 }
 
+export type BundleProgress = {
+    +type: typeof UI.BUNDLE_PROGRESS,
+    payload: {
+        progress: number;
+        response: Object;
+    }
+}
+
 
 export type UiRequest =
     MessageWithoutPayload
@@ -144,6 +152,7 @@ export type UiRequest =
     | SelectAccount
     | SelectFee
     | UpdateCustomFee
+    | BundleProgress
 
 declare function MessageFactory(type: $PropertyType<MessageWithoutPayload, 'type'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<DeviceMessage, 'type'>, payload: $PropertyType<DeviceMessage, 'payload'>): CoreMessage;
@@ -157,5 +166,6 @@ declare function MessageFactory(type: $PropertyType<UnexpectedDeviceMode, 'type'
 declare function MessageFactory(type: $PropertyType<SelectAccount, 'type'>, payload: $PropertyType<SelectAccount, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<SelectFee, 'type'>, payload: $PropertyType<SelectFee, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<UpdateCustomFee, 'type'>, payload: $PropertyType<UpdateCustomFee, 'payload'>): CoreMessage;
+declare function MessageFactory(type: $PropertyType<BundleProgress, 'type'>, payload: $PropertyType<BundleProgress, 'payload'>): CoreMessage;
 
 export type UiMessageFactory = UiResponseFactory & typeof MessageFactory;

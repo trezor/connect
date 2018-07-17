@@ -49,3 +49,5 @@ export const CUSTOM_MESSAGE_RESPONSE: 'ui-custom_response' = 'ui-custom_response
 
 export const LOGIN_CHALLENGE_REQUEST: 'ui-login_challenge_request' = 'ui-login_challenge_request';
 export const LOGIN_CHALLENGE_RESPONSE: 'ui-login_challenge_response' = 'ui-login_challenge_response';
+
+export const BUNDLE_PROGRESS: 'ui-bundle_progress' = 'ui-bundle_progress';
