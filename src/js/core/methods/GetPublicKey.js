@@ -51,7 +51,7 @@ export default class GetPublicKey extends AbstractMethod {
         const bundle = [];
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
-            validateParams(payload, [
+            validateParams(batch, [
                 { name: 'path', obligatory: true },
                 { name: 'coin', type: 'string' },
                 { name: 'crossChain', type: 'boolean' },
