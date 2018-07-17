@@ -23,7 +23,6 @@ import NEMSignTransaction from './NEMSignTransaction';
 import SignMessage from './SignMessage';
 import SignTransaction from './SignTransaction';
 import StellarGetAddress from './StellarGetAddress';
-import StellarGetPublicKey from './StellarGetPublicKey';
 import StellarSignTransaction from './StellarSignTransaction';
 import VerifyMessage from './VerifyMessage';
 
@@ -46,7 +45,6 @@ const classes: {[k: string]: any} = {
     'signMessage': SignMessage,
     'signTransaction': SignTransaction,
     'stellarGetAddress': StellarGetAddress,
-    'stellarGetPublicKey': StellarGetPublicKey,
     'stellarSignTransaction': StellarSignTransaction,
     'verifyMessage': VerifyMessage,
 }
