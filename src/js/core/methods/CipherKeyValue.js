@@ -98,6 +98,14 @@ export default class CipherKeyValue extends AbstractMethod {
                 batch.iv
             );
             responses.push(response);
+
+            if (this.params.bundledResponse) {
+                // send progress
+                this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+                    progress: i,
+                    response
+                }));
+            }
         }
         return this.params.bundledResponse ? responses : responses[0];
     }
