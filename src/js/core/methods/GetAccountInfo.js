@@ -2,6 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams, validateCoinPath } from './helpers/paramsValidator';
 import Discovery from './helpers/Discovery';
 import * as UI from '../../constants/ui';
 import { NO_COIN_INFO } from '../../constants/errors';
@@ -15,7 +16,7 @@ import { create as createDeferred } from '../../utils/deferred';
 
 import Account, { create as createAccount } from '../../account';
 import BlockBook, { create as createBackend } from '../../backend';
-import { getCoinInfoByCurrency, fixCoinInfoNetwork } from '../../data/CoinInfo';
+import { getCoinInfoByCurrency, fixCoinInfoNetwork, getCoinInfoFromPath } from '../../data/CoinInfo';
 import { UiMessage } from '../../message/builder';
 import type { CoinInfo, UiPromiseResponse } from 'flowtype';
 import type { AccountInfo, HDNodeResponse } from '../../types/trezor';
@@ -45,15 +46,29 @@ export default class GetAccountInfo extends AbstractMethod {
 
         const payload: Object = message.payload;
 
+        // validate incoming parameters
+        validateParams(payload, [
+            { name: 'coin', type: 'string' },
+            { name: 'xpub', type: 'string' },
+            { name: 'crossChain', type: 'boolean' },
+        ]);
+
+        let path: Array<number>;
         let coinInfo: ?CoinInfo;
-        if (payload.hasOwnProperty('coin')) {
-            if (typeof payload.coin === 'string') {
-                coinInfo = getCoinInfoByCurrency(payload.coin);
-            } else {
-                throw new Error('Parameter "coin" has invalid type. String expected.');
+        if (payload.coin) {
+            coinInfo = getCoinInfoByCurrency(payload.coin);
+        }
+
+        if (payload.path) {
+            path = validatePath(payload.path, 3, true);
+            if (!coinInfo) {
+                coinInfo = getCoinInfoFromPath(path);
+            } else if (!payload.crossChain) {
+                validateCoinPath(coinInfo, path);
             }
         }
 
+        // if there is no coinInfo at this point return error
         if (!coinInfo) {
             throw NO_COIN_INFO;
         } else {
@@ -61,18 +76,12 @@ export default class GetAccountInfo extends AbstractMethod {
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
 
-        if (payload.hasOwnProperty('path')) {
-            payload.path = validatePath(payload.path, 3, true);
-        } else if (payload.hasOwnProperty('xpub') && typeof payload.xpub !== 'string') {
-            throw new Error('Parameter "xpub" has invalid type. String expected.');
-        }
-
         // delete payload.path;
         // payload.xpub = 'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6'
         // payload.xpub = 'xpub6BiVtCpG9fQQNBuKZoKzhzmENDKdCeXQsNVPF2Ynt8rhyYznmPURQNDmnNnX9SYahZ1DVTaNtsh3pJ4b2jKvsZhpv2oVj76YETCGztKJ3LM'
 
         this.params = {
-            path: payload.path,
+            path: path,
             xpub: payload.xpub,
             coinInfo,
         }
