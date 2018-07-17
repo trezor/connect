@@ -2,9 +2,8 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinPath } from './helpers/paramsValidator';
+import { validateParams, validateCoinPath, getRequiredFirmware } from './helpers/paramsValidator';
 import { validatePath, getPathFromIndex } from '../../utils/pathUtils';
-import semvercmp from 'semver-compare';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
@@ -14,7 +13,6 @@ import { getPublicKeyLabel, isSegwitPath } from '../../utils/pathUtils';
 import type { CoinInfo, UiPromiseResponse } from 'flowtype';
 import type { Success, HDNodeResponse } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
-
 
 type Batch = {
     path: Array<number>;
@@ -35,7 +33,6 @@ export default class GetPublicKey extends AbstractMethod {
 
         this.requiredPermissions = ['read'];
         this.requiredFirmware = ['1.0.0', '2.0.0'];
-        // If permission is granted and export confirmed, set to false
         this.info = 'Export public key';
 
         const payload: Object = message.payload;
@@ -51,14 +48,15 @@ export default class GetPublicKey extends AbstractMethod {
             { name: 'bundle', type: 'array' },
         ]);
 
-        // let coinInfo: ?CoinInfo;
-        // if (payload.coin) {
-        //     coinInfo = getCoinInfoByCurrency(payload.coin);
-        // }
-
         const bundle = [];
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
+            validateParams(payload, [
+                { name: 'path', obligatory: true },
+                { name: 'coin', type: 'string' },
+                { name: 'crossChain', type: 'boolean' },
+            ]);
+
             const path: Array<number> = validatePath(batch.path);
             let coinInfo: ?CoinInfo;
             if (batch.coin) {
@@ -76,13 +74,7 @@ export default class GetPublicKey extends AbstractMethod {
 
             // set required firmware from coinInfo support
             if (coinInfo) {
-                if (semvercmp(coinInfo.support.trezor1, this.requiredFirmware[0]) > 0) {
-                    this.requiredFirmware[0] = coinInfo.support.trezor1;
-                }
-
-                if (semvercmp(coinInfo.support.trezor2, this.requiredFirmware[1]) > 0) {
-                    this.requiredFirmware[1] = coinInfo.support.trezor2;
-                }
+                this.requiredFirmware = getRequiredFirmware(coinInfo, this.requiredFirmware);
             }
         });
 

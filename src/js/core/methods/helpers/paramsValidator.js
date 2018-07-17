@@ -4,6 +4,7 @@
 import { invalidParameter } from '../../../constants/errors';
 import { fromHardened } from '../../../utils/pathUtils';
 import { ethereumNetworks } from '../../../data/CoinInfo';
+import semvercmp from 'semver-compare';
 import type { CoinInfo } from 'flowtype';
 
 type Param = {
@@ -53,4 +54,16 @@ export const validateEthereumPath = (path: Array<number>): void => {
     if (!founded) {
         throw invalidParameter('Unknown slip44 in ethereum "path".');
     }
+}
+
+export const getRequiredFirmware = (coinInfo: CoinInfo, current: Array<string>): Array<string> => {
+    if (semvercmp(coinInfo.support.trezor1, current[0]) > 0) {
+        current[0] = coinInfo.support.trezor1;
+    }
+
+    if (semvercmp(coinInfo.support.trezor2, current[1]) > 0) {
+        current[1] = coinInfo.support.trezor2;
+    }
+
+    return current;
 }
