@@ -28,8 +28,9 @@ export default class SignMessage extends AbstractMethod {
 
         const payload: Object = message.payload;
 
-        // validate incoming parameters for each batch
+        // validate incoming parameters
         validateParams(payload, [
+            { name: 'path', obligatory: true },
             { name: 'coin', type: 'string' },
             { name: 'message', type: 'string', obligatory: true },
         ]);
