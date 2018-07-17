@@ -15,9 +15,13 @@ import type { CoinInfo, UiPromiseResponse } from 'flowtype';
 import type { Success, HDNodeResponse } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
-type Params = {
-    bundle: Array< Array<number> >;
+
+type Batch = {
+    path: Array<number>;
     coinInfo: ?CoinInfo;
+}
+type Params = {
+    bundle: Array<Batch>;
     bundledResponse: boolean;
 }
 
@@ -38,44 +42,50 @@ export default class GetPublicKey extends AbstractMethod {
         let bundledResponse: boolean = true;
         // create a bundle with only one batch
         if (!payload.hasOwnProperty('bundle')) {
-            payload.bundle = [ payload.path ];
+            payload.bundle = [ ...payload ];
             bundledResponse = false;
         }
 
-        // validate types
+        // validate bundle type
         validateParams(payload, [
             { name: 'bundle', type: 'array' },
-            { name: 'coin', type: 'string' },
-            { name: 'crossChain', type: 'boolean' },
         ]);
 
-        let coinInfo: ?CoinInfo;
-        if (payload.coin) {
-            coinInfo = getCoinInfoByCurrency(payload.coin);
-        }
+        // let coinInfo: ?CoinInfo;
+        // if (payload.coin) {
+        //     coinInfo = getCoinInfoByCurrency(payload.coin);
+        // }
 
         const bundle = [];
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
-            const path: Array<number> = validatePath(batch);
-            if (coinInfo && !payload.crossChain) {
-                validateCoinPath(coinInfo, path);
+            const path: Array<number> = validatePath(batch.path);
+            let coinInfo: ?CoinInfo;
+            if (batch.coin) {
+                coinInfo = getCoinInfoByCurrency(batch.coin);
             }
-            bundle.push(path);
+            if (coinInfo && !batch.crossChain) {
+                validateCoinPath(coinInfo, path);
+            } else if (!coinInfo) {
+                coinInfo = getCoinInfoFromPath(path);
+            }
+            bundle.push({
+                path,
+                coinInfo,
+            });
         });
 
-        if (!coinInfo) {
-            // coinInfo = getCoinInfoFromPath(path);
-        }
+        // if (!coinInfo) {
+        //     // coinInfo = getCoinInfoFromPath(path);
+        // }
 
         // set required firmware from coinInfo support
-        if (coinInfo) {
-            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
-        }
+        // if (coinInfo) {
+        //     this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+        // }
 
         this.params = {
             bundle,
-            coinInfo,
             bundledResponse,
         }
     }
@@ -88,7 +98,12 @@ export default class GetPublicKey extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // const label = getPublicKeyLabel(this.params.path, this.params.coinInfo);
-        const label = getPublicKeyLabel(this.params.bundle[0], this.params.coinInfo);
+        let label: string;
+        if (this.params.bundle.length > 1) {
+            label = 'Export multiple keys';
+        } else {
+            label = getPublicKeyLabel(this.params.bundle[0].path, this.params.bundle[0].coinInfo);
+        }
 
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
@@ -107,9 +122,10 @@ export default class GetPublicKey extends AbstractMethod {
     async run(): Promise<HDNodeResponse | Array<HDNodeResponse>> {
         const responses: Array<HDNodeResponse> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
+            console.warn("CI",this.params.bundle[i].coinInfo )
             const response: HDNodeResponse = await this.device.getCommands().getHDNode(
-                this.params.bundle[i],
-                this.params.coinInfo
+                this.params.bundle[i].path,
+                this.params.bundle[i].coinInfo
             );
             responses.push(response);
         }

@@ -108,10 +108,13 @@ export type $GetDeviceState = $Common;
 
 export type $GetFeatures = $Common;
 
-export type $GetPublicKey = $Common & {
+type $GetPublicKeyBatch = {
+    path: $Path;
     coin?: string;
     crossChain?: boolean;
-} & ( { path: $Path; } | { bundle: Array<$Path>; })
+}
+
+export type $GetPublicKey = $Common & ( $GetPublicKeyBatch | { bundle: Array<$GetPublicKeyBatch>; } );
 
 export type $RequestLogin = $Common & {
    challengeHidden?: string;
