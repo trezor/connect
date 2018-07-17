@@ -243,10 +243,10 @@ class TrezorConnect {
     }
 
     static requestLogin = async (params: $T.$RequestLogin): Promise<$T.RequestLogin$> => {
+        // $FlowIssue: property callback not found
         if (typeof params.callback === 'function') {
             const callback = params.callback;
-            delete params.callback;
-            //params.asyncChallenge = true; // replace value for callback (this field cannot be function)
+            delete params.callback; // delete callback value. this field cannot be sent using postMessage function
 
             // TODO: set message listener only if iframe is loaded correctly
             const loginChallengeListener = async (event: $T.PostMessageEvent) => {
@@ -263,7 +263,7 @@ class TrezorConnect {
 
             window.addEventListener('message', loginChallengeListener, false);
 
-            const response = await call({ method: 'requestLogin', ...params });
+            const response = await call({ method: 'requestLogin', ...params, asyncChallenge: true });
             window.removeEventListener('message', loginChallengeListener);
             return response;
         } else {
