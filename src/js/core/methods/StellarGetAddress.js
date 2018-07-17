@@ -57,7 +57,7 @@ export default class StellarGetAddress extends AbstractMethod {
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
-            const path: Array<number> = validatePath(batch.path);
+            const path: Array<number> = validatePath(batch.path, 3);
             let showOnTrezor: boolean = true;
             if (batch.hasOwnProperty('showOnTrezor')){
                 showOnTrezor = batch.showOnTrezor;

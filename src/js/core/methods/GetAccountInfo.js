@@ -62,7 +62,7 @@ export default class GetAccountInfo extends AbstractMethod {
         }
 
         if (payload.hasOwnProperty('path')) {
-            payload.path = validatePath(payload.path, true);
+            payload.path = validatePath(payload.path, 3, true);
         } else if (payload.hasOwnProperty('xpub') && typeof payload.xpub !== 'string') {
             throw new Error('Parameter "xpub" has invalid type. String expected.');
         }

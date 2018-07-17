@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateEthereumPath } from './helpers/paramsValidator';
+import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/ethereumSignTx';
 import type { CoreMessage } from '../../types';
@@ -33,8 +33,7 @@ export default class EthereumSignTx extends AbstractMethod {
             { name: 'transaction', obligatory: true },
         ]);
 
-        const path: Array<number> = validatePath(payload.path);
-        validateEthereumPath(path);
+        const path: Array<number> = validatePath(payload.path, 3);
 
         // incoming transaction should be in EthereumTx format
         // https://github.com/ethereumjs/ethereumjs-tx

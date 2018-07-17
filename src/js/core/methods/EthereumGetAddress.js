@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateEthereumPath } from './helpers/paramsValidator';
+import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
@@ -54,8 +54,8 @@ export default class EthereumGetAddress extends AbstractMethod {
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
-            const path: Array<number> = validatePath(batch.path);
-            validateEthereumPath(path);
+            const path: Array<number> = validatePath(batch.path, 3);
+            // validateEthereumPath(path);
 
             let showOnTrezor: boolean = true;
             if (batch.hasOwnProperty('showOnTrezor')){

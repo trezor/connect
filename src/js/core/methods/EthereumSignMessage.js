@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateEthereumPath } from './helpers/paramsValidator';
+import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import type { MessageSignature } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
@@ -31,8 +31,7 @@ export default class EthereumSignMessage extends AbstractMethod {
             { name: 'message', type: 'string', obligatory: true },
         ]);
 
-        const path: Array<number> = validatePath(payload.path);
-        validateEthereumPath(path);
+        const path: Array<number> = validatePath(payload.path, 3);
         // TODO: check if message is already in hex format
         const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
         this.params = {

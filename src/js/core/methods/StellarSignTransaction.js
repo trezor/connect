@@ -29,7 +29,7 @@ export default class StellarSignTransaction extends AbstractMethod {
         if (!payload.hasOwnProperty('path')) {
             throw new Error('Parameter "path" is missing');
         } else {
-            payload.path = validatePath(payload.path);
+            payload.path = validatePath(payload.path, 3);
         }
 
         if (!payload.hasOwnProperty('transaction')) {

@@ -39,7 +39,7 @@ export const isSegwitPath = (path: Array<number> | any): boolean => {
     return Array.isArray(path) && path[0] === toHardened(49);
 }
 
-export const validatePath = (path: string | Array<number>, base: boolean = false): Array<number> => {
+export const validatePath = (path: string | Array<number>, length: number = 0, base: boolean = false): Array<number> => {
     let valid: ?Array<number>;
     if (typeof path === 'string') {
         valid = getHDPath(path);
@@ -55,6 +55,7 @@ export const validatePath = (path: string | Array<number>, base: boolean = false
         });
     }
     if (!valid) throw PATH_NOT_VALID;
+    if (length > 0 && valid.length < length) throw PATH_NOT_VALID;
     return base ? valid.splice(0, 3) : valid;
 };
 

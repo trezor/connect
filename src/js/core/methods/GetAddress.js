@@ -57,7 +57,7 @@ export default class GetAddress extends AbstractMethod {
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
-            const path: Array<number> = validatePath(batch.path);
+            const path: Array<number> = validatePath(batch.path, 3);
             let coinInfo: ?CoinInfo;
             if (batch.coin) {
                 coinInfo = getCoinInfoByCurrency(batch.coin);
