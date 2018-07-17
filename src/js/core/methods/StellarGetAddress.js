@@ -2,6 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams } from './helpers/paramsValidator';
 import { validatePath, fromHardened } from '../../utils/pathUtils';
 import type { MessageResponse } from '../../device/DeviceCommands';
 
@@ -12,9 +13,15 @@ import type { UiPromiseResponse } from 'flowtype';
 import type { StellarAddress } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
-type Params = {
+
+type Batch = {
     path: Array<number>;
     showOnTrezor: boolean;
+}
+
+type Params = {
+    bundle: Array<Batch>;
+    bundledResponse: boolean;
 }
 
 export default class StellarGetAddress extends AbstractMethod {
@@ -26,29 +33,45 @@ export default class StellarGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.info = 'Export Stellar public key';
+        this.requiredFirmware = ['1.6.2', '2.0.7'];
+        this.info = 'Export Stellar address';
 
-        const payload: any = message.payload;
-
-        let path: Array<number>;
-        if (payload.hasOwnProperty('path')) {
-            path = validatePath(payload.path);
-        } else {
-            throw new Error('Parameters "path" are missing');
+        const payload: Object = message.payload;
+        let bundledResponse: boolean = true;
+        // create a bundle with only one batch
+        if (!payload.hasOwnProperty('bundle')) {
+            payload.bundle = [ ...payload ];
+            bundledResponse = false;
         }
 
-        let showOnTrezor: boolean = true;
-        if (payload.hasOwnProperty('showOnTrezor')){
-            if (typeof payload.showOnTrezor !== 'boolean') {
-                throw new Error('Parameter "showOnTrezor" has invalid type. Boolean expected.');
-            } else {
-                showOnTrezor = payload.showOnTrezor;
+        // validate bundle type
+        validateParams(payload, [
+            { name: 'bundle', type: 'array' },
+        ]);
+
+        const bundle = [];
+        payload.bundle.forEach(batch => {
+            // validate incoming parameters for each batch
+            validateParams(batch, [
+                { name: 'path', obligatory: true },
+                { name: 'showOnTrezor', type: 'boolean' },
+            ]);
+
+            const path: Array<number> = validatePath(batch.path);
+            let showOnTrezor: boolean = true;
+            if (batch.hasOwnProperty('showOnTrezor')){
+                showOnTrezor = batch.showOnTrezor;
             }
-        }
+
+            bundle.push({
+                path,
+                showOnTrezor
+            });
+        });
 
         this.params = {
-            path,
-            showOnTrezor
+            bundle,
+            bundledResponse
         }
     }
 
@@ -59,10 +82,17 @@ export default class StellarGetAddress extends AbstractMethod {
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
+        let label: string;
+        if (this.params.bundle.length > 1) {
+            label = 'Export multiple Stellar addresses';
+        } else {
+            label = `Export Stellar address for Account#${ (fromHardened(this.params.bundle[0].path[2]) + 1) }`
+        }
+
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-address',
-            label: `Export Stellar address for Account#${ (fromHardened(this.params.path[2]) + 1) }`
+            label
         }));
 
         // wait for user action
@@ -73,8 +103,24 @@ export default class StellarGetAddress extends AbstractMethod {
         return this.confirmed;
     }
 
-    async run(): Promise<StellarAddress> {
-        const response: MessageResponse<StellarAddress> = await this.device.getCommands().stellarGetAddress(this.params.path, this.params.showOnTrezor);
-        return response.message;
+    async run(): Promise<StellarAddress | Array<StellarAddress>> {
+        const responses: Array<StellarAddress> = [];
+        for (let i = 0; i < this.params.bundle.length; i++) {
+
+            const response: StellarAddress = await this.device.getCommands().stellarGetAddress(
+                this.params.bundle[i].path,
+                this.params.bundle[i].showOnTrezor
+            );
+            responses.push(response);
+
+            if (this.params.bundledResponse) {
+                // send progress
+                this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+                    progress: i,
+                    response
+                }));
+            }
+        }
+        return this.params.bundledResponse ? responses : responses[0];
     }
 }

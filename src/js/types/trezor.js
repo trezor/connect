@@ -396,12 +396,20 @@ export type NEMImportanceTransferMode = {
 }
 
 // Stellar types
-export type StellarAddress = {
-    address: string;
-    path: Array<number>;
-}
 
-export type StellarPublicKey = {
+// this type is returned from connect
+export type StellarAddress = {
+    path: Array<number>;
+    address: string;
+    publicKey: string;
+}
+// this type is returned from device
+export type StellarAddressMessage = {
+    path: Array<number>;
+    address: string;
+}
+// this type is returned from device
+export type StellarPublicKeyMessage = {
     public_key: string;
     path: Array<number>;
 }
