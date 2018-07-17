@@ -15,13 +15,16 @@ type Param = {
 export const validateParams = (values: Object, fields: Array<Param>): void => {
     fields.forEach(field => {
         if (values.hasOwnProperty(field.name)) {
+            const value = values[field.name];
             if (field.type) {
                 if (field.type === 'array') {
-                    if (!Array.isArray(values[field.name])) {
+                    if (!Array.isArray(value)) {
                         // invalid type
                         throw invalidParameter(`Parameter "${ field.name }" has invalid type. "${ field.type }" expected.`);
+                    } else if (value.length < 1) {
+                        throw invalidParameter(`Parameter "${ field.name }" is empty.`);
                     }
-                } else if (typeof values[field.name] !== field.type) {
+                } else if (typeof value !== field.type) {
                     // invalid type
                     throw invalidParameter(`Parameter "${ field.name }" has invalid type. "${ field.type }" expected.`);
                 }
