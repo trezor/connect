@@ -3,7 +3,6 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
-import { validatePath } from '../../utils/pathUtils';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
 

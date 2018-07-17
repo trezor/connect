@@ -2,7 +2,6 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validatePath, getPathFromIndex } from '../../utils/pathUtils';
 import type { MessageResponse } from '../../device/DeviceCommands';
 
 import * as UI from '../../constants/ui';

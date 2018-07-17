@@ -3,7 +3,6 @@
 
 import AbstractMethod from './AbstractMethod';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
-import { validatePath } from '../../utils/pathUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
 import BlockBook, { create as createBackend } from '../../backend';

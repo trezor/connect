@@ -6,7 +6,6 @@ import Discovery from './helpers/Discovery';
 import * as UI from '../../constants/ui';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
 import { validateParams } from './helpers/paramsValidator';
-import { validatePath } from '../../utils/pathUtils';
 import { resolveAfter } from '../../utils/promiseUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
@@ -44,7 +43,6 @@ type Params = {
 }
 
 export default class ComposeTransaction extends AbstractMethod {
-
     params: Params;
     backend: BlockBook;
     discovery: ?Discovery;
