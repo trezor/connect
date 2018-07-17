@@ -217,18 +217,15 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    async nemGetAddress(address_n: Array<number>, network: number, showOnTrezor: boolean): Promise<MessageResponse<trezor.NEMAddress>> {
+    async nemGetAddress(address_n: Array<number>, network: number, showOnTrezor: boolean): Promise<trezor.NEMAddress> {
         const response: Object = await this.typedCall('NEMGetAddress', 'NEMAddress', {
             address_n,
             network,
             show_display: !!showOnTrezor,
         });
         return {
-            type: response.type,
-            message: {
-                path: address_n || [],
-                address: response.message.address
-            }
+            path: address_n,
+            address: response.message.address
         };
     }
 
