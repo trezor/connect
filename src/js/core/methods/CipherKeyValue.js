@@ -12,7 +12,8 @@ import type { UiPromiseResponse } from 'flowtype';
 import type { CoreMessage } from '../../types';
 import type { CipheredKeyValue } from '../../types/trezor';
 
-type Params = {
+
+type Batch = {
     path: Array<number>;
     key: string;
     value: string;
@@ -21,12 +22,14 @@ type Params = {
     askOnDecrypt: boolean;
     iv: string;
 }
-
-type Response = {value: string};
+type Params = {
+    bundle: Array<Batch>;
+    bundledResponse: boolean;
+}
 
 export default class CipherKeyValue extends AbstractMethod {
 
-    params: Array<Params>;
+    params: Params;
     confirmed: boolean = false;
 
     constructor(message: CoreMessage) {
@@ -37,10 +40,11 @@ export default class CipherKeyValue extends AbstractMethod {
         this.info = 'Cypher key value';
 
         const payload: Object = message.payload;
-        // there is only one request
+        let bundledResponse: boolean = true;
         // create a bundle with only one batch
         if (!payload.hasOwnProperty('bundle')) {
             payload.bundle = [{ ...payload }];
+            bundledResponse = false;
         }
 
         // validate bundle type
@@ -48,7 +52,7 @@ export default class CipherKeyValue extends AbstractMethod {
             { name: 'bundle', type: 'array' }
         ]);
 
-        this.params = [];
+        const bundle = [];
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
@@ -63,7 +67,7 @@ export default class CipherKeyValue extends AbstractMethod {
 
             const path: Array<number> = validatePath(batch.path);
 
-            this.params.push({
+            bundle.push({
                 path,
                 key: batch.key,
                 value: batch.value,
@@ -73,22 +77,28 @@ export default class CipherKeyValue extends AbstractMethod {
                 iv: batch.iv
             });
         });
+
+        this.params = {
+            bundle,
+            bundledResponse
+        }
     }
 
     async run(): Promise<CipheredKeyValue | Array<CipheredKeyValue>> {
         const responses: Array<CipheredKeyValue> = [];
-        for (let i = 0; i < this.params.length; i++) {
+        for (let i = 0; i < this.params.bundle.length; i++) {
+            const batch = this.params.bundle[i];
             const response: CipheredKeyValue = await this.device.getCommands().cipherKeyValue(
-                this.params[i].path,
-                this.params[i].key,
-                this.params[i].value,
-                this.params[i].encrypt,
-                this.params[i].askOnEncrypt,
-                this.params[i].askOnDecrypt,
-                this.params[i].iv
+                batch.path,
+                batch.key,
+                batch.value,
+                batch.encrypt,
+                batch.askOnEncrypt,
+                batch.askOnDecrypt,
+                batch.iv
             );
             responses.push(response);
         }
-        return responses.length === 1 ? responses[0] : responses;
+        return this.params.bundledResponse ? responses : responses[0];
     }
 }
