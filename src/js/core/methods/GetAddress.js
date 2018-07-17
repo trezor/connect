@@ -71,7 +71,7 @@ export default class GetAddress extends AbstractMethod {
 
             let showOnTrezor: boolean = true;
             if (batch.hasOwnProperty('showOnTrezor')){
-                showOnTrezor = payload.showOnTrezor;
+                showOnTrezor = batch.showOnTrezor;
             }
             if (showOnTrezor) {
                 shouldUseUi = true;
