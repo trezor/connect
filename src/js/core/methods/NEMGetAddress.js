@@ -104,7 +104,7 @@ export default class NEMGetAddress extends AbstractMethod {
                     break;
             }
 
-            label = `Export NEM address for Account#${ (fromHardened(this.params.bundle[0].path[2]) + 1) } on ${ network } network`
+            label = `Export NEM address for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) } on ${ network } network`
         }
 
         // request confirmation view

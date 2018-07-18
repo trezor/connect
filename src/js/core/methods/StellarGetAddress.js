@@ -86,7 +86,7 @@ export default class StellarGetAddress extends AbstractMethod {
         if (this.params.bundle.length > 1) {
             label = 'Export multiple Stellar addresses';
         } else {
-            label = `Export Stellar address for Account#${ (fromHardened(this.params.bundle[0].path[2]) + 1) }`
+            label = `Export Stellar address for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) }`
         }
 
         // request confirmation view

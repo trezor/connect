@@ -4,6 +4,7 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
+import { getLabel } from '../../utils/pathUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
 import BlockBook, { create as createBackend } from '../../backend';
@@ -63,6 +64,7 @@ export default class SignTransaction extends AbstractMethod {
         } else {
             // set required firmware from coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+            this.info = getLabel('Sign #NETWORK transaction', coinInfo);
         }
 
         const {

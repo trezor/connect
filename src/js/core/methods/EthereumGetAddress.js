@@ -84,7 +84,7 @@ export default class EthereumGetAddress extends AbstractMethod {
             const requestedNetworks: Array<?EthereumNetworkInfo> = bundle.map(b => b.network);
             const uniqNetworks = uniq(requestedNetworks);
             if (uniqNetworks.length === 1 && uniqNetworks[0]) {
-                this.info = getNetworkLabel('Export multiple #NETWORK address', uniqNetworks[0]);
+                this.info = getNetworkLabel('Export multiple #NETWORK addresses', uniqNetworks[0]);
             } else {
                 this.info = `Export multiple addresses`;
             }

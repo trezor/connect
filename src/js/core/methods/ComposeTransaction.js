@@ -7,6 +7,7 @@ import * as UI from '../../constants/ui';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
 import { validateParams } from './helpers/paramsValidator';
 import { resolveAfter } from '../../utils/promiseUtils';
+import { getLabel } from '../../utils/pathUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
 import BlockBook, { create as createBackend } from '../../backend';
@@ -51,7 +52,6 @@ export default class ComposeTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.info = 'Payment request';
 
         const payload: Object = message.payload;
         // validate incoming parameters
@@ -67,6 +67,7 @@ export default class ComposeTransaction extends AbstractMethod {
 
         // set required firmware from coinInfo support
         this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+        this.info = getLabel('Compose #NETWORK transaction', coinInfo);
 
         const outputs: Array<BuildTxOutputRequest> = payload.outputs.map(out => validateOutput(out, coinInfo));
         if (outputs.length < 1) {

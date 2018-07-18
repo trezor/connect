@@ -3,9 +3,10 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getRequiredFirmware } from './helpers/paramsValidator';
-import { validatePath } from '../../utils/pathUtils';
+import { validatePath, getLabel } from '../../utils/pathUtils';
 import { getCoinInfoByCurrency, getCoinInfoFromPath, fixCoinInfoNetwork } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
+import { uniqBy } from 'lodash';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
@@ -32,7 +33,7 @@ export default class GetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.info = 'Export address';
+
 
         const payload: Object = message.payload;
         let bundledResponse: boolean = true;
@@ -77,10 +78,11 @@ export default class GetAddress extends AbstractMethod {
                 shouldUseUi = true;
             }
 
-            // set required firmware from coinInfo support
+
             if (!coinInfo) {
                 throw NO_COIN_INFO;
             } else if (coinInfo) {
+                // set required firmware from coinInfo support
                 this.requiredFirmware = getRequiredFirmware(coinInfo, this.requiredFirmware);
             }
 
@@ -96,6 +98,19 @@ export default class GetAddress extends AbstractMethod {
 
         //this.useUi = !(!shouldUseUi && bundle.length < 2);
         this.useUi = shouldUseUi;
+
+        // set info
+        if (bundle.length === 1) {
+            this.info = getLabel('Export #NETWORK address', bundle[0].coinInfo);
+        } else {
+            const requestedNetworks: Array<?CoinInfo> = bundle.map(b => b.coinInfo);
+            const uniqNetworks = uniqBy(requestedNetworks, (ci) => { return ci ? ci.shortcut : null });
+            if (uniqNetworks.length === 1 && uniqNetworks[0]) {
+                this.info = getLabel('Export multiple #NETWORK addresses', uniqNetworks[0]);
+            } else {
+                this.info = `Export multiple addresses`;
+            }
+        }
 
         this.params = {
             bundle,

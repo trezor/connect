@@ -4,6 +4,7 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
+import { getLabel } from '../../utils/pathUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
 import type { Success } from '../../types/trezor';
@@ -43,6 +44,7 @@ export default class VerifyMessage extends AbstractMethod {
         } else {
             // check required firmware with coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+            this.info = getLabel('Verify #NETWORK message', coinInfo);
         }
         // TODO: check if message is already a hex
         const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');

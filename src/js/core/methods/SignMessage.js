@@ -3,7 +3,7 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath } from './helpers/paramsValidator';
-import { validatePath } from '../../utils/pathUtils';
+import { validatePath, getLabel } from '../../utils/pathUtils';
 import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../data/CoinInfo';
 import type { MessageResponse } from '../../device/DeviceCommands';
 import type { MessageSignature } from '../../types/trezor';
@@ -24,7 +24,7 @@ export default class SignMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['write'];
-        this.info = 'Sign message';
+
 
         const payload: Object = message.payload;
 
@@ -43,6 +43,8 @@ export default class SignMessage extends AbstractMethod {
         } else {
             coinInfo = getCoinInfoFromPath(path);
         }
+
+        this.info = getLabel('Sign #NETWORK message', coinInfo);
 
         if (coinInfo) {
             // check required firmware with coinInfo support

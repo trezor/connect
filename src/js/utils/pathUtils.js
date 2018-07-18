@@ -139,3 +139,10 @@ export const getPublicKeyLabel = (path: Array<number>, coinInfo: ?CoinInfo): str
     }
     return `${ prefix } ${ accountType } <span>account #${realAccountId}</span>`;
 }
+
+export const getLabel = (label: string, coinInfo: ?CoinInfo): string => {
+    if (coinInfo) {
+        return label.replace('#NETWORK', coinInfo.label);
+    }
+    return label.replace('#NETWORK', '');
+}
