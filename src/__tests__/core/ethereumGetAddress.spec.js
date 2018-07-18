@@ -17,23 +17,23 @@ export const ethereumGetAddress = () => {
         const testPayloads: Array<TestEthereumGetAddressPayload> = [
             {
                 method: 'ethereumGetAddress',
-                path: [],
+                path: "m/44'/43'/0'",
             },
             {
                 method: 'ethereumGetAddress',
-                path: [1],
+                path: [2147483692, 2147483691, 2147483648],
             },
             {
                 method: 'ethereumGetAddress',
-                path: [0, -1],
+                path: "m/44'/43'/1'",
             },
             {
                 method: 'ethereumGetAddress',
-                path: [-9, 0],
+                path: [-1],
             },
             {
                 method: 'ethereumGetAddress',
-                path: [0, 9999999],
+                path: [0, 1],
             },
         ];
 
@@ -41,28 +41,24 @@ export const ethereumGetAddress = () => {
         const expectedResponses: Array<ExpectedEthereumGetAddressResponse> = [
             {
                 payload: {
-                    address: '1d1c328764a41bda0492b66baa30c4a339ff85ef',
+                    address: '6ae2f16e73aeac6a2bbc46cc98a1d2e23661e6fe',
                 },
             },
             {
                 payload: {
-                    address: '437207ca3cf43bf2e47dea0756d736c5df4f597a',
+                    address: '6ae2f16e73aeac6a2bbc46cc98a1d2e23661e6fe',
                 },
             },
             {
                 payload: {
-                    address: 'e5d96dfa07bcf1a3ae43677840c31394258861bf',
+                    address: '64c97f1954602ef09b950aba4b0d172ace043392',
                 },
             },
             {
-                payload: {
-                    address: 'f68804ac9eca9483ab4241d3e4751590d2c05102',
-                },
+                success: false,
             },
             {
-                payload: {
-                    address: '7a6366ecfcaf0d5dcc1539c171696c6cdd1eb8ed',
-                },
+                success: false,
             },
         ];
 
