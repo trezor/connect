@@ -16,12 +16,13 @@ const getPermissionText = (permissionType: string, deviceName: string): string =
             break;
         case 'read-meta':
             text = 'Read metadata from Trezor device';
+            break;
         case 'write':
-            text = 'Use Trezor device to sign transactions';
+            text = 'Prepare Trezor device for transaction and data signing';
             break;
         case 'write-meta':
             text = 'Write metadata to Trezor device'
-
+            break;
         case 'custom-message':
             text = 'Run custom operations';
             break;
@@ -35,10 +36,10 @@ const getPermissionTooltipText = (permissionType: string): string => {
 
     switch (permissionType) {
         case 'read':
-            text = 'The service needs this permission to read your account balance.';
+            text = 'Permission needed to load public information from your device.';
             break;
         case 'write':
-            text = 'The service needs this permission to compose a transaction for you.';
+            text = 'Permission needed to execute operations, such as composing a transaction, after your confirmation.';
             break;
         case 'custom-message':
             text = 'Development tool. Use at your own risk. Allows service to send arbitrary data to your Trezor device.';

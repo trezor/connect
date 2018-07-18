@@ -73,7 +73,7 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>):
             status.innerHTML = account.transactions ? `${ account.transactions } transactions` : 'Loading...';
             button.disabled = true;
         } else {
-            status.innerHTML = account.transactions === 0 ? 'Fresh account' : formatAmount(account.balance, payload.coinInfo);
+            status.innerHTML = account.transactions === 0 ? 'New account' : formatAmount(account.balance, payload.coinInfo);
             if (payload.checkBalance) {
                 button.disabled = account.transactions === 0 || account.balance === 0;
             } else {
