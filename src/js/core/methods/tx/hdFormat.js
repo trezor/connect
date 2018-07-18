@@ -4,6 +4,7 @@
 import { reverseBuffer } from '../../../utils/bufferUtils';
 import { isSegwitPath } from '../../../utils/pathUtils';
 import { isValidAddress } from '../../../utils/addressUtils';
+import { validateParams } from '../helpers/paramsValidator';
 
 import type {
     BuildTxOutputRequest,
@@ -37,54 +38,80 @@ export const input = (input: TransactionInput, sequence: number): BuildTxInput =
     };
 }
 
+
 // validate
 export const validateOutput = (output: BuildTxOutputRequest, coinInfo: CoinInfo): BuildTxOutputRequest => {
 
-    if (output.hasOwnProperty('address') && typeof output.address === 'string') {
-        if (!isValidAddress(output.address, coinInfo)) {
+    // if (output.hasOwnProperty('address') && typeof output.address === 'string') {
+    //     if (!isValidAddress(output.address, coinInfo)) {
+    //         throw new Error(`Invalid ${ coinInfo.label } output address format`);
+    //     }
+    // }
+
+    const validateAddress = (address) => {
+        if (!isValidAddress(address, coinInfo)) {
             throw new Error(`Invalid ${ coinInfo.label } output address format`);
         }
     }
 
-    if (typeof output.type === 'string') {
-
-        switch (output.type) {
-            case 'opreturn' :
-                if (typeof output.dataHex !== 'string')
-                    throw new Error('Invalid dataHex in opreturn output');
-            break;
-
-            case 'send-max' :
-                if (typeof output.address !== 'string')
-                    throw new Error('Invalid address in send-max output');
-            break;
-
-            case 'noaddress' :
-                if (typeof output.amount !== 'number')
-                    throw new Error('Invalid amount in noaddress output');
-            break;
-        }
-
-        return output;
-
-    } else {
-
-        if (typeof output.address !== 'string')
-            throw new Error('Invalid address in output');
-
-        if (typeof output.amount !== 'number')
-            throw new Error('Invalid amount in output');
-
-            if (output.address) {
-
+    switch (output) {
+        case 'opreturn' :
+            validateParams(output, [ { name: 'dataHex', type: 'string', obligatory: true }]);
+            return {
+                type: 'opreturn',
+                dataHex: output.dataHex
             }
 
-        return {
-            type: 'complete',
-            address: output.address,
-            amount: output.amount
-        }
+        case 'send-max' :
+            validateParams(output, [ { name: 'address', type: 'string', obligatory: true }]);
+            validateAddress(output.address);
+            return {
+                type: 'send-max',
+                address: output.address
+            }
+
+        case 'noaddress' :
+            validateParams(output, [ { name: 'amount', type: 'string', obligatory: true }]);
+            return {
+                type: 'noaddress',
+                amount: parseInt(output.amount)
+            }
+        case 'send-max-noaddress' :
+            return {
+                type: 'send-max-noaddress'
+            }
+
+        default :
+        case 'complete' :
+            validateParams(output, [
+                { name: 'amount', type: 'string', obligatory: true },
+                { name: 'address', type: 'string', obligatory: true }
+            ]);
+            validateAddress(output.address);
+            return {
+                type: 'complete',
+                address: output.address,
+                amount: parseFloat(output.amount)
+            }
     }
+
+
+    //     if (typeof output.address !== 'string')
+    //         throw new Error('Invalid address in output');
+
+    //     if (typeof output.amount !== 'number')
+    //         throw new Error('Invalid amount in output');
+
+    //         if (output.address) {
+
+    //         }
+
+    //     return {
+    //         type: 'complete',
+    //         address: output.address,
+    //         amount: output.amount
+    //     }
+    // }
 
 
 }
