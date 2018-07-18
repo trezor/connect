@@ -43,19 +43,6 @@ export const validateCoinPath = (coinInfo: ?CoinInfo, path: Array<number>): void
     }
 }
 
-export const validateEthereumPath = (path: Array<number>): void => {
-    const slip44 = fromHardened(path[1]);
-    let founded: boolean = false;
-    ethereumNetworks.forEach(network => {
-        if (network.slip44 === slip44) {
-            founded = true;
-        }
-    });
-    if (!founded) {
-        throw invalidParameter('Unknown slip44 in ethereum "path".');
-    }
-}
-
 export const getRequiredFirmware = (coinInfo: CoinInfo, current: Array<string>): Array<string> => {
     if (semvercmp(coinInfo.support.trezor1, current[0]) > 0) {
         current[0] = coinInfo.support.trezor1;
