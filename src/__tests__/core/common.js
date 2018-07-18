@@ -13,15 +13,15 @@ import type {
 
 export const settings = {
     configSrc: 'base/src/__tests__/config.json', // constant
-    debug: false,
+    debug: true,
     origin: 'localhost',
     priority: 0,
     trustedHost: true,
     connectSrc: '',
-    iframeSrc: `iframe.html`,
+    iframeSrc: 'iframe.html',
     popup: false,
-    popupSrc: `popup.html`,
-    webusbSrc: `webusb.html`,
+    popupSrc: 'popup.html',
+    webusbSrc: 'webusb.html',
     transportReconnect: false,
     webusb: true,
     pendingTransportEvent: true,

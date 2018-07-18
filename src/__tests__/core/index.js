@@ -24,6 +24,7 @@ import { nemSignTransactionMosaic } from './nemSignTransactionMosaic.spec.js';
 import { nemSignTransactionMultisig } from './nemSignTransactionMultisig.spec.js';
 import { nemSignTransactionOthers } from './nemSignTransactionOthers.spec.js';
 import { nemSignTransactionTransfers } from './nemSignTransactionTransfers.spec.js';
+import { passphrase } from './passphrase.spec.js';
 
 export default {
     getPublicKey,
@@ -50,4 +51,5 @@ export default {
     nemSignTransactionMultisig,
     nemSignTransactionOthers,
     nemSignTransactionTransfers,
+    passphrase,
 }
