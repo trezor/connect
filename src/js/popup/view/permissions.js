@@ -79,12 +79,13 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
     showView('permissions');
 
     const h3: HTMLElement = container.getElementsByTagName('h3')[0];
-    const hostName: HTMLElement = h3.getElementsByTagName('span')[0];
+    const hostName: HTMLElement = h3.getElementsByClassName('host-name')[0];
     const permissionsList: HTMLElement = container.getElementsByClassName('permissions-list')[0];
     const confirmButton: HTMLElement = container.getElementsByClassName('confirm')[0];
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
     const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName('remember-permissions')[0]: any);
 
+    hostName.innerText = DataManager.getSettings('origin');
     if (payload && Array.isArray(payload.permissions)) {
         payload.permissions.forEach(p => {
             const permissionText = getPermissionText(p, payload.device.label);
@@ -112,6 +113,6 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
     };
 
     rememberCheckbox.onchange = (e) => {
-        confirmButton.innerText = e.target.checked ? 'Allow forever for this service' : 'Allow once for this session';
+        confirmButton.innerText = e.target.checked ? 'Always allow for this service' : 'Allow once for this session';
     };
 };
