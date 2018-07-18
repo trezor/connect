@@ -24,7 +24,7 @@ export default class EthereumSignTx extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
 
-        this.requiredPermissions = ['write'];
+        this.requiredPermissions = ['read', 'write'];
         this.requiredFirmware = ['1.6.2', '2.0.7'];
 
         const payload: Object = message.payload;

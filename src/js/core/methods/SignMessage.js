@@ -23,7 +23,7 @@ export default class SignMessage extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
 
-        this.requiredPermissions = ['write'];
+        this.requiredPermissions = ['read', 'write'];
 
 
         const payload: Object = message.payload;

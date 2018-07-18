@@ -25,7 +25,7 @@ export default class VerifyMessage extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
 
-        this.requiredPermissions = ['read'];
+        this.requiredPermissions = ['read', 'write'];
         this.info = 'Verify message';
 
         const payload: Object = message.payload;
