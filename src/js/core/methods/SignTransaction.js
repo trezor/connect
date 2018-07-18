@@ -37,6 +37,7 @@ type Params = {
     hdInputs:Array<BuildTxInput>;
     outputs: Array<any>;
     coinInfo: CoinInfo;
+    push: boolean;
 }
 
 export default class SignTransaction extends AbstractMethod {
@@ -56,6 +57,7 @@ export default class SignTransaction extends AbstractMethod {
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
             { name: 'coin', type: 'string', obligatory: true },
+            { name: 'push', type: 'boolean' },
         ]);
 
         const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
@@ -76,7 +78,7 @@ export default class SignTransaction extends AbstractMethod {
 
         const total: number = outputs.reduce((t, r) => t + r.amount, 0);
         if (total <= coinInfo.dustLimit) {
-            throw new Error('Total amount to spent is lower than coin dust limit.');
+            throw new Error('Total amount is too low.');
         }
 
         this.params = {
@@ -84,6 +86,7 @@ export default class SignTransaction extends AbstractMethod {
             hdInputs,
             outputs: payload.outputs,
             coinInfo,
+            push: payload.hasOwnProperty('push') ? payload.push : false
         }
     }
 
@@ -101,6 +104,14 @@ export default class SignTransaction extends AbstractMethod {
             this.params.coinInfo,
         );
 
-        return response.message
+        if (this.params.push) {
+            const txid: string = await this.backend.sendTransactionHex(response.serialized);
+            return {
+                ...response,
+                txid
+            }
+        }
+
+        return response;
     }
 }
