@@ -4,15 +4,20 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
+import { toChecksumAddress } from '../../utils/ethereumUtils';
+import { getEthereumNetwork } from '../../data/CoinInfo';
+import { uniq } from 'lodash';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { EthereumAddress } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
+import type { EthereumNetworkInfo } from 'flowtype';
 
 type Batch = {
     path: Array<number>;
+    network: ?EthereumNetworkInfo;
     showOnTrezor: boolean;
 }
 
@@ -30,7 +35,7 @@ export default class EthereumGetAddress extends AbstractMethod {
 
         this.requiredPermissions = ['read'];
         this.requiredFirmware = ['1.6.2', '2.0.7'];
-        this.info = 'Export Ethereum address';
+        this.info = 'Export address';
 
         const payload: Object = message.payload;
         let bundledResponse: boolean = true;
@@ -47,6 +52,8 @@ export default class EthereumGetAddress extends AbstractMethod {
 
         const bundle = [];
         let shouldUseUi: boolean = false;
+        let network: ?EthereumNetworkInfo;
+
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
@@ -55,7 +62,7 @@ export default class EthereumGetAddress extends AbstractMethod {
             ]);
 
             const path: Array<number> = validatePath(batch.path, 3);
-            // validateEthereumPath(path);
+            const network: ?EthereumNetworkInfo = getEthereumNetwork(path);
 
             let showOnTrezor: boolean = true;
             if (batch.hasOwnProperty('showOnTrezor')){
@@ -67,9 +74,24 @@ export default class EthereumGetAddress extends AbstractMethod {
 
             bundle.push({
                 path,
+                network,
                 showOnTrezor
             });
         });
+
+        if (bundle.length === 1) {
+            if (bundle[0].network) {
+                this.info = `Export ${ bundle[0].network.name } address`;
+            }
+        } else {
+            const requestedNetworks: Array<?EthereumNetworkInfo> = bundle.map(b => b.network);
+            const uniqNetworks = uniq(requestedNetworks);
+            if (uniqNetworks.length === 1 && uniqNetworks[0]) {
+                this.info = `Export multiple ${ uniqNetworks[0].name } addresses`;
+            } else {
+                this.info = `Export multiple addresses`;
+            }
+        }
 
         this.useUi = shouldUseUi;
 
@@ -83,11 +105,13 @@ export default class EthereumGetAddress extends AbstractMethod {
 
         const responses: Array<EthereumAddress> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
-
+            const batch: Batch = this.params.bundle[i];
             const response = await this.device.getCommands().ethereumGetAddress(
-                this.params.bundle[i].path,
-                this.params.bundle[i].showOnTrezor
+                batch.path,
+                batch.showOnTrezor
             );
+
+            response.address = toChecksumAddress(response.address, batch.network && batch.network.rskip60 ? batch.network.chainId : 0 );
             responses.push(response);
 
             if (this.params.bundledResponse) {

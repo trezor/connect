@@ -86,6 +86,15 @@ declare module 'flowtype' {
         blocks?: number,
     }
 
+    declare export type EthereumNetworkInfo = {
+        chainId: number;
+        slip44: number;
+        shortcut: string;
+        name: string;
+        rskip60: boolean;
+        url: string;
+    }
+
     declare export type SimpleAccount = {
         id: number;
         path: Array<number>;

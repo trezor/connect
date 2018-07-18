@@ -6,16 +6,7 @@ import { HD_HARDENED, toHardened, fromHardened } from '../utils/pathUtils';
 import type {
     Network as BitcoinJsNetwork,
 } from 'bitcoinjs-lib-zcash';
-import type { CoinInfo } from 'flowtype';
-
-type EthereumNetworkInfo = {
-    chainId: number;
-    slip44: number;
-    shortcut: string;
-    name: string;
-    rskip60: boolean;
-    url: string;
-}
+import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
 
 const coins: Array<CoinInfo> = [];
 
@@ -114,6 +105,11 @@ export const getCoinName = (path: Array<number>): string => {
     };
     return 'Unknown coin';
 };
+
+export const getEthereumNetwork = (path: Array<number>): ?EthereumNetworkInfo => {
+    const slip44: number = fromHardened(path[1]);
+    return ethereumNetworks.find(n => n.slip44 === slip44);
+}
 
 export const parseCoinsJson = (json: JSON): void => {
     const coinsObject: Object = json;
