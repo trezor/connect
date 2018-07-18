@@ -72,6 +72,8 @@ nemSignTransactionOthers_subtests="importanceTransfer provisionNamespace"
 nemSignTransactionTransfers_subtests="simple encryptedPayload xemAsMosaic unknownMosaic knownMosaic knownMosaicWithLevy multipleMosaics"
 
 getAccountInfo_subtests="firstAccount zeroBalance pathInvalid noAddressIndex zeroBalance xpubInsteadOfPath"
+
+passphrase_subtests="correctPassphrase wrongPassphrase"
 ################# Possible subtests: END
 
 
@@ -156,8 +158,9 @@ start_transport() {
     cd $trezord_path
     #./trezord-go -e 21324 > /dev/null 2>&1 &
     ./trezord-go -e 21324 -e 21325 > /dev/null 2>&1 &
+    #./trezord-go -e 21324 -e 21325 &
     #./trezord-go -e 21325 > /dev/null 2>&1 &
-
+    #./trezord-go &
     # You can disable all USB in order to run on some virtuaized environments, for example Travis
     # doesn't check for devices connected via USB, only for emulator
     # ./trezord -e 21324 -u=false
@@ -193,6 +196,10 @@ init_device() {
 
 setup_mnemonic_allallall() {
     init_device "$mnemonic_all" "$pin_0" "False"
+}
+
+setup_mnemonic_allallall_passphrase() {
+    init_device "$mnemonic_all" "$pin_0" "True"
 }
 
 setup_mnemonic_nopin_nopassphrase() {
@@ -905,7 +912,6 @@ test_nemSignTransactionOthers() {
 }
 
 test_nemSignTransactionTransfers() {
-    # todo: emulator firmware
     specified_subtest=$1
     if [ -n "$specified_subtest" ]; then
         # Run only specified subtest
@@ -956,6 +962,29 @@ test_getAccountInfo() {
         start_transport
 
         run_karma "getAccountInfo" $subtest
+
+        kill_emul_transport
+    done;
+}
+
+test_passphrase() {
+    specified_subtest=$1
+    if [ -n "$specified_subtest" ]; then
+        # Run only specified subtest
+        subtests=$specified_subtest
+    else
+        # Run all possible subtests
+        subtests=$passphrase_subtests
+    fi;
+
+    for subtest in $subtests; do
+        echo "${green}   - subtest: ${subtest}${reset}"
+
+        start_emulator
+        setup_mnemonic_allallall_passphrase
+        start_transport
+
+        run_karma "passphrase" $subtest
 
         kill_emul_transport
     done;

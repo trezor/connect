@@ -2,7 +2,6 @@
 
 import 'babel-polyfill';
 import testFunctions from './index.js';
-import { getPublicKey } from './getPublicKey.spec.js';
 
 const testToRun = __karma__.config.test;
 

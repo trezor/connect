@@ -34,6 +34,7 @@ def main():
     client.load_device_by_mnemonic(
         mnemonic=args.mnemonic, pin=args.pin, passphrase_protection=args.passphrase, label='test')
 
+
     print(client.features)
 
     client.transport.session_end()
