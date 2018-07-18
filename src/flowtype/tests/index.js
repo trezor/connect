@@ -55,6 +55,11 @@ import type {
     ExpectedNemSignTransactionResponse,
 } from 'flowtype/tests/nem-sign-transaction';
 
+import type {
+    TestPassphrasePayload,
+    ExpectedPassphraseResponse,
+} from 'flowtype/tests/passphrase';
+
 declare module 'flowtype/tests' {
     declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
     declare export type GetAddressSegwitAvailableSubtests = 'showSegwit';
@@ -88,6 +93,7 @@ declare module 'flowtype/tests' {
     declare export type NemSignTransactionOthersAvailableSubtests = 'importanceTransfer' | 'provisionNamespace';
     declare export type NemSignTransactionTransfersAvailableSubtests = 'simple' | 'encryptedPayload' | 'xemAsMosaic' | 'unknownMosaic' | 'knownMosaic' | 'knownMosaicWithLevy' | 'multipleMosaics';
     declare export type GetAccountInfoAvailableSubtests = 'firstAccount' | 'zeroBalance' | 'pathInvalid' | 'noAddressIndex' | 'zeroBalance' | 'xpubInsteadOfPath';
+    declare export type PassphraseAvailableSubtests = 'correctPassphrase' | 'wrongPassphrase';
 
     declare type Subtest<T, R> = {
         testPayloads: Array<T>,
@@ -101,6 +107,7 @@ declare module 'flowtype/tests' {
     declare export type SubtestVerifyMessage = Subtest<TestVerifyMessagePayload, ExpectedVerifyMessageResponse>;
     declare export type SubtestGetAccountInfo = Subtest<TestGetAccountInfoPayload, ExpectedGetAccountInfoResponse>;
     declare export type SubtestNemSignTransaction = Subtest<TestNemSignTransactionPayload, ExpectedNemSignTransactionResponse>;
+    declare export type SubtestPassphrase = Subtest<TestPassphrasePayload, ExpectedPassphraseResponse>;
 
     declare export type TestPayload =
         TestEthereumGetAddressPayload
@@ -113,7 +120,8 @@ declare module 'flowtype/tests' {
         | TestSignTransactionPayload
         | TestVerifyMessagePayload
         | TestGetAccountInfoPayload
-        | TestNemSignTransactionPayload;
+        | TestNemSignTransactionPayload
+        | TestPassphrasePayload;
     declare export type ExpectedResponse =
         ExpectedEthereumGetAddressResponse
         | ExpectedEthereumSignMessageResponse
@@ -125,5 +133,6 @@ declare module 'flowtype/tests' {
         | ExpectedSignTransactionResponse
         | ExpectedVerifyMessageResponse
         | ExpectedGetAccountInfoResponse
-        | ExpectedNemSignTransactionResponse;
+        | ExpectedNemSignTransactionResponse
+        | ExpectedPassphraseResponse;
 }
