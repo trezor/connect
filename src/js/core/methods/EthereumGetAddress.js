@@ -4,7 +4,7 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
-import { toChecksumAddress } from '../../utils/ethereumUtils';
+import { toChecksumAddress, getNetworkLabel } from '../../utils/ethereumUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
 import { uniq } from 'lodash';
 
@@ -35,7 +35,6 @@ export default class EthereumGetAddress extends AbstractMethod {
 
         this.requiredPermissions = ['read'];
         this.requiredFirmware = ['1.6.2', '2.0.7'];
-        this.info = 'Export address';
 
         const payload: Object = message.payload;
         let bundledResponse: boolean = true;
@@ -52,7 +51,6 @@ export default class EthereumGetAddress extends AbstractMethod {
 
         const bundle = [];
         let shouldUseUi: boolean = false;
-        let network: ?EthereumNetworkInfo;
 
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
@@ -79,15 +77,14 @@ export default class EthereumGetAddress extends AbstractMethod {
             });
         });
 
+        // set info
         if (bundle.length === 1) {
-            if (bundle[0].network) {
-                this.info = `Export ${ bundle[0].network.name } address`;
-            }
+            this.info = getNetworkLabel('Export #NETWORK address', bundle[0].network);
         } else {
             const requestedNetworks: Array<?EthereumNetworkInfo> = bundle.map(b => b.network);
             const uniqNetworks = uniq(requestedNetworks);
             if (uniqNetworks.length === 1 && uniqNetworks[0]) {
-                this.info = `Export multiple ${ uniqNetworks[0].name } addresses`;
+                this.info = getNetworkLabel('Export multiple #NETWORK address', uniqNetworks[0]);
             } else {
                 this.info = `Export multiple addresses`;
             }
@@ -111,7 +108,7 @@ export default class EthereumGetAddress extends AbstractMethod {
                 batch.showOnTrezor
             );
 
-            response.address = toChecksumAddress(response.address, batch.network && batch.network.rskip60 ? batch.network.chainId : 0 );
+            response.address = toChecksumAddress(response.address, batch.network);
             responses.push(response);
 
             if (this.params.bundledResponse) {

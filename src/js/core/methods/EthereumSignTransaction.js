@@ -4,7 +4,10 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
+import { getEthereumNetwork } from '../../data/CoinInfo';
+import { stripHexPrefix, getNetworkLabel } from '../../utils/ethereumUtils';
 import * as helper from './helpers/ethereumSignTx';
+
 import type { CoreMessage } from '../../types';
 import type { EthereumSignedTx } from '../../types/trezor';
 import type { Transaction as EthereumTransaction } from '../../types/ethereum';
@@ -23,7 +26,6 @@ export default class EthereumSignTx extends AbstractMethod {
 
         this.requiredPermissions = ['write'];
         this.requiredFirmware = ['1.6.2', '2.0.7'];
-        this.info = 'Sign Ethereum transaction';
 
         const payload: Object = message.payload;
 
@@ -34,6 +36,9 @@ export default class EthereumSignTx extends AbstractMethod {
         ]);
 
         const path: Array<number> = validatePath(payload.path, 3);
+        const network = getEthereumNetwork(path);
+
+        this.info = getNetworkLabel('Sign #NETWORK transaction', network);
 
         // incoming transaction should be in EthereumTx format
         // https://github.com/ethereumjs/ethereumjs-tx
@@ -53,15 +58,12 @@ export default class EthereumSignTx extends AbstractMethod {
         // strip '0x' from values
         Object.keys(tx).map(key => {
             if (typeof tx[key] === 'string') {
-                let value: string = tx[key];
-                if (value.indexOf('0x') === 0) {
-                    value = value.substring(2, value.length);
-                    // pad left even
-                    if (value.length % 2 !== 0)
-                        value = '0' + value;
-                    // $FlowIssue
-                    tx[key] = value;
-                }
+                let value: string = stripHexPrefix(tx[key]);
+                // pad left even
+                if (value.length % 2 !== 0)
+                    value = '0' + value;
+                // $FlowIssue
+                tx[key] = value;
             }
         });
 

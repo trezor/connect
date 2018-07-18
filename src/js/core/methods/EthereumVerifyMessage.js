@@ -6,6 +6,8 @@ import { validateParams } from './helpers/paramsValidator';
 import type { Success } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
+import { stripHexPrefix } from '../../utils/ethereumUtils';
+
 type Params = {
     address: string;
     signature: string;
@@ -21,7 +23,7 @@ export default class EthereumVerifyMessage extends AbstractMethod {
 
         this.requiredPermissions = ['write'];
         this.requiredFirmware = ['1.6.2', '2.0.7'];
-        this.info = 'Verify Ethereum message';
+        this.info = 'Verify message';
 
         const payload: Object = message.payload;
 
@@ -35,8 +37,8 @@ export default class EthereumVerifyMessage extends AbstractMethod {
         // TODO: check if message is already in hex format
         const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
         this.params = {
-            address: payload.address,
-            signature: payload.signature,
+            address: stripHexPrefix(payload.address),
+            signature: stripHexPrefix(payload.signature),
             message: messageHex
         }
     }

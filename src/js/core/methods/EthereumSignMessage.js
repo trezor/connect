@@ -4,11 +4,16 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
+import { getEthereumNetwork } from '../../data/CoinInfo';
+import { toChecksumAddress, getNetworkLabel } from '../../utils/ethereumUtils';
+
 import type { MessageSignature } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
+import type { EthereumNetworkInfo } from 'flowtype';
 
 type Params = {
     path: Array<number>;
+    network: ?EthereumNetworkInfo;
     message: string;
 }
 
@@ -21,7 +26,6 @@ export default class EthereumSignMessage extends AbstractMethod {
 
         this.requiredPermissions = ['write'];
         this.requiredFirmware = ['1.6.2', '2.0.7'];
-        this.info = 'Sign Ethereum message';
 
         const payload: Object = message.payload;
 
@@ -32,18 +36,25 @@ export default class EthereumSignMessage extends AbstractMethod {
         ]);
 
         const path: Array<number> = validatePath(payload.path, 3);
+        const network: ?EthereumNetworkInfo = getEthereumNetwork(path);
+
+        this.info = getNetworkLabel('Sign #NETWORK message', network);
+
         // TODO: check if message is already in hex format
         const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
         this.params = {
             path,
+            network,
             message: messageHex
         }
     }
 
     async run(): Promise<MessageSignature> {
-        return await this.device.getCommands().ethereumSignMessage(
+        const response: MessageSignature = await this.device.getCommands().ethereumSignMessage(
             this.params.path,
             this.params.message
         );
+        response.address = toChecksumAddress(response.address, this.params.network);
+        return response;
     }
 }
