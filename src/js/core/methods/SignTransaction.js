@@ -2,6 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams } from './helpers/paramsValidator';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
 
@@ -47,32 +48,20 @@ export default class SignTransaction extends AbstractMethod {
         this.requiredPermissions = ['read', 'write'];
         this.info = 'Sign transaction';
 
-        const payload: any = message.payload;
-        if (!payload.hasOwnProperty('inputs')) {
-            throw new Error('Parameter "inputs" is missing');
-        }
+        const payload: Object = message.payload;
 
-        if (!payload.hasOwnProperty('outputs')) {
-            throw new Error('Parameter "outputs" is missing');
-        } else {
+        // validate incoming parameters
+        validateParams(payload, [
+            { name: 'inputs', type: 'array', obligatory: true },
+            { name: 'outputs', type: 'array', obligatory: true },
+            { name: 'coin', type: 'string', obligatory: true },
+        ]);
 
-        }
-
-        let coinInfo: ?CoinInfo;
-        if (!payload.hasOwnProperty('coin')) {
-            throw new Error('Parameter "coin" is missing');
-        } else {
-            if (typeof payload.coin === 'string') {
-                coinInfo = getCoinInfoByCurrency(payload.coin);
-            } else {
-                throw new Error('Parameter "coin" has invalid type. String expected.');
-            }
-        }
-
+        const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         } else {
-            // check required firmware with coinInfo support
+            // set required firmware from coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
 
@@ -83,9 +72,9 @@ export default class SignTransaction extends AbstractMethod {
 
         const outputs = validateOutputs(payload.outputs, coinInfo.network);
 
-        const total = outputs.reduce((t, r) => t + r.amount, 0);
+        const total: number = outputs.reduce((t, r) => t + r.amount, 0);
         if (total <= coinInfo.dustLimit) {
-            throw new Error('AMOUNT_TOO_LOW');
+            throw new Error('Total amount to spent is lower than coin dust limit.');
         }
 
         this.params = {
