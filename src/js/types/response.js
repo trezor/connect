@@ -41,7 +41,7 @@ export type CustomMessage$ = {
 
 export type ComposeTransaction$ = {
     success: true;
-    payload: any;
+    payload: SignedTx;
 } | Unsuccessful$;
 
 export type EthereumGetAddress$ = {

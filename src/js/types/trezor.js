@@ -189,10 +189,9 @@ export type TxRequest = {
 };
 
 export type SignedTx = {
-    serialized: {
-        signatures: Array<string>,
-        serialized_tx: string,
-    },
+    signatures: Array<string>,
+    serialized: string,
+    txid?: string,
 };
 
 export type EthereumTxRequest = {

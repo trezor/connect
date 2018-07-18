@@ -7,25 +7,23 @@ import * as UI from '../../constants/ui';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
 import { validateParams } from './helpers/paramsValidator';
 import { resolveAfter } from '../../utils/promiseUtils';
-import { getLabel } from '../../utils/pathUtils';
+import { isValidAddress } from '../../utils/addressUtils';
+import { formatAmount } from '../../utils/formatUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
 import BlockBook, { create as createBackend } from '../../backend';
 import Account from '../../account';
 import TransactionComposer from './tx/TransactionComposer';
 import {
-    input as transformInput,
-    output as transformOutput
-} from './tx/trezorFormat';
-import {
-    validateOutput
-} from './tx/hdFormat';
-
-import * as helper from './helpers/signtx';
-import {
     getReferencedTransactions,
     transformReferencedTransactions
 } from './tx';
+import {
+    input as transformInput,
+    output as transformOutput
+} from './tx/trezorFormat';
+import * as helper from './helpers/signtx';
+
 import { UiMessage } from '../../message/builder';
 
 import type { CoinInfo, UiPromiseResponse } from 'flowtype';
@@ -41,6 +39,7 @@ import type {
 type Params = {
     outputs: Array<BuildTxOutputRequest>;
     coinInfo: CoinInfo;
+    push: boolean;
 }
 
 export default class ComposeTransaction extends AbstractMethod {
@@ -58,6 +57,7 @@ export default class ComposeTransaction extends AbstractMethod {
         validateParams(payload, [
             { name: 'outputs', type: 'array', obligatory: true },
             { name: 'coin', type: 'string', obligatory: true },
+            { name: 'push', type: 'boolean' },
         ]);
 
         const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
@@ -67,16 +67,40 @@ export default class ComposeTransaction extends AbstractMethod {
 
         // set required firmware from coinInfo support
         this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
-        this.info = getLabel('Compose #NETWORK transaction', coinInfo);
 
-        const outputs: Array<BuildTxOutputRequest> = payload.outputs.map(out => validateOutput(out, coinInfo));
-        if (outputs.length < 1) {
-            throw new Error('Minimum 1 output is required.');
+        // validate each output and transform into hd-wallet format
+        const outputs: Array<BuildTxOutputRequest> = [];
+        let total: number = 0;
+        payload.outputs.forEach(out => {
+            validateParams(out, [
+                { name: 'amount', type: 'string', obligatory: true },
+                { name: 'address', type: 'string', obligatory: true },
+            ]);
+
+            if (!isValidAddress(out.address, coinInfo)) {
+                throw new Error(`Invalid ${ coinInfo.label } output address format`);
+            }
+
+            const amount: number = parseInt(out.amount);
+            total += amount;
+
+            outputs.push({
+                type: 'complete',
+                amount: parseInt(out.amount),
+                address: out.address
+            });
+        });
+
+        if (total <= coinInfo.dustLimit) {
+            throw new Error('Total amount is too low.');
         }
+
+        this.info = `Send ${ formatAmount(total, coinInfo) }`;
 
         this.params = {
             outputs,
             coinInfo,
+            push: payload.hasOwnProperty('push') ? payload.push : true
         }
     }
 
@@ -207,7 +231,7 @@ export default class ComposeTransaction extends AbstractMethod {
 
         const tx: BuildTxResult = this.composer.composed[feeLevel];
 
-        if (tx.type !== 'final') throw new Error('TODO: trying to sign unfinished tx');
+        if (tx.type !== 'final') throw new Error('Trying to sign unfinished tx');
 
         const bjsRefTxs = await this.backend.loadTransactions( getReferencedTransactions(tx.transaction.inputs) );
         const refTxs = transformReferencedTransactions(bjsRefTxs);
@@ -222,28 +246,15 @@ export default class ComposeTransaction extends AbstractMethod {
             coinInfo,
         );
 
-        //const txid: string = await this.backend.sendTransactionHex(response.message.serialized.serialized_tx);
-
-        return {
-            ...response.message,
-            //txid
+        if (this.params.push) {
+            const txid: string = await this.backend.sendTransactionHex(response.serialized);
+            return {
+                ...response,
+                txid
+            }
         }
 
-        // try {
-        //     txId = await this.backend.sendTransactionHex(signedtx.message.serialized.serialized_tx);
-        // } catch (error) {
-        //     throw {
-        //         // custom: true,
-        //         error: error.message || error,
-        //         // ...signedtx.message.serialized,
-        //     };
-        // }
-        // return {
-        //     serialized: {
-        //         serialized_tx: 'a',
-        //         signatures: ['a'],
-        //     }
-        // }
+        return response;
     }
 
     dispose() {

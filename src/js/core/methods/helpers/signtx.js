@@ -143,19 +143,14 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
     index: {[key: string]: RefTransaction},
     inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>
-): Promise<MessageResponse<SignedTx>> => {
+): Promise<SignedTx> => {
 
     saveTxSignatures(m.serialized, serializedTx, signatures);
 
     if (m.request_type === 'TXFINISHED') {
         return Promise.resolve({
-            message: {
-                serialized: {
-                    signatures: signatures,
-                    serialized_tx: serializedTx.serialized,
-                },
-            },
-            type: 'SignedTx',
+            signatures: signatures,
+            serialized: serializedTx.serialized,
         });
     }
 
@@ -179,7 +174,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
     refTxs: Array<RefTransaction>,
     coinInfo: CoinInfo,
     locktime: ?number,
-): Promise<MessageResponse<SignedTx>> => {
+): Promise<SignedTx> => {
 
     // TODO rbf
     const sequence: number = locktime ? (0xffffffff - 1) : 0xffffffff;
@@ -197,7 +192,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
         lock_time: locktime,
     });
 
-    const signed: MessageResponse<SignedTx> = await processTxRequest(
+    const signed: SignedTx = await processTxRequest(
         typedCall,
         response.message,
         serializedTx,

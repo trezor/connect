@@ -41,26 +41,10 @@ type $CipherKeyValueBatch = {
 
 export type $CipherKeyValue = $Common & ( $CipherKeyValueBatch | { bundle: Array<$CipherKeyValueBatch> } );
 
-type ComposeTransactionOutput = {
-    type: 'complete',
-    address: string,
-    amount: number, // in satoshis
-} | {
-    type: 'send-max', // only one in TX request
-    address: string,
-} | {
-    type: 'opreturn', // this is misnomer, since it doesn't need to have address
-    dataHex: string,
-} | {
-    type: 'noaddress',
-    amount: number,
-} | {
-    type: 'send-max-noaddress',
-}
-
 export type $ComposeTransaction = $Common & {
-    outputs: Array<ComposeTransactionOutput>;
+    outputs: Array<{ amount: string; address: string; }>;
     coin: string;
+    push?: boolean;
 }
 
 export type $CustomMessage = $Common & {
