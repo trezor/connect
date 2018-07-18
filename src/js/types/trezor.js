@@ -404,6 +404,17 @@ export type StellarAddress = {
     publicKey: string;
 }
 // this type is returned from device
+export type StellarSignedTx = {
+    public_key: string;
+    signature: string;
+}
+
+export type StellarPaymentOp = {
+    type: "StellarTxOpRequest",
+    message: {}
+}
+
+// this type is returned from device
 export type StellarAddressMessage = {
     path: Array<number>;
     address: string;
@@ -414,10 +425,109 @@ export type StellarPublicKeyMessage = {
     path: Array<number>;
 }
 
-export type StellarSignedTx = {
-    public_key: string;
-    signature: string;
+// those types are sent TO device
+export type StellarSignTxMessage = {
+    address_n: Array<number>;
+    protocol_version: number;
+    source_account: string;
+    fee: ?number;
+    sequence_number: ?number;
+    network_passphrase: string;
+    timebounds_start?: number;
+    timebounds_end?: number;
+    memo_type?: number;
+    memo_text?: ?string;
+    memo_id?: ?number;
+    memo_hash?: ?string;
+    num_operations: number;
 }
+
+type StellarAsset = {
+    type: string;
+    code?: string;
+    issuer?: string;
+}
+
+export type StellarOperationMessage = {
+    type: 'StellarCreateAccountOp',
+    new_account: ?string,
+    source_account: string,
+    starting_balance: ?number,
+} | {
+    type: 'StellarPaymentOp',
+    source_account: ?string,
+    destination_account: ?string,
+    asset: ?StellarAsset,
+    amount: ?number,
+} | {
+    type: 'StellarPathPaymentOp',
+    source_account: string,
+    send_asset: ?StellarAsset,
+    send_max: ?number,
+    destination_account: ?string,
+    destination_asset: ?StellarAsset,
+    destination_amount: ?number,
+    paths: ?Array<StellarAsset>
+} | {
+    type: 'StellarManageOfferOp',
+    source_account: string,
+    offer_id: number,
+    amount: number,
+    buying_asset: StellarAsset,
+    selling_asset: StellarAsset,
+    price_n: number,
+    price_d: number,
+} | {
+    type: 'StellarCreatePassiveOfferOp',
+    source_account: string,
+    offer_id: number,
+    amount: number,
+    buying_asset: StellarAsset,
+    selling_asset: StellarAsset,
+    price_n: number,
+    price_d: number,
+} | {
+    type: 'StellarSetOptionsOp',
+    source_account: string,
+    signer_type: ?number,
+    signer_key: ?string,
+    signer_weight: ?number,
+    clear_flags: ?number,
+    set_flags: ?number,
+    master_weight: ?number,
+    low_threshold: ?number,
+    medium_threshold: ?number,
+    high_threshold: ?number,
+    home_domain: ?string,
+    inflation_destination_account: ?string,
+} | {
+    type: 'StellarChangeTrustOp',
+    source_account: string,
+    asset: ?StellarAsset,
+    limit: ?number,
+} | {
+    type: 'StellarAllowTrustOp',
+    source_account: string,
+    trusted_account: string,
+    asset_type: ?number,
+    asset_code: ?string,
+    is_authorized: ?number,
+} | {
+    type: 'StellarAccountMergeOp',
+    source_account: string,
+    destination_account: string,
+} | {
+    type: 'StellarManageDataOp',
+    source_account: string,
+    key: string,
+    value: string,
+} | {
+    type: 'StellarBumpSequenceOp',
+    source_account: string,
+    bump_to: number
+}
+
+
 
 // GetAccountInfo response
 export type AccountInfo = {

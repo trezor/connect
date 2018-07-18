@@ -75,7 +75,7 @@ export type SetOptionsOperation = {
     +type: 'setOptions';    // Proto: "StellarSetOptionsOp"
     source: string;        // Proto: "source_account"
     signer: {
-        type: number;      // (?) Missing in stellar API, Proto: "signer_type"
+        type: number;      // (?) Missing in stellar API, Proto: "signer_type" 0: accont added/removed; 1: pre-authorized tx added/removed; 2: hash aded/removed
         key?: string;      // Proto: "signer_key"
         weight: number;    // Proto: "signer_weight"
     };
@@ -102,7 +102,7 @@ export type AllowTrustOperation = {
     trustor: string;       // Proto: "trusted_account"
     assetType?: number;    // Proto: "asset_type"
     assetCode?: string;    // Proto: "asset_code"
-    authorize: boolean;    // Proto: "is_authorized" > parse to uint32
+    authorize: boolean;    // Proto: "is_authorized" > parse to number
 }
 
 export type AccountMergeOperation = {

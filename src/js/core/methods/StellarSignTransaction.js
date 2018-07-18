@@ -2,16 +2,19 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/stellarSignTx';
 
-import type { NEMSignTxMessage, NEMSignedTx } from '../../types/trezor';
-import type { Transaction as $NEMTransaction } from '../../types/nem';
+import type { StellarSignedTx } from '../../types/trezor';
+import type { Transaction as $StellarTransaction } from '../../types/stellar';
 import type { CoreMessage } from '../../types';
 
 
 type Params = {
     path: Array<number>;
+    ledgerVersion: number;
+    networkPassphrase: string;
     transaction: any;
 }
 
@@ -24,33 +27,33 @@ export default class StellarSignTransaction extends AbstractMethod {
         this.requiredPermissions = ['read', 'write'];
         this.info = 'Sign Stellar transaction';
 
-        const payload: any = message.payload;
-        // common fields validation
-        if (!payload.hasOwnProperty('path')) {
-            throw new Error('Parameter "path" is missing');
-        } else {
-            payload.path = validatePath(payload.path, 3);
-        }
+        const payload: Object = message.payload;
+        // validate incoming parameters
+        validateParams(payload, [
+            { name: 'path', obligatory: true },
+            { name: 'ledgerVersion', type: 'number', obligatory: true },
+            { name: 'networkPassphrase', type: 'string', obligatory: true },
+            { name: 'transaction', obligatory: true },
+        ]);
 
-        if (!payload.hasOwnProperty('transaction')) {
-            throw new Error('Parameter "transaction" is missing');
-        }
-
+        const path = validatePath(payload.path, 3);
+        // incoming data should be in stellar-sdk format
+        const transaction: $StellarTransaction = payload.transaction;
         this.params = {
-            path: payload.path,
-            transaction: payload.transaction,
+            path,
+            ledgerVersion: payload.ledgerVersion,
+            networkPassphrase: payload.networkPassphrase,
+            transaction,
         }
-
-        // incoming data are in nem-sdk format
-        // const transaction: $NEMTransaction = payload.transaction;
-        // this.message = helper.createTx(transaction, payload.path);
     }
 
-    async run(): Promise<NEMSignedTx> {
+    async run(): Promise<StellarSignedTx> {
         const tx = this.params.transaction;
         return await helper.stellarSignTx(
             this.device.getCommands().typedCall.bind( this.device.getCommands() ),
             this.params.path,
+            this.params.ledgerVersion,
+            this.params.networkPassphrase,
             this.params.transaction
         );
     }

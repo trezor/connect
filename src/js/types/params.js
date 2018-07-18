@@ -157,9 +157,9 @@ export type $StellarGetAddress = $Common & {
 }
 
 export type $StellarSignTransaction = $Common & {
-    path?: $Path;
-    ledgerVersion?: number;
-    networkPassphrase?: string;
+    path: $Path;
+    ledgerVersion: number;
+    networkPassphrase: string;
     transaction: StellarTransaction;
 }
 
