@@ -208,7 +208,8 @@ export type EthereumAddress = {
 }
 
 export type EthereumSignedTx = {
-    v: number,
+    // v: number,
+    v: string,
     r: string,
     s: string,
 };

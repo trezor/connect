@@ -26,8 +26,14 @@ const processTxRequest = async (
             throw new Error('Unexpected request.');
         }
 
+        // return Promise.resolve({
+        //     v, r, s
+        // });
+
         return Promise.resolve({
-            v, r, s,
+            v: '0x' + v.toString(16),
+            r: '0x' + r,
+            s: '0x' + s,
         });
     }
 
