@@ -114,9 +114,9 @@ export const getPublicKeyLabel = (path: Array<number>, coinInfo: ?CoinInfo): str
     }
 
     const p1: number = fromHardened(path[0]);
-    let account: number = fromHardened(path[2]);
+    let account: number = path.length >= 3 ? fromHardened(path[2]) : -1;
     let realAccountId: number = account + 1;
-    let prefix: string = 'Export public key of';
+    let prefix: string = 'Export public key';
     let accountType: string = '';
 
     // Copay id
@@ -137,7 +137,13 @@ export const getPublicKeyLabel = (path: Array<number>, coinInfo: ?CoinInfo): str
     } else {
         accountType = coinLabel;
     }
-    return `${ prefix } ${ accountType } <span>account #${realAccountId}</span>`;
+
+    if (realAccountId > 0) {
+        return `${ prefix } of ${ accountType } <span>account #${realAccountId}</span>`;
+    } else {
+        return prefix;
+    }
+
 }
 
 export const getLabel = (label: string, coinInfo: ?CoinInfo): string => {

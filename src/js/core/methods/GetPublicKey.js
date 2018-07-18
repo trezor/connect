@@ -56,11 +56,13 @@ export default class GetPublicKey extends AbstractMethod {
                 { name: 'crossChain', type: 'boolean' },
             ]);
 
-            const path: Array<number> = validatePath(batch.path);
             let coinInfo: ?CoinInfo;
             if (batch.coin) {
                 coinInfo = getCoinInfoByCurrency(batch.coin);
             }
+
+            const path: Array<number> = validatePath(batch.path, coinInfo ? 3 : 0);
+
             if (coinInfo && !batch.crossChain) {
                 validateCoinPath(coinInfo, path);
             } else if (!coinInfo) {
