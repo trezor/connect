@@ -92,7 +92,7 @@ declare module 'flowtype/tests' {
     declare export type NemSignTransactionMultisigAvailableSubtests = 'aggregateModification' | 'multisig' | 'multisigSigner';
     declare export type NemSignTransactionOthersAvailableSubtests = 'importanceTransfer' | 'provisionNamespace';
     declare export type NemSignTransactionTransfersAvailableSubtests = 'simple' | 'encryptedPayload' | 'xemAsMosaic' | 'unknownMosaic' | 'knownMosaic' | 'knownMosaicWithLevy' | 'multipleMosaics';
-    declare export type GetAccountInfoAvailableSubtests = 'firstAccount' | 'zeroBalance' | 'pathInvalid' | 'noAddressIndex' | 'zeroBalance' | 'xpubInsteadOfPath';
+    declare export type GetAccountInfoAvailableSubtests = 'firstAccount' | 'zeroBalance' | 'pathInvalid' | 'zeroBalance' | 'xpubInsteadOfPath';
     declare export type PassphraseAvailableSubtests = 'correctPassphrase' | 'wrongPassphrase';
 
     declare type Subtest<T, R> = {
