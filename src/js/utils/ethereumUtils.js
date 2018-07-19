@@ -30,7 +30,8 @@ export const toChecksumAddress = (address: string, network: ?EthereumNetworkInfo
 
 export const getNetworkLabel = (label: string, network: ?EthereumNetworkInfo): string => {
     if (network) {
-        return label.replace('#NETWORK', network.name);
+        const name: string = network.name.toLowerCase().indexOf('testnet') >= 0 ? 'Testnet' : network.name;
+        return label.replace('#NETWORK', name);
     }
     return label.replace('#NETWORK', '');
 }
