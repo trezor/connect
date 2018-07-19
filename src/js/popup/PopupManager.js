@@ -53,12 +53,14 @@ export default class PopupManager extends EventEmitter {
 
         const openFn: Function = this.open.bind(this);
         this.locked = true;
-        this.requestTimeout = window.setTimeout(() => {
-            this.requestTimeout = 0;
+        if (!this.settings.supportedBrowser) {
             openFn();
-            // this.setAddress(settings.popupURL);
-        }, POPUP_REQUEST_TIMEOUT);
-        // this.open();
+        } else {
+            this.requestTimeout = window.setTimeout(() => {
+                this.requestTimeout = 0;
+                openFn();
+            }, POPUP_REQUEST_TIMEOUT);
+        }
     }
 
     cancel(): void {
@@ -91,6 +93,10 @@ export default class PopupManager extends EventEmitter {
             ,status=no
             ,scrollbars=yes`;
 
+        if (!this.settings.supportedBrowser) {
+            window.open(this.src +'#unsupported', '_blank', opts);
+            return;
+        }
         this._window = window.open('', '_blank', opts);
         if (this._window) {
             this._window.location.href = this.lazyLoad ? this.src +'#loading' : this.src; // otherwise android/chrome loose window.opener reference

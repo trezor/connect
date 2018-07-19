@@ -7,6 +7,7 @@
  */
 
 import EventEmitter from 'events';
+import 'babel-polyfill'; // for unsupported browsers
 
 import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from './constants';
 import * as TRANSPORT from './constants/transport';
@@ -114,6 +115,10 @@ const init = async (settings: Object = {}): Promise<void> => {
         _settings = parseSettings(settings);
     }
 
+    if (!_settings.supportedBrowser) {
+        throw new Error('Unsupported browser');
+    }
+
     if (!_popupManager) {
         _popupManager = initPopupManager();
     }
@@ -138,6 +143,11 @@ const call = async (params: Object): Promise<Object> => {
         _settings = parseSettings({});
         _popupManager = initPopupManager();
         _popupManager.request(true);
+
+        if (!_settings.supportedBrowser) {
+            return { success: false, message: 'Unsupported browser' };
+        }
+
         // auto init with default settings
         try {
             await init(_settings);

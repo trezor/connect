@@ -16,6 +16,7 @@ export type ConnectSettings = {
     transportReconnect: boolean;
     webusb: boolean;
     pendingTransportEvent: boolean;
+    supportedBrowser?: boolean;
 }
 
 /*
@@ -42,6 +43,7 @@ const initialSettings: ConnectSettings = {
     transportReconnect: false,
     webusb: true,
     pendingTransportEvent: true,
+    supportedBrowser: !(/Trident|MSIE/.test(navigator.userAgent)),
 };
 
 let currentSettings: ConnectSettings = initialSettings;
