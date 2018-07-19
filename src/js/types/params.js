@@ -116,6 +116,11 @@ export type $NEMSignTransaction = $Common & {
     transaction: NEMTransaction;
 }
 
+export type $PushTransaction = $Common & $Exact<{
+    tx: string;
+    coin: string;
+}>;
+
 export type $RequestLogin = $Common & $Exact<{
     challengeHidden: string;
     challengeVisible: string;

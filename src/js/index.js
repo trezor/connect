@@ -323,6 +323,10 @@ class TrezorConnect {
         return await call({ method: 'nemSignTransaction', ...params });
     }
 
+    static pushTransaction = async (params: $T.$PushTransaction): Promise<$T.PushTransaction$> => {
+        return await call({ method: 'pushTransaction', ...params });
+    }
+
     static signMessage = async (params: $T.$SignMessage): Promise<$T.SignMessage$> => {
         return await call({ method: 'signMessage', ...params });
     }

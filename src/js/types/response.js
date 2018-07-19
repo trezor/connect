@@ -91,6 +91,10 @@ export type GetPublicKey$ = {
     payload: HDNodeResponse | Array<HDNodeResponse>;
 } | Unsuccessful$;
 
+export type PushTransaction$ = {
+    txid: string;
+} | Unsuccessful$;
+
 export type RequestLogin$ = {
     success: true;
     payload: SignedIdentity;

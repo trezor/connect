@@ -17,6 +17,7 @@ import GetAddress from './GetAddress';
 import GetDeviceState from './GetDeviceState';
 import GetFeatures from './GetFeatures';
 import GetPublicKey from './GetPublicKey';
+import PushTransaction from './PushTransaction';
 import RequestLogin from './RequestLogin';
 import NEMGetAddress from './NEMGetAddress';
 import NEMSignTransaction from './NEMSignTransaction';
@@ -39,6 +40,7 @@ const classes: {[k: string]: any} = {
     'getDeviceState': GetDeviceState,
     'getFeatures': GetFeatures,
     'getPublicKey': GetPublicKey,
+    'pushTransaction': PushTransaction,
     'requestLogin': RequestLogin,
     'nemGetAddress': NEMGetAddress,
     'nemSignTransaction': NEMSignTransaction,
