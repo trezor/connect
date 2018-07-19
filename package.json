@@ -41,6 +41,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
     "bchaddrjs": "^0.2.1",
     "bip44-constants": "^5.0.0",
@@ -90,7 +91,7 @@
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
-    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-runtime": "^6.26.0",
     "events": "^1.1.1",
     "whatwg-fetch": "^2.0.4"
   }
