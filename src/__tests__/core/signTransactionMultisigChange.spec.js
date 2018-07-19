@@ -146,7 +146,7 @@ const externalInternal = (): SubtestSignTransaction => {
                     script_type: 'PAYTOADDRESS',
                 },
                 {
-                    address_n: getHDPath("45'/0/1/1"),
+                    address_n: [45 | 0x80000000, 0, 1, 1],
                     amount: 44000000,
                     script_type: 'PAYTOADDRESS',
                 },
@@ -178,12 +178,12 @@ const internalExternal = (): SubtestSignTransaction => {
             inputs: [input1, input2],
             outputs: [
                 {
-                    address_n: getHDPath("45'/0/1/0"),
+                    address_n: [45 | 0x80000000, 0, 1, 0],
                     amount: 40000000,
                     script_type: 'PAYTOADDRESS',
                 },
                 {
-                    address_n: getHDPath("45'/0/1/1"),
+                    address_n: [45 | 0x80000000, 0, 1, 1],
                     amount: 44000000,
                     script_type: 'PAYTOADDRESS',
                 },
