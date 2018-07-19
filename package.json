@@ -1,6 +1,6 @@
 {
   "name": "trezor-connect",
-  "version": "5.0.21",
+  "version": "5.0.22",
   "author": "TREZOR <info@trezor.io>",
   "homepage": "https://github.com/trezor/connect",
   "description": "High-level javascript interface for TREZOR hardware wallet.",
@@ -91,7 +91,6 @@
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
-    "babel-runtime": "^6.26.0",
     "events": "^1.1.1",
     "whatwg-fetch": "^2.0.4"
   }
