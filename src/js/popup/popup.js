@@ -140,17 +140,17 @@ const init = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
 
     // pass popup console to iframe
     // popupConsole(POPUP.LOG, postMessage);
-
-    // global method used in html-inline elements
-    window.closeWindow = () => {
-        setTimeout(window.close, 100);
-    };
 }
 
 const onLoad = () => {
     if (window.location.hash.length > 0) {
-        if (window.opener)
+        if (window.location.hash.indexOf('unsupported') >= 0) {
+            view.initBrowserView({
+                supported: false
+            });
+        } else if (window.opener) {
             window.opener.postMessage(POPUP.INIT, '*');
+        }
         return;
     }
     window.location.hash = '';
@@ -169,4 +169,9 @@ window.addEventListener('message', handleMessage, false);
 window.addEventListener('beforeunload', () => {
     // TODO
 });
+
+// global method used in html-inline elements
+window.closeWindow = () => {
+    setTimeout(window.close, 100);
+};
 
