@@ -71,7 +71,7 @@ nemSignTransactionMultisig_subtests="aggregateModification multisig multisigSign
 nemSignTransactionOthers_subtests="importanceTransfer provisionNamespace"
 nemSignTransactionTransfers_subtests="simple encryptedPayload xemAsMosaic unknownMosaic knownMosaic knownMosaicWithLevy multipleMosaics"
 
-getAccountInfo_subtests="firstAccount zeroBalance pathInvalid noAddressIndex zeroBalance xpubInsteadOfPath"
+getAccountInfo_subtests="firstAccount zeroBalance pathInvalid zeroBalance xpubInsteadOfPath"
 
 passphrase_subtests="correctPassphrase wrongPassphrase"
 ################# Possible subtests: END
@@ -204,18 +204,6 @@ setup_mnemonic_allallall_passphrase() {
 
 setup_mnemonic_nopin_nopassphrase() {
     init_device "$mnemonic_12" "$pin_0" "False"
-}
-
-setup_mnemonic_nopin_passphrase() {
-    init_device "$mnemonic_12" "$pin_0" "True"
-}
-
-setup_mnemonic_pin_nopassphrase() {
-    init_device "$mnemonic_12" "$pin_4" "False"
-}
-
-setup_mnemonic_pin_passphrase() {
-    init_device "$mnemonic_12" "$pin_4" "True"
 }
 
 show_available_subtests_for_test() {
@@ -478,10 +466,6 @@ test_getAddress() {
 
         start_emulator
         setup_mnemonic_nopin_nopassphrase
-        #if [ $subtest == "bch" ] || [ $subtest == "bchMultisig" ]; then
-        #    setup_mnemonic_allallall
-        #else
-        #fi;
         start_transport
 
         run_karma "getAddress" $subtest
@@ -806,10 +790,6 @@ test_ethereumSignTransaction() {
 
         start_emulator
         setup_mnemonic_nopin_nopassphrase
-        #if [ $subtest == "noDataEip155" ] || [ $subtest == "dataEip155" ]; then
-        #    setup_mnemonic_allallall
-        #else
-        #fi;
         start_transport
 
         run_karma "ethereumSignTransaction" $subtest
@@ -951,7 +931,7 @@ test_getAccountInfo() {
         echo "${green}   - subtest: ${subtest}${reset}"
 
         start_emulator
-        setup_mnemonic_allallall
+        setup_mnemonic_nopin_nopassphrase
         start_transport
 
         run_karma "getAccountInfo" $subtest
