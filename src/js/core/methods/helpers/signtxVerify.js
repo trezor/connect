@@ -22,24 +22,21 @@ import type {
     SignedTx
 } from '../../../types/trezor';
 
-export const verifyTx = (tx: ?BuildTxResult,
-    inputs: Array<TransactionInput>,
+export const verifyTx = (inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>,
     nodes: ?Array<bitcoin.HDNode>,
     signedTx: SignedTx,
     coinInfo: CoinInfo,
 ): void => {
     const bitcoinTx: bitcoin.Transaction = bitcoin.Transaction.fromHex(signedTx.serialized, coinInfo.zcash);
-    // $FlowIssue
-    // if (tx.transaction.inputs.length !== bitcoinTx.ins.length) {
-    //     throw new Error('Signed transaction has wrong length.');
-    // }
-    // // $FlowIssue
-    // if (tx.transaction.outputs.sorted.length !== bitcoinTx.outs.length) {
-    //     throw new Error('Signed transaction has wrong length.');
-    // }
 
+    if (inputs.length !== bitcoinTx.ins.length) {
+        throw new Error('Signed transaction has wrong length.');
+    }
 
+    if (outputs.length !== bitcoinTx.outs.length) {
+        throw new Error('Signed transaction has wrong length.');
+    }
 
     // outputs.sorted.map((output, i) => {
     outputs.map((output, i) => {
@@ -68,52 +65,6 @@ export const verifyTx = (tx: ?BuildTxResult,
         //     }
         // }
     });
-}
-
-function isScriptHash(address: string, network: bitcoin.Network): boolean {
-    const decoded = bitcoin.address.fromBase58Check(address);
-    if (decoded.version === network.pubKeyHash) {
-        return true;
-    }
-    if (decoded.version === network.scriptHash) {
-        return false;
-    }
-    throw new Error('Unknown address type.');
-}
-
-const transformResTx = (tx: bitcoin.Transaction): RefTransaction => {
-    const data = getJoinSplitData(tx);
-    const dataStr = data == null ? null : data.toString('hex');
-    return {
-        lock_time: tx.locktime,
-        version: tx.version,
-        hash: tx.getId(),
-        inputs: tx.ins.map((input: bitcoin.Input) => {
-            return {
-                prev_index: input.index,
-                sequence: input.sequence,
-                prev_hash: reverseBuffer(input.hash).toString('hex'),
-                script_sig: input.script.toString('hex'),
-            };
-        }),
-        bin_outputs: tx.outs.map((output: bitcoin.Output) => {
-            return {
-                amount: output.value,
-                script_pubkey: output.script.toString('hex'),
-            };
-        }),
-        extra_data: dataStr,
-    };
-};
-
-function getJoinSplitData(transaction) {
-    if (transaction.version < 2) {
-        return null;
-    }
-    const buffer = transaction.toBuffer();
-    const joinsplitByteLength = transaction.joinsplitByteLength();
-    const res = buffer.slice(buffer.length - joinsplitByteLength);
-    return res;
 }
 
 function deriveOutputScript(

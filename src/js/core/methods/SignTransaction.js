@@ -9,9 +9,11 @@ import { NO_COIN_INFO } from '../../constants/errors';
 
 import BlockBook, { create as createBackend } from '../../backend';
 import * as helper from './helpers/signtx';
+
 import {
-    validateInputs,
-    validateOutputs,
+    validateTrezorInputs,
+    validateTrezorOutputs,
+    inputToHD,
     getReferencedTransactions,
     transformReferencedTransactions
 } from './tx';
@@ -35,7 +37,7 @@ import type { CoreMessage } from '../../types';
 type Params = {
     inputs: Array<TransactionInput>;
     hdInputs:Array<BuildTxInput>;
-    outputs: Array<any>;
+    outputs: Array<TransactionOutput>;
     coinInfo: CoinInfo;
     push: boolean;
 }
@@ -69,12 +71,9 @@ export default class SignTransaction extends AbstractMethod {
             this.info = getLabel('Sign #NETWORK transaction', coinInfo);
         }
 
-        const {
-            inputs,
-            hdInputs
-        } = validateInputs(payload.inputs, coinInfo.network);
-
-        const outputs = validateOutputs(payload.outputs, coinInfo.network);
+        const inputs: Array<TransactionInput> = validateTrezorInputs(payload.inputs, coinInfo);
+        const hdInputs: Array<BuildTxInput> = inputs.map(inputToHD);
+        const outputs: Array<TransactionOutput> = validateTrezorOutputs(payload.outputs, coinInfo);
 
         const total: number = outputs.reduce((t, r) => t + r.amount, 0);
         if (total <= coinInfo.dustLimit) {

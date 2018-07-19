@@ -203,7 +203,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
     );
 
     // TODO: validate tx
-    // verifyTx(null, inputs, outputs, null, signed.message, coinInfo);
+    // verifyTx(inputs, outputs, null, signed, coinInfo);
 
     return signed;
 };

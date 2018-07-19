@@ -15,13 +15,11 @@ import BlockBook, { create as createBackend } from '../../backend';
 import Account from '../../account';
 import TransactionComposer from './tx/TransactionComposer';
 import {
+    inputToTrezor,
+    outputToTrezor,
     getReferencedTransactions,
     transformReferencedTransactions
 } from './tx';
-import {
-    input as transformInput,
-    output as transformOutput
-} from './tx/trezorFormat';
 import * as helper from './helpers/signtx';
 
 import { UiMessage } from '../../message/builder';
@@ -240,8 +238,8 @@ export default class ComposeTransaction extends AbstractMethod {
 
         const response = await helper.signTx(
             this.device.getCommands().typedCall.bind( this.device.getCommands() ),
-            tx.transaction.inputs.map(inp => transformInput(inp, 0)),
-            tx.transaction.outputs.sorted.map(out => transformOutput(out, coinInfo)),
+            tx.transaction.inputs.map(inp => inputToTrezor(inp, 0)),
+            tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo)),
             refTxs,
             coinInfo,
         );
