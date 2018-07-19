@@ -373,10 +373,6 @@ export {
     // RESPONSE_EVENT,
 };
 
-// expose as window
-window.TrezorConnect = TrezorConnect;
-
-// reexport types
 export type {
     Device,
     Features,
