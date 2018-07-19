@@ -67,38 +67,38 @@ export const verifyTx = (inputs: Array<TransactionInput>,
     });
 }
 
-function deriveOutputScript(
-    pathOrAddress: string | Array<number>,
-    nodes: Array<bitcoin.HDNode>,
-    network: bitcoin.Network,
-    segwit: boolean
-): Buffer {
-    const scriptType = typeof pathOrAddress === 'string'
-        ? (isScriptHash(pathOrAddress, network) ? 'PAYTOSCRIPTHASH' : 'PAYTOADDRESS')
-        : (segwit ? 'PAYTOP2SHWITNESS' : 'PAYTOADDRESS');
+// function deriveOutputScript(
+//     pathOrAddress: string | Array<number>,
+//     nodes: Array<bitcoin.HDNode>,
+//     network: bitcoin.Network,
+//     segwit: boolean
+// ): Buffer {
+//     const scriptType = typeof pathOrAddress === 'string'
+//         ? (isScriptHash(pathOrAddress, network) ? 'PAYTOSCRIPTHASH' : 'PAYTOADDRESS')
+//         : (segwit ? 'PAYTOP2SHWITNESS' : 'PAYTOADDRESS');
 
-    const pkh: Buffer = typeof pathOrAddress === 'string'
-        ? bitcoin.address.fromBase58Check(pathOrAddress).hash
-        : derivePubKeyHash(
-            nodes,
-            pathOrAddress[pathOrAddress.length - 2],
-            pathOrAddress[pathOrAddress.length - 1]
-        );
+//     const pkh: Buffer = typeof pathOrAddress === 'string'
+//         ? bitcoin.address.fromBase58Check(pathOrAddress).hash
+//         : derivePubKeyHash(
+//             nodes,
+//             pathOrAddress[pathOrAddress.length - 2],
+//             pathOrAddress[pathOrAddress.length - 1]
+//         );
 
-    if (scriptType === 'PAYTOADDRESS') {
-        return bitcoin.script.pubKeyHash.output.encode(pkh);
-    }
+//     if (scriptType === 'PAYTOADDRESS') {
+//         return bitcoin.script.pubKeyHash.output.encode(pkh);
+//     }
 
-    if (scriptType === 'PAYTOSCRIPTHASH') {
-        return bitcoin.script.scriptHash.output.encode(pkh);
-    }
+//     if (scriptType === 'PAYTOSCRIPTHASH') {
+//         return bitcoin.script.scriptHash.output.encode(pkh);
+//     }
 
-    if (scriptType === 'PAYTOP2SHWITNESS') {
-        return deriveWitnessOutput(pkh);
-    }
+//     if (scriptType === 'PAYTOP2SHWITNESS') {
+//         return deriveWitnessOutput(pkh);
+//     }
 
-    throw new Error('Unknown script type ' + scriptType);
-}
+//     throw new Error('Unknown script type ' + scriptType);
+// }
 
 function deriveWitnessOutput(pkh): Buffer {
     // see https://github.com/bitcoin/bips/blob/master/bip-0049.mediawiki
