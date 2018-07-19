@@ -477,11 +477,11 @@ test_getAddress() {
         echo "${green}   - subtest: ${subtest}${reset}"
 
         start_emulator
-        if [ $subtest == "bch" ] || [ $subtest == "bchMultisig" ]; then
-            setup_mnemonic_allallall
-        else
-            setup_mnemonic_nopin_nopassphrase
-        fi;
+        setup_mnemonic_nopin_nopassphrase
+        #if [ $subtest == "bch" ] || [ $subtest == "bchMultisig" ]; then
+        #    setup_mnemonic_allallall
+        #else
+        #fi;
         start_transport
 
         run_karma "getAddress" $subtest
@@ -583,14 +583,7 @@ test_signTransaction() {
         echo "${green}   - subtest: ${subtest}${reset}"
 
         start_emulator
-        if [ $subtest == "oneTwoFee" ] ||
-        [ $subtest == "testnetOneTwoFee" ] ||
-        [ $subtest == "changeOnmainChainAllowed" ] ||
-        [ $subtest == "twoChanges" ]; then
-            setup_mnemonic_allallall
-        else
-            setup_mnemonic_nopin_nopassphrase
-        fi;
+        setup_mnemonic_nopin_nopassphrase
         start_transport
 
         run_karma "signTransaction" $subtest
@@ -613,7 +606,7 @@ test_signTransactionSegwit() {
         echo "${green}   - subtest: ${subtest}${reset}"
 
         start_emulator
-        setup_mnemonic_allallall
+        setup_mnemonic_nopin_nopassphrase
         start_transport
 
         run_karma "signTransactionSegwit" $subtest
@@ -636,7 +629,7 @@ test_signTransactionBgold() {
         echo "${green}   - subtest: ${subtest}${reset}"
 
         start_emulator
-        setup_mnemonic_allallall
+        setup_mnemonic_nopin_nopassphrase
         start_transport
 
         run_karma "signTransactionBgold" $subtest
@@ -659,7 +652,7 @@ test_signTransactionBcash() {
         echo "${green}   - subtest: ${subtest}${reset}"
 
         start_emulator
-        setup_mnemonic_allallall
+        setup_mnemonic_nopin_nopassphrase
         start_transport
 
         run_karma "signTransactionBcash" $subtest
@@ -812,11 +805,11 @@ test_ethereumSignTransaction() {
         echo "${green}   - subtest: ${subtest}${reset}"
 
         start_emulator
-        if [ $subtest == "noDataEip155" ] || [ $subtest == "dataEip155" ]; then
-            setup_mnemonic_allallall
-        else
-            setup_mnemonic_nopin_nopassphrase
-        fi;
+        setup_mnemonic_nopin_nopassphrase
+        #if [ $subtest == "noDataEip155" ] || [ $subtest == "dataEip155" ]; then
+        #    setup_mnemonic_allallall
+        #else
+        #fi;
         start_transport
 
         run_karma "ethereumSignTransaction" $subtest

@@ -54,12 +54,8 @@ export const ethereumGetAddress = () => {
                     address: '64c97f1954602ef09b950aba4b0d172ace043392',
                 },
             },
-            {
-                success: false,
-            },
-            {
-                success: false,
-            },
+            { success: false },
+            { success: false },
         ];
 
         beforeEach(async (done) => {

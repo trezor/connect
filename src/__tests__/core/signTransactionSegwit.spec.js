@@ -24,7 +24,7 @@ const sendP2sh = (): SubtestSignTransaction => {
             coin: 'Testnet',
             inputs: [
                 {
-                    address_n: getHDPath("49'/1'/0'/1/0"),
+                    address_n: [49 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 0],
                     amount: 123456789,
                     prev_hash: '20912f98ea3ed849042efed0fdac8cb4fc301961c5988cba56902d8ffb61c337',
                     prev_index: 0,
@@ -50,7 +50,10 @@ const sendP2sh = (): SubtestSignTransaction => {
         {
             payload: {
                 serialized: {
-                    serialized_tx: '0100000000010137c361fb8f2d9056ba8c98c5611930fcb48cacfdd0fe2e0449d83eea982f91200000000017160014d16b8c0680c61fc6ed2e407455715055e41052f5ffffffff02e0aebb00000000001976a91414fdede0ddc3be652a0ce1afbc1b509a55b6b94888ac3df39f060000000017a91458b53ea7f832e8f096e896b8713a8c6df0e892ca8702483045022100ccd253bfdf8a5593cd7b6701370c531199f0f05a418cd547dfc7da3f21515f0f02203fa08a0753688871c220648f9edadbdb98af42e5d8269364a326572cf703895b012103e7bfe10708f715e8538c92d46ca50db6f657bbc455b7494e6a0303ccdb868b7900000000',
+                    signatures: [
+                        '304402207e8c682de6cdcdcd8883f012c909398b9853c60687dc708f435c519cc9b2c8ae02207b312b94a0d9bf24dcfc565d541f07e2029ee0ec1e7a6c73f3fc250d33f6df7a',
+                    ],
+                    serialized_tx: '0100000000010137c361fb8f2d9056ba8c98c5611930fcb48cacfdd0fe2e0449d83eea982f91200000000017160014831ad96fe5919bbc843626034b7eeef99fc5df7affffffff02e0aebb00000000001976a91414fdede0ddc3be652a0ce1afbc1b509a55b6b94888ac3df39f060000000017a91458b53ea7f832e8f096e896b8713a8c6df0e892ca870247304402207e8c682de6cdcdcd8883f012c909398b9853c60687dc708f435c519cc9b2c8ae02207b312b94a0d9bf24dcfc565d541f07e2029ee0ec1e7a6c73f3fc250d33f6df7a012102e7232ddd135b988b1e4e19370097426fd66a1e6b00d19c44bb4c8b2557b74de400000000',
                 },
             },
         },
@@ -70,7 +73,7 @@ const sendP2shChange = (): SubtestSignTransaction => {
             coin: 'Testnet',
             inputs: [
                 {
-                    address_n: getHDPath("49'/1'/0'/1/0"),
+                    address_n: [49 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 0],
                     amount: 123456789,
                     prev_hash: '20912f98ea3ed849042efed0fdac8cb4fc301961c5988cba56902d8ffb61c337',
                     prev_index: 0,
@@ -84,7 +87,7 @@ const sendP2shChange = (): SubtestSignTransaction => {
                     script_type: 'PAYTOADDRESS',
                 },
                 {
-                    address_n: getHDPath("49'/1'/0'/1/0"),
+                    address_n: [49 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 0],
                     amount: 123456789 - 11000 - 12300000,
                     script_type: 'PAYTOP2SHWITNESS',
                 },
@@ -96,7 +99,10 @@ const sendP2shChange = (): SubtestSignTransaction => {
         {
             payload: {
                 serialized: {
-                    serialized_tx: '0100000000010137c361fb8f2d9056ba8c98c5611930fcb48cacfdd0fe2e0449d83eea982f91200000000017160014d16b8c0680c61fc6ed2e407455715055e41052f5ffffffff02e0aebb00000000001976a91414fdede0ddc3be652a0ce1afbc1b509a55b6b94888ac3df39f060000000017a91458b53ea7f832e8f096e896b8713a8c6df0e892ca8702483045022100ccd253bfdf8a5593cd7b6701370c531199f0f05a418cd547dfc7da3f21515f0f02203fa08a0753688871c220648f9edadbdb98af42e5d8269364a326572cf703895b012103e7bfe10708f715e8538c92d46ca50db6f657bbc455b7494e6a0303ccdb868b7900000000',
+                    signatures: [
+                        '3045022100c0b0cd7a0ba2fa82b73a203891c45871928f054c2cd8eb4d50543e54ab981136022003721ee8511e614abd862f21edec75d6fa4bbeb476bdd435461e5595e2235c5f',
+                    ],
+                    serialized_tx: '0100000000010137c361fb8f2d9056ba8c98c5611930fcb48cacfdd0fe2e0449d83eea982f91200000000017160014831ad96fe5919bbc843626034b7eeef99fc5df7affffffff02e0aebb00000000001976a91414fdede0ddc3be652a0ce1afbc1b509a55b6b94888ac3df39f060000000017a914ca03da1d2aa3db6feec01d02867181d459d65a808702483045022100c0b0cd7a0ba2fa82b73a203891c45871928f054c2cd8eb4d50543e54ab981136022003721ee8511e614abd862f21edec75d6fa4bbeb476bdd435461e5595e2235c5f012102e7232ddd135b988b1e4e19370097426fd66a1e6b00d19c44bb4c8b2557b74de400000000',
                 },
             },
         },
@@ -110,7 +116,7 @@ const sendP2shChange = (): SubtestSignTransaction => {
 };
 
 const sendMultisig1 = (): SubtestSignTransaction => {
-        const address = getHDPath("999'/1'/1'/2/0");
+        const address = [999 | 0x80000000, 1 | 0x80000000, 1 | 0x80000000, 2, 0];
         address[2] = 0x80000003
     const testPayloads: Array<TestSignTransactionPayload> = [
         {
@@ -118,7 +124,7 @@ const sendMultisig1 = (): SubtestSignTransaction => {
             coin: 'Testnet',
             inputs: [
                 {
-                    address_n: address,
+                    address_n: [999 | 0x80000000, 1 | 0x80000000, 0x80000003, 2, 0],
                     amount: 1610436,
                     prev_hash: '9c31922be756c06d02167656465c8dc83bb553bf386a3f478ae65b5c021002be',
                     prev_index: 1,
@@ -126,19 +132,19 @@ const sendMultisig1 = (): SubtestSignTransaction => {
                     multisig: {
                         pubkeys: [
                             {
-                                node: 'tpubDD6wzrQrGNt7XttZcK8cK93fUzyNbkFnzf8QKXdY94ugLMg8GfZVH7KiyNHoYoatCBteb8K4NYjfdLqpVh3pa2UqzYQ6Qhxk8e5hdG1U41v',
+                                node: 'tpubDCKNmygUHqKJZjbtPqaKyFms6BjMvNHrwe3ePSdEruYfLb1EQDXRN63t7cDEhc79xjqYTpbnvp6XHR9cXb5iF4jTqJaHfwm5Dv2CRwyyAwq',
                                 address_n: [2, 0],
                             },
                             {
-                                node: 'tpubDD6wzrQrGNt7aUu5CyGJCL8dB57hGEbqvKr1nqDcGPiB9iMhHPhypMJnCVcrVtai6rqdbF3VBFinjtibv9A7WwxxmY7ZprNo3k4dKNKYDdm',
+                                node: 'tpubDCKNmygUHqKJbHoeVPzzjkAjgHfmqoWaG4dBp4kyE5rCmhujjWLC7SkcQw9g6q6ZDp4QgN24REZmoHJTik1a6sqqCH5txzrCdhsTnZh9bSA',
                                 address_n: [2, 0],
                             },
                             {
-                                node: 'tpubDD6wzrQrGNt7dT4MJ59xLxAJaEVsr29pFQuCZVubCUHC1SoC85XPvWSyzDs6mjDeYoHYPiMrSUmknSqELasqmUiZ4y388mZboC3aHqPCPts',
+                                node: 'tpubDCKNmygUHqKJft96NiaH9vQF78U71ShySniMobimCi3ZHF6fwsG2SFDRLzoWZQZwJvvMMKABCvu6BTPzxgZAFWfere6aRZ6ZeC6dfvoNuHr',
                                 address_n: [2, 0],
                             },
                         ],
-                        signatures: ['304402205b44c20cf2681690edaaf7cd2e30d4704124dd8b7eb1fb7f459d3906c3c374a602205ca359b6544ce2c101c979899c782f7d141c3b0454ea69202b1fb4c09d3b7157', '', ''],
+                        signatures: ['3045022100f79ce22f119d279f68b480224404346160b96f1e814dace24e880330e280d8250220390567133c9c292114afa753ee8144a44f73fe7fcd503f0a07ac5fdd23c72f3c', '', ''],
                         m: 2,
                     },
                 },
@@ -157,7 +163,10 @@ const sendMultisig1 = (): SubtestSignTransaction => {
         {
             payload: {
                 serialized: {
-                    serialized_tx: '01000000000101be0210025c5be68a473f6a38bf53b53bc88d5c46567616026dc056e72b92319c01000000232200201e8dda334f11171190b3da72e526d441491464769679a319a2f011da5ad312a1ffffffff01887d1800000000001976a91414fdede0ddc3be652a0ce1afbc1b509a55b6b94888ac040047304402205b44c20cf2681690edaaf7cd2e30d4704124dd8b7eb1fb7f459d3906c3c374a602205ca359b6544ce2c101c979899c782f7d141c3b0454ea69202b1fb4c09d3b715701473044022052fafa64022554ae436dbf781e550bf0d326fef31eea1438350b3ff1940a180102202851bd19203b7fe8582a9ef52e82aa9f61cd52d4bcedfe6dcc0cf782468e6a8e01695221038e81669c085a5846e68e03875113ddb339ecbb7cb11376d4163bca5dc2e2a0c1210348c5c3be9f0e6cf1954ded1c0475beccc4d26aaa9d0cce2dd902538ff1018a112103931140ebe0fbbb7df0be04ed032a54e9589e30339ba7bbb8b0b71b15df1294da53ae00000000',
+                    signatures: [
+                        '3045022100af67a90d34bb71944b50b8209347f3764a371440808eba040ebda80816a0bc0602201ab3f38eb40552b8f6d5509b2199305d0a65b84e09c04e26f4a30b700f11784b',
+                    ],
+                    serialized_tx: '01000000000101be0210025c5be68a473f6a38bf53b53bc88d5c46567616026dc056e72b92319c0100000023220020949ea1343a263ca9db30033322917725e37a955e17df902ca68e3fe5210190dfffffffff01887d1800000000001976a91414fdede0ddc3be652a0ce1afbc1b509a55b6b94888ac0400483045022100f79ce22f119d279f68b480224404346160b96f1e814dace24e880330e280d8250220390567133c9c292114afa753ee8144a44f73fe7fcd503f0a07ac5fdd23c72f3c01483045022100af67a90d34bb71944b50b8209347f3764a371440808eba040ebda80816a0bc0602201ab3f38eb40552b8f6d5509b2199305d0a65b84e09c04e26f4a30b700f11784b0169522102b9f95f18f40f57d0044fc1414dd4b344a28289b6848744dd797c8b1e8eb972c42102a98fed2ba9d0d360bc2d61910ce3b3bad000e488a501a21d3dc9bde84b969ad22103e38bac0a0c76efd6017f729715d5e8f5751d3d5f5fdb3d10d47cfb544143f02b53ae00000000',
                 },
             },
         },

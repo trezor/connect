@@ -43,15 +43,15 @@ const signTestnet = (): SubtestSignMessage => {
         {
             method: 'signMessage',
             coin: 'Testnet',
-            path: [0],
+            path: "m/49'/1'/0'",
             message: 'This is an example of a signed message.',
         },
     ];
     const expectedResponses: Array<ExpectedSignMessageResponse> = [
         {
             payload: {
-                address: 'mirio8q3gtv7fhdnmb3TpZ4EuafdzSs7zL',
-                signature: '209e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80',
+                address: '2MtXohfW9QA4VhD1zxViEt7ETNc2NuTDPVA',
+                signature: '23fbc8e26c957149bcb884edd531cab9182bf79b52235c2f7a3b69ffe751ee92be22219ff576ca00406e3717dc97f3917a2ad633bfd8f088dfc8b9abd0a3311556',
             },
         },
     ];
@@ -68,15 +68,15 @@ const signBch = (): SubtestSignMessage => {
         {
             method: 'signMessage',
             coin: 'Bcash',
-            path: [0],
+            path: "m/44'/145'/0'",
             message: 'This is an example of a signed message.',
         },
     ];
     const expectedResponses: Array<ExpectedSignMessageResponse> = [
         {
             payload: {
-                address: 'bitcoincash:qqj22md58nm09vpwsw82fyletkxkq36zxyxh322pru',
-                signature: '209e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80',
+                address: 'bitcoincash:qzhsxlrst79yl6cn9fxahfl6amjn95fufcvsuqscme',
+                signature: '206c6379b33a93d220c232bc8d5d0f9dab8e89e396ebd687a0c40657060b9d553e2397612ea1df6e8aa8ec04ec5e5496c408e282ffd05b42b21da37d819e3720da',
             },
         },
     ];
