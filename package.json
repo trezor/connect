@@ -93,5 +93,9 @@
   "dependencies": {
     "events": "^1.1.1",
     "whatwg-fetch": "^2.0.4"
+  },
+  "npmDependencies": {
+    "babel-runtime": "^6.26.0",
+    "babel-polyfill": "^6.26.0"
   }
 }
