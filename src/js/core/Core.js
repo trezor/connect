@@ -383,6 +383,11 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             device.setState(null);
             device.setPassphrase(null);
         }
+    } else if (method.useEmptyPassphrase) {
+        if (method.useEmptyPassphrase) {
+            device.setPassphrase(null);
+            device.setState(null);
+        }
     }
 
     // device is available
@@ -539,8 +544,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     } finally {
         // Work done
         _log.log('onCall::finally', messageResponse);
-        // device.release();
-        // device.removeAllListeners();
+
         device.cleanup();
         cleanup();
 
@@ -625,13 +629,14 @@ const onDevicePassphraseHandler = async (device: Device, callback: (error: any, 
     // wait for passphrase
 
     const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_PASSPHRASE, device).promise;
-    const pass: string = uiResp.payload.value;
-    const save: boolean = uiResp.payload.save;
-    DataManager.isPassphraseCached(save);
-    callback(null, pass);
+    const value: string = uiResp.payload.value;
+    const cache: boolean = uiResp.payload.save;
+    device.setPassphrase(cache ? value : null);
+    callback(null, value);
 };
 
 const onEmptyPassphraseHandler = async (device: Device, callback: (error: any, success: any) => void): Promise<void> => {
+    device.setPassphrase(null);
     callback(null, '');
 };
 

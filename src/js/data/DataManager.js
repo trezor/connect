@@ -52,7 +52,6 @@ export default class DataManager {
     static config: Config;
     static assets: AssetCollection = {};
     static settings: ConnectSettings;
-    static cachePassphrase: boolean = false;
 
     static async load(settings: ConnectSettings): Promise<void> {
         const ts: number = new Date().getTime();
@@ -126,12 +125,5 @@ export default class DataManager {
 
     static getConfig(): Config {
         return this.config;
-    }
-
-    static isPassphraseCached(status: ?boolean): boolean {
-        if (typeof status === 'boolean') {
-            this.cachePassphrase = status;
-        }
-        return this.cachePassphrase; // this.json.device.cachePassphrase;
     }
 }

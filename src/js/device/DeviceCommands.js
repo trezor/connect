@@ -416,11 +416,6 @@ export default class DeviceCommands {
 
             return this._promptPassphrase().then(
                 passphrase => {
-                    if (DataManager.isPassphraseCached()) {
-                        this.device.setPassphrase(passphrase);
-                    } else {
-                        this.device.setPassphrase(null);
-                    }
                     return this._commonCall('PassphraseAck', { passphrase: passphrase, state });
                 },
                 err => {
