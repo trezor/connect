@@ -63,14 +63,14 @@ const oneTwoFee = (): SubtestSignTransaction => {
             coin: 'Bitcoin',
             inputs: [
                 {
-                    address_n: getHDPath("m/44'/0'/0'/0/5"),
+                    address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 5],
                     prev_hash: '50f6f1209ca92d7359564be803cb2c932cde7d370f7cee50fd1fad6790f6206d',
                     prev_index: 1,
                 }
             ],
             outputs: [
                 {
-                    address_n: getHDPath("m/44'/0'/0'/1/3"),
+                    address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 3],
                     amount: 30000,
                     script_type: 'PAYTOADDRESS',
                 },
@@ -87,7 +87,8 @@ const oneTwoFee = (): SubtestSignTransaction => {
         {
             payload: {
                 serialized: {
-                    serialized_tx: '01000000016d20f69067ad1ffd50ee7c0f377dde2c932ccb03e84b5659732da99c20f1f650010000006a47304402203429bd3ce7b38c5c1e8a15340edd79ced41a2939aae62e259d2e3d18e0c5ee7602201b83b10ebc4d6dcee3f9eb42ba8f1ef8a059a05397e0c1b9223d1565a3e6ec01012102a7a079c1ef9916b289c2ff21a992c808d0de3dfcf8a9f163205c5c9e21f55d5cffffffff0230750000000000001976a914954820f1de627a703596ac0396f986d958e3de4c88ac10270000000000001976a91405427736705cfbfaff76b1cff48283707fb1037088ac00000000',
+                    signatures: ['304402200aad33a2fa9994b1aedb062486808b7e85406c2745359a02d57d617cd48298b80220394320f7409359a56061d050eeba0ba27b1ac9e3e0aa4501427f58766381f34d'],
+                    serialized_tx: '01000000016d20f69067ad1ffd50ee7c0f377dde2c932ccb03e84b5659732da99c20f1f650010000006a47304402200aad33a2fa9994b1aedb062486808b7e85406c2745359a02d57d617cd48298b80220394320f7409359a56061d050eeba0ba27b1ac9e3e0aa4501427f58766381f34d0121035c85bf271936439f0a25b9ba175593a178fcf7c5476f6c8a4621f50b1de93b3effffffff0230750000000000001976a91489a0db486cbff44de5b4bdf30e04cf66f73224db88ac10270000000000001976a91405427736705cfbfaff76b1cff48283707fb1037088ac00000000',
                 },
             },
         },
@@ -209,7 +210,7 @@ const testnetOneTwoFee = (): SubtestSignTransaction => {
             coin: 'Testnet',
             inputs: [
                 {
-                    address_n: getHDPath("44'/1'/0'/0/0"),
+                    address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 0],
                     prev_hash: 'e5040e1bc1ae7667ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd',
                     prev_index: 0,
                 }
@@ -221,7 +222,7 @@ const testnetOneTwoFee = (): SubtestSignTransaction => {
                     script_type: 'PAYTOADDRESS',
                 },
                 {
-                    address_n: getHDPath("44'/1'/0'/1/0"),
+                    address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 0],
                     amount: 900000,
                     script_type: 'PAYTOADDRESS',
                 },
@@ -233,7 +234,7 @@ const testnetOneTwoFee = (): SubtestSignTransaction => {
         {
             payload: {
                 serialized: {
-                    serialized_tx: '0100000001cd3b93f5b24ae190ce5141235091cd93fbb2908e24e5b9ff6776aec11b0e04e5000000006b483045022100eba3bbcbb82ab1ebac88a394e8fb53b0263dadbb3e8072f0a21ee62818c911060220686a9b7f306d028b54a228b5c47cc6c27b1d01a3b0770440bcc64d55d8bace2c0121030e669acac1f280d1ddf441cd2ba5e97417bf2689e4bbec86df4f831bf9f7ffd0ffffffff021023cb01000000001976a91485eb47fe98f349065d6f044e27a4ac541af79ee288aca0bb0d00000000001976a9143d3cca567e00a04819742b21a696a67da796498b88ac00000000',
+                    serialized_tx: '0100000001cd3b93f5b24ae190ce5141235091cd93fbb2908e24e5b9ff6776aec11b0e04e5000000006a47304402204a1915f47d170b3d17f2d13696279edf7ad7b250d9827b29fa5ca96211c3d58f02200476f03c7be26f874ef2ebfa049b11aaee1582b619a46f96482b731aec14e98c012103426f6986e620f883d2d44f671cf2f91e5e0ae4d9fab0c0cc54ac16a80e628631ffffffff021023cb01000000001976a91485eb47fe98f349065d6f044e27a4ac541af79ee288aca0bb0d00000000001976a9149a3677c632cab1860f1ee7bd52d7c095579b758888ac00000000',
                 },
             },
         },
@@ -475,7 +476,7 @@ const twoChanges = (): SubtestSignTransaction => {
             coin: 'Testnet',
             inputs: [
                 {
-                    address_n: getHDPath("44'/1'/0'/0/0"),
+                    address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 0],
                     prev_hash: 'e5040e1bc1ae7667ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd',
                     prev_index: 0,
                 }
@@ -488,13 +489,13 @@ const twoChanges = (): SubtestSignTransaction => {
                 },
                 {
                     // change
-                    address_n: getHDPath("44'/1'/0'/1/0"),
+                    address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 0],
                     amount: 900000,
                     script_type: 'PAYTOADDRESS',
                 },
                 {
                     // change
-                    address_n: getHDPath("44'/1'/0'/1/1"),
+                    address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 1],
                     amount: 10000,
                     script_type: 'PAYTOADDRESS',
                 },
@@ -503,7 +504,14 @@ const twoChanges = (): SubtestSignTransaction => {
     ];
 
     const expectedResponses: Array<ExpectedSignTransactionResponse> = [
-        { success: true, },
+        {
+            payload: {
+                serialized: {
+                    signatures: [ "30440220246a5d5d21730d5de70ce9b9f46067b7bee2a448361a8a42274a8a9408b3211d022035c5fe94b8ee3c825d1c3ae86e31ec64671db27c6488cbc616b4c21b79902727" ],
+                    serialized_tx: "0100000001cd3b93f5b24ae190ce5141235091cd93fbb2908e24e5b9ff6776aec11b0e04e5000000006a4730440220246a5d5d21730d5de70ce9b9f46067b7bee2a448361a8a42274a8a9408b3211d022035c5fe94b8ee3c825d1c3ae86e31ec64671db27c6488cbc616b4c21b79902727012103426f6986e620f883d2d44f671cf2f91e5e0ae4d9fab0c0cc54ac16a80e628631ffffffff031023cb01000000001976a91485eb47fe98f349065d6f044e27a4ac541af79ee288aca0bb0d00000000001976a9149a3677c632cab1860f1ee7bd52d7c095579b758888ac10270000000000001976a9141b7c3b31576a99995457844e1b2d0e231b8f064388ac00000000",
+                },
+            },
+        },
     ];
 
     return {
@@ -559,7 +567,7 @@ const changeOnMainChainAllowed = (): SubtestSignTransaction => {
             coin: 'Testnet',
             inputs: [
                 {
-                    address_n: getHDPath("44'/1'/0'/0/0"),
+                    address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 0],
                     prev_hash: 'e5040e1bc1ae7667ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd',
                     prev_index: 0,
                 },
@@ -572,7 +580,7 @@ const changeOnMainChainAllowed = (): SubtestSignTransaction => {
                 },
                 {
                     // change on main chain is allowed => treated as a change
-                    address_n: getHDPath("44'/1'/0'/0/0"),
+                    address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 0],
                     amount: 900000,
                     script_type: 'PAYTOADDRESS',
                 },
@@ -581,7 +589,14 @@ const changeOnMainChainAllowed = (): SubtestSignTransaction => {
     ];
 
     const expectedResponses: Array<ExpectedSignTransactionResponse> = [
-        { success: true, },
+        {
+            payload: {
+                serialized: {
+                    signatures: ['304402202cf32c9a07a8bd86061df3554d9b0cfad516006a9b368e1c016dff3492ac2ac1022069927e583bdcdc48e254f2f1da6e8cd4b1338ca102e6200ac47a160b14b10b9b'],
+                    serialized_tx: '0100000001cd3b93f5b24ae190ce5141235091cd93fbb2908e24e5b9ff6776aec11b0e04e5000000006a47304402202cf32c9a07a8bd86061df3554d9b0cfad516006a9b368e1c016dff3492ac2ac1022069927e583bdcdc48e254f2f1da6e8cd4b1338ca102e6200ac47a160b14b10b9b012103426f6986e620f883d2d44f671cf2f91e5e0ae4d9fab0c0cc54ac16a80e628631ffffffff021023cb01000000001976a91485eb47fe98f349065d6f044e27a4ac541af79ee288aca0bb0d00000000001976a9143a56a008ea50c69036f345a8b274b35bb156329288ac00000000',
+                },
+            },
+        },
     ];
 
     return {

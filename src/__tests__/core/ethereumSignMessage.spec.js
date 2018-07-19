@@ -16,26 +16,26 @@ export const ethereumSignMessage = () => {
         const testPayloads: Array<TestEthereumSignMessagePayload> = [
             {
                 method: 'ethereumSignMessage',
-                path: [0],
+                path: "m/44'/60'/0'",
                 message: 'This is an example of a signed message.',
             },
             {
                 method: 'ethereumSignMessage',
-                path: [0],
+                path: "m/44'/60'/0'",
                 message: 'VeryLongMessage!'.repeat(64),
             },
         ];
         const expectedResponses: Array<ExpectedEthereumSignMessageResponse> = [
             {
                 payload: {
-                    address: 'cb3864960e8db1a751212c580af27ee8867d688f',
-                    signature: 'b7837058907192dbc9427bf57d93a0acca3816c92927a08be573b785f2d72dab65dad9c92fbe03a358acdb455eab2107b869945d11f4e353d9cc6ea957d08a871b',
+                    address: 'ae2b111b634f8fb3942b13b98c824b0f1060cacb',
+                    signature: '9dc221f51fe1515d598324e51c1897637c3f0098b02758fa68a794803495df061ddbc1460b40497a80f3b1bf63e5966850c3bbd8ff91e0e9f4d7a121be32b1c21c',
                 },
             },
             {
                 payload: {
-                    address: 'cb3864960e8db1a751212c580af27ee8867d688f',
-                    signature: 'da2b73b0170479c2bfba3dd4839bf0d67732a44df8c873f3f3a2aca8a57d7bdc0b5d534f54c649e2d44135717001998b176d3cd1212366464db51f5838430fb31c',
+                    address: 'ae2b111b634f8fb3942b13b98c824b0f1060cacb',
+                    signature: '076d6dcf1fdcac60748919a781dc39d0ee7beece5fd5604be2f061e32ec6d91817562df343171ab38214fa3e2de46240ab330da34011856e2461378940243ec91c',
                 },
             },
         ]

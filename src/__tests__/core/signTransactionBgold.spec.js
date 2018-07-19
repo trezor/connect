@@ -22,17 +22,16 @@ const change = (): SubtestSignTransaction => {
             coin: 'Bgold',
             inputs: [
                 {
-                    address_n: getHDPath("44'/156'/0'/0/0"),
+                    address_n: [44 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 0, 0],
                     amount: 1995344,
                     prev_hash: '25526bf06c76ad3082bba930cf627cdd5f1b3cd0b9907dd7ff1a07e14addc985',
                     prev_index: 0,
                     script_type: 'SPENDADDRESS',
                 },
             ],
-
             outputs: [
                 {
-                    address_n: getHDPath("44'/156'/0'/1/0"),
+                    address_n: [44 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 1, 0],
                     amount: 1896050,
                     script_type: 'PAYTOADDRESS',
                 },
@@ -49,7 +48,10 @@ const change = (): SubtestSignTransaction => {
         {
             payload: {
                 serialized: {
-                    serialized_tx: '010000000185c9dd4ae1071affd77d90b9d03c1b5fdd7c62cf30a9bb8230ad766cf06b5225000000006b483045022100963904da0731b71ce468afd45366dd80fbff566ec0d39c1161ab85d17459c7ca02202f5c24a7a7272d98b14a3f5bc000c7cde8ac0eb773f20f4c3131518186cc98854121023bd0ec4022d12d0106c5b7308a25572953ba1951f576f691354a7b147ee0cc1fffffffff0272ee1c00000000001976a9141c82b9c11f193ad82413caadc0955730572b50ae88acec1e0100000000001976a914ea5f904d195079a350b534db4446433b3cec222e88ac00000000',
+                    signatures: [
+                        '3045022100f03d3fe33c6a1306ca338da457c4f9e38c9c5e15ae0e079992604953f670cb78022026110ee7bbc528268ad885fa734f2fae75985cfec712c185c12ae74d315b1bd3',
+                    ],
+                    serialized_tx: '010000000185c9dd4ae1071affd77d90b9d03c1b5fdd7c62cf30a9bb8230ad766cf06b5225000000006b483045022100f03d3fe33c6a1306ca338da457c4f9e38c9c5e15ae0e079992604953f670cb78022026110ee7bbc528268ad885fa734f2fae75985cfec712c185c12ae74d315b1bd34121021659b2309dcfb7ff4b88e2dc1a18471fca2aa3da64d1c85515fabcc82904d476ffffffff0272ee1c00000000001976a9143f0cf98e116e3a4049c7e78f05f1e935802df01088acec1e0100000000001976a914ea5f904d195079a350b534db4446433b3cec222e88ac00000000',
                 },
             },
         },
@@ -69,14 +71,14 @@ const noChange = (): SubtestSignTransaction => {
             coin: 'Bgold',
             inputs: [
                 {
-                    address_n: getHDPath("44'/156'/0'/1/0"),
+                    address_n: [44 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 1, 0],
                     amount: 1896050,
                     prev_hash: '25526bf06c76ad3082bba930cf627cdd5f1b3cd0b9907dd7ff1a07e14addc985',
                     prev_index: 0,
                     script_type: 'SPENDADDRESS',
                 },
                 {
-                    address_n: getHDPath("44'/156'/0'/0/1"),
+                    address_n: [44 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 1, 1],
                     amount: 73452,
                     prev_hash: 'db77c2461b840e6edbe7f9280043184a98e020d9795c1b65cb7cef2551a8fb18',
                     prev_index: 1,
@@ -98,7 +100,11 @@ const noChange = (): SubtestSignTransaction => {
         {
             payload: {
                 serialized: {
-                    serialized_tx: '010000000285c9dd4ae1071affd77d90b9d03c1b5fdd7c62cf30a9bb8230ad766cf06b5225000000006b483045022100928852076c9fab160c07564cd54691af1cbc37fb28f0b7bee7299c7925ef62f0022058856387afecc6508f2f04ecdfd292a13026a5b2107ebdd2cc789bdf8820d552412102a6c3998d0d4e5197ff41aab5c53580253b3b91f583f4c31f7624be7dc83ce15fffffffff18fba85125ef7ccb651b5c79d920e0984a18430028f9e7db6e0e841b46c277db010000006b483045022100faa2f4f01cc95e680349a093923aae0aa2ea01429873555aa8a84bf630ef33a002204c3f4bf567e2d20540c0f71dc278481d6ccb6b95acda2a2f87ce521c79d6b872412102d54a7e5733b1635e5e9442943f48179b1700206b2d1925250ba10f1c86878be8ffffffff0170861d00000000001976a914ea5f904d195079a350b534db4446433b3cec222e88ac00000000',
+                    signatures: [
+                        '30430220533f82aef549abc1171716c4b152478f2a10c6eeb7f716594bad4a69f5d4aabe021f7a499d3f66ffb90ba001c2ed3bf3ddda7d8d380be8fe303fc59e7987db111e',
+                        '30450221008c1b653f4b22df62148a6381a06e8c7010732555db1d7ef72f6c51892f83d32502201f3347c0c4a0c77857886066d56ef4f1942bb35a5ce3bf65ab7c6f4f7e205c8b',
+                    ],
+                    serialized_tx: '010000000285c9dd4ae1071affd77d90b9d03c1b5fdd7c62cf30a9bb8230ad766cf06b522500000000694630430220533f82aef549abc1171716c4b152478f2a10c6eeb7f716594bad4a69f5d4aabe021f7a499d3f66ffb90ba001c2ed3bf3ddda7d8d380be8fe303fc59e7987db111e412102cf2b28fa22872ab35cb6e0728b51fb4c5d18e99284d030bc64b890859c645d5dffffffff18fba85125ef7ccb651b5c79d920e0984a18430028f9e7db6e0e841b46c277db010000006b4830450221008c1b653f4b22df62148a6381a06e8c7010732555db1d7ef72f6c51892f83d32502201f3347c0c4a0c77857886066d56ef4f1942bb35a5ce3bf65ab7c6f4f7e205c8b4121025a639d0293154eecd7afc45dce239f2bc387c3c45b3844ee98eda272fd32d7aeffffffff0170861d00000000001976a914ea5f904d195079a350b534db4446433b3cec222e88ac00000000',
                 },
             },
         },
@@ -118,7 +124,7 @@ const p2sh = (): SubtestSignTransaction => {
             coin: 'Bgold',
             inputs: [
                 {
-                    address_n: getHDPath("49'/156'/0'/1/0"),
+                    address_n: [49 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 1, 0],
                     amount: 123456789,
                     prev_hash: '25526bf06c76ad3082bba930cf627cdd5f1b3cd0b9907dd7ff1a07e14addc985',
                     prev_index: 0,
@@ -145,7 +151,10 @@ const p2sh = (): SubtestSignTransaction => {
         {
             payload: {
                 serialized: {
-                    serialized_tx: '0100000000010185c9dd4ae1071affd77d90b9d03c1b5fdd7c62cf30a9bb8230ad766cf06b52250000000017160014b5355d001e720d8f4513da00ff2bba4dcf9d39fcffffffff02e0aebb00000000001976a914ea5f904d195079a350b534db4446433b3cec222e88ac3df39f06000000001976a914a8f757819ec6779409f45788f7b4a0e8f51ec50488ac02473044022073fcbf2876f073f78923ab427f14de5b2a0fbeb313a9b2b650b3567061f242a702202f45fc22c501108ff6222afe3aca7da9d8c7dc860f9cda335bef31fa184e7bef412102ecea08b559fc5abd009acf77cfae13fa8a3b1933e3e031956c65c12cec8ca3e300000000',
+                    signatures: [
+                        '3045022100e0c5c9db3fe1abbd7f2a4da946b357c362ce29a77e9588b6c3be36f39bd7953f02200d4a6ec682b4241a579cbea7b299dcbe3ff5157f16caadca0e252c24de51ce3f',
+                    ],
+                    serialized_tx: '0100000000010185c9dd4ae1071affd77d90b9d03c1b5fdd7c62cf30a9bb8230ad766cf06b52250000000017160014bcf764faafca9982aba3612eb91370d091cddb4affffffff02e0aebb00000000001976a914ea5f904d195079a350b534db4446433b3cec222e88ac3df39f06000000001976a914a8f757819ec6779409f45788f7b4a0e8f51ec50488ac02483045022100e0c5c9db3fe1abbd7f2a4da946b357c362ce29a77e9588b6c3be36f39bd7953f02200d4a6ec682b4241a579cbea7b299dcbe3ff5157f16caadca0e252c24de51ce3f412103e4c2e99d4d9a36f949e947d94391d01bd016826afd87132b3257a660139b3b8a00000000',
                 },
             },
         },
@@ -165,7 +174,7 @@ const p2shWitnessChange = (): SubtestSignTransaction => {
             coin: 'Bgold',
             inputs: [
                 {
-                    address_n: getHDPath("49'/156'/0'/1/0"),
+                    address_n: [49 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 1, 0],
                     amount: 123456789,
                     prev_hash: '25526bf06c76ad3082bba930cf627cdd5f1b3cd0b9907dd7ff1a07e14addc985',
                     prev_index: 0,
@@ -180,7 +189,7 @@ const p2shWitnessChange = (): SubtestSignTransaction => {
                     script_type: 'PAYTOADDRESS',
                 },
                 {
-                    address_n: getHDPath("49'/156'/0'/1/0"),
+                    address_n: [49 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 1, 0],
                     amount: 123456789 - 11000 - 12300000,
                     script_type: 'PAYTOP2SHWITNESS',
                 },
@@ -192,7 +201,10 @@ const p2shWitnessChange = (): SubtestSignTransaction => {
         {
             payload: {
                 serialized: {
-                    serialized_tx: '0100000000010185c9dd4ae1071affd77d90b9d03c1b5fdd7c62cf30a9bb8230ad766cf06b52250000000017160014b5355d001e720d8f4513da00ff2bba4dcf9d39fcffffffff02e0aebb00000000001976a914ea5f904d195079a350b534db4446433b3cec222e88ac3df39f060000000017a9140cd03822b799a452c106d1b3771844a067b17f118702483045022100d79b33384c686d8dd40ad5f84f46691d30994992c1cb42e934c2a625d86cb2f902206859805a9a98ba140b71a9d4b9a6b8df94a9424f9c40f3bd804149fd6e278d63412102ecea08b559fc5abd009acf77cfae13fa8a3b1933e3e031956c65c12cec8ca3e300000000',
+                    signatures: [
+                        '3045022100f15fd0b3a3b661f08d6cb932e54b0f23882a05c173cf5174f25af5a7ce77d069022037127e7ef34bf845bcff441d020dead71eabe478f16faa3705ee256fb3a26452',
+                    ],
+                    serialized_tx: '0100000000010185c9dd4ae1071affd77d90b9d03c1b5fdd7c62cf30a9bb8230ad766cf06b52250000000017160014bcf764faafca9982aba3612eb91370d091cddb4affffffff02e0aebb00000000001976a914ea5f904d195079a350b534db4446433b3cec222e88ac3df39f060000000017a914fea1579ecdf0e50674819c9924fcc0007e7ec12b8702483045022100f15fd0b3a3b661f08d6cb932e54b0f23882a05c173cf5174f25af5a7ce77d069022037127e7ef34bf845bcff441d020dead71eabe478f16faa3705ee256fb3a26452412103e4c2e99d4d9a36f949e947d94391d01bd016826afd87132b3257a660139b3b8a00000000',
                 },
             },
         },
@@ -206,7 +218,7 @@ const p2shWitnessChange = (): SubtestSignTransaction => {
 };
 
 const sendMultisig1 = (): SubtestSignTransaction => {
-    const address_n = getHDPath("999'/1'/1'/2/0");
+    const address_n = [999 | 0x80000000, 1 | 0x80000000, 1 | 0x80000000, 2, 0];
     address_n[2] = 0x80000003;
 
     const testPayloads: Array<TestSignTransactionPayload> = [
@@ -215,7 +227,7 @@ const sendMultisig1 = (): SubtestSignTransaction => {
             coin: 'Bgold',
             inputs: [
                 {
-                    address_n,
+                    address_n: [999 | 0x80000000, 1 | 0x80000000, 0x80000003, 2, 0],
                     prev_hash: '25526bf06c76ad3082bba930cf627cdd5f1b3cd0b9907dd7ff1a07e14addc985',
                     prev_index: 1,
                     script_type: 'SPENDP2SHWITNESS',
@@ -223,19 +235,19 @@ const sendMultisig1 = (): SubtestSignTransaction => {
                     multisig: {
                         pubkeys: [
                             {
-                                node: 'xpub6CjKUcbAZ6vfG6hiA89X7DiJ9ssicMkjT2Y6xyaPoA9nb51RCSiQ8fetjLD22JdeQHMjyYoBqSucwAMD6qCagb2YvwenjBJWYgVHsK1fzzd',
+                                node: 'xpub6BwkFjrnaZMrHwR2webEmLSVm4dhvynoQ1TM2ta6WznmbJLXKzgLDeP3sa8TB79vAqJdrF5vPiGUbEf18jEUMdHAmhpyzR6qdxRnfvr61GW',
                                 address_n: [2, 0],
                             },
                             {
-                                node: 'xpub6CjKUcbAZ6vfJgiDknHCzQoFqx23Gr6nNhFiSHATvUxHQRgzDArtfudwxTY4yPdUJxJiyfXce9tk3iDzXHJsdWWfhwNG9KiZTnUDZHmV1mX',
+                                node: 'xpub6BwkFjrnaZMrKVco3D1uXpqNMAa7rR1WiS2tTWhptB6K2RF2fHV6y15nAu4taL9KRuXW4nWBt8jj76orKtALDSPY8gLbHUBy3kH42aRXRmM',
                                 address_n: [2, 0],
                             },
                             {
-                                node: 'xpub6CjKUcbAZ6vfMesVqtAs92pwF7QDrdekhnJuCwrSrZXJGA8V3rgJn4n9kBnKFEGQktkdn8qyuNwi6GLcwj2bt3GG1NHpTEuNDETAXt4cZqw',
+                                node: 'xpub6BwkFjrnaZMrQ5xEvXbBx14sn1NT24CuuA84T3fcroHfXxRxseQwHoYb6xij2uchX2PSjjeJfq53VGuPZphvN5DMo3MGk2SL4EWDuuQ5bit',
                                 address_n: [2, 0],
                             },
                         ],
-                        signatures: ['3045022100e728485c8337f9a09ebbf36edc0fef10f8bcf5c1ba601b7d8ba43a9250a898f002206b9e3401c297f9ab9afb7f1be59bb342db53b5b65aff7c557e3109679697df0f', '', ''],
+                        signatures: ['3045022100dad69cca1a408de702169c007f39c1f3f884716e07b9110e494f9e1adbd2a77b02202dc56ccc595a8b69e4a25bdd95e395c6307b36ca555d451a4059bdf0ec535a18', '', ''],
                         m: 2,
                     }
                 },
@@ -253,7 +265,10 @@ const sendMultisig1 = (): SubtestSignTransaction => {
         {
             payload: {
                 serialized: {
-                    serialized_tx: '0100000000010185c9dd4ae1071affd77d90b9d03c1b5fdd7c62cf30a9bb8230ad766cf06b522501000000232200201e8dda334f11171190b3da72e526d441491464769679a319a2f011da5ad312a1ffffffff01887d1800000000001976a914ea5f904d195079a350b534db4446433b3cec222e88ac0400483045022100e728485c8337f9a09ebbf36edc0fef10f8bcf5c1ba601b7d8ba43a9250a898f002206b9e3401c297f9ab9afb7f1be59bb342db53b5b65aff7c557e3109679697df0f41473044022062ea69ecdc07d0dadc1971fbda50a629a56dd30f431db26327428f4992601ce602204a1c8ab9c7d81c36cb6f819109a26f9baaa9607b8d37bff5e24eee6fab4a04e441695221038e81669c085a5846e68e03875113ddb339ecbb7cb11376d4163bca5dc2e2a0c1210348c5c3be9f0e6cf1954ded1c0475beccc4d26aaa9d0cce2dd902538ff1018a112103931140ebe0fbbb7df0be04ed032a54e9589e30339ba7bbb8b0b71b15df1294da53ae00000000',
+                    signatures: [
+                        '3045022100a478e5358215d0896e41f3259e76d53d82123b43397d2fcba4646918ed10a38602201f2f67ac239b44fa6ddf724b445d49300d91d65733554e79206b2ec180d5ce3d',
+                    ],
+                    serialized_tx: '0100000000010185c9dd4ae1071affd77d90b9d03c1b5fdd7c62cf30a9bb8230ad766cf06b52250100000023220020949ea1343a263ca9db30033322917725e37a955e17df902ca68e3fe5210190dfffffffff01887d1800000000001976a914ea5f904d195079a350b534db4446433b3cec222e88ac0400483045022100dad69cca1a408de702169c007f39c1f3f884716e07b9110e494f9e1adbd2a77b02202dc56ccc595a8b69e4a25bdd95e395c6307b36ca555d451a4059bdf0ec535a1841483045022100a478e5358215d0896e41f3259e76d53d82123b43397d2fcba4646918ed10a38602201f2f67ac239b44fa6ddf724b445d49300d91d65733554e79206b2ec180d5ce3d4169522102b9f95f18f40f57d0044fc1414dd4b344a28289b6848744dd797c8b1e8eb972c42102a98fed2ba9d0d360bc2d61910ce3b3bad000e488a501a21d3dc9bde84b969ad22103e38bac0a0c76efd6017f729715d5e8f5751d3d5f5fdb3d10d47cfb544143f02b53ae00000000',
                 },
             },
         },

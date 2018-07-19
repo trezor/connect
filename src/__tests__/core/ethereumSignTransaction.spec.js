@@ -17,7 +17,7 @@ const knownErc20Token = (): SubtestEthereumSignTransaction => {
     const testPayloads: Array<TestEthereumSignTransactionPayload>  = [
         {
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 nonce: '0x0',
                 gasPrice: '0x14',
@@ -32,8 +32,8 @@ const knownErc20Token = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: '75cf48fa173d8ceb68af9e4fb6b78ef69e6ed5e7679ba6f8e3e91d74b2fb0f96',
-                s: '65de4a8c35263b2cfff3954b12146e8e568aa67a1c2461d6865e74ef75c7e190',
+                r: 'aa0c28d61c7c9382a256ead609d5b713cfe17c3aa3a6facb6b60342883db448e',
+                s: '039d88ed4ce5416680117dbee92f86976b381241786f1ffaf058c8e80cb25c63',
             },
         },
     ];
@@ -49,7 +49,7 @@ const unknownErc20Token = (): SubtestEthereumSignTransaction => {
     const testPayloads: Array<TestEthereumSignTransactionPayload> = [
         {
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 nonce: '0x0',
                 gasPrice: '0x14',
@@ -64,8 +64,8 @@ const unknownErc20Token = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: '1707471fbf632e42d18144157aaf4cde101cd9aa9782ad8e30583cfc95ddeef6',
-                s: '3d2e52ba5904a4bf131abde3f79db826199f5d6f4d241d531d7e8a30a3b9cfd9',
+                r: 'afd33dc30cf829e3fde2575f189b9f80a6e7cfe3bbad8554f1015b29c33fb13d',
+                s: '5a4efd7242bae4e460ae2e608470ee19237246f72601bf879d0444100d6ae9ab',
             },
         },
     ];
@@ -81,7 +81,7 @@ const noData = (): SubtestEthereumSignTransaction => {
     const testPayloads: Array<TestEthereumSignTransactionPayload> = [
         {
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 nonce: '0x0',
                 gasPrice: '0x14',
@@ -92,7 +92,7 @@ const noData = (): SubtestEthereumSignTransaction => {
         },
         {
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 nonce: '0x1e240',
                 gasPrice: '0x4e20',
@@ -105,15 +105,15 @@ const noData = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: '9b61192a161d056c66cfbbd331edb2d783a0193bd4f65f49ee965f791d898f72',
-                s: '49c0bbe35131592c6ed5c871ac457feeb16a1493f64237387fab9b83c1a202f7',
+                r: 'ff2676c3d23f4ed59b41a284348b6e4cc56fa4b4c06ab2cd2cfa0fc85d3d5b72',
+                s: '180682139cb3ec01d8371bd42996c689e2f11a14c89b2c57494a6020bae09417',
                 v: 27,
             },
         },
         {
             payload: {
-                r: '6de597b8ec1b46501e5b159676e132c1aa78a95bd5892ef23560a9867528975a',
-                s: '6e33c4230b1ecf96a8dbb514b4aec0a6d6ba53f8991c8143f77812aa6daa993f',
+                r: '324f82ca8a681ea882f7abfcc396addd13b4a947d65d3cf972c2a44cfbc35c89',
+                s: '6fddb0aa918ab0ff5bd09368b4edec21e9a626c1acf8d839b821784db2b44fac',
                 v: 28,
             },
         },
@@ -130,7 +130,7 @@ const data = (): SubtestEthereumSignTransaction => {
     const testPayloads: Array<TestEthereumSignTransactionPayload> = [
         {
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 nonce: '0x0',
                 gasPrice: '0x14',
@@ -143,7 +143,7 @@ const data = (): SubtestEthereumSignTransaction => {
         },
         {
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 nonce: '0x1e240',
                 gasPrice: '0x4e20',
@@ -157,15 +157,15 @@ const data = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: '6da89ed8627a491bedc9e0382f37707ac4e5102e25e7a1234cb697cedb7cd2c0',
-                s: '691f73b145647623e2d115b208a7c3455a6a8a83e3b4db5b9c6d9bc75825038a',
+                r: 'c07ca9b87ebf87620396a16cd575ac68dbef0eb0b22481f8f62facfe40fc4c7a',
+                s: '3e2f26e2fb739cfeafee82f3f74ecd0b88dfba4d3cf850eb10f53569f424f3a0',
                 v: 28,
             },
         },
         {
             payload: {
-                r: '4e90b13c45c6a9bf4aaad0e5427c3e62d76692b36eb727c78d332441b7400404',
-                s: '3ff236e7d05f0f9b1ee3d70599bb4200638f28388a8faf6bb36db9e04dc544be',
+                r: '2a27c485c02cdd4796eab5624cca2e5024b3567ff04ac144a0cb2a46c8bef98c',
+                s: '56e5ca6a6adb6ee90e4749f3b28f372ccc8b3ba9a51ec1e739ba1cba0cc7eba5',
                 v: 28,
             },
         },
@@ -182,7 +182,7 @@ const message = (): SubtestEthereumSignTransaction => {
     const testPayloads: Array<TestEthereumSignTransactionPayload> = [
         {
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 nonce: '0x0',
                 gasPrice: '0x4e20',
@@ -196,8 +196,8 @@ const message = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: '070e9dafda4d9e733fa7b6747a75f8a4916459560efb85e3e73cd39f31aa160d',
-                s: '7842db33ef15c27049ed52741db41fe3238a6fa3a6a0888fcfb74d6917600e41',
+                r: 'ce5c299678f8ba333c219a3f70f01f7281bf4716cf4c2d47518f689cf3344dc4',
+                s: '194495dedbcbfdc6bbccfd83f1b8b5a2802e5da1c86e61731ffbc59e5b1719b2',
                 v: 28,
             },
         },
@@ -215,7 +215,7 @@ const newContract = (): SubtestEthereumSignTransaction => {
     const testPayloads: Array<TestEthereumSignTransactionPayload> = [
         {
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 nonce: '0x1e240',
                 gasPrice: '0x4e20',
@@ -226,7 +226,7 @@ const newContract = (): SubtestEthereumSignTransaction => {
         },
         {
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 nonce: '0x0',
                 gasPrice: '0x4e20',
@@ -238,12 +238,17 @@ const newContract = (): SubtestEthereumSignTransaction => {
         },
     ];
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
-        { success: false },
+        {
+            success: false,
+            payload: {
+                code: 'Failure_DataError',
+            },
+        },
         {
             payload: {
-                r: 'b401884c10ae435a2e792303b5fc257a09f94403b2883ad8c0ac7a7282f5f1f9',
-                s: '4742fc9e6a5fa8db3db15c2d856914a7f3daab21603a6c1ce9e9927482f8352e',
-                v: 28,
+                r: '05249f09ef32544c07aba09767f4dbe5248472b5c5250e77911a034e0978041a',
+                s: '0239c60830534b34db1c4c3d715253f2ed2786a322c6218c424188ccf0f0f464',
+                v: 27,
             },
         },
     ];
@@ -260,7 +265,7 @@ const sanityChecks = (): SubtestEthereumSignTransaction => {
         {
             // Gas overflow
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 nonce: '0x1e240',
                 gasPrice: '0xffffffffffffffffffffffffffffffff',
@@ -272,7 +277,7 @@ const sanityChecks = (): SubtestEthereumSignTransaction => {
         {
             // No gas price
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 nonce: '0x1e240',
                 gasLimit: '0x2710',
@@ -283,7 +288,7 @@ const sanityChecks = (): SubtestEthereumSignTransaction => {
         {
             // No gas limit
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 nonce: '0x1e240',
                 gasPrice: '0x2710',
@@ -294,7 +299,7 @@ const sanityChecks = (): SubtestEthereumSignTransaction => {
         {
             // No nonce
             method: 'ethereumSignTransaction',
-            path: [0, 0],
+            path: "m/44'/60'/0'",
             transaction: {
                 gasLimit: '0x2710',
                 to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
@@ -303,7 +308,12 @@ const sanityChecks = (): SubtestEthereumSignTransaction => {
         },
     ];
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
-        { success: false },
+        {
+            success: false,
+            payload: {
+                code: 'Failure_DataError'
+            },
+        },
         { success: false },
         { success: false },
         { success: false },
@@ -320,7 +330,7 @@ const noDataEip155 = (): SubtestEthereumSignTransaction => {
     const testPayloads: Array<TestEthereumSignTransactionPayload> = [
         {
             method: 'ethereumSignTransaction',
-            path: [2147483692, 2147483649, 2147483648, 0, 0],
+            path: "m/44'/1'/0'/0/0",
             transaction: {
                 nonce: '0x0',
                 gasPrice: '0x4a817c800',
@@ -332,7 +342,7 @@ const noDataEip155 = (): SubtestEthereumSignTransaction => {
         },
         {
             method: 'ethereumSignTransaction',
-            path: [2147483692, 2147483649, 2147483648, 0, 0],
+            path: "m/44'/1'/0'/0/0",
             transaction: {
                 nonce: '0x1',
                 gasPrice: '0x4a817c800',
@@ -346,16 +356,16 @@ const noDataEip155 = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: 'a90d0bc4f8d63be69453dd62f2bb5fff53c610000abf956672564d8a654d401a',
-                s: '544a2e57bc8b4da18660a1e6036967ea581cc635f5137e3ba97a750867c27cf2',
+                r: '39aa7798b8debf2db32945d929d25bd9c514e7f7e6a1f1c72bcbf0600f9f2db3',
+                s: '66e3a42fde7e7eb1096bc1f90342914612019688d97fe6b0571f420b5ddcb64c',
                 v: 41,
             },
         },
         {
             payload: {
-                r: '699428a6950e23c6843f1bf3754f847e64e047e829978df80d55187d19a401ce',
-                s: '087343d0a3a2f10842218ffccb146b59a8431b6245ab389fde22dc833f171e6e',
-                v: 42,
+                r: '0283d00760697f456534ad547cb1aa0542527929bbe13d82877be23505a5b012',
+                s: '2db7e0ea93dedf0226675b1b0498c1568c76e0c2d69dbfabb65bfa1412fb773b',
+                v: 41,
             },
         },
     ];
@@ -371,7 +381,7 @@ const dataEip155 = (): SubtestEthereumSignTransaction => {
     const testPayloads: Array<TestEthereumSignTransactionPayload> = [
         {
             method: 'ethereumSignTransaction',
-            path: [2147483692, 2147483649, 2147483648, 0, 0],
+            path: "m/44'/1'/0'/0/0",
             transaction: {
                 nonce: '0x2',
                 gasPrice: '0x4a817c800',
@@ -384,7 +394,7 @@ const dataEip155 = (): SubtestEthereumSignTransaction => {
         },
         {
             method: 'ethereumSignTransaction',
-            path: [2147483692, 2147483649, 2147483648, 0, 0],
+            path: "m/44'/1'/0'/0/0",
             transaction: {
                 nonce: '0x3',
                 gasPrice: '0x4a817c800',
@@ -397,7 +407,7 @@ const dataEip155 = (): SubtestEthereumSignTransaction => {
         },
         {
             method: 'ethereumSignTransaction',
-            path: [2147483692, 2147483649, 2147483648, 0, 0],
+            path: "m/44'/1'/0'/0/0",
             transaction: {
                 nonce: '0x4',
                 gasPrice: '0x4a817c800',
@@ -410,7 +420,7 @@ const dataEip155 = (): SubtestEthereumSignTransaction => {
         },
         {
             method: 'ethereumSignTransaction',
-            path: [2147483692, 2147483649, 2147483648, 0, 0],
+            path: "m/44'/1'/0'/0/0",
             transaction: {
                 nonce: '0x5',
                 gasPrice: '0x0',
@@ -425,29 +435,29 @@ const dataEip155 = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: 'ba85b622a8bb82606ba96c132e81fa8058172192d15bc41d7e57c031bca17df4',
-                s: '6473b75997634b6f692f8d672193591d299d5bf1c2d6e51f1a14ed0530b91c7d',
-                v: 42,
+                r: 'dbae2f01331e274f24831afadaa86f1da08c9cf9e28b120acc17ec4a748c533a',
+                s: '2e2a390c4afd7617d654b9affdee21b9b593964f19ac618039007b2c6677563f',
+                v: 41,
             },
         },
         {
             payload: {
-                r: 'd021c98f92859c8db5e4de2f0e410a8deb0c977eb1a631e323ebf7484bd0d79a',
-                s: '2c0e9defc9b1e895dc9520ff25ba3c635b14ad70aa86a5ad6c0a3acb82b569b6',
-                v: 42,
+                r: '8ceec1dc6f52a6ff4d17584ebbae00e9d6210a960fba29095f077d57e0dbc28d',
+                s: '3dd7d1b01c399d70a81fae0c0e5a306d1456b6f9a8d38514763d747af1e74c38',
+                v: 41,
             },
         },
         {
             payload: {
-                r: 'dd52f026972a83c56b7dea356836fcfc70a68e3b879cdc8ef2bb5fea23e0a7aa',
-                s: '079285fe579c9a2da25c811b1c5c0a74cd19b6301ee42cf20ef7b3b1353f7242',
-                v: 42,
+                r: '0672d6eb1b238b225be64dcbe39f52a9fb376c3cc47ec3d3dd28c94fcaac98fe',
+                s: '677959c411ef54889448de94661dfddef91292da7dd9a5855b9ee71bcd2bba6f',
+                v: 41,
             },
         },
         {
             payload: {
-                r: 'f7505f709d5999343aea3c384034c62d0514336ff6c6af65582006f708f81503',
-                s: '44e09e29a4b6247000b46ddc94fe391e94deb2b39ad6ac6398e6db5bec095ba9',
+                r: '23e1a4e27fd9926621bd75ecd7519e324a18a6ca156cafd522a9445096217360',
+                s: '4cdc7f2d028449acd0c2b72aeaab20d571e0cf6439a2e4b3cb5f45ff7a92d2d9',
                 v: 42,
             },
         },

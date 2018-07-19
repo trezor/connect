@@ -13,7 +13,7 @@ import type {
 
 export const settings = {
     configSrc: 'base/src/__tests__/config.json', // constant
-    debug: true,
+    debug: false,
     origin: 'localhost',
     priority: 0,
     trustedHost: true,
