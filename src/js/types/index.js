@@ -22,7 +22,7 @@ export type CoreMessage = {
 }
 
 // Override MessageEvent type to have access to "ports" field and typed "data"
-export class PostMessageEvent extends Event {
+export interface PostMessageEvent extends Event {
     +origin: string;
     +lastEventId: string;
     +source: WindowProxy;
