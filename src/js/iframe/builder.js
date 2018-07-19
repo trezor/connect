@@ -68,6 +68,7 @@ export const init = async (settings: Object): Promise<void> => {
     // inject iframe into host document body
     if (document.body) {
         document.body.appendChild(instance);
+        injectStyleSheet();
     }
 
     timeout = window.setTimeout(() => {
@@ -76,7 +77,6 @@ export const init = async (settings: Object): Promise<void> => {
 
     try {
         await initPromise.promise;
-        injectStyleSheet();
     } catch(error) {
         error = error.message;
         throw error;
