@@ -80,6 +80,7 @@ const removeUiPromise = (promise: Deferred<UiPromiseResponse>): void => {
 
 /**
  * Emit message to listener (parent).
+ * Clear method reference from _callMethods
  * @param {CoreMessage} message
  * @returns {void}
  * @memberof Core
@@ -272,7 +273,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         throw ERROR.INVALID_PARAMETERS;
     }
 
-    //_callMethods[responseID] = method;
     _callMethods.push(method);
 
     let messageResponse: ?ResponseMessage;
@@ -299,28 +299,25 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         }
     }
 
-    // this method is not using device, there is no need to acquire
+    // this method is not using the device, there is no need to acquire
     if (!method.useDevice) {
-        // TODO: call function and handle interruptions
-        // const response: Object = await _parameters.method.apply(this, [ parameters, callbacks ]);
-        // messageResponse = new ResponseMessage(_parameters.responseID, true, response);
-        // try {
-        //     const callbacks2: MethodCallbacks = {
-        //         device,
-        //         postMessage,
-        //         getPopupPromise,
-        //         createUiPromise,
-        //         findUiPromise,
-        //         removeUiPromise
-        //     };
-        //     const response: Object = await parameters.method.apply(this, [ parameters, callbacks2 ]);
-        //     var messageResponse2 = new ResponseMessage(parameters.responseID, true, response);
-        //     postMessage(messageResponse2);
-        //     return Promise.resolve();
+        if (method.useUi) {
+            // wait for popup handshake
+            await getPopupPromise().promise;
+        } else {
+            // cancel popup request
+            postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
+        }
 
-        // } catch (error1) {
-        //     console.error("WEBUS", error1);
-        // }
+        try {
+            const response: Object = await method.run();
+            messageResponse = new ResponseMessage(method.responseID, true, response);
+            postMessage(messageResponse);
+            return Promise.resolve();
+        } catch (error) {
+            postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
+            throw error;
+        }
     }
 
     // find device
