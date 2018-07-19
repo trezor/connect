@@ -23,7 +23,7 @@ export const isValidAddress = (address: string, coinInfo: CoinInfo): boolean  =>
 const isValidBase58Address = (address: string, network: BitcoinJSNetwork): boolean => {
     try {
         const decoded = BitcoinJSAddress.fromBase58Check(address);
-        if (decoded.version !== network.pubKeyHash || decoded.version !== network.scriptHash) {
+        if (decoded.version !== network.pubKeyHash && decoded.version !== network.scriptHash) {
             return false;
         }
     } catch (e) {
