@@ -1,3 +1,8 @@
+# 5.0.23
+__fixed__
+- npm package dependencies
+- Unsupported browser (IE)
+
 # 5.0.21
 __added__
 - Added `TrezorConnect.pushTransaction` method
