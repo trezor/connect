@@ -59,7 +59,7 @@ export default class PopupManager extends EventEmitter {
             this.requestTimeout = window.setTimeout(() => {
                 this.requestTimeout = 0;
                 openFn();
-            }, POPUP_REQUEST_TIMEOUT);
+            }, lazyLoad ? 1 : POPUP_REQUEST_TIMEOUT);
         }
     }
 
