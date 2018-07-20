@@ -97,7 +97,7 @@ module.exports = function(config) {
             runInParent: true,
             // Put the parameters here
             test: config.test,
-            subtest: config.subtest,
+            subtests: config.subtests,
         },
 
         // Continuous Integration mode
