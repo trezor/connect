@@ -37,7 +37,7 @@ export const getHDPath = (path: string): Array<number> => {
 
 export const isSegwitPath = (path: Array<number> | any): boolean => {
     return Array.isArray(path) && path[0] === toHardened(49);
-}
+};
 
 export const validatePath = (path: string | Array<number>, length: number = 0, base: boolean = false): Array<number> => {
     let valid: ?Array<number>;
@@ -86,11 +86,11 @@ export function getIndexFromPath(path: Array<number>): number {
 }
 
 export const getAccountLabel = (path: Array<number>, coinInfo: CoinInfo): string => {
-    let coinLabel: string = coinInfo.label;
+    const coinLabel: string = coinInfo.label;
     const p1: number = fromHardened(path[0]);
-    let account: number = fromHardened(path[2]);
-    let realAccountId: number = account + 1;
-    let prefix: string = 'Export info of';
+    const account: number = fromHardened(path[2]);
+    const realAccountId: number = account + 1;
+    const prefix: string = 'Export info of';
     let accountType: string = '';
 
     if (p1 === 48) {
@@ -143,12 +143,11 @@ export const getPublicKeyLabel = (path: Array<number>, coinInfo: ?CoinInfo): str
     } else {
         return prefix;
     }
-
-}
+};
 
 export const getLabel = (label: string, coinInfo: ?CoinInfo): string => {
     if (coinInfo) {
         return label.replace('#NETWORK', coinInfo.label);
     }
     return label.replace('#NETWORK', '');
-}
+};

@@ -5,7 +5,7 @@ export function clone<T>(obj: T): T {
     return JSON.parse(JSON.stringify(obj));
 }
 
-export function entries<T>(obj : { [string]: T }): Array<[string, T]> {
+export function entries<T>(obj: { [string]: T }): Array<[string, T]> {
     const keys : string[] = Object.keys(obj);
     return keys.map(key => [ key, obj[key] ]);
 }

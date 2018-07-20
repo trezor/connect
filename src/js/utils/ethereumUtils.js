@@ -10,7 +10,7 @@ export const stripHexPrefix = (str: string): string => {
 
 const hasHexPrefix = (str: string): boolean => {
     return str.slice(0, 2) === '0x';
-}
+};
 
 export const toChecksumAddress = (address: string, network: ?EthereumNetworkInfo): string => {
     let clean = stripHexPrefix(address);
@@ -18,15 +18,15 @@ export const toChecksumAddress = (address: string, network: ?EthereumNetworkInfo
     if (network && network.rskip60) clean = network.chainId + '0x' + address;
     const hash: string = createKeccakHash('keccak256').update(clean).digest('hex');
     let response: string = '0x';
-    for (var i = 0; i < address.length; i++) {
+    for (let i = 0; i < address.length; i++) {
         if (parseInt(hash[i], 16) >= 8) {
-            response += address[i].toUpperCase()
+            response += address[i].toUpperCase();
         } else {
-            response += address[i]
+            response += address[i];
         }
     }
     return response;
-}
+};
 
 export const getNetworkLabel = (label: string, network: ?EthereumNetworkInfo): string => {
     if (network) {
@@ -34,4 +34,4 @@ export const getNetworkLabel = (label: string, network: ?EthereumNetworkInfo): s
         return label.replace('#NETWORK', name);
     }
     return label.replace('#NETWORK', '');
-}
+};

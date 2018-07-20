@@ -11,13 +11,13 @@ import type {
 } from 'bitcoinjs-lib-zcash';
 import type { CoinInfo } from 'flowtype';
 
-export const isValidAddress = (address: string, coinInfo: CoinInfo): boolean  => {
-    if (!!(coinInfo.cashAddrPrefix)) {
+export const isValidAddress = (address: string, coinInfo: CoinInfo): boolean => {
+    if (coinInfo.cashAddrPrefix) {
         return isValidCashAddress(address);
     } else {
         return isValidBase58Address(address, coinInfo.network) || isValidBech32Address(address, coinInfo.network);
     }
-}
+};
 
 // Base58
 const isValidBase58Address = (address: string, network: BitcoinJSNetwork): boolean => {
@@ -30,7 +30,7 @@ const isValidBase58Address = (address: string, network: BitcoinJSNetwork): boole
         return false;
     }
     return true;
-}
+};
 
 // segwit native
 const isValidBech32Address = (address: string, network: BitcoinJSNetwork): boolean => {
@@ -43,7 +43,7 @@ const isValidBech32Address = (address: string, network: BitcoinJSNetwork): boole
         return false;
     }
     return true;
-}
+};
 
 // BCH cashaddress
 const isValidCashAddress = (address: string): boolean => {
@@ -52,7 +52,7 @@ const isValidCashAddress = (address: string): boolean => {
     } catch (err) {
         return false;
     }
-}
+};
 
 const isBech32 = (address: string): boolean => {
     try {
@@ -61,14 +61,14 @@ const isBech32 = (address: string): boolean => {
     } catch (e) {
         return false;
     }
-}
+};
 
-export const isScriptHash = (address: string, coinInfo: CoinInfo): boolean  => {
+export const isScriptHash = (address: string, coinInfo: CoinInfo): boolean => {
     if (!isBech32(address)) {
         // cashaddr hack
         // Cashaddr format (with prefix) is neither base58 nor bech32, so it would fail
         // in bitcoinjs-lib-zchash. For this reason, we use legacy format here
-        if (!!(coinInfo.cashAddrPrefix)) {
+        if (coinInfo.cashAddrPrefix) {
             address = bchaddrjs.toLegacyAddress(address);
         }
 
@@ -89,4 +89,4 @@ export const isScriptHash = (address: string, coinInfo: CoinInfo): boolean  => {
         }
     }
     throw new Error('Unknown address type.');
-}
+};

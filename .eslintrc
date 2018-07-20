@@ -134,7 +134,7 @@
         "no-unneeded-ternary": [2, { "defaultAssignment": false }],
         "no-unreachable": 2,
         "no-useless-call": 2,
-        "no-use-before-define": [2, {"functions": false, "classes": false }],
+        "no-use-before-define": ["error", {"functions": false, "classes": false }],
         "no-var": 2,
         "no-with": 2,
         "one-var": [2, { "initialized": "never" }],
