@@ -87,16 +87,15 @@ export default class DescriptorStream extends EventEmitter {
                     // this wasn't the reason, bridge is probably missing. Throw error
                     this.emit(TRANSPORT.ERROR, error);
                 } catch (fetchError) {
-                    logger.log("Failed to load static resource");
+                    logger.log('Failed to load static resource');
                     // wait one second and try again
                     await resolveAfter(1000, null);
                     if (this.listening) this.listen();
                 }
 
                 this.failedToFetchTimestamp = ts;
-
             } else {
-                logger.log("Transport error");
+                logger.log('Transport error');
                 this.emit(TRANSPORT.ERROR, error);
             }
         }

@@ -37,11 +37,6 @@ export type DeviceListOptions = {
 // custom log
 const _log: Log = initLog('DeviceList');
 
-let sharedWorkerFactory: ?() => ?SharedWorker = null;
-export function setSharedWorkerFactory(swf: ?() => ?SharedWorker) {
-    sharedWorkerFactory = swf;
-}
-
 function sharedWorkerFactoryWrap() {
     if (typeof window.SharedWorker !== 'undefined') {
         return new SharedConnectionWorker();
@@ -97,7 +92,7 @@ export default class DeviceList extends EventEmitter {
             if (webUsbPlugin) {
                 webUsbPlugin.unreadableHidDeviceChange.on('change', async () => {
                     if (webUsbPlugin.unreadableHidDevice) {
-                        const device = await this._createUnacquiredDevice( { path: DEVICE.UNREADABLE, session: null });
+                        const device = await this._createUnacquiredDevice({ path: DEVICE.UNREADABLE, session: null });
                         this.devices[DEVICE.UNREADABLE] = device;
                         this.emit(DEVICE.CONNECT_UNACQUIRED, device.toMessageObject());
                     } else {
@@ -121,7 +116,7 @@ export default class DeviceList extends EventEmitter {
         const transport = this.options.transport;
         if (!transport) throw ERROR.NO_TRANSPORT;
         _log.debug('Initializing transports');
-        await transport.init( DataManager.getSettings('debug') );
+        await transport.init(DataManager.getSettings('debug'));
         // await transport.init(false);
         _log.debug('Configuring transports');
         await this._configTransport(transport);
@@ -171,7 +166,7 @@ export default class DeviceList extends EventEmitter {
                 this.removeListener(TRANSPORT.START, handler);
                 this.removeListener(TRANSPORT.ERROR, handler);
                 resolve();
-            }
+            };
             this.on(TRANSPORT.START, handler);
             this.on(TRANSPORT.ERROR, handler);
         });
@@ -192,8 +187,8 @@ export default class DeviceList extends EventEmitter {
         stream.on(TRANSPORT.START, (): void => {
             this.emit(TRANSPORT.START, {
                 type: this.transportType(),
-                version: this.transportVersion()
-            })
+                version: this.transportVersion(),
+            });
         });
 
         stream.on(TRANSPORT.UPDATE, (diff: DeviceDescriptorDiff): void => {
@@ -224,9 +219,9 @@ export default class DeviceList extends EventEmitter {
         _log.debug('Creating Unacquired Device', descriptor);
         try {
             const device = await Device.createUnacquired(this.transport, descriptor);
-            device.once(DEVICE.ACQUIRED, () =>{
+            device.once(DEVICE.ACQUIRED, () => {
                 this.emit(DEVICE.CONNECT, device.toMessageObject());
-            })
+            });
             return device;
         } catch (error) {
             throw error;
@@ -320,7 +315,6 @@ export default class DeviceList extends EventEmitter {
     }
 
     onBeforeUnload(clearSession?: ?boolean) {
-
         if (this.stream !== null) {
             this.stream.stop();
         }
@@ -328,11 +322,11 @@ export default class DeviceList extends EventEmitter {
         this.allDevices().forEach(device => device.onBeforeUnload());
     }
 
-    disconnectDevices(){
+    disconnectDevices() {
         this.allDevices().forEach(device => {
             // device.disconnect();
             this.emit(DEVICE.DISCONNECT, device.toMessageObject());
-        })
+        });
     }
 }
 
@@ -475,7 +469,7 @@ class DiffHandler {
     async _createConnectedDevices() {
         for (const descriptor of this.diff.connected) {
             const path: string = descriptor.path.toString();
-            const priority: number = DataManager.getSettings('priority')
+            const priority: number = DataManager.getSettings('priority');
             _log.debug('Connected', priority, descriptor.session, this.list.devices);
             if (priority) {
                 await resolveAfter(501 + 100 * priority, null);

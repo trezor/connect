@@ -2,17 +2,14 @@
 'use strict';
 
 import * as DEVICE from '../constants/device';
-import * as ERROR from '../constants/errors';
 import randombytes from 'randombytes';
 
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as hdnodeUtils from '../utils/hdnode';
 import { isSegwitPath } from '../utils/pathUtils';
 import Device from './Device';
-import DataManager from '../data/DataManager';
 
-import { getCoinInfoByCurrency, getSegwitNetwork } from '../data/CoinInfo';
-
+import { getSegwitNetwork } from '../data/CoinInfo';
 
 import type { CoinInfo } from 'flowtype';
 import type { Transport } from 'trezor-link';
@@ -128,14 +125,14 @@ export default class DeviceCommands {
             publicKey: publicKey.node.public_key,
             fingerprint: publicKey.node.fingerprint,
             depth: publicKey.node.depth,
-        }
+        };
 
         // if requested path is a segwit
         // convert xpub to new format
         if (coinInfo) {
             const segwitNetwork = getSegwitNetwork(coinInfo);
             if (segwitNetwork && isSegwitPath(path)) {
-                response.xpubSegwit = hdnodeUtils.convertXpub(publicKey.xpub, segwitNetwork)
+                response.xpubSegwit = hdnodeUtils.convertXpub(publicKey.xpub, segwitNetwork);
             }
         }
         return response;
@@ -158,7 +155,7 @@ export default class DeviceCommands {
 
         return {
             path: address_n,
-            address: response.message.address
+            address: response.message.address,
         };
     }
 
@@ -186,7 +183,7 @@ export default class DeviceCommands {
             address,
             signature,
             message,
-            coin_name: coin
+            coin_name: coin,
         });
         return response.message;
     }
@@ -198,7 +195,7 @@ export default class DeviceCommands {
         });
         return {
             path: address_n,
-            address: response.message.address
+            address: response.message.address,
         };
     }
 
@@ -227,7 +224,7 @@ export default class DeviceCommands {
         });
         return {
             path: address_n,
-            address: response.message.address
+            address: response.message.address,
         };
     }
 
@@ -242,25 +239,25 @@ export default class DeviceCommands {
             type: response.type,
             message: {
                 path: address_n,
-                public_key: response.message.public_key
-            }
+                public_key: response.message.public_key,
+            },
         };
     }
 
     async stellarGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.StellarAddress> {
         const address: MessageResponse<trezor.StellarAddressMessage> = await this.typedCall('StellarGetAddress', 'StellarAddress', {
             address_n,
-            show_display: !!showOnTrezor
+            show_display: !!showOnTrezor,
         });
 
         const publicKey: MessageResponse<trezor.StellarPublicKeyMessage> = await this.typedCall('StellarGetPublicKey', 'StellarPublicKey', {
-            address_n
+            address_n,
         });
 
         return {
             path: address_n,
             address: address.message.address,
-            publicKey: publicKey.message.public_key
+            publicKey: publicKey.message.public_key,
         };
     }
 
@@ -318,8 +315,7 @@ export default class DeviceCommands {
         if (!this.device.isT1()) {
             // T2 features
             payload.state = this.device.getExpectedState() || this.device.getState();
-            if (useEmptyPassphrase)
-                payload.skip_passphrase = useEmptyPassphrase;
+            if (useEmptyPassphrase) { payload.skip_passphrase = useEmptyPassphrase; }
         }
 
         const response = await this.call('Initialize', payload);
@@ -401,7 +397,6 @@ export default class DeviceCommands {
         }
 
         if (res.type === 'PassphraseRequest') {
-
             const state: ?string = !this.device.isT1() ? (this.device.getExpectedState() || this.device.getState()) : null;
 
             if (res.message.on_device) {

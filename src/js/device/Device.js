@@ -121,7 +121,6 @@ export default class Device extends EventEmitter {
         // will be resolved after trezor-link acquire event
         this.deferredActions[ DEVICE.ACQUIRE ] = createDeferred();
         this.deferredActions[ DEVICE.ACQUIRED ] = createDeferred();
-        const _this: Device = this;
         try {
             const sessionID: string = await this.transport.acquire({
                 path: this.originalDescriptor.path,
@@ -140,18 +139,16 @@ export default class Device extends EventEmitter {
 
             // future defer for trezor-link release event
             this.deferredActions[ DEVICE.RELEASE ] = createDeferred();
-
         } catch (error) {
             this.deferredActions[ DEVICE.ACQUIRED ].resolve();
             delete this.deferredActions[ DEVICE.ACQUIRED ];
-            if (this.runPromise){
+            if (this.runPromise) {
                 this.runPromise.reject(error);
             } else {
                 throw error;
             }
             this.runPromise = null;
         }
-
     }
 
     async release(): Promise<void> {
@@ -240,7 +237,7 @@ export default class Device extends EventEmitter {
 
             // update features
             try {
-                await this.initialize(options.useEmptyPassphrase ? true : false);
+                await this.initialize(!!options.useEmptyPassphrase);
             } catch (error) {
                 this.inconsistent = true;
                 await this.deferredActions[ DEVICE.ACQUIRE ].promise;
@@ -330,13 +327,13 @@ export default class Device extends EventEmitter {
         this.featuresNeedsReload = false;
         this.featuresTimestamp = new Date().getTime();
 
-        this.firmwareStatus = checkFirmware( [ this.features.major_version, this.features.minor_version, this.features.patch_version ] );
+        this.firmwareStatus = checkFirmware([ this.features.major_version, this.features.minor_version, this.features.patch_version ]);
     }
 
     async getFeatures(): Promise<void> {
         const { message } : { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
         this.features = message;
-        this.firmwareStatus = checkFirmware( [ this.features.major_version, this.features.minor_version, this.features.patch_version ] );
+        this.firmwareStatus = checkFirmware([ this.features.major_version, this.features.minor_version, this.features.patch_version ]);
     }
 
     getState(): ?string {
@@ -362,8 +359,7 @@ export default class Device extends EventEmitter {
     async updateDescriptor(descriptor: DeviceDescriptor): Promise<void> {
         _log.debug('updateDescriptor', 'currentSession', this.originalDescriptor.session, 'upcoming', descriptor.session, 'lastUsedID', this.activitySessionID);
 
-        if (this.deferredActions[ DEVICE.ACQUIRED ])
-            await this.deferredActions[ DEVICE.ACQUIRED ].promise;
+        if (this.deferredActions[ DEVICE.ACQUIRED ]) { await this.deferredActions[ DEVICE.ACQUIRED ].promise; }
 
         if (descriptor.session === null) {
             // released
@@ -381,7 +377,6 @@ export default class Device extends EventEmitter {
                 if (this.listeners(DEVICE.ACQUIRED).length > 0) {
                     this.emit(DEVICE.ACQUIRED);
                 }
-
             } else {
                 // by other application
                 _log.debug('RELEASED BY OTHER APP');
@@ -487,7 +482,7 @@ export default class Device extends EventEmitter {
         if (this.features.bootloader_mode || !this.features.initialized) return true;
         const pin: boolean = this.features.pin_protection ? this.features.pin_cached : true;
         const pass: boolean = this.features.passphrase_protection ? this.features.passphrase_cached : true;
-        return true;
+        return pin && pass;
     }
 
     isT1(): boolean {
