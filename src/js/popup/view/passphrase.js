@@ -14,7 +14,7 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
     const input1: HTMLInputElement = (container.getElementsByClassName('pass')[0]: any);
     const input2: HTMLInputElement = (container.getElementsByClassName('pass-check')[0]: any);
     const toggle: HTMLInputElement = (container.getElementsByClassName('show-passphrase')[0]: any);
-    const enter: HTMLButtonElement = ( container.getElementsByClassName('submit')[0]: any);
+    const enter: HTMLButtonElement = (container.getElementsByClassName('submit')[0]: any);
 
     let inputType: string = 'password';
 
@@ -38,7 +38,7 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
             input2.value = '';
             validation();
         }
-    }
+    };
     const validation = () => {
         if (input1.value !== input2.value) {
             enter.disabled = true;

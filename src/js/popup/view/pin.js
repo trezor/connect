@@ -31,7 +31,7 @@ const addPin = (val: number): void => {
             isSubmitButtonDisabled(false);
         }
     }
-}
+};
 
 const backspacePin = (): void => {
     const input: HTMLInputElement = (container.getElementsByClassName('pin-input')[0]: any);

@@ -21,12 +21,11 @@ const getPermissionText = (permissionType: string, deviceName: string): string =
             text = 'Prepare Trezor device for transaction and data signing';
             break;
         case 'write-meta':
-            text = 'Write metadata to Trezor device'
+            text = 'Write metadata to Trezor device';
             break;
         case 'custom-message':
             text = 'Run custom operations';
             break;
-
     }
     return text;
 };
@@ -46,7 +45,7 @@ const getPermissionTooltipText = (permissionType: string): string => {
             break;
     }
     return text;
-}
+};
 
 const createPermissionItem = (permissionText: string, tooltipText: string): HTMLDivElement => {
     const permissionItem = document.createElement('div');

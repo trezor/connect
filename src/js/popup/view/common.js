@@ -1,9 +1,7 @@
 /* @flow */
 'use strict';
 
-import { ResponseMessage } from '../../message/builder';
 import type { CoreMessage } from '../../types';
-import { getOrigin } from '../../utils/networkUtils';
 import DataManager from '../../data/DataManager';
 import * as POPUP from '../../constants/popup';
 

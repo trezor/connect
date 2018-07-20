@@ -21,4 +21,4 @@ export const initInvalidPassphraseView = (payload: $PropertyType<DeviceMessage, 
         postMessage(new UiMessage(UI.INVALID_PASSPHRASE_ACTION, true));
         showView('loader');
     };
-}
+};

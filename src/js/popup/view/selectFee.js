@@ -44,7 +44,7 @@ export const updateCustomFee = (payload: $PropertyType<UpdateCustomFee, 'payload
 
 const validation = (coinInfo: CoinInfo) => {
     if (selectedFee) {
-        const selectedName: string = selectedFee.getAttribute("data-fee") || 'custom';
+        const selectedName: string = selectedFee.getAttribute('data-fee') || 'custom';
         const selectedValue = fees.find(f => f.name === selectedName);
         const sendButton: HTMLElement = container.getElementsByClassName('send-button')[0];
 
@@ -56,7 +56,7 @@ const validation = (coinInfo: CoinInfo) => {
             sendButton.innerHTML = 'Send';
         }
     }
-}
+};
 
 /*
  * Show select fee view.
@@ -70,7 +70,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
     selectedFee = null;
     fees.splice(0, fees.length);
     // add new fees from message
-    fees.push( ...data.feeLevels );
+    fees.push(...data.feeLevels);
 
     // build innerHTML string with fee buttons
     const feesComponents: Array<string> = [];
@@ -124,7 +124,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
             selectedFee = event.currentTarget;
             selectedFee.classList.add('active');
 
-            validation( data.coinInfo );
+            validation(data.coinInfo);
         }
     };
 
@@ -134,7 +134,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         feeButtons.item(i).addEventListener('click', onFeeSelect);
 
         // Select normal fee on default
-        if  (feeButtons.item(i).dataset.fee === 'normal') {
+        if (feeButtons.item(i).dataset.fee === 'normal') {
             feeButtons.item(i).click();
         }
     }
@@ -152,7 +152,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         let customFeeDefaultValue: number = 0;
         if (!composedCustomFee) {
             if (selectedFee) {
-                const selectedName: ?string = selectedFee.getAttribute("data-fee");
+                const selectedName: ?string = selectedFee.getAttribute('data-fee');
                 const selectedValue = fees.find(f => f.name === selectedName);
                 if (selectedValue && selectedValue.fee !== 0) {
                     customFeeDefaultValue = selectedValue.feePerByte;
@@ -170,7 +170,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         selectedFee = custom;
 
         focusInput(customFeeDefaultValue);
-    }
+    };
 
     const focusInput = (defaultValue: number) => {
         const input: HTMLInputElement = container.getElementsByTagName('input')[0];
@@ -184,13 +184,12 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
             }
             input.focus();
         }, 1);
-    }
+    };
 
     const minFee: number = data.coinInfo.minFeeSatoshiKb / 1000;
     const maxFee: number = data.coinInfo.maxFeeSatoshiKb / 1000;
 
     const handleCustomFeeChange = (event: Event): void => {
-
         window.clearTimeout(composingTimeout);
 
         sendButton.setAttribute('disabled', 'disabled');
@@ -227,30 +226,27 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
                 //     },
                 //     coinInfo: data.coinInfo,
                 // })
-            }
+            };
 
             composingTimeout = window.setTimeout(composeCustomFeeTimeoutHandler, 800);
         }
-    }
+    };
 
     const changeAccountButton: HTMLElement = container.getElementsByClassName('back-button')[0];
     changeAccountButton.onclick = () => {
         postMessage(new UiMessage(UI.RECEIVE_FEE, {
-            type: 'change-account'
+            type: 'change-account',
         }));
         showView('loader');
     };
 
     sendButton.onclick = () => {
         if (!selectedFee) return;
-        const selectedName: ?string = selectedFee.getAttribute("data-fee");
+        const selectedName: ?string = selectedFee.getAttribute('data-fee');
         postMessage(new UiMessage(UI.RECEIVE_FEE, {
             type: 'send',
             value: selectedName || 'custom',
         }));
-    }
+    };
 };
-
-
-
 

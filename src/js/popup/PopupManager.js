@@ -2,7 +2,7 @@
 'use strict';
 
 import EventEmitter from 'events';
-import { INIT, OPENED, HANDSHAKE, CLOSED } from '../constants/popup';
+import { INIT, CLOSED } from '../constants/popup';
 import { showPopupRequest } from './showPopupRequest';
 import type { ConnectSettings } from '../data/ConnectSettings';
 import type { CoreMessage, Deferred } from '../types';
@@ -94,12 +94,12 @@ export default class PopupManager extends EventEmitter {
             ,scrollbars=yes`;
 
         if (!this.settings.supportedBrowser) {
-            window.open(this.src +'#unsupported', '_blank', opts);
+            window.open(this.src + '#unsupported', '_blank', opts);
             return;
         }
         this._window = window.open('', '_blank', opts);
         if (this._window) {
-            this._window.location.href = this.lazyLoad ? this.src +'#loading' : this.src; // otherwise android/chrome loose window.opener reference
+            this._window.location.href = this.lazyLoad ? this.src + '#loading' : this.src; // otherwise android/chrome loose window.opener reference
         }
 
         this.closeInterval = window.setInterval(() => {

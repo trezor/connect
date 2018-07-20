@@ -1,5 +1,5 @@
 /* @flow */
-'use strict'
+'use strict';
 import { container, showView } from './common';
 import type { DeviceMessage } from '../../types/ui-request';
 
@@ -8,4 +8,4 @@ export const initPassphraseOnDeviceView = (payload: $PropertyType<DeviceMessage,
 
     const deviceName: HTMLElement = container.getElementsByClassName('device-name')[0];
     deviceName.innerText = payload.device.label;
-}
+};

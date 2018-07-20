@@ -24,21 +24,21 @@ const initWebUsbButton = (webusb: boolean): void => {
             window.resizeTo(originalWidth, originalHeight);
             window.moveTo(x, y);
             window.focus();
-        }
+        };
 
         window.resizeTo(100, 100);
         window.moveTo(screen.width, screen.height);
 
         const usb = iframe.clientInformation.usb;
         try {
-            await usb.requestDevice( { filters: DataManager.getConfig().webusb } );
+            await usb.requestDevice({ filters: DataManager.getConfig().webusb });
             showView('loader');
             restorePosition(currentWidth, currentHeight);
         } catch (error) {
             restorePosition(currentWidth, currentHeight);
         }
-    }
-}
+    };
+};
 
 export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): void => {
     if (!payload) return;
@@ -82,7 +82,7 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
             deviceButton.addEventListener('click', () => {
                 postMessage(new UiMessage(UI.RECEIVE_DEVICE, {
                     remember: (rememberCheckbox && rememberCheckbox.checked),
-                    device
+                    device,
                 }));
                 showView('loader');
             });
