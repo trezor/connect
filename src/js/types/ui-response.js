@@ -9,58 +9,58 @@ import * as UI from '../constants/ui';
 declare type ReceivePermission = {
     +type: typeof UI.RECEIVE_PERMISSION,
     payload: {
-        granted: boolean;
-        remember: boolean;
-    }
+        granted: boolean,
+        remember: boolean,
+    },
 }
 
 declare type ReceiveConfirmation = {
     +type: typeof UI.RECEIVE_CONFIRMATION | typeof UI.RECEIVE_PERMISSION,
-    payload: string; // TODO: boolean
+    payload: string, // TODO: boolean
 }
 
 declare type ReceiveDevice = {
     +type: typeof UI.RECEIVE_DEVICE,
     payload: {
-        device: Device;
-        remember: boolean;
-    }
+        device: Device,
+        remember: boolean,
+    },
 }
 
 declare type ReceivePin = {
     +type: typeof UI.RECEIVE_PIN,
-    payload: string;
+    payload: string,
 }
 
 declare type ReceivePassphrase = {
     +type: typeof UI.RECEIVE_PASSPHRASE,
     payload: {
-        save: boolean;
-        value: string;
-    }
+        save: boolean,
+        value: string,
+    },
 }
 
 declare type ReceivePassphraseAction = {
     +type: typeof UI.INVALID_PASSPHRASE_ACTION,
-    payload: boolean;
+    payload: boolean,
 }
 
 declare type ReceiveAccount = {
     +type: typeof UI.RECEIVE_ACCOUNT,
-    payload: ?string;
+    payload: ?string,
 }
 
 declare type ReceiveFee = {
     +type: typeof UI.RECEIVE_FEE,
     payload: {
-        +type: 'compose-custom';
-        value: number;
+        +type: 'compose-custom',
+        value: number,
     } | {
-        +type: 'change-account';
+        +type: 'change-account',
     } | {
-        +type: 'send';
-        value: string;
-    }
+        +type: 'send',
+        value: string,
+    },
 }
 
 /*
@@ -70,9 +70,9 @@ declare type ReceiveFee = {
 declare type CustomMessageRequest = {
     +type: typeof UI.CUSTOM_MESSAGE_REQUEST,
     payload: {
-        type: string;
-        message: Object;
-    }
+        type: string,
+        message: Object,
+    },
 }
 
 export type UiResponse =
