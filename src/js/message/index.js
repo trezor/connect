@@ -9,7 +9,7 @@ export const parseMessage = (messageData: any): CoreMessage => {
         event: messageData.event,
         type: messageData.type,
         payload: messageData.payload,
-    }
+    };
 
     if (typeof messageData.id === 'number') {
         message.id = messageData.id;
