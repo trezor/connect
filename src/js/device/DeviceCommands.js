@@ -409,14 +409,9 @@ export default class DeviceCommands {
                 return this._commonCall('PassphraseAck', { state });
             }
 
-            const cachedPassphrase: ?string = this.device.getPassphrase();
-            if (typeof cachedPassphrase === 'string') {
-                return this._commonCall('PassphraseAck', { passphrase: cachedPassphrase, state });
-            }
-
             return this._promptPassphrase().then(
                 passphrase => {
-                    return this._commonCall('PassphraseAck', { passphrase: passphrase, state });
+                    return this._commonCall('PassphraseAck', { passphrase, state });
                 },
                 err => {
                     return this._commonCall('Cancel', {}).catch(e => {

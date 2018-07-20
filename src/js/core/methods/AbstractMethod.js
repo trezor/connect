@@ -26,7 +26,7 @@ export default class AbstractMethod implements MethodInterface {
     devicePath: ?string;
     deviceInstance: number;
     deviceState: ?string;
-    expectedDeviceState: boolean;
+    hasExpectedDeviceState: boolean;
     keepSession: boolean;
     overridePreviousCall: boolean;
     overridden: boolean;
@@ -54,8 +54,10 @@ export default class AbstractMethod implements MethodInterface {
         this.responseID = message.id || 0;
         this.devicePath = payload.device ? payload.device.path : null;
         this.deviceInstance = payload.device ? payload.device.instance : 0;
-        this.deviceState = payload.device ? payload.device.state : null; // expected state (call param). This is not current device state!
-        this.expectedDeviceState = payload.device ? payload.device.hasOwnProperty('state') : false;
+        // expected state from method parameter.
+        // it could be null
+        this.deviceState = payload.device ? payload.device.state : null;
+        this.hasExpectedDeviceState = payload.device ? payload.device.hasOwnProperty('state') : false;
         this.keepSession = typeof payload.keepSession === 'boolean' ? payload.keepSession : false;
         this.overridePreviousCall = typeof payload.override === 'boolean' ? payload.override : false;
         this.overridden = false;

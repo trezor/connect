@@ -296,7 +296,12 @@ export default class Device extends EventEmitter {
         return this.instance;
     }
 
+    // set expected state from method parameter
     setExpectedState(state: ?string): void {
+        if (!state) {
+            this.setState(null); // T2 reset state
+            this.setPassphrase(null); // T1 reset password
+        }
         this.expectedState = state;
     }
 

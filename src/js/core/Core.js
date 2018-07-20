@@ -371,23 +371,11 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         }
     }
 
-    // TODO: nicer
-    //if (method.deviceInstance) {
-        device.setInstance(method.deviceInstance);
-    //}
+    // set device instance. default is 0
+    device.setInstance(method.deviceInstance);
 
-    if (method.expectedDeviceState) {
+    if (method.hasExpectedDeviceState) {
         device.setExpectedState(method.deviceState);
-        // reset state (for T2) and reset cachedPassphrase
-        if (!method.deviceState) {
-            device.setState(null);
-            device.setPassphrase(null);
-        }
-    } else if (method.useEmptyPassphrase) {
-        if (method.useEmptyPassphrase) {
-            device.setPassphrase(null);
-            device.setState(null);
-        }
     }
 
     // device is available
@@ -452,7 +440,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             // Make sure that device will display pin/passphrase
             try {
                 const deviceState: string = await device.getCommands().getDeviceState();
-                const validState: boolean = device.validateExpectedState(deviceState);
+                const validState: boolean = method.useEmptyPassphrase || device.validateExpectedState(deviceState);
                 if (!validState) {
                     if (isUsingPopup) {
                         // initialize user response promise
@@ -467,6 +455,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                             await device.getCommands().initialize(method.useEmptyPassphrase);
                             return inner();
                         } else {
+                            // set new state as requested
                             device.setState(deviceState);
                         }
                     } else {
@@ -622,6 +611,13 @@ const onDevicePinHandler = async (device: Device, type: string, callback: (error
  * @memberof Core
  */
 const onDevicePassphraseHandler = async (device: Device, callback: (error: any, success: any) => void): Promise<void> => {
+
+    const cachedPassphrase: ?string = device.getPassphrase();
+    if (typeof cachedPassphrase === 'string') {
+        callback(null, cachedPassphrase);
+        return;
+    }
+
     // wait for popup handshake
     await getPopupPromise().promise;
     // request passphrase view
@@ -636,7 +632,7 @@ const onDevicePassphraseHandler = async (device: Device, callback: (error: any, 
 };
 
 const onEmptyPassphraseHandler = async (device: Device, callback: (error: any, success: any) => void): Promise<void> => {
-    device.setPassphrase(null);
+    // device.setPassphrase(null);
     callback(null, '');
 };
 
