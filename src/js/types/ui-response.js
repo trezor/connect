@@ -86,6 +86,7 @@ export type UiResponse =
     | ReceiveFee
     | CustomMessageRequest;
 
+/* eslint-disable no-redeclare */
 declare function MessageFactory(type: $PropertyType<ReceivePermission, 'type'>, payload: $PropertyType<ReceivePermission, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<ReceiveConfirmation, 'type'>, payload: $PropertyType<ReceiveConfirmation, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<ReceiveDevice, 'type'>, payload: $PropertyType<ReceiveDevice, 'payload'>): CoreMessage;
@@ -95,5 +96,6 @@ declare function MessageFactory(type: $PropertyType<ReceivePassphraseAction, 'ty
 declare function MessageFactory(type: $PropertyType<ReceiveAccount, 'type'>, payload: $PropertyType<ReceiveAccount, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<ReceiveFee, 'type'>, payload: $PropertyType<ReceiveFee, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<CustomMessageRequest, 'type'>, payload: $PropertyType<CustomMessageRequest, 'payload'>): CoreMessage;
+/* eslint-enable no-redeclare */
 
 export type UiResponseFactory = typeof MessageFactory;

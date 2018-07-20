@@ -4,12 +4,12 @@
 import createKeccakHash from 'keccak';
 import type { EthereumNetworkInfo } from 'flowtype';
 
-export const stripHexPrefix = (str: string): string => {
-    return hasHexPrefix(str) ? str.slice(2) : str;
-};
-
 const hasHexPrefix = (str: string): boolean => {
     return str.slice(0, 2) === '0x';
+};
+
+export const stripHexPrefix = (str: string): string => {
+    return hasHexPrefix(str) ? str.slice(2) : str;
 };
 
 export const toChecksumAddress = (address: string, network: ?EthereumNetworkInfo): string => {

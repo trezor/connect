@@ -28,6 +28,7 @@ export const getReferencedTransactions = (inputs: Array<BuildTxInput>): Array<st
 // Transform referenced transactions from Bitcore to Trezor format
 export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>): Array<RefTransaction> => {
     return txs.map(tx => {
+        // eslint-disable-next-line no-use-before-define
         const data = getJoinSplitData(tx);
         const dataStr = data == null ? null : data.toString('hex');
         return {

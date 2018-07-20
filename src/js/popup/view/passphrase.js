@@ -21,6 +21,15 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
     deviceNameSpan.innerText = payload.device.label;
 
     /* Functions */
+    const validation = () => {
+        if (input1.value !== input2.value) {
+            enter.disabled = true;
+            view.classList.add('not-valid');
+        } else {
+            enter.disabled = false;
+            view.classList.remove('not-valid');
+        }
+    };
     const toggleInputFontStyle = (input: HTMLInputElement) => {
         if (inputType === 'text') {
             input.classList.add('text');
@@ -39,15 +48,6 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
             validation();
         }
     };
-    const validation = () => {
-        if (input1.value !== input2.value) {
-            enter.disabled = true;
-            view.classList.add('not-valid');
-        } else {
-            enter.disabled = false;
-            view.classList.remove('not-valid');
-        }
-    };
     const handleToggleClick = () => {
         inputType = inputType === 'text' ? 'password' : 'text';
 
@@ -57,7 +57,7 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
     const handleEnterClick = () => {
         input1.blur();
         input2.blur();
-
+        // eslint-disable-next-line no-use-before-define
         window.removeEventListener('keydown', handleWindowKeydown);
 
         showView('loader');

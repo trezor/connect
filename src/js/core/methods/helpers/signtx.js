@@ -13,32 +13,6 @@ import type {
     SignedTx,
 } from '../../../types/trezor';
 
-// requests information about a transaction
-// can be either signed transaction iteslf of prev transaction
-const requestTxInfo = (m: TxRequest,
-    index: {[hash: string]: RefTransaction},
-    inputs: Array<TransactionInput>,
-    outputs: Array<TransactionOutput>
-): SignTxInfoToTrezor => {
-    const md = m.details;
-    const hash = md.tx_hash;
-    if (hash) {
-        const reqTx = index[hash.toLowerCase()];
-        if (!reqTx) {
-            throw new Error(`Requested unknown tx: ${hash}`);
-        }
-        return requestPrevTxInfo(
-            reqTx,
-            m.request_type,
-            md.request_index,
-            md.extra_data_len,
-            md.extra_data_offset
-        );
-    } else {
-        return requestSignedTxInfo(inputs, outputs, m.request_type, md.request_index);
-    }
-};
-
 const requestPrevTxInfo = (reqTx: RefTransaction,
     requestType: string,
     requestIndex: string | number,
@@ -116,6 +90,32 @@ const requestSignedTxInfo = (inputs: Array<TransactionInput>,
     throw new Error(`Unknown request type: ${requestType}`);
 };
 
+// requests information about a transaction
+// can be either signed transaction iteslf of prev transaction
+const requestTxInfo = (m: TxRequest,
+    index: {[hash: string]: RefTransaction},
+    inputs: Array<TransactionInput>,
+    outputs: Array<TransactionOutput>
+): SignTxInfoToTrezor => {
+    const md = m.details;
+    const hash = md.tx_hash;
+    if (hash) {
+        const reqTx = index[hash.toLowerCase()];
+        if (!reqTx) {
+            throw new Error(`Requested unknown tx: ${hash}`);
+        }
+        return requestPrevTxInfo(
+            reqTx,
+            m.request_type,
+            md.request_index,
+            md.extra_data_len,
+            md.extra_data_offset
+        );
+    } else {
+        return requestSignedTxInfo(inputs, outputs, m.request_type, md.request_index);
+    }
+};
+
 const saveTxSignatures = (ms: TxRequestSerialized,
     serializedTx: {serialized: string},
     signatures: Array<string>
@@ -175,7 +175,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
     locktime: ?number,
 ): Promise<SignedTx> => {
     // TODO rbf
-    const sequence: number = locktime ? (0xffffffff - 1) : 0xffffffff;
+    // const sequence: number = locktime ? (0xffffffff - 1) : 0xffffffff;
     const index: {[key: string]: RefTransaction} = {};
     refTxs.forEach((tx: RefTransaction) => {
         index[tx.hash.toLowerCase()] = tx;

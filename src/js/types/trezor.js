@@ -273,18 +273,6 @@ export type NEMSignedTx = {
     signature: string,
 }
 
-export type NEMSignTxMessage = {
-    transaction?: NEMTransactionCommon,
-    cosigning?: boolean,
-    multisig?: NEMTransactionCommon,
-    transfer?: NEMTransfer,
-    provision_namespace?: NEMProvisionNamespace,
-    mosaic_creation?: NEMMosaicCreation,
-    supply_change?: NEMMosaicSupplyChange,
-    aggregate_modification?: NEMAggregateModification,
-    importance_transfer?: NEMImportanceTransfer,
-}
-
 export type NEMTransactionCommon = {
     address_n: ?Array<number>,
     network: ?number,
@@ -292,6 +280,12 @@ export type NEMTransactionCommon = {
     fee: ?number,
     deadline: ?number,
     signer: ?string,
+}
+
+export type NEMMosaic = {
+    namespace: ?string,
+    mosaic: ?string,
+    quantity: ?number,
 }
 
 export type NEMTransfer = {
@@ -302,63 +296,11 @@ export type NEMTransfer = {
     payload: ?string,
 }
 
-export type NEMMosaic = {
-    namespace: ?string,
-    mosaic: ?string,
-    quantity: ?number,
-}
-
 export type NEMProvisionNamespace = {
     namespace: ?string,
     sink: ?string,
     fee: ?number,
     parent: ?string,
-}
-
-export type NEMMosaicCreation = {
-    definition: ?NEMMosaicDefinition,
-    sink: ?string,
-    fee: ?number,
-}
-
-export type NEMMosaicDefinition = {
-    name?: string,
-    ticker?: string,
-    namespace?: string,
-    mosaic?: string,
-    divisibility?: number,
-    fee?: number,
-    levy?: NEMMosaicLevyType,
-    levy_address?: string,
-    levy_namespace?: string,
-    levy_mosaic?: string,
-    supply?: number,
-    mutable_supply?: boolean,
-    transferable?: boolean,
-    description?: string,
-    networks?: number,
-}
-
-export type NEMMosaicSupplyChange = {
-    namespace?: string,
-    type?: NEMSupplyChangeType,
-    mosaic?: string,
-    delta?: number,
-}
-
-export type NEMAggregateModification = {
-    modifications: ?Array<NEMCosignatoryModification>,
-    relative_change: ?number, // TODO: "sint32"
-}
-
-export type NEMCosignatoryModification = {
-    type?: NEMModificationType,
-    public_key?: string,
-}
-
-export type NEMImportanceTransfer = {
-    mode?: NEMImportanceTransferMode,
-    public_key?: string,
 }
 
 export type NEMMosaicLevyType = {
@@ -391,6 +333,64 @@ export type NEMImportanceTransferMode = {
 } | {
     id: 2,
     name: 'ImportanceTransfer_Deactivate',
+}
+
+export type NEMMosaicDefinition = {
+    name?: string,
+    ticker?: string,
+    namespace?: string,
+    mosaic?: string,
+    divisibility?: number,
+    fee?: number,
+    levy?: NEMMosaicLevyType,
+    levy_address?: string,
+    levy_namespace?: string,
+    levy_mosaic?: string,
+    supply?: number,
+    mutable_supply?: boolean,
+    transferable?: boolean,
+    description?: string,
+    networks?: number,
+}
+
+export type NEMMosaicCreation = {
+    definition: ?NEMMosaicDefinition,
+    sink: ?string,
+    fee: ?number,
+}
+
+export type NEMMosaicSupplyChange = {
+    namespace?: string,
+    type?: NEMSupplyChangeType,
+    mosaic?: string,
+    delta?: number,
+}
+
+export type NEMCosignatoryModification = {
+    type?: NEMModificationType,
+    public_key?: string,
+}
+
+export type NEMAggregateModification = {
+    modifications: ?Array<NEMCosignatoryModification>,
+    relative_change: ?number, // TODO: "sint32"
+}
+
+export type NEMImportanceTransfer = {
+    mode?: NEMImportanceTransferMode,
+    public_key?: string,
+}
+
+export type NEMSignTxMessage = {
+    transaction?: NEMTransactionCommon,
+    cosigning?: boolean,
+    multisig?: NEMTransactionCommon,
+    transfer?: NEMTransfer,
+    provision_namespace?: NEMProvisionNamespace,
+    mosaic_creation?: NEMMosaicCreation,
+    supply_change?: NEMMosaicSupplyChange,
+    aggregate_modification?: NEMAggregateModification,
+    importance_transfer?: NEMImportanceTransfer,
 }
 
 // Stellar types

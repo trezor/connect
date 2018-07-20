@@ -42,6 +42,7 @@ export const stellarSignTx = async (typedCall: (type: string, resType: string, m
     networkPassphrase: string,
     tx: $StellarTransaction,
 ): Promise<StellarSignedTx> => {
+    // eslint-disable-next-line no-use-before-define
     const message: StellarSignTxMessage = transformSignMessage(tx);
     message.address_n = address_n;
     message.protocol_version = ledgerVersion;
@@ -49,6 +50,7 @@ export const stellarSignTx = async (typedCall: (type: string, resType: string, m
 
     const operations: Array<StellarOperationMessage> = [];
     tx.operations.forEach(op => {
+        // eslint-disable-next-line no-use-before-define
         const transformed: ?StellarOperationMessage = transformOperation(op);
         if (transformed) { operations.push(transformed); }
     });

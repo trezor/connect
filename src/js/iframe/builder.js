@@ -68,6 +68,7 @@ export const init = async (settings: Object): Promise<void> => {
     // inject iframe into host document body
     if (document.body) {
         document.body.appendChild(instance);
+        // eslint-disable-next-line no-use-before-define
         injectStyleSheet();
     }
 

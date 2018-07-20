@@ -2,7 +2,6 @@
 'use strict';
 
 import { CORE_EVENT, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT } from '../constants';
-import { LOG } from '../constants/popup';
 import * as POPUP from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
 import * as UI from '../constants/ui';
@@ -17,7 +16,7 @@ import { UiMessage, ResponseMessage } from '../message/builder';
 
 import type { CoreMessage, PostMessageEvent } from '../types';
 
-import Log, { init as initLog, getLog } from '../utils/debug';
+import Log, { init as initLog } from '../utils/debug';
 import { checkBrowser, state as browserState } from '../utils/browser';
 import { getOrigin } from '../utils/networkUtils';
 import { load as loadStorage, PERMISSIONS_KEY } from './storage';
@@ -42,13 +41,16 @@ const handleMessage = (event: PostMessageEvent): void => {
     // respond to call
     // TODO: instead of error _core should be initialized automatically
     if (!_core && data.type === IFRAME.CALL && typeof data.id === 'number') {
+        // eslint-disable-next-line no-use-before-define
         postMessage(new ResponseMessage(data.id, false, { error: 'Core not initialized yet!' }));
+        // eslint-disable-next-line no-use-before-define
         postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
         return;
     }
 
     // catch first message from connect.js (parent window)
     if (!DataManager.getSettings('origin') && data.type === UI.IFRAME_HANDSHAKE) {
+        // eslint-disable-next-line no-use-before-define
         init(data.payload, event.origin);
         return;
     }
@@ -66,6 +68,7 @@ const handleMessage = (event: PostMessageEvent): void => {
             _popupMessagePort = event.ports[0];
             const method = _core.getCurrentMethod()[0];
 
+            // eslint-disable-next-line no-use-before-define
             postMessage(new UiMessage(POPUP.HANDSHAKE, {
                 settings: DataManager.getSettings(),
                 transport: _core.getTransportInfo(),
@@ -92,23 +95,6 @@ const handleMessage = (event: PostMessageEvent): void => {
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    switch (message.type) {
-        // utility: print log from popup window
-
-        case 'getlog' :
-            postMessage(new ResponseMessage(message.id || 0, true, getLog()));
-            break;
-        case LOG :
-            // $FlowIssue
-            if (typeof message.args === 'string') {
-                const args = JSON.parse(message.args);
-                // console[message.level].apply(this, args);
-                // _log.debug.apply(this, args);
-                _logFromPopup.debug(...args);
-            }
-            break;
-    }
-
     // pass data to Core
     _core.handleMessage(message, isTrustedDomain);
 };
@@ -132,6 +118,7 @@ const postMessage = (message: CoreMessage): void => {
     if (!trustedHost && !handshake && (message.event === TRANSPORT_EVENT)) {
         return;
     }
+    // eslint-disable-next-line no-use-before-define
     if (!trustedHost && message.event === DEVICE_EVENT && !filterDeviceEvent(message)) {
         return;
     }

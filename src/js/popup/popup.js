@@ -23,6 +23,7 @@ const handleMessage = (event: PostMessageEvent): void => {
 
     if (event.data === POPUP.INIT) {
         window.location.hash = '';
+        // eslint-disable-next-line no-use-before-define
         onLoad();
         return;
     }
@@ -41,6 +42,7 @@ const handleMessage = (event: PostMessageEvent): void => {
     }
     // catch first message from iframe.js and gain settings
     if (isMessagePort && !DataManager.getSettings('origin') && data.type === POPUP.HANDSHAKE && data.payload) {
+        // eslint-disable-next-line no-use-before-define
         init(data.payload);
         return;
     }

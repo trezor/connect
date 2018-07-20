@@ -152,6 +152,7 @@ export type UiRequest =
     | UpdateCustomFee
     | BundleProgress
 
+/* eslint-disable no-redeclare */
 declare function MessageFactory(type: $PropertyType<MessageWithoutPayload, 'type'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<DeviceMessage, 'type'>, payload: $PropertyType<DeviceMessage, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<IFrameHandshake, 'type'>, payload: $PropertyType<IFrameHandshake, 'payload'>): CoreMessage;
@@ -165,5 +166,6 @@ declare function MessageFactory(type: $PropertyType<SelectAccount, 'type'>, payl
 declare function MessageFactory(type: $PropertyType<SelectFee, 'type'>, payload: $PropertyType<SelectFee, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<UpdateCustomFee, 'type'>, payload: $PropertyType<UpdateCustomFee, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<BundleProgress, 'type'>, payload: $PropertyType<BundleProgress, 'payload'>): CoreMessage;
+/* eslint-enable no-redeclare */
 
 export type UiMessageFactory = UiResponseFactory & typeof MessageFactory;

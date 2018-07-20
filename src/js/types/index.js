@@ -5,10 +5,9 @@
 * Public types accessible from npm library
 */
 
-import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from '../constants';
+import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT } from '../constants';
 import * as TRANSPORT from '../constants/transport';
 import * as POPUP from '../constants/popup';
-import * as IFRAME from '../constants/iframe';
 import * as UI from '../constants/ui';
 import * as DEVICE from '../constants/device';
 
@@ -38,39 +37,6 @@ export type Deferred<T> = {
     reject: (e: Error) => void,
 };
 
-export type DeviceStatus = 'available' | 'occupied' | 'used';
-export type DeviceFirmwareStatus = 'valid' | 'outdated' | 'required';
-
-// export type Device = {
-//     +type: DeviceStatus,
-//     path: string,
-//     label: string,
-//     firmware: DeviceFirmwareStatus,
-//     isUsedElsewhere: boolean,
-//     featuresNeedsReload: boolean,
-//     features?: Features,
-//     unacquired?: boolean,
-//     unreadable?: boolean,
-// }
-
-export type Device = $Exact<{
-    +type: 'acquired',
-    +path: string,
-    +label: string,
-    +firmware: DeviceFirmwareStatus,
-    +status: DeviceStatus,
-    state: ?string,
-    features: Features,
-}> | $Exact<{
-    +type: 'unacquired',
-    +path: string,
-    +label: string,
-}> | $Exact<{
-    +type: 'unreadable',
-    +path: string,
-    +label: string,
-}>
-
 export type Features = {
     vendor: string,
     major_version: number,
@@ -94,6 +60,27 @@ export type Features = {
     needs_backup?: boolean,
     firmware_present?: boolean,
 }
+
+export type DeviceStatus = 'available' | 'occupied' | 'used';
+export type DeviceFirmwareStatus = 'valid' | 'outdated' | 'required';
+
+export type Device = $Exact<{
+    +type: 'acquired',
+    +path: string,
+    +label: string,
+    +firmware: DeviceFirmwareStatus,
+    +status: DeviceStatus,
+    state: ?string,
+    features: Features,
+}> | $Exact<{
+    +type: 'unacquired',
+    +path: string,
+    +label: string,
+}> | $Exact<{
+    +type: 'unreadable',
+    +path: string,
+    +label: string,
+}>
 
 export type Settings = {
     priority?: number,
@@ -134,10 +121,12 @@ export type TransportMessage = {
     payload: Object,
 }
 
+/* eslint-disable no-redeclare */
 declare function F_EventListener(type: typeof DEVICE_EVENT, handler: (event: DeviceMessage) => void): void;
 declare function F_EventListener(type: typeof UI_EVENT, handler: (event: UiMessage) => void): void;
 declare function F_EventListener(type: typeof TRANSPORT_EVENT, handler: (event: TransportMessage) => void): void;
 declare function F_EventListener(type: DeviceMessageType, handler: (device: Device) => void): void;
+/* eslint-enable no-redeclare */
 
 export type EventListener = typeof F_EventListener;
 

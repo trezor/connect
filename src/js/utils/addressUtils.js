@@ -11,14 +11,6 @@ import type {
 } from 'bitcoinjs-lib-zcash';
 import type { CoinInfo } from 'flowtype';
 
-export const isValidAddress = (address: string, coinInfo: CoinInfo): boolean => {
-    if (coinInfo.cashAddrPrefix) {
-        return isValidCashAddress(address);
-    } else {
-        return isValidBase58Address(address, coinInfo.network) || isValidBech32Address(address, coinInfo.network);
-    }
-};
-
 // Base58
 const isValidBase58Address = (address: string, network: BitcoinJSNetwork): boolean => {
     try {
@@ -51,6 +43,14 @@ const isValidCashAddress = (address: string): boolean => {
         return bchaddrjs.isCashAddress(address);
     } catch (err) {
         return false;
+    }
+};
+
+export const isValidAddress = (address: string, coinInfo: CoinInfo): boolean => {
+    if (coinInfo.cashAddrPrefix) {
+        return isValidCashAddress(address);
+    } else {
+        return isValidBase58Address(address, coinInfo.network) || isValidBech32Address(address, coinInfo.network);
     }
 };
 

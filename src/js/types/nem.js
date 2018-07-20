@@ -2,6 +2,42 @@
 // NEM types from nem-sdk
 // https://nemproject.github.io/#transferTransaction
 
+type MosaicID = {
+    namespaceId: string,
+    name: string,
+}
+
+type MosaicDefinition = {
+    levy: {
+        type: number,
+        fee: number,
+        recipient: string,
+        mosaicId: MosaicID,
+    },
+    id: MosaicID,
+    description: string,
+    properties: Array<{
+        name: string,
+        value: string,
+    }>,
+}
+
+type Modification = {
+    modificationType: number,
+    cosignatoryAccount: string,
+}
+
+type Message = {
+    payload: string,
+    type: number,
+    publicKey?: string, // not present in sdk
+}
+
+export type Mosaic = {
+    mosaicId: MosaicID,
+    quantity: number,
+}
+
 export type Transaction = {
     timeStamp: number,
     amount: number,
@@ -41,40 +77,3 @@ export type Transaction = {
     supplyType: number,
     delta: number,
 }
-
-type MosaicDefinition = {
-    levy: {
-        type: number,
-        fee: number,
-        recipient: string,
-        mosaicId: MosaicID,
-    },
-    id: MosaicID,
-    description: string,
-    properties: Array<{
-        name: string,
-        value: string,
-    }>,
-}
-
-type Modification = {
-    modificationType: number,
-    cosignatoryAccount: string,
-}
-
-type Message = {
-    payload: string,
-    type: number,
-    publicKey?: string, // not present in sdk
-}
-
-export type Mosaic = {
-    mosaicId: MosaicID,
-    quantity: number,
-}
-
-type MosaicID = {
-    namespaceId: string,
-    name: string,
-}
-

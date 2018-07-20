@@ -38,7 +38,7 @@ export const updateCustomFee = (payload: $PropertyType<UpdateCustomFee, 'payload
     } else {
         customFeeLabel.innerHTML = 'Insufficient funds';
     }
-
+    // eslint-disable-next-line no-use-before-define
     validation(payload.coinInfo);
 };
 
@@ -168,13 +168,14 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
 
         custom.classList.add('active');
         selectedFee = custom;
-
+        // eslint-disable-next-line no-use-before-define
         focusInput(customFeeDefaultValue);
     };
 
     const focusInput = (defaultValue: number) => {
         const input: HTMLInputElement = container.getElementsByTagName('input')[0];
         setTimeout(() => {
+            // eslint-disable-next-line no-use-before-define
             input.oninput = handleCustomFeeChange;
             if (defaultValue) {
                 input.value = defaultValue.toString();

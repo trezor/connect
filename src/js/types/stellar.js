@@ -8,23 +8,6 @@ type Asset = {
     issuer?: string,
 }
 
-export type Transaction = {
-    source: string, // Proto: "source_account"
-    fee?: number, // Proto: ok
-    sequence?: number, // Proto: "sequence_number"
-    timebounds?: {
-        minTime: number, // Proto: "timebounds_start"
-        maxTime: number, // Proto: "timebounds_end"
-    },
-    memo?: {
-        id?: number, // Proto: "memo_id"
-        type: number, // Proto: "memo_type"
-        text?: string, // Proto: "memo_text"
-        hash?: string, // Proto: "memo_hash"
-    },
-    operations: Array<Operation>, // Proto: calculated array length > "num_operations"
-}
-
 export type CreateAccountOperation = {
     +type: 'createAccount', // Proto: "StellarCreateAccountOp"
     destination: string, // Proto: "new_account",
@@ -142,3 +125,20 @@ export type Operation = CreateAccountOperation
     | InflationOperation
     | ManageDataOperation
     | BumpSequenceOperation;
+
+export type Transaction = {
+    source: string, // Proto: "source_account"
+    fee?: number, // Proto: ok
+    sequence?: number, // Proto: "sequence_number"
+    timebounds?: {
+        minTime: number, // Proto: "timebounds_start"
+        maxTime: number, // Proto: "timebounds_end"
+    },
+    memo?: {
+        id?: number, // Proto: "memo_id"
+        type: number, // Proto: "memo_type"
+        text?: string, // Proto: "memo_text"
+        hash?: string, // Proto: "memo_hash"
+    },
+    operations: Array<Operation>, // Proto: calculated array length > "num_operations"
+}

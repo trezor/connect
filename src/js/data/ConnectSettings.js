@@ -3,20 +3,20 @@
 
 export type ConnectSettings = {
     // debug: boolean | {[k: string]: boolean};
-    +configSrc: string; // constant
-    debug: boolean;
-    origin: ?string;
-    priority: number;
-    trustedHost: boolean;
-    connectSrc: string;
-    iframeSrc: string;
-    popup: boolean;
-    popupSrc: string;
-    webusbSrc: string;
-    transportReconnect: boolean;
-    webusb: boolean;
-    pendingTransportEvent: boolean;
-    supportedBrowser?: boolean;
+    +configSrc: string, // constant
+    debug: boolean,
+    origin: ?string,
+    priority: number,
+    trustedHost: boolean,
+    connectSrc: string,
+    iframeSrc: string,
+    popup: boolean,
+    popupSrc: string,
+    webusbSrc: string,
+    transportReconnect: boolean,
+    webusb: boolean,
+    pendingTransportEvent: boolean,
+    supportedBrowser?: boolean,
 }
 
 /*

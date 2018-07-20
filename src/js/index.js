@@ -20,7 +20,7 @@ import { NO_IFRAME, IFRAME_INITIALIZED, DEVICE_CALL_IN_PROGRESS } from './consta
 import PopupManager from './popup/PopupManager';
 import * as iframe from './iframe/builder';
 import webUSBButton from './webusb/button';
-import Log, { init as initLog, getLog } from './utils/debug';
+import Log, { init as initLog } from './utils/debug';
 import { parseMessage } from './message';
 import { parse as parseSettings } from './data/ConnectSettings';
 
@@ -92,7 +92,7 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
 
             if (type === UI.IFRAME_HANDSHAKE) {
                 if (payload.error) {
-                    iframe.initPromise.reject( new Error(payload.error) );
+                    iframe.initPromise.reject(new Error(payload.error));
                 } else {
                     iframe.initPromise.resolve();
                 }
@@ -135,7 +135,7 @@ const init = async (settings: Object = {}): Promise<void> => {
     });
 
     await iframe.init(_settings);
-}
+};
 
 const call = async (params: Object): Promise<Object> => {
     if (!iframe.instance && !iframe.timeout) {
@@ -186,18 +186,17 @@ const call = async (params: Object): Promise<Object> => {
         _log.error('__call error', error);
         return error;
     }
-}
+};
 
 const customMessageResponse = (payload: ?{ message: string, params?: Object }): void => {
     iframe.postMessage({
         event: UI_EVENT,
         type: UI.CUSTOM_MESSAGE_RESPONSE,
-        payload
+        payload,
     });
-}
+};
 
 class TrezorConnect {
-
     static init = async (settings: $T.Settings): Promise<void> => {
         return await init(settings);
     }
@@ -226,9 +225,9 @@ class TrezorConnect {
             return {
                 success: false,
                 payload: {
-                    error: 'Parameter "callback" is not a function'
-                }
-            }
+                    error: 'Parameter "callback" is not a function',
+                },
+            };
         }
 
         // TODO: set message listener only if iframe is loaded correctly
@@ -236,7 +235,7 @@ class TrezorConnect {
         delete params.callback;
         const customMessageListener = async (event: $T.PostMessageEvent) => {
             const data = event.data;
-            if (data && data.type == UI.CUSTOM_MESSAGE_REQUEST) {
+            if (data && data.type === UI.CUSTOM_MESSAGE_REQUEST) {
                 const payload = await callback(data.payload);
                 if (payload) {
                     customMessageResponse(payload);
@@ -244,7 +243,7 @@ class TrezorConnect {
                     customMessageResponse({ message: 'release' });
                 }
             }
-        }
+        };
         window.addEventListener('message', customMessageListener, false);
 
         const response = await call({ method: 'customMessage', ...params });
@@ -261,15 +260,15 @@ class TrezorConnect {
             // TODO: set message listener only if iframe is loaded correctly
             const loginChallengeListener = async (event: $T.PostMessageEvent) => {
                 const data = event.data;
-                if (data && data.type == UI.LOGIN_CHALLENGE_REQUEST) {
+                if (data && data.type === UI.LOGIN_CHALLENGE_REQUEST) {
                     const payload = await callback();
                     iframe.postMessage({
                         event: UI_EVENT,
                         type: UI.LOGIN_CHALLENGE_RESPONSE,
-                        payload
+                        payload,
                     });
                 }
-            }
+            };
 
             window.addEventListener('message', loginChallengeListener, false);
 
@@ -392,4 +391,4 @@ export type {
     UiMessage,
     TransportMessageType,
     TransportMessage,
- } from './types';
+} from './types';
