@@ -74,6 +74,8 @@ const handleMessage = (event: PostMessageEvent): void => {
                 transport: _core.getTransportInfo(),
                 method: method ? method.info : null,
             }));
+        } else {
+            console.warn("POPUP.OPENED: popupMessagePort not found");
         }
     }
 
@@ -107,25 +109,38 @@ const postMessage = (message: CoreMessage): void => {
         return;
     }
 
-    if (message.type === UI.REQUEST_UI_WINDOW && !DataManager.getSettings('popup')) {
-        // popup handshake is resolved automatically
+    const usingPopup: boolean = DataManager.getSettings('popup');
+    const trustedHost: boolean = DataManager.getSettings('trustedHost');
+    const handshake: boolean = message.type === UI.IFRAME_HANDSHAKE;
+
+    // popup handshake is resolved automatically
+    if (!usingPopup && message.type === UI.REQUEST_UI_WINDOW) {
         _core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, true);
         return;
     }
-    // check if permissions to read is granted
-    const trustedHost: boolean = DataManager.getSettings('trustedHost');
-    const handshake: boolean = message.type === UI.IFRAME_HANDSHAKE;
-    if (!trustedHost && !handshake && (message.event === TRANSPORT_EVENT)) {
+
+    if (!trustedHost && !handshake && message.event === TRANSPORT_EVENT) {
         return;
     }
+    // check if permissions to read from device is granted
     // eslint-disable-next-line no-use-before-define
     if (!trustedHost && message.event === DEVICE_EVENT && !filterDeviceEvent(message)) {
         return;
     }
-    _log.debug('postMessage', message);
-    // window.top.postMessage(message, DataManager.getSettings('origin'));
 
-    const parentMessages = [
+    if (usingPopup && targetUiEvent(message)) {
+        if (_popupMessagePort) {
+            _popupMessagePort.postMessage(message);
+        } else {
+            console.warn("postMessage: popupMessagePort not found");
+        }
+    } else {
+        window.top.postMessage(message, DataManager.getSettings('origin'));
+    }
+};
+
+const targetUiEvent = (message: CoreMessage): boolean => {
+    const whitelistedMessages = [
         UI.IFRAME_HANDSHAKE,
         UI.CLOSE_UI_WINDOW,
         POPUP.CANCEL_POPUP_REQUEST,
@@ -133,16 +148,8 @@ const postMessage = (message: CoreMessage): void => {
         UI.LOGIN_CHALLENGE_REQUEST,
         UI.BUNDLE_PROGRESS,
     ];
-    if (message.event === UI_EVENT && parentMessages.indexOf(message.type) < 0) {
-        if (_popupMessagePort) {
-            _popupMessagePort.postMessage(message);
-        } else {
-            // TODO: communication error
-        }
-    } else {
-        window.top.postMessage(message, DataManager.getSettings('origin'));
-    }
-};
+    return (message.event === UI_EVENT && whitelistedMessages.indexOf(message.type) < 0);
+}
 
 const filterDeviceEvent = (message: CoreMessage): boolean => {
     if (message.payload && message.payload.features) {
