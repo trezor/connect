@@ -6,7 +6,6 @@ import { LOG } from '../constants/popup';
 import * as POPUP from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
 import * as UI from '../constants/ui';
-import * as TRANSPORT from '../constants/transport';
 
 import { parse as parseSettings } from '../data/ConnectSettings';
 import DataManager from '../data/DataManager';
@@ -14,7 +13,7 @@ import type { ConnectSettings } from '../data/ConnectSettings';
 
 import { Core, init as initCore, initTransport } from '../core/Core';
 import { parseMessage } from '../message';
-import { UiMessage, ResponseMessage, TransportMessage } from '../message/builder';
+import { UiMessage, ResponseMessage } from '../message/builder';
 
 import type { CoreMessage, PostMessageEvent } from '../types';
 
@@ -43,7 +42,7 @@ const handleMessage = (event: PostMessageEvent): void => {
     // respond to call
     // TODO: instead of error _core should be initialized automatically
     if (!_core && data.type === IFRAME.CALL && typeof data.id === 'number') {
-        postMessage(new ResponseMessage(data.id, false, { error: "Core not initialized yet!"} ) );
+        postMessage(new ResponseMessage(data.id, false, { error: 'Core not initialized yet!' }));
         postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
         return;
     }
@@ -70,8 +69,8 @@ const handleMessage = (event: PostMessageEvent): void => {
             postMessage(new UiMessage(POPUP.HANDSHAKE, {
                 settings: DataManager.getSettings(),
                 transport: _core.getTransportInfo(),
-                method: method ? method.info : null
-            }))
+                method: method ? method.info : null,
+            }));
         }
     }
 
@@ -116,6 +115,7 @@ const handleMessage = (event: PostMessageEvent): void => {
 
 // communication with parent window
 const postMessage = (message: CoreMessage): void => {
+    _log.debug('postMessage', message);
     if (!window.top) {
         _log.error('Cannot reach window.top');
         return;
@@ -144,7 +144,7 @@ const postMessage = (message: CoreMessage): void => {
         POPUP.CANCEL_POPUP_REQUEST,
         UI.CUSTOM_MESSAGE_REQUEST,
         UI.LOGIN_CHALLENGE_REQUEST,
-        UI.BUNDLE_PROGRESS
+        UI.BUNDLE_PROGRESS,
     ];
     if (message.event === UI_EVENT && parentMessages.indexOf(message.type) < 0) {
         if (_popupMessagePort) {
@@ -163,13 +163,13 @@ const filterDeviceEvent = (message: CoreMessage): boolean => {
         const features: any = message.payload.features;
         if (savedPermissions && Array.isArray(savedPermissions)) {
             const devicePermissions: Array<Object> = savedPermissions.filter(p => {
-                return (p.origin === DataManager.getSettings('origin') && p.type === 'read' && p.device === features.device_id)
+                return (p.origin === DataManager.getSettings('origin') && p.type === 'read' && p.device === features.device_id);
             });
             return (devicePermissions.length > 0);
         }
     }
     return false;
-}
+};
 
 const init = async (settings: any, origin: string) => {
     const parsedSettings: ConnectSettings = parseSettings(settings);
@@ -190,7 +190,7 @@ const init = async (settings: any, origin: string) => {
         }
 
         postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {
-            browser: browserState
+            browser: browserState,
         }));
     } catch (error) {
         postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {
@@ -198,7 +198,7 @@ const init = async (settings: any, origin: string) => {
             error: error.message,
         }));
     }
-}
+};
 
 window.addEventListener('message', handleMessage, false);
 window.addEventListener('beforeunload', () => {
