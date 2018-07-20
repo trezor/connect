@@ -23,9 +23,7 @@ aside {
     }
 
     .info-panel {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
+        .test-ellipsis();
 
         flex: 1;
         display: flex;
@@ -34,8 +32,7 @@ aside {
         text-align: center;
 
         h2, p {
-            text-overflow: ellipsis;
-            overflow: hidden;
+            .test-ellipsis();
             word-break: break-word;
         }
     }

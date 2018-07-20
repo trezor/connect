@@ -1,26 +1,17 @@
-body {
-  overflow-y: hidden;
-}
-
 .permissions {
   padding: 24px 24px 0;
   height: 100%;
   display: flex;
   flex-direction: column;
 
-  overflow-y: scroll;
-
   h3 {
     display: flex;
     flex-direction: column;
 
     span {
+      .test-ellipsis();
       flex: 1;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-
-      font-weight: bold;
+      font-weight: 600;
     }
   }
 
@@ -38,6 +29,11 @@ body {
     background-color: @color_info_secondary;
 
     text-align: left;
+
+    [tooltip] {
+      width: 28px;
+      height: 28px;
+    }
   }
 
   .permission-item {
@@ -71,10 +67,6 @@ body {
       color: @color_info_primary;
       font-size: 28px;
     }
-
-    &:hover .tooltip {
-      //visibility: visible;
-    }
   }
 
   input:checked + .indicator:after {
@@ -99,10 +91,6 @@ body {
 }
 
 @media screen and (max-width: 639px) {
-  body {
-    overflow-y: visible;
-  }
-
   .permissions {
     overflow: visible;
 

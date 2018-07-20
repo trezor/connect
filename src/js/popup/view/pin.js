@@ -99,13 +99,13 @@ const pinKeyboardHandler = (event: KeyboardEvent): void => {
 export const initPinView = (payload: $PropertyType<DeviceMessage, 'payload'>): void => {
     showView('pin');
 
-    const header: HTMLElement = container.getElementsByTagName('h3')[0];
+    const deviceName: HTMLElement = container.getElementsByClassName('device-name')[0];
     const input: HTMLInputElement = (container.getElementsByClassName('pin-input')[0]: any);
     const enter: HTMLElement = container.getElementsByClassName('submit')[0];
     const backspace: HTMLElement = container.getElementsByClassName('pin-backspace')[0];
     const buttons: NodeList<HTMLElement> = container.querySelectorAll('[data-value]');
 
-    header.innerHTML = header.innerHTML.replace('#TREZOR', payload.device.label);
+    deviceName.innerText = payload.device.label;
 
     for (let i = 0; i < buttons.length; i++) {
         buttons.item(i).addEventListener('click', (event: MouseEvent) => {

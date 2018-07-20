@@ -11,6 +11,10 @@
         height: auto;
     }
 
+    section {
+        // overflow: visible;
+    }
+
     aside {
         .wrapper {
             flex-direction: row;
@@ -23,6 +27,7 @@
         }
 
         .info-panel {
+            text-align: right;
             h2 {
                 font-size: 16px;
                 padding-top: 5px;
@@ -65,6 +70,15 @@
     aside {
         .wrapper {
             flex-direction: column;
+
+            svg {
+                margin: 0;
+            }
+
+            .info-panel {
+                max-width: 100%;
+                text-align: center;
+            }
         }
     }
 }

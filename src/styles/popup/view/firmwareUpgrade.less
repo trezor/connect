@@ -7,10 +7,6 @@
     margin-bottom: 3px;
   }
 
-  .confirm {
-    margin-bottom: 16px;
-  }
-
   .skip-update {
     font-size: 12px;
     font-weight: 500;
@@ -20,6 +16,22 @@
 
     &::after {
       content: none;
+    }
+  }
+
+  a.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+
+    .exit {
+      position: relative;
+      top: 1px;
+
+      &::after {
+        .icomoon-exit();
+      }
     }
   }
 }
