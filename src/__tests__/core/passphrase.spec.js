@@ -1,4 +1,4 @@
-/* @flow */
+/* TODO: flow */
 
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
@@ -147,7 +147,6 @@ const wrongPassphrase = (): SubtestPassphrase => {
 }; */
 
 export const passphrase = () => {
-    const subtest: PassphraseAvailableSubtests = __karma__.config.subtest;
     const availableSubtests = {
         correctPassphrase,
         wrongPassphrase,

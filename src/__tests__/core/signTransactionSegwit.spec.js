@@ -1,13 +1,4 @@
 /* @flow */
-
-import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
-import { checkBrowser } from '../../js/utils/browser';
-import { settings, CoreEventHandler } from './common.js';
-
-import { getHDPath } from '../../js/utils/pathUtils.js';
-import * as bitcoin from 'bitcoinjs-lib-zcash';
-
-
 import type {
     SubtestSignTransaction,
     SignTransactionSegwitAvailableSubtests,
@@ -173,41 +164,16 @@ const sendMultisig1 = (): SubtestSignTransaction => {
     };
 };
 
-export const signTransactionSegwit = (): void => {
-    const subtest: SignTransactionSegwitAvailableSubtests = __karma__.config.subtest;
+export const signTransactionSegwit = () => {
     const availableSubtests = {
         sendP2sh,
         sendP2shChange,
         sendMultisig1,
     };
+    const testName = 'SignTransactionSegwit';
 
-    describe('SignTransactionSegwit', () => {
-        let core: Core;
-
-        beforeEach(async (done) => {
-            core = await initCore(settings);
-            checkBrowser();
-            done();
-        });
-        afterEach(() => {
-            // Deinitialize existing core
-            core.onBeforeUnload();
-        });
-
-        const { testPayloads, expectedResponses, specName } = availableSubtests[subtest]();
-        if (testPayloads.length !== expectedResponses.length) {
-            throw new Error('Different number of payloads and expected responses');
-        }
-
-        for (let i = 0; i < testPayloads.length; i++) {
-            const payload = testPayloads[i];
-            const expectedResponse = expectedResponses[i];
-
-            it(specName, async (done) => {
-                const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
-                handler.startListening();
-                await initTransport(settings);
-            });
-        }
-    });
+    return {
+        ...availableSubtests,
+        testName,
+    };
 };

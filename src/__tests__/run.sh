@@ -194,6 +194,14 @@ init_device() {
     fi;
 }
 
+prepare_environment() {
+    enable_passphrase="$1" # "True"/"False"
+
+    start_emulator
+    setup_mnemonic_nopin_nopassphrase ${enable_passphrase}
+    start_transport
+}
+
 setup_mnemonic_allallall_passphrase() {
     init_device "$mnemonic_all" "$pin_0" "True"
 }
@@ -348,37 +356,39 @@ run_karma() {
     path_babel_node="./node_modules/babel-cli/bin/babel-node.js"
     path_karma="./node_modules/karma/bin/karma"
 
+    ${path_babel_node} ${path_karma} start --test="${1}" --subtests="${2}" | tee /dev/tty > $logs_path
+
     # Leave the regular output and also redirect to log file
-    $path_babel_node $path_karma start --test="$1" --subtest="$2" | tee /dev/tty > $logs_path
+    # $path_babel_node $path_karma start --test="$1" --subtest="$2" | tee /dev/tty > $logs_path
 
 
     # If test has a subtest
-    if [ -z "$2" ]; then
-        finished_test_names="${finished_test_names}$1;"
-    else
-        finished_test_names="${finished_test_names}$1/$2;"
-    fi;
+    # if [ -z "$2" ]; then
+    #     finished_test_names="${finished_test_names}$1;"
+    # else
+    #     finished_test_names="${finished_test_names}$1/$2;"
+    # fi;
 
     # Grab last summary line after test has finished
     # so we can show summary for all tests later
     # todo: doesn't work when running 'signMessage/sign' and test fails
-    result=$(cat $logs_path | grep Executed | cut -d ":" -f2 | tail -1)
-    is_fail=$(echo ${result} | grep -E "FAILED|ERROR" >/dev/null && echo 1 || echo 0)
-    if [ $is_fail -eq 1 ]; then
-        echo "${red}${result}${reset}"
-    else
-        echo "${green}${result}${reset}"
-    fi;
+    # result=$(cat $logs_path | grep Executed | cut -d ":" -f2 | tail -1)
+    # is_fail=$(echo ${result} | grep -E "FAILED|ERROR" >/dev/null && echo 1 || echo 0)
+    # if [ $is_fail -eq 1 ]; then
+    #     echo "${red}${result}${reset}"
+    # else
+    #     echo "${green}${result}${reset}"
+    # fi;
 
-    finished_test_results="${finished_test_results}${result};"
+    # finished_test_results="${finished_test_results}${result};"
 
-    delimiter1="@"
-    delimiter2=";"
-    test_name="$1"
-    if [ -n "$2" ]; then
-        test_name="$1/$2"
-    fi;
-    test_results="${test_results}${test_name}${delimiter1}${result}${delimiter2}"
+    # delimiter1="@"
+    # delimiter2=";"
+    # test_name="$1"
+    # if [ -n "$2" ]; then
+    #     test_name="$1/$2"
+    # fi;
+    # test_results="${test_results}${test_name}${delimiter1}${result}${delimiter2}"
 }
 
 run_all_tests() {
@@ -414,15 +424,6 @@ run_excluded_tests() {
     done;
 }
 
-
-prepare_environment() {
-    enable_passphrase="$1" # "True"/"False"
-
-    start_emulator
-    setup_mnemonic_nopin_nopassphrase ${enable_passphrase}
-    start_transport
-}
-
 run_test() {
     # Check whether specified test was specified also with a subtest
     # - trailing '/' must be added so the cut command works for $subtest_to_run
@@ -452,12 +453,13 @@ run_test() {
     fi;
 
     if [ -n "${subtests}" ]; then
-        for subtest in $subtests; do
-            echo "${green}   - subtest: ${subtest}${reset}"
-            run_karma ${test_to_run} ${subtest}
-        done;
+        run_karma "${test_to_run}" "${subtests}"
+        # for subtest in $subtests; do
+        #     echo "${green}   - subtest: ${subtest}${reset}"
+        #     run_karma ${test_to_run} ${subtest}
+        # done;
     else
-        run_karma ${test_to_run}
+        run_karma "${test_to_run}"
     fi;
     kill_emul_transport
 }
@@ -529,5 +531,5 @@ elif [ "$run_type" = "excluded" ]; then
     run_excluded_tests "$tests_not_to_run"
 fi;
 
-show_results
+# show_results
 cleanup
