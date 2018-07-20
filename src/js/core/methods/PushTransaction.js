@@ -11,12 +11,11 @@ import type { CoreMessage, PushTransaction$ } from '../../types';
 import type { CoinInfo } from 'flowtype';
 
 type Params = {
-    tx: string;
-    coinInfo: CoinInfo;
+    tx: string,
+    coinInfo: CoinInfo,
 }
 
 export default class PushTransaction extends AbstractMethod {
-
     params: Params;
     backend: BlockBook;
 
@@ -45,9 +44,8 @@ export default class PushTransaction extends AbstractMethod {
 
         this.params = {
             tx: payload.tx,
-            coinInfo
-        }
-
+            coinInfo,
+        };
     }
 
     async run(): Promise<PushTransaction$> {
@@ -55,7 +53,7 @@ export default class PushTransaction extends AbstractMethod {
         this.backend = await createBackend(this.params.coinInfo);
         const txid: string = await this.backend.sendTransactionHex(this.params.tx);
         return {
-            txid
-        }
+            txid,
+        };
     }
 }

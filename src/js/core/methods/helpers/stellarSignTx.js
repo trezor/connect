@@ -4,21 +4,19 @@
 import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type {
     Transaction as $StellarTransaction,
-    Operation as $StellarOperation
+    Operation as $StellarOperation,
 } from '../../../types/stellar';
 
 import type {
     StellarSignedTx,
-    StellarPaymentOp,
     StellarSignTxMessage,
-    StellarOperationMessage
+    StellarOperationMessage,
 } from '../../../types/trezor';
 
 const processTxRequest = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     operations: Array<StellarOperationMessage>,
     index: number
 ): Promise<StellarSignedTx> => {
-
     const lastOp: boolean = (index + 1 >= operations.length);
     const op = operations[index];
     const type: string = op.type;
@@ -44,7 +42,6 @@ export const stellarSignTx = async (typedCall: (type: string, resType: string, m
     networkPassphrase: string,
     tx: $StellarTransaction,
 ): Promise<StellarSignedTx> => {
-
     const message: StellarSignTxMessage = transformSignMessage(tx);
     message.address_n = address_n;
     message.protocol_version = ledgerVersion;
@@ -53,21 +50,19 @@ export const stellarSignTx = async (typedCall: (type: string, resType: string, m
     const operations: Array<StellarOperationMessage> = [];
     tx.operations.forEach(op => {
         const transformed: ?StellarOperationMessage = transformOperation(op);
-        if (transformed)
-            operations.push(transformed);
-    })
+        if (transformed) { operations.push(transformed); }
+    });
 
-    const response: DefaultMessageResponse = await typedCall('StellarSignTx', 'StellarTxOpRequest', message);
+    await typedCall('StellarSignTx', 'StellarTxOpRequest', message);
 
     return await processTxRequest(typedCall, operations, 0);
 };
 
 // transform incoming parameters to protobuf messages format
 const transformSignMessage = (tx: $StellarTransaction): StellarSignTxMessage => {
-
     const timebounds = tx.timebounds ? {
         timebounds_start: tx.timebounds.minTime,
-        timebounds_end: tx.timebounds.maxTime
+        timebounds_end: tx.timebounds.maxTime,
     } : null;
 
     const memo = tx.memo ? {
@@ -86,21 +81,20 @@ const transformSignMessage = (tx: $StellarTransaction): StellarSignTxMessage => 
         sequence_number: tx.sequence,
         ...timebounds,
         ...memo,
-        num_operations: tx.operations.length
-    }
-}
+        num_operations: tx.operations.length,
+    };
+};
 
 // transform incoming parameters to protobuf messages format
 const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => {
     switch (op.type) {
-
         case 'createAccount' :
             return {
                 type: 'StellarCreateAccountOp',
                 new_account: op.destination,
                 source_account: op.source,
                 starting_balance: parseFloat(op.startingBalance),
-            }
+            };
 
         case 'payment' :
             return {
@@ -109,7 +103,7 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 destination_account: op.destination,
                 asset: op.asset,
                 amount: parseFloat(op.amount),
-            }
+            };
 
         case 'pathPayment' :
             return {
@@ -120,8 +114,8 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 destination_account: op.destination,
                 destination_asset: op.destAsset,
                 destination_amount: parseFloat(op.destAmount),
-                paths: op.path
-            }
+                paths: op.path,
+            };
 
         case 'manageOffer' :
             return {
@@ -133,7 +127,7 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 selling_asset: op.selling,
                 price_n: op.price.n,
                 price_d: op.price.d,
-            }
+            };
 
         case 'createPassiveOffer' :
             return {
@@ -145,7 +139,7 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 selling_asset: op.selling,
                 price_n: op.price.n,
                 price_d: op.price.d,
-            }
+            };
 
         case 'setOptions' :
             return {
@@ -162,15 +156,15 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 high_threshold: op.highThreshold,
                 home_domain: op.homeDomain,
                 inflation_destination_account: op.inflationDest,
-            }
+            };
 
         case 'changeTrust' :
             return {
                 type: 'StellarChangeTrustOp',
                 source_account: op.source,
                 asset: op.line,
-                limit: parseFloat(op.limit)
-            }
+                limit: parseFloat(op.limit),
+            };
 
         case 'allowTrust' :
             return {
@@ -180,14 +174,14 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 asset_type: op.assetType,
                 asset_code: op.assetCode,
                 is_authorized: op.authorize ? 1 : 0,
-            }
+            };
 
         case 'accountMerge' :
             return {
                 type: 'StellarAccountMergeOp',
                 source_account: op.source,
                 destination_account: op.destination,
-            }
+            };
 
         case 'manageData' :
             return {
@@ -195,15 +189,14 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 source_account: op.source,
                 key: op.name,
                 value: op.value,
-            }
+            };
 
         case 'bumpSequence' :
             return {
                 type: 'StellarBumpSequenceOp',
                 source_account: op.source,
-                bump_to: op.to
-            }
+                bump_to: op.to,
+            };
     }
-}
-
+};
 

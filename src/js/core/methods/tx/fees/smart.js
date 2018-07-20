@@ -3,7 +3,7 @@
 
 import { btckb2satoshib } from '../../../../utils/formatUtils';
 import BlockBook from '../../../../backend';
-import type { FeeHandler} from './index';
+import type { FeeHandler } from './index';
 import type { FeeLevel, FeeLevelInfo, SmartBitcoreFeeLevel } from 'flowtype/fee';
 
 const feeLevels: $ReadOnlyArray<SmartBitcoreFeeLevel> = [

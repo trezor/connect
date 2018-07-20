@@ -16,18 +16,17 @@ import type { CoreMessage } from '../../types';
 import type { EthereumNetworkInfo } from 'flowtype';
 
 type Batch = {
-    path: Array<number>;
-    network: ?EthereumNetworkInfo;
-    showOnTrezor: boolean;
+    path: Array<number>,
+    network: ?EthereumNetworkInfo,
+    showOnTrezor: boolean,
 }
 
 type Params = {
-    bundle: Array<Batch>;
-    bundledResponse: boolean;
+    bundle: Array<Batch>,
+    bundledResponse: boolean,
 }
 
 export default class EthereumGetAddress extends AbstractMethod {
-
     params: Params;
 
     constructor(message: CoreMessage) {
@@ -63,7 +62,7 @@ export default class EthereumGetAddress extends AbstractMethod {
             const network: ?EthereumNetworkInfo = getEthereumNetwork(path);
 
             let showOnTrezor: boolean = true;
-            if (batch.hasOwnProperty('showOnTrezor')){
+            if (batch.hasOwnProperty('showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
             if (showOnTrezor) {
@@ -73,7 +72,7 @@ export default class EthereumGetAddress extends AbstractMethod {
             bundle.push({
                 path,
                 network,
-                showOnTrezor
+                showOnTrezor,
             });
         });
 
@@ -86,7 +85,7 @@ export default class EthereumGetAddress extends AbstractMethod {
             if (uniqNetworks.length === 1 && uniqNetworks[0]) {
                 this.info = getNetworkLabel('Export multiple #NETWORK addresses', uniqNetworks[0]);
             } else {
-                this.info = `Export multiple addresses`;
+                this.info = 'Export multiple addresses';
             }
         }
 
@@ -94,12 +93,11 @@ export default class EthereumGetAddress extends AbstractMethod {
 
         this.params = {
             bundle,
-            bundledResponse
-        }
+            bundledResponse,
+        };
     }
 
     async run(): Promise<EthereumAddress | Array<EthereumAddress>> {
-
         const responses: Array<EthereumAddress> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
             const batch: Batch = this.params.bundle[i];
@@ -115,7 +113,7 @@ export default class EthereumGetAddress extends AbstractMethod {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
-                    response
+                    response,
                 }));
             }
         }

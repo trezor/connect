@@ -23,17 +23,16 @@ import type { AccountInfo, HDNodeResponse } from '../../types/trezor';
 import type { Deferred, CoreMessage } from '../../types';
 
 type Params = {
-    path: ?Array<number>;
-    xpub: ?string;
-    coinInfo: CoinInfo;
+    path: ?Array<number>,
+    xpub: ?string,
+    coinInfo: CoinInfo,
 }
 
 type Response = AccountInfo | {
-    error: string;
+    error: string,
 }
 
 export default class GetAccountInfo extends AbstractMethod {
-
     params: Params;
     confirmed: boolean = false;
     backend: BlockBook;
@@ -84,7 +83,7 @@ export default class GetAccountInfo extends AbstractMethod {
             path: path,
             xpub: payload.xpub,
             coinInfo,
-        }
+        };
     }
 
     async confirmation(): Promise<boolean> {
@@ -136,7 +135,7 @@ export default class GetAccountInfo extends AbstractMethod {
         const account = createAccount(path, node.xpub, coinInfo);
 
         const discovery: Discovery = this.discovery = new Discovery({
-            getHDNode: this.device.getCommands().getHDNode.bind( this.device.getCommands() ),
+            getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
             coinInfo: this.params.coinInfo,
             backend: this.backend,
             loadInfo: false,
@@ -147,9 +146,8 @@ export default class GetAccountInfo extends AbstractMethod {
     }
 
     async _getAccountFromPublicKey(): Promise<Response> {
-
         const discovery: Discovery = this.discovery = new Discovery({
-            getHDNode: this.device.getCommands().getHDNode.bind( this.device.getCommands() ),
+            getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
             coinInfo: this.params.coinInfo,
             backend: this.backend,
             loadInfo: false,
@@ -159,17 +157,16 @@ export default class GetAccountInfo extends AbstractMethod {
         discovery.on('update', async (accounts: Array<Account>) => {
             const account = accounts.find(a => a.xpub === this.params.xpub);
             if (account) {
-
                 discovery.removeAllListeners();
                 discovery.completed = true;
 
                 await discovery.getAccountInfo(account);
                 discovery.stop();
-                deferred.resolve( this._response(account) );
+                deferred.resolve(this._response(account));
             }
         });
         discovery.on('complete', () => {
-            deferred.resolve( this._response(null) );
+            deferred.resolve(this._response(null));
         });
 
         discovery.start();
@@ -178,9 +175,8 @@ export default class GetAccountInfo extends AbstractMethod {
     }
 
     async _getAccountFromDiscovery(): Promise<Response> {
-
         const discovery: Discovery = this.discovery = new Discovery({
-            getHDNode: this.device.getCommands().getHDNode.bind( this.device.getCommands() ),
+            getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
             coinInfo: this.params.coinInfo,
             backend: this.backend,
         });
@@ -196,16 +192,16 @@ export default class GetAccountInfo extends AbstractMethod {
             this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
                 coinInfo: this.params.coinInfo,
                 accounts: accounts.map(a => a.toMessage()),
-                complete: true
+                complete: true,
             }));
         });
 
         try {
             discovery.start();
-        } catch(error) {
+        } catch (error) {
             return {
-                error
-            }
+                error,
+            };
         }
 
         // set select account view
@@ -213,7 +209,7 @@ export default class GetAccountInfo extends AbstractMethod {
         this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
             coinInfo: this.params.coinInfo,
             accounts: [],
-            start: true
+            start: true,
         }));
 
         // wait for user action
@@ -227,11 +223,10 @@ export default class GetAccountInfo extends AbstractMethod {
     }
 
     _response(account: ?Account): Response {
-
         if (!account) {
             return {
-                error: "No account found"
-            }
+                error: 'No account found',
+            };
         }
 
         return {
@@ -240,11 +235,11 @@ export default class GetAccountInfo extends AbstractMethod {
             serializedPath: getSerializedPath(account.path),
             address: account.getNextAddress(),
             addressId: account.getNextAddressId(),
-            addressPath: account.getAddressPath( account.getNextAddress() ),
+            addressPath: account.getAddressPath(account.getNextAddress()),
             xpub: account.xpub,
             balance: account.getBalance(),
             confirmed: account.getConfirmedBalance(),
-        }
+        };
     }
 
     dispose() {

@@ -3,7 +3,7 @@
 
 import type { CoreMessage } from '../../types';
 
-import AbstractMethod, { MethodInterface } from './AbstractMethod';
+import AbstractMethod from './AbstractMethod';
 
 import CipherKeyValue from './CipherKeyValue';
 import ComposeTransaction from './ComposeTransaction';
@@ -49,7 +49,7 @@ const classes: {[k: string]: any} = {
     'stellarGetAddress': StellarGetAddress,
     'stellarSignTransaction': StellarSignTransaction,
     'verifyMessage': VerifyMessage,
-}
+};
 
 export const find = (message: CoreMessage): AbstractMethod => {
     if (!message.payload) {
@@ -65,6 +65,6 @@ export const find = (message: CoreMessage): AbstractMethod => {
     }
 
     throw new Error(`Method ${message.payload.method} not found`);
-}
+};
 
 export default find;

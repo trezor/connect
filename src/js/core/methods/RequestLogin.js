@@ -14,14 +14,13 @@ import type { ConnectSettings } from '../../data/ConnectSettings';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    asyncChallenge: boolean;
-    identity: Identity;
-    challengeHidden: string;
-    challengeVisual: string;
+    asyncChallenge: boolean,
+    identity: Identity,
+    challengeHidden: string,
+    challengeVisual: string,
 }
 
 export default class RequestLogin extends AbstractMethod {
-
     params: Params;
 
     constructor(message: CoreMessage) {
@@ -57,11 +56,10 @@ export default class RequestLogin extends AbstractMethod {
             identity,
             challengeHidden: payload.challengeHidden || '',
             challengeVisual: payload.challengeVisual || '',
-        }
+        };
     }
 
     async run(): Promise<SignedIdentity> {
-
         if (this.params.asyncChallenge) {
             // send request to developer
             this.postMessage(new UiMessage(UI.LOGIN_CHALLENGE_REQUEST));

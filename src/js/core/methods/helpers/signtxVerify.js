@@ -8,18 +8,18 @@ import { derivePubKeyHash } from '../../../utils/hdnode';
 import type {
     BuildTxResult,
     BuildTxInput,
-    BuildTxOutput
+    BuildTxOutput,
 } from 'hd-wallet';
 
 import type {
-    CoinInfo
+    CoinInfo,
 } from 'flowtype';
 
 import type {
     TransactionInput,
     TransactionOutput,
     RefTransaction,
-    SignedTx
+    SignedTx,
 } from '../../../types/trezor';
 
 export const verifyTx = (inputs: Array<TransactionInput>,
@@ -40,7 +40,6 @@ export const verifyTx = (inputs: Array<TransactionInput>,
 
     // outputs.sorted.map((output, i) => {
     outputs.map((output, i) => {
-
         const scriptB = bitcoinTx.outs[i].script;
 
         // if (output.opReturnData !== null) {
@@ -65,7 +64,7 @@ export const verifyTx = (inputs: Array<TransactionInput>,
         //     }
         // }
     });
-}
+};
 
 // function deriveOutputScript(
 //     pathOrAddress: string | Array<number>,

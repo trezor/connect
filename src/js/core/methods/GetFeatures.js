@@ -5,7 +5,6 @@ import AbstractMethod from './AbstractMethod';
 import type { CoreMessage } from '../../types';
 
 export default class GetPublicKey extends AbstractMethod {
-
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = [];

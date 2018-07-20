@@ -17,7 +17,6 @@ type CustomFeeLevelInfo = {
     fee: string,
 }
 
-
 // refreshHack is a "counter", that tells angular, that refresh happened,
 // so it needs to repaint what it can.
 //

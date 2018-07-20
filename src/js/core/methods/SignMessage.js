@@ -5,26 +5,23 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath } from './helpers/paramsValidator';
 import { validatePath, getLabel } from '../../utils/pathUtils';
 import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../data/CoinInfo';
-import type { MessageResponse } from '../../device/DeviceCommands';
 import type { MessageSignature } from '../../types/trezor';
 import type { CoinInfo } from 'flowtype';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    path: Array<number>;
-    message: string;
-    coinInfo: ?CoinInfo;
+    path: Array<number>,
+    message: string,
+    coinInfo: ?CoinInfo,
 }
 
 export default class SignMessage extends AbstractMethod {
-
     params: Params;
 
     constructor(message: CoreMessage) {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-
 
         const payload: Object = message.payload;
 
@@ -35,7 +32,7 @@ export default class SignMessage extends AbstractMethod {
             { name: 'message', type: 'string', obligatory: true },
         ]);
 
-        const path: Array<number> = validatePath(payload.path)
+        const path: Array<number> = validatePath(payload.path);
         let coinInfo: ?CoinInfo;
         if (payload.coin) {
             coinInfo = getCoinInfoByCurrency(payload.coin);
@@ -56,8 +53,8 @@ export default class SignMessage extends AbstractMethod {
         this.params = {
             path,
             message: messageHex,
-            coinInfo
-        }
+            coinInfo,
+        };
     }
 
     async run(): Promise<MessageSignature> {

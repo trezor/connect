@@ -13,10 +13,6 @@ import type {
     NEMMosaicCreation,
     NEMMosaicDefinition,
     NEMMosaicSupplyChange,
-    NEMMosaicLevyType,
-    NEMSupplyChangeType,
-    NEMModificationType,
-    NEMImportanceTransferMode,
 } from '../../../types/trezor';
 
 import type {
@@ -31,8 +27,8 @@ export const NEM_MIJIN: number = 0x60;
 export const NETWORKS = {
     'mainnet': NEM_MAINNET,
     'testnet': NEM_TESTNET,
-    'mijin': NEM_MIJIN
-}
+    'mijin': NEM_MIJIN,
+};
 
 export const NEM_TRANSFER: 0x0101 = 0x0101;
 export const NEM_COSIGNING: 0x0102 = 0x0102;
@@ -54,26 +50,26 @@ export const TX_TYPES = {
     'provisionNamespace': NEM_PROVISION_NAMESPACE,
     'mosaicCreation': NEM_MOSAIC_CREATION,
     'supplyChange': NEM_SUPPLY_CHANGE,
-}
+};
 
 const NEM_MOSAIC_LEVY_TYPES = {
     '1': 'MosaicLevy_Absolute',
-    '2': 'MosaicLevy_Percentile'
+    '2': 'MosaicLevy_Percentile',
 };
 
 const NEM_SUPPLY_CHANGE_TYPES = {
     '1': 'SupplyChange_Increase',
-    '2': 'SupplyChange_Decrease'
+    '2': 'SupplyChange_Decrease',
 };
 
 const NEM_AGGREGATE_MODIFICATION_TYPES = {
     '1': 'CosignatoryModification_Add',
-    '2': 'CosignatoryModification_Delete'
+    '2': 'CosignatoryModification_Delete',
 };
 
 const NEM_IMPORTANCE_TRANSFER_MODES = {
     '1': 'ImportanceTransfer_Activate',
-    '2': 'ImportanceTransfer_Deactivate'
+    '2': 'ImportanceTransfer_Deactivate',
 };
 
 const getCommon = (tx: $NEMTransaction, address_n?: Array<number>): NEMTransactionCommon => {
@@ -83,48 +79,48 @@ const getCommon = (tx: $NEMTransaction, address_n?: Array<number>): NEMTransacti
         timestamp: tx.timeStamp,
         fee: tx.fee,
         deadline: tx.deadline,
-        signer: address_n ? undefined : tx.signer
-    }
+        signer: address_n ? undefined : tx.signer,
+    };
 };
 
 const transferMessage = (tx: $NEMTransaction): NEMTransfer => {
     const mosaics: ?Array<NEMMosaic> = tx.mosaics ? tx.mosaics.map((mosaic: $NEMMosaic) => ({
         namespace: mosaic.mosaicId.namespaceId,
         mosaic: mosaic.mosaicId.name,
-        quantity: mosaic.quantity
+        quantity: mosaic.quantity,
     })) : undefined;
 
     return {
         recipient: tx.recipient,
         amount: tx.amount,
         payload: tx.message.payload || undefined,
-        public_key: tx.message.type == 0x02 ? tx.message.publicKey : undefined,
+        public_key: tx.message.type === 0x02 ? tx.message.publicKey : undefined,
         mosaics,
     };
-}
+};
 
 const importanceTransferMessage = (tx: $NEMTransaction): NEMImportanceTransfer => ({
     mode: NEM_IMPORTANCE_TRANSFER_MODES[tx.importanceTransfer.mode],
-    public_key: tx.importanceTransfer.publicKey
+    public_key: tx.importanceTransfer.publicKey,
 });
 
 const aggregateModificationMessage = (tx: $NEMTransaction): NEMAggregateModification => {
     const modifications: ?Array<NEMCosignatoryModification> = tx.modifications ? tx.modifications.map(modification => ({
         type: NEM_AGGREGATE_MODIFICATION_TYPES[modification.modificationType],
-        public_key: modification.cosignatoryAccount
+        public_key: modification.cosignatoryAccount,
     })) : undefined;
 
     return {
         modifications,
-        relative_change: tx.minCosignatories.relativeChange
-    }
-}
+        relative_change: tx.minCosignatories.relativeChange,
+    };
+};
 
 const provisionNamespaceMessage = (tx: $NEMTransaction): NEMProvisionNamespace => ({
     namespace: tx.newPart,
     parent: tx.parent || undefined,
     sink: tx.rentalFeeSink,
-    fee: tx.rentalFee
+    fee: tx.rentalFee,
 });
 
 const mosaicCreationMessage = (tx: $NEMTransaction): NEMMosaicCreation => {
@@ -138,7 +134,7 @@ const mosaicCreationMessage = (tx: $NEMTransaction): NEMMosaicCreation => {
         levy_address: levy && levy.recipient,
         levy_namespace: levy && levy.mosaicId.namespaceId,
         levy_mosaic: levy && levy.mosaicId.name,
-        description: tx.mosaicDefinition.description
+        description: tx.mosaicDefinition.description,
     };
 
     const properties = tx.mosaicDefinition.properties;
@@ -155,11 +151,11 @@ const mosaicCreationMessage = (tx: $NEMTransaction): NEMMosaicCreation => {
                     break;
 
                 case 'supplyMutable':
-                    definition.mutable_supply = (value == "true");
+                    definition.mutable_supply = (value === 'true');
                     break;
 
                 case 'transferable':
-                    definition.transferable = (value == "true");
+                    definition.transferable = (value === 'true');
                     break;
             }
         });
@@ -168,26 +164,25 @@ const mosaicCreationMessage = (tx: $NEMTransaction): NEMMosaicCreation => {
     return {
         definition,
         sink: tx.creationFeeSink,
-        fee: tx.creationFee
+        fee: tx.creationFee,
     };
-}
+};
 
 const supplyChangeMessage = (tx: $NEMTransaction): NEMMosaicSupplyChange => ({
     namespace: tx.mosaicId.namespaceId,
     mosaic: tx.mosaicId.name,
     type: NEM_SUPPLY_CHANGE_TYPES[tx.supplyType],
-    delta: tx.delta
+    delta: tx.delta,
 });
 
 export const createTx = (tx: $NEMTransaction, address_n: Array<number>): NEMSignTxMessage => {
-
     let transaction: $NEMTransaction = tx;
     const message: NEMSignTxMessage = {
-        transaction: getCommon(tx, address_n)
-    }
+        transaction: getCommon(tx, address_n),
+    };
 
-    message.cosigning = (tx.type == 0x1002);
-    if (message.cosigning || tx.type == 0x1004) {
+    message.cosigning = (tx.type === 0x1002);
+    if (message.cosigning || tx.type === 0x1004) {
         transaction = tx.otherTrans;
         message.multisig = getCommon(transaction);
     }
@@ -222,4 +217,4 @@ export const createTx = (tx: $NEMTransaction, address_n: Array<number>): NEMSign
     }
 
     return message;
-}
+};

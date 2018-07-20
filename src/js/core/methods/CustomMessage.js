@@ -10,13 +10,12 @@ import type { UiPromiseResponse } from 'flowtype';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    customMessages: JSON;
-    message: string;
-    params: any;
+    customMessages: JSON,
+    message: string,
+    params: any,
 }
 
 export default class CustomMessage extends AbstractMethod {
-
     params: Params;
     run: () => Promise<any>;
 
@@ -33,9 +32,9 @@ export default class CustomMessage extends AbstractMethod {
             { name: 'params', type: 'object', obligatory: true },
         ]);
 
-        if (payload.hasOwnProperty('messages')){
+        if (payload.hasOwnProperty('messages')) {
             try {
-                JSON.parse( JSON.stringify(payload.messages) );
+                JSON.parse(JSON.stringify(payload.messages));
             } catch (error) {
                 throw new Error('Parameter "messages" has invalid type. JSON expected.');
             }
@@ -44,8 +43,8 @@ export default class CustomMessage extends AbstractMethod {
         this.params = {
             customMessages: payload.messages,
             message: payload.message,
-            params: payload.params
-        }
+            params: payload.params,
+        };
     }
 
     getCustomMessages(): ?JSON {
@@ -53,7 +52,6 @@ export default class CustomMessage extends AbstractMethod {
     }
 
     async run(): Promise<Object> {
-
         // call message
         const response = await this.device.getCommands()._commonCall(this.params.message, this.params.params);
 

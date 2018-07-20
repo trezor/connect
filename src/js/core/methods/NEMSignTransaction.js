@@ -11,7 +11,6 @@ import type { Transaction as $NEMTransaction } from '../../types/nem';
 import type { CoreMessage } from '../../types';
 
 export default class NEMSignTransaction extends AbstractMethod {
-
     message: NEMSignTxMessage;
     run: () => Promise<any>;
 

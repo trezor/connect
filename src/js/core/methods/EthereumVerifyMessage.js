@@ -9,13 +9,12 @@ import type { CoreMessage } from '../../types';
 import { stripHexPrefix } from '../../utils/ethereumUtils';
 
 type Params = {
-    address: string;
-    signature: string;
-    message: string;
+    address: string,
+    signature: string,
+    message: string,
 }
 
 export default class EthereumVerifyMessage extends AbstractMethod {
-
     params: Params;
 
     constructor(message: CoreMessage) {
@@ -39,8 +38,8 @@ export default class EthereumVerifyMessage extends AbstractMethod {
         this.params = {
             address: stripHexPrefix(payload.address),
             signature: stripHexPrefix(payload.signature),
-            message: messageHex
-        }
+            message: messageHex,
+        };
     }
 
     async run(): Promise<Success> {

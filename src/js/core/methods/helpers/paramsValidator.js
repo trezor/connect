@@ -3,14 +3,13 @@
 
 import { invalidParameter } from '../../../constants/errors';
 import { fromHardened } from '../../../utils/pathUtils';
-import { ethereumNetworks } from '../../../data/CoinInfo';
 import semvercmp from 'semver-compare';
 import type { CoinInfo } from 'flowtype';
 
 type Param = {
-    name: string;
-    type?: string;
-    obligatory?: true;
+    name: string,
+    type?: string,
+    obligatory?: true,
 }
 
 export const validateParams = (values: Object, fields: Array<Param>): void => {
@@ -32,16 +31,16 @@ export const validateParams = (values: Object, fields: Array<Param>): void => {
             }
         } else if (field.obligatory) {
             // not found
-            throw invalidParameter(`Parameter "${ field.name }" is missing.`)
+            throw invalidParameter(`Parameter "${ field.name }" is missing.`);
         }
     });
-}
+};
 
 export const validateCoinPath = (coinInfo: ?CoinInfo, path: Array<number>): void => {
     if (coinInfo && coinInfo.slip44 !== fromHardened(path[1])) {
         throw invalidParameter('Parameters "path" and "coin" do not match.');
     }
-}
+};
 
 export const getRequiredFirmware = (coinInfo: CoinInfo, current: Array<string>): Array<string> => {
     if (semvercmp(coinInfo.support.trezor1, current[0]) > 0) {
@@ -53,4 +52,4 @@ export const getRequiredFirmware = (coinInfo: CoinInfo, current: Array<string>):
     }
 
     return current;
-}
+};

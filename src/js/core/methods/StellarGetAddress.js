@@ -4,7 +4,6 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { validatePath, fromHardened } from '../../utils/pathUtils';
-import type { MessageResponse } from '../../device/DeviceCommands';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
@@ -13,19 +12,17 @@ import type { UiPromiseResponse } from 'flowtype';
 import type { StellarAddress } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
-
 type Batch = {
-    path: Array<number>;
-    showOnTrezor: boolean;
+    path: Array<number>,
+    showOnTrezor: boolean,
 }
 
 type Params = {
-    bundle: Array<Batch>;
-    bundledResponse: boolean;
+    bundle: Array<Batch>,
+    bundledResponse: boolean,
 }
 
 export default class StellarGetAddress extends AbstractMethod {
-
     params: Params;
     confirmed: boolean = false;
 
@@ -59,20 +56,20 @@ export default class StellarGetAddress extends AbstractMethod {
 
             const path: Array<number> = validatePath(batch.path, 3);
             let showOnTrezor: boolean = true;
-            if (batch.hasOwnProperty('showOnTrezor')){
+            if (batch.hasOwnProperty('showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
 
             bundle.push({
                 path,
-                showOnTrezor
+                showOnTrezor,
             });
         });
 
         this.params = {
             bundle,
-            bundledResponse
-        }
+            bundledResponse,
+        };
     }
 
     async confirmation(): Promise<boolean> {
@@ -86,13 +83,13 @@ export default class StellarGetAddress extends AbstractMethod {
         if (this.params.bundle.length > 1) {
             label = 'Export multiple Stellar addresses';
         } else {
-            label = `Export Stellar address for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) }`
+            label = `Export Stellar address for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) }`;
         }
 
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-address',
-            label
+            label,
         }));
 
         // wait for user action
@@ -106,7 +103,6 @@ export default class StellarGetAddress extends AbstractMethod {
     async run(): Promise<StellarAddress | Array<StellarAddress>> {
         const responses: Array<StellarAddress> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
-
             const response: StellarAddress = await this.device.getCommands().stellarGetAddress(
                 this.params.bundle[i].path,
                 this.params.bundle[i].showOnTrezor
@@ -117,7 +113,7 @@ export default class StellarGetAddress extends AbstractMethod {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
-                    response
+                    response,
                 }));
             }
         }

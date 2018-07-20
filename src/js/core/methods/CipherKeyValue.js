@@ -7,28 +7,24 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 
-import Device from '../../device/Device';
-import type { UiPromiseResponse } from 'flowtype';
 import type { CoreMessage } from '../../types';
 import type { CipheredKeyValue } from '../../types/trezor';
 
-
 type Batch = {
-    path: Array<number>;
-    key: string;
-    value: string;
-    encrypt: boolean;
-    askOnEncrypt: boolean;
-    askOnDecrypt: boolean;
-    iv: string;
+    path: Array<number>,
+    key: string,
+    value: string,
+    encrypt: boolean,
+    askOnEncrypt: boolean,
+    askOnDecrypt: boolean,
+    iv: string,
 }
 type Params = {
-    bundle: Array<Batch>;
-    bundledResponse: boolean;
+    bundle: Array<Batch>,
+    bundledResponse: boolean,
 }
 
 export default class CipherKeyValue extends AbstractMethod {
-
     params: Params;
     confirmed: boolean = false;
 
@@ -49,7 +45,7 @@ export default class CipherKeyValue extends AbstractMethod {
 
         // validate bundle type
         validateParams(payload, [
-            { name: 'bundle', type: 'array' }
+            { name: 'bundle', type: 'array' },
         ]);
 
         const bundle = [];
@@ -74,14 +70,14 @@ export default class CipherKeyValue extends AbstractMethod {
                 encrypt: batch.encrypt,
                 askOnEncrypt: batch.askOnEncrypt,
                 askOnDecrypt: batch.askOnDecrypt,
-                iv: batch.iv
+                iv: batch.iv,
             });
         });
 
         this.params = {
             bundle,
-            bundledResponse
-        }
+            bundledResponse,
+        };
     }
 
     async run(): Promise<CipheredKeyValue | Array<CipheredKeyValue>> {
@@ -103,7 +99,7 @@ export default class CipherKeyValue extends AbstractMethod {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
-                    response
+                    response,
                 }));
             }
         }

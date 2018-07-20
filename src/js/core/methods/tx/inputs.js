@@ -12,39 +12,18 @@ import type { BuildTxInput } from 'hd-wallet';
 import type { CoinInfo } from 'flowtype';
 import type { TransactionInput } from '../../../types/trezor';
 
-/*******
+/** *****
  * SignTx: validation
  *******/
 export const validateTrezorInputs = (inputs: Array<TransactionInput>, coinInfo: CoinInfo): Array<TransactionInput> => {
+    return inputs.map(fixPath).map(convertMultisigPubKey.bind(null, coinInfo.network));
+};
 
-    const trezorInputs: Array<TransactionInput> = inputs.map(fixPath).map(convertMultisigPubKey.bind(null, coinInfo.network));
-
-    const hdInputs: Array<BuildTxInput> = [];
-    for (let input of inputs) {
-        let segwit = isSegwitPath(input.address_n);
-        if (segwit) {
-            if (!input.amount) throw new Error('Input amount not set');
-            if (!input.script_type) throw new Error('Input script_type not set');
-            // if (input.script_type !== 'SPENDP2SHWITNESS') throw new Error('Input script_type should be set to SPENDP2SHWITNESS');
-        }
-
-        hdInputs.push({
-            hash: reverseBuffer(new Buffer(input.prev_hash, 'hex')),
-            index: input.prev_index,
-            path: input.address_n,
-            amount: input.amount,
-            segwit: segwit
-        });
-    }
-
-    return inputs;
-}
-
-/*******
+/** *****
  * Transform from TREZOR format to hd-wallet
  *******/
 export const inputToHD = (input: TransactionInput): BuildTxInput => {
-    let segwit = isSegwitPath(input.address_n);
+    const segwit = isSegwitPath(input.address_n);
     if (segwit) {
         if (!input.amount) throw new Error('Input amount not set');
         if (!input.script_type) throw new Error('Input script_type not set');
@@ -56,11 +35,11 @@ export const inputToHD = (input: TransactionInput): BuildTxInput => {
         index: input.prev_index,
         path: input.address_n,
         amount: input.amount,
-        segwit: segwit
+        segwit: segwit,
     };
-}
+};
 
-/*******
+/** *****
  * Transform from hd-wallet format to TREZOR
  *******/
 export const inputToTrezor = (input: BuildTxInput, sequence: number): TransactionInput => {
@@ -73,4 +52,4 @@ export const inputToTrezor = (input: BuildTxInput, sequence: number): Transactio
         amount,
         sequence,
     };
-}
+};

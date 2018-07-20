@@ -11,9 +11,8 @@ import BlockBook from '../../../backend';
 import { init as initFees, getFeeLevels, getActualFee, getBlocks } from './fees';
 
 import type {
-    AccountInfo,
     BuildTxOutputRequest,
-    BuildTxResult
+    BuildTxResult,
 } from 'hd-wallet';
 
 import type { FeeLevel, CustomFeeLevel, SelectFeeLevel } from 'flowtype/fee';
@@ -25,10 +24,9 @@ const customFeeLevel: CustomFeeLevel = {
         type: 'custom',
         fee: '10',
     },
-}
+};
 
 export default class TransactionComposer {
-
     account: Account;
     outputs: Array<BuildTxOutputRequest>;
     currentHeight: number;
@@ -77,7 +75,7 @@ export default class TransactionComposer {
             const tx: BuildTxResult = this.compose(account.coinInfo.minFee);
             if (tx.type === 'final') {
                 // add custom Fee level to list
-                this.feeLevels.push( customFeeLevel );
+                this.feeLevels.push(customFeeLevel);
                 this.composed['custom'] = tx;
             } else {
                 return false;
@@ -90,7 +88,7 @@ export default class TransactionComposer {
     composeCustomFee(fee: number): SelectFeeLevel {
         const tx: BuildTxResult = this.compose(fee);
         if (!this.composed['custom']) {
-            this.feeLevels.push( customFeeLevel );
+            this.feeLevels.push(customFeeLevel);
         }
         this.composed['custom'] = tx;
         if (tx.type === 'final') {
@@ -99,16 +97,15 @@ export default class TransactionComposer {
                 fee: tx.fee,
                 feePerByte: tx.feePerByte,
                 minutes: this.getEstimatedTime(tx.fee),
-                total: tx.totalSpent
+                total: tx.totalSpent,
             };
         } else {
             return {
                 name: 'custom',
                 fee: 0,
-                disabled: true
-            }
+                disabled: true,
+            };
         }
-
     }
 
     getFeeLevelList(): Array<SelectFeeLevel> {
@@ -121,14 +118,14 @@ export default class TransactionComposer {
                     fee: tx.fee,
                     feePerByte: tx.feePerByte,
                     minutes: this.getEstimatedTime(tx.fee),
-                    total: tx.totalSpent
+                    total: tx.totalSpent,
                 });
             } else {
                 list.push({
                     name: level.name,
                     fee: 0,
-                    disabled: true
-                })
+                    disabled: true,
+                });
             }
         });
         return list;

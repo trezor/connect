@@ -1,18 +1,13 @@
 /* @flow */
 'use strict';
-// npm packages
-import { address as BitcoinJSAddress } from 'bitcoinjs-lib-zcash';
+
 // local modules
 import { uniq, reverseBuffer } from '../../../utils/bufferUtils';
-import { xpubToHDNodeType } from '../../../utils/hdnode';
-import { isSegwitPath } from '../../../utils/pathUtils';
-import { fixPath, convertMultisigPubKey } from './index';
 
 // npm types
 import type {
     Input as BitcoinJsInput,
     Output as BitcoinJsOutput,
-    Network as BitcoinJsNetwork,
     Transaction as BitcoinJsTransaction,
 } from 'bitcoinjs-lib-zcash';
 
@@ -28,7 +23,7 @@ export const getReferencedTransactions = (inputs: Array<BuildTxInput>): Array<st
         return [];
     }
     return uniq(legacyInputs, utxo => reverseBuffer(utxo.hash).toString('hex')).map(tx => reverseBuffer(tx.hash).toString('hex'));
-}
+};
 
 // Transform referenced transactions from Bitcore to Trezor format
 export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>): Array<RefTransaction> => {
@@ -54,16 +49,16 @@ export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>
                 };
             }),
             extra_data: dataStr,
-        }
+        };
     });
-}
+};
 
 const getJoinSplitData = (transaction: BitcoinJsTransaction): ?Buffer => {
     if (transaction.version < 2) {
         return null;
     }
-    var buffer = transaction.toBuffer();
-    var joinsplitByteLength = transaction.joinsplitByteLength();
-    var res = buffer.slice(buffer.length - joinsplitByteLength);
+    const buffer = transaction.toBuffer();
+    const joinsplitByteLength = transaction.joinsplitByteLength();
+    const res = buffer.slice(buffer.length - joinsplitByteLength);
     return res;
-}
+};

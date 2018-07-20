@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
+import type { DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type { CoinInfo } from 'flowtype';
 import type {
     TxRequest,
@@ -10,7 +10,7 @@ import type {
     TransactionOutput,
     SignTxInfoToTrezor,
     TxRequestSerialized,
-    SignedTx
+    SignedTx,
 } from '../../../types/trezor';
 
 // requests information about a transaction
@@ -37,7 +37,7 @@ const requestTxInfo = (m: TxRequest,
     } else {
         return requestSignedTxInfo(inputs, outputs, m.request_type, md.request_index);
     }
-}
+};
 
 const requestPrevTxInfo = (reqTx: RefTransaction,
     requestType: string,
@@ -93,7 +93,7 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
         }
     }
     throw new Error(`Unknown request type: ${requestType}`);
-}
+};
 
 const requestSignedTxInfo = (inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>,
@@ -114,7 +114,7 @@ const requestSignedTxInfo = (inputs: Array<TransactionInput>,
         throw new Error('Cannot read TXEXTRADATA from signed transaction');
     }
     throw new Error(`Unknown request type: ${requestType}`);
-}
+};
 
 const saveTxSignatures = (ms: TxRequestSerialized,
     serializedTx: {serialized: string},
@@ -134,7 +134,7 @@ const saveTxSignatures = (ms: TxRequestSerialized,
             signatures[_signatureIndex] = _signature;
         }
     }
-}
+};
 
 const processTxRequest = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     m: TxRequest,
@@ -144,7 +144,6 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
     inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>
 ): Promise<SignedTx> => {
-
     saveTxSignatures(m.serialized, serializedTx, signatures);
 
     if (m.request_type === 'TXFINISHED') {
@@ -175,7 +174,6 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
     coinInfo: CoinInfo,
     locktime: ?number,
 ): Promise<SignedTx> => {
-
     // TODO rbf
     const sequence: number = locktime ? (0xffffffff - 1) : 0xffffffff;
     const index: {[key: string]: RefTransaction} = {};

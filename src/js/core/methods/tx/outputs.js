@@ -1,7 +1,6 @@
 /* @flow */
 'use strict';
 // npm packages
-import { address as BitcoinJSAddress } from 'bitcoinjs-lib-zcash';
 import bchaddrjs from 'bchaddrjs';
 // local modules
 import { isSegwitPath } from '../../../utils/pathUtils';
@@ -16,7 +15,7 @@ import type { BuildTxOutput, BuildTxOutputRequest } from 'hd-wallet';
 import type { CoinInfo } from 'flowtype';
 import type { TransactionOutput } from '../../../types/trezor';
 
-/*******
+/** *****
  * SignTransaction: validation
  *******/
 export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInfo: CoinInfo): Array<TransactionOutput> => {
@@ -33,9 +32,9 @@ export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInf
         }
     }
     return trezorOutputs;
-}
+};
 
-/*******
+/** *****
  * ComposeTransaction: validation
  *******/
 export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: CoinInfo): BuildTxOutputRequest => {
@@ -43,51 +42,51 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: CoinInf
         if (!isValidAddress(address, coinInfo)) {
             throw new Error(`Invalid ${ coinInfo.label } output address format`);
         }
-    }
+    };
 
     switch (output) {
         case 'opreturn' :
-            validateParams(output, [ { name: 'dataHex', type: 'string', obligatory: true }]);
+            validateParams(output, [ { name: 'dataHex', type: 'string', obligatory: true } ]);
             return {
                 type: 'opreturn',
-                dataHex: output.dataHex
-            }
+                dataHex: output.dataHex,
+            };
 
         case 'send-max' :
-            validateParams(output, [ { name: 'address', type: 'string', obligatory: true }]);
+            validateParams(output, [ { name: 'address', type: 'string', obligatory: true } ]);
             validateAddress(output.address);
             return {
                 type: 'send-max',
-                address: output.address
-            }
+                address: output.address,
+            };
 
         case 'noaddress' :
-            validateParams(output, [ { name: 'amount', type: 'string', obligatory: true }]);
+            validateParams(output, [ { name: 'amount', type: 'string', obligatory: true } ]);
             return {
                 type: 'noaddress',
-                amount: parseInt(output.amount)
-            }
+                amount: parseInt(output.amount),
+            };
         case 'send-max-noaddress' :
             return {
-                type: 'send-max-noaddress'
-            }
+                type: 'send-max-noaddress',
+            };
 
         default :
         case 'complete' :
             validateParams(output, [
                 { name: 'amount', type: 'string', obligatory: true },
-                { name: 'address', type: 'string', obligatory: true }
+                { name: 'address', type: 'string', obligatory: true },
             ]);
             validateAddress(output.address);
             return {
                 type: 'complete',
                 address: output.address,
-                amount: parseFloat(output.amount)
-            }
+                amount: parseFloat(output.amount),
+            };
     }
-}
+};
 
-/*******
+/** *****
  * Transform from hd-wallet format to TREZOR
  *******/
 export const outputToTrezor = (output: BuildTxOutput, coinInfo: CoinInfo): TransactionOutput => {
@@ -135,11 +134,11 @@ export const outputToTrezor = (output: BuildTxOutput, coinInfo: CoinInfo): Trans
     // make sure that cashaddr has prefix
     return {
         address: isCashAddress ? bchaddrjs.toCashAddress(address) : address,
-        //address: address,
+        // address: address,
         amount: amount,
         script_type: 'PAYTOADDRESS',
     };
-}
+};
 
 function _flow_makeArray(a: mixed): Array<number> {
     if (!Array.isArray(a)) {

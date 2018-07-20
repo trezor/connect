@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, getRequiredFirmware } from './helpers/paramsValidator';
+import { validateParams } from './helpers/paramsValidator';
 import { validatePath, fromHardened } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
@@ -13,14 +13,14 @@ import type { UiPromiseResponse } from 'flowtype';
 import type { CoreMessage } from '../../types';
 
 type Batch = {
-    path: Array<number>;
-    network: number;
-    showOnTrezor: boolean;
+    path: Array<number>,
+    network: number,
+    showOnTrezor: boolean,
 }
 
 type Params = {
-    bundle: Array<Batch>;
-    bundledResponse: boolean;
+    bundle: Array<Batch>,
+    bundledResponse: boolean,
 }
 
 const MAINNET: number = 0x68; // 104
@@ -28,7 +28,6 @@ const TESTNET: number = 0x98; // 152
 const MIJIN: number = 0x60; // 96
 
 export default class NEMGetAddress extends AbstractMethod {
-
     params: Params;
     confirmed: boolean = false;
 
@@ -63,21 +62,21 @@ export default class NEMGetAddress extends AbstractMethod {
 
             const path: Array<number> = validatePath(batch.path, 3);
             let showOnTrezor: boolean = true;
-            if (batch.hasOwnProperty('showOnTrezor')){
+            if (batch.hasOwnProperty('showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
 
             bundle.push({
                 path,
                 network: batch.network || MAINNET,
-                showOnTrezor
+                showOnTrezor,
             });
         });
 
         this.params = {
             bundle,
-            bundledResponse
-        }
+            bundledResponse,
+        };
     }
 
     async confirmation(): Promise<boolean> {
@@ -104,13 +103,13 @@ export default class NEMGetAddress extends AbstractMethod {
                     break;
             }
 
-            label = `Export NEM address for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) } on ${ network } network`
+            label = `Export NEM address for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) } on ${ network } network`;
         }
 
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-address',
-            label
+            label,
         }));
 
         // wait for user action
@@ -124,7 +123,6 @@ export default class NEMGetAddress extends AbstractMethod {
     async run(): Promise<NEMAddress | Array<NEMAddress>> {
         const responses: Array<NEMAddress> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
-
             const response: NEMAddress = await this.device.getCommands().nemGetAddress(
                 this.params.bundle[i].path,
                 this.params.bundle[i].network,
@@ -136,7 +134,7 @@ export default class NEMGetAddress extends AbstractMethod {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
-                    response
+                    response,
                 }));
             }
         }

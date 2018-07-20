@@ -13,12 +13,11 @@ import type { EthereumSignedTx } from '../../types/trezor';
 import type { Transaction as EthereumTransaction } from '../../types/ethereum';
 
 type Params = {
-    path: Array<number>;
-    transaction: EthereumTransaction;
+    path: Array<number>,
+    transaction: EthereumTransaction,
 }
 
 export default class EthereumSignTx extends AbstractMethod {
-
     params: Params;
 
     constructor(message: CoreMessage) {
@@ -60,8 +59,7 @@ export default class EthereumSignTx extends AbstractMethod {
             if (typeof tx[key] === 'string') {
                 let value: string = stripHexPrefix(tx[key]);
                 // pad left even
-                if (value.length % 2 !== 0)
-                    value = '0' + value;
+                if (value.length % 2 !== 0) { value = '0' + value; }
                 // $FlowIssue
                 tx[key] = value;
             }
@@ -70,14 +68,13 @@ export default class EthereumSignTx extends AbstractMethod {
         this.params = {
             path,
             transaction: tx,
-        }
+        };
     }
 
     async run(): Promise<EthereumSignedTx> {
-
         const tx = this.params.transaction;
         return await helper.ethereumSignTx(
-            this.device.getCommands().typedCall.bind( this.device.getCommands() ),
+            this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,
             tx.to,
             tx.value,

@@ -12,13 +12,12 @@ import type { CoreMessage } from '../../types';
 import type { EthereumNetworkInfo } from 'flowtype';
 
 type Params = {
-    path: Array<number>;
-    network: ?EthereumNetworkInfo;
-    message: string;
+    path: Array<number>,
+    network: ?EthereumNetworkInfo,
+    message: string,
 }
 
 export default class EthereumSignMessage extends AbstractMethod {
-
     params: Params;
 
     constructor(message: CoreMessage) {
@@ -45,8 +44,8 @@ export default class EthereumSignMessage extends AbstractMethod {
         this.params = {
             path,
             network,
-            message: messageHex
-        }
+            message: messageHex,
+        };
     }
 
     async run(): Promise<MessageSignature> {

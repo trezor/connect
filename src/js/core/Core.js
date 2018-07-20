@@ -3,7 +3,7 @@
 
 import EventEmitter from 'events';
 import DataManager from '../data/DataManager';
-import DeviceList, { getDeviceList } from '../device/DeviceList';
+import DeviceList from '../device/DeviceList';
 import Device from '../device/Device';
 
 import { CORE_EVENT, RESPONSE_EVENT } from '../constants';
@@ -21,8 +21,7 @@ import { find as findMethod } from './methods';
 
 import { create as createDeferred } from '../utils/deferred';
 
-import { resolveAfter } from '../utils/promiseUtils'; // TODO: just tmp. remove
-import { getPathFromIndex } from '../utils/pathUtils';
+import { resolveAfter } from '../utils/promiseUtils';
 import { state as browserState } from '../utils/browser';
 
 import Log, { init as initLog, enable as enableLog } from '../utils/debug';
@@ -88,8 +87,7 @@ const removeUiPromise = (promise: Deferred<UiPromiseResponse>): void => {
 const postMessage = (message: CoreMessage): void => {
     if (message.event === RESPONSE_EVENT) {
         const index: number = _callMethods.findIndex(call => call && call.responseID === message.id);
-        if (index >= 0)
-            _callMethods.splice(index, 1);
+        if (index >= 0) { _callMethods.splice(index, 1); }
     }
     _core.emit(CORE_EVENT, message);
 };
@@ -109,7 +107,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         UI.CHANGE_SETTINGS,
         UI.CUSTOM_MESSAGE_RESPONSE,
         UI.LOGIN_CHALLENGE_RESPONSE,
-        TRANSPORT.RECONNECT
+        TRANSPORT.RECONNECT,
     ];
 
     if (!isTrustedOrigin && safeMessages.indexOf(message.type) === -1) {
@@ -206,7 +204,7 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
                 // request select device view
                 postMessage(new UiMessage(UI.SELECT_DEVICE, {
                     webusb: isWebUsb,
-                    devices: _deviceList.asArray()
+                    devices: _deviceList.asArray(),
                 }));
 
                 // wait for device selection
@@ -247,7 +245,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     if (!_deviceList && !DataManager.getSettings('transportReconnect')) {
         // transport is missing try to initialize it once again
-        await initTransport( DataManager.getSettings() );
+        await initTransport(DataManager.getSettings());
     } else if (_deviceList) {
         // restore default messages
         await _deviceList.reconfigure();
@@ -292,7 +290,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));
             // wait for user interaction
             const uiPromise: Deferred<UiPromiseResponse> = createUiPromise(UI.RECEIVE_BROWSER);
-            const uiResp: UiPromiseResponse = await uiPromise.promise;
+            await uiPromise.promise;
         } else {
             // just show message about browser
             postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));
@@ -344,11 +342,11 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     // find pending calls to this device
     const previousCall: Array<AbstractMethod> = _callMethods.filter(call => call && call !== method && call.devicePath === method.devicePath);
-    //console.warn('THIS CALL', message);
-    //console.warn('PREVIOUS CALL', previousCall);
+    // console.warn('THIS CALL', message);
+    // console.warn('PREVIOUS CALL', previousCall);
     if (previousCall.length > 0 && method.overridePreviousCall) {
         // set flag for each pending method
-        previousCall.forEach(call => { call.overridden = true } );
+        previousCall.forEach(call => { call.overridden = true; });
         // interrupt potential communication with device. this should throw error in try/catch block below
         // this error will apply to the last item of pending methods
         await device.override(ERROR.CALL_OVERRIDE);
@@ -359,7 +357,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             throw ERROR.CALL_OVERRIDE;
         }
     } else if (device.isRunning()) {
-        //console.error('DEVICE', device);
+        // console.error('DEVICE', device);
         if (!device.isLoaded()) {
             // corner case
             // device didn't finish loading for the first time. @see DeviceList._createAndSaveDevice
@@ -462,7 +460,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                         throw ERROR.INVALID_STATE;
                     }
                 }
-
             } catch (error) {
                 // catch wrong pin error
                 if (error.message === ERROR.INVALID_PIN_ERROR_MESSAGE) {
@@ -523,7 +520,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
         // run inner function
         await device.run(inner, { keepSession: method.keepSession, useEmptyPassphrase: method.useEmptyPassphrase });
-
     } catch (error) {
         if (method) {
             // cancel popup request
@@ -537,12 +533,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         device.cleanup();
         cleanup();
 
-        if (method)
-            method.dispose();
+        if (method) { method.dispose(); }
 
         // restore default messages
-        if (_deviceList)
-            await _deviceList.reconfigure();
+        if (_deviceList) { await _deviceList.reconfigure(); }
 
         if (messageResponse) {
             postMessage(messageResponse);
@@ -611,7 +605,6 @@ const onDevicePinHandler = async (device: Device, type: string, callback: (error
  * @memberof Core
  */
 const onDevicePassphraseHandler = async (device: Device, callback: (error: any, success: any) => void): Promise<void> => {
-
     const cachedPassphrase: ?string = device.getPassphrase();
     if (typeof cachedPassphrase === 'string') {
         callback(null, cachedPassphrase);
@@ -699,7 +692,7 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceTyped = null): voi
             // update device selection list view
             postMessage(new UiMessage(UI.SELECT_DEVICE, {
                 webusb: isWebUsb,
-                devices: list
+                devices: list,
             }));
         }
     }
@@ -735,7 +728,6 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceTyped = null): voi
  */
 const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
     try {
-        // _deviceList = await getDeviceList();
         _deviceList = new DeviceList({
             rememberDevicePassphrase: true,
         });
@@ -786,7 +778,6 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
         if (_deviceList) {
             await _deviceList.waitForTransportFirstEvent();
         }
-
     } catch (error) {
         _deviceList = null;
         if (!settings.transportReconnect) {
@@ -829,8 +820,8 @@ export class Core extends EventEmitter {
             return {
                 type: _deviceList.transportType(),
                 version: _deviceList.transportVersion(),
-                outdated: _deviceList.transportOutdated()
-            }
+                outdated: _deviceList.transportOutdated(),
+            };
         }
         return null;
     }
@@ -858,11 +849,11 @@ export const initCore = (): Core => {
 export const initData = async (settings: ConnectSettings): Promise<void> => {
     try {
         await DataManager.load(settings);
-    } catch(error) {
+    } catch (error) {
         _log.log('init error', error);
         throw error;
     }
-}
+};
 
 export const init = async (settings: ConnectSettings): Promise<Core> => {
     try {
@@ -890,7 +881,7 @@ export const initTransport = async (settings: ConnectSettings): Promise<void> =>
         _log.log('initTransport', error);
         throw error;
     }
-}
+};
 
 const reconnectTransport = async (): Promise<void> => {
     if (DataManager.getSettings('transportReconnect')) {
@@ -902,4 +893,4 @@ const reconnectTransport = async (): Promise<void> => {
     } catch (error) {
         postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
     }
-}
+};

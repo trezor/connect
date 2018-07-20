@@ -8,7 +8,7 @@ import type { FeeHandler } from './index';
 import type {
     FeeLevel,
     FeeLevelInfo,
-    LegacyBitcoreFeeLevel
+    LegacyBitcoreFeeLevel,
 } from 'flowtype/fee';
 
 // special case - when blockchain is empty and returns same levels for all 3,

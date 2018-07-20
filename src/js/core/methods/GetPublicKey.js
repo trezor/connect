@@ -3,28 +3,27 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getRequiredFirmware } from './helpers/paramsValidator';
-import { validatePath, getPathFromIndex } from '../../utils/pathUtils';
+import { validatePath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../data/CoinInfo';
-import { getPublicKeyLabel, isSegwitPath } from '../../utils/pathUtils';
+import { getPublicKeyLabel } from '../../utils/pathUtils';
 import type { CoinInfo, UiPromiseResponse } from 'flowtype';
-import type { Success, HDNodeResponse } from '../../types/trezor';
+import type { HDNodeResponse } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
 type Batch = {
-    path: Array<number>;
-    coinInfo: ?CoinInfo;
+    path: Array<number>,
+    coinInfo: ?CoinInfo,
 }
 type Params = {
-    bundle: Array<Batch>;
-    bundledResponse: boolean;
+    bundle: Array<Batch>,
+    bundledResponse: boolean,
 }
 
 export default class GetPublicKey extends AbstractMethod {
-
     params: Params;
     confirmed: boolean = false;
 
@@ -82,7 +81,7 @@ export default class GetPublicKey extends AbstractMethod {
         this.params = {
             bundle,
             bundledResponse,
-        }
+        };
     }
 
     async confirmation(): Promise<boolean> {
@@ -127,7 +126,7 @@ export default class GetPublicKey extends AbstractMethod {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
-                    response
+                    response,
                 }));
             }
         }

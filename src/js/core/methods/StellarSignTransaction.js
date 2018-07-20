@@ -10,16 +10,14 @@ import type { StellarSignedTx } from '../../types/trezor';
 import type { Transaction as $StellarTransaction } from '../../types/stellar';
 import type { CoreMessage } from '../../types';
 
-
 type Params = {
-    path: Array<number>;
-    ledgerVersion: number;
-    networkPassphrase: string;
-    transaction: any;
+    path: Array<number>,
+    ledgerVersion: number,
+    networkPassphrase: string,
+    transaction: any,
 }
 
 export default class StellarSignTransaction extends AbstractMethod {
-
     params: Params;
 
     constructor(message: CoreMessage) {
@@ -44,13 +42,12 @@ export default class StellarSignTransaction extends AbstractMethod {
             ledgerVersion: payload.ledgerVersion,
             networkPassphrase: payload.networkPassphrase,
             transaction,
-        }
+        };
     }
 
     async run(): Promise<StellarSignedTx> {
-        const tx = this.params.transaction;
         return await helper.stellarSignTx(
-            this.device.getCommands().typedCall.bind( this.device.getCommands() ),
+            this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,
             this.params.ledgerVersion,
             this.params.networkPassphrase,

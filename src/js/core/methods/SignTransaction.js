@@ -15,35 +15,31 @@ import {
     validateTrezorOutputs,
     inputToHD,
     getReferencedTransactions,
-    transformReferencedTransactions
+    transformReferencedTransactions,
 } from './tx';
 
 import type {
     TransactionInput,
     TransactionOutput,
-    SignedTx
+    SignedTx,
 } from '../../types/trezor';
 
 import type {
     BuildTxInput,
-    BuildTxOutput
 } from 'hd-wallet';
 
 import type { CoinInfo } from 'flowtype';
 import type { CoreMessage } from '../../types';
 
-
-
 type Params = {
-    inputs: Array<TransactionInput>;
-    hdInputs:Array<BuildTxInput>;
-    outputs: Array<TransactionOutput>;
-    coinInfo: CoinInfo;
-    push: boolean;
+    inputs: Array<TransactionInput>,
+    hdInputs: Array<BuildTxInput>,
+    outputs: Array<TransactionOutput>,
+    coinInfo: CoinInfo,
+    push: boolean,
 }
 
 export default class SignTransaction extends AbstractMethod {
-
     params: Params;
     backend: BlockBook;
 
@@ -85,18 +81,18 @@ export default class SignTransaction extends AbstractMethod {
             hdInputs,
             outputs: payload.outputs,
             coinInfo,
-            push: payload.hasOwnProperty('push') ? payload.push : false
-        }
+            push: payload.hasOwnProperty('push') ? payload.push : false,
+        };
     }
 
     async run(): Promise<SignedTx> {
         // initialize backend
         this.backend = await createBackend(this.params.coinInfo);
-        const bjsRefTxs = await this.backend.loadTransactions( getReferencedTransactions(this.params.hdInputs) );
+        const bjsRefTxs = await this.backend.loadTransactions(getReferencedTransactions(this.params.hdInputs));
         const refTxs = transformReferencedTransactions(bjsRefTxs);
 
         const response = await helper.signTx(
-            this.device.getCommands().typedCall.bind( this.device.getCommands() ),
+            this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.inputs,
             this.params.outputs,
             refTxs,
@@ -107,8 +103,8 @@ export default class SignTransaction extends AbstractMethod {
             const txid: string = await this.backend.sendTransactionHex(response.serialized);
             return {
                 ...response,
-                txid
-            }
+                txid,
+            };
         }
 
         return response;

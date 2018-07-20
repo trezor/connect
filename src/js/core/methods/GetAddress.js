@@ -16,24 +16,22 @@ import type { CoinInfo } from 'flowtype';
 import type { CoreMessage } from '../../types';
 
 type Batch = {
-    path: Array<number>;
-    coinInfo: CoinInfo;
-    showOnTrezor: boolean;
+    path: Array<number>,
+    coinInfo: CoinInfo,
+    showOnTrezor: boolean,
 }
 type Params = {
-    bundle: Array<Batch>;
-    bundledResponse: boolean;
+    bundle: Array<Batch>,
+    bundledResponse: boolean,
 }
 
 export default class GetAddress extends AbstractMethod {
-
     params: Params;
 
     constructor(message: CoreMessage) {
         super(message);
 
         this.requiredPermissions = ['read'];
-
 
         const payload: Object = message.payload;
         let bundledResponse: boolean = true;
@@ -71,13 +69,12 @@ export default class GetAddress extends AbstractMethod {
             }
 
             let showOnTrezor: boolean = true;
-            if (batch.hasOwnProperty('showOnTrezor')){
+            if (batch.hasOwnProperty('showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
             if (showOnTrezor) {
                 shouldUseUi = true;
             }
-
 
             if (!coinInfo) {
                 throw NO_COIN_INFO;
@@ -92,11 +89,11 @@ export default class GetAddress extends AbstractMethod {
             bundle.push({
                 path,
                 coinInfo,
-                showOnTrezor
+                showOnTrezor,
             });
         });
 
-        //this.useUi = !(!shouldUseUi && bundle.length < 2);
+        // this.useUi = !(!shouldUseUi && bundle.length < 2);
         this.useUi = shouldUseUi;
 
         // set info
@@ -104,24 +101,23 @@ export default class GetAddress extends AbstractMethod {
             this.info = getLabel('Export #NETWORK address', bundle[0].coinInfo);
         } else {
             const requestedNetworks: Array<?CoinInfo> = bundle.map(b => b.coinInfo);
-            const uniqNetworks = uniqBy(requestedNetworks, (ci) => { return ci ? ci.shortcut : null });
+            const uniqNetworks = uniqBy(requestedNetworks, (ci) => { return ci ? ci.shortcut : null; });
             if (uniqNetworks.length === 1 && uniqNetworks[0]) {
                 this.info = getLabel('Export multiple #NETWORK addresses', uniqNetworks[0]);
             } else {
-                this.info = `Export multiple addresses`;
+                this.info = 'Export multiple addresses';
             }
         }
 
         this.params = {
             bundle,
-            bundledResponse
-        }
+            bundledResponse,
+        };
     }
 
     async run(): Promise<Address | Array<Address>> {
         const responses: Array<Address> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
-
             const response:Address = await this.device.getCommands().getAddress(
                 this.params.bundle[i].path,
                 this.params.bundle[i].coinInfo,
@@ -133,7 +129,7 @@ export default class GetAddress extends AbstractMethod {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
-                    response
+                    response,
                 }));
             }
         }

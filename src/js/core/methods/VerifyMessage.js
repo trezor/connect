@@ -12,14 +12,13 @@ import type { CoinInfo } from 'flowtype';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    address: string;
-    signature: string;
-    message: string;
-    coinInfo: CoinInfo;
+    address: string,
+    signature: string,
+    message: string,
+    coinInfo: CoinInfo,
 }
 
 export default class VerifyMessage extends AbstractMethod {
-
     params: Params;
 
     constructor(message: CoreMessage) {
@@ -53,8 +52,8 @@ export default class VerifyMessage extends AbstractMethod {
             address: payload.address,
             signature: payload.signature,
             message: messageHex,
-            coinInfo
-        }
+            coinInfo,
+        };
     }
 
     async run(): Promise<Success> {

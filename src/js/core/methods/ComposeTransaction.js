@@ -18,26 +18,25 @@ import {
     inputToTrezor,
     outputToTrezor,
     getReferencedTransactions,
-    transformReferencedTransactions
+    transformReferencedTransactions,
 } from './tx';
 import * as helper from './helpers/signtx';
 
 import { UiMessage } from '../../message/builder';
 
 import type { CoinInfo, UiPromiseResponse } from 'flowtype';
-import type { Deferred, CoreMessage } from '../../types';
-import type { TransactionInput, TransactionOutput, SignedTx } from '../../types/trezor';
+import type { CoreMessage } from '../../types';
+import type { SignedTx } from '../../types/trezor';
 
 import type {
     BuildTxOutputRequest,
-    BuildTxOutput,
-    BuildTxResult
+    BuildTxResult,
 } from 'hd-wallet';
 
 type Params = {
-    outputs: Array<BuildTxOutputRequest>;
-    coinInfo: CoinInfo;
-    push: boolean;
+    outputs: Array<BuildTxOutputRequest>,
+    coinInfo: CoinInfo,
+    push: boolean,
 }
 
 export default class ComposeTransaction extends AbstractMethod {
@@ -85,7 +84,7 @@ export default class ComposeTransaction extends AbstractMethod {
             outputs.push({
                 type: 'complete',
                 amount: parseInt(out.amount),
-                address: out.address
+                address: out.address,
             });
         });
 
@@ -98,8 +97,8 @@ export default class ComposeTransaction extends AbstractMethod {
         this.params = {
             outputs,
             coinInfo,
-            push: payload.hasOwnProperty('push') ? payload.push : true
-        }
+            push: payload.hasOwnProperty('push') ? payload.push : true,
+        };
     }
 
     async run(): Promise<SignedTx> {
@@ -123,9 +122,8 @@ export default class ComposeTransaction extends AbstractMethod {
     }
 
     async _getAccount(): Promise<Account | { error: string }> {
-
         const discovery: Discovery = this.discovery || new Discovery({
-            getHDNode: this.device.getCommands().getHDNode.bind( this.device.getCommands() ),
+            getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
             coinInfo: this.params.coinInfo,
             backend: this.backend,
         });
@@ -134,7 +132,7 @@ export default class ComposeTransaction extends AbstractMethod {
             this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
                 coinInfo: this.params.coinInfo,
                 accounts: accounts.map(a => a.toMessage()),
-                checkBalance: true
+                checkBalance: true,
             }));
         });
 
@@ -143,7 +141,7 @@ export default class ComposeTransaction extends AbstractMethod {
                 coinInfo: this.params.coinInfo,
                 accounts: accounts.map(a => a.toMessage()),
                 checkBalance: true,
-                complete: true
+                complete: true,
             }));
         });
 
@@ -159,7 +157,7 @@ export default class ComposeTransaction extends AbstractMethod {
             accounts: discovery.accounts.map(a => a.toMessage()),
             checkBalance: true,
             start: true,
-            complete: discovery.completed
+            complete: discovery.completed,
         }));
 
         // wait for user action
@@ -172,9 +170,7 @@ export default class ComposeTransaction extends AbstractMethod {
     }
 
     async _getFee(account: Account): Promise<string | SignedTx> {
-
-        if (this.composer)
-            this.composer.dispose();
+        if (this.composer) { this.composer.dispose(); }
 
         const composer: TransactionComposer = new TransactionComposer(account, this.params.outputs);
         await composer.init(this.backend);
@@ -194,7 +190,7 @@ export default class ComposeTransaction extends AbstractMethod {
         // this view will be updated from discovery events
         this.postMessage(new UiMessage(UI.SELECT_FEE, {
             feeLevels: composer.getFeeLevelList(),
-            coinInfo: this.params.coinInfo
+            coinInfo: this.params.coinInfo,
         }));
 
         // wait for user action
@@ -209,7 +205,7 @@ export default class ComposeTransaction extends AbstractMethod {
                 // recompose custom fee level with requested value
                 this.postMessage(new UiMessage(UI.UPDATE_CUSTOM_FEE, {
                     level: this.composer.composeCustomFee(resp.payload.value),
-                    coinInfo: this.params.coinInfo
+                    coinInfo: this.params.coinInfo,
                 }));
 
                 // wait for user action
@@ -220,24 +216,22 @@ export default class ComposeTransaction extends AbstractMethod {
 
             case 'change-account':
             default:
-                return 'change-account'
-
+                return 'change-account';
         }
     }
 
     async _send(feeLevel: string): Promise<SignedTx> {
-
         const tx: BuildTxResult = this.composer.composed[feeLevel];
 
         if (tx.type !== 'final') throw new Error('Trying to sign unfinished tx');
 
-        const bjsRefTxs = await this.backend.loadTransactions( getReferencedTransactions(tx.transaction.inputs) );
+        const bjsRefTxs = await this.backend.loadTransactions(getReferencedTransactions(tx.transaction.inputs));
         const refTxs = transformReferencedTransactions(bjsRefTxs);
 
         const coinInfo: CoinInfo = this.composer.account.coinInfo;
 
         const response = await helper.signTx(
-            this.device.getCommands().typedCall.bind( this.device.getCommands() ),
+            this.device.getCommands().typedCall.bind(this.device.getCommands()),
             tx.transaction.inputs.map(inp => inputToTrezor(inp, 0)),
             tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo)),
             refTxs,
@@ -248,8 +242,8 @@ export default class ComposeTransaction extends AbstractMethod {
             const txid: string = await this.backend.sendTransactionHex(response.serialized);
             return {
                 ...response,
-                txid
-            }
+                txid,
+            };
         }
 
         return response;
