@@ -21,7 +21,7 @@ export const remove = (backend: BlockBook): void => {
     if (index >= 0) {
         instances.splice(index, 1);
     }
-}
+};
 
 export const createFromCoinInfo = async (coinInfo: CoinInfo): Promise<BlockBook> => {
     let backend: ?BlockBook = find(coinInfo.blockbook);
