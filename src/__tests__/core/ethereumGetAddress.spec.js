@@ -41,17 +41,17 @@ export const ethereumGetAddress = () => {
         const expectedResponses: Array<ExpectedEthereumGetAddressResponse> = [
             {
                 payload: {
-                    address: '6ae2f16e73aeac6a2bbc46cc98a1d2e23661e6fe',
+                    address: '0x6ae2F16e73Aeac6A2Bbc46cc98a1D2e23661E6Fe',
                 },
             },
             {
                 payload: {
-                    address: '6ae2f16e73aeac6a2bbc46cc98a1d2e23661e6fe',
+                    address: '0x6ae2F16e73Aeac6A2Bbc46cc98a1D2e23661E6Fe',
                 },
             },
             {
                 payload: {
-                    address: '64c97f1954602ef09b950aba4b0d172ace043392',
+                    address: '0x64c97F1954602eF09b950aBa4B0d172ACe043392',
                 },
             },
             { success: false },
