@@ -14,7 +14,7 @@ export class TrezorError extends Error {
 
 export const invalidParameter = (message: string): TrezorError => {
     return new TrezorError('Connect_InvalidParameter', message);
-}
+};
 
 // level 100 error during initialization
 export const NO_IFRAME: TrezorError = new TrezorError(100, 'TrezorConnect not yet initialized');
@@ -45,7 +45,6 @@ export const INVALID_STATE: TrezorError = new TrezorError('Failure_PassphraseSta
 export const WRONG_PREVIOUS_SESSION_ERROR_MESSAGE: string = 'wrong previous session';
 export const INVALID_PIN_ERROR_MESSAGE: string = 'PIN invalid';
 export const WEBUSB_ERROR_MESSAGE: string = 'NetworkError: Unable to claim interface.';
-
 
 // BlockBook
 export const BACKEND_NO_URL: TrezorError = new TrezorError('Backend_init', 'Url not found');

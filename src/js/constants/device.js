@@ -5,7 +5,6 @@
 // replace ": '(.*)' = '(.*)';" to ": '$1' = '$1';"
 // replace "export const " to ""
 
-
 // device list events
 export const CONNECT: 'device__connect' = 'device__connect';
 export const CONNECT_UNACQUIRED: 'device__connect_unacquired' = 'device__connect_unacquired';
