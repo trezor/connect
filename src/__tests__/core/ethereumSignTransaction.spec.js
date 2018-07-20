@@ -32,8 +32,8 @@ const knownErc20Token = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: 'aa0c28d61c7c9382a256ead609d5b713cfe17c3aa3a6facb6b60342883db448e',
-                s: '039d88ed4ce5416680117dbee92f86976b381241786f1ffaf058c8e80cb25c63',
+                r: '0xaa0c28d61c7c9382a256ead609d5b713cfe17c3aa3a6facb6b60342883db448e',
+                s: '0x039d88ed4ce5416680117dbee92f86976b381241786f1ffaf058c8e80cb25c63',
             },
         },
     ];
@@ -64,8 +64,8 @@ const unknownErc20Token = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: 'afd33dc30cf829e3fde2575f189b9f80a6e7cfe3bbad8554f1015b29c33fb13d',
-                s: '5a4efd7242bae4e460ae2e608470ee19237246f72601bf879d0444100d6ae9ab',
+                r: '0xafd33dc30cf829e3fde2575f189b9f80a6e7cfe3bbad8554f1015b29c33fb13d',
+                s: '0x5a4efd7242bae4e460ae2e608470ee19237246f72601bf879d0444100d6ae9ab',
             },
         },
     ];
@@ -105,16 +105,16 @@ const noData = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: 'ff2676c3d23f4ed59b41a284348b6e4cc56fa4b4c06ab2cd2cfa0fc85d3d5b72',
-                s: '180682139cb3ec01d8371bd42996c689e2f11a14c89b2c57494a6020bae09417',
-                v: 27,
+                r: '0xff2676c3d23f4ed59b41a284348b6e4cc56fa4b4c06ab2cd2cfa0fc85d3d5b72',
+                s: '0x180682139cb3ec01d8371bd42996c689e2f11a14c89b2c57494a6020bae09417',
+                v: '0x1b',
             },
         },
         {
             payload: {
-                r: '324f82ca8a681ea882f7abfcc396addd13b4a947d65d3cf972c2a44cfbc35c89',
-                s: '6fddb0aa918ab0ff5bd09368b4edec21e9a626c1acf8d839b821784db2b44fac',
-                v: 28,
+                r: '0x324f82ca8a681ea882f7abfcc396addd13b4a947d65d3cf972c2a44cfbc35c89',
+                s: '0x6fddb0aa918ab0ff5bd09368b4edec21e9a626c1acf8d839b821784db2b44fac',
+                v: '0x1c',
             },
         },
     ];
@@ -157,16 +157,16 @@ const data = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: 'c07ca9b87ebf87620396a16cd575ac68dbef0eb0b22481f8f62facfe40fc4c7a',
-                s: '3e2f26e2fb739cfeafee82f3f74ecd0b88dfba4d3cf850eb10f53569f424f3a0',
-                v: 28,
+                r: '0xc07ca9b87ebf87620396a16cd575ac68dbef0eb0b22481f8f62facfe40fc4c7a',
+                s: '0x3e2f26e2fb739cfeafee82f3f74ecd0b88dfba4d3cf850eb10f53569f424f3a0',
+                v: '0x1c',
             },
         },
         {
             payload: {
-                r: '2a27c485c02cdd4796eab5624cca2e5024b3567ff04ac144a0cb2a46c8bef98c',
-                s: '56e5ca6a6adb6ee90e4749f3b28f372ccc8b3ba9a51ec1e739ba1cba0cc7eba5',
-                v: 28,
+                r: '0x2a27c485c02cdd4796eab5624cca2e5024b3567ff04ac144a0cb2a46c8bef98c',
+                s: '0x56e5ca6a6adb6ee90e4749f3b28f372ccc8b3ba9a51ec1e739ba1cba0cc7eba5',
+                v: '0x1c',
             },
         },
     ];
@@ -196,9 +196,9 @@ const message = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: 'ce5c299678f8ba333c219a3f70f01f7281bf4716cf4c2d47518f689cf3344dc4',
-                s: '194495dedbcbfdc6bbccfd83f1b8b5a2802e5da1c86e61731ffbc59e5b1719b2',
-                v: 28,
+                r: '0xce5c299678f8ba333c219a3f70f01f7281bf4716cf4c2d47518f689cf3344dc4',
+                s: '0x194495dedbcbfdc6bbccfd83f1b8b5a2802e5da1c86e61731ffbc59e5b1719b2',
+                v: '0x1c',
             },
         },
     ];
@@ -246,9 +246,9 @@ const newContract = (): SubtestEthereumSignTransaction => {
         },
         {
             payload: {
-                r: '05249f09ef32544c07aba09767f4dbe5248472b5c5250e77911a034e0978041a',
-                s: '0239c60830534b34db1c4c3d715253f2ed2786a322c6218c424188ccf0f0f464',
-                v: 27,
+                r: '0x05249f09ef32544c07aba09767f4dbe5248472b5c5250e77911a034e0978041a',
+                s: '0x0239c60830534b34db1c4c3d715253f2ed2786a322c6218c424188ccf0f0f464',
+                v: '0x1b',
             },
         },
     ];
@@ -356,16 +356,16 @@ const noDataEip155 = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: '39aa7798b8debf2db32945d929d25bd9c514e7f7e6a1f1c72bcbf0600f9f2db3',
-                s: '66e3a42fde7e7eb1096bc1f90342914612019688d97fe6b0571f420b5ddcb64c',
-                v: 41,
+                r: '0x39aa7798b8debf2db32945d929d25bd9c514e7f7e6a1f1c72bcbf0600f9f2db3',
+                s: '0x66e3a42fde7e7eb1096bc1f90342914612019688d97fe6b0571f420b5ddcb64c',
+                v: '0x29',
             },
         },
         {
             payload: {
-                r: '0283d00760697f456534ad547cb1aa0542527929bbe13d82877be23505a5b012',
-                s: '2db7e0ea93dedf0226675b1b0498c1568c76e0c2d69dbfabb65bfa1412fb773b',
-                v: 41,
+                r: '0x0283d00760697f456534ad547cb1aa0542527929bbe13d82877be23505a5b012',
+                s: '0x2db7e0ea93dedf0226675b1b0498c1568c76e0c2d69dbfabb65bfa1412fb773b',
+                v: '0x29',
             },
         },
     ];
@@ -435,30 +435,30 @@ const dataEip155 = (): SubtestEthereumSignTransaction => {
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
             payload: {
-                r: 'dbae2f01331e274f24831afadaa86f1da08c9cf9e28b120acc17ec4a748c533a',
-                s: '2e2a390c4afd7617d654b9affdee21b9b593964f19ac618039007b2c6677563f',
-                v: 41,
+                r: '0xdbae2f01331e274f24831afadaa86f1da08c9cf9e28b120acc17ec4a748c533a',
+                s: '0x2e2a390c4afd7617d654b9affdee21b9b593964f19ac618039007b2c6677563f',
+                v: '0x29',
             },
         },
         {
             payload: {
-                r: '8ceec1dc6f52a6ff4d17584ebbae00e9d6210a960fba29095f077d57e0dbc28d',
-                s: '3dd7d1b01c399d70a81fae0c0e5a306d1456b6f9a8d38514763d747af1e74c38',
-                v: 41,
+                r: '0x8ceec1dc6f52a6ff4d17584ebbae00e9d6210a960fba29095f077d57e0dbc28d',
+                s: '0x3dd7d1b01c399d70a81fae0c0e5a306d1456b6f9a8d38514763d747af1e74c38',
+                v: '0x29',
             },
         },
         {
             payload: {
-                r: '0672d6eb1b238b225be64dcbe39f52a9fb376c3cc47ec3d3dd28c94fcaac98fe',
-                s: '677959c411ef54889448de94661dfddef91292da7dd9a5855b9ee71bcd2bba6f',
-                v: 41,
+                r: '0x0672d6eb1b238b225be64dcbe39f52a9fb376c3cc47ec3d3dd28c94fcaac98fe',
+                s: '0x677959c411ef54889448de94661dfddef91292da7dd9a5855b9ee71bcd2bba6f',
+                v: '0x29',
             },
         },
         {
             payload: {
-                r: '23e1a4e27fd9926621bd75ecd7519e324a18a6ca156cafd522a9445096217360',
-                s: '4cdc7f2d028449acd0c2b72aeaab20d571e0cf6439a2e4b3cb5f45ff7a92d2d9',
-                v: 42,
+                r: '0x23e1a4e27fd9926621bd75ecd7519e324a18a6ca156cafd522a9445096217360',
+                s: '0x4cdc7f2d028449acd0c2b72aeaab20d571e0cf6439a2e4b3cb5f45ff7a92d2d9',
+                v: '0x2a',
             },
         },
     ];

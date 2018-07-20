@@ -17,10 +17,8 @@ declare module 'flowtype/tests/sign-transaction' {
         success?: boolean,
         payload?: {
             code?: string,
-            serialized?: {
-                serialized_tx?: string,
-                signatures?: Array<string>,
-            },
+            serialized?: string,
+            signatures?: Array<string>,
         }
     };
 }
