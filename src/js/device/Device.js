@@ -537,35 +537,28 @@ export default class Device extends EventEmitter {
 
     // simplified object to pass via postMessage
     toMessageObject(): DeviceTyped {
-
         if (this.originalDescriptor.path === DEVICE.UNREADABLE) {
             return {
+                type: 'unreadable',
                 path: this.originalDescriptor.path,
                 label: 'Unreadable device',
-                firmware: 'required',
-                isUsedElsewhere: false,
-                featuresNeedsReload: false,
-                unreadable: true
             };
         } else if (this.isUnacquired()) {
             return {
+                type: 'unacquired',
                 path: this.originalDescriptor.path,
                 label: 'Unacquired device',
-                firmware: 'required',
-                isUsedElsewhere: this.isUsedElsewhere(),
-                featuresNeedsReload: this.featuresNeedsReload,
-                unacquired: true,
             };
         } else {
             const defaultLabel: string = 'My TREZOR';
             const label = this.features.label === '' || this.features.label === null ? defaultLabel : this.features.label;
             return {
+                type: 'acquired',
                 path: this.originalDescriptor.path,
                 label: label,
                 state: this.state,
+                status: this.isUsedElsewhere() ? 'occupied' : this.featuresNeedsReload ? 'used' : 'available',
                 firmware: this.firmwareStatus,
-                isUsedElsewhere: this.isUsedElsewhere(),
-                featuresNeedsReload: this.featuresNeedsReload,
                 features: this.features,
             };
         }

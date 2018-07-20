@@ -38,18 +38,39 @@ export type Deferred<T> = {
     reject: (e: Error) => void,
 };
 
+
+export type DeviceStatus = 'available' | 'occupied' | 'used';
 export type DeviceFirmwareStatus = 'valid' | 'outdated' | 'required';
 
-export type Device = {
-    path: string,
-    label: string,
-    firmware: DeviceFirmwareStatus,
-    isUsedElsewhere: boolean,
-    featuresNeedsReload: boolean,
-    features?: Features,
-    unacquired?: boolean,
-    unreadable?: boolean,
-}
+// export type Device = {
+//     +type: DeviceStatus,
+//     path: string,
+//     label: string,
+//     firmware: DeviceFirmwareStatus,
+//     isUsedElsewhere: boolean,
+//     featuresNeedsReload: boolean,
+//     features?: Features,
+//     unacquired?: boolean,
+//     unreadable?: boolean,
+// }
+
+export type Device = $Exact<{
+    +type: 'acquired',
+    +path: string,
+    +label: string,
+    +firmware: DeviceFirmwareStatus,
+    +status: DeviceStatus,
+    state: ?string,
+    features: Features
+}> | $Exact<{
+    +type: 'unacquired',
+    +path: string,
+    +label: string,
+}> | $Exact<{
+    +type: 'unreadable',
+    +path: string,
+    +label: string,
+}>
 
 export type Features = {
     vendor: string,
