@@ -84,6 +84,18 @@ export class CoreEventHandler {
             }
         }
 
+        if (event.type === UI.REQUEST_PASSPHRASE) {
+            // Send empty passphrase if requested
+            setTimeout(() => {
+                const passphrase = '';
+                const messagePayload = {
+                    save: false,
+                    value: passphrase,
+                };
+                this._core.handleMessage({ event: UI_EVENT, type: UI.RECEIVE_PASSPHRASE, payload: messagePayload }, true);
+            }, 501)
+        }
+
         if (event.type === UI.REQUEST_BUTTON) {
             try {
                 this._isHandlingButtonRequest = true;
