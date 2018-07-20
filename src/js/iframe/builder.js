@@ -6,6 +6,7 @@ import { IFRAME_HANDSHAKE } from '../constants/ui';
 import { IFRAME_TIMEOUT } from '../constants/errors';
 import css from './inline-styles';
 import type { Deferred } from '../types';
+import type { ConnectSettings } from '../data/ConnectSettings';
 
 export let instance: HTMLIFrameElement;
 export let origin: string;
@@ -17,7 +18,7 @@ let _messageID: number = 0;
 // every postMessage to iframe has its own promise to resolve
 export const messagePromises: { [key: number]: Deferred<any> } = {};
 
-export const init = async (settings: Object): Promise<void> => {
+export const init = async (settings: ConnectSettings): Promise<void> => {
     const existedFrame: HTMLIFrameElement = (document.getElementById('trezorconnect'): any);
     if (existedFrame) {
         instance = existedFrame;

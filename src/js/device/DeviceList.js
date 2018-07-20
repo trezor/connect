@@ -209,6 +209,10 @@ export default class DeviceList extends EventEmitter {
     async _createAndSaveDevice(
         descriptor: DeviceDescriptor
     ): Promise<void> {
+        if (DataManager.isExcludedDevice(descriptor.path)) {
+            this.resolveTransportEvent();
+            return;
+        }
         _log.debug('Creating Device', descriptor);
         await new CreateDeviceHandler(descriptor, this).handle();
     }

@@ -86,6 +86,9 @@ export const parse = (input: ?Object): ConnectSettings => {
         settings.pendingTransportEvent = input.pendingTransportEvent;
     }
 
+    // $FlowIssue: settings.excludedDevices field is intentionally not defined in flowtype. it's used only in tests to exclude debug-link device.
+    settings.excludedDevices = input.excludedDevices;
+
     currentSettings = settings;
     return currentSettings;
 };
