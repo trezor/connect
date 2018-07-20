@@ -1,3 +1,10 @@
+# 5.0.24
+__fixed__
+- removed popup delay if lazy loading
+- validation of device state if method is using emptyPassphrase
+- retyped Device, distinguished by "type" field
+- eslint fixes
+
 # 5.0.23
 __fixed__
 - npm package dependencies
