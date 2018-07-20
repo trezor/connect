@@ -194,16 +194,13 @@ init_device() {
     fi;
 }
 
-setup_mnemonic_allallall() {
-    init_device "$mnemonic_all" "$pin_0" "False"
-}
-
 setup_mnemonic_allallall_passphrase() {
     init_device "$mnemonic_all" "$pin_0" "True"
 }
 
 setup_mnemonic_nopin_nopassphrase() {
-    init_device "$mnemonic_12" "$pin_0" "False"
+    enable_passphrase="$1" # "True"/"False"
+    init_device "${mnemonic_12}" "${pin_0}" "${enable_passphrase}"
 }
 
 show_available_subtests_for_test() {
@@ -415,552 +412,54 @@ run_excluded_tests() {
     for t in $to_run; do
         run_test $t
     done;
+}
 
-    #for t in $available_tests; do
-    #    is_excluded=""
-    #    is_excluded=$(echo "$not_to_run" | grep -ow "$t")
-    #    if [ -z "$is_excluded" ]
-    #    then
-    #        run_test $t
-    #    fi
-    #done
+
+prepare_environment() {
+    enable_passphrase="$1" # "True"/"False"
+
+    start_emulator
+    setup_mnemonic_nopin_nopassphrase ${enable_passphrase}
+    start_transport
 }
 
 run_test() {
-    # Check whether specified test has any subtest
-    # - trailing '/' must be added so the cut command works for $subtest_name
+    # Check whether specified test was specified also with a subtest
+    # - trailing '/' must be added so the cut command works for $subtest_to_run
     # - if $test is only name of the test without '/' (i.e.: 'test=ethereumSignTransaction' not 'test=ethereumSignTransaction/')
-    # the $subtest_name would be same as the $test_name
-    test_name=$(echo ${1}/ | cut -d"/" -f1)
-    subtest_name=$(echo ${1}/ | cut -d"/" -f2)
+    # the $subtest_to_run would be same as the $test_to_run
+    test_to_run=$(echo ${1}/ | cut -d"/" -f1)
+    subtest_to_run=$(echo ${1}/ | cut -d"/" -f2)
 
-    echo "${green}${bold} - Current test: ${test_name}${reset}"
+    echo "${green}${bold} - Current test: ${test_to_run}${reset}"
 
-    # Since test functions are named like this: test_nameOfTest
-    # the following line will call the desired test function
-    test_$test_name $subtest_name
+    # Passphrase test is only test requiring enabled passphrase
+    if [ ${test_to_run} = "passphrase" ]; then
+        prepare_environment "True"
+    else
+        prepare_environment "False"
+    fi;
 
+    if [ -n "${subtest_to_run}" ]; then
+        # Subtest was specified
+        # Run only the specified subtest
+        subtests=${subtest_to_run}
+    else
+        # Subtest wasn't specified
+        # If a specified test has any subtests run all of them
+        subtests=${test_to_run}_subtests
+        subtests=${!subtests}
+    fi;
+
+    if [ -n "${subtests}" ]; then
+        for subtest in $subtests; do
+            echo "${green}   - subtest: ${subtest}${reset}"
+            run_karma ${test_to_run} ${subtest}
+        done;
+    else
+        run_karma ${test_to_run}
+    fi;
     kill_emul_transport
-}
-
-test_getPublicKey() {
-    start_emulator
-    setup_mnemonic_nopin_nopassphrase
-    start_transport
-    run_karma "getPublicKey"
-}
-
-test_getAddress() {
-    specified_subtest=$1
-
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$getAddress_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "getAddress" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_getAddressSegwit() {
-    specified_subtest=$1
-
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$getAddressSegwit_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "getAddressSegwit" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_signMessage() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$signMessage_subtests
-
-        # Filter subtests
-        #excluded_subtests=$(echo ${subtests_not_to_run} | tr " " "\n" | grep -w "signMessage" | cut -d"/" -f2)
-
-        #echo "${excluded_subtests}" | sort > "./tmp1.$$.txt"
-        #echo "${signMessage_subtests}" | tr " " "\n" | sort > "./tmp2.$$.txt"
-        #subtests=$(comm -23 "./tmp1.$$.txt" "./tmp2.$$.txt" | tr "\n" " ")
-        #rm -f "./tmp1.$$.txt"
-        #rm -f "./tmp2.$$.txt"
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "signMessage" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_signMessageSegwit() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$signMessageSegwit_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "signMessageSegwit" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_signTransaction() {
-   specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$signTransaction_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "signTransaction" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_signTransactionSegwit() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$signTransactionSegwit_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "signTransactionSegwit" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_signTransactionBgold() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$signTransactionBgold_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "signTransactionBgold" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_signTransactionBcash() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$signTransactionBcash_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "signTransactionBcash" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_signTransactionMultisig() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$signTransactionMultisig_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "signTransactionMultisig" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_signTransactionMultisigChange() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$signTransactionMultisigChange_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "signTransactionMultisigChange" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_verifyMessage() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$verifyMessage_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "verifyMessage" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_verifyMessageSegwit() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$verifyMessageSegwit_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "verifyMessageSegwit" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_verifyMessageSegwitNative() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$verifyMessageSegwitNative_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "verifyMessageSegwitNative" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_ethereumGetAddress() {
-    start_emulator
-    setup_mnemonic_nopin_nopassphrase
-    start_transport
-    run_karma "ethereumGetAddress"
-}
-
-test_ethereumSignMessage() {
-    start_emulator
-    setup_mnemonic_nopin_nopassphrase
-    start_transport
-    run_karma "ethereumSignMessage"
-}
-
-test_ethereumSignTransaction() {
-    specified_subtest=$1
-
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$ethereumSignTransaction_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "ethereumSignTransaction" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_ethereumVerifyMessage() {
-    start_emulator
-    setup_mnemonic_nopin_nopassphrase
-    start_transport
-
-    run_karma "ethereumVerifyMessage"
-}
-
-test_nemGetAddress() {
-    start_emulator
-    setup_mnemonic_nopin_nopassphrase
-    start_transport
-
-    run_karma "nemGetAddress"
-}
-
-test_nemSignTransactionMosaic() {
-    specified_subtest=$1
-
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$nemSignTransactionMosaic_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "nemSignTransactionMosaic" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_nemSignTransactionMultisig() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$nemSignTransactionMultisig_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "nemSignTransactionMultisig" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_nemSignTransactionOthers() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$nemSignTransactionOthers_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "nemSignTransactionOthers" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_nemSignTransactionTransfers() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$nemSignTransactionTransfers_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "nemSignTransactionTransfers" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_stellarGetPublicKey() {
-    # todo: emulator firmware
-
-    start_emulator
-    setup_mnemonic_nopin_nopassphrase
-    start_transport
-
-    run_karma "stellarGetPublicKey"
-}
-
-test_getAccountInfo() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$getAccountInfo_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_nopin_nopassphrase
-        start_transport
-
-        run_karma "getAccountInfo" $subtest
-
-        kill_emul_transport
-    done;
-}
-
-test_passphrase() {
-    specified_subtest=$1
-    if [ -n "$specified_subtest" ]; then
-        # Run only specified subtest
-        subtests=$specified_subtest
-    else
-        # Run all possible subtests
-        subtests=$passphrase_subtests
-    fi;
-
-    for subtest in $subtests; do
-        echo "${green}   - subtest: ${subtest}${reset}"
-
-        start_emulator
-        setup_mnemonic_allallall_passphrase
-        start_transport
-
-        run_karma "passphrase" $subtest
-
-        kill_emul_transport
-    done;
 }
 ################# Functions: END
 
