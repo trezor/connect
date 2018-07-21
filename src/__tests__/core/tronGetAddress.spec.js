@@ -12,59 +12,23 @@ import type {
 } from 'flowtype/tests/ethereum-get-address';
 
 
-export const ethereumGetAddress = () => {
+export const tronGetAddress = () => {
 
-    describe('EthereumGetAddress', () => {
+    describe('TronGetAddress', () => {
 
         let core: Core;
-        const testPayloads: Array<TestEthereumGetAddressPayload> = [
+        const testPayloads = [
             {
-                method: 'ethereumGetAddress',
+                method: 'TronGetAddress',
                 path: [],
-            },
-            {
-                method: 'ethereumGetAddress',
-                path: [1],
-            },
-            {
-                method: 'ethereumGetAddress',
-                path: [0, -1],
-            },
-            {
-                method: 'ethereumGetAddress',
-                path: [-9, 0],
-            },
-            {
-                method: 'ethereumGetAddress',
-                path: [0, 9999999],
             },
         ];
 
 
-        const expectedResponses: Array<ExpectedEthereumGetAddressResponse> = [
+        const expectedResponses = [
             {
                 payload: {
                     address: '1d1c328764a41bda0492b66baa30c4a339ff85ef',
-                },
-            },
-            {
-                payload: {
-                    address: '437207ca3cf43bf2e47dea0756d736c5df4f597a',
-                },
-            },
-            {
-                payload: {
-                    address: 'e5d96dfa07bcf1a3ae43677840c31394258861bf',
-                },
-            },
-            {
-                payload: {
-                    address: 'f68804ac9eca9483ab4241d3e4751590d2c05102',
-                },
-            },
-            {
-                payload: {
-                    address: '7a6366ecfcaf0d5dcc1539c171696c6cdd1eb8ed',
                 },
             },
         ];
@@ -74,6 +38,7 @@ export const ethereumGetAddress = () => {
             checkBrowser();
             done();
         });
+
         afterEach(() => {
             // Deinitialize existing core
             core.onBeforeUnload();
@@ -86,9 +51,9 @@ export const ethereumGetAddress = () => {
         console.log("PATHLOAY COUNT", testPayloads.length);
 
         for (let i = 0; i < testPayloads.length; i++) {
-            console.log("PATHLOAY", i);
             const payload = testPayloads[i];
             const expectedResponse = expectedResponses[i];
+            console.log("SEND", payload, expectedResponse);
 
             it(`for derivation path: [${payload.path.toString()}]`, async (done) => {
                 const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
