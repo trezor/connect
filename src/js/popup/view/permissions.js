@@ -4,7 +4,7 @@
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
 import DataManager from '../../data/DataManager';
-import { container, showView, postMessage } from './common';
+import { container, showView, postMessage, createTooltip } from './common';
 import type { RequestPermission } from '../../types/ui-request';
 
 const getPermissionText = (permissionType: string, deviceName: string): string => {
@@ -16,16 +16,16 @@ const getPermissionText = (permissionType: string, deviceName: string): string =
             break;
         case 'read-meta':
             text = 'Read metadata from Trezor device';
+            break;
         case 'write':
-            text = 'Use Trezor device to sign transactions';
+            text = 'Prepare Trezor device for transaction and data signing';
             break;
         case 'write-meta':
-            text = 'Write metadata to Trezor device'
-
+            text = 'Write metadata to Trezor device';
+            break;
         case 'custom-message':
             text = 'Run custom operations';
             break;
-
     }
     return text;
 };
@@ -35,25 +35,16 @@ const getPermissionTooltipText = (permissionType: string): string => {
 
     switch (permissionType) {
         case 'read':
-            text = 'The service needs this permission to read your account balance.';
+            text = 'Permission needed to load public information from your device.';
             break;
         case 'write':
-            text = 'The service needs this permission to compose a transaction for you.';
+            text = 'Permission needed to execute operations, such as composing a transaction, after your confirmation.';
             break;
         case 'custom-message':
             text = 'Development tool. Use at your own risk. Allows service to send arbitrary data to your Trezor device.';
             break;
     }
     return text;
-}
-
-const createTooltip = (text: string): HTMLDivElement => {
-    const tooltip = document.createElement('div');
-    tooltip.className = 'tooltip';
-    tooltip.setAttribute('tooltip', text);
-    tooltip.setAttribute('tooltip-position', 'bottom');
-
-    return tooltip;
 };
 
 const createPermissionItem = (permissionText: string, tooltipText: string): HTMLDivElement => {
@@ -87,12 +78,13 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
     showView('permissions');
 
     const h3: HTMLElement = container.getElementsByTagName('h3')[0];
-    const hostName: HTMLElement = h3.getElementsByTagName('span')[0];
+    const hostName: HTMLElement = h3.getElementsByClassName('host-name')[0];
     const permissionsList: HTMLElement = container.getElementsByClassName('permissions-list')[0];
     const confirmButton: HTMLElement = container.getElementsByClassName('confirm')[0];
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
     const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName('remember-permissions')[0]: any);
 
+    hostName.innerText = DataManager.getSettings('origin');
     if (payload && Array.isArray(payload.permissions)) {
         payload.permissions.forEach(p => {
             const permissionText = getPermissionText(p, payload.device.label);
@@ -120,6 +112,6 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
     };
 
     rememberCheckbox.onchange = (e) => {
-        confirmButton.innerText = e.target.checked ? 'Allow forever for this service' : 'Allow once for this session';
+        confirmButton.innerText = e.target.checked ? 'Always allow for this service' : 'Allow once for this session';
     };
 };

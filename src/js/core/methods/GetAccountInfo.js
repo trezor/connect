@@ -2,8 +2,11 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams, validateCoinPath } from './helpers/paramsValidator';
 import Discovery from './helpers/Discovery';
 import * as UI from '../../constants/ui';
+import { NO_COIN_INFO } from '../../constants/errors';
+
 import {
     validatePath,
     getAccountLabel,
@@ -13,24 +16,23 @@ import { create as createDeferred } from '../../utils/deferred';
 
 import Account, { create as createAccount } from '../../account';
 import BlockBook, { create as createBackend } from '../../backend';
-import { getCoinInfoByCurrency, getAccountCoinInfo } from '../../data/CoinInfo';
+import { getCoinInfoByCurrency, fixCoinInfoNetwork, getCoinInfoFromPath } from '../../data/CoinInfo';
 import { UiMessage } from '../../message/builder';
 import type { CoinInfo, UiPromiseResponse } from 'flowtype';
 import type { AccountInfo, HDNodeResponse } from '../../types/trezor';
 import type { Deferred, CoreMessage } from '../../types';
 
 type Params = {
-    path: ?Array<number>;
-    xpub: ?string;
-    coinInfo: CoinInfo;
+    path: ?Array<number>,
+    xpub: ?string,
+    coinInfo: CoinInfo,
 }
 
 type Response = AccountInfo | {
-    error: string;
+    error: string,
 }
 
 export default class GetAccountInfo extends AbstractMethod {
-
     params: Params;
     confirmed: boolean = false;
     backend: BlockBook;
@@ -43,26 +45,34 @@ export default class GetAccountInfo extends AbstractMethod {
 
         const payload: Object = message.payload;
 
+        // validate incoming parameters
+        validateParams(payload, [
+            { name: 'coin', type: 'string' },
+            { name: 'xpub', type: 'string' },
+            { name: 'crossChain', type: 'boolean' },
+        ]);
+
+        let path: Array<number>;
         let coinInfo: ?CoinInfo;
-        if (payload.hasOwnProperty('coin')) {
-            if (typeof payload.coin === 'string') {
-                coinInfo = getCoinInfoByCurrency(payload.coin);
-            } else {
-                throw new Error('Parameter "coin" has invalid type. String expected.');
+        if (payload.coin) {
+            coinInfo = getCoinInfoByCurrency(payload.coin);
+        }
+
+        if (payload.path) {
+            path = validatePath(payload.path, 3, true);
+            if (!coinInfo) {
+                coinInfo = getCoinInfoFromPath(path);
+            } else if (!payload.crossChain) {
+                validateCoinPath(coinInfo, path);
             }
         }
 
+        // if there is no coinInfo at this point return error
         if (!coinInfo) {
-            throw new Error('Coin not found');
+            throw NO_COIN_INFO;
         } else {
             // check required firmware with coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
-        }
-
-        if (payload.hasOwnProperty('path')) {
-            payload.path = validatePath(payload.path, true);
-        } else if (payload.hasOwnProperty('xpub') && typeof payload.xpub !== 'string') {
-            throw new Error('Parameter "xpub" has invalid type. String expected.');
         }
 
         // delete payload.path;
@@ -70,10 +80,10 @@ export default class GetAccountInfo extends AbstractMethod {
         // payload.xpub = 'xpub6BiVtCpG9fQQNBuKZoKzhzmENDKdCeXQsNVPF2Ynt8rhyYznmPURQNDmnNnX9SYahZ1DVTaNtsh3pJ4b2jKvsZhpv2oVj76YETCGztKJ3LM'
 
         this.params = {
-            path: payload.path,
+            path: path,
             xpub: payload.xpub,
             coinInfo,
-        }
+        };
     }
 
     async confirmation(): Promise<boolean> {
@@ -120,12 +130,12 @@ export default class GetAccountInfo extends AbstractMethod {
     }
 
     async _getAccountFromPath(path: Array<number>): Promise<Response> {
-        const coinInfo: CoinInfo = getAccountCoinInfo(this.params.coinInfo, path);
+        const coinInfo: CoinInfo = fixCoinInfoNetwork(this.params.coinInfo, path);
         const node: HDNodeResponse = await this.device.getCommands().getHDNode(path, coinInfo);
         const account = createAccount(path, node.xpub, coinInfo);
 
         const discovery: Discovery = this.discovery = new Discovery({
-            getHDNode: this.device.getCommands().getHDNode.bind( this.device.getCommands() ),
+            getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
             coinInfo: this.params.coinInfo,
             backend: this.backend,
             loadInfo: false,
@@ -136,9 +146,8 @@ export default class GetAccountInfo extends AbstractMethod {
     }
 
     async _getAccountFromPublicKey(): Promise<Response> {
-
         const discovery: Discovery = this.discovery = new Discovery({
-            getHDNode: this.device.getCommands().getHDNode.bind( this.device.getCommands() ),
+            getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
             coinInfo: this.params.coinInfo,
             backend: this.backend,
             loadInfo: false,
@@ -148,17 +157,16 @@ export default class GetAccountInfo extends AbstractMethod {
         discovery.on('update', async (accounts: Array<Account>) => {
             const account = accounts.find(a => a.xpub === this.params.xpub);
             if (account) {
-
                 discovery.removeAllListeners();
                 discovery.completed = true;
 
                 await discovery.getAccountInfo(account);
                 discovery.stop();
-                deferred.resolve( this._response(account) );
+                deferred.resolve(this._response(account));
             }
         });
         discovery.on('complete', () => {
-            deferred.resolve( this._response(null) );
+            deferred.resolve(this._response(null));
         });
 
         discovery.start();
@@ -167,9 +175,8 @@ export default class GetAccountInfo extends AbstractMethod {
     }
 
     async _getAccountFromDiscovery(): Promise<Response> {
-
         const discovery: Discovery = this.discovery = new Discovery({
-            getHDNode: this.device.getCommands().getHDNode.bind( this.device.getCommands() ),
+            getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
             coinInfo: this.params.coinInfo,
             backend: this.backend,
         });
@@ -185,16 +192,16 @@ export default class GetAccountInfo extends AbstractMethod {
             this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
                 coinInfo: this.params.coinInfo,
                 accounts: accounts.map(a => a.toMessage()),
-                complete: true
+                complete: true,
             }));
         });
 
         try {
             discovery.start();
-        } catch(error) {
+        } catch (error) {
             return {
-                error
-            }
+                error,
+            };
         }
 
         // set select account view
@@ -202,7 +209,7 @@ export default class GetAccountInfo extends AbstractMethod {
         this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
             coinInfo: this.params.coinInfo,
             accounts: [],
-            start: true
+            start: true,
         }));
 
         // wait for user action
@@ -216,11 +223,10 @@ export default class GetAccountInfo extends AbstractMethod {
     }
 
     _response(account: ?Account): Response {
-
         if (!account) {
             return {
-                error: "No account found"
-            }
+                error: 'No account found',
+            };
         }
 
         return {
@@ -229,11 +235,11 @@ export default class GetAccountInfo extends AbstractMethod {
             serializedPath: getSerializedPath(account.path),
             address: account.getNextAddress(),
             addressId: account.getNextAddressId(),
-            addressPath: account.getAddressPath( account.getNextAddress() ),
+            addressPath: account.getAddressPath(account.getNextAddress()),
             xpub: account.xpub,
             balance: account.getBalance(),
             confirmed: account.getConfirmedBalance(),
-        }
+        };
     }
 
     dispose() {

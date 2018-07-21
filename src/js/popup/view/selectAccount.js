@@ -41,7 +41,6 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>):
     const h3: HTMLElement = container.getElementsByTagName('h3')[0];
     h3.innerHTML = payload.complete ? `Select ${ payload.coinInfo.label } account` : `Loading ${ payload.coinInfo.label } accounts...`;
 
-
     const buttonsContainer: HTMLElement = container.querySelectorAll('.select-account-list.normal')[0];
     const legacyButtonsContainer: HTMLElement = container.querySelectorAll('.select-account-list.legacy')[0];
 
@@ -73,7 +72,7 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>):
             status.innerHTML = account.transactions ? `${ account.transactions } transactions` : 'Loading...';
             button.disabled = true;
         } else {
-            status.innerHTML = account.transactions === 0 ? 'Fresh account' : formatAmount(account.balance, payload.coinInfo);
+            status.innerHTML = account.transactions === 0 ? 'New account' : formatAmount(account.balance, payload.coinInfo);
             if (payload.checkBalance) {
                 button.disabled = account.transactions === 0 || account.balance === 0;
             } else {
@@ -93,7 +92,7 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>):
             button.className = 'list';
             button.setAttribute('data-index', index.toString());
 
-            updateButtonValue(button, account, );
+            updateButtonValue(button, account);
 
             // add to proper container
             if (payload.coinInfo.segwit && !account.coinInfo.segwit) {

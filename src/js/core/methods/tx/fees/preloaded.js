@@ -1,11 +1,10 @@
 /* @flow */
 'use strict';
 
-
 import BlockBook from '../../../../backend';
 import type { FeeHandler } from './index';
 import type { CoinInfo } from 'flowtype';
-import type { FeeLevel, FeeLevelInfo, PreloadedFeeLevelInfo } from 'flowtype/fee';
+import type { FeeLevel, FeeLevelInfo } from 'flowtype/fee';
 
 let feeLevels: $ReadOnlyArray<FeeLevel> = [];
 

@@ -1,13 +1,10 @@
 /* @flow */
 'use strict';
 
-import { popupConsole } from '../utils/debug';
 import { parseMessage } from '../message';
 import { UiMessage, ResponseMessage } from '../message/builder';
 import type { CoreMessage, PostMessageEvent } from '../types';
 import DataManager from '../data/DataManager';
-import { parse as parseSettings } from '../data/ConnectSettings';
-import type { ConnectSettings } from '../data/ConnectSettings';
 import type { PopupHandshake } from '../types/ui-request';
 
 import * as POPUP from '../constants/popup';
@@ -22,11 +19,11 @@ import * as view from './view';
 import styles from '../../styles/popup.less';
 
 const handleMessage = (event: PostMessageEvent): void => {
-
     console.log('handleMessage', event.data);
 
     if (event.data === POPUP.INIT) {
         window.location.hash = '';
+        // eslint-disable-next-line no-use-before-define
         onLoad();
         return;
     }
@@ -38,13 +35,14 @@ const handleMessage = (event: PostMessageEvent): void => {
 
     if (isMessagePort && data === POPUP.CLOSE) {
         if (window.opener) {
-            window.opener.postMessage( new ResponseMessage(0, false, "Popup couldn't establish connection with iframe."), '*');
+            window.opener.postMessage(new ResponseMessage(0, false, "Popup couldn't establish connection with iframe."), '*');
         }
         window.close();
         return;
     }
     // catch first message from iframe.js and gain settings
     if (isMessagePort && !DataManager.getSettings('origin') && data.type === POPUP.HANDSHAKE && data.payload) {
+        // eslint-disable-next-line no-use-before-define
         init(data.payload);
         return;
     }
@@ -117,17 +115,19 @@ const handleMessage = (event: PostMessageEvent): void => {
             view.initPassphraseView(message.payload);
             break;
         case UI.REQUEST_PASSPHRASE_ON_DEVICE :
-            view.initPinOnDeviceView(message.payload);
+            view.passphraseOnDeviceView(message.payload);
+            break;
+        case UI.INVALID_PASSPHRASE :
+            view.initInvalidPassphraseView(message.payload);
             break;
     }
 };
 
-//const init = async (settings: ConnectSettings) => {
 const init = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
     if (!payload) return;
 
     await DataManager.load(payload.settings);
-    setOperation(payload.method || "");
+    setOperation(payload.method || '');
 
     if (payload.transport && payload.transport.outdated) {
         showBridgeUpdateNotification();
@@ -136,18 +136,18 @@ const init = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
     postMessage(new UiMessage(POPUP.HANDSHAKE));
 
     // pass popup console to iframe
-    popupConsole(POPUP.LOG, postMessage);
-
-    // global method used in html-inline elements
-    window.closeWindow = () => {
-        setTimeout(window.close, 100);
-    };
-}
+    // popupConsole(POPUP.LOG, postMessage);
+};
 
 const onLoad = () => {
     if (window.location.hash.length > 0) {
-        if (window.opener)
+        if (window.location.hash.indexOf('unsupported') >= 0) {
+            view.initBrowserView({
+                supported: false,
+            });
+        } else if (window.opener) {
             window.opener.postMessage(POPUP.INIT, '*');
+        }
         return;
     }
     window.location.hash = '';
@@ -155,10 +155,10 @@ const onLoad = () => {
     // $FlowIssue (Event !== MessageEvent)
     channel.port1.onmessage = (event: Message) => {
         handleMessage(event);
-    }
+    };
 
     postMessage(new UiMessage(POPUP.OPENED));
-}
+};
 
 window.addEventListener('load', onLoad, false);
 window.addEventListener('message', handleMessage, false);
@@ -166,4 +166,9 @@ window.addEventListener('message', handleMessage, false);
 window.addEventListener('beforeunload', () => {
     // TODO
 });
+
+// global method used in html-inline elements
+window.closeWindow = () => {
+    setTimeout(window.close, 100);
+};
 

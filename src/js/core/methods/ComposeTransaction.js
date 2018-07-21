@@ -5,47 +5,41 @@ import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import * as UI from '../../constants/ui';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
-import { validatePath } from '../../utils/pathUtils';
+import { validateParams } from './helpers/paramsValidator';
 import { resolveAfter } from '../../utils/promiseUtils';
+import { isValidAddress } from '../../utils/addressUtils';
+import { formatAmount } from '../../utils/formatUtils';
+import { NO_COIN_INFO } from '../../constants/errors';
 
 import BlockBook, { create as createBackend } from '../../backend';
 import Account from '../../account';
 import TransactionComposer from './tx/TransactionComposer';
 import {
-    input as transformInput,
-    output as transformOutput
-} from './tx/trezorFormat';
-import {
-    validateOutput
-} from './tx/hdFormat';
-
-import * as helper from './helpers/signtx';
-import {
-    validateInputs,
-    validateOutputs,
+    inputToTrezor,
+    outputToTrezor,
     getReferencedTransactions,
-    transformReferencedTransactions
+    transformReferencedTransactions,
 } from './tx';
+import * as helper from './helpers/signtx';
+
 import { UiMessage } from '../../message/builder';
 
 import type { CoinInfo, UiPromiseResponse } from 'flowtype';
-import type { Deferred, CoreMessage } from '../../types';
-import type { TransactionInput, TransactionOutput, SignedTx } from '../../types/trezor';
+import type { CoreMessage } from '../../types';
+import type { SignedTx } from '../../types/trezor';
 
 import type {
     BuildTxOutputRequest,
-    BuildTxInput,
-    BuildTxOutput,
-    BuildTxResult
+    BuildTxResult,
 } from 'hd-wallet';
 
 type Params = {
-    outputs: Array<BuildTxOutputRequest>;
-    coinInfo: CoinInfo;
+    outputs: Array<BuildTxOutputRequest>,
+    coinInfo: CoinInfo,
+    push: boolean,
 }
 
 export default class ComposeTransaction extends AbstractMethod {
-
     params: Params;
     backend: BlockBook;
     discovery: ?Discovery;
@@ -54,39 +48,57 @@ export default class ComposeTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.info = 'Payment request';
 
-        const payload: any = message.payload;
-        if (!payload.hasOwnProperty('outputs')) {
-            throw new Error('Parameter "outputs" is missing');
-        } else if (!Array.isArray(payload.outputs)) {
-            throw new Error('Parameter "outputs" has invalid type. Array of BuildTxOutputRequest expected.');
-        }
+        const payload: Object = message.payload;
+        // validate incoming parameters
+        validateParams(payload, [
+            { name: 'outputs', type: 'array', obligatory: true },
+            { name: 'coin', type: 'string', obligatory: true },
+            { name: 'push', type: 'boolean' },
+        ]);
 
-        let coinInfo: ?CoinInfo;
-        if (!payload.hasOwnProperty('coin')) {
-            throw new Error('Parameter "coin" is missing');
-        } else {
-            if (typeof payload.coin === 'string') {
-                coinInfo = getCoinInfoByCurrency(payload.coin);
-            } else {
-                throw new Error('Parameter "coin" has invalid type. String expected.');
-            }
-        }
-
+        const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
         if (!coinInfo) {
-            throw new Error('Coin not found');
-        } else {
-            // check required firmware with coinInfo support
-            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+            throw NO_COIN_INFO;
         }
 
-        const outputs: Array<BuildTxOutputRequest> = payload.outputs.map(out => validateOutput(out));
+        // set required firmware from coinInfo support
+        this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+
+        // validate each output and transform into hd-wallet format
+        const outputs: Array<BuildTxOutputRequest> = [];
+        let total: number = 0;
+        payload.outputs.forEach(out => {
+            validateParams(out, [
+                { name: 'amount', type: 'string', obligatory: true },
+                { name: 'address', type: 'string', obligatory: true },
+            ]);
+
+            if (!isValidAddress(out.address, coinInfo)) {
+                throw new Error(`Invalid ${ coinInfo.label } output address format`);
+            }
+
+            const amount: number = parseInt(out.amount);
+            total += amount;
+
+            outputs.push({
+                type: 'complete',
+                amount: parseInt(out.amount),
+                address: out.address,
+            });
+        });
+
+        if (total <= coinInfo.dustLimit) {
+            throw new Error('Total amount is too low.');
+        }
+
+        this.info = `Send ${ formatAmount(total, coinInfo) }`;
 
         this.params = {
             outputs,
             coinInfo,
-        }
+            push: payload.hasOwnProperty('push') ? payload.push : true,
+        };
     }
 
     async run(): Promise<SignedTx> {
@@ -110,9 +122,8 @@ export default class ComposeTransaction extends AbstractMethod {
     }
 
     async _getAccount(): Promise<Account | { error: string }> {
-
         const discovery: Discovery = this.discovery || new Discovery({
-            getHDNode: this.device.getCommands().getHDNode.bind( this.device.getCommands() ),
+            getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
             coinInfo: this.params.coinInfo,
             backend: this.backend,
         });
@@ -121,7 +132,7 @@ export default class ComposeTransaction extends AbstractMethod {
             this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
                 coinInfo: this.params.coinInfo,
                 accounts: accounts.map(a => a.toMessage()),
-                checkBalance: true
+                checkBalance: true,
             }));
         });
 
@@ -130,7 +141,7 @@ export default class ComposeTransaction extends AbstractMethod {
                 coinInfo: this.params.coinInfo,
                 accounts: accounts.map(a => a.toMessage()),
                 checkBalance: true,
-                complete: true
+                complete: true,
             }));
         });
 
@@ -146,7 +157,7 @@ export default class ComposeTransaction extends AbstractMethod {
             accounts: discovery.accounts.map(a => a.toMessage()),
             checkBalance: true,
             start: true,
-            complete: discovery.completed
+            complete: discovery.completed,
         }));
 
         // wait for user action
@@ -159,9 +170,7 @@ export default class ComposeTransaction extends AbstractMethod {
     }
 
     async _getFee(account: Account): Promise<string | SignedTx> {
-
-        if (this.composer)
-            this.composer.dispose();
+        if (this.composer) { this.composer.dispose(); }
 
         const composer: TransactionComposer = new TransactionComposer(account, this.params.outputs);
         await composer.init(this.backend);
@@ -181,7 +190,7 @@ export default class ComposeTransaction extends AbstractMethod {
         // this view will be updated from discovery events
         this.postMessage(new UiMessage(UI.SELECT_FEE, {
             feeLevels: composer.getFeeLevelList(),
-            coinInfo: this.params.coinInfo
+            coinInfo: this.params.coinInfo,
         }));
 
         // wait for user action
@@ -196,7 +205,7 @@ export default class ComposeTransaction extends AbstractMethod {
                 // recompose custom fee level with requested value
                 this.postMessage(new UiMessage(UI.UPDATE_CUSTOM_FEE, {
                     level: this.composer.composeCustomFee(resp.payload.value),
-                    coinInfo: this.params.coinInfo
+                    coinInfo: this.params.coinInfo,
                 }));
 
                 // wait for user action
@@ -207,52 +216,37 @@ export default class ComposeTransaction extends AbstractMethod {
 
             case 'change-account':
             default:
-                return 'change-account'
-
+                return 'change-account';
         }
     }
 
     async _send(feeLevel: string): Promise<SignedTx> {
-
         const tx: BuildTxResult = this.composer.composed[feeLevel];
 
-        if (tx.type !== 'final') throw new Error('TODO: trying to sign unfinished tx');
+        if (tx.type !== 'final') throw new Error('Trying to sign unfinished tx');
 
-        const bjsRefTxs = await this.backend.loadTransactions( getReferencedTransactions(tx.transaction.inputs) );
+        const bjsRefTxs = await this.backend.loadTransactions(getReferencedTransactions(tx.transaction.inputs));
         const refTxs = transformReferencedTransactions(bjsRefTxs);
 
         const coinInfo: CoinInfo = this.composer.account.coinInfo;
 
         const response = await helper.signTx(
-            this.device.getCommands().typedCall.bind( this.device.getCommands() ),
-            tx.transaction.inputs.map(inp => transformInput(inp, 0)),
-            tx.transaction.outputs.sorted.map(out => transformOutput(out, coinInfo)),
+            this.device.getCommands().typedCall.bind(this.device.getCommands()),
+            tx.transaction.inputs.map(inp => inputToTrezor(inp, 0)),
+            tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo)),
             refTxs,
             coinInfo,
         );
 
-        //const txid: string = await this.backend.sendTransactionHex(response.message.serialized.serialized_tx);
-
-        return {
-            ...response.message,
-            //txid
+        if (this.params.push) {
+            const txid: string = await this.backend.sendTransactionHex(response.serialized);
+            return {
+                ...response,
+                txid,
+            };
         }
 
-        // try {
-        //     txId = await this.backend.sendTransactionHex(signedtx.message.serialized.serialized_tx);
-        // } catch (error) {
-        //     throw {
-        //         // custom: true,
-        //         error: error.message || error,
-        //         // ...signedtx.message.serialized,
-        //     };
-        // }
-        // return {
-        //     serialized: {
-        //         serialized_tx: 'a',
-        //         signatures: ['a'],
-        //     }
-        // }
+        return response;
     }
 
     dispose() {

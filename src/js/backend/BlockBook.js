@@ -1,12 +1,15 @@
 /* @flow */
 'use strict';
 
-import * as ERROR from '../constants/errors';
-
 import {
     BitcoreBlockchain,
     WorkerDiscovery,
 } from 'hd-wallet';
+import { Transaction as BitcoinJsTransaction } from 'bitcoinjs-lib-zcash';
+
+import * as ERROR from '../constants/errors';
+import { getCoinInfoByHash } from '../data/CoinInfo';
+import { httpRequest } from '../utils/networkUtils';
 
 import type {
     Stream,
@@ -14,15 +17,7 @@ import type {
     AccountInfo,
     AccountLoadStatus,
 } from 'hd-wallet';
-
-import {
-    Transaction as BitcoinJsTransaction,
-} from 'bitcoinjs-lib-zcash';
-
-import { getCoinInfoByHash, getCoinInfoByCurrency } from '../data/CoinInfo';
 import type { CoinInfo } from 'flowtype';
-
-import { httpRequest } from '../utils/networkUtils';
 
 /* $FlowIssue loader notation */
 import FastXpubWasm from 'hd-wallet/lib/fastxpub/fastxpub.wasm';
@@ -46,7 +41,6 @@ export default class BlockBook {
     discovery: Discovery;
 
     constructor(options: Options) {
-
         if (options.urls.length < 1) {
             throw ERROR.BACKEND_NO_URL;
         }
@@ -59,7 +53,7 @@ export default class BlockBook {
         // // $FlowIssue WebAssembly
         const filePromise = typeof WebAssembly !== 'undefined' ? httpRequest(FastXpubWasm, 'binary') : Promise.reject();
 
-        //this.blockchain.errors.values.attach(() => { this._setError(); });
+        // this.blockchain.errors.values.attach(() => { this._setError(); });
         this.blockchain.errors.values.attach(this._setError.bind(this));
         this.discovery = new WorkerDiscovery(
             () => new DiscoveryWorker(),

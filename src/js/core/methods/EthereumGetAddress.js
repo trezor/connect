@@ -2,18 +2,31 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
-import type { MessageResponse } from '../../device/DeviceCommands';
+import { toChecksumAddress, getNetworkLabel } from '../../utils/ethereumUtils';
+import { getEthereumNetwork } from '../../data/CoinInfo';
+import { uniq } from 'lodash';
+
+import * as UI from '../../constants/ui';
+import { UiMessage } from '../../message/builder';
+
 import type { EthereumAddress } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
+import type { EthereumNetworkInfo } from 'flowtype';
+
+type Batch = {
+    path: Array<number>,
+    network: ?EthereumNetworkInfo,
+    showOnTrezor: boolean,
+}
 
 type Params = {
-    path: Array<number>;
-    showOnTrezor: boolean;
+    bundle: Array<Batch>,
+    bundledResponse: boolean,
 }
 
 export default class EthereumGetAddress extends AbstractMethod {
-
     params: Params;
 
     constructor(message: CoreMessage) {
@@ -21,40 +34,89 @@ export default class EthereumGetAddress extends AbstractMethod {
 
         this.requiredPermissions = ['read'];
         this.requiredFirmware = ['1.6.2', '2.0.7'];
-        this.info = 'Export Ethereum address';
 
-        const payload: any = message.payload;
-
-        if (!payload.hasOwnProperty('path')) {
-            throw new Error('Parameter "path" is missing');
-        } else {
-            payload.path = validatePath(payload.path);
+        const payload: Object = message.payload;
+        let bundledResponse: boolean = true;
+        // create a bundle with only one batch
+        if (!payload.hasOwnProperty('bundle')) {
+            payload.bundle = [ ...payload ];
+            bundledResponse = false;
         }
 
-        let showOnTrezor: boolean = true;
-        if (payload.hasOwnProperty('showOnTrezor')){
-            if (typeof payload.showOnTrezor !== 'boolean') {
-                throw new Error('Parameter "showOnTrezor" has invalid type. Boolean expected.');
+        // validate bundle type
+        validateParams(payload, [
+            { name: 'bundle', type: 'array' },
+        ]);
+
+        const bundle = [];
+        let shouldUseUi: boolean = false;
+
+        payload.bundle.forEach(batch => {
+            // validate incoming parameters for each batch
+            validateParams(batch, [
+                { name: 'path', obligatory: true },
+                { name: 'showOnTrezor', type: 'boolean' },
+            ]);
+
+            const path: Array<number> = validatePath(batch.path, 3);
+            const network: ?EthereumNetworkInfo = getEthereumNetwork(path);
+
+            let showOnTrezor: boolean = true;
+            if (batch.hasOwnProperty('showOnTrezor')) {
+                showOnTrezor = batch.showOnTrezor;
+            }
+            if (showOnTrezor) {
+                shouldUseUi = true;
+            }
+
+            bundle.push({
+                path,
+                network,
+                showOnTrezor,
+            });
+        });
+
+        // set info
+        if (bundle.length === 1) {
+            this.info = getNetworkLabel('Export #NETWORK address', bundle[0].network);
+        } else {
+            const requestedNetworks: Array<?EthereumNetworkInfo> = bundle.map(b => b.network);
+            const uniqNetworks = uniq(requestedNetworks);
+            if (uniqNetworks.length === 1 && uniqNetworks[0]) {
+                this.info = getNetworkLabel('Export multiple #NETWORK addresses', uniqNetworks[0]);
             } else {
-                showOnTrezor = payload.showOnTrezor;
+                this.info = 'Export multiple addresses';
             }
         }
 
-
+        this.useUi = shouldUseUi;
 
         this.params = {
-            path: payload.path,
-            showOnTrezor
-        }
+            bundle,
+            bundledResponse,
+        };
     }
 
-    async run(): Promise<Object> {
-        const response: MessageResponse<EthereumAddress> = await this.device.getCommands().ethereumGetAddress(
-            this.params.path,
-            this.params.showOnTrezor
-        );
-        return {
-            ...response.message
-        };
+    async run(): Promise<EthereumAddress | Array<EthereumAddress>> {
+        const responses: Array<EthereumAddress> = [];
+        for (let i = 0; i < this.params.bundle.length; i++) {
+            const batch: Batch = this.params.bundle[i];
+            const response = await this.device.getCommands().ethereumGetAddress(
+                batch.path,
+                batch.showOnTrezor
+            );
+
+            response.address = toChecksumAddress(response.address, batch.network);
+            responses.push(response);
+
+            if (this.params.bundledResponse) {
+                // send progress
+                this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+                    progress: i,
+                    response,
+                }));
+            }
+        }
+        return this.params.bundledResponse ? responses : responses[0];
     }
 }

@@ -7,6 +7,7 @@
  */
 
 import EventEmitter from 'events';
+import 'babel-polyfill'; // for unsupported browsers
 
 import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from './constants';
 import * as TRANSPORT from './constants/transport';
@@ -19,7 +20,7 @@ import { NO_IFRAME, IFRAME_INITIALIZED, DEVICE_CALL_IN_PROGRESS } from './consta
 import PopupManager from './popup/PopupManager';
 import * as iframe from './iframe/builder';
 import webUSBButton from './webusb/button';
-import Log, { init as initLog, getLog } from './utils/debug';
+import Log, { init as initLog } from './utils/debug';
 import { parseMessage } from './message';
 import { parse as parseSettings } from './data/ConnectSettings';
 
@@ -63,6 +64,8 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
                 // clear unnecessary fields from message object
                 delete message.type;
                 delete message.event;
+                // delete message.id;
+                // message.__id = id;
                 // resolve message promise (send result of call method)
                 iframe.messagePromises[id].resolve(message);
                 delete iframe.messagePromises[id];
@@ -89,7 +92,7 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
 
             if (type === UI.IFRAME_HANDSHAKE) {
                 if (payload.error) {
-                    iframe.initPromise.reject( new Error(payload.error) );
+                    iframe.initPromise.reject(new Error(payload.error));
                 } else {
                     iframe.initPromise.resolve();
                 }
@@ -112,6 +115,10 @@ const init = async (settings: Object = {}): Promise<void> => {
         _settings = parseSettings(settings);
     }
 
+    if (!_settings.supportedBrowser) {
+        throw new Error('Unsupported browser');
+    }
+
     if (!_popupManager) {
         _popupManager = initPopupManager();
     }
@@ -128,7 +135,7 @@ const init = async (settings: Object = {}): Promise<void> => {
     });
 
     await iframe.init(_settings);
-}
+};
 
 const call = async (params: Object): Promise<Object> => {
     if (!iframe.instance && !iframe.timeout) {
@@ -136,6 +143,11 @@ const call = async (params: Object): Promise<Object> => {
         _settings = parseSettings({});
         _popupManager = initPopupManager();
         _popupManager.request(true);
+
+        if (!_settings.supportedBrowser) {
+            return { success: false, message: 'Unsupported browser' };
+        }
+
         // auto init with default settings
         try {
             await init(_settings);
@@ -174,18 +186,17 @@ const call = async (params: Object): Promise<Object> => {
         _log.error('__call error', error);
         return error;
     }
-}
+};
 
 const customMessageResponse = (payload: ?{ message: string, params?: Object }): void => {
     iframe.postMessage({
         event: UI_EVENT,
         type: UI.CUSTOM_MESSAGE_RESPONSE,
-        payload
+        payload,
     });
-}
+};
 
 class TrezorConnect {
-
     static init = async (settings: $T.Settings): Promise<void> => {
         return await init(settings);
     }
@@ -214,9 +225,9 @@ class TrezorConnect {
             return {
                 success: false,
                 payload: {
-                    error: 'Parameter "callback" is not a function'
-                }
-            }
+                    error: 'Parameter "callback" is not a function',
+                },
+            };
         }
 
         // TODO: set message listener only if iframe is loaded correctly
@@ -224,7 +235,7 @@ class TrezorConnect {
         delete params.callback;
         const customMessageListener = async (event: $T.PostMessageEvent) => {
             const data = event.data;
-            if (data && data.type == UI.CUSTOM_MESSAGE_REQUEST) {
+            if (data && data.type === UI.CUSTOM_MESSAGE_REQUEST) {
                 const payload = await callback(data.payload);
                 if (payload) {
                     customMessageResponse(payload);
@@ -232,7 +243,7 @@ class TrezorConnect {
                     customMessageResponse({ message: 'release' });
                 }
             }
-        }
+        };
         window.addEventListener('message', customMessageListener, false);
 
         const response = await call({ method: 'customMessage', ...params });
@@ -241,27 +252,27 @@ class TrezorConnect {
     }
 
     static requestLogin = async (params: $T.$RequestLogin): Promise<$T.RequestLogin$> => {
+        // $FlowIssue: property callback not found
         if (typeof params.callback === 'function') {
             const callback = params.callback;
-            delete params.callback;
-            //params.asyncChallenge = true; // replace value for callback (this field cannot be function)
+            delete params.callback; // delete callback value. this field cannot be sent using postMessage function
 
             // TODO: set message listener only if iframe is loaded correctly
             const loginChallengeListener = async (event: $T.PostMessageEvent) => {
                 const data = event.data;
-                if (data && data.type == UI.LOGIN_CHALLENGE_REQUEST) {
+                if (data && data.type === UI.LOGIN_CHALLENGE_REQUEST) {
                     const payload = await callback();
                     iframe.postMessage({
                         event: UI_EVENT,
                         type: UI.LOGIN_CHALLENGE_RESPONSE,
-                        payload
+                        payload,
                     });
                 }
-            }
+            };
 
             window.addEventListener('message', loginChallengeListener, false);
 
-            const response = await call({ method: 'requestLogin', ...params });
+            const response = await call({ method: 'requestLogin', ...params, asyncChallenge: true });
             window.removeEventListener('message', loginChallengeListener);
             return response;
         } else {
@@ -321,6 +332,10 @@ class TrezorConnect {
         return await call({ method: 'nemSignTransaction', ...params });
     }
 
+    static pushTransaction = async (params: $T.$PushTransaction): Promise<$T.PushTransaction$> => {
+        return await call({ method: 'pushTransaction', ...params });
+    }
+
     static signMessage = async (params: $T.$SignMessage): Promise<$T.SignMessage$> => {
         return await call({ method: 'signMessage', ...params });
     }
@@ -367,10 +382,6 @@ export {
     // RESPONSE_EVENT,
 };
 
-// expose as window
-window.TrezorConnect = TrezorConnect;
-
-// reexport types
 export type {
     Device,
     Features,
@@ -380,4 +391,4 @@ export type {
     UiMessage,
     TransportMessageType,
     TransportMessage,
- } from './types';
+} from './types';

@@ -1,7 +1,7 @@
 {
     "presets": [
         ["env", {
-            "useBuiltIns": true,
+            "useBuiltIns": false,
             "loose": true
         }]
     ],
@@ -9,7 +9,6 @@
         "transform-class-properties",
         "transform-object-rest-spread",
         "transform-flow-strip-types",
-        "add-module-exports",
         ["transform-runtime", {
             "polyfill": false,
             "regenerator": true

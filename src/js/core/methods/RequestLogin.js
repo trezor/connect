@@ -2,7 +2,6 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validatePath, getPathFromIndex } from '../../utils/pathUtils';
 import type { MessageResponse } from '../../device/DeviceCommands';
 
 import * as UI from '../../constants/ui';
@@ -15,20 +14,19 @@ import type { ConnectSettings } from '../../data/ConnectSettings';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    asyncChallenge: boolean;
-    identity: Identity;
-    challengeHidden: string;
-    challengeVisual: string;
+    asyncChallenge: boolean,
+    identity: Identity,
+    challengeHidden: string,
+    challengeVisual: string,
 }
 
 export default class RequestLogin extends AbstractMethod {
-
     params: Params;
 
     constructor(message: CoreMessage) {
         super(message);
         this.useEmptyPassphrase = true;
-        this.requiredPermissions = ['read'];
+        this.requiredPermissions = ['read', 'write'];
         this.info = 'Login';
 
         const payload: any = message.payload;
@@ -58,11 +56,10 @@ export default class RequestLogin extends AbstractMethod {
             identity,
             challengeHidden: payload.challengeHidden || '',
             challengeVisual: payload.challengeVisual || '',
-        }
+        };
     }
 
     async run(): Promise<SignedIdentity> {
-
         if (this.params.asyncChallenge) {
             // send request to developer
             this.postMessage(new UiMessage(UI.LOGIN_CHALLENGE_REQUEST));

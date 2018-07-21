@@ -1,7 +1,7 @@
 export { init, showView, postMessage } from './common';
 export { initPinView } from './pin';
 export { initPassphraseView } from './passphrase';
-export { requestDevice } from './requestDevice';
+export { initInvalidPassphraseView } from './invalidPassphrase';
 export { selectDevice } from './selectDevice';
 export { selectAccount } from './selectAccount';
 export { selectFee, updateCustomFee } from './selectFee';
@@ -9,4 +9,4 @@ export { requestButton } from './requestButton';
 export { initPermissionsView } from './permissions';
 export { initConfirmationView } from './confirmation';
 export { initBrowserView } from './browser';
-export { initPinOnDeviceView } from './pinOnDevice';
+export { passphraseOnDeviceView } from './passphraseOnDevice';

@@ -2,7 +2,7 @@
 'use strict';
 
 const render = (className: ?string, url: string, origin: ?string) => {
-    const query = className ? className : '.trezor-webusb-button';
+    const query = className || '.trezor-webusb-button';
     const buttons = document.querySelectorAll(query);
     const src: string = `${url}?${ Date.now() }`;
 
@@ -26,13 +26,13 @@ const render = (className: ?string, url: string, origin: ?string) => {
                     // outer: b.outerHTML,
                     // inner: b.innerHTML
                 }, origin);
-            }
+            };
             btnIframe.src = src;
 
             // inject iframe into button
             b.append(btnIframe);
         }
     });
-}
+};
 
 export default render;

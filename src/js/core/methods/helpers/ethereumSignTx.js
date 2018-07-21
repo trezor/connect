@@ -2,7 +2,7 @@
 'use strict';
 
 import type { EthereumTxRequest, EthereumSignedTx } from '../../../types/trezor';
-import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
+import type { DefaultMessageResponse } from '../../../device/DeviceCommands';
 
 const splitString = (str: ?string, len: number): [string, string] => {
     if (str == null) {
@@ -26,8 +26,14 @@ const processTxRequest = async (
             throw new Error('Unexpected request.');
         }
 
+        // return Promise.resolve({
+        //     v, r, s
+        // });
+
         return Promise.resolve({
-            v, r, s,
+            v: '0x' + v.toString(16),
+            r: '0x' + r,
+            s: '0x' + s,
         });
     }
 

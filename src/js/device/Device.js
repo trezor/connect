@@ -16,8 +16,6 @@ import DataManager from '../data/DataManager';
 import { checkFirmware } from '../data/FirmwareInfo';
 import Log, { init as initLog } from '../utils/debug';
 
-const FEATURES_LIFETIME: number = 10 * 60 * 1000; // 10 minutes
-
 // custom log
 const _log: Log = initLog('Device');
 
@@ -83,6 +81,7 @@ export default class Device extends EventEmitter {
 
     state: ?string;
     expectedState: ?string;
+    temporaryState: ?string;
 
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
         super();
@@ -122,7 +121,6 @@ export default class Device extends EventEmitter {
         // will be resolved after trezor-link acquire event
         this.deferredActions[ DEVICE.ACQUIRE ] = createDeferred();
         this.deferredActions[ DEVICE.ACQUIRED ] = createDeferred();
-        const _this: Device = this;
         try {
             const sessionID: string = await this.transport.acquire({
                 path: this.originalDescriptor.path,
@@ -141,18 +139,16 @@ export default class Device extends EventEmitter {
 
             // future defer for trezor-link release event
             this.deferredActions[ DEVICE.RELEASE ] = createDeferred();
-
         } catch (error) {
             this.deferredActions[ DEVICE.ACQUIRED ].resolve();
             delete this.deferredActions[ DEVICE.ACQUIRED ];
-            if (this.runPromise){
+            if (this.runPromise) {
                 this.runPromise.reject(error);
             } else {
                 throw error;
             }
             this.runPromise = null;
         }
-
     }
 
     async release(): Promise<void> {
@@ -241,7 +237,7 @@ export default class Device extends EventEmitter {
 
             // update features
             try {
-                await this.initialize(options.useEmptyPassphrase ? true : false);
+                await this.initialize(!!options.useEmptyPassphrase);
             } catch (error) {
                 this.inconsistent = true;
                 await this.deferredActions[ DEVICE.ACQUIRE ].promise;
@@ -255,11 +251,6 @@ export default class Device extends EventEmitter {
         // until method with keepSession: false will be called
         if (options.keepSession) {
             this.keepSession = true;
-        }
-
-        // try to cancel popup request, maybe it's not too late...
-        if (this.isAuthenticated()) {
-            this.emit(DEVICE.AUTHENTICATED);
         }
 
         // wait for event from trezor-link
@@ -302,7 +293,12 @@ export default class Device extends EventEmitter {
         return this.instance;
     }
 
+    // set expected state from method parameter
     setExpectedState(state: ?string): void {
+        if (!state) {
+            this.setState(null); // T2 reset state
+            this.setPassphrase(null); // T1 reset password
+        }
         this.expectedState = state;
     }
 
@@ -311,7 +307,9 @@ export default class Device extends EventEmitter {
     }
 
     setPassphrase(pass: ?string): void {
-        this.cachedPassphrase[ this.instance ] = pass;
+        if (this.isT1()) {
+            this.cachedPassphrase[ this.instance ] = pass;
+        }
     }
 
     getPassphrase(): ?string {
@@ -329,13 +327,13 @@ export default class Device extends EventEmitter {
         this.featuresNeedsReload = false;
         this.featuresTimestamp = new Date().getTime();
 
-        this.firmwareStatus = checkFirmware( [ this.features.major_version, this.features.minor_version, this.features.patch_version ] );
+        this.firmwareStatus = checkFirmware([ this.features.major_version, this.features.minor_version, this.features.patch_version ]);
     }
 
     async getFeatures(): Promise<void> {
         const { message } : { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
         this.features = message;
-        this.firmwareStatus = checkFirmware( [ this.features.major_version, this.features.minor_version, this.features.patch_version ] );
+        this.firmwareStatus = checkFirmware([ this.features.major_version, this.features.minor_version, this.features.patch_version ]);
     }
 
     getState(): ?string {
@@ -346,6 +344,14 @@ export default class Device extends EventEmitter {
         this.state = state;
     }
 
+    setTemporaryState(state: string): void {
+        this.temporaryState = state;
+    }
+
+    getTemporaryState(): ?string {
+        return this.temporaryState;
+    }
+
     isUnacquired(): boolean {
         return this.features === undefined;
     }
@@ -353,8 +359,7 @@ export default class Device extends EventEmitter {
     async updateDescriptor(descriptor: DeviceDescriptor): Promise<void> {
         _log.debug('updateDescriptor', 'currentSession', this.originalDescriptor.session, 'upcoming', descriptor.session, 'lastUsedID', this.activitySessionID);
 
-        if (this.deferredActions[ DEVICE.ACQUIRED ])
-            await this.deferredActions[ DEVICE.ACQUIRED ].promise;
+        if (this.deferredActions[ DEVICE.ACQUIRED ]) { await this.deferredActions[ DEVICE.ACQUIRED ].promise; }
 
         if (descriptor.session === null) {
             // released
@@ -372,7 +377,6 @@ export default class Device extends EventEmitter {
                 if (this.listeners(DEVICE.ACQUIRED).length > 0) {
                     this.emit(DEVICE.ACQUIRED);
                 }
-
             } else {
                 // by other application
                 _log.debug('RELEASED BY OTHER APP');
@@ -473,18 +477,16 @@ export default class Device extends EventEmitter {
         return this.originalDescriptor.path;
     }
 
-    isAuthenticated(useEmptyPassphrase: boolean = false): boolean {
-        if (this.isUnacquired() || this.isUsedElsewhere() || this.featuresNeedsReload) return false;
-        if (new Date().getTime() - this.featuresTimestamp > FEATURES_LIFETIME) return false;
-
-        if (this.features.bootloader_mode || !this.features.initialized) return false;
-
+    needAuthentication(): boolean {
+        if (this.isUnacquired() || this.isUsedElsewhere() || this.featuresNeedsReload) return true;
+        if (this.features.bootloader_mode || !this.features.initialized) return true;
         const pin: boolean = this.features.pin_protection ? this.features.pin_cached : true;
-        let pass: boolean = this.features.passphrase_protection ? this.features.passphrase_cached : true;
-        if (typeof this.cachedPassphrase[ this.instance ] === 'string') pass = true;
-        if (useEmptyPassphrase) pass = true;
-        _log.debug('isAuthenticated', pin, pass);
-        return (pin && pass);
+        const pass: boolean = this.features.passphrase_protection ? this.features.passphrase_cached : true;
+        return pin && pass;
+    }
+
+    isT1(): boolean {
+        return this.features ? this.features.major_version === 1 : false;
     }
 
     hasUnexpectedMode(requiredFirmware: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE) {
@@ -502,6 +504,21 @@ export default class Device extends EventEmitter {
         return null;
     }
 
+    validateExpectedState(state: string): boolean {
+        if (!this.isT1()) {
+            const currentState: ?string = this.getExpectedState() || this.getState();
+            if (!currentState) {
+                this.setState(state);
+                return true;
+            } else if (currentState !== state) {
+                return false;
+            }
+        } else if (this.getExpectedState() && this.getExpectedState() !== state) {
+            return false;
+        }
+        return true;
+    }
+
     onBeforeUnload() {
         if (this.isUsedHere()) {
             try {
@@ -515,35 +532,28 @@ export default class Device extends EventEmitter {
 
     // simplified object to pass via postMessage
     toMessageObject(): DeviceTyped {
-
         if (this.originalDescriptor.path === DEVICE.UNREADABLE) {
             return {
+                type: 'unreadable',
                 path: this.originalDescriptor.path,
                 label: 'Unreadable device',
-                firmware: 'required',
-                isUsedElsewhere: false,
-                featuresNeedsReload: false,
-                unreadable: true
             };
         } else if (this.isUnacquired()) {
             return {
+                type: 'unacquired',
                 path: this.originalDescriptor.path,
                 label: 'Unacquired device',
-                firmware: 'required',
-                isUsedElsewhere: this.isUsedElsewhere(),
-                featuresNeedsReload: this.featuresNeedsReload,
-                unacquired: true,
             };
         } else {
             const defaultLabel: string = 'My TREZOR';
             const label = this.features.label === '' || this.features.label === null ? defaultLabel : this.features.label;
             return {
+                type: 'acquired',
                 path: this.originalDescriptor.path,
                 label: label,
                 state: this.state,
+                status: this.isUsedElsewhere() ? 'occupied' : this.featuresNeedsReload ? 'used' : 'available',
                 firmware: this.firmwareStatus,
-                isUsedElsewhere: this.isUsedElsewhere(),
-                featuresNeedsReload: this.featuresNeedsReload,
                 features: this.features,
             };
         }

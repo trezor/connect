@@ -2,7 +2,7 @@
 'use strict';
 
 import EventEmitter from 'events';
-import { INIT, OPENED, HANDSHAKE, CLOSED } from '../constants/popup';
+import { INIT, CLOSED } from '../constants/popup';
 import { showPopupRequest } from './showPopupRequest';
 import type { ConnectSettings } from '../data/ConnectSettings';
 import type { CoreMessage, Deferred } from '../types';
@@ -11,7 +11,8 @@ import { create as createDeferred } from '../utils/deferred';
 
 const POPUP_WIDTH: number = 640;
 const POPUP_HEIGHT: number = 500;
-const POPUP_REQUEST_TIMEOUT: number = 400;
+// const POPUP_REQUEST_TIMEOUT: number = 602;
+const POPUP_REQUEST_TIMEOUT: number = 999;
 const POPUP_CLOSE_INTERVAL: number = 500;
 const POPUP_OPEN_TIMEOUT: number = 2000;
 
@@ -52,12 +53,14 @@ export default class PopupManager extends EventEmitter {
 
         const openFn: Function = this.open.bind(this);
         this.locked = true;
-        this.requestTimeout = window.setTimeout(() => {
-            this.requestTimeout = 0;
+        if (!this.settings.supportedBrowser) {
             openFn();
-            // this.setAddress(settings.popupURL);
-        }, POPUP_REQUEST_TIMEOUT);
-        // this.open();
+        } else {
+            this.requestTimeout = window.setTimeout(() => {
+                this.requestTimeout = 0;
+                openFn();
+            }, lazyLoad ? 1 : POPUP_REQUEST_TIMEOUT);
+        }
     }
 
     cancel(): void {
@@ -90,9 +93,13 @@ export default class PopupManager extends EventEmitter {
             ,status=no
             ,scrollbars=yes`;
 
+        if (!this.settings.supportedBrowser) {
+            window.open(this.src + '#unsupported', '_blank', opts);
+            return;
+        }
         this._window = window.open('', '_blank', opts);
         if (this._window) {
-            this._window.location.href = this.lazyLoad ? this.src +'#loading' : this.src; // otherwise android/chrome loose window.opener reference
+            this._window.location.href = this.lazyLoad ? this.src + '#loading' : this.src; // otherwise android/chrome loose window.opener reference
         }
 
         this.closeInterval = window.setInterval(() => {

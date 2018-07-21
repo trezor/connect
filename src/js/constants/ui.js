@@ -21,6 +21,8 @@ export const REQUEST_PIN: 'ui-request_pin' = 'ui-request_pin';
 export const INVALID_PIN: 'ui-invalid_pin' = 'ui-invalid_pin';
 export const REQUEST_PASSPHRASE: 'ui-request_passphrase' = 'ui-request_passphrase';
 export const REQUEST_PASSPHRASE_ON_DEVICE: 'ui-request_passphrase_on_device' = 'ui-request_passphrase_on_device';
+export const INVALID_PASSPHRASE: 'ui-invalid_passphrase' = 'ui-invalid_passphrase';
+export const INVALID_PASSPHRASE_ACTION: 'ui-invalid_passphrase_action' = 'ui-invalid_passphrase_action';
 export const CONNECT: 'ui-connect' = 'ui-connect';
 export const LOADING: 'ui-loading' = 'ui-loading';
 export const SET_OPERATION: 'ui-set_operation' = 'ui-set_operation';
@@ -47,3 +49,5 @@ export const CUSTOM_MESSAGE_RESPONSE: 'ui-custom_response' = 'ui-custom_response
 
 export const LOGIN_CHALLENGE_REQUEST: 'ui-login_challenge_request' = 'ui-login_challenge_request';
 export const LOGIN_CHALLENGE_RESPONSE: 'ui-login_challenge_response' = 'ui-login_challenge_response';
+
+export const BUNDLE_PROGRESS: 'ui-bundle_progress' = 'ui-bundle_progress';

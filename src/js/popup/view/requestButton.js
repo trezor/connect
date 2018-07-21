@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import { container, showView } from './common';
+import { showView } from './common';
 
 export const requestButton = (data: Object): void => {
     if (data.code === 'ButtonRequest_ConfirmOutput') {
@@ -11,4 +11,4 @@ export const requestButton = (data: Object): void => {
     } else {
         showView('follow-device');
     }
-}
+};

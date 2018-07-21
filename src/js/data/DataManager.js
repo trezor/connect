@@ -6,53 +6,51 @@ import { DEFAULT_PRIORITY } from '../data/ConnectSettings';
 import { parseCoinsJson, parseEthereumNetworksJson } from './CoinInfo';
 import { parseFirmware } from './FirmwareInfo';
 import { Promise } from 'es6-promise';
-import { getOrigin } from '../utils/networkUtils';
 import parseUri from 'parse-uri';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
 
 type WhiteList = {
-    +priority: number;
-    +origin: string;
+    +priority: number,
+    +origin: string,
 }
 type WebUSB = {
-    +vendorId: string;
-    +productId: string;
+    +vendorId: string,
+    +productId: string,
 }
 type Browser = {
-    +version: number;
-    +download: string;
-    +update: string;
+    +version: number,
+    +download: string,
+    +update: string,
 }
 type Resources = {
-    bridge: string;
+    bridge: string,
 }
 type Asset = {
-    name: string;
-    type?: string;
-    url: string;
+    name: string,
+    type?: string,
+    url: string,
 }
 type Config = {
-    +whitelist: Array<WhiteList>;
-    +webusb: Array<WebUSB>;
-    +resources: Resources;
-    +assets: Array<Asset>;
-    +supportedBrowsers: { [key: string]: Browser };
+    +whitelist: Array<WhiteList>,
+    +webusb: Array<WebUSB>,
+    +resources: Resources,
+    +assets: Array<Asset>,
+    +supportedBrowsers: { [key: string]: Browser },
 }
 
-type AssetCollection = { [key: string] : JSON };
+type AssetCollection = { [key: string]: JSON };
 
 // TODO: transform json to flow typed object
 const parseConfig = (json: any): Config => {
     const config: Config = json;
     return config;
-}
+};
 
 export default class DataManager {
     static config: Config;
     static assets: AssetCollection = {};
     static settings: ConnectSettings;
-    static cachePassphrase: boolean = false;
 
     static async load(settings: ConnectSettings): Promise<void> {
         const ts: number = new Date().getTime();
@@ -64,7 +62,7 @@ export default class DataManager {
             this.config = parseConfig(config);
 
             // check if origin is trusted
-            const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || "");
+            const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || '');
             this.settings.trustedHost = !!whitelist && !this.settings.popup;
             if (this.settings.debug && !this.settings.trustedHost && !whitelist) {
                 this.settings.debug = false;
@@ -77,12 +75,12 @@ export default class DataManager {
             }
 
             // parse coins definitions
-            parseCoinsJson( this.assets['coins'] );
+            parseCoinsJson(this.assets['coins']);
             parseEthereumNetworksJson(this.assets['ethereumNetworks']);
 
             // parse firmware definitions
-            parseFirmware( this.assets['firmware-t1'] );
-            parseFirmware( this.assets['firmware-t2'] );
+            parseFirmware(this.assets['firmware-t1']);
+            parseFirmware(this.assets['firmware-t2']);
         } catch (error) {
             throw error;
         }
@@ -128,10 +126,8 @@ export default class DataManager {
         return this.config;
     }
 
-    static isPassphraseCached(status: ?boolean): boolean {
-        if (typeof status === 'boolean') {
-            this.cachePassphrase = status;
-        }
-        return this.cachePassphrase; // this.json.device.cachePassphrase;
+    static isExcludedDevice(path: string): boolean {
+        // $FlowIssue: settings.excludedDevices field is intentionally not defined in flowtype. it's used only in tests to exclude debug-link device.
+        return Array.isArray(this.settings.excludedDevices) ? this.settings.excludedDevices.indexOf(path) >= 0 : false;
     }
 }

@@ -2,81 +2,67 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validatePath } from '../../utils/pathUtils';
+import { validateParams, validateCoinPath } from './helpers/paramsValidator';
+import { validatePath, getLabel } from '../../utils/pathUtils';
 import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../data/CoinInfo';
-import type { MessageResponse } from '../../device/DeviceCommands';
 import type { MessageSignature } from '../../types/trezor';
 import type { CoinInfo } from 'flowtype';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    path: Array<number>;
-    message: string;
-    coinInfo: ?CoinInfo;
+    path: Array<number>,
+    message: string,
+    coinInfo: ?CoinInfo,
 }
 
 export default class SignMessage extends AbstractMethod {
-
     params: Params;
 
     constructor(message: CoreMessage) {
         super(message);
 
-        this.requiredPermissions = ['write'];
-        this.info = 'Sign message';
+        this.requiredPermissions = ['read', 'write'];
 
-        const payload: any = message.payload;
+        const payload: Object = message.payload;
+
+        // validate incoming parameters
+        validateParams(payload, [
+            { name: 'path', obligatory: true },
+            { name: 'coin', type: 'string' },
+            { name: 'message', type: 'string', obligatory: true },
+        ]);
+
+        const path: Array<number> = validatePath(payload.path);
         let coinInfo: ?CoinInfo;
-
-        if (payload.hasOwnProperty('coin') && payload.coin) {
-            if (typeof payload.coin === 'string') {
-                coinInfo = getCoinInfoByCurrency(payload.coin);
-            } else {
-                throw new Error('Parameter "coin" has invalid type. String expected.');
-            }
-        }
-
-        if (!payload.hasOwnProperty('path')) {
-            throw new Error('Parameter "path" is missing');
+        if (payload.coin) {
+            coinInfo = getCoinInfoByCurrency(payload.coin);
+            validateCoinPath(coinInfo, path);
         } else {
-            payload.path = validatePath(payload.path);
+            coinInfo = getCoinInfoFromPath(path);
         }
 
-        if (!coinInfo) {
-            coinInfo = getCoinInfoFromPath(payload.path);
-        } else {
-            const coinInfoFromPath: ?CoinInfo = getCoinInfoFromPath(payload.path);
-            if (coinInfoFromPath && coinInfo.shortcut !== coinInfoFromPath.shortcut) {
-                throw new Error('Parameters "path" and "coin" do not match');
-            }
-        }
+        this.info = getLabel('Sign #NETWORK message', coinInfo);
 
         if (coinInfo) {
             // check required firmware with coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
-
-        if (!payload.hasOwnProperty('message')){
-            throw new Error('Parameter "message" is missing');
-        } else if (typeof payload.message !== 'string') {
-            throw new Error('Parameter "message" has invalid type. String expected.');
-        }
-
+        // TODO: check if it's already a hex
         const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
 
         this.params = {
-            path: payload.path,
+            path,
             message: messageHex,
-            coinInfo
-        }
+            coinInfo,
+        };
     }
 
     async run(): Promise<MessageSignature> {
-        const response: MessageResponse<MessageSignature> = await this.device.getCommands().signMessage(
+        const response: MessageSignature = await this.device.getCommands().signMessage(
             this.params.path,
             this.params.message,
             this.params.coinInfo ? this.params.coinInfo.name : null
         );
-        return response.message;
+        return response;
     }
 }

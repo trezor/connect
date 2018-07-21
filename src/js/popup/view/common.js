@@ -1,9 +1,7 @@
 /* @flow */
 'use strict';
 
-import { ResponseMessage } from '../../message/builder';
 import type { CoreMessage } from '../../types';
-import { getOrigin } from '../../utils/networkUtils';
 import DataManager from '../../data/DataManager';
 import * as POPUP from '../../constants/popup';
 
@@ -37,6 +35,14 @@ export const init = (): any => {
         }
     }
     return iframe;
+};
+
+export const createTooltip = (text: string): HTMLDivElement => {
+    const tooltip = document.createElement('div');
+    tooltip.setAttribute('tooltip', text);
+    tooltip.setAttribute('tooltip-position', 'bottom');
+
+    return tooltip;
 };
 
 export const clearView = (): void => {

@@ -3,19 +3,20 @@
 
 export type ConnectSettings = {
     // debug: boolean | {[k: string]: boolean};
-    +configSrc: string; // constant
-    debug: boolean;
-    origin: ?string;
-    priority: number;
-    trustedHost: boolean;
-    connectSrc: string;
-    iframeSrc: string;
-    popup: boolean;
-    popupSrc: string;
-    webusbSrc: string;
-    transportReconnect: boolean;
-    webusb: boolean;
-    pendingTransportEvent: boolean;
+    +configSrc: string, // constant
+    debug: boolean,
+    origin: ?string,
+    priority: number,
+    trustedHost: boolean,
+    connectSrc: string,
+    iframeSrc: string,
+    popup: boolean,
+    popupSrc: string,
+    webusbSrc: string,
+    transportReconnect: boolean,
+    webusb: boolean,
+    pendingTransportEvent: boolean,
+    supportedBrowser?: boolean,
 }
 
 /*
@@ -42,6 +43,7 @@ const initialSettings: ConnectSettings = {
     transportReconnect: false,
     webusb: true,
     pendingTransportEvent: true,
+    supportedBrowser: !(/Trident|MSIE/.test(navigator.userAgent)),
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -83,6 +85,9 @@ export const parse = (input: ?Object): ConnectSettings => {
     if (typeof input.pendingTransportEvent === 'boolean') {
         settings.pendingTransportEvent = input.pendingTransportEvent;
     }
+
+    // $FlowIssue: settings.excludedDevices field is intentionally not defined in flowtype. it's used only in tests to exclude debug-link device.
+    settings.excludedDevices = input.excludedDevices;
 
     currentSettings = settings;
     return currentSettings;

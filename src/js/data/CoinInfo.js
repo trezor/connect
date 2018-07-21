@@ -1,21 +1,12 @@
 /* @flow */
 'use strict';
 
-import { HD_HARDENED, toHardened, fromHardened } from '../utils/pathUtils';
+import { toHardened, fromHardened } from '../utils/pathUtils';
 
 import type {
     Network as BitcoinJsNetwork,
 } from 'bitcoinjs-lib-zcash';
-import type { CoinInfo } from 'flowtype';
-
-type EthereumNetworkInfo = {
-    chainId: number;
-    slip44: number;
-    shortcut: string;
-    name: string;
-    rskip60: boolean;
-    url: string;
-}
+import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
 
 const coins: Array<CoinInfo> = [];
 
@@ -34,14 +25,15 @@ export const getSegwitNetwork = (coin: CoinInfo): ?BitcoinJsNetwork => {
             ...coin.network,
             bip32: {
                 ...coin.network.bip32,
-                public: coin.xPubMagicSegwit
-            }
-        }
+                public: coin.xPubMagicSegwit,
+            },
+        };
     }
     return null;
 };
 
-export const getAccountCoinInfo = (ci: CoinInfo, path: Array<number>): CoinInfo => {
+// fix coinInfo network values from path (segwit/legacy)
+export const fixCoinInfoNetwork = (ci: CoinInfo, path: Array<number>): CoinInfo => {
     const coinInfo: CoinInfo = cloneCoinInfo(ci);
     if (path[0] === toHardened(49)) {
         const segwitNetwork = getSegwitNetwork(coinInfo);
@@ -52,7 +44,7 @@ export const getAccountCoinInfo = (ci: CoinInfo, path: Array<number>): CoinInfo 
         coinInfo.segwit = false;
     }
     return coinInfo;
-}
+};
 
 const detectBtcVersion = (data): string => {
     if (data.subversion == null) {
@@ -101,11 +93,7 @@ export const getCoinInfoByCurrency = (currency: string): ?CoinInfo => {
 };
 
 export const getCoinInfoFromPath = (path: Array<number>): ?CoinInfo => {
-    const coinInfo: ?CoinInfo = getCoins().find((coin: CoinInfo) => toHardened(coin.slip44) === path[1]);
-    if (coinInfo && fromHardened(path[0]) === 44) {
-        coinInfo.network.bip32.public = parseInt(coinInfo.xPubMagic, 16);
-    }
-    return coinInfo;
+    return getCoins().find((coin: CoinInfo) => toHardened(coin.slip44) === path[1]);
 };
 
 export const getCoinName = (path: Array<number>): string => {
@@ -114,7 +102,7 @@ export const getCoinName = (path: Array<number>): string => {
         if (network.slip44 === slip44) {
             return network.name;
         }
-    };
+    }
     return 'Unknown coin';
 };
 
@@ -144,6 +132,7 @@ export const parseCoinsJson = (json: JSON): void => {
             // address_type in Network
             // address_type_p2sh in Network
             // bech32_prefix in Network
+            // bip115: not used
             bitcore: coin.bitcore,
             blockbook: coin.blockbook,
             blocktime: Math.round(coin.blocktime_seconds / 60),
@@ -182,11 +171,14 @@ export const parseCoinsJson = (json: JSON): void => {
             hasSegwit: coin.segwit,
             maxFee: Math.round(coin.maxfee_kb / 1000),
             minFee: Math.round(coin.minfee_kb / 1000),
+
+            // used in backend ?
+            blocks: Math.round(coin.blocktime_seconds / 60),
         });
     });
 };
 
-const ethereumNetworks: Array<EthereumNetworkInfo> = [];
+export const ethereumNetworks: Array<EthereumNetworkInfo> = [];
 
 export const parseEthereumNetworksJson = (json: JSON): void => {
     const networksObject: Object = json;
@@ -201,4 +193,9 @@ export const parseEthereumNetworksJson = (json: JSON): void => {
             url: network.url,
         });
     });
-}
+};
+
+export const getEthereumNetwork = (path: Array<number>): ?EthereumNetworkInfo => {
+    const slip44: number = fromHardened(path[1]);
+    return ethereumNetworks.find(n => n.slip44 === slip44);
+};

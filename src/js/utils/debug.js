@@ -81,7 +81,7 @@ export const enable = (enabled: boolean): void => {
 };
 
 export const getLog = (args: ?Array<string>): Array<LogMessage> => {
-    //if
+    // if
     let logs: Array<LogMessage> = [];
     for (const l of Object.keys(_logs)) {
         logs = logs.concat(_logs[l].messages);

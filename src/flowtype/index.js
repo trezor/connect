@@ -40,8 +40,10 @@ declare module 'flowtype' {
 
     declare export type CoinInfo = {
         addressPrefix: string,
-        // address_type in Network
-        // address_type_p2sh in Network
+        // address_type: in Network
+        // address_type_p2sh: in Network
+        // bech32_prefix: in Network
+        // bip115: not used
         bitcore: Array<string>,
         blockbook: Array<string>,
         blocktime: number,
@@ -55,27 +57,42 @@ declare module 'flowtype' {
         dustLimit: number,
         forceBip143: boolean,
         forkid: ?number,
+        // github: not used
         hashGenesisBlock: string,
+        // maintainer: not used
         maxAddressLength: number,
         maxFeeSatoshiKb: number,
         minAddressLength: number,
         minFeeSatoshiKb: number,
         segwit: boolean,
+        // signed_message_header: in Network
         slip44: number,
         support: CoinSupport,
-        xPubMagic: string,
-        xPubMagicSegwit: ?string,
-        xPubMagicSegwitNative: ?string,
+        // version_group_id: not used
+        // website: not used
+        // xprv_magic: in Network
+        xPubMagic: number,
+        xPubMagicSegwit: ?number,
+        xPubMagicSegwitNative: ?number,
 
+        // custom
         network: BitcoinJsNetwork,
         zcash: boolean,
         isBitcoin: boolean,
         hasSegwit: boolean,
         minFee: number,
         maxFee: number,
-        blocktime: number,
         // used in backend
         blocks?: number,
+    }
+
+    declare export type EthereumNetworkInfo = {
+        chainId: number;
+        slip44: number;
+        shortcut: string;
+        name: string;
+        rskip60: boolean;
+        url: string;
     }
 
     declare export type SimpleAccount = {

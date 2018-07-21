@@ -1,17 +1,12 @@
 /* @flow */
 'use strict';
 
-import BlockBook from '../backend';
 import { getIndexFromPath } from '../utils/pathUtils';
 
-
-import type {
-    AccountInfo,
-} from 'hd-wallet';
+import type { AccountInfo } from 'hd-wallet';
 import type { CoinInfo, SimpleAccount } from 'flowtype';
 
 export default class Account {
-
     id: number;
     path: Array<number>;
     xpub: string;
@@ -56,8 +51,8 @@ export default class Account {
 
     getAddressPath(address: string): Array<number> {
         if (!this.info) return this.path;
-        let addresses = this.info.usedAddresses.concat(this.info.unusedAddresses);
-        let index = addresses.indexOf(address);
+        const addresses = this.info.usedAddresses.concat(this.info.unusedAddresses);
+        const index = addresses.indexOf(address);
         return this.path.concat([0, index]);
     }
 
@@ -83,6 +78,6 @@ export default class Account {
             label: `Account #${this.id + 1}`,
             balance: this.info ? this.info.balance : -1,
             transactions: this.info ? this.info.transactions.length : this.transactions,
-        }
+        };
     }
- }
+}

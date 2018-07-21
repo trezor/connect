@@ -2,6 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
+import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/nemSignTx';
 
@@ -10,7 +11,6 @@ import type { Transaction as $NEMTransaction } from '../../types/nem';
 import type { CoreMessage } from '../../types';
 
 export default class NEMSignTransaction extends AbstractMethod {
-
     message: NEMSignTxMessage;
     run: () => Promise<any>;
 
@@ -19,21 +19,17 @@ export default class NEMSignTransaction extends AbstractMethod {
         this.requiredPermissions = ['read', 'write'];
         this.info = 'Sign NEM transaction';
 
-        const payload: any = message.payload;
-        // common fields validation
-        if (!payload.hasOwnProperty('path')) {
-            throw new Error('Parameter "path" is missing');
-        } else {
-            payload.path = validatePath(payload.path);
-        }
+        const payload: Object = message.payload;
+        // validate incoming parameters
+        validateParams(payload, [
+            { name: 'path', obligatory: true },
+            { name: 'transaction', obligatory: true },
+        ]);
 
-        if (!payload.hasOwnProperty('transaction')) {
-            throw new Error('Parameter "transaction" is missing');
-        }
-
-        // incoming data are in nem-sdk format
+        const path = validatePath(payload.path, 3);
+        // incoming data should be in nem-sdk format
         const transaction: $NEMTransaction = payload.transaction;
-        this.message = helper.createTx(transaction, payload.path);
+        this.message = helper.createTx(transaction, path);
     }
 
     async run(): Promise<NEMSignedTx> {

@@ -3,23 +3,18 @@
 import EventEmitter from 'events';
 import Account, { create as createAccount, remove as removeAccount } from '../../../account';
 import BlockBook from '../../../backend';
-import { cloneCoinInfo, getAccountCoinInfo } from '../../../data/CoinInfo';
-import {
-    isSegwitPath,
-    getPathFromIndex
-} from '../../../utils/pathUtils';
+import { cloneCoinInfo, fixCoinInfoNetwork } from '../../../data/CoinInfo';
+import { getPathFromIndex } from '../../../utils/pathUtils';
 import type { CoinInfo } from 'flowtype';
 import type { HDNodeResponse } from '../../../types/trezor';
-import type {
-    AccountInfo
-} from 'hd-wallet';
+import type { AccountInfo } from 'hd-wallet';
 
 export type DiscoveryOptions = {
-    +getHDNode: (path: Array<number>, coinInfo: ?CoinInfo) => Promise<HDNodeResponse>;
+    +getHDNode: (path: Array<number>, coinInfo: ?CoinInfo) => Promise<HDNodeResponse>,
     +backend: BlockBook,
     +coinInfo: CoinInfo,
-    +loadInfo?: boolean;
-    +limit?: number;
+    +loadInfo?: boolean,
+    +limit?: number,
 
     discoverLegacyAccounts?: boolean,
     legacyAddressOnSegwit?: boolean,
@@ -30,7 +25,6 @@ export type DiscoveryOptions = {
 }
 
 export default class Discovery extends EventEmitter {
-
     accounts: Array<Account> = [];
     interrupted: boolean = false;
     completed: boolean = false;
@@ -70,14 +64,13 @@ export default class Discovery extends EventEmitter {
             }
 
             const path: Array<number> = getPathFromIndex(coinInfo.segwit ? 49 : 44, coinInfo.slip44, index);
-            await this.discoverAccount(path, getAccountCoinInfo(coinInfo, path));
+            await this.discoverAccount(path, fixCoinInfoNetwork(coinInfo, path));
         }
     }
 
     stop() {
         this.interrupted = !this.completed;
-        if (this.disposer)
-            this.disposer();
+        if (this.disposer) { this.disposer(); }
 
         // if last account was not completely loaded
         // remove it from list
@@ -105,10 +98,9 @@ export default class Discovery extends EventEmitter {
         this.accounts.push(account);
         this.emit('update', this.accounts);
 
-        if (!this.loadInfo)
-            return account;
+        if (!this.loadInfo) { return account; }
 
-        const info = await this.getAccountInfo(account);
+        await this.getAccountInfo(account);
         if (this.interrupted) return null;
 
         this.emit('update', this.accounts);
@@ -129,7 +121,7 @@ export default class Discovery extends EventEmitter {
             (disposer) => {
                 this.disposer = disposer;
             }
-        )
+        );
         account.info = info;
 
         return info;

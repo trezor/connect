@@ -8,42 +8,38 @@ import { derivePubKeyHash } from '../../../utils/hdnode';
 import type {
     BuildTxResult,
     BuildTxInput,
-    BuildTxOutput
+    BuildTxOutput,
 } from 'hd-wallet';
 
 import type {
-    CoinInfo
+    CoinInfo,
 } from 'flowtype';
 
 import type {
     TransactionInput,
     TransactionOutput,
     RefTransaction,
-    SignedTx
+    SignedTx,
 } from '../../../types/trezor';
 
-export const verifyTx = (tx: ?BuildTxResult,
-    inputs: Array<TransactionInput>,
+export const verifyTx = (inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>,
     nodes: ?Array<bitcoin.HDNode>,
     signedTx: SignedTx,
     coinInfo: CoinInfo,
 ): void => {
-    const bitcoinTx: bitcoin.Transaction = bitcoin.Transaction.fromHex(signedTx.serialized.serialized_tx, coinInfo.zcash);
-    // $FlowIssue
-    // if (tx.transaction.inputs.length !== bitcoinTx.ins.length) {
-    //     throw new Error('Signed transaction has wrong length.');
-    // }
-    // // $FlowIssue
-    // if (tx.transaction.outputs.sorted.length !== bitcoinTx.outs.length) {
-    //     throw new Error('Signed transaction has wrong length.');
-    // }
+    const bitcoinTx: bitcoin.Transaction = bitcoin.Transaction.fromHex(signedTx.serialized, coinInfo.zcash);
 
+    if (inputs.length !== bitcoinTx.ins.length) {
+        throw new Error('Signed transaction has wrong length.');
+    }
 
+    if (outputs.length !== bitcoinTx.outs.length) {
+        throw new Error('Signed transaction has wrong length.');
+    }
 
     // outputs.sorted.map((output, i) => {
     outputs.map((output, i) => {
-
         const scriptB = bitcoinTx.outs[i].script;
 
         // if (output.opReturnData !== null) {
@@ -68,86 +64,40 @@ export const verifyTx = (tx: ?BuildTxResult,
         //     }
         // }
     });
-}
-
-function isScriptHash(address: string, network: bitcoin.Network): boolean {
-    const decoded = bitcoin.address.fromBase58Check(address);
-    if (decoded.version === network.pubKeyHash) {
-        return true;
-    }
-    if (decoded.version === network.scriptHash) {
-        return false;
-    }
-    throw new Error('Unknown address type.');
-}
-
-const transformResTx = (tx: bitcoin.Transaction): RefTransaction => {
-    const data = getJoinSplitData(tx);
-    const dataStr = data == null ? null : data.toString('hex');
-    return {
-        lock_time: tx.locktime,
-        version: tx.version,
-        hash: tx.getId(),
-        inputs: tx.ins.map((input: bitcoin.Input) => {
-            return {
-                prev_index: input.index,
-                sequence: input.sequence,
-                prev_hash: reverseBuffer(input.hash).toString('hex'),
-                script_sig: input.script.toString('hex'),
-            };
-        }),
-        bin_outputs: tx.outs.map((output: bitcoin.Output) => {
-            return {
-                amount: output.value,
-                script_pubkey: output.script.toString('hex'),
-            };
-        }),
-        extra_data: dataStr,
-    };
 };
 
-function getJoinSplitData(transaction) {
-    if (transaction.version < 2) {
-        return null;
-    }
-    const buffer = transaction.toBuffer();
-    const joinsplitByteLength = transaction.joinsplitByteLength();
-    const res = buffer.slice(buffer.length - joinsplitByteLength);
-    return res;
-}
+// function deriveOutputScript(
+//     pathOrAddress: string | Array<number>,
+//     nodes: Array<bitcoin.HDNode>,
+//     network: bitcoin.Network,
+//     segwit: boolean
+// ): Buffer {
+//     const scriptType = typeof pathOrAddress === 'string'
+//         ? (isScriptHash(pathOrAddress, network) ? 'PAYTOSCRIPTHASH' : 'PAYTOADDRESS')
+//         : (segwit ? 'PAYTOP2SHWITNESS' : 'PAYTOADDRESS');
 
-function deriveOutputScript(
-    pathOrAddress: string | Array<number>,
-    nodes: Array<bitcoin.HDNode>,
-    network: bitcoin.Network,
-    segwit: boolean
-): Buffer {
-    const scriptType = typeof pathOrAddress === 'string'
-        ? (isScriptHash(pathOrAddress, network) ? 'PAYTOSCRIPTHASH' : 'PAYTOADDRESS')
-        : (segwit ? 'PAYTOP2SHWITNESS' : 'PAYTOADDRESS');
+//     const pkh: Buffer = typeof pathOrAddress === 'string'
+//         ? bitcoin.address.fromBase58Check(pathOrAddress).hash
+//         : derivePubKeyHash(
+//             nodes,
+//             pathOrAddress[pathOrAddress.length - 2],
+//             pathOrAddress[pathOrAddress.length - 1]
+//         );
 
-    const pkh: Buffer = typeof pathOrAddress === 'string'
-        ? bitcoin.address.fromBase58Check(pathOrAddress).hash
-        : derivePubKeyHash(
-            nodes,
-            pathOrAddress[pathOrAddress.length - 2],
-            pathOrAddress[pathOrAddress.length - 1]
-        );
+//     if (scriptType === 'PAYTOADDRESS') {
+//         return bitcoin.script.pubKeyHash.output.encode(pkh);
+//     }
 
-    if (scriptType === 'PAYTOADDRESS') {
-        return bitcoin.script.pubKeyHash.output.encode(pkh);
-    }
+//     if (scriptType === 'PAYTOSCRIPTHASH') {
+//         return bitcoin.script.scriptHash.output.encode(pkh);
+//     }
 
-    if (scriptType === 'PAYTOSCRIPTHASH') {
-        return bitcoin.script.scriptHash.output.encode(pkh);
-    }
+//     if (scriptType === 'PAYTOP2SHWITNESS') {
+//         return deriveWitnessOutput(pkh);
+//     }
 
-    if (scriptType === 'PAYTOP2SHWITNESS') {
-        return deriveWitnessOutput(pkh);
-    }
-
-    throw new Error('Unknown script type ' + scriptType);
-}
+//     throw new Error('Unknown script type ' + scriptType);
+// }
 
 function deriveWitnessOutput(pkh): Buffer {
     // see https://github.com/bitcoin/bips/blob/master/bip-0049.mediawiki

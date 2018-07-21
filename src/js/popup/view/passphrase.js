@@ -14,13 +14,22 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
     const input1: HTMLInputElement = (container.getElementsByClassName('pass')[0]: any);
     const input2: HTMLInputElement = (container.getElementsByClassName('pass-check')[0]: any);
     const toggle: HTMLInputElement = (container.getElementsByClassName('show-passphrase')[0]: any);
-    const enter: HTMLButtonElement = ( container.getElementsByClassName('submit')[0]: any);
+    const enter: HTMLButtonElement = (container.getElementsByClassName('submit')[0]: any);
 
     let inputType: string = 'password';
 
     deviceNameSpan.innerText = payload.device.label;
 
     /* Functions */
+    const validation = () => {
+        if (input1.value !== input2.value) {
+            enter.disabled = true;
+            view.classList.add('not-valid');
+        } else {
+            enter.disabled = false;
+            view.classList.remove('not-valid');
+        }
+    };
     const toggleInputFontStyle = (input: HTMLInputElement) => {
         if (inputType === 'text') {
             input.classList.add('text');
@@ -38,15 +47,6 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
             input2.value = '';
             validation();
         }
-    }
-    const validation = () => {
-        if (input1.value !== input2.value) {
-            enter.disabled = true;
-            view.classList.add('not-valid');
-        } else {
-            enter.disabled = false;
-            view.classList.remove('not-valid');
-        }
     };
     const handleToggleClick = () => {
         inputType = inputType === 'text' ? 'password' : 'text';
@@ -57,7 +57,7 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
     const handleEnterClick = () => {
         input1.blur();
         input2.blur();
-
+        // eslint-disable-next-line no-use-before-define
         window.removeEventListener('keydown', handleWindowKeydown);
 
         showView('loader');

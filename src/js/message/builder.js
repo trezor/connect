@@ -10,24 +10,24 @@ export const UiMessage: UiMessageFactory = (type, payload) => {
         event: UI_EVENT,
         type,
         payload,
-    }
-}
+    };
+};
 
 export const DeviceMessage = (type: string, payload: any): CoreMessage => {
     return {
         event: DEVICE_EVENT,
         type,
         payload,
-    }
-}
+    };
+};
 
 export const TransportMessage = (type: string, payload: any): CoreMessage => {
     return {
         event: TRANSPORT_EVENT,
         type,
         payload,
-    }
-}
+    };
+};
 
 export const ResponseMessage = (id: number, success: boolean, payload: any = null): CoreMessage => {
     return {
@@ -36,5 +36,5 @@ export const ResponseMessage = (id: number, success: boolean, payload: any = nul
         id,
         success,
         payload,
-    }
-}
+    };
+};

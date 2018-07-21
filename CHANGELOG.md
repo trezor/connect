@@ -1,3 +1,35 @@
+# 5.0.24
+__fixed__
+- removed popup delay if lazy loading
+- validation of device state if method is using emptyPassphrase
+- retyped Device, distinguished by "type" field
+- eslint fixes
+
+# 5.0.23
+__fixed__
+- npm package dependencies
+- Unsupported browser (IE)
+
+# 5.0.21
+__added__
+- Added `TrezorConnect.pushTransaction` method
+- Added bundle parameters in `TrezorConnect.cipherKeyValue` method
+- Added bundle parameters in `TrezorConnect.getPublicKey` method
+- Added bundle parameters in `TrezorConnect.getAddress` method
+- Added bundle parameters in `TrezorConnect.ethereumGetAddress` method
+- Added bundle parameters in `TrezorConnect.nemGetAddress` method
+- Added bundle parameters in `TrezorConnect.stellarGetAddress` method
+- Added type conversion from stellar-sdk to protobuf in `TrezorConnect.stellarSignTransaction` method
+- Popup warning with outdated firmware and outdated bridge
+- Tests with emulator
+- Added '@babel/runtime' to package dependency
+__fixed__
+- Fixed device authentication and popup open delay
+- Minor fixes in popup view
+- Ethereum methods accepts values with '0x' prefix
+- Ethereum methods returns checksummed addresses (with different checksum typ for RSK network)
+- Ethereum methods returns values prefixed with '0x'
+
 # 5.0.20
 __added__
 - Added firmware check against CoinInfo.support values

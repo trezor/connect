@@ -1,6 +1,6 @@
 {
   "name": "trezor-connect",
-  "version": "5.0.20",
+  "version": "5.0.24",
   "author": "TREZOR <info@trezor.io>",
   "homepage": "https://github.com/trezor/connect",
   "description": "High-level javascript interface for TREZOR hardware wallet.",
@@ -57,7 +57,7 @@
     "file-loader": "^1.1.10",
     "flow-bin": "0.74.0",
     "fs-extra": "^6.0.1",
-    "hd-wallet": "7.14.1",
+    "hd-wallet": "7.14.3",
     "html-webpack-plugin": "^3.2.0",
     "jasmine-ajax": "^3.4.0",
     "jasmine-core": "^3.1.0",
@@ -70,6 +70,7 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^3.0.0",
+    "keccak": "^1.4.0",
     "less": "^3.0.4",
     "less-loader": "^4.1.0",
     "less-plugin-autoprefix": "^1.5.1",
@@ -79,7 +80,7 @@
     "pre-build-webpack": "^0.1.0",
     "sharedworker-loader": "^2.1.1",
     "style-loader": "^0.21.0",
-    "trezor-link": "1.5.2",
+    "trezor-link": "1.5.5",
     "uglify-es": "3.3.9",
     "uglifyjs-webpack-plugin": "1.2.5",
     "version-bump-prompt": "^4.1.0",
@@ -92,5 +93,9 @@
   "dependencies": {
     "events": "^1.1.1",
     "whatwg-fetch": "^2.0.4"
+  },
+  "npmDependencies": {
+    "babel-runtime": "^6.26.0",
+    "babel-polyfill": "^6.26.0"
   }
 }

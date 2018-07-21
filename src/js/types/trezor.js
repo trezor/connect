@@ -2,6 +2,10 @@
 
 // This file has all various types that go into TREZOR or out of it.
 
+export type CipheredKeyValue = {
+    value: string,
+}
+
 export type Success = {};
 
 export type CoinType = {
@@ -30,7 +34,7 @@ export type Features = {
     imported: boolean,
     pin_cached: boolean,
     passphrase_cached: boolean,
-    state?: string;
+    state?: string,
     needs_backup?: boolean,
     firmware_present?: boolean,
 };
@@ -102,9 +106,9 @@ export type MessageSignature = {
 }
 
 type MultisigRedeemScriptType = {
-    pubkeys: Array<{ node: string, address_n: Array<number>}>;
-    signatures: Array<string>;
-    m?: number;
+    pubkeys: Array<{ node: string, address_n: Array<number>}>,
+    signatures: Array<string>,
+    m?: number,
 }
 
 // type TransactionInputBase = {
@@ -185,10 +189,9 @@ export type TxRequest = {
 };
 
 export type SignedTx = {
-    serialized: {
-        signatures: Array<string>,
-        serialized_tx: string,
-    },
+    signatures: Array<string>,
+    serialized: string,
+    txid?: string,
 };
 
 export type EthereumTxRequest = {
@@ -199,12 +202,13 @@ export type EthereumTxRequest = {
 };
 
 export type EthereumAddress = {
-    address: string;
-    path: Array<number>;
+    address: string,
+    path: Array<number>,
 }
 
 export type EthereumSignedTx = {
-    v: number,
+    // v: number,
+    v: string,
     r: string,
     s: string,
 };
@@ -258,121 +262,61 @@ export type SignTxInfoToTrezor = {
     extra_data_len?: number,
 };
 
-
-
 // NEM types
 export type NEMAddress = {
-    address: string;
-    path: Array<number>;
+    address: string,
+    path: Array<number>,
 }
 
 export type NEMSignedTx = {
-    data: string;
-    signature: string;
-}
-
-export type NEMSignTxMessage = {
-    transaction?: NEMTransactionCommon;
-    cosigning?: boolean;
-    multisig?: NEMTransactionCommon;
-    transfer?: NEMTransfer;
-    provision_namespace?: NEMProvisionNamespace;
-    mosaic_creation?: NEMMosaicCreation;
-    supply_change?: NEMMosaicSupplyChange;
-    aggregate_modification?: NEMAggregateModification;
-    importance_transfer?: NEMImportanceTransfer;
+    data: string,
+    signature: string,
 }
 
 export type NEMTransactionCommon = {
-    address_n: ?Array<number>;
-    network: ?number;
-    timestamp: ?number;
-    fee: ?number;
-    deadline: ?number;
-    signer: ?string;
-}
-
-export type NEMTransfer = {
-    mosaics: ?Array<NEMMosaic>;
-    public_key: ?string;
-    recipient: ?string;
-    amount: ?number;
-    payload: ?string;
+    address_n: ?Array<number>,
+    network: ?number,
+    timestamp: ?number,
+    fee: ?number,
+    deadline: ?number,
+    signer: ?string,
 }
 
 export type NEMMosaic = {
-    namespace: ?string;
-    mosaic: ?string;
-    quantity: ?number;
+    namespace: ?string,
+    mosaic: ?string,
+    quantity: ?number,
+}
+
+export type NEMTransfer = {
+    mosaics: ?Array<NEMMosaic>,
+    public_key: ?string,
+    recipient: ?string,
+    amount: ?number,
+    payload: ?string,
 }
 
 export type NEMProvisionNamespace = {
-    namespace: ?string;
-    sink: ?string;
-    fee: ?number;
-    parent: ?string;
-}
-
-export type NEMMosaicCreation = {
-    definition: ?NEMMosaicDefinition;
-    sink: ?string;
-    fee: ?number;
-}
-
-export type NEMMosaicDefinition = {
-    name?: string;
-    ticker?: string;
-    namespace?: string;
-    mosaic?: string;
-    divisibility?: number;
-    fee?: number;
-    levy?: NEMMosaicLevyType;
-    levy_address?: string;
-    levy_namespace?: string;
-    levy_mosaic?: string;
-    supply?: number;
-    mutable_supply?: boolean;
-    transferable?: boolean;
-    description?: string;
-    networks?: number;
-}
-
-export type NEMMosaicSupplyChange = {
-    namespace?: string;
-    type?: NEMSupplyChangeType;
-    mosaic?: string;
-    delta?: number;
-}
-
-export type NEMAggregateModification = {
-    modifications: ?Array<NEMCosignatoryModification>;
-    relative_change: ?number; // TODO: "sint32"
-}
-
-export type NEMCosignatoryModification = {
-    type?: NEMModificationType;
-    public_key?: string;
-}
-
-export type NEMImportanceTransfer = {
-    mode?: NEMImportanceTransferMode;
-    public_key?: string;
+    namespace: ?string,
+    sink: ?string,
+    fee: ?number,
+    parent: ?string,
 }
 
 export type NEMMosaicLevyType = {
     id: 1,
-    name: 'MosaicLevy_Absolute'
+    name: 'MosaicLevy_Absolute',
 } | {
     id: 2,
-    name: 'MosaicLevy_Percentile'
+    name: 'MosaicLevy_Percentile',
 }
 
 export type NEMSupplyChangeType = {
     id: 1,
-    name: 'SupplyChange_Increase'
+    name: 'SupplyChange_Increase',
 } | {
     id: 2,
-    name: 'SupplyChange_Decrease'
+    name: 'SupplyChange_Decrease',
 }
 
 export type NEMModificationType = {
@@ -385,43 +329,217 @@ export type NEMModificationType = {
 
 export type NEMImportanceTransferMode = {
     id: 1,
-    name: 'ImportanceTransfer_Activate'
+    name: 'ImportanceTransfer_Activate',
 } | {
     id: 2,
-    name: 'ImportanceTransfer_Deactivate'
+    name: 'ImportanceTransfer_Deactivate',
+}
+
+export type NEMMosaicDefinition = {
+    name?: string,
+    ticker?: string,
+    namespace?: string,
+    mosaic?: string,
+    divisibility?: number,
+    fee?: number,
+    levy?: NEMMosaicLevyType,
+    levy_address?: string,
+    levy_namespace?: string,
+    levy_mosaic?: string,
+    supply?: number,
+    mutable_supply?: boolean,
+    transferable?: boolean,
+    description?: string,
+    networks?: number,
+}
+
+export type NEMMosaicCreation = {
+    definition: ?NEMMosaicDefinition,
+    sink: ?string,
+    fee: ?number,
+}
+
+export type NEMMosaicSupplyChange = {
+    namespace?: string,
+    type?: NEMSupplyChangeType,
+    mosaic?: string,
+    delta?: number,
+}
+
+export type NEMCosignatoryModification = {
+    type?: NEMModificationType,
+    public_key?: string,
+}
+
+export type NEMAggregateModification = {
+    modifications: ?Array<NEMCosignatoryModification>,
+    relative_change: ?number, // TODO: "sint32"
+}
+
+export type NEMImportanceTransfer = {
+    mode?: NEMImportanceTransferMode,
+    public_key?: string,
+}
+
+export type NEMSignTxMessage = {
+    transaction?: NEMTransactionCommon,
+    cosigning?: boolean,
+    multisig?: NEMTransactionCommon,
+    transfer?: NEMTransfer,
+    provision_namespace?: NEMProvisionNamespace,
+    mosaic_creation?: NEMMosaicCreation,
+    supply_change?: NEMMosaicSupplyChange,
+    aggregate_modification?: NEMAggregateModification,
+    importance_transfer?: NEMImportanceTransfer,
 }
 
 // Stellar types
+
+// this type is returned from connect
 export type StellarAddress = {
-    address: string;
-    path: Array<number>;
+    path: Array<number>,
+    address: string,
+    publicKey: string,
 }
-
-export type StellarPublicKey = {
-    public_key: string;
-    path: Array<number>;
-}
-
+// this type is returned from device
 export type StellarSignedTx = {
-    public_key: string;
-    signature: string;
+    public_key: string,
+    signature: string,
+}
+
+export type StellarPaymentOp = {
+    type: "StellarTxOpRequest",
+    message: {},
+}
+
+// this type is returned from device
+export type StellarAddressMessage = {
+    path: Array<number>,
+    address: string,
+}
+// this type is returned from device
+export type StellarPublicKeyMessage = {
+    public_key: string,
+    path: Array<number>,
+}
+
+// those types are sent TO device
+export type StellarSignTxMessage = {
+    address_n: Array<number>,
+    protocol_version: number,
+    source_account: string,
+    fee: ?number,
+    sequence_number: ?number,
+    network_passphrase: string,
+    timebounds_start?: number,
+    timebounds_end?: number,
+    memo_type?: number,
+    memo_text?: ?string,
+    memo_id?: ?number,
+    memo_hash?: ?string,
+    num_operations: number,
+}
+
+type StellarAsset = {
+    type: string,
+    code?: string,
+    issuer?: string,
+}
+
+export type StellarOperationMessage = {
+    type: 'StellarCreateAccountOp',
+    new_account: ?string,
+    source_account: string,
+    starting_balance: ?number,
+} | {
+    type: 'StellarPaymentOp',
+    source_account: ?string,
+    destination_account: ?string,
+    asset: ?StellarAsset,
+    amount: ?number,
+} | {
+    type: 'StellarPathPaymentOp',
+    source_account: string,
+    send_asset: ?StellarAsset,
+    send_max: ?number,
+    destination_account: ?string,
+    destination_asset: ?StellarAsset,
+    destination_amount: ?number,
+    paths: ?Array<StellarAsset>,
+} | {
+    type: 'StellarManageOfferOp',
+    source_account: string,
+    offer_id: number,
+    amount: number,
+    buying_asset: StellarAsset,
+    selling_asset: StellarAsset,
+    price_n: number,
+    price_d: number,
+} | {
+    type: 'StellarCreatePassiveOfferOp',
+    source_account: string,
+    offer_id: number,
+    amount: number,
+    buying_asset: StellarAsset,
+    selling_asset: StellarAsset,
+    price_n: number,
+    price_d: number,
+} | {
+    type: 'StellarSetOptionsOp',
+    source_account: string,
+    signer_type: ?number,
+    signer_key: ?string,
+    signer_weight: ?number,
+    clear_flags: ?number,
+    set_flags: ?number,
+    master_weight: ?number,
+    low_threshold: ?number,
+    medium_threshold: ?number,
+    high_threshold: ?number,
+    home_domain: ?string,
+    inflation_destination_account: ?string,
+} | {
+    type: 'StellarChangeTrustOp',
+    source_account: string,
+    asset: ?StellarAsset,
+    limit: ?number,
+} | {
+    type: 'StellarAllowTrustOp',
+    source_account: string,
+    trusted_account: string,
+    asset_type: ?number,
+    asset_code: ?string,
+    is_authorized: ?number,
+} | {
+    type: 'StellarAccountMergeOp',
+    source_account: string,
+    destination_account: string,
+} | {
+    type: 'StellarManageDataOp',
+    source_account: string,
+    key: string,
+    value: string,
+} | {
+    type: 'StellarBumpSequenceOp',
+    source_account: string,
+    bump_to: number,
 }
 
 // GetAccountInfo response
 export type AccountInfo = {
-    id: number;
-    path: Array<number>;
-    serializedPath: string;
-    xpub: string;
-    address: string;
-    addressId: number;
-    addressPath: Array<number>;
-    balance: number;
-    confirmed: number;
+    id: number,
+    path: Array<number>,
+    serializedPath: string,
+    xpub: string,
+    address: string,
+    addressId: number,
+    addressPath: Array<number>,
+    balance: number,
+    confirmed: number,
 }
 
 // GetAddress response
 export type Address = {
-    address: string;
-    path: Array<number>;
+    address: string,
+    path: Array<number>,
 }

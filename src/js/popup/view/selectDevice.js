@@ -24,21 +24,21 @@ const initWebUsbButton = (webusb: boolean): void => {
             window.resizeTo(originalWidth, originalHeight);
             window.moveTo(x, y);
             window.focus();
-        }
+        };
 
         window.resizeTo(100, 100);
         window.moveTo(screen.width, screen.height);
 
         const usb = iframe.clientInformation.usb;
         try {
-            await usb.requestDevice( { filters: DataManager.getConfig().webusb } );
+            await usb.requestDevice({ filters: DataManager.getConfig().webusb });
             showView('loader');
             restorePosition(currentWidth, currentHeight);
         } catch (error) {
             restorePosition(currentWidth, currentHeight);
         }
-    }
-}
+    };
+};
 
 export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): void => {
     if (!payload) return;
@@ -67,9 +67,9 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
 
     // Show readable devices first
     payload.devices.sort((d1, d2) => {
-        if (d1.unreadable && !d2.unreadable) {
+        if (d1.type === 'unreadable' && !d2.type !== 'unreadable') {
             return 1;
-        } else if (!d1.unreadable && d2.unreadable) {
+        } else if (d1.type !== 'unreadable' && d2.type === 'unreadable') {
             return -1;
         }
         return 0;
@@ -78,11 +78,11 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
     payload.devices.forEach(device => {
         const deviceButton: HTMLButtonElement = document.createElement('button');
         deviceButton.className = 'list';
-        if (!device.unreadable) {
+        if (device.type !== 'unreadable') {
             deviceButton.addEventListener('click', () => {
                 postMessage(new UiMessage(UI.RECEIVE_DEVICE, {
                     remember: (rememberCheckbox && rememberCheckbox.checked),
-                    device
+                    device,
                 }));
                 showView('loader');
             });
@@ -107,7 +107,7 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
         wrapper.appendChild(deviceName);
         deviceButton.appendChild(wrapper);
 
-        if (device.unreadable || device.unacquired) {
+        if (device.type !== 'available') {
             deviceIcon.classList.add('unknown');
 
             deviceButton.classList.add('device-explain');
@@ -118,13 +118,13 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
             const htmlUnreadable: string = 'Please install <a href="https://wallet.trezor.io" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">Bridge</a> to use Trezor device.';
             const htmlUnacquired: string = 'Click to activate. This device is used by another application.';
 
-            if (device.unreadable) {
+            if (device.type === 'unreadable') {
                 deviceButton.disabled = true;
                 deviceName.textContent = 'Unrecognized device';
                 explanation.innerHTML = htmlUnreadable;
             }
 
-            if (device.unacquired) {
+            if (device.type === 'unacquired') {
                 deviceName.textContent = 'Inactive device';
                 deviceButton.classList.add('unacquired');
                 explanation.classList.add('unacquired');

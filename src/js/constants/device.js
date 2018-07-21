@@ -5,7 +5,6 @@
 // replace ": '(.*)' = '(.*)';" to ": '$1' = '$1';"
 // replace "export const " to ""
 
-
 // device list events
 export const CONNECT: 'device__connect' = 'device__connect';
 export const CONNECT_UNACQUIRED: 'device__connect_unacquired' = 'device__connect_unacquired';
@@ -29,8 +28,6 @@ export const PASSPHRASE_ON_DEVICE: 'passphrase_on_device' = 'passphrase_on_devic
 export const WORD: 'word' = 'word';
 
 // custom
-export const AUTHENTICATED: 'device__authenticated' = 'device__authenticated';
-
 export const WAIT_FOR_SELECTION: 'device__wait_for_selection' = 'device__wait_for_selection';
 
 export const UNREADABLE: 'unreadable-device' = 'unreadable-device'; // this string has different form than other constants because it is used as unreadable device path

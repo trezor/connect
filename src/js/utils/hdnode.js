@@ -5,8 +5,6 @@ import * as trezor from '../types/trezor';
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as ecurve from 'ecurve';
 
-import type { MessageResponse } from '../device/DeviceCommands';
-
 const curve = ecurve.getCurveByName('secp256k1');
 
 export function derivePubKeyHash(
@@ -23,7 +21,6 @@ export function pubNode2bjsNode(
     node: trezor.HDPubNode,
     network: bitcoin.Network
 ): bitcoin.HDNode {
-
     const chainCode = new Buffer(node.chain_code, 'hex');
     const publicKey = new Buffer(node.public_key, 'hex');
 
@@ -94,24 +91,22 @@ export function checkDerivation(
     }
 }
 
-
 export const xpubDerive = (resXpub: trezor.PublicKey, childXPub: trezor.PublicKey, suffix: number): trezor.PublicKey => {
-
     const resNode: bitcoin.HDNode = pubKey2bjsNode(resXpub, bitcoin.networks.bitcoin);
     const childNode: bitcoin.HDNode = pubKey2bjsNode(childXPub, bitcoin.networks.bitcoin);
 
     checkDerivation(resNode, childNode, suffix);
 
     return resXpub;
-}
+};
 
 export const xpubToHDNodeType = (xpub: string, network: bitcoin.Network): trezor.HDPubNode => {
-    let hd = bitcoin.HDNode.fromBase58(xpub, network);
+    const hd = bitcoin.HDNode.fromBase58(xpub, network);
     return {
         depth: hd.depth,
         child_num: hd.index,
         fingerprint: hd.parentFingerprint,
         public_key: hd.keyPair.getPublicKeyBuffer().toString('hex'),
-        chain_code: hd.chainCode.toString('hex')
+        chain_code: hd.chainCode.toString('hex'),
     };
-}
+};

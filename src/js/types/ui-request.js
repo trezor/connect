@@ -11,9 +11,9 @@ import type { UiResponseFactory } from './ui-response';
 import type { ConnectSettings } from '../data/ConnectSettings';
 
 export type TransportInfo = {
-    type: string;
-    version: string;
-    outdated: boolean;
+    type: string,
+    version: string,
+    outdated: boolean,
 }
 
 /*
@@ -29,7 +29,7 @@ export type MessageWithoutPayload = {
         typeof UI.CHANGE_ACCOUNT |
         typeof UI.INSUFFICIENT_FUNDS |
         typeof UI.CLOSE_UI_WINDOW |
-        typeof UI.LOGIN_CHALLENGE_REQUEST
+        typeof UI.LOGIN_CHALLENGE_REQUEST,
 }
 
 /*
@@ -37,15 +37,15 @@ export type MessageWithoutPayload = {
 */
 
 export type DeviceMessage = {
-    +type:
-        typeof UI.REQUEST_BUTTON |
+    +type: typeof UI.REQUEST_BUTTON |
         typeof UI.REQUEST_PIN |
         typeof UI.INVALID_PIN |
         typeof UI.REQUEST_PASSPHRASE_ON_DEVICE |
-        typeof UI.REQUEST_PASSPHRASE,
+        typeof UI.REQUEST_PASSPHRASE |
+        typeof UI.INVALID_PASSPHRASE,
     payload: {
-        device: Device
-    }
+        device: Device,
+    },
 }
 
 /*
@@ -55,8 +55,8 @@ export type DeviceMessage = {
 export type IFrameHandshake = {
     +type: typeof UI.IFRAME_HANDSHAKE,
     payload: {
-        browser: BrowserState;
-    }
+        browser: BrowserState,
+    },
 }
 
 export type PopupHandshake = {
@@ -65,15 +65,15 @@ export type PopupHandshake = {
         settings: ConnectSettings,
         method: ?string,
         transport: ?TransportInfo,
-    }
+    },
 }
 
 export type RequestPermission = {
     +type: typeof UI.REQUEST_PERMISSION,
     payload: {
         permissions: Array<string>,
-        device: Device
-    }
+        device: Device,
+    },
 }
 
 export type RequestConfirmation = {
@@ -81,54 +81,61 @@ export type RequestConfirmation = {
     payload: {
         view: string,
         label: string,
-    }
+    },
 }
 
 export type SelectDevice = {
     +type: typeof UI.SELECT_DEVICE,
     payload: {
-        devices: Array<Device>;
-        webusb: boolean;
-    }
+        devices: Array<Device>,
+        webusb: boolean,
+    },
 }
 
 export type BrowserMessage = {
     +type: typeof UI.BROWSER_NOT_SUPPORTED | typeof UI.BROWSER_OUTDATED,
-    payload: BrowserState
+    payload: BrowserState,
 }
 
 export type UnexpectedDeviceMode = {
     +type: typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE | typeof UI.FIRMWARE_OUTDATED,
-    payload: Device
+    payload: Device,
 }
 
 export type SelectAccount = {
     +type: typeof UI.SELECT_ACCOUNT,
     payload: {
-        accounts: Array<SimpleAccount>;
-        coinInfo: CoinInfo;
-        complete?: boolean;
-        start?: boolean;
-        checkBalance?: boolean;
-    }
+        accounts: Array<SimpleAccount>,
+        coinInfo: CoinInfo,
+        complete?: boolean,
+        start?: boolean,
+        checkBalance?: boolean,
+    },
 }
 
 export type SelectFee = {
     +type: typeof UI.SELECT_FEE,
     payload: {
-        coinInfo: CoinInfo;
-        feeLevels: Array<SelectFeeLevel>;
-    }
+        coinInfo: CoinInfo,
+        feeLevels: Array<SelectFeeLevel>,
+    },
 }
 
 export type UpdateCustomFee = {
     +type: typeof UI.UPDATE_CUSTOM_FEE,
     payload: {
-        coinInfo: CoinInfo;
-        level: SelectFeeLevel;
-    }
+        coinInfo: CoinInfo,
+        level: SelectFeeLevel,
+    },
 }
 
+export type BundleProgress = {
+    +type: typeof UI.BUNDLE_PROGRESS,
+    payload: {
+        progress: number,
+        response: Object,
+    },
+}
 
 export type UiRequest =
     MessageWithoutPayload
@@ -143,7 +150,9 @@ export type UiRequest =
     | SelectAccount
     | SelectFee
     | UpdateCustomFee
+    | BundleProgress
 
+/* eslint-disable no-redeclare */
 declare function MessageFactory(type: $PropertyType<MessageWithoutPayload, 'type'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<DeviceMessage, 'type'>, payload: $PropertyType<DeviceMessage, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<IFrameHandshake, 'type'>, payload: $PropertyType<IFrameHandshake, 'payload'>): CoreMessage;
@@ -156,5 +165,7 @@ declare function MessageFactory(type: $PropertyType<UnexpectedDeviceMode, 'type'
 declare function MessageFactory(type: $PropertyType<SelectAccount, 'type'>, payload: $PropertyType<SelectAccount, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<SelectFee, 'type'>, payload: $PropertyType<SelectFee, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<UpdateCustomFee, 'type'>, payload: $PropertyType<UpdateCustomFee, 'payload'>): CoreMessage;
+declare function MessageFactory(type: $PropertyType<BundleProgress, 'type'>, payload: $PropertyType<BundleProgress, 'payload'>): CoreMessage;
+/* eslint-enable no-redeclare */
 
 export type UiMessageFactory = UiResponseFactory & typeof MessageFactory;

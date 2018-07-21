@@ -2,11 +2,9 @@
 'use strict';
 
 import { CORE_EVENT, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT } from '../constants';
-import { LOG } from '../constants/popup';
 import * as POPUP from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
 import * as UI from '../constants/ui';
-import * as TRANSPORT from '../constants/transport';
 
 import { parse as parseSettings } from '../data/ConnectSettings';
 import DataManager from '../data/DataManager';
@@ -14,11 +12,11 @@ import type { ConnectSettings } from '../data/ConnectSettings';
 
 import { Core, init as initCore, initTransport } from '../core/Core';
 import { parseMessage } from '../message';
-import { UiMessage, ResponseMessage, TransportMessage } from '../message/builder';
+import { UiMessage, ResponseMessage } from '../message/builder';
 
 import type { CoreMessage, PostMessageEvent } from '../types';
 
-import Log, { init as initLog, getLog } from '../utils/debug';
+import Log, { init as initLog } from '../utils/debug';
 import { checkBrowser, state as browserState } from '../utils/browser';
 import { getOrigin } from '../utils/networkUtils';
 import { load as loadStorage, PERMISSIONS_KEY } from './storage';
@@ -43,13 +41,16 @@ const handleMessage = (event: PostMessageEvent): void => {
     // respond to call
     // TODO: instead of error _core should be initialized automatically
     if (!_core && data.type === IFRAME.CALL && typeof data.id === 'number') {
-        postMessage(new ResponseMessage(data.id, false, { error: "Core not initialized yet!"} ) );
+        // eslint-disable-next-line no-use-before-define
+        postMessage(new ResponseMessage(data.id, false, { error: 'Core not initialized yet!' }));
+        // eslint-disable-next-line no-use-before-define
         postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
         return;
     }
 
     // catch first message from connect.js (parent window)
     if (!DataManager.getSettings('origin') && data.type === UI.IFRAME_HANDSHAKE) {
+        // eslint-disable-next-line no-use-before-define
         init(data.payload, event.origin);
         return;
     }
@@ -67,11 +68,14 @@ const handleMessage = (event: PostMessageEvent): void => {
             _popupMessagePort = event.ports[0];
             const method = _core.getCurrentMethod()[0];
 
+            // eslint-disable-next-line no-use-before-define
             postMessage(new UiMessage(POPUP.HANDSHAKE, {
                 settings: DataManager.getSettings(),
                 transport: _core.getTransportInfo(),
-                method: method ? method.info : null
-            }))
+                method: method ? method.info : null,
+            }));
+        } else {
+            console.warn("POPUP.OPENED: popupMessagePort not found");
         }
     }
 
@@ -93,62 +97,59 @@ const handleMessage = (event: PostMessageEvent): void => {
     event.preventDefault();
     event.stopImmediatePropagation();
 
-    switch (message.type) {
-        // utility: print log from popup window
-
-        case 'getlog' :
-            postMessage(new ResponseMessage(message.id || 0, true, getLog()));
-            break;
-        case LOG :
-            // $FlowIssue
-            if (typeof message.args === 'string') {
-                const args = JSON.parse(message.args);
-                // console[message.level].apply(this, args);
-                // _log.debug.apply(this, args);
-                _logFromPopup.debug(...args);
-            }
-            break;
-    }
-
     // pass data to Core
     _core.handleMessage(message, isTrustedDomain);
 };
 
 // communication with parent window
 const postMessage = (message: CoreMessage): void => {
+    _log.debug('postMessage', message);
     if (!window.top) {
         _log.error('Cannot reach window.top');
         return;
     }
 
-    if (message.type === UI.REQUEST_UI_WINDOW && !DataManager.getSettings('popup')) {
-        // popup handshake is resolved automatically
+    const usingPopup: boolean = DataManager.getSettings('popup');
+    const trustedHost: boolean = DataManager.getSettings('trustedHost');
+    const handshake: boolean = message.type === UI.IFRAME_HANDSHAKE;
+
+    // popup handshake is resolved automatically
+    if (!usingPopup && message.type === UI.REQUEST_UI_WINDOW) {
         _core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, true);
         return;
     }
-    // check if permissions to read is granted
-    const trustedHost: boolean = DataManager.getSettings('trustedHost');
-    const handshake: boolean = message.type === UI.IFRAME_HANDSHAKE;
-    if (!trustedHost && !handshake && (message.event === TRANSPORT_EVENT)) {
+
+    if (!trustedHost && !handshake && message.event === TRANSPORT_EVENT) {
         return;
     }
+    // check if permissions to read from device is granted
+    // eslint-disable-next-line no-use-before-define
     if (!trustedHost && message.event === DEVICE_EVENT && !filterDeviceEvent(message)) {
         return;
     }
-    _log.debug('postMessage', message);
-    // window.top.postMessage(message, DataManager.getSettings('origin'));
 
-    const parentMessages = [ UI.IFRAME_HANDSHAKE, UI.CLOSE_UI_WINDOW, POPUP.CANCEL_POPUP_REQUEST, UI.CUSTOM_MESSAGE_REQUEST, UI.LOGIN_CHALLENGE_REQUEST ];
-    if (message.event === UI_EVENT && parentMessages.indexOf(message.type) < 0) {
+    if (usingPopup && targetUiEvent(message)) {
         if (_popupMessagePort) {
             _popupMessagePort.postMessage(message);
         } else {
-            // TODO: communication error
+            console.warn("postMessage: popupMessagePort not found");
         }
     } else {
         window.top.postMessage(message, DataManager.getSettings('origin'));
     }
 };
+
+const targetUiEvent = (message: CoreMessage): boolean => {
+    const whitelistedMessages = [
+        UI.IFRAME_HANDSHAKE,
+        UI.CLOSE_UI_WINDOW,
+        POPUP.CANCEL_POPUP_REQUEST,
+        UI.CUSTOM_MESSAGE_REQUEST,
+        UI.LOGIN_CHALLENGE_REQUEST,
+        UI.BUNDLE_PROGRESS,
+    ];
+    return (message.event === UI_EVENT && whitelistedMessages.indexOf(message.type) < 0);
+}
 
 const filterDeviceEvent = (message: CoreMessage): boolean => {
     if (message.payload && message.payload.features) {
@@ -156,13 +157,13 @@ const filterDeviceEvent = (message: CoreMessage): boolean => {
         const features: any = message.payload.features;
         if (savedPermissions && Array.isArray(savedPermissions)) {
             const devicePermissions: Array<Object> = savedPermissions.filter(p => {
-                return (p.origin === DataManager.getSettings('origin') && p.type === 'read' && p.device === features.device_id)
+                return (p.origin === DataManager.getSettings('origin') && p.type === 'read' && p.device === features.device_id);
             });
             return (devicePermissions.length > 0);
         }
     }
     return false;
-}
+};
 
 const init = async (settings: any, origin: string) => {
     const parsedSettings: ConnectSettings = parseSettings(settings);
@@ -183,7 +184,7 @@ const init = async (settings: any, origin: string) => {
         }
 
         postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {
-            browser: browserState
+            browser: browserState,
         }));
     } catch (error) {
         postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {
@@ -191,7 +192,7 @@ const init = async (settings: any, origin: string) => {
             error: error.message,
         }));
     }
-}
+};
 
 window.addEventListener('message', handleMessage, false);
 window.addEventListener('beforeunload', () => {

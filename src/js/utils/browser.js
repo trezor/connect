@@ -5,11 +5,11 @@ import * as bowser from 'bowser';
 import DataManager from '../data/DataManager';
 
 type State = {
-    name: string;
-    osname: string;
-    supported: boolean;
-    outdated: boolean;
-    mobile: boolean;
+    name: string,
+    osname: string,
+    supported: boolean,
+    outdated: boolean,
+    mobile: boolean,
 }
 
 export const state: State = {
@@ -18,7 +18,7 @@ export const state: State = {
     supported: false,
     outdated: false,
     mobile: false,
-}
+};
 
 export const checkBrowser = (): State => {
     const supported = DataManager.getConfig().supportedBrowsers;
@@ -36,4 +36,4 @@ export const checkBrowser = (): State => {
     }
 
     return state;
-}
+};

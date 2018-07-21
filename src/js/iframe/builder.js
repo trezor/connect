@@ -6,6 +6,7 @@ import { IFRAME_HANDSHAKE } from '../constants/ui';
 import { IFRAME_TIMEOUT } from '../constants/errors';
 import css from './inline-styles';
 import type { Deferred } from '../types';
+import type { ConnectSettings } from '../data/ConnectSettings';
 
 export let instance: HTMLIFrameElement;
 export let origin: string;
@@ -17,7 +18,7 @@ let _messageID: number = 0;
 // every postMessage to iframe has its own promise to resolve
 export const messagePromises: { [key: number]: Deferred<any> } = {};
 
-export const init = async (settings: Object): Promise<void> => {
+export const init = async (settings: ConnectSettings): Promise<void> => {
     const existedFrame: HTMLIFrameElement = (document.getElementById('trezorconnect'): any);
     if (existedFrame) {
         instance = existedFrame;
@@ -40,7 +41,7 @@ export const init = async (settings: Object): Promise<void> => {
         instance.setAttribute('allow', 'usb');
     }
 
-    // eslint-disable-next-line no-irregular-whitespace
+    // eslint-disable-next-line no-irregular-whitespace, no-useless-escape
     const iframeSrcHost: ?Array<string> = instance.src.match(/^.+\:\/\/[^\‌​/]+/);
     if (iframeSrcHost && iframeSrcHost.length > 0) { origin = iframeSrcHost[0]; }
 
@@ -56,11 +57,11 @@ export const init = async (settings: Object): Promise<void> => {
         }, origin);
 
         instance.onload = undefined;
-    }
+    };
 
     // IE hack
     if (instance.attachEvent) {
-        instance.attachEvent("onload", onLoad);
+        instance.attachEvent('onload', onLoad);
     } else {
         instance.onload = onLoad;
     }
@@ -68,23 +69,22 @@ export const init = async (settings: Object): Promise<void> => {
     // inject iframe into host document body
     if (document.body) {
         document.body.appendChild(instance);
+        // eslint-disable-next-line no-use-before-define
+        injectStyleSheet();
     }
 
     timeout = window.setTimeout(() => {
-        initPromise.reject( IFRAME_TIMEOUT );
+        initPromise.reject(IFRAME_TIMEOUT);
     }, 30000);
 
     try {
         await initPromise.promise;
-        injectStyleSheet();
-    } catch(error) {
-        error = error.message;
-        throw error;
+    } catch (error) {
+        throw error.message || error;
     } finally {
         window.clearTimeout(timeout);
         timeout = 0;
     }
-
 };
 
 const injectStyleSheet = (): void => {
@@ -122,8 +122,8 @@ export const dispose = () => {
     if (instance && instance.parentNode) {
         try {
             instance.parentNode.removeChild(instance);
-        } catch(error) {
-
+        } catch (error) {
+            // do nothing
         }
     }
-}
+};

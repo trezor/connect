@@ -3,7 +3,7 @@
 
 import type { CoreMessage } from '../../types';
 
-import AbstractMethod, { MethodInterface } from './AbstractMethod';
+import AbstractMethod from './AbstractMethod';
 
 import CipherKeyValue from './CipherKeyValue';
 import ComposeTransaction from './ComposeTransaction';
@@ -17,13 +17,13 @@ import GetAddress from './GetAddress';
 import GetDeviceState from './GetDeviceState';
 import GetFeatures from './GetFeatures';
 import GetPublicKey from './GetPublicKey';
+import PushTransaction from './PushTransaction';
 import RequestLogin from './RequestLogin';
 import NEMGetAddress from './NEMGetAddress';
 import NEMSignTransaction from './NEMSignTransaction';
 import SignMessage from './SignMessage';
 import SignTransaction from './SignTransaction';
 import StellarGetAddress from './StellarGetAddress';
-import StellarGetPublicKey from './StellarGetPublicKey';
 import StellarSignTransaction from './StellarSignTransaction';
 import VerifyMessage from './VerifyMessage';
 
@@ -40,16 +40,16 @@ const classes: {[k: string]: any} = {
     'getDeviceState': GetDeviceState,
     'getFeatures': GetFeatures,
     'getPublicKey': GetPublicKey,
+    'pushTransaction': PushTransaction,
     'requestLogin': RequestLogin,
     'nemGetAddress': NEMGetAddress,
     'nemSignTransaction': NEMSignTransaction,
     'signMessage': SignMessage,
     'signTransaction': SignTransaction,
     'stellarGetAddress': StellarGetAddress,
-    'stellarGetPublicKey': StellarGetPublicKey,
     'stellarSignTransaction': StellarSignTransaction,
     'verifyMessage': VerifyMessage,
-}
+};
 
 export const find = (message: CoreMessage): AbstractMethod => {
     if (!message.payload) {
@@ -65,6 +65,6 @@ export const find = (message: CoreMessage): AbstractMethod => {
     }
 
     throw new Error(`Method ${message.payload.method} not found`);
-}
+};
 
 export default find;

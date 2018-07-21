@@ -22,6 +22,10 @@ build:
 	cp dist/js/trezor-connect.*.js dist/trezor-connect.js
 	cp robots.txt dist/robots.txt
 
+build-test:
+	make build
+	rsync -avz --delete -e ssh ./dist/* admin@dev.sldev.cz:~/sisyfos/www/next
+
 dist-%:
 	git fetch
 	git checkout $*

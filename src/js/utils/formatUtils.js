@@ -1,11 +1,13 @@
 /* @flow */
 'use strict';
 
+import type { CoinInfo } from 'flowtype';
+
 const currencyUnits = 'mbtc2';
 
 // TODO: chagne currency units
 
-export const formatAmount = (n: number, coinInfo: any): string => {
+export const formatAmount = (n: number, coinInfo: CoinInfo): string => {
     const amount = (n / 1e8);
     if (coinInfo.isBitcoin && currencyUnits === 'mbtc' && amount <= 0.1 && n !== 0) {
         const s = (n / 1e5).toString();

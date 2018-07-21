@@ -13,21 +13,18 @@ import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../..
 import { crypto } from 'bitcoinjs-lib-zcash';
 import DataManager from '../../data/DataManager';
 
-
 export interface MethodInterface {
-    +responseID: number;
-    +device: Device;
+    +responseID: number,
+    +device: Device,
 }
 
 export default class AbstractMethod implements MethodInterface {
-
-    //+root: AbstractMethod;
     responseID: number;
     device: Device;
     devicePath: ?string;
     deviceInstance: number;
     deviceState: ?string;
-    expectedDeviceState: boolean;
+    hasExpectedDeviceState: boolean;
     keepSession: boolean;
     overridePreviousCall: boolean;
     overridden: boolean;
@@ -55,8 +52,10 @@ export default class AbstractMethod implements MethodInterface {
         this.responseID = message.id || 0;
         this.devicePath = payload.device ? payload.device.path : null;
         this.deviceInstance = payload.device ? payload.device.instance : 0;
-        this.deviceState = payload.device ? payload.device.state : null; // expected state (call param). This is not current device state!
-        this.expectedDeviceState = payload.device ? payload.device.hasOwnProperty('state') : false;
+        // expected state from method parameter.
+        // it could be null
+        this.deviceState = payload.device ? payload.device.state : null;
+        this.hasExpectedDeviceState = payload.device ? payload.device.hasOwnProperty('state') : false;
         this.keepSession = typeof payload.keepSession === 'boolean' ? payload.keepSession : false;
         this.overridePreviousCall = typeof payload.override === 'boolean' ? payload.override : false;
         this.overridden = false;
@@ -67,9 +66,9 @@ export default class AbstractMethod implements MethodInterface {
         this.useUi = true;
     }
 
-    async run(): Promise<Object> {
+    async run(): Promise<Object | Array<Object>> {
         // to override
-        return new Promise(r => r({}));
+        return new Promise(resolve => resolve({}));
     }
 
     async requestPermissions(): Promise<boolean> {
@@ -116,15 +115,15 @@ export default class AbstractMethod implements MethodInterface {
     savePermissions() {
         let savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY);
         if (!savedPermissions || !Array.isArray(savedPermissions)) {
-            savedPermissions = JSON.parse("[]");
+            savedPermissions = JSON.parse('[]');
         }
 
         let permissionsToSave: Array<Object> = this.requiredPermissions.map(p => {
             return {
                 origin: DataManager.getSettings('origin'),
                 type: p,
-                device: this.device.features.device_id
-            }
+                device: this.device.features.device_id,
+            };
         });
 
         // check if this will be first time granted permission to read this device
@@ -136,7 +135,6 @@ export default class AbstractMethod implements MethodInterface {
                 emitEvent = true;
             }
         }
-
 
         // find permissions for this origin
         const originPermissions: Array<Object> = savedPermissions.filter(p => p.origin === DataManager.getSettings('origin'));
@@ -150,7 +148,7 @@ export default class AbstractMethod implements MethodInterface {
         saveStorage(PERMISSIONS_KEY, savedPermissions.concat(permissionsToSave));
 
         if (emitEvent) {
-            this.postMessage(new DeviceMessage(DEVICE.CONNECT, this.device.toMessageObject()))
+            this.postMessage(new DeviceMessage(DEVICE.CONNECT, this.device.toMessageObject()));
         }
     }
 
