@@ -41,7 +41,6 @@ const initWebUsbButton = (webusb: boolean): void => {
 };
 
 export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): void => {
-    console.log(payload);
     if (!payload) return;
 
     if (!payload.devices || !Array.isArray(payload.devices) || payload.devices.length === 0) {
@@ -114,7 +113,6 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
         //     type: 'acquired' | 'unacquired' | 'unreadable';
         // }
         if (device.status !== 'available') {
-            console.log(device);
             deviceButton.classList.add('device-explain');
 
             const explanation: HTMLDivElement = document.createElement('div');
