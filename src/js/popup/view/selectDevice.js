@@ -41,6 +41,7 @@ const initWebUsbButton = (webusb: boolean): void => {
 };
 
 export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): void => {
+    console.log(payload);
     if (!payload) return;
 
     if (!payload.devices || !Array.isArray(payload.devices) || payload.devices.length === 0) {
@@ -107,9 +108,13 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
         wrapper.appendChild(deviceName);
         deviceButton.appendChild(wrapper);
 
-        if (device.type !== 'available') {
-            deviceIcon.classList.add('unknown');
 
+        // device {
+        //     status: 'available' | 'occupied' | 'used';
+        //     type: 'acquired' | 'unacquired' | 'unreadable';
+        // }
+        if (device.status !== 'available') {
+            console.log(device);
             deviceButton.classList.add('device-explain');
 
             const explanation: HTMLDivElement = document.createElement('div');
@@ -120,15 +125,20 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
 
             if (device.type === 'unreadable') {
                 deviceButton.disabled = true;
+                deviceIcon.classList.add('unknown');
                 deviceName.textContent = 'Unrecognized device';
                 explanation.innerHTML = htmlUnreadable;
             }
 
-            if (device.type === 'unacquired') {
+            if (device.type === 'unacquired' || device.type === 'acquired') {
                 deviceName.textContent = 'Inactive device';
                 deviceButton.classList.add('unacquired');
                 explanation.classList.add('unacquired');
                 explanation.innerHTML = htmlUnacquired;
+
+                if (device.type === 'acquired') {
+                    deviceName.textContent = device.label;
+                }
             }
 
             deviceButton.appendChild(explanation);
