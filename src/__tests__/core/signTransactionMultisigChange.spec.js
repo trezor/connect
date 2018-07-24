@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    TestFunction,
     SubtestSignTransaction,
     SignTransactionMultisigChangeAvailableSubtests,
 } from 'flowtype/tests';
@@ -230,7 +231,7 @@ const multisigExternalExternal = (): SubtestSignTransaction => {
     }
 };
 
-export const signTransactionMultisigChange = () => {
+export const signTransactionMultisigChange = (): TestFunction => {
     const availableSubtests = {
         externalExternal,
         externalInternal,

@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    TestFunction,
     SubtestSignTransaction,
     SignTransactionBcashAvailableSubtests,
 } from 'flowtype/tests';
@@ -147,7 +148,7 @@ const oldAddr = (): SubtestSignTransaction => {
     };
 };
 
-export const signTransactionBcash = () => {
+export const signTransactionBcash = (): TestFunction => {
     const availableSubtests = {
         change,
         noChange,

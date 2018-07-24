@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    TestFunction,
     SubtestVerifyMessage,
     VerifyMessageAvailableSubtests,
 } from 'flowtype/tests';
@@ -168,7 +169,7 @@ const verifyBitcoind = (): SubtestVerifyMessage => {
     };
 };
 
-export const verifyMessage = () => {
+export const verifyMessage = (): TestFunction => {
     const availableSubtests = {
         verify,
         verifyLong,

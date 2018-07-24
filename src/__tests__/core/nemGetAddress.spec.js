@@ -2,11 +2,15 @@
 import { NEM_MAINNET, NEM_TESTNET } from '../../js/core/methods/helpers/nemSignTx.js'
 
 import type {
+    TestFunction,
+} from 'flowtype/tests';
+
+import type {
     TestNemGetAddressPayload,
     ExpectedNemGetAddressResponse,
 } from 'flowtype/tests/nem-get-address';
 
-export const nemGetAddress = () => {
+export const nemGetAddress = (): TestFunction => {
     const testPayloads: Array<TestNemGetAddressPayload> = [
         {
             method: 'nemGetAddress',

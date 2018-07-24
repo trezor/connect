@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    TestFunction,
     SubtestGetAddress,
     GetAddressSegwitAvailableSubtests,
 } from 'flowtype/tests';
@@ -65,7 +66,7 @@ const showSegwit = (): SubtestGetAddress => {
     };
 };
 
-export const getAddressSegwit = () => {
+export const getAddressSegwit = (): TestFunction => {
     const availableSubtests = {
         showSegwit,
     };
