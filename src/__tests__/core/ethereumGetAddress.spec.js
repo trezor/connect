@@ -1,10 +1,14 @@
 /* @flow */
 import type {
+    TestFunction,
+} from 'flowtype/tests';
+
+import type {
     TestEthereumGetAddressPayload,
     ExpectedEthereumGetAddressResponse,
 } from 'flowtype/tests/ethereum-get-address';
 
-export const ethereumGetAddress = () => {
+export const ethereumGetAddress = (): TestFunction => {
     const testPayloads: Array<TestEthereumGetAddressPayload> = [
         {
             method: 'ethereumGetAddress',

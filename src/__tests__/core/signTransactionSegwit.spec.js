@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    TestFunction,
     SubtestSignTransaction,
     SignTransactionSegwitAvailableSubtests,
 } from 'flowtype/tests';
@@ -164,7 +165,7 @@ const sendMultisig1 = (): SubtestSignTransaction => {
     };
 };
 
-export const signTransactionSegwit = () => {
+export const signTransactionSegwit = (): TestFunction => {
     const availableSubtests = {
         sendP2sh,
         sendP2shChange,

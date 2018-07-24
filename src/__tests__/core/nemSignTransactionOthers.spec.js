@@ -2,6 +2,7 @@
 import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
 
 import type {
+    TestFunction,
     SubtestNemSignTransaction,
     NemSignTransactionOthersAvailableSubtests,
 } from 'flowtype/tests';
@@ -79,7 +80,7 @@ const provisionNamespace = (): SubtestNemSignTransaction => {
     };
 };
 
-export const nemSignTransactionOthers = () => {
+export const nemSignTransactionOthers = (): TestFunction => {
     const availableSubtests = {
         importanceTransfer,
         provisionNamespace,

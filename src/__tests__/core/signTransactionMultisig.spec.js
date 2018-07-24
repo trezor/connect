@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    TestFunction,
     SubtestSignTransaction,
     SignTransactionMultisigAvailableSubtests,
 } from 'flowtype/tests';
@@ -231,7 +232,7 @@ const missingPubkey = (): SubtestSignTransaction => {
     }
 };
 
-export const signTransactionMultisig = () => {
+export const signTransactionMultisig = (): TestFunction => {
     const availableSubtests = {
         twoOfThree,
         fifteenOfFifteen,

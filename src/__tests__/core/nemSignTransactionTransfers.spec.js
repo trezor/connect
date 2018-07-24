@@ -2,6 +2,7 @@
 import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
 
 import type {
+    TestFunction,
     SubtestNemSignTransaction,
     NemSignTransactionTransfersAvailableSubtests,
 } from 'flowtype/tests';
@@ -327,7 +328,7 @@ const multipleMosaics = (): SubtestNemSignTransaction => {
     };
 };
 
-export const nemSignTransactionTransfers = () => {
+export const nemSignTransactionTransfers = (): TestFunction => {
     const availableSubtests = {
         simple,
         encryptedPayload,

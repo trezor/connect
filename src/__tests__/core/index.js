@@ -1,5 +1,9 @@
 /* @flow */
 
+import type {
+    AvailableTestFunctions,
+} from 'flowtype/tests';
+
 import { getPublicKey } from './getPublicKey.spec.js';
 import { getAddress } from './getAddress.spec.js';
 import { getAddressSegwit } from './getAddressSegwit.spec.js';
@@ -26,7 +30,7 @@ import { nemSignTransactionOthers } from './nemSignTransactionOthers.spec.js';
 import { nemSignTransactionTransfers } from './nemSignTransactionTransfers.spec.js';
 import { passphrase } from './passphrase.spec.js';
 
-export default {
+export const testFunctions: AvailableTestFunctions = {
     getPublicKey,
     getAddress,
     getAddressSegwit,

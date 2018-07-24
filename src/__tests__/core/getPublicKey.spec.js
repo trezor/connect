@@ -1,11 +1,14 @@
 /* @flow */
+import type {
+    TestFunction,
+} from 'flowtype/tests';
 
 import type {
     TestGetPublicKeyPayload,
     ExpectedGetPublicKeyResponse,
 } from 'flowtype/tests/get-public-key';
 
-export const getPublicKey = () => {
+export const getPublicKey = (): TestFunction => {
     const testPayloads: Array<TestGetPublicKeyPayload> = [
         {
             method: 'getPublicKey',

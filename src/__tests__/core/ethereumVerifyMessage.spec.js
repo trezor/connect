@@ -1,10 +1,14 @@
 /* @flow */
 import type {
+    TestFunction,
+} from 'flowtype/tests';
+
+import type {
     TestEthereumVerifyMessagePayload,
     ExpectedEthereumVerifyMessageResponse,
 } from 'flowtype/tests/ethereum-verify-message';
 
-export const ethereumVerifyMessage = () => {
+export const ethereumVerifyMessage = (): TestFunction => {
     const testPayloads: Array<TestEthereumVerifyMessagePayload> = [
         {
             method: 'ethereumVerifyMessage',

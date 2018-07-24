@@ -1,10 +1,14 @@
 /* @flow */
-import type  {
+import type {
+    TestFunction,
+} from 'flowtype/tests';
+
+import type {
     TestEthereumSignMessagePayload,
     ExpectedEthereumSignMessageResponse,
 } from 'flowtype/tests/ethereum-sign-message';
 
-export const ethereumSignMessage = () => {
+export const ethereumSignMessage = (): TestFunction => {
     const testPayloads: Array<TestEthereumSignMessagePayload> = [
         {
             method: 'ethereumSignMessage',

@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    TestFunction,
     SubtestVerifyMessage,
     VerifyMessageSegwitNativeAvailableSubtests,
 } from 'flowtype/tests';
@@ -93,7 +94,7 @@ const verifyTestnet = (): SubtestVerifyMessage => {
     };
 };
 
-export const verifyMessageSegwitNative = () => {
+export const verifyMessageSegwitNative = (): TestFunction => {
     const availableSubtests = {
         verify,
         verifyLong,
