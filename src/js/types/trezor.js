@@ -532,8 +532,9 @@ export type AccountInfo = {
     serializedPath: string,
     xpub: string,
     address: string,
-    addressId: number,
+    addressIndex: number,
     addressPath: Array<number>,
+    addressSerializedPath: string,
     balance: number,
     confirmed: number,
 }
