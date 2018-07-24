@@ -7,6 +7,8 @@ base_path=`pwd`
 trezord_path="${base_path}/../trezord-go"
 emulator_path="${base_path}/../trezor-core"
 
+should_start_emulator="true"
+
 run_type="" # "all", "specified", "excluded"
 # Generate all possible tests that can run
 # Valid test name is any file with name ./src/__tests__/core/*.spec.js
@@ -275,8 +277,10 @@ init_device() {
 prepare_environment() {
     enable_passphrase="$1" # "True"/"False"
 
-    start_emulator
-    init_device "${enable_passphrase}"
+    if [ "${should_start_emulator}" = "true" ]; then
+        start_emulator
+        init_device "${enable_passphrase}"
+    fi
     start_transport
 }
 ################# Device + transport functions: END
@@ -289,7 +293,7 @@ run_karma() {
     path_babel_node="./node_modules/babel-cli/bin/babel-node.js"
     path_karma="./node_modules/karma/bin/karma"
 
-    ${path_babel_node} ${path_karma} start --tests="${1}"
+    ${path_babel_node} ${path_karma} start --tests="${1}" --isEmulatorRunning="${should_start_emulator}"
 }
 
 all_tests() {
@@ -372,7 +376,7 @@ fi;
 
 # The emulator device is configured for each specific test automatically
 OPTIND=1
-while getopts ":at:x:ls:e:b:k:pdh" opt; do
+while getopts ":at:x:ls:e:b:k:mpdh" opt; do
     case $opt in
         a) # Run all tests
             run_type="all"
@@ -412,6 +416,9 @@ while getopts ":at:x:ls:e:b:k:pdh" opt; do
         ;;
         k) # Karma log level
             karma_log_level="$OPTARG"
+        ;;
+        m) # Start tests without emulator - testing on a physical device
+            should_start_emulator="false"
         ;;
         \?)
             log_error "invalid option" $OPTARG
