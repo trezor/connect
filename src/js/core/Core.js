@@ -783,10 +783,6 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
             postMessage(new DeviceMessage(DEVICE.DISCONNECT, device));
         });
 
-        _deviceList.on(DEVICE.DISCONNECT_UNACQUIRED, (device: DeviceTyped) => {
-            postMessage(new DeviceMessage(DEVICE.DISCONNECT_UNACQUIRED, device));
-        });
-
         _deviceList.on(DEVICE.CHANGED, (device: DeviceTyped) => {
             postMessage(new DeviceMessage(DEVICE.CHANGED, device));
         });
