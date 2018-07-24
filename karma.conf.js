@@ -97,6 +97,7 @@ module.exports = function(config) {
             runInParent: true,
             // Put the parameters here
             tests: config.tests,
+            isEmulatorRunning: config.isEmulatorRunning,
         },
 
         // Continuous Integration mode
