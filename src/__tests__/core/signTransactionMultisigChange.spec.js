@@ -2,7 +2,6 @@
 import type {
     TestFunction,
     SubtestSignTransaction,
-    SignTransactionMultisigChangeAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestSignTransactionPayload,
@@ -11,7 +10,7 @@ import type {
 
 const xpubExt1 = 'tpubDADHV9u9Y6gkggintTdMjJE3be58zKNLhpxBQyuEM6Pwx3sN9JVLmMCMN4DNVwL9AKec27z5TaWcWuHzMXiGAtcra5DjwWbvppGX4gaEGVN';
 const xpubExt2 = 'tpubDADHV9u9Y6gkhWXBmDJ6TUhZajLWjvKukRe2w9FfhdbQpUux8Z8jnPHNAZqFRgHPg9sR7YR93xThM32M7NfRu8S5WyDtext7S62sqxeJNkd';
-const xpubExt3 = 'tpubDADHV9u9Y6gkmM5ohWRGTswrc6fr7soH7e2D2ic5a86PDUaHc5Ln9EbER69cEr5bDZPa7EXguJ1MhWVzPZpZWVdG5fvoF3hfirXvRbpCCBg';
+// const xpubExt3 = 'tpubDADHV9u9Y6gkmM5ohWRGTswrc6fr7soH7e2D2ic5a86PDUaHc5Ln9EbER69cEr5bDZPa7EXguJ1MhWVzPZpZWVdG5fvoF3hfirXvRbpCCBg';
 const xpubInt = 'tpubDADHV9u9Y6gke2Vw3rWE8KRXmeK8PTtsF5B3Cqjo6h3SoiyRtzxjnDVG1knxrqB8BpP1dMAd6MR3Ps5UXibiFDtQuWVPXLkJ3HvttZYbH12';
 
 const multisig1 = {
@@ -50,7 +49,7 @@ const multisig2 = {
     signatures: ['', '', ''],
     m: 2,
 };
-const multisig3 = {
+/* const multisig3 = {
     pubkeys: [
         {
             node: xpubExt1,
@@ -67,7 +66,7 @@ const multisig3 = {
     ],
     signatures: ['', '', ''],
     m: 2,
-};
+}; */
 
 const input1 = {
     address_n: [2147483693, 0, 0, 0],
@@ -75,7 +74,7 @@ const input1 = {
     prev_index: 1,
     script_type: 'SPENDMULTISIG',
     multisig: multisig1,
-}
+};
 const input2 = {
     address_n: [2147483693, 0, 0, 1],
     prev_hash: 'd80c34ee14143a8bf61125102b7ef594118a3796cad670fa8ee15080ae155318',
@@ -83,13 +82,13 @@ const input2 = {
     script_type: 'SPENDMULTISIG',
     multisig: multisig2,
 };
-const input3 = {
+/* const input3 = {
     address_n: [2147483693, 0, 0, 1],
     prev_hash: 'b0946dc27ba308a749b11afecc2018980af18f79e89ad6b080b58220d856f739',
     prev_index: 0,
     script_type: 'SPENDMULTISIG',
     multisig: multisig3,
-};
+}; */
 
 const externalExternal = (): SubtestSignTransaction => {
     const testPayloads: Array<TestSignTransactionPayload> = [
@@ -123,7 +122,7 @@ const externalExternal = (): SubtestSignTransaction => {
         testPayloads,
         expectedResponses,
         specName: '/externalExternal',
-    }
+    };
 };
 
 const externalInternal = (): SubtestSignTransaction => {
@@ -158,7 +157,7 @@ const externalInternal = (): SubtestSignTransaction => {
         testPayloads,
         expectedResponses,
         specName: '/externalInternal',
-    }
+    };
 };
 
 const internalExternal = (): SubtestSignTransaction => {
@@ -193,7 +192,7 @@ const internalExternal = (): SubtestSignTransaction => {
         testPayloads,
         expectedResponses,
         specName: '/internalExternal',
-    }
+    };
 };
 
 const multisigExternalExternal = (): SubtestSignTransaction => {
@@ -228,7 +227,7 @@ const multisigExternalExternal = (): SubtestSignTransaction => {
         testPayloads,
         expectedResponses,
         specName: '/multisigExternalExternal',
-    }
+    };
 };
 
 export const signTransactionMultisigChange = (): TestFunction => {

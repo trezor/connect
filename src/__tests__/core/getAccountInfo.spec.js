@@ -2,8 +2,7 @@
 import type {
     TestFunction,
     SubtestGetAccountInfo,
-    GetAccountInfoAvailableSubtests,
-} from 'flowtype/tests'
+} from 'flowtype/tests';
 import type {
     TestGetAccountInfoPayload,
     ExpectedGetAccountInfoResponse,
@@ -85,7 +84,7 @@ const xpubInsteadOfPath = (): SubtestGetAccountInfo => {
         expectedResponses,
         specName: '/xpubInsteadOfPath',
     };
-}
+};
 
 // Path is invalid
 // Should fail
@@ -108,7 +107,6 @@ const pathInvalid = (): SubtestGetAccountInfo => {
     };
 };
 
-
 export const getAccountInfo = (): TestFunction => {
     const availableSubtests = {
         firstAccount,
@@ -121,6 +119,6 @@ export const getAccountInfo = (): TestFunction => {
         testName,
         subtests: {
             ...availableSubtests,
-        }
+        },
     };
 };

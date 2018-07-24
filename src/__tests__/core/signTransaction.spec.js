@@ -2,7 +2,6 @@
 import type {
     TestFunction,
     SubtestSignTransaction,
-    SignTransactionAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestSignTransactionPayload,
@@ -20,7 +19,7 @@ const oneOneFee = (): SubtestSignTransaction => {
                     address_n: [0],
                     prev_hash: 'd5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882',
                     prev_index: 0,
-                }
+                },
             ],
             outputs: [
                 {
@@ -58,7 +57,7 @@ const oneTwoFee = (): SubtestSignTransaction => {
                     address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 5],
                     prev_hash: '50f6f1209ca92d7359564be803cb2c932cde7d370f7cee50fd1fad6790f6206d',
                     prev_index: 1,
-                }
+                },
             ],
             outputs: [
                 {
@@ -102,7 +101,7 @@ const oneThreeFee = (): SubtestSignTransaction => {
                     address_n: [0],
                     prev_hash: 'd5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882',
                     prev_index: 0,
-                }
+                },
             ],
             outputs: [
                 {
@@ -199,7 +198,7 @@ const testnetOneTwoFee = (): SubtestSignTransaction => {
                     address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 0],
                     prev_hash: 'e5040e1bc1ae7667ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd',
                     prev_index: 0,
-                }
+                },
             ],
             outputs: [
                 {
@@ -213,7 +212,7 @@ const testnetOneTwoFee = (): SubtestSignTransaction => {
                     script_type: 'PAYTOADDRESS',
                 },
             ],
-        }
+        },
     ];
 
     const expectedResponses: Array<ExpectedSignTransactionResponse> = [
@@ -242,7 +241,7 @@ const testnetFeeTooHigh = (): SubtestSignTransaction => {
                     address_n: [0],
                     prev_hash: '6f90f3c7cbec2258b0971056ef3fe34128dbde30daa9c0639a898f9977299d54',
                     prev_index: 1,
-                }
+                },
             ],
             outputs: [
                 {
@@ -256,7 +255,7 @@ const testnetFeeTooHigh = (): SubtestSignTransaction => {
                     script_type: 'PAYTOADDRESS',
                 },
             ],
-        }
+        },
     ];
 
     const expectedResponses: Array<ExpectedSignTransactionResponse> = [
@@ -279,13 +278,13 @@ const lotsOfOutputs = (): SubtestSignTransaction => {
 
     // See tx c63e24ed820c5851b60c54613fbc4bcb37df6cd49b4c96143e99580a472f79fb
     // See tx 39a29e954977662ab3879c66fb251ef753e0912223a83d1dcb009111d28265e5
-    let outputs = [];
+    const outputs = [];
     const total: number = 255;
     for (let i = 0; i < total; i++) {
         const output = {
             address: '1NwN6UduuVkJi6sw3gSiKZaCY5rHgVXC2h',
             amount: Math.floor((100000 + 2540000 - 39000) / total),
-            script_type: 'PAYTOADDRESS'
+            script_type: 'PAYTOADDRESS',
         };
 
         outputs.push(output);
@@ -308,7 +307,7 @@ const lotsOfOutputs = (): SubtestSignTransaction => {
                 },
             ],
             outputs,
-        }
+        },
     ];
 
     let serializedTx = '0100000002fb792f470a58993e14964c9bd46cdf37cb4bbc3f61540cb651580c82ed243ec6010000006b483045022100969da46f94a81f34f3717b014e0c3e1826eda1b0022ec2f9ce39f3d750ab9235022026da269770993211a1503413566a339bbb4389a482fffcf8e1f76713fc3b94f5012103477b9f0f34ae85434ce795f0c5e1e90c9420e5b5fad084d7cce9a487b94a7902ffffffffe56582d2119100cb1d3da8232291e053f71e25fb669c87b32a667749959ea239010000006a473044022052e1419bb237b9db400ab5e3df16db6355619d545fde9030924a360763ae9ad40220704beab04d72ecaeb42eca7d98faca7a0941e65f2e1341f183be2b83e6b09e1c012103477b9f0f34ae85434ce795f0c5e1e90c9420e5b5fad084d7cce9a487b94a7902fffffffffdff00';
@@ -340,7 +339,7 @@ const feeTooHigh = (): SubtestSignTransaction => {
                     address_n: [0],
                     prev_hash: '1570416eb4302cf52979afd5e6909e37d8fdd874301f7cc87e547e509cb1caa6',
                     prev_index: 0,
-                }
+                },
             ],
             outputs: [
                 {
@@ -378,7 +377,7 @@ const notEnoughFunds = (): SubtestSignTransaction => {
                     address_n: [0],
                     prev_hash: 'd5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882',
                     prev_index: 0,
-                }
+                },
             ],
             outputs: [
                 {
@@ -417,7 +416,7 @@ const spendCoinbase = (): SubtestSignTransaction => {
                     address_n: [1],
                     prev_hash: 'd6da21677d7cca5f42fbc7631d062c9ae918a0254f7c6c22de8e8cb7fd5b8236',
                     prev_index: 0,
-                }
+                },
             ],
             outputs: [
                 {
@@ -455,7 +454,7 @@ const twoChanges = (): SubtestSignTransaction => {
                     address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 0],
                     prev_hash: 'e5040e1bc1ae7667ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd',
                     prev_index: 0,
-                }
+                },
             ],
             outputs: [
                 {
@@ -482,8 +481,8 @@ const twoChanges = (): SubtestSignTransaction => {
     const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
-                signatures: [ "30440220246a5d5d21730d5de70ce9b9f46067b7bee2a448361a8a42274a8a9408b3211d022035c5fe94b8ee3c825d1c3ae86e31ec64671db27c6488cbc616b4c21b79902727" ],
-                serialized: "0100000001cd3b93f5b24ae190ce5141235091cd93fbb2908e24e5b9ff6776aec11b0e04e5000000006a4730440220246a5d5d21730d5de70ce9b9f46067b7bee2a448361a8a42274a8a9408b3211d022035c5fe94b8ee3c825d1c3ae86e31ec64671db27c6488cbc616b4c21b79902727012103426f6986e620f883d2d44f671cf2f91e5e0ae4d9fab0c0cc54ac16a80e628631ffffffff031023cb01000000001976a91485eb47fe98f349065d6f044e27a4ac541af79ee288aca0bb0d00000000001976a9149a3677c632cab1860f1ee7bd52d7c095579b758888ac10270000000000001976a9141b7c3b31576a99995457844e1b2d0e231b8f064388ac00000000",
+                signatures: [ '30440220246a5d5d21730d5de70ce9b9f46067b7bee2a448361a8a42274a8a9408b3211d022035c5fe94b8ee3c825d1c3ae86e31ec64671db27c6488cbc616b4c21b79902727' ],
+                serialized: '0100000001cd3b93f5b24ae190ce5141235091cd93fbb2908e24e5b9ff6776aec11b0e04e5000000006a4730440220246a5d5d21730d5de70ce9b9f46067b7bee2a448361a8a42274a8a9408b3211d022035c5fe94b8ee3c825d1c3ae86e31ec64671db27c6488cbc616b4c21b79902727012103426f6986e620f883d2d44f671cf2f91e5e0ae4d9fab0c0cc54ac16a80e628631ffffffff031023cb01000000001976a91485eb47fe98f349065d6f044e27a4ac541af79ee288aca0bb0d00000000001976a9149a3677c632cab1860f1ee7bd52d7c095579b758888ac10270000000000001976a9141b7c3b31576a99995457844e1b2d0e231b8f064388ac00000000',
             },
         },
     ];
@@ -505,7 +504,7 @@ const p2sh = (): SubtestSignTransaction => {
                     address_n: [0],
                     prev_hash: '54aa5680dea781f45ebb536e53dffc526d68c0eb5c00547e323b2c32382dfba3',
                     prev_index: 1,
-                }
+                },
             ],
             outputs: [
                 {

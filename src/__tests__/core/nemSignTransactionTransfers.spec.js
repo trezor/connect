@@ -4,7 +4,6 @@ import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
 import type {
     TestFunction,
     SubtestNemSignTransaction,
-    NemSignTransactionTransfersAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestNemSignTransactionPayload,
@@ -103,7 +102,7 @@ const xemAsMosaic = (): SubtestNemSignTransaction => {
                     {
                         mosaicId: {
                             namespaceId: 'nem',
-                            name: 'xem'
+                            name: 'xem',
                         },
                         quantity: 9000000,
                     },
@@ -146,7 +145,7 @@ const unknownMosaic = (): SubtestNemSignTransaction => {
                     {
                         mosaicId: {
                             namespaceId: 'xxx',
-                            name: 'aa'
+                            name: 'aa',
                         },
                         quantity: 3500000,
                     },
@@ -189,14 +188,14 @@ const knownMosaic = (): SubtestNemSignTransaction => {
                     {
                         mosaicId: {
                             namespaceId: 'dim',
-                            name: 'token'
+                            name: 'token',
                         },
                         quantity: 111000,
                     },
                 ],
                 version: 1744830464,
             },
-        }
+        },
     ];
     const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
@@ -232,14 +231,14 @@ const knownMosaicWithLevy = (): SubtestNemSignTransaction => {
                     {
                         mosaicId: {
                             namespaceId: 'dim',
-                            name: 'coin'
+                            name: 'coin',
                         },
                         quantity: 222000,
                     },
                 ],
                 version: 1744830464,
             },
-        }
+        },
     ];
     const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
@@ -282,35 +281,35 @@ const multipleMosaics = (): SubtestNemSignTransaction => {
                     {
                         mosaicId: {
                             namespaceId: 'abc',
-                            name: 'mosaic'
+                            name: 'mosaic',
                         },
                         quantity: 200,
                     },
                     {
                         mosaicId: {
                             namespaceId: 'nem',
-                            name: 'xem'
+                            name: 'xem',
                         },
                         quantity: 30000,
                     },
                     {
                         mosaicId: {
                             namespaceId: 'abc',
-                            name: 'mosaic'
+                            name: 'mosaic',
                         },
                         quantity: 2000000,
                     },
                     {
                         mosaicId: {
                             namespaceId: 'breeze',
-                            name: 'breeze-token'
+                            name: 'breeze-token',
                         },
                         quantity: 111000,
                     },
                 ],
                 version: 1744830464,
             },
-        }
+        },
     ];
     const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {

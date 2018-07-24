@@ -2,7 +2,6 @@
 import type {
     TestFunction,
     SubtestSignTransaction,
-    SignTransactionBcashAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestSignTransactionPayload,

@@ -2,7 +2,6 @@
 import type {
     TestFunction,
     SubtestSignTransaction,
-    SignTransactionBgoldAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestSignTransactionPayload,
@@ -235,7 +234,7 @@ const sendMultisig1 = (): SubtestSignTransaction => {
                         ],
                         signatures: ['3045022100dad69cca1a408de702169c007f39c1f3f884716e07b9110e494f9e1adbd2a77b02202dc56ccc595a8b69e4a25bdd95e395c6307b36ca555d451a4059bdf0ec535a18', '', ''],
                         m: 2,
-                    }
+                    },
                 },
             ],
             outputs: [
@@ -247,7 +246,7 @@ const sendMultisig1 = (): SubtestSignTransaction => {
             ],
         },
     ];
-    const expectedResponses: Array <ExpectedSignTransactionResponse> = [
+    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
         {
             payload: {
                 signatures: [
@@ -257,7 +256,6 @@ const sendMultisig1 = (): SubtestSignTransaction => {
             },
         },
     ];
-
 
     return {
         testPayloads,

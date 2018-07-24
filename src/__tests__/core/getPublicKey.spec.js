@@ -42,8 +42,8 @@ export const getPublicKey = (): TestFunction => {
                 xpub: 'xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G',
             },
         },
-        { success: false, },
-        { success: false, },
+        { success: false },
+        { success: false },
     ];
     const testName = 'GetPublicKey';
 

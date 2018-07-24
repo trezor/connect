@@ -4,7 +4,6 @@ import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
 import type {
     TestFunction,
     SubtestNemSignTransaction,
-    NemSignTransactionOthersAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestNemSignTransactionPayload,
@@ -28,7 +27,7 @@ const importanceTransfer = (): SubtestNemSignTransaction => {
                 },
                 version: -1744830464,
             },
-        }
+        },
     ];
     const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
