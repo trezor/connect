@@ -112,7 +112,8 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
         //     status: 'available' | 'occupied' | 'used';
         //     type: 'acquired' | 'unacquired' | 'unreadable';
         // }
-        if (device.status !== 'available') {
+        // if (device.status !== 'available') {
+        if (device.type !== 'acquired' || device.status === 'occupied') {
             deviceButton.classList.add('device-explain');
 
             const explanation: HTMLDivElement = document.createElement('div');
@@ -128,7 +129,7 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
                 explanation.innerHTML = htmlUnreadable;
             }
 
-            if (device.type === 'unacquired' || device.type === 'acquired') {
+            if (device.type === 'unacquired' || device.status === 'occupied') {
                 deviceName.textContent = 'Inactive device';
                 deviceButton.classList.add('unacquired');
                 explanation.classList.add('unacquired');

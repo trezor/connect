@@ -66,7 +66,7 @@ export default class Device extends EventEmitter {
     inconsistent: boolean = false;
     firstRunPromise: Deferred<boolean>;
 
-    activitySessionID: string;
+    activitySessionID: ?string;
 
     featuresTimestamp: number = 0;
 
@@ -152,7 +152,7 @@ export default class Device extends EventEmitter {
     }
 
     async release(): Promise<void> {
-        if (this.isUsedHere() && !this.keepSession) {
+        if (this.isUsedHere() && !this.keepSession && this.activitySessionID) {
             if (this.commands) {
                 this.commands.dispose();
             }
@@ -370,6 +370,7 @@ export default class Device extends EventEmitter {
                     this.deferredActions[ DEVICE.RELEASE ].resolve();
                     delete this.deferredActions[ DEVICE.RELEASE ];
                 }
+                this.activitySessionID = null;
 
                 // corner-case: if device was unacquired but some call to this device was made
                 // this will automatically change unacquired device to acquired (without deviceList)
@@ -450,11 +451,11 @@ export default class Device extends EventEmitter {
     }
 
     isUsed(): boolean {
-        return this.originalDescriptor.session != null;
+        return this.originalDescriptor.session !== null;
     }
 
     isUsedHere(): boolean {
-        return this.originalDescriptor.session != null && this.originalDescriptor.session === this.activitySessionID;
+        return this.originalDescriptor.session !== null && this.originalDescriptor.session === this.activitySessionID;
     }
 
     isUsedElsewhere(): boolean {
@@ -520,14 +521,13 @@ export default class Device extends EventEmitter {
     }
 
     onBeforeUnload() {
-        if (this.isUsedHere()) {
+        if (this.isUsedHere() && this.activitySessionID) {
             try {
                 this.transport.release(this.activitySessionID, true);
             } catch (err) {
                 // empty
             }
         }
-        // await this.transport.release(this.activitySessionID);
     }
 
     // simplified object to pass via postMessage
