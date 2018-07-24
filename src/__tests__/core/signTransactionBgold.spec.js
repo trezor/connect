@@ -276,7 +276,9 @@ export const signTransactionBgold = () => {
     const testName = 'SignTransactionBgold';
 
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

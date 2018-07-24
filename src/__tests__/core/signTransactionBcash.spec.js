@@ -156,7 +156,9 @@ export const signTransactionBcash = () => {
     const testName = 'SignTransactionBCash';
 
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

@@ -118,7 +118,9 @@ export const signMessage = () => {
     const testName = 'SignMessage';
 
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

@@ -593,7 +593,9 @@ export const signTransaction = () => {
     };
     const testName = 'SignTransaction';
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

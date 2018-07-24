@@ -66,7 +66,9 @@ export const signMessageSegwit = () => {
     const testName = 'SignMessageSegwit';
 
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

@@ -466,6 +466,7 @@ const dataEip155 = (): SubtestEthereumSignTransaction => {
 };
 
 export const ethereumSignTransaction = () => {
+    const testName = 'EthereumSignTransaction';
     const availableSubtests = {
         knownErc20Token,
         unknownErc20Token,
@@ -477,9 +478,12 @@ export const ethereumSignTransaction = () => {
         noDataEip155,
         dataEip155,
     };
-    const testName = 'EthereumSignTransaction';
+
+
     return {
         testName,
-        ...availableSubtests,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

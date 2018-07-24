@@ -205,6 +205,8 @@ export const getAddress = () => {
 
     return {
         testName,
-        ...availableSubtests,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

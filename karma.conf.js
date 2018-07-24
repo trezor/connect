@@ -96,8 +96,7 @@ module.exports = function(config) {
             useIframe: false,
             runInParent: true,
             // Put the parameters here
-            test: config.test,
-            subtests: config.subtests,
+            tests: config.tests,
         },
 
         // Continuous Integration mode

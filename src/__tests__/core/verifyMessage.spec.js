@@ -179,7 +179,9 @@ export const verifyMessage = () => {
     const testName = 'VerifyMessage';
 
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };
