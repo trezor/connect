@@ -7,11 +7,11 @@
         "bip115": false,
         "bitcore": [],
         "blockbook": [
-            "https://bch1.trezor.io",
-            "https://bch2.trezor.io",
-            "https://bch3.trezor.io",
-            "https://bch4.trezor.io",
-            "https://bch5.trezor.io"
+            "https://bch1.trezor.io/api",
+            "https://bch2.trezor.io/api",
+            "https://bch3.trezor.io/api",
+            "https://bch4.trezor.io/api",
+            "https://bch5.trezor.io/api"
         ],
         "blocktime_seconds": 600,
         "cashaddr_prefix": "bitcoincash",
@@ -61,11 +61,11 @@
         "bip115": false,
         "bitcore": [],
         "blockbook": [
-            "https://btg1.trezor.io",
-            "https://btg2.trezor.io",
-            "https://btg3.trezor.io",
-            "https://btg4.trezor.io",
-            "https://btg5.trezor.io"
+            "https://btg1.trezor.io/api",
+            "https://btg2.trezor.io/api",
+            "https://btg3.trezor.io/api",
+            "https://btg4.trezor.io/api",
+            "https://btg5.trezor.io/api"
         ],
         "blocktime_seconds": 600,
         "cashaddr_prefix": null,
@@ -115,11 +115,11 @@
         "bip115": false,
         "bitcore": [],
         "blockbook": [
-            "https://btc1.trezor.io",
-            "https://btc2.trezor.io",
-            "https://btc3.trezor.io",
-            "https://btc4.trezor.io",
-            "https://btc5.trezor.io"
+            "https://btc1.trezor.io/api",
+            "https://btc2.trezor.io/api",
+            "https://btc3.trezor.io/api",
+            "https://btc4.trezor.io/api",
+            "https://btc5.trezor.io/api"
         ],
         "blocktime_seconds": 600,
         "cashaddr_prefix": null,
@@ -169,11 +169,11 @@
         "bip115": false,
         "bitcore": [],
         "blockbook": [
-            "https://dash1.trezor.io",
-            "https://dash2.trezor.io",
-            "https://dash3.trezor.io",
-            "https://dash4.trezor.io",
-            "https://dash5.trezor.io"
+            "https://dash1.trezor.io/api",
+            "https://dash2.trezor.io/api",
+            "https://dash3.trezor.io/api",
+            "https://dash4.trezor.io/api",
+            "https://dash5.trezor.io/api"
         ],
         "blocktime_seconds": 150,
         "cashaddr_prefix": null,
@@ -220,11 +220,11 @@
         "bip115": false,
         "bitcore": [],
         "blockbook": [
-            "https://ltc1.trezor.io",
-            "https://ltc2.trezor.io",
-            "https://ltc3.trezor.io",
-            "https://ltc4.trezor.io",
-            "https://ltc5.trezor.io"
+            "https://ltc1.trezor.io/api",
+            "https://ltc2.trezor.io/api",
+            "https://ltc3.trezor.io/api",
+            "https://ltc4.trezor.io/api",
+            "https://ltc5.trezor.io/api"
         ],
         "blocktime_seconds": 150,
         "cashaddr_prefix": null,
@@ -270,7 +270,7 @@
         "bech32_prefix": "tb",
         "bip115": false,
         "bitcore": [],
-        "blockbook": ["https://testnet-bitcore1.trezor.io"],
+        "blockbook": [],
         "blocktime_seconds": 600,
         "cashaddr_prefix": null,
         "coin_label": "Testnet",
@@ -316,11 +316,11 @@
         "bip115": false,
         "bitcore": [],
         "blockbook": [
-            "https://zec1.trezor.io",
-            "https://zec2.trezor.io",
-            "https://zec3.trezor.io",
-            "https://zec4.trezor.io",
-            "https://zec5.trezor.io"
+            "https://zec1.trezor.io/api",
+            "https://zec2.trezor.io/api",
+            "https://zec3.trezor.io/api",
+            "https://zec4.trezor.io/api",
+            "https://zec5.trezor.io/api"
         ],
         "blocktime_seconds": 150,
         "cashaddr_prefix": null,

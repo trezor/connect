@@ -250,6 +250,7 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
  * @memberof Core
  */
 export const onCall = async (message: CoreMessage): Promise<void> => {
+    console.log("ON CALL", message);
     if (!message.id || !message.payload) {
         throw ERROR.INVALID_PARAMETERS;
     }

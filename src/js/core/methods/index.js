@@ -26,6 +26,8 @@ import SignTransaction from './SignTransaction';
 import StellarGetAddress from './StellarGetAddress';
 import StellarSignTransaction from './StellarSignTransaction';
 import VerifyMessage from './VerifyMessage';
+import TronGetAddress from "./TronGetAddress";
+import TronSignTransaction from "./TronSignTransaction";
 
 const classes: {[k: string]: any} = {
     'cipherKeyValue': CipherKeyValue,
@@ -49,6 +51,9 @@ const classes: {[k: string]: any} = {
     'stellarGetAddress': StellarGetAddress,
     'stellarSignTransaction': StellarSignTransaction,
     'verifyMessage': VerifyMessage,
+    'tronGetAddress': TronGetAddress,
+    'tronSignTransaction': TronSignTransaction,
+    'tronSignTx': TronSignTransaction,
 };
 
 export const find = (message: CoreMessage): AbstractMethod => {

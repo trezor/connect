@@ -149,6 +149,7 @@ const call = async (params: Object): Promise<Object> => {
         }
 
         // auto init with default settings
+
         try {
             await init(_settings);
             _popupManager.resolveLazyLoad();
@@ -302,6 +303,14 @@ class TrezorConnect {
 
     static ethereumVerifyMessage = async (params: $T.$EthereumVerifyMessage): Promise<$T.EthereumVerifyMessage$> => {
         return await call({ method: 'ethereumVerifyMessage', ...params });
+    }
+
+    static tronGetAddress = async (params) => {
+        return await call({ method: 'tronGetAddress', ...params });
+    }
+
+    static tronSignTx = async (params) => {
+        return await call({ method: 'tronSignTx', ...params });
     }
 
     static getAccountInfo = async (params: $T.$GetAccountInfo): Promise<$T.GetAccountInfo$> => {

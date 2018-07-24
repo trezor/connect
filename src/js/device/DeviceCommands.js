@@ -199,6 +199,55 @@ export default class DeviceCommands {
         };
     }
 
+    async tronGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise {
+        const response: MessageResponse<trezor.EthereumAddress> = await this.typedCall('TronGetAddress', 'TronAddress', {
+            address_n: address_n,
+            show_display: !!showOnTrezor,
+        });
+        return {
+            path: address_n,
+            address: response.message.address,
+        };
+    }
+
+    async tronSignTx(address_n: Array<number>, transaction, showOnTrezor: boolean): Promise {
+
+        function toHex(str) {
+            var hex = '';
+            for(var i=0;i<str.length;i++) {
+                hex += ''+str.charCodeAt(i).toString(16);
+            }
+            return hex;
+        }
+
+        const response: MessageResponse<trezor.EthereumAddress> = await this.typedCall('TronSignTx', 'TronSignedTx', {
+            transaction: {
+                ref_block_bytes: "C565",
+                ref_block_hash: "6CD623DBE83075D8",
+                expiration: 1528768890000,
+                timestamp: 1528768831987,
+                contract: {
+                    type: 1,
+                    parameter: {
+                        api: "type.googleapis.com/protocol.TransferContract",
+                        payload: {
+                            transfer_contract: {
+                                owner_address: toHex('TUEZSdKsoDHQMeZwihtdoBiN46zxhGWYdH'),
+                                to_address: toHex('TKSXDA8HfE9E1y39RczVQ1ZascUEtaSToF'),
+                                amount: 1000000,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        return {
+            path: address_n,
+            signature: response.message.signature,
+        };
+    }
+
     async ethereumSignMessage(address_n: Array<number>, message: string): Promise<trezor.MessageSignature> {
         const response: MessageResponse<trezor.MessageSignature> = await this.typedCall('EthereumSignMessage', 'EthereumMessageSignature', {
             address_n,
