@@ -161,7 +161,7 @@ declare module 'flowtype/tests' {
         signMessage(): TestFunction,
         signMessageSegwit(): TestFunction,
         signTransaction(): TestFunction,
-        signTransactionSegwitA: TestFunction,
+        signTransactionSegwit(): TestFunction,
         signTransactionBgold(): TestFunction,
         signTransactionBcash(): TestFunction,
         signTransactionMultisig(): TestFunction,
