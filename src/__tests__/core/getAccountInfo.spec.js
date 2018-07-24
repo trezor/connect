@@ -117,7 +117,9 @@ export const getAccountInfo = () => {
     };
     const testName = 'GetAccountInfo';
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        }
     };
 };

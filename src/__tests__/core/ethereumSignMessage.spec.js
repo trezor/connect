@@ -32,6 +32,7 @@ export const ethereumSignMessage = () => {
         },
     ];
     const testName = 'EthereumSignMessage';
+
     return {
         testPayloads,
         expectedResponses,

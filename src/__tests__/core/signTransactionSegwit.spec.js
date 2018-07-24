@@ -173,7 +173,9 @@ export const signTransactionSegwit = () => {
     const testName = 'SignTransactionSegwit';
 
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

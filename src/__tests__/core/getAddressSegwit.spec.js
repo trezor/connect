@@ -72,7 +72,9 @@ export const getAddressSegwit = () => {
     const testName = 'GetAddressSegwit';
 
     return {
-        ...availableSubtests,
+        subtests: {
+            ...availableSubtests,
+        },
         testName,
     };
 };

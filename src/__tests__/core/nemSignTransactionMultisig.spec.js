@@ -210,10 +210,12 @@ export const nemSignTransactionMultisig = () => {
         multisig,
         multisigSigner,
     };
-    const testName = 'NEMSignTransactionMultisig';
+    const testName = 'nemSignTransactionMultisig';
 
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

@@ -240,7 +240,9 @@ export const signTransactionMultisigChange = () => {
     const testName = 'SignTransactionMultisigChange';
 
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

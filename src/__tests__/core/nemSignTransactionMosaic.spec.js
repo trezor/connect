@@ -224,10 +224,12 @@ export const nemSignTransactionMosaic = () => {
         creationProperties,
         creationLevy,
     };
-    const testName = 'NEMSignTransactionMosaic';
+    const testName = 'nemSignTransactionMosaic';
 
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 }

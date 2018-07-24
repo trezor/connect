@@ -49,8 +49,8 @@ export const ethereumGetAddress = () => {
     const testName = 'EthereumGetAddress';
 
     return {
+        testName,
         testPayloads,
         expectedResponses,
-        testName,
     };
 };
