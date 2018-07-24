@@ -46,6 +46,7 @@ export class CoreEventHandler {
     _urlRelease = (session: number | string) => `${this._urlBase}/release/${session}`;
 
     _isHandlingButtonRequest = false;
+    // eslint-disable-next-line no-undef
     _isEmulatorRunning = __karma__.config.isEmulatorRunning === 'true';
 
     constructor(core: Core, payload: TestPayload, expectedResponse: ExpectedResponse, expectFn: any, doneFn: any) {

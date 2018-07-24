@@ -1,4 +1,5 @@
 /* TODO: flow */
+/* eslint-disable */
 
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';
