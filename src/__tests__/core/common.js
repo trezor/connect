@@ -5,7 +5,6 @@ import { CORE_EVENT, RESPONSE_EVENT, UI_EVENT } from '../../js/constants';
 import * as UI from '../../js/constants/ui';
 import * as DEVICE from '../../js/constants/device';
 
-
 import type {
     TestPayload,
     ExpectedResponse,
@@ -29,6 +28,7 @@ export const settings = {
     pendingTransportEvent: true,
     supportedBrowser: true,
     extension: null,
+    // excludedDevices: ['emulator21325']
 }
 
 export class CoreEventHandler {
@@ -46,6 +46,7 @@ export class CoreEventHandler {
     _urlRelease = (session: number | string) => `${this._urlBase}/release/${session}`;
 
     _isHandlingButtonRequest = false;
+    _isEmulatorRunning = __karma__.config.isEmulatorRunning === 'true';
 
     constructor(core: Core, payload: TestPayload, expectedResponse: ExpectedResponse, expectFn: any, doneFn: any) {
         this._core = core;
@@ -58,55 +59,14 @@ export class CoreEventHandler {
 
     // Public Functions
     startListening() {
-        this._core.on('CORE_EVENT', this._handleCoreEvents.bind(this));
+        this._core.on(CORE_EVENT, this._handleCoreEvents.bind(this));
     }
     // Public Functions: END
 
     // Private Functions
     async _handleCoreEvents(event: any): Promise<void> {
-        if (event.type === DEVICE.CONNECT && event.payload.path === 'emulator21324' && event.payload.features) {
-            this._core.handleMessage({
-                type: 'iframe_call',
-                id: 1,
-                payload: {...this._payload, device: { path: 'emulator21324' }},
-            }, true);
-        }
-
-        if (event.type === DEVICE.CHANGED
-        && event.payload.path === 'emulator21325'
-        && this._isHandlingButtonRequest) {
-            try {
-                setTimeout(async () => {
-                    this._isHandlingButtonRequest = false;
-                    const { session } = await this._getDebugLinkInfo();
-                    this._pressButtonYes(session);
-                }, 501);
-            } catch (error) {
-                console.error('Error on device changed event', [error, event]);
-            }
-        }
-
-        if (event.type === UI.REQUEST_PASSPHRASE) {
-            // Send empty passphrase if requested
-            setTimeout(() => {
-                const passphrase = '';
-                const messagePayload = {
-                    save: false,
-                    value: passphrase,
-                };
-                this._core.handleMessage({ event: UI_EVENT, type: UI.RECEIVE_PASSPHRASE, payload: messagePayload }, true);
-            }, 501)
-        }
-
-        if (event.type === UI.REQUEST_BUTTON) {
-            try {
-                this._isHandlingButtonRequest = true;
-                const { session, path } = await this._getDebugLinkInfo();
-                this._acquireDevice(session, path);
-            } catch(error) {
-                console.error('Error on request button event', [error, event]);
-            }
-        }
+        console.log('=== EVENT', event);
+        console.log('IS EMULATOR RUNNING', this._isEmulatorRunning);
 
         if (event.type === UI.REQUEST_UI_WINDOW) {
             this._core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, true);
@@ -123,8 +83,76 @@ export class CoreEventHandler {
         if (event.type === RESPONSE_EVENT) {
             // console.warn(event);
             this._compareExpectedResponseToActual(this._expectedResponse, event);
-
             this._doneFn();
+        }
+
+        if (this._isEmulatorRunning) {
+            if (event.type === DEVICE.CONNECT && event.payload.path === 'emulator21324' && event.payload.features) {
+                this._core.handleMessage({
+                    type: 'iframe_call',
+                    id: 1,
+                    payload: { ...this._payload, device: { path: 'emulator21324' } },
+                }, true);
+            }
+
+            if (event.type === DEVICE.CHANGED &&
+                event.payload.path === 'emulator21325' &&
+                this._isHandlingButtonRequest) {
+                try {
+                    setTimeout(async () => {
+                        this._isHandlingButtonRequest = false;
+                        const { session } = await this._getDebugLinkInfo();
+                        this._pressButtonYes(session);
+                    }, 501);
+                } catch (error) {
+                    console.error('Error on device changed event', [error, event]);
+                }
+            }
+
+            // if (event.type === UI.REQUEST_PASSPHRASE) {
+            //     // Send empty passphrase if requested
+            //     setTimeout(() => {
+            //         const passphrase = '';
+            //         const messagePayload = {
+            //             save: false,
+            //             value: passphrase,
+            //         };
+            //         this._core.handleMessage({ event: UI_EVENT, type: UI.RECEIVE_PASSPHRASE, payload: messagePayload }, true);
+            //     }, 501)
+            // }
+
+            if (event.type === UI.REQUEST_BUTTON) {
+                try {
+                    this._isHandlingButtonRequest = true;
+                    const { session, path } = await this._getDebugLinkInfo();
+                    this._acquireDevice(session, path);
+                } catch (error) {
+                    console.error('Error on request button event', [error, event]);
+                }
+            }
+
+            // if (event.type === DEVICE.CHANGED && this._isHandlingButtonRequest) {
+            //     console.warn('WILL PRESS BUTTON');
+            //     const { session } = await this._getDebugLinkInfo();
+            //     this._pressButtonYes(session);
+            // }
+
+            // if (event.type === UI.REQUEST_BUTTON) {
+            //     setTimeout(async () => {
+            //         this._isHandlingButtonRequest = true;
+            //         const { session, path } = await this._getDebugLinkInfo();
+            //         console.warn('WILL ACQUIRE');
+            //         this._acquireDevice(session, path);
+            //     }, 501);
+            // }
+        } else {
+            if (event.type === DEVICE.CONNECT && event.payload.features) {
+                this._core.handleMessage({
+                    type: 'iframe_call',
+                    id: 1,
+                    payload: { ...this._payload },
+                }, true);
+            }
         }
     }
 
