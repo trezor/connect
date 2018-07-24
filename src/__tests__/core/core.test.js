@@ -1,4 +1,6 @@
 /* @flow */
+/* eslint  no-undef: 0 */
+
 import 'babel-polyfill';
 import { testFunctions } from './index.js';
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
@@ -127,7 +129,7 @@ if (tests === 'passphrase') {
     });
 
     // Iterate through the config object and run each test
-    for (let testName in config) {
+    for (const testName in config) {
         const subtestNames: Array<string> = config[testName];
 
         // $FlowIssue: cannot access computed object's property using string?
