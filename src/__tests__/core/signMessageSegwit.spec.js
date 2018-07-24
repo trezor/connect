@@ -2,7 +2,6 @@
 import type {
     TestFunction,
     SubtestSignMessage,
-    SignMessageSegwitAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestSignMessagePayload,

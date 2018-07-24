@@ -2,7 +2,6 @@
 import type {
     TestFunction,
     SubtestSignTransaction,
-    SignTransactionMultisigAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestSignTransactionPayload,
@@ -112,8 +111,8 @@ const twoOfThree = (): SubtestSignTransaction => {
 };
 
 const fifteenOfFifteen = (): SubtestSignTransaction => {
-    let pubkeys: Array<{ node: string, address_n: Array<number>}> = [];
-    let signatures: Array<string> = [
+    const pubkeys: Array<{ node: string, address_n: Array<number>}> = [];
+    const signatures: Array<string> = [
         '304502210098e23085ad7282de988bf98afa1e9add9c9830009132f8902a9fa4624d5dc98b0220733216e70ab67791aa64be5c83d2050cb4ed9ff7eda2a1acc35da024d2ab2a67',
         '304402201f8c11fb6e90fd616e484986e9451929797eba039882a9abcc203210948060b9022044da031530de7d9747d3c5a8e7cec04b04b7af495c9120b854ce7362af7fa05a',
         '3045022100ea67c70186acef019bdf1551881bf38e6f88186501b64d3a756a2ce18e4ba18002201c35110325653e21e448b60053a4b5dda46b61096faf701a1faca61fcde91f00',
@@ -176,8 +175,8 @@ const fifteenOfFifteen = (): SubtestSignTransaction => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/fifteenOfFifteen'
-    }
+        specName: '/fifteenOfFifteen',
+    };
 };
 
 const missingPubkey = (): SubtestSignTransaction => {
@@ -208,7 +207,7 @@ const missingPubkey = (): SubtestSignTransaction => {
                         ],
                         signatures: ['', '', ''],
                         m: 2,
-                    }
+                    },
                 },
             ],
             outputs: [
@@ -218,7 +217,7 @@ const missingPubkey = (): SubtestSignTransaction => {
                     script_type: 'PAYTOADDRESS',
                 },
             ],
-        }
+        },
     ];
 
     const expectedResponses: Array<ExpectedSignTransactionResponse> = [
@@ -229,7 +228,7 @@ const missingPubkey = (): SubtestSignTransaction => {
         testPayloads,
         expectedResponses,
         specName: '/missingPubkey',
-    }
+    };
 };
 
 export const signTransactionMultisig = (): TestFunction => {

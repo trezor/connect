@@ -2,7 +2,6 @@
 import type {
     TestFunction,
     SubtestGetAddress,
-    GetAddressAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestGetAddressPayload,
@@ -202,7 +201,7 @@ export const getAddress = (): TestFunction => {
         tbtc,
         bch,
     };
-    const testName = 'GetAddress'
+    const testName = 'GetAddress';
 
     return {
         testName,

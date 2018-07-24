@@ -2,7 +2,6 @@
 import type {
     TestFunction,
     SubtestEthereumSignTransaction,
-    EthereumSignTransactionAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestEthereumSignTransactionPayload,
@@ -10,7 +9,7 @@ import type {
 } from 'flowtype/tests/ethereum-sign-transaction';
 
 const knownErc20Token = (): SubtestEthereumSignTransaction => {
-    const testPayloads: Array<TestEthereumSignTransactionPayload>  = [
+    const testPayloads: Array<TestEthereumSignTransactionPayload> = [
         {
             method: 'ethereumSignTransaction',
             path: "m/44'/60'/0'",
@@ -96,7 +95,7 @@ const noData = (): SubtestEthereumSignTransaction => {
                 to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
                 value: '0xab54a98ceb1f0ad2',
             },
-        }
+        },
     ];
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
@@ -148,7 +147,7 @@ const data = (): SubtestEthereumSignTransaction => {
                 value: '0xab54a98ceb1f0ad2',
                 data: `0x${'4142434445464748494a4b4c4d4e4f50'.repeat(256)}212121`,
             },
-        }
+        },
     ];
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
@@ -170,7 +169,7 @@ const data = (): SubtestEthereumSignTransaction => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/data'
+        specName: '/data',
     };
 };
 
@@ -187,7 +186,7 @@ const message = (): SubtestEthereumSignTransaction => {
                 value: '0x0',
                 data: `0x${'4142434445464748494a4b4c4d4e4f50'.repeat(256)}212121`,
             },
-        }
+        },
     ];
     const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
         {
@@ -198,7 +197,6 @@ const message = (): SubtestEthereumSignTransaction => {
             },
         },
     ];
-
 
     return {
         testPayloads,
@@ -307,7 +305,7 @@ const sanityChecks = (): SubtestEthereumSignTransaction => {
         {
             success: false,
             payload: {
-                code: 'Failure_DataError'
+                code: 'Failure_DataError',
             },
         },
         { success: false },
@@ -370,7 +368,7 @@ const noDataEip155 = (): SubtestEthereumSignTransaction => {
         testPayloads,
         expectedResponses,
         specName: '/noDataEip155',
-    }
+    };
 };
 
 const dataEip155 = (): SubtestEthereumSignTransaction => {
