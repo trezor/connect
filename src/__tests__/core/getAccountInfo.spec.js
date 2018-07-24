@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    TestFunction,
     SubtestGetAccountInfo,
     GetAccountInfoAvailableSubtests,
 } from 'flowtype/tests'
@@ -108,7 +109,7 @@ const pathInvalid = (): SubtestGetAccountInfo => {
 };
 
 
-export const getAccountInfo = () => {
+export const getAccountInfo = (): TestFunction => {
     const availableSubtests = {
         firstAccount,
         zeroBalance,

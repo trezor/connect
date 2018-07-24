@@ -137,4 +137,48 @@ declare module 'flowtype/tests' {
         | ExpectedGetAccountInfoResponse
         | ExpectedNemSignTransactionResponse
         | ExpectedPassphraseResponse;
+
+    declare export type SubtestFunction = SubtestGetAddress
+    | SubtestSignMessage
+    | SubtestEthereumSignTransaction
+    | SubtestSignTransaction
+    | SubtestVerifyMessage
+    | SubtestGetAccountInfo
+    | SubtestNemSignTransaction
+    | SubtestPassphrase;
+
+    declare export type TestFunction = {
+        testName: string,
+        testPayloads?: Array<TestPayload>,
+        expectedResponses?: Array<ExpectedResponse>,
+        subtests?: { [k: string]: () => SubtestFunction },
+    };
+
+    declare export type AvailableTestFunctions = {
+        getPublicKey(): TestFunction,
+        getAddress(): TestFunction,
+        getAddressSegwit(): TestFunction,
+        signMessage(): TestFunction,
+        signMessageSegwit(): TestFunction,
+        signTransaction(): TestFunction,
+        signTransactionSegwitA: TestFunction,
+        signTransactionBgold(): TestFunction,
+        signTransactionBcash(): TestFunction,
+        signTransactionMultisig(): TestFunction,
+        signTransactionMultisigChange(): TestFunction,
+        verifyMessage(): TestFunction,
+        verifyMessageSegwit(): TestFunction,
+        verifyMessageSegwitNative(): TestFunction,
+        ethereumGetAddress(): TestFunction,
+        ethereumSignMessage(): TestFunction,
+        ethereumSignTransaction(): TestFunction,
+        ethereumVerifyMessage(): TestFunction,
+        getAccountInfo(): TestFunction,
+        nemGetAddress(): TestFunction,
+        nemSignTransactionMosaic(): TestFunction,
+        nemSignTransactionMultisig(): TestFunction,
+        nemSignTransactionOthers(): TestFunction,
+        nemSignTransactionTransfers(): TestFunction,
+        passphrase(): TestFunction,
+    };
 }

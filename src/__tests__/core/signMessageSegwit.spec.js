@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    TestFunction,
     SubtestSignMessage,
     SignMessageSegwitAvailableSubtests,
 } from 'flowtype/tests';
@@ -58,7 +59,7 @@ const signLong = (): SubtestSignMessage => {
     };
 };
 
-export const signMessageSegwit = () => {
+export const signMessageSegwit = (): TestFunction => {
     const availableSubtests = {
         sign,
         signLong,

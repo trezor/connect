@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    TestFunction,
     SubtestEthereumSignTransaction,
     EthereumSignTransactionAvailableSubtests,
 } from 'flowtype/tests';
@@ -465,7 +466,7 @@ const dataEip155 = (): SubtestEthereumSignTransaction => {
     };
 };
 
-export const ethereumSignTransaction = () => {
+export const ethereumSignTransaction = (): TestFunction => {
     const testName = 'EthereumSignTransaction';
     const availableSubtests = {
         knownErc20Token,
@@ -478,7 +479,6 @@ export const ethereumSignTransaction = () => {
         noDataEip155,
         dataEip155,
     };
-
 
     return {
         testName,

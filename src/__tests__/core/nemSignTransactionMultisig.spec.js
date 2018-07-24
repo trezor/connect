@@ -2,6 +2,7 @@
 import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
 
 import type {
+    TestFunction,
     SubtestNemSignTransaction,
      NemSignTransactionMultisigAvailableSubtests,
 } from 'flowtype/tests';
@@ -204,7 +205,7 @@ const multisigSigner = (): SubtestNemSignTransaction => {
     };
 };
 
-export const nemSignTransactionMultisig = () => {
+export const nemSignTransactionMultisig = (): TestFunction => {
     const availableSubtests = {
         aggregateModification,
         multisig,

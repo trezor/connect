@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    TestFunction,
     SubtestSignTransaction,
     SignTransactionAvailableSubtests,
 } from 'flowtype/tests';
@@ -575,7 +576,7 @@ const changeOnMainChainAllowed = (): SubtestSignTransaction => {
     };
 };
 
-export const signTransaction = () => {
+export const signTransaction = (): TestFunction => {
     const availableSubtests = {
         oneOneFee,
         oneTwoFee,
