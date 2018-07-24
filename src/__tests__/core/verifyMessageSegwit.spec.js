@@ -2,7 +2,6 @@
 import type {
     TestFunction,
     SubtestVerifyMessage,
-    VerifyMessageSegwitAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestVerifyMessagePayload,
@@ -68,7 +67,7 @@ const verifyLong = (): SubtestVerifyMessage => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/verifyLong'
+        specName: '/verifyLong',
     };
 };
 
@@ -90,7 +89,7 @@ const verifyTestnet = (): SubtestVerifyMessage => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/verifyTestnet'
+        specName: '/verifyTestnet',
     };
 };
 

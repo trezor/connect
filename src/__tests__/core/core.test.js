@@ -67,7 +67,6 @@ const runTest = (test: TestFunction, subtestNames: Array<string>) => {
             if (subtestNames.length > 0) {
                 // Subtests were specified by the user
                 subtestNames.forEach(subtestName => {
-
                     // $FlowIssue Handling above - if test.subtests if void throw error
                     const { testPayloads, expectedResponses, specName } = test.subtests[subtestName]();
                     const specNames: Array<string> = testPayloads.map(p => specName);

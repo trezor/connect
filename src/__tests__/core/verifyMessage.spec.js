@@ -2,7 +2,6 @@
 import type {
     TestFunction,
     SubtestVerifyMessage,
-    VerifyMessageAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestVerifyMessagePayload,

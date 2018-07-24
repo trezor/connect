@@ -2,7 +2,6 @@
 import type {
     TestFunction,
     SubtestGetAddress,
-    GetAddressSegwitAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestGetAddressPayload,

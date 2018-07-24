@@ -2,7 +2,6 @@
 import type {
     TestFunction,
     SubtestSignTransaction,
-    SignTransactionSegwitAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestSignTransactionPayload,
@@ -104,8 +103,8 @@ const sendP2shChange = (): SubtestSignTransaction => {
 };
 
 const sendMultisig1 = (): SubtestSignTransaction => {
-        const address = [999 | 0x80000000, 1 | 0x80000000, 1 | 0x80000000, 2, 0];
-        address[2] = 0x80000003
+    const address = [999 | 0x80000000, 1 | 0x80000000, 1 | 0x80000000, 2, 0];
+    address[2] = 0x80000003;
     const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',

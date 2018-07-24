@@ -4,7 +4,6 @@ import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
 import type {
     TestFunction,
     SubtestNemSignTransaction,
-     NemSignTransactionMultisigAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestNemSignTransactionPayload,
@@ -25,11 +24,11 @@ const aggregateModification = (): SubtestNemSignTransaction => {
                 modifications: [
                     {
                         modificationType: 1,
-                        cosignatoryAccount: 'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844'
+                        cosignatoryAccount: 'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
                     },
                 ],
                 minCosignatories: {
-                    relativeChange: 3
+                    relativeChange: 3,
                 },
                 version: -1744830464,
             },
@@ -64,15 +63,15 @@ const multisig = (): SubtestNemSignTransaction => {
                 deadline: 74735615,
                 otherTrans: {
                     timeStamp: 2,
-                        amount: 2000000,
-                        fee: 15000,
-                        recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
-                        type: TX_TYPES.transfer,
-                        deadline: 67890,
-                        message: {
-                            payload: '746573745f6e656d5f7472616e73616374696f6e5f7472616e73666572',
-                            type: 1,
-                        },
+                    amount: 2000000,
+                    fee: 15000,
+                    recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
+                    type: TX_TYPES.transfer,
+                    deadline: 67890,
+                    message: {
+                        payload: '746573745f6e656d5f7472616e73616374696f6e5f7472616e73666572',
+                        type: 1,
+                    },
                     version: -1744830464,
                     signer: 'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
                 },
@@ -170,7 +169,7 @@ const multisigSigner = (): SubtestNemSignTransaction => {
                     message: { },
                     mosaicId: {
                         namespaceId: 'hellom',
-                        name: 'Hello mosaic'
+                        name: 'Hello mosaic',
                     },
                     supplyType: 1,
                     delta: 1,

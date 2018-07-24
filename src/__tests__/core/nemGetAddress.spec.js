@@ -1,5 +1,5 @@
 /* @flow */
-import { NEM_MAINNET, NEM_TESTNET } from '../../js/core/methods/helpers/nemSignTx.js'
+import { NEM_MAINNET, NEM_TESTNET } from '../../js/core/methods/helpers/nemSignTx.js';
 
 import type {
     TestFunction,

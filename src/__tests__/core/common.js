@@ -14,7 +14,7 @@ let currentSuite: string = '';
 
 export const settings = {
     configSrc: 'base/src/__tests__/config.json', // constant
-    debug: true,
+    debug: false,
     origin: 'localhost',
     priority: 0,
     trustedHost: true,
@@ -66,9 +66,6 @@ export class CoreEventHandler {
 
     // Private Functions
     async _handleCoreEvents(event: any): Promise<void> {
-        console.log('=== EVENT', event);
-        console.log('IS EMULATOR RUNNING', this._isEmulatorRunning);
-
         if (event.type === UI.REQUEST_UI_WINDOW) {
             this._core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, true);
         }

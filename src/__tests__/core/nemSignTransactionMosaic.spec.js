@@ -4,7 +4,6 @@ import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
 import type {
     TestFunction,
     SubtestNemSignTransaction,
-    NemSignTransactionMosaicAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestNemSignTransactionPayload,
@@ -67,7 +66,7 @@ const creation = (): SubtestNemSignTransaction => {
                         name: 'Hello mosaic',
                     },
                     levy: { },
-                    properties: { } ,
+                    properties: { },
                     description: 'lorem',
                 },
                 version: (0x98 << 24), // testnet // 2550136832
@@ -108,23 +107,23 @@ const creationProperties = (): SubtestNemSignTransaction => {
                         namespaceId: 'hellom',
                         name: 'Hello mosaic',
                     },
-                    levy: {} ,
+                    levy: {},
                     properties: [
                         {
                             name: 'divisibility',
-                            value: '4'
+                            value: '4',
                         },
                         {
                             name: 'initialSupply',
-                            value: '200'
+                            value: '200',
                         },
                         {
                             name: 'supplyMutable',
-                            value: 'false'
+                            value: 'false',
                         },
                         {
                             name: 'transferable',
-                            value: 'true'
+                            value: 'true',
                         },
                     ],
                     description: 'lorem',
@@ -179,19 +178,19 @@ const creationLevy = (): SubtestNemSignTransaction => {
                     properties: [
                         {
                             name: 'divisibility',
-                            value: '4'
+                            value: '4',
                         },
                         {
                             name: 'initialSupply',
-                            value: '200'
+                            value: '200',
                         },
                         {
                             name: 'supplyMutable',
-                            value: 'false'
+                            value: 'false',
                         },
                         {
                             name: 'transferable',
-                            value: 'true'
+                            value: 'true',
                         },
                     ],
                     description: 'lorem',
@@ -233,4 +232,4 @@ export const nemSignTransactionMosaic = (): TestFunction => {
             ...availableSubtests,
         },
     };
-}
+};
