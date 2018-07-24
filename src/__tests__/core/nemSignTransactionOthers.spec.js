@@ -84,10 +84,12 @@ export const nemSignTransactionOthers = () => {
         importanceTransfer,
         provisionNamespace,
     };
-    const testName = 'NEMSignTransactionOthers';
+    const testName = 'nemSignTransactionOthers';
 
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

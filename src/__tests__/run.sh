@@ -6,7 +6,6 @@ trap 'cleanup' INT
 base_path=`pwd`
 trezord_path="${base_path}/../trezord-go"
 emulator_path="${base_path}/../trezor-core"
-logs_path="${base_path}/karma-logs.txt"
 
 run_type="" # "all", "specified", "excluded"
 # Generate all possible tests that can run
@@ -21,11 +20,6 @@ subtests_not_to_run=""
 should_print_debug=0
 karma_log_level="error" # "disable", "error", "warn", "info", "debug"
 
-finished_test_names=""
-finished_test_results=""
-
-test_results=""
-
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
@@ -35,14 +29,7 @@ reset=$(tput sgr0)
 
 ################# Device config vars
 mnemonic_12="alcohol woman abuse must during monitor noble actual mixed trade anger aisle"
-mnemonic_18="owner little vague addict embark decide pink prosper true fork panda embody mixture exchange choose canoe electric jewel"
-mnemonic_24="dignity pass list indicate nasty swamp pool script soccer toe leaf photo multiply desk host tomato cradle drill spread actor shine dismiss champion exotic"
-mnemonic_all="all all all all all all all all all all all all"
-
 pin_0=""
-pin_4="1234"
-pin_6="789456"
-pin_8="45678978"
 ################# Device config vars: END
 
 ################# Possible subtests
@@ -77,11 +64,9 @@ passphrase_subtests="correctPassphrase wrongPassphrase"
 ################# Possible subtests: END
 
 
-################# Functions
+################# General functions
 cleanup() {
     cd $base_path
-    #rm -rf './karma-logs.txt'
-    rm -f $logs_path
 
     # Ignore INT and TERM while shutting down
     trap '' INT TERM
@@ -91,21 +76,6 @@ cleanup() {
     wait > /dev/null 2>&1
 
     exit
-}
-
-kill_emul_transport() {
-    is_running_emul=$(ps $pid_emul > /dev/null && echo 1 || echo 0)
-    is_running_transport=$(ps $pid_transport > /dev/null && echo 1 || echo 0)
-
-    if [ $is_running_transport -eq 1 ]; then
-        kill -TERM $pid_transport
-        wait $pid_transport > /dev/null 2>&1
-    fi;
-
-    if [ $is_running_emul -eq 1 ]; then
-        kill -TERM $pid_emul
-        wait $pid_emul > /dev/null 2>&1
-    fi;
 }
 
 log_error() {
@@ -131,84 +101,6 @@ show_usage() {
     echo "  -d                                  Print debug messages while running tests"
     echo "  -k <LOG_LEVEL>                      (todo) Set Karma's log-level ('disable', 'error' - default, 'warn', 'info', 'debug')"
     echo "  -h                                  Show this message and exit"
-}
-
-start_emulator() {
-    if [ $should_print_debug -eq 1 ]; then
-        echo "Starting emulator..."
-    fi;
-
-    # Start emulator
-    cd $emulator_path
-    PYOPT=0 ./emu.sh > /dev/null 2>&1 &
-    #PYOPT=0 ./emu.sh &
-    pid_emul=$!
-    #PYOPT=0 ./emu.sh 2>&1 > /dev/null &
-
-    if [ $should_print_debug -eq 1 ]; then
-        echo "Emulator ready.\n"
-    fi;
-}
-
-start_transport() {
-    if [ $should_print_debug -eq 1 ]; then
-        echo "Starting trezord..."
-    fi;
-
-    cd $trezord_path
-    #./trezord-go -e 21324 > /dev/null 2>&1 &
-    ./trezord-go -e 21324 -e 21325 > /dev/null 2>&1 &
-    #./trezord-go -e 21324 -e 21325 &
-    #./trezord-go -e 21325 > /dev/null 2>&1 &
-    #./trezord-go &
-    # You can disable all USB in order to run on some virtuaized environments, for example Travis
-    # doesn't check for devices connected via USB, only for emulator
-    # ./trezord -e 21324 -u=false
-
-    #./trezord-go -e 21324 -e 21325 2>&1 > /dev/null &
-    pid_transport=$!
-
-    if [ $should_print_debug -eq 1 ]; then
-        echo "Bridge ready.\n"
-    fi;
-}
-
-init_device() {
-    mnemonic="$1"
-    pin="$2"
-    passphraseEnabled="$3" # True/False
-
-    if [ $should_print_debug -eq 1 ]; then
-        echo "Load device with mnemonic: '$mnemonic', pin: '$pin', passphrase: '$passphraseEnabled'..."
-    fi;
-
-    cd $base_path
-    if [ "$passphraseEnabled" == "True" ]; then
-        python3 ./src/__tests__/init_device.py -m "$mnemonic" -p "$pin" --passphrase 2>&1 > /dev/null
-    else
-        python3 ./src/__tests__/init_device.py -m "$mnemonic" -p "$pin" --no-passphrase 2>&1 > /dev/null
-    fi;
-
-    if [ $should_print_debug -eq 1 ]; then
-        echo "Device ready.\n"
-    fi;
-}
-
-prepare_environment() {
-    enable_passphrase="$1" # "True"/"False"
-
-    start_emulator
-    setup_mnemonic_nopin_nopassphrase ${enable_passphrase}
-    start_transport
-}
-
-setup_mnemonic_allallall_passphrase() {
-    init_device "$mnemonic_all" "$pin_0" "True"
-}
-
-setup_mnemonic_nopin_nopassphrase() {
-    enable_passphrase="$1" # "True"/"False"
-    init_device "${mnemonic_12}" "${pin_0}" "${enable_passphrase}"
 }
 
 show_available_subtests_for_test() {
@@ -245,53 +137,10 @@ show_default_paths() {
     echo "  emulator:   '${emulator_path}'"
     echo "  transport:  '${trezord_path}'"
 }
+################# General functions: END
 
-show_results() {
-    echo "\n"
 
-    pad=$(printf '%0.1s' "."{1..80})
-    pad_length=60
-
-    reset_ifs=$IFS
-    IFS=";"
-    for r in $test_results; do
-        test=$(echo ${r} | cut -d"@" -f1)
-        test_name=$(echo ${test}/ | cut -d"/" -f1)
-        subtest_name=$(echo ${test}/ | cut -d"/" -f2)
-        if [ -n "${subtest_name}" ]; then
-            subtest_name="/${subtest_name}"
-        fi;
-        full_name="${test_name}${subtest_name}"
-        full_name_color="${bold}${green}${test_name}${reset}${green}${subtest_name}${reset}"
-
-        test_result=$(echo $r | cut -d"@" -f2)
-
-        printf '%s' "- ${full_name_color}"
-        printf '%0.*s' $(($pad_length - ${#full_name})) "$pad"
-
-        #success=$(echo ,${test_result} | cut -d"," -f2)
-        #failed=$(echo ,${test_result} | cut -d"," -f1)
-        #printf '%s\n' "${red}${failed} ${green}${success}${reset}"
-        is_fail=$(echo ${test_result} | grep -E "FAILED|ERROR" >/dev/null && echo 1 || echo 0)
-        if [ $is_fail -eq 1 ]; then
-            printf '%s\n' "${red}${test_result}${reset}"
-        else
-            printf '%s\n' "${green}${test_result}${reset}"
-        fi;
-
-        #is_success=$(echo ${test_result} | grep "SUCCESS" >/dev/null && echo 1 || echo 0)
-        #if [ $is_success -eq 1 ]; then
-        #    printf '%s\n' "${green}${success}${reset}"
-        #else
-        #    printf '%s\n' "${red}${test_result}${reset}"
-        #fi;
-
-    done;
-    IFS=$reset_ifs
-
-    echo "\n"
-}
-
+################# Validation functions
 validate_subtest_name_for_test() {
     subtest_name=$1
     test_name=$2
@@ -349,62 +198,114 @@ validate_test_names() {
         fi;
     done;
 }
+################# Validation functions: END
 
+
+################# Device + transport functions
+kill_emul_transport() {
+    is_running_emul=$(ps $pid_emul > /dev/null && echo 1 || echo 0)
+    is_running_transport=$(ps $pid_transport > /dev/null && echo 1 || echo 0)
+
+    if [ $is_running_transport -eq 1 ]; then
+        kill -TERM $pid_transport
+        wait $pid_transport > /dev/null 2>&1
+    fi;
+
+    if [ $is_running_emul -eq 1 ]; then
+        kill -TERM $pid_emul
+        wait $pid_emul > /dev/null 2>&1
+    fi;
+}
+
+start_emulator() {
+    if [ $should_print_debug -eq 1 ]; then
+        echo "Starting emulator..."
+    fi;
+
+    # Start emulator
+    cd $emulator_path
+    PYOPT=0 ./emu.sh > /dev/null 2>&1 &
+    #PYOPT=0 ./emu.sh &
+    pid_emul=$!
+    #PYOPT=0 ./emu.sh 2>&1 > /dev/null &
+
+    if [ $should_print_debug -eq 1 ]; then
+        echo "Emulator ready.\n"
+    fi;
+}
+
+start_transport() {
+    if [ $should_print_debug -eq 1 ]; then
+        echo "Starting trezord..."
+    fi;
+
+    cd $trezord_path
+    #./trezord-go -e 21324 > /dev/null 2>&1 &
+    ./trezord-go -e 21324 -e 21325 > /dev/null 2>&1 &
+    #./trezord-go -e 21324 -e 21325 &
+    #./trezord-go -e 21325 > /dev/null 2>&1 &
+    #./trezord-go &
+    # You can disable all USB in order to run on some virtuaized environments, for example Travis
+    # doesn't check for devices connected via USB, only for emulator
+    # ./trezord -e 21324 -u=false
+
+    #./trezord-go -e 21324 -e 21325 2>&1 > /dev/null &
+    pid_transport=$!
+
+    if [ $should_print_debug -eq 1 ]; then
+        echo "Bridge ready.\n"
+    fi;
+}
+
+init_device() {
+    passphrase_enabled="$1" # True/False
+
+    cd $base_path
+    if [ "$passphrase_enabled" == "True" ]; then
+        python3 ./src/__tests__/init_device.py -m "${mnemonic_12}" -p "${pin_0}" --passphrase 2>&1 > /dev/null
+    else
+        python3 ./src/__tests__/init_device.py -m "${mnemonic_12}" -p "${pin_0}" --no-passphrase 2>&1 > /dev/null
+    fi;
+
+    if [ $should_print_debug -eq 1 ]; then
+        echo "Device ready.\n"
+    fi;
+}
+
+prepare_environment() {
+    enable_passphrase="$1" # "True"/"False"
+
+    start_emulator
+    init_device "${enable_passphrase}"
+    start_transport
+}
+################# Device + transport functions: END
+
+
+################# Test execution functions
 run_karma() {
     cd $base_path
 
     path_babel_node="./node_modules/babel-cli/bin/babel-node.js"
     path_karma="./node_modules/karma/bin/karma"
 
-    ${path_babel_node} ${path_karma} start --test="${1}" --subtests="${2}" | tee /dev/tty > $logs_path
-
-    # Leave the regular output and also redirect to log file
-    # $path_babel_node $path_karma start --test="$1" --subtest="$2" | tee /dev/tty > $logs_path
-
-
-    # If test has a subtest
-    # if [ -z "$2" ]; then
-    #     finished_test_names="${finished_test_names}$1;"
-    # else
-    #     finished_test_names="${finished_test_names}$1/$2;"
-    # fi;
-
-    # Grab last summary line after test has finished
-    # so we can show summary for all tests later
-    # todo: doesn't work when running 'signMessage/sign' and test fails
-    # result=$(cat $logs_path | grep Executed | cut -d ":" -f2 | tail -1)
-    # is_fail=$(echo ${result} | grep -E "FAILED|ERROR" >/dev/null && echo 1 || echo 0)
-    # if [ $is_fail -eq 1 ]; then
-    #     echo "${red}${result}${reset}"
-    # else
-    #     echo "${green}${result}${reset}"
-    # fi;
-
-    # finished_test_results="${finished_test_results}${result};"
-
-    # delimiter1="@"
-    # delimiter2=";"
-    # test_name="$1"
-    # if [ -n "$2" ]; then
-    #     test_name="$1/$2"
-    # fi;
-    # test_results="${test_results}${test_name}${delimiter1}${result}${delimiter2}"
+    ${path_babel_node} ${path_karma} start --tests="${1}"
 }
 
-run_all_tests() {
+all_tests() {
     echo "${green}${bold}Running all tests...${reset}"
-    for t in $available_tests; do
-        run_test $t
-    done
+    # for t in $available_tests; do
+    #     run_test $t
+    # done
+
+    run_tests "${available_tests}"
 }
 
-run_specified_tests() {
-    for t in $1; do
-        run_test $t
-    done;
+specified_tests() {
+    run_tests "$1"
 }
 
-run_excluded_tests() {
+excluded_tests() {
     not_to_run="$1"
 
     echo "${yellow}${bold}Excluded tests: ${not_to_run}${reset}"
@@ -417,55 +318,52 @@ run_excluded_tests() {
     rm -f "./tmp1.$$.txt"
     rm -f "./tmp2.$$.txt"
 
-    echo "TESTS TO RUN: ${to_run}"
+    run_tests "${to_run}"
+}
 
-    for t in $to_run; do
-        run_test $t
+run_tests() {
+    test_names="$1"
+
+    will_run_passphrase="false"
+
+    # First loop through all tests and check whether a passphrase test will run
+    test_names_filtered=""
+    for test_name in $test_names; do
+        # Check whether specified test was specified also with a subtest
+        # - trailing '/' must be added so the cut command works for $subtest_to_run
+        # - if $test is only name of the test without '/' (i.e.: 'test=ethereumSignTransaction' not 'test=ethereumSignTransaction/')
+        # the $subtest_to_run would be same as the $test_to_run
+        test_to_run=$(echo ${test_name}/ | cut -d"/" -f1)
+        subtest_to_run=$(echo ${test_name}/ | cut -d"/" -f2)
+
+        if [ $test_to_run = "passphrase" ]; then
+            # Run passphrse test first because it has a different environment
+            will_run_passphrase="true"
+        else
+            test_names_filtered="${test_names_filtered} ${test_name}"
+        fi
     done;
-}
 
-run_test() {
-    # Check whether specified test was specified also with a subtest
-    # - trailing '/' must be added so the cut command works for $subtest_to_run
-    # - if $test is only name of the test without '/' (i.e.: 'test=ethereumSignTransaction' not 'test=ethereumSignTransaction/')
-    # the $subtest_to_run would be same as the $test_to_run
-    test_to_run=$(echo ${1}/ | cut -d"/" -f1)
-    subtest_to_run=$(echo ${1}/ | cut -d"/" -f2)
-
-    echo "${green}${bold} - Current test: ${test_to_run}${reset}"
-
-    # Passphrase test is only test requiring enabled passphrase
-    if [ ${test_to_run} = "passphrase" ]; then
+    if [ ${will_run_passphrase} = "true" ]; then
         prepare_environment "True"
-    else
+        # Run karma with passphrase as the only test
+        run_karma "passphrase"
+        kill_emul_transport
+    fi
+
+    # If any additional tests are left can run now
+    if [ -n "${test_names_filtered}" ]; then
         prepare_environment "False"
-    fi;
-
-    if [ -n "${subtest_to_run}" ]; then
-        # Subtest was specified
-        # Run only the specified subtest
-        subtests=${subtest_to_run}
-    else
-        # Subtest wasn't specified
-        # If a specified test has any subtests run all of them
-        subtests=${test_to_run}_subtests
-        subtests=${!subtests}
-    fi;
-
-    if [ -n "${subtests}" ]; then
-        run_karma "${test_to_run}" "${subtests}"
-        # for subtest in $subtests; do
-        #     echo "${green}   - subtest: ${subtest}${reset}"
-        #     run_karma ${test_to_run} ${subtest}
-        # done;
-    else
-        run_karma "${test_to_run}"
-    fi;
-    kill_emul_transport
+        run_karma "${test_names_filtered}"
+        kill_emul_transport
+    fi
 }
-################# Functions: END
+################# Test execution functions: END
 
-################# Scripts starts here #################
+
+
+
+################# Script execution starts here #################
 # Show help if no option provided
 if [ $# -eq 0 ]; then
     show_usage
@@ -524,12 +422,11 @@ done
 shift $((OPTIND-1))
 
 if [ "$run_type" = "all" ]; then
-    run_all_tests
+    all_tests
 elif [ "$run_type" = "specified" ]; then
-    run_specified_tests "$tests_to_run"
+    specified_tests "$tests_to_run"
 elif [ "$run_type" = "excluded" ]; then
-    run_excluded_tests "$tests_not_to_run"
+    excluded_tests "$tests_not_to_run"
 fi;
 
-# show_results
 cleanup

@@ -102,7 +102,9 @@ export const verifyMessageSegwitNative = () => {
     const testName = 'VerifyMessageSegwitNative';
 
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

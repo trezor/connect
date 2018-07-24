@@ -337,10 +337,12 @@ export const nemSignTransactionTransfers = () => {
         knownMosaicWithLevy,
         multipleMosaics,
     };
-    const testName = 'NEMSignTransactionTransfers';
+    const testName = 'nemSignTransactionTransfers';
 
     return {
-        ...availableSubtests,
         testName,
+        subtests: {
+            ...availableSubtests,
+        },
     };
 };

@@ -60,6 +60,8 @@ import type {
     ExpectedPassphraseResponse,
 } from 'flowtype/tests/passphrase';
 
+
+
 declare module 'flowtype/tests' {
     declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
     declare export type GetAddressSegwitAvailableSubtests = 'showSegwit';
