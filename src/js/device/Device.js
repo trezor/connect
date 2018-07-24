@@ -356,12 +356,17 @@ export default class Device extends EventEmitter {
         return this.features === undefined;
     }
 
-    async updateDescriptor(descriptor: DeviceDescriptor): Promise<void> {
-        _log.debug('updateDescriptor', 'currentSession', this.originalDescriptor.session, 'upcoming', descriptor.session, 'lastUsedID', this.activitySessionID);
+    async updateDescriptor(upcomingDescriptor: DeviceDescriptor): Promise<void> {
+        _log.debug('updateDescriptor', 'currentSession', this.originalDescriptor.session, 'upcoming', upcomingDescriptor.session, 'lastUsedID', this.activitySessionID);
+
+        if (!this.originalDescriptor.session && !upcomingDescriptor.session && !this.activitySessionID) {
+            // no change
+            return;
+        }
 
         if (this.deferredActions[ DEVICE.ACQUIRED ]) { await this.deferredActions[ DEVICE.ACQUIRED ].promise; }
 
-        if (descriptor.session === null) {
+        if (upcomingDescriptor.session === null) {
             // released
             if (this.originalDescriptor.session === this.activitySessionID) {
                 // by myself
@@ -387,7 +392,7 @@ export default class Device extends EventEmitter {
         } else {
             // acquired
             // TODO: Case where listen event will dispatch before this.transport.acquire (this.acquire) return ID
-            if (descriptor.session === this.activitySessionID) {
+            if (upcomingDescriptor.session === this.activitySessionID) {
                 // by myself
                 _log.debug('ACQUIRED BY MYSELF');
                 if (this.deferredActions[ DEVICE.ACQUIRE ]) {
@@ -400,7 +405,7 @@ export default class Device extends EventEmitter {
                 this.interruptionFromOutside();
             }
         }
-        this.originalDescriptor = descriptor;
+        this.originalDescriptor = upcomingDescriptor;
     }
 
     disconnect(): void {
