@@ -1,44 +1,20 @@
 # TREZOR Connect API (version 5)
 
-TREZOR Connect is a platform for easy integration of TREZOR into 3rd party services. It provides websites with functionality to authenticate users, access public keys and sign transactions. User interface is presented in a secure popup window.
+TREZOR Connect is a platform for easy integration of TREZOR into 3rd party services. It provides API with functionality to access public keys, sign transactions and authenticate users. User interface is presented in a secure popup window served from `https://connect.trezor.io/5/popup.html`
+
+* [Integration](docs/index.md)
+* [Development](https://wiki.trezor.io/Developers_guide:Trezor_Connect_API)
+
 
 ## Versions
-
 We started tagging versions and releasing them to separate URLs, so we don't break any existing (and working) integrations.
-Currently, we are at version 5 has an url `https://connect.trezor.io/5/trezor-connect.js`.
 
-## Install
+Currently, we are at version 5, which has an url https://connect.trezor.io/5/trezor-connect.js.
+<br> 
+The older version listed below are still working, but new features are not being added.
+* https://connect.trezor.io/4/connect.js, 
+* https://connect.trezor.io/3/connect.js, 
+* https://connect.trezor.io/2/connect.js 
+* https://trezor.github.io/connect/connect.js, 
 
-Install with npm:
-```html
-npm install trezor-connect
-```
-
-Install with yarn:
-```html
-yarn add trezor-connect
-```
-
-Or include library as inline script
-```html
-<script src="https://connect.trezor.io/5/trezor-connect.js"></script>
-```
-
-## Methods
-
-All API calls are promises. Resolve is guaranteed to get called
-with a `result` object, even if user closes the window, network connection times
-out, etc. In case of failure, `result.success` is set to false and `result.payload.error` is
-the error message. It is recommended to log the error message and let user
-restart the action.
-
-## Documentation
-
-* [Login](docs/requestLogin.md)
-* [Export public key](docs/getPublicKey.md)
-* [Sign transaction](docs/signTransaction.md)
-* [Request payment](docs/composeTransaction.md)
-* [Sign and Verify message](docs/signVerifyMessage.md)
-* [Get account info](docs/getAcountInfo.md)
-* [Show address](docs/showAddress.md)
-* [Symmetric key-value encryption](docs/cipherKeyValue.md)
+With regards to this repo - All updates should go to master branch, the previus releases are in corresponding branches. The gh-pages is the same older version, that is used at trezor.github.io/connect/connect.js, and it's there for backwards compatibility; please don't touch.
