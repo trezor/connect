@@ -237,6 +237,7 @@ export type PublicKey = {
 // combined PublicKey and bitcoin.HDNode
 export type HDNodeResponse = {
     path: Array<number>,
+    serializedPath: string,
     childNum: number,
     xpub: string,
     xpubSegwit?: string,

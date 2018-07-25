@@ -119,6 +119,7 @@ export default class DeviceCommands {
 
         const response: trezor.HDNodeResponse = {
             path,
+            serializedPath: getSerializedPath(path),
             childNum: publicKey.node.child_num,
             xpub: coinInfo ? hdnodeUtils.convertXpub(publicKey.xpub, coinInfo.network) : publicKey.xpub,
             chainCode: publicKey.node.chain_code,
