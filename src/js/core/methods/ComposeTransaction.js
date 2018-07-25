@@ -97,7 +97,7 @@ export default class ComposeTransaction extends AbstractMethod {
         this.params = {
             outputs,
             coinInfo,
-            push: payload.hasOwnProperty('push') ? payload.push : true,
+            push: payload.hasOwnProperty('push') ? payload.push : false,
         };
     }
 
