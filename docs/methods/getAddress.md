@@ -51,17 +51,18 @@ Result with only one address
     payload: {
         address: string,     // displayed address
         path: Array<number>, // hardended path
+        serializedPath: string,
     }
 }
 ```
-Result with bundle of addresses sorted by FIFO
+Result with bundle of addresses
 ```javascript
 {
     success: true,
     payload: [
-        { address: string, path: Array<number> }, // address 1
-        { address: string, path: Array<number> }, // address 2
-        { address: string, path: Array<number> }, // address 3
+        { address: string, path: Array<number>, serializedPath: string }, // address 1
+        { address: string, path: Array<number>, serializedPath: string }, // address 2
+        { address: string, path: Array<number>, serializedPath: string }, // address 3
     ]
 }
 ```
@@ -80,7 +81,7 @@ Error
 v4 and below:
 ```javascript
 TrezorConnect.getAddress("m/49'/0'/4'/0/0", function(result) {
-    // result not changed
+    // added "serializedPath" field
 });
 ```
 should be
@@ -89,6 +90,6 @@ should be
 TrezorConnect.getAddress({ 
     path: "m/49'/0'/4'/0/0" 
 }).then(function(result) {
-    // result not changed
+    ...
 })
 ```

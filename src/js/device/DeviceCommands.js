@@ -154,8 +154,9 @@ export default class DeviceCommands {
         });
 
         return {
-            path: address_n,
             address: response.message.address,
+            path: address_n,
+            serializedPath: getSerializedPath(address_n),
         };
     }
 

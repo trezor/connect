@@ -545,4 +545,5 @@ export type AccountInfo = {
 export type Address = {
     address: string,
     path: Array<number>,
+    serializedPath: string,
 }
