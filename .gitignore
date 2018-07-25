@@ -2,6 +2,7 @@
 _old
 dist
 npm
+src/html/inline.html
 
 # Dependency directory
 node_modules
