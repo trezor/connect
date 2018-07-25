@@ -194,8 +194,9 @@ export default class DeviceCommands {
             show_display: !!showOnTrezor,
         });
         return {
-            path: address_n,
             address: response.message.address,
+            path: address_n,
+            serializedPath: getSerializedPath(address_n),
         };
     }
 

@@ -48,6 +48,7 @@ Result with only one address
     payload: {
         address: string,     // displayed address
         path: Array<number>, // hardended path
+        serializedPath: string,
     }
 }
 ```
@@ -56,9 +57,9 @@ Result with bundle of addresses sorted by FIFO
 {
     success: true,
     payload: [
-        { address: string, path: Array<number> }, // account 1
-        { address: string, path: Array<number> }, // account 2
-        { address: string, path: Array<number> }  // account 3
+        { address: string, path: Array<number>, serializedPath: string }, // account 1
+        { address: string, path: Array<number>, serializedPath: string }, // account 2
+        { address: string, path: Array<number>, serializedPath: string }  // account 3
     ]
 }
 ```
@@ -89,5 +90,6 @@ TrezorConnect.ethereumGetAddress({
 }).then(function(result) {
     result.address   // address with "0x" prefix and checksum
     result.path      // no change
+    result.serializedPath // added
 })
 ```
