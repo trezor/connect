@@ -50,19 +50,18 @@ Result with only one address
     payload: {
         address: string,
         path: Array<number>,
-        publicKey: string,
+        serializedPath: string,
     }
 }
 ```
-Result with bundle of addresses sorted by FIFO
+Result with bundle of addresses
 ```javascript
 {
     success: true,
     payload: [
-        { address: string, path: Array<number>, publicKey: string },
-        { address: string, path: Array<number>, publicKey: string },
-        ...,
-        { address: string, path: Array<number>, publicKey: string },
+        { address: string, path: Array<number>, serializedPath: string }, // account 1
+        { address: string, path: Array<number>, serializedPath: string }, // account 2
+        { address: string, path: Array<number>, serializedPath: string }, // account 3
     ]
 }
 ```
@@ -86,7 +85,6 @@ TrezorConnect.nemGetAddress(
     function(result) {
         result.address,
         result.path
-        result.public_key
     }
 );
 ```
@@ -100,6 +98,6 @@ TrezorConnect.nemGetAddress({
 }).then(function(result) {
     result.address,    // no change
     result.path,       // no change
-    result.publicKey   // transformed into 'camel case'
+    result.serializedPath   // added
 })
 ```

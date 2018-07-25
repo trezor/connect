@@ -266,6 +266,7 @@ export type SignTxInfoToTrezor = {
 export type NEMAddress = {
     address: string,
     path: Array<number>,
+    serializedPath: string,
 }
 
 export type NEMSignedTx = {

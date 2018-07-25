@@ -217,31 +217,20 @@ export default class DeviceCommands {
     }
 
     async nemGetAddress(address_n: Array<number>, network: number, showOnTrezor: boolean): Promise<trezor.NEMAddress> {
-        const response: Object = await this.typedCall('NEMGetAddress', 'NEMAddress', {
+        const response: MessageResponse<trezor.NEMAddress> = await this.typedCall('NEMGetAddress', 'NEMAddress', {
             address_n,
             network,
             show_display: !!showOnTrezor,
         });
         return {
-            path: address_n,
             address: response.message.address,
+            path: address_n,
+            serializedPath: getSerializedPath(address_n),
         };
     }
 
     async nemSignTx(transaction: any): Promise<MessageResponse<trezor.NEMSignedTx>> {
         return this.typedCall('NEMSignTx', 'NEMSignedTx', transaction);
-    }
-
-    // deprecated
-    async stellarGetPublicKey(address_n: Array<number>): Promise<MessageResponse<trezor.StellarPublicKeyMessage>> {
-        const response: Object = await this.typedCall('StellarGetPublicKey', 'StellarPublicKey', { address_n });
-        return {
-            type: response.type,
-            message: {
-                path: address_n,
-                public_key: response.message.public_key,
-            },
-        };
     }
 
     async stellarGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.StellarAddress> {
