@@ -398,9 +398,11 @@ export type NEMSignTxMessage = {
 // this type is returned from connect
 export type StellarAddress = {
     path: Array<number>,
+    serializedPath: string,
     address: string,
     publicKey: string,
 }
+
 // this type is returned from device
 export type StellarSignedTx = {
     public_key: string,
@@ -414,13 +416,11 @@ export type StellarPaymentOp = {
 
 // this type is returned from device
 export type StellarAddressMessage = {
-    path: Array<number>,
     address: string,
 }
 // this type is returned from device
 export type StellarPublicKeyMessage = {
     public_key: string,
-    path: Array<number>,
 }
 
 // those types are sent TO device

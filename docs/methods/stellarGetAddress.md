@@ -48,6 +48,7 @@ Result with only one address
     payload: {
         address: string,
         path: Array<number>,
+        serializedPath: string,
         publicKey: string,
     }
 }
@@ -57,9 +58,9 @@ Result with bundle of addresses
 {
     success: true,
     payload: [
-        { address: string, path: Array<number>, publicKey: steing }, // account 1
-        { address: string, path: Array<number>, publicKey: string }, // account 2
-        { address: string, path: Array<number>, publicKey: string }, // account 3
+        { address: string, path: Array<number>, serializedPath: string, publicKey: steing }, // account 1
+        { address: string, path: Array<number>, serializedPath: string, publicKey: string }, // account 2
+        { address: string, path: Array<number>, serializedPath: string, publicKey: string }, // account 3
     ]
 }
 ```

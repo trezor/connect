@@ -9,6 +9,7 @@ import * as helper from './helpers/stellarSignTx';
 import type { StellarSignedTx } from '../../types/trezor';
 import type { Transaction as $StellarTransaction } from '../../types/stellar';
 import type { CoreMessage } from '../../types';
+import type { StellarSignTransaction$ } from '../../types/response';
 
 type Params = {
     path: Array<number>,
@@ -45,13 +46,18 @@ export default class StellarSignTransaction extends AbstractMethod {
         };
     }
 
-    async run(): Promise<StellarSignedTx> {
-        return await helper.stellarSignTx(
+    async run(): Promise<$PropertyType<StellarSignTransaction$, 'payload'>> {
+        const response: StellarSignedTx = await helper.stellarSignTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,
             this.params.ledgerVersion,
             this.params.networkPassphrase,
             this.params.transaction
         );
+
+        return {
+            publicKey: response.public_key,
+            signature: response.signature,
+        }
     }
 }

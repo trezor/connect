@@ -16,7 +16,6 @@ import type {
 
     Success,
     SignedTx,
-    SignedIdentity,
     StellarAddress,
     StellarSignedTx,
 

@@ -6,7 +6,7 @@ import randombytes from 'randombytes';
 
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as hdnodeUtils from '../utils/hdnode';
-import { isSegwitPath } from '../utils/pathUtils';
+import { isSegwitPath, getSerializedPath } from '../utils/pathUtils';
 import Device from './Device';
 
 import { getSegwitNetwork } from '../data/CoinInfo';
@@ -256,6 +256,7 @@ export default class DeviceCommands {
 
         return {
             path: address_n,
+            serializedPath: getSerializedPath(address_n),
             address: address.message.address,
             publicKey: publicKey.message.public_key,
         };
