@@ -26,9 +26,9 @@ export default class RequestLogin extends AbstractMethod {
 
     constructor(message: CoreMessage) {
         super(message);
-        this.useEmptyPassphrase = true;
         this.requiredPermissions = ['read', 'write'];
         this.info = 'Login';
+        this.useEmptyPassphrase = true;
 
         const payload: Object = message.payload;
 
