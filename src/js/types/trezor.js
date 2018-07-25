@@ -190,7 +190,7 @@ export type TxRequest = {
 
 export type SignedTx = {
     signatures: Array<string>,
-    serialized: string,
+    serializedTx: string,
     txid?: string,
 };
 

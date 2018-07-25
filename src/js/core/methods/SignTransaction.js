@@ -100,7 +100,7 @@ export default class SignTransaction extends AbstractMethod {
         );
 
         if (this.params.push) {
-            const txid: string = await this.backend.sendTransactionHex(response.serialized);
+            const txid: string = await this.backend.sendTransactionHex(response.serializedTx);
             return {
                 ...response,
                 txid,
