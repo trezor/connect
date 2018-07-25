@@ -293,12 +293,13 @@ export default class DeviceCommands {
         identity: trezor.Identity,
         challenge_hidden: string,
         challenge_visual: string
-    ): Promise<MessageResponse<trezor.SignedIdentity>> {
-        return this.typedCall('SignIdentity', 'SignedIdentity', {
+    ): Promise<trezor.SignedIdentity> {
+        const response: MessageResponse<trezor.SignedIdentity> = await this.typedCall('SignIdentity', 'SignedIdentity', {
             identity,
             challenge_hidden,
             challenge_visual,
         });
+        return response.message;
     }
 
     // async clearSession(): Promise<MessageResponse<trezor.Success>> {

@@ -123,9 +123,9 @@ export type $PushTransaction = $Common & $Exact<{
 
 export type $RequestLogin = $Common & $Exact<{
     challengeHidden: string,
-    challengeVisible: string,
+    challengeVisual: string,
 }> | $Common & $Exact<{
-    callback: () => Promise<?{ hidden: string, visual: string}>,
+    callback: () => Promise<?{ challengeHidden: string, challengeVisual: string}>,
 }>
 
 export type $SignMessage = $Common & {

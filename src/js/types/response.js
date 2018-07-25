@@ -97,7 +97,11 @@ export type PushTransaction$ = {
 
 export type RequestLogin$ = {
     success: true,
-    payload: SignedIdentity,
+    payload: {
+        address: string,
+        publicKey: string,
+        signature: string,
+    },
 } | Unsuccessful$;
 
 export type NEMGetAddress$ = {
@@ -127,8 +131,12 @@ export type StellarGetAddress$ = {
 
 export type StellarSignTransaction$ = {
     success: true,
-    payload: StellarSignedTx,
+    payload: {
+        publicKey: string,
+        signature: string,
+    },
 } | Unsuccessful$;
+
 
 export type VerifyMessage$ = {
     success: true,

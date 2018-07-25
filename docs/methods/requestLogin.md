@@ -67,6 +67,7 @@ TrezorConnect.requestLogin({
 {
     success: true,
     payload: {
+        address: string,
         publicKey: string,
         signature: string,
     }
@@ -112,6 +113,7 @@ TrezorConnect.requestLogin(
         result.signatures    // not changed
         result.public_key    // renamed to "publicKey"
         result.version       // removed, it's not possible to use this method witch outdated firmware
+        // added "address" field
     }
 );
 ```
