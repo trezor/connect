@@ -1,5 +1,5 @@
 ## Symmetric key-value encryption
-Asks device to encrypt value using the private key derived by given BIP32 path and the given key.
+Asks device to encrypt value using the private key derived by given BIP32 path and the given key. IV is always computed automatically.
 
 More information can be found in [SLIP-0011](https://github.com/satoshilabs/slips/blob/master/slip-0011.md).
 
