@@ -1,3 +1,12 @@
+# 5.0.25
+__added__
+- Added documentation
+__fixed__
+- filter UI events for popup and trusted apps
+- Fixed `TrezorConnect.signMessage` and `TrezorConnect.verifyMessage` signature to base64 format
+__changed__
+- Changed constants prefix from "__" to "-"
+
 # 5.0.24
 __fixed__
 - removed popup delay if lazy loading
