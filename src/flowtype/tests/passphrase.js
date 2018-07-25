@@ -6,7 +6,9 @@ import type {
 
 declare module 'flowtype/tests/passphrase' {
     declare export type TestPassphrasePayload = {
-        message: TestGetPublicKeyPayload,
+        method: 'getPublicKey',
+        coin: 'btc',
+        path: "m/49'/0'/0'",
         passphrase: string,
         state: string,
     };
