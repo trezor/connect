@@ -220,8 +220,8 @@ export default class DeviceCommands {
             return hex;
         }
 
-        const response: MessageResponse<trezor.EthereumAddress> = await this.typedCall('TronSignTx', 'TronSignedTx', {
-            transaction: {
+        /*
+        {
                 ref_block_bytes: "C565",
                 ref_block_hash: "6CD623DBE83075D8",
                 expiration: 1528768890000,
@@ -239,7 +239,11 @@ export default class DeviceCommands {
                         },
                     },
                 },
-            },
+            }
+         */
+
+        const response: MessageResponse<trezor.EthereumAddress> = await this.typedCall('TronSignTx', 'TronSignedTx', {
+            transaction: transaction,
         });
 
         return {
