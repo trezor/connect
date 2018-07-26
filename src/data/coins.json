@@ -17,6 +17,7 @@
         "coin_label": "Bitcoin Cash",
         "coin_name": "Bcash",
         "coin_shortcut": "BCH",
+        "cooldown": 100,
         "curve_name": "secp256k1",
         "decred": false,
         "default_fee_b": {
@@ -71,6 +72,7 @@
         "coin_label": "Bitcoin Gold",
         "coin_name": "Bgold",
         "coin_shortcut": "BTG",
+        "cooldown": 100,
         "curve_name": "secp256k1",
         "decred": false,
         "default_fee_b": {
@@ -125,6 +127,7 @@
         "coin_label": "Bitcoin",
         "coin_name": "Bitcoin",
         "coin_shortcut": "BTC",
+        "cooldown": 100,
         "curve_name": "secp256k1",
         "decred": false,
         "default_fee_b": {
@@ -179,6 +182,7 @@
         "coin_label": "Dash",
         "coin_name": "Dash",
         "coin_shortcut": "DASH",
+        "cooldown": 100,
         "curve_name": "secp256k1",
         "decred": false,
         "default_fee_b": {
@@ -230,6 +234,7 @@
         "coin_label": "Dogecoin",
         "coin_name": "Dogecoin",
         "coin_shortcut": "DOGE",
+        "cooldown": 100,
         "curve_name": "secp256k1",
         "decred": false,
         "default_fee_b": {
@@ -281,6 +286,7 @@
         "coin_label": "Litecoin",
         "coin_name": "Litecoin",
         "coin_shortcut": "LTC",
+        "cooldown": 100,
         "curve_name": "secp256k1",
         "decred": false,
         "default_fee_b": {
@@ -319,13 +325,17 @@
         "address_type_p2sh": 196,
         "bech32_prefix": "tb",
         "bip115": false,
-        "bitcore": [],
-        "blockbook": ["https://testnet-bitcore1.trezor.io"],
+        "bitcore": [
+            "https://testnet-bitcore1.trezor.io",
+            "https://testnet-bitcore2.trezor.io"
+        ],
+        "blockbook": [],
         "blocktime_seconds": 600,
         "cashaddr_prefix": null,
         "coin_label": "Testnet",
         "coin_name": "Testnet",
         "coin_shortcut": "TEST",
+        "cooldown": 100,
         "curve_name": "secp256k1",
         "decred": false,
         "default_fee_b": {
@@ -377,6 +387,7 @@
         "coin_label": "Vertcoin",
         "coin_name": "Vertcoin",
         "coin_shortcut": "VTC",
+        "cooldown": 100,
         "curve_name": "secp256k1",
         "decred": false,
         "default_fee_b": {
@@ -428,6 +439,7 @@
         "coin_label": "Zcash",
         "coin_name": "Zcash",
         "coin_shortcut": "ZEC",
+        "cooldown": 100,
         "curve_name": "secp256k1",
         "decred": false,
         "default_fee_b": {
