@@ -46,44 +46,6 @@ const simple = (): SubtestNemSignTransaction => {
     };
 };
 
-const encryptedPayload = (): SubtestNemSignTransaction => {
-    const testPayloads: Array<TestNemSignTransactionPayload> = [
-        /* {
-            method: 'nemSignTransaction',
-            path: "m/44'/1'/0'/0'/0'",
-            transaction: {
-                timeStamp: 74649215,
-                amount: 2000000,
-                fee: 2000000,
-                recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
-                type: TX_TYPES.transfer,
-                deadline: 74735615,
-                message: {
-                    payload: '74686973206d6573736167652073686f756c6420626520656e63727970746564',
-                    publicKey: '5a5e14c633d7d269302849d739d80344ff14db51d7bcda86045723f05c4e4541',
-                    type: 2,
-                },
-                version: -1744830464,
-            },
-        }, */
-    ];
-    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
-        /* {
-            payload: {
-                todo: 'check python-trezor',
-                // tx.data[:124]
-                signature: 64,
-            },
-        }, */
-    ];
-
-    return {
-        testPayloads,
-        expectedResponses,
-        specName: '/encryptedPayload',
-    };
-};
-
 const xemAsMosaic = (): SubtestNemSignTransaction => {
     const testPayloads: Array<TestNemSignTransactionPayload> = [
         {
@@ -330,7 +292,6 @@ const multipleMosaics = (): SubtestNemSignTransaction => {
 export const nemSignTransactionTransfers = (): TestFunction => {
     const availableSubtests = {
         simple,
-        encryptedPayload,
         xemAsMosaic,
         unknownMosaic,
         knownMosaic,

@@ -58,7 +58,7 @@ ethereumSignTransaction_subtests="knownErc20Token unknownErc20Token noData data 
 nemSignTransactionMosaic_subtests="supplyChange creation creationProperties creationLevy"
 nemSignTransactionMultisig_subtests="aggregateModification multisig multisigSigner"
 nemSignTransactionOthers_subtests="importanceTransfer provisionNamespace"
-nemSignTransactionTransfers_subtests="simple encryptedPayload xemAsMosaic unknownMosaic knownMosaic knownMosaicWithLevy multipleMosaics"
+nemSignTransactionTransfers_subtests="simple xemAsMosaic unknownMosaic knownMosaic knownMosaicWithLevy multipleMosaics"
 
 getAccountInfo_subtests="firstAccount zeroBalance pathInvalid zeroBalance xpubInsteadOfPath"
 
