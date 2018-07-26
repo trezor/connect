@@ -7,7 +7,7 @@ import { container, iframe, showView, postMessage } from './common';
 import DataManager from '../../data/DataManager';
 import type { SelectDevice } from '../../types/ui-request';
 
-const initWebUsbButton = (webusb: boolean): void => {
+const initWebUsbButton = (webusb: boolean, showLoader: boolean): void => {
     if (!webusb || !iframe) return;
 
     const webusbContainer: HTMLElement = container.getElementsByClassName('webusb')[0];
@@ -32,7 +32,9 @@ const initWebUsbButton = (webusb: boolean): void => {
         const usb = iframe.clientInformation.usb;
         try {
             await usb.requestDevice({ filters: DataManager.getConfig().webusb });
-            showView('loader');
+            // window.open('javascript:void(0)', DataManager.getSettings('windowName'));
+            // window.open('javascript:void(0)', 'parent-window');
+            if (showLoader) { showView('loader'); }
             restorePosition(currentWidth, currentHeight);
         } catch (error) {
             restorePosition(currentWidth, currentHeight);
@@ -46,12 +48,12 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
     if (!payload.devices || !Array.isArray(payload.devices) || payload.devices.length === 0) {
         // No device connected
         showView('connect');
-        initWebUsbButton(payload.webusb);
+        initWebUsbButton(payload.webusb, true);
         return;
     }
 
     showView('select-device');
-    initWebUsbButton(payload.webusb);
+    initWebUsbButton(payload.webusb, false);
 
     // If only 'remember device for now' toggle and no webusb button is available
     // show it right under the table
