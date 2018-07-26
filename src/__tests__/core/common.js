@@ -4,7 +4,7 @@ let currentSuite: string = '';
 
 export const settings = {
     configSrc: 'base/src/__tests__/config.json', // constant
-    debug: false,
+    debug: __karma__.config.printDebug === 'true',
     origin: 'localhost',
     priority: 0,
     trustedHost: true,
