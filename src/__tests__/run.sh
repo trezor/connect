@@ -95,6 +95,7 @@ show_usage() {
     echo "  -a                                  Run all available tests"
     echo "  -t \"<,TEST_NAME/SUBTEST_NAME>\"      Run specified tests/subtest"
     echo "  -x \"<,TEST_NAME>\"                   Run all but specified tests"
+    echo "  -m                                  Run on a physical device"
     echo "  -l                                  Show all available tests and exit."
     echo "  -s <TEST_NAME>                      Show all available subtests for the specified test name and exit."
     echo "  -e                                  Specify path to emulator"
