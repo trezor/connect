@@ -1,6 +1,7 @@
 /* @flow */
 
-type DoneFn = () => void;
+declare type DoneFn = () => void;
+declare type ExpectFn = (actual: Object) => any;
 type ActionFn = (done: DoneFn) => Promise<void> | void;
 type AssertionFn = (done: DoneFn) => Promise<void> | void;
 
@@ -59,7 +60,7 @@ declare function afterEach(action: ActionFn, timeout?: number): void;
 declare function it(expectation: string, assertion?: AssertionFn, timeout?: number): void;
 
 // todo?
-declare function expect(): any;
+declare function expect(actual: Object): any;
 
 declare type Reporter = {
     jasmineDone?: (suiteInfo: JasmineDoneInfo) => void,
