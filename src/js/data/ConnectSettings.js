@@ -67,10 +67,6 @@ export const parse = (input: ?Object): ConnectSettings => {
         }
     }
 
-    if (window.location.protocol === 'file:') {
-        settings.origin = window.location.origin + window.location.pathname;
-    }
-
     if (typeof input.connectSrc === 'string') {
         // TODO: escape string, validate url
         settings.connectSrc = input.connectSrc;
@@ -95,6 +91,12 @@ export const parse = (input: ?Object): ConnectSettings => {
 
     if (typeof input.pendingTransportEvent === 'boolean') {
         settings.pendingTransportEvent = input.pendingTransportEvent;
+    }
+
+    // local files
+    if (window.location.protocol === 'file:') {
+        settings.origin = window.location.origin + window.location.pathname;
+        settings.webusb = false;
     }
 
     // $FlowIssue: settings.excludedDevices field is intentionally not defined in flowtype. it's used only in tests to exclude debug-link device.
