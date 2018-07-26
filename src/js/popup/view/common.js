@@ -17,7 +17,7 @@ export const setOperation = (operation: string): void => {
     const h2: HTMLElement = infoPanel.getElementsByTagName('h2')[0];
     const p: HTMLElement = infoPanel.getElementsByTagName('p')[0];
     h2.innerHTML = operation;
-    p.innerHTML = DataManager.getSettings('origin');
+    p.innerHTML = DataManager.getSettings('hostLabel') || DataManager.getSettings('origin');
 };
 
 export const init = (): any => {

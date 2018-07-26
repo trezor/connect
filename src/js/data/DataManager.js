@@ -14,6 +14,11 @@ type WhiteList = {
     +priority: number,
     +origin: string,
 }
+type KnownHost = {
+    +origin: string,
+    +label?: string,
+    +icon?: string,
+}
 type WebUSB = {
     +vendorId: string,
     +productId: string,
@@ -33,6 +38,7 @@ type Asset = {
 }
 type Config = {
     +whitelist: Array<WhiteList>,
+    +knownHosts: Array<KnownHost>,
     +webusb: Array<WebUSB>,
     +resources: Resources,
     +assets: Array<Asset>,
@@ -68,6 +74,12 @@ export default class DataManager {
                 this.settings.debug = false;
             }
             this.settings.priority = DataManager.getPriority(whitelist);
+
+            const knownHost: ?KnownHost = DataManager.getHostLabel(this.settings.origin || '');
+            if (knownHost) {
+                this.settings.hostLabel = knownHost.label;
+                this.settings.hostIcon = knownHost.icon;
+            }
 
             for (const asset of this.config.assets) {
                 const json: JSON = await httpRequest(`${asset.url}?r=${ ts }`, asset.type || 'json');
@@ -108,6 +120,10 @@ export default class DataManager {
             return whitelist.priority;
         }
         return DEFAULT_PRIORITY;
+    }
+
+    static getHostLabel(origin: string): ?KnownHost {
+        return this.config.knownHosts.find(host => host.origin === origin);
     }
 
     static getSettings(key: ?string): any {

@@ -6,6 +6,8 @@ export type ConnectSettings = {
     +configSrc: string, // constant
     debug: boolean,
     origin: ?string,
+    hostLabel?: string,
+    hostIcon?: string,
     priority: number,
     trustedHost: boolean,
     connectSrc: string,
