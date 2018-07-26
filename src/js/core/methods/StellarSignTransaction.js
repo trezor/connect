@@ -58,6 +58,6 @@ export default class StellarSignTransaction extends AbstractMethod {
         return {
             publicKey: response.public_key,
             signature: response.signature,
-        }
+        };
     }
 }

@@ -88,6 +88,6 @@ export default class RequestLogin extends AbstractMethod {
             address: response.address,
             publicKey: response.public_key,
             signature: response.signature,
-        }
+        };
     }
 }

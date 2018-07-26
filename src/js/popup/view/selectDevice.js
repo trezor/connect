@@ -107,7 +107,6 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
         wrapper.appendChild(deviceName);
         deviceButton.appendChild(wrapper);
 
-
         // device {
         //     status: 'available' | 'occupied' | 'used';
         //     type: 'acquired' | 'unacquired' | 'unreadable';

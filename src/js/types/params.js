@@ -13,7 +13,7 @@ import type {
 } from './stellar';
 
 import type {
-    MultisigRedeemScriptType
+    MultisigRedeemScriptType,
 } from './trezor';
 
 declare type $Common = {

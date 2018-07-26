@@ -75,7 +75,7 @@ const handleMessage = (event: PostMessageEvent): void => {
                 method: method ? method.info : null,
             }));
         } else {
-            console.warn("POPUP.OPENED: popupMessagePort not found");
+            console.warn('POPUP.OPENED: popupMessagePort not found');
         }
     }
 
@@ -128,15 +128,16 @@ const postMessage = (message: CoreMessage): void => {
         return;
     }
 
+    // eslint-disable-next-line no-use-before-define
     if (usingPopup && targetUiEvent(message)) {
         if (_popupMessagePort) {
             _popupMessagePort.postMessage(message);
         } else {
-            console.warn("postMessage: popupMessagePort not found");
+            console.warn('postMessage: popupMessagePort not found');
         }
     } else {
         let origin: ?string = DataManager.getSettings('origin');
-        if (!origin || origin.indexOf("file://") >= 0) origin = '*';
+        if (!origin || origin.indexOf('file://') >= 0) origin = '*';
         window.top.postMessage(message, origin);
     }
 };
@@ -151,7 +152,7 @@ const targetUiEvent = (message: CoreMessage): boolean => {
         UI.BUNDLE_PROGRESS,
     ];
     return (message.event === UI_EVENT && whitelistedMessages.indexOf(message.type) < 0);
-}
+};
 
 const filterDeviceEvent = (message: CoreMessage): boolean => {
     if (message.payload && message.payload.features) {

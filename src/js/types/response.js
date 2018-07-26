@@ -17,8 +17,6 @@ import type {
     Success,
     SignedTx,
     StellarAddress,
-    StellarSignedTx,
-
 } from './trezor';
 
 export type Unsuccessful$ = {
@@ -135,7 +133,6 @@ export type StellarSignTransaction$ = {
         signature: string,
     },
 } | Unsuccessful$;
-
 
 export type VerifyMessage$ = {
     success: true,

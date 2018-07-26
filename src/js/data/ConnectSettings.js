@@ -26,7 +26,7 @@ export type ConnectSettings = {
 
 const VERSION: string = '5.0.25';
 const versionN: Array<number> = VERSION.split('.').map(s => parseInt(s));
-const DIRECTORY: string = `${ versionN[0] }${ ( versionN[1] > 0 ? `.${versionN[1]}` : '' ) }/`;
+const DIRECTORY: string = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
 const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/';
 const SRC: string = window.__TREZOR_CONNECT_SRC || `${ DEFAULT_DOMAIN }${ DIRECTORY }`;
 

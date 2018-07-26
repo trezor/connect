@@ -68,7 +68,7 @@ export default class SignMessage extends AbstractMethod {
         const signatureBuffer = new Buffer(response.signature, 'hex');
         return {
             ...response,
-            signature: signatureBuffer.toString('base64')
-        }
+            signature: signatureBuffer.toString('base64'),
+        };
     }
 }

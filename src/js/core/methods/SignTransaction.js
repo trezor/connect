@@ -69,15 +69,15 @@ export default class SignTransaction extends AbstractMethod {
 
         payload.inputs.forEach(utxo => {
             validateParams(utxo, [
-                { name: 'amount', type: 'string' }
+                { name: 'amount', type: 'string' },
             ]);
-        })
+        });
 
         payload.outputs.forEach(utxo => {
             validateParams(utxo, [
-                { name: 'amount', type: 'string' }
+                { name: 'amount', type: 'string' },
             ]);
-        })
+        });
 
         const inputs: Array<TransactionInput> = validateTrezorInputs(payload.inputs, coinInfo);
         const hdInputs: Array<BuildTxInput> = inputs.map(inputToHD);
