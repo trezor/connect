@@ -24,9 +24,11 @@ export type ConnectSettings = {
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
-// const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/5/';
-// $FlowIssue
-const DEFAULT_DOMAIN: string = typeof LOCAL === 'string' ? 'http://localhost:8082/' : 'https://sisyfos.trezor.io/next/';
+const VERSION: string = '5.1.25';
+const versionN: Array<number> = VERSION.split('.').map(s => parseInt(s));
+const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/';
+const SRC: string = window.__TREZOR_CONNECT_SRC || `${ DEFAULT_DOMAIN }${ versionN[0] }${ ( versionN[1] > 0 ? `.${versionN[1]}` : '' ) }/`;
+
 export const DEFAULT_PRIORITY: number = 2;
 
 const initialSettings: ConnectSettings = {
@@ -35,11 +37,11 @@ const initialSettings: ConnectSettings = {
     origin: null,
     priority: DEFAULT_PRIORITY,
     trustedHost: false,
-    connectSrc: DEFAULT_DOMAIN,
-    iframeSrc: `${ DEFAULT_DOMAIN }iframe.html`,
+    connectSrc: SRC,
+    iframeSrc: `${ SRC }iframe.html`,
     popup: true,
-    popupSrc: `${ DEFAULT_DOMAIN }popup.html`,
-    webusbSrc: `${ DEFAULT_DOMAIN }webusb.html`,
+    popupSrc: `${ SRC }popup.html`,
+    webusbSrc: `${ SRC }webusb.html`,
     transportReconnect: false,
     webusb: true,
     pendingTransportEvent: true,
@@ -60,6 +62,10 @@ export const parse = (input: ?Object): ConnectSettings => {
         } else if (typeof input.debug === 'string') {
             settings.debug = input.debug === 'true';
         }
+    }
+
+    if (window.location.protocol === 'file:') {
+        settings.origin = window.location.origin + window.location.pathname;
     }
 
     if (typeof input.connectSrc === 'string') {
