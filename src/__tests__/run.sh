@@ -19,7 +19,7 @@ tests_to_run=""
 tests_not_to_run=""
 subtests_not_to_run=""
 
-should_print_debug=0
+should_print_debug="false"
 karma_log_level="error" # "disable", "error", "warn", "info", "debug"
 
 red=$(tput setaf 1)
@@ -221,27 +221,15 @@ kill_emul_transport() {
 }
 
 start_emulator() {
-    if [ $should_print_debug -eq 1 ]; then
-        echo "Starting emulator..."
-    fi;
-
     # Start emulator
     cd $emulator_path
     PYOPT=0 ./emu.sh > /dev/null 2>&1 &
     #PYOPT=0 ./emu.sh &
     pid_emul=$!
     #PYOPT=0 ./emu.sh 2>&1 > /dev/null &
-
-    if [ $should_print_debug -eq 1 ]; then
-        echo "Emulator ready.\n"
-    fi;
 }
 
 start_transport() {
-    if [ $should_print_debug -eq 1 ]; then
-        echo "Starting trezord..."
-    fi;
-
     cd $trezord_path
     #./trezord-go -e 21324 > /dev/null 2>&1 &
     ./trezord-go -e 21324 -e 21325 > /dev/null 2>&1 &
@@ -254,10 +242,6 @@ start_transport() {
 
     #./trezord-go -e 21324 -e 21325 2>&1 > /dev/null &
     pid_transport=$!
-
-    if [ $should_print_debug -eq 1 ]; then
-        echo "Bridge ready.\n"
-    fi;
 }
 
 init_device() {
@@ -268,10 +252,6 @@ init_device() {
         python3 ./src/__tests__/init_device.py -m "${mnemonic_12}" -p "${pin_0}" --passphrase 2>&1 > /dev/null
     else
         python3 ./src/__tests__/init_device.py -m "${mnemonic_12}" -p "${pin_0}" --no-passphrase 2>&1 > /dev/null
-    fi;
-
-    if [ $should_print_debug -eq 1 ]; then
-        echo "Device ready.\n"
     fi;
 }
 
@@ -294,7 +274,7 @@ run_karma() {
     path_babel_node="./node_modules/babel-cli/bin/babel-node.js"
     path_karma="./node_modules/karma/bin/karma"
 
-    ${path_babel_node} ${path_karma} start --tests="${1}" --isEmulatorRunning="${should_start_emulator}"
+    ${path_babel_node} ${path_karma} start --tests="${1}" --isEmulatorRunning="${should_start_emulator}" --printDebug="${should_print_debug}"
 }
 
 all_tests() {
@@ -413,7 +393,7 @@ while getopts ":at:x:ls:e:b:k:mpdh" opt; do
             cleanup
         ;;
         d) # Print debug messages (emulator, transport)
-            should_print_debug=1
+            should_print_debug="true"
         ;;
         k) # Karma log level
             karma_log_level="$OPTARG"
