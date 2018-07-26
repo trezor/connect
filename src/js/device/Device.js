@@ -420,7 +420,7 @@ export default class Device extends EventEmitter {
     }
 
     isBootloader(): boolean {
-        return this.features.bootloader_mode;
+        return this.features.bootloader_mode && (typeof this.features.firmware_present === 'boolean' && this.features.firmware_present);
     }
 
     isInitialized(): boolean {
