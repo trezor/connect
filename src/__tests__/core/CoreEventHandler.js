@@ -80,8 +80,6 @@ export class CoreEventHandler {
     }
 
     _callCoreMessage(message: Object, state: string, isEmulator: boolean = false) {
-        console.log('=== WILL SEND CORE MESSAGE', isEmulator);
-
         let payload: Object;
         if (isEmulator) {
             payload = { ...message, device: { path: 'emulator21324', state } };
@@ -137,7 +135,6 @@ export class CoreEventHandler {
     }
 
     _handleResponseEvent(event: Object) {
-        console.log('@@@ I AM CALLED');
         console.warn(event);
 
         if (this._shouldWaitForLastResponse) {
@@ -198,18 +195,18 @@ export class CoreEventHandler {
     }
 
     async _handleCoreEvents(event: any): Promise<void> {
-        console.log('=== EVENT', event.type);
         switch (event.type) {
             case UI.REQUEST_UI_WINDOW:
                 this._handleUiWindowRequest();
                 break;
 
             case UI.REQUEST_PASSPHRASE:
-                let passphrase = this._getCurrentPayload.passphrase;
+                let passphrase = this._getCurrentPayload().passphrase;
                 if (!passphrase) {
                     // Use empty passphrase by default
                     passphrase = '';
                 }
+
                 this._handlePassphraseRequest(passphrase);
                 break;
 
@@ -228,7 +225,7 @@ export class CoreEventHandler {
             try {
                 setTimeout(async () => {
                     this._isHandlingButtonRequest = false;
-                    const { session } = await this._getDebugLinkInfo();
+                    const { session } = await this._enumerate();
                     this._pressButtonYes(session);
                 }, 501);
             } catch (error) {
@@ -239,7 +236,7 @@ export class CoreEventHandler {
         if (event.type === UI.REQUEST_BUTTON) {
             try {
                 this._isHandlingButtonRequest = true;
-                const { session, path } = await this._getDebugLinkInfo();
+                const { session, path } = await this._enumerate();
                 this._acquireDevice(session, path);
             } catch (error) {
                 console.error('Error on request button event', [error, event]);
@@ -249,7 +246,7 @@ export class CoreEventHandler {
     // Event handlers: END
 
     // Debug link communication
-    async _getDebugLinkInfo(): Promise<any> {
+    async _enumerate(): Promise<any> {
         try {
             let session: number | string = 'null';
             let path = '';
