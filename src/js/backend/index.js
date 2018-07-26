@@ -24,9 +24,9 @@ export const remove = (backend: BlockBook): void => {
 };
 
 export const createFromCoinInfo = async (coinInfo: CoinInfo): Promise<BlockBook> => {
-    let backend: ?BlockBook = find(coinInfo.blockbook);
+    let backend: ?BlockBook = find([ ...coinInfo.blockbook, ...coinInfo.bitcore ]);
     if (!backend) {
-        backend = new BlockBook({ urls: coinInfo.blockbook, coinInfo });
+        backend = new BlockBook({ urls: [ ...coinInfo.blockbook, ...coinInfo.bitcore ], coinInfo });
         instances.push(backend);
     }
     try {
