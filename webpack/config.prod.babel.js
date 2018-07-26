@@ -120,17 +120,9 @@ module.exports = {
             inject: true
         }),
 
-        new HtmlWebpackPlugin({
-            chunks: ['trezor-connect'],
-            filename: `inline.html`,
-            template: `${HTML_SRC}inline.html`,
-            inject: true
-        }),
-
         new CopyWebpackPlugin([
             { from: `${HTML_SRC}index.html`, to: `${DIST}index.html` },
             { from: `${HTML_SRC}webusb.html`, to: `${DIST}webusb.html` },
-            { from: `${HTML_SRC}inline.html`, to: `${DIST}inline.html` },
             { from: DATA_SRC, to: `${DIST}data` },
             //{ from: `${SRC}images`, to: 'images' },
         ]),
