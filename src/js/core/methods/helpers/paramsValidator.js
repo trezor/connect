@@ -53,3 +53,17 @@ export const getRequiredFirmware = (coinInfo: CoinInfo, current: Array<string>):
 
     return current;
 };
+
+export const isHex = (valToTest: string): boolean => {
+    let isHex = true;
+    for (let i = 0; i < valToTest.length - 1; i++) {
+        const currentChar = valToTest.charAt(i);
+        const currentCharNum = parseInt(currentChar, 16);
+
+        if (currentCharNum.toString(16) !== currentChar || isNaN(currentCharNum)) {
+            isHex = false;
+            break;
+        }
+    }
+    return isHex;
+}
