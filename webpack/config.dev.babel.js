@@ -22,7 +22,7 @@ module.exports = {
         'trezor-connect': `${JS_SRC}index.js`,
         'iframe': `${JS_SRC}iframe/iframe.js`,
         'popup': `${JS_SRC}popup/popup.js`,
-        'webusb': `${JS_SRC}webusb/webusb.js`
+        'webusb': `${JS_SRC}webusb/index.js`
     },
     output: {
         filename: '[name].js',
@@ -129,10 +129,10 @@ module.exports = {
             inject: true
         }),
 
-        new CopyWebpackPlugin([
-            { from: DATA_SRC, to: `${DIST}data` },
-            { from: `${SRC}images`, to: 'images' },
-        ]),
+        // new CopyWebpackPlugin([
+        //     { from: DATA_SRC, to: `${DIST}data` },
+        //     { from: `${SRC}images`, to: 'images' },
+        // ]),
 
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
