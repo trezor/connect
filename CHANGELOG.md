@@ -1,3 +1,13 @@
+# 5.0.26
+__added__
+- Added support for Dogecoin and Vertcoin
+__fixed__
+- Fixed handling not initialized device
+- SignTransaction: amount as string
+- Handle origin of file://
+__changed__
+- Default url in connect
+
 # 5.0.25
 __added__
 - Added documentation
