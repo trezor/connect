@@ -108,18 +108,11 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
     }
 };
 
-const setWindowName = () => {
-    if (!window.name || window.name.length < 1) {
-        window.name = 'trezor-connect-parent';
-    }
-}
-
 const init = async (settings: Object = {}): Promise<void> => {
     if (iframe.instance) { throw IFRAME_INITIALIZED; }
 
     if (!_settings) {
-        setWindowName();
-        _settings = parseSettings( { ...settings, windowName: window.name } );
+        _settings = parseSettings(settings);
     }
 
     if (!_settings.supportedBrowser) {
@@ -147,8 +140,7 @@ const init = async (settings: Object = {}): Promise<void> => {
 const call = async (params: Object): Promise<Object> => {
     if (!iframe.instance && !iframe.timeout) {
         // init popup with lazy loading before iframe initialization
-        setWindowName();
-        _settings = parseSettings({ windowName: window.name });
+        _settings = parseSettings({});
         _popupManager = initPopupManager();
         _popupManager.request(true);
 
