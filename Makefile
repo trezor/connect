@@ -10,6 +10,7 @@
 clean:
 	rm -rf dist/
 
+# manually: goto ./submodules/trezor-common; git checkout master; git pull
 submodules:
 	git submodule update --remote --merge --recursive
 
