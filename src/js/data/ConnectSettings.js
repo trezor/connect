@@ -24,7 +24,7 @@ export type ConnectSettings = {
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
-const VERSION: string = '5.1.25';
+const VERSION: string = '5.0.25';
 const versionN: Array<number> = VERSION.split('.').map(s => parseInt(s));
 const DIRECTORY: string = `${ versionN[0] }${ ( versionN[1] > 0 ? `.${versionN[1]}` : '' ) }/`;
 const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/';
@@ -72,10 +72,12 @@ export const parse = (input: ?Object): ConnectSettings => {
     if (typeof input.connectSrc === 'string') {
         // TODO: escape string, validate url
         settings.connectSrc = input.connectSrc;
-        settings.iframeSrc = `${ input.connectSrc }iframe.html`;
-        settings.popupSrc = `${ input.connectSrc }popup.html`;
-        settings.webusbSrc = `${ input.connectSrc }webusb.html`;
+    } else if (typeof window.__TREZOR_CONNECT_SRC === 'string') {
+        settings.connectSrc = window.__TREZOR_CONNECT_SRC;
     }
+    settings.iframeSrc = `${ settings.connectSrc }iframe.html`;
+    settings.popupSrc = `${ settings.connectSrc }popup.html`;
+    settings.webusbSrc = `${ settings.connectSrc }webusb.html`;
 
     if (typeof input.transportReconnect === 'boolean') {
         settings.transportReconnect = input.transportReconnect;
