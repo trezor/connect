@@ -13,8 +13,7 @@ import type {
 } from './stellar';
 
 import type {
-    TransactionInput,
-    TransactionOutput,
+    MultisigRedeemScriptType
 } from './trezor';
 
 declare type $Common = {
@@ -132,6 +131,34 @@ export type $SignMessage = $Common & {
     path: $Path,
     coin: string,
     message: string,
+}
+
+// modified types from trezor/TransactionInput (amount: string)
+export type TransactionInput = {
+    address_n?: Array<number>,
+    prev_hash: string,
+    prev_index: number,
+    script_sig?: string,
+    sequence?: number,
+    script_type?: 'SPENDADDRESS' | 'SPENDMULTISIG' | 'EXTERNAL' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS',
+    multisig?: MultisigRedeemScriptType,
+    amount?: string, // only with segwit
+    decred_tree?: number,
+    decred_script_version?: number,
+}
+// modified types from trezor/TransactionOutput (amount: string)
+export type TransactionOutput = {
+    address: string,
+    amount: string, // in satoshis
+    script_type: 'PAYTOADDRESS',
+} | {
+    address_n: Array<number>,
+    amount: string, // in satoshis
+    script_type: 'PAYTOADDRESS' | 'PAYTOP2SHWITNESS',
+} | {
+    op_return_data: string,
+    amount: '0', // fixed value
+    script_type: 'PAYTOOPRETURN',
 }
 
 export type $SignTransaction = $Common & {

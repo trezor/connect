@@ -12,6 +12,14 @@ export const fixPath = (utxo: any): any => {
     return utxo;
 };
 
+// temporary solution, change it after amount will be accepted as string in protobuf
+export const fixAmount = (utxo: any): any => {
+    if (utxo.amount) {
+        utxo.amount = parseInt(utxo.amount);
+    }
+    return utxo;
+};
+
 export const convertMultisigPubKey = (network: BitcoinJsNetwork, utxo: any): any => {
     if (utxo.multisig && utxo.multisig.pubkeys) {
         // convert xpubs to HDNodeTypes

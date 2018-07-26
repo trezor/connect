@@ -19,9 +19,9 @@ TrezorConnect.signTransaction(params).then(function(result) {
 
 ### Params 
 [****Optional common params****](commonParams.md)
-###### [flowtype](../../src/js/types/params.js#L137-L142)
-* `inputs` - *obligatory* `Array` of [TransactionInput](../../src/js/types/trezor.js#L128-L139),
-* `outputs` - *obligatory* `Array` of [TransactionOutput](../../src/js/types/trezor.js#L141-L153),
+###### [flowtype](../../src/js/types/params.js#L169-L164)
+* `inputs` - *obligatory* `Array` of [TransactionInput](../../src/js/types/params.js#L137-L148),
+* `outputs` - *obligatory* `Array` of [TransactionOutput](../../src/js/types/params.js#L150-L162),
 * `coin` - *obligatory* `string` Determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 * `push` - *optional* `boolean` Broadcast signed transaction to blockchain. Default is set to false
 
@@ -39,11 +39,11 @@ TrezorConnect.signTransaction({
     outputs: [
         {
             address_n: [44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 1, 1],
-            amount: 3181747,
+            amount: '3181747',
             script_type: 'PAYTOADDRESS'
         }, {
             address: '18WL2iZKmpDYWk1oFavJapdLALxwSjcSk2',
-            amount: 200000,
+            amount: '200000',
             script_type: 'PAYTOADDRESS'
         }
     ],
@@ -59,18 +59,18 @@ TrezorConnect.signTransaction({
             address_n: [49 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 1, 0],
             prev_index: 0,
             prev_hash: 'b035d89d4543ce5713c553d69431698116a822c57c03ddacf3f04b763d1999ac'
-            amount: 3382047,
+            amount: '3382047',
             script_type: 'SPENDP2SHWITNESS'
         }
     ],
     outputs: [
         {
             address_n: [49 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 1, 1],
-            amount: 3181747,
+            amount: '3181747',
             script_type: 'PAYTOP2SHWITNESS'
         }, {
             address: '18WL2iZKmpDYWk1oFavJapdLALxwSjcSk2',
-            amount: 200000,
+            amount: '200000',
             script_type: 'PAYTOADDRESS'
         }
     ],
@@ -122,8 +122,8 @@ var outputs = [{
 }];
 TrezorConnect.setCurrency('BTC');
 TrezorConnect.signTx(
-    inputs,
-    outputs,
+    inputs,  // amount field retyped to a string
+    outputs, // amount field retyped to a string
     "example message",
     function(result) {
         result.signatures    // not changed
@@ -144,11 +144,11 @@ TrezorConnect.signTransaction({
     }],
     outputs: [{
         address_n: [44 | 0x80000000, 0 | 0x80000000, 2 | 0x80000000, 1, 1],
-        amount: 3181747,
+        amount: '3181747',
         script_type: 'PAYTOADDRESS'
     }, {
         address: '18WL2iZKmpDYWk1oFavJapdLALxwSjcSk2',
-        amount: 200000,
+        amount: '200000',
         script_type: 'PAYTOADDRESS'
     }],
     coin: "btc"

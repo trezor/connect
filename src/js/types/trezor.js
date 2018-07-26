@@ -105,7 +105,7 @@ export type MessageSignature = {
     signature: string,
 }
 
-type MultisigRedeemScriptType = {
+export type MultisigRedeemScriptType = {
     pubkeys: Array<{ node: string, address_n: Array<number>}>,
     signatures: Array<string>,
     m?: number,
