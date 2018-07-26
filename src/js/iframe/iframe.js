@@ -135,7 +135,9 @@ const postMessage = (message: CoreMessage): void => {
             console.warn("postMessage: popupMessagePort not found");
         }
     } else {
-        window.top.postMessage(message, DataManager.getSettings('origin'));
+        let origin: ?string = DataManager.getSettings('origin');
+        if (!origin || origin.indexOf("file://") >= 0) origin = '*';
+        window.top.postMessage(message, origin);
     }
 };
 
@@ -167,7 +169,8 @@ const filterDeviceEvent = (message: CoreMessage): boolean => {
 
 const init = async (settings: any, origin: string) => {
     const parsedSettings: ConnectSettings = parseSettings(settings);
-    parsedSettings.origin = origin; // set origin manually to avoid injection from settings
+    // set origin manually
+    parsedSettings.origin = !origin || origin === 'null' ? settings.origin : origin;
 
     try {
         _log.enabled = _logFromPopup.enabled = parsedSettings.debug;
