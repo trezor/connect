@@ -94,10 +94,12 @@ export default class PopupManager extends EventEmitter {
             ,scrollbars=yes`;
 
         if (!this.settings.supportedBrowser) {
-            window.open(this.src + '#unsupported', '_blank', opts);
+            // window.open(this.src + '#unsupported', '_blank', opts);
+            window.open(this.src + '#unsupported', '_blank');
             return;
         }
-        this._window = window.open('', '_blank', opts);
+        // this._window = window.open('', '_blank', opts);
+        this._window = window.open('', '_blank');
         if (this._window) {
             this._window.location.href = this.lazyLoad ? this.src + '#loading' : this.src; // otherwise android/chrome loose window.opener reference
         }
