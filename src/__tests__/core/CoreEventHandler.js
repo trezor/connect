@@ -39,7 +39,7 @@ export class CoreEventHandler {
     _responseIndex = 0;
     _finishResponseIndex = 0;
 
-    constructor(core: Core, expectFn: any, doneFn: any) {
+    constructor(core: Core, expectFn: ExpectFn, doneFn: DoneFn) {
         this._core = core;
         this._expectFn = expectFn;
         this._doneFn = doneFn;
