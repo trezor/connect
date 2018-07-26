@@ -98,6 +98,7 @@ export default class PopupManager extends EventEmitter {
             return;
         }
         this._window = window.open('', '_blank', opts);
+        this._window.name = 'trezor-connect-popup';
         if (this._window) {
             this._window.location.href = this.lazyLoad ? this.src + '#loading' : this.src; // otherwise android/chrome loose window.opener reference
         }
@@ -150,6 +151,11 @@ export default class PopupManager extends EventEmitter {
             this._window.close();
             this._window = null;
         }
+    }
+
+    focus() {
+        window.open('javascript:void(0)', 'trezor-connect-popup');
+        this._window.focus();
     }
 
     postMessage(message: CoreMessage): void {

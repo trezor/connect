@@ -17,6 +17,7 @@ export type ConnectSettings = {
     webusb: boolean,
     pendingTransportEvent: boolean,
     supportedBrowser?: boolean,
+    windowName: string,
 }
 
 /*
@@ -47,6 +48,7 @@ const initialSettings: ConnectSettings = {
     webusb: true,
     pendingTransportEvent: true,
     supportedBrowser: !(/Trident|MSIE/.test(navigator.userAgent)),
+    windowName: '',
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -67,6 +69,10 @@ export const parse = (input: ?Object): ConnectSettings => {
 
     if (window.location.protocol === 'file:') {
         settings.origin = window.location.origin + window.location.pathname;
+    }
+
+    if (typeof input.windowName === 'string') {
+        settings.windowName = input.windowName;
     }
 
     if (typeof input.connectSrc === 'string') {
