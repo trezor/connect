@@ -81,17 +81,17 @@ export default class PopupManager extends EventEmitter {
         const top: number = (window.screen.height - POPUP_HEIGHT) / 2;
         const width: number = POPUP_WIDTH;
         const height: number = POPUP_HEIGHT;
-        const opts: string =
-            `width=${width}
-            ,height=${height}
-            ,left=${left}
-            ,top=${top}
-            ,menubar=no
-            ,toolbar=no
-            ,location=no
-            ,personalbar=no
-            ,status=no
-            ,scrollbars=yes`;
+        // const opts: string =
+        //     `width=${width}
+        //     ,height=${height}
+        //     ,left=${left}
+        //     ,top=${top}
+        //     ,menubar=no
+        //     ,toolbar=no
+        //     ,location=no
+        //     ,personalbar=no
+        //     ,status=no
+        //     ,scrollbars=yes`;
 
         if (!this.settings.supportedBrowser) {
             // window.open(this.src + '#unsupported', '_blank', opts);
