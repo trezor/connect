@@ -18,14 +18,14 @@ const correctPassphrase = (): SubtestPassphrase => {
             coin: 'btc',
             path: "m/49'/0'/0'",
             passphrase: 'A',
-            state: '9f0334bd78e441f1fa725f249a57a0a56050b9f479c94b5a829d4d70de34a37c9dcec089d6e70929686e584010a40dba74d7e6ddcd43054ac290b43c49c3a2c6'
+            state: 'a3c4974ba31d3b7772ee6fbda5df12010c4ebafa94c9ec3d7b0ad50252ab42cdea9161152a5b12e344d98ed20e183baaac5c53af40778aad22376d013aca94a2'
         },
     ];
 
     let expectedResponses: Array<ExpectedPassphraseResponse> = [
         {
             payload: {
-                xpub: 'xpub661MyMwAqRbcGSFnGhvj2yEs3HapBbJExFT7GRG4V83a8ECibmzmJHBaJrdTvQKhgaPxC1A53M7NLKCKG6uF9RYairavkNeXXarGLY68EZ9',
+                xpub: 'xpub6Cpsx8nPk8iiTy3BMTB7Q2bNSfDr8FC1r6Qn2YcJnHmmx9dRAvNTFiiLabT99o86C97PRGFq8SMB85JKqR9w9CnRDJ35gDfwMLGQDSis6kL',
             },
         },
     ];
@@ -37,30 +37,30 @@ const correctPassphrase = (): SubtestPassphrase => {
     };
 };
 
-const wrongPassphrase = (): SubtestPassphrase => {
-    let testPayloads: Array<TestPassphrasePayload> = [
-        {
-            method: 'getPublicKey',
-            coin: 'btc',
-            path: "m/49'/0'/0'",
-            passphrase: 'A',
-            // Wrong state for the given passphrase
-            state: '1f0334bd78e441f1fa725f249a57a0a56050b9f479c94b5a829d4d70de34a37c9dcec089d6e70929686e584010a40dba74d7e6ddcd43054ac290b43c49c3a2c6'
-        },
-    ];
+// const wrongPassphrase = (): SubtestPassphrase => {
+//     let testPayloads: Array<TestPassphrasePayload> = [
+//         {
+//             method: 'getPublicKey',
+//             coin: 'btc',
+//             path: "m/49'/0'/0'",
+//             passphrase: 'A',
+//             // Wrong state for the given passphrase
+//             state: '13c4974ba31d3b7772ee6fbda5df12010c4ebafa94c9ec3d7b0ad50252ab42cdea9161152a5b12e344d98ed20e183baaac5c53af40778aad22376d013aca94a2'
+//         },
+//     ];
 
-    let expectedResponses: Array<ExpectedPassphraseResponse> = [
-        {
-            success: false
-        },
-    ];
+//     let expectedResponses: Array<ExpectedPassphraseResponse> = [
+//         {
+//             success: false
+//         },
+//     ];
 
-    return {
-        testPayloads,
-        expectedResponses,
-        specName: '/wrong',
-    };
-};
+//     return {
+//         testPayloads,
+//         expectedResponses,
+//         specName: '/wrong',
+//     };
+// };
 
 /* const contexts = () => {
 
@@ -69,7 +69,7 @@ const wrongPassphrase = (): SubtestPassphrase => {
 export const passphrase = (): TestFunction => {
     const availableSubtests = {
         correctPassphrase,
-        wrongPassphrase,
+        // wrongPassphrase,
         /* contexts, */
     }
     const testName = 'Passphrase';
