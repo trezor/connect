@@ -98,6 +98,7 @@ module.exports = function(config) {
             // Put the parameters here
             tests: config.tests,
             isEmulatorRunning: config.isEmulatorRunning,
+            printDebug: config.printDebug,
         },
 
         // Continuous Integration mode
