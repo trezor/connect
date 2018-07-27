@@ -155,8 +155,8 @@ export class CoreEventHandler {
             // this._callCoreMessage(nextTestPayload.payload, state);
             this._callCoreMessage(nextTestPayload, state);
         } else {
-            const expectedResponse = this._getCurrentExpectedResponse;
-            this._compareExpectedResponseToActual(this._expectedResponse, event);
+            const expectedResponse = this._getCurrentExpectedResponse();
+            this._compareExpectedResponseToActual(expectedResponse, event);
             this._doneFn();
         }
     }
