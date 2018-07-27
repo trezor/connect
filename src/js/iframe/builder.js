@@ -52,13 +52,13 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
     const onLoad = () => {
 
         if (!instance) {
-            initPromise.reject(IFRAME_TIMEOUT);
+            initPromise.reject(IFRAME_BLOCKED);
             return;
         }
         try {
             // if hosting page is able to access cross-origin location it means that the iframe is not loaded
             const iframeOrigin: ?string = instance.contentWindow.location.origin;
-            if (!iframeOrigin) {
+            if (!iframeOrigin || iframeOrigin === 'null') {
                 window.clearTimeout(timeout);
                 error = IFRAME_BLOCKED.message;
                 dispose();
