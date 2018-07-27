@@ -63,7 +63,7 @@ const multisig = (): SubtestNemSignTransaction => {
                 deadline: 74735615,
                 otherTrans: {
                     timeStamp: 2,
-                    amount: 2000000,
+                    amount: '2000000',
                     fee: 15000,
                     recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                     type: TX_TYPES.transfer,
@@ -137,7 +137,7 @@ const multisigSigner = (): SubtestNemSignTransaction => {
                 deadline: 444,
                 otherTrans: {
                     timeStamp: 555,
-                    amount: 2000000,
+                    amount: '2000000',
                     fee: 2000000,
                     recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                     type: TX_TYPES.transfer,

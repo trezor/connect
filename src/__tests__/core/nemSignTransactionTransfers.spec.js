@@ -17,7 +17,7 @@ const simple = (): SubtestNemSignTransaction => {
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 74649215,
-                amount: 2000000,
+                amount: '2000000',
                 fee: 2000000,
                 recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                 type: TX_TYPES.transfer,
@@ -53,7 +53,7 @@ const xemAsMosaic = (): SubtestNemSignTransaction => {
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 76809215,
-                amount: 5000000,
+                amount: '5000000',
                 fee: 1000000,
                 recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                 type: TX_TYPES.transfer,
@@ -96,7 +96,7 @@ const unknownMosaic = (): SubtestNemSignTransaction => {
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 76809215,
-                amount: 2000000,
+                amount: '2000000',
                 fee: 1000000,
                 recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                 type: TX_TYPES.transfer,
@@ -139,7 +139,7 @@ const knownMosaic = (): SubtestNemSignTransaction => {
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 76809215,
-                amount: 3000000,
+                amount: '3000000',
                 fee: 1000000,
                 recipient: 'NDMYSLXI4L3FYUQWO4MJOVL6BSTJJXKDSZRMT4LT',
                 type: TX_TYPES.transfer,
@@ -182,7 +182,7 @@ const knownMosaicWithLevy = (): SubtestNemSignTransaction => {
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 76809215,
-                amount: 2000000,
+                amount: '2000000',
                 fee: 1000000,
                 recipient: 'NDMYSLXI4L3FYUQWO4MJOVL6BSTJJXKDSZRMT4LT',
                 type: TX_TYPES.transfer,
@@ -225,7 +225,7 @@ const multipleMosaics = (): SubtestNemSignTransaction => {
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 76809215,
-                amount: 2000000,
+                amount: '2000000',
                 fee: 1000000,
                 recipient: 'NDMYSLXI4L3FYUQWO4MJOVL6BSTJJXKDSZRMT4LT',
                 type: TX_TYPES.transfer,
