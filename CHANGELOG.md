@@ -1,3 +1,11 @@
+# 5.0.27
+__fixed__
+- Fixed handling not initialized iframe
+- Fixed iframe ad-blocker handling
+- Fixed popup views
+__changed__
+- Popup as new tab
+
 # 5.0.26
 __added__
 - Added support for Dogecoin and Vertcoin
