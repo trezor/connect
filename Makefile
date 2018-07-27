@@ -66,9 +66,8 @@ sync-%:
 
 # Build messages.json from protobuf
 protobuf:
-	sed 's/\(google\/protobuf\)/\.\/\1/' ./submodules/trezor-common/protob/messages.proto > ./submodules/trezor-common/protob/messages_fixed.proto
-	./node_modules/.bin/proto2js ./submodules/trezor-common/protob/messages_fixed.proto > ./src/data/messages.json
-	rm ./submodules/trezor-common/protob/messages_fixed.proto
+	make -C ./submodules/trezor-common/protob combine
+	./node_modules/.bin/proto2js ./submodules/trezor-common/protob/combined.proto > ./src/data/messages.I.json
 
 # Build coin definitions
 coins:
