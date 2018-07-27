@@ -3,6 +3,14 @@
     flex-direction: column;
     justify-content: space-between;
 
+    .title-mobile {
+        display: block;
+    }
+
+    .title-desktop {
+        display: none;
+    }
+
     .wrapper {
         height: 100%;
 
@@ -199,6 +207,25 @@
                 color: @color_info_primary;
                 fill: @color_info_primary;
             }
+        }
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .select-account {
+        height: 100%;
+
+        .wrapper {
+            width: 500px;
+            margin: 0 auto;
+        }
+
+        .title-mobile {
+            display: none;
+        }
+
+        .title-desktop {
+            display: block;
         }
     }
 }
