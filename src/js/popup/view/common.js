@@ -11,6 +11,7 @@ export const views: HTMLElement = (document.getElementById('views'): any);
 export let iframe: any; // Window type
 
 export const channel = new MessageChannel();
+export let broadcast: BroadcastChannel;
 
 export const setOperation = (operation: string): void => {
     const infoPanel: HTMLElement = document.getElementsByClassName('info-panel')[0];
@@ -62,8 +63,20 @@ export const showView = (className: string): HTMLElement => {
     return container;
 };
 
+export const initBroadcast = (id: string): BroadcastChannel => {
+    broadcast = new BroadcastChannel(id);
+    return broadcast;
+}
+
 export const postMessage = (message: CoreMessage): void => {
-    if (!window.opener || !iframe) return;
+
+    if (broadcast) {
+        broadcast.postMessage(message);
+        return;
+    }
+    if (!window.opener || !iframe) {
+        return;
+    }
 
     if (message.type && message.type === POPUP.OPENED) {
         iframe.postMessage(message, window.location.origin, [channel.port2]);

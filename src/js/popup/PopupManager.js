@@ -2,7 +2,7 @@
 'use strict';
 
 import EventEmitter from 'events';
-import { INIT, CLOSED } from '../constants/popup';
+import * as POPUP from '../constants/popup';
 import { showPopupRequest } from './showPopupRequest';
 import type { ConnectSettings } from '../data/ConnectSettings';
 import type { CoreMessage, Deferred } from '../types';
@@ -26,7 +26,12 @@ export default class PopupManager extends EventEmitter {
     openTimeout: number;
     closeInterval: number = 0;
     lazyLoad: ?Deferred<boolean>;
-    handleLazyLoading: () => void;
+    handleLazyLoading: (event: MessageEvent) => void;
+    extension: boolean = false;
+    handleExtensionConnect: () => void;
+    handleExtensionMessage: () => void;
+    extensionPort: ?ChromePort;
+    broadcast: ?string;
 
     constructor(settings: ConnectSettings) {
         super();
@@ -34,6 +39,9 @@ export default class PopupManager extends EventEmitter {
         this.src = settings.popupSrc;
         this.origin = getOrigin(settings.popupSrc);
         this.handleLazyLoading = this.handleLazyLoading.bind(this);
+        this.handleExtensionConnect = this.handleExtensionConnect.bind(this);
+        this.handleExtensionMessage = this.handleExtensionMessage.bind(this);
+        this.extension = (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined');
     }
 
     request(lazyLoad: boolean = false): void {
@@ -42,13 +50,26 @@ export default class PopupManager extends EventEmitter {
 
         // bring popup window to front
         if (this.locked) {
-            if (this._window) { this._window.focus(); }
+            if (this._window) {
+                if (this.extension) {
+                    chrome.tabs.get(this._window.id, tab => {
+                        if (!tab) return;
+                        chrome.tabs.highlight(
+                            { tabs: tab.index }
+                        )
+                    })
+                } else {
+                    this._window.focus();
+                }
+            }
             return;
         }
 
-        this.lazyLoad = lazyLoad ? createDeferred(INIT) : null;
+        this.lazyLoad = lazyLoad ? createDeferred(POPUP.INIT) : null;
         if (this.lazyLoad) {
-            window.addEventListener('message', this.handleLazyLoading, false);
+            if (!this.extension) {
+                window.addEventListener('message', this.handleLazyLoading, false);
+            }
         }
 
         const openFn: Function = this.open.bind(this);
@@ -59,7 +80,7 @@ export default class PopupManager extends EventEmitter {
             this.requestTimeout = window.setTimeout(() => {
                 this.requestTimeout = 0;
                 openFn();
-            }, lazyLoad ? 1 : POPUP_REQUEST_TIMEOUT);
+            }, lazyLoad || this.extension ? 1 : POPUP_REQUEST_TIMEOUT);
         }
     }
 
@@ -71,58 +92,85 @@ export default class PopupManager extends EventEmitter {
         this.locked = false;
     }
 
-    // workaround for IE. hide window (blur) finally set address and window.focus after timeout
-    setAddress(url: string): void {
-        this._window.location = url;
-    }
-
     open(): void {
-        const left: number = (window.screen.width - POPUP_WIDTH) / 2;
-        const top: number = (window.screen.height - POPUP_HEIGHT) / 2;
-        const width: number = POPUP_WIDTH;
-        const height: number = POPUP_HEIGHT;
-        // const opts: string =
-        //     `width=${width}
-        //     ,height=${height}
-        //     ,left=${left}
-        //     ,top=${top}
-        //     ,menubar=no
-        //     ,toolbar=no
-        //     ,location=no
-        //     ,personalbar=no
-        //     ,status=no
-        //     ,scrollbars=yes`;
-
         if (!this.settings.supportedBrowser) {
-            // window.open(this.src + '#unsupported', '_blank', opts);
-            window.open(this.src + '#unsupported', '_blank');
+            this.openWrapper(this.src + '#unsupported');
             return;
         }
-        // this._window = window.open('', '_blank', opts);
-        // this._window = window.open(this.lazyLoad ? this.src + '#loading' : this.src, '_blank');
-        this._window = window.open('', '_blank');
-        if (this._window) {
-            this._window.location.href = this.lazyLoad ? this.src + '#loading' : this.src; // otherwise android/chrome loose window.opener reference
-        }
+
+        this.openWrapper(this.lazyLoad ? this.src + '#loading' : this.src);
 
         this.closeInterval = window.setInterval(() => {
-            if (this._window && this._window.closed) {
-                this.close();
-                this.emit(CLOSED);
+            if (this._window) {
+                if (this.extension) {
+                    chrome.tabs.get(this._window.id, tab => {
+                        if (!tab) {
+                            this.close();
+                            this.emit(POPUP.CLOSED);
+                        }
+                    });
+                } else if (this._window.closed) {
+                    this.close();
+                    this.emit(POPUP.CLOSED);
+                }
             }
         }, POPUP_CLOSE_INTERVAL);
 
         this.openTimeout = window.setTimeout(() => {
             if (!(this._window && !this._window.closed)) {
                 this.close();
-
-                showPopupRequest(this.open.bind(this), () => { this.emit(CLOSED); });
+                showPopupRequest(this.open.bind(this), () => { this.emit(POPUP.CLOSED); });
             }
         }, POPUP_OPEN_TIMEOUT);
     }
 
-    handleLazyLoading(event: MessageEvent) {
-        if (this.lazyLoad && event.data && event.data === INIT) {
+    openWrapper(url: string): void {
+        if (this.extension) {
+            // connect with this tab
+            chrome.runtime.onConnect.removeListener(this.handleExtensionConnect);
+            chrome.runtime.onConnect.addListener(this.handleExtensionConnect);
+
+            chrome.tabs.create({
+                url,
+            }, tab => {
+                this._window = tab;
+            });
+
+        } else {
+            this._window = window.open('', '_blank');
+            if (this._window) {
+                this._window.location.href = url; // otherwise android/chrome loose window.opener reference
+            }
+        }
+    }
+
+    handleExtensionConnect(port: ChromePort): void {
+        if (this._window && this._window.id !== port.sender.tab.id) {
+            return;
+        }
+        this.extensionPort = port;
+        this.extensionPort.onMessage.addListener(this.handleExtensionMessage);
+    }
+
+    handleExtensionMessage(message: Object): void {
+        if (!this.extensionPort) return;
+        if (message === POPUP.EXTENSION_REQUEST) {
+            this.extensionPort.postMessage( { type: POPUP.EXTENSION_REQUEST, broadcast: this.broadcast } );
+        } else if (message === POPUP.INIT && this.lazyLoad) {
+            this.lazyLoad.resolve(true);
+        } else if (message === POPUP.EXTENSION_USB_PERMISSIONS) {
+            chrome.tabs.create({
+                url: 'usb-permissions.html'
+            })
+        }
+    }
+
+    setBroadcast(broadcast: ?string) {
+        this.broadcast = broadcast;
+    }
+
+    handleLazyLoading(event: MessageEvent): void {
+        if (this.lazyLoad && event.data && event.data === POPUP.INIT) {
             this.lazyLoad.resolve(true);
             window.removeEventListener('message', this.handleLazyLoading, false);
         }
@@ -132,7 +180,12 @@ export default class PopupManager extends EventEmitter {
         if (this.lazyLoad) {
             await this.lazyLoad.promise;
         }
-        this._window.postMessage(INIT, this.origin);
+        if (this.extension) {
+            if (this.extensionPort)
+                this.extensionPort.postMessage( { type: POPUP.INIT  } );
+        } else {
+            this._window.postMessage({ type: POPUP.INIT }, this.origin);
+        }
     }
 
     close(): void {
@@ -149,8 +202,19 @@ export default class PopupManager extends EventEmitter {
             window.clearInterval(this.closeInterval);
             this.closeInterval = 0;
         }
+
+        if (this.extensionPort) {
+            // chrome.runtime.onConnect.removeListener(this.handleExtensionConnect);
+            this.extensionPort.disconnect();
+            this.extensionPort = null;
+        }
+
         if (this._window) {
-            this._window.close();
+            if (this.extension) {
+                chrome.tabs.remove(this._window.id);
+            } else {
+                this._window.close();
+            }
             this._window = null;
         }
     }
@@ -166,7 +230,7 @@ export default class PopupManager extends EventEmitter {
         // ignore "ui_request_window" type
         if (!this._window && message.type !== 'ui_request_window' && this.openTimeout) {
             this.close();
-            showPopupRequest(this.open.bind(this), () => { this.emit(CLOSED); });
+            showPopupRequest(this.open.bind(this), () => { this.emit(POPUP.CLOSED); });
             return;
         }
 

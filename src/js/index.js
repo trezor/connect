@@ -94,6 +94,7 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
                 if (payload.error) {
                     iframe.initPromise.reject(new Error(payload.error));
                 } else {
+                    _popupManager.setBroadcast(payload.broadcast)
                     iframe.initPromise.resolve();
                 }
             } else if (type === POPUP.CANCEL_POPUP_REQUEST) {
