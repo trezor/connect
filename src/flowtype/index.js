@@ -10,6 +10,43 @@ declare var navigator: Navigator & {
     +usb?: USB;
 };
 
+declare type ChromeTab = {
+    id: number;
+    index: number;
+}
+
+declare type ChromePort = {
+    onMessage: (message: Object) => void;
+    postMessage: (message: Object) => void;
+    sender: any;
+    disconnect: () => void;
+}
+
+declare var chrome: {
+    runtime: {
+        id: string;
+        onConnect: {
+            addListener: ((port: ChromePort) => void) => void;
+            removeListener: ((port: ChromePort) => void) => void;
+        }
+    },
+    tabs: {
+        create: ({
+            url?: string;
+            index?: number;
+        }, callback?: (tab: ?ChromeTab) => void) => void;
+        get: (id: number, callback: (tab: ?ChromeTab) => void) => void;
+        highlight: (options: Object, callback?: () => void) => void;
+        remove: (id: number) => void;
+    }
+}
+
+declare interface BroadcastChannel {
+    constructor: (id: string) => void;
+    onmessage: (message: Object) => void;
+    postMessage: (message: Object) => void;
+}
+
 // Common types used across library
 declare module 'flowtype' {
 
