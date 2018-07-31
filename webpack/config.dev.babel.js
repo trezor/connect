@@ -23,7 +23,7 @@ module.exports = {
         'iframe': `${JS_SRC}iframe/iframe.js`,
         'popup': `${JS_SRC}popup/popup.js`,
         'webusb': `${JS_SRC}webusb/index.js`,
-        'extensionPermissions': `${JS_SRC}extensionPermissions.js`,
+        'extension': `${JS_SRC}webusb/extension.js`
     },
     output: {
         filename: '[name].js',
@@ -130,9 +130,9 @@ module.exports = {
             inject: true
         }),
         new HtmlWebpackPlugin({
-            chunks: ['extension-permissions'],
-            filename: 'extension-permissions.html',
-            template: `${HTML_SRC}extension-permissions.html`,
+            chunks: ['extension'],
+            filename: `extension.html`,
+            template: `${HTML_SRC}extension.html`,
             inject: true
         }),
 
