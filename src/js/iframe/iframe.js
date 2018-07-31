@@ -26,7 +26,7 @@ let _core: Core;
 const _log: Log = initLog('IFrame');
 const _logFromPopup: Log = initLog('Popup');
 
-let _popupMessagePort: ?MessagePort;
+let _popupMessagePort: ?(MessagePort | BroadcastChannel);
 
 // Wrapper which listen events from Core
 
@@ -57,17 +57,8 @@ const handleMessage = (event: PostMessageEvent): void => {
 
     // handle popup handshake event to get reference to popup MessagePort
     if (data.type === POPUP.OPENED && event.origin === window.location.origin) {
-        // $FlowIssue
-        if (event.ports.length > 0) {
-            if (!_core) {
-                event.ports[0].postMessage(POPUP.CLOSE);
-                return;
-            }
-
-            // $FlowIssue
-            _popupMessagePort = event.ports[0];
+        if (_popupMessagePort) {
             const method = _core.getCurrentMethod()[0];
-
             // eslint-disable-next-line no-use-before-define
             postMessage(new UiMessage(POPUP.HANDSHAKE, {
                 settings: DataManager.getSettings(),
@@ -75,13 +66,33 @@ const handleMessage = (event: PostMessageEvent): void => {
                 method: method ? method.info : null,
             }));
         } else {
-            console.warn('POPUP.OPENED: popupMessagePort not found');
+            // $FlowIssue
+            if (event.ports.length > 0) {
+                if (!_core) {
+                    event.ports[0].postMessage(POPUP.CLOSE);
+                    return;
+                }
+
+                // $FlowIssue
+                _popupMessagePort = event.ports[0];
+                const method = _core.getCurrentMethod()[0];
+
+                // eslint-disable-next-line no-use-before-define
+                postMessage(new UiMessage(POPUP.HANDSHAKE, {
+                    settings: DataManager.getSettings(),
+                    transport: _core.getTransportInfo(),
+                    method: method ? method.info : null,
+                }));
+            } else {
+                console.warn('POPUP.OPENED: popupMessagePort not found');
+            }
         }
     }
 
     // clear reference to popup MessagePort
     if (data.type === POPUP.CLOSED) {
-        _popupMessagePort = null;
+        if (_popupMessagePort instanceof MessagePort)
+            _popupMessagePort = null;
     }
 
     // is message from popup or extension
@@ -89,7 +100,8 @@ const handleMessage = (event: PostMessageEvent): void => {
     const isTrustedDomain: boolean = (event.origin === window.location.origin || !!whitelist);
 
     // ignore messages from domain other then parent.window or popup.window or chrome extension
-    if (getOrigin(event.origin) !== getOrigin(document.referrer) && !isTrustedDomain) return;
+    const eventOrigin: string = getOrigin(event.origin);
+    if ((eventOrigin !== getOrigin(document.referrer) || eventOrigin !== DataManager.getSettings('origin')) && !isTrustedDomain) return;
 
     const message: CoreMessage = parseMessage(data);
 
@@ -104,10 +116,6 @@ const handleMessage = (event: PostMessageEvent): void => {
 // communication with parent window
 const postMessage = (message: CoreMessage): void => {
     _log.debug('postMessage', message);
-    if (!window.top) {
-        _log.error('Cannot reach window.top');
-        return;
-    }
 
     const usingPopup: boolean = DataManager.getSettings('popup');
     const trustedHost: boolean = DataManager.getSettings('trustedHost');
@@ -168,10 +176,17 @@ const filterDeviceEvent = (message: CoreMessage): boolean => {
     return false;
 };
 
-const init = async (settings: any, origin: string) => {
-    const parsedSettings: ConnectSettings = parseSettings(settings);
+const init = async (payload: any, origin: string) => {
+    const parsedSettings: ConnectSettings = parseSettings( { ...payload.settings, extension: payload.extension } );
     // set origin manually
-    parsedSettings.origin = !origin || origin === 'null' ? settings.origin : origin;
+    parsedSettings.origin = !origin || origin === 'null' ? payload.settings.origin : origin;
+
+    let broadcast: ?string;
+    if (parsedSettings.popup && payload.extension) {
+        broadcast = `${payload.extension}-${ new Date().getTime() }`;
+        _popupMessagePort = new BroadcastChannel(broadcast);
+        _popupMessagePort.onmessage = message => handleMessage(message);
+    }
 
     try {
         _log.enabled = _logFromPopup.enabled = parsedSettings.debug;
@@ -189,6 +204,7 @@ const init = async (settings: any, origin: string) => {
 
         postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {
             browser: browserState,
+            broadcast,
         }));
     } catch (error) {
         postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {

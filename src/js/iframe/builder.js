@@ -83,13 +83,18 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
             // empty
         }
 
-        if (typeof window.chrome !== 'undefined' && window.chrome.runtime && window.chrome.runtime.onConnect) {
-            window.chrome.runtime.onConnect.addListener(() => { });
+        let extension: ?string;
+        if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined') {
+            chrome.runtime.onConnect.addListener(() => { });
+            extension = chrome.runtime.id;
         }
 
         instance.contentWindow.postMessage({
             type: IFRAME_HANDSHAKE,
-            payload: settings,
+            payload: {
+                settings,
+                extension,
+            }
         }, origin);
 
         instance.onload = undefined;
