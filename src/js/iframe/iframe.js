@@ -101,7 +101,7 @@ const handleMessage = (event: PostMessageEvent): void => {
 
     // ignore messages from domain other then parent.window or popup.window or chrome extension
     const eventOrigin: string = getOrigin(event.origin);
-    if ((eventOrigin !== getOrigin(document.referrer) || eventOrigin !== DataManager.getSettings('origin')) && !isTrustedDomain) return;
+    if (!isTrustedDomain && eventOrigin !== DataManager.getSettings('origin') && eventOrigin !== getOrigin(document.referrer)) return;
 
     const message: CoreMessage = parseMessage(data);
 
