@@ -12,6 +12,7 @@ export let instance: ?HTMLIFrameElement;
 export let origin: string;
 export const initPromise: Deferred<void> = createDeferred();
 export let timeout: number = 0;
+export let interval: number = 0;
 export let error: ?string;
 
 let _messageID: number = 0;
@@ -49,6 +50,22 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
         initPromise.reject(IFRAME_TIMEOUT);
     }, 30000);
 
+    // If trying to read 'instance.contentWindow.location.origin' and 'SecurityError' is thrown - iframe was successfully loaded from trezor.io (error because it's cross site)
+    // If trying to read 'instance.contentWindow.location.origin' and it's either 'null' or undefined - iframe was blocked
+    interval = window.setInterval(() => {
+        try {
+            if (!instance ||
+                !instance.contentWindow ||
+                !instance.contentWindow.location.origin ||
+                instance.contentWindow.location.origin === 'null') {
+                handleIframeBlocked();
+            }
+        } catch (e) {
+            // Empty
+            // 'SecurityError' was thrown - iframe was loaded
+        }
+    }, 300)
+
     const onLoad = () => {
 
         if (!instance) {
@@ -59,10 +76,7 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
             // if hosting page is able to access cross-origin location it means that the iframe is not loaded
             const iframeOrigin: ?string = instance.contentWindow.location.origin;
             if (!iframeOrigin || iframeOrigin === 'null') {
-                window.clearTimeout(timeout);
-                error = IFRAME_BLOCKED.message;
-                dispose();
-                initPromise.reject(IFRAME_BLOCKED);
+                handleIframeBlocked();
                 return;
             }
         } catch (e) {
@@ -87,13 +101,13 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
     } else {
         instance.onload = onLoad;
     }
-
     // inject iframe into host document body
     if (document.body) {
         document.body.appendChild(instance);
         // eslint-disable-next-line no-use-before-define
         injectStyleSheet();
     }
+
 
     try {
         await initPromise.promise;
@@ -102,6 +116,9 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
     } finally {
         window.clearTimeout(timeout);
         timeout = 0;
+
+        window.clearInterval(interval);
+        interval = 0;
     }
 };
 
@@ -123,6 +140,15 @@ const injectStyleSheet = (): void => {
         style.appendChild(document.createTextNode(css));
     }
     head.append(style);
+};
+
+const handleIframeBlocked = (): void => {
+    window.clearTimeout(timeout);
+    window.clearInterval(interval);
+
+    error = IFRAME_BLOCKED.message;
+    dispose();
+    initPromise.reject(IFRAME_BLOCKED);
 };
 
 // post messages to iframe
@@ -152,4 +178,5 @@ export const dispose = () => {
     }
     instance = null;
     timeout = 0;
+    interval = 0;
 };
