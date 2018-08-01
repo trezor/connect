@@ -36,7 +36,7 @@ type Asset = {
     type?: string,
     url: string,
 }
-type Config = {
+export type Config = {
     +whitelist: Array<WhiteList>,
     +knownHosts: Array<KnownHost>,
     +webusb: Array<WebUSB>,
