@@ -1231,6 +1231,18 @@
     </div>
 
     <script type="text/javascript" async="false">
+        const POPUP_BOOTSTRAP = 'popup-bootstrap';
+        const uiMessage = {
+            event: 'UI_EVENT',
+            type: POPUP_BOOTSTRAP,
+        }
+
+        if (window.opener) {
+            window.opener.postMessage(uiMessage, window.opener.origin);
+        } else {
+            // TODO: Case for an extension
+        }
+
         const popupScript = document.createElement('script');
         popupScript.setAttribute('type', 'text/javascript');
         popupScript.setAttribute('src', '<%= htmlWebpackPlugin.files.chunks.popup.entry %>');

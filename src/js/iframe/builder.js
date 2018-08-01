@@ -153,3 +153,7 @@ export const dispose = () => {
     instance = null;
     timeout = 0;
 };
+
+export const clearIframeTimeout = () => {
+    window.clearTimeout(timeout);
+};

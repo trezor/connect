@@ -100,6 +100,14 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
                 _popupManager.cancel();
             } else if (type === UI.CLOSE_UI_WINDOW) {
                 _popupManager.close();
+            } else if (type === POPUP.BOOTSTRAP) {
+                // Popup did open but is still loading JS
+                _popupManager.cancelOpenTimeout();
+
+                // TODO: Should cancel request timeout?
+                _popupManager.cancelRequestTimeout();
+
+                iframe.clearIframeTimeout();
             }
             break;
 

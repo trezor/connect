@@ -99,6 +99,7 @@ export default class PopupManager extends EventEmitter {
             return;
         }
         // this._window = window.open('', '_blank', opts);
+        // this._window = window.open(this.lazyLoad ? this.src + '#loading' : this.src, '_blank');
         this._window = window.open('', '_blank');
         if (this._window) {
             this._window.location.href = this.lazyLoad ? this.src + '#loading' : this.src; // otherwise android/chrome loose window.opener reference
@@ -175,5 +176,13 @@ export default class PopupManager extends EventEmitter {
 
     onBeforeUnload() {
         this.close();
+    }
+
+    cancelOpenTimeout() {
+        this._window.clearTimeout(this.openTimeout);
+    }
+
+    cancelRequestTimeout() {
+        this._window.clearTimeout(this.requestTimeout);
     }
 }

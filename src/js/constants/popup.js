@@ -2,6 +2,7 @@
 'use strict';
 
 export const INIT: 'popup-init' = 'popup-init';
+export const BOOTSTRAP: 'popup-bootstrap' = 'popup-bootstrap';
 export const LOG: 'popup-log' = 'popup-log';
 export const OPENED: 'popup-opened' = 'popup-opened';
 export const OPEN_TIMEOUT: 'popup-open_timeout' = 'popup-open_timeout';
