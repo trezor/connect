@@ -14,6 +14,11 @@ const initWebUsbButton = (webusb: boolean, showLoader: boolean): void => {
     const webusbContainer: HTMLElement = container.getElementsByClassName('webusb')[0];
     webusbContainer.style.display = 'flex';
     const button: HTMLButtonElement = webusbContainer.getElementsByTagName('button')[0];
+
+    if (!iframe) {
+        button.innerHTML = '<span class="text">Allow usb permissions for chrome extension</span>';
+    }
+
     button.onclick = async () => {
         if (!iframe) {
             window.postMessage(POPUP.EXTENSION_USB_PERMISSIONS, window.location.origin);
