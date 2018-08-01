@@ -25,6 +25,8 @@ export const settings = {
     transportReconnect: false,
     webusb: true,
     pendingTransportEvent: true,
+    supportedBrowser: true,
+    extension: null,
 }
 
 export class CoreEventHandler {
