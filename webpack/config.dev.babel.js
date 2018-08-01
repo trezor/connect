@@ -130,9 +130,9 @@ module.exports = {
             inject: true
         }),
         new HtmlWebpackPlugin({
-            chunks: ['extension-permissons'],
-            filename: 'extension-permissons.html',
-            template: `${HTML_SRC}extension-permissons.html`,
+            chunks: ['extension-permissions'],
+            filename: 'extension-permissions.html',
+            template: `${HTML_SRC}extension-permissions.html`,
             inject: true
         }),
 
