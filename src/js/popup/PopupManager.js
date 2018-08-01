@@ -52,12 +52,7 @@ export default class PopupManager extends EventEmitter {
         if (this.locked) {
             if (this._window) {
                 if (this.extension) {
-                    chrome.tabs.get(this._window.id, tab => {
-                        if (!tab) return;
-                        chrome.tabs.highlight(
-                            { tabs: tab.index }
-                        )
-                    })
+                    chrome.tabs.update(this._window.id, { active: true });
                 } else {
                     this._window.focus();
                 }
@@ -160,8 +155,11 @@ export default class PopupManager extends EventEmitter {
             this.lazyLoad.resolve(true);
         } else if (message === POPUP.EXTENSION_USB_PERMISSIONS) {
             chrome.tabs.create({
-                url: 'usb-permissions.html'
+                url: 'trezor-usb-permissions.html'
             })
+        } else if (message === 'window.close') {
+            this.emit(POPUP.CLOSED);
+            this.close();
         }
     }
 
