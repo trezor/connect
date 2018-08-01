@@ -2,6 +2,7 @@
 'use strict';
 
 export const INIT: 'popup-init' = 'popup-init';
+export const BOOTSTRAP: 'popup-bootstrap' = 'popup-bootstrap';
 export const EXTENSION_REQUEST: 'popup-extension_request' = 'popup-extension_request';
 export const EXTENSION_USB_PERMISSIONS: 'open-usb-permissions' = 'open-usb-permissions';
 export const LOG: 'popup-log' = 'popup-log';
