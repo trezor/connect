@@ -121,7 +121,7 @@ module.exports = {
             chunks: ['popup'],
             filename: 'popup.html',
             template: `${HTML_SRC}popup.html`,
-            inject: true
+            inject: false
         }),
         new HtmlWebpackPlugin({
             chunks: ['webusb'],
