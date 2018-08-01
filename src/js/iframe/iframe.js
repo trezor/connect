@@ -57,7 +57,7 @@ const handleMessage = (event: PostMessageEvent): void => {
 
     // handle popup handshake event to get reference to popup MessagePort
     if (data.type === POPUP.OPENED && event.origin === window.location.origin) {
-        if (_popupMessagePort) {
+        if (_popupMessagePort && _popupMessagePort instanceof BroadcastChannel) {
             const method = _core.getCurrentMethod()[0];
             // eslint-disable-next-line no-use-before-define
             postMessage(new UiMessage(POPUP.HANDSHAKE, {
