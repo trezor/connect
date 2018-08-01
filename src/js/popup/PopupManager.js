@@ -37,9 +37,12 @@ export default class PopupManager extends EventEmitter {
         this.src = settings.popupSrc;
         this.origin = getOrigin(settings.popupSrc);
         this.handleLazyLoading = this.handleLazyLoading.bind(this);
-        this.handleExtensionConnect = this.handleExtensionConnect.bind(this);
-        this.handleExtensionMessage = this.handleExtensionMessage.bind(this);
         this.extension = (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined');
+        if (this.extension) {
+            this.handleExtensionConnect = this.handleExtensionConnect.bind(this);
+            this.handleExtensionMessage = this.handleExtensionMessage.bind(this);
+            chrome.runtime.onConnect.addListener(this.handleExtensionConnect);
+        }
     }
 
     request(lazyLoad: boolean = false): void {
@@ -119,10 +122,6 @@ export default class PopupManager extends EventEmitter {
 
     openWrapper(url: string): void {
         if (this.extension) {
-            // connect with this tab
-            chrome.runtime.onConnect.removeListener(this.handleExtensionConnect);
-            chrome.runtime.onConnect.addListener(this.handleExtensionConnect);
-
             chrome.tabs.create({
                 url,
             }, tab => {
@@ -137,11 +136,16 @@ export default class PopupManager extends EventEmitter {
     }
 
     handleExtensionConnect(port: ChromePort): void {
-        if (this._window && this._window.id !== port.sender.tab.id) {
-            return;
-        }
-        this.extensionPort = port;
-        this.extensionPort.onMessage.addListener(this.handleExtensionMessage);
+        if (port.name === 'trezor-connect') {
+            if (!this._window || (this._window && this._window.id !== port.sender.tab.id)) {
+                port.disconnect();
+                return;
+            }
+            this.extensionPort = port;
+            this.extensionPort.onMessage.addListener(this.handleExtensionMessage);
+        } else if (port.name === 'trezor-usb-permissions') {
+            port.postMessage({ broadcast: this.broadcast });
+        };
     }
 
     handleExtensionMessage(message: Object): void {
@@ -238,9 +242,5 @@ export default class PopupManager extends EventEmitter {
 
     cancelOpenTimeout() {
         this._window.clearTimeout(this.openTimeout);
-    }
-
-    cancelRequestTimeout() {
-        this._window.clearTimeout(this.requestTimeout);
     }
 }

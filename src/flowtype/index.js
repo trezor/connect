@@ -16,6 +16,7 @@ declare type ChromeTab = {
 }
 
 declare type ChromePort = {
+    name: string;
     onMessage: (message: Object) => void;
     postMessage: (message: Object) => void;
     sender: any;
