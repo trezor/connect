@@ -91,8 +91,7 @@ const handleMessage = (event: PostMessageEvent): void => {
 
     // clear reference to popup MessagePort
     if (data.type === POPUP.CLOSED) {
-        if (_popupMessagePort instanceof MessagePort)
-            _popupMessagePort = null;
+        if (_popupMessagePort instanceof MessagePort) { _popupMessagePort = null; }
     }
 
     // is message from popup or extension
@@ -177,7 +176,7 @@ const filterDeviceEvent = (message: CoreMessage): boolean => {
 };
 
 const init = async (payload: any, origin: string) => {
-    const parsedSettings: ConnectSettings = parseSettings( { ...payload.settings, extension: payload.extension } );
+    const parsedSettings: ConnectSettings = parseSettings({ ...payload.settings, extension: payload.extension });
     // set origin manually
     parsedSettings.origin = !origin || origin === 'null' ? payload.settings.origin : origin;
 

@@ -58,16 +58,16 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
                 !instance.contentWindow ||
                 !instance.contentWindow.location.origin ||
                 instance.contentWindow.location.origin === 'null') {
+                // eslint-disable-next-line no-use-before-define
                 handleIframeBlocked();
             }
         } catch (e) {
             // Empty
             // 'SecurityError' was thrown - iframe was loaded
         }
-    }, 300)
+    }, 300);
 
     const onLoad = () => {
-
         if (!instance) {
             initPromise.reject(IFRAME_BLOCKED);
             return;
@@ -76,6 +76,7 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
             // if hosting page is able to access cross-origin location it means that the iframe is not loaded
             const iframeOrigin: ?string = instance.contentWindow.location.origin;
             if (!iframeOrigin || iframeOrigin === 'null') {
+                // eslint-disable-next-line no-use-before-define
                 handleIframeBlocked();
                 return;
             }
@@ -94,7 +95,7 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
             payload: {
                 settings,
                 extension,
-            }
+            },
         }, origin);
 
         instance.onload = undefined;
@@ -112,7 +113,6 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
         // eslint-disable-next-line no-use-before-define
         injectStyleSheet();
     }
-
 
     try {
         await initPromise.promise;
@@ -152,6 +152,7 @@ const handleIframeBlocked = (): void => {
     window.clearInterval(interval);
 
     error = IFRAME_BLOCKED.message;
+    // eslint-disable-next-line no-use-before-define
     dispose();
     initPromise.reject(IFRAME_BLOCKED);
 };

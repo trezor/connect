@@ -9,8 +9,6 @@ import type { CoreMessage, Deferred } from '../types';
 import { getOrigin } from '../utils/networkUtils';
 import { create as createDeferred } from '../utils/deferred';
 
-const POPUP_WIDTH: number = 640;
-const POPUP_HEIGHT: number = 500;
 // const POPUP_REQUEST_TIMEOUT: number = 602;
 const POPUP_REQUEST_TIMEOUT: number = 999;
 const POPUP_CLOSE_INTERVAL: number = 500;
@@ -130,7 +128,6 @@ export default class PopupManager extends EventEmitter {
             }, tab => {
                 this._window = tab;
             });
-
         } else {
             this._window = window.open('', '_blank');
             if (this._window) {
@@ -150,13 +147,13 @@ export default class PopupManager extends EventEmitter {
     handleExtensionMessage(message: Object): void {
         if (!this.extensionPort) return;
         if (message === POPUP.EXTENSION_REQUEST) {
-            this.extensionPort.postMessage( { type: POPUP.EXTENSION_REQUEST, broadcast: this.broadcast } );
+            this.extensionPort.postMessage({ type: POPUP.EXTENSION_REQUEST, broadcast: this.broadcast });
         } else if (message === POPUP.INIT && this.lazyLoad) {
             this.lazyLoad.resolve(true);
         } else if (message === POPUP.EXTENSION_USB_PERMISSIONS) {
             chrome.tabs.create({
-                url: 'trezor-usb-permissions.html'
-            })
+                url: 'trezor-usb-permissions.html',
+            });
         } else if (message === 'window.close') {
             this.emit(POPUP.CLOSED);
             this.close();
@@ -179,8 +176,7 @@ export default class PopupManager extends EventEmitter {
             await this.lazyLoad.promise;
         }
         if (this.extension) {
-            if (this.extensionPort)
-                this.extensionPort.postMessage( { type: POPUP.INIT  } );
+            if (this.extensionPort) { this.extensionPort.postMessage({ type: POPUP.INIT }); }
         } else {
             this._window.postMessage({ type: POPUP.INIT }, this.origin);
         }

@@ -66,10 +66,9 @@ export const showView = (className: string): HTMLElement => {
 export const initBroadcast = (id: string): BroadcastChannel => {
     broadcast = new BroadcastChannel(id);
     return broadcast;
-}
+};
 
 export const postMessage = (message: CoreMessage): void => {
-
     if (broadcast) {
         broadcast.postMessage(message);
         return;

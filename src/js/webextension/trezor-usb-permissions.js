@@ -7,14 +7,14 @@ window.addEventListener('message', event => {
         const iframe = document.getElementById('trezor-usb-permissions');
         iframe.contentWindow.postMessage({
             type: 'usb-permissions-init',
-            extension: chrome.runtime.id
+            extension: chrome.runtime.id,
         }, '*');
     } else if (event.data === 'usb-permissions-close') {
         chrome.tabs.query({
             currentWindow: true,
-            active: true
+            active: true,
         }, (tabs) => {
-            chrome.tabs.remove( tabs[0].id );
+            chrome.tabs.remove(tabs[0].id);
         });
     }
 });

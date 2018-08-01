@@ -10,11 +10,10 @@ let config: Config;
 
 const onLoad = async () => {
     config = await httpRequest('./data/config.json', 'json');
-    window.top.postMessage('usb-permissions-init', '*')
-}
+    window.top.postMessage('usb-permissions-init', '*');
+};
 
 const init = (label: string) => {
-
     const h3: HTMLElement = document.getElementsByTagName('h3')[0];
     h3.innerText = label;
 
@@ -25,8 +24,8 @@ const init = (label: string) => {
         const filters = config.webusb.map(desc => {
             return {
                 vendorId: parseInt(desc.vendorId),
-                productId: parseInt(desc.productId)
-            }
+                productId: parseInt(desc.productId),
+            };
         });
 
         const usb = navigator.usb;
@@ -42,8 +41,8 @@ const init = (label: string) => {
 
     cancelButton.onclick = () => {
         window.top.postMessage('usb-permissions-close', '*');
-    }
-}
+    };
+};
 
 const handleMessage = (message: MessageEvent) => {
     const data: any = message.data;
@@ -53,7 +52,7 @@ const handleMessage = (message: MessageEvent) => {
         const label: string = knownHost && knownHost.label ? knownHost.label : message.origin;
         init(label);
     }
-}
+};
 
 window.addEventListener('load', onLoad, false);
 window.addEventListener('message', handleMessage, false);
