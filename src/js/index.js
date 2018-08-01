@@ -105,10 +105,7 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
                 // Popup did open but is still loading JS
                 _popupManager.cancelOpenTimeout();
 
-                // TODO: Should cancel request timeout?
-                _popupManager.cancelRequestTimeout();
-
-                iframe.clearIframeTimeout();
+                // iframe.clearIframeTimeout();
             }
             break;
 

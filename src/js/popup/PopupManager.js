@@ -241,6 +241,6 @@ export default class PopupManager extends EventEmitter {
     }
 
     cancelOpenTimeout() {
-        this._window.clearTimeout(this.openTimeout);
+        window.clearTimeout(this.openTimeout);
     }
 }
