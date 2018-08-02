@@ -227,6 +227,9 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
                 if (uiPromise) {
                     const uiResp: UiPromiseResponse = await uiPromise.promise;
                     if (uiResp.payload.remember) {
+                        if (!uiResp.payload.device.state) {
+                            delete uiResp.payload.device.state;
+                        }
                         _preferredDevice = uiResp.payload.device;
                     }
                     selectedDevicePath = uiResp.payload.device.path;
@@ -684,6 +687,7 @@ const onPopupClosed = (): void => {
                     _callMethods.forEach(m => {
                         postMessage(new ResponseMessage(m.responseID, false, { error: ERROR.POPUP_CLOSED.message }));
                     });
+                    _callMethods.splice(0, _callMethods.length);
                 }
             }
         });
