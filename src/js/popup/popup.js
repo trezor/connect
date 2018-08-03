@@ -11,7 +11,7 @@ import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
 import { getOrigin } from '../utils/networkUtils';
 
-import { showView, postMessage, setOperation, channel } from './view/common';
+import { showView, postMessage, setOperation, channel, initBroadcast, broadcast } from './view/common';
 import { showFirmwareUpdateNotification, showBridgeUpdateNotification } from './view/notification';
 
 import * as view from './view';
@@ -21,17 +21,23 @@ import styles from '../../styles/popup.less';
 const handleMessage = (event: PostMessageEvent): void => {
     console.log('handleMessage', event.data);
 
-    if (event.data === POPUP.INIT) {
+    const data: any = event.data;
+    if (!data) return;
+
+    if (data.type === POPUP.INIT) {
         window.location.hash = '';
+        // eslint-disable-next-line no-use-before-define
+        onLoad();
+        return;
+    } else if (data.type === POPUP.EXTENSION_REQUEST) {
+        const broadcast = initBroadcast(data.broadcast);
+        broadcast.onmessage = message => handleMessage(message);
         // eslint-disable-next-line no-use-before-define
         onLoad();
         return;
     }
 
-    const data: any = event.data;
-    if (!data) return;
-
-    const isMessagePort: boolean = event.target instanceof MessagePort;
+    const isMessagePort: boolean = event.target instanceof MessagePort || event.target instanceof BroadcastChannel;
 
     if (isMessagePort && data === POPUP.CLOSE) {
         if (window.opener) {
@@ -145,17 +151,31 @@ const onLoad = () => {
             view.initBrowserView({
                 supported: false,
             });
-        } else if (window.opener) {
-            window.opener.postMessage(POPUP.INIT, '*');
+        } else {
+            if (window.opener) {
+                window.opener.postMessage(POPUP.INIT, '*');
+            } else {
+                window.postMessage(POPUP.INIT, window.location.origin);
+            }
         }
         return;
     }
+
+    // if don't have access to opener
+    // request a content-script of extension
+    if (!window.opener && !broadcast) {
+        window.postMessage(POPUP.EXTENSION_REQUEST, window.location.origin);
+        return;
+    }
+
     window.location.hash = '';
     view.init();
-    // $FlowIssue (Event !== MessageEvent)
-    channel.port1.onmessage = (event: Message) => {
-        handleMessage(event);
-    };
+
+    if (!broadcast) {
+        // future communication will be thru MessageChannel
+        // $FlowIssue (Event !== MessageEvent)
+        channel.port1.onmessage = event => handleMessage(event);
+    }
 
     postMessage(new UiMessage(POPUP.OPENED));
 };
@@ -169,6 +189,9 @@ window.addEventListener('beforeunload', () => {
 
 // global method used in html-inline elements
 window.closeWindow = () => {
-    setTimeout(window.close, 100);
+    setTimeout(() => {
+        window.postMessage('window.close', window.location.origin);
+        window.close();
+    }, 100);
 };
 

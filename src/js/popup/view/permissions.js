@@ -84,7 +84,7 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
     const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName('remember-permissions')[0]: any);
 
-    hostName.innerText = DataManager.getSettings('origin');
+    hostName.innerText = DataManager.getSettings('hostLabel') || DataManager.getSettings('origin');
     if (payload && Array.isArray(payload.permissions)) {
         payload.permissions.forEach(p => {
             const permissionText = getPermissionText(p, payload.device.label);

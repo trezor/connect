@@ -36,4 +36,54 @@ aside {
             word-break: break-word;
         }
     }
+
+    .service-info {
+        align-items: center;
+        justify-content: center;
+
+        margin-bottom: 10px;
+
+        &.desktop {
+            display: flex;
+        }
+
+        &.mobile {
+            display: none;
+        }
+
+        img {
+            height: 30px;
+            width: auto;
+        }
+    }
+}
+
+
+@media screen and (max-width: 639px) {
+    aside {
+        .service-info {
+            justify-content: flex-end;
+            margin: 0;
+        }
+    }
+}
+
+@media screen and (max-width: 425px) {
+    aside {
+        .header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .service-info {
+            &.desktop {
+                display: none;
+            }
+
+            &.mobile {
+                display: flex;
+            }
+        }
+    }
 }

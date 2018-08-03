@@ -3,41 +3,34 @@
 
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
+import * as POPUP from '../../constants/popup';
 import { container, iframe, showView, postMessage } from './common';
 import DataManager from '../../data/DataManager';
 import type { SelectDevice } from '../../types/ui-request';
 
 const initWebUsbButton = (webusb: boolean, showLoader: boolean): void => {
-    if (!webusb || !iframe) return;
+    if (!webusb) return;
 
     const webusbContainer: HTMLElement = container.getElementsByClassName('webusb')[0];
     webusbContainer.style.display = 'flex';
     const button: HTMLButtonElement = webusbContainer.getElementsByTagName('button')[0];
+
+    if (!iframe) {
+        button.innerHTML = '<span class="plus"></span><span class="text">Pair devices</span>';
+    }
+
     button.onclick = async () => {
-        const x = window.screenLeft;
-        const y = window.screenTop;
-
-        const currentWidth = window.outerWidth;
-        const currentHeight = window.outerHeight;
-
-        const restorePosition = (originalWidth: number, originalHeight: number): void => {
-            window.resizeTo(originalWidth, originalHeight);
-            window.moveTo(x, y);
-            window.focus();
-        };
-
-        window.resizeTo(100, 100);
-        window.moveTo(screen.width, screen.height);
+        if (!iframe) {
+            window.postMessage(POPUP.EXTENSION_USB_PERMISSIONS, window.location.origin);
+            return;
+        }
 
         const usb = iframe.clientInformation.usb;
         try {
             await usb.requestDevice({ filters: DataManager.getConfig().webusb });
-            // window.open('javascript:void(0)', DataManager.getSettings('windowName'));
-            // window.open('javascript:void(0)', 'parent-window');
             if (showLoader) { showView('loader'); }
-            restorePosition(currentWidth, currentHeight);
         } catch (error) {
-            restorePosition(currentWidth, currentHeight);
+            // empty, do nothing
         }
     };
 };

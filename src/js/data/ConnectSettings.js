@@ -19,6 +19,7 @@ export type ConnectSettings = {
     webusb: boolean,
     pendingTransportEvent: boolean,
     supportedBrowser?: boolean,
+    extension: ?string,
 }
 
 /*
@@ -26,7 +27,7 @@ export type ConnectSettings = {
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
-const VERSION: string = '5.0.26';
+const VERSION: string = '5.0.28';
 const versionN: Array<number> = VERSION.split('.').map(s => parseInt(s));
 const DIRECTORY: string = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
 const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/';
@@ -49,6 +50,7 @@ const initialSettings: ConnectSettings = {
     webusb: true,
     pendingTransportEvent: true,
     supportedBrowser: !(/Trident|MSIE/.test(navigator.userAgent)),
+    extension: null,
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -97,6 +99,10 @@ export const parse = (input: ?Object): ConnectSettings => {
     if (window.location.protocol === 'file:') {
         settings.origin = window.location.origin + window.location.pathname;
         settings.webusb = false;
+    }
+
+    if (typeof input.extension === 'string') {
+        settings.extension = input.extension;
     }
 
     // $FlowIssue: settings.excludedDevices field is intentionally not defined in flowtype. it's used only in tests to exclude debug-link device.

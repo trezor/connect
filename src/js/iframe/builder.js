@@ -47,10 +47,9 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
 
     timeout = window.setTimeout(() => {
         initPromise.reject(IFRAME_TIMEOUT);
-    }, 30000);
+    }, 10000);
 
     const onLoad = () => {
-
         if (!instance) {
             initPromise.reject(IFRAME_BLOCKED);
             return;
@@ -59,23 +58,26 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
             // if hosting page is able to access cross-origin location it means that the iframe is not loaded
             const iframeOrigin: ?string = instance.contentWindow.location.origin;
             if (!iframeOrigin || iframeOrigin === 'null') {
-                window.clearTimeout(timeout);
-                error = IFRAME_BLOCKED.message;
-                dispose();
-                initPromise.reject(IFRAME_BLOCKED);
+                // eslint-disable-next-line no-use-before-define
+                handleIframeBlocked();
                 return;
             }
         } catch (e) {
             // empty
         }
 
-        if (typeof window.chrome !== 'undefined' && window.chrome.runtime && window.chrome.runtime.onConnect) {
-            window.chrome.runtime.onConnect.addListener(() => { });
+        let extension: ?string;
+        if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined') {
+            chrome.runtime.onConnect.addListener(() => { });
+            extension = chrome.runtime.id;
         }
 
         instance.contentWindow.postMessage({
             type: IFRAME_HANDSHAKE,
-            payload: settings,
+            payload: {
+                settings,
+                extension,
+            },
         }, origin);
 
         instance.onload = undefined;
@@ -87,7 +89,6 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
     } else {
         instance.onload = onLoad;
     }
-
     // inject iframe into host document body
     if (document.body) {
         document.body.appendChild(instance);
@@ -125,6 +126,15 @@ const injectStyleSheet = (): void => {
     head.append(style);
 };
 
+const handleIframeBlocked = (): void => {
+    window.clearTimeout(timeout);
+
+    error = IFRAME_BLOCKED.message;
+    // eslint-disable-next-line no-use-before-define
+    dispose();
+    initPromise.reject(IFRAME_BLOCKED);
+};
+
 // post messages to iframe
 export const postMessage = (message: any, usePromise: boolean = true): ?Promise<void> => {
     if (!instance) {
@@ -152,4 +162,8 @@ export const dispose = () => {
     }
     instance = null;
     timeout = 0;
+};
+
+export const clearTimeout = () => {
+    window.clearTimeout(timeout);
 };

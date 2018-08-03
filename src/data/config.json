@@ -11,8 +11,12 @@
         { "origin": "localhost", "priority": 0 }
     ],
     "knownHosts": [
-        { "origin": "chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk", "label": "Trezor Password Manager (Develop)", "icon": "./data/icons/tpm.jpg" },
-        { "origin": "chrome-extension://niebkpllfhmpfbffbfifagfgoamhpflf", "label": "Trezor Password Manager" }
+        { "origin": "imloifkgjagghnncjkhggdhalmcnfklk", "label": "Trezor Password Manager (Develop)", "icon": "./data/icons/tpm.jpg" },
+        { "origin": "niebkpllfhmpfbffbfifagfgoamhpflf", "label": "Trezor Password Manager" },
+        { "origin": "trezor-connect@trezor.io", "label": "Trezor Connect FF Extension" },
+        { "origin": "efbfhenfhihgdcmnfdkhaphjdnopihlf", "label": "Trezor Connect Chrome Extension", "icon": "./data/icons/metamask.svg" },
+        { "origin": "mnpfhpndmjholfdlhpkjfmjkgppmodaf", "label": "MetaMask" },
+        { "origin": "webextension@metamask.io", "label": "MetaMask" }
     ],
     "resources": {
         "bridge": "./data/bridge/latest.txt"
