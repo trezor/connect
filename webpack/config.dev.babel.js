@@ -22,7 +22,8 @@ module.exports = {
         'trezor-connect': `${JS_SRC}index.js`,
         'iframe': `${JS_SRC}iframe/iframe.js`,
         'popup': `${JS_SRC}popup/popup.js`,
-        'webusb': `${JS_SRC}webusb/index.js`
+        'webusb': `${JS_SRC}webusb/index.js`,
+        'extensionPermissions': `${JS_SRC}webusb/extensionPermissions.js`
     },
     output: {
         filename: '[name].js',
@@ -114,18 +115,24 @@ module.exports = {
             chunks: ['iframe'],
             filename: `iframe.html`,
             template: `${HTML_SRC}iframe.html`,
-            inject: true
+            inject: false
         }),
         new HtmlWebpackPlugin({
             chunks: ['popup'],
             filename: 'popup.html',
             template: `${HTML_SRC}popup.html`,
-            inject: true
+            inject: false
         }),
         new HtmlWebpackPlugin({
             chunks: ['webusb'],
             filename: `webusb.html`,
             template: `${HTML_SRC}webusb.html`,
+            inject: true
+        }),
+        new HtmlWebpackPlugin({
+            chunks: ['extensionPermissions'],
+            filename: `extension-permissions.html`,
+            template: `${HTML_SRC}extension-permissions.html`,
             inject: true
         }),
 

@@ -36,7 +36,7 @@ type Asset = {
     type?: string,
     url: string,
 }
-type Config = {
+export type Config = {
     +whitelist: Array<WhiteList>,
     +knownHosts: Array<KnownHost>,
     +webusb: Array<WebUSB>,
@@ -75,7 +75,7 @@ export default class DataManager {
             }
             this.settings.priority = DataManager.getPriority(whitelist);
 
-            const knownHost: ?KnownHost = DataManager.getHostLabel(this.settings.origin || '');
+            const knownHost: ?KnownHost = DataManager.getHostLabel(this.settings.extension || this.settings.origin || '');
             if (knownHost) {
                 this.settings.hostLabel = knownHost.label;
                 this.settings.hostIcon = knownHost.icon;
