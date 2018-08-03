@@ -32,7 +32,8 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
     };
     const toggleInputFontStyle = (input: HTMLInputElement) => {
         if (inputType === 'text') {
-            input.classList.add('text');
+            // input.classList.add('text');
+            input.setAttribute('type', 'text');
 
             // Since passphrase is visible there's no need to force user to fill the passphrase twice
             // - disable input2
@@ -41,7 +42,8 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
             input2.value = input1.value;
             validation();
         } else if (inputType === 'password') {
-            input.classList.remove('text');
+            // input.classList.remove('text');
+            input.setAttribute('type', 'password');
 
             input2.disabled = false;
             input2.value = '';
