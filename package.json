@@ -24,6 +24,8 @@
   "scripts": {
     "dev": "webpack-dev-server --config ./webpack/config.dev.babel.js --mode development",
     "build": "rm -rf dist && webpack --config ./webpack/config.prod.babel.js --progress",
+    "build:rollup": "./node_modules/.bin/rollup --config ./tools/rollup.config.js",
+    "build:inline": "rm -rf dist && webpack --config ./webpack/config.inline.babel.js --progress",
     "build:npm": "rm -rf npm && babel-node ./tools/build.js && babel ./npm/lib --out-dir ./npm/lib",
     "stats": "webpack --config ./webpack/config.prod.babel.js --json > dist/stats.json",
     "test": "sh ./src/__tests__/run.sh",
