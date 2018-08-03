@@ -18,7 +18,15 @@ export const setOperation = (operation: string): void => {
     const operationEl: HTMLElement = infoPanel.getElementsByClassName('operation')[0];
     const originEl: HTMLElement = infoPanel.getElementsByClassName('origin')[0];
     operationEl.innerHTML = operation;
-    originEl.innerHTML = DataManager.getSettings('hostLabel') || DataManager.getSettings('origin');
+    originEl.innerText = DataManager.getSettings('hostLabel') || DataManager.getSettings('origin');
+
+    const icon: ?string = DataManager.getSettings('hostIcon');
+    if (icon) {
+        const iconContainers: HTMLCollection<HTMLElement> = document.getElementsByClassName('service-info');
+        for (let i = 0; i < iconContainers.length; i++) {
+            iconContainers[i].innerHTML = `<img src="${ icon }" alt="" />`;
+        }
+    }
 };
 
 export const init = (): any => {
