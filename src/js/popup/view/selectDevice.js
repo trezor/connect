@@ -16,7 +16,7 @@ const initWebUsbButton = (webusb: boolean, showLoader: boolean): void => {
     const button: HTMLButtonElement = webusbContainer.getElementsByTagName('button')[0];
 
     if (!iframe) {
-        button.innerHTML = '<span class="text">Allow usb permissions for chrome extension</span>';
+        button.innerHTML = '<span class="plus"></span><span class="text">Pair devices</span>';
     }
 
     button.onclick = async () => {
