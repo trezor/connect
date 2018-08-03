@@ -1,3 +1,11 @@
+# 5.0.28
+__added__
+- Added support for WebExtensions (Chrome/Firefox)
+- Added host icon for whitelisted domains
+__fixed__
+- Fixed passphrase input type (revert to password type)
+- Fixed popup and iframe timeout handling
+
 # 5.0.27
 __fixed__
 - Fixed handling not initialized iframe
