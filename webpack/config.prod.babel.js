@@ -105,7 +105,7 @@ module.exports = {
             chunks: ['iframe'],
             filename: `iframe.html`,
             template: `${HTML_SRC}iframe.html`,
-            inject: true
+            inject: false
         }),
         new HtmlWebpackPlugin({
             chunks: ['popup'],

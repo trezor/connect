@@ -9,7 +9,7 @@
 import EventEmitter from 'events';
 import 'babel-polyfill'; // for unsupported browsers
 
-import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from './constants';
+import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT, IFRAME_EVENT } from './constants';
 import * as TRANSPORT from './constants/transport';
 import * as POPUP from './constants/popup';
 import * as IFRAME from './constants/iframe';
@@ -100,6 +100,12 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
                 _popupManager.cancel();
             } else if (type === UI.CLOSE_UI_WINDOW) {
                 _popupManager.close();
+            }
+            break;
+
+        case IFRAME_EVENT :
+            if (type === IFRAME.BOOTSTRAP) {
+                iframe.clearTimeout();
             }
             break;
 

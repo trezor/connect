@@ -52,19 +52,19 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
 
     // If trying to read 'instance.contentWindow.location.origin' and 'SecurityError' is thrown - iframe was successfully loaded from trezor.io (error because it's cross site)
     // If trying to read 'instance.contentWindow.location.origin' and it's either 'null' or undefined - iframe was blocked
-    interval = window.setInterval(() => {
-        try {
-            if (!instance ||
-                !instance.contentWindow ||
-                !instance.contentWindow.location.origin ||
-                instance.contentWindow.location.origin === 'null') {
-                handleIframeBlocked();
-            }
-        } catch (e) {
-            // Empty
-            // 'SecurityError' was thrown - iframe was loaded
-        }
-    }, 300)
+    // interval = window.setInterval(() => {
+    //     try {
+    //         if (!instance ||
+    //             !instance.contentWindow ||
+    //             !instance.contentWindow.location.origin ||
+    //             instance.contentWindow.location.origin === 'null') {
+    //             handleIframeBlocked();
+    //         }
+    //     } catch (e) {
+    //         // Empty
+    //         // 'SecurityError' was thrown - iframe was loaded
+    //     }
+    // }, 300)
 
     const onLoad = () => {
 
@@ -179,4 +179,8 @@ export const dispose = () => {
     instance = null;
     timeout = 0;
     interval = 0;
+};
+
+export const clearTimeout = () => {
+    window.clearTimeout(timeout);
 };

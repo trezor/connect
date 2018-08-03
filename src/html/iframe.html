@@ -14,5 +14,20 @@
     <meta http-equiv="pragma" content="no-cache" />
 </head>
 <body>
+
+    <script type="text/javascript">
+        const IFRAME_BOOTSTRAP = 'iframe-bootstrap';
+        const iframeMessage = {
+            event: 'IFRAME_EVENT',
+            type: IFRAME_BOOTSTRAP,
+        };
+        window.top.postMessage(iframeMessage, window.top.location.origin);
+
+        const iframeScript = document.createElement('script');
+        iframeScript.setAttribute('type', 'text/javascript');
+        iframeScript.setAttribute('src', '<%= htmlWebpackPlugin.files.chunks.iframe.entry %>');
+        iframeScript.setAttribute('async', 'false');
+        document.body.appendChild(iframeScript);
+    </script>
 </body>
 </html>
