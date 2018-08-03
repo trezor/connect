@@ -14,8 +14,8 @@ const onLoad = async () => {
 };
 
 const init = (label: string) => {
-    const h3: HTMLElement = document.getElementsByTagName('h3')[0];
-    h3.innerText = label;
+    const extensionName: HTMLElement = document.getElementsByClassName('extension-name')[0];
+    extensionName.innerText = label;
 
     const usbButton: HTMLElement = document.getElementsByClassName('confirm')[0];
     const cancelButton: HTMLElement = document.getElementsByClassName('cancel')[0];
