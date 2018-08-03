@@ -145,7 +145,7 @@ export default class PopupManager extends EventEmitter {
             this.extensionPort.onMessage.addListener(this.handleExtensionMessage);
         } else if (port.name === 'trezor-usb-permissions') {
             port.postMessage({ broadcast: this.broadcast });
-        };
+        }
     }
 
     handleExtensionMessage(message: Object): void {

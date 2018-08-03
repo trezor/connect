@@ -12,7 +12,6 @@ export let instance: ?HTMLIFrameElement;
 export let origin: string;
 export const initPromise: Deferred<void> = createDeferred();
 export let timeout: number = 0;
-export let interval: number = 0;
 export let error: ?string;
 
 let _messageID: number = 0;
@@ -48,24 +47,7 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
 
     timeout = window.setTimeout(() => {
         initPromise.reject(IFRAME_TIMEOUT);
-    }, 30000);
-
-    // If trying to read 'instance.contentWindow.location.origin' and 'SecurityError' is thrown - iframe was successfully loaded from trezor.io (error because it's cross site)
-    // If trying to read 'instance.contentWindow.location.origin' and it's either 'null' or undefined - iframe was blocked
-    interval = window.setInterval(() => {
-        try {
-            if (!instance ||
-                !instance.contentWindow ||
-                !instance.contentWindow.location.origin ||
-                instance.contentWindow.location.origin === 'null') {
-                // eslint-disable-next-line no-use-before-define
-                handleIframeBlocked();
-            }
-        } catch (e) {
-            // Empty
-            // 'SecurityError' was thrown - iframe was loaded
-        }
-    }, 300);
+    }, 10000);
 
     const onLoad = () => {
         if (!instance) {
@@ -121,9 +103,6 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
     } finally {
         window.clearTimeout(timeout);
         timeout = 0;
-
-        window.clearInterval(interval);
-        interval = 0;
     }
 };
 
@@ -149,7 +128,6 @@ const injectStyleSheet = (): void => {
 
 const handleIframeBlocked = (): void => {
     window.clearTimeout(timeout);
-    window.clearInterval(interval);
 
     error = IFRAME_BLOCKED.message;
     // eslint-disable-next-line no-use-before-define
@@ -184,9 +162,8 @@ export const dispose = () => {
     }
     instance = null;
     timeout = 0;
-    interval = 0;
 };
 
-export const clearIframeTimeout = () => {
+export const clearTimeout = () => {
     window.clearTimeout(timeout);
 };

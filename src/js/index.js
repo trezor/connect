@@ -86,6 +86,16 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
             break;
 
         case UI_EVENT :
+
+            if (type === IFRAME.BOOTSTRAP) {
+                iframe.clearTimeout();
+                break;
+            } else if (type === POPUP.BOOTSTRAP) {
+                // Popup did open but is still loading JS
+                _popupManager.cancelOpenTimeout();
+                break;
+            }
+
             // pass UI event up
             eventEmitter.emit(event, message);
             eventEmitter.emit(type, payload);
@@ -101,11 +111,6 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
                 _popupManager.cancel();
             } else if (type === UI.CLOSE_UI_WINDOW) {
                 _popupManager.close();
-            } else if (type === POPUP.BOOTSTRAP) {
-                // Popup did open but is still loading JS
-                _popupManager.cancelOpenTimeout();
-
-                // iframe.clearIframeTimeout();
             }
             break;
 
@@ -151,7 +156,7 @@ const call = async (params: Object): Promise<Object> => {
         _popupManager.request(true);
 
         if (!_settings.supportedBrowser) {
-            return { success: false, message: 'Unsupported browser' };
+            return { success: false, payload: { error: 'Unsupported browser' } };
         }
 
         // auto init with default settings
@@ -160,16 +165,16 @@ const call = async (params: Object): Promise<Object> => {
             _popupManager.resolveLazyLoad();
         } catch (error) {
             _popupManager.close();
-            return { success: false, message: error };
+            return { success: false, payload: { error } };
         }
     }
 
     if (iframe.timeout) {
         // this.init was called, but iframe doesn't return handshake yet
-        return { success: false, message: NO_IFRAME.message };
+        return { success: false, payload: { error: NO_IFRAME.message } };
     } else if (iframe.error) {
         // iframe was initialized with error
-        return { success: false, message: iframe.error };
+        return { success: false, payload: { error: iframe.error } };
     }
 
     // request popup window it might be used in the future
@@ -186,7 +191,7 @@ const call = async (params: Object): Promise<Object> => {
         } else {
             _popupManager.unlock();
             // TODO
-            return { success: false };
+            return { success: false, payload: { error: 'No response from iframe' } };
         }
     } catch (error) {
         _log.error('__call error', error);
