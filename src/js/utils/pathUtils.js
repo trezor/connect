@@ -14,8 +14,8 @@ const PATH_NEGATIVE_VALUES = invalidParameter('Path cannot contain negative valu
 
 export const getHDPath = (path: string): Array<number> => {
     const parts: Array<string> = path.toLowerCase().split('/');
-    if (parts[0] !== 'm' || parts.length < 2) throw PATH_NOT_VALID;
-    return parts.filter((p: string) => p !== 'm')
+    if (parts[0] !== 'm') throw PATH_NOT_VALID;
+    return parts.filter((p: string) => p !== 'm' && p !== '')
         .map((p: string) => {
             let hardened: boolean = false;
             if (p.substr(p.length - 1) === "'") {
