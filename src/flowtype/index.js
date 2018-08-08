@@ -23,13 +23,18 @@ declare type ChromePort = {
     disconnect: () => void;
 }
 
+declare function $RuntimeSendMessage(message: any, options: Object, callback: () => void): void;
+declare function $RuntimeSendMessage(id: string, message: any, options: ?Object, callback: () => void): void;
+
 declare var chrome: {
     runtime: {
         id: string;
         onConnect: {
             addListener: ((port: ChromePort) => void) => void;
             removeListener: ((port: ChromePort) => void) => void;
-        }
+        };
+        sendMessage: typeof $RuntimeSendMessage;
+        lastError?: string;
     },
     tabs: {
         create: ({

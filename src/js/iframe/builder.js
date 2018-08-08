@@ -67,6 +67,7 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
         }
 
         let extension: ?string;
+        // $FlowIssue chrome is not declared outside
         if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined') {
             chrome.runtime.onConnect.addListener(() => { });
             extension = chrome.runtime.id;
