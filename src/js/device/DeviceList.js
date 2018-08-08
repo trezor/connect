@@ -100,7 +100,6 @@ export default class DeviceList extends EventEmitter {
                         delete this.devices[DEVICE.UNREADABLE];
                         this.emit(DEVICE.DISCONNECT, device.toMessageObject());
                     }
-                    // this.emit(TRANSPORT.UNREADABLE, { connected: webUsbPlugin.unreadableHidDevice } )
                 });
             }
 
