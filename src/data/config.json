@@ -15,8 +15,8 @@
         { "origin": "niebkpllfhmpfbffbfifagfgoamhpflf", "label": "Trezor Password Manager" },
         { "origin": "trezor-connect@trezor.io", "label": "Trezor Connect FF Extension" },
         { "origin": "efbfhenfhihgdcmnfdkhaphjdnopihlf", "label": "Trezor Connect Chrome Extension", "icon": "./data/icons/metamask.svg" },
-        { "origin": "mnpfhpndmjholfdlhpkjfmjkgppmodaf", "label": "MetaMask" },
-        { "origin": "webextension@metamask.io", "label": "MetaMask" }
+        { "origin": "mnpfhpndmjholfdlhpkjfmjkgppmodaf", "label": "MetaMask", "icon": "./data/icons/metamask.svg" },
+        { "origin": "webextension@metamask.io", "label": "MetaMask", "icon": "./data/icons/metamask.svg" }
     ],
     "resources": {
         "bridge": "./data/bridge/latest.txt"
