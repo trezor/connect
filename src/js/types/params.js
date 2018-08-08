@@ -16,7 +16,7 @@ import type {
     MultisigRedeemScriptType,
 } from './trezor';
 
-declare type $Common = {
+export type $Common = {
     device?: {
         path: string,
         instance?: ?number,
@@ -26,9 +26,9 @@ declare type $Common = {
     keepSession?: boolean,
 }
 
-declare type $Path = string | Array<number>;
+export type $Path = string | Array<number>;
 
-type $CipherKeyValueBatch = {
+export type $CipherKeyValue = {
     path: $Path,
     key?: string,
     value?: string,
@@ -37,8 +37,6 @@ type $CipherKeyValueBatch = {
     askOnDecrypt?: boolean,
     iv?: string,
 }
-
-export type $CipherKeyValue = $Common & ($CipherKeyValueBatch | { bundle: Array<$CipherKeyValueBatch> });
 
 export type $ComposeTransaction = $Common & {
     outputs: Array<{ amount: string, address: string }>,
@@ -53,12 +51,10 @@ export type $CustomMessage = $Common & {
     callback: (request: any) => Promise<?{ message: string, params?: Object }>,
 }
 
-type $EthereumGetAddressBatch = {
+export type $EthereumGetAddress = {
     path: $Path,
     showOnTrezor?: boolean,
 }
-
-export type $EthereumGetAddress = $Common & ($EthereumGetAddressBatch | { bundle: Array<$EthereumGetAddressBatch> });
 
 export type $EthereumSignMessage = $Common & {
     path: $Path,
@@ -82,33 +78,28 @@ export type $GetAccountInfo = $Common & {
     coin: string,
 }
 
-type $GetAddressBatch = {
+export type $GetAddress = {
     path: $Path,
     coin?: string,
     showOnTrezor?: boolean,
     crossChain?: boolean,
 }
-
-export type $GetAddress = $Common & ($GetAddressBatch | { bundle: Array<$GetAddressBatch> });
 
 export type $GetDeviceState = $Common;
 
 export type $GetFeatures = $Common;
 
-type $GetPublicKeyBatch = {
+export type $GetPublicKey = {
     path: $Path,
     coin?: string,
     crossChain?: boolean,
 }
 
-export type $GetPublicKey = $Common & ($GetPublicKeyBatch | { bundle: Array<$GetPublicKeyBatch> });
-
-type $NEMGetAddressBatch = {
+export type $NEMGetAddress = {
     path: $Path,
     network: number,
     showOnTrezor?: boolean,
 }
-export type $NEMGetAddress = $Common & ($NEMGetAddressBatch | { bundle: Array<$NEMGetAddressBatch> });
 
 export type $NEMSignTransaction = $Common & {
     path: $Path,
@@ -168,7 +159,7 @@ export type $SignTransaction = $Common & {
     push?: boolean,
 }
 
-export type $StellarGetAddress = $Common & {
+export type $StellarGetAddress = {
     path: $Path,
     showOnTrezor?: boolean,
 }

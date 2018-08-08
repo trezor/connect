@@ -231,7 +231,7 @@ class TrezorConnect {
         iframe.postMessage({ type: UI.CHANGE_SETTINGS, payload: parsedSettings }, false);
     }
 
-    static customMessage = async (params: $T.$CustomMessage): Promise<$T.CustomMessage$> => {
+    static customMessage: $T.CustomMessage = async (params) => {
         if (typeof params.callback !== 'function') {
             return {
                 success: false,
@@ -262,7 +262,7 @@ class TrezorConnect {
         return response;
     }
 
-    static requestLogin = async (params: $T.$RequestLogin): Promise<$T.RequestLogin$> => {
+    static requestLogin: $T.RequestLogin = async (params) => {
         // $FlowIssue: property callback not found
         if (typeof params.callback === 'function') {
             const callback = params.callback;
@@ -291,84 +291,79 @@ class TrezorConnect {
         }
     }
 
-    static cipherKeyValue = async (params: $T.$CipherKeyValue): Promise<$T.CipherKeyValue$> => {
+    static cipherKeyValue: $T.CipherKeyValue = async (params) => {
         return await call({ method: 'cipherKeyValue', ...params });
     }
 
-    static composeTransaction = async (params: $T.$ComposeTransaction): Promise<$T.ComposeTransaction$> => {
+    static composeTransaction: $T.ComposeTransaction = async (params) => {
         return await call({ method: 'composeTransaction', ...params });
     }
 
-    static ethereumGetAddress = async (params: $T.$EthereumGetAddress): Promise<$T.EthereumGetAddress$> => {
+    static ethereumGetAddress: $T.EthereumGetAddress = async (params) => {
         return await call({ method: 'ethereumGetAddress', ...params });
     }
 
-    static ethereumSignMessage = async (params: $T.$EthereumSignMessage): Promise<$T.EthereumSignMessage$> => {
+    static ethereumSignMessage: $T.EthereumSignMessage = async (params) => {
         return await call({ method: 'ethereumSignMessage', ...params });
     }
 
-    static ethereumSignTransaction = async (params: $T.$EthereumSignTransaction): Promise<$T.EthereumSignTransaction$> => {
+    static ethereumSignTransaction: $T.EthereumSignTransaction = async (params) => {
         return await call({ method: 'ethereumSignTransaction', ...params });
     }
 
-    static ethereumVerifyMessage = async (params: $T.$EthereumVerifyMessage): Promise<$T.EthereumVerifyMessage$> => {
+    static ethereumVerifyMessage: $T.EthereumVerifyMessage = async (params) => {
         return await call({ method: 'ethereumVerifyMessage', ...params });
     }
 
-    static getAccountInfo = async (params: $T.$GetAccountInfo): Promise<$T.GetAccountInfo$> => {
+    static getAccountInfo: $T.GetAccountInfo = async (params) => {
         return await call({ method: 'getAccountInfo', ...params });
     }
 
-    static getAddress = async (params: $T.$GetAddress): Promise<$T.GetAddress$> => {
+    static getAddress: $T.GetAddress = async (params) => {
         return await call({ method: 'getAddress', ...params });
     }
 
-    static getDeviceState = async (params: $T.$GetDeviceState): Promise<$T.GetDeviceState$> => {
+    static getDeviceState: $T.GetDeviceState = async (params) => {
         return await call({ method: 'getDeviceState', ...params });
     }
 
-    static getFeatures = async (params: $T.$GetFeatures): Promise<$T.GetFeatures$> => {
+    static getFeatures: $T.GetFeatures = async (params) => {
         return await call({ method: 'getFeatures', ...params });
     }
 
-    static getPublicKey = async (params: $T.$GetPublicKey): Promise<$T.GetPublicKey$> => {
+    static getPublicKey: $T.GetPublicKey = async (params) => {
         return await call({ method: 'getPublicKey', ...params });
     }
 
-    static nemGetAddress = async (params: $T.$NEMGetAddress): Promise<$T.NEMGetAddress$> => {
+    static nemGetAddress: $T.NEMGetAddress = async (params) => {
         return await call({ method: 'nemGetAddress', ...params });
     }
 
-    static nemSignTransaction = async (params: $T.$NEMSignTransaction): Promise<$T.NEMSignTransaction$> => {
+    static nemSignTransaction: $T.NEMSignTransaction = async (params) => {
         return await call({ method: 'nemSignTransaction', ...params });
     }
 
-    static pushTransaction = async (params: $T.$PushTransaction): Promise<$T.PushTransaction$> => {
+    static pushTransaction: $T.PushTransaction = async (params) => {
         return await call({ method: 'pushTransaction', ...params });
     }
 
-    static signMessage = async (params: $T.$SignMessage): Promise<$T.SignMessage$> => {
+    static signMessage: $T.SignMessage = async (params) => {
         return await call({ method: 'signMessage', ...params });
     }
 
-    static signTransaction = async (params: $T.$SignTransaction): Promise<$T.SignTransaction$> => {
+    static signTransaction: $T.SignTransaction = async (params) => {
         return await call({ method: 'signTransaction', ...params });
     }
 
-    static stellarGetAddress = async (params: $T.$StellarGetAddress): Promise<$T.StellarGetAddress$> => {
+    static stellarGetAddress: $T.StellarGetAddress = async (params) => {
         return await call({ method: 'stellarGetAddress', ...params });
     }
 
-    // deprecated
-    static stellarGetPublicKey = async (params: $T.$StellarGetAddress): Promise<$T.StellarGetAddress$> => {
-        return await call({ method: 'stellarGetPublicKey', ...params });
-    }
-
-    static stellarSignTransaction = async (params: $T.$StellarSignTransaction): Promise<$T.StellarSignTransaction$> => {
+    static stellarSignTransaction: $T.StellarSignTransaction = async (params) => {
         return await call({ method: 'stellarSignTransaction', ...params });
     }
 
-    static verifyMessage = async (params: $T.$VerifyMessage): Promise<$T.VerifyMessage$> => {
+    static verifyMessage: $T.VerifyMessage = async (params) => {
         return await call({ method: 'verifyMessage', ...params });
     }
 
@@ -395,6 +390,8 @@ export {
 
 export type {
     Device,
+    DeviceStatus,
+    DeviceFirmwareStatus,
     Features,
     DeviceMessageType,
     DeviceMessage,

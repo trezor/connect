@@ -31,6 +31,11 @@ export type CipherKeyValue$ = {
     payload: CipheredKeyValue | Array<CipheredKeyValue>,
 } | Unsuccessful$;
 
+export type CipherKeyValue$$ = {
+    success: true,
+    payload: Array<CipheredKeyValue>,
+} | Unsuccessful$;
+
 export type CustomMessage$ = {
     success: true,
     payload: any,
@@ -43,7 +48,12 @@ export type ComposeTransaction$ = {
 
 export type EthereumGetAddress$ = {
     success: true,
-    payload: EthereumAddress | Array<EthereumAddress>,
+    payload: EthereumAddress,
+} | Unsuccessful$;
+
+export type EthereumGetAddress$$ = {
+    success: true,
+    payload: Array<EthereumAddress>,
 } | Unsuccessful$;
 
 export type EthereumSignMessage$ = {
@@ -68,7 +78,12 @@ export type GetAccountInfo$ = {
 
 export type GetAddress$ = {
     success: true,
-    payload: Address | Array<Address>,
+    payload: Address,
+} | Unsuccessful$;
+
+export type GetAddress$$ = {
+    success: true,
+    payload: Array<Address>,
 } | Unsuccessful$;
 
 export type GetDeviceState$ = {
@@ -85,7 +100,12 @@ export type GetFeatures$ = {
 
 export type GetPublicKey$ = {
     success: true,
-    payload: HDNodeResponse | Array<HDNodeResponse>,
+    payload: HDNodeResponse,
+} | Unsuccessful$;
+
+export type GetPublicKey$$ = {
+    success: true,
+    payload: Array<HDNodeResponse>,
 } | Unsuccessful$;
 
 export type PushTransaction$ = {
@@ -103,7 +123,12 @@ export type RequestLogin$ = {
 
 export type NEMGetAddress$ = {
     success: true,
-    payload: NEMAddress | Array<NEMAddress>,
+    payload: NEMAddress,
+} | Unsuccessful$;
+
+export type NEMGetAddress$$ = {
+    success: true,
+    payload: Array<NEMAddress>,
 } | Unsuccessful$;
 
 export type NEMSignTransaction$ = {
@@ -123,7 +148,12 @@ export type SignTransaction$ = {
 
 export type StellarGetAddress$ = {
     success: true,
-    payload: StellarAddress | Array<StellarAddress>,
+    payload: StellarAddress,
+} | Unsuccessful$;
+
+export type StellarGetAddress$$ = {
+    success: true,
+    payload: Array<StellarAddress>,
 } | Unsuccessful$;
 
 export type StellarSignTransaction$ = {
