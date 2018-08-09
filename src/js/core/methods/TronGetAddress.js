@@ -10,20 +10,8 @@ import { uniq } from 'lodash';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { EthereumAddress } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
-import type { EthereumNetworkInfo } from 'flowtype';
 
-type Batch = {
-    path: Array<number>,
-    network: ?EthereumNetworkInfo,
-    showOnTrezor: boolean,
-}
-
-type Params = {
-    bundle: Array<Batch>,
-    bundledResponse: boolean,
-}
 
 export default class TronGetAddress extends AbstractMethod {
     params: Params;
@@ -37,6 +25,7 @@ export default class TronGetAddress extends AbstractMethod {
 
         const payload: Object = message.payload;
         let bundledResponse: boolean = true;
+
         // create a bundle with only one batch
         if (!payload.hasOwnProperty('bundle')) {
             payload.bundle = [ ...payload ];
@@ -52,6 +41,7 @@ export default class TronGetAddress extends AbstractMethod {
         let shouldUseUi: boolean = false;
 
         payload.bundle.forEach(batch => {
+
             // validate incoming parameters for each batch
             validateParams(batch, [
                 { name: 'path', obligatory: true },
@@ -59,7 +49,6 @@ export default class TronGetAddress extends AbstractMethod {
             ]);
 
             const path: Array<number> = validatePath(batch.path, 3);
-            const network: ?EthereumNetworkInfo = getEthereumNetwork(path);
 
             let showOnTrezor: boolean = true;
             if (batch.hasOwnProperty('showOnTrezor')) {
@@ -71,7 +60,6 @@ export default class TronGetAddress extends AbstractMethod {
 
             bundle.push({
                 path,
-                network,
                 showOnTrezor,
             });
         });
@@ -84,8 +72,8 @@ export default class TronGetAddress extends AbstractMethod {
         };
     }
 
-    async run(): Promise<EthereumAddress | Array<EthereumAddress>> {
-        const responses: Array<EthereumAddress> = [];
+    async run() {
+        const responses = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
             const batch: Batch = this.params.bundle[i];
             const response = await this.device.getCommands().tronGetAddress(

@@ -136,11 +136,10 @@ start_emulator() {
         echo "Starting emulator..."
     fi;
 
-#    echo $emulator_path
     # Start emulator
     cd $emulator_path
-#    PYOPT=0 ./emu.sh > /dev/null 2>&1 &
-    PYOPT=0 ./emu.sh &
+    PYOPT=0 ./emu.sh > /dev/null 2>&1 &
+    #PYOPT=0 ./emu.sh &
     pid_emul=$!
     #PYOPT=0 ./emu.sh 2>&1 > /dev/null &
 
@@ -156,7 +155,7 @@ start_transport() {
 
     cd $trezord_path
     #./trezord-go -e 21324 > /dev/null 2>&1 &
-    #./trezord-go -e 21324 -e 21325 > /dev/null 2>&1 &
+    ./trezord-go -e 21324 -e 21325 > /dev/null 2>&1 &
     #./trezord-go -e 21325 > /dev/null 2>&1 &
 
     # You can disable all USB in order to run on some virtuaized environments, for example Travis
@@ -181,12 +180,11 @@ init_device() {
     fi;
 
     cd $base_path
-
-#    if [ "$passphraseEnabled" == "True" ]; then
-#        ./venv/bin/python3 ./src/__tests__/init_device.py -m "$mnemonic" -p "$pin" --passphrase 2>&1 > /dev/null
-#    else
-#    fi;
-    ./venv/bin/python3 ./src/__tests__/init_device.py -m "$mnemonic" -p "$pin" --no-passphrase 2>&1 > /dev/null
+    if [ "$passphraseEnabled" == "True" ]; then
+        python3 ./src/__tests__/init_device.py -m "$mnemonic" -p "$pin" --passphrase 2>&1 > /dev/null
+    else
+        python3 ./src/__tests__/init_device.py -m "$mnemonic" -p "$pin" --no-passphrase 2>&1 > /dev/null
+    fi;
 
     if [ $should_print_debug -eq 1 ]; then
         echo "Device ready.\n"

@@ -11,11 +11,8 @@ import type {
     ExpectedEthereumGetAddressResponse,
 } from 'flowtype/tests/ethereum-get-address';
 
-
 export const ethereumGetAddress = () => {
-
     describe('EthereumGetAddress', () => {
-
         let core: Core;
         const testPayloads: Array<TestEthereumGetAddressPayload> = [
             {
@@ -83,20 +80,14 @@ export const ethereumGetAddress = () => {
             throw new Error('Different number of payloads and expected responses');
         }
 
-        console.log("PATHLOAY COUNT", testPayloads.length);
-
         for (let i = 0; i < testPayloads.length; i++) {
-            console.log("PATHLOAY", i);
             const payload = testPayloads[i];
             const expectedResponse = expectedResponses[i];
 
             it(`for derivation path: [${payload.path.toString()}]`, async (done) => {
                 const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
-                console.log("GO start");
                 handler.startListening();
-                console.log("GO DONE");
                 await initTransport(settings);
-                console.log("INITED");
             });
         }
     });

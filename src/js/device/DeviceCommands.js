@@ -215,7 +215,7 @@ export default class DeviceCommands {
 
     async tronSignTx(address_n: Array<number>, transaction): Promise {
 
-        const response: MessageResponse<trezor.EthereumAddress> = await this.typedCall('TronSignTx', 'TronSignedTx', {
+        const response = await this.typedCall('TronSignTx', 'TronSignedTx', {
             transaction: transaction.transaction,
             address_n: address_n,
         });
