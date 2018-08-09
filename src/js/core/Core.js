@@ -227,6 +227,9 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
                 if (uiPromise) {
                     const uiResp: UiPromiseResponse = await uiPromise.promise;
                     if (uiResp.payload.remember) {
+                        if (!uiResp.payload.device.state) {
+                            delete uiResp.payload.device.state;
+                        }
                         _preferredDevice = uiResp.payload.device;
                     }
                     selectedDevicePath = uiResp.payload.device.path;
@@ -685,6 +688,7 @@ const onPopupClosed = (): void => {
                     _callMethods.forEach(m => {
                         postMessage(new ResponseMessage(m.responseID, false, { error: ERROR.POPUP_CLOSED.message }));
                     });
+                    _callMethods.splice(0, _callMethods.length);
                 }
             }
         });
@@ -784,10 +788,6 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
             postMessage(new DeviceMessage(DEVICE.DISCONNECT, device));
         });
 
-        _deviceList.on(DEVICE.DISCONNECT_UNACQUIRED, (device: DeviceTyped) => {
-            postMessage(new DeviceMessage(DEVICE.DISCONNECT_UNACQUIRED, device));
-        });
-
         _deviceList.on(DEVICE.CHANGED, (device: DeviceTyped) => {
             postMessage(new DeviceMessage(DEVICE.CHANGED, device));
         });
@@ -809,7 +809,6 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
         });
 
         _deviceList.on(TRANSPORT.START, (transportType) => postMessage(new TransportMessage(TRANSPORT.START, transportType)));
-        _deviceList.on(TRANSPORT.UNREADABLE, () => postMessage(new TransportMessage(TRANSPORT.UNREADABLE)));
 
         await _deviceList.init();
         if (_deviceList) {

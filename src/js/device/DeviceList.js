@@ -100,7 +100,6 @@ export default class DeviceList extends EventEmitter {
                         delete this.devices[DEVICE.UNREADABLE];
                         this.emit(DEVICE.DISCONNECT, device.toMessageObject());
                     }
-                    // this.emit(TRANSPORT.UNREADABLE, { connected: webUsbPlugin.unreadableHidDevice } )
                 });
             }
 
@@ -209,10 +208,6 @@ export default class DeviceList extends EventEmitter {
     async _createAndSaveDevice(
         descriptor: DeviceDescriptor
     ): Promise<void> {
-        if (DataManager.isExcludedDevice(descriptor.path)) {
-            this.resolveTransportEvent();
-            return;
-        }
         _log.debug('Creating Device', descriptor);
         await new CreateDeviceHandler(descriptor, this).handle();
     }
@@ -398,7 +393,7 @@ class CreateDeviceHandler {
     async _takeAndCreateDevice(): Promise<void> {
         const device = await Device.fromDescriptor(this.list.transport, this.descriptor);
         this.list.devices[this.path] = device;
-        await device.run();
+        if (!DataManager.isExcludedDevice(this.path)) { await device.run(); }
         this.list.emit(DEVICE.CONNECT, device.toMessageObject());
     }
 

@@ -5,9 +5,6 @@
   flex-direction: column;
 
   h3 {
-    display: flex;
-    flex-direction: column;
-
     span {
       .test-ellipsis();
       flex: 1;
@@ -86,6 +83,16 @@
 
       border: 1px solid @color_info_primary;
       background-color: @color_info_primary;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .permissions {
+    height: 500px;
+
+    .permission-item .content {
+      font-size: 14px;
     }
   }
 }

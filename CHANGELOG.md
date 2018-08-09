@@ -1,3 +1,38 @@
+# 5.0.28
+__added__
+- Added support for WebExtensions (Chrome/Firefox)
+- Added host icon for whitelisted domains
+__fixed__
+- Fixed passphrase input type (revert to password type)
+- Fixed popup and iframe timeout handling
+
+# 5.0.27
+__fixed__
+- Fixed handling not initialized iframe
+- Fixed iframe ad-blocker handling
+- Fixed popup views
+__changed__
+- Popup as new tab
+
+# 5.0.26
+__added__
+- Added support for Dogecoin and Vertcoin
+__fixed__
+- Fixed handling not initialized device
+- SignTransaction: amount as string
+- Handle origin of file://
+__changed__
+- Default url in connect
+
+# 5.0.25
+__added__
+- Added documentation
+__fixed__
+- filter UI events for popup and trusted apps
+- Fixed `TrezorConnect.signMessage` and `TrezorConnect.verifyMessage` signature to base64 format
+__changed__
+- Changed constants prefix from "__" to "-"
+
 # 5.0.24
 __fixed__
 - removed popup delay if lazy loading

@@ -6,6 +6,8 @@ export type ConnectSettings = {
     +configSrc: string, // constant
     debug: boolean,
     origin: ?string,
+    hostLabel?: string,
+    hostIcon?: string,
     priority: number,
     trustedHost: boolean,
     connectSrc: string,
@@ -17,6 +19,7 @@ export type ConnectSettings = {
     webusb: boolean,
     pendingTransportEvent: boolean,
     supportedBrowser?: boolean,
+    extension: ?string,
 }
 
 /*
@@ -24,9 +27,12 @@ export type ConnectSettings = {
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
-// const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/5/';
-// $FlowIssue
-const DEFAULT_DOMAIN: string = typeof LOCAL === 'string' ? 'http://localhost:8082/' : 'https://sisyfos.trezor.io/next/';
+const VERSION: string = '5.0.28';
+const versionN: Array<number> = VERSION.split('.').map(s => parseInt(s));
+const DIRECTORY: string = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
+const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/';
+const SRC: string = window.__TREZOR_CONNECT_SRC || `${ DEFAULT_DOMAIN }${ DIRECTORY }`;
+
 export const DEFAULT_PRIORITY: number = 2;
 
 const initialSettings: ConnectSettings = {
@@ -35,15 +41,16 @@ const initialSettings: ConnectSettings = {
     origin: null,
     priority: DEFAULT_PRIORITY,
     trustedHost: false,
-    connectSrc: DEFAULT_DOMAIN,
-    iframeSrc: `${ DEFAULT_DOMAIN }iframe.html`,
+    connectSrc: SRC,
+    iframeSrc: `${ SRC }iframe.html`,
     popup: true,
-    popupSrc: `${ DEFAULT_DOMAIN }popup.html`,
-    webusbSrc: `${ DEFAULT_DOMAIN }webusb.html`,
+    popupSrc: `${ SRC }popup.html`,
+    webusbSrc: `${ SRC }webusb.html`,
     transportReconnect: false,
     webusb: true,
     pendingTransportEvent: true,
     supportedBrowser: !(/Trident|MSIE/.test(navigator.userAgent)),
+    extension: null,
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -65,10 +72,12 @@ export const parse = (input: ?Object): ConnectSettings => {
     if (typeof input.connectSrc === 'string') {
         // TODO: escape string, validate url
         settings.connectSrc = input.connectSrc;
-        settings.iframeSrc = `${ input.connectSrc }iframe.html`;
-        settings.popupSrc = `${ input.connectSrc }popup.html`;
-        settings.webusbSrc = `${ input.connectSrc }webusb.html`;
+    } else if (typeof window.__TREZOR_CONNECT_SRC === 'string') {
+        settings.connectSrc = window.__TREZOR_CONNECT_SRC;
     }
+    settings.iframeSrc = `${ settings.connectSrc }iframe.html`;
+    settings.popupSrc = `${ settings.connectSrc }popup.html`;
+    settings.webusbSrc = `${ settings.connectSrc }webusb.html`;
 
     if (typeof input.transportReconnect === 'boolean') {
         settings.transportReconnect = input.transportReconnect;
@@ -84,6 +93,16 @@ export const parse = (input: ?Object): ConnectSettings => {
 
     if (typeof input.pendingTransportEvent === 'boolean') {
         settings.pendingTransportEvent = input.pendingTransportEvent;
+    }
+
+    // local files
+    if (window.location.protocol === 'file:') {
+        settings.origin = window.location.origin + window.location.pathname;
+        settings.webusb = false;
+    }
+
+    if (typeof input.extension === 'string') {
+        settings.extension = input.extension;
     }
 
     // $FlowIssue: settings.excludedDevices field is intentionally not defined in flowtype. it's used only in tests to exclude debug-link device.

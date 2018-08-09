@@ -66,7 +66,7 @@ export default class Device extends EventEmitter {
     inconsistent: boolean = false;
     firstRunPromise: Deferred<boolean>;
 
-    activitySessionID: string;
+    activitySessionID: ?string;
 
     featuresTimestamp: number = 0;
 
@@ -152,7 +152,7 @@ export default class Device extends EventEmitter {
     }
 
     async release(): Promise<void> {
-        if (this.isUsedHere() && !this.keepSession) {
+        if (this.isUsedHere() && !this.keepSession && this.activitySessionID) {
             if (this.commands) {
                 this.commands.dispose();
             }
@@ -356,12 +356,17 @@ export default class Device extends EventEmitter {
         return this.features === undefined;
     }
 
-    async updateDescriptor(descriptor: DeviceDescriptor): Promise<void> {
-        _log.debug('updateDescriptor', 'currentSession', this.originalDescriptor.session, 'upcoming', descriptor.session, 'lastUsedID', this.activitySessionID);
+    async updateDescriptor(upcomingDescriptor: DeviceDescriptor): Promise<void> {
+        _log.debug('updateDescriptor', 'currentSession', this.originalDescriptor.session, 'upcoming', upcomingDescriptor.session, 'lastUsedID', this.activitySessionID);
+
+        if (!this.originalDescriptor.session && !upcomingDescriptor.session && !this.activitySessionID) {
+            // no change
+            return;
+        }
 
         if (this.deferredActions[ DEVICE.ACQUIRED ]) { await this.deferredActions[ DEVICE.ACQUIRED ].promise; }
 
-        if (descriptor.session === null) {
+        if (upcomingDescriptor.session === null) {
             // released
             if (this.originalDescriptor.session === this.activitySessionID) {
                 // by myself
@@ -370,6 +375,7 @@ export default class Device extends EventEmitter {
                     this.deferredActions[ DEVICE.RELEASE ].resolve();
                     delete this.deferredActions[ DEVICE.RELEASE ];
                 }
+                this.activitySessionID = null;
 
                 // corner-case: if device was unacquired but some call to this device was made
                 // this will automatically change unacquired device to acquired (without deviceList)
@@ -386,7 +392,7 @@ export default class Device extends EventEmitter {
         } else {
             // acquired
             // TODO: Case where listen event will dispatch before this.transport.acquire (this.acquire) return ID
-            if (descriptor.session === this.activitySessionID) {
+            if (upcomingDescriptor.session === this.activitySessionID) {
                 // by myself
                 _log.debug('ACQUIRED BY MYSELF');
                 if (this.deferredActions[ DEVICE.ACQUIRE ]) {
@@ -399,7 +405,7 @@ export default class Device extends EventEmitter {
                 this.interruptionFromOutside();
             }
         }
-        this.originalDescriptor = descriptor;
+        this.originalDescriptor = upcomingDescriptor;
     }
 
     disconnect(): void {
@@ -414,7 +420,7 @@ export default class Device extends EventEmitter {
     }
 
     isBootloader(): boolean {
-        return this.features.bootloader_mode;
+        return this.features.bootloader_mode && (typeof this.features.firmware_present === 'boolean' && this.features.firmware_present);
     }
 
     isInitialized(): boolean {
@@ -450,11 +456,11 @@ export default class Device extends EventEmitter {
     }
 
     isUsed(): boolean {
-        return this.originalDescriptor.session != null;
+        return this.originalDescriptor.session !== null;
     }
 
     isUsedHere(): boolean {
-        return this.originalDescriptor.session != null && this.originalDescriptor.session === this.activitySessionID;
+        return this.originalDescriptor.session !== null && this.originalDescriptor.session === this.activitySessionID;
     }
 
     isUsedElsewhere(): boolean {
@@ -520,14 +526,13 @@ export default class Device extends EventEmitter {
     }
 
     onBeforeUnload() {
-        if (this.isUsedHere()) {
+        if (this.isUsedHere() && this.activitySessionID) {
             try {
                 this.transport.release(this.activitySessionID, true);
             } catch (err) {
                 // empty
             }
         }
-        // await this.transport.release(this.activitySessionID);
     }
 
     // simplified object to pass via postMessage

@@ -1,6 +1,6 @@
 {
   "name": "trezor-connect",
-  "version": "5.0.25",
+  "version": "5.0.28",
   "author": "TREZOR <info@trezor.io>",
   "homepage": "https://github.com/trezor/connect",
   "description": "High-level javascript interface for TREZOR hardware wallet.",
@@ -24,6 +24,8 @@
   "scripts": {
     "dev": "webpack-dev-server --config ./webpack/config.dev.babel.js --mode development",
     "build": "rm -rf dist && webpack --config ./webpack/config.prod.babel.js --progress",
+    "build:rollup": "./node_modules/.bin/rollup --config ./tools/rollup.config.js",
+    "build:inline": "rm -rf dist && webpack --config ./webpack/config.inline.babel.js --progress",
     "build:npm": "rm -rf npm && babel-node ./tools/build.js && babel ./npm/lib --out-dir ./npm/lib",
     "stats": "webpack --config ./webpack/config.prod.babel.js --json > dist/stats.json",
     "test": "sh ./src/__tests__/run.sh",
@@ -47,7 +49,7 @@
     "bip44-constants": "^5.0.0",
     "bitcoinjs-lib-zcash": "^3.4.1",
     "bowser": "^1.9.3",
-    "copy-webpack-plugin": "^4.5.1",
+    "copy-webpack-plugin": "4.5.2",
     "css-loader": "^0.28.11",
     "es6-promise": "^4.2.2",
     "eslint": "^4.19.1",
@@ -86,7 +88,7 @@
     "version-bump-prompt": "^4.1.0",
     "webpack": "^4.12.0",
     "webpack-cli": "^3.0.6",
-    "webpack-dev-server": "^3.1.4",
+    "webpack-dev-server": "3.1.5",
     "window-or-global": "^1.0.1",
     "worker-loader": "^2.0.0"
   },

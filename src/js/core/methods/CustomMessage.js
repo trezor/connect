@@ -62,16 +62,20 @@ export default class CustomMessage extends AbstractMethod {
         const uiResp: UiPromiseResponse = await this.createUiPromise(UI.CUSTOM_MESSAGE_RESPONSE, this.device).promise;
         const payload = uiResp.payload;
 
-        // validate incoming parameters
+        // validate incoming response
         validateParams(payload, [
             { name: 'message', type: 'string', obligatory: true },
-            { name: 'params', type: 'object', obligatory: true },
         ]);
 
         if (payload.message.toLowerCase() === 'release') {
             // release device
             return response;
         } else {
+            // validate incoming parameters
+            validateParams(payload, [
+                { name: 'params', type: 'object', obligatory: true },
+            ]);
+
             // change local params and make another call to device
             this.params.message = payload.message;
             this.params.params = payload.params;

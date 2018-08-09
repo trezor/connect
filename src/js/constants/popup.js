@@ -1,11 +1,14 @@
 /* @flow */
 'use strict';
 
-export const INIT: 'popup_init' = 'popup_init';
-export const LOG: 'popup_log' = 'popup_log';
-export const OPENED: 'popup_opened' = 'popup_opened';
-export const OPEN_TIMEOUT: 'popup_open_timeout' = 'popup_open_timeout';
-export const HANDSHAKE: 'popup_handshake' = 'popup_handshake';
-export const CLOSE: 'popup_close' = 'popup_close';
-export const CLOSED: 'popup_closed' = 'popup_closed';
-export const CANCEL_POPUP_REQUEST: 'ui_cancel-popup-request' = 'ui_cancel-popup-request';
+export const INIT: 'popup-init' = 'popup-init';
+export const BOOTSTRAP: 'popup-bootstrap' = 'popup-bootstrap';
+export const EXTENSION_REQUEST: 'popup-extension_request' = 'popup-extension_request';
+export const EXTENSION_USB_PERMISSIONS: 'open-usb-permissions' = 'open-usb-permissions';
+export const LOG: 'popup-log' = 'popup-log';
+export const OPENED: 'popup-opened' = 'popup-opened';
+export const OPEN_TIMEOUT: 'popup-open_timeout' = 'popup-open_timeout';
+export const HANDSHAKE: 'popup-handshake' = 'popup-handshake';
+export const CLOSE: 'popup-close' = 'popup-close';
+export const CLOSED: 'popup-closed' = 'popup-closed';
+export const CANCEL_POPUP_REQUEST: 'ui-cancel-popup-request' = 'ui-cancel-popup-request';

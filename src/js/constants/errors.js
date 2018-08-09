@@ -18,6 +18,7 @@ export const invalidParameter = (message: string): TrezorError => {
 
 // level 100 error during initialization
 export const NO_IFRAME: TrezorError = new TrezorError(100, 'TrezorConnect not yet initialized');
+export const IFRAME_BLOCKED: TrezorError = new TrezorError('iframe_blocked', 'TrezorConnect iframe was blocked');
 export const IFRAME_INITIALIZED: TrezorError = new TrezorError(101, 'TrezorConnect has been already initialized');
 export const IFRAME_TIMEOUT: TrezorError = new TrezorError(102, 'Iframe timeout');
 export const POPUP_TIMEOUT: TrezorError = new TrezorError(103, 'Popup timeout');

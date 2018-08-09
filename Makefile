@@ -10,9 +10,7 @@
 clean:
 	rm -rf dist/
 
-node_modules:
-	yarn
-
+# manually: goto ./submodules/trezor-common; git checkout master; git pull
 submodules:
 	git submodule update --remote --merge --recursive
 
@@ -22,17 +20,42 @@ build:
 	cp dist/js/trezor-connect.*.js dist/trezor-connect.js
 	cp robots.txt dist/robots.txt
 
+# Build only npm library
+build-npm:
+	yarn run build:npm
+	cd ./npm && npm publish
+
+# Build test
 build-test:
 	make build
-	rsync -avz --delete -e ssh ./dist/* admin@dev.sldev.cz:~/sisyfos/www/next
+	sed -i '' -e 's/connect.trezor.io/sisyfos.trezor.io\/connect/g' ./dist/js/iframe.*.js
+	rsync -avz --delete -e ssh ./dist/* admin@dev.sldev.cz:~/sisyfos/www/connect
 
-dist-%:
-	git fetch
-	git checkout $*
-	git submodule update --remote --merge --recursive
-	make clean
+# Build for hot fixes on https://connect.trezor.io/[major]
+
+build-patch:
+	yarn bump --patch --lock --grep ./README.md ./src/js/data/ConnectSettings.js
 	make build
+	# Call: sync-[major]
+	# TODO: git push changed files with new version in summary
 
+# Build for minor fixes on https://connect.trezor.io/[major.minor] and NPM
+build-minor:
+	yarn bump --minor --lock --grep ./README.md ./src/js/data/ConnectSettings.js
+	make build
+	# Call: build-npm
+	# Call: sync-[major.minor]
+	# TODO: git push changed files with new version in summary
+
+# Build for major fixes on https://connect.trezor.io/[major] and NPM
+build-major:
+	yarn bump --major --lock --grep ./README.md ./src/js/data/ConnectSettings.js
+	make build
+	# Call: build-npm
+	# Call: sync-[major]
+	# TODO: git push changed files with new version in summary
+
+# Sync new build
 sync-%:
 	make .sync-$*
 
@@ -41,22 +64,14 @@ sync-%:
 	# Configure access credentials (aws configure), region is "eu-central-1"
 	aws s3 sync --delete --cache-control 'public, max-age=3600' dist/ s3://connect.trezor.io/$*/
 
-# Build only for npm
-npm-lib:
-	yarn bump
-	yarn run build:npm
-	cd ./npm && npm publish
-
+# Build messages.json from protobuf
 protobuf:
-	sed 's/\(google\/protobuf\)/\.\/\1/' ./submodules/trezor-common/protob/messages.proto > ./submodules/trezor-common/protob/messages_fixed.proto
-	./node_modules/.bin/proto2js ./submodules/trezor-common/protob/messages_fixed.proto > ./src/data/messages.json
-	rm ./submodules/trezor-common/protob/messages_fixed.proto
+	make -C ./submodules/trezor-common/protob combine
+	./node_modules/.bin/proto2js ./submodules/trezor-common/protob/combined.proto > ./src/data/messages.I.json
 
+# Build coin definitions
 coins:
-	make submodules
+	# make submodules
 	./submodules/trezor-common/defs/coins/tools/build_coins.py connect
-#	./submodules/trezor-common/defs/coins/tools/build_coins.py
 	mv coins.json ./src/data/coins.json
 	cp ./submodules/trezor-common/defs/ethereum/networks.json ./src/data/ethereumNetworks.json
-
-

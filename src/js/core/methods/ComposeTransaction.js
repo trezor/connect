@@ -97,7 +97,7 @@ export default class ComposeTransaction extends AbstractMethod {
         this.params = {
             outputs,
             coinInfo,
-            push: payload.hasOwnProperty('push') ? payload.push : true,
+            push: payload.hasOwnProperty('push') ? payload.push : false,
         };
     }
 
@@ -239,7 +239,7 @@ export default class ComposeTransaction extends AbstractMethod {
         );
 
         if (this.params.push) {
-            const txid: string = await this.backend.sendTransactionHex(response.serialized);
+            const txid: string = await this.backend.sendTransactionHex(response.serializedTx);
             return {
                 ...response,
                 txid,

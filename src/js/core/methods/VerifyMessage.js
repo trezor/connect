@@ -47,10 +47,11 @@ export default class VerifyMessage extends AbstractMethod {
         }
         // TODO: check if message is already a hex
         const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
+        const signatureHex: string = new Buffer(payload.signature, 'base64').toString('hex');
 
         this.params = {
             address: payload.address,
-            signature: payload.signature,
+            signature: signatureHex,
             message: messageHex,
             coinInfo,
         };

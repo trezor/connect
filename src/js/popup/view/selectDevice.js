@@ -3,39 +3,34 @@
 
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
+import * as POPUP from '../../constants/popup';
 import { container, iframe, showView, postMessage } from './common';
 import DataManager from '../../data/DataManager';
 import type { SelectDevice } from '../../types/ui-request';
 
-const initWebUsbButton = (webusb: boolean): void => {
-    if (!webusb || !iframe) return;
+const initWebUsbButton = (webusb: boolean, showLoader: boolean): void => {
+    if (!webusb) return;
 
     const webusbContainer: HTMLElement = container.getElementsByClassName('webusb')[0];
     webusbContainer.style.display = 'flex';
     const button: HTMLButtonElement = webusbContainer.getElementsByTagName('button')[0];
+
+    if (!iframe) {
+        button.innerHTML = '<span class="plus"></span><span class="text">Pair devices</span>';
+    }
+
     button.onclick = async () => {
-        const x = window.screenLeft;
-        const y = window.screenTop;
-
-        const currentWidth = window.outerWidth;
-        const currentHeight = window.outerHeight;
-
-        const restorePosition = (originalWidth: number, originalHeight: number): void => {
-            window.resizeTo(originalWidth, originalHeight);
-            window.moveTo(x, y);
-            window.focus();
-        };
-
-        window.resizeTo(100, 100);
-        window.moveTo(screen.width, screen.height);
+        if (!iframe) {
+            window.postMessage(POPUP.EXTENSION_USB_PERMISSIONS, window.location.origin);
+            return;
+        }
 
         const usb = iframe.clientInformation.usb;
         try {
             await usb.requestDevice({ filters: DataManager.getConfig().webusb });
-            showView('loader');
-            restorePosition(currentWidth, currentHeight);
+            if (showLoader) { showView('loader'); }
         } catch (error) {
-            restorePosition(currentWidth, currentHeight);
+            // empty, do nothing
         }
     };
 };
@@ -46,12 +41,12 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
     if (!payload.devices || !Array.isArray(payload.devices) || payload.devices.length === 0) {
         // No device connected
         showView('connect');
-        initWebUsbButton(payload.webusb);
+        initWebUsbButton(payload.webusb, true);
         return;
     }
 
     showView('select-device');
-    initWebUsbButton(payload.webusb);
+    initWebUsbButton(payload.webusb, false);
 
     // If only 'remember device for now' toggle and no webusb button is available
     // show it right under the table
@@ -107,9 +102,12 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
         wrapper.appendChild(deviceName);
         deviceButton.appendChild(wrapper);
 
-        if (device.type !== 'available') {
-            deviceIcon.classList.add('unknown');
-
+        // device {
+        //     status: 'available' | 'occupied' | 'used';
+        //     type: 'acquired' | 'unacquired' | 'unreadable';
+        // }
+        // if (device.status !== 'available') {
+        if (device.type !== 'acquired' || device.status === 'occupied') {
             deviceButton.classList.add('device-explain');
 
             const explanation: HTMLDivElement = document.createElement('div');
@@ -120,15 +118,20 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
 
             if (device.type === 'unreadable') {
                 deviceButton.disabled = true;
+                deviceIcon.classList.add('unknown');
                 deviceName.textContent = 'Unrecognized device';
                 explanation.innerHTML = htmlUnreadable;
             }
 
-            if (device.type === 'unacquired') {
+            if (device.type === 'unacquired' || device.status === 'occupied') {
                 deviceName.textContent = 'Inactive device';
                 deviceButton.classList.add('unacquired');
                 explanation.classList.add('unacquired');
                 explanation.innerHTML = htmlUnacquired;
+
+                if (device.type === 'acquired') {
+                    deviceName.textContent = device.label;
+                }
             }
 
             deviceButton.appendChild(explanation);

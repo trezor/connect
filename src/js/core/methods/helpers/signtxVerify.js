@@ -28,7 +28,7 @@ export const verifyTx = (inputs: Array<TransactionInput>,
     signedTx: SignedTx,
     coinInfo: CoinInfo,
 ): void => {
-    const bitcoinTx: bitcoin.Transaction = bitcoin.Transaction.fromHex(signedTx.serialized, coinInfo.zcash);
+    const bitcoinTx: bitcoin.Transaction = bitcoin.Transaction.fromHex(signedTx.serializedTx, coinInfo.zcash);
 
     if (inputs.length !== bitcoinTx.ins.length) {
         throw new Error('Signed transaction has wrong length.');

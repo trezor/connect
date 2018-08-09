@@ -105,7 +105,7 @@ export type MessageSignature = {
     signature: string,
 }
 
-type MultisigRedeemScriptType = {
+export type MultisigRedeemScriptType = {
     pubkeys: Array<{ node: string, address_n: Array<number>}>,
     signatures: Array<string>,
     m?: number,
@@ -190,7 +190,7 @@ export type TxRequest = {
 
 export type SignedTx = {
     signatures: Array<string>,
-    serialized: string,
+    serializedTx: string,
     txid?: string,
 };
 
@@ -204,6 +204,7 @@ export type EthereumTxRequest = {
 export type EthereumAddress = {
     address: string,
     path: Array<number>,
+    serializedPath: string,
 }
 
 export type EthereumSignedTx = {
@@ -236,6 +237,7 @@ export type PublicKey = {
 // combined PublicKey and bitcoin.HDNode
 export type HDNodeResponse = {
     path: Array<number>,
+    serializedPath: string,
     childNum: number,
     xpub: string,
     xpubSegwit?: string,
@@ -266,6 +268,7 @@ export type SignTxInfoToTrezor = {
 export type NEMAddress = {
     address: string,
     path: Array<number>,
+    serializedPath: string,
 }
 
 export type NEMSignedTx = {
@@ -398,9 +401,11 @@ export type NEMSignTxMessage = {
 // this type is returned from connect
 export type StellarAddress = {
     path: Array<number>,
+    serializedPath: string,
     address: string,
     publicKey: string,
 }
+
 // this type is returned from device
 export type StellarSignedTx = {
     public_key: string,
@@ -414,13 +419,11 @@ export type StellarPaymentOp = {
 
 // this type is returned from device
 export type StellarAddressMessage = {
-    path: Array<number>,
     address: string,
 }
 // this type is returned from device
 export type StellarPublicKeyMessage = {
     public_key: string,
-    path: Array<number>,
 }
 
 // those types are sent TO device
@@ -532,8 +535,9 @@ export type AccountInfo = {
     serializedPath: string,
     xpub: string,
     address: string,
-    addressId: number,
+    addressIndex: number,
     addressPath: Array<number>,
+    addressSerializedPath: string,
     balance: number,
     confirmed: number,
 }
@@ -542,4 +546,5 @@ export type AccountInfo = {
 export type Address = {
     address: string,
     path: Array<number>,
+    serializedPath: string,
 }

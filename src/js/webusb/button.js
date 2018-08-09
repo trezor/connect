@@ -17,7 +17,7 @@ const render = (className: ?string, url: string, origin: ?string) => {
             btnIframe.style.top = '0px';
             btnIframe.style.left = '0px';
             btnIframe.style.zIndex = '1';
-            btnIframe.style.opacity = '0';
+            // btnIframe.style.opacity = '0'; // this makes click impossible on cross-origin
             btnIframe.setAttribute('allow', 'usb');
             btnIframe.setAttribute('scrolling', 'no');
             btnIframe.onload = () => {

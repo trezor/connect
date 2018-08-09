@@ -229,13 +229,16 @@ export default class GetAccountInfo extends AbstractMethod {
             };
         }
 
+        const nextAddress: string = account.getNextAddress();
+
         return {
             id: account.id,
             path: account.path,
             serializedPath: getSerializedPath(account.path),
-            address: account.getNextAddress(),
-            addressId: account.getNextAddressId(),
-            addressPath: account.getAddressPath(account.getNextAddress()),
+            address: nextAddress,
+            addressIndex: account.getNextAddressId(),
+            addressPath: account.getAddressPath(nextAddress),
+            addressSerializedPath: getSerializedPath(account.getAddressPath(nextAddress)),
             xpub: account.xpub,
             balance: account.getBalance(),
             confirmed: account.getConfirmedBalance(),

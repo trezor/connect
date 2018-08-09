@@ -1,6 +1,21 @@
 @default_popup_width: 639px;
 @mobile_break: calc(@default_popup_width - 1px);
 
+@media screen and (min-width: 768px) {
+    aside {
+        width: 35%;
+    }
+
+    section {
+        width: 65%;
+        align-items: center;
+    }
+
+    section > div {
+        height: auto;
+    }
+}
+
 @media screen and (max-width: @default_popup_width) {
     main {
         flex-direction: column;

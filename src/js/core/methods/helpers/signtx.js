@@ -149,7 +149,7 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
     if (m.request_type === 'TXFINISHED') {
         return Promise.resolve({
             signatures: signatures,
-            serialized: serializedTx.serialized,
+            serializedTx: serializedTx.serialized,
         });
     }
 

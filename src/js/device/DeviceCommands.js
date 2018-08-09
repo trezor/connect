@@ -6,7 +6,7 @@ import randombytes from 'randombytes';
 
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as hdnodeUtils from '../utils/hdnode';
-import { isSegwitPath } from '../utils/pathUtils';
+import { isSegwitPath, getSerializedPath } from '../utils/pathUtils';
 import Device from './Device';
 
 import { getSegwitNetwork } from '../data/CoinInfo';
@@ -119,6 +119,7 @@ export default class DeviceCommands {
 
         const response: trezor.HDNodeResponse = {
             path,
+            serializedPath: getSerializedPath(path),
             childNum: publicKey.node.child_num,
             xpub: coinInfo ? hdnodeUtils.convertXpub(publicKey.xpub, coinInfo.network) : publicKey.xpub,
             chainCode: publicKey.node.chain_code,
@@ -154,8 +155,9 @@ export default class DeviceCommands {
         });
 
         return {
-            path: address_n,
             address: response.message.address,
+            path: address_n,
+            serializedPath: getSerializedPath(address_n),
         };
     }
 
@@ -194,8 +196,9 @@ export default class DeviceCommands {
             show_display: !!showOnTrezor,
         });
         return {
-            path: address_n,
             address: response.message.address,
+            path: address_n,
+            serializedPath: getSerializedPath(address_n),
         };
     }
 
@@ -241,31 +244,20 @@ export default class DeviceCommands {
     }
 
     async nemGetAddress(address_n: Array<number>, network: number, showOnTrezor: boolean): Promise<trezor.NEMAddress> {
-        const response: Object = await this.typedCall('NEMGetAddress', 'NEMAddress', {
+        const response: MessageResponse<trezor.NEMAddress> = await this.typedCall('NEMGetAddress', 'NEMAddress', {
             address_n,
             network,
             show_display: !!showOnTrezor,
         });
         return {
-            path: address_n,
             address: response.message.address,
+            path: address_n,
+            serializedPath: getSerializedPath(address_n),
         };
     }
 
     async nemSignTx(transaction: any): Promise<MessageResponse<trezor.NEMSignedTx>> {
         return this.typedCall('NEMSignTx', 'NEMSignedTx', transaction);
-    }
-
-    // deprecated
-    async stellarGetPublicKey(address_n: Array<number>): Promise<MessageResponse<trezor.StellarPublicKeyMessage>> {
-        const response: Object = await this.typedCall('StellarGetPublicKey', 'StellarPublicKey', { address_n });
-        return {
-            type: response.type,
-            message: {
-                path: address_n,
-                public_key: response.message.public_key,
-            },
-        };
     }
 
     async stellarGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.StellarAddress> {
@@ -280,6 +272,7 @@ export default class DeviceCommands {
 
         return {
             path: address_n,
+            serializedPath: getSerializedPath(address_n),
             address: address.message.address,
             publicKey: publicKey.message.public_key,
         };
@@ -317,12 +310,13 @@ export default class DeviceCommands {
         identity: trezor.Identity,
         challenge_hidden: string,
         challenge_visual: string
-    ): Promise<MessageResponse<trezor.SignedIdentity>> {
-        return this.typedCall('SignIdentity', 'SignedIdentity', {
+    ): Promise<trezor.SignedIdentity> {
+        const response: MessageResponse<trezor.SignedIdentity> = await this.typedCall('SignIdentity', 'SignedIdentity', {
             identity,
             challenge_hidden,
             challenge_visual,
         });
+        return response.message;
     }
 
     // async clearSession(): Promise<MessageResponse<trezor.Success>> {

@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import type { MessageResponse } from '../../device/DeviceCommands';
+import { validateParams } from './helpers/paramsValidator';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
@@ -12,6 +12,7 @@ import type { UiPromiseResponse } from 'flowtype';
 import type { Identity, SignedIdentity } from '../../types/trezor';
 import type { ConnectSettings } from '../../data/ConnectSettings';
 import type { CoreMessage } from '../../types';
+import type { RequestLogin$ } from '../../types/response';
 
 type Params = {
     asyncChallenge: boolean,
@@ -25,11 +26,11 @@ export default class RequestLogin extends AbstractMethod {
 
     constructor(message: CoreMessage) {
         super(message);
-        this.useEmptyPassphrase = true;
         this.requiredPermissions = ['read', 'write'];
         this.info = 'Login';
+        this.useEmptyPassphrase = true;
 
-        const payload: any = message.payload;
+        const payload: Object = message.payload;
 
         const identity: Identity = { };
         const settings: ConnectSettings = DataManager.getSettings();
@@ -43,13 +44,12 @@ export default class RequestLogin extends AbstractMethod {
             identity.index = 0;
         }
 
-        if (payload.hasOwnProperty('challengeHidden') && typeof payload.challengeHidden !== 'string') {
-            throw new Error('Parameter "challengeHidden" has invalid type. String expected.');
-        }
-
-        if (payload.hasOwnProperty('challengeVisual') && typeof payload.challengeVisual !== 'string') {
-            throw new Error('Parameter "challengeVisual" has invalid type. String expected.');
-        }
+        // validate incoming parameters
+        validateParams(payload, [
+            { name: 'challengeHidden', type: 'string' },
+            { name: 'challengeVisual', type: 'string' },
+            { name: 'asyncChallenge', type: 'boolean' },
+        ]);
 
         this.params = {
             asyncChallenge: payload.asyncChallenge,
@@ -59,32 +59,35 @@ export default class RequestLogin extends AbstractMethod {
         };
     }
 
-    async run(): Promise<SignedIdentity> {
+    async run(): Promise<$PropertyType<RequestLogin$, 'payload'>> {
         if (this.params.asyncChallenge) {
             // send request to developer
             this.postMessage(new UiMessage(UI.LOGIN_CHALLENGE_REQUEST));
 
             // wait for response from developer
             const uiResp: UiPromiseResponse = await this.createUiPromise(UI.LOGIN_CHALLENGE_RESPONSE, this.device).promise;
-            const payload = uiResp.payload;
-            if (typeof payload.hidden !== 'string') {
-                throw new Error('Parameter "challengeHidden" is missing');
-            }
+            const payload: Object = uiResp.payload;
 
-            if (typeof payload.visual !== 'string') {
-                throw new Error('Parameter "challengeVisual" is missing');
-            }
+            // validate incoming parameters
+            validateParams(payload, [
+                { name: 'challengeHidden', type: 'string', obligatory: true },
+                { name: 'challengeVisual', type: 'string', obligatory: true },
+            ]);
 
-            this.params.challengeHidden = payload.hidden;
-            this.params.challengeVisual = payload.visual;
+            this.params.challengeHidden = payload.challengeHidden;
+            this.params.challengeVisual = payload.challengeVisual;
         }
 
-        const response: MessageResponse<SignedIdentity> = await this.device.getCommands().signIdentity(
+        const response: SignedIdentity = await this.device.getCommands().signIdentity(
             this.params.identity,
             this.params.challengeHidden,
             this.params.challengeVisual
         );
 
-        return response.message;
+        return {
+            address: response.address,
+            publicKey: response.public_key,
+            signature: response.signature,
+        };
     }
 }

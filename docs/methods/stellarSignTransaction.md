@@ -1,0 +1,78 @@
+
+## Stellar: Sign transaction
+Asks device to sign given transaction. User is asked to confirm all transaction
+details on TREZOR.
+
+ES6
+```javascript
+const result = await TrezorConnect.stellarSignTransaction(params);
+```
+
+CommonJS
+```javascript
+TrezorConnect.stellarSignTransaction(params).then(function(result) {
+
+});
+```
+
+### Params 
+[****Optional common params****](commonParams.md)
+###### [flowtype](../../src/js/types/params.js#L149-L154)
+* `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
+* `ledgerVersion` - *obligatory* `number` network id
+* `networkPassphrase` - *obligatory* `string` network passphrase
+* `transaction` - *obligatory* `Object` type of [StellarTransaction](../../src/js/types/stellar.js#L129)
+
+### Example
+```javascript
+TrezorConnect.stellarSignTransaction(
+    path: "m/44'/1'/0'/0'/0'",
+    ledgerVersion: 1,
+    networkPassphrase: "Test SDF Network ; September 2015",
+    transaction: {
+        source: "5d55642466b185b843152e9e219151dbc5892027ec40101a517bed5ca030c2e0",
+        fee: 100,
+        sequence: 4294967296,
+        timebounds: {
+            minTime: null,
+            maxTime: null
+        },
+        memo: {
+            id: null,
+            type: 0,
+            text: null,
+            hash: null
+        },
+        operations: [
+            {
+                type: "payment",
+                source: "5d55642466b185b843152e9e219151dbc5892027ec40101a517bed5ca030c2e0",
+                destination: "5d55642466b185b843152e9e219151dbc5892027ec40101a517bed5ca030c2e0",
+                asset: null,
+                amount: "10000"
+            }
+        ]
+    }
+});
+```
+
+### Result
+###### [flowtype](../../src/js/types/response.js#L129-L132)
+```javascript
+{
+    success: true,
+    payload: {
+        publicKey: string,
+        signature: string,
+    }
+}
+```
+Error
+```javascript
+{
+    success: false,
+    payload: {
+        error: string // error message
+    }
+}
+```

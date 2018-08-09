@@ -5,7 +5,7 @@ import bchaddrjs from 'bchaddrjs';
 // local modules
 import { isSegwitPath } from '../../../utils/pathUtils';
 import { isScriptHash, isValidAddress } from '../../../utils/addressUtils';
-import { fixPath, convertMultisigPubKey } from './index';
+import { fixPath, convertMultisigPubKey, fixAmount } from './index';
 import { validateParams } from '../helpers/paramsValidator';
 
 // npm types
@@ -19,7 +19,7 @@ import type { TransactionOutput } from '../../../types/trezor';
  * SignTransaction: validation
  *******/
 export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInfo: CoinInfo): Array<TransactionOutput> => {
-    const trezorOutputs: Array<TransactionOutput> = outputs.map(fixPath).map(convertMultisigPubKey.bind(null, coinInfo.network));
+    const trezorOutputs: Array<TransactionOutput> = outputs.map(fixPath).map(fixAmount).map(convertMultisigPubKey.bind(null, coinInfo.network));
     for (const output of trezorOutputs) {
         if (output.address_n && isSegwitPath(output.address_n)) {
             if (output.script_type !== 'PAYTOP2SHWITNESS') throw new Error('Output change script_type should be set to PAYTOP2SHWITNESS');
