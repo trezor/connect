@@ -6,12 +6,10 @@ import {validateParams} from './helpers/paramsValidator';
 import {validatePath} from '../../utils/pathUtils';
 
 import type {CoreMessage} from '../../types';
-import type {EthereumSignedTx} from '../../types/trezor';
-import type {Transaction as EthereumTransaction} from '../../types/ethereum';
 
 type Params = {
     path: Array<number>,
-    transaction: EthereumTransaction,
+    transaction,
 }
 
 export default class TronSignTransaction extends AbstractMethod {
@@ -40,7 +38,7 @@ export default class TronSignTransaction extends AbstractMethod {
         };
     }
 
-    async run(): Promise<EthereumSignedTx> {
+    async run() {
         let tx = this.params.transaction;
 
         tx = {
