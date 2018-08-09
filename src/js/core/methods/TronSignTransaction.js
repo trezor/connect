@@ -42,7 +42,6 @@ export default class TronSignTransaction extends AbstractMethod {
 
     async run(): Promise<EthereumSignedTx> {
         let tx = this.params.transaction;
-        console.log("SENDING TRX", tx);
 
         tx = {
             transaction: tx,
