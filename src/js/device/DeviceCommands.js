@@ -210,40 +210,11 @@ export default class DeviceCommands {
         };
     }
 
-    async tronSignTx(address_n: Array<number>, transaction, showOnTrezor: boolean): Promise {
-
-        function toHex(str) {
-            var hex = '';
-            for(var i=0;i<str.length;i++) {
-                hex += ''+str.charCodeAt(i).toString(16);
-            }
-            return hex;
-        }
-
-        /*
-        {
-                ref_block_bytes: "C565",
-                ref_block_hash: "6CD623DBE83075D8",
-                expiration: 1528768890000,
-                timestamp: 1528768831987,
-                contract: {
-                    type: 1,
-                    parameter: {
-                        api: "type.googleapis.com/protocol.TransferContract",
-                        payload: {
-                            transfer_contract: {
-                                owner_address: toHex('TUEZSdKsoDHQMeZwihtdoBiN46zxhGWYdH'),
-                                to_address: toHex('TKSXDA8HfE9E1y39RczVQ1ZascUEtaSToF'),
-                                amount: 1000000,
-                            },
-                        },
-                    },
-                },
-            }
-         */
+    async tronSignTx(address_n: Array<number>, transaction): Promise {
 
         const response: MessageResponse<trezor.EthereumAddress> = await this.typedCall('TronSignTx', 'TronSignedTx', {
-            transaction: transaction,
+            transaction: transaction.transaction,
+            address_n: address_n,
         });
 
         return {
