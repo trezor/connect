@@ -8,7 +8,7 @@
 
 import EventEmitter from 'events';
 if (window._babelPolyfill != true) {
-    import 'babel-polyfill'; // for unsupported browsers
+    require('babel-polyfill'); // for unsupported browsers
 }
 import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from './constants';
 import * as TRANSPORT from './constants/transport';
