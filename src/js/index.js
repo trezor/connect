@@ -7,8 +7,6 @@
  */
 
 import EventEmitter from 'events';
-import 'babel-polyfill'; // for unsupported browsers
-
 import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from './constants';
 import * as TRANSPORT from './constants/transport';
 import * as POPUP from './constants/popup';
