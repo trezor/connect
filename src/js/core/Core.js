@@ -808,7 +808,6 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
         });
 
         _deviceList.on(TRANSPORT.START, (transportType) => postMessage(new TransportMessage(TRANSPORT.START, transportType)));
-        _deviceList.on(TRANSPORT.UNREADABLE, () => postMessage(new TransportMessage(TRANSPORT.UNREADABLE)));
 
         await _deviceList.init();
         if (_deviceList) {

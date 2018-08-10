@@ -1,11 +1,14 @@
 /* @flow */
-'use strict';
 
+import { httpRequest } from '../utils/networkUtils';
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/webusb.less';
 
+import type { Config } from '../data/DataManager';
+
 // handle message received from connect.js
-const handleMessage = (event: MessageEvent): void => {
+const handleMessage = async (event: MessageEvent): Promise<void> => {
+
     if (!event.data) return;
     const data: any = event.data;
 
@@ -13,6 +16,14 @@ const handleMessage = (event: MessageEvent): void => {
     if (exists && exists.length > 0) {
         return;
     }
+
+    const config: Config = await httpRequest('./data/config.json', 'json');
+    const filters = config.webusb.map(desc => {
+        return {
+            vendorId: parseInt(desc.vendorId),
+            productId: parseInt(desc.productId),
+        };
+    });
 
     const button = document.createElement('button');
 
@@ -28,20 +39,10 @@ const handleMessage = (event: MessageEvent): void => {
     }
 
     button.onclick = async () => {
-        // TODO: get it from config.json
-        const TREZOR_DESCS = [
-            // TREZOR v1
-            { vendorId: 0x534c, productId: 0x0001 },
-            // TREZOR v2 Bootloader
-            { vendorId: 0x1209, productId: 0x53c0 },
-            // TREZOR v2 Firmware
-            { vendorId: 0x1209, productId: 0x53c1 },
-        ];
-
         const usb = navigator.usb;
         if (usb) {
             try {
-                await usb.requestDevice({filters: TREZOR_DESCS});
+                await usb.requestDevice({filters});
             } catch (error) {
                 console.log('Webusb', error);
             }

@@ -1,6 +1,6 @@
 {
   "name": "trezor-connect",
-  "version": "5.0.28",
+  "version": "5.0.29",
   "author": "TREZOR <info@trezor.io>",
   "homepage": "https://github.com/trezor/connect",
   "description": "High-level javascript interface for TREZOR hardware wallet.",
@@ -25,7 +25,7 @@
     "dev": "webpack-dev-server --config ./webpack/config.dev.babel.js --mode development",
     "build": "rm -rf dist && webpack --config ./webpack/config.prod.babel.js --progress",
     "build:rollup": "./node_modules/.bin/rollup --config ./tools/rollup.config.js",
-    "build:inline": "rm -rf dist && webpack --config ./webpack/config.inline.babel.js --progress",
+    "build:inline": "webpack --config ./webpack/config.inline.babel.js --progress",
     "build:npm": "rm -rf npm && babel-node ./tools/build.js && babel ./npm/lib --out-dir ./npm/lib",
     "stats": "webpack --config ./webpack/config.prod.babel.js --json > dist/stats.json",
     "test": "sh ./src/__tests__/run.sh",
@@ -97,7 +97,6 @@
     "whatwg-fetch": "^2.0.4"
   },
   "npmDependencies": {
-    "babel-runtime": "^6.26.0",
-    "babel-polyfill": "^6.26.0"
+    "babel-runtime": "^6.26.0"
   }
 }

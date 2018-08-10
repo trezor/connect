@@ -28,7 +28,9 @@ export default class PopupManager extends EventEmitter {
     extension: boolean = false;
     handleExtensionConnect: () => void;
     handleExtensionMessage: () => void;
+    // $FlowIssue chrome not declared outside
     extensionPort: ?ChromePort;
+    extensionTabId: number = 0;
     broadcast: ?string;
 
     constructor(settings: ConnectSettings) {
@@ -37,10 +39,12 @@ export default class PopupManager extends EventEmitter {
         this.src = settings.popupSrc;
         this.origin = getOrigin(settings.popupSrc);
         this.handleLazyLoading = this.handleLazyLoading.bind(this);
+        // $FlowIssue chrome not declared outside
         this.extension = (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined');
         if (this.extension) {
             this.handleExtensionConnect = this.handleExtensionConnect.bind(this);
             this.handleExtensionMessage = this.handleExtensionMessage.bind(this);
+            // $FlowIssue chrome not declared outside
             chrome.runtime.onConnect.addListener(this.handleExtensionConnect);
         }
     }
@@ -53,6 +57,7 @@ export default class PopupManager extends EventEmitter {
         if (this.locked) {
             if (this._window) {
                 if (this.extension) {
+                    // $FlowIssue chrome not declared outside
                     chrome.tabs.update(this._window.id, { active: true });
                 } else {
                     this._window.focus();
@@ -99,6 +104,7 @@ export default class PopupManager extends EventEmitter {
         this.closeInterval = window.setInterval(() => {
             if (this._window) {
                 if (this.extension) {
+                    // $FlowIssue chrome not declared outside
                     chrome.tabs.get(this._window.id, tab => {
                         if (!tab) {
                             this.close();
@@ -122,10 +128,19 @@ export default class PopupManager extends EventEmitter {
 
     openWrapper(url: string): void {
         if (this.extension) {
-            chrome.tabs.create({
-                url,
-            }, tab => {
-                this._window = tab;
+            // $FlowIssue chrome not declared outside
+            chrome.tabs.query({
+                currentWindow: true,
+                active: true,
+            }, (tabs) => {
+                this.extensionTabId = tabs[0].id;
+                // $FlowIssue chrome not declared outside
+                chrome.tabs.create({
+                    url,
+                    index: tabs[0].index + 1
+                }, tab => {
+                    this._window = tab;
+                });
             });
         } else {
             this._window = window.open('', '_blank');
@@ -155,8 +170,18 @@ export default class PopupManager extends EventEmitter {
         } else if (message === POPUP.INIT && this.lazyLoad) {
             this.lazyLoad.resolve(true);
         } else if (message === POPUP.EXTENSION_USB_PERMISSIONS) {
-            chrome.tabs.create({
-                url: 'trezor-usb-permissions.html',
+            // $FlowIssue chrome not declared outside
+            chrome.tabs.query({
+                currentWindow: true,
+                active: true,
+            }, (tabs) => {
+                // $FlowIssue chrome not declared outside
+                chrome.tabs.create({
+                    url: 'trezor-usb-permissions.html',
+                    index: tabs[0].index + 1
+                }, tab => {
+                    this._window = tab;
+                });
             });
         } else if (message === 'window.close') {
             this.emit(POPUP.CLOSED);
@@ -202,13 +227,19 @@ export default class PopupManager extends EventEmitter {
         }
 
         if (this.extensionPort) {
-            // chrome.runtime.onConnect.removeListener(this.handleExtensionConnect);
             this.extensionPort.disconnect();
             this.extensionPort = null;
         }
 
+        if (this.extensionTabId) {
+            // $FlowIssue chrome not declared outside
+            chrome.tabs.update(this.extensionTabId, { active: true });
+            this.extensionTabId = 0;
+        }
+
         if (this._window) {
             if (this.extension) {
+                // $FlowIssue chrome not declared outside
                 chrome.tabs.remove(this._window.id);
             } else {
                 this._window.close();

@@ -1,3 +1,11 @@
+# 5.0.29
+__fixed__
+- Fixed flowtype for TrezorConnect methods (bundled methods return bundled results)
+- Fixed renderWebUSBButton method
+- Removed "babel-polyfill" from npm and export unminified script https://connect.trezor.io/5/trezor-connect.js
+- Added https://connect.trezor.io/5/trezor-connect.min.js to export with bundled "babel-polyfill"
+- Web extensions: open popup tab next to currently used tab
+
 # 5.0.28
 __added__
 - Added support for WebExtensions (Chrome/Firefox)

@@ -17,7 +17,8 @@ submodules:
 build:
 	yarn
 	yarn run build
-	cp dist/js/trezor-connect.*.js dist/trezor-connect.js
+	yarn run build:inline
+	cp dist/js/trezor-connect.*.js dist/trezor-connect.min.js
 	cp robots.txt dist/robots.txt
 
 # Build only npm library
