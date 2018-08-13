@@ -6294,10 +6294,19 @@
                 },
                 {
                     "rule": "optional",
+                    "options": {
+                        "default": "Ed25519"
+                    },
+                    "type": "TezosCurveType",
+                    "name": "curve",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
                     "options": {},
                     "type": "bool",
                     "name": "show_display",
-                    "id": 2
+                    "id": 3
                 }
             ],
             "enums": [],
@@ -6333,10 +6342,19 @@
                 },
                 {
                     "rule": "optional",
+                    "options": {
+                        "default": "Ed25519"
+                    },
+                    "type": "TezosCurveType",
+                    "name": "curve",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
                     "options": {},
                     "type": "bool",
                     "name": "show_display",
-                    "id": 2
+                    "id": 3
                 }
             ],
             "enums": [],
@@ -6350,7 +6368,7 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bytes",
+                    "type": "string",
                     "name": "public_key",
                     "id": 1
                 }
@@ -6372,31 +6390,47 @@
                 },
                 {
                     "rule": "optional",
-                    "options": {},
-                    "type": "TezosOperationCommon",
-                    "name": "operation",
+                    "options": {
+                        "default": "Ed25519"
+                    },
+                    "type": "TezosCurveType",
+                    "name": "curve",
                     "id": 2
                 },
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "TezosTransactionType",
-                    "name": "transaction",
+                    "type": "bytes",
+                    "name": "branch",
                     "id": 3
                 },
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "TezosOriginationType",
-                    "name": "origination",
+                    "type": "TezosRevealOp",
+                    "name": "reveal",
                     "id": 4
                 },
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "TezosDelegationType",
-                    "name": "delegation",
+                    "type": "TezosTransactionOp",
+                    "name": "transaction",
                     "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "TezosOriginationOp",
+                    "name": "origination",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "TezosDelegationOp",
+                    "name": "delegation",
+                    "id": 7
                 }
             ],
             "enums": [],
@@ -6440,155 +6474,48 @@
                     "oneofs": {}
                 },
                 {
-                    "name": "TezosOperationCommon",
+                    "name": "TezosRevealOp",
                     "fields": [
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "branch",
-                            "id": 1
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TezosOperationType",
-                            "name": "tag",
-                            "id": 2
-                        },
                         {
                             "rule": "optional",
                             "options": {},
                             "type": "TezosContractID",
                             "name": "source",
-                            "id": 3
+                            "id": 1
                         },
                         {
                             "rule": "optional",
                             "options": {},
                             "type": "uint64",
                             "name": "fee",
-                            "id": 4
+                            "id": 2
                         },
                         {
                             "rule": "optional",
                             "options": {},
                             "type": "uint64",
                             "name": "counter",
-                            "id": 5
+                            "id": 3
                         },
                         {
                             "rule": "optional",
                             "options": {},
                             "type": "uint64",
                             "name": "gas_limit",
-                            "id": 6
+                            "id": 4
                         },
                         {
                             "rule": "optional",
                             "options": {},
                             "type": "uint64",
                             "name": "storage_limit",
-                            "id": 7
-                        }
-                    ],
-                    "enums": [
-                        {
-                            "name": "TezosOperationType",
-                            "values": [
-                                {
-                                    "name": "Transaction",
-                                    "id": 8
-                                },
-                                {
-                                    "name": "Origination",
-                                    "id": 9
-                                },
-                                {
-                                    "name": "Delegation",
-                                    "id": 10
-                                }
-                            ],
-                            "options": {}
-                        }
-                    ],
-                    "messages": [],
-                    "options": {},
-                    "oneofs": {}
-                },
-                {
-                    "name": "TezosTransactionType",
-                    "fields": [
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "uint64",
-                            "name": "amount",
-                            "id": 1
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TezosContractID",
-                            "name": "destination",
-                            "id": 2
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "parameters",
-                            "id": 3
-                        }
-                    ],
-                    "enums": [],
-                    "messages": [],
-                    "options": {},
-                    "oneofs": {}
-                },
-                {
-                    "name": "TezosOriginationType",
-                    "fields": [
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "manager_pubkey",
-                            "id": 1
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "uint64",
-                            "name": "balance",
-                            "id": 2
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bool",
-                            "name": "spendable",
-                            "id": 3
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bool",
-                            "name": "delegatable",
-                            "id": 4
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "delegate",
                             "id": 5
                         },
                         {
                             "rule": "optional",
                             "options": {},
                             "type": "bytes",
-                            "name": "script",
+                            "name": "public_key",
                             "id": 6
                         }
                     ],
@@ -6598,14 +6525,200 @@
                     "oneofs": {}
                 },
                 {
-                    "name": "TezosDelegationType",
+                    "name": "TezosTransactionOp",
                     "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "TezosContractID",
+                            "name": "source",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "fee",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "counter",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "gas_limit",
+                            "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "storage_limit",
+                            "id": 5
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "amount",
+                            "id": 6
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "TezosContractID",
+                            "name": "destination",
+                            "id": 7
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "parameters",
+                            "id": 8
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "TezosOriginationOp",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "TezosContractID",
+                            "name": "source",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "fee",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "counter",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "gas_limit",
+                            "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "storage_limit",
+                            "id": 5
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "manager_pubkey",
+                            "id": 6
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "balance",
+                            "id": 7
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bool",
+                            "name": "spendable",
+                            "id": 8
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bool",
+                            "name": "delegatable",
+                            "id": 9
+                        },
                         {
                             "rule": "optional",
                             "options": {},
                             "type": "bytes",
                             "name": "delegate",
+                            "id": 10
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "script",
+                            "id": 11
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "TezosDelegationOp",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "TezosContractID",
+                            "name": "source",
                             "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "fee",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "counter",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "gas_limit",
+                            "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "storage_limit",
+                            "id": 5
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "delegate",
+                            "id": 6
                         }
                     ],
                     "enums": [],
@@ -6623,7 +6736,7 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bytes",
+                    "type": "string",
                     "name": "signature",
                     "id": 1
                 },
@@ -6725,6 +6838,24 @@
                 {
                     "name": "SPENDP2SHWITNESS",
                     "id": 4
+                }
+            ],
+            "options": {}
+        },
+        {
+            "name": "TezosCurveType",
+            "values": [
+                {
+                    "name": "Ed25519",
+                    "id": 0
+                },
+                {
+                    "name": "Secp256k1",
+                    "id": 1
+                },
+                {
+                    "name": "P256",
+                    "id": 2
                 }
             ],
             "options": {}
