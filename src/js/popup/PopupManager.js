@@ -3,6 +3,7 @@
 
 import EventEmitter from 'events';
 import * as POPUP from '../constants/popup';
+import * as ERROR from '../constants/errors';
 import { showPopupRequest } from './showPopupRequest';
 import type { ConnectSettings } from '../data/ConnectSettings';
 import type { CoreMessage, Deferred } from '../types';
@@ -203,15 +204,21 @@ export default class PopupManager extends EventEmitter {
     async resolveLazyLoad(): Promise<void> {
         if (this.lazyLoad) {
             await this.lazyLoad.promise;
+        } else {
+            throw ERROR.POPUP_CLOSED.message;
         }
+
         if (this.extension) {
             if (this.extensionPort) { this.extensionPort.postMessage({ type: POPUP.INIT }); }
-        } else {
+        } else if (this._window) {
             this._window.postMessage({ type: POPUP.INIT }, this.origin);
         }
     }
 
     close(): void {
+
+        this.locked = false;
+
         if (this.requestTimeout) {
             window.clearTimeout(this.requestTimeout);
             this.requestTimeout = 0;
@@ -235,6 +242,10 @@ export default class PopupManager extends EventEmitter {
             // $FlowIssue chrome not declared outside
             chrome.tabs.update(this.extensionTabId, { active: true });
             this.extensionTabId = 0;
+        }
+
+        if (this.lazyLoad) {
+            this.lazyLoad = null;
         }
 
         if (this._window) {
