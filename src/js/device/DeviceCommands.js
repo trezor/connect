@@ -258,6 +258,43 @@ export default class DeviceCommands {
         return this.typedCall('StellarSignTx', 'StellarSignedTx', transaction);
     }
 
+    async cardanoGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoGetAddressResponse> {
+        const address: MessageResponse<trezor.CardanoAddress> = await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+
+        const publicKey: MessageResponse<trezor.CardanoPublicKey> = await this.typedCall('CardanoGetPublicKey', 'CardanoPublicKey', {
+            address_n,
+        });
+
+        return {
+            path: address_n,
+            serializedPath: getSerializedPath(address_n),
+            address: address.message.address,
+            publicKey: publicKey.message.xpub,
+            node: publicKey.message.node,
+            rootHDPassphrase: publicKey.message.root_hd_passphrase,
+        };
+    }
+
+    async cardanoSignMessage(address_n: Array<number>, message: string): Promise<trezor.CardanoMessageSignature> {
+        const response: MessageResponse<trezor.CardanoMessageSignature> = await this.typedCall('CardanoSignMessage', 'CardanoMessageSignature', {
+            address_n,
+            message,
+        });
+        return response.message;
+    }
+
+    async cardanoVerifyMessage(publicKey: string, signature: string, message: string): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('CardanoVerifyMessage', 'Success', {
+            public_key: publicKey,
+            signature,
+            message,
+        });
+        return response.message;
+    }
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,
