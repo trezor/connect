@@ -29,7 +29,7 @@ export const cardanoGetAddress = (): TestFunction => {
         },
     ];
 
-    const expectedResponses: <ExpectedCardanoGetAddressResponse> = [
+    const expectedResponses: Array<ExpectedCardanoGetAddressResponse> = [
         {
             payload: {
                 address: 'DdzFFzCqrhst5m97LJq6P8x5ixpQJUAEurzas1kfTiV1uVyx5bKBqhRLjpTNaKKNsyKFCxfcoxVnDkbodL927Fjske2eEuyyXF4McGqd',

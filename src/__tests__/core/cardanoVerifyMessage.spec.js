@@ -9,7 +9,7 @@ import type {
 } from 'flowtype/tests/cardano-verify-message';
 
 export const cardanoVerifyMessage = (): TestFunction => {
-    const testPayloads: Array<TestCardanoSignMessagePayload> = [
+    const testPayloads: Array<TestCardanoVerifyMessagePayload> = [
         {
             message: 'Test message to sign',
             publicKey: '5ed62999f3d181c86dfc932e2e0d9ce1d9067e6212b51629c700492f7f7e0bb1',
@@ -27,7 +27,7 @@ export const cardanoVerifyMessage = (): TestFunction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedCardanoSignMessageResponse> = [
+    const expectedResponses: Array<ExpectedCardanoVerifyMessageResponse> = [
         { success: true },
         { success: true },
         { success: true },

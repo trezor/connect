@@ -14,7 +14,7 @@ export const cardanoSignTransaction = (): TestFunction => {
             // "m/44'/1815'/0'/0/0",
             address_n: [2147483692, 2147485463, 2147483648, 0, 0],
             prev_index: 0,
-            type: 0
+            type: 0,
         },
     ];
     const outputs = [
@@ -32,7 +32,7 @@ export const cardanoSignTransaction = (): TestFunction => {
         '839f8200d81858248258208f088493a600c7d897ef89caeb060e8e8137a1e5aa52e32f6262ec5a087341a6008200d81858248258208f088493a600c7d897ef89caeb060e8e8137a1e5aa52e32f6262ec5a087341a601ff9f8282d818583e83581c3a043fc1baa52fe4df2be89c689c953a52e7c13e51551ef5a3ed1e3da101581a5818360a746c532b81f364ce25168befa6cb2e29d5eccc4883bc001a90ce7a581a007e86118282d818584283581cc52ea4de5aacc58e0fab8b1a55e8bc194c6fd22eebd93fab56cf2789a101581e581c8c44aea4dee0952907690336fa16773c53257ec002dbd219d3970747001a409c205e01ffa0',
     ];
 
-    const testPayloads = [
+    const testPayloads: Array<TestCardanoSignTransactionPayload> = [
         {
             inputs,
             outputs,

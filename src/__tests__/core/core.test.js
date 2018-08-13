@@ -75,15 +75,13 @@ const runTest = (test: TestFunction, subtestNames: Array<string>) => {
             }
             const specNames = testPayloads.map(p => p.method);
 
-
             startTestingPayloads(testPayloads, expectedResponses, specNames, isTestingPassphrase);
         } else {
             if (!test.subtests) {
                 throw new Error('Test is missing subtests but hasSubtest is true');
             }
 
-
-            let subtestNamesFiltered: Array<string> = subtestNames.length > 0 ? subtestNames : Object.keys(test.subtests);
+            const subtestNamesFiltered: Array<string> = subtestNames.length > 0 ? subtestNames : Object.keys(test.subtests);
             subtestNamesFiltered.forEach(name => {
                 // $FlowIssue is being handled above - if test.subtests is void throw error
                 const { testPayloads, expectedResponses, specName } = test.subtests[name]();
@@ -91,7 +89,6 @@ const runTest = (test: TestFunction, subtestNames: Array<string>) => {
 
                 startTestingPayloads(testPayloads, expectedResponses, specNames, isTestingPassphrase);
             });
-
 
             // if (subtestNames.length > 0) {
             //     // Subtests were specified by the user
