@@ -7,9 +7,8 @@ import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/stellarSignTx';
 
 import type { StellarSignedTx } from '../../types/trezor';
-import type { Transaction as $StellarTransaction } from '../../types/stellar';
+import type { Transaction as $StellarTransaction, StellarSignedTx as StellarSignedTxResponse } from '../../types/stellar';
 import type { CoreMessage } from '../../types';
-import type { StellarSignTransaction$ } from '../../types/response';
 
 type Params = {
     path: Array<number>,
@@ -46,7 +45,7 @@ export default class StellarSignTransaction extends AbstractMethod {
         };
     }
 
-    async run(): Promise<$PropertyType<StellarSignTransaction$, 'payload'>> {
+    async run(): Promise<StellarSignedTxResponse> {
         const response: StellarSignedTx = await helper.stellarSignTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,

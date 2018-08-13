@@ -9,10 +9,6 @@ import type {
 } from './nem';
 
 import type {
-    Transaction as StellarTransaction,
-} from './stellar';
-
-import type {
     MultisigRedeemScriptType,
 } from './trezor';
 
@@ -157,18 +153,6 @@ export type $SignTransaction = $Common & {
     outputs: Array<TransactionOutput>,
     coin: string,
     push?: boolean,
-}
-
-export type $StellarGetAddress = {
-    path: $Path,
-    showOnTrezor?: boolean,
-}
-
-export type $StellarSignTransaction = $Common & {
-    path: $Path,
-    ledgerVersion: number,
-    networkPassphrase: string,
-    transaction: StellarTransaction,
 }
 
 export type $VerifyMessage = $Common & {
