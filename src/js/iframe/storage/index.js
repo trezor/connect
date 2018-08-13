@@ -4,7 +4,13 @@
 export const PERMISSIONS_KEY: string = 'trezorconnect_permissions';
 export const CONFIRMATION_KEY: string = 'trezorconnect_confirmations';
 
-export const save = (storageKey: string, value: any): void => {
+const _storage: {[k: string]: string} = {};
+
+export const save = (storageKey: string, value: any, temporary: boolean = false): void => {
+    if (temporary) {
+        _storage[ storageKey ] = JSON.stringify(value);
+        return;
+    }
     try {
         window.localStorage[storageKey] = JSON.stringify(value);
         return;
@@ -20,8 +26,14 @@ export const save = (storageKey: string, value: any): void => {
     }
 };
 
-export const load = (storageKey: string): ?JSON => {
+export const load = (storageKey: string, temporary: boolean = false): ?JSON => {
     let value: ?string;
+
+    if (temporary) {
+        value = _storage[ storageKey ];
+        return value ? JSON.parse(value) : null;
+    }
+
     try {
         value = window.localStorage[storageKey];
     } catch (ignore) {
@@ -40,6 +52,5 @@ export const load = (storageKey: string): ?JSON => {
             // empty
         }
     }
-    if (!value) return null;
-    return JSON.parse(value);
+    return value ? JSON.parse(value) : null;
 };

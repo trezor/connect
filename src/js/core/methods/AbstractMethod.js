@@ -86,10 +86,7 @@ export default class AbstractMethod implements MethodInterface {
         const permissionsResponse: any = uiResp.payload;
 
         if (permissionsResponse.granted) {
-            if (permissionsResponse.remember) {
-                this.savePermissions();
-                return true;
-            }
+            this.savePermissions(!(permissionsResponse.remember));
             return true;
         }
         return false;
@@ -112,8 +109,8 @@ export default class AbstractMethod implements MethodInterface {
         this.requiredPermissions = notPermitted;
     }
 
-    savePermissions() {
-        let savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY);
+    savePermissions(temporary: boolean = false) {
+        let savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY, temporary);
         if (!savedPermissions || !Array.isArray(savedPermissions)) {
             savedPermissions = JSON.parse('[]');
         }
@@ -145,7 +142,7 @@ export default class AbstractMethod implements MethodInterface {
             });
         }
 
-        saveStorage(PERMISSIONS_KEY, savedPermissions.concat(permissionsToSave));
+        saveStorage(PERMISSIONS_KEY, savedPermissions.concat(permissionsToSave), temporary);
 
         if (emitEvent) {
             this.postMessage(new DeviceMessage(DEVICE.CONNECT, this.device.toMessageObject()));

@@ -163,7 +163,7 @@ const targetUiEvent = (message: CoreMessage): boolean => {
 
 const filterDeviceEvent = (message: CoreMessage): boolean => {
     if (message.payload && message.payload.features) {
-        const savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY);
+        const savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY) || loadStorage(PERMISSIONS_KEY, true);
         const features: any = message.payload.features;
         if (savedPermissions && Array.isArray(savedPermissions)) {
             const devicePermissions: Array<Object> = savedPermissions.filter(p => {
