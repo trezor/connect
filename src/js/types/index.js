@@ -131,12 +131,22 @@ export type EventListener = typeof F_EventListener;
 
 import * as P from './params';
 import * as R from './response';
-import * as STELLAR from './stellar';
+import * as Cardano from './cardano';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
 export type CustomMessage = (P.$CustomMessage) => Promise<R.CustomMessage$>;
 export type RequestLogin = (P.$RequestLogin) => Promise<R.RequestLogin$>;
+
+/* eslint-disable no-redeclare */
+declare function F_CardanoGetAddress(params: (P.$Common & Cardano.$CardanoGetAddress)): Promise<Cardano.CardanoGetAddress$>;
+declare function F_CardanoGetAddress(params: (P.$Common & { bundle: Array<Cardano.$CardanoGetAddress> })): Promise<Cardano.CardanoGetAddress$$>;
+/* eslint-enable no-redeclare */
+export type CardanoGetAddress = typeof F_CardanoGetAddress;
+
+export type CardanoSignMessage = (Cardano.$CardanoSignMessage) => Promise<Cardano.CardanoSignMessage$>;
+export type CardanoSignTransaction = (Cardano.$CardanoSignTransaction) => Promise<Cardano.CardanoSignTransaction$>;
+export type CardanoVerifyMessage = (Cardano.$CardanoVerifyMessage) => Promise<Cardano.CardanoVerifyMessage$>;
 
 /* eslint-disable no-redeclare */
 declare function F_CipherKeyValue(params: (P.$Common & P.$CipherKeyValue)): Promise<R.CipherKeyValue$>;

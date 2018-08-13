@@ -512,6 +512,52 @@ export type StellarOperationMessage = {
     bump_to: number,
 }
 
+// Cardano types
+export type CardanoAddress = {
+    address: string,
+    address_n?: Array<number>,
+};
+export type CardanoPublicKey = {
+    xpub: string,
+    node: HDPubNode,
+    root_hd_passphrase: string,
+};
+// combined address + public key
+export type CardanoGetAddressResponse = {
+    address: string,
+    path: Array<number>,
+    serializedPath: string,
+    publicKey: string,
+    node: HDPubNode,
+    rootHDPassphrase: string,
+}
+export type CardanoSignedTx = {
+    tx_hash: string,
+    tx_body: string,
+};
+export type CardanoTxInput = {
+    tx_hash: string,
+    address_n: Array<number>,
+    output_index: number,
+    type?: number,
+};
+export type CardanoTxOutput = {
+    address?: string,
+    address_n?: Array<number>,
+    amount: number,
+};
+
+export type CardanoTxRequest = {
+    tx_index?: number,
+    tx_hash: string,
+    tx_body: string,
+};
+
+export type CardanoMessageSignature = {
+    public_key: string,
+    signature: string,
+}
+
 // GetAccountInfo response
 export type AccountInfo = {
     id: number,
