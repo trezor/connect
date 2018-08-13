@@ -19,7 +19,6 @@ TrezorConnect.stellarSignTransaction(params).then(function(result) {
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L149-L154)
 * `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
-* `ledgerVersion` - *obligatory* `number` network id
 * `networkPassphrase` - *obligatory* `string` network passphrase
 * `transaction` - *obligatory* `Object` type of [StellarTransaction](../../src/js/types/stellar.js#L129)
 
@@ -27,7 +26,6 @@ TrezorConnect.stellarSignTransaction(params).then(function(result) {
 ```javascript
 TrezorConnect.stellarSignTransaction(
     path: "m/44'/1'/0'/0'/0'",
-    ledgerVersion: 1,
     networkPassphrase: "Test SDF Network ; September 2015",
     transaction: {
         source: "5d55642466b185b843152e9e219151dbc5892027ec40101a517bed5ca030c2e0",
