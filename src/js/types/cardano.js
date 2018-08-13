@@ -29,13 +29,13 @@ export type CardanoGetAddress$$ = $Common & {
 // Sign transaction
 
 type CardanoInput = {
-    address_n: $Path,
+    path: $Path,
     tx_hash: string,
     output_index: number,
     type?: number,
 }
 type CardanoOutput = {
-    address_n: $Path,
+    path: $Path,
     amount: string,
 } | {
     address: string,
