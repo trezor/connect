@@ -28,7 +28,7 @@ export type Unsuccessful$ = {
 
 export type CipherKeyValue$ = {
     success: true,
-    payload: CipheredKeyValue | Array<CipheredKeyValue>,
+    payload: CipheredKeyValue,
 } | Unsuccessful$;
 
 export type CipherKeyValue$$ = {
