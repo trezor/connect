@@ -1,19 +1,19 @@
 /* @flow */
 
 declare module 'flowtype/tests/cardano-sign-transaction' {
-    type CardanoInput = {
+    declare type CardanoInput = {
         address_n: string | Array<number>,
         tx_hash: string,
         output_index: number,
         type?: number,
-    }
-    type CardanoOutput = {
+    };
+    declare type CardanoOutput = {
         address_n: string | Array<number>,
         amount: string,
     } | {
         address: string,
         amount: string,
-    }
+    };
 
     declare export type TestCardanoSignTransactionPayload = {
         inputs: Array<CardanoInput>,

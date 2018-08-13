@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint  no-undef: 0 */
 
 let currentSuite: string = '';
 
@@ -19,9 +20,9 @@ export const settings = {
     supportedBrowser: true,
     extension: null,
     // excludedDevices: ['emulator21325']
-}
+};
 
-export const httpPost = (url: string, data ?: any): Promise <any> => {
+export const httpPost = (url: string, data ?: any): Promise<any> => {
     return new Promise((resolve, reject) => {
         const xhr: XMLHttpRequest = new XMLHttpRequest();
         xhr.open('POST', url);
@@ -49,7 +50,7 @@ export const httpPost = (url: string, data ?: any): Promise <any> => {
 
         xhr.send(data);
     });
-}
+};
 
 export const testReporter: Reporter = {
     suiteStarted(result) {

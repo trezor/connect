@@ -164,7 +164,7 @@ export class CoreEventHandler {
     _handleDeviceConnect(event: Object, isEmulatorRunning: boolean) {
         // No features mean that we still don't whether it's a Trezor device
         if (!event.payload.features) {
-            return
+            return;
         }
 
         // If emulator is running communicate only with the emulator device
@@ -200,7 +200,7 @@ export class CoreEventHandler {
                 this._handleUiWindowRequest();
                 break;
 
-            case UI.REQUEST_PASSPHRASE:
+            case UI.REQUEST_PASSPHRASE: {
                 let passphrase = this._getCurrentPayload().passphrase;
                 if (!passphrase) {
                     // Use empty passphrase by default
@@ -209,6 +209,7 @@ export class CoreEventHandler {
 
                 this._handlePassphraseRequest(passphrase);
                 break;
+            }
 
             case RESPONSE_EVENT:
                 this._handleResponseEvent(event);
