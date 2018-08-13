@@ -1,6 +1,26 @@
 /* @flow */
 
 import type {
+    TestCardanoGetAddressPayload,
+    ExpectedCardanoGetAddressResponse,
+} from 'flowtype/tests/cardano-get-address';
+
+import type {
+    TestCardanoSignMessagePayload,
+    ExpectedCardanoSignMessageResponse,
+} from 'flowtype/tests/cardano-sign-message';
+
+import type {
+    TestCardanoVerifyMessagePayload,
+    ExpectedCardanoVerifyMessageResponse,
+} from 'flowtype/tests/cardano-verify-message';
+
+import type {
+    TestCardanoSignTransactionPayload,
+    ExpectedCardanoSignTransactionResponse,
+} from 'flowtype/tests/cardano-sign-transaction';
+
+import type {
     TestEthereumGetAddressPayload,
     ExpectedEthereumGetAddressResponse,
 } from 'flowtype/tests/ethereum-get-address';
@@ -112,7 +132,11 @@ declare module 'flowtype/tests' {
     declare export type SubtestPassphrase = Subtest<TestPassphrasePayload, ExpectedPassphraseResponse>;
 
     declare export type TestPayload =
-        TestEthereumGetAddressPayload
+        TestCardanoSignMessagePayload
+        | TestCardanoVerifyMessagePayload
+        | TestCardanoGetAddressPayload
+        | TestCardanoSignTransactionPayload
+        | TestEthereumGetAddressPayload
         | TestEthereumSignMessagePayload
         | TestEthereumSignTransactionPayload
         | TestGetAddressPayload
@@ -125,7 +149,11 @@ declare module 'flowtype/tests' {
         | TestNemSignTransactionPayload
         | TestPassphrasePayload;
     declare export type ExpectedResponse =
-        ExpectedEthereumGetAddressResponse
+        ExpectedCardanoSignMessageResponse
+        | ExpectedCardanoVerifyMessageResponse
+        | ExpectedCardanoGetAddressResponse
+        | ExpectedCardanoSignTransactionResponse
+        | ExpectedEthereumGetAddressResponse
         | ExpectedEthereumSignMessageResponse
         | ExpectedEthereumSignTransactionResponse
         | ExpectedGetAddressResponse
