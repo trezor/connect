@@ -19,8 +19,8 @@ tests_to_run=""
 tests_not_to_run=""
 subtests_not_to_run=""
 
-should_print_debug="false"
-karma_log_level="error" # "disable", "error", "warn", "info", "debug"
+should_print_karma_debug="false"
+should_print_emulator_debug="false"
 
 red=$(tput setaf 1)
 green=$(tput setaf 2)
@@ -101,8 +101,8 @@ show_usage() {
     echo "  -e                                  Specify path to emulator"
     echo "  -b                                  Specify path to transport"
     echo "  -p                                  Show default paths to emulator and transport and exit"
-    echo "  -d                                  Print debug messages while running tests"
-    echo "  -k <LOG_LEVEL>                      (todo) Set Karma's log-level ('disable', 'error' - default, 'warn', 'info', 'debug')"
+    echo "  -d                                  Print karma debug messages while running tests"
+    echo "  -k                                  Print emulator debug messages while running tests"
     echo "  -h                                  Show this message and exit"
 }
 
@@ -223,10 +223,14 @@ kill_emul_transport() {
 start_emulator() {
     # Start emulator
     cd $emulator_path
-    PYOPT=0 ./emu.sh > /dev/null 2>&1 &
-    #PYOPT=0 ./emu.sh &
-    pid_emul=$!
-    #PYOPT=0 ./emu.sh 2>&1 > /dev/null &
+
+    if [ $should_print_emulator_debug == "true" ]; then
+        PYOPT=0 ./emu.sh &
+        pid_emul=$!
+    else
+        PYOPT=0 ./emu.sh > /dev/null 2>&1 &
+        pid_emul=$!
+    fi;
 }
 
 start_transport() {
@@ -274,7 +278,7 @@ run_karma() {
     path_babel_node="./node_modules/babel-cli/bin/babel-node.js"
     path_karma="./node_modules/karma/bin/karma"
 
-    ${path_babel_node} ${path_karma} start --tests="${1}" --isEmulatorRunning="${should_start_emulator}" --printDebug="${should_print_debug}"
+    ${path_babel_node} ${path_karma} start --tests="${1}" --isEmulatorRunning="${should_start_emulator}" --printDebug="${should_print_karma_debug}"
 }
 
 all_tests() {
@@ -357,7 +361,7 @@ fi;
 
 # The emulator device is configured for each specific test automatically
 OPTIND=1
-while getopts ":at:x:ls:e:b:k:mpdh" opt; do
+while getopts ":at:x:ls:e:b:kmpdh" opt; do
     case $opt in
         a) # Run all tests
             run_type="all"
@@ -392,11 +396,11 @@ while getopts ":at:x:ls:e:b:k:mpdh" opt; do
             show_default_paths
             cleanup
         ;;
-        d) # Print debug messages (emulator, transport)
-            should_print_debug="true"
+        d) # Print debug messages from Karma
+            should_print_karma_debug="true"
         ;;
-        k) # Karma log level
-            karma_log_level="$OPTARG"
+        k) # Print debug messages from emulator
+            should_print_emulator_debug="true"
         ;;
         m) # Start tests without emulator - testing on a physical device
             should_start_emulator="false"
