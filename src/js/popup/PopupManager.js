@@ -216,7 +216,6 @@ export default class PopupManager extends EventEmitter {
     }
 
     close(): void {
-
         this.locked = false;
 
         if (this.requestTimeout) {
