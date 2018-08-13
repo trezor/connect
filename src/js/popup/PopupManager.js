@@ -137,7 +137,7 @@ export default class PopupManager extends EventEmitter {
                 // $FlowIssue chrome not declared outside
                 chrome.tabs.create({
                     url,
-                    index: tabs[0].index + 1
+                    index: tabs[0].index + 1,
                 }, tab => {
                     this._window = tab;
                 });
@@ -178,7 +178,7 @@ export default class PopupManager extends EventEmitter {
                 // $FlowIssue chrome not declared outside
                 chrome.tabs.create({
                     url: 'trezor-usb-permissions.html',
-                    index: tabs[0].index + 1
+                    index: tabs[0].index + 1,
                 }, tab => {
                     this._window = tab;
                 });
