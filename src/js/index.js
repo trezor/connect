@@ -289,6 +289,22 @@ class TrezorConnect {
         }
     }
 
+    static cardanoGetAddress: $T.CardanoGetAddress = async (params) => {
+        return await call({ method: 'cardanoGetAddress', ...params });
+    }
+
+    static cardanoSignMessage: $T.CardanoSignMessage = async (params) => {
+        return await call({ method: 'cardanoSignMessage', ...params });
+    }
+
+    static cardanoSignTransaction: $T.CardanoSignTransaction = async (params) => {
+        return await call({ method: 'cardanoSignTransaction', ...params });
+    }
+
+    static cardanoVerifyMessage: $T.CardanoVerifyMessage = async (params) => {
+        return await call({ method: 'cardanoVerifyMessage', ...params });
+    }
+
     static cipherKeyValue: $T.CipherKeyValue = async (params) => {
         return await call({ method: 'cipherKeyValue', ...params });
     }
