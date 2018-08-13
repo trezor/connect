@@ -71,5 +71,3 @@ alcohol woman abuse must during monitor noble actual mixed trade anger aisle
 3. Resolve Flow issues
     - Each Connect method has its own flowtype file in `src/flowtype/tests`
         - Those files contains description for both `testPayloads` object and `expectedResponses` object that you created earlier.
-
-## If you'd like to have subtests in your tests
