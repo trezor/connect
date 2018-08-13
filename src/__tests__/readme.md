@@ -71,3 +71,34 @@ alcohol woman abuse must during monitor noble actual mixed trade anger aisle
 3. Resolve Flow issues
     - Each Connect method has its own flowtype file in `src/flowtype/tests`
         - Those files contains description for both `testPayloads` object and `expectedResponses` object that you created earlier.
+        ```javascript
+        declare export type TestEthereumGetAddressPayload = {
+            method: string,
+            path: string | Array<number>,
+        };
+
+        declare export type ExpectedEthereumGetAddressResponse = {
+            payload: {
+                address: string,
+            },
+        };
+        ```
+
+    - Add types you just created into `src/flowtype/tests/index.js`
+        ```javascript
+        import type {
+            TestEthereumGetAddressPayload,
+            ExpectedEthereumGetAddressResponse,
+        } from 'flowtype/tests/ethereum-get-address';
+
+        ...
+
+        declare export type TestPayload =
+        ...
+        | TestEthereumGetAddressPayload;
+
+
+        declare export type ExpectedResponse =
+        ...
+        | ExpectedEthereumGetAddressResponse;
+        ```
