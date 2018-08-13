@@ -3,7 +3,6 @@ Handling messages from usb permissions iframe
 */
 
 const switchToPopupTab = (event) => {
-
     window.removeEventListener('beforeunload', switchToPopupTab);
 
     if (!event) {
@@ -15,11 +14,11 @@ const switchToPopupTab = (event) => {
         }, (current) => {
             if (current.length < 0) return;
             chrome.tabs.query({
-                index: current[0].index - 1
+                index: current[0].index - 1,
             }, popup => {
                 if (popup.length < 0) return;
                 chrome.tabs.update(popup[0].id, { active: true });
-            })
+            });
             chrome.tabs.remove(current[0].id);
         });
         return;
@@ -28,12 +27,12 @@ const switchToPopupTab = (event) => {
     // triggered from 'beforeunload' event
     // find tab by popup pattern and switch to it
     chrome.tabs.query({
-        url: "*://connect.trezor.io/*/popup.html"
+        url: '*://connect.trezor.io/*/popup.html',
     }, (tabs) => {
         if (tabs.length < 0) return;
         chrome.tabs.update(tabs[0].id, { active: true });
     });
-}
+};
 
 window.addEventListener('message', event => {
     if (event.data === 'usb-permissions-init') {
