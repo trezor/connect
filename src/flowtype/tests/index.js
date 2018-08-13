@@ -1,6 +1,26 @@
 /* @flow */
 
 import type {
+    TestCardanoGetAddressPayload,
+    ExpectedCardanoGetAddressResponse,
+} from 'flowtype/tests/cardano-get-address';
+
+import type {
+    TestCardanoSignMessagePayload,
+    ExpectedCardanoSignMessageResponse,
+} from 'flowtype/tests/cardano-sign-message';
+
+import type {
+    TestCardanoVerifyMessagePayload,
+    ExpectedCardanoVerifyMessageResponse,
+} from 'flowtype/tests/cardano-verify-message';
+
+import type {
+    TestCardanoSignTransactionPayload,
+    ExpectedCardanoSignTransactionResponse,
+} from 'flowtype/tests/cardano-sign-transaction';
+
+import type {
     TestEthereumGetAddressPayload,
     ExpectedEthereumGetAddressResponse,
 } from 'flowtype/tests/ethereum-get-address';
@@ -55,39 +75,47 @@ import type {
     ExpectedNemSignTransactionResponse,
 } from 'flowtype/tests/nem-sign-transaction';
 
+import type {
+    TestPassphrasePayload,
+    ExpectedPassphraseResponse,
+} from 'flowtype/tests/passphrase';
+
+
+
 declare module 'flowtype/tests' {
-    declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
-    declare export type GetAddressSegwitAvailableSubtests = 'showSegwit';
-    declare export type SignMessageAvailableSubtests = 'sign' | 'signTestnet' | 'signBch' | 'signLong';
-    declare export type SignMessageSegwitAvailableSubtests = 'sign' | 'signLong';
-    declare export type SignTransactionAvailableSubtests =
-        'oneOneFee'
-        | 'oneTwoFee'
-        | 'oneThreeFee'
-        | 'twoTwo'
-        | 'testnetOneTwoFee'
-        | 'testnetFeeTooHigh'
-        | 'lotsOfOutputs'
-        | 'feeTooHigh'
-        | 'notEnoughFunds'
-        | 'spendCoinbase'
-        | 'twoChanges'
-        | 'p2sh'
-        | 'changeOnMainChainAllowed';
-    declare export type SignTransactionSegwitAvailableSubtests = 'sendP2sh' | 'sendP2shChange' | 'sendMultisig1';
-    declare export type SignTransactionBgoldAvailableSubtests = 'change' | 'noChange' | 'p2sh' | 'p2shWitnessChange' | 'sendMultisig1';
-    declare export type SignTransactionBcashAvailableSubtests = 'change' | 'noChange' | 'oldAddr';
-    declare export type SignTransactionMultisigAvailableSubtests = 'twoOfThree' | 'fifteenOfFifteen' | 'missingPubkey';
-    declare export type SignTransactionMultisigChangeAvailableSubtests = 'externalExternal' | 'externalInternal' | 'internalExternal' | 'multisigExternalExternal';
-    declare export type VerifyMessageAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet' | 'verifyBcash' | 'verifyBitcoind';
-    declare export type VerifyMessageSegwitAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet';
-    declare export type VerifyMessageSegwitNativeAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet';
-    declare export type EthereumSignTransactionAvailableSubtests = 'knownErc20Token' | 'unknownErc20Token' | 'noData' | 'data' | 'message' | 'newContract' | 'sanityChecks' | 'noDataEip155' | 'dataEip155';
-    declare export type NemSignTransactionMosaicAvailableSubtests = 'supplyChange' | 'creation' | 'creationProperties' | 'creationLevy';
-    declare export type NemSignTransactionMultisigAvailableSubtests = 'aggregateModification' | 'multisig' | 'multisigSigner';
-    declare export type NemSignTransactionOthersAvailableSubtests = 'importanceTransfer' | 'provisionNamespace';
-    declare export type NemSignTransactionTransfersAvailableSubtests = 'simple' | 'encryptedPayload' | 'xemAsMosaic' | 'unknownMosaic' | 'knownMosaic' | 'knownMosaicWithLevy' | 'multipleMosaics';
-    declare export type GetAccountInfoAvailableSubtests = 'firstAccount' | 'zeroBalance' | 'pathInvalid' | 'noAddressIndex' | 'zeroBalance' | 'xpubInsteadOfPath';
+    // declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
+    // declare export type GetAddressSegwitAvailableSubtests = 'showSegwit';
+    // declare export type SignMessageAvailableSubtests = 'sign' | 'signTestnet' | 'signBch' | 'signLong';
+    // declare export type SignMessageSegwitAvailableSubtests = 'sign' | 'signLong';
+    // declare export type SignTransactionAvailableSubtests =
+    //     'oneOneFee'
+    //     | 'oneTwoFee'
+    //     | 'oneThreeFee'
+    //     | 'twoTwo'
+    //     | 'testnetOneTwoFee'
+    //     | 'testnetFeeTooHigh'
+    //     | 'lotsOfOutputs'
+    //     | 'feeTooHigh'
+    //     | 'notEnoughFunds'
+    //     | 'spendCoinbase'
+    //     | 'twoChanges'
+    //     | 'p2sh'
+    //     | 'changeOnMainChainAllowed';
+    // declare export type SignTransactionSegwitAvailableSubtests = 'sendP2sh' | 'sendP2shChange' | 'sendMultisig1';
+    // declare export type SignTransactionBgoldAvailableSubtests = 'change' | 'noChange' | 'p2sh' | 'p2shWitnessChange' | 'sendMultisig1';
+    // declare export type SignTransactionBcashAvailableSubtests = 'change' | 'noChange' | 'oldAddr';
+    // declare export type SignTransactionMultisigAvailableSubtests = 'twoOfThree' | 'fifteenOfFifteen' | 'missingPubkey';
+    // declare export type SignTransactionMultisigChangeAvailableSubtests = 'externalExternal' | 'externalInternal' | 'internalExternal' | 'multisigExternalExternal';
+    // declare export type VerifyMessageAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet' | 'verifyBcash' | 'verifyBitcoind';
+    // declare export type VerifyMessageSegwitAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet';
+    // declare export type VerifyMessageSegwitNativeAvailableSubtests = 'verify' | 'verifyLong' | 'verifyTestnet';
+    // declare export type EthereumSignTransactionAvailableSubtests = 'knownErc20Token' | 'unknownErc20Token' | 'noData' | 'data' | 'message' | 'newContract' | 'sanityChecks' | 'noDataEip155' | 'dataEip155';
+    // declare export type NemSignTransactionMosaicAvailableSubtests = 'supplyChange' | 'creation' | 'creationProperties' | 'creationLevy';
+    // declare export type NemSignTransactionMultisigAvailableSubtests = 'aggregateModification' | 'multisig' | 'multisigSigner';
+    // declare export type NemSignTransactionOthersAvailableSubtests = 'importanceTransfer' | 'provisionNamespace';
+    // declare export type NemSignTransactionTransfersAvailableSubtests = 'simple' | 'xemAsMosaic' | 'unknownMosaic' | 'knownMosaic' | 'knownMosaicWithLevy' | 'multipleMosaics';
+    // declare export type GetAccountInfoAvailableSubtests = 'firstAccount' | 'zeroBalance' | 'pathInvalid' | 'zeroBalance' | 'xpubInsteadOfPath';
+    // declare export type PassphraseAvailableSubtests = 'correctPassphrase' | 'wrongPassphrase';
 
     declare type Subtest<T, R> = {
         testPayloads: Array<T>,
@@ -101,9 +129,14 @@ declare module 'flowtype/tests' {
     declare export type SubtestVerifyMessage = Subtest<TestVerifyMessagePayload, ExpectedVerifyMessageResponse>;
     declare export type SubtestGetAccountInfo = Subtest<TestGetAccountInfoPayload, ExpectedGetAccountInfoResponse>;
     declare export type SubtestNemSignTransaction = Subtest<TestNemSignTransactionPayload, ExpectedNemSignTransactionResponse>;
+    declare export type SubtestPassphrase = Subtest<TestPassphrasePayload, ExpectedPassphraseResponse>;
 
     declare export type TestPayload =
-        TestEthereumGetAddressPayload
+        TestCardanoSignMessagePayload
+        | TestCardanoVerifyMessagePayload
+        | TestCardanoGetAddressPayload
+        | TestCardanoSignTransactionPayload
+        | TestEthereumGetAddressPayload
         | TestEthereumSignMessagePayload
         | TestEthereumSignTransactionPayload
         | TestGetAddressPayload
@@ -113,9 +146,14 @@ declare module 'flowtype/tests' {
         | TestSignTransactionPayload
         | TestVerifyMessagePayload
         | TestGetAccountInfoPayload
-        | TestNemSignTransactionPayload;
+        | TestNemSignTransactionPayload
+        | TestPassphrasePayload;
     declare export type ExpectedResponse =
-        ExpectedEthereumGetAddressResponse
+        ExpectedCardanoSignMessageResponse
+        | ExpectedCardanoVerifyMessageResponse
+        | ExpectedCardanoGetAddressResponse
+        | ExpectedCardanoSignTransactionResponse
+        | ExpectedEthereumGetAddressResponse
         | ExpectedEthereumSignMessageResponse
         | ExpectedEthereumSignTransactionResponse
         | ExpectedGetAddressResponse
@@ -125,5 +163,50 @@ declare module 'flowtype/tests' {
         | ExpectedSignTransactionResponse
         | ExpectedVerifyMessageResponse
         | ExpectedGetAccountInfoResponse
-        | ExpectedNemSignTransactionResponse;
+        | ExpectedNemSignTransactionResponse
+        | ExpectedPassphraseResponse;
+
+    declare export type SubtestFunction = SubtestGetAddress
+    | SubtestSignMessage
+    | SubtestEthereumSignTransaction
+    | SubtestSignTransaction
+    | SubtestVerifyMessage
+    | SubtestGetAccountInfo
+    | SubtestNemSignTransaction
+    | SubtestPassphrase;
+
+    declare export type TestFunction = {
+        testName: string,
+        testPayloads?: Array<TestPayload>,
+        expectedResponses?: Array<ExpectedResponse>,
+        subtests?: { [k: string]: () => SubtestFunction },
+    };
+
+    declare export type AvailableTestFunctions = {
+        getPublicKey(): TestFunction,
+        getAddress(): TestFunction,
+        getAddressSegwit(): TestFunction,
+        signMessage(): TestFunction,
+        signMessageSegwit(): TestFunction,
+        signTransaction(): TestFunction,
+        signTransactionSegwit(): TestFunction,
+        signTransactionBgold(): TestFunction,
+        signTransactionBcash(): TestFunction,
+        signTransactionMultisig(): TestFunction,
+        signTransactionMultisigChange(): TestFunction,
+        verifyMessage(): TestFunction,
+        verifyMessageSegwit(): TestFunction,
+        verifyMessageSegwitNative(): TestFunction,
+        ethereumGetAddress(): TestFunction,
+        ethereumSignMessage(): TestFunction,
+        ethereumSignTransaction(): TestFunction,
+        ethereumVerifyMessage(): TestFunction,
+        getAccountInfo(): TestFunction,
+        nemGetAddress(): TestFunction,
+        nemSignTransactionMosaic(): TestFunction,
+        nemSignTransactionMultisig(): TestFunction,
+        nemSignTransactionOthers(): TestFunction,
+        nemSignTransactionTransfers(): TestFunction,
+        passphrase(): TestFunction,
+    };
 }

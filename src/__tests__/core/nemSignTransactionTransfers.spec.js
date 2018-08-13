@@ -1,13 +1,9 @@
 /* @flow */
-
-import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
-import { checkBrowser } from '../../js/utils/browser';
 import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
-import { settings, CoreEventHandler } from './common.js';
 
 import type {
+    TestFunction,
     SubtestNemSignTransaction,
-    NemSignTransactionTransfersAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestNemSignTransactionPayload,
@@ -21,7 +17,7 @@ const simple = (): SubtestNemSignTransaction => {
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 74649215,
-                amount: 2000000,
+                amount: '2000000',
                 fee: 2000000,
                 recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                 type: TX_TYPES.transfer,
@@ -50,44 +46,6 @@ const simple = (): SubtestNemSignTransaction => {
     };
 };
 
-const encryptedPayload = (): SubtestNemSignTransaction => {
-    const testPayloads: Array<TestNemSignTransactionPayload> = [
-        /* {
-            method: 'nemSignTransaction',
-            path: "m/44'/1'/0'/0'/0'",
-            transaction: {
-                timeStamp: 74649215,
-                amount: 2000000,
-                fee: 2000000,
-                recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
-                type: TX_TYPES.transfer,
-                deadline: 74735615,
-                message: {
-                    payload: '74686973206d6573736167652073686f756c6420626520656e63727970746564',
-                    publicKey: '5a5e14c633d7d269302849d739d80344ff14db51d7bcda86045723f05c4e4541',
-                    type: 2,
-                },
-                version: -1744830464,
-            },
-        }, */
-    ];
-    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
-        /* {
-            payload: {
-                todo: 'check python-trezor',
-                // tx.data[:124]
-                signature: 64,
-            },
-        }, */
-    ];
-
-    return {
-        testPayloads,
-        expectedResponses,
-        specName: '/encryptedPayload',
-    };
-};
-
 const xemAsMosaic = (): SubtestNemSignTransaction => {
     const testPayloads: Array<TestNemSignTransactionPayload> = [
         {
@@ -95,7 +53,7 @@ const xemAsMosaic = (): SubtestNemSignTransaction => {
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 76809215,
-                amount: 5000000,
+                amount: '5000000',
                 fee: 1000000,
                 recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                 type: TX_TYPES.transfer,
@@ -106,7 +64,7 @@ const xemAsMosaic = (): SubtestNemSignTransaction => {
                     {
                         mosaicId: {
                             namespaceId: 'nem',
-                            name: 'xem'
+                            name: 'xem',
                         },
                         quantity: 9000000,
                     },
@@ -138,7 +96,7 @@ const unknownMosaic = (): SubtestNemSignTransaction => {
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 76809215,
-                amount: 2000000,
+                amount: '2000000',
                 fee: 1000000,
                 recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                 type: TX_TYPES.transfer,
@@ -149,7 +107,7 @@ const unknownMosaic = (): SubtestNemSignTransaction => {
                     {
                         mosaicId: {
                             namespaceId: 'xxx',
-                            name: 'aa'
+                            name: 'aa',
                         },
                         quantity: 3500000,
                     },
@@ -181,7 +139,7 @@ const knownMosaic = (): SubtestNemSignTransaction => {
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 76809215,
-                amount: 3000000,
+                amount: '3000000',
                 fee: 1000000,
                 recipient: 'NDMYSLXI4L3FYUQWO4MJOVL6BSTJJXKDSZRMT4LT',
                 type: TX_TYPES.transfer,
@@ -192,14 +150,14 @@ const knownMosaic = (): SubtestNemSignTransaction => {
                     {
                         mosaicId: {
                             namespaceId: 'dim',
-                            name: 'token'
+                            name: 'token',
                         },
                         quantity: 111000,
                     },
                 ],
                 version: 1744830464,
             },
-        }
+        },
     ];
     const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
@@ -224,7 +182,7 @@ const knownMosaicWithLevy = (): SubtestNemSignTransaction => {
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 76809215,
-                amount: 2000000,
+                amount: '2000000',
                 fee: 1000000,
                 recipient: 'NDMYSLXI4L3FYUQWO4MJOVL6BSTJJXKDSZRMT4LT',
                 type: TX_TYPES.transfer,
@@ -235,14 +193,14 @@ const knownMosaicWithLevy = (): SubtestNemSignTransaction => {
                     {
                         mosaicId: {
                             namespaceId: 'dim',
-                            name: 'coin'
+                            name: 'coin',
                         },
                         quantity: 222000,
                     },
                 ],
                 version: 1744830464,
             },
-        }
+        },
     ];
     const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
@@ -267,7 +225,7 @@ const multipleMosaics = (): SubtestNemSignTransaction => {
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 76809215,
-                amount: 2000000,
+                amount: '2000000',
                 fee: 1000000,
                 recipient: 'NDMYSLXI4L3FYUQWO4MJOVL6BSTJJXKDSZRMT4LT',
                 type: TX_TYPES.transfer,
@@ -285,35 +243,35 @@ const multipleMosaics = (): SubtestNemSignTransaction => {
                     {
                         mosaicId: {
                             namespaceId: 'abc',
-                            name: 'mosaic'
+                            name: 'mosaic',
                         },
                         quantity: 200,
                     },
                     {
                         mosaicId: {
                             namespaceId: 'nem',
-                            name: 'xem'
+                            name: 'xem',
                         },
                         quantity: 30000,
                     },
                     {
                         mosaicId: {
                             namespaceId: 'abc',
-                            name: 'mosaic'
+                            name: 'mosaic',
                         },
                         quantity: 2000000,
                     },
                     {
                         mosaicId: {
                             namespaceId: 'breeze',
-                            name: 'breeze-token'
+                            name: 'breeze-token',
                         },
                         quantity: 111000,
                     },
                 ],
                 version: 1744830464,
             },
-        }
+        },
     ];
     const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
         {
@@ -331,45 +289,21 @@ const multipleMosaics = (): SubtestNemSignTransaction => {
     };
 };
 
-export const nemSignTransactionTransfers = (): void => {
-    const subtest: NemSignTransactionTransfersAvailableSubtests = __karma__.config.subtest;
+export const nemSignTransactionTransfers = (): TestFunction => {
     const availableSubtests = {
         simple,
-        encryptedPayload,
         xemAsMosaic,
         unknownMosaic,
         knownMosaic,
         knownMosaicWithLevy,
         multipleMosaics,
     };
+    const testName = 'nemSignTransactionTransfers';
 
-    describe('NEMSignTransactionTransfers', () => {
-        let core: Core;
-
-        beforeEach(async (done) => {
-            core = await initCore(settings);
-            checkBrowser();
-            done();
-        });
-        afterEach(() => {
-            // Deinitialize existing core
-            core.onBeforeUnload();
-        });
-
-        const { testPayloads, expectedResponses, specName } = availableSubtests[subtest]();
-        if (testPayloads.length !== expectedResponses.length) {
-            throw new Error('Different number of payloads and expected responses');
-        }
-
-        for (let i = 0; i < testPayloads.length; i++) {
-            const payload = testPayloads[i];
-            const expectedResponse = expectedResponses[i];
-
-            it(specName, async (done) => {
-                const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
-                handler.startListening();
-                await initTransport(settings);
-            });
-        }
-    });
+    return {
+        testName,
+        subtests: {
+            ...availableSubtests,
+        },
+    };
 };

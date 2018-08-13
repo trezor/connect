@@ -1,12 +1,7 @@
 /* @flow */
-
-import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
-import { checkBrowser } from '../../js/utils/browser';
-import { settings, CoreEventHandler } from './common.js';
-
 import type {
+    TestFunction,
     SubtestVerifyMessage,
-    VerifyMessageAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestVerifyMessagePayload,
@@ -20,7 +15,7 @@ const verify = (): SubtestVerifyMessage => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T',
-            signature: '1ba77e01a9e17ba158b962cfef5f13dfed676ffc2b4bada24e58f784458b52b97421470d001d53d5880cf5e10e76f02be3e80bf21e18398cbd41e8c3b4af74c8c2',
+            signature: /* btoa( */'1ba77e01a9e17ba158b962cfef5f13dfed676ffc2b4bada24e58f784458b52b97421470d001d53d5880cf5e10e76f02be3e80bf21e18398cbd41e8c3b4af74c8c2'/* ) */,
             message: 'This is an example of a signed message.',
         },
         {
@@ -28,7 +23,7 @@ const verify = (): SubtestVerifyMessage => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T',
-            signature: '1ba77e01a9e17ba158b962cfef5f13dfed676ffc2b4bada24e58f784458b52b97421470d001d53d5880cf5e10e76f02be3e80bf21e18398cbd41e8c3b4af74c800',
+            signature: /* btoa( */'1ba77e01a9e17ba158b962cfef5f13dfed676ffc2b4bada24e58f784458b52b97421470d001d53d5880cf5e10e76f02be3e80bf21e18398cbd41e8c3b4af74c800'/* ) */,
             message: 'This is an example of a signed message.',
         },
         {
@@ -36,7 +31,7 @@ const verify = (): SubtestVerifyMessage => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T',
-            signature: '1ba77e01a9e17ba158b962cfef5f13dfed676ffc2b4bada24e58f784458b52b97421470d001d53d5880cf5e10e76f02be3e80bf21e18398cbd41e8c3b4af74c8c2',
+            signature: /* btoa( */'1ba77e01a9e17ba158b962cfef5f13dfed676ffc2b4bada24e58f784458b52b97421470d001d53d5880cf5e10e76f02be3e80bf21e18398cbd41e8c3b4af74c8c2'/* ) */,
             message: 'This is an example of a signed message!',
         },
         {
@@ -44,7 +39,7 @@ const verify = (): SubtestVerifyMessage => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '1C7zdTfnkzmr13HfA2vNm5SJYRK6nEKyq8',
-            signature: '1f44e3e461f7ca9f57c472ce1a28214df1de1dadefb6551a32d1907b80c74d5a1fbfd6daaba12dd8cb06699ce3f6941fbe0f3957b5802d13076181046e741eaaaf',
+            signature: /* btoa( */'1f44e3e461f7ca9f57c472ce1a28214df1de1dadefb6551a32d1907b80c74d5a1fbfd6daaba12dd8cb06699ce3f6941fbe0f3957b5802d13076181046e741eaaaf'/* ) */,
             message: 'This is an example of a signed message.',
         },
         {
@@ -52,7 +47,7 @@ const verify = (): SubtestVerifyMessage => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '1C7zdTfnkzmr13HfA2vNm5SJYRK6nEKyq8',
-            signature: '1f44e3e461f7ca9f57c472ce1a28214df1de1dadefb6551a32d1907b80c74d5a1fbfd6daaba12dd8cb06699ce3f6941fbe0f3957b5802d13076181046e741eaa00',
+            signature: /* btoa( */'1f44e3e461f7ca9f57c472ce1a28214df1de1dadefb6551a32d1907b80c74d5a1fbfd6daaba12dd8cb06699ce3f6941fbe0f3957b5802d13076181046e741eaa00'/* ) */,
             message: 'This is an example of a signed message.',
         },
         {
@@ -60,7 +55,7 @@ const verify = (): SubtestVerifyMessage => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '14LmW5k4ssUrtbAB4255zdqv3b4w1TuX9e',
-            signature: '209e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80',
+            signature: /* btoa( */'209e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80'/* ) */,
             message: 'This is an example of a signed message.',
         },
         {
@@ -68,7 +63,7 @@ const verify = (): SubtestVerifyMessage => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '14LmW5k4ssUrtbAB4255zdqv3b4w1TuX9e',
-            signature: '209e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80',
+            signature: /* btoa( */'209e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80'/* ) */,
             message: 'This is an example of a signed message!',
         },
     ];
@@ -173,8 +168,7 @@ const verifyBitcoind = (): SubtestVerifyMessage => {
     };
 };
 
-export const verifyMessage = (): void => {
-    const subtest: VerifyMessageAvailableSubtests = __karma__.config.subtest;
+export const verifyMessage = (): TestFunction => {
     const availableSubtests = {
         verify,
         verifyLong,
@@ -182,34 +176,12 @@ export const verifyMessage = (): void => {
         verifyBcash,
         verifyBitcoind,
     };
+    const testName = 'VerifyMessage';
 
-    describe('VerifyMessage', () => {
-        let core: Core;
-
-        beforeEach(async (done) => {
-            core = await initCore(settings);
-            checkBrowser();
-            done();
-        });
-        afterEach(() => {
-            // Deinitialize existing core
-            core.onBeforeUnload();
-        });
-
-        const { testPayloads, expectedResponses, specName } = availableSubtests[subtest]();
-        if (testPayloads.length !== expectedResponses.length) {
-            throw new Error('Different number of payloads and expected responses');
-        }
-
-        for (let i = 0; i < testPayloads.length; i++) {
-            const payload = testPayloads[i];
-            const expectedResponse = expectedResponses[i];
-
-            it(specName, async (done) => {
-                const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
-                handler.startListening();
-                await initTransport(settings);
-            });
-        }
-    });
+    return {
+        testName,
+        subtests: {
+            ...availableSubtests,
+        },
+    };
 };
