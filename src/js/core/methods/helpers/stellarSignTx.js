@@ -38,14 +38,12 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
 
 export const stellarSignTx = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     address_n: Array<number>,
-    ledgerVersion: number,
     networkPassphrase: string,
     tx: $StellarTransaction,
 ): Promise<StellarSignedTx> => {
     // eslint-disable-next-line no-use-before-define
     const message: StellarSignTxMessage = transformSignMessage(tx);
     message.address_n = address_n;
-    message.protocol_version = ledgerVersion;
     message.network_passphrase = networkPassphrase;
 
     const operations: Array<StellarOperationMessage> = [];
@@ -76,7 +74,6 @@ const transformSignMessage = (tx: $StellarTransaction): StellarSignTxMessage => 
 
     return {
         address_n: [], // will be overridden
-        protocol_version: 0, // will be overridden
         network_passphrase: '', // will be overridden
         source_account: tx.source,
         fee: tx.fee,

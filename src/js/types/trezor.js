@@ -429,7 +429,6 @@ export type StellarPublicKeyMessage = {
 // those types are sent TO device
 export type StellarSignTxMessage = {
     address_n: Array<number>,
-    protocol_version: number,
     source_account: string,
     fee: ?number,
     sequence_number: ?number,
