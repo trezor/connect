@@ -145,6 +145,24 @@ export type SignTransaction$ = {
     payload: SignedTx,
 } | Unsuccessful$;
 
+export type StellarGetAddress$ = {
+    success: true,
+    payload: StellarAddress | Array<StellarAddress>,
+} | Unsuccessful$;
+
+export type StellarSignTransaction$ = {
+    success: true,
+    payload: {
+        publicKey: string,
+        signature: string,
+    },
+} | Unsuccessful$;
+
+export type LiskGetAddress$ = {
+    success: true,
+    payload: LiskAddress | Array<LiskAddress>,
+} | Unsuccessful$;
+
 export type VerifyMessage$ = {
     success: true,
     payload: Success,

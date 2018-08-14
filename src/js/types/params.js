@@ -155,6 +155,23 @@ export type $SignTransaction = $Common & {
     push?: boolean,
 }
 
+export type $StellarGetAddress = $Common & {
+    path: $Path,
+    showOnTrezor?: boolean,
+}
+
+export type $StellarSignTransaction = $Common & {
+    path: $Path,
+    ledgerVersion: number,
+    networkPassphrase: string,
+    transaction: StellarTransaction,
+}
+
+export type $LiskGetAddress = $Common & {
+    path: $Path,
+    showOnTrezor?: boolean,
+}
+
 export type $VerifyMessage = $Common & {
     address: string,
     coin: string,

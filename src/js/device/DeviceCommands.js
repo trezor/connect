@@ -258,6 +258,20 @@ export default class DeviceCommands {
         return this.typedCall('StellarSignTx', 'StellarSignedTx', transaction);
     }
 
+    async liskGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskAddress> {
+        const address: MessageResponse<trezor.LiskAddress> = await this.typedCall('LiskGetAddress', 'LiskAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+
+        // TODO: return pbulick key
+        return {
+            path: address_n,
+            serializedPath: getSerializedPath(address_n),
+            address: address.message.address,
+        };
+    }
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,

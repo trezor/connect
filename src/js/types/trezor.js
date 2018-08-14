@@ -527,6 +527,13 @@ export type StellarOperationMessage = {
     bump_to: number,
 }
 
+// Lisk types
+export type LiskAddress = {
+    address: string,
+    path: Array<number>,
+    serializedPath: string,
+}
+
 // GetAccountInfo response
 export type AccountInfo = {
     id: number,

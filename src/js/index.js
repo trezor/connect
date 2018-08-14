@@ -361,7 +361,11 @@ class TrezorConnect {
         return await call({ method: 'stellarSignTransaction', ...params });
     }
 
-    static verifyMessage: $T.VerifyMessage = async (params) => {
+    static liskGetAddress = async (params: $T.$LiskGetAddress): Promise<$T.LiskGetAddress$> => {
+        return await call({ method: 'liskGetAddress', ...params });
+    }
+
+    static verifyMessage = async (params: $T.$VerifyMessage): Promise<$T.VerifyMessage$> => {
         return await call({ method: 'verifyMessage', ...params });
     }
 
