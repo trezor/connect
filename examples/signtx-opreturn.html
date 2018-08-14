@@ -42,6 +42,7 @@
             }
         ];
 
+        TrezorConnect.setCurrency('Testnet');
         TrezorConnect.signTx(inputs, outputs, function (response) {
             if (response.success) {
                 console.log('Serialized TX:', response.serialized_tx); // tx in hex
