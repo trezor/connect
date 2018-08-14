@@ -437,6 +437,52 @@ TrezorConnect.ethereumVerifyMessage(path, signature, message, function (result) 
 ```
 The message can be UTF-8; however, TREZOR is not displaying non-ascii characters, and third-party apps are not dealing with them correctly either. Therefore, using ASCII only is recommended.
 
+## Sign & Verify Cardano message
+
+`TrezorConnect.adaSignMessage(path, message, callback)` asks device to
+sign a message using the private key derived by given BIP32 path. Path can be specified
+either as an array of numbers or as string m/A'/B'/C'/D/E'
+
+Message is signed and address + signature is returned
+
+[Example:](examples/signmsg-cardano.html)
+
+```javascript
+var path="m/44'/1815'/0'/0'";
+var message="Example message";
+TrezorConnect.adaSignMessage(path, message, function (result) {
+    if (result.success) {
+        console.log('Message signed!', result.signature); // signature in hex
+        console.log('Signing public key:', result.public_key);
+    } else {
+        console.error('Error:', result.error); // error message
+    }
+});
+```
+The message can be UTF-8; however, TREZOR is not displaying non-ascii characters, and third-party apps are not dealing with them correctly either. Therefore, using ASCII only is recommended.
+
+## Verify Cardano message
+`TrezorConnect.adaVerifyMessage(publicKey, signature, message, callback)` asks device to
+verify a message using the cardano public key and signature.
+
+Message is verified and success is returned.
+
+[Example:](examples/signmsg-cardano.html)
+
+```javascript
+var publicKey="e34e53a1ef72f0493a227e051b0f223fa27aab2ee98af48fc2a8cb29407c2f27";
+var signature="ac979a384a5eacebdcb11770d1202ca19791bff5fca95d64eb287d15009cfb4808ed95025ebf1b4abf394fba683ffab85321e588d4982ac99a6ad69017139d00"; // signature in hex
+var message="Example message"; // message utf8
+TrezorConnect.adaVerifyMessage(publicKey, signature, message, function (result) {
+    if (result.success) {
+        console.log(result.success);
+    } else {
+        console.error('Error:', result.error); // error message
+    }
+});
+```
+The message can be UTF-8; however, TREZOR is not displaying non-ascii characters, and third-party apps are not dealing with them correctly either. Therefore, using ASCII only is recommended.
+
 ## Symmetric key-value encryption
 
 `TrezorConnect.cipherKeyValue(path, key, value, encrypt, ask_on_encrypt, ask_on_decrypt, callback)` asks device to
@@ -540,3 +586,65 @@ TrezorConnect.ethereumGetAddress(path, function (response) {
     }
 });
 ```
+
+## Cardano - Show address / get address
+
+`TrezorConnect.adaGetAddress(path, show_confirmation, callback)` shows addresses on device and returns it to the caller
+
+[Example:](examples/getaddress.html)
+
+```javascript
+var paths = ["m/44'/1815'/0'/0/0'", "m/44'/1815'/0'/0/5'"];
+
+TrezorConnect.adaGetAddress(path, true, function (response) {
+    console.log("TrezorConnect.adaGetAddress", response);
+});
+```
+
+## Export Cardano public key
+
+`TrezorConnect.adaGetPublicKey(path, callback)` retrieves xpub key
+by path. User is presented with a description of the requested key and asked to
+confirm the export.
+
+
+[Example:](examples/xpubkey-cardano.html)
+
+```javascript
+var path = "m/44'/1815'/0'/0/0'";
+
+TrezorConnect.adaGetPublicKey(path, function (result) {
+    if (result.success) {
+        console.log('Public key:', result);
+    } else {
+        console.error('Error:', result.error);
+    }
+});
+```
+
+## Sign Cardano transaction
+
+```javascript
+const inputs = [
+    {prev_hash: "2effff328b76a8113e32a218f7af99e77768289c9201e8d26a9cda0edaf59bfd", address_n: "m/44'/1815'/0'/0/0", prev_index: 0, type: 0}
+];
+const outputs = [
+    {address: "2w1sdSJu3GVeNrv8NVHmWNBqK6ssW84An4pExajjdFgXx6k4gksoo6CP1qTwbE34qjKEHZtUKGxY1GMkApUnNEMwGPTgLc7Yghs", amount: 1000000},
+    {address_n: "m/44'/1815'/0'/0/1", amount: 7120787}
+];
+const transactions = ["839f8200d81858248258208f088493a600c7d897ef89caeb060e8e8137a1e5aa52e32f6262ec5a087341a6008200d81858248258208f088493a600c7d897ef89caeb060e8e8137a1e5aa52e32f6262ec5a087341a601ff9f8282d818583e83581c3a043fc1baa52fe4df2be89c689c953a52e7c13e51551ef5a3ed1e3da101581a5818360a746c532b81f364ce25168befa6cb2e29d5eccc4883bc001a90ce7a581a007e86118282d818584283581cc52ea4de5aacc58e0fab8b1a55e8bc194c6fd22eebd93fab56cf2789a101581e581c8c44aea4dee0952907690336fa16773c53257ec002dbd219d3970747001a409c205e01ffa0"];
+
+TrezorConnect.adaSignTransaction(
+    inputs,
+    outputs,
+    transactions,
+    function (response) {
+        document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+    }
+);
+```
+
+This will return tx_hash and tx_body.
+
+[Cardano sign transaction example:](examples/signtx-cardano.html)
+

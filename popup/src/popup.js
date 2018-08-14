@@ -45,7 +45,7 @@ var BIP44_COIN_TYPE = 0;
 var COIN_INFO_URL = 'coins.json';
 
 const SOCKET_WORKER_PATH = './js/socket-worker-dist.js';
-const CRYPTO_WORKER_PATH = './js/trezor-crypto-dist.js';
+
 
 global.alert = '#alert_loading';
 global.device = null;
@@ -58,6 +58,7 @@ window.addEventListener('message', onMessage);
 
 function onMessage(event) {
     let request = event.data;
+
     if (!request) {
         return;
     }
@@ -148,12 +149,24 @@ function onMessage(event) {
         handleEthereumSignMsg(event);
         break;
 
+    case 'signadamsg':
+        handleCardanoSignMsg(event);
+        break;
+
+    case 'adagetpublickey':
+        handleCardanoGetPublicKey(event);
+        break;
+
     case 'verifymsg':
         handleVerifyMsg(event);
         break;
 
     case 'verifyethmsg':
         handleEthereumVerifyMsg(event);
+        break;
+    
+    case 'verifyadamsg':
+        handleCardanoVerifyMsg(event);
         break;
 
     case 'cipherkeyvalue':
@@ -168,12 +181,20 @@ function onMessage(event) {
         handleEthereumGetAddress(event);
         break;
 
+    case 'adagetaddress':
+        handleCardanoGetAddress(event);
+        break;
+
     case 'nemGetAddress':
         handleNEMGetAddress(event);
         break;
 
     case 'nemSignTx':
         handleNEMSignTx(event);
+        break;
+    
+    case 'signadatransaction':
+        handleAdaSignTransaction(event);
         break;
 
     default:
@@ -358,6 +379,70 @@ function handleEthereumSignMsg(event) {
         });
 }
 
+/*
+ * Sign Cardano message
+ */
+
+function handleCardanoSignMsg(event) {
+    let message = new Buffer(event.data.message, 'utf8').toString('hex');
+    let requestedPath = event.data.path;
+
+    // make sure bip32 indices are unsigned
+    requestedPath = requestedPath.map((i) => i >>> 0);
+
+    initDevice()
+        .then(function signAdaMessage(device) {
+            return device.session.signAdaMessage(
+                requestedPath,
+                message
+            ).catch( errorHandler(() => signAdaMessage(device)) );
+        })
+        .then((result) => {
+            let {message} = result;
+            let {public_key, signature} = message;
+
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    public_key: public_key,
+                    signature: signature
+                });
+            });
+        })
+        .catch((error) => {
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+
+/*
+ * Get Cardano public key
+ */
+
+function handleCardanoGetPublicKey(event) {
+    let requestedPath = event.data.address_n;
+
+    initDevice()
+        .then((device) => {
+            device.session.getAdaPublicKey(requestedPath)
+            .then(response => {
+                respondToEvent(event, {
+                    success: true,
+                    ...response.message,
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+                respondToEvent(event, {success: false, error: error.message});
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+
 function handleVerifyMsg(event) {
     let txtmessage = event.data.message;
     let msgBuff = new Buffer(txtmessage, 'utf8');
@@ -389,7 +474,6 @@ function handleVerifyMsg(event) {
                 });
             });
         })
-
         .catch((error) => { // failure
             console.error(error);
             respondToEvent(event, {success: false, error: error.message});
@@ -424,6 +508,32 @@ function handleEthereumVerifyMsg(event) {
 
         .catch((error) => { // failure
             console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+function handleCardanoVerifyMsg(event) {
+
+    let publicKey = event.data.public_key;
+    let signature = event.data.signature;
+    let message = new Buffer(event.data.message, 'utf8').toString('hex');
+
+    initDevice()
+        .then(function verifyCardanoMessage(device) {
+            return device.session.verifyAdaMessage(
+                publicKey,
+                signature,
+                message,
+            ).catch( errorHandler(() => verifyCardanoMessage(device)) );
+        })
+        .then((result) => { // success
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true
+                });
+            });
+        })
+        .catch((error) => { // failure
             respondToEvent(event, {success: false, error: error.message});
         });
 }
@@ -504,6 +614,34 @@ function handleNEMGetAddress(event) {
         })
         .catch((error) => { // failure
             console.error(error);
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+function handleAdaSignTransaction(event) {
+
+    let inputs = event.data.inputs;
+    let outputs = event.data.outputs;
+    let transactions = event.data.transactions;
+
+    initDevice()
+        .then(function signCardanoTransaction(device) {
+            return device.session.signAdaTransaction(
+                inputs,
+                outputs,
+                transactions,
+            )
+        })
+        .then((result) => { // success
+            return global.device.session.release().then(() => {
+                respondToEvent(event, {
+                    success: true,
+                    tx_hash: result.message.tx_hash,
+                    tx_body: result.message.tx_body,
+                });
+            });
+        })
+        .catch((error) => { // failure
             respondToEvent(event, {success: false, error: error.message});
         });
 }
@@ -1095,6 +1233,34 @@ function handleEthereumGetAddress(event) {
             });
         });
 }
+
+/*
+ * getadaaddress
+ */
+
+function handleCardanoGetAddress(event) {
+    let address_n = event.data.address_n;
+    let show_display = event.data.show_display;
+
+    initDevice()
+        .then((device) => {
+            device.session.adaGetAddress(address_n, show_display)
+            .then(response => {
+                respondToEvent(event, {
+                    success: true,
+                    address: response.message.address,
+                });
+            })
+            .catch((error) => {
+                respondToEvent(event, {success: false, error: error.message});
+            });
+        })
+        .catch((error) => {
+            respondToEvent(event, {success: false, error: error.message});
+        });
+}
+
+
 
 /*
  * composetx

@@ -34,6 +34,15 @@
       });
     }
 
+    function trezoradaGetAddress() {
+      var path = document.getElementById('adaaddress').value;
+
+      TrezorConnect.adaGetAddress(path, true, function (response) {
+        console.log("TrezorConnect.adaGetAddress", response);
+        document.getElementById("response").innerHTML = JSON.stringify(response, undefined, 2);
+      });
+    }
+
     function trezorNemGetAddress(network) {
       var path = document.getElementById('nemaddress').value;
 
@@ -103,6 +112,14 @@
         <h3>TrezorConnect.ethereumGetAddress</h3>
         <input type="text" id="ethaddress" name="ethaddress" value="m/44'/60'/0'/0/0" />
         <button onclick="trezorEthereumGetAddress()">Ethereum Get Address</button>
+    </div>
+
+    <hr/>
+
+    <div>
+        <h3>TrezorConnect.adaGetAddress</h3>
+        <input type="text" id="adaaddress" name="adaaddress" value="m/44'/1815'/0'/0/0'" />
+        <button onclick="trezoradaGetAddress()">Cardano Get Address</button>
     </div>
 
     <hr/>
