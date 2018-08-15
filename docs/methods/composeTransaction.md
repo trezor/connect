@@ -18,11 +18,20 @@ TrezorConnect.composeTransaction(params).then(function(result) {
 
 ### Params
 [****Optional common params****](commonParams.md)
-* `outputs` — *obligatory* `Array` of recipients Object contains
-    - `amount` - *obligatory* `string` value to send in satohosi
-    - `address` - *obligatory* `string` recipient address
+* `outputs` — *obligatory* `Array` of recipients Objects described below
 * `coin` — *obligatory* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 * `push` — *optional* `boolean` determines if composed transaction will be broadcasted into blockchain.
+
+## Outputs objects:
+* `regular output`
+    - `amount` - *obligatory* `string` value to send in satohosi
+    - `address` - *obligatory* `string` recipient address
+* `send-max` - spends all available inputs from account
+    - `type` - *obligatory* with `send-max` value
+    - `address` - *obligatory* `string` recipient address
+* `opreturn` - [read more](https://wiki.trezor.io/OP_RETURN)
+    - `type` - *obligatory* with `opreturn` value
+    - `dataHex` - *optional* `hexadecimal string` with arbitrary data
 
 ### Example
 Send 0.002 BTC to "18WL2iZKmpDYWk1oFavJapdLALxwSjcSk2"
