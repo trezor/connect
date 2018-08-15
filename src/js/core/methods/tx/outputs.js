@@ -44,12 +44,12 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: CoinInf
         }
     };
 
-    switch (output) {
+    switch (output.type) {
         case 'opreturn' :
-            validateParams(output, [ { name: 'dataHex', type: 'string', obligatory: true } ]);
+            validateParams(output, [ { name: 'dataHex', type: 'string' } ]);
             return {
                 type: 'opreturn',
-                dataHex: output.dataHex,
+                dataHex: output.dataHex || '',
             };
 
         case 'send-max' :
@@ -58,17 +58,6 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: CoinInf
             return {
                 type: 'send-max',
                 address: output.address,
-            };
-
-        case 'noaddress' :
-            validateParams(output, [ { name: 'amount', type: 'string', obligatory: true } ]);
-            return {
-                type: 'noaddress',
-                amount: parseInt(output.amount),
-            };
-        case 'send-max-noaddress' :
-            return {
-                type: 'send-max-noaddress',
             };
 
         default :
@@ -81,7 +70,7 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: CoinInf
             return {
                 type: 'complete',
                 address: output.address,
-                amount: parseFloat(output.amount),
+                amount: parseInt(output.amount),
             };
     }
 };
