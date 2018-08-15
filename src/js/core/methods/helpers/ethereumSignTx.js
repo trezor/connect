@@ -16,19 +16,22 @@ const splitString = (str: ?string, len: number): [string, string] => {
 const processTxRequest = async (
     typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     request: EthereumTxRequest,
-    data: ?string
+    data: ?string,
+    chain_id: ?number,
 ): Promise<EthereumSignedTx> => {
     if (!request.data_length) {
-        const v = request.signature_v;
+        let v: ?number = request.signature_v;
         const r = request.signature_r;
         const s = request.signature_s;
         if (v == null || r == null || s == null) {
             throw new Error('Unexpected request.');
         }
 
-        // return Promise.resolve({
-        //     v, r, s
-        // });
+        // recompute "v" value
+        // from: https://github.com/kvhnuke/etherwallet/commit/288bd35497e00ad3947e9d11f60154bae1bf3c2f
+        if (chain_id && v <= 1) {
+            v += 2 * chain_id + 35;
+        }
 
         return Promise.resolve({
             v: '0x' + v.toString(16),
@@ -43,7 +46,8 @@ const processTxRequest = async (
     return await processTxRequest(
         typedCall,
         response.message,
-        rest
+        rest,
+        chain_id,
     );
 };
 
@@ -85,7 +89,7 @@ export const ethereumSignTx = async (typedCall: (type: string, resType: string, 
         };
     }
 
-    if (chain_id != null) {
+    if (chain_id) {
         message = {
             ...message,
             chain_id,
@@ -97,6 +101,7 @@ export const ethereumSignTx = async (typedCall: (type: string, resType: string, 
     return await processTxRequest(
         typedCall,
         response.message,
-        rest
+        rest,
+        chain_id
     );
 };
