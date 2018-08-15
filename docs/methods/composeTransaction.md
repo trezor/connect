@@ -22,7 +22,7 @@ TrezorConnect.composeTransaction(params).then(function(result) {
 * `coin` — *obligatory* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 * `push` — *optional* `boolean` determines if composed transaction will be broadcasted into blockchain.
 
-## Outputs objects:
+### Outputs objects:
 * `regular output`
     - `amount` - *obligatory* `string` value to send in satohosi
     - `address` - *obligatory* `string` recipient address
