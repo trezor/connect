@@ -31,7 +31,7 @@ export const inputToHD = (input: TransactionInput): BuildTxInput => {
     }
 
     return {
-        hash: reverseBuffer(new Buffer(input.prev_hash, 'hex')),
+        hash: reverseBuffer(Buffer.from(input.prev_hash, 'hex')),
         index: input.prev_index,
         path: input.address_n,
         amount: input.amount,
