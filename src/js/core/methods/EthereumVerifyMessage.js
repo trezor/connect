@@ -33,8 +33,7 @@ export default class EthereumVerifyMessage extends AbstractMethod {
             { name: 'message', type: 'string', obligatory: true },
         ]);
 
-        // TODO: check if message is already in hex format
-        const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
+        const messageHex: string = Buffer.from(payload.message, 'utf8').toString('hex');
         this.params = {
             address: stripHexPrefix(payload.address),
             signature: stripHexPrefix(payload.signature),

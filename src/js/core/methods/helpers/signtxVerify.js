@@ -102,12 +102,12 @@ export const verifyTx = (inputs: Array<TransactionInput>,
 function deriveWitnessOutput(pkh): Buffer {
     // see https://github.com/bitcoin/bips/blob/master/bip-0049.mediawiki
     // address derivation + test vectors
-    const scriptSig = new Buffer(pkh.length + 2);
+    const scriptSig = Buffer.alloc(pkh.length + 2);
     scriptSig[0] = 0;
     scriptSig[1] = 0x14;
     pkh.copy(scriptSig, 2);
     const addressBytes = bitcoin.crypto.hash160(scriptSig);
-    const scriptPubKey: Buffer = new Buffer(23);
+    const scriptPubKey: Buffer = Buffer.alloc(23);
     scriptPubKey[0] = 0xa9;
     scriptPubKey[1] = 0x14;
     scriptPubKey[22] = 0x87;
