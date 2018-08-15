@@ -31,8 +31,6 @@ const VERSION: string = '5.0.29';
 const versionN: Array<number> = VERSION.split('.').map(s => parseInt(s));
 const DIRECTORY: string = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
 const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/';
-const SRC: string = window.__TREZOR_CONNECT_SRC || `${ DEFAULT_DOMAIN }${ DIRECTORY }`;
-
 export const DEFAULT_PRIORITY: number = 2;
 
 const initialSettings: ConnectSettings = {
@@ -41,11 +39,11 @@ const initialSettings: ConnectSettings = {
     origin: null,
     priority: DEFAULT_PRIORITY,
     trustedHost: false,
-    connectSrc: SRC,
-    iframeSrc: `${ SRC }iframe.html`,
+    connectSrc: DEFAULT_DOMAIN,
+    iframeSrc: `${ DEFAULT_DOMAIN }iframe.html`,
     popup: true,
-    popupSrc: `${ SRC }popup.html`,
-    webusbSrc: `${ SRC }webusb.html`,
+    popupSrc: `${ DEFAULT_DOMAIN }popup.html`,
+    webusbSrc: `${ DEFAULT_DOMAIN }webusb.html`,
     transportReconnect: false,
     webusb: true,
     pendingTransportEvent: true,
@@ -72,7 +70,7 @@ export const parse = (input: ?Object): ConnectSettings => {
     if (typeof input.connectSrc === 'string') {
         // TODO: escape string, validate url
         settings.connectSrc = input.connectSrc;
-    } else if (typeof window.__TREZOR_CONNECT_SRC === 'string') {
+    } else if (typeof window !== 'undefined' && typeof window.__TREZOR_CONNECT_SRC === 'string') {
         settings.connectSrc = window.__TREZOR_CONNECT_SRC;
     }
     settings.iframeSrc = `${ settings.connectSrc }iframe.html`;
