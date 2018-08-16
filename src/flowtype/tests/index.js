@@ -80,7 +80,10 @@ import type {
     ExpectedPassphraseResponse,
 } from 'flowtype/tests/passphrase';
 
-
+import type {
+    TestLiskGetAddressPayload,
+    ExpectedLiskGetAddressResponse,
+} from 'flowtype/tests/lisk-get-address';
 
 declare module 'flowtype/tests' {
     // declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
@@ -147,7 +150,9 @@ declare module 'flowtype/tests' {
         | TestVerifyMessagePayload
         | TestGetAccountInfoPayload
         | TestNemSignTransactionPayload
-        | TestPassphrasePayload;
+        | TestPassphrasePayload
+        | TestLiskGetAddressPayload;
+
     declare export type ExpectedResponse =
         ExpectedCardanoSignMessageResponse
         | ExpectedCardanoVerifyMessageResponse
@@ -208,5 +213,6 @@ declare module 'flowtype/tests' {
         nemSignTransactionOthers(): TestFunction,
         nemSignTransactionTransfers(): TestFunction,
         passphrase(): TestFunction,
+        liskGetAddress(): TestFunction,
     };
 }
