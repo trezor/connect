@@ -130,18 +130,36 @@ export default class PopupManager extends EventEmitter {
     openWrapper(url: string): void {
         if (this.extension) {
             // $FlowIssue chrome not declared outside
-            chrome.tabs.query({
-                currentWindow: true,
-                active: true,
-            }, (tabs) => {
-                this.extensionTabId = tabs[0].id;
-                // $FlowIssue chrome not declared outside
-                chrome.tabs.create({
-                    url,
-                    index: tabs[0].index + 1,
-                }, tab => {
-                    this._window = tab;
-                });
+            chrome.windows.getCurrent(null, currentWindow => {
+                // Request comming from extension popup,
+                // create new window above instead of opening new tab
+                if (currentWindow.type !== 'normal') {
+                    // $FlowIssue chrome not declared outside
+                    chrome.windows.create({ url }, newWindow => {
+                        // $FlowIssue chrome not declared outside
+                        chrome.tabs.query({
+                          windowId: newWindow.id,
+                          active: true
+                        }, tabs => {
+                          this._window = tabs[0];
+                        });
+                    });
+                } else {
+                    // $FlowIssue chrome not declared outside
+                    chrome.tabs.query({
+                        currentWindow: true,
+                        active: true,
+                    }, (tabs) => {
+                        this.extensionTabId = tabs[0].id;
+                        // $FlowIssue chrome not declared outside
+                        chrome.tabs.create({
+                            url,
+                            index: tabs[0].index + 1,
+                        }, tab => {
+                            this._window = tab;
+                        });
+                    });
+                }
             });
         } else {
             this._window = window.open('', '_blank');
@@ -181,7 +199,7 @@ export default class PopupManager extends EventEmitter {
                     url: 'trezor-usb-permissions.html',
                     index: tabs[0].index + 1,
                 }, tab => {
-                    this._window = tab;
+                    // do nothing
                 });
             });
         } else if (message === 'window.close') {
