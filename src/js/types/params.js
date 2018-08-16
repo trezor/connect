@@ -177,6 +177,12 @@ export type $LiskSignMessage = $Common & {
     message: string,
 }
 
+export type $LiskVerifyMessage = $Common & {
+    public_key: string,
+    message: string,
+    signature: string,
+}
+
 export type $VerifyMessage = $Common & {
     address: string,
     coin: string,

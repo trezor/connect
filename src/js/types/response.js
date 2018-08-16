@@ -172,6 +172,11 @@ export type LiskSignMessage$ = {
     payload: LiskMessageSignature,
 } | Unsuccessful$;
 
+export type LiskVerifyMessage$ = {
+    success: true,
+    payload: Success,
+} | Unsuccessful$;
+
 export type VerifyMessage$ = {
     success: true,
     payload: Success,

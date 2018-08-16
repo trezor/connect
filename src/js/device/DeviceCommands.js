@@ -281,6 +281,15 @@ export default class DeviceCommands {
         return response.message;
     }
 
+    async liskVerifyMessage(public_key: string, signature: string, message: string): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('LiskVerifyMessage', 'Success', {
+            public_key,
+            signature,
+            message,
+        });
+        return response.message;
+    }
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,

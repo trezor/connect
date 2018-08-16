@@ -39,3 +39,4 @@ Every method require an [`Object`](https://developer.mozilla.org/en-US/docs/Web/
 ### Lisk
 * [TrezorConnect.liskGetAddress](methods/liskGetAddress.md)
 * [TrezorConnect.liskSignMessage](methods/liskSignMessage.md)
+* [TrezorConnect.liskVerifyMessage](methods/liskVerifyMessage.md)
