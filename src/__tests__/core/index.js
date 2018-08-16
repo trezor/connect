@@ -31,6 +31,7 @@ import { nemSignTransactionTransfers } from './nemSignTransactionTransfers.spec.
 import { passphrase } from './passphrase.spec.js';
 import { liskGetAddress } from './liskGetAddress.spec.js';
 import { liskSignMessage } from './liskSignMessage.spec.js';
+import { liskVerifyMessage } from './liskVerifyMessage.spec.js';
 
 export const testFunctions: AvailableTestFunctions = {
     getPublicKey,
@@ -60,4 +61,5 @@ export const testFunctions: AvailableTestFunctions = {
     passphrase,
     liskGetAddress,
     liskSignMessage,
+    liskVerifyMessage,
 };

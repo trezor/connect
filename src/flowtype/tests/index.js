@@ -90,6 +90,11 @@ import type {
     ExpectedLiskSignMessageResponse,
 } from 'flowtype/tests/lisk-sign-message';
 
+import type {
+    TestLiskVerifyMessagePayload,
+    ExpectedLiskVerifyMessageResponse,
+} from 'flowtype/tests/lisk-verify-message';
+
 declare module 'flowtype/tests' {
     // declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
     // declare export type GetAddressSegwitAvailableSubtests = 'showSegwit';
@@ -157,7 +162,8 @@ declare module 'flowtype/tests' {
         | TestNemSignTransactionPayload
         | TestPassphrasePayload
         | TestLiskGetAddressPayload
-        | TestLiskSignMessagePayload;
+        | TestLiskSignMessagePayload
+        | TestLiskVerifyMessagePayload;
 
     declare export type ExpectedResponse =
         ExpectedCardanoSignMessageResponse
@@ -177,7 +183,8 @@ declare module 'flowtype/tests' {
         | ExpectedNemSignTransactionResponse
         | ExpectedPassphraseResponse
         | ExpectedLiskGetAddressResponse
-        | ExpectedLiskSignMessageResponse;
+        | ExpectedLiskSignMessageResponse
+        | ExpectedLiskVerifyMessageResponse;
 
     declare export type SubtestFunction = SubtestGetAddress
     | SubtestSignMessage
@@ -223,5 +230,6 @@ declare module 'flowtype/tests' {
         passphrase(): TestFunction,
         liskGetAddress(): TestFunction,
         liskSignMessage(): TestFunction,
+        liskVerifyMessageResponse(): TestFunction,
     };
 }
