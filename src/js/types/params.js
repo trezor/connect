@@ -172,6 +172,11 @@ export type $LiskGetAddress = $Common & {
     showOnTrezor?: boolean,
 }
 
+export type $LiskSignMessage = $Common & {
+    path: $Path,
+    message: string,
+}
+
 export type $VerifyMessage = $Common & {
     address: string,
     coin: string,

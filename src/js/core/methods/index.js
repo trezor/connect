@@ -26,6 +26,7 @@ import SignTransaction from './SignTransaction';
 import StellarGetAddress from './StellarGetAddress';
 import StellarSignTransaction from './StellarSignTransaction';
 import LiskGetAddress from './LiskGetAddress';
+import LiskSignMessage from './LiskSignMessage';
 import VerifyMessage from './VerifyMessage';
 
 const classes: {[k: string]: any} = {
@@ -50,6 +51,7 @@ const classes: {[k: string]: any} = {
     'stellarGetAddress': StellarGetAddress,
     'stellarSignTransaction': StellarSignTransaction,
     'liskGetAddress': LiskGetAddress,
+    'liskSignMessage': LiskSignMessage,
     'verifyMessage': VerifyMessage,
 };
 

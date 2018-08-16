@@ -534,6 +534,11 @@ export type LiskAddress = {
     serializedPath: string,
 }
 
+export type LiskMessageSignature = {
+    public_key: string,
+    signature: string,
+}
+
 // GetAccountInfo response
 export type AccountInfo = {
     id: number,

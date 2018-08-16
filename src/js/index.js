@@ -365,6 +365,10 @@ class TrezorConnect {
         return await call({ method: 'liskGetAddress', ...params });
     }
 
+    static liskSignMessage = async (params: $T.$LiskSignMessage): Promise<$T.LiskSignMessage$> => {
+        return await call({ method: 'liskSignMessage', ...params });
+    }
+
     static verifyMessage = async (params: $T.$VerifyMessage): Promise<$T.VerifyMessage$> => {
         return await call({ method: 'verifyMessage', ...params });
     }

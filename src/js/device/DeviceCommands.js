@@ -272,6 +272,15 @@ export default class DeviceCommands {
         };
     }
 
+    async liskSignMessage(address_n: Array<number>, message: string): Promise<trezor.LiskMessageSignature> {
+        const response: MessageResponse<trezor.LiskMessageSignature> = await this.typedCall('LiskSignMessage', 'LiskMessageSignature', {
+            address_n,
+            message,
+        });
+
+        return response.message;
+    }
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,
