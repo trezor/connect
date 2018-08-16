@@ -138,10 +138,10 @@ export default class PopupManager extends EventEmitter {
                     chrome.windows.create({ url }, newWindow => {
                         // $FlowIssue chrome not declared outside
                         chrome.tabs.query({
-                          windowId: newWindow.id,
-                          active: true
+                            windowId: newWindow.id,
+                            active: true,
                         }, tabs => {
-                          this._window = tabs[0];
+                            this._window = tabs[0];
                         });
                     });
                 } else {

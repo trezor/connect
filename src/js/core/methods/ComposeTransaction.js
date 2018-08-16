@@ -7,7 +7,6 @@ import * as UI from '../../constants/ui';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
 import { validateParams } from './helpers/paramsValidator';
 import { resolveAfter } from '../../utils/promiseUtils';
-import { isValidAddress } from '../../utils/addressUtils';
 import { formatAmount } from '../../utils/formatUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
@@ -81,7 +80,7 @@ export default class ComposeTransaction extends AbstractMethod {
 
         // there should be only one output when using send-max option
         if (sendMax && outputs.length > 1) {
-            throw new Error(`Only one output allowed when using "send-max" option.`);
+            throw new Error('Only one output allowed when using "send-max" option.');
         }
 
         // if outputs contains regular items
@@ -91,7 +90,7 @@ export default class ComposeTransaction extends AbstractMethod {
         }
 
         if (sendMax) {
-            this.info = `Send maximum amount`;
+            this.info = 'Send maximum amount';
         } else {
             this.info = `Send ${ formatAmount(total, coinInfo) }`;
         }
