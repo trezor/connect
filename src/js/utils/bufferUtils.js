@@ -4,7 +4,7 @@
 import * as _ from 'lodash';
 
 export const reverseBuffer = (buf: Buffer): Buffer => {
-    const copy = new Buffer(buf.length);
+    const copy = Buffer.alloc(buf.length);
     buf.copy(copy);
     [].reverse.call(copy);
     return copy;

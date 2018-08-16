@@ -21,8 +21,8 @@ export function pubNode2bjsNode(
     node: trezor.HDPubNode,
     network: bitcoin.Network
 ): bitcoin.HDNode {
-    const chainCode = new Buffer(node.chain_code, 'hex');
-    const publicKey = new Buffer(node.public_key, 'hex');
+    const chainCode = Buffer.from(node.chain_code, 'hex');
+    const publicKey = Buffer.from(node.public_key, 'hex');
 
     if (curve == null) {
         throw new Error('secp256k1 is null');

@@ -46,8 +46,8 @@ export default class VerifyMessage extends AbstractMethod {
             this.info = getLabel('Verify #NETWORK message', coinInfo);
         }
         // TODO: check if message is already a hex
-        const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
-        const signatureHex: string = new Buffer(payload.signature, 'base64').toString('hex');
+        const messageHex: string = Buffer.from(payload.message, 'utf8').toString('hex');
+        const signatureHex: string = Buffer.from(payload.signature, 'base64').toString('hex');
 
         this.params = {
             address: payload.address,

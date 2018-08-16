@@ -3,6 +3,7 @@
 
 import EventEmitter from 'events';
 import * as POPUP from '../constants/popup';
+import * as ERROR from '../constants/errors';
 import { showPopupRequest } from './showPopupRequest';
 import type { ConnectSettings } from '../data/ConnectSettings';
 import type { CoreMessage, Deferred } from '../types';
@@ -129,18 +130,36 @@ export default class PopupManager extends EventEmitter {
     openWrapper(url: string): void {
         if (this.extension) {
             // $FlowIssue chrome not declared outside
-            chrome.tabs.query({
-                currentWindow: true,
-                active: true,
-            }, (tabs) => {
-                this.extensionTabId = tabs[0].id;
-                // $FlowIssue chrome not declared outside
-                chrome.tabs.create({
-                    url,
-                    index: tabs[0].index + 1
-                }, tab => {
-                    this._window = tab;
-                });
+            chrome.windows.getCurrent(null, currentWindow => {
+                // Request comming from extension popup,
+                // create new window above instead of opening new tab
+                if (currentWindow.type !== 'normal') {
+                    // $FlowIssue chrome not declared outside
+                    chrome.windows.create({ url }, newWindow => {
+                        // $FlowIssue chrome not declared outside
+                        chrome.tabs.query({
+                            windowId: newWindow.id,
+                            active: true,
+                        }, tabs => {
+                            this._window = tabs[0];
+                        });
+                    });
+                } else {
+                    // $FlowIssue chrome not declared outside
+                    chrome.tabs.query({
+                        currentWindow: true,
+                        active: true,
+                    }, (tabs) => {
+                        this.extensionTabId = tabs[0].id;
+                        // $FlowIssue chrome not declared outside
+                        chrome.tabs.create({
+                            url,
+                            index: tabs[0].index + 1,
+                        }, tab => {
+                            this._window = tab;
+                        });
+                    });
+                }
             });
         } else {
             this._window = window.open('', '_blank');
@@ -178,9 +197,9 @@ export default class PopupManager extends EventEmitter {
                 // $FlowIssue chrome not declared outside
                 chrome.tabs.create({
                     url: 'trezor-usb-permissions.html',
-                    index: tabs[0].index + 1
+                    index: tabs[0].index + 1,
                 }, tab => {
-                    this._window = tab;
+                    // do nothing
                 });
             });
         } else if (message === 'window.close') {
@@ -203,15 +222,20 @@ export default class PopupManager extends EventEmitter {
     async resolveLazyLoad(): Promise<void> {
         if (this.lazyLoad) {
             await this.lazyLoad.promise;
+        } else {
+            throw ERROR.POPUP_CLOSED.message;
         }
+
         if (this.extension) {
             if (this.extensionPort) { this.extensionPort.postMessage({ type: POPUP.INIT }); }
-        } else {
+        } else if (this._window) {
             this._window.postMessage({ type: POPUP.INIT }, this.origin);
         }
     }
 
     close(): void {
+        this.locked = false;
+
         if (this.requestTimeout) {
             window.clearTimeout(this.requestTimeout);
             this.requestTimeout = 0;
@@ -235,6 +259,10 @@ export default class PopupManager extends EventEmitter {
             // $FlowIssue chrome not declared outside
             chrome.tabs.update(this.extensionTabId, { active: true });
             this.extensionTabId = 0;
+        }
+
+        if (this.lazyLoad) {
+            this.lazyLoad = null;
         }
 
         if (this._window) {

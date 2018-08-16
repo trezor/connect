@@ -8,7 +8,6 @@ import type { Config } from '../data/DataManager';
 
 // handle message received from connect.js
 const handleMessage = async (event: MessageEvent): Promise<void> => {
-
     if (!event.data) return;
     const data: any = event.data;
 

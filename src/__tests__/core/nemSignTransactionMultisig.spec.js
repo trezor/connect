@@ -1,13 +1,9 @@
 /* @flow */
-
-import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
-import { checkBrowser } from '../../js/utils/browser';
 import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
-import { settings, CoreEventHandler } from './common.js';
 
 import type {
+    TestFunction,
     SubtestNemSignTransaction,
-     NemSignTransactionMultisigAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestNemSignTransactionPayload,
@@ -28,11 +24,11 @@ const aggregateModification = (): SubtestNemSignTransaction => {
                 modifications: [
                     {
                         modificationType: 1,
-                        cosignatoryAccount: 'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844'
+                        cosignatoryAccount: 'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
                     },
                 ],
                 minCosignatories: {
-                    relativeChange: 3
+                    relativeChange: 3,
                 },
                 version: -1744830464,
             },
@@ -67,15 +63,15 @@ const multisig = (): SubtestNemSignTransaction => {
                 deadline: 74735615,
                 otherTrans: {
                     timeStamp: 2,
-                        amount: 2000000,
-                        fee: 15000,
-                        recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
-                        type: TX_TYPES.transfer,
-                        deadline: 67890,
-                        message: {
-                            payload: '746573745f6e656d5f7472616e73616374696f6e5f7472616e73666572',
-                            type: 1,
-                        },
+                    amount: '2000000',
+                    fee: 15000,
+                    recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
+                    type: TX_TYPES.transfer,
+                    deadline: 67890,
+                    message: {
+                        payload: '746573745f6e656d5f7472616e73616374696f6e5f7472616e73666572',
+                        type: 1,
+                    },
                     version: -1744830464,
                     signer: 'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
                 },
@@ -141,7 +137,7 @@ const multisigSigner = (): SubtestNemSignTransaction => {
                 deadline: 444,
                 otherTrans: {
                     timeStamp: 555,
-                    amount: 2000000,
+                    amount: '2000000',
                     fee: 2000000,
                     recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
                     type: TX_TYPES.transfer,
@@ -173,7 +169,7 @@ const multisigSigner = (): SubtestNemSignTransaction => {
                     message: { },
                     mosaicId: {
                         namespaceId: 'hellom',
-                        name: 'Hello mosaic'
+                        name: 'Hello mosaic',
                     },
                     supplyType: 1,
                     delta: 1,
@@ -208,41 +204,18 @@ const multisigSigner = (): SubtestNemSignTransaction => {
     };
 };
 
-export const nemSignTransactionMultisig = (): void => {
-    const subtest: NemSignTransactionMultisigAvailableSubtests = __karma__.config.subtest;
+export const nemSignTransactionMultisig = (): TestFunction => {
     const availableSubtests = {
         aggregateModification,
         multisig,
         multisigSigner,
     };
+    const testName = 'nemSignTransactionMultisig';
 
-    describe('NEMSignTransactionMultisig', () => {
-        let core: Core;
-
-        beforeEach(async (done) => {
-            core = await initCore(settings);
-            checkBrowser();
-            done();
-        });
-        afterEach(() => {
-            // Deinitialize existing core
-            core.onBeforeUnload();
-        });
-
-        const { testPayloads, expectedResponses, specName } = availableSubtests[subtest]();
-        if (testPayloads.length !== expectedResponses.length) {
-            throw new Error('Different number of payloads and expected responses');
-        }
-
-        for (let i = 0; i < testPayloads.length; i++) {
-            const payload = testPayloads[i];
-            const expectedResponse = expectedResponses[i];
-
-            it(specName, async (done) => {
-                const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
-                handler.startListening();
-                await initTransport(settings);
-            });
-        }
-    });
+    return {
+        testName,
+        subtests: {
+            ...availableSubtests,
+        },
+    };
 };

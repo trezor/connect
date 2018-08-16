@@ -160,7 +160,7 @@ const call = async (params: Object): Promise<Object> => {
         // auto init with default settings
         try {
             await init(_settings);
-            _popupManager.resolveLazyLoad();
+            await _popupManager.resolveLazyLoad();
         } catch (error) {
             _popupManager.close();
             return { success: false, payload: { error } };

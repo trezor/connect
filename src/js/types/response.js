@@ -16,7 +16,6 @@ import type {
 
     Success,
     SignedTx,
-    StellarAddress,
 } from './trezor';
 
 export type Unsuccessful$ = {
@@ -28,7 +27,7 @@ export type Unsuccessful$ = {
 
 export type CipherKeyValue$ = {
     success: true,
-    payload: CipheredKeyValue | Array<CipheredKeyValue>,
+    payload: CipheredKeyValue,
 } | Unsuccessful$;
 
 export type CipherKeyValue$$ = {
@@ -144,24 +143,6 @@ export type SignMessage$ = {
 export type SignTransaction$ = {
     success: true,
     payload: SignedTx,
-} | Unsuccessful$;
-
-export type StellarGetAddress$ = {
-    success: true,
-    payload: StellarAddress,
-} | Unsuccessful$;
-
-export type StellarGetAddress$$ = {
-    success: true,
-    payload: Array<StellarAddress>,
-} | Unsuccessful$;
-
-export type StellarSignTransaction$ = {
-    success: true,
-    payload: {
-        publicKey: string,
-        signature: string,
-    },
 } | Unsuccessful$;
 
 export type VerifyMessage$ = {

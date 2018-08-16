@@ -7,13 +7,11 @@ import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/stellarSignTx';
 
 import type { StellarSignedTx } from '../../types/trezor';
-import type { Transaction as $StellarTransaction } from '../../types/stellar';
+import type { Transaction as $StellarTransaction, StellarSignedTx as StellarSignedTxResponse } from '../../types/stellar';
 import type { CoreMessage } from '../../types';
-import type { StellarSignTransaction$ } from '../../types/response';
 
 type Params = {
     path: Array<number>,
-    ledgerVersion: number,
     networkPassphrase: string,
     transaction: any,
 }
@@ -30,7 +28,6 @@ export default class StellarSignTransaction extends AbstractMethod {
         // validate incoming parameters
         validateParams(payload, [
             { name: 'path', obligatory: true },
-            { name: 'ledgerVersion', type: 'number', obligatory: true },
             { name: 'networkPassphrase', type: 'string', obligatory: true },
             { name: 'transaction', obligatory: true },
         ]);
@@ -40,17 +37,15 @@ export default class StellarSignTransaction extends AbstractMethod {
         const transaction: $StellarTransaction = payload.transaction;
         this.params = {
             path,
-            ledgerVersion: payload.ledgerVersion,
             networkPassphrase: payload.networkPassphrase,
             transaction,
         };
     }
 
-    async run(): Promise<$PropertyType<StellarSignTransaction$, 'payload'>> {
+    async run(): Promise<StellarSignedTxResponse> {
         const response: StellarSignedTx = await helper.stellarSignTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,
-            this.params.ledgerVersion,
             this.params.networkPassphrase,
             this.params.transaction
         );

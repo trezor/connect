@@ -7,7 +7,6 @@ import * as UI from '../../constants/ui';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
 import { validateParams } from './helpers/paramsValidator';
 import { resolveAfter } from '../../utils/promiseUtils';
-import { isValidAddress } from '../../utils/addressUtils';
 import { formatAmount } from '../../utils/formatUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
@@ -15,6 +14,7 @@ import BlockBook, { create as createBackend } from '../../backend';
 import Account from '../../account';
 import TransactionComposer from './tx/TransactionComposer';
 import {
+    validateHDOutput,
     inputToTrezor,
     outputToTrezor,
     getReferencedTransactions,
@@ -69,30 +69,31 @@ export default class ComposeTransaction extends AbstractMethod {
         const outputs: Array<BuildTxOutputRequest> = [];
         let total: number = 0;
         payload.outputs.forEach(out => {
-            validateParams(out, [
-                { name: 'amount', type: 'string', obligatory: true },
-                { name: 'address', type: 'string', obligatory: true },
-            ]);
-
-            if (!isValidAddress(out.address, coinInfo)) {
-                throw new Error(`Invalid ${ coinInfo.label } output address format`);
+            const output = validateHDOutput(out, coinInfo);
+            if (typeof output.amount === 'number') {
+                total += output.amount;
             }
-
-            const amount: number = parseInt(out.amount);
-            total += amount;
-
-            outputs.push({
-                type: 'complete',
-                amount: parseInt(out.amount),
-                address: out.address,
-            });
+            outputs.push(output);
         });
 
-        if (total <= coinInfo.dustLimit) {
+        const sendMax: boolean = outputs.find(o => o.type === 'send-max') !== undefined;
+
+        // there should be only one output when using send-max option
+        if (sendMax && outputs.length > 1) {
+            throw new Error('Only one output allowed when using "send-max" option.');
+        }
+
+        // if outputs contains regular items
+        // check if total amount is not lower than dust limit
+        if (outputs.find(o => o.type === 'complete') !== undefined && total <= coinInfo.dustLimit) {
             throw new Error('Total amount is too low.');
         }
 
-        this.info = `Send ${ formatAmount(total, coinInfo) }`;
+        if (sendMax) {
+            this.info = 'Send maximum amount';
+        } else {
+            this.info = `Send ${ formatAmount(total, coinInfo) }`;
+        }
 
         this.params = {
             outputs,

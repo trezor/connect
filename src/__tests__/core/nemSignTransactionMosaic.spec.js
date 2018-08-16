@@ -1,13 +1,9 @@
 /* @flow */
-
-import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
-import { checkBrowser } from '../../js/utils/browser';
 import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
-import { settings, CoreEventHandler } from './common.js';
 
 import type {
+    TestFunction,
     SubtestNemSignTransaction,
-    NemSignTransactionMosaicAvailableSubtests,
 } from 'flowtype/tests';
 import type {
     TestNemSignTransactionPayload,
@@ -70,7 +66,7 @@ const creation = (): SubtestNemSignTransaction => {
                         name: 'Hello mosaic',
                     },
                     levy: { },
-                    properties: { } ,
+                    properties: { },
                     description: 'lorem',
                 },
                 version: (0x98 << 24), // testnet // 2550136832
@@ -111,23 +107,23 @@ const creationProperties = (): SubtestNemSignTransaction => {
                         namespaceId: 'hellom',
                         name: 'Hello mosaic',
                     },
-                    levy: {} ,
+                    levy: {},
                     properties: [
                         {
                             name: 'divisibility',
-                            value: '4'
+                            value: '4',
                         },
                         {
                             name: 'initialSupply',
-                            value: '200'
+                            value: '200',
                         },
                         {
                             name: 'supplyMutable',
-                            value: 'false'
+                            value: 'false',
                         },
                         {
                             name: 'transferable',
-                            value: 'true'
+                            value: 'true',
                         },
                     ],
                     description: 'lorem',
@@ -182,19 +178,19 @@ const creationLevy = (): SubtestNemSignTransaction => {
                     properties: [
                         {
                             name: 'divisibility',
-                            value: '4'
+                            value: '4',
                         },
                         {
                             name: 'initialSupply',
-                            value: '200'
+                            value: '200',
                         },
                         {
                             name: 'supplyMutable',
-                            value: 'false'
+                            value: 'false',
                         },
                         {
                             name: 'transferable',
-                            value: 'true'
+                            value: 'true',
                         },
                     ],
                     description: 'lorem',
@@ -221,42 +217,19 @@ const creationLevy = (): SubtestNemSignTransaction => {
     };
 };
 
-export const nemSignTransactionMosaic = (): void => {
-    const subtest: NemSignTransactionMosaicAvailableSubtests = __karma__.config.subtest;
+export const nemSignTransactionMosaic = (): TestFunction => {
     const availableSubtests = {
         supplyChange,
         creation,
         creationProperties,
         creationLevy,
     };
+    const testName = 'nemSignTransactionMosaic';
 
-    describe('NEMSignTransactionMosaic', () => {
-        let core: Core;
-
-        beforeEach(async (done) => {
-            core = await initCore(settings);
-            checkBrowser();
-            done();
-        });
-        afterEach(() => {
-            // Deinitialize existing core
-            core.onBeforeUnload();
-        });
-
-        const { testPayloads, expectedResponses, specName } = availableSubtests[subtest]();
-        if (testPayloads.length !== expectedResponses.length) {
-            throw new Error('Different number of payloads and expected responses');
-        }
-
-        for (let i = 0; i < testPayloads.length; i++) {
-            const payload = testPayloads[i];
-            const expectedResponse = expectedResponses[i];
-
-            it(specName, async (done) => {
-                const handler = new CoreEventHandler(core, payload, expectedResponse, expect, done);
-                handler.startListening();
-                await initTransport(settings);
-            });
-        }
-    });
-}
+    return {
+        testName,
+        subtests: {
+            ...availableSubtests,
+        },
+    };
+};
