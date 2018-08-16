@@ -30,7 +30,7 @@ export type ConnectSettings = {
 const VERSION: string = '5.0.29';
 const versionN: Array<number> = VERSION.split('.').map(s => parseInt(s));
 const DIRECTORY: string = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
-const DEFAULT_DOMAIN: string = 'https://connect.trezor.io/';
+const DEFAULT_DOMAIN: string = `https://connect.trezor.io/${ DIRECTORY }`;
 export const DEFAULT_PRIORITY: number = 2;
 
 const initialSettings: ConnectSettings = {
