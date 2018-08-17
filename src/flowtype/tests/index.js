@@ -230,6 +230,6 @@ declare module 'flowtype/tests' {
         passphrase(): TestFunction,
         liskGetAddress(): TestFunction,
         liskSignMessage(): TestFunction,
-        liskVerifyMessageResponse(): TestFunction,
+        liskVerifyMessage(): TestFunction,
     };
 }

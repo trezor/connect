@@ -361,19 +361,19 @@ class TrezorConnect {
         return await call({ method: 'stellarSignTransaction', ...params });
     }
 
-    static liskGetAddress = async (params: $T.$LiskGetAddress): Promise<$T.LiskGetAddress$> => {
+    static liskGetAddress: $T.LiskGetAddress = async (params) => {
         return await call({ method: 'liskGetAddress', ...params });
     }
 
-    static liskSignMessage = async (params: $T.$LiskSignMessage): Promise<$T.LiskSignMessage$> => {
+    static liskSignMessage: $T.LiskSignMessage = async (params) => {
         return await call({ method: 'liskSignMessage', ...params });
     }
 
-    static liskVerifyMessage = async (params: $T.$EthereumVerifyMessage): Promise<$T.LiskVerifyMessage$> => {
+    static liskVerifyMessage: $T.LiskVerivyMessage = async (params) => {
         return await call({ method: 'liskVerifyMessage', ...params });
     }
 
-    static verifyMessage = async (params: $T.$VerifyMessage): Promise<$T.VerifyMessage$> => {
+    static verifyMessage: $T.VerifyMessage = async (params) => {
         return await call({ method: 'verifyMessage', ...params });
     }
 

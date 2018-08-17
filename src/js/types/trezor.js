@@ -530,8 +530,17 @@ export type StellarOperationMessage = {
 // Lisk types
 export type LiskAddress = {
     address: string,
+    publicKey: string,
     path: Array<number>,
     serializedPath: string,
+}
+
+export type LiskAddressMessage = {
+    address: string,
+}
+
+export type LiskPublicKeyMessage = {
+    public_key: string,
 }
 
 export type LiskMessageSignature = {

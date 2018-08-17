@@ -101,7 +101,7 @@ export default class LiskGetAddress extends AbstractMethod {
     }
 
     async run(): Promise<LiskAddress | Array<LiskAddress>> {
-        const responses: Array<StellarAddress> = [];
+        const responses: Array<LiskAddress> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
             const response: LiskAddress = await this.device.getCommands().liskGetAddress(
                 this.params.bundle[i].path,

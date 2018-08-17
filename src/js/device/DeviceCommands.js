@@ -259,16 +259,21 @@ export default class DeviceCommands {
     }
 
     async liskGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskAddress> {
-        const address: MessageResponse<trezor.LiskAddress> = await this.typedCall('LiskGetAddress', 'LiskAddress', {
+        const address: MessageResponse<trezor.LiskAddressMessage> = await this.typedCall('LiskGetAddress', 'LiskAddress', {
             address_n,
             show_display: !!showOnTrezor,
         });
 
-        // TODO: return pbulick key
+        const publicKey: MessageResponse<trezor.LiskPublicKeyMessage> = await this.typedCall('LiskGetPublicKey', 'LiskPublicKey', {
+            address_n,
+            show_display: false,
+        });
+
         return {
             path: address_n,
             serializedPath: getSerializedPath(address_n),
             address: address.message.address,
+            publicKey: publicKey.message.public_key,
         };
     }
 

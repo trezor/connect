@@ -2,7 +2,8 @@
 
 declare module 'flowtype/tests/lisk-verify-message' {
     declare export type TestLiskVerifyMessagePayload = {
-        publicKey: string,
+        method: string,
+        public_key: string,
         signature: string,
         message: string,
     };
