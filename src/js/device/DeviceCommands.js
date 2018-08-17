@@ -141,7 +141,7 @@ export default class DeviceCommands {
 
     async getDeviceState(): Promise<string> {
         const response: trezor.PublicKey = await this.getPublicKey([1, 0, 0]);
-        const secret: string = `${response.xpub}#${this.device.features.device_id}`;
+        const secret: string = `${response.xpub}#${this.device.features.device_id}#${this.device.instance}`;
         const state: string = this.device.getTemporaryState() || bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
         return state;
     }
@@ -309,7 +309,10 @@ export default class DeviceCommands {
         if (!this.device.isT1()) {
             // T2 features
             payload.state = this.device.getExpectedState() || this.device.getState();
-            if (useEmptyPassphrase) { payload.skip_passphrase = useEmptyPassphrase; }
+            if (useEmptyPassphrase) {
+                payload.skip_passphrase = useEmptyPassphrase;
+                payload.state = null;
+            }
         }
 
         const response = await this.call('Initialize', payload);
