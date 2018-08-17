@@ -373,6 +373,10 @@ class TrezorConnect {
         return await call({ method: 'liskVerifyMessage', ...params });
     }
 
+    static liskSignTransaction: $T.LiskSignTransaction = async (params) => {
+        return await call({ method: 'liskSignTransaction', ...params });
+    }
+
     static verifyMessage: $T.VerifyMessage = async (params) => {
         return await call({ method: 'verifyMessage', ...params });
     }

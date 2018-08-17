@@ -548,6 +548,10 @@ export type LiskMessageSignature = {
     signature: string,
 }
 
+export type LiskSignedTx = {
+    signature: string,
+}
+
 // GetAccountInfo response
 export type AccountInfo = {
     id: number,

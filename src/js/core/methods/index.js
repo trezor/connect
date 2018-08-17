@@ -28,6 +28,7 @@ import StellarSignTransaction from './StellarSignTransaction';
 import LiskGetAddress from './LiskGetAddress';
 import LiskSignMessage from './LiskSignMessage';
 import LiskVerifyMessage from './LiskVerifyMessage';
+import LiskSignTransaction from './LiskSignTransaction';
 import VerifyMessage from './VerifyMessage';
 
 const classes: {[k: string]: any} = {
@@ -55,6 +56,7 @@ const classes: {[k: string]: any} = {
     'liskSignMessage': LiskSignMessage,
     'liskVerifyMessage': LiskVerifyMessage,
     'verifyMessage': VerifyMessage,
+    'liskSignTransaction': LiskSignTransaction,
 };
 
 export const find = (message: CoreMessage): AbstractMethod => {

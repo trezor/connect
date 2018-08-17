@@ -32,6 +32,7 @@ import { passphrase } from './passphrase.spec.js';
 import { liskGetAddress } from './liskGetAddress.spec.js';
 import { liskSignMessage } from './liskSignMessage.spec.js';
 import { liskVerifyMessage } from './liskVerifyMessage.spec.js';
+import { liskSignTransaction } from './liskSignTransaction.spec.js';
 
 export const testFunctions: AvailableTestFunctions = {
     getPublicKey,
@@ -62,4 +63,5 @@ export const testFunctions: AvailableTestFunctions = {
     liskGetAddress,
     liskSignMessage,
     liskVerifyMessage,
+    liskSignTransaction,
 };

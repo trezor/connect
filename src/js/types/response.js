@@ -20,6 +20,7 @@ import type {
 
     LiskAddress,
     LiskMessageSignature,
+    LiskSignedTx,
 } from './trezor';
 
 export type Unsuccessful$ = {
@@ -176,6 +177,11 @@ export type LiskVerifyMessage$ = {
     success: true,
     payload: Success,
 } | Unsuccessful$;
+
+export type LiskSignTransaction$ = {
+    success: true,
+    payload: LiskSignedTx,
+} | Unsuccessful$
 
 export type VerifyMessage$ = {
     success: true,

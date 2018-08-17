@@ -12,6 +12,10 @@ import type {
     MultisigRedeemScriptType,
 } from './trezor';
 
+import type {
+    PreparedTransaction as LiskTransaction,
+} from './lisk';
+
 export type $Common = {
     device?: {
         path: string,
@@ -169,6 +173,11 @@ export type $LiskVerifyMessage = $Common & {
     public_key: string,
     message: string,
     signature: string,
+}
+
+export type $LiskSignTransaction = $Common & {
+    path: $Path,
+    transaction: LiskTransaction,
 }
 
 export type $VerifyMessage = $Common & {

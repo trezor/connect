@@ -95,6 +95,11 @@ import type {
     ExpectedLiskVerifyMessageResponse,
 } from 'flowtype/tests/lisk-verify-message';
 
+import type {
+    TestLiskSignTransactionPayload,
+    ExpectedLiskSignTransactionResponse,
+} from 'flowtype/tests/lisk-sign-transaction';
+
 declare module 'flowtype/tests' {
     // declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
     // declare export type GetAddressSegwitAvailableSubtests = 'showSegwit';
@@ -143,6 +148,7 @@ declare module 'flowtype/tests' {
     declare export type SubtestGetAccountInfo = Subtest<TestGetAccountInfoPayload, ExpectedGetAccountInfoResponse>;
     declare export type SubtestNemSignTransaction = Subtest<TestNemSignTransactionPayload, ExpectedNemSignTransactionResponse>;
     declare export type SubtestPassphrase = Subtest<TestPassphrasePayload, ExpectedPassphraseResponse>;
+    declare export type SubtestLiskSignTransaction = Subtest<TestLiskSignTransactionPayload, ExpectedLiskSignTransactionResponse>;
 
     declare export type TestPayload =
         TestCardanoSignMessagePayload
@@ -163,7 +169,8 @@ declare module 'flowtype/tests' {
         | TestPassphrasePayload
         | TestLiskGetAddressPayload
         | TestLiskSignMessagePayload
-        | TestLiskVerifyMessagePayload;
+        | TestLiskVerifyMessagePayload
+        | TestLiskSignTransactionPayload;
 
     declare export type ExpectedResponse =
         ExpectedCardanoSignMessageResponse
@@ -184,7 +191,8 @@ declare module 'flowtype/tests' {
         | ExpectedPassphraseResponse
         | ExpectedLiskGetAddressResponse
         | ExpectedLiskSignMessageResponse
-        | ExpectedLiskVerifyMessageResponse;
+        | ExpectedLiskVerifyMessageResponse
+        | ExpectedLiskSignTransactionResponse;
 
     declare export type SubtestFunction = SubtestGetAddress
     | SubtestSignMessage
@@ -193,7 +201,8 @@ declare module 'flowtype/tests' {
     | SubtestVerifyMessage
     | SubtestGetAccountInfo
     | SubtestNemSignTransaction
-    | SubtestPassphrase;
+    | SubtestPassphrase
+    | SubtestLiskSignTransaction;
 
     declare export type TestFunction = {
         testName: string,
@@ -231,5 +240,6 @@ declare module 'flowtype/tests' {
         liskGetAddress(): TestFunction,
         liskSignMessage(): TestFunction,
         liskVerifyMessage(): TestFunction,
+        liskSignTransaction(): TestFunction,
     };
 }

@@ -26,16 +26,16 @@ TrezorConnect.liskGetAddress(params).then(function(result) {
 Display address of first Lisk account:
 ```javascript
 TrezorConnect.liskGetAddress({
-    path: "m/44'/134'/0'"
+    path: "m/44'/134'/0'/0'/0'"
 });
 ```
 Return a bundle of Lisk addresses without displaying them on device:
 ```javascript
 TrezorConnect.liskGetAddress({
     bundle: [
-        { path: "m/44'/134'/0''", showOnTrezor: false }, // account 1
-        { path: "m/44'/134'/1'", showOnTrezor: false }, // account 2
-        { path: "m/44'/134'/2'", showOnTrezor: false }  // account 3
+        { path: "m/44'/134'/0'/0'/0'", showOnTrezor: false }, // account 1
+        { path: "m/44'/134'/0'/0'/1'", showOnTrezor: false }, // account 2
+        { path: "m/44'/134'/0'/0'/2'", showOnTrezor: false }  // account 3
     ]
 });
 ```
