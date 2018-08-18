@@ -10,6 +10,7 @@ export type Transaction = {
     nonce: string,
     data?: string,
     chainId?: number,
+    txType?: number,
     v: string,
     r: string,
     s: string,

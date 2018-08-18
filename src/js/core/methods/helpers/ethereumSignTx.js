@@ -62,7 +62,8 @@ export const ethereumSignTx = async (typedCall: (type: string, resType: string, 
     gas_price: string,
     nonce: string,
     data?: string,
-    chain_id?: number
+    chain_id?: number,
+    tx_type?: number
 ): Promise<EthereumSignedTx> => {
     const length = data == null ? 0 : data.length / 2;
 
@@ -91,6 +92,14 @@ export const ethereumSignTx = async (typedCall: (type: string, resType: string, 
             chain_id,
         };
     }
+
+    if (tx_type != null) {
+        message = {
+            ...message,
+            tx_type,
+        };
+    }
+    console.log(message);
 
     const response: DefaultMessageResponse = await typedCall('EthereumSignTx', 'EthereumTxRequest', message);
 
