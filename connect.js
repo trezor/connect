@@ -641,6 +641,49 @@ this.TrezorConnect = (function () {
             }, requiredFirmware), callback);
         }
 
+        /**
+         * Display tezos address on device
+         *
+         * @param {array} address
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.tezosGetAddress = function (address, callback, requiredFirmware) {
+
+            if (typeof address === 'string') {
+                address = parseHDPath(address);
+            }
+
+            manager.sendWithChannel(_fwStrFix({
+                type: 'tezosGetAddress',
+                address_n: address,
+            }, requiredFirmware), callback);
+        }
+
+        /**
+         * Sign tezos transaction on device
+         *
+         * @param {array} address
+         * @param {?(string|array<number>)} requiredFirmware
+         *
+         */
+        this.tezosSignTx = function (address, to, fee, amount, operation, callback, requiredFirmware) {
+
+            if (typeof address === 'string') {
+                address = parseHDPath(address);
+            }
+
+            manager.sendWithChannel(_fwStrFix({
+                type: 'tezosSignTx',
+                address_n: address,
+                to: to,
+                fee: fee,
+                amount: amount,
+                operation: operation,
+            }, requiredFirmware), callback);
+
+        }
+
         var LOGIN_CSS =
             '<style>@import url("@connect_path@/login_buttons.css")</style>';
 
