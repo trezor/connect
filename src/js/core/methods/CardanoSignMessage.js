@@ -21,7 +21,7 @@ export default class CardanoSignMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        // this.requiredFirmware = ['1.6.2', '2.0.7'];
+        this.requiredFirmware = ['0', '2.0.7'];
         this.info = 'Sign Cardano message';
 
         const payload: Object = message.payload;

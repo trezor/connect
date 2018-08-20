@@ -533,20 +533,13 @@ export type CardanoAddress = {
     address: string,
     address_n?: Array<number>,
 };
+
 export type CardanoPublicKey = {
     xpub: string,
     node: HDPubNode,
     root_hd_passphrase: string,
 };
-// combined address + public key
-export type CardanoGetAddressResponse = {
-    address: string,
-    path: Array<number>,
-    serializedPath: string,
-    publicKey: string,
-    node: HDPubNode,
-    rootHDPassphrase: string,
-}
+
 export type CardanoSignedTx = {
     tx_hash: string,
     tx_body: string,

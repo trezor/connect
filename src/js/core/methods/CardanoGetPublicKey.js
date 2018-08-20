@@ -9,9 +9,9 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { UiPromiseResponse } from 'flowtype';
-import type { CardanoAddress } from '../../types/trezor';
+import type { CardanoPublicKey } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
-import type { CardanoAddress as CardanoAddressResponse } from '../../types/cardano';
+import type { CardanoPublicKey as CardanoPublicKeyResponse } from '../../types/cardano';
 
 type Batch = {
     path: Array<number>,
@@ -32,7 +32,7 @@ export default class CardanoGetAddress extends AbstractMethod {
 
         this.requiredPermissions = ['read'];
         this.requiredFirmware = ['0', '2.0.7'];
-        this.info = 'Export Cardano address';
+        this.info = 'Export Cardano public key';
 
         const payload: Object = message.payload;
         let bundledResponse: boolean = true;
@@ -57,7 +57,7 @@ export default class CardanoGetAddress extends AbstractMethod {
             ]);
 
             const path: Array<number> = validatePath(batch.path, 3);
-            let showOnTrezor: boolean = true;
+            let showOnTrezor: boolean = false;
             if (batch.hasOwnProperty('showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
@@ -83,14 +83,14 @@ export default class CardanoGetAddress extends AbstractMethod {
 
         let label: string;
         if (this.params.bundle.length > 1) {
-            label = 'Export multiple Cardano addresses';
+            label = 'Export multiple Cardano public keys';
         } else {
-            label = `Export Cardano address for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) }`;
+            label = `Export Cardano public key for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) }`;
         }
 
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'export-address',
+            view: 'export-xpub',
             label,
         }));
 
@@ -102,18 +102,20 @@ export default class CardanoGetAddress extends AbstractMethod {
         return this.confirmed;
     }
 
-    async run(): Promise<CardanoAddressResponse | Array<CardanoAddressResponse>> {
-        const responses: Array<CardanoAddressResponse> = [];
+    async run(): Promise<CardanoPublicKeyResponse | Array<CardanoPublicKeyResponse>> {
+        const responses: Array<CardanoPublicKeyResponse> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
             const batch: Batch = this.params.bundle[i];
-            const response: CardanoAddress = await this.device.getCommands().cardanoGetAddress(
+            const response: CardanoPublicKey = await this.device.getCommands().cardanoGetPublicKey(
                 batch.path,
                 batch.showOnTrezor
             );
             responses.push({
                 path: batch.path,
                 serializedPath: getSerializedPath(batch.path),
-                address: response.address,
+                publicKey: response.xpub,
+                node: response.node,
+                hdPassphrase: response.root_hd_passphrase,
             });
 
             if (this.params.bundledResponse) {
