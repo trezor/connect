@@ -35,3 +35,26 @@ export const getNetworkLabel = (label: string, network: ?EthereumNetworkInfo): s
     }
     return label.replace('#NETWORK', '');
 };
+
+// from (isHexString) https://github.com/ethjs/ethjs-util/blob/master/src/index.js
+const isHexString = (value: string, length?: number) => {
+    if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
+        return false;
+    }
+    if (length && value.length !== 2 + 2 * length) { return false; }
+    return true;
+}
+
+// from (toBuffer) https://github.com/ethereumjs/ethereumjs-util/blob/master/index.js
+export const messageToHex = (message: string): string => {
+    let buffer: Buffer;
+    if (isHexString(message)) {
+        let clean = stripHexPrefix(message);
+        // pad left even
+        if (clean.length % 2 !== 0) { clean = '0' + clean; }
+        buffer = Buffer.from(clean, 'hex');
+    } else {
+        buffer = Buffer.from(message)
+    }
+    return buffer.toString('hex');
+}
