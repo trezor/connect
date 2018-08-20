@@ -98,7 +98,7 @@ export type BrowserMessage = {
 }
 
 export type UnexpectedDeviceMode = {
-    +type: typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE | typeof UI.FIRMWARE_OUTDATED,
+    +type: typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE | typeof UI.FIRMWARE_OUTDATED | typeof UI.FIRMWARE_NOT_SUPPORTED,
     payload: Device,
 }
 
