@@ -244,24 +244,20 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    async cardanoGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoGetAddressResponse> {
-        const address: MessageResponse<trezor.CardanoAddress> = await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
+    async cardanoGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoPublicKey> {
+        const response: MessageResponse<trezor.CardanoPublicKey> = await this.typedCall('CardanoGetPublicKey', 'CardanoPublicKey', {
             address_n,
             show_display: !!showOnTrezor,
         });
+        return response.message;
+    }
 
-        const publicKey: MessageResponse<trezor.CardanoPublicKey> = await this.typedCall('CardanoGetPublicKey', 'CardanoPublicKey', {
+    async cardanoGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoAddress> {
+        const response: MessageResponse<trezor.CardanoAddress> = await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
             address_n,
+            show_display: !!showOnTrezor,
         });
-
-        return {
-            path: address_n,
-            serializedPath: getSerializedPath(address_n),
-            address: address.message.address,
-            publicKey: publicKey.message.xpub,
-            node: publicKey.message.node,
-            rootHDPassphrase: publicKey.message.root_hd_passphrase,
-        };
+        return response.message;
     }
 
     async cardanoSignMessage(address_n: Array<number>, message: string): Promise<trezor.CardanoMessageSignature> {

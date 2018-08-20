@@ -293,6 +293,10 @@ class TrezorConnect {
         return await call({ method: 'cardanoGetAddress', ...params });
     }
 
+    static cardanoGetPublicKey: $T.CardanoGetPublicKey = async (params) => {
+        return await call({ method: 'cardanoGetPublicKey', ...params });
+    }
+
     static cardanoSignMessage: $T.CardanoSignMessage = async (params) => {
         return await call({ method: 'cardanoSignMessage', ...params });
     }

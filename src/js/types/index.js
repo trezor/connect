@@ -144,6 +144,12 @@ declare function F_CardanoGetAddress(params: (P.$Common & { bundle: Array<CARDAN
 /* eslint-enable no-redeclare */
 export type CardanoGetAddress = typeof F_CardanoGetAddress;
 
+/* eslint-disable no-redeclare */
+declare function F_CardanoGetPublicKey(params: (P.$Common & CARDANO.$CardanoGetPublicKey)): Promise<CARDANO.CardanoGetPublicKey$>;
+declare function F_CardanoGetPublicKey(params: (P.$Common & { bundle: Array<CARDANO.$CardanoGetPublicKey> })): Promise<CARDANO.CardanoGetPublicKey$$>;
+/* eslint-enable no-redeclare */
+export type CardanoGetPublicKey = typeof F_CardanoGetPublicKey;
+
 export type CardanoSignMessage = (CARDANO.$CardanoSignMessage) => Promise<CARDANO.CardanoSignMessage$>;
 export type CardanoSignTransaction = (CARDANO.$CardanoSignTransaction) => Promise<CARDANO.CardanoSignTransaction$>;
 export type CardanoVerifyMessage = (CARDANO.$CardanoVerifyMessage) => Promise<CARDANO.CardanoVerifyMessage$>;
