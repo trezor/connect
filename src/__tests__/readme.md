@@ -7,7 +7,7 @@ Tests may be ran using an emulator (only TT is supported) or a physical Trezor d
 2. Download & build [Trezor emulator](https://github.com/trezor/trezor-core/blob/master/docs/emulator.md)
 3. Download & build [Trezor Bridge](https://github.com/trezor/trezord-go)
 4. `git clone https://github.com/trezor/connect.git`
-5. `cd ./connect && git checkout tpm`
+5. `cd ./connect`
 6. Now you can start tests by typing
     ```bash
     yarn test -t "[test-name]"
