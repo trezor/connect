@@ -942,6 +942,13 @@
                     "type": "uint32",
                     "name": "address_n",
                     "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
                 }
             ],
             "enums": [],
@@ -1056,7 +1063,7 @@
             "oneofs": {}
         },
         {
-            "name": "CardanoSignTransaction",
+            "name": "CardanoSignTx",
             "fields": [
                 {
                     "rule": "repeated",
@@ -1200,7 +1207,7 @@
             "oneofs": {}
         },
         {
-            "name": "CardanoSignedTransaction",
+            "name": "CardanoSignedTx",
             "fields": [
                 {
                     "rule": "optional",
@@ -3569,6 +3576,217 @@
             "oneofs": {}
         },
         {
+            "name": "MoneroTransactionSourceEntry",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "MoneroOutputEntry",
+                    "name": "outputs",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "real_output",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "real_out_tx_key",
+                    "id": 3
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "real_out_additional_tx_keys",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "real_output_in_tx_index",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "amount",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "rct",
+                    "id": 7
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "mask",
+                    "id": 8
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "MoneroMultisigKLRki",
+                    "name": "multisig_kLRki",
+                    "id": 9
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "MoneroOutputEntry",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "idx",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "MoneroRctKey",
+                            "name": "key",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [
+                        {
+                            "name": "MoneroRctKey",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "bytes",
+                                    "name": "dest",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "bytes",
+                                    "name": "mask",
+                                    "id": 2
+                                }
+                            ],
+                            "enums": [],
+                            "messages": [],
+                            "options": {},
+                            "oneofs": {}
+                        }
+                    ],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "MoneroMultisigKLRki",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "K",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "L",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "R",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "ki",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroTransactionDestinationEntry",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "amount",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "MoneroAccountPublicAddress",
+                    "name": "addr",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "is_subaddress",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "MoneroAccountPublicAddress",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "spend_public_key",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "view_public_key",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "MoneroGetAddress",
             "fields": [
                 {
@@ -3811,62 +4029,7 @@
                         }
                     ],
                     "enums": [],
-                    "messages": [
-                        {
-                            "name": "MoneroTransactionDestinationEntry",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "amount",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "MoneroAccountPublicAddress",
-                                    "name": "addr",
-                                    "id": 2
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "bool",
-                                    "name": "is_subaddress",
-                                    "id": 3
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [
-                                {
-                                    "name": "MoneroAccountPublicAddress",
-                                    "fields": [
-                                        {
-                                            "rule": "optional",
-                                            "options": {},
-                                            "type": "bytes",
-                                            "name": "spend_public_key",
-                                            "id": 1
-                                        },
-                                        {
-                                            "rule": "optional",
-                                            "options": {},
-                                            "type": "bytes",
-                                            "name": "view_public_key",
-                                            "id": 2
-                                        }
-                                    ],
-                                    "enums": [],
-                                    "messages": [],
-                                    "options": {},
-                                    "oneofs": {}
-                                }
-                            ],
-                            "options": {},
-                            "oneofs": {}
-                        }
-                    ],
+                    "messages": [],
                     "options": {},
                     "oneofs": {}
                 }
@@ -3938,7 +4101,7 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bytes",
+                    "type": "MoneroTransactionSourceEntry",
                     "name": "src_entr",
                     "id": 2
                 }
@@ -4029,7 +4192,7 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bytes",
+                    "type": "MoneroTransactionSourceEntry",
                     "name": "src_entr",
                     "id": 1
                 },
@@ -4081,7 +4244,7 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bytes",
+                    "type": "MoneroTransactionDestinationEntry",
                     "name": "dst_entr",
                     "id": 1
                 },
@@ -4241,7 +4404,7 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bytes",
+                    "type": "MoneroTransactionSourceEntry",
                     "name": "src_entr",
                     "id": 1
                 },
@@ -5437,6 +5600,548 @@
             "oneofs": {}
         },
         {
+            "name": "OntologyTransaction",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "version",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "type",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "nonce",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "gas_price",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "gas_limit",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "payer",
+                    "id": 6
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "OntologyTxAttribute",
+                    "name": "tx_attributes",
+                    "id": 7
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "OntologyTxAttribute",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "usage",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "data",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OntologyGetPublicKey",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OntologyPublicKey",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "public_key",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OntologyGetAddress",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OntologyAddress",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "address",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OntologySignTransfer",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "OntologyTransaction",
+                    "name": "transaction",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "OntologyTransfer",
+                    "name": "transfer",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "OntologyTransfer",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "OntologyAsset",
+                            "name": "asset",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "amount",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "from_address",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "to_address",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [
+                        {
+                            "name": "OntologyAsset",
+                            "values": [
+                                {
+                                    "name": "ONT",
+                                    "id": 1
+                                },
+                                {
+                                    "name": "ONG",
+                                    "id": 2
+                                }
+                            ],
+                            "options": {}
+                        }
+                    ],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OntologySignedTransfer",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "payload",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OntologySignWithdrawOng",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "OntologyTransaction",
+                    "name": "transaction",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "OntologyWithdrawOng",
+                    "name": "withdraw_ong",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "OntologyWithdrawOng",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "amount",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "from_address",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "to_address",
+                            "id": 3
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OntologySignedWithdrawOng",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "payload",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OntologySignOntIdRegister",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "OntologyTransaction",
+                    "name": "transaction",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "OntologyOntIdRegister",
+                    "name": "ont_id_register",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "OntologyOntIdRegister",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "ont_id",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "public_key",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OntologySignedOntIdRegister",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "payload",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OntologySignOntIdAddAttributes",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "OntologyTransaction",
+                    "name": "transaction",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "OntologyOntIdAddAttributes",
+                    "name": "ont_id_add_attributes",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "OntologyOntIdAddAttributes",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "ont_id",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "public_key",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "OntologyOntIdAttribute",
+                            "name": "ont_id_attributes",
+                            "id": 3
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [
+                        {
+                            "name": "OntologyOntIdAttribute",
+                            "fields": [
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "key",
+                                    "id": 1
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "type",
+                                    "id": 2
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "string",
+                                    "name": "value",
+                                    "id": 3
+                                }
+                            ],
+                            "enums": [],
+                            "messages": [],
+                            "options": {},
+                            "oneofs": {}
+                        }
+                    ],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OntologySignedOntIdAddAttributes",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "payload",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "RippleGetAddress",
             "fields": [
                 {
@@ -5634,45 +6339,6 @@
                     "options": {},
                     "type": "string",
                     "name": "address",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "StellarGetPublicKey",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "address_n",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "show_display",
-                    "id": 2
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "StellarPublicKey",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "public_key",
                     "id": 1
                 }
             ],
@@ -7236,14 +7902,6 @@
                     "id": 155
                 },
                 {
-                    "name": "MessageType_StellarGetPublicKey",
-                    "id": 200
-                },
-                {
-                    "name": "MessageType_StellarPublicKey",
-                    "id": 201
-                },
-                {
                     "name": "MessageType_StellarSignTx",
                     "id": 202
                 },
@@ -7320,7 +7978,7 @@
                     "id": 302
                 },
                 {
-                    "name": "MessageType_CardanoSignTransaction",
+                    "name": "MessageType_CardanoSignTx",
                     "id": 303
                 },
                 {
@@ -7348,8 +8006,56 @@
                     "id": 309
                 },
                 {
-                    "name": "MessageType_CardanoSignedTransaction",
+                    "name": "MessageType_CardanoSignedTx",
                     "id": 310
+                },
+                {
+                    "name": "MessageType_OntologyGetAddress",
+                    "id": 350
+                },
+                {
+                    "name": "MessageType_OntologyAddress",
+                    "id": 351
+                },
+                {
+                    "name": "MessageType_OntologyGetPublicKey",
+                    "id": 352
+                },
+                {
+                    "name": "MessageType_OntologyPublicKey",
+                    "id": 353
+                },
+                {
+                    "name": "MessageType_OntologySignTransfer",
+                    "id": 354
+                },
+                {
+                    "name": "MessageType_OntologySignedTransfer",
+                    "id": 355
+                },
+                {
+                    "name": "MessageType_OntologySignWithdrawOng",
+                    "id": 356
+                },
+                {
+                    "name": "MessageType_OntologySignedWithdrawOng",
+                    "id": 357
+                },
+                {
+                    "name": "MessageType_OntologySignOntIdRegister",
+                    "id": 358
+                },
+                {
+                    "name": "MessageType_OntologySignedOntIdRegister",
+                    "id": 359
+                },
+                {
+                    "name": "MessageType_OntologySignOntIdAddAttributes",
+                    "id": 360
+                },
+                {
+                    "name": "MessageType_OntologySignedOntIdAddAttributes",
+                    "id": 361
                 },
                 {
                     "name": "MessageType_RippleGetAddress",
