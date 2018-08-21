@@ -549,7 +549,7 @@ export type LiskAsset =
     { multisignature: {
         min: number,
         life_time: number,
-        keys_group: Array<string>
+        keys_group: Array<string>,
     } };
 
 export type LiskTransaction = {

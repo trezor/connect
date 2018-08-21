@@ -104,7 +104,6 @@ export default class LiskGetPublicKey extends AbstractMethod {
     async run(): Promise<LiskPublicKeyResponse | Array<LiskPublicKeyResponse>> {
         const responses: Array<LiskPublicKeyResponse> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
-            console.warn("EEELO!?", this.params.bundle[i])
             const response: LiskPublicKey = await this.device.getCommands().liskGetPublicKey(
                 this.params.bundle[i].path,
                 this.params.bundle[i].showOnTrezor
@@ -112,7 +111,7 @@ export default class LiskGetPublicKey extends AbstractMethod {
             responses.push({
                 publicKey: response.public_key,
                 path: this.params.bundle[i].path,
-                serializedPath: getSerializedPath(this.params.bundle[i].path)
+                serializedPath: getSerializedPath(this.params.bundle[i].path),
             });
 
             if (this.params.bundledResponse) {
