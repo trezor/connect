@@ -17,10 +17,6 @@ import type {
     Success,
     SignedTx,
     StellarAddress,
-
-    LiskAddress,
-    LiskMessageSignature,
-    LiskSignedTx,
 } from './trezor';
 
 export type Unsuccessful$ = {
@@ -162,26 +158,6 @@ export type StellarSignTransaction$ = {
         signature: string,
     },
 } | Unsuccessful$;
-
-export type LiskGetAddress$ = {
-    success: true,
-    payload: LiskAddress | Array<LiskAddress>,
-} | Unsuccessful$;
-
-export type LiskSignMessage$ = {
-    success: true,
-    payload: LiskMessageSignature,
-} | Unsuccessful$;
-
-export type LiskVerifyMessage$ = {
-    success: true,
-    payload: Success,
-} | Unsuccessful$;
-
-export type LiskSignTransaction$ = {
-    success: true,
-    payload: LiskSignedTx,
-} | Unsuccessful$
 
 export type VerifyMessage$ = {
     success: true,

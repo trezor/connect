@@ -530,22 +530,38 @@ export type StellarOperationMessage = {
 // Lisk types
 export type LiskAddress = {
     address: string,
-    publicKey: string,
-    path: Array<number>,
-    serializedPath: string,
 }
 
-export type LiskAddressMessage = {
-    address: string,
-}
-
-export type LiskPublicKeyMessage = {
+export type LiskPublicKey = {
     public_key: string,
 }
 
 export type LiskMessageSignature = {
     public_key: string,
     signature: string,
+}
+
+export type LiskAsset =
+    { data: string } |
+    { votes: Array<string> } |
+    { delegate: { username: string } } |
+    { signature: { public_key: string } } |
+    { multisignature: {
+        min: number,
+        life_time: number,
+        keys_group: Array<string>
+    } };
+
+export type LiskTransaction = {
+    type: number,
+    fee: number,
+    amount: number,
+    timestamp: number,
+    recipient_id?: string,
+    sender_public_key?: string,
+    requester_public_key?: string,
+    signature?: string,
+    asset?: LiskAsset,
 }
 
 export type LiskSignedTx = {

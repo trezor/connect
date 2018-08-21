@@ -132,6 +132,7 @@ export type EventListener = typeof F_EventListener;
 import * as P from './params';
 import * as R from './response';
 import * as STELLAR from './stellar';
+import * as LISK from './lisk';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
@@ -173,6 +174,22 @@ declare function F_GetPublicKey(params: (P.$Common & { bundle: Array<P.$GetPubli
 export type GetPublicKey = typeof F_GetPublicKey;
 
 /* eslint-disable no-redeclare */
+declare function F_LiskGetAddress(params: (P.$Common & LISK.$LiskGetAddress)): Promise<LISK.LiskGetAddress$>;
+declare function F_LiskGetAddress(params: (P.$Common & { bundle: Array<LISK.$LiskGetAddress> })): Promise<LISK.LiskGetAddress$$>;
+/* eslint-enable no-redeclare */
+export type LiskGetAddress = typeof F_LiskGetAddress;
+
+/* eslint-disable no-redeclare */
+declare function F_LiskGetPublicKey(params: (P.$Common & LISK.$LiskGetPublicKey)): Promise<LISK.LiskGetPublicKey$>;
+declare function F_LiskGetPublicKey(params: (P.$Common & { bundle: Array<LISK.$LiskGetPublicKey> })): Promise<LISK.LiskGetPublicKey$$>;
+/* eslint-enable no-redeclare */
+export type LiskGetPublicKey = typeof F_LiskGetPublicKey;
+
+export type LiskSignMessage = (LISK.$LiskSignMessage) => Promise<LISK.LiskSignMessage$>;
+export type LiskSignTransaction = (LISK.$LiskSignTransaction) => Promise<LISK.LiskSignTransaction$>
+export type LiskVerifyMessage = (LISK.$LiskVerifyMessage) => Promise<LISK.LiskVerifyMessage$>;
+
+/* eslint-disable no-redeclare */
 declare function F_NEMGetAddress(params: (P.$Common & P.$NEMGetAddress)): Promise<R.NEMGetAddress$>;
 declare function F_NEMGetAddress(params: (P.$Common & { bundle: Array<P.$NEMGetAddress> })): Promise<R.NEMGetAddress$$>;
 /* eslint-enable no-redeclare */
@@ -191,11 +208,6 @@ export type StellarGetAddress = typeof F_StellarGetAddress;
 
 export type StellarSignTransaction = (STELLAR.$StellarSignTransaction) => Promise<STELLAR.StellarSignTransaction$>;
 export type VerifyMessage = (P.$VerifyMessage) => Promise<R.VerifyMessage$>;
-
-export type LiskGetAddress = (P.$LiskGetAddress) => Promise<R.LiskGetAddress$>;
-export type LiskSignMessage = (P.$LiskSignMessage) => Promise<R.LiskSignMessage$>;
-export type LiskVerivyMessage = (P.$LiskVerifyMessage) => Promise<R.LiskVerifyMessage$>;
-export type LiskSignTransaction = (P.$LiskSignTransaction) => Promise<R.LiskSignTransaction$>
 
 // export * from './params';
 export * from './response';
