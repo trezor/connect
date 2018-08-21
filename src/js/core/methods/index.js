@@ -17,18 +17,19 @@ import GetAddress from './GetAddress';
 import GetDeviceState from './GetDeviceState';
 import GetFeatures from './GetFeatures';
 import GetPublicKey from './GetPublicKey';
-import PushTransaction from './PushTransaction';
-import RequestLogin from './RequestLogin';
+import LiskGetAddress from './LiskGetAddress';
+import LiskGetPublicKey from './LiskGetPublicKey';
+import LiskSignMessage from './LiskSignMessage';
+import LiskVerifyMessage from './LiskVerifyMessage';
+import LiskSignTransaction from './LiskSignTransaction';
 import NEMGetAddress from './NEMGetAddress';
 import NEMSignTransaction from './NEMSignTransaction';
+import PushTransaction from './PushTransaction';
+import RequestLogin from './RequestLogin';
 import SignMessage from './SignMessage';
 import SignTransaction from './SignTransaction';
 import StellarGetAddress from './StellarGetAddress';
 import StellarSignTransaction from './StellarSignTransaction';
-import LiskGetAddress from './LiskGetAddress';
-import LiskSignMessage from './LiskSignMessage';
-import LiskVerifyMessage from './LiskVerifyMessage';
-import LiskSignTransaction from './LiskSignTransaction';
 import VerifyMessage from './VerifyMessage';
 
 const classes: {[k: string]: any} = {
@@ -44,19 +45,20 @@ const classes: {[k: string]: any} = {
     'getDeviceState': GetDeviceState,
     'getFeatures': GetFeatures,
     'getPublicKey': GetPublicKey,
-    'pushTransaction': PushTransaction,
-    'requestLogin': RequestLogin,
+    'liskGetAddress': LiskGetAddress,
+    'liskGetPublicKey': LiskGetPublicKey,
+    'liskSignMessage': LiskSignMessage,
+    'liskSignTransaction': LiskSignTransaction,
+    'liskVerifyMessage': LiskVerifyMessage,
     'nemGetAddress': NEMGetAddress,
     'nemSignTransaction': NEMSignTransaction,
+    'pushTransaction': PushTransaction,
+    'requestLogin': RequestLogin,
     'signMessage': SignMessage,
     'signTransaction': SignTransaction,
     'stellarGetAddress': StellarGetAddress,
     'stellarSignTransaction': StellarSignTransaction,
-    'liskGetAddress': LiskGetAddress,
-    'liskSignMessage': LiskSignMessage,
-    'liskVerifyMessage': LiskVerifyMessage,
     'verifyMessage': VerifyMessage,
-    'liskSignTransaction': LiskSignTransaction,
 };
 
 export const find = (message: CoreMessage): AbstractMethod => {
