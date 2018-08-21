@@ -8,8 +8,9 @@ import { validatePath } from '../../utils/pathUtils';
 import { prepareTx } from './helpers/liskSignTx';
 
 import type { CoreMessage } from '../../types';
-import type { LiskSignedTx } from '../../types/trezor';
-import type { RawTransaction, PreparedTransaction as LiskTransaction } from '../../types/lisk';
+import type { LiskTransaction, LiskSignedTx } from '../../types/trezor';
+import type { MessageResponse } from '../../device/DeviceCommands';
+import type { Transaction as RawTransaction } from '../../types/lisk';
 
 type Params = {
     path: Array<number>,
@@ -23,7 +24,7 @@ export default class LiskSignTransaction extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = ['1.7.0', '2.0.7'];
+        this.requiredFirmware = ['0', '2.0.8'];
 
         const payload: Object = message.payload;
 
@@ -57,9 +58,10 @@ export default class LiskSignTransaction extends AbstractMethod {
     }
 
     async run(): Promise<LiskSignedTx> {
-        return await this.device.getCommands().liskSignTx(
-            this.params.path,
-            this.params.transaction
-        );
+        const response: MessageResponse<LiskSignedTx> = await this.device.getCommands().typedCall('LiskSignTx', 'LiskSignedTx', {
+            address_n: this.params.path,
+            transaction: this.params.transaction,
+        });
+        return response.message;
     }
 }

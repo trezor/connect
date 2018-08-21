@@ -3,7 +3,7 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
-import { validatePath, fromHardened } from '../../utils/pathUtils';
+import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
@@ -11,6 +11,7 @@ import { UiMessage } from '../../message/builder';
 import type { UiPromiseResponse } from 'flowtype';
 import type { LiskAddress } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
+import type { LiskAddress as LiskAddressResponse } from '../../types/lisk';
 
 type Batch = {
     path: Array<number>,
@@ -30,7 +31,7 @@ export default class LiskGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['1.7.0', '2.0.7'];
+        this.requiredFirmware = ['0', '2.0.8'];
         this.info = 'Export Lisk address';
 
         const payload: Object = message.payload;
@@ -100,14 +101,18 @@ export default class LiskGetAddress extends AbstractMethod {
         return this.confirmed;
     }
 
-    async run(): Promise<LiskAddress | Array<LiskAddress>> {
-        const responses: Array<LiskAddress> = [];
+    async run(): Promise<LiskAddressResponse | Array<LiskAddressResponse>> {
+        const responses: Array<LiskAddressResponse> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
             const response: LiskAddress = await this.device.getCommands().liskGetAddress(
                 this.params.bundle[i].path,
                 this.params.bundle[i].showOnTrezor
             );
-            responses.push(response);
+            responses.push({
+                address: response.address,
+                path: this.params.bundle[i].path,
+                serializedPath: getSerializedPath(this.params.bundle[i].path)
+            });
 
             if (this.params.bundledResponse) {
                 // send progress

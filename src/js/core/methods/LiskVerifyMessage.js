@@ -7,7 +7,7 @@ import type { Success } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    public_key: string,
+    publicKey: string,
     signature: string,
     message: string,
 }
@@ -19,23 +19,23 @@ export default class LiskVerifyMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = ['1.7.0', '2.0.7'];
+        this.requiredFirmware = ['0', '2.0.8'];
         this.info = 'Verify Lisk message';
 
         const payload: Object = message.payload;
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'public_key', type: 'string', obligatory: true },
+            { name: 'publicKey', type: 'string', obligatory: true },
             { name: 'signature', type: 'string', obligatory: true },
             { name: 'message', type: 'string', obligatory: true },
         ]);
 
         // TODO: check if message is already in hex format
-        const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
+        const messageHex: string = Buffer.from(payload.message, 'utf8').toString('hex');
 
         this.params = {
-            public_key: payload.public_key,
+            publicKey: payload.publicKey,
             signature: payload.signature,
             message: messageHex,
         };
@@ -43,7 +43,7 @@ export default class LiskVerifyMessage extends AbstractMethod {
 
     async run(): Promise<Success> {
         return await this.device.getCommands().liskVerifyMessage(
-            this.params.public_key,
+            this.params.publicKey,
             this.params.signature,
             this.params.message,
         );

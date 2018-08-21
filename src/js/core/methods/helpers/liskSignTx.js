@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import type { RawTransaction } from '../../../types/lisk';
+import type { Transaction as RawTransaction } from '../../../types/lisk';
 
 const FIELDS_TO_CONVERT = ['amount', 'fee'];
 const FIELDS_TO_RENAME = ['lifetime', 'keysgroup'];

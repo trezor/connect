@@ -259,22 +259,19 @@ export default class DeviceCommands {
     }
 
     async liskGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskAddress> {
-        const address: MessageResponse<trezor.LiskAddressMessage> = await this.typedCall('LiskGetAddress', 'LiskAddress', {
+        const response: MessageResponse<trezor.LiskAddress> = await this.typedCall('LiskGetAddress', 'LiskAddress', {
             address_n,
             show_display: !!showOnTrezor,
         });
+        return response.message;
+    }
 
-        const publicKey: MessageResponse<trezor.LiskPublicKeyMessage> = await this.typedCall('LiskGetPublicKey', 'LiskPublicKey', {
+    async liskGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskPublicKey> {
+        const response: MessageResponse<trezor.LiskPublicKey> = await this.typedCall('LiskGetPublicKey', 'LiskPublicKey', {
             address_n,
-            show_display: false,
+            show_display: !!showOnTrezor,
         });
-
-        return {
-            path: address_n,
-            serializedPath: getSerializedPath(address_n),
-            address: address.message.address,
-            publicKey: publicKey.message.public_key,
-        };
+        return response.message;
     }
 
     async liskSignMessage(address_n: Array<number>, message: string): Promise<trezor.LiskMessageSignature> {
@@ -282,7 +279,6 @@ export default class DeviceCommands {
             address_n,
             message,
         });
-
         return response.message;
     }
 
@@ -291,14 +287,6 @@ export default class DeviceCommands {
             public_key,
             signature,
             message,
-        });
-        return response.message;
-    }
-
-    async liskSignTx(address_n: Array<number>, transaction: any): Promise<trezor.LiskSignedTx> {
-        const response: MessageResponse<trezor.LiskSignedTx> = await this.typedCall('LiskSignTx', 'LiskSignedTx', {
-            address_n,
-            transaction,
         });
         return response.message;
     }
