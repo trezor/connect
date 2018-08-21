@@ -23,7 +23,7 @@ type Params = {
     bundledResponse: boolean,
 }
 
-export default class CardanoGetAddress extends AbstractMethod {
+export default class CardanoGetPublicKey extends AbstractMethod {
     params: Params;
     confirmed: boolean = false;
 
