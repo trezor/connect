@@ -1,3 +1,11 @@
+# 5.0.31
+__added__
+- Exception for not supported firmware when value for "trezor1" or "trezor2" inside coins.json is not set
+- Disable customMessage method for devices with official firmware
+__fixed__
+- Device state verification while using multiple instances with the same passphrase
+- ConnectSettings sensitive settings verification in DataManager
+
 # 5.0.30
 __added__
 - Added 'send-max' and 'opreturn' output types to `TrezorConnect.composeTransaction`
