@@ -17,9 +17,9 @@ TrezorConnect.liskSignTransaction(params).then(function(result) {
 
 ### Params
 [****Optional common params****](commonParams.md)
-###### [flowtype](../../src/js/types/params.js#L69-L72)
+###### [flowtype](../../src/js/types/lisk.js#L121-L124)
 * `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
-* `transaction` - *obligatory* `Object` type of [LiskTransaction](../../src/js/types/lisk.js#38)
+* `transaction` - *obligatory* `Object` type of [LiskTransaction](../../src/js/types/lisk.js#42-L52)
 
 ### Example
 ```javascript
@@ -39,7 +39,7 @@ TrezorConnect.liskSignTransaction(
 ```
 
 ### Result
-###### [flowtype](../../src/js/types/response.js#L181-L185)
+###### [flowtype](../../src/js/types/lisk.js#L126-L129)
 ```javascript
 {
     success: true,

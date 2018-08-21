@@ -16,7 +16,7 @@ TrezorConnect.liskSignMessage(params).then(function(result) {
 
 ### Params
 [****Optional common params****](commonParams.md)
-###### [flowtype](../../src/js/types/params.js#L188-L191)
+###### [flowtype](../../src/js/types/lisk.js#L109-L112)
 * `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
 * `message` - *obligatory* `string` message to sign in plain text
 
@@ -29,12 +29,12 @@ TrezorConnect.liskSignMessage({
 ```
 
 ### Result
-###### [flowtype](../../src/js/types/response.js#L142-L145)
+###### [flowtype](../../src/js/types/response.js#L104-L106)
 ```javascript
 {
     success: true,
     payload: {
-        public_key: string,
+        publicKey: string,
         signature: string,
     }
 }
