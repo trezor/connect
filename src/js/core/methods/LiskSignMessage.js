@@ -21,7 +21,7 @@ export default class LiskSignMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = ['0', '2.0.8'];
+        this.requiredFirmware = ['1.6.7', '2.0.7'];
 
         const payload: Object = message.payload;
 

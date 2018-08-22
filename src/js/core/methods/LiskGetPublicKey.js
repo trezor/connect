@@ -31,7 +31,7 @@ export default class LiskGetPublicKey extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['0', '2.0.8'];
+        this.requiredFirmware = ['1.6.7', '2.0.7'];
         this.info = 'Export Lisk public key';
 
         const payload: Object = message.payload;
