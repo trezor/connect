@@ -512,6 +512,31 @@ export type StellarOperationMessage = {
     bump_to: number,
 }
 
+// Lisk types
+export type LiskAddress = {
+    address: string,
+    publicKey: string,
+    path: Array<number>,
+    serializedPath: string,
+}
+
+export type LiskAddressMessage = {
+    address: string,
+}
+
+export type LiskPublicKeyMessage = {
+    public_key: string,
+}
+
+export type LiskMessageSignature = {
+    public_key: string,
+    signature: string,
+}
+
+export type LiskSignedTx = {
+    signature: string,
+}
+
 // GetAccountInfo response
 export type AccountInfo = {
     id: number,

@@ -192,5 +192,10 @@ export type StellarGetAddress = typeof F_StellarGetAddress;
 export type StellarSignTransaction = (STELLAR.$StellarSignTransaction) => Promise<STELLAR.StellarSignTransaction$>;
 export type VerifyMessage = (P.$VerifyMessage) => Promise<R.VerifyMessage$>;
 
+export type LiskGetAddress = (P.$LiskGetAddress) => Promise<R.LiskGetAddress$>;
+export type LiskSignMessage = (P.$LiskSignMessage) => Promise<R.LiskSignMessage$>;
+export type LiskVerivyMessage = (P.$LiskVerifyMessage) => Promise<R.LiskVerifyMessage$>;
+export type LiskSignTransaction = (P.$LiskSignTransaction) => Promise<R.LiskSignTransaction$>
+
 // export * from './params';
 export * from './response';

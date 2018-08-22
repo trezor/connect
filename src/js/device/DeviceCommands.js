@@ -244,6 +244,51 @@ export default class DeviceCommands {
         return response.message;
     }
 
+    async liskGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskAddress> {
+        const address: MessageResponse<trezor.LiskAddressMessage> = await this.typedCall('LiskGetAddress', 'LiskAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+
+        const publicKey: MessageResponse<trezor.LiskPublicKeyMessage> = await this.typedCall('LiskGetPublicKey', 'LiskPublicKey', {
+            address_n,
+            show_display: false,
+        });
+
+        return {
+            path: address_n,
+            serializedPath: getSerializedPath(address_n),
+            address: address.message.address,
+            publicKey: publicKey.message.public_key,
+        };
+    }
+
+    async liskSignMessage(address_n: Array<number>, message: string): Promise<trezor.LiskMessageSignature> {
+        const response: MessageResponse<trezor.LiskMessageSignature> = await this.typedCall('LiskSignMessage', 'LiskMessageSignature', {
+            address_n,
+            message,
+        });
+
+        return response.message;
+    }
+
+    async liskVerifyMessage(public_key: string, signature: string, message: string): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('LiskVerifyMessage', 'Success', {
+            public_key,
+            signature,
+            message,
+        });
+        return response.message;
+    }
+
+    async liskSignTx(address_n: Array<number>, transaction: any): Promise<trezor.LiskSignedTx> {
+        const response: MessageResponse<trezor.LiskSignedTx> = await this.typedCall('LiskSignTx', 'LiskSignedTx', {
+            address_n,
+            transaction,
+        });
+        return response.message;
+    }
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,

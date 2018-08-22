@@ -12,7 +12,7 @@ Every method require an [`Object`](https://developer.mozilla.org/en-US/docs/Web/
 * [TrezorConnect.requestLogin](methods/requestLogin.md)
 * [TrezorConnect.cipherKeyValue](methods/cipherKeyValue.md)
 
-### Bitcoin, Bitcoin Cash, Bitcoin Gold, Litecoin, Dash, ZCash, Testnet 
+### Bitcoin, Bitcoin Cash, Bitcoin Gold, Litecoin, Dash, ZCash, Testnet
 
 * [TrezorConnect.getAddress](methods/getAddress.md)
 * [TrezorConnect.getAccountInfo](methods/getAccountInfo.md)
@@ -35,3 +35,9 @@ Every method require an [`Object`](https://developer.mozilla.org/en-US/docs/Web/
 ### Stellar
 * [TrezorConnect.stellarGetAddress](methods/stellarGetAddress.md)
 * [TrezorConnect.stellarSignTransaction](methods/stellarSignTransaction.md)
+
+### Lisk
+* [TrezorConnect.liskGetAddress](methods/liskGetAddress.md)
+* [TrezorConnect.liskSignMessage](methods/liskSignMessage.md)
+* [TrezorConnect.liskVerifyMessage](methods/liskVerifyMessage.md)
+* [TrezorConnect.liskSignTransaction](methods/liskSignTransaction.md)

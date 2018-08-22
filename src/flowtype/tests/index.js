@@ -80,7 +80,25 @@ import type {
     ExpectedPassphraseResponse,
 } from 'flowtype/tests/passphrase';
 
+import type {
+    TestLiskGetAddressPayload,
+    ExpectedLiskGetAddressResponse,
+} from 'flowtype/tests/lisk-get-address';
 
+import type {
+    TestLiskSignMessagePayload,
+    ExpectedLiskSignMessageResponse,
+} from 'flowtype/tests/lisk-sign-message';
+
+import type {
+    TestLiskVerifyMessagePayload,
+    ExpectedLiskVerifyMessageResponse,
+} from 'flowtype/tests/lisk-verify-message';
+
+import type {
+    TestLiskSignTransactionPayload,
+    ExpectedLiskSignTransactionResponse,
+} from 'flowtype/tests/lisk-sign-transaction';
 
 declare module 'flowtype/tests' {
     // declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
@@ -130,6 +148,7 @@ declare module 'flowtype/tests' {
     declare export type SubtestGetAccountInfo = Subtest<TestGetAccountInfoPayload, ExpectedGetAccountInfoResponse>;
     declare export type SubtestNemSignTransaction = Subtest<TestNemSignTransactionPayload, ExpectedNemSignTransactionResponse>;
     declare export type SubtestPassphrase = Subtest<TestPassphrasePayload, ExpectedPassphraseResponse>;
+    declare export type SubtestLiskSignTransaction = Subtest<TestLiskSignTransactionPayload, ExpectedLiskSignTransactionResponse>;
 
     declare export type TestPayload =
         TestCardanoSignMessagePayload
@@ -147,7 +166,12 @@ declare module 'flowtype/tests' {
         | TestVerifyMessagePayload
         | TestGetAccountInfoPayload
         | TestNemSignTransactionPayload
-        | TestPassphrasePayload;
+        | TestPassphrasePayload
+        | TestLiskGetAddressPayload
+        | TestLiskSignMessagePayload
+        | TestLiskVerifyMessagePayload
+        | TestLiskSignTransactionPayload;
+
     declare export type ExpectedResponse =
         ExpectedCardanoSignMessageResponse
         | ExpectedCardanoVerifyMessageResponse
@@ -164,7 +188,11 @@ declare module 'flowtype/tests' {
         | ExpectedVerifyMessageResponse
         | ExpectedGetAccountInfoResponse
         | ExpectedNemSignTransactionResponse
-        | ExpectedPassphraseResponse;
+        | ExpectedPassphraseResponse
+        | ExpectedLiskGetAddressResponse
+        | ExpectedLiskSignMessageResponse
+        | ExpectedLiskVerifyMessageResponse
+        | ExpectedLiskSignTransactionResponse;
 
     declare export type SubtestFunction = SubtestGetAddress
     | SubtestSignMessage
@@ -173,7 +201,8 @@ declare module 'flowtype/tests' {
     | SubtestVerifyMessage
     | SubtestGetAccountInfo
     | SubtestNemSignTransaction
-    | SubtestPassphrase;
+    | SubtestPassphrase
+    | SubtestLiskSignTransaction;
 
     declare export type TestFunction = {
         testName: string,
@@ -208,5 +237,9 @@ declare module 'flowtype/tests' {
         nemSignTransactionOthers(): TestFunction,
         nemSignTransactionTransfers(): TestFunction,
         passphrase(): TestFunction,
+        liskGetAddress(): TestFunction,
+        liskSignMessage(): TestFunction,
+        liskVerifyMessage(): TestFunction,
+        liskSignTransaction(): TestFunction,
     };
 }

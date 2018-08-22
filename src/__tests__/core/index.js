@@ -29,6 +29,10 @@ import { nemSignTransactionMultisig } from './nemSignTransactionMultisig.spec.js
 import { nemSignTransactionOthers } from './nemSignTransactionOthers.spec.js';
 import { nemSignTransactionTransfers } from './nemSignTransactionTransfers.spec.js';
 import { passphrase } from './passphrase.spec.js';
+import { liskGetAddress } from './liskGetAddress.spec.js';
+import { liskSignMessage } from './liskSignMessage.spec.js';
+import { liskVerifyMessage } from './liskVerifyMessage.spec.js';
+import { liskSignTransaction } from './liskSignTransaction.spec.js';
 
 export const testFunctions: AvailableTestFunctions = {
     getPublicKey,
@@ -56,4 +60,8 @@ export const testFunctions: AvailableTestFunctions = {
     nemSignTransactionOthers,
     nemSignTransactionTransfers,
     passphrase,
+    liskGetAddress,
+    liskSignMessage,
+    liskVerifyMessage,
+    liskSignTransaction,
 };
