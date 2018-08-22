@@ -237,25 +237,11 @@ export default class DeviceCommands {
     }
 
     async stellarGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.StellarAddress> {
-        const address: MessageResponse<trezor.StellarAddressMessage> = await this.typedCall('StellarGetAddress', 'StellarAddress', {
+        const response: MessageResponse<trezor.StellarAddress> = await this.typedCall('StellarGetAddress', 'StellarAddress', {
             address_n,
             show_display: !!showOnTrezor,
         });
-
-        const publicKey: MessageResponse<trezor.StellarPublicKeyMessage> = await this.typedCall('StellarGetPublicKey', 'StellarPublicKey', {
-            address_n,
-        });
-
-        return {
-            path: address_n,
-            serializedPath: getSerializedPath(address_n),
-            address: address.message.address,
-            publicKey: publicKey.message.public_key,
-        };
-    }
-
-    async stellarSignTx(transaction: any): Promise<MessageResponse<trezor.StellarSignedTx>> {
-        return this.typedCall('StellarSignTx', 'StellarSignedTx', transaction);
+        return response.message;
     }
 
     async cipherKeyValue(
