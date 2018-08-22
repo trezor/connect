@@ -19,6 +19,8 @@ import GetFeatures from './GetFeatures';
 import GetPublicKey from './GetPublicKey';
 import PushTransaction from './PushTransaction';
 import RequestLogin from './RequestLogin';
+import RippleGetAddress from './RippleGetAddress';
+import RippleSignTransaction from './RippleSignTransaction';
 import NEMGetAddress from './NEMGetAddress';
 import NEMSignTransaction from './NEMSignTransaction';
 import SignMessage from './SignMessage';
@@ -42,6 +44,8 @@ const classes: {[k: string]: any} = {
     'getPublicKey': GetPublicKey,
     'pushTransaction': PushTransaction,
     'requestLogin': RequestLogin,
+    'rippleGetAddress': RippleGetAddress,
+    'rippleSignTransaction': RippleSignTransaction,
     'nemGetAddress': NEMGetAddress,
     'nemSignTransaction': NEMSignTransaction,
     'signMessage': SignMessage,
