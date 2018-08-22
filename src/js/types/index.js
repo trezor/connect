@@ -132,6 +132,7 @@ export type EventListener = typeof F_EventListener;
 import * as P from './params';
 import * as R from './response';
 import * as STELLAR from './stellar';
+import * as TEZOS from './tezos';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
@@ -190,6 +191,20 @@ declare function F_StellarGetAddress(params: (P.$Common & { bundle: Array<STELLA
 export type StellarGetAddress = typeof F_StellarGetAddress;
 
 export type StellarSignTransaction = (STELLAR.$StellarSignTransaction) => Promise<STELLAR.StellarSignTransaction$>;
+
+/* eslint-disable no-redeclare */
+declare function F_TezosGetAddress(params: (P.$Common & TEZOS.$TezosGetAddress)): Promise<TEZOS.TezosGetAddress$>;
+declare function F_TezosGetAddress(params: (P.$Common & { bundle: Array<TEZOS.$TezosGetAddress> })): Promise<TEZOS.TezosGetAddress$$>;
+/* eslint-enable no-redeclare */
+export type TezosGetAddress = typeof F_TezosGetAddress;
+/* eslint-disable no-redeclare */
+declare function F_TezosGetPublicKey(params: (P.$Common & TEZOS.$TezosGetPublicKey)): Promise<TEZOS.TezosGetPublicKey$>;
+declare function F_TezosGetPublicKey(params: (P.$Common & { bundle: Array<TEZOS.$TezosGetPublicKey> })): Promise<TEZOS.TezosGetPublicKey$$>;
+/* eslint-enable no-redeclare */
+export type TezosGetPublicKey = typeof F_TezosGetPublicKey;
+
+export type TezosSignTransaction = (TEZOS.$TezosSignTransaction) => Promise<TEZOS.TezosSignTransaction$>;
+
 export type VerifyMessage = (P.$VerifyMessage) => Promise<R.VerifyMessage$>;
 
 // export * from './params';

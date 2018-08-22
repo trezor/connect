@@ -527,6 +527,48 @@ export type StellarOperationMessage = {
     bump_to: number,
 }
 
+// TEZOS
+
+export type TezosAddress = {
+    address: string
+}
+
+export type TezosPublicKey = {
+    public_key: string
+}
+
+type TezosCurve = 0 | 1 | 2;
+
+type TezosContractID = {
+    tag?: any, // TODO
+    hash?: string,
+}
+
+type TezosRevealOperation = {
+    source?: TezosContractID, // TODO
+    fee?: number,
+    counter?: number,
+    gas_limit?: number,
+    storage_limit?: number,
+    public_key?: string,
+}
+
+export type TezosTransaction = {
+    address_n: Array<number>,
+    curve?: TezosCurve,
+    branch?: string;
+    reveal?: TezosRevealOperation,
+    transaction?: any, // TODO
+    origination?: any, // TODO
+    delegation?: any // TODO
+}
+
+export type TezosSignedTx = {
+    signature: string,
+    sig_op_contents: string,
+    operation_hash: string,
+}
+
 // GetAccountInfo response
 export type AccountInfo = {
     id: number,
