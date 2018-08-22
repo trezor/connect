@@ -131,6 +131,7 @@ export type EventListener = typeof F_EventListener;
 
 import * as P from './params';
 import * as R from './response';
+import * as RIPPLE from './ripple';
 import * as STELLAR from './stellar';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
@@ -180,6 +181,15 @@ export type NEMGetAddress = typeof F_NEMGetAddress;
 
 export type NEMSignTransaction = (P.$NEMSignTransaction) => Promise<R.NEMSignTransaction$>;
 export type PushTransaction = (P.$PushTransaction) => Promise<R.PushTransaction$>;
+
+/* eslint-disable no-redeclare */
+declare function F_RippleGetAddress(params: (P.$Common & RIPPLE.$RippleGetAddress)): Promise<RIPPLE.RippleGetAddress$>;
+declare function F_RippleGetAddress(params: (P.$Common & { bundle: Array<RIPPLE.$RippleGetAddress> })): Promise<RIPPLE.RippleGetAddress$$>;
+/* eslint-enable no-redeclare */
+export type RippleGetAddress = typeof F_RippleGetAddress;
+
+export type RippleSignTransaction = (RIPPLE.$RippleSignTransaction) => Promise<RIPPLE.RippleSignTransaction$>;
+
 export type SignMessage = (P.$SignMessage) => Promise<R.SignMessage$>;
 export type SignTransaction = (P.$SignTransaction) => Promise<R.SignTransaction$>;
 
