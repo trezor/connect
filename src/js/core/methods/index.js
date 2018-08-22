@@ -25,6 +25,9 @@ import SignMessage from './SignMessage';
 import SignTransaction from './SignTransaction';
 import StellarGetAddress from './StellarGetAddress';
 import StellarSignTransaction from './StellarSignTransaction';
+import TezosGetAddress from './TezosGetAddress';
+import TezosGetPublicKey from './TezosGetPublicKey';
+import TezosSignTransaction from './TezosSignTransaction';
 import VerifyMessage from './VerifyMessage';
 
 const classes: {[k: string]: any} = {
@@ -48,6 +51,9 @@ const classes: {[k: string]: any} = {
     'signTransaction': SignTransaction,
     'stellarGetAddress': StellarGetAddress,
     'stellarSignTransaction': StellarSignTransaction,
+    'tezosGetAddress': TezosGetAddress,
+    'tezosGetPublicKey': TezosGetPublicKey,
+    'tezosSignTransaction': TezosSignTransaction,
     'verifyMessage': VerifyMessage,
 };
 
