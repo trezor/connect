@@ -258,6 +258,27 @@ export default class DeviceCommands {
         return this.typedCall('StellarSignTx', 'StellarSignedTx', transaction);
     }
 
+    // Tezos: begin
+    async tezosGetAddress(address_n: Array<number>, curve: number, showOnTrezor: boolean): Promise<trezor.TezosAddress> {
+        const response: MessageResponse<trezor.TezosAddress> = await this.typedCall('TezosGetAddress', 'TezosAddress', {
+            address_n,
+            curve,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async tezosGetPublicKey(address_n: Array<number>, curve: number, showOnTrezor: boolean): Promise<trezor.TezosPublicKey> {
+        const response: MessageResponse<trezor.TezosPublicKey> = await this.typedCall('TezosGetPublicKey', 'TezosPublicKey', {
+            address_n,
+            curve,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+    // Tezos: end
+
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,
