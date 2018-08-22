@@ -19,7 +19,7 @@ export default class EthereumVerifyMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = ['0', '2.0.7'];
+        this.requiredFirmware = ['0', '2.0.8'];
         this.info = 'Verify Cardano message';
 
         const payload: Object = message.payload;

@@ -31,7 +31,7 @@ export default class CardanoGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['0', '2.0.7'];
+        this.requiredFirmware = ['0', '2.0.8'];
         this.info = 'Export Cardano address';
 
         const payload: Object = message.payload;

@@ -22,7 +22,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = ['0', '2.0.7'];
+        this.requiredFirmware = ['0', '2.0.8'];
         this.info = 'Sign Cardano transaction';
 
         const payload: Object = message.payload;
