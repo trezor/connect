@@ -97,13 +97,12 @@ export const ethereumSignTx = async (typedCall: (type: string, resType: string, 
         };
     }
 
-    if (tx_type != null) {
+    if (tx_type !== null) {
         message = {
             ...message,
             tx_type,
         };
     }
-    console.log(message);
 
     const response: DefaultMessageResponse = await typedCall('EthereumSignTx', 'EthereumTxRequest', message);
 
