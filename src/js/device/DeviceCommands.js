@@ -195,11 +195,7 @@ export default class DeviceCommands {
             address_n: address_n,
             show_display: !!showOnTrezor,
         });
-        return {
-            address: response.message.address,
-            path: address_n,
-            serializedPath: getSerializedPath(address_n),
-        };
+        return response.message;
     }
 
     async ethereumSignMessage(address_n: Array<number>, message: string): Promise<trezor.MessageSignature> {
