@@ -28,7 +28,7 @@ export const cardanoSignTx = async (typedCall: (type: string, resType: string, m
     outputs: Array<CardanoTxOutput>,
     transactions: Array<string>,
 ): Promise<CardanoSignedTx> => {
-    const response: MessageResponse<CardanoTxRequest> = await typedCall('CardanoSignTransaction', 'CardanoTxRequest', {
+    const response: MessageResponse<CardanoTxRequest> = await typedCall('CardanoSignTx', 'CardanoTxRequest', {
         inputs: inputs,
         outputs: outputs,
         transactions_count: transactions.length,
