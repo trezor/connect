@@ -12,7 +12,7 @@ type Params = {
     message: string,
 }
 
-export default class EthereumVerifyMessage extends AbstractMethod {
+export default class CardanoVerifyMessage extends AbstractMethod {
     params: Params;
 
     constructor(message: CoreMessage) {
