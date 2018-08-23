@@ -1,5 +1,4 @@
 /* @flow */
-
 declare module 'flowtype/tests/cardano-get-address' {
     declare export type TestCardanoGetAddressPayload = {
         method: string,
@@ -10,7 +9,6 @@ declare module 'flowtype/tests/cardano-get-address' {
         success?: boolean,
         payload?: {
             address: string,
-            publicKey: string,
         },
     };
 }
