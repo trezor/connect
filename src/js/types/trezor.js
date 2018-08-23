@@ -494,6 +494,27 @@ export type StellarOperationMessage = {
     bump_to: number,
 }
 
+export type RippleAddress = {
+    address: string,
+}
+
+export type RippleTransaction = {
+    address_n: Array<number>,
+    fee?: number,
+    flags?: number,
+    sequence?: number,
+    last_ledger_sequence?: number,
+    payment: {
+        amount: number,
+        destination: string,
+    },
+}
+
+export type RippleSignedTx = {
+    signature: string,
+    serialized_tx: string,
+}
+
 // GetAccountInfo response
 export type AccountInfo = {
     id: number,

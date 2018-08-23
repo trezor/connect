@@ -35,3 +35,7 @@ Every method require an [`Object`](https://developer.mozilla.org/en-US/docs/Web/
 ### Stellar
 * [TrezorConnect.stellarGetAddress](methods/stellarGetAddress.md)
 * [TrezorConnect.stellarSignTransaction](methods/stellarSignTransaction.md)
+
+### Ripple
+* [TrezorConnect.rippleGetAddress](methods/rippleGetAddress.md)
+* [TrezorConnect.rippleSignTransaction](methods/rippleSignTransaction.md)

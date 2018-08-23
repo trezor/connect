@@ -229,6 +229,21 @@ export default class DeviceCommands {
         return response.message;
     }
 
+    // Ripple: begin
+    async rippleGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.RippleAddress> {
+        const response: MessageResponse<trezor.RippleAddress> = await this.typedCall('RippleGetAddress', 'RippleAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async rippleSignTx(transaction: trezor.RippleTransaction): Promise<trezor.RippleSignedTx> {
+        const response: MessageResponse<trezor.RippleSignedTx> = await this.typedCall('RippleSignTx', 'RippleSignedTx', transaction);
+        return response.message;
+    }
+    // Ripple: end
+
     async stellarGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.StellarAddress> {
         const response: MessageResponse<trezor.StellarAddress> = await this.typedCall('StellarGetAddress', 'StellarAddress', {
             address_n,
