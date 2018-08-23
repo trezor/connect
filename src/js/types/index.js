@@ -131,6 +131,7 @@ export type EventListener = typeof F_EventListener;
 
 import * as P from './params';
 import * as R from './response';
+import * as CARDANO from './cardano';
 import * as RIPPLE from './ripple';
 import * as ETHEREUM from './ethereum';
 import * as NEM from './nem';
@@ -140,6 +141,22 @@ import * as STELLAR from './stellar';
 export type ChangeSettings = (settings: Settings) => void;
 export type CustomMessage = (P.$CustomMessage) => Promise<R.CustomMessage$>;
 export type RequestLogin = (P.$RequestLogin) => Promise<R.RequestLogin$>;
+
+/* eslint-disable no-redeclare */
+declare function F_CardanoGetAddress(params: (P.$Common & CARDANO.$CardanoGetAddress)): Promise<CARDANO.CardanoGetAddress$>;
+declare function F_CardanoGetAddress(params: (P.$Common & { bundle: Array<CARDANO.$CardanoGetAddress> })): Promise<CARDANO.CardanoGetAddress$$>;
+/* eslint-enable no-redeclare */
+export type CardanoGetAddress = typeof F_CardanoGetAddress;
+
+/* eslint-disable no-redeclare */
+declare function F_CardanoGetPublicKey(params: (P.$Common & CARDANO.$CardanoGetPublicKey)): Promise<CARDANO.CardanoGetPublicKey$>;
+declare function F_CardanoGetPublicKey(params: (P.$Common & { bundle: Array<CARDANO.$CardanoGetPublicKey> })): Promise<CARDANO.CardanoGetPublicKey$$>;
+/* eslint-enable no-redeclare */
+export type CardanoGetPublicKey = typeof F_CardanoGetPublicKey;
+
+export type CardanoSignMessage = (CARDANO.$CardanoSignMessage) => Promise<CARDANO.CardanoSignMessage$>;
+export type CardanoSignTransaction = (CARDANO.$CardanoSignTransaction) => Promise<CARDANO.CardanoSignTransaction$>;
+export type CardanoVerifyMessage = (CARDANO.$CardanoVerifyMessage) => Promise<CARDANO.CardanoVerifyMessage$>;
 
 /* eslint-disable no-redeclare */
 declare function F_CipherKeyValue(params: (P.$Common & P.$CipherKeyValue)): Promise<R.CipherKeyValue$>;

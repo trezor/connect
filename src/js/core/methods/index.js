@@ -5,6 +5,11 @@ import type { CoreMessage } from '../../types';
 
 import AbstractMethod from './AbstractMethod';
 
+import CardanoGetAddress from './CardanoGetAddress';
+import CardanoGetPublicKey from './CardanoGetPublicKey';
+import CardanoSignMessage from './CardanoSignMessage';
+import CardanoSignTransaction from './CardanoSignTransaction';
+import CardanoVerifyMessage from './CardanoVerifyMessage';
 import CipherKeyValue from './CipherKeyValue';
 import ComposeTransaction from './ComposeTransaction';
 import CustomMessage from './CustomMessage';
@@ -30,6 +35,11 @@ import StellarSignTransaction from './StellarSignTransaction';
 import VerifyMessage from './VerifyMessage';
 
 const classes: {[k: string]: any} = {
+    'cardanoGetAddress': CardanoGetAddress,
+    'cardanoGetPublicKey': CardanoGetPublicKey,
+    'cardanoSignMessage': CardanoSignMessage,
+    'cardanoSignTransaction': CardanoSignTransaction,
+    'cardanoVerifyMessage': CardanoVerifyMessage,
     'cipherKeyValue': CipherKeyValue,
     'composeTransaction': ComposeTransaction,
     'customMessage': CustomMessage,
