@@ -9,7 +9,7 @@ declare module 'flowtype/tests/lisk-sign-message' {
 
     declare export type ExpectedLiskSignMessageResponse = {
         payload: {
-            public_key: string,
+            publicKey: string,
             signature: string,
         },
     };
