@@ -132,6 +132,7 @@ export type EventListener = typeof F_EventListener;
 import * as P from './params';
 import * as R from './response';
 import * as CARDANO from './cardano';
+import * as STELLAR from './stellar';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
