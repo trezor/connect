@@ -1,5 +1,8 @@
 # 5.0.31
 __added__
+- Support for Cardano
+- Support for Ripple
+- Support for Lisk
 - Exception for not supported firmware when value for "trezor1" or "trezor2" inside coins.json is not set
 - Disable customMessage method for devices with official firmware
 __fixed__
