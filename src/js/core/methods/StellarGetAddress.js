@@ -111,7 +111,7 @@ export default class StellarGetAddress extends AbstractMethod {
             responses.push({
                 address: response.address,
                 path: this.params.bundle[i].path,
-                serializedPath: getSerializedPath(this.params.bundle[i].path)
+                serializedPath: getSerializedPath(this.params.bundle[i].path),
             });
 
             if (this.params.bundledResponse) {
