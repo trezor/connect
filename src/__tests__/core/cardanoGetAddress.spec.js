@@ -21,11 +21,11 @@ export const cardanoGetAddress = (): TestFunction => {
         },
         {
             method: 'cardanoGetAddress',
-            path: "m/44'/1815'/0/0/0",
+            path: "m/44'/1815'/0'/0/1'",
         },
         {
             method: 'cardanoGetAddress',
-            path: "m/44'/1815'/0'/0/0",
+            path: "m/44'/1815'/0'/0/2'",
         },
     ];
 

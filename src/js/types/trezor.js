@@ -111,20 +111,6 @@ export type MultisigRedeemScriptType = {
     m?: number,
 }
 
-// type TransactionInputBase = {
-//     address_n?: Array<number>,
-//     prev_hash: string,
-//     prev_index: number,
-// }
-
-// export type TransactionInput = TransactionInputBase & {
-//     script_type: 'SPENDMULTISIG',
-//     multisig: MultisigRedeemScriptType,
-// } | TransactionInputBase & {
-//     script_type: 'SPENDP2SHWITNESS',
-//     amount: number,
-// }
-
 export type TransactionInput = {
     address_n?: Array<number>,
     prev_hash: string,
@@ -203,8 +189,6 @@ export type EthereumTxRequest = {
 
 export type EthereumAddress = {
     address: string,
-    path: Array<number>,
-    serializedPath: string,
 }
 
 export type EthereumSignedTx = {
@@ -267,8 +251,6 @@ export type SignTxInfoToTrezor = {
 // NEM types
 export type NEMAddress = {
     address: string,
-    path: Array<number>,
-    serializedPath: string,
 }
 
 export type NEMSignedTx = {
@@ -398,15 +380,10 @@ export type NEMSignTxMessage = {
 
 // Stellar types
 
-// this type is returned from connect
 export type StellarAddress = {
-    path: Array<number>,
-    serializedPath: string,
     address: string,
-    publicKey: string,
 }
 
-// this type is returned from device
 export type StellarSignedTx = {
     public_key: string,
     signature: string,
@@ -417,16 +394,6 @@ export type StellarPaymentOp = {
     message: {},
 }
 
-// this type is returned from device
-export type StellarAddressMessage = {
-    address: string,
-}
-// this type is returned from device
-export type StellarPublicKeyMessage = {
-    public_key: string,
-}
-
-// those types are sent TO device
 export type StellarSignTxMessage = {
     address_n: Array<number>,
     source_account: string,
@@ -525,6 +492,108 @@ export type StellarOperationMessage = {
     type: 'StellarBumpSequenceOp',
     source_account: string,
     bump_to: number,
+}
+
+// Cardano types
+export type CardanoAddress = {
+    address: string,
+    address_n?: Array<number>,
+};
+
+export type CardanoPublicKey = {
+    xpub: string,
+    node: HDPubNode,
+    root_hd_passphrase: string,
+};
+
+export type CardanoSignedTx = {
+    tx_hash: string,
+    tx_body: string,
+};
+export type CardanoTxInput = {
+    tx_hash: string,
+    address_n: Array<number>,
+    output_index: number,
+    type?: number,
+};
+export type CardanoTxOutput = {
+    address?: string,
+    address_n?: Array<number>,
+    amount: number,
+};
+
+export type CardanoTxRequest = {
+    tx_index: number,
+    tx_hash: string,
+    tx_body: string,
+};
+
+export type CardanoMessageSignature = {
+    public_key: string,
+    signature: string,
+};
+
+// Lisk types
+export type LiskAddress = {
+    address: string,
+}
+
+export type LiskPublicKey = {
+    public_key: string,
+}
+
+export type LiskMessageSignature = {
+    public_key: string,
+    signature: string,
+};
+
+export type LiskAsset =
+    { data: string } |
+    { votes: Array<string> } |
+    { delegate: { username: string } } |
+    { signature: { public_key: string } } |
+    { multisignature: {
+        min: number,
+        life_time: number,
+        keys_group: Array<string>,
+    } };
+
+export type LiskTransaction = {
+    type: number,
+    fee: number,
+    amount: number,
+    timestamp: number,
+    recipient_id?: string,
+    sender_public_key?: string,
+    requester_public_key?: string,
+    signature?: string,
+    asset?: LiskAsset,
+}
+
+export type LiskSignedTx = {
+    signature: string,
+}
+
+// Ripple types
+export type RippleAddress = {
+    address: string,
+}
+
+export type RippleTransaction = {
+    address_n: Array<number>,
+    fee?: number,
+    flags?: number,
+    sequence?: number,
+    last_ledger_sequence?: number,
+    payment: {
+        amount: number,
+        destination: string,
+    },
+}
+
+export type RippleSignedTx = {
+    signature: string,
+    serialized_tx: string,
 }
 
 // GetAccountInfo response

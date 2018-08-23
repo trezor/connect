@@ -1,3 +1,19 @@
+# 5.0.31
+__added__
+- Support for Cardano
+- Support for Ripple
+- Support for Lisk
+- Exception for not supported firmware when value for "trezor1" or "trezor2" inside coins.json is not set
+- Disable customMessage method for devices with official firmware
+- Added new field in `TrezorConnect.signEthereumTransaction` for `Wanchain`
+__changed__
+- Separate "getPublicKey" and "getAddress" methods for all coins
+__fixed__
+- Device state verification while using multiple instances with the same passphrase
+- ConnectSettings sensitive settings verification in DataManager
+- removed package-lock.json from repository
+
+
 # 5.0.30
 __added__
 - Added 'send-max' and 'opreturn' output types to `TrezorConnect.composeTransaction`

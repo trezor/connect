@@ -70,6 +70,11 @@ export default class DataManager {
             // check if origin is trusted
             const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || '');
             this.settings.trustedHost = !!whitelist && !this.settings.popup;
+            // ensure that popup will be used
+            if (!this.settings.trustedHost) {
+                this.settings.popup = true;
+            }
+            // ensure that debug is disabled
             if (this.settings.debug && !this.settings.trustedHost && !whitelist) {
                 this.settings.debug = false;
             }

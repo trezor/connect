@@ -3,33 +3,32 @@ import type {
     TestFunction,
 } from 'flowtype/tests';
 
-// CardanoGetAddress method returns bot xpub and address
 import type {
-    TestCardanoGetAddressPayload,
-    ExpectedCardanoGetAddressResponse,
-} from 'flowtype/tests/cardano-get-address';
+    TestCardanoGetPublicKeyPayload,
+    ExpectedCardanoGetPublicKeyResponse,
+} from 'flowtype/tests/cardano-get-public-key';
 
-export const cardanoGetAddress = (): TestFunction => {
-    const testPayloads: Array<TestCardanoGetAddressPayload> = [
+export const cardanoGetPublicKey = (): TestFunction => {
+    const testPayloads: Array<TestCardanoGetPublicKeyPayload> = [
         {
-            method: 'cardanoGetAddress',
+            method: 'cardanoGetPublicKey',
             path: "m/44'/1815'/0'/0/0'",
         },
         {
-            method: 'cardanoGetAddress',
+            method: 'cardanoGetPublicKey',
             path: "m/44'/1815'",
         },
         {
-            method: 'cardanoGetAddress',
+            method: 'cardanoGetPublicKey',
             path: "m/44'/1815'/0/0/0",
         },
         {
-            method: 'cardanoGetAddress',
+            method: 'cardanoGetPublicKey',
             path: "m/44'/1815'/0'/0/0",
         },
     ];
 
-    const expectedResponses: Array<ExpectedCardanoGetAddressResponse> = [
+    const expectedResponses: Array<ExpectedCardanoGetPublicKeyResponse> = [
         {
             payload: {
                 publicKey: '5ed62999f3d181c86dfc932e2e0d9ce1d9067e6212b51629c700492f7f7e0bb19897025ed2b63debadcd858ca78864234c6c924b5b1c4c8a7d9b5b20b8d8fdb7',

@@ -26,6 +26,11 @@ import type {
 } from 'flowtype/tests/ethereum-get-address';
 
 import type {
+    TestCardanoGetPublicKeyPayload,
+    ExpectedCardanoGetPublicKeyResponse,
+} from 'flowtype/tests/cardano-get-public-key';
+
+import type {
     TestEthereumSignMessagePayload,
     ExpectedEthereumSignMessageResponse,
 } from 'flowtype/tests/ethereum-sign-message';
@@ -80,7 +85,35 @@ import type {
     ExpectedPassphraseResponse,
 } from 'flowtype/tests/passphrase';
 
+import type {
+    TestLiskGetAddressPayload,
+    ExpectedLiskGetAddressResponse,
+} from 'flowtype/tests/lisk-get-address';
 
+import type {
+    TestLiskSignMessagePayload,
+    ExpectedLiskSignMessageResponse,
+} from 'flowtype/tests/lisk-sign-message';
+
+import type {
+    TestLiskVerifyMessagePayload,
+    ExpectedLiskVerifyMessageResponse,
+} from 'flowtype/tests/lisk-verify-message';
+
+import type {
+    TestLiskSignTransactionPayload,
+    ExpectedLiskSignTransactionResponse,
+} from 'flowtype/tests/lisk-sign-transaction';
+
+import type {
+    TestRippleGetAddressPayload,
+    ExpectedRippleGetAddressResponse,
+} from 'flowtype/tests/ripple-get-address';
+
+import type {
+    TestRippleSignTransactionPayload,
+    ExpectedRippleSignTransactionResponse,
+} from 'flowtype/tests/ripple-sign-transaction';
 
 declare module 'flowtype/tests' {
     // declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
@@ -130,11 +163,13 @@ declare module 'flowtype/tests' {
     declare export type SubtestGetAccountInfo = Subtest<TestGetAccountInfoPayload, ExpectedGetAccountInfoResponse>;
     declare export type SubtestNemSignTransaction = Subtest<TestNemSignTransactionPayload, ExpectedNemSignTransactionResponse>;
     declare export type SubtestPassphrase = Subtest<TestPassphrasePayload, ExpectedPassphraseResponse>;
+    declare export type SubtestLiskSignTransaction = Subtest<TestLiskSignTransactionPayload, ExpectedLiskSignTransactionResponse>;
 
     declare export type TestPayload =
         TestCardanoSignMessagePayload
         | TestCardanoVerifyMessagePayload
         | TestCardanoGetAddressPayload
+        | TestCardanoGetPublicKeyPayload
         | TestCardanoSignTransactionPayload
         | TestEthereumGetAddressPayload
         | TestEthereumSignMessagePayload
@@ -147,11 +182,19 @@ declare module 'flowtype/tests' {
         | TestVerifyMessagePayload
         | TestGetAccountInfoPayload
         | TestNemSignTransactionPayload
-        | TestPassphrasePayload;
+        | TestPassphrasePayload
+        | TestLiskGetAddressPayload
+        | TestLiskSignMessagePayload
+        | TestLiskVerifyMessagePayload
+        | TestLiskSignTransactionPayload
+        | TestRippleGetAddressPayload
+        | TestRippleSignTransactionPayload;
+
     declare export type ExpectedResponse =
         ExpectedCardanoSignMessageResponse
         | ExpectedCardanoVerifyMessageResponse
         | ExpectedCardanoGetAddressResponse
+        | ExpectedCardanoGetPublicKeyResponse
         | ExpectedCardanoSignTransactionResponse
         | ExpectedEthereumGetAddressResponse
         | ExpectedEthereumSignMessageResponse
@@ -164,7 +207,13 @@ declare module 'flowtype/tests' {
         | ExpectedVerifyMessageResponse
         | ExpectedGetAccountInfoResponse
         | ExpectedNemSignTransactionResponse
-        | ExpectedPassphraseResponse;
+        | ExpectedPassphraseResponse
+        | ExpectedLiskGetAddressResponse
+        | ExpectedLiskSignMessageResponse
+        | ExpectedLiskVerifyMessageResponse
+        | ExpectedLiskSignTransactionResponse
+        | ExpectedRippleGetAddressResponse
+        | ExpectedRippleSignTransactionResponse;
 
     declare export type SubtestFunction = SubtestGetAddress
     | SubtestSignMessage
@@ -173,7 +222,8 @@ declare module 'flowtype/tests' {
     | SubtestVerifyMessage
     | SubtestGetAccountInfo
     | SubtestNemSignTransaction
-    | SubtestPassphrase;
+    | SubtestPassphrase
+    | SubtestLiskSignTransaction;
 
     declare export type TestFunction = {
         testName: string,
@@ -208,5 +258,11 @@ declare module 'flowtype/tests' {
         nemSignTransactionOthers(): TestFunction,
         nemSignTransactionTransfers(): TestFunction,
         passphrase(): TestFunction,
+        liskGetAddress(): TestFunction,
+        liskSignMessage(): TestFunction,
+        liskVerifyMessage(): TestFunction,
+        liskSignTransaction(): TestFunction,
+        rippleGetAddress(): TestFunction,
+        rippleSignTransaction(): TestFunction,
     };
 }
