@@ -52,7 +52,7 @@ export default class CustomMessage extends AbstractMethod {
     }
 
     async run(): Promise<Object> {
-        if (this.device.features.vendor === 'trezor.io') {
+        if (this.device.features.vendor === 'trezor.io' || this.device.features.vendor === 'bitcointrezor.com') {
             throw new Error('Cannot use custom message on device with official firmware. Change device "vendor" field.');
         }
         // call message
