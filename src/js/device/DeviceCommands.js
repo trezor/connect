@@ -195,11 +195,7 @@ export default class DeviceCommands {
             address_n: address_n,
             show_display: !!showOnTrezor,
         });
-        return {
-            address: response.message.address,
-            path: address_n,
-            serializedPath: getSerializedPath(address_n),
-        };
+        return response.message;
     }
 
     async ethereumSignMessage(address_n: Array<number>, message: string): Promise<trezor.MessageSignature> {
@@ -225,16 +221,28 @@ export default class DeviceCommands {
             network,
             show_display: !!showOnTrezor,
         });
-        return {
-            address: response.message.address,
-            path: address_n,
-            serializedPath: getSerializedPath(address_n),
-        };
+        return response.message;
     }
 
-    async nemSignTx(transaction: any): Promise<MessageResponse<trezor.NEMSignedTx>> {
-        return this.typedCall('NEMSignTx', 'NEMSignedTx', transaction);
+    async nemSignTx(transaction: trezor.NEMSignTxMessage): Promise<trezor.NEMSignedTx> {
+        const response: MessageResponse<trezor.NEMSignedTx> = await this.typedCall('NEMSignTx', 'NEMSignedTx', transaction);
+        return response.message;
     }
+
+    // Ripple: begin
+    async rippleGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.RippleAddress> {
+        const response: MessageResponse<trezor.RippleAddress> = await this.typedCall('RippleGetAddress', 'RippleAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async rippleSignTx(transaction: trezor.RippleTransaction): Promise<trezor.RippleSignedTx> {
+        const response: MessageResponse<trezor.RippleSignedTx> = await this.typedCall('RippleSignTx', 'RippleSignedTx', transaction);
+        return response.message;
+    }
+    // Ripple: end
 
     async stellarGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.StellarAddress> {
         const response: MessageResponse<trezor.StellarAddress> = await this.typedCall('StellarGetAddress', 'StellarAddress', {

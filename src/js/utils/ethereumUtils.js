@@ -43,7 +43,7 @@ const isHexString = (value: string, length?: number) => {
     }
     if (length && value.length !== 2 + 2 * length) { return false; }
     return true;
-}
+};
 
 // from (toBuffer) https://github.com/ethereumjs/ethereumjs-util/blob/master/index.js
 export const messageToHex = (message: string): string => {
@@ -54,7 +54,7 @@ export const messageToHex = (message: string): string => {
         if (clean.length % 2 !== 0) { clean = '0' + clean; }
         buffer = Buffer.from(clean, 'hex');
     } else {
-        buffer = Buffer.from(message)
+        buffer = Buffer.from(message);
     }
     return buffer.toString('hex');
-}
+};

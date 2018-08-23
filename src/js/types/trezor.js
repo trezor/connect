@@ -111,20 +111,6 @@ export type MultisigRedeemScriptType = {
     m?: number,
 }
 
-// type TransactionInputBase = {
-//     address_n?: Array<number>,
-//     prev_hash: string,
-//     prev_index: number,
-// }
-
-// export type TransactionInput = TransactionInputBase & {
-//     script_type: 'SPENDMULTISIG',
-//     multisig: MultisigRedeemScriptType,
-// } | TransactionInputBase & {
-//     script_type: 'SPENDP2SHWITNESS',
-//     amount: number,
-// }
-
 export type TransactionInput = {
     address_n?: Array<number>,
     prev_hash: string,
@@ -203,8 +189,6 @@ export type EthereumTxRequest = {
 
 export type EthereumAddress = {
     address: string,
-    path: Array<number>,
-    serializedPath: string,
 }
 
 export type EthereumSignedTx = {
@@ -267,8 +251,6 @@ export type SignTxInfoToTrezor = {
 // NEM types
 export type NEMAddress = {
     address: string,
-    path: Array<number>,
-    serializedPath: string,
 }
 
 export type NEMSignedTx = {
@@ -549,6 +531,27 @@ export type CardanoTxRequest = {
 export type CardanoMessageSignature = {
     public_key: string,
     signature: string,
+}
+
+export type RippleAddress = {
+    address: string,
+}
+
+export type RippleTransaction = {
+    address_n: Array<number>,
+    fee?: number,
+    flags?: number,
+    sequence?: number,
+    last_ledger_sequence?: number,
+    payment: {
+        amount: number,
+        destination: string,
+    },
+}
+
+export type RippleSignedTx = {
+    signature: string,
+    serialized_tx: string,
 }
 
 // GetAccountInfo response

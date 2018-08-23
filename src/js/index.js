@@ -365,6 +365,14 @@ class TrezorConnect {
         return await call({ method: 'pushTransaction', ...params });
     }
 
+    static rippleGetAddress: $T.RippleGetAddress = async (params) => {
+        return await call({ method: 'rippleGetAddress', ...params });
+    }
+
+    static rippleSignTransaction: $T.RippleSignTransaction = async (params) => {
+        return await call({ method: 'rippleSignTransaction', ...params });
+    }
+
     static signMessage: $T.SignMessage = async (params) => {
         return await call({ method: 'signMessage', ...params });
     }

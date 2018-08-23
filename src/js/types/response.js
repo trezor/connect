@@ -4,16 +4,9 @@ import type {
     CipheredKeyValue,
     AccountInfo,
     Address,
-
-    EthereumSignedTx,
-    EthereumAddress,
     Features,
     HDNodeResponse,
-
     MessageSignature,
-    NEMAddress,
-    NEMSignedTx,
-
     Success,
     SignedTx,
 } from './trezor';
@@ -43,31 +36,6 @@ export type CustomMessage$ = {
 export type ComposeTransaction$ = {
     success: true,
     payload: SignedTx,
-} | Unsuccessful$;
-
-export type EthereumGetAddress$ = {
-    success: true,
-    payload: EthereumAddress,
-} | Unsuccessful$;
-
-export type EthereumGetAddress$$ = {
-    success: true,
-    payload: Array<EthereumAddress>,
-} | Unsuccessful$;
-
-export type EthereumSignMessage$ = {
-    success: true,
-    payload: MessageSignature,
-} | Unsuccessful$;
-
-export type EthereumSignTransaction$ = {
-    success: true,
-    payload: EthereumSignedTx,
-} | Unsuccessful$;
-
-export type EthereumVerifyMessage$ = {
-    success: true,
-    payload: Success,
 } | Unsuccessful$;
 
 export type GetAccountInfo$ = {
@@ -118,21 +86,6 @@ export type RequestLogin$ = {
         publicKey: string,
         signature: string,
     },
-} | Unsuccessful$;
-
-export type NEMGetAddress$ = {
-    success: true,
-    payload: NEMAddress,
-} | Unsuccessful$;
-
-export type NEMGetAddress$$ = {
-    success: true,
-    payload: Array<NEMAddress>,
-} | Unsuccessful$;
-
-export type NEMSignTransaction$ = {
-    success: true,
-    payload: NEMSignedTx,
 } | Unsuccessful$;
 
 export type SignMessage$ = {

@@ -41,3 +41,7 @@ Every method require an [`Object`](https://developer.mozilla.org/en-US/docs/Web/
 * [TrezorConnect.cardanoSignTransaction](methods/cardanoSignTransaction.md)
 * [TrezorConnect.cardanoSignMessage](methods/cardanoSignMessage.md)
 * [TrezorConnect.cardanoVerifyMessage](methods/cardanoVerifyMessage.md)
+
+### Ripple
+* [TrezorConnect.rippleGetAddress](methods/rippleGetAddress.md)
+* [TrezorConnect.rippleSignTransaction](methods/rippleSignTransaction.md)
