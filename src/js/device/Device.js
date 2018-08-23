@@ -286,6 +286,20 @@ export default class Device extends EventEmitter {
     }
 
     setInstance(instance: number): void {
+        if (this.instance !== instance) {
+            // if requested instance is different than current
+            // and device wasn't released in previous call (example: interrupted discovery which set "keepSession" to true but never released)
+            // clear "keepSession" and reset "activitySessionID" to ensure that "initialize" will be called
+            if (this.keepSession) {
+                this.activitySessionID = null;
+                this.keepSession = false;
+            }
+
+            // T1: forget cached passphrase
+            if (this.isT1()) {
+                this.clearPassphrase();
+            }
+        }
         this.instance = instance;
     }
 
@@ -300,6 +314,13 @@ export default class Device extends EventEmitter {
             this.setPassphrase(null); // T1 reset password
         }
         this.expectedState = state;
+        // T2: set "temporaryState" the same as "expectedState", it may change if device will request for passphrase [after PassphraseStateRequest message]
+        // this solves the issue with different instances but the same passphrases,
+        // where device state passed in "initialize" is correct from device point of view
+        // but "expectedState" and "temporaryState" are different strings
+        if (!this.isT1()) {
+            this.temporaryState = state;
+        }
     }
 
     getExpectedState(): ?string {
@@ -344,7 +365,7 @@ export default class Device extends EventEmitter {
         this.state = state;
     }
 
-    setTemporaryState(state: string): void {
+    setTemporaryState(state: ?string): void {
         this.temporaryState = state;
     }
 
@@ -495,13 +516,16 @@ export default class Device extends EventEmitter {
         return this.features ? this.features.major_version === 1 : false;
     }
 
-    hasUnexpectedMode(requiredFirmware: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE) {
+    hasUnexpectedMode(requiredFirmware: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE | typeof UI.FIRMWARE_NOT_SUPPORTED) {
         if (this.features) {
             if (this.isBootloader()) {
                 return UI.BOOTLOADER;
             }
             if (!this.isInitialized()) {
                 return UI.INITIALIZE;
+            }
+            if (requiredFirmware[ this.features.major_version - 1 ] === '0') {
+                return UI.FIRMWARE_NOT_SUPPORTED;
             }
             if (this.firmwareStatus === 'required' || !this.atLeast(requiredFirmware)) {
                 return UI.FIRMWARE;

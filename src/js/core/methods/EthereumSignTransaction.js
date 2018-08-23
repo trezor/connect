@@ -50,6 +50,7 @@ export default class EthereumSignTx extends AbstractMethod {
             { name: 'nonce', type: 'string', obligatory: true },
             { name: 'data', type: 'string' },
             { name: 'chainId', type: 'number' },
+            { name: 'txType', type: 'number' },
         ]);
 
         // TODO: check if tx data is a valid hex
@@ -82,7 +83,8 @@ export default class EthereumSignTx extends AbstractMethod {
             tx.gasPrice,
             tx.nonce,
             tx.data,
-            tx.chainId
+            tx.chainId,
+            tx.txType
         );
     }
 }

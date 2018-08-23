@@ -9,9 +9,9 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { UiPromiseResponse } from 'flowtype';
-import type { StellarAddress } from '../../types/trezor';
-import type { StellarAddress as StellarAddressResponse } from '../../types/stellar';
+import type { CardanoAddress } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
+import type { CardanoAddress as CardanoAddressResponse } from '../../types/cardano';
 
 type Batch = {
     path: Array<number>,
@@ -23,7 +23,7 @@ type Params = {
     bundledResponse: boolean,
 }
 
-export default class StellarGetAddress extends AbstractMethod {
+export default class CardanoGetAddress extends AbstractMethod {
     params: Params;
     confirmed: boolean = false;
 
@@ -32,7 +32,7 @@ export default class StellarGetAddress extends AbstractMethod {
 
         this.requiredPermissions = ['read'];
         this.requiredFirmware = ['0', '2.0.8'];
-        this.info = 'Export Stellar address';
+        this.info = 'Export Cardano address';
 
         const payload: Object = message.payload;
         let bundledResponse: boolean = true;
@@ -48,6 +48,7 @@ export default class StellarGetAddress extends AbstractMethod {
         ]);
 
         const bundle = [];
+
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
@@ -82,9 +83,9 @@ export default class StellarGetAddress extends AbstractMethod {
 
         let label: string;
         if (this.params.bundle.length > 1) {
-            label = 'Export multiple Stellar addresses';
+            label = 'Export multiple Cardano addresses';
         } else {
-            label = `Export Stellar address for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) }`;
+            label = `Export Cardano address for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) }`;
         }
 
         // request confirmation view
@@ -101,17 +102,18 @@ export default class StellarGetAddress extends AbstractMethod {
         return this.confirmed;
     }
 
-    async run(): Promise<StellarAddressResponse | Array<StellarAddressResponse>> {
-        const responses: Array<StellarAddressResponse> = [];
+    async run(): Promise<CardanoAddressResponse | Array<CardanoAddressResponse>> {
+        const responses: Array<CardanoAddressResponse> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
-            const response: StellarAddress = await this.device.getCommands().stellarGetAddress(
-                this.params.bundle[i].path,
-                this.params.bundle[i].showOnTrezor
+            const batch: Batch = this.params.bundle[i];
+            const response: CardanoAddress = await this.device.getCommands().cardanoGetAddress(
+                batch.path,
+                batch.showOnTrezor
             );
             responses.push({
+                path: batch.path,
+                serializedPath: getSerializedPath(batch.path),
                 address: response.address,
-                path: this.params.bundle[i].path,
-                serializedPath: getSerializedPath(this.params.bundle[i].path),
             });
 
             if (this.params.bundledResponse) {

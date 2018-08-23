@@ -1,14 +1,14 @@
-## Stellar: get address
+## Ripple: get address
 Display requested address on device and returns it to caller. User is presented with a description of the requested key and asked to confirm the export.
 
 ES6
 ```javascript
-const result = await TrezorConnect.stellarGetAddress(params);
+const result = await TrezorConnect.rippleGetAddress(params);
 ```
 
 CommonJS
 ```javascript
-TrezorConnect.stellarGetAddress(params).then(function(result) {
+TrezorConnect.rippleGetAddress(params).then(function(result) {
 
 });
 ```
@@ -23,19 +23,19 @@ TrezorConnect.stellarGetAddress(params).then(function(result) {
 * `bundle` - `Array` of Objects with `path` and `showOnTrezor` fields
 
 ### Example
-Display address of first stellar account:
+Display third address of second ripple account:
 ```javascript
-TrezorConnect.stellarGetAddress({
-    path: "m/44'/148'/0'"
+TrezorConnect.rippleGetAddress({
+    path: "m/44'/144'/1'/0/2"
 });
 ```
-Return a bundle of stellar addresses without displaying them on device:
+Return a bundle of ripple addresses without displaying them on device:
 ```javascript
-TrezorConnect.stellarGetAddress({
+TrezorConnect.rippleGetAddress({
     bundle: [
-        { path: "m/44'/148'/0'", showOnTrezor: false }, // account 1
-        { path: "m/44'/148'/1'", showOnTrezor: false }, // account 2
-        { path: "m/44'/148'/2'", showOnTrezor: false }  // account 3
+        { path: "m/44'/144'/0'/0/0", showOnTrezor: false }, // account 1
+        { path: "m/44'/144'/1'/0/1", showOnTrezor: false }, // account 2
+        { path: "m/44'/144'/2'/0/2", showOnTrezor: false }  // account 3
     ]
 });
 ```
@@ -57,9 +57,9 @@ Result with bundle of addresses
 {
     success: true,
     payload: [
-        { address: string, path: Array<number>, serializedPath: string }, // account 1
-        { address: string, path: Array<number>, serializedPath: string }, // account 2
-        { address: string, path: Array<number>, serializedPath: string }, // account 3
+        { address: string, path: Array<number>, serializedPath: string }, // account 1, address 1
+        { address: string, path: Array<number>, serializedPath: string }, // account 2, address 2
+        { address: string, path: Array<number>, serializedPath: string }, // account 3, address 3
     ]
 }
 ```

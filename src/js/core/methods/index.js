@@ -5,6 +5,11 @@ import type { CoreMessage } from '../../types';
 
 import AbstractMethod from './AbstractMethod';
 
+import CardanoGetAddress from './CardanoGetAddress';
+import CardanoGetPublicKey from './CardanoGetPublicKey';
+import CardanoSignMessage from './CardanoSignMessage';
+import CardanoSignTransaction from './CardanoSignTransaction';
+import CardanoVerifyMessage from './CardanoVerifyMessage';
 import CipherKeyValue from './CipherKeyValue';
 import ComposeTransaction from './ComposeTransaction';
 import CustomMessage from './CustomMessage';
@@ -22,6 +27,10 @@ import LiskGetPublicKey from './LiskGetPublicKey';
 import LiskSignMessage from './LiskSignMessage';
 import LiskVerifyMessage from './LiskVerifyMessage';
 import LiskSignTransaction from './LiskSignTransaction';
+import PushTransaction from './PushTransaction';
+import RequestLogin from './RequestLogin';
+import RippleGetAddress from './RippleGetAddress';
+import RippleSignTransaction from './RippleSignTransaction';
 import NEMGetAddress from './NEMGetAddress';
 import NEMSignTransaction from './NEMSignTransaction';
 import PushTransaction from './PushTransaction';
@@ -33,6 +42,11 @@ import StellarSignTransaction from './StellarSignTransaction';
 import VerifyMessage from './VerifyMessage';
 
 const classes: {[k: string]: any} = {
+    'cardanoGetAddress': CardanoGetAddress,
+    'cardanoGetPublicKey': CardanoGetPublicKey,
+    'cardanoSignMessage': CardanoSignMessage,
+    'cardanoSignTransaction': CardanoSignTransaction,
+    'cardanoVerifyMessage': CardanoVerifyMessage,
     'cipherKeyValue': CipherKeyValue,
     'composeTransaction': ComposeTransaction,
     'customMessage': CustomMessage,
@@ -50,6 +64,10 @@ const classes: {[k: string]: any} = {
     'liskSignMessage': LiskSignMessage,
     'liskSignTransaction': LiskSignTransaction,
     'liskVerifyMessage': LiskVerifyMessage,
+    'pushTransaction': PushTransaction,
+    'requestLogin': RequestLogin,
+    'rippleGetAddress': RippleGetAddress,
+    'rippleSignTransaction': RippleSignTransaction,
     'nemGetAddress': NEMGetAddress,
     'nemSignTransaction': NEMSignTransaction,
     'pushTransaction': PushTransaction,

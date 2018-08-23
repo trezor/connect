@@ -3,7 +3,7 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
-import { validatePath } from '../../utils/pathUtils';
+import { validatePath, getSerializedPath } from '../../utils/pathUtils';
 import { toChecksumAddress, getNetworkLabel } from '../../utils/ethereumUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
 import { uniq } from 'lodash';
@@ -12,6 +12,7 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { EthereumAddress } from '../../types/trezor';
+import type { EthereumAddress as EthereumAddressResponse } from '../../types/ethereum';
 import type { CoreMessage } from '../../types';
 import type { EthereumNetworkInfo } from 'flowtype';
 
@@ -97,17 +98,21 @@ export default class EthereumGetAddress extends AbstractMethod {
         };
     }
 
-    async run(): Promise<EthereumAddress | Array<EthereumAddress>> {
-        const responses: Array<EthereumAddress> = [];
+    async run(): Promise<EthereumAddressResponse | Array<EthereumAddressResponse>> {
+        const responses: Array<EthereumAddressResponse> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
             const batch: Batch = this.params.bundle[i];
-            const response = await this.device.getCommands().ethereumGetAddress(
+            const response: EthereumAddress = await this.device.getCommands().ethereumGetAddress(
                 batch.path,
                 batch.showOnTrezor
             );
 
             response.address = toChecksumAddress(response.address, batch.network);
-            responses.push(response);
+            responses.push({
+                address: response.address,
+                path: batch.path,
+                serializedPath: getSerializedPath(batch.path),
+            });
 
             if (this.params.bundledResponse) {
                 // send progress
