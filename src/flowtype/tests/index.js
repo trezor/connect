@@ -85,6 +85,10 @@ import type {
     ExpectedRippleGetAddressResponse,
 } from 'flowtype/tests/ripple-get-address';
 
+import type {
+    TestRippleSignTransactionPayload,
+    ExpectedRippleSignTransactionResponse,
+} from 'flowtype/tests/ripple-sign-transaction';
 
 declare module 'flowtype/tests' {
     // declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
@@ -151,9 +155,9 @@ declare module 'flowtype/tests' {
         | TestVerifyMessagePayload
         | TestGetAccountInfoPayload
         | TestNemSignTransactionPayload
-        | TestPassphrasePayload;
         | TestPassphrasePayload
         | TestRippleGetAddressPayload
+        | TestRippleSignTransactionPayload;
     declare export type ExpectedResponse =
         ExpectedCardanoSignMessageResponse
         | ExpectedCardanoVerifyMessageResponse
@@ -170,9 +174,9 @@ declare module 'flowtype/tests' {
         | ExpectedVerifyMessageResponse
         | ExpectedGetAccountInfoResponse
         | ExpectedNemSignTransactionResponse
-        | ExpectedPassphraseResponse;
         | ExpectedPassphraseResponse
         | ExpectedRippleGetAddressResponse
+        | ExpectedRippleSignTransactionResponse;
 
     declare export type SubtestFunction = SubtestGetAddress
     | SubtestSignMessage
@@ -217,5 +221,6 @@ declare module 'flowtype/tests' {
         nemSignTransactionTransfers(): TestFunction,
         passphrase(): TestFunction,
         rippleGetAddress(): TestFunction,
+        rippleSignTransaction(): TestFunction,
     };
 }
