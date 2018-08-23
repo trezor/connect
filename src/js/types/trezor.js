@@ -111,20 +111,6 @@ export type MultisigRedeemScriptType = {
     m?: number,
 }
 
-// type TransactionInputBase = {
-//     address_n?: Array<number>,
-//     prev_hash: string,
-//     prev_index: number,
-// }
-
-// export type TransactionInput = TransactionInputBase & {
-//     script_type: 'SPENDMULTISIG',
-//     multisig: MultisigRedeemScriptType,
-// } | TransactionInputBase & {
-//     script_type: 'SPENDP2SHWITNESS',
-//     amount: number,
-// }
-
 export type TransactionInput = {
     address_n?: Array<number>,
     prev_hash: string,
