@@ -56,4 +56,5 @@ export const testFunctions: AvailableTestFunctions = {
     nemSignTransactionOthers,
     nemSignTransactionTransfers,
     passphrase,
+    rippleGetAddress,
 };
