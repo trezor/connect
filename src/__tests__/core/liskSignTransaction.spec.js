@@ -149,7 +149,7 @@ const liskSignTxCastVotes = (): SubtestLiskSignTransaction => {
                 asset: {
                     votes: [
                         '+b002f58531c074c7190714523eec08c48db8c7cfc0c943097db1a2e82ed87f84',
-                        '-ec111c8ad482445cfe83d811a7edd1f1d2765079c99d7d958cca1354740b7614'
+                        '-ec111c8ad482445cfe83d811a7edd1f1d2765079c99d7d958cca1354740b7614',
                     ],
                 },
             },
@@ -186,7 +186,7 @@ const liskSignTxMultisignature = (): SubtestLiskSignTransaction => {
                         lifetime: 5,
                         keysgroup: [
                             '+5d036a858ce89f844491762eb89e2bfbd50a4a0a0da658e4b2628b25b117ae09',
-                            '+922fbfdd596fa78269bbcadc67ec2a1cc15fc929a19c462169568d7a3df1a1aa'
+                            '+922fbfdd596fa78269bbcadc67ec2a1cc15fc929a19c462169568d7a3df1a1aa',
                         ],
                     },
                 },
