@@ -9,7 +9,6 @@ import { prepareTx } from './helpers/liskSignTx';
 
 import type { CoreMessage } from '../../types';
 import type { LiskTransaction, LiskSignedTx } from '../../types/trezor';
-import type { MessageResponse } from '../../device/DeviceCommands';
 import type { Transaction as $LiskTransaction } from '../../types/lisk';
 
 type Params = {
@@ -58,10 +57,9 @@ export default class LiskSignTransaction extends AbstractMethod {
     }
 
     async run(): Promise<LiskSignedTx> {
-        const response: MessageResponse<LiskSignedTx> = await this.device.getCommands().typedCall('LiskSignTx', 'LiskSignedTx', {
-            address_n: this.params.path,
-            transaction: this.params.transaction,
-        });
-        return response.message;
+        return await this.device.getCommands().liskSignTx(
+            this.params.path,
+            this.params.transaction,
+        );
     }
 }

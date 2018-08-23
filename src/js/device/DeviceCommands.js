@@ -244,6 +244,7 @@ export default class DeviceCommands {
     }
     // Ripple: end
 
+    // Stellar: begin
     async stellarGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.StellarAddress> {
         const response: MessageResponse<trezor.StellarAddress> = await this.typedCall('StellarGetAddress', 'StellarAddress', {
             address_n,
@@ -252,6 +253,10 @@ export default class DeviceCommands {
         return response.message;
     }
 
+    // StellarSignTx message can be found inside ./core/methods/helpers/stellarSignTx
+    // Stellar: end
+
+    // Cardano: begin
     async cardanoGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoPublicKey> {
         const response: MessageResponse<trezor.CardanoPublicKey> = await this.typedCall('CardanoGetPublicKey', 'CardanoPublicKey', {
             address_n,
@@ -284,7 +289,10 @@ export default class DeviceCommands {
         });
         return response.message;
     }
+    // CardanoSignTx message can be found inside ./core/methods/helpers/cardanoSignTx
+    // Cardano: end
 
+    // Lisk: begin
     async liskGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskAddress> {
         const response: MessageResponse<trezor.LiskAddress> = await this.typedCall('LiskGetAddress', 'LiskAddress', {
             address_n,
@@ -317,6 +325,15 @@ export default class DeviceCommands {
         });
         return response.message;
     }
+
+    async liskSignTx(address_n: Array<number>, transaction: trezor.LiskTransaction): Promise<trezor.LiskSignedTx> {
+        const response: MessageResponse<trezor.LiskSignedTx> = await this.typedCall('LiskSignTx', 'LiskSignedTx', {
+            address_n,
+            transaction,
+        });
+        return response.message;
+    }
+    // Lisk: end
 
     async cipherKeyValue(
         address_n: Array<number>,
