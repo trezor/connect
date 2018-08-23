@@ -27,7 +27,7 @@ export type ConnectSettings = {
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
-const VERSION: string = '5.0.30';
+const VERSION: string = '5.0.31';
 const versionN: Array<number> = VERSION.split('.').map(s => parseInt(s));
 const DIRECTORY: string = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
 const DEFAULT_DOMAIN: string = `https://connect.trezor.io/${ DIRECTORY }`;
