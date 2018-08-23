@@ -225,15 +225,12 @@ export default class DeviceCommands {
             network,
             show_display: !!showOnTrezor,
         });
-        return {
-            address: response.message.address,
-            path: address_n,
-            serializedPath: getSerializedPath(address_n),
-        };
+        return response.message;
     }
 
-    async nemSignTx(transaction: any): Promise<MessageResponse<trezor.NEMSignedTx>> {
-        return this.typedCall('NEMSignTx', 'NEMSignedTx', transaction);
+    async nemSignTx(transaction: trezor.NEMSignTxMessage): Promise<trezor.NEMSignedTx> {
+        const response: MessageResponse<trezor.NEMSignedTx> = await this.typedCall('NEMSignTx', 'NEMSignedTx', transaction);
+        return response.message;
     }
 
     async stellarGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.StellarAddress> {
