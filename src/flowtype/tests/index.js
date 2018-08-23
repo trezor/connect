@@ -105,6 +105,7 @@ import type {
     ExpectedLiskSignTransactionResponse,
 } from 'flowtype/tests/lisk-sign-transaction';
 
+import type {
     TestRippleGetAddressPayload,
     ExpectedRippleGetAddressResponse,
 } from 'flowtype/tests/ripple-get-address';
