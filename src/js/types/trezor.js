@@ -541,7 +541,7 @@ export type CardanoTxOutput = {
 };
 
 export type CardanoTxRequest = {
-    tx_index?: number,
+    tx_index: number,
     tx_hash: string,
     tx_body: string,
 };
