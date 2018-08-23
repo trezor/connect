@@ -203,8 +203,6 @@ export type EthereumTxRequest = {
 
 export type EthereumAddress = {
     address: string,
-    path: Array<number>,
-    serializedPath: string,
 }
 
 export type EthereumSignedTx = {

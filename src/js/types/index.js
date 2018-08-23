@@ -131,6 +131,7 @@ export type EventListener = typeof F_EventListener;
 
 import * as P from './params';
 import * as R from './response';
+import * as ETHEREUM from './ethereum';
 import * as NEM from './nem';
 import * as STELLAR from './stellar';
 
@@ -148,14 +149,14 @@ export type CipherKeyValue = typeof F_CipherKeyValue;
 export type ComposeTransaction = (P.$ComposeTransaction) => Promise<R.ComposeTransaction$>;
 
 /* eslint-disable no-redeclare */
-declare function F_EthereumGetAddress(params: (P.$Common & P.$EthereumGetAddress)): Promise<R.EthereumGetAddress$>;
-declare function F_EthereumGetAddress(params: (P.$Common & { bundle: Array<P.$EthereumGetAddress> })): Promise<R.EthereumGetAddress$$>;
+declare function F_EthereumGetAddress(params: (P.$Common & ETHEREUM.$EthereumGetAddress)): Promise<ETHEREUM.EthereumGetAddress$>;
+declare function F_EthereumGetAddress(params: (P.$Common & { bundle: Array<ETHEREUM.$EthereumGetAddress> })): Promise<ETHEREUM.EthereumGetAddress$$>;
 /* eslint-enable no-redeclare */
 export type EthereumGetAddress = typeof F_EthereumGetAddress;
 
-export type EthereumSignMessage = (P.$EthereumSignMessage) => Promise<R.EthereumSignMessage$>;
-export type EthereumSignTransaction = (P.$EthereumSignTransaction) => Promise<R.EthereumSignTransaction$>;
-export type EthereumVerifyMessage = (P.$EthereumVerifyMessage) => Promise<R.EthereumVerifyMessage$>;
+export type EthereumSignMessage = (ETHEREUM.$EthereumSignMessage) => Promise<ETHEREUM.EthereumSignMessage$>;
+export type EthereumSignTransaction = (ETHEREUM.$EthereumSignTransaction) => Promise<ETHEREUM.EthereumSignTransaction$>;
+export type EthereumVerifyMessage = (ETHEREUM.$EthereumVerifyMessage) => Promise<ETHEREUM.EthereumVerifyMessage$>;
 export type GetAccountInfo = (P.$GetAccountInfo) => Promise<R.GetAccountInfo$>;
 
 /* eslint-disable no-redeclare */

@@ -4,9 +4,6 @@ import type {
     CipheredKeyValue,
     AccountInfo,
     Address,
-
-    EthereumSignedTx,
-    EthereumAddress,
     Features,
     HDNodeResponse,
     MessageSignature,
@@ -39,31 +36,6 @@ export type CustomMessage$ = {
 export type ComposeTransaction$ = {
     success: true,
     payload: SignedTx,
-} | Unsuccessful$;
-
-export type EthereumGetAddress$ = {
-    success: true,
-    payload: EthereumAddress,
-} | Unsuccessful$;
-
-export type EthereumGetAddress$$ = {
-    success: true,
-    payload: Array<EthereumAddress>,
-} | Unsuccessful$;
-
-export type EthereumSignMessage$ = {
-    success: true,
-    payload: MessageSignature,
-} | Unsuccessful$;
-
-export type EthereumSignTransaction$ = {
-    success: true,
-    payload: EthereumSignedTx,
-} | Unsuccessful$;
-
-export type EthereumVerifyMessage$ = {
-    success: true,
-    payload: Success,
 } | Unsuccessful$;
 
 export type GetAccountInfo$ = {

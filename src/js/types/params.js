@@ -1,10 +1,6 @@
 /* @flow */
 
 import type {
-    Transaction as EthereumTransaction,
-} from './ethereum';
-
-import type {
     MultisigRedeemScriptType,
 } from './trezor';
 
@@ -41,27 +37,6 @@ export type $CustomMessage = $Common & {
     message: string,
     params: JSON,
     callback: (request: any) => Promise<?{ message: string, params?: Object }>,
-}
-
-export type $EthereumGetAddress = {
-    path: $Path,
-    showOnTrezor?: boolean,
-}
-
-export type $EthereumSignMessage = $Common & {
-    path: $Path,
-    message: string,
-}
-
-export type $EthereumSignTransaction = $Common & {
-    path: $Path,
-    transaction: EthereumTransaction,
-}
-
-export type $EthereumVerifyMessage = $Common & {
-    address: string,
-    message: string,
-    signature: string,
 }
 
 export type $GetAccountInfo = $Common & {
