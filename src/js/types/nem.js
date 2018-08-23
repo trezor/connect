@@ -2,6 +2,10 @@
 // NEM types from nem-sdk
 // https://nemproject.github.io/#transferTransaction
 
+import type { $Path, $Common } from './params';
+import type { Unsuccessful$ } from './response';
+import type { NEMSignedTx } from './trezor';
+
 type MosaicID = {
     namespaceId: string,
     name: string,
@@ -77,3 +81,39 @@ export type Transaction = {
     supplyType: number,
     delta: number,
 }
+
+// get address
+
+export type NEMAddress = {
+    address: string,
+    path: Array<number>,
+    serializedPath: string,
+}
+
+export type $NEMGetAddress = {
+    path: $Path,
+    network: number,
+    showOnTrezor?: boolean,
+}
+
+export type NEMGetAddress$ = {
+    success: true,
+    payload: NEMAddress,
+} | Unsuccessful$;
+
+export type NEMGetAddress$$ = {
+    success: true,
+    payload: Array<NEMAddress>,
+} | Unsuccessful$;
+
+// sign transaction
+
+export type $NEMSignTransaction = $Common & {
+    path: $Path,
+    transaction: Transaction,
+}
+
+export type NEMSignTransaction$ = {
+    success: true,
+    payload: NEMSignedTx,
+} | Unsuccessful$;

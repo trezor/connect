@@ -9,11 +9,7 @@ import type {
     EthereumAddress,
     Features,
     HDNodeResponse,
-
     MessageSignature,
-    NEMAddress,
-    NEMSignedTx,
-
     Success,
     SignedTx,
 } from './trezor';
@@ -118,21 +114,6 @@ export type RequestLogin$ = {
         publicKey: string,
         signature: string,
     },
-} | Unsuccessful$;
-
-export type NEMGetAddress$ = {
-    success: true,
-    payload: NEMAddress,
-} | Unsuccessful$;
-
-export type NEMGetAddress$$ = {
-    success: true,
-    payload: Array<NEMAddress>,
-} | Unsuccessful$;
-
-export type NEMSignTransaction$ = {
-    success: true,
-    payload: NEMSignedTx,
 } | Unsuccessful$;
 
 export type SignMessage$ = {

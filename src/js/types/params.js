@@ -5,10 +5,6 @@ import type {
 } from './ethereum';
 
 import type {
-    Transaction as NEMTransaction,
-} from './nem';
-
-import type {
     MultisigRedeemScriptType,
 } from './trezor';
 
@@ -89,17 +85,6 @@ export type $GetPublicKey = {
     path: $Path,
     coin?: string,
     crossChain?: boolean,
-}
-
-export type $NEMGetAddress = {
-    path: $Path,
-    network: number,
-    showOnTrezor?: boolean,
-}
-
-export type $NEMSignTransaction = $Common & {
-    path: $Path,
-    transaction: NEMTransaction,
 }
 
 export type $PushTransaction = $Common & $Exact<{

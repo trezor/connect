@@ -131,6 +131,7 @@ export type EventListener = typeof F_EventListener;
 
 import * as P from './params';
 import * as R from './response';
+import * as NEM from './nem';
 import * as STELLAR from './stellar';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
@@ -173,12 +174,12 @@ declare function F_GetPublicKey(params: (P.$Common & { bundle: Array<P.$GetPubli
 export type GetPublicKey = typeof F_GetPublicKey;
 
 /* eslint-disable no-redeclare */
-declare function F_NEMGetAddress(params: (P.$Common & P.$NEMGetAddress)): Promise<R.NEMGetAddress$>;
-declare function F_NEMGetAddress(params: (P.$Common & { bundle: Array<P.$NEMGetAddress> })): Promise<R.NEMGetAddress$$>;
+declare function F_NEMGetAddress(params: (P.$Common & NEM.$NEMGetAddress)): Promise<NEM.NEMGetAddress$>;
+declare function F_NEMGetAddress(params: (P.$Common & { bundle: Array<NEM.$NEMGetAddress> })): Promise<NEM.NEMGetAddress$$>;
 /* eslint-enable no-redeclare */
 export type NEMGetAddress = typeof F_NEMGetAddress;
 
-export type NEMSignTransaction = (P.$NEMSignTransaction) => Promise<R.NEMSignTransaction$>;
+export type NEMSignTransaction = (NEM.$NEMSignTransaction) => Promise<NEM.NEMSignTransaction$>;
 export type PushTransaction = (P.$PushTransaction) => Promise<R.PushTransaction$>;
 export type SignMessage = (P.$SignMessage) => Promise<R.SignMessage$>;
 export type SignTransaction = (P.$SignTransaction) => Promise<R.SignTransaction$>;
