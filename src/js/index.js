@@ -353,6 +353,26 @@ class TrezorConnect {
         return await call({ method: 'getPublicKey', ...params });
     }
 
+    static liskGetAddress: $T.LiskGetAddress = async (params) => {
+        return await call({ method: 'liskGetAddress', ...params });
+    }
+
+    static liskGetPublicKey: $T.LiskGetPublicKey = async (params) => {
+        return await call({ method: 'liskGetPublicKey', ...params });
+    }
+
+    static liskSignMessage: $T.LiskSignMessage = async (params) => {
+        return await call({ method: 'liskSignMessage', ...params });
+    }
+
+    static liskSignTransaction: $T.LiskSignTransaction = async (params) => {
+        return await call({ method: 'liskSignTransaction', ...params });
+    }
+
+    static liskVerifyMessage: $T.LiskVerifyMessage = async (params) => {
+        return await call({ method: 'liskVerifyMessage', ...params });
+    }
+
     static nemGetAddress: $T.NEMGetAddress = async (params) => {
         return await call({ method: 'nemGetAddress', ...params });
     }

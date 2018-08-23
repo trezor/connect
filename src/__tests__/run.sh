@@ -55,6 +55,8 @@ verifyMessageSegwitNative_subtests="verify verifyLong verifyTestnet"
 
 ethereumSignTransaction_subtests="knownErc20Token unknownErc20Token noData data message newContract sanityChecks noDataEip155 dataEip155"
 
+liskSignTransaction_subtests="liskSignTxTransfer liskSignTxTransferWithData liskSignTxSecondSignature liskSignTxDelegateRegistration liskSignTxCastVotes liskSignTxMultisignature"
+
 nemSignTransactionMosaic_subtests="supplyChange creation creationProperties creationLevy"
 nemSignTransactionMultisig_subtests="aggregateModification multisig multisigSigner"
 nemSignTransactionOthers_subtests="importanceTransfer provisionNamespace"

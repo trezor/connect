@@ -136,6 +136,7 @@ import * as RIPPLE from './ripple';
 import * as ETHEREUM from './ethereum';
 import * as NEM from './nem';
 import * as STELLAR from './stellar';
+import * as LISK from './lisk';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
@@ -193,8 +194,25 @@ declare function F_GetPublicKey(params: (P.$Common & { bundle: Array<P.$GetPubli
 export type GetPublicKey = typeof F_GetPublicKey;
 
 /* eslint-disable no-redeclare */
+declare function F_LiskGetAddress(params: (P.$Common & LISK.$LiskGetAddress)): Promise<LISK.LiskGetAddress$>;
+declare function F_LiskGetAddress(params: (P.$Common & { bundle: Array<LISK.$LiskGetAddress> })): Promise<LISK.LiskGetAddress$$>;
+/* eslint-enable no-redeclare */
+export type LiskGetAddress = typeof F_LiskGetAddress;
+
+/* eslint-disable no-redeclare */
+declare function F_LiskGetPublicKey(params: (P.$Common & LISK.$LiskGetPublicKey)): Promise<LISK.LiskGetPublicKey$>;
+declare function F_LiskGetPublicKey(params: (P.$Common & { bundle: Array<LISK.$LiskGetPublicKey> })): Promise<LISK.LiskGetPublicKey$$>;
+/* eslint-enable no-redeclare */
+export type LiskGetPublicKey = typeof F_LiskGetPublicKey;
+
+export type LiskSignMessage = (LISK.$LiskSignMessage) => Promise<LISK.LiskSignMessage$>;
+export type LiskSignTransaction = (LISK.$LiskSignTransaction) => Promise<LISK.LiskSignTransaction$>
+export type LiskVerifyMessage = (LISK.$LiskVerifyMessage) => Promise<LISK.LiskVerifyMessage$>;
+
+/* eslint-disable no-redeclare */
 declare function F_NEMGetAddress(params: (P.$Common & NEM.$NEMGetAddress)): Promise<NEM.NEMGetAddress$>;
 declare function F_NEMGetAddress(params: (P.$Common & { bundle: Array<NEM.$NEMGetAddress> })): Promise<NEM.NEMGetAddress$$>;
+
 /* eslint-enable no-redeclare */
 export type NEMGetAddress = typeof F_NEMGetAddress;
 

@@ -22,12 +22,19 @@ import GetAddress from './GetAddress';
 import GetDeviceState from './GetDeviceState';
 import GetFeatures from './GetFeatures';
 import GetPublicKey from './GetPublicKey';
+import LiskGetAddress from './LiskGetAddress';
+import LiskGetPublicKey from './LiskGetPublicKey';
+import LiskSignMessage from './LiskSignMessage';
+import LiskVerifyMessage from './LiskVerifyMessage';
+import LiskSignTransaction from './LiskSignTransaction';
 import PushTransaction from './PushTransaction';
 import RequestLogin from './RequestLogin';
 import RippleGetAddress from './RippleGetAddress';
 import RippleSignTransaction from './RippleSignTransaction';
 import NEMGetAddress from './NEMGetAddress';
 import NEMSignTransaction from './NEMSignTransaction';
+import PushTransaction from './PushTransaction';
+import RequestLogin from './RequestLogin';
 import SignMessage from './SignMessage';
 import SignTransaction from './SignTransaction';
 import StellarGetAddress from './StellarGetAddress';
@@ -52,12 +59,19 @@ const classes: {[k: string]: any} = {
     'getDeviceState': GetDeviceState,
     'getFeatures': GetFeatures,
     'getPublicKey': GetPublicKey,
+    'liskGetAddress': LiskGetAddress,
+    'liskGetPublicKey': LiskGetPublicKey,
+    'liskSignMessage': LiskSignMessage,
+    'liskSignTransaction': LiskSignTransaction,
+    'liskVerifyMessage': LiskVerifyMessage,
     'pushTransaction': PushTransaction,
     'requestLogin': RequestLogin,
     'rippleGetAddress': RippleGetAddress,
     'rippleSignTransaction': RippleSignTransaction,
     'nemGetAddress': NEMGetAddress,
     'nemSignTransaction': NEMSignTransaction,
+    'pushTransaction': PushTransaction,
+    'requestLogin': RequestLogin,
     'signMessage': SignMessage,
     'signTransaction': SignTransaction,
     'stellarGetAddress': StellarGetAddress,

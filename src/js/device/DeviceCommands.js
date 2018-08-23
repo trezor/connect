@@ -318,6 +318,39 @@ export default class DeviceCommands {
         return response.message;
     }
 
+    async liskGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskAddress> {
+        const response: MessageResponse<trezor.LiskAddress> = await this.typedCall('LiskGetAddress', 'LiskAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async liskGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskPublicKey> {
+        const response: MessageResponse<trezor.LiskPublicKey> = await this.typedCall('LiskGetPublicKey', 'LiskPublicKey', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async liskSignMessage(address_n: Array<number>, message: string): Promise<trezor.LiskMessageSignature> {
+        const response: MessageResponse<trezor.LiskMessageSignature> = await this.typedCall('LiskSignMessage', 'LiskMessageSignature', {
+            address_n,
+            message,
+        });
+        return response.message;
+    }
+
+    async liskVerifyMessage(public_key: string, signature: string, message: string): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('LiskVerifyMessage', 'Success', {
+            public_key,
+            signature,
+            message,
+        });
+        return response.message;
+    }
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,
