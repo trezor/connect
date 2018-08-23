@@ -11,14 +11,17 @@ import type {
 export const cardanoSignMessage = (): TestFunction => {
     const testPayloads: Array<TestCardanoSignMessagePayload> = [
         {
+            method: 'cardanoSignMessage',
             path: "m/44'/1815'/0'/0/0'",
             message: 'Test message to sign',
         },
         {
+            method: 'cardanoSignMessage',
             path: "m/44'/1815'/0/0/0",
             message: 'Another Test message to sign',
         },
         {
+            method: 'cardanoSignMessage',
             path: "m/44'/1815'/0'/0/0",
             message: 'Just another Test message to sign',
         },
