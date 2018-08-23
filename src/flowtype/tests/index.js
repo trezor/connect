@@ -26,6 +26,11 @@ import type {
 } from 'flowtype/tests/ethereum-get-address';
 
 import type {
+    TestCardanoGetPublicKeyPayload,
+    ExpectedCardanoGetPublicKeyResponse,
+} from 'flowtype/tests/cardano-get-public-key';
+
+import type {
     TestEthereumSignMessagePayload,
     ExpectedEthereumSignMessageResponse,
 } from 'flowtype/tests/ethereum-sign-message';
@@ -80,8 +85,6 @@ import type {
     ExpectedPassphraseResponse,
 } from 'flowtype/tests/passphrase';
 
-
-
 declare module 'flowtype/tests' {
     // declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
     // declare export type GetAddressSegwitAvailableSubtests = 'showSegwit';
@@ -135,6 +138,7 @@ declare module 'flowtype/tests' {
         TestCardanoSignMessagePayload
         | TestCardanoVerifyMessagePayload
         | TestCardanoGetAddressPayload
+        | TestCardanoGetPublicKeyPayload
         | TestCardanoSignTransactionPayload
         | TestEthereumGetAddressPayload
         | TestEthereumSignMessagePayload
@@ -152,6 +156,7 @@ declare module 'flowtype/tests' {
         ExpectedCardanoSignMessageResponse
         | ExpectedCardanoVerifyMessageResponse
         | ExpectedCardanoGetAddressResponse
+        | ExpectedCardanoGetPublicKeyResponse
         | ExpectedCardanoSignTransactionResponse
         | ExpectedEthereumGetAddressResponse
         | ExpectedEthereumSignMessageResponse

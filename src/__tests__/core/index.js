@@ -5,6 +5,7 @@ import type {
 } from 'flowtype/tests';
 
 import { cardanoGetAddress } from './cardanoGetAddress.spec.js';
+import { cardanoGetPublicKey } from './cardanoGetPublicKey.spec.js';
 import { getPublicKey } from './getPublicKey.spec.js';
 import { getAddress } from './getAddress.spec.js';
 import { getAddressSegwit } from './getAddressSegwit.spec.js';
@@ -33,6 +34,7 @@ import { passphrase } from './passphrase.spec.js';
 
 export const testFunctions: AvailableTestFunctions = {
     cardanoGetAddress,
+    cardanoGetPublicKey,
     getPublicKey,
     getAddress,
     getAddressSegwit,
