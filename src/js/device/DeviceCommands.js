@@ -285,39 +285,6 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    async cardanoGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoPublicKey> {
-        const response: MessageResponse<trezor.CardanoPublicKey> = await this.typedCall('CardanoGetPublicKey', 'CardanoPublicKey', {
-            address_n,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    async cardanoGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoAddress> {
-        const response: MessageResponse<trezor.CardanoAddress> = await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
-            address_n,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    async cardanoSignMessage(address_n: Array<number>, message: string): Promise<trezor.CardanoMessageSignature> {
-        const response: MessageResponse<trezor.CardanoMessageSignature> = await this.typedCall('CardanoSignMessage', 'CardanoMessageSignature', {
-            address_n,
-            message,
-        });
-        return response.message;
-    }
-
-    async cardanoVerifyMessage(publicKey: string, signature: string, message: string): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('CardanoVerifyMessage', 'Success', {
-            public_key: publicKey,
-            signature,
-            message,
-        });
-        return response.message;
-    }
-
     async liskGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskAddress> {
         const response: MessageResponse<trezor.LiskAddress> = await this.typedCall('LiskGetAddress', 'LiskAddress', {
             address_n,
