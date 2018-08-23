@@ -1,3 +1,22 @@
+# 5.0.31
+__added__
+- Exception for not supported firmware when value for "trezor1" or "trezor2" inside coins.json is not set
+- Disable customMessage method for devices with official firmware
+__fixed__
+- Device state verification while using multiple instances with the same passphrase
+- ConnectSettings sensitive settings verification in DataManager
+
+# 5.0.30
+__added__
+- Added 'send-max' and 'opreturn' output types to `TrezorConnect.composeTransaction`
+__fixed__
+- Handle popup close event while waiting for iframe handshake
+- Removed ledgerVersion (protocol_version) from StellarSignTransaction method
+- One time permissions stored in session in application variable
+- `TrezorConnect.ethereumSignTransaction` recompute "v" value if Trezor returns value in range [0,1]
+- Webextensions: Handling if popup is called from "normal" window or extension popup
+- ConnectSetting default domain
+
 # 5.0.29
 __fixed__
 - Fixed flowtype for TrezorConnect methods (bundled methods return bundled results)

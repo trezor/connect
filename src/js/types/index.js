@@ -132,6 +132,7 @@ export type EventListener = typeof F_EventListener;
 import * as P from './params';
 import * as R from './response';
 import * as CARDANO from './cardano';
+import * as STELLAR from './stellar';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
@@ -200,12 +201,12 @@ export type SignMessage = (P.$SignMessage) => Promise<R.SignMessage$>;
 export type SignTransaction = (P.$SignTransaction) => Promise<R.SignTransaction$>;
 
 /* eslint-disable no-redeclare */
-declare function F_StellarGetAddress(params: (P.$Common & P.$StellarGetAddress)): Promise<R.StellarGetAddress$>;
-declare function F_StellarGetAddress(params: (P.$Common & { bundle: Array<P.$StellarGetAddress> })): Promise<R.StellarGetAddress$$>;
+declare function F_StellarGetAddress(params: (P.$Common & STELLAR.$StellarGetAddress)): Promise<STELLAR.StellarGetAddress$>;
+declare function F_StellarGetAddress(params: (P.$Common & { bundle: Array<STELLAR.$StellarGetAddress> })): Promise<STELLAR.StellarGetAddress$$>;
 /* eslint-enable no-redeclare */
 export type StellarGetAddress = typeof F_StellarGetAddress;
 
-export type StellarSignTransaction = (P.$StellarSignTransaction) => Promise<R.StellarSignTransaction$>;
+export type StellarSignTransaction = (STELLAR.$StellarSignTransaction) => Promise<STELLAR.StellarSignTransaction$>;
 export type VerifyMessage = (P.$VerifyMessage) => Promise<R.VerifyMessage$>;
 
 // export * from './params';

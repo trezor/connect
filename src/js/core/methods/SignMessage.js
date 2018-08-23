@@ -47,9 +47,8 @@ export default class SignMessage extends AbstractMethod {
             // check required firmware with coinInfo support
             this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
         }
-        // TODO: check if it's already a hex
-        const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
 
+        const messageHex: string = Buffer.from(payload.message, 'utf8').toString('hex');
         this.params = {
             path,
             message: messageHex,
@@ -65,7 +64,7 @@ export default class SignMessage extends AbstractMethod {
         );
 
         // convert signature to base64
-        const signatureBuffer = new Buffer(response.signature, 'hex');
+        const signatureBuffer = Buffer.from(response.signature, 'hex');
         return {
             ...response,
             signature: signatureBuffer.toString('base64'),

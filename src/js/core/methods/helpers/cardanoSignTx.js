@@ -13,14 +13,14 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
     request: CardanoTxRequest,
     transactions: Array<string>
 ): Promise<CardanoSignedTx> => {
-    if (request.tx_index === null || request.tx_index === undefined) {
-        return request;
-    }
-
     const transaction: string = transactions[request.tx_index];
-    const response: MessageResponse<CardanoTxRequest> = await typedCall('CardanoTxAck', 'CardanoTxRequest', { transaction });
-
-    return processTxRequest(typedCall, response.message, transactions);
+    if (request.tx_index < transactions.length - 1) {
+        const response: MessageResponse<CardanoTxRequest> = await typedCall('CardanoTxAck', 'CardanoTxRequest', { transaction });
+        return processTxRequest(typedCall, response.message, transactions);
+    } else {
+        const response: MessageResponse<CardanoSignedTx> = await typedCall('CardanoTxAck', 'CardanoSignedTx', { transaction });
+        return response.message;
+    }
 };
 
 export const cardanoSignTx = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
@@ -33,6 +33,5 @@ export const cardanoSignTx = async (typedCall: (type: string, resType: string, m
         outputs: outputs,
         transactions_count: transactions.length,
     });
-
     return await processTxRequest(typedCall, response.message, transactions);
 };

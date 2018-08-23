@@ -31,6 +31,17 @@
             "priority": 0
         }
     ],
+    "knownHosts": [
+        {
+            "origin": "chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk",
+            "label": "Trezor Password Manager (Develop)",
+            "icon": "./data/icons/tpm.jpg"
+        },
+        {
+            "origin": "chrome-extension://niebkpllfhmpfbffbfifagfgoamhpflf",
+            "label": "Trezor Password Manager"
+        }
+    ],
     "resources": {
         "bridge": "base/src/data/bridge/latest.txt"
     },

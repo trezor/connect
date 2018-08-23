@@ -398,15 +398,10 @@ export type NEMSignTxMessage = {
 
 // Stellar types
 
-// this type is returned from connect
 export type StellarAddress = {
-    path: Array<number>,
-    serializedPath: string,
     address: string,
-    publicKey: string,
 }
 
-// this type is returned from device
 export type StellarSignedTx = {
     public_key: string,
     signature: string,
@@ -417,19 +412,8 @@ export type StellarPaymentOp = {
     message: {},
 }
 
-// this type is returned from device
-export type StellarAddressMessage = {
-    address: string,
-}
-// this type is returned from device
-export type StellarPublicKeyMessage = {
-    public_key: string,
-}
-
-// those types are sent TO device
 export type StellarSignTxMessage = {
     address_n: Array<number>,
-    protocol_version: number,
     source_account: string,
     fee: ?number,
     sequence_number: ?number,
@@ -557,7 +541,7 @@ export type CardanoTxOutput = {
 };
 
 export type CardanoTxRequest = {
-    tx_index?: number,
+    tx_index: number,
     tx_hash: string,
     tx_body: string,
 };

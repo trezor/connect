@@ -1,6 +1,6 @@
 {
   "name": "trezor-connect",
-  "version": "5.0.29",
+  "version": "5.0.30",
   "author": "TREZOR <info@trezor.io>",
   "homepage": "https://github.com/trezor/connect",
   "description": "High-level javascript interface for TREZOR hardware wallet.",
@@ -30,7 +30,10 @@
     "stats": "webpack --config ./webpack/config.prod.babel.js --json > dist/stats.json",
     "test": "sh ./src/__tests__/run.sh",
     "flow": "flow check src/js",
+    "flow-tests": "flow check src/__tests__",
     "eslint": "eslint src/js",
+    "eslint-tests": "eslint src/__tests__",
+    "eslint-tests-fix": "eslint --fix src/__tests__",
     "eslint-fix": "eslint --fix src/js",
     "bump": "bump --patch"
   },

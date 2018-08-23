@@ -141,8 +141,8 @@ export default class DeviceCommands {
 
     async getDeviceState(): Promise<string> {
         const response: trezor.PublicKey = await this.getPublicKey([1, 0, 0]);
-        const secret: string = `${response.xpub}#${this.device.features.device_id}`;
-        const state: string = this.device.getTemporaryState() || bitcoin.crypto.hash256(new Buffer(secret, 'binary')).toString('hex');
+        const secret: string = `${response.xpub}#${this.device.features.device_id}#${this.device.instance}`;
+        const state: string = this.device.getTemporaryState() || bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
         return state;
     }
 
@@ -237,25 +237,44 @@ export default class DeviceCommands {
     }
 
     async stellarGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.StellarAddress> {
-        const address: MessageResponse<trezor.StellarAddressMessage> = await this.typedCall('StellarGetAddress', 'StellarAddress', {
+        const response: MessageResponse<trezor.StellarAddress> = await this.typedCall('StellarGetAddress', 'StellarAddress', {
             address_n,
             show_display: !!showOnTrezor,
         });
-
-        const publicKey: MessageResponse<trezor.StellarPublicKeyMessage> = await this.typedCall('StellarGetPublicKey', 'StellarPublicKey', {
-            address_n,
-        });
-
-        return {
-            path: address_n,
-            serializedPath: getSerializedPath(address_n),
-            address: address.message.address,
-            publicKey: publicKey.message.public_key,
-        };
+        return response.message;
     }
 
-    async stellarSignTx(transaction: any): Promise<MessageResponse<trezor.StellarSignedTx>> {
-        return this.typedCall('StellarSignTx', 'StellarSignedTx', transaction);
+    async cardanoGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoPublicKey> {
+        const response: MessageResponse<trezor.CardanoPublicKey> = await this.typedCall('CardanoGetPublicKey', 'CardanoPublicKey', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async cardanoGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoAddress> {
+        const response: MessageResponse<trezor.CardanoAddress> = await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async cardanoSignMessage(address_n: Array<number>, message: string): Promise<trezor.CardanoMessageSignature> {
+        const response: MessageResponse<trezor.CardanoMessageSignature> = await this.typedCall('CardanoSignMessage', 'CardanoMessageSignature', {
+            address_n,
+            message,
+        });
+        return response.message;
+    }
+
+    async cardanoVerifyMessage(publicKey: string, signature: string, message: string): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('CardanoVerifyMessage', 'Success', {
+            public_key: publicKey,
+            signature,
+            message,
+        });
+        return response.message;
     }
 
     async cardanoGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoPublicKey> {
@@ -342,7 +361,10 @@ export default class DeviceCommands {
         if (!this.device.isT1()) {
             // T2 features
             payload.state = this.device.getExpectedState() || this.device.getState();
-            if (useEmptyPassphrase) { payload.skip_passphrase = useEmptyPassphrase; }
+            if (useEmptyPassphrase) {
+                payload.skip_passphrase = useEmptyPassphrase;
+                payload.state = null;
+            }
         }
 
         const response = await this.call('Initialize', payload);

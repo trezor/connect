@@ -23,7 +23,7 @@ TrezorConnect.stellarGetAddress(params).then(function(result) {
 * `bundle` - `Array` of Objects with `path` and `showOnTrezor` fields
 
 ### Example
-Display address of third stellar account:
+Display address of first stellar account:
 ```javascript
 TrezorConnect.stellarGetAddress({
     path: "m/44'/148'/0'"
@@ -49,7 +49,6 @@ Result with only one address
         address: string,
         path: Array<number>,
         serializedPath: string,
-        publicKey: string,
     }
 }
 ```
@@ -58,9 +57,9 @@ Result with bundle of addresses
 {
     success: true,
     payload: [
-        { address: string, path: Array<number>, serializedPath: string, publicKey: steing }, // account 1
-        { address: string, path: Array<number>, serializedPath: string, publicKey: string }, // account 2
-        { address: string, path: Array<number>, serializedPath: string, publicKey: string }, // account 3
+        { address: string, path: Array<number>, serializedPath: string }, // account 1
+        { address: string, path: Array<number>, serializedPath: string }, // account 2
+        { address: string, path: Array<number>, serializedPath: string }, // account 3
     ]
 }
 ```
