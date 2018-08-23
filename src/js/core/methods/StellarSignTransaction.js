@@ -22,6 +22,7 @@ export default class StellarSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
+        this.requiredFirmware = ['0', '2.0.8'];
         this.info = 'Sign Stellar transaction';
 
         const payload: Object = message.payload;

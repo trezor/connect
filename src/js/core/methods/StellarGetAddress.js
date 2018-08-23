@@ -3,13 +3,14 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
-import { validatePath, fromHardened } from '../../utils/pathUtils';
+import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { UiPromiseResponse } from 'flowtype';
 import type { StellarAddress } from '../../types/trezor';
+import type { StellarAddress as StellarAddressResponse } from '../../types/stellar';
 import type { CoreMessage } from '../../types';
 
 type Batch = {
@@ -30,7 +31,7 @@ export default class StellarGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['1.6.2', '2.0.7'];
+        this.requiredFirmware = ['0', '2.0.8'];
         this.info = 'Export Stellar address';
 
         const payload: Object = message.payload;
@@ -100,14 +101,18 @@ export default class StellarGetAddress extends AbstractMethod {
         return this.confirmed;
     }
 
-    async run(): Promise<StellarAddress | Array<StellarAddress>> {
-        const responses: Array<StellarAddress> = [];
+    async run(): Promise<StellarAddressResponse | Array<StellarAddressResponse>> {
+        const responses: Array<StellarAddressResponse> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
             const response: StellarAddress = await this.device.getCommands().stellarGetAddress(
                 this.params.bundle[i].path,
                 this.params.bundle[i].showOnTrezor
             );
-            responses.push(response);
+            responses.push({
+                address: response.address,
+                path: this.params.bundle[i].path,
+                serializedPath: getSerializedPath(this.params.bundle[i].path),
+            });
 
             if (this.params.bundledResponse) {
                 // send progress

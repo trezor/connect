@@ -5,6 +5,7 @@ npm
 
 # Dependency directory
 node_modules
+package-lock.json
 
 # OSX
 .DS_Store

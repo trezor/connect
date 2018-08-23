@@ -111,20 +111,6 @@ export type MultisigRedeemScriptType = {
     m?: number,
 }
 
-// type TransactionInputBase = {
-//     address_n?: Array<number>,
-//     prev_hash: string,
-//     prev_index: number,
-// }
-
-// export type TransactionInput = TransactionInputBase & {
-//     script_type: 'SPENDMULTISIG',
-//     multisig: MultisigRedeemScriptType,
-// } | TransactionInputBase & {
-//     script_type: 'SPENDP2SHWITNESS',
-//     amount: number,
-// }
-
 export type TransactionInput = {
     address_n?: Array<number>,
     prev_hash: string,
@@ -203,8 +189,6 @@ export type EthereumTxRequest = {
 
 export type EthereumAddress = {
     address: string,
-    path: Array<number>,
-    serializedPath: string,
 }
 
 export type EthereumSignedTx = {
@@ -267,8 +251,6 @@ export type SignTxInfoToTrezor = {
 // NEM types
 export type NEMAddress = {
     address: string,
-    path: Array<number>,
-    serializedPath: string,
 }
 
 export type NEMSignedTx = {
@@ -398,15 +380,10 @@ export type NEMSignTxMessage = {
 
 // Stellar types
 
-// this type is returned from connect
 export type StellarAddress = {
-    path: Array<number>,
-    serializedPath: string,
     address: string,
-    publicKey: string,
 }
 
-// this type is returned from device
 export type StellarSignedTx = {
     public_key: string,
     signature: string,
@@ -417,16 +394,6 @@ export type StellarPaymentOp = {
     message: {},
 }
 
-// this type is returned from device
-export type StellarAddressMessage = {
-    address: string,
-}
-// this type is returned from device
-export type StellarPublicKeyMessage = {
-    public_key: string,
-}
-
-// those types are sent TO device
 export type StellarSignTxMessage = {
     address_n: Array<number>,
     source_account: string,
