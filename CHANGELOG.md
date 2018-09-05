@@ -1,4 +1,8 @@
 # 5.0.31
+__fixed__
+- TRANSPORT.ERROR event when computer goes to sleep
+
+# 5.0.31
 __added__
 - Support for Cardano
 - Support for Ripple
