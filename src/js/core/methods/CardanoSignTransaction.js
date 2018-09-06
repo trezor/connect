@@ -31,6 +31,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
             { name: 'transactions', type: 'array', obligatory: true },
+            { name: 'network', type: 'number', obligatory: true },
         ]);
 
         const inputs: Array<CardanoTxInput> = payload.inputs.map(input => {
@@ -71,6 +72,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             inputs,
             outputs,
             transactions: payload.transactions,
+            network: payload.network,
         };
     }
 
@@ -80,6 +82,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             this.params.inputs,
             this.params.outputs,
             this.params.transactions,
+            this.params.network,
         );
 
         return {

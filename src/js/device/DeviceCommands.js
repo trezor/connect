@@ -273,22 +273,6 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    async cardanoSignMessage(address_n: Array<number>, message: string): Promise<trezor.CardanoMessageSignature> {
-        const response: MessageResponse<trezor.CardanoMessageSignature> = await this.typedCall('CardanoSignMessage', 'CardanoMessageSignature', {
-            address_n,
-            message,
-        });
-        return response.message;
-    }
-
-    async cardanoVerifyMessage(publicKey: string, signature: string, message: string): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('CardanoVerifyMessage', 'Success', {
-            public_key: publicKey,
-            signature,
-            message,
-        });
-        return response.message;
-    }
     // CardanoSignTx message can be found inside ./core/methods/helpers/cardanoSignTx
     // Cardano: end
 

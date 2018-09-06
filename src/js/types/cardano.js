@@ -88,34 +88,3 @@ export type CardanoSignTransaction$ = {
     success: true,
     payload: CardanoSignedTx,
 } | Unsuccessful$;
-
-// Sign message
-
-export type $CardanoSignMessage = $Common & {
-    path: $Path,
-    message: string,
-}
-
-// retyped trezor.CardanoMessageSignature from snake_case to camelCase
-export type CardanoMessageSignature = {
-    publicKey: string,
-    signature: string,
-}
-
-export type CardanoSignMessage$ = {
-    success: true,
-    payload: CardanoMessageSignature,
-} | Unsuccessful$;
-
-// Verify message
-
-export type $CardanoVerifyMessage = $Common & {
-    publicKey: string,
-    signature: string,
-    message: string,
-}
-
-export type CardanoVerifyMessage$ = {
-    success: true,
-    payload: Success,
-} | Unsuccessful$;

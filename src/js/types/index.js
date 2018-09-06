@@ -155,9 +155,7 @@ declare function F_CardanoGetPublicKey(params: (P.$Common & { bundle: Array<CARD
 /* eslint-enable no-redeclare */
 export type CardanoGetPublicKey = typeof F_CardanoGetPublicKey;
 
-export type CardanoSignMessage = (CARDANO.$CardanoSignMessage) => Promise<CARDANO.CardanoSignMessage$>;
 export type CardanoSignTransaction = (CARDANO.$CardanoSignTransaction) => Promise<CARDANO.CardanoSignTransaction$>;
-export type CardanoVerifyMessage = (CARDANO.$CardanoVerifyMessage) => Promise<CARDANO.CardanoVerifyMessage$>;
 
 /* eslint-disable no-redeclare */
 declare function F_CipherKeyValue(params: (P.$Common & P.$CipherKeyValue)): Promise<R.CipherKeyValue$>;
