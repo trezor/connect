@@ -51,15 +51,72 @@ export type TezosGetPublicKey$$ = {
     payload: Array<TezosPublicKey>,
 } | Unsuccessful$;
 
-// sign transaction
+export type TezosCurve =
+    0 | 1 | 2;
 
-export type Transaction = {
-    // TODO: add expected fields
+export type TezosContractID = {
+    tag: Array<number>,
+    hash: string,
 }
 
-export type $TezosSignTransaction = $Common & {
-    path: $Path,
+export type Reveal = {
+    source: TezosContractID,
+    fee: number,
+    counter: number,
+    gas_limit: number,
+    storage_limit: number,
+    public_key: Array<number>,
+}
+
+export type Transaction = {
+    source: TezosContractID,
+    destination: TezosContractID,
+    amount: number,
+    parameters?: Array<number>,
+    counter: number,
+    fee: number,
+    gas_limit: number,
+    storage_limit: number,
+}
+
+export type Origination = {
+    source: TezosContractID,
+    manager_pubkey: Array<number>,
+    balance: number,
+    spendable: boolean,
+    delegatable: boolean,
+    delegate: Array<number>,
+    script?: Array<number>,
+    fee: number,
+    counter: number,
+    gas_limit: number,
+    storage_limit: number,
+}
+
+export type Delegation = {
+    source: TezosContractID,
+    delegate: TezosContractID,
+    fee: number,
+    counter: number,
+    gas_limit: number,
+    storage_limit: number,
+}
+
+export type TezosOperation = {
+    reveal: Reveal,
     transaction: Transaction,
+    origination: Origination,
+    delegation: Delegation,
+}
+
+export type $TezosSignTransaction = {
+    address_n: Array<number>,
+    curve: TezosCurve,
+    branch: Array<number>,
+    reveal?: Reveal,
+    transaction?: Transaction,
+    origination?: Origination,
+    delegation?: Delegation,
 }
 
 export type TezosSignedTx = {
