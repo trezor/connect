@@ -1,6 +1,6 @@
 ## Cardano: sign message
 
-Asks device to sign a message using the private key derived by given BIP32 path.
+Asks device to sign a message using the private key derived by given [BIP32-Ed25519](https://cardanolaunch.com/assets/Ed25519_BIP.pdf) path.
 
 ES6
 ```javascript
