@@ -540,27 +540,61 @@ export type TezosPublicKey = {
 type TezosCurve = 0 | 1 | 2;
 
 type TezosContractID = {
-    tag?: any, // TODO
-    hash?: string,
+    tag: Array<number>,
+    hash: string,
 }
 
-type TezosRevealOperation = {
-    source?: TezosContractID, // TODO
-    fee?: number,
-    counter?: number,
-    gas_limit?: number,
-    storage_limit?: number,
-    public_key?: string,
+type TezosRevealOp = {
+    source: TezosContractID,
+    fee: number,
+    counter: number,
+    gas_limit: number,
+    storage_limit: number,
+    public_key: Array<number>,
+}
+
+type TezosTransactionOp = {
+    source: TezosContractID,
+    destination: TezosContractID,
+    amount: number,
+    parameters?: Array<number>,
+    counter: number,
+    fee: number,
+    gas_limit: number,
+    storage_limit: number,
+}
+
+type TezosOriginationOp = {
+    source:TezosContractID ,
+    manager_pubkey: Array<number>,
+    balance: number,
+    spendable: boolean,
+    delegatable: boolean,
+    delegate: Array<number>,
+    script?: Array<number>,
+    fee: number,
+    counter: number,
+    gas_limit: number,
+    storage_limit: number,
+}
+
+type TezosDelegationOp = {
+    source: TezosContractID,
+    delegate: TezosContractID,
+    fee: number,
+    counter: number,
+    gas_limit: number,
+    storage_limit: number,
 }
 
 export type TezosTransaction = {
     address_n: Array<number>,
-    curve?: TezosCurve,
-    branch?: string;
-    reveal?: TezosRevealOperation,
-    transaction?: any, // TODO
-    origination?: any, // TODO
-    delegation?: any // TODO
+    curve: TezosCurve,
+    branch: Array<number>;
+    reveal?: TezosRevealOp,
+    transaction?: TezosTransactionOp,
+    origination?: TezosOriginationOp,
+    delegation?: TezosDelegationOp
 }
 
 export type TezosSignedTx = {

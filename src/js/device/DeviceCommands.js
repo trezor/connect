@@ -276,6 +276,11 @@ export default class DeviceCommands {
         });
         return response.message;
     }
+
+    async tezosSignTransaction(message: trezor.TezosTransaction): Promise<trezor.TezosSignedTx> {
+        const response: MessageResponse<trezor.TezosSignedTx> = await this.typedCall('TezosSignTx', 'TezosSignedTx', message);
+        return response.message;
+    }
     // Tezos: end
 
 

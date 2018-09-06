@@ -6,18 +6,12 @@ import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/tezosSignTx';
 
-import type { TezosSignedTx } from '../../types/trezor';
-import type { Transaction as $TezosTransaction, TezosSignedTx as TezosSignedTxResponse } from '../../types/tezos';
+import type { TezosTransaction, TezosSignedTx } from '../../types/trezor';
+import type { TezosCurve, TezosOperation, $TezosSignTransaction } from '../../types/tezos';
 import type { CoreMessage } from '../../types';
 
-type Params = {
-    path: Array<number>,
-    networkPassphrase: string,
-    transaction: any,
-}
-
 export default class TezosSignTransaction extends AbstractMethod {
-    params: Params;
+    message: $TezosSignTransaction // change type
 
     constructor(message: CoreMessage) {
         super(message);
@@ -26,33 +20,39 @@ export default class TezosSignTransaction extends AbstractMethod {
         this.info = 'Sign Tezos transaction';
 
         const payload: Object = message.payload;
+
         // validate incoming parameters
         validateParams(payload, [
             { name: 'path', obligatory: true },
-            { name: 'transaction', obligatory: true },
+            { name: 'curve', obligatory: true },
+            { name: 'branch', obligatory: true },
+            { name: 'operation', obligatory: true },
         ]);
 
         const path = validatePath(payload.path, 3);
-        // incoming data should be in stellar-sdk format
-        const transaction: $TezosTransaction = payload.transaction;
-        this.params = {
-            path,
-            networkPassphrase: payload.networkPassphrase,
-            transaction,
-        };
+        const curve: TezosCurve = payload.curve;
+        const branch: Array<number> = payload.branch;
+        const operation: TezosOperation = payload.operation;
+
+        this.message = helper.createTx(path, curve, branch, operation);
+
+        //console.warn('[TezosSignTransaction][constructor]', message)
     }
 
-    async run(): Promise<TezosSignedTxResponse> {
-        const response: TezosSignedTx = await helper.tezosSignTx(
-            this.device.getCommands().typedCall.bind(this.device.getCommands()),
-            this.params.path,
-            this.params.transaction
+    async run(): Promise<TezosSignedTx> {
+
+        //console.warn('[y][TezosSignTransaction] run request ', this.message)
+
+        const response: TezosSignedTx = await this.device.getCommands().tezosSignTransaction(
+            this.message,
         );
+        //console.warn('[y][TezosSignTransaction] run response ', response)
 
         return {
-            signatureContents: response.sig_op_contents,
             signature: response.signature,
-            hash: response.operation_hash,
-        };
+            sig_op_contents: response.sig_op_contents,
+            operation_hash: response.operation_hash,
+        }
+
     }
 }
