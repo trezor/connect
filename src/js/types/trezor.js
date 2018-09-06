@@ -528,11 +528,6 @@ export type CardanoTxRequest = {
     tx_body: string,
 };
 
-export type CardanoMessageSignature = {
-    public_key: string,
-    signature: string,
-};
-
 // Lisk types
 export type LiskAddress = {
     address: string,
