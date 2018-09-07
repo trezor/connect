@@ -503,7 +503,6 @@ export type CardanoAddress = {
 export type CardanoPublicKey = {
     xpub: string,
     node: HDPubNode,
-    root_hd_passphrase: string,
 };
 
 export type CardanoSignedTx = {

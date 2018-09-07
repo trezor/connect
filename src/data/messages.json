@@ -972,13 +972,6 @@
                     "type": "HDNodeType",
                     "name": "node",
                     "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "string",
-                    "name": "root_hd_passphrase",
-                    "id": 3
                 }
             ],
             "enums": [],
