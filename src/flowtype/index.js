@@ -137,6 +137,8 @@ declare module 'flowtype' {
         name: string;
         rskip60: boolean;
         url: string;
+        bitcore: Array<string>,
+        blockbook: Array<string>,
     }
 
     declare export type SimpleAccount = {

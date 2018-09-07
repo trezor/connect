@@ -191,11 +191,18 @@ export const parseEthereumNetworksJson = (json: JSON): void => {
             name: network.name,
             rskip60: network.rskip60,
             url: network.url,
+            blockbook: network.blockbook || [],
+            bitcore: [] // legacy compatibility with bitcoin coinInfo
         });
     });
 };
 
-export const getEthereumNetwork = (path: Array<number>): ?EthereumNetworkInfo => {
-    const slip44: number = fromHardened(path[1]);
-    return ethereumNetworks.find(n => n.slip44 === slip44);
+export const getEthereumNetwork = (pathOrName: Array<number> | string): ?EthereumNetworkInfo => {
+    if (typeof pathOrName === 'string') {
+        const name: string = pathOrName.toLowerCase();
+        return ethereumNetworks.find(n => n.name === name || n.shortcut === name);
+    } else {
+        const slip44: number = fromHardened(pathOrName[1]);
+        return ethereumNetworks.find(n => n.slip44 === slip44);
+    }
 };
