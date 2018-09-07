@@ -5,11 +5,12 @@
 * Public types accessible from npm library
 */
 
-import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT } from '../constants';
+import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, BLOCKCHAIN_EVENT } from '../constants';
 import * as TRANSPORT from '../constants/transport';
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
 import * as DEVICE from '../constants/device';
+import * as BLOCKCHAIN from '../constants/blockchain';
 
 export type CoreMessage = {
     +event: string,
@@ -121,10 +122,18 @@ export type TransportMessage = {
     payload: Object,
 }
 
+export type BlockchainMessageType = $Values<typeof BLOCKCHAIN>;
+export type BlockchainMessage = {
+    event: typeof BLOCKCHAIN_EVENT,
+    type: BlockchainMessageType,
+    payload: Object,
+}
+
 /* eslint-disable no-redeclare */
 declare function F_EventListener(type: typeof DEVICE_EVENT, handler: (event: DeviceMessage) => void): void;
 declare function F_EventListener(type: typeof UI_EVENT, handler: (event: UiMessage) => void): void;
 declare function F_EventListener(type: typeof TRANSPORT_EVENT, handler: (event: TransportMessage) => void): void;
+declare function F_EventListener(type: typeof BLOCKCHAIN_EVENT, handler: (event: BlockchainMessage) => void): void;
 declare function F_EventListener(type: DeviceMessageType, handler: (device: Device) => void): void;
 /* eslint-enable no-redeclare */
 export type EventListener = typeof F_EventListener;
@@ -140,6 +149,7 @@ import * as LISK from './lisk';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
+export type BlockchainSubscribe = (P.$BlockchainSubscribe) => Promise<R.BlockchainSubscribe$>;
 export type CustomMessage = (P.$CustomMessage) => Promise<R.CustomMessage$>;
 export type RequestLogin = (P.$RequestLogin) => Promise<R.RequestLogin$>;
 
@@ -166,6 +176,12 @@ declare function F_CipherKeyValue(params: (P.$Common & { bundle: Array<P.$Cipher
 export type CipherKeyValue = typeof F_CipherKeyValue;
 
 export type ComposeTransaction = (P.$ComposeTransaction) => Promise<R.ComposeTransaction$>;
+
+/* eslint-disable no-redeclare */
+declare function F_EthereumGetAccountInfo(params: (ETHEREUM.$EthereumGetAccountInfo)): Promise<ETHEREUM.EthereumGetAccountInfo$>;
+declare function F_EthereumGetAccountInfo(params: (ETHEREUM.$$EthereumGetAccountInfo)): Promise<ETHEREUM.EthereumGetAccountInfo$$>;
+/* eslint-enable no-redeclare */
+export type EthereumGetAccountInfo = typeof F_EthereumGetAccountInfo;
 
 /* eslint-disable no-redeclare */
 declare function F_EthereumGetAddress(params: (P.$Common & ETHEREUM.$EthereumGetAddress)): Promise<ETHEREUM.EthereumGetAddress$>;

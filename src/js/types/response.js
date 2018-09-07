@@ -19,6 +19,11 @@ export type Unsuccessful$ = {
     },
 }
 
+export type BlockchainSubscribe$ = {
+    success: true,
+    payload: boolean,
+} | Unsuccessful$;
+
 export type CipherKeyValue$ = {
     success: true,
     payload: CipheredKeyValue,

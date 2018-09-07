@@ -24,6 +24,35 @@ export type Transaction = {
     s: string,
 }
 
+// get account info
+
+export type EthereumAccount = {
+    address: string;
+    block: number;
+    transactions: number;
+}
+
+export type $EthereumGetAccountInfo = {
+    account: EthereumAccount;
+    coin: string;
+}
+
+export type $$EthereumGetAccountInfo = {
+    accounts: Array<EthereumAccount>;
+    coin: string;
+}
+
+export type EthereumGetAccountInfo$ = {
+    success: true,
+    payload: EthereumAccount,
+} | Unsuccessful$;
+
+export type EthereumGetAccountInfo$$ = {
+    success: true,
+    payload: Array<EthereumAccount>,
+} | Unsuccessful$;
+
+
 // get address
 
 export type EthereumAddress = {

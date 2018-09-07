@@ -7,12 +7,13 @@
  */
 
 import EventEmitter from 'events';
-import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from './constants';
+import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT, BLOCKCHAIN_EVENT } from './constants';
 import * as TRANSPORT from './constants/transport';
 import * as POPUP from './constants/popup';
 import * as IFRAME from './constants/iframe';
 import * as UI from './constants/ui';
 import * as DEVICE from './constants/device';
+import * as BLOCKCHAIN from './constants/blockchain';
 import { NO_IFRAME, IFRAME_INITIALIZED, DEVICE_CALL_IN_PROGRESS } from './constants/errors';
 
 import PopupManager from './popup/PopupManager';
@@ -80,7 +81,12 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
 
         case TRANSPORT_EVENT :
             eventEmitter.emit(event, message);
-            eventEmitter.emit(type, payload); // DEVICE_EVENT also emit single events (connect/disconnect...)
+            eventEmitter.emit(type, payload);
+            break;
+
+        case BLOCKCHAIN_EVENT :
+            eventEmitter.emit(event, message);
+            eventEmitter.emit(type, payload);
             break;
 
         case UI_EVENT :
@@ -229,6 +235,12 @@ class TrezorConnect {
         iframe.postMessage({ type: UI.CHANGE_SETTINGS, payload: parsedSettings }, false);
     }
 
+    // methods
+
+    static blockchainSubscribe: $T.BlockchainSubscribe = async (params) => {
+        return await call({ method: 'blockchainSubscribe', ...params });
+    }
+
     static customMessage: $T.CustomMessage = async (params) => {
         if (typeof params.callback !== 'function') {
             return {
@@ -315,6 +327,10 @@ class TrezorConnect {
 
     static composeTransaction: $T.ComposeTransaction = async (params) => {
         return await call({ method: 'composeTransaction', ...params });
+    }
+
+    static ethereumGetAccountInfo: $T.EthereumGetAccountInfo = async (params) => {
+        return await call({ method: 'ethereumGetAccountInfo', ...params });
     }
 
     static ethereumGetAddress: $T.EthereumGetAddress = async (params) => {
@@ -428,10 +444,11 @@ export {
     TRANSPORT,
     UI,
     DEVICE,
+    BLOCKCHAIN,
     UI_EVENT,
     DEVICE_EVENT,
     TRANSPORT_EVENT,
-    // RESPONSE_EVENT,
+    BLOCKCHAIN_EVENT,
 };
 
 export type {
@@ -445,4 +462,6 @@ export type {
     UiMessage,
     TransportMessageType,
     TransportMessage,
+    BlockchainMessageType,
+    BlockchainMessage,
 } from './types';

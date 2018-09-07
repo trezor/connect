@@ -5,6 +5,7 @@ import type { CoreMessage } from '../../types';
 
 import AbstractMethod from './AbstractMethod';
 
+import BlockchainSubscribe from './BlockchainSubscribe';
 import CardanoGetAddress from './CardanoGetAddress';
 import CardanoGetPublicKey from './CardanoGetPublicKey';
 import CardanoSignMessage from './CardanoSignMessage';
@@ -13,6 +14,7 @@ import CardanoVerifyMessage from './CardanoVerifyMessage';
 import CipherKeyValue from './CipherKeyValue';
 import ComposeTransaction from './ComposeTransaction';
 import CustomMessage from './CustomMessage';
+import EthereumGetAccountInfo from './EthereumGetAccountInfo';
 import EthereumGetAddress from './EthereumGetAddress';
 import EthereumSignMessage from './EthereumSignMessage';
 import EthereumSignTransaction from './EthereumSignTransaction';
@@ -40,6 +42,7 @@ import StellarSignTransaction from './StellarSignTransaction';
 import VerifyMessage from './VerifyMessage';
 
 const classes: {[k: string]: any} = {
+    'blockchainSubscribe': BlockchainSubscribe,
     'cardanoGetAddress': CardanoGetAddress,
     'cardanoGetPublicKey': CardanoGetPublicKey,
     'cardanoSignMessage': CardanoSignMessage,
@@ -48,6 +51,7 @@ const classes: {[k: string]: any} = {
     'cipherKeyValue': CipherKeyValue,
     'composeTransaction': ComposeTransaction,
     'customMessage': CustomMessage,
+    'ethereumGetAccountInfo': EthereumGetAccountInfo,
     'ethereumGetAddress': EthereumGetAddress,
     'ethereumSignMessage': EthereumSignMessage,
     'ethereumSignTransaction': EthereumSignTransaction,
