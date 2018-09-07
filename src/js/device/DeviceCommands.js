@@ -259,19 +259,17 @@ export default class DeviceCommands {
     }
 
     // Tezos: begin
-    async tezosGetAddress(address_n: Array<number>, curve: number, showOnTrezor: boolean): Promise<trezor.TezosAddress> {
+    async tezosGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.TezosAddress> {
         const response: MessageResponse<trezor.TezosAddress> = await this.typedCall('TezosGetAddress', 'TezosAddress', {
             address_n,
-            curve,
             show_display: !!showOnTrezor,
         });
         return response.message;
     }
 
-    async tezosGetPublicKey(address_n: Array<number>, curve: number, showOnTrezor: boolean): Promise<trezor.TezosPublicKey> {
+    async tezosGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.TezosPublicKey> {
         const response: MessageResponse<trezor.TezosPublicKey> = await this.typedCall('TezosGetPublicKey', 'TezosPublicKey', {
             address_n,
-            curve,
             show_display: !!showOnTrezor,
         });
         return response.message;

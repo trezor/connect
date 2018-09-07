@@ -15,7 +15,6 @@ import type { CoreMessage } from '../../types';
 
 type Batch = {
     path: Array<number>,
-    curve: number,
     showOnTrezor: boolean,
 }
 
@@ -53,7 +52,6 @@ export default class TezosGetPublicKey extends AbstractMethod {
             // validate incoming parameters for each batch
             validateParams(batch, [
                 { name: 'path', obligatory: true },
-                { name: 'curve', type: 'number' },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
@@ -65,7 +63,6 @@ export default class TezosGetPublicKey extends AbstractMethod {
 
             bundle.push({
                 path,
-                curve: payload.curve,
                 showOnTrezor,
             });
         });
@@ -109,7 +106,6 @@ export default class TezosGetPublicKey extends AbstractMethod {
         for (let i = 0; i < this.params.bundle.length; i++) {
             const response: TezosPublicKey = await this.device.getCommands().tezosGetPublicKey(
                 this.params.bundle[i].path,
-                this.params.bundle[i].curve,
                 this.params.bundle[i].showOnTrezor
             );
             responses.push({
