@@ -987,82 +987,6 @@
             "oneofs": {}
         },
         {
-            "name": "CardanoSignMessage",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "address_n",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "message",
-                    "id": 2
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "CardanoMessageSignature",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "public_key",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "signature",
-                    "id": 2
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "CardanoVerifyMessage",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "public_key",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "signature",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "message",
-                    "id": 3
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
             "name": "CardanoSignTx",
             "fields": [
                 {
@@ -1085,6 +1009,13 @@
                     "type": "uint32",
                     "name": "transactions_count",
                     "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "network",
+                    "id": 4
                 }
             ],
             "enums": [],
@@ -1404,6 +1335,10 @@
                         {
                             "name": "ButtonRequest_PassphraseType",
                             "id": 14
+                        },
+                        {
+                            "name": "ButtonRequest_UnknownDerivationPath",
+                            "id": 15
                         }
                     ],
                     "options": {}
@@ -3787,6 +3722,92 @@
             "oneofs": {}
         },
         {
+            "name": "MoneroTransactionRsigData",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "version",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "rsig_type",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "offload_type",
+                    "id": 3
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "grouping",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "step",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "operation",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "seed",
+                    "id": 7
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "mask",
+                    "id": 8
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "amount",
+                    "id": 9
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "rsig",
+                    "id": 10
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "MoneroTransactionDestinationEntry",
+                    "name": "outputs",
+                    "id": 11
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "MoneroGetAddress",
             "fields": [
                 {
@@ -4023,9 +4044,16 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "bool",
-                            "name": "is_bulletproof",
+                            "type": "MoneroTransactionRsigData",
+                            "name": "rsig_data",
                             "id": 14
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "integrated_indices",
+                            "id": 15
                         }
                     ],
                     "enums": [],
@@ -4081,6 +4109,13 @@
                     "type": "bool",
                     "name": "many_outputs",
                     "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "MoneroTransactionRsigData",
+                    "name": "rsig_data",
+                    "id": 7
                 }
             ],
             "enums": [],
@@ -4239,6 +4274,38 @@
             "oneofs": {}
         },
         {
+            "name": "MoneroTransactionAllInputsSetRequest",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "MoneroTransactionRsigData",
+                    "name": "rsig_data",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroTransactionAllInputsSetAck",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "MoneroTransactionRsigData",
+                    "name": "rsig_data",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "MoneroTransactionSetOutputRequest",
             "fields": [
                 {
@@ -4254,6 +4321,13 @@
                     "type": "bytes",
                     "name": "dst_entr_hmac",
                     "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "MoneroTransactionRsigData",
+                    "name": "rsig_data",
+                    "id": 3
                 }
             ],
             "enums": [],
@@ -4281,8 +4355,8 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bytes",
-                    "name": "rsig",
+                    "type": "MoneroTransactionRsigData",
+                    "name": "rsig_data",
                     "id": 3
                 },
                 {
@@ -4306,8 +4380,48 @@
             "oneofs": {}
         },
         {
+            "name": "MoneroTransactionRangeSigRequest",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "MoneroTransactionRsigData",
+                    "name": "rsig_data",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroTransactionRangeSigAck",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "MoneroTransactionRsigData",
+                    "name": "rsig_data",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "MoneroTransactionAllOutSetRequest",
-            "fields": [],
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "MoneroTransactionRsigData",
+                    "name": "rsig_data",
+                    "id": 1
+                }
+            ],
             "enums": [],
             "messages": [],
             "options": {},
@@ -4333,9 +4447,16 @@
                 {
                     "rule": "optional",
                     "options": {},
+                    "type": "MoneroTransactionRsigData",
+                    "name": "rsig_data",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
                     "type": "MoneroRingCtSig",
                     "name": "rv",
-                    "id": 3
+                    "id": 4
                 }
             ],
             "enums": [],
@@ -4558,37 +4679,51 @@
                 {
                     "rule": "optional",
                     "options": {},
+                    "type": "MoneroTransactionAllInputsSetRequest",
+                    "name": "all_in_set",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
                     "type": "MoneroTransactionSetOutputRequest",
                     "name": "set_output",
-                    "id": 5
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "MoneroTransactionRangeSigRequest",
+                    "name": "rsig",
+                    "id": 7
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "MoneroTransactionAllOutSetRequest",
                     "name": "all_out_set",
-                    "id": 6
+                    "id": 8
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "MoneroTransactionMlsagDoneRequest",
                     "name": "mlsag_done",
-                    "id": 7
+                    "id": 9
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "MoneroTransactionSignInputRequest",
                     "name": "sign_input",
-                    "id": 8
+                    "id": 10
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "MoneroTransactionFinalRequest",
                     "name": "final_msg",
-                    "id": 9
+                    "id": 11
                 }
             ],
             "enums": [],
@@ -6960,19 +7095,10 @@
                 },
                 {
                     "rule": "optional",
-                    "options": {
-                        "default": "Ed25519"
-                    },
-                    "type": "TezosCurveType",
-                    "name": "curve",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
                     "options": {},
                     "type": "bool",
                     "name": "show_display",
-                    "id": 3
+                    "id": 2
                 }
             ],
             "enums": [],
@@ -7008,19 +7134,10 @@
                 },
                 {
                     "rule": "optional",
-                    "options": {
-                        "default": "Ed25519"
-                    },
-                    "type": "TezosCurveType",
-                    "name": "curve",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
                     "options": {},
                     "type": "bool",
                     "name": "show_display",
-                    "id": 3
+                    "id": 2
                 }
             ],
             "enums": [],
@@ -7056,47 +7173,38 @@
                 },
                 {
                     "rule": "optional",
-                    "options": {
-                        "default": "Ed25519"
-                    },
-                    "type": "TezosCurveType",
-                    "name": "curve",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
                     "options": {},
                     "type": "bytes",
                     "name": "branch",
-                    "id": 3
+                    "id": 2
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "TezosRevealOp",
                     "name": "reveal",
-                    "id": 4
+                    "id": 3
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "TezosTransactionOp",
                     "name": "transaction",
-                    "id": 5
+                    "id": 4
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "TezosOriginationOp",
                     "name": "origination",
-                    "id": 6
+                    "id": 5
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "TezosDelegationOp",
                     "name": "delegation",
-                    "id": 7
+                    "id": 6
                 }
             ],
             "enums": [],
@@ -7504,24 +7612,6 @@
                 {
                     "name": "SPENDP2SHWITNESS",
                     "id": 4
-                }
-            ],
-            "options": {}
-        },
-        {
-            "name": "TezosCurveType",
-            "values": [
-                {
-                    "name": "Ed25519",
-                    "id": 0
-                },
-                {
-                    "name": "Secp256k1",
-                    "id": 1
-                },
-                {
-                    "name": "P256",
-                    "id": 2
                 }
             ],
             "options": {}
@@ -7966,18 +8056,6 @@
                     "id": 230
                 },
                 {
-                    "name": "MessageType_CardanoSignMessage",
-                    "id": 300
-                },
-                {
-                    "name": "MessageType_CardanoMessageSignature",
-                    "id": 301
-                },
-                {
-                    "name": "MessageType_CardanoVerifyMessage",
-                    "id": 302
-                },
-                {
                     "name": "MessageType_CardanoSignTx",
                     "id": 303
                 },
@@ -8094,8 +8172,16 @@
                     "id": 505
                 },
                 {
+                    "name": "MessageType_MoneroTransactionAllInputsSetAck",
+                    "id": 513
+                },
+                {
                     "name": "MessageType_MoneroTransactionSetOutputAck",
                     "id": 506
+                },
+                {
+                    "name": "MessageType_MoneroTransactionRangeSigAck",
+                    "id": 514
                 },
                 {
                     "name": "MessageType_MoneroTransactionAllOutSetAck",
