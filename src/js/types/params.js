@@ -4,6 +4,11 @@ import type {
     MultisigRedeemScriptType,
 } from './trezor';
 
+export type $BlockchainSubscribe = {
+    accounts: Array<any>;
+    coin: string;
+}
+
 export type $Common = {
     device?: {
         path: string,

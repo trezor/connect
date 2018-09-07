@@ -17,7 +17,7 @@ import type {
     AccountInfo,
     AccountLoadStatus,
 } from 'hd-wallet';
-import type { CoinInfo } from 'flowtype';
+import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
 
 /* $FlowIssue loader notation */
 import FastXpubWasm from 'hd-wallet/lib/fastxpub/fastxpub.wasm';
@@ -30,7 +30,7 @@ import SocketWorker from 'worker-loader?name=js/socketio-worker.[hash].js!hd-wal
 
 export type Options = {
     urls: Array<string>,
-    coinInfo: CoinInfo,
+    coinInfo: CoinInfo | EthereumNetworkInfo,
 };
 
 export default class BlockBook {
@@ -67,7 +67,7 @@ export default class BlockBook {
         this.error = error;
     }
 
-    async loadCoinInfo(coinInfo: ?CoinInfo): Promise<void> {
+    async loadCoinInfo(coinInfo: ?(CoinInfo | EthereumNetworkInfo)): Promise<void> {
         const socket: any = await this.blockchain.socket.promise; // socket from hd-wallet TODO: type
         const networkInfo: any = await socket.send({ method: 'getInfo', params: [] }); // TODO: what type is it?
 
@@ -80,7 +80,9 @@ export default class BlockBook {
         }
 
         // set vars
-        this.blockchain.zcash = coinInfo.zcash;
+        if (typeof coinInfo.zcash === 'boolean') {
+            this.blockchain.zcash = coinInfo.zcash;
+        }
     }
 
     async loadAccountInfo(
@@ -109,6 +111,28 @@ export default class BlockBook {
         discovery.stream.dispose();
 
         return info;
+    }
+
+    subscribed: boolean = false;
+
+    subscribe(accounts: Array<string>,
+        blockHandler: (block: string) => void,
+        errorHandler: (error: Error) => void,
+    ): void {
+
+        if (!this.subscribed) {
+            this.subscribed = true;
+
+            this.blockchain.blocks.values.attach(block => {
+                if (typeof block === 'string')
+                    blockHandler(block);
+            });
+
+            this.blockchain.errors.values.attach(error => {
+                errorHandler(error);
+            });
+        }
+        // this.blockchain.subscribe(new Set(accounts));
     }
 
     monitorAccountActivity(
