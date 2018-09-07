@@ -3,16 +3,16 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
-import { getCoinInfoByCurrency } from '../../data/CoinInfo';
+import { getCoinInfoByCurrency, getEthereumNetwork } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
 import BlockBook, { create as createBackend } from '../../backend';
 
 import type { CoreMessage, PushTransaction$ } from '../../types';
-import type { CoinInfo } from 'flowtype';
+import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
 
 type Params = {
     tx: string,
-    coinInfo: CoinInfo,
+    coinInfo: CoinInfo | EthereumNetworkInfo,
 }
 
 export default class PushTransaction extends AbstractMethod {
@@ -33,11 +33,15 @@ export default class PushTransaction extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
-        if (!(/^[0-9A-Fa-f]*$/.test(payload.tx))) {
-            throw new Error('Transaction must be hexadecimal');
+        let coinInfo: ?(CoinInfo | EthereumNetworkInfo) = getCoinInfoByCurrency(payload.coin);
+        if (!coinInfo) {
+            coinInfo = getEthereumNetwork(payload.coin);
+        } else {
+            // btc-like tx
+            if (!(/^[0-9A-Fa-f]*$/.test(payload.tx))) {
+                throw new Error('Transaction must be hexadecimal');
+            }
         }
-
-        const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         }
