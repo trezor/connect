@@ -10,8 +10,12 @@ import type { TezosTransaction, TezosSignedTx } from '../../types/trezor';
 import type { TezosCurve, TezosOperation, $TezosSignTransaction } from '../../types/tezos';
 import type { CoreMessage } from '../../types';
 
+type Params = {
+    transaction: TezosTransaction,
+}
+
 export default class TezosSignTransaction extends AbstractMethod {
-    message: $TezosSignTransaction // change type
+    params: Params;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -33,21 +37,17 @@ export default class TezosSignTransaction extends AbstractMethod {
         const curve: TezosCurve = payload.curve;
         const branch: Array<number> = payload.branch;
         const operation: TezosOperation = payload.operation;
+        const transaction = helper.createTx(path, curve, branch, operation);
 
-        this.message = helper.createTx(path, curve, branch, operation);
-
-        //console.warn('[TezosSignTransaction][constructor]', message)
+        this.params = {
+            transaction,
+        }
     }
 
     async run(): Promise<TezosSignedTx> {
-
-        //console.warn('[y][TezosSignTransaction] run request ', this.message)
-
         const response: TezosSignedTx = await this.device.getCommands().tezosSignTransaction(
-            this.message,
+            this.params.transaction,
         );
-        //console.warn('[y][TezosSignTransaction] run response ', response)
-
         return {
             signature: response.signature,
             sig_op_contents: response.sig_op_contents,
