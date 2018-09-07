@@ -19,9 +19,13 @@
     "chain_id": 3,
     "slip44": 1,
     "shortcut": "tETH",
-    "name": "Ethereum Testnet Ropsten",
+    "name": "ropsten",
+    "label": "Ethereum Testnet Ropsten",
     "rskip60": false,
-    "url": "https://www.ethereum.org"
+    "url": "https://www.ethereum.org",
+    "blockbook": [
+        "https://blockbook-dev.corp:19136"
+    ]
   },
   {
     "chain_id": 4,
