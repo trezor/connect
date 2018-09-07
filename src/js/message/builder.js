@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, RESPONSE_EVENT } from '../constants';
+import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, RESPONSE_EVENT, BLOCKCHAIN_EVENT } from '../constants';
 import type { CoreMessage } from '../types';
 import type { UiMessageFactory } from '../types/ui-request';
 
@@ -35,6 +35,14 @@ export const ResponseMessage = (id: number, success: boolean, payload: any = nul
         type: RESPONSE_EVENT,
         id,
         success,
+        payload,
+    };
+};
+
+export const BlockchainMessage = (type: string, payload: any): CoreMessage => {
+    return {
+        event: BLOCKCHAIN_EVENT,
+        type,
         payload,
     };
 };
