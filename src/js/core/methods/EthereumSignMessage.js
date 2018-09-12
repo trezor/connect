@@ -40,15 +40,17 @@ export default class EthereumSignMessage extends AbstractMethod {
 
         this.info = getNetworkLabel('Sign #NETWORK message', network);
 
-        let messageHex = payload.message;
-        if (!payload.message.startsWith('0x')) {
+        let messageHex;
+        if (payload.message.startsWith('0x')) {
+            messageHex = makeHexEven(payload.message);
+        } else {
             messageHex = Buffer.from(payload.message, 'utf8').toString('hex');
         }
 
         this.params = {
             path,
             network,
-            message: makeHexEven(messageHex)
+            message: messageHex
         };
     }
 
