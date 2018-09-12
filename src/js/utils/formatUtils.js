@@ -39,19 +39,3 @@ export const formatTime = (n: number): string => {
 export const btckb2satoshib = (n: number): number => {
     return Math.round(n * 1e5);
 };
-
-/**
- * Prepend 0 in case of uneven hex char count
- * @param input The hex input
- */
-export function makeHexEven(input: string): string {
-    if (!input) return undefined;
-
-    let output;
-    if (input.length % 2 !== 0) {
-      output = `0${input.slice(2)}`;
-    } else {
-      output = input.slice(2);
-    }
-    return output;
-}
