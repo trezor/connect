@@ -6,6 +6,7 @@ import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
 import { toChecksumAddress, getNetworkLabel } from '../../utils/ethereumUtils';
+import { makeHexEven } from '../../utils/formatUtils';
 
 import type { MessageSignature } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
@@ -39,11 +40,15 @@ export default class EthereumSignMessage extends AbstractMethod {
 
         this.info = getNetworkLabel('Sign #NETWORK message', network);
 
-        const messageHex: string = Buffer.from(payload.message, 'utf8').toString('hex');
+        let messageHex = payload.message;
+        if (!payload.message.startsWith('0x')) {
+            messageHex = Buffer.from(payload.message, 'utf8').toString('hex');
+        }
+
         this.params = {
             path,
             network,
-            message: messageHex,
+            message: makeHexEven(messageHex)
         };
     }
 
