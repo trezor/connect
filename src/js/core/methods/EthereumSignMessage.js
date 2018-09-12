@@ -42,7 +42,7 @@ export default class EthereumSignMessage extends AbstractMethod {
 
         let messageHex;
         if (payload.message.startsWith('0x')) {
-            messageHex = makeHexEven(messageHex);
+            messageHex = makeHexEven(payload.message);
         } else {
             messageHex = Buffer.from(payload.message, 'utf8').toString('hex');
         }
