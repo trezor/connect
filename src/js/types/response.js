@@ -82,7 +82,10 @@ export type GetPublicKey$$ = {
 } | Unsuccessful$;
 
 export type PushTransaction$ = {
-    txid: string,
+    success: true,
+    payload: {
+        txid: string
+    }
 } | Unsuccessful$;
 
 export type RequestLogin$ = {

@@ -52,7 +52,7 @@ export default class PushTransaction extends AbstractMethod {
         };
     }
 
-    async run(): Promise<PushTransaction$> {
+    async run(): Promise<{ txid: string }> {
         // initialize backend
         this.backend = await createBackend(this.params.coinInfo);
         const txid: string = await this.backend.sendTransactionHex(this.params.tx);
