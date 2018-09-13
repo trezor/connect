@@ -67,10 +67,10 @@ export type $GetPublicKey = {
     crossChain?: boolean,
 }
 
-export type $PushTransaction = $Common & $Exact<{
+export type $PushTransaction = $Common & {
     tx: string,
     coin: string,
-}>;
+};
 
 export type $RequestLogin = $Common & $Exact<{
     challengeHidden: string,
