@@ -10,7 +10,11 @@ const instances: Array<BlockBook> = [];
 export const find = (name: string): ?BlockBook => {
     for (let i: number = 0; i < instances.length; i++) {
         if (instances[i].options.coinInfo.name === name) {
-            return instances[i];
+            if (instances[i].error) {
+                remove(instances[i]);
+            } else {
+                return instances[i];
+            }
         }
     }
     return null;
