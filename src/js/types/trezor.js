@@ -589,7 +589,6 @@ type TezosDelegationOp = {
 
 export type TezosTransaction = {
     address_n: Array<number>,
-    curve: TezosCurve,
     branch: Array<number>;
     reveal?: TezosRevealOp,
     transaction?: TezosTransactionOp,

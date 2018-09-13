@@ -28,16 +28,14 @@ export default class TezosSignTransaction extends AbstractMethod {
         // validate incoming parameters
         validateParams(payload, [
             { name: 'path', obligatory: true },
-            { name: 'curve', obligatory: true },
             { name: 'branch', obligatory: true },
             { name: 'operation', obligatory: true },
         ]);
 
         const path = validatePath(payload.path, 3);
-        const curve: TezosCurve = payload.curve;
         const branch: Array<number> = payload.branch;
         const operation: TezosOperation = payload.operation;
-        const transaction = helper.createTx(path, curve, branch, operation);
+        const transaction = helper.createTx(path, branch, operation);
 
         this.params = {
             transaction,

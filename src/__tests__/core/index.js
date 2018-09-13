@@ -28,6 +28,10 @@ import { nemSignTransactionMosaic } from './nemSignTransactionMosaic.spec.js';
 import { nemSignTransactionMultisig } from './nemSignTransactionMultisig.spec.js';
 import { nemSignTransactionOthers } from './nemSignTransactionOthers.spec.js';
 import { nemSignTransactionTransfers } from './nemSignTransactionTransfers.spec.js';
+import { tezosGetAddress } from './tezosGetAddress.spec.js';
+import { tezosGetPublicKey } from './tezosGetPublicKey.spec.js';
+import { tezosSignTransaction } from './tezosSignTransaction.spec.js';
+
 import { passphrase } from './passphrase.spec.js';
 
 export const testFunctions: AvailableTestFunctions = {
@@ -55,5 +59,8 @@ export const testFunctions: AvailableTestFunctions = {
     nemSignTransactionMultisig,
     nemSignTransactionOthers,
     nemSignTransactionTransfers,
+    tezosGetAddress,
+    tezosGetPublicKey,
+    tezosSignTransaction,
     passphrase,
 };

@@ -80,7 +80,20 @@ import type {
     ExpectedPassphraseResponse,
 } from 'flowtype/tests/passphrase';
 
+import type {
+    TestTezosGetAddressPayload,
+    ExpectedTezosGetAddressResponse,
+} from 'flowtype/tests/tezos-get-address';
 
+import type {
+    TestTezosGetPublicKeyPayload,
+    ExpectedTezosGetPublicKeyResponse,
+} from 'flowtype/tests/tezos-get-public-key';
+
+import type {
+    TestTezosSignTransactionPayload,
+    ExpectedTezosSignTransactionResponse,
+} from 'flowtype/tests/tezos-sign-transaction';
 
 declare module 'flowtype/tests' {
     // declare export type GetAddressAvailableSubtests = 'btc' | 'ltc' | 'tbtc' | 'bch';
@@ -129,6 +142,7 @@ declare module 'flowtype/tests' {
     declare export type SubtestVerifyMessage = Subtest<TestVerifyMessagePayload, ExpectedVerifyMessageResponse>;
     declare export type SubtestGetAccountInfo = Subtest<TestGetAccountInfoPayload, ExpectedGetAccountInfoResponse>;
     declare export type SubtestNemSignTransaction = Subtest<TestNemSignTransactionPayload, ExpectedNemSignTransactionResponse>;
+    declare export type SubtestTezosSignTransaction = Subtest<TestTezosSignTransactionPayload, ExpectedTezosSignTransactionResponse>;
     declare export type SubtestPassphrase = Subtest<TestPassphrasePayload, ExpectedPassphraseResponse>;
 
     declare export type TestPayload =
@@ -147,6 +161,9 @@ declare module 'flowtype/tests' {
         | TestVerifyMessagePayload
         | TestGetAccountInfoPayload
         | TestNemSignTransactionPayload
+        | TestTezosGetAddressPayload
+        | TestTezosGetPublicKeyPayload
+        | TestTezosSignTransactionPayload
         | TestPassphrasePayload;
     declare export type ExpectedResponse =
         ExpectedCardanoSignMessageResponse
@@ -164,6 +181,9 @@ declare module 'flowtype/tests' {
         | ExpectedVerifyMessageResponse
         | ExpectedGetAccountInfoResponse
         | ExpectedNemSignTransactionResponse
+        | ExpectedTezosGetAddressResponse
+        | ExpectedTezosGetPublicKeyResponse
+        | ExpectedTezosSignTransactionResponse
         | ExpectedPassphraseResponse;
 
     declare export type SubtestFunction = SubtestGetAddress
@@ -173,6 +193,7 @@ declare module 'flowtype/tests' {
     | SubtestVerifyMessage
     | SubtestGetAccountInfo
     | SubtestNemSignTransaction
+    | SubtestTezosSignTransaction
     | SubtestPassphrase;
 
     declare export type TestFunction = {

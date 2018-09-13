@@ -1,15 +1,14 @@
 /* @flow */
 'use strict';
 
-import type { TezosCurve, TezosOperation } from '../../../types/tezos';
+import type { TezosOperation } from '../../../types/tezos';
 import type { TezosTransaction } from '../../../types/trezor';
 import { validateParams } from './../helpers/paramsValidator';
 
-export const createTx = (address_n: Array<number>, curve: TezosCurve, branch: Array<number>, operation: TezosOperation): TezosTransaction => {
+export const createTx = (address_n: Array<number>, branch: Array<number>, operation: TezosOperation): TezosTransaction => {
 
     let message: TezosTransaction = {
         address_n,
-        curve,
         branch,
     }
 
