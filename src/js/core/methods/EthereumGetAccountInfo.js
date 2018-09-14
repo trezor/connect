@@ -97,47 +97,44 @@ export default class EthereumGetAccountInfo extends AbstractMethod {
                     from: 0,
                     to: 0,
                     queryMempol: false,
-                    queryMempoolOnly: false
                 }
             ];
             const socket = await blockchain.socket.promise;
             const confirmed = await socket.send({method, params});
 
-            delete params[1].queryMempol;
-            params[1].queryMempoolOnly = true;
-
-            const pendingCount = await socket.send({method, params});
-            const pendingTransactions = []
-            if (pendingCount.totalCount > 0) {
-                params[1].to = pendingCount.totalCount;
-                const pendingTxs = await socket.send({method, params});
-                pendingTransactions.concat(pendingTxs.items);
-            }
-
             responses.push({
                 address: account.address,
                 transactions: confirmed.totalCount,
-                pending: pendingTransactions,
                 block: height
             });
         }
-
-        // const addresses: Array<string> = this.params.accounts.map(a => a.address);
-
-        // const socket = await blockchain.socket.promise;
-        // const method = 'getAddressHistory';
-        // const params = [
-        //     addresses,
-        //     {
-        //         start: height,
-        //         end: 0,
-        //         from: 0,
-        //         to: 0,
-        //         queryMempol: true
-        //     }
-        // ];
-        // const txs = await socket.send({method, params});
-
         return this.params.bundledResponse ? responses : responses[0];
+
+        /*
+        // This will be useful for BTC-like accounts (multi addresses)
+        const addresses: Array<string> = this.params.accounts.map(a => a.address);
+
+        const socket = await blockchain.socket.promise;
+        const method = 'getAddressHistory';
+        const params = [
+            addresses,
+            {
+                start: height,
+                end: 0,
+                from: 0,
+                to: 0,
+                queryMempol: true
+            }
+        ];
+
+
+        const response = await socket.send({method, params});
+        return {
+            address: addresses[0],
+            transactions: response.totalCount,
+            block: height
+        }
+        */
+
     }
 }
