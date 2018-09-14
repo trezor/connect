@@ -83,7 +83,6 @@ declare module 'flowtype' {
     }
 
     declare export type CoinInfo = {
-        addressPrefix: string,
         // address_type: in Network
         // address_type_p2sh: in Network
         // bech32_prefix: in Network
@@ -95,6 +94,7 @@ declare module 'flowtype' {
         label: string,
         name: string,
         shortcut: string,
+        // cooldown no used
         curveName: string,
         decred: boolean,
         defaultFees: {[level: string]: number},
@@ -103,27 +103,29 @@ declare module 'flowtype' {
         forkid: ?number,
         // github: not used
         hashGenesisBlock: string,
+        // key not used
         // maintainer: not used
         maxAddressLength: number,
         maxFeeSatoshiKb: number,
         minAddressLength: number,
         minFeeSatoshiKb: number,
+        // name: same as coin_label
         segwit: boolean,
         // signed_message_header: in Network
         slip44: number,
         support: CoinSupport,
+        // uri_prefix not used
         // version_group_id: not used
         // website: not used
         // xprv_magic: in Network
         xPubMagic: number,
-        xPubMagicSegwit: ?number,
         xPubMagicSegwitNative: ?number,
+        xPubMagicSegwit: ?number,
 
         // custom
         network: BitcoinJsNetwork,
         zcash: boolean,
         isBitcoin: boolean,
-        hasSegwit: boolean,
         minFee: number,
         maxFee: number,
         // used in backend
@@ -131,14 +133,17 @@ declare module 'flowtype' {
     }
 
     declare export type EthereumNetworkInfo = {
+        bitcore: Array<string>, // compatibility
+        blockbook: Array<string>,
+        chain: string;
         chainId: number;
-        slip44: number;
-        shortcut: string;
+        // key not used
         name: string;
         rskip60: boolean;
-        url: string;
-        bitcore: Array<string>,
-        blockbook: Array<string>,
+        shortcut: string;
+        slip44: number;
+        support: CoinSupport;
+        // url not used
     }
 
     declare export type SimpleAccount = {

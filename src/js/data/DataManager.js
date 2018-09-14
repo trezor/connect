@@ -93,7 +93,6 @@ export default class DataManager {
 
             // parse coins definitions
             parseCoinsJson(this.assets['coins']);
-            parseEthereumNetworksJson(this.assets['ethereumNetworks']);
 
             // parse firmware definitions
             parseFirmware(this.assets['firmware-t1']);
