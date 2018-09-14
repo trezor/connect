@@ -44,7 +44,7 @@ export default class BlockchainSubscribe extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'accounts', type: 'array', obligatory: true },
+            // { name: 'accounts', type: 'array', obligatory: true },
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
@@ -65,46 +65,30 @@ export default class BlockchainSubscribe extends AbstractMethod {
 
         this.backend.subscribe(
             this.params.accounts,
-            block => {
+            (hash, height) => {
                 this.postMessage( new BlockchainMessage(BLOCKCHAIN.BLOCK, {
-                    coin: this.params.coinInfo.name,
-                    block
+                    coin: this.params.coinInfo,
+                    hash,
+                    height
+                }) );
+            },
+            notification => {
+                this.postMessage( new BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
+                    coin: this.params.coinInfo,
+                    notification
                 }) );
             },
             error => {
                 this.postMessage( new BlockchainMessage(BLOCKCHAIN.ERROR, {
-                    coin: this.params.coinInfo.name,
+                    coin: this.params.coinInfo,
                     error: error.message
                 }) );
             }
         );
 
-        console.warn("-----BLOCKBOOK", this.backend.blockchain.blocks)
-        // this.backend.blockchain.blocks.values.attach(block => {
-        //     console.warn("BLOCK!", block)
-
-        //     // send progress
-        //     this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
-        //         block
-        //     }));
-        // });
-
-        // this.backend.blockchain.notifications.values.attach(block => {
-        //     console.warn("NOTIF!", block)
-
-        //     // send progress
-        //     this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
-        //         block
-        //     }));
-        // });
-
-        // this.backend.blockchain.errors.values.attach(block => {
-        //     console.warn("ERROR!", block)
-        // });
-
-        // // const { height } = await this.backend.blockchain.lookupSyncStatus();
-        // const txs = await this.backend.blockchain.subscribe(new Set(this.params.addresses));
-        // //clearInterval(inter);
+        this.postMessage( new BlockchainMessage(BLOCKCHAIN.CONNECT, {
+            coin: this.params.coinInfo
+        }) );
 
         return {
             subscribed: true

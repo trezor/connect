@@ -65,11 +65,14 @@ export default class BlockBook {
 
     _setError(error: Error) {
         this.error = error;
+        this.subscribed = false;
+        // TODO: remove all stream listeners
+        // this instance will not be used anymore
     }
 
     async loadCoinInfo(coinInfo: ?(CoinInfo | EthereumNetworkInfo)): Promise<void> {
-        const socket: any = await this.blockchain.socket.promise; // socket from hd-wallet TODO: type
-        const networkInfo: any = await socket.send({ method: 'getInfo', params: [] }); // TODO: what type is it?
+        const socket = await this.blockchain.socket.promise;
+        const networkInfo = await socket.send({ method: 'getInfo', params: [] });
 
         if (!coinInfo) {
             const hash: string = await this.blockchain.lookupBlockHash(0);
@@ -116,22 +119,30 @@ export default class BlockBook {
     subscribed: boolean = false;
 
     subscribe(accounts: Array<string>,
-        blockHandler: (block: string) => void,
+        blockHandler: (hash: string, height: number) => void,
+        notificationHandler: (notification: any) => void,
         errorHandler: (error: Error) => void,
     ): void {
 
         if (!this.subscribed) {
             this.subscribed = true;
 
-            this.blockchain.blocks.values.attach(block => {
-                if (typeof block === 'string')
-                    blockHandler(block);
+            this.blockchain.blocks.values.attach(hash => {
+                const asyncFN = async (hash) => {
+                    const { height } = await this.blockchain.lookupSyncStatus();
+                    blockHandler(hash, height);
+                }
+                if (typeof hash === 'string') {
+                    asyncFN(hash);
+                }
             });
 
-            this.blockchain.errors.values.attach(error => {
-                errorHandler(error);
-            });
+            this.blockchain.notifications.values.attach(notificationHandler)
+            this.blockchain.errors.values.attach(errorHandler);
         }
+
+        // TODO: verify address duplicates
+        // TODO: add option to remove subscription
         // this.blockchain.subscribe(new Set(accounts));
     }
 
