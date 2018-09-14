@@ -109,6 +109,18 @@ export const getCoinName = (path: Array<number>): string => {
 export const parseCoinsJson = (json: JSON): void => {
     const coinsObject: Object = json;
     Object.keys(coinsObject).forEach(key => {
+        switch (key) {
+            case "bitcoin" :
+                return parseBitcoinNetworksJson( coinsObject[key] );
+            case "eth" :
+                return parseEthereumNetworksJson( coinsObject[key] );
+        }
+    });
+}
+
+export const parseBitcoinNetworksJson = (json: JSON): void => {
+    const coinsObject: Object = json;
+    Object.keys(coinsObject).forEach(key => {
         const coin = coinsObject[key];
         const network: BitcoinJsNetwork = {
             messagePrefix: coin.signed_message_header,
@@ -128,7 +140,6 @@ export const parseCoinsJson = (json: JSON): void => {
         const isBitcoin = shortcut === 'BTC' || shortcut === 'TEST';
 
         coins.push({
-            addressPrefix: coin.address_prefix,
             // address_type in Network
             // address_type_p2sh in Network
             // bech32_prefix in Network
@@ -140,6 +151,7 @@ export const parseCoinsJson = (json: JSON): void => {
             label: coin.coin_label,
             name: coin.coin_name,
             shortcut,
+            // cooldown no used
             curveName: coin.curve_name,
             decred: coin.decred,
             defaultFees: coin.default_fee_b,
@@ -148,27 +160,29 @@ export const parseCoinsJson = (json: JSON): void => {
             forkid: coin.fork_id,
             // github not used
             hashGenesisBlock: coin.hash_genesis_block,
+            // key not used
             // maintainer not used
             maxAddressLength: coin.max_address_length,
             maxFeeSatoshiKb: coin.maxfee_kb,
             minAddressLength: coin.min_address_length,
             minFeeSatoshiKb: coin.minfee_kb,
+            // name: same as coin_label
             segwit: coin.segwit,
             // signed_message_header in Network
             slip44: coin.slip44,
             support: coin.support,
+            // uri_prefix not used
             // version_group_id not used
             // website not used
             // xprv_magic in Network
             xPubMagic: coin.xpub_magic,
-            xPubMagicSegwit: coin.xpub_magic_segwit_p2sh,
             xPubMagicSegwitNative: coin.xpub_magic_segwit_native,
+            xPubMagicSegwit: coin.xpub_magic_segwit_p2sh,
 
             // custom
-            network,
+            network, // bitcoinjs network
             zcash,
             isBitcoin,
-            hasSegwit: coin.segwit,
             maxFee: Math.round(coin.maxfee_kb / 1000),
             minFee: Math.round(coin.minfee_kb / 1000),
 
@@ -185,14 +199,17 @@ export const parseEthereumNetworksJson = (json: JSON): void => {
     Object.keys(networksObject).forEach(key => {
         const network = networksObject[key];
         ethereumNetworks.push({
+            blockbook: network.blockbook || [],
+            bitcore: [], // legacy compatibility with bitcoin coinInfo
+            chain: network.chain,
             chainId: network.chain_id,
-            slip44: network.slip44,
-            shortcut: network.shortcut,
+            // key not used
             name: network.name,
             rskip60: network.rskip60,
-            url: network.url,
-            blockbook: network.blockbook || [],
-            bitcore: [] // legacy compatibility with bitcoin coinInfo
+            shortcut: network.shortcut,
+            slip44: network.slip44,
+            support: network.support,
+            // url not used
         });
     });
 };
@@ -200,7 +217,7 @@ export const parseEthereumNetworksJson = (json: JSON): void => {
 export const getEthereumNetwork = (pathOrName: Array<number> | string): ?EthereumNetworkInfo => {
     if (typeof pathOrName === 'string') {
         const name: string = pathOrName.toLowerCase();
-        return ethereumNetworks.find(n => n.name === name || n.shortcut === name);
+        return ethereumNetworks.find(n => n.name.toLowerCase() === name || n.shortcut.toLowerCase() === name);
     } else {
         const slip44: number = fromHardened(pathOrName[1]);
         return ethereumNetworks.find(n => n.slip44 === slip44);
