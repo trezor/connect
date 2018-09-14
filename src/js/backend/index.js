@@ -31,13 +31,13 @@ export const createFromCoinInfo = async (coinInfo: CoinInfo | EthereumNetworkInf
     let backend: ?BlockBook = find(coinInfo.name);
     if (!backend) {
         backend = new BlockBook({ urls: [ ...coinInfo.blockbook, ...coinInfo.bitcore ], coinInfo });
+        try {
+            await backend.loadCoinInfo(coinInfo);
+        } catch (error) {
+            remove(backend);
+            throw error;
+        }
         instances.push(backend);
-    }
-    try {
-        await backend.loadCoinInfo(coinInfo);
-    } catch (error) {
-        remove(backend);
-        throw error;
     }
     return backend;
 };
