@@ -46,7 +46,7 @@ function hashToCoinInfo(hash: string, btcVersion: string): ?CoinInfo {
             return coinInfos.find(info => info.name === 'Bcash');
         }
         if (btcVersion === 'btg') {
-            return coinInfos.find(info => info.name === 'Bitcoin Gold');
+            return coinInfos.find(info => info.name === 'Bgold');
         }
     }
     return result;
@@ -178,7 +178,7 @@ const coins = [
 	"firmware": "stable"
 },
 {
-	"coin_name": "Bitcoin Gold",
+	"coin_name": "Bgold",
 	"coin_shortcut": "BTG",
 	"coin_label": "Bitcoin Gold",
 	"address_type": 38,
