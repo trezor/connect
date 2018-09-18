@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 5.0.33
 __fixed__
 - `TrezorConnect.ethereumSignMessage` and `TrezorConnect.ethereumVerifyMessage` methods with "hex" parameter
@@ -15,6 +16,18 @@ __fixed__
 __removed__
 - Removed `TrezorConnect.cardanoSignMessage` method
 - Removed `TrezorConnect.cardanoVerifyMessage` method
+=======
+# 5.0.32
+__added__
+- Added `TrezorConnect.pushTransaction` method with ethereum blockbook support
+- Added `TrezorConnect.ethereumGetAccountInfo` method
+- Added `TrezorConnect.blockchainSubscribe` method
+- Added `BLOCKCHAIN` events
+__fixed__
+- TRANSPORT.ERROR event when computer goes to sleep
+__changed__
+- coins.json merged as one file
+>>>>>>> updated changelog
 
 # 5.0.31
 __added__
