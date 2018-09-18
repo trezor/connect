@@ -73,6 +73,4 @@ protobuf:
 # Build coin definitions
 coins:
 	# make submodules
-	./submodules/trezor-common/defs/coins/tools/build_coins.py connect
-	mv coins.json ./src/data/coins.json
-	cp ./submodules/trezor-common/defs/ethereum/networks.json ./src/data/ethereumNetworks.json
+	./submodules/trezor-common/defs/coins/tools/cointool.py dump -p -d connect -o ./src/data/coins.json
