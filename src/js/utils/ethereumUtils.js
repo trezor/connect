@@ -5,7 +5,7 @@ import createKeccakHash from 'keccak';
 import type { EthereumNetworkInfo } from 'flowtype';
 
 const hasHexPrefix = (str: string): boolean => {
-    return str.slice(0, 2) === '0x';
+    return str.slice(0, 2).toLowerCase() === '0x';
 };
 
 export const stripHexPrefix = (str: string): string => {
