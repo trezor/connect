@@ -4,6 +4,7 @@
 import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, RESPONSE_EVENT, BLOCKCHAIN_EVENT } from '../constants';
 import type { CoreMessage } from '../types';
 import type { UiMessageFactory } from '../types/ui-request';
+import type { BlockchainMessageFactory } from '../types/blockchain-events';
 
 export const UiMessage: UiMessageFactory = (type, payload) => {
     return {
@@ -39,7 +40,7 @@ export const ResponseMessage = (id: number, success: boolean, payload: any = nul
     };
 };
 
-export const BlockchainMessage = (type: string, payload: any): CoreMessage => {
+export const BlockchainMessage: BlockchainMessageFactory = (type, payload): CoreMessage => {
     return {
         event: BLOCKCHAIN_EVENT,
         type,
