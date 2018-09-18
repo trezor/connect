@@ -51,10 +51,6 @@
             "url": "base/src/data/coins.json"
         },
         {
-            "name": "ethereumNetworks",
-            "url": "base/src/data/ethereumNetworks.json"
-        },
-        {
             "name": "firmware-t1",
             "url": "base/src/data/firmware/1/releases.json"
         },
