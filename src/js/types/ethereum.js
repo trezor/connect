@@ -30,6 +30,8 @@ export type EthereumAccount = {
     address: string;
     block: number;
     transactions: number;
+    balance: string;
+    nonce: number;
 }
 
 export type $EthereumGetAccountInfo = {
