@@ -21,7 +21,9 @@ export type Unsuccessful$ = {
 
 export type BlockchainSubscribe$ = {
     success: true,
-    payload: boolean,
+    payload: {
+        subscribed: true
+    },
 } | Unsuccessful$;
 
 export type CipherKeyValue$ = {
@@ -105,19 +107,6 @@ export type SignMessage$ = {
 export type SignTransaction$ = {
     success: true,
     payload: SignedTx,
-} | Unsuccessful$;
-
-export type StellarGetAddress$ = {
-    success: true,
-    payload: StellarAddress | Array<StellarAddress>,
-} | Unsuccessful$;
-
-export type StellarSignTransaction$ = {
-    success: true,
-    payload: {
-        publicKey: string,
-        signature: string,
-    },
 } | Unsuccessful$;
 
 export type VerifyMessage$ = {
