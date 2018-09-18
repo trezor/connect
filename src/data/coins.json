@@ -506,7 +506,7 @@
     "eth": [
         {
             "blockbook": [
-                "https://eth1.trezor.io"
+                "https://eth2.trezor.io"
             ],
             "chain": "eth",
             "chain_id": 1,
@@ -697,7 +697,7 @@
         },
         {
             "blockbook": [
-                "https://etc1.trezor.io"
+                "https://etc2.trezor.io"
             ],
             "chain": "etc",
             "chain_id": 61,
