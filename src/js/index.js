@@ -465,3 +465,7 @@ export type {
     BlockchainMessageType,
     BlockchainMessage,
 } from './types';
+
+export type {
+    EthereumAccount
+} from './types/ethereum';
