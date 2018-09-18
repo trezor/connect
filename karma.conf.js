@@ -48,7 +48,6 @@ module.exports = function(config) {
             { pattern: 'src/data/firmware/2/releases.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/messages.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/bridge/latest.txt', included: false, served: true, nocache: true },
-            { pattern: 'src/data/ethereumNetworks.json', included: false, served: true, nocache: true },
         ],
 
         proxies: {
