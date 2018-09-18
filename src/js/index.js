@@ -459,5 +459,6 @@ export type {
 } from './types';
 
 export type {
-    EthereumAccount
+    EthereumAccount,
+    Transaction as EthereumTransaction
 } from './types/ethereum';
