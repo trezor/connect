@@ -105,7 +105,9 @@ export default class EthereumGetAccountInfo extends AbstractMethod {
             responses.push({
                 address: account.address,
                 transactions: confirmed.totalCount,
-                block: height
+                block: height,
+                balance: "0", // TODO: fetch balance from blockbook
+                nonce: 0 // TODO: fetch nonce from blockbook
             });
         }
         return this.params.bundledResponse ? responses : responses[0];
