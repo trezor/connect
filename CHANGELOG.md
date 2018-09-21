@@ -1,6 +1,15 @@
-# 5.0.31
+# 5.0.32
+__added__
+- Added `TrezorConnect.cardanoGetPublicKey` method
+- Ability to sign hexed ethereum message
+- `network` parameter to `TrezorConnect.cardanoSignTransaction` method
 __fixed__
 - TRANSPORT.ERROR event when computer goes to sleep
+- finding backend by name instead of urls
+- proper FW version for Lisk and Stellar
+__removed__
+- Removed `TrezorConnect.cardanoSignMessage` method
+- Removed `TrezorConnect.cardanoVerifyMessage` method
 
 # 5.0.31
 __added__
