@@ -6,9 +6,7 @@ import type {
 
 import { cardanoGetAddress } from './cardanoGetAddress.spec.js';
 import { cardanoGetPublicKey } from './cardanoGetPublicKey.spec.js';
-import { cardanoSignMessage } from './cardanoSignMessage.spec.js';
 import { cardanoSignTransaction } from './cardanoSignTransaction.spec.js';
-import { cardanoVerifyMessage } from './cardanoVerifyMessage.spec.js';
 import { getPublicKey } from './getPublicKey.spec.js';
 import { getAddress } from './getAddress.spec.js';
 import { getAddressSegwit } from './getAddressSegwit.spec.js';
@@ -44,9 +42,7 @@ import { rippleSignTransaction } from './rippleSignTransaction.spec.js';
 export const testFunctions: AvailableTestFunctions = {
     cardanoGetAddress,
     cardanoGetPublicKey,
-    cardanoSignMessage,
     cardanoSignTransaction,
-    cardanoVerifyMessage,
     getPublicKey,
     getAddress,
     getAddressSegwit,

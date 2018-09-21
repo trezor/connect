@@ -6,16 +6,6 @@ import type {
 } from 'flowtype/tests/cardano-get-address';
 
 import type {
-    TestCardanoSignMessagePayload,
-    ExpectedCardanoSignMessageResponse,
-} from 'flowtype/tests/cardano-sign-message';
-
-import type {
-    TestCardanoVerifyMessagePayload,
-    ExpectedCardanoVerifyMessageResponse,
-} from 'flowtype/tests/cardano-verify-message';
-
-import type {
     TestCardanoSignTransactionPayload,
     ExpectedCardanoSignTransactionResponse,
 } from 'flowtype/tests/cardano-sign-transaction';
@@ -166,9 +156,7 @@ declare module 'flowtype/tests' {
     declare export type SubtestLiskSignTransaction = Subtest<TestLiskSignTransactionPayload, ExpectedLiskSignTransactionResponse>;
 
     declare export type TestPayload =
-        TestCardanoSignMessagePayload
-        | TestCardanoVerifyMessagePayload
-        | TestCardanoGetAddressPayload
+        TestCardanoGetAddressPayload
         | TestCardanoGetPublicKeyPayload
         | TestCardanoSignTransactionPayload
         | TestEthereumGetAddressPayload
@@ -191,9 +179,7 @@ declare module 'flowtype/tests' {
         | TestRippleSignTransactionPayload;
 
     declare export type ExpectedResponse =
-        ExpectedCardanoSignMessageResponse
-        | ExpectedCardanoVerifyMessageResponse
-        | ExpectedCardanoGetAddressResponse
+        ExpectedCardanoGetAddressResponse
         | ExpectedCardanoGetPublicKeyResponse
         | ExpectedCardanoSignTransactionResponse
         | ExpectedEthereumGetAddressResponse

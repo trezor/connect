@@ -5,7 +5,7 @@ import createKeccakHash from 'keccak';
 import type { EthereumNetworkInfo } from 'flowtype';
 
 const hasHexPrefix = (str: string): boolean => {
-    return str.slice(0, 2) === '0x';
+    return str.slice(0, 2).toLowerCase() === '0x';
 };
 
 export const stripHexPrefix = (str: string): string => {
@@ -38,7 +38,7 @@ export const getNetworkLabel = (label: string, network: ?EthereumNetworkInfo): s
 
 // from (isHexString) https://github.com/ethjs/ethjs-util/blob/master/src/index.js
 const isHexString = (value: string, length?: number) => {
-    if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
+    if (typeof value !== 'string' || !value.match(/^(0x|0X)?[0-9A-Fa-f]*$/)) {
         return false;
     }
     if (length && value.length !== 2 + 2 * length) { return false; }

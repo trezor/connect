@@ -7,9 +7,9 @@ import type { CoinInfo } from 'flowtype';
 
 const instances: Array<BlockBook> = [];
 
-export const find = (urls: Array<string>): ?BlockBook => {
+export const find = (name: string): ?BlockBook => {
     for (let i: number = 0; i < instances.length; i++) {
-        if (instances[i].options.urls === urls) {
+        if (instances[i].options.coinInfo.name === name) {
             return instances[i];
         }
     }
@@ -24,7 +24,7 @@ export const remove = (backend: BlockBook): void => {
 };
 
 export const createFromCoinInfo = async (coinInfo: CoinInfo): Promise<BlockBook> => {
-    let backend: ?BlockBook = find([ ...coinInfo.blockbook, ...coinInfo.bitcore ]);
+    let backend: ?BlockBook = find(coinInfo.name);
     if (!backend) {
         backend = new BlockBook({ urls: [ ...coinInfo.blockbook, ...coinInfo.bitcore ], coinInfo });
         instances.push(backend);

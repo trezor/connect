@@ -115,7 +115,6 @@ export default class CardanoGetPublicKey extends AbstractMethod {
                 serializedPath: getSerializedPath(batch.path),
                 publicKey: response.xpub,
                 node: response.node,
-                hdPassphrase: response.root_hd_passphrase,
             });
 
             if (this.params.bundledResponse) {

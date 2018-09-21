@@ -23,7 +23,7 @@ TrezorConnect.ethereumSignTransaction(params).then(function(result) {
 
 ### Example
 ```javascript
-TrezorConnect.ethereumSignTransaction(
+TrezorConnect.ethereumSignTransaction({
     path: "m/44'/60'/0'",
     transaction: {
         to: "0x7314e0f1c0e28474bdb6be3e2c3e0453255188f8",

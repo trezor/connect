@@ -6,7 +6,7 @@ import { validateParams } from './helpers/paramsValidator';
 import type { Success } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
-import { stripHexPrefix } from '../../utils/ethereumUtils';
+import { stripHexPrefix, messageToHex } from '../../utils/ethereumUtils';
 
 type Params = {
     address: string,
@@ -33,7 +33,7 @@ export default class EthereumVerifyMessage extends AbstractMethod {
             { name: 'message', type: 'string', obligatory: true },
         ]);
 
-        const messageHex: string = Buffer.from(payload.message, 'utf8').toString('hex');
+        const messageHex: string = messageToHex(payload.message);
         this.params = {
             address: stripHexPrefix(payload.address),
             signature: stripHexPrefix(payload.signature),

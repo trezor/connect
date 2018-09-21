@@ -19,6 +19,7 @@ declare module 'flowtype/tests/cardano-sign-transaction' {
         inputs: Array<CardanoInput>,
         outputs: Array<CardanoOutput>,
         transactions: Array<string>,
+        network: number,
     };
 
     declare export type ExpectedCardanoSignTransactionResponse = {

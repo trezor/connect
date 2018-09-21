@@ -19,7 +19,7 @@ export default class LiskVerifyMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = ['0', '2.0.8'];
+        this.requiredFirmware = ['1.6.3', '2.0.7'];
         this.info = 'Verify Lisk message';
 
         const payload: Object = message.payload;

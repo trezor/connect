@@ -503,7 +503,6 @@ export type CardanoAddress = {
 export type CardanoPublicKey = {
     xpub: string,
     node: HDPubNode,
-    root_hd_passphrase: string,
 };
 
 export type CardanoSignedTx = {
@@ -526,11 +525,6 @@ export type CardanoTxRequest = {
     tx_index: number,
     tx_hash: string,
     tx_body: string,
-};
-
-export type CardanoMessageSignature = {
-    public_key: string,
-    signature: string,
 };
 
 // Lisk types

@@ -34,7 +34,7 @@ export default class DescriptorStream extends EventEmitter {
     listening: boolean = false;
 
     // if transport fetch API rejects (when computer goes to sleep)
-    failedToFetchTimestamp: number = 0;
+    listenTimestamp: number = 0;
 
     // null if nothing
     current: ?Array<DeviceDescriptor> = null;
@@ -58,6 +58,7 @@ export default class DescriptorStream extends EventEmitter {
         let descriptors: Array<DeviceDescriptor>;
         try {
             logger.debug('Start listening', current);
+            this.listenTimestamp = new Date().getTime();
             descriptors = waitForEvent ? await this.transport.listen(current) : await this.transport.enumerate();
             if (this.listening && !waitForEvent) {
                 // enumerate returns some value
@@ -73,27 +74,16 @@ export default class DescriptorStream extends EventEmitter {
             this.upcoming = descriptors;
             logger.debug('Listen result', descriptors);
             this._reportChanges();
-            this.failedToFetchTimestamp = 0;
             if (this.listening) this.listen(); // handlers might have called stop()
         } catch (error) {
-            const ts: number = new Date().getTime();
-            logger.debug('Listen error', error.message, this.failedToFetchTimestamp, ts - this.failedToFetchTimestamp);
-            if (error && typeof error.message === 'string' && error.message.toLowerCase() === 'failed to fetch') {
-                // workaround for windows
-                // to make sure that this error was caused by "err_network_io_suspended"
-                // try to fetch resource that is definitely present, if this request is also failing it means that computer is in hibernate state
-                try {
-                    await httpRequest('data/config.json', 'json');
-                    // this wasn't the reason, bridge is probably missing. Throw error
-                    this.emit(TRANSPORT.ERROR, error);
-                } catch (fetchError) {
-                    logger.log('Failed to load static resource');
-                    // wait one second and try again
-                    await resolveAfter(1000, null);
-                    if (this.listening) this.listen();
-                }
 
-                this.failedToFetchTimestamp = ts;
+            const time = new Date().getTime() - this.listenTimestamp;
+            logger.debug('Listen error', 'timestamp', time, typeof error);
+
+            if (time > 1100) {
+                await resolveAfter(1000, null);
+                if (this.listening) this.listen();
+
             } else {
                 logger.log('Transport error');
                 this.emit(TRANSPORT.ERROR, error);
