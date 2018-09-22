@@ -19,6 +19,7 @@ TrezorConnect.ethereumSignMessage(params).then(function(result) {
 ###### [flowtype](../../src/js/types/params.js#L64-L67)
 * `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
 * `message` - *obligatory* `string` message to sign in plain text
+* `hex` - *optional* `boolean` convert message from hex
 
 ### Example
 ```javascript

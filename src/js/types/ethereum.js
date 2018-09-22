@@ -64,7 +64,8 @@ export type EthereumSignTransaction$ = {
 export type $EthereumSignMessage = $Common & {
     path: $Path,
     message: string,
-}
+    hex?: boolean,
+};
 
 export type EthereumSignMessage$ = {
     success: true,
@@ -76,6 +77,7 @@ export type EthereumSignMessage$ = {
 export type $EthereumVerifyMessage = $Common & {
     address: string,
     message: string,
+    hex?: boolean,
     signature: string,
 }
 
@@ -83,4 +85,3 @@ export type EthereumVerifyMessage$ = {
     success: true,
     payload: Success,
 } | Unsuccessful$;
-
