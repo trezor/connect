@@ -14,6 +14,7 @@ type Params = {
     inputs: Array<CardanoTxInput>,
     outputs: Array<CardanoTxOutput>,
     transactions: Array<string>,
+    network: number,
 }
 
 export default class CardanoSignTransaction extends AbstractMethod {

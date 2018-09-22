@@ -21,7 +21,6 @@ export type CardanoPublicKey = {
     serializedPath: string,
     publicKey: string,
     node: HDPubNode,
-    hdPassphrase: string,
 }
 
 export type CardanoGetPublicKey$ = $Common & {
