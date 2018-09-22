@@ -1,6 +1,13 @@
-# 5.0.34
+# branch
+__added__
+- Added `TrezorConnect.pushTransaction` method with ethereum blockbook support
+- Added `TrezorConnect.ethereumGetAccountInfo` method
+- Added `TrezorConnect.blockchainSubscribe` method
+- Added `BLOCKCHAIN` events
 __fixed__
-- Unicode character in regexp, (https://github.com/trezor/connect/pull/229)
+- TRANSPORT.ERROR event when computer goes to sleep
+__changed__
+- coins.json merged as one file
 
 # 5.0.33
 __fixed__
