@@ -1,3 +1,8 @@
+# 5.0.33
+__fixed__
+- `TrezorConnect.ethereumSignMessage` and `TrezorConnect.ethereumVerifyMessage` methods with "hex" parameter
+- flowtype for `TrezorConnect.cardanoGetPublicKey` in `TrezorConnect.cardanoSignTransaction` methods
+
 # 5.0.32
 __added__
 - Added `TrezorConnect.cardanoGetPublicKey` method

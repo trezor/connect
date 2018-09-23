@@ -32,6 +32,7 @@ export default class EthereumSignMessage extends AbstractMethod {
         validateParams(payload, [
             { name: 'path', obligatory: true },
             { name: 'message', type: 'string', obligatory: true },
+            { name: 'hex', type: 'boolean' },
         ]);
 
         const path: Array<number> = validatePath(payload.path, 3);
@@ -39,7 +40,7 @@ export default class EthereumSignMessage extends AbstractMethod {
 
         this.info = getNetworkLabel('Sign #NETWORK message', network);
 
-        const messageHex = messageToHex(payload.message);
+        const messageHex = payload.hex ? messageToHex(payload.message) : Buffer.from(payload.message, 'utf8').toString('hex');
         this.params = {
             path,
             network,
