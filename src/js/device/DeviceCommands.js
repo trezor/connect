@@ -141,8 +141,8 @@ export default class DeviceCommands {
 
     async getDeviceState(): Promise<string> {
         const response: trezor.PublicKey = await this.getPublicKey([1, 0, 0]);
-        const secret: string = `${response.xpub}#${this.device.features.device_id}`;
-        const state: string = this.device.getTemporaryState() || bitcoin.crypto.hash256(new Buffer(secret, 'binary')).toString('hex');
+        const secret: string = `${response.xpub}#${this.device.features.device_id}#${this.device.instance}`;
+        const state: string = this.device.getTemporaryState() || bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
         return state;
     }
 
@@ -195,11 +195,7 @@ export default class DeviceCommands {
             address_n: address_n,
             show_display: !!showOnTrezor,
         });
-        return {
-            address: response.message.address,
-            path: address_n,
-            serializedPath: getSerializedPath(address_n),
-        };
+        return response.message;
     }
 
     async tronGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise {
@@ -249,38 +245,103 @@ export default class DeviceCommands {
             network,
             show_display: !!showOnTrezor,
         });
-        return {
-            address: response.message.address,
-            path: address_n,
-            serializedPath: getSerializedPath(address_n),
-        };
+        return response.message;
     }
 
-    async nemSignTx(transaction: any): Promise<MessageResponse<trezor.NEMSignedTx>> {
-        return this.typedCall('NEMSignTx', 'NEMSignedTx', transaction);
+    async nemSignTx(transaction: trezor.NEMSignTxMessage): Promise<trezor.NEMSignedTx> {
+        const response: MessageResponse<trezor.NEMSignedTx> = await this.typedCall('NEMSignTx', 'NEMSignedTx', transaction);
+        return response.message;
     }
 
-    async stellarGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.StellarAddress> {
-        const address: MessageResponse<trezor.StellarAddressMessage> = await this.typedCall('StellarGetAddress', 'StellarAddress', {
+    // Ripple: begin
+    async rippleGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.RippleAddress> {
+        const response: MessageResponse<trezor.RippleAddress> = await this.typedCall('RippleGetAddress', 'RippleAddress', {
             address_n,
             show_display: !!showOnTrezor,
         });
+        return response.message;
+    }
 
-        const publicKey: MessageResponse<trezor.StellarPublicKeyMessage> = await this.typedCall('StellarGetPublicKey', 'StellarPublicKey', {
+    async rippleSignTx(transaction: trezor.RippleTransaction): Promise<trezor.RippleSignedTx> {
+        const response: MessageResponse<trezor.RippleSignedTx> = await this.typedCall('RippleSignTx', 'RippleSignedTx', transaction);
+        return response.message;
+    }
+    // Ripple: end
+
+    // Stellar: begin
+    async stellarGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.StellarAddress> {
+        const response: MessageResponse<trezor.StellarAddress> = await this.typedCall('StellarGetAddress', 'StellarAddress', {
             address_n,
+            show_display: !!showOnTrezor,
         });
-
-        return {
-            path: address_n,
-            serializedPath: getSerializedPath(address_n),
-            address: address.message.address,
-            publicKey: publicKey.message.public_key,
-        };
+        return response.message;
     }
 
-    async stellarSignTx(transaction: any): Promise<MessageResponse<trezor.StellarSignedTx>> {
-        return this.typedCall('StellarSignTx', 'StellarSignedTx', transaction);
+    // StellarSignTx message can be found inside ./core/methods/helpers/stellarSignTx
+    // Stellar: end
+
+    // Cardano: begin
+    async cardanoGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoPublicKey> {
+        const response: MessageResponse<trezor.CardanoPublicKey> = await this.typedCall('CardanoGetPublicKey', 'CardanoPublicKey', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
     }
+
+    async cardanoGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoAddress> {
+        const response: MessageResponse<trezor.CardanoAddress> = await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    // CardanoSignTx message can be found inside ./core/methods/helpers/cardanoSignTx
+    // Cardano: end
+
+    // Lisk: begin
+    async liskGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskAddress> {
+        const response: MessageResponse<trezor.LiskAddress> = await this.typedCall('LiskGetAddress', 'LiskAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async liskGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskPublicKey> {
+        const response: MessageResponse<trezor.LiskPublicKey> = await this.typedCall('LiskGetPublicKey', 'LiskPublicKey', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async liskSignMessage(address_n: Array<number>, message: string): Promise<trezor.LiskMessageSignature> {
+        const response: MessageResponse<trezor.LiskMessageSignature> = await this.typedCall('LiskSignMessage', 'LiskMessageSignature', {
+            address_n,
+            message,
+        });
+        return response.message;
+    }
+
+    async liskVerifyMessage(public_key: string, signature: string, message: string): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('LiskVerifyMessage', 'Success', {
+            public_key,
+            signature,
+            message,
+        });
+        return response.message;
+    }
+
+    async liskSignTx(address_n: Array<number>, transaction: trezor.LiskTransaction): Promise<trezor.LiskSignedTx> {
+        const response: MessageResponse<trezor.LiskSignedTx> = await this.typedCall('LiskSignTx', 'LiskSignedTx', {
+            address_n,
+            transaction,
+        });
+        return response.message;
+    }
+    // Lisk: end
 
     async cipherKeyValue(
         address_n: Array<number>,
@@ -333,7 +394,10 @@ export default class DeviceCommands {
         if (!this.device.isT1()) {
             // T2 features
             payload.state = this.device.getExpectedState() || this.device.getState();
-            if (useEmptyPassphrase) { payload.skip_passphrase = useEmptyPassphrase; }
+            if (useEmptyPassphrase) {
+                payload.skip_passphrase = useEmptyPassphrase;
+                payload.state = null;
+            }
         }
 
         const response = await this.call('Initialize', payload);

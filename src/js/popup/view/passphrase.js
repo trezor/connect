@@ -35,7 +35,6 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
             // input.classList.add('text');
             input.setAttribute('type', 'text');
 
-
             // Since passphrase is visible there's no need to force user to fill the passphrase twice
             // - disable input2
             // - write automatically into input2 as the user is writing into input1 (listen to input event)
@@ -45,7 +44,6 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
         } else if (inputType === 'password') {
             // input.classList.remove('text');
             input.setAttribute('type', 'password');
-
 
             input2.disabled = false;
             input2.value = '';

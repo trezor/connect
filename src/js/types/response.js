@@ -4,16 +4,9 @@ import type {
     CipheredKeyValue,
     AccountInfo,
     Address,
-
-    EthereumSignedTx,
-    EthereumAddress,
     Features,
     HDNodeResponse,
-
     MessageSignature,
-    NEMAddress,
-    NEMSignedTx,
-
     Success,
     SignedTx,
     StellarAddress,
@@ -28,7 +21,7 @@ export type Unsuccessful$ = {
 
 export type CipherKeyValue$ = {
     success: true,
-    payload: CipheredKeyValue | Array<CipheredKeyValue>,
+    payload: CipheredKeyValue,
 } | Unsuccessful$;
 
 export type CipherKeyValue$$ = {
@@ -44,31 +37,6 @@ export type CustomMessage$ = {
 export type ComposeTransaction$ = {
     success: true,
     payload: SignedTx,
-} | Unsuccessful$;
-
-export type EthereumGetAddress$ = {
-    success: true,
-    payload: EthereumAddress,
-} | Unsuccessful$;
-
-export type EthereumGetAddress$$ = {
-    success: true,
-    payload: Array<EthereumAddress>,
-} | Unsuccessful$;
-
-export type EthereumSignMessage$ = {
-    success: true,
-    payload: MessageSignature,
-} | Unsuccessful$;
-
-export type EthereumSignTransaction$ = {
-    success: true,
-    payload: EthereumSignedTx,
-} | Unsuccessful$;
-
-export type EthereumVerifyMessage$ = {
-    success: true,
-    payload: Success,
 } | Unsuccessful$;
 
 export type GetAccountInfo$ = {
@@ -121,21 +89,6 @@ export type RequestLogin$ = {
     },
 } | Unsuccessful$;
 
-export type NEMGetAddress$ = {
-    success: true,
-    payload: NEMAddress,
-} | Unsuccessful$;
-
-export type NEMGetAddress$$ = {
-    success: true,
-    payload: Array<NEMAddress>,
-} | Unsuccessful$;
-
-export type NEMSignTransaction$ = {
-    success: true,
-    payload: NEMSignedTx,
-} | Unsuccessful$;
-
 export type SignMessage$ = {
     success: true,
     payload: MessageSignature,
@@ -148,12 +101,7 @@ export type SignTransaction$ = {
 
 export type StellarGetAddress$ = {
     success: true,
-    payload: StellarAddress,
-} | Unsuccessful$;
-
-export type StellarGetAddress$$ = {
-    success: true,
-    payload: Array<StellarAddress>,
+    payload: StellarAddress | Array<StellarAddress>,
 } | Unsuccessful$;
 
 export type StellarSignTransaction$ = {

@@ -7,8 +7,6 @@
  */
 
 import EventEmitter from 'events';
-import 'babel-polyfill'; // for unsupported browsers
-
 import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from './constants';
 import * as TRANSPORT from './constants/transport';
 import * as POPUP from './constants/popup';
@@ -163,7 +161,7 @@ const call = async (params: Object): Promise<Object> => {
 
         try {
             await init(_settings);
-            _popupManager.resolveLazyLoad();
+            await _popupManager.resolveLazyLoad();
         } catch (error) {
             _popupManager.close();
             return { success: false, payload: { error } };
@@ -292,6 +290,18 @@ class TrezorConnect {
         }
     }
 
+    static cardanoGetAddress: $T.CardanoGetAddress = async (params) => {
+        return await call({ method: 'cardanoGetAddress', ...params });
+    }
+
+    static cardanoGetPublicKey: $T.CardanoGetPublicKey = async (params) => {
+        return await call({ method: 'cardanoGetPublicKey', ...params });
+    }
+
+    static cardanoSignTransaction: $T.CardanoSignTransaction = async (params) => {
+        return await call({ method: 'cardanoSignTransaction', ...params });
+    }
+
     static cipherKeyValue: $T.CipherKeyValue = async (params) => {
         return await call({ method: 'cipherKeyValue', ...params });
     }
@@ -344,6 +354,26 @@ class TrezorConnect {
         return await call({ method: 'getPublicKey', ...params });
     }
 
+    static liskGetAddress: $T.LiskGetAddress = async (params) => {
+        return await call({ method: 'liskGetAddress', ...params });
+    }
+
+    static liskGetPublicKey: $T.LiskGetPublicKey = async (params) => {
+        return await call({ method: 'liskGetPublicKey', ...params });
+    }
+
+    static liskSignMessage: $T.LiskSignMessage = async (params) => {
+        return await call({ method: 'liskSignMessage', ...params });
+    }
+
+    static liskSignTransaction: $T.LiskSignTransaction = async (params) => {
+        return await call({ method: 'liskSignTransaction', ...params });
+    }
+
+    static liskVerifyMessage: $T.LiskVerifyMessage = async (params) => {
+        return await call({ method: 'liskVerifyMessage', ...params });
+    }
+
     static nemGetAddress: $T.NEMGetAddress = async (params) => {
         return await call({ method: 'nemGetAddress', ...params });
     }
@@ -354,6 +384,14 @@ class TrezorConnect {
 
     static pushTransaction: $T.PushTransaction = async (params) => {
         return await call({ method: 'pushTransaction', ...params });
+    }
+
+    static rippleGetAddress: $T.RippleGetAddress = async (params) => {
+        return await call({ method: 'rippleGetAddress', ...params });
+    }
+
+    static rippleSignTransaction: $T.RippleSignTransaction = async (params) => {
+        return await call({ method: 'rippleSignTransaction', ...params });
     }
 
     static signMessage: $T.SignMessage = async (params) => {

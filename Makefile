@@ -17,7 +17,8 @@ submodules:
 build:
 	yarn
 	yarn run build
-	cp dist/js/trezor-connect.*.js dist/trezor-connect.js
+	yarn run build:inline
+	cp dist/js/trezor-connect.*.js dist/trezor-connect.min.js
 	cp robots.txt dist/robots.txt
 
 # Build only npm library
@@ -34,14 +35,14 @@ build-test:
 # Build for hot fixes on https://connect.trezor.io/[major]
 
 build-patch:
-	yarn bump --patch --lock --grep ./README.md ./src/js/data/ConnectSettings.js
+	yarn bump --patch --grep ./README.md ./src/js/data/ConnectSettings.js
 	make build
 	# Call: sync-[major]
 	# TODO: git push changed files with new version in summary
 
 # Build for minor fixes on https://connect.trezor.io/[major.minor] and NPM
 build-minor:
-	yarn bump --minor --lock --grep ./README.md ./src/js/data/ConnectSettings.js
+	yarn bump --minor --grep ./README.md ./src/js/data/ConnectSettings.js
 	make build
 	# Call: build-npm
 	# Call: sync-[major.minor]
@@ -49,7 +50,7 @@ build-minor:
 
 # Build for major fixes on https://connect.trezor.io/[major] and NPM
 build-major:
-	yarn bump --major --lock --grep ./README.md ./src/js/data/ConnectSettings.js
+	yarn bump --major --grep ./README.md ./src/js/data/ConnectSettings.js
 	make build
 	# Call: build-npm
 	# Call: sync-[major]

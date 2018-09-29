@@ -131,11 +131,31 @@ export type EventListener = typeof F_EventListener;
 
 import * as P from './params';
 import * as R from './response';
+import * as CARDANO from './cardano';
+import * as RIPPLE from './ripple';
+import * as ETHEREUM from './ethereum';
+import * as NEM from './nem';
+import * as STELLAR from './stellar';
+import * as LISK from './lisk';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
 export type CustomMessage = (P.$CustomMessage) => Promise<R.CustomMessage$>;
 export type RequestLogin = (P.$RequestLogin) => Promise<R.RequestLogin$>;
+
+/* eslint-disable no-redeclare */
+declare function F_CardanoGetAddress(params: (P.$Common & CARDANO.$CardanoGetAddress)): Promise<CARDANO.CardanoGetAddress$>;
+declare function F_CardanoGetAddress(params: (P.$Common & { bundle: Array<CARDANO.$CardanoGetAddress> })): Promise<CARDANO.CardanoGetAddress$$>;
+/* eslint-enable no-redeclare */
+export type CardanoGetAddress = typeof F_CardanoGetAddress;
+
+/* eslint-disable no-redeclare */
+declare function F_CardanoGetPublicKey(params: (P.$Common & CARDANO.$CardanoGetPublicKey)): Promise<CARDANO.CardanoGetPublicKey$>;
+declare function F_CardanoGetPublicKey(params: (P.$Common & { bundle: Array<CARDANO.$CardanoGetPublicKey> })): Promise<CARDANO.CardanoGetPublicKey$$>;
+/* eslint-enable no-redeclare */
+export type CardanoGetPublicKey = typeof F_CardanoGetPublicKey;
+
+export type CardanoSignTransaction = (CARDANO.$CardanoSignTransaction) => Promise<CARDANO.CardanoSignTransaction$>;
 
 /* eslint-disable no-redeclare */
 declare function F_CipherKeyValue(params: (P.$Common & P.$CipherKeyValue)): Promise<R.CipherKeyValue$>;
@@ -146,14 +166,14 @@ export type CipherKeyValue = typeof F_CipherKeyValue;
 export type ComposeTransaction = (P.$ComposeTransaction) => Promise<R.ComposeTransaction$>;
 
 /* eslint-disable no-redeclare */
-declare function F_EthereumGetAddress(params: (P.$Common & P.$EthereumGetAddress)): Promise<R.EthereumGetAddress$>;
-declare function F_EthereumGetAddress(params: (P.$Common & { bundle: Array<P.$EthereumGetAddress> })): Promise<R.EthereumGetAddress$$>;
+declare function F_EthereumGetAddress(params: (P.$Common & ETHEREUM.$EthereumGetAddress)): Promise<ETHEREUM.EthereumGetAddress$>;
+declare function F_EthereumGetAddress(params: (P.$Common & { bundle: Array<ETHEREUM.$EthereumGetAddress> })): Promise<ETHEREUM.EthereumGetAddress$$>;
 /* eslint-enable no-redeclare */
 export type EthereumGetAddress = typeof F_EthereumGetAddress;
 
-export type EthereumSignMessage = (P.$EthereumSignMessage) => Promise<R.EthereumSignMessage$>;
-export type EthereumSignTransaction = (P.$EthereumSignTransaction) => Promise<R.EthereumSignTransaction$>;
-export type EthereumVerifyMessage = (P.$EthereumVerifyMessage) => Promise<R.EthereumVerifyMessage$>;
+export type EthereumSignMessage = (ETHEREUM.$EthereumSignMessage) => Promise<ETHEREUM.EthereumSignMessage$>;
+export type EthereumSignTransaction = (ETHEREUM.$EthereumSignTransaction) => Promise<ETHEREUM.EthereumSignTransaction$>;
+export type EthereumVerifyMessage = (ETHEREUM.$EthereumVerifyMessage) => Promise<ETHEREUM.EthereumVerifyMessage$>;
 export type GetAccountInfo = (P.$GetAccountInfo) => Promise<R.GetAccountInfo$>;
 
 /* eslint-disable no-redeclare */
@@ -172,23 +192,49 @@ declare function F_GetPublicKey(params: (P.$Common & { bundle: Array<P.$GetPubli
 export type GetPublicKey = typeof F_GetPublicKey;
 
 /* eslint-disable no-redeclare */
-declare function F_NEMGetAddress(params: (P.$Common & P.$NEMGetAddress)): Promise<R.NEMGetAddress$>;
-declare function F_NEMGetAddress(params: (P.$Common & { bundle: Array<P.$NEMGetAddress> })): Promise<R.NEMGetAddress$$>;
+declare function F_LiskGetAddress(params: (P.$Common & LISK.$LiskGetAddress)): Promise<LISK.LiskGetAddress$>;
+declare function F_LiskGetAddress(params: (P.$Common & { bundle: Array<LISK.$LiskGetAddress> })): Promise<LISK.LiskGetAddress$$>;
+/* eslint-enable no-redeclare */
+export type LiskGetAddress = typeof F_LiskGetAddress;
+
+/* eslint-disable no-redeclare */
+declare function F_LiskGetPublicKey(params: (P.$Common & LISK.$LiskGetPublicKey)): Promise<LISK.LiskGetPublicKey$>;
+declare function F_LiskGetPublicKey(params: (P.$Common & { bundle: Array<LISK.$LiskGetPublicKey> })): Promise<LISK.LiskGetPublicKey$$>;
+/* eslint-enable no-redeclare */
+export type LiskGetPublicKey = typeof F_LiskGetPublicKey;
+
+export type LiskSignMessage = (LISK.$LiskSignMessage) => Promise<LISK.LiskSignMessage$>;
+export type LiskSignTransaction = (LISK.$LiskSignTransaction) => Promise<LISK.LiskSignTransaction$>
+export type LiskVerifyMessage = (LISK.$LiskVerifyMessage) => Promise<LISK.LiskVerifyMessage$>;
+
+/* eslint-disable no-redeclare */
+declare function F_NEMGetAddress(params: (P.$Common & NEM.$NEMGetAddress)): Promise<NEM.NEMGetAddress$>;
+declare function F_NEMGetAddress(params: (P.$Common & { bundle: Array<NEM.$NEMGetAddress> })): Promise<NEM.NEMGetAddress$$>;
+
 /* eslint-enable no-redeclare */
 export type NEMGetAddress = typeof F_NEMGetAddress;
 
-export type NEMSignTransaction = (P.$NEMSignTransaction) => Promise<R.NEMSignTransaction$>;
+export type NEMSignTransaction = (NEM.$NEMSignTransaction) => Promise<NEM.NEMSignTransaction$>;
 export type PushTransaction = (P.$PushTransaction) => Promise<R.PushTransaction$>;
+
+/* eslint-disable no-redeclare */
+declare function F_RippleGetAddress(params: (P.$Common & RIPPLE.$RippleGetAddress)): Promise<RIPPLE.RippleGetAddress$>;
+declare function F_RippleGetAddress(params: (P.$Common & { bundle: Array<RIPPLE.$RippleGetAddress> })): Promise<RIPPLE.RippleGetAddress$$>;
+/* eslint-enable no-redeclare */
+export type RippleGetAddress = typeof F_RippleGetAddress;
+
+export type RippleSignTransaction = (RIPPLE.$RippleSignTransaction) => Promise<RIPPLE.RippleSignTransaction$>;
+
 export type SignMessage = (P.$SignMessage) => Promise<R.SignMessage$>;
 export type SignTransaction = (P.$SignTransaction) => Promise<R.SignTransaction$>;
 
 /* eslint-disable no-redeclare */
-declare function F_StellarGetAddress(params: (P.$Common & P.$StellarGetAddress)): Promise<R.StellarGetAddress$>;
-declare function F_StellarGetAddress(params: (P.$Common & { bundle: Array<P.$StellarGetAddress> })): Promise<R.StellarGetAddress$$>;
+declare function F_StellarGetAddress(params: (P.$Common & STELLAR.$StellarGetAddress)): Promise<STELLAR.StellarGetAddress$>;
+declare function F_StellarGetAddress(params: (P.$Common & { bundle: Array<STELLAR.$StellarGetAddress> })): Promise<STELLAR.StellarGetAddress$$>;
 /* eslint-enable no-redeclare */
 export type StellarGetAddress = typeof F_StellarGetAddress;
 
-export type StellarSignTransaction = (P.$StellarSignTransaction) => Promise<R.StellarSignTransaction$>;
+export type StellarSignTransaction = (STELLAR.$StellarSignTransaction) => Promise<STELLAR.StellarSignTransaction$>;
 export type VerifyMessage = (P.$VerifyMessage) => Promise<R.VerifyMessage$>;
 
 // export * from './params';

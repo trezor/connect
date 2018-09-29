@@ -3,12 +3,13 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
-import { validatePath, fromHardened } from '../../utils/pathUtils';
+import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { NEMAddress } from '../../types/trezor';
+import type { NEMAddress as NEMAddressResponse } from '../../types/nem';
 import type { UiPromiseResponse } from 'flowtype';
 import type { CoreMessage } from '../../types';
 
@@ -120,15 +121,20 @@ export default class NEMGetAddress extends AbstractMethod {
         return this.confirmed;
     }
 
-    async run(): Promise<NEMAddress | Array<NEMAddress>> {
-        const responses: Array<NEMAddress> = [];
+    async run(): Promise<NEMAddressResponse | Array<NEMAddressResponse>> {
+        const responses: Array<NEMAddressResponse> = [];
         for (let i = 0; i < this.params.bundle.length; i++) {
             const response: NEMAddress = await this.device.getCommands().nemGetAddress(
                 this.params.bundle[i].path,
                 this.params.bundle[i].network,
                 this.params.bundle[i].showOnTrezor
             );
-            responses.push(response);
+
+            responses.push({
+                address: response.address,
+                path: this.params.bundle[i].path,
+                serializedPath: getSerializedPath(this.params.bundle[i].path),
+            });
 
             if (this.params.bundledResponse) {
                 // send progress

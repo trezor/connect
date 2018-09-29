@@ -5,7 +5,7 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
-import { toChecksumAddress, getNetworkLabel } from '../../utils/ethereumUtils';
+import { toChecksumAddress, getNetworkLabel, messageToHex } from '../../utils/ethereumUtils';
 
 import type { MessageSignature } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
@@ -24,7 +24,7 @@ export default class EthereumSignMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = ['1.6.2', '2.0.7'];
+        // this.requiredFirmware = ['1.6.2', '2.0.7'];
 
         const payload: Object = message.payload;
 
@@ -32,6 +32,7 @@ export default class EthereumSignMessage extends AbstractMethod {
         validateParams(payload, [
             { name: 'path', obligatory: true },
             { name: 'message', type: 'string', obligatory: true },
+            { name: 'hex', type: 'boolean' },
         ]);
 
         const path: Array<number> = validatePath(payload.path, 3);
@@ -39,12 +40,11 @@ export default class EthereumSignMessage extends AbstractMethod {
 
         this.info = getNetworkLabel('Sign #NETWORK message', network);
 
-        // TODO: check if message is already in hex format
-        const messageHex: string = new Buffer(payload.message, 'utf8').toString('hex');
+        const messageHex = payload.hex ? messageToHex(payload.message) : Buffer.from(payload.message, 'utf8').toString('hex');
         this.params = {
             path,
             network,
-            message: messageHex,
+            message: messageHex
         };
     }
 

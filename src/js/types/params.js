@@ -1,18 +1,6 @@
 /* @flow */
 
 import type {
-    Transaction as EthereumTransaction,
-} from './ethereum';
-
-import type {
-    Transaction as NEMTransaction,
-} from './nem';
-
-import type {
-    Transaction as StellarTransaction,
-} from './stellar';
-
-import type {
     MultisigRedeemScriptType,
 } from './trezor';
 
@@ -51,27 +39,6 @@ export type $CustomMessage = $Common & {
     callback: (request: any) => Promise<?{ message: string, params?: Object }>,
 }
 
-export type $EthereumGetAddress = {
-    path: $Path,
-    showOnTrezor?: boolean,
-}
-
-export type $EthereumSignMessage = $Common & {
-    path: $Path,
-    message: string,
-}
-
-export type $EthereumSignTransaction = $Common & {
-    path: $Path,
-    transaction: EthereumTransaction,
-}
-
-export type $EthereumVerifyMessage = $Common & {
-    address: string,
-    message: string,
-    signature: string,
-}
-
 export type $GetAccountInfo = $Common & {
     path?: $Path,
     xpub?: string,
@@ -93,17 +60,6 @@ export type $GetPublicKey = {
     path: $Path,
     coin?: string,
     crossChain?: boolean,
-}
-
-export type $NEMGetAddress = {
-    path: $Path,
-    network: number,
-    showOnTrezor?: boolean,
-}
-
-export type $NEMSignTransaction = $Common & {
-    path: $Path,
-    transaction: NEMTransaction,
 }
 
 export type $PushTransaction = $Common & $Exact<{
@@ -157,18 +113,6 @@ export type $SignTransaction = $Common & {
     outputs: Array<TransactionOutput>,
     coin: string,
     push?: boolean,
-}
-
-export type $StellarGetAddress = {
-    path: $Path,
-    showOnTrezor?: boolean,
-}
-
-export type $StellarSignTransaction = $Common & {
-    path: $Path,
-    ledgerVersion: number,
-    networkPassphrase: string,
-    transaction: StellarTransaction,
 }
 
 export type $VerifyMessage = $Common & {

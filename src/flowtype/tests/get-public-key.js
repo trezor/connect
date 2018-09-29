@@ -6,7 +6,6 @@ declare module 'flowtype/tests/get-public-key' {
         path: string | Array<number>,
         coin: string,
     };
-
     declare export type ExpectedGetPublicKeyResponse = {
         payload: {
             xpub: string,

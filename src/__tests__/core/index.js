@@ -1,5 +1,12 @@
 /* @flow */
 
+import type {
+    AvailableTestFunctions,
+} from 'flowtype/tests';
+
+import { cardanoGetAddress } from './cardanoGetAddress.spec.js';
+import { cardanoGetPublicKey } from './cardanoGetPublicKey.spec.js';
+import { cardanoSignTransaction } from './cardanoSignTransaction.spec.js';
 import { getPublicKey } from './getPublicKey.spec.js';
 import { getAddress } from './getAddress.spec.js';
 import { getAddressSegwit } from './getAddressSegwit.spec.js';
@@ -25,8 +32,18 @@ import { nemSignTransactionMultisig } from './nemSignTransactionMultisig.spec.js
 import { nemSignTransactionOthers } from './nemSignTransactionOthers.spec.js';
 import { nemSignTransactionTransfers } from './nemSignTransactionTransfers.spec.js';
 import { tronGetAddress } from './tronGetAddress.spec.js';
+import { passphrase } from './passphrase.spec.js';
+import { liskGetAddress } from './liskGetAddress.spec.js';
+import { liskSignMessage } from './liskSignMessage.spec.js';
+import { liskVerifyMessage } from './liskVerifyMessage.spec.js';
+import { liskSignTransaction } from './liskSignTransaction.spec.js';
+import { rippleGetAddress } from './rippleGetAddress.spec.js';
+import { rippleSignTransaction } from './rippleSignTransaction.spec.js';
 
-export default {
+export const testFunctions: AvailableTestFunctions = {
+    cardanoGetAddress,
+    cardanoGetPublicKey,
+    cardanoSignTransaction,
     getPublicKey,
     getAddress,
     getAddressSegwit,
@@ -52,4 +69,11 @@ export default {
     nemSignTransactionOthers,
     nemSignTransactionTransfers,
     tronGetAddress,
-}
+    passphrase,
+    liskGetAddress,
+    liskSignMessage,
+    liskVerifyMessage,
+    liskSignTransaction,
+    rippleGetAddress,
+    rippleSignTransaction,
+};

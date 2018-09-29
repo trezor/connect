@@ -43,11 +43,15 @@ export const validateCoinPath = (coinInfo: ?CoinInfo, path: Array<number>): void
 };
 
 export const getRequiredFirmware = (coinInfo: CoinInfo, current: Array<string>): Array<string> => {
-    if (semvercmp(coinInfo.support.trezor1, current[0]) > 0) {
+    if (!coinInfo.support || typeof coinInfo.support.trezor1 !== 'string') {
+        current[0] = '0';
+    } else if (semvercmp(coinInfo.support.trezor1, current[0]) > 0) {
         current[0] = coinInfo.support.trezor1;
     }
 
-    if (semvercmp(coinInfo.support.trezor2, current[1]) > 0) {
+    if (!coinInfo.support || typeof coinInfo.support.trezor2 !== 'string') {
+        current[1] = '0';
+    } else if (semvercmp(coinInfo.support.trezor2, current[1]) > 0) {
         current[1] = coinInfo.support.trezor2;
     }
 

@@ -1,6 +1,10 @@
 /* @flow */
+
 // Stellar types from stellar-sdk
 // https://github.com/stellar/js-stellar-base
+
+import type { $Path, $Common } from './params';
+import type { Unsuccessful$ } from './response';
 
 type Asset = {
     type: string,
@@ -142,3 +146,42 @@ export type Transaction = {
     },
     operations: Array<Operation>, // Proto: calculated array length > "num_operations"
 }
+
+export type $StellarSignTransaction = $Common & {
+    path: $Path,
+    networkPassphrase: string,
+    transaction: Transaction,
+}
+
+export type StellarSignedTx = {
+    publicKey: string,
+    signature: string,
+}
+
+export type StellarSignTransaction$ = {
+    success: true,
+    payload: StellarSignedTx,
+} | Unsuccessful$;
+
+// get address
+
+export type StellarAddress = {
+    address: string,
+    path: Array<number>,
+    serializedPath: string,
+}
+
+export type $StellarGetAddress = {
+    path: $Path,
+    showOnTrezor?: boolean,
+}
+
+export type StellarGetAddress$ = {
+    success: true,
+    payload: StellarAddress,
+} | Unsuccessful$;
+
+export type StellarGetAddress$$ = {
+    success: true,
+    payload: Array<StellarAddress>,
+} | Unsuccessful$;
