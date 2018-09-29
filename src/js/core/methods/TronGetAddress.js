@@ -1,17 +1,25 @@
 /* @flow */
+
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
-import { getEthereumNetwork } from '../../data/CoinInfo';
-import { uniq } from 'lodash';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { CoreMessage } from '../../types';
 
+type Batch = {
+    path: Array<number>,
+    showOnTrezor: boolean,
+}
+
+type Params = {
+    bundle: Array<Batch>,
+    bundledResponse: boolean,
+}
 
 export default class TronGetAddress extends AbstractMethod {
     params: Params;

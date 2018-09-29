@@ -5,11 +5,13 @@ import AbstractMethod from './AbstractMethod';
 import {validateParams} from './helpers/paramsValidator';
 import {validatePath} from '../../utils/pathUtils';
 
+import type { Transaction as TronTransaction } from '../../types/tron';
+
 import type {CoreMessage} from '../../types';
 
 type Params = {
     path: Array<number>,
-    transaction,
+    transaction: TronTransaction,
 }
 
 export default class TronSignTransaction extends AbstractMethod {
