@@ -2,26 +2,14 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinPath } from './helpers/paramsValidator';
+import { validateParams } from './helpers/paramsValidator';
 import { getEthereumNetwork } from '../../data/CoinInfo';
 import Discovery from './helpers/Discovery';
-import * as UI from '../../constants/ui';
 import { NO_COIN_INFO } from '../../constants/errors';
 
-import {
-    validatePath,
-    getAccountLabel,
-    getSerializedPath,
-} from '../../utils/pathUtils';
-import { create as createDeferred } from '../../utils/deferred';
-
-import Account, { create as createAccount } from '../../account';
 import BlockBook, { create as createBackend } from '../../backend';
-import { getCoinInfoByCurrency, fixCoinInfoNetwork, getCoinInfoFromPath } from '../../data/CoinInfo';
-import { UiMessage } from '../../message/builder';
-import type { EthereumNetworkInfo, UiPromiseResponse } from 'flowtype';
-import type { AccountInfo, HDNodeResponse } from '../../types/trezor';
-import type { Deferred, CoreMessage } from '../../types';
+import type { EthereumNetworkInfo } from 'flowtype';
+import type { CoreMessage } from '../../types';
 import type { EthereumAccount } from '../../types/ethereum';
 
 type Params = {
@@ -73,7 +61,7 @@ export default class EthereumGetAccountInfo extends AbstractMethod {
         this.params = {
             accounts: payload.accounts,
             coinInfo: network,
-            bundledResponse
+            bundledResponse,
         };
     }
 
@@ -97,7 +85,7 @@ export default class EthereumGetAccountInfo extends AbstractMethod {
                     from: 0,
                     to: 0,
                     queryMempol: false,
-                }
+                },
             ];
             const socket = await blockchain.socket.promise;
             const confirmed = await socket.send({method, params});
@@ -106,8 +94,8 @@ export default class EthereumGetAccountInfo extends AbstractMethod {
                 address: account.address,
                 transactions: confirmed.totalCount,
                 block: height,
-                balance: "0", // TODO: fetch balance from blockbook
-                nonce: 0 // TODO: fetch nonce from blockbook
+                balance: '0', // TODO: fetch balance from blockbook
+                nonce: 0, // TODO: fetch nonce from blockbook
             });
         }
         return this.params.bundledResponse ? responses : responses[0];
@@ -129,7 +117,6 @@ export default class EthereumGetAccountInfo extends AbstractMethod {
             }
         ];
 
-
         const response = await socket.send({method, params});
         return {
             address: addresses[0],
@@ -137,6 +124,5 @@ export default class EthereumGetAccountInfo extends AbstractMethod {
             block: height
         }
         */
-
     }
 }
