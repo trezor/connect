@@ -582,6 +582,7 @@ export default class Device extends EventEmitter {
                 label: label,
                 state: this.state,
                 status: this.isUsedElsewhere() ? 'occupied' : this.featuresNeedsReload ? 'used' : 'available',
+                mode: this.features.bootloader_mode ? 'bootloader' : !this.features.initialized ? 'initialize' : 'normal',
                 firmware: this.firmwareStatus,
                 features: this.features,
             };

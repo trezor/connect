@@ -63,6 +63,7 @@ export type Features = {
 }
 
 export type DeviceStatus = 'available' | 'occupied' | 'used';
+export type DeviceMode = 'normal' | 'bootloader' | 'initialize';
 export type DeviceFirmwareStatus = 'valid' | 'outdated' | 'required';
 
 export type Device = $Exact<{
@@ -71,6 +72,7 @@ export type Device = $Exact<{
     +label: string,
     +firmware: DeviceFirmwareStatus,
     +status: DeviceStatus,
+    +mode: DeviceMode,
     state: ?string,
     features: Features,
 }> | $Exact<{
