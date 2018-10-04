@@ -27,6 +27,10 @@
             "url": "./data/coins.json"
         },
         {
+            "name": "bridge",
+            "url": "./data/bridge/releases.json"
+        },
+        {
             "name": "firmware-t1",
             "url": "./data/firmware/1/releases.json"
         },
