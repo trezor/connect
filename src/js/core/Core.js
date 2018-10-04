@@ -412,15 +412,21 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
             const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE | typeof UI.FIRMWARE_NOT_SUPPORTED) = device.hasUnexpectedMode(method.requiredFirmware);
             if (unexpectedMode) {
-                // wait for popup handshake
-                await getPopupPromise().promise;
-                // show unexpected state information
-                postMessage(new UiMessage(unexpectedMode, device.toMessageObject()));
+                if (isUsingPopup) {
+                    // wait for popup handshake
+                    await getPopupPromise().promise;
+                    // show unexpected state information
+                    postMessage(new UiMessage(unexpectedMode, device.toMessageObject()));
 
-                // wait for device disconnect
-                await createUiPromise(DEVICE.DISCONNECT, device).promise;
-                // interrupt process and go to "final" block
-                return Promise.resolve();
+                    // wait for device disconnect
+                    await createUiPromise(DEVICE.DISCONNECT, device).promise;
+                    // interrupt process and go to "final" block
+                    return Promise.resolve();
+                } else {
+                    // return error if not using popup
+                    postMessage(new ResponseMessage(method.responseID, false, { error: unexpectedMode }));
+                    return Promise.resolve();
+                }
             }
 
             // notify if firmware is outdated but not required
@@ -799,7 +805,10 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
             }
 
             _deviceList = null;
-            postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
+            postMessage(new TransportMessage(TRANSPORT.ERROR, {
+                error: error.message || error,
+                bridge: DataManager.getLatestBridgeVersion(),
+            }));
             // if transport fails during app lifetime, try to reconnect
             if (settings.transportReconnect) {
                 await resolveAfter(1000, null);
@@ -818,7 +827,10 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
         if (!settings.transportReconnect) {
             throw error;
         } else {
-            postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
+            postMessage(new TransportMessage(TRANSPORT.ERROR, {
+                error: error.message || error,
+                bridge: DataManager.getLatestBridgeVersion(),
+            }));
             await resolveAfter(3000, null);
             // try to reconnect
             await initDeviceList(settings);
@@ -926,6 +938,9 @@ const reconnectTransport = async (): Promise<void> => {
     try {
         await initDeviceList(DataManager.getSettings());
     } catch (error) {
-        postMessage(new TransportMessage(TRANSPORT.ERROR, error.message || error));
+        postMessage(new TransportMessage(TRANSPORT.ERROR, {
+            error: error.message || error,
+            bridge: DataManager.getLatestBridgeVersion(),
+        }));
     }
 };
