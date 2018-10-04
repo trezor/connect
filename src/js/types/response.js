@@ -9,7 +9,6 @@ import type {
     MessageSignature,
     Success,
     SignedTx,
-    StellarAddress,
 } from './trezor';
 
 export type Unsuccessful$ = {
@@ -22,7 +21,7 @@ export type Unsuccessful$ = {
 export type BlockchainSubscribe$ = {
     success: true,
     payload: {
-        subscribed: true
+        subscribed: true,
     },
 } | Unsuccessful$;
 
@@ -86,8 +85,8 @@ export type GetPublicKey$$ = {
 export type PushTransaction$ = {
     success: true,
     payload: {
-        txid: string
-    }
+        txid: string,
+    },
 } | Unsuccessful$;
 
 export type RequestLogin$ = {
