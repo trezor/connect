@@ -2,8 +2,9 @@
 'use strict';
 
 import { httpRequest } from '../utils/networkUtils';
+import { parseBridgeJSON } from '../utils/browser';
 import { DEFAULT_PRIORITY } from '../data/ConnectSettings';
-import { parseCoinsJson, parseEthereumNetworksJson } from './CoinInfo';
+import { parseCoinsJson } from './CoinInfo';
 import { parseFirmware } from './FirmwareInfo';
 import { Promise } from 'es6-promise';
 import parseUri from 'parse-uri';
@@ -91,6 +92,9 @@ export default class DataManager {
                 this.assets[ asset.name ] = json;
             }
 
+            // parse bridge JSON
+            this.assets['bridge'] = parseBridgeJSON(this.assets['bridge']);
+
             // parse coins definitions
             parseCoinsJson(this.assets['coins']);
 
@@ -149,5 +153,9 @@ export default class DataManager {
     static isExcludedDevice(path: string): boolean {
         // $FlowIssue: settings.excludedDevices field is intentionally not defined in flowtype. it's used only in tests to exclude debug-link device.
         return Array.isArray(this.settings.excludedDevices) ? this.settings.excludedDevices.indexOf(path) >= 0 : false;
+    }
+
+    static getLatestBridgeVersion(): JSON {
+        return DataManager.assets.bridge;
     }
 }

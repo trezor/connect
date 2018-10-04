@@ -37,3 +37,37 @@ export const checkBrowser = (): State => {
 
     return state;
 };
+
+// Parse JSON loaded from config.assets.bridge
+// Find preferred platform using bowser and userAgent
+export const parseBridgeJSON = (json: JSON): JSON => {
+    const osname = bowser.osname.toLowerCase();
+    let preferred: string = '';
+    switch (osname) {
+        case 'linux': {
+            const agent = navigator.userAgent;
+            const isRpm = agent.match(/CentOS|Fedora|Mandriva|Mageia|Red Hat|Scientific|SUSE/) ? 'rpm' : 'deb';
+            const is64x = agent.match(/Linux i[3456]86/) ? '32' : '64';
+            preferred = `${isRpm}${is64x}`;
+        }
+            break;
+        case 'macos':
+            preferred = 'mac';
+            break;
+        case 'windows':
+            preferred = 'win';
+            break;
+        default: break;
+    }
+
+    // $FlowIssue indexer property is missing in `JSON`
+    const latest = json[0];
+    const version = latest.version.join('.');
+
+    latest.packages = latest.packages.map(p => ({
+        ...p,
+        url: `${latest.directory}${p.url}`,
+        preferred: (p.platform.indexOf(preferred) >= 0),
+    }));
+    return JSON.parse(JSON.stringify(latest).replace(new RegExp('{version}', 'g'), version));
+};

@@ -187,6 +187,8 @@ export default class DeviceList extends EventEmitter {
             this.emit(TRANSPORT.START, {
                 type: this.transportType(),
                 version: this.transportVersion(),
+                outdated: this.transportOutdated(),
+                bridge: DataManager.getLatestBridgeVersion(),
             });
         });
 
