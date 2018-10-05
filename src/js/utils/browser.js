@@ -67,7 +67,10 @@ export const parseBridgeJSON = (json: JSON): JSON => {
     latest.packages = latest.packages.map(p => ({
         ...p,
         url: `${latest.directory}${p.url}`,
+        signature: p.signature ? `${latest.directory}${p.signature}` : null,
         preferred: (p.platform.indexOf(preferred) >= 0),
     }));
-    return JSON.parse(JSON.stringify(latest).replace(new RegExp('{version}', 'g'), version));
+    latest.changelog = latest.changelog.replace(/\n/g, '').split('* ');
+    latest.changelog.splice(0, 1);
+    return JSON.parse(JSON.stringify(latest).replace(/{version}/g, version));
 };
