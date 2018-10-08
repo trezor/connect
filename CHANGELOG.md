@@ -1,3 +1,7 @@
+# 5.0.34
+__fixed__
+- Unicode character in regexp, (https://github.com/trezor/connect/pull/229)
+
 # 5.0.33
 __fixed__
 - `TrezorConnect.ethereumSignMessage` and `TrezorConnect.ethereumVerifyMessage` methods with "hex" parameter
