@@ -2,25 +2,16 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinPath } from './helpers/paramsValidator';
+import { validateParams } from './helpers/paramsValidator';
 import Discovery from './helpers/Discovery';
 import * as BLOCKCHAIN from '../../constants/blockchain';
 import { NO_COIN_INFO } from '../../constants/errors';
 
-import {
-    validatePath,
-    getAccountLabel,
-    getSerializedPath,
-} from '../../utils/pathUtils';
-import { create as createDeferred } from '../../utils/deferred';
-
-import Account, { create as createAccount } from '../../account';
 import BlockBook, { create as createBackend } from '../../backend';
-import { getCoinInfoByCurrency, fixCoinInfoNetwork, getCoinInfoFromPath, getEthereumNetwork } from '../../data/CoinInfo';
+import { getEthereumNetwork } from '../../data/CoinInfo';
 import { BlockchainMessage } from '../../message/builder';
-import type { CoinInfo, EthereumNetworkInfo, UiPromiseResponse } from 'flowtype';
-import type { AccountInfo, HDNodeResponse } from '../../types/trezor';
-import type { Deferred, CoreMessage } from '../../types';
+import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
+import type { CoreMessage } from '../../types';
 
 type Params = {
     accounts: Array<string>,
@@ -66,32 +57,47 @@ export default class BlockchainSubscribe extends AbstractMethod {
         this.backend.subscribe(
             this.params.accounts,
             (hash, height) => {
-                this.postMessage( new BlockchainMessage(BLOCKCHAIN.BLOCK, {
+                this.postMessage(new BlockchainMessage(BLOCKCHAIN.BLOCK, {
                     coin: this.params.coinInfo,
                     hash,
-                    height
-                }) );
+                    height,
+                }));
             },
             notification => {
-                this.postMessage( new BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
+                this.postMessage(new BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
                     coin: this.params.coinInfo,
-                    notification
-                }) );
+                    notification,
+                }));
             },
             error => {
-                this.postMessage( new BlockchainMessage(BLOCKCHAIN.ERROR, {
+                this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
                     coin: this.params.coinInfo,
-                    error: error.message
-                }) );
+                    error: error.message,
+                }));
             }
         );
 
-        this.postMessage( new BlockchainMessage(BLOCKCHAIN.CONNECT, {
-            coin: this.params.coinInfo
-        }) );
+        // ONLY for testing purposes
+        if (window.top) {
+            if (!window.top.__blockchainDisconnect) {
+                window.top.__blockchainDisconnect = {};
+            }
+            window.top.__blockchainDisconnect[this.params.coinInfo.shortcut.toLowerCase()] = () => {
+                this.backend.blockchain.destroy();
+                this.backend._setError(new Error('manual'));
+                this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
+                    coin: this.params.coinInfo,
+                    error: 'manual disconnect',
+                }));
+            };
+        }
+
+        this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
+            coin: this.params.coinInfo,
+        }));
 
         return {
-            subscribed: true
+            subscribed: true,
         };
     }
 }
