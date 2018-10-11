@@ -106,18 +106,6 @@ export const getCoinName = (path: Array<number>): string => {
     return 'Unknown coin';
 };
 
-export const parseCoinsJson = (json: JSON): void => {
-    const coinsObject: Object = json;
-    Object.keys(coinsObject).forEach(key => {
-        switch (key) {
-            case "bitcoin" :
-                return parseBitcoinNetworksJson( coinsObject[key] );
-            case "eth" :
-                return parseEthereumNetworksJson( coinsObject[key] );
-        }
-    });
-}
-
 export const parseBitcoinNetworksJson = (json: JSON): void => {
     const coinsObject: Object = json;
     Object.keys(coinsObject).forEach(key => {
@@ -222,4 +210,16 @@ export const getEthereumNetwork = (pathOrName: Array<number> | string): ?Ethereu
         const slip44: number = fromHardened(pathOrName[1]);
         return ethereumNetworks.find(n => n.slip44 === slip44);
     }
+};
+
+export const parseCoinsJson = (json: JSON): void => {
+    const coinsObject: Object = json;
+    Object.keys(coinsObject).forEach(key => {
+        switch (key) {
+            case 'bitcoin' :
+                return parseBitcoinNetworksJson(coinsObject[key]);
+            case 'eth' :
+                return parseEthereumNetworksJson(coinsObject[key]);
+        }
+    });
 };

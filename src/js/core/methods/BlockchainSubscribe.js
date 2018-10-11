@@ -3,7 +3,6 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
-import Discovery from './helpers/Discovery';
 import * as BLOCKCHAIN from '../../constants/blockchain';
 import { NO_COIN_INFO } from '../../constants/errors';
 
@@ -20,14 +19,12 @@ type Params = {
 
 export default class BlockchainSubscribe extends AbstractMethod {
     params: Params;
-    confirmed: boolean = false;
     backend: BlockBook;
-    discovery: ?Discovery;
 
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = [];
-        this.info = 'Export ethereum account info';
+        this.info = '';
         this.useDevice = false;
         this.useUi = false;
 
@@ -76,21 +73,6 @@ export default class BlockchainSubscribe extends AbstractMethod {
                 }));
             }
         );
-
-        // ONLY for testing purposes
-        if (window.top) {
-            if (!window.top.__blockchainDisconnect) {
-                window.top.__blockchainDisconnect = {};
-            }
-            window.top.__blockchainDisconnect[this.params.coinInfo.shortcut.toLowerCase()] = () => {
-                this.backend.blockchain.destroy();
-                this.backend._setError(new Error('manual'));
-                this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
-                    coin: this.params.coinInfo,
-                    error: 'manual disconnect',
-                }));
-            };
-        }
 
         this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
             coin: this.params.coinInfo,

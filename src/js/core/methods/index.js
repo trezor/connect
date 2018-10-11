@@ -5,6 +5,7 @@ import type { CoreMessage } from '../../types';
 
 import AbstractMethod from './AbstractMethod';
 
+import BlockchainDisconnect from './BlockchainDisconnect';
 import BlockchainSubscribe from './BlockchainSubscribe';
 import CardanoGetAddress from './CardanoGetAddress';
 import CardanoGetPublicKey from './CardanoGetPublicKey';
@@ -40,6 +41,7 @@ import StellarSignTransaction from './StellarSignTransaction';
 import VerifyMessage from './VerifyMessage';
 
 const classes: {[k: string]: any} = {
+    'blockchainDisconnect': BlockchainDisconnect,
     'blockchainSubscribe': BlockchainSubscribe,
     'cardanoGetAddress': CardanoGetAddress,
     'cardanoGetPublicKey': CardanoGetPublicKey,
