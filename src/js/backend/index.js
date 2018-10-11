@@ -7,6 +7,13 @@ import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
 
 const instances: Array<BlockBook> = [];
 
+export const remove = (backend: BlockBook): void => {
+    const index: number = instances.indexOf(backend);
+    if (index >= 0) {
+        instances.splice(index, 1);
+    }
+};
+
 export const find = (name: string): ?BlockBook => {
     for (let i: number = 0; i < instances.length; i++) {
         if (instances[i].options.coinInfo.name === name) {
@@ -18,13 +25,6 @@ export const find = (name: string): ?BlockBook => {
         }
     }
     return null;
-};
-
-export const remove = (backend: BlockBook): void => {
-    const index: number = instances.indexOf(backend);
-    if (index >= 0) {
-        instances.splice(index, 1);
-    }
 };
 
 export const createFromCoinInfo = async (coinInfo: CoinInfo | EthereumNetworkInfo): Promise<BlockBook> => {

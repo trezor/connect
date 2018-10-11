@@ -232,6 +232,10 @@ class TrezorConnect {
 
     // methods
 
+    static blockchainDisconnect: $T.BlockchainSubscribe = async (params) => {
+        return await call({ method: 'blockchainDisconnect', ...params });
+    }
+
     static blockchainSubscribe: $T.BlockchainSubscribe = async (params) => {
         return await call({ method: 'blockchainSubscribe', ...params });
     }
@@ -442,6 +446,7 @@ export type {
     Device,
     DeviceStatus,
     DeviceFirmwareStatus,
+    DeviceMode,
     Features,
     DeviceMessageType,
     DeviceMessage,
@@ -455,5 +460,5 @@ export type {
 
 export type {
     EthereumAccount,
-    Transaction as EthereumTransaction
+    Transaction as EthereumTransaction,
 } from './types/ethereum';
