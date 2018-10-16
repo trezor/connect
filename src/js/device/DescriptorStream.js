@@ -9,7 +9,6 @@ import * as DEVICE from '../constants/device';
 
 import Log, { init as initLog } from '../utils/debug';
 import DataManager from '../data/DataManager';
-import { httpRequest } from '../utils/networkUtils';
 import { resolveAfter } from '../utils/promiseUtils';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
@@ -76,14 +75,12 @@ export default class DescriptorStream extends EventEmitter {
             this._reportChanges();
             if (this.listening) this.listen(); // handlers might have called stop()
         } catch (error) {
-
             const time = new Date().getTime() - this.listenTimestamp;
             logger.debug('Listen error', 'timestamp', time, typeof error);
 
             if (time > 1100) {
                 await resolveAfter(1000, null);
                 if (this.listening) this.listen();
-
             } else {
                 logger.log('Transport error');
                 this.emit(TRANSPORT.ERROR, error);

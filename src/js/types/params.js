@@ -5,8 +5,8 @@ import type {
 } from './trezor';
 
 export type $BlockchainSubscribe = {
-    accounts: Array<any>;
-    coin: string;
+    accounts: Array<any>,
+    coin: string,
 }
 
 export type $Common = {

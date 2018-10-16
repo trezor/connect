@@ -44,7 +44,7 @@ export default class EthereumSignMessage extends AbstractMethod {
         this.params = {
             path,
             network,
-            message: messageHex
+            message: messageHex,
         };
     }
 

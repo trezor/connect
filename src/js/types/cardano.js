@@ -4,10 +4,7 @@
 
 import type { $Path, $Common } from './params';
 import type { Unsuccessful$ } from './response';
-import type {
-    Success,
-    HDPubNode,
-} from './trezor';
+import type { HDPubNode } from './trezor';
 
 // GetAddress
 
