@@ -123,7 +123,6 @@ export default class BlockBook {
         notificationHandler: (notification: any) => void,
         errorHandler: (error: Error) => void,
     ): void {
-
         if (!this.subscribed) {
             this.subscribed = true;
 
@@ -131,13 +130,13 @@ export default class BlockBook {
                 const asyncFN = async (hash) => {
                     const { height } = await this.blockchain.lookupSyncStatus();
                     blockHandler(hash, height);
-                }
+                };
                 if (typeof hash === 'string') {
                     asyncFN(hash);
                 }
             });
 
-            this.blockchain.notifications.values.attach(notificationHandler)
+            this.blockchain.notifications.values.attach(notificationHandler);
             this.blockchain.errors.values.attach(errorHandler);
         }
 

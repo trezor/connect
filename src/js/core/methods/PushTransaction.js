@@ -7,7 +7,7 @@ import { getCoinInfoByCurrency, getEthereumNetwork } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
 import BlockBook, { create as createBackend } from '../../backend';
 
-import type { CoreMessage, PushTransaction$ } from '../../types';
+import type { CoreMessage } from '../../types';
 import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
 
 type Params = {

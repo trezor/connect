@@ -5,35 +5,35 @@ import type { CoreMessage } from './index';
 import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
 
 type BlockchainBlock = {
-    +type: typeof BLOCKCHAIN.BLOCK;
+    +type: typeof BLOCKCHAIN.BLOCK,
     +payload: {
-        hash: string;
-        height: number;
-        coin: CoinInfo | EthereumNetworkInfo;
-    }
+        hash: string,
+        height: number,
+        coin: CoinInfo | EthereumNetworkInfo,
+    },
 }
 
 type BlockchainNotification = {
-    +type: typeof BLOCKCHAIN.NOTIFICATION;
+    +type: typeof BLOCKCHAIN.NOTIFICATION,
     +payload: {
-        notification: any; // TODO: specify notification type
-        coin: CoinInfo | EthereumNetworkInfo;
-    }
+        notification: any, // TODO: specify notification type
+        coin: CoinInfo | EthereumNetworkInfo,
+    },
 }
 
 type BlockchainConnect = {
-    +type: typeof BLOCKCHAIN.CONNECT;
+    +type: typeof BLOCKCHAIN.CONNECT,
     +payload: {
-        coin: CoinInfo | EthereumNetworkInfo;
-    }
+        coin: CoinInfo | EthereumNetworkInfo,
+    },
 }
 
 type BlockchainError = {
-    +type: typeof BLOCKCHAIN.ERROR;
+    +type: typeof BLOCKCHAIN.ERROR,
     +payload: {
-        error: string;
-        coin: CoinInfo | EthereumNetworkInfo;
-    }
+        error: string,
+        coin: CoinInfo | EthereumNetworkInfo,
+    },
 }
 
 /* eslint-disable no-redeclare */
