@@ -7,7 +7,7 @@ import * as BLOCKCHAIN from '../../constants/blockchain';
 import { NO_COIN_INFO } from '../../constants/errors';
 
 import BlockBook, { create as createBackend } from '../../backend';
-import { getEthereumNetwork } from '../../data/CoinInfo';
+import { getCoinInfoByCurrency, getEthereumNetwork } from '../../data/CoinInfo';
 import { BlockchainMessage } from '../../message/builder';
 import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
 import type { CoreMessage } from '../../types';
@@ -36,14 +36,18 @@ export default class BlockchainSubscribe extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
-        const network: ?EthereumNetworkInfo = getEthereumNetwork(payload.coin);
-        if (!network) {
+        let coinInfo: ?(CoinInfo | EthereumNetworkInfo) = getCoinInfoByCurrency(payload.coin);
+        if (!coinInfo) {
+            coinInfo = getEthereumNetwork(payload.coin);
+        }
+
+        if (!coinInfo) {
             throw NO_COIN_INFO;
         }
 
         this.params = {
             accounts: payload.accounts,
-            coinInfo: network,
+            coinInfo,
         };
     }
 
