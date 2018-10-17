@@ -237,7 +237,7 @@ class TrezorConnect {
 
     // methods
 
-    static blockchainDisconnect: $T.BlockchainSubscribe = async (params) => {
+    static blockchainDisconnect: $T.BlockchainDisconnect = async (params) => {
         return await call({ method: 'blockchainDisconnect', ...params });
     }
 

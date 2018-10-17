@@ -18,6 +18,13 @@ export type Unsuccessful$ = {
     },
 }
 
+export type BlockchainDisconnect$ = {
+    success: true,
+    payload: {
+        disconnected: true,
+    },
+} | Unsuccessful$;
+
 export type BlockchainSubscribe$ = {
     success: true,
     payload: {
