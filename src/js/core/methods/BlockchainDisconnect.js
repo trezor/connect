@@ -49,12 +49,11 @@ export default class BlockchainDisconnect extends AbstractMethod {
     }
 
     async run(): Promise<{ disconnected: true }> {
-        // initialize backend
         const backend = await findBackend(this.params.coinInfo.name);
 
         if (backend) {
             backend.blockchain.destroy();
-            backend._setError(new Error('manual'));
+            backend._setError(new Error('manual disconnect'));
             this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
                 coin: this.params.coinInfo,
                 error: 'manual disconnect',

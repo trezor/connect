@@ -4,6 +4,10 @@ import type {
     MultisigRedeemScriptType,
 } from './trezor';
 
+export type $BlockchainDisconnect = {
+    coin: string,
+}
+
 export type $BlockchainSubscribe = {
     accounts: Array<any>,
     coin: string,
