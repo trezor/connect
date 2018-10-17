@@ -121,9 +121,13 @@ const postMessage = (message: CoreMessage): void => {
     const handshake: boolean = message.type === UI.IFRAME_HANDSHAKE;
 
     // popup handshake is resolved automatically
-    if (!usingPopup && message.type === UI.REQUEST_UI_WINDOW) {
-        _core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, true);
-        return;
+    if (!usingPopup) {
+        if (message.type === UI.REQUEST_UI_WINDOW) {
+            _core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, true);
+            return;
+        } else if (message.type === POPUP.CANCEL_POPUP_REQUEST) {
+            return;
+        }
     }
 
     if (!trustedHost && !handshake && message.event === TRANSPORT_EVENT) {
