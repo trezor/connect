@@ -465,17 +465,6 @@ export default class Device extends EventEmitter {
         return semvercmp(this.getVersion(), modelVersion) >= 0;
     }
 
-    getCoin(name: string): Object {
-        const coins = this.features.coins;
-
-        for (let i = 0; i < coins.length; i++) {
-            if (coins[i].coin_name === name) {
-                return coins[i];
-            }
-        }
-        throw new Error('Device does not support given coin type');
-    }
-
     isUsed(): boolean {
         return this.originalDescriptor.session !== null;
     }
