@@ -1,13 +1,21 @@
-# branch
+# 6.0.0
 __added__
 - Added `TrezorConnect.pushTransaction` method with ethereum blockbook support
 - Added `TrezorConnect.ethereumGetAccountInfo` method
 - Added `TrezorConnect.blockchainSubscribe` method
+- Added `TrezorConnect.blockchainDisconnect` method
 - Added `BLOCKCHAIN` events
+- Added `./data/bridge/releases.json`
+- Added bridge release info in TRANSPORT.START and TRANSPORT.ERROR event
 __fixed__
 - TRANSPORT.ERROR event when computer goes to sleep
+- unexpectedDeviceMode immediately rejects call in trusted mode
 __changed__
-- coins.json merged as one file
+- coins.json merged as one file (removed data/ethereumNetworks.json)
+
+# 5.0.34
+__fixed__
+- Unicode character in regexp, (https://github.com/trezor/connect/pull/229)
 
 # 5.0.33
 __fixed__
