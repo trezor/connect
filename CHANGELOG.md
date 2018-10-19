@@ -12,6 +12,7 @@ __fixed__
 - unexpectedDeviceMode immediately rejects call in trusted mode
 __changed__
 - coins.json merged as one file (removed data/ethereumNetworks.json)
+- License to T-RSL
 
 # 5.0.34
 __fixed__
