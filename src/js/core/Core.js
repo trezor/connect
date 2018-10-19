@@ -407,7 +407,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     /* eslint-enable no-use-before-define */
 
     try {
-        let PIN_TRIES: number = 0;
+        let PIN_TRIES: number = 1;
+        const MAX_PIN_TRIES: number = 3;
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
             // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
@@ -492,7 +493,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 }
             } catch (error) {
                 // catch wrong pin error
-                if (error.message === ERROR.INVALID_PIN_ERROR_MESSAGE && PIN_TRIES < 2) {
+                if (error.message === ERROR.INVALID_PIN_ERROR_MESSAGE && PIN_TRIES < MAX_PIN_TRIES) {
                     PIN_TRIES++;
                     postMessage(new UiMessage(UI.INVALID_PIN, { device: device.toMessageObject() }));
                     return inner();
