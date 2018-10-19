@@ -30,6 +30,5 @@ packageJSON.main = "lib/index.js";
 fs.writeFileSync(path.resolve(npm, 'package.json'), JSON.stringify(packageJSON, null, '  '), 'utf-8');
 
 fs.copySync( path.resolve(npm, '../README.md'), path.resolve(npm, 'README.md'));
-fs.copySync( path.resolve(npm, '../COPYING'), path.resolve(npm, 'COPYING'));
-// fs.copySync( path.resolve(npm, '../LICENSE.txt'), path.resolve(npm, 'LICENSE.txt'));
+fs.copySync( path.resolve(npm, '../LICENSE.md'), path.resolve(npm, 'LICENSE.md'));
 fs.copySync( path.resolve(npm, '../CHANGELOG.md'), path.resolve(npm, 'CHANGELOG.md'));
