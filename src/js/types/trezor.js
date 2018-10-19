@@ -8,14 +8,6 @@ export type CipheredKeyValue = {
 
 export type Success = {};
 
-export type CoinType = {
-    coin_name: string,
-    coin_shortcut: string,
-    address_type: number,
-    maxfee_kb: number,
-    address_type_p2sh: number,
-};
-
 export type Features = {
     vendor: string,
     major_version: number,
@@ -27,16 +19,23 @@ export type Features = {
     passphrase_protection: boolean,
     language: string,
     label: string,
-    coins: CoinType[],
     initialized: boolean,
     revision: string,
     bootloader_hash: string,
     imported: boolean,
     pin_cached: boolean,
     passphrase_cached: boolean,
-    state?: string,
-    needs_backup?: boolean,
-    firmware_present?: boolean,
+    firmware_present: boolean,
+    needs_backup: boolean,
+    flags: number,
+    model: string,
+    fw_major: number,
+    fw_minor: number,
+    fw_patch: number,
+    fw_vendor: string,
+    fw_vendor_keys: string,
+    unfinished_backup: boolean,
+    no_backup: boolean,
 };
 
 export type ResetDeviceSettings = {

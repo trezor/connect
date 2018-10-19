@@ -42,7 +42,7 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
     }
 
     // eslint-disable-next-line no-irregular-whitespace, no-useless-escape
-    const iframeSrcHost: ?Array<string> = instance.src.match(/^.+\:\/\/[^\‌​/]+/);
+    const iframeSrcHost: ?Array<string> = instance.src.match(/^.+\:\/\/[^\/]+/);
     if (iframeSrcHost && iframeSrcHost.length > 0) { origin = iframeSrcHost[0]; }
 
     timeout = window.setTimeout(() => {
