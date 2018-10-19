@@ -1,6 +1,6 @@
 [
 	{
-		"version": [2, 0, 19],
+		"version": [2, 0, 24],
 		"directory": "bridge/{version}/",
 		"packages": [
 			{
@@ -36,6 +36,6 @@
 				"signature": "trezor-bridge-{version}-win32-install.exe.asc"
 			}
 		],
-		"changelog": "* Add hidapi enumeration verbose logs on windows\n* Move trezor/usbhid dependency to /usb/lowlevel\n* Skip non-trezor USB devices on windows HID enumeration"
+		"changelog": "* Use interrupt reads without timeouts\n* Move Remove wait for other pending driver installation on Windows\n* Do not attempt to read from a disconnected device\n* Add FreeBSD support (but not as release target)\n* Fix device types on status page with V1+WebUSB\n* Nicer error on disconnect during call\n* Remove \"reinstall drivers\" option in Win7"
 	}
 ]
