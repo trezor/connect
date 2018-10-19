@@ -868,6 +868,7 @@ export class Core extends EventEmitter {
                 type: _deviceList.transportType(),
                 version: _deviceList.transportVersion(),
                 outdated: _deviceList.transportOutdated(),
+                bridge: DataManager.getLatestBridgeVersion(),
             };
         }
         return null;
