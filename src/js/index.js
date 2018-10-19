@@ -1,11 +1,6 @@
 /* @flow */
 'use strict';
 
-/**
- * (C) 2017 SatoshiLabs
- * GPLv3
- */
-
 import EventEmitter from 'events';
 import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT } from './constants';
 import * as TRANSPORT from './constants/transport';
