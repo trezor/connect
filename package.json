@@ -4,7 +4,7 @@
   "author": "TREZOR <info@trezor.io>",
   "homepage": "https://github.com/trezor/connect",
   "description": "High-level javascript interface for TREZOR hardware wallet.",
-  "license": "LGPL-3.0+",
+  "license": "SEE LICENSE IN LICENSE.md",
   "repository": {
     "type": "git",
     "url": "git://github.com/trezor/connect.git"
