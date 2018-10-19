@@ -558,6 +558,9 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             // cancel popup request
             postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST)); // TODO: should it be here?
             postMessage(new ResponseMessage(method.responseID, false, { error: error.message || error, code: error.code }));
+
+            // eslint-disable-next-line no-use-before-define
+            closePopup();
         }
     } finally {
         // Work done
