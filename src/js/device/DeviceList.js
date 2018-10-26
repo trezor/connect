@@ -217,9 +217,10 @@ export default class DeviceList extends EventEmitter {
     async _createUnacquiredDevice(
         descriptor: DeviceDescriptor
     ): Promise<Device> {
-        _log.debug('Creating Unacquired Device', descriptor);
+        const currentDescriptor = (this.stream.current && this.stream.current.find(d => d.path === descriptor.path)) || descriptor;
+        _log.debug('Creating Unacquired Device', currentDescriptor);
         try {
-            const device = await Device.createUnacquired(this.transport, descriptor);
+            const device = await Device.createUnacquired(this.transport, currentDescriptor);
             device.once(DEVICE.ACQUIRED, () => {
                 this.emit(DEVICE.CONNECT, device.toMessageObject());
             });
@@ -331,6 +332,19 @@ export default class DeviceList extends EventEmitter {
             this.emit(DEVICE.DISCONNECT, device.toMessageObject());
         });
     }
+
+    enumerate() {
+        this.stream.enumerate();
+        if (!this.stream.current) return;
+        // update current values
+        this.stream.current.forEach((descriptor: DeviceDescriptor) => {
+            const path: string = descriptor.path.toString();
+            const device: Device = this.devices[path];
+            if (device) {
+                device.updateDescriptor(descriptor);
+            }
+        });
+    }
 }
 
 /**
@@ -379,6 +393,7 @@ class CreateDeviceHandler {
                 // do nothing
                 // it's a race condition between "device_changed" and "device_disconnected"
             } else if (error.message === ERROR.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE || error.toString() === ERROR.WEBUSB_ERROR_MESSAGE) {
+                this.list.enumerate();
                 await this._handleUsedElsewhere();
             } else if (error.code === ERROR.INITIALIZATION_FAILED.code) {
                 // firmware bug - device is in "show address" state which cannot be cancelled

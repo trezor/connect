@@ -558,6 +558,13 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         await device.run(inner, { keepSession: method.keepSession, useEmptyPassphrase: method.useEmptyPassphrase });
     } catch (error) {
         if (method) {
+            // corner case:
+            // thrown while acquiring device
+            // it's a race condition between two tabs
+            // workaround is to enumerate transport again and report changes to get a valid session number
+            if (_deviceList && error.message === ERROR.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE) {
+                _deviceList.enumerate();
+            }
             // cancel popup request
             postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST)); // TODO: should it be here?
             postMessage(new ResponseMessage(method.responseID, false, { error: error.message || error, code: error.code }));

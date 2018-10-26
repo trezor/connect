@@ -88,6 +88,16 @@ export default class DescriptorStream extends EventEmitter {
         }
     }
 
+    async enumerate(): Promise<void> {
+        if (!this.listening) return;
+        try {
+            this.upcoming = await this.transport.enumerate();
+            this._reportChanges();
+        } catch (error) {
+            // empty
+        }
+    }
+
     stop(): void {
         this.listening = false;
     }

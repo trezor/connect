@@ -199,6 +199,9 @@ export default class Device extends EventEmitter {
 
     interruptionFromUser(error: Error): void {
         _log.debug('+++++interruptionFromUser');
+        if (this.commands) {
+            this.commands.dispose();
+        }
         if (this.runPromise) {
             // reject inner defer
             this.runPromise.reject(error);
@@ -209,21 +212,16 @@ export default class Device extends EventEmitter {
                 this.release();
             }
         }
-
-        if (this.commands) {
-            this.commands.dispose();
-        }
     }
 
     interruptionFromOutside(): void {
         _log.debug('+++++interruptionFromOutside');
+        if (this.commands) {
+            this.commands.dispose();
+        }
         if (this.runPromise) {
             this.runPromise.reject(ERROR.DEVICE_USED_ELSEWHERE);
             this.runPromise = null;
-        }
-
-        if (this.commands) {
-            this.commands.dispose();
         }
     }
 
@@ -388,6 +386,16 @@ export default class Device extends EventEmitter {
         if (this.deferredActions[ DEVICE.ACQUIRED ]) { await this.deferredActions[ DEVICE.ACQUIRED ].promise; }
 
         if (upcomingDescriptor.session === null) {
+            // corner-case: if device was unacquired but some call to this device was made
+            // this will automatically change unacquired device to acquired (without deviceList)
+            // emit ACQUIRED event to deviceList which will propagate DEVICE.CONNECT event
+            if (this.listeners(DEVICE.ACQUIRED).length > 0) {
+                this.emit(DEVICE.ACQUIRED);
+            }
+        }
+
+        const methodStillRunning = this.commands && !this.commands.disposed;
+        if (upcomingDescriptor.session === null && !methodStillRunning) {
             // released
             if (this.originalDescriptor.session === this.activitySessionID) {
                 // by myself
@@ -397,13 +405,6 @@ export default class Device extends EventEmitter {
                     delete this.deferredActions[ DEVICE.RELEASE ];
                 }
                 this.activitySessionID = null;
-
-                // corner-case: if device was unacquired but some call to this device was made
-                // this will automatically change unacquired device to acquired (without deviceList)
-                // emit ACQUIRED event to deviceList which will propagate DEVICE.CONNECT event
-                if (this.listeners(DEVICE.ACQUIRED).length > 0) {
-                    this.emit(DEVICE.ACQUIRED);
-                }
             } else {
                 // by other application
                 _log.debug('RELEASED BY OTHER APP');
