@@ -25,7 +25,7 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 
 ### Example
 ```javascript
-TrezorConnect.cardanoSignTransaction(
+TrezorConnect.cardanoSignTransaction({
     inputs: [
         {
             path: "m/44'/1815'/0'/0/1",
