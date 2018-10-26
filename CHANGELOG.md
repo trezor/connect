@@ -1,3 +1,11 @@
+# 6.0.1
+__fixed__
+- WRONG_PREVIOUS_SESSION race condition when switching between tabs and acquiring device
+- removed unnecessary console.logs and build scripts
+- Docker build for npm
+__changed__
+- Renamed directory "dist" to "build"
+
 # 6.0.0
 __added__
 - Added `TrezorConnect.pushTransaction` method with ethereum blockbook support
