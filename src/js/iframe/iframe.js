@@ -144,7 +144,7 @@ const postMessage = (message: CoreMessage): void => {
         if (_popupMessagePort) {
             _popupMessagePort.postMessage(message);
         } else {
-            console.warn('postMessage: popupMessagePort not found');
+            console.warn('iframe postMessage: popupMessagePort not found');
         }
     } else {
         let origin: ?string = DataManager.getSettings('origin');

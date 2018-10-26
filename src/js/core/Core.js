@@ -361,8 +361,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     // find pending calls to this device
     const previousCall: Array<AbstractMethod> = _callMethods.filter(call => call && call !== method && call.devicePath === method.devicePath);
-    // console.warn('THIS CALL', message);
-    // console.warn('PREVIOUS CALL', previousCall);
     if (previousCall.length > 0 && method.overridePreviousCall) {
         // set flag for each pending method
         previousCall.forEach(call => { call.overridden = true; });
@@ -376,7 +374,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             throw ERROR.CALL_OVERRIDE;
         }
     } else if (device.isRunning()) {
-        // console.error('DEVICE', device);
         if (!device.isLoaded()) {
             // corner case
             // device didn't finish loading for the first time. @see DeviceList._createAndSaveDevice

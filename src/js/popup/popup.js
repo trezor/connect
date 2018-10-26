@@ -19,8 +19,6 @@ import * as view from './view';
 import styles from '../../styles/popup.less';
 
 const handleMessage = (event: PostMessageEvent): void => {
-    console.log('handleMessage', event.data);
-
     const data: any = event.data;
     if (!data) return;
 

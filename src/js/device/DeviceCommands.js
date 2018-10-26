@@ -386,19 +386,19 @@ export default class DeviceCommands {
         const logMessage: Object = filterForLog(type, msg);
 
         if (this.debug) {
-            console.log('[trezor.js] [call] Sending', type, logMessage, this.transport);
+            console.log('[DeviceCommands] [call] Sending', type, logMessage, this.transport);
         }
 
         try {
             const res: DefaultMessageResponse = await this.transport.call(this.sessionId, type, msg);
             const logMessage = filterForLog(res.type, res.message);
             if (this.debug) {
-                console.log('[trezor.js] [call] Received', res.type, logMessage);
+                console.log('[DeviceCommands] [call] Received', res.type, logMessage);
             }
             return res;
         } catch (error) {
             if (this.debug) {
-                console.log('[trezor.js] [call] Received error', error);
+                console.warn('[DeviceCommands] [call] Received error', error);
             }
             // TODO: throw trezor error
             throw error;
@@ -506,7 +506,7 @@ export default class DeviceCommands {
                 });
             } else {
                 // if (this.session.debug) {
-                console.warn('[trezor.js] [call] PIN callback not configured, cancelling request');
+                console.warn('[DeviceCommands] [call] PIN callback not configured, cancelling request');
                 // }
                 reject(new Error('PIN callback not configured'));
             }
@@ -525,7 +525,7 @@ export default class DeviceCommands {
                 });
             } else {
                 // if (this.session.debug) {
-                console.warn('[trezor.js] [call] Passphrase callback not configured, cancelling request');
+                console.warn('[DeviceCommands] [call] Passphrase callback not configured, cancelling request');
                 // }
                 reject(new Error('Passphrase callback not configured'));
             }
@@ -542,7 +542,7 @@ export default class DeviceCommands {
             //     }
             // })) {
             //     if (this.session.debug) {
-            //         console.warn('[trezor.js] [call] Word callback not configured, cancelling request');
+            //         console.warn('[DeviceCommands] [call] Word callback not configured, cancelling request');
             //     }
             reject(new Error('Word callback not configured'));
             // }
