@@ -1,6 +1,6 @@
 # Builds
 _old
-dist
+build
 npm
 
 # Dependency directory

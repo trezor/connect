@@ -1,7 +1,7 @@
 # Dev directories
 webpack
 src
-dist
+build
 _old
 .babelrc
 .flowconfig

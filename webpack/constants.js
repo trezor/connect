@@ -2,7 +2,7 @@ import path from 'path';
 
 export const ABSOLUTE_BASE = path.normalize(path.join(__dirname, '..'));
 export const LIB_NAME = 'TrezorConnect';
-export const DIST = path.join(ABSOLUTE_BASE, 'dist/');
+export const DIST = path.join(ABSOLUTE_BASE, 'build/');
 export const SRC = path.join(ABSOLUTE_BASE, 'src/');
 export const JS_SRC = path.join(ABSOLUTE_BASE, 'src/js/');
 export const HTML_SRC = path.join(ABSOLUTE_BASE, 'src/html/');

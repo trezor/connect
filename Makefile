@@ -1,69 +1,48 @@
-# for stable (numbered) versions:
-# make dist-stable-v1 && make sync-stable-v1
-# the result is on connect.trezor.io/1
-
-# for rolling versions:
-# make dist-rolling-claim-bch && make sync-rolling-claim-bch
-# the result is on connect.trezor.io/claim-bch-ce179c9
-# ce179c9 is first 7 letters from the hash of the commit (what github etc shows)
-
 clean:
-	rm -rf dist/
+	rm -rf build/
 
 # manually: goto ./submodules/trezor-common; git checkout master; git pull
 submodules:
 	git submodule update --remote --merge --recursive
 
+# docker build for connect.trezor.io
 build:
-	yarn
+	./scripts/docker-build.sh
+
+# docker build for npm
+build-npm:
+	./scripts/docker-build.sh npm
+
+publish-npm:
+	cd ./npm && npm publish
+
+# local file system build
+build-connect:
+	yarn install
 	yarn run build
 	yarn run build:inline
-	cp dist/js/trezor-connect.*.js dist/trezor-connect.min.js
-	cp robots.txt dist/robots.txt
-
-# Build only npm library
-build-npm:
-	yarn run build:npm
-	cd ./npm && npm publish
+	cp build/js/trezor-connect.*.js build/trezor-connect.min.js
+	cp robots.txt build/robots.txt
 
 # Build test
 build-test:
-	make build
-	sed -i '' -e 's/connect.trezor.io/sisyfos.trezor.io\/connect/g' ./dist/js/iframe.*.js
-	rsync -avz --delete -e ssh ./dist/* admin@dev.sldev.cz:~/sisyfos/www/connect
+	make build-connect
+	sed -i '' -e 's/connect.trezor.io/sisyfos.trezor.io\/connect/g' ./build/js/iframe.*.js
+	rsync -avz --delete -e ssh ./build/* admin@dev.sldev.cz:~/sisyfos/www/connect
 
-# Build for hot fixes on https://connect.trezor.io/[major]
-
-build-patch:
+# Version bump
+version-patch:
 	yarn bump --patch --grep ./README.md ./src/js/data/ConnectSettings.js
-	make build
-	# Call: sync-[major]
-	# TODO: git push changed files with new version in summary
-
-# Build for minor fixes on https://connect.trezor.io/[major.minor] and NPM
-build-minor:
+version-minor:
 	yarn bump --minor --grep ./README.md ./src/js/data/ConnectSettings.js
-	make build
-	# Call: build-npm
-	# Call: sync-[major.minor]
-	# TODO: git push changed files with new version in summary
-
-# Build for major fixes on https://connect.trezor.io/[major] and NPM
-build-major:
+version-major:
 	yarn bump --major --grep ./README.md ./src/js/data/ConnectSettings.js
-	make build
-	# Call: build-npm
-	# Call: sync-[major]
-	# TODO: git push changed files with new version in summary
 
-# Sync new build
+# Sync build
 sync-%:
-	make .sync-$*
-
-.sync-%:
 	# Before first use: Install awscli (pip install awscli)
 	# Configure access credentials (aws configure), region is "eu-central-1"
-	aws s3 sync --delete --cache-control 'public, max-age=3600' dist/ s3://connect.trezor.io/$*/
+	aws s3 sync --delete --cache-control 'public, max-age=3600' build/ s3://connect.trezor.io/$*/
 
 # Build messages.json from protobuf
 protobuf:
@@ -74,3 +53,18 @@ protobuf:
 coins:
 	# make submodules
 	./submodules/trezor-common/defs/coins/tools/cointool.py dump -p -d connect -o ./src/data/coins.json
+
+.DEFAULT_GOAL:= default
+default:
+	@echo "Build:"
+	@echo "git checkout to version branch v[X]"
+	@echo "    make build"
+	@echo "Sync:"
+	@echo "s3 sync version build to server (connect.trezor.io)"
+	@echo "    make sync-[X]"
+	@echo " "
+	@echo " "
+	@echo "NPM:"
+	@echo "    make build-npm"
+	@echo "Publish NPM:"
+	@echo "    make publish-npm"

@@ -1,0 +1,12 @@
+_old
+.DS_Store
+.vscode
+.editorconfig
+.git
+
+build
+docs
+node_modules
+npm
+submodules
+src/__tests__
