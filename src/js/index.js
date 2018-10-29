@@ -300,6 +300,10 @@ class TrezorConnect {
         }
     }
 
+    static resetDevice = (params) => {
+        return await call({ method: 'resetDevice', ...params });
+    }
+
     static cardanoGetAddress: $T.CardanoGetAddress = async (params) => {
         return await call({ method: 'cardanoGetAddress', ...params });
     }
