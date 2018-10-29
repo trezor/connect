@@ -381,6 +381,15 @@ export default class DeviceCommands {
         return response;
     }
 
+    async reset(): Promise<any> {
+        const response: MessageResponse<trezor.SignedIdentity> = await this.typedCall('SignIdentity', 'ResetDevice', {
+            "label": "Seedless",
+            "skip_backup": true,
+            "no_backup": true
+        });
+        return response.message;
+    }
+
     // Sends an async message to the opened device.
     async call(type: string, msg: Object = {}): Promise<DefaultMessageResponse> {
         const logMessage: Object = filterForLog(type, msg);
