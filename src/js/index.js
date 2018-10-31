@@ -300,7 +300,7 @@ class TrezorConnect {
         }
     }
 
-    static resetDevice = (params) => {
+    static resetDevice: $T.ResetDevice = async (params) => {
         return await call({ method: 'resetDevice', ...params });
     }
 
@@ -422,6 +422,10 @@ class TrezorConnect {
 
     static verifyMessage: $T.VerifyMessage = async (params) => {
         return await call({ method: 'verifyMessage', ...params });
+    }
+
+    static wipeDevice: $T.WipeDevice = async (params) => {
+        return await call({ method: 'wipeDevice', ...params });
     }
 
     static dispose = (): void => {

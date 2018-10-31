@@ -2,67 +2,65 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinPath, getRequiredFirmware } from './helpers/paramsValidator';
-import { validatePath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
+import { validateParams } from './helpers/paramsValidator';
 
-import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../data/CoinInfo';
-import { getPublicKeyLabel } from '../../utils/pathUtils';
-import type { CoinInfo, UiPromiseResponse } from 'flowtype';
-import type { HDNodeResponse } from '../../types/trezor';
+import type { UiPromiseResponse } from 'flowtype';
+import type { ResetDeviceFlags, Success } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
-type Batch = {
-    path: Array<number>,
-    coinInfo: ?CoinInfo,
-}
-type Params = {
-    bundle: Array<Batch>,
-    bundledResponse: boolean,
-}
-
 export default class GetPublicKey extends AbstractMethod {
-    params: Params;
+    params: ResetDeviceFlags;
     confirmed: boolean = false;
 
     constructor(message: CoreMessage) {
         super(message);
 
-        this.requiredPermissions = ['write'];
+        this.allowDeviceMode = [ UI.INITIALIZE, UI.SEEDLESS ];
+        this.useDeviceState = false;
+        this.requiredPermissions = ['management'];
         this.info = 'Reset device';
 
         const payload: Object = message.payload;
         // validate bundle type
-        // validateParams(payload, [
-        //     { name: 'bundle', type: 'array' },
-        // ]);
+        validateParams(payload, [
+            { name: 'displayRandom', type: 'boolean' },
+            { name: 'strength', type: 'number' },
+            { name: 'passphraseProtection', type: 'boolean' },
+            { name: 'pinProtection', type: 'boolean' },
+            { name: 'language', type: 'string' },
+            { name: 'label', type: 'string' },
+            { name: 'u2fCounter', type: 'number' },
+            { name: 'skipBackup', type: 'boolean' },
+            { name: 'noBackup', type: 'boolean' },
+        ]);
 
         this.params = {
-
+            display_random: payload.displayRandom,
+            strength: payload.strength,
+            passphrase_protection: payload.passphraseProtection,
+            pin_protection: payload.pinProtection,
+            language: payload.language,
+            label: payload.label,
+            u2f_counter: payload.u2fCounter,
+            skip_backup: payload.skipBackup,
+            no_backup: payload.noBackup,
         };
     }
 
-    async confirmation2(): Promise<boolean> {
+    async confirmation(): Promise<boolean> {
         if (this.confirmed) return true;
         // wait for popup window
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
-        // const label = getPublicKeyLabel(this.params.path, this.params.coinInfo);
-        let label: string;
-        if (this.params.bundle.length > 1) {
-            label = 'Export multiple public keys';
-        } else {
-            label = getPublicKeyLabel(this.params.bundle[0].path, this.params.bundle[0].coinInfo);
-        }
-
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'export-xpub',
-            label,
+            view: 'device-management',
+            label: 'Do you really you want to create a new wallet?',
         }));
 
         // wait for user action
@@ -73,7 +71,7 @@ export default class GetPublicKey extends AbstractMethod {
         return this.confirmed;
     }
 
-    async run(): Promise<HDNodeResponse | Array<HDNodeResponse>> {
-        return await this.device.getCommands().reset();
+    async run(): Promise<Success> {
+        return await this.device.getCommands().reset(this.params);
     }
 }
