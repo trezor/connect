@@ -23,6 +23,9 @@ const getPermissionText = (permissionType: string, deviceName: string): string =
         case 'write-meta':
             text = 'Write metadata to Trezor device';
             break;
+        case 'management':
+            text = 'Modify device settings';
+            break;
         case 'custom-message':
             text = 'Run custom operations';
             break;
@@ -39,6 +42,9 @@ const getPermissionTooltipText = (permissionType: string): string => {
             break;
         case 'write':
             text = 'Permission needed to execute operations, such as composing a transaction, after your confirmation.';
+            break;
+        case 'management':
+            text = 'Permission needed to modify device settings, such as pin, passphrase, label or a seed.';
             break;
         case 'custom-message':
             text = 'Development tool. Use at your own risk. Allows service to send arbitrary data to your Trezor device.';
