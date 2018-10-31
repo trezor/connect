@@ -140,6 +140,9 @@ export default class DeviceCommands {
     }
 
     async getDeviceState(): Promise<string> {
+        if (!this.device.features.initialized) {
+            return 'null';
+        }
         const response: trezor.PublicKey = await this.getPublicKey([1, 0, 0]);
         const secret: string = `${response.xpub}#${this.device.features.device_id}#${this.device.instance}`;
         const state: string = this.device.getTemporaryState() || bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
@@ -381,12 +384,13 @@ export default class DeviceCommands {
         return response;
     }
 
-    async reset(): Promise<any> {
-        const response: MessageResponse<trezor.SignedIdentity> = await this.typedCall('SignIdentity', 'ResetDevice', {
-            "label": "Seedless",
-            "skip_backup": true,
-            "no_backup": true
-        });
+    async wipe(): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('WipeDevice', 'Success');
+        return response.message;
+    }
+
+    async reset(flags?: trezor.ResetDeviceFlags): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('ResetDevice', 'Success', flags);
         return response.message;
     }
 

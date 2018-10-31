@@ -409,7 +409,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
             // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
-            const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE | typeof UI.FIRMWARE_NOT_SUPPORTED) = device.hasUnexpectedMode(method.requiredFirmware);
+            const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | typeof UI.FIRMWARE | typeof UI.FIRMWARE_NOT_SUPPORTED) = device.hasUnexpectedMode(method.requiredFirmware, method.allowDeviceMode);
             if (unexpectedMode) {
                 if (isUsingPopup) {
                     // wait for popup handshake
@@ -465,8 +465,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
             // Make sure that device will display pin/passphrase
             try {
-                const deviceState: string = await device.getCommands().getDeviceState();
-                const validState: boolean = method.useEmptyPassphrase || device.validateExpectedState(deviceState);
+                const deviceState: string = method.useDeviceState ? await device.getCommands().getDeviceState() : 'null';
+                const validState: boolean = !method.useDeviceState || method.useEmptyPassphrase || device.validateExpectedState(deviceState);
                 if (!validState) {
                     if (isUsingPopup) {
                         // initialize user response promise

@@ -32,10 +32,13 @@ export default class AbstractMethod implements MethodInterface {
     info: string; // method info, displayed in popup info-panel
     useUi: boolean; // should use popup?
     useDevice: boolean; // use device
+    useDeviceState: boolean; // should validate device state?
     useEmptyPassphrase: boolean;
+    allowSeedlessDevice: boolean;
 
     requiredFirmware: Array<string>;
     requiredPermissions: Array<string>;
+    allowDeviceMode: Array<string>; // used in device management (like ResetDevice allow !UI.INITIALIZED)
 
     +confirmation: () => Promise<boolean>;
 
@@ -60,9 +63,15 @@ export default class AbstractMethod implements MethodInterface {
         this.overridePreviousCall = typeof payload.override === 'boolean' ? payload.override : false;
         this.overridden = false;
         this.useEmptyPassphrase = typeof payload.useEmptyPassphrase === 'boolean' ? payload.useEmptyPassphrase : false;
+        this.allowSeedlessDevice = typeof payload.allowSeedlessDevice === 'boolean' ? payload.allowSeedlessDevice : false;
+        this.allowDeviceMode = [];
+        if (this.allowSeedlessDevice) {
+            this.allowDeviceMode = [ UI.SEEDLESS ];
+        }
         // default values for all methods
         this.requiredFirmware = ['1.0.0', '2.0.0'];
         this.useDevice = true;
+        this.useDeviceState = true;
         this.useUi = true;
     }
 
