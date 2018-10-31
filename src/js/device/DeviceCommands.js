@@ -381,12 +381,13 @@ export default class DeviceCommands {
         return response;
     }
 
-    async reset(): Promise<any> {
-        const response: MessageResponse<trezor.SignedIdentity> = await this.typedCall('SignIdentity', 'ResetDevice', {
-            "label": "Seedless",
-            "skip_backup": true,
-            "no_backup": true
-        });
+    async wipe(): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('WipeDevice', 'Success');
+        return response.message;
+    }
+
+    async reset(flags?: trezor.ResetDeviceFlags): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('ResetDevice', 'Success', flags);
         return response.message;
     }
 

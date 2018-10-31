@@ -449,6 +449,10 @@ export default class Device extends EventEmitter {
         return this.features.initialized;
     }
 
+    isSeedless(): boolean {
+        return this.features.no_backup;
+    }
+
     isInconsistent(): boolean {
         return this.inconsistent;
     }
@@ -506,13 +510,16 @@ export default class Device extends EventEmitter {
         return this.features ? this.features.major_version === 1 : false;
     }
 
-    hasUnexpectedMode(requiredFirmware: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE | typeof UI.FIRMWARE_NOT_SUPPORTED) {
+    hasUnexpectedMode(requiredFirmware: Array<string>, allow: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | typeof UI.FIRMWARE | typeof UI.FIRMWARE_NOT_SUPPORTED) {
         if (this.features) {
-            if (this.isBootloader()) {
+            if (this.isBootloader() && allow.indexOf(UI.BOOTLOADER) < 0) {
                 return UI.BOOTLOADER;
             }
-            if (!this.isInitialized()) {
+            if (!this.isInitialized() && allow.indexOf(UI.INITIALIZE) < 0) {
                 return UI.INITIALIZE;
+            }
+            if (this.isSeedless() && allow.indexOf(UI.SEEDLESS) < 0) {
+                return UI.SEEDLESS;
             }
             if (requiredFirmware[ this.features.major_version - 1 ] === '0') {
                 return UI.FIRMWARE_NOT_SUPPORTED;
@@ -549,6 +556,13 @@ export default class Device extends EventEmitter {
         }
     }
 
+    getMode() {
+        if (this.features.bootloader_mode) return 'bootloader';
+        if (!this.features.initialized) return 'initialize';
+        if (this.features.no_backup) return 'seedless';
+        return 'normal';
+    }
+
     // simplified object to pass via postMessage
     toMessageObject(): DeviceTyped {
         if (this.originalDescriptor.path === DEVICE.UNREADABLE) {
@@ -572,7 +586,7 @@ export default class Device extends EventEmitter {
                 label: label,
                 state: this.state,
                 status: this.isUsedElsewhere() ? 'occupied' : this.featuresNeedsReload ? 'used' : 'available',
-                mode: this.features.bootloader_mode ? 'bootloader' : !this.features.initialized ? 'initialize' : 'normal',
+                mode: this.getMode(),
                 firmware: this.firmwareStatus,
                 features: this.features,
             };

@@ -6,6 +6,7 @@ export const IFRAME_HANDSHAKE: 'iframe-handshake' = 'iframe-handshake';
 export const TRANSPORT: 'ui-no_transport' = 'ui-no_transport';
 export const BOOTLOADER: 'ui-device_bootloader_mode' = 'ui-device_bootloader_mode';
 export const INITIALIZE: 'ui-device_not_initialized' = 'ui-device_not_initialized';
+export const SEEDLESS: 'ui-device_seedless' = 'ui-device_seedless';
 export const FIRMWARE: 'ui-device_firmware_old' = 'ui-device_firmware_old';
 export const FIRMWARE_OUTDATED: 'ui-device_firmware_outdated' = 'ui-device_firmware_outdated';
 export const FIRMWARE_NOT_SUPPORTED: 'ui-device_firmware_unsupported' = 'ui-device_firmware_unsupported';
