@@ -40,6 +40,7 @@ import SignTransaction from './SignTransaction';
 import StellarGetAddress from './StellarGetAddress';
 import StellarSignTransaction from './StellarSignTransaction';
 import VerifyMessage from './VerifyMessage';
+import WipeDevice from './WipeDevice';
 
 const classes: {[k: string]: any} = {
     'blockchainDisconnect': BlockchainDisconnect,
@@ -77,6 +78,7 @@ const classes: {[k: string]: any} = {
     'stellarGetAddress': StellarGetAddress,
     'stellarSignTransaction': StellarSignTransaction,
     'verifyMessage': VerifyMessage,
+    'wipeDevice': WipeDevice,
 };
 
 export const find = (message: CoreMessage): AbstractMethod => {
