@@ -609,3 +609,16 @@ export type Address = {
     path: Array<number>,
     serializedPath: string,
 }
+
+// Reset device flags
+export type ResetDeviceFlags = {
+    display_random?: boolean,
+    strength?: number,
+    passphrase_protection?: boolean,
+    pin_protection?: boolean,
+    language?: string,
+    label?: string,
+    u2f_counter?: number,
+    skip_backup?: boolean,
+    no_backup?: boolean,
+}
