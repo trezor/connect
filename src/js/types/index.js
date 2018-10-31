@@ -70,7 +70,7 @@ export type Features = {
 }
 
 export type DeviceStatus = 'available' | 'occupied' | 'used';
-export type DeviceMode = 'normal' | 'bootloader' | 'initialize';
+export type DeviceMode = 'normal' | 'bootloader' | 'initialize' | 'seedless';
 export type DeviceFirmwareStatus = 'valid' | 'outdated' | 'required';
 
 export type Device = $Exact<{
@@ -162,6 +162,7 @@ export type BlockchainDisconnect = (P.$BlockchainDisconnect) => Promise<R.Blockc
 export type BlockchainSubscribe = (P.$BlockchainSubscribe) => Promise<R.BlockchainSubscribe$>;
 export type CustomMessage = (P.$CustomMessage) => Promise<R.CustomMessage$>;
 export type RequestLogin = (P.$RequestLogin) => Promise<R.RequestLogin$>;
+export type ResetDevice = (P.$ResetDevice) => Promise<R.ResetDevice$>;
 
 /* eslint-disable no-redeclare */
 declare function F_CardanoGetAddress(params: (P.$Common & CARDANO.$CardanoGetAddress)): Promise<CARDANO.CardanoGetAddress$>;
@@ -262,6 +263,7 @@ export type StellarGetAddress = typeof F_StellarGetAddress;
 
 export type StellarSignTransaction = (STELLAR.$StellarSignTransaction) => Promise<STELLAR.StellarSignTransaction$>;
 export type VerifyMessage = (P.$VerifyMessage) => Promise<R.VerifyMessage$>;
+export type WipeDevice = (P.$WipeDevice) => Promise<R.WipeDevice$>;
 
 // export * from './params';
 export * from './response';

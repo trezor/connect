@@ -20,6 +20,7 @@ export type $Common = {
         state?: ?string,
     },
     useEmptyPassphrase?: boolean,
+    allowSeedlessDevice?: boolean,
     keepSession?: boolean,
 }
 
@@ -83,6 +84,18 @@ export type $RequestLogin = $Common & $Exact<{
     callback: () => Promise<?{ challengeHidden: string, challengeVisual: string}>,
 }>
 
+export type $ResetDevice = $Common & {
+    displayRandom?: boolean,
+    strength?: number,
+    passphraseProtection?: boolean,
+    pinProtection?: boolean,
+    language?: string,
+    label?: string,
+    u2fCounter?: number,
+    skipBackup?: boolean,
+    noBackup?: boolean,
+};
+
 export type $SignMessage = $Common & {
     path: $Path,
     coin: string,
@@ -130,3 +143,5 @@ export type $VerifyMessage = $Common & {
     message: string,
     signature: string,
 }
+
+export type $WipeDevice = $Common;

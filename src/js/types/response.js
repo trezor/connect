@@ -105,6 +105,11 @@ export type RequestLogin$ = {
     },
 } | Unsuccessful$;
 
+export type ResetDevice$ = {
+    success: true,
+    payload: Success,
+} | Unsuccessful$;
+
 export type SignMessage$ = {
     success: true,
     payload: MessageSignature,
@@ -116,6 +121,11 @@ export type SignTransaction$ = {
 } | Unsuccessful$;
 
 export type VerifyMessage$ = {
+    success: true,
+    payload: Success,
+} | Unsuccessful$;
+
+export type WipeDevice$ = {
     success: true,
     payload: Success,
 } | Unsuccessful$;
