@@ -92,6 +92,9 @@ const handleMessage = (event: PostMessageEvent): void => {
         case UI.INITIALIZE :
             showView('initialize');
             break;
+        case UI.SEEDLESS :
+            showView('seedless');
+            break;
         case UI.FIRMWARE :
             showView('firmware-update');
             break;
