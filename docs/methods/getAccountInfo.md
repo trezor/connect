@@ -20,7 +20,7 @@ TrezorConnect.getAccountInfo(params).then(function(result) {
 * `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
 * `coin` — *obligatory* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 
-#### Using path
+#### Using public key
 * `xpub` — *obligatory* `string` public key of account
 * `coin` — *obligatory* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 
