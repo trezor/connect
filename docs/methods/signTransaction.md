@@ -2,7 +2,7 @@
 
 Asks device to sign given
 inputs and outputs of pre-composed transaction. User is asked to confirm all transaction
-details on TREZOR.
+details on Trezor.
 
 
 ES6

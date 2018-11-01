@@ -76,7 +76,7 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: CoinInf
 };
 
 /** *****
- * Transform from hd-wallet format to TREZOR
+ * Transform from hd-wallet format to Trezor
  *******/
 export const outputToTrezor = (output: BuildTxOutput, coinInfo: CoinInfo): TransactionOutput => {
     if (output.address == null) {

@@ -20,7 +20,7 @@ export const validateTrezorInputs = (inputs: Array<TransactionInput>, coinInfo: 
 };
 
 /** *****
- * Transform from TREZOR format to hd-wallet
+ * Transform from Trezor format to hd-wallet
  *******/
 export const inputToHD = (input: TransactionInput): BuildTxInput => {
     const segwit = isSegwitPath(input.address_n);
@@ -40,7 +40,7 @@ export const inputToHD = (input: TransactionInput): BuildTxInput => {
 };
 
 /** *****
- * Transform from hd-wallet format to TREZOR
+ * Transform from hd-wallet format to Trezor
  *******/
 export const inputToTrezor = (input: BuildTxInput, sequence: number): TransactionInput => {
     const { hash, index, path, amount } = input;

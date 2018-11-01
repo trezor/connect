@@ -1,6 +1,6 @@
 /* @flow */
 
-// This file has all various types that go into TREZOR or out of it.
+// This file has all various types that go into Trezor or out of it.
 
 export type CipheredKeyValue = {
     value: string,
