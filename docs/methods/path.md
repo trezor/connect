@@ -7,7 +7,7 @@ Bitcoin account 1 using BIP44 derivation path
 ```
 Bitcoin account 1 using hardended path
 ```javascript
-[49 | 0x80000000 >>> 0, 0 | 0x80000000 >>> 0, 0 | 0x80000000 >>> 0]
+[(49 | 0x80000000) >>> 0, (0 | 0x80000000 >>> 0), (0 | 0x80000000) >>> 0]
 ```
 Bitcoin first address address of account 1 using BIP44 derivation path
 ```javascript
@@ -15,7 +15,7 @@ Bitcoin first address address of account 1 using BIP44 derivation path
 ```
 Bitcoin first address address of account 1 using hardended path
 ```javascript
-[49 | 0x80000000 >>> 0, 0 | 0x80000000 >>> 0, 0 | 0x80000000 >>> 0, 0, 0]
+[(49 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0, 0, 0]
 ```
 [See more examples](https://github.com/trezor/trezor-core/blob/tsusanka/paths/docs/coins/README.md)
 
