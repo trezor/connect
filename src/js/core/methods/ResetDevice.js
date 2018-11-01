@@ -44,7 +44,7 @@ export default class GetPublicKey extends AbstractMethod {
             pin_protection: payload.pinProtection,
             language: payload.language,
             label: payload.label,
-            u2f_counter: payload.u2fCounter,
+            u2f_counter: payload.u2fCounter || Math.floor(Date.now() / 1000),
             skip_backup: payload.skipBackup,
             no_backup: payload.noBackup,
         };
