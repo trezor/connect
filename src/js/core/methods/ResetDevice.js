@@ -39,7 +39,7 @@ export default class GetPublicKey extends AbstractMethod {
 
         this.params = {
             display_random: payload.displayRandom,
-            strength: payload.strength,
+            strength: payload.strength || 256,
             passphrase_protection: payload.passphraseProtection,
             pin_protection: payload.pinProtection,
             language: payload.language,
