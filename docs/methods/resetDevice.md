@@ -16,9 +16,9 @@ TrezorConnect.resetDevice(params).then(function(result) {
 ### Params
 [****Optional common params****](commonParams.md)
 <br>
+* `strength` — *optional* `number` Accepted values are [128|192|256]. Default is set to `256`
 * `label` — *optional* `string`
-* `strength` — *optional* `number` [128|192|256]
-* `u2fCounter` — *optional* `number`
+* `u2fCounter` — *optional* `number`. Default value is set to current time stamp in seconds.
 * `pinProtection` — *optional* `boolean`
 * `passphraseProtection` — *optional* `boolean`
 * `skipBackup` — *optional* `boolean`
