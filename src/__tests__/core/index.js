@@ -45,6 +45,8 @@ import { liskVerifyMessage } from './liskVerifyMessage.spec.js';
 import { liskSignTransaction } from './liskSignTransaction.spec.js';
 import { rippleGetAddress } from './rippleGetAddress.spec.js';
 import { rippleSignTransaction } from './rippleSignTransaction.spec.js';
+import { eosGetPublicKey } from './eosGetPublicKey.spec';
+import { eosSignTransaction } from './eosSignTransaction.spec';
 
 export const testFunctions: AvailableTestFunctions = {
     cardanoGetAddress,
@@ -88,4 +90,6 @@ export const testFunctions: AvailableTestFunctions = {
     liskSignTransaction,
     rippleGetAddress,
     rippleSignTransaction,
+    eosGetPublicKey,
+    eosSignTransaction,
 };

@@ -179,6 +179,7 @@ import * as NEM from './nem';
 import * as STELLAR from './stellar';
 import * as LISK from './lisk';
 import * as TEZOS from './tezos';
+import * as EOS from './eos';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
@@ -291,6 +292,13 @@ export type ChangePin = (P.$ChangePin) => Promise<R.ChangePin$>;
 export type FirmwareErase = (P.$FirmwareErase) => Promise<R.FirmwareErase$>;
 export type FirmwareUpload = (P.$FirmwareUpload) => Promise<R.FirmwareUpload$>;
 export type RecoveryDevice = (P.$RecoveryDevice) => Promise<R.RecoveryDevice$>;
+
+/* eslint-disable no-redeclare */
+declare function F_EosGetPublicKey(params: (P.$Common & EOS.$EosGetPublicKey)): Promise<EOS.EosGetPublicKey$>;
+declare function F_EosGetPublicKey(params: (P.$Common & { bundle: Array<EOS.$EosGetPublicKey> })): Promise<EOS.EosGetPublicKey$$>;
+/* eslint-enable no-redeclare */
+export type EosGetPublicKey = typeof F_EosGetPublicKey;
+export type EosSignTx = (EOS.$EosSignTx) => Promise<EOS.EosSignTx$>;
 
 export * from './response';
 export * from './coinInfo';

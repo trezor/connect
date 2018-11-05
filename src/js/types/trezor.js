@@ -677,6 +677,196 @@ export type RippleSignedTx = {
     serialized_tx: string,
 }
 
+// EOS types
+export type EosPublicKey = {
+    wif_public_key: string,
+    raw_public_key: string,
+  }
+
+export type EosTxActionRequest = {
+    type: "EosTxActionRequest",
+    message: {},
+}
+
+export type EosTxHeader = {
+    expiration: number,
+    ref_block_num: number,
+    ref_block_prefix: number,
+    max_net_usage_words: number,
+    max_cpu_usage_ms: number,
+    delay_sec: number,
+  }
+
+export type EosSignTx = {
+    address_n: Array<number>,
+    chain_id: string,
+    header: ?EosTxHeader,
+    num_actions: number,
+}
+
+export type EosAsset = {
+    amount: number,
+    symbol: number,
+}
+
+export type EosPermissionLevel = {
+    actor: number,
+    permission: number,
+}
+
+export type EosAuthorizationKey = {
+    type: number,
+    key: string,
+    weight: number,
+}
+
+export type EosAuthorizationAccount = {
+    account: EosPermissionLevel,
+    weight: number,
+}
+
+export type EosAuthorizationWait = {
+    wait_sec: number,
+    weight: number,
+}
+
+export type EosAuthorization = {
+    threshold: number,
+    keys: Array<EosAuthorizationKey>,
+    accounts: Array<EosAuthorizationAccount>,
+    waits: Array<EosAuthorizationWait>,
+}
+
+export type EosActionCommon = {
+    account: number,
+    name: number,
+    authorization: Array<EosPermissionLevel>,
+}
+
+export type EosActionTransfer = {
+    sender: number,
+    receiver: number,
+    quantity: EosAsset,
+    memo: string,
+}
+
+export type EosActionDelegate = {
+    sender: number,
+    receiver: number,
+    net_quantity: EosAsset,
+    cpu_quantity: EosAsset,
+    transfer: boolean,
+}
+
+export type EosActionUndelegate = {
+    sender: number,
+    receiver: number,
+    net_quantity: EosAsset,
+    cpu_quantity: EosAsset,
+}
+
+export type EosActionBuyRam = {
+    payer: number,
+    receiver: number,
+    quantity: EosAsset,
+}
+
+export type EosActionBuyRamBytes = {
+    payer: number,
+    receiver: number,
+    bytes: number,
+}
+
+export type EosActionSellRam = {
+    account: number,
+    bytes: number,
+}
+
+export type EosActionVoteProducer = {
+    voter: number,
+    proxy?: number,
+    producers: Array<number>,
+}
+
+export type EosActionRefund = {
+    owner: number,
+}
+
+export type EosActionUpdateAuth = {
+    account: number,
+    permission: number,
+    parent: number,
+    auth: EosAuthorization,
+}
+
+export type EosActionDeleteAuth = {
+    account: number,
+    permission: number,
+  }
+
+export type EosActionLinkAuth = {
+    account: number,
+    code: number,
+    type: number,
+    requirement: number,
+}
+
+export type EosActionUnlinkAuth = {
+    account: number,
+    code: number,
+    type: number,
+}
+
+export type EosActionNewAccount = {
+    creator: number,
+    name: number,
+    owner: EosAuthorization,
+    active: EosAuthorization,
+}
+
+export type EosActionUnknown = {
+    data_size: number,
+    data_chunk: string,
+}
+
+export type EosTxActionAck = {
+  common: ?EosActionCommon,
+  transfer: ?EosActionTransfer,
+  delegate: ?EosActionDelegate,
+  undelegate: ?EosActionUndelegate,
+  buy_ram: ?EosActionBuyRam,
+  buy_ram_bytes: ?EosActionBuyRamBytes,
+  sell_ram: ?EosActionSellRam,
+  vote_producer: ?EosActionVoteProducer,
+  refund: ?EosActionRefund,
+  update_auth: ?EosActionUpdateAuth,
+  delete_auth: ?EosActionDeleteAuth,
+  link_auth: ?EosActionLinkAuth,
+  unlink_auth: ?EosActionUnlinkAuth,
+  new_account: ?EosActionNewAccount,
+  unknown: ?EosActionUnknown,
+}
+
+export type EosSignedTx = {
+    signature_v: number,
+    signature_r: string,
+    signature_s: string,
+}
+
+// GetAccountInfo response
+export type AccountInfo = {
+    id: number,
+    path: Array<number>,
+    serializedPath: string,
+    xpub: string,
+    address: string,
+    addressIndex: number,
+    addressPath: Array<number>,
+    addressSerializedPath: string,
+    balance: number,
+    confirmed: number,
+}
+
 // GetAddress response
 export type Address = {
     address: string,
