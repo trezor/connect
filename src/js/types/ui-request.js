@@ -81,6 +81,7 @@ export type RequestConfirmation = {
     payload: {
         view: string,
         label: string,
+        customClassName?: string,
     },
 }
 
