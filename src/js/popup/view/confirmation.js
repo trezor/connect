@@ -14,15 +14,15 @@ export const initConfirmationView = (data: $PropertyType<RequestConfirmation, 'p
     // TODO: Check if correct class names for HTML views
     showView(data.view);
 
-    const { customClassName } = data;
-    if (typeof customClassName === 'string') {
-        const view = container.getElementsByClassName(data.view)[0];
-        view.classList.add(customClassName);
-    }
-
     const h3: HTMLElement = container.getElementsByTagName('h3')[0];
     const confirmButton: HTMLElement = container.getElementsByClassName('confirm')[0];
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
+
+    const { customConfirmButton } = data;
+    if (customConfirmButton) {
+        confirmButton.innerHTML = customConfirmButton.label;
+        confirmButton.classList.add(customConfirmButton.className);
+    }
 
     h3.innerHTML = data.label;
 
