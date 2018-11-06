@@ -1,6 +1,28 @@
 [
 	{
 		"required": false,
+		"version": [2, 0, 9],
+		"min_bridge_version": [2, 0, 7],
+		"min_firmware_version": [2, 0, 5],
+		"min_bootloader_version": [2, 0, 0],
+		"url": "data/firmware/2/trezor-2.0.9.bin.hex",
+		"beta": true,
+		"fingerprint": "87be93d6966e7a9eff78dc7b434d1a138ec8d1ee0300882d16f90b606f3a806b",
+		"changelog": "* stable release, optional update\nSmall Monero and Segwit bugfixes"
+	},
+	{
+		"required": false,
+		"version": [2, 0, 8],
+		"min_bridge_version": [2, 0, 7],
+		"min_firmware_version": [2, 0, 5],
+		"min_bootloader_version": [2, 0, 0],
+		"url": "data/firmware/2/trezor-2.0.8.bin.hex",
+		"beta": true,
+		"fingerprint": "642b6215bda981f8eacafee34dbee5cdeee7d47d49f605bbe2828a8d9b79813d",
+		"changelog": "* stable release, optional update\n* Monero support\n* Cardano support\n* Stellar support\n* Ripple support\n* Tezos support\n* Decred support\n* Groestlcoin support\n* Zencash support\n* Zcash sapling hardfork support\n* Implemented seedless setup"
+	},
+	{
+		"required": false,
 		"version": [2, 0, 7],
 		"min_bridge_version": [2, 0, 7],
 		"min_firmware_version": [2, 0, 5],
