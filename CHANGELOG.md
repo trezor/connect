@@ -1,3 +1,9 @@
+# 6.0.2
+__added__
+- Added `TrezorConnect.wipeDevice` method
+- Added `TrezorConnect.resetDevice` method
+- Calling method on device with seedless setup is disabled by default
+
 # 6.0.1
 __fixed__
 - WRONG_PREVIOUS_SESSION race condition when switching between tabs and acquiring device
