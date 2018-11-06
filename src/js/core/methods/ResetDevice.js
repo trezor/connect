@@ -21,7 +21,7 @@ export default class GetPublicKey extends AbstractMethod {
         this.allowDeviceMode = [ UI.INITIALIZE, UI.SEEDLESS ];
         this.useDeviceState = false;
         this.requiredPermissions = ['management'];
-        this.info = 'Reset device';
+        this.info = 'Setup device';
 
         const payload: Object = message.payload;
         // validate bundle type
