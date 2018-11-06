@@ -32,7 +32,10 @@ export default class GetPublicKey extends AbstractMethod {
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'device-management',
-            customClassName: 'wipe-device',
+            customConfirmButton: {
+                className: 'wipe',
+                label: `Wipe ${this.device.toMessageObject().label}`,
+            },
             label: 'Are you sure you want to wipe your device?',
         }));
 
