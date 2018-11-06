@@ -1,6 +1,18 @@
 [
 	{
 		"required": false,
+		"version": [1, 7, 1],
+		"min_bridge_version": [1, 1, 5],
+		"min_firmware_version": [1, 6, 2],
+		"min_bootloader_version": [1, 5, 0],
+		"url": "data/firmware/1/trezor-1.7.1.bin.hex",
+		"beta": true,
+		"rollout": 0.1,
+		"fingerprint": "1c303c50bb45d3f35da9e962d8405d0b8e89cc45e122496a48fce3995fa71d48",
+		"changelog": "* Stable release, optional update\n* Switch from HID to WebUSB\n* Add support for Stellar\n* Add support for Lisk\n* Add support for Zcash Sapling hardfork\n* Implement seedless setup"
+	},
+	{
+		"required": false,
 		"version": [1, 6, 3],
 		"min_bridge_version": [1, 1, 5],
 		"min_firmware_version": [1, 0, 0],
