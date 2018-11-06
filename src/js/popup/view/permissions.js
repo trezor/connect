@@ -44,7 +44,7 @@ const getPermissionTooltipText = (permissionType: string): string => {
             text = 'Permission needed to execute operations, such as composing a transaction, after your confirmation.';
             break;
         case 'management':
-            text = 'Permission needed to modify device settings, such as pin, passphrase, label or a seed.';
+            text = 'Permission needed to change device settings, such as PIN, passphrase, label or seed.';
             break;
         case 'custom-message':
             text = 'Development tool. Use at your own risk. Allows service to send arbitrary data to your Trezor device.';
