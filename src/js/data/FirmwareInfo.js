@@ -7,7 +7,11 @@ type Release = {
     required: true,
     version: Array<number>,
     min_bridge_version: Array<number>,
+    min_firmware_version: Array<number>,
+    min_bootloader_version: Array<number>,
     url: string,
+    beta: boolean,
+    rollout: number,
     fingerprint: string,
     changelog: string,
     notes: string,
@@ -38,4 +42,11 @@ export const checkFirmware = (fw: Array<number>): DeviceFirmwareStatus => {
         }
     }
     return 'valid';
+};
+
+export const getLatestRelease = (fw: Array<number>): ?Release => {
+    // find all releases for device model
+    const modelFirmware: Array<Release> = releases.filter(r => r.version[0] === fw[0]);
+    // find latest firmware for this model
+    return modelFirmware.find(r => r.version[1] > fw[1] || (r.version[1] === fw[1] && r.version[2] > fw[2]));
 };
