@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 trap 'cleanup' INT
 
 ################# Script vars
