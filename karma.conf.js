@@ -44,6 +44,7 @@ module.exports = function(config) {
             'src/__tests__/core/core.test.js',
             { pattern: 'src/__tests__/config.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/coins.json', included: false, served: true, nocache: true },
+            { pattern: 'src/data/bridge/releases.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/firmware/1/releases.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/firmware/2/releases.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/messages.json', included: false, served: true, nocache: true },
