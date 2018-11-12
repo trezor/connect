@@ -140,7 +140,7 @@ export default class DeviceCommands {
     }
 
     async getDeviceState(): Promise<string> {
-        const response: trezor.PublicKey = await this.getPublicKey([1, 0, 0]);
+        const response: trezor.PublicKey = await this.getPublicKey([(49 | 0x80000000) >>> 0, (1 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0]);
         const secret: string = `${response.xpub}#${this.device.features.device_id}#${this.device.instance}`;
         const state: string = this.device.getTemporaryState() || bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
         return state;
