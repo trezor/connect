@@ -1,6 +1,7 @@
 /* @flow */
 
 import { httpRequest } from '../utils/networkUtils';
+import { sendMessage } from '../utils/windowsUtils';
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/popup.less';
 
@@ -10,7 +11,7 @@ let config: Config;
 
 const onLoad = async () => {
     config = await httpRequest('./data/config.json', 'json');
-    window.top.postMessage('usb-permissions-init', '*');
+    sendMessage('usb-permissions-init', '*');
 };
 
 const init = (label: string) => {
@@ -32,7 +33,7 @@ const init = (label: string) => {
         if (usb) {
             try {
                 await usb.requestDevice({filters});
-                window.top.postMessage('usb-permissions-close', '*');
+                sendMessage('usb-permissions-close', '*');
             } catch (error) {
                 console.warn('Webusb error', error);
             }
@@ -40,7 +41,7 @@ const init = (label: string) => {
     };
 
     cancelButton.onclick = () => {
-        window.top.postMessage('usb-permissions-close', '*');
+        sendMessage('usb-permissions-close', '*');
     };
 };
 
