@@ -3,6 +3,9 @@ __added__
 - Added `TrezorConnect.wipeDevice` method
 - Added `TrezorConnect.resetDevice` method
 - Calling method on device with seedless setup is disabled by default
+__changed__
+- Post message to window.parent instead of window.top
+- Authenticating device using BTC testnet path instead of dummy m/1/0/0
 
 # 6.0.1
 __fixed__
