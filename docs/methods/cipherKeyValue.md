@@ -89,7 +89,7 @@ version 4 and below:
 ```javascript
 TrezorConnect.cipherKeyValue(
     "m/49'/0'/0'",     // path
-    "This is displayed on TREZOR during encrypt", // key
+    "This is displayed on Trezor during encrypt", // key
     "1c0ffeec0ffeec0ffeec0ffeec0ffee1",           // value
     true,              // encrypt
     true,              // ask on encrypt
@@ -104,7 +104,7 @@ version 5
 // params are key-value pairs inside Object
 TrezorConnect.cipherKeyValue({ 
     path: "m/49'/0'/0'",
-    key: "This is displayed on TREZOR during encrypt",
+    key: "This is displayed on Trezor during encrypt",
     value: "1c0ffeec0ffeec0ffeec0ffeec0ffee1",
     encrypt: true,
     askOnEncrypt: true,

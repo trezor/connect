@@ -1,6 +1,6 @@
-# TREZOR Connect API version 6.0.2
+# Trezor Connect API version 6.0.1
 
-TREZOR Connect is a platform for easy integration of TREZOR into 3rd party services. It provides API with functionality to access public keys, sign transactions and authenticate users. User interface is presented in a secure popup window served from `https://connect.trezor.io/6/popup.html`
+Trezor Connect is a platform for easy integration of Trezor into 3rd party services. It provides API with functionality to access public keys, sign transactions and authenticate users. User interface is presented in a secure popup window served from `https://connect.trezor.io/6/popup.html`
 
 * [Integration](docs/index.md)
 * [Development](https://wiki.trezor.io/Developers_guide:Trezor_Connect_API)

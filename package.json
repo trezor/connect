@@ -1,9 +1,9 @@
 {
   "name": "trezor-connect",
-  "version": "6.0.2",
-  "author": "TREZOR <info@trezor.io>",
+  "version": "6.0.1",
+  "author": "Trezor <info@trezor.io>",
   "homepage": "https://github.com/trezor/connect",
-  "description": "High-level javascript interface for TREZOR hardware wallet.",
+  "description": "High-level javascript interface for Trezor hardware wallet.",
   "license": "SEE LICENSE IN LICENSE.md",
   "repository": {
     "type": "git",
@@ -13,7 +13,7 @@
     "url": "https://github.com/trezor/connect/issues"
   },
   "keywords": [
-    "TREZOR",
+    "Trezor",
     "trezor-connect",
     "javascript"
   ],
@@ -27,7 +27,7 @@
     "build:inline": "webpack --config ./webpack/config.inline.babel.js --progress",
     "build:npm": "rm -rf npm && babel-node ./scripts/build-npm.js && babel ./npm/lib --out-dir ./npm/lib",
     "stats": "webpack --config ./webpack/config.prod.babel.js --json > build/stats.json",
-    "test": "sh ./src/__tests__/run.sh",
+    "test": "bash ./src/__tests__/run.sh",
     "flow": "flow check src/js",
     "flow-tests": "flow check src/__tests__",
     "eslint": "eslint src/js",

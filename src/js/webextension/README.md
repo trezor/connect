@@ -6,12 +6,12 @@ Basic implementation is same for both Google Chrome & Firefox. However, few addi
 
 
 1. Configure your manifest file ([Google Chrome](https://github.com/trezor/connect-explorer/blob/webextensions/manifest-chrome.json), [Firefox](https://github.com/trezor/connect-explorer/blob/webextensions/manifest-firefox.json))
-    * Because Trezor Connect is served from the `https://connect.trezor.io/5` domain you must grant permissions to `://connect.trezor.io/5/*` URL in your manifest file.
+    * Because Trezor Connect is served from the `https://connect.trezor.io/` domain you must grant permissions to `://connect.trezor.io/*` URL in your manifest file.
 
         ```JSON
         {
             "permissions": [
-                "*://connect.trezor.io/5/*"
+                "*://connect.trezor.io/*"
             ]
         }
         ```
@@ -42,21 +42,21 @@ Basic implementation is same for both Google Chrome & Firefox. However, few addi
 
     * Include `trezor-content-script.js` in a `"content-scripts"`
 
-        Trezor Connect may present a popup tab for certain actions. Since your code & Connect is running in a background script you need to allow communication between popup tab and background script explicitely using this Javascript [file](https://github.com/trezor/connect/blob/v5/src/js/webextension/trezor-content-script.js).
+        Trezor Connect may present a popup tab for certain actions. Since your code & Connect is running in a background script you need to allow communication between popup tab and background script explicitly using this Javascript [file](https://github.com/trezor/connect/blob/develop/src/js/webextension/trezor-content-script.js).
 
         ```JSON
         {
             "content_scripts": [
                 {
                 "matches": [
-                    "*://connect.trezor.io/5/popup.html"
+                    "*://connect.trezor.io/*/popup.html"
                 ],
                 "js": ["trezor-content-script.js"]
                 }
             ],
         }
         ```
-        Snippet above is basically saying _"Inject `trezor-content-script.js` into `connect.trezor.io/5/popup.html`"_.
+        Snippet above is basically saying _"Inject `trezor-content-script.js` into `connect.trezor.io/*/popup.html`"_.
 
 
 
@@ -111,7 +111,7 @@ However, if you're creating a Google Chrome extension you must complete one addi
 
 ## Google Chrome
 
-Chrome extension requires a special `trezor-usb-permissions.html` file served from the root of extension - you can get the file [here](https://github.com/trezor/connect/blob/v5/src/js/webextension/trezor-usb-permissions.html).
+Chrome extension requires a special `trezor-usb-permissions.html` file served from the root of extension - you can get the file [here](https://github.com/trezor/connect/blob/develop/src/js/webextension/trezor-usb-permissions.html).
 This page is displayed in case a user is using Trezor without Trezor Bridge installed.
 
-Lastly, you have to place [this](https://github.com/trezor/connect/blob/v5/src/js/webextension/trezor-usb-permissions.js) Javascript file into your `vendor/` folder.
+Lastly, you have to place [this](https://github.com/trezor/connect/blob/develop/src/js/webextension/trezor-usb-permissions.js) Javascript file into your `vendor/` folder.

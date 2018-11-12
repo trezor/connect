@@ -17,6 +17,7 @@ import { UiMessage, ResponseMessage } from '../message/builder';
 import type { CoreMessage, PostMessageEvent } from '../types';
 
 import Log, { init as initLog } from '../utils/debug';
+import { sendMessage } from '../utils/windowsUtils';
 import { checkBrowser, state as browserState } from '../utils/browser';
 import { getOrigin } from '../utils/networkUtils';
 import { load as loadStorage, PERMISSIONS_KEY } from './storage';
@@ -149,7 +150,7 @@ const postMessage = (message: CoreMessage): void => {
     } else {
         let origin: ?string = DataManager.getSettings('origin');
         if (!origin || origin.indexOf('file://') >= 0) origin = '*';
-        window.top.postMessage(message, origin);
+        sendMessage(message, origin);
     }
 };
 

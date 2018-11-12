@@ -1,7 +1,7 @@
 
 ## NEM: Sign transaction
 Asks device to sign given transaction. User is asked to confirm all transaction
-details on TREZOR.
+details on Trezor.
 
 ES6
 ```javascript
