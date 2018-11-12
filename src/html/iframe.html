@@ -16,7 +16,7 @@
 <body>
 
     <script type="text/javascript">
-        window.top.postMessage({
+        window.parent.postMessage({
             event: 'UI_EVENT',
             type: 'iframe-bootstrap',
         }, '*');
