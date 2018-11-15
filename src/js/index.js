@@ -396,6 +396,10 @@ class TrezorConnect {
         return await call({ method: 'pushTransaction', ...params });
     }
 
+    static rippleGetAccountInfo: $T.RippleGetAccountInfo = async (params) => {
+        return await call({ method: 'rippleGetAccountInfo', ...params });
+    }
+
     static rippleGetAddress: $T.RippleGetAddress = async (params) => {
         return await call({ method: 'rippleGetAddress', ...params });
     }
@@ -470,3 +474,8 @@ export type {
     EthereumAccount,
     Transaction as EthereumTransaction,
 } from './types/ethereum';
+
+export type {
+    RippleAccount,
+    Transaction as RippleTransaction,
+} from './types/ripple';

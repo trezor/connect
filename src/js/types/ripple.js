@@ -3,6 +3,39 @@
 import type { $Path, $Common } from './params';
 import type { Unsuccessful$ } from './response';
 
+// get account info
+
+export type RippleAccount = {
+    address: string,
+    path?: Array<number>,
+    serializedPath?: string,
+    block: number,
+    transactions: number,
+    balance: string,
+    availableBalance: string,
+    sequence: number,
+}
+
+export type $RippleGetAccountInfo = {
+    account: RippleAccount,
+    coin: string,
+}
+
+export type $$RippleGetAccountInfo = {
+    bundle: Array<RippleAccount>,
+    coin: string,
+}
+
+export type RippleGetAccountInfo$ = {
+    success: true,
+    payload: RippleAccount,
+} | Unsuccessful$;
+
+export type RippleGetAccountInfo$$ = {
+    success: true,
+    payload: Array<RippleAccount>,
+} | Unsuccessful$;
+
 // get address
 
 export type RippleAddress = {
