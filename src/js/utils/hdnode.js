@@ -7,20 +7,20 @@ import * as ecurve from 'ecurve';
 
 const curve = ecurve.getCurveByName('secp256k1');
 
-export function derivePubKeyHash(
+export const derivePubKeyHash = (
     nodes: Array<bitcoin.HDNode>,
     nodeIx: number,
     addressIx: number
-): Buffer {
+): Buffer => {
     const node = nodes[nodeIx].derive(addressIx);
     const pkh: Buffer = node.getIdentifier();
     return pkh;
-}
+};
 
-export function pubNode2bjsNode(
+const pubNode2bjsNode = (
     node: trezor.HDPubNode,
     network: bitcoin.Network
-): bitcoin.HDNode {
+): bitcoin.HDNode => {
     const chainCode = Buffer.from(node.chain_code, 'hex');
     const publicKey = Buffer.from(node.public_key, 'hex');
 
@@ -35,34 +35,40 @@ export function pubNode2bjsNode(
     res.parentFingerprint = node.fingerprint;
 
     return res;
-}
+};
 
-// stupid hack, because trezor serializes all xpubs with bitcoin magic
-export function convertXpub(original: string, network: bitcoin.Network) {
+export const convertXpub = (xpub: string, originalNetwork: bitcoin.Network, requestedNetwork?: bitcoin.Network): string => {
+    const node = bitcoin.HDNode.fromBase58(xpub, originalNetwork);
+    if (requestedNetwork) {
+        node.keyPair.network = requestedNetwork;
+    }
+    return node.toBase58();
+};
+
+// stupid hack, because older (1.7.1, 2.0.8) trezor FW serializes all xpubs with bitcoin magic
+export const convertBitcoinXpub = (xpub: string, network: bitcoin.Network): string => {
     if (network.bip32.public === 0x0488b21e) {
         // it's bitcoin-like => return xpub
-        return original;
+        return xpub;
     } else {
-        const node = bitcoin.HDNode.fromBase58(original); // use bitcoin magic
+        const node = bitcoin.HDNode.fromBase58(xpub); // use bitcoin magic
 
         // "hard-fix" the new network into the HDNode keypair
         node.keyPair.network = network;
         return node.toBase58();
     }
-}
+};
 
 // converts from internal PublicKey format to bitcoin.js HDNode
 // network info is necessary. throws error on wrong xpub
-export function pubKey2bjsNode(
+const pubKey2bjsNode = (
     key: trezor.PublicKey,
     network: bitcoin.Network
-): bitcoin.HDNode {
+): bitcoin.HDNode => {
     const keyNode: trezor.HDPubNode = key.node;
     const bjsNode: bitcoin.HDNode = pubNode2bjsNode(keyNode, network);
-
     const bjsXpub: string = bjsNode.toBase58();
     const keyXpub: string = convertXpub(key.xpub, network);
-
     if (bjsXpub !== keyXpub) {
         throw new Error('Invalid public key transmission detected - ' +
                     'invalid xpub check. ' +
@@ -71,15 +77,14 @@ export function pubKey2bjsNode(
     }
 
     return bjsNode;
-}
+};
 
-export function checkDerivation(
+const checkDerivation = (
     parBjsNode: bitcoin.HDNode,
     childBjsNode: bitcoin.HDNode,
     suffix: number
-): void {
+) => {
     const derivedChildBjsNode = parBjsNode.derive(suffix);
-
     const derivedXpub = derivedChildBjsNode.toBase58();
     const compXpub = childBjsNode.toBase58();
 
@@ -89,15 +94,19 @@ export function checkDerivation(
                     'Computed derived: ' + derivedXpub + ', ' +
                     'Computed received: ' + compXpub);
     }
-}
+};
 
-export const xpubDerive = (resXpub: trezor.PublicKey, childXPub: trezor.PublicKey, suffix: number): trezor.PublicKey => {
-    const resNode: bitcoin.HDNode = pubKey2bjsNode(resXpub, bitcoin.networks.bitcoin);
-    const childNode: bitcoin.HDNode = pubKey2bjsNode(childXPub, bitcoin.networks.bitcoin);
-
+export const xpubDerive = (xpub: trezor.PublicKey,
+    childXPub: trezor.PublicKey,
+    suffix: number,
+    network?: bitcoin.Network,
+    requestedNetwork?: bitcoin.Network
+): trezor.PublicKey => {
+    const resNode: bitcoin.HDNode = pubKey2bjsNode(xpub, network || bitcoin.networks.bitcoin);
+    const childNode: bitcoin.HDNode = pubKey2bjsNode(childXPub, network || bitcoin.networks.bitcoin);
     checkDerivation(resNode, childNode, suffix);
 
-    return resXpub;
+    return xpub;
 };
 
 export const xpubToHDNodeType = (xpub: string, network: bitcoin.Network): trezor.HDPubNode => {
