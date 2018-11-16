@@ -109,8 +109,7 @@ export default class DeviceCommands {
         path: Array<number>,
         coinInfo: ?CoinInfo
     ): Promise<trezor.HDNodeResponse> {
-        // if (!this.device.atLeast(['1.7.2', '2.0.10'])) {
-        if (!this.device.atLeast(['1.7.1', '2.0.8'])) {
+        if (!this.device.atLeast(['1.7.2', '2.0.10'])) {
             return await this.getBitcoinHDNode(path, coinInfo);
         }
         if (!coinInfo) {
@@ -131,7 +130,9 @@ export default class DeviceCommands {
         let scriptType: ?string = getScriptType(path);
         if (!network) {
             network = coinInfo.network;
-            scriptType = undefined;
+            if (scriptType !== 'SPENDADDRESS') {
+                scriptType = undefined;
+            }
         }
 
         const resKey: trezor.PublicKey = await this.getPublicKey(path, coinInfo.name, scriptType);
@@ -195,7 +196,7 @@ export default class DeviceCommands {
     }
 
     async getDeviceState(): Promise<string> {
-        const response: trezor.PublicKey = await this.getPublicKey([(49 | 0x80000000) >>> 0, (1 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0], 'Testnet');
+        const response: trezor.PublicKey = await this.getPublicKey([(44 | 0x80000000) >>> 0, (1 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0], 'Testnet', 'SPENDADDRESS');
         const secret: string = `${response.xpub}#${this.device.features.device_id}#${this.device.instance}`;
         const state: string = this.device.getTemporaryState() || bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
         return state;
