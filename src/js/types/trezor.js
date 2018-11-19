@@ -152,6 +152,7 @@ export type RefTransaction = {
     bin_outputs: Array<TransactionBinOutput>,
     lock_time: number,
     extra_data: ?string,
+    timestamp: number,
 };
 
 export type TxRequestDetails = {

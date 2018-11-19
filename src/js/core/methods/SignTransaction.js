@@ -94,7 +94,13 @@ export default class SignTransaction extends AbstractMethod {
             outputs: payload.outputs,
             coinInfo,
             push: payload.hasOwnProperty('push') ? payload.push : false,
+            timestamp: payload.hasOwnProperty('timestamp') ? payload.timestamp : 0,
         };
+
+        if (coinInfo.hasTimestamp && !payload.hasOwnProperty('timestamp')) {
+            var d = new Date();
+            this.params.timestamp = Math.round(d.getTime() / 1000);
+        }
     }
 
     async run(): Promise<SignedTx> {
@@ -109,6 +115,7 @@ export default class SignTransaction extends AbstractMethod {
             this.params.outputs,
             refTxs,
             this.params.coinInfo,
+            this.params.timestamp,
         );
 
         if (this.params.push) {

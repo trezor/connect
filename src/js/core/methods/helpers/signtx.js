@@ -63,6 +63,7 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
                 lock_time: reqTx.lock_time,
                 inputs_cnt: reqTx.inputs.length,
                 outputs_cnt: outputCount,
+                timestamp: reqTx.timestamp,
             };
         }
     }
@@ -172,6 +173,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
     outputs: Array<TransactionOutput>,
     refTxs: Array<RefTransaction>,
     coinInfo: CoinInfo,
+    timestamp: number,
     locktime: ?number,
 ): Promise<SignedTx> => {
     // TODO rbf
@@ -188,6 +190,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
         outputs_count: outputs.length,
         coin_name: coinInfo.name,
         lock_time: locktime,
+        timestamp: timestamp
     });
 
     const signed: SignedTx = await processTxRequest(

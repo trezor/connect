@@ -357,6 +357,13 @@
                     "type": "uint32",
                     "name": "version_group_id",
                     "id": 8
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "timestamp",
+                    "id": 9
                 }
             ],
             "enums": [],
