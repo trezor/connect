@@ -219,7 +219,6 @@
                 "Low": 1,
                 "Normal": 14
             },
-            "duplicate": true,
             "dust_limit": 546,
             "force_bip143": false,
             "fork_id": null,

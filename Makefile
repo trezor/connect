@@ -52,7 +52,7 @@ protobuf:
 # Build coin definitions
 coins:
 	# make submodules
-	./submodules/trezor-common/tools/cointool.py dump -p -d connect -e icon -e cooldown -e github -e key -e maintainer -e uri_prefix -e version_group_id -e website -e links -o ./src/data/coins.json
+	./submodules/trezor-common/tools/cointool.py dump -p -d connect -e icon -e cooldown -e github -e key -e maintainer -e uri_prefix -e version_group_id -e website -e links -e duplicate -o ./src/data/coins.json
 
 .DEFAULT_GOAL:= default
 default:
