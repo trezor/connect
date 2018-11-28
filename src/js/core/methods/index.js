@@ -5,8 +5,9 @@ import type { CoreMessage } from '../../types';
 
 import AbstractMethod from './AbstractMethod';
 
-import BlockchainDisconnect from './BlockchainDisconnect';
-import BlockchainSubscribe from './BlockchainSubscribe';
+import BlockchainDisconnect from './blockchain/BlockchainDisconnect';
+import BlockchainGetFee from './blockchain/BlockchainGetFee';
+import BlockchainSubscribe from './blockchain/BlockchainSubscribe';
 import CardanoGetAddress from './CardanoGetAddress';
 import CardanoGetPublicKey from './CardanoGetPublicKey';
 import CardanoSignTransaction from './CardanoSignTransaction';
@@ -31,6 +32,7 @@ import LiskSignTransaction from './LiskSignTransaction';
 import PushTransaction from './PushTransaction';
 import RequestLogin from './RequestLogin';
 import ResetDevice from './ResetDevice';
+import RippleGetAccountInfo from './RippleGetAccountInfo';
 import RippleGetAddress from './RippleGetAddress';
 import RippleSignTransaction from './RippleSignTransaction';
 import NEMGetAddress from './NEMGetAddress';
@@ -44,6 +46,7 @@ import WipeDevice from './WipeDevice';
 
 const classes: {[k: string]: any} = {
     'blockchainDisconnect': BlockchainDisconnect,
+    'blockchainGetFee': BlockchainGetFee,
     'blockchainSubscribe': BlockchainSubscribe,
     'cardanoGetAddress': CardanoGetAddress,
     'cardanoGetPublicKey': CardanoGetPublicKey,
@@ -69,6 +72,7 @@ const classes: {[k: string]: any} = {
     'pushTransaction': PushTransaction,
     'requestLogin': RequestLogin,
     'resetDevice': ResetDevice,
+    'rippleGetAccountInfo': RippleGetAccountInfo,
     'rippleGetAddress': RippleGetAddress,
     'rippleSignTransaction': RippleSignTransaction,
     'nemGetAddress': NEMGetAddress,

@@ -1,16 +1,16 @@
 /* @flow */
 'use strict';
 
-import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
-import * as BLOCKCHAIN from '../../constants/blockchain';
-import { NO_COIN_INFO } from '../../constants/errors';
+import AbstractMethod from '../AbstractMethod';
+import { validateParams } from '../helpers/paramsValidator';
+import * as BLOCKCHAIN from '../../../constants/blockchain';
+import { NO_COIN_INFO } from '../../../constants/errors';
 
-import BlockBook, { find as findBackend } from '../../backend';
-import { getCoinInfoByCurrency, getEthereumNetwork } from '../../data/CoinInfo';
-import { BlockchainMessage } from '../../message/builder';
+import BlockBook, { find as findBackend } from '../../../backend';
+import { getCoinInfoByCurrency, getEthereumNetwork } from '../../../data/CoinInfo';
+import { BlockchainMessage } from '../../../message/builder';
 import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage } from '../../../types';
 
 type Params = {
     coinInfo: CoinInfo | EthereumNetworkInfo,
