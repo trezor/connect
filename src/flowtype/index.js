@@ -7,20 +7,20 @@ declare module 'CSSModule' {
 
 // Override Navigator to have access to "usb" field
 declare var navigator: Navigator & {
-    +usb?: USB;
+    +usb?: USB,
 };
 
 declare type ChromeTab = {
-    id: number;
-    index: number;
+    id: number,
+    index: number,
 }
 
 declare type ChromePort = {
-    name: string;
-    onMessage: (message: Object) => void;
-    postMessage: (message: Object) => void;
-    sender: any;
-    disconnect: () => void;
+    name: string,
+    onMessage: (message: Object) => void,
+    postMessage: (message: Object) => void,
+    sender: any,
+    disconnect: () => void,
 }
 
 declare function $RuntimeSendMessage(message: any, options: Object, callback: () => void): void;
@@ -28,35 +28,34 @@ declare function $RuntimeSendMessage(id: string, message: any, options: ?Object,
 
 declare var chrome: {
     runtime: {
-        id: string;
+        id: string,
         onConnect: {
-            addListener: ((port: ChromePort) => void) => void;
-            removeListener: ((port: ChromePort) => void) => void;
-        };
-        sendMessage: typeof $RuntimeSendMessage;
-        lastError?: string;
+            addListener: ((port: ChromePort) => void) => void,
+            removeListener: ((port: ChromePort) => void) => void,
+        },
+        sendMessage: typeof $RuntimeSendMessage,
+        lastError?: string,
     },
     tabs: {
         create: ({
-            url?: string;
-            index?: number;
-        }, callback?: (tab: ?ChromeTab) => void) => void;
-        get: (id: number, callback: (tab: ?ChromeTab) => void) => void;
-        highlight: (options: Object, callback?: () => void) => void;
-        update: (id: number, options: Object) => void;
-        remove: (id: number) => void;
-    }
+            url?: string,
+            index?: number,
+        }, callback?: (tab: ?ChromeTab) => void) => void,
+        get: (id: number, callback: (tab: ?ChromeTab) => void) => void,
+        highlight: (options: Object, callback?: () => void) => void,
+        update: (id: number, options: Object) => void,
+        remove: (id: number) => void,
+    },
 }
 
 declare interface BroadcastChannel {
-    constructor: (id: string) => void;
-    onmessage: (message: Object) => void;
-    postMessage: (message: Object) => void;
+    constructor: (id: string) => void,
+    onmessage: (message: Object) => void,
+    postMessage: (message: Object) => void,
 }
 
 // Common types used across library
 declare module 'flowtype' {
-
     import type {
         Network as BitcoinJsNetwork,
     } from 'bitcoinjs-lib-zcash';
@@ -67,19 +66,19 @@ declare module 'flowtype' {
     }
 
     declare export type BrowserState = {
-        name: string;
-        osname: string;
-        supported: boolean;
-        outdated: boolean;
-        mobile: boolean;
+        name: string,
+        osname: string,
+        supported: boolean,
+        outdated: boolean,
+        mobile: boolean,
     }
 
     declare type CoinSupport = {
         connect: boolean,
-        // "electrum": "https://electrum.org/",
+        // electrum not used,
         trezor1: string,
         trezor2: string,
-        // "webwallet": true
+        // webwallet not used
     }
 
     declare export type CoinInfo = {
@@ -135,24 +134,36 @@ declare module 'flowtype' {
     declare export type EthereumNetworkInfo = {
         bitcore: Array<string>, // compatibility
         blockbook: Array<string>,
-        chain: string;
-        chainId: number;
+        chain: string,
+        chainId: number,
         // key not used
-        name: string;
-        rskip60: boolean;
-        shortcut: string;
-        slip44: number;
-        support: CoinSupport;
+        name: string,
+        rskip60: boolean,
+        shortcut: string,
+        slip44: number,
+        support: CoinSupport,
         // url not used
     }
 
+    declare export type MiscNetworkInfo = {
+        bitcore: Array<string>, // compatibility
+        blockbook: Array<string>, // compatibility
+        curve: string,
+        // key not used
+        // links not used
+        name: string,
+        shortcut: string,
+        slip44: number,
+        support: CoinSupport,
+    }
+
     declare export type SimpleAccount = {
-        id: number;
-        path: Array<number>;
-        coinInfo: CoinInfo;
-        xpub: string;
+        id: number,
+        path: Array<number>,
+        coinInfo: CoinInfo,
+        xpub: string,
         label: string,
-        balance: number;
-        transactions: number;
+        balance: number,
+        transactions: number,
     }
 }
