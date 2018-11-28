@@ -27,7 +27,7 @@ build: ${ENTRY} ${SOCKET_WORKER} ${DISCOVERY_WORKER} node_modules submodules
 		-d \
 	| ${BIN}/exorcist ${DISCOVERY_WORKER_TARGET}.map > ${DISCOVERY_WORKER_TARGET}
 	cp ${TREZOR_CRYPTO} ${TREZOR_CRYPTO_TARGET}
-	cp ${COINS_JSON} ${COINS_JSON_TARGET}
+	# cp ${COINS_JSON} ${COINS_JSON_TARGET}
 
 build-fast: 
 	${BIN}/browserify ${ENTRY} \
