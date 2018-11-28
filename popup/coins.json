@@ -32,8 +32,11 @@
 	"min_address_length": 27,
 	"max_address_length": 34,
 	"bitcore": [
-		"https://btc-bitcore3.trezor.io",
-		"https://btc-bitcore1.trezor.io"
+		"https://btc1.trezor.io",
+		"https://btc2.trezor.io",
+		"https://btc3.trezor.io",
+		"https://btc4.trezor.io",
+		"https://btc5.trezor.io"
 	]
 },
 {
@@ -66,8 +69,8 @@
 	"min_address_length": 27,
 	"max_address_length": 34,
 	"bitcore": [
-		"https://testnet-bitcore1.trezor.io",
-		"https://testnet-bitcore2.trezor.io"
+		"https://tbtc1.trezor.io",
+		"https://tbtc2.trezor.io"
 	]
 },
 {
@@ -103,7 +106,11 @@
 	"min_address_length": 27,
 	"max_address_length": 34,
 	"bitcore": [
-		"https://bch-bitcore2.trezor.io"
+		"https://bch1.trezor.io",
+		"https://bch2.trezor.io",
+		"https://bch3.trezor.io",
+		"https://bch4.trezor.io",
+		"https://bch5.trezor.io"
 	]
 },
 {
@@ -198,7 +205,11 @@
 	"min_address_length": 27,
 	"max_address_length": 34,
 	"bitcore": [
-		"https://ltc-bitcore3.trezor.io"
+		"https://ltc1.trezor.io",
+		"https://ltc2.trezor.io",
+		"https://ltc3.trezor.io",
+		"https://ltc4.trezor.io",
+		"https://ltc5.trezor.io"
 	]
 },
 {
@@ -262,8 +273,11 @@
 	"min_address_length": 27,
 	"max_address_length": 34,
 	"bitcore": [
-		"https://dash-bitcore1.trezor.io",
-		"https://dash-bitcore3.trezor.io"
+		"https://dash1.trezor.io",
+		"https://dash2.trezor.io",
+		"https://dash3.trezor.io",
+		"https://dash4.trezor.io",
+		"https://dash5.trezor.io"
 	]
 },
 {
@@ -296,7 +310,11 @@
 	"min_address_length": 35,
 	"max_address_length": 95,
 	"bitcore": [
-		"https://zec-bitcore1.trezor.io/"
+		"https://zec1.trezor.io",
+		"https://zec2.trezor.io",
+		"https://zec3.trezor.io",
+		"https://zec4.trezor.io",
+		"https://zec5.trezor.io"
 	]
 },
 {
@@ -363,7 +381,11 @@
 	"min_address_length": 27,
 	"max_address_length": 34,
 	"bitcore": [
-		"https://btg-bitcore2.trezor.io"
+		"https://btg1.trezor.io",
+		"https://btg2.trezor.io",
+		"https://btg3.trezor.io",
+		"https://btg4.trezor.io",
+		"https://btg5.trezor.io"
 	]
 },
 {

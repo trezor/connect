@@ -37,7 +37,7 @@ const CONFIG_URL = './config_signed.bin';
 var CHUNK_SIZE = 20;
 var GAP_LENGTH = 20;
 const ADDRESS_VERSION = 0x0;
-var BITCORE_URLS = ['https://btc-bitcore3.trezor.io', 'https://btc-bitcore1.trezor.io'];
+var BITCORE_URLS = ['https://btc1.trezor.io', 'https://btc2.trezor.io', 'https://btc3.trezor.io', 'https://btc4.trezor.io', 'https://btc5.trezor.io'];
 var CURRENCY;
 var CURRENCY_UNITS;
 var ACCOUNT_DISCOVERY_LIMIT = 10;
