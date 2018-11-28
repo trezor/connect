@@ -195,55 +195,6 @@
             "xpub_magic_segwit_p2sh": 77429938
         },
         {
-            "address_type": 28,
-            "address_type_p2sh": 35,
-            "bech32_prefix": null,
-            "bip115": false,
-            "bitcore": [],
-            "blockbook": [
-                "https://blockbook.capricoin.org",
-                "https://blockbook2.capricoin.org",
-                "https://blockbook3.capricoin.org",
-                "https://blockbook4.capricoin.org"
-            ],
-            "blocktime_seconds": 60,
-            "cashaddr_prefix": null,
-            "coin_label": "Capricoin",
-            "coin_name": "Capricoin",
-            "coin_shortcut": "CPC",
-            "curve_name": "secp256k1",
-            "decred": false,
-            "default_fee_b": {
-                "Economy": 7,
-                "High": 20,
-                "Low": 1,
-                "Normal": 14
-            },
-            "dust_limit": 546,
-            "force_bip143": false,
-            "fork_id": null,
-            "hash_genesis_block": "000007abc632537def4bce0806ca008150b19363f887ad0cb5cf582804f8bc3d",
-            "max_address_length": 34,
-            "maxfee_kb": 2000000,
-            "min_address_length": 27,
-            "minfee_kb": 1000,
-            "name": "Capricoin",
-            "segwit": false,
-            "shortcut": "CPC",
-            "signed_message_header": "Capricoin Signed Message:\n",
-            "slip44": 289,
-            "support": {
-                "connect": true,
-                "trezor1": "soon",
-                "trezor2": "soon",
-                "webwallet": false
-            },
-            "xprv_magic": 76066276,
-            "xpub_magic": 76067358,
-            "xpub_magic_segwit_native": 78792518,
-            "xpub_magic_segwit_p2sh": 77429938
-        },
-        {
             "address_type": 76,
             "address_type_p2sh": 16,
             "bech32_prefix": null,
