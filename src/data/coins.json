@@ -325,11 +325,11 @@
         "address_type_p2sh": 196,
         "bech32_prefix": "tb",
         "bip115": false,
-        "bitcore": [
-            "https://testnet-bitcore1.trezor.io",
-            "https://testnet-bitcore2.trezor.io"
+        "bitcore": [],
+        "blockbook": [
+            "https://tbtc1.trezor.io",
+            "https://tbtc2.trezor.io"
         ],
-        "blockbook": [],
         "blocktime_seconds": 600,
         "cashaddr_prefix": null,
         "coin_label": "Testnet",
