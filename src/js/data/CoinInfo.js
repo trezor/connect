@@ -6,7 +6,7 @@ import { toHardened, fromHardened } from '../utils/pathUtils';
 import type {
     Network as BitcoinJsNetwork,
 } from 'bitcoinjs-lib-zcash';
-import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
+import type { CoinInfo, EthereumNetworkInfo, MiscNetworkInfo } from 'flowtype';
 
 const coins: Array<CoinInfo> = [];
 
@@ -212,6 +212,35 @@ export const getEthereumNetwork = (pathOrName: Array<number> | string): ?Ethereu
     }
 };
 
+export const miscNetworks: Array<MiscNetworkInfo> = [];
+
+export const parseMiscNetworksJSON = (json: JSON): void => {
+    const networksObject: Object = json;
+    Object.keys(networksObject).forEach(key => {
+        const network = networksObject[key];
+        miscNetworks.push({
+            blockbook: network.blockbook || [], // legacy compatibility with bitcoin coinInfo
+            bitcore: [], // legacy compatibility with bitcoin coinInfo
+            curve: network.curve,
+            name: network.name,
+            shortcut: network.shortcut,
+            slip44: network.slip44,
+            support: network.support,
+        });
+    });
+};
+
+export const getMiscNetwork = (pathOrName: Array<number> | string): ?MiscNetworkInfo => {
+    console.warn('GET MISC', pathOrName, miscNetworks);
+    if (typeof pathOrName === 'string') {
+        const name: string = pathOrName.toLowerCase();
+        return miscNetworks.find(n => n.name.toLowerCase() === name || n.shortcut.toLowerCase() === name);
+    } else {
+        const slip44: number = fromHardened(pathOrName[1]);
+        return miscNetworks.find(n => n.slip44 === slip44);
+    }
+};
+
 export const parseCoinsJson = (json: JSON): void => {
     const coinsObject: Object = json;
     Object.keys(coinsObject).forEach(key => {
@@ -220,6 +249,8 @@ export const parseCoinsJson = (json: JSON): void => {
                 return parseBitcoinNetworksJson(coinsObject[key]);
             case 'eth' :
                 return parseEthereumNetworksJson(coinsObject[key]);
+            case 'misc' :
+                return parseMiscNetworksJSON(coinsObject[key]);
         }
     });
 };
