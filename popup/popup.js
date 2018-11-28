@@ -28,7 +28,7 @@ const HD_HARDENED = 0x80000000;
 const CHUNK_SIZE = 20;
 const GAP_LENGTH = 20;
 const ADDRESS_VERSION = 0x0;
-const BITCORE_URLS = ['https://bitcore3.trezor.io', 'https://bitcore1.trezor.io'];
+const BITCORE_URLS = ['https://btc1.trezor.io', 'https://btc2.trezor.io', 'https://btc3.trezor.io', 'https://btc4.trezor.io', 'https://btc5.trezor.io'];
 
 const SOCKET_WORKER_PATH = './socket-worker-dist.js';
 const CRYPTO_WORKER_PATH = './trezor-crypto-dist.js';
