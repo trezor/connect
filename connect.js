@@ -40,8 +40,11 @@ this.TrezorConnect = (function () {
 
     var INSIGHT_URLS = window.TREZOR_INSIGHT_URLS || 
         [
-            'https://bitcore1.trezor.io/api/',
-            'https://bitcore3.trezor.io/api/',
+            'https://btc1.trezor.io/api/',
+            'https://btc2.trezor.io/api/',
+            'https://btc3.trezor.io/api/',
+            'https://btc4.trezor.io/api/',
+            'https://btc5.trezor.io/api/'
         ];
 
     var POPUP_INIT_TIMEOUT = 15000;
