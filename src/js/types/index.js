@@ -10,7 +10,6 @@ import * as TRANSPORT from '../constants/transport';
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
 import * as DEVICE from '../constants/device';
-import * as BLOCKCHAIN from '../constants/blockchain';
 
 export type CoreMessage = {
     +event: string,
@@ -131,18 +130,14 @@ export type TransportMessage = {
     payload: Object,
 }
 
-export type BlockchainMessageType = $Values<typeof BLOCKCHAIN>;
-export type BlockchainMessage = {
-    event: typeof BLOCKCHAIN_EVENT,
-    type: BlockchainMessageType,
-    payload: Object,
-}
+import type { BlockchainEvent } from './blockchain-events';
+export type { BlockchainEvent } from './blockchain-events';
 
 /* eslint-disable no-redeclare */
 declare function F_EventListener(type: typeof DEVICE_EVENT, handler: (event: DeviceMessage) => void): void;
 declare function F_EventListener(type: typeof UI_EVENT, handler: (event: UiMessage) => void): void;
 declare function F_EventListener(type: typeof TRANSPORT_EVENT, handler: (event: TransportMessage) => void): void;
-declare function F_EventListener(type: typeof BLOCKCHAIN_EVENT, handler: (event: BlockchainMessage) => void): void;
+declare function F_EventListener(type: typeof BLOCKCHAIN_EVENT, handler: (event: BlockchainEvent) => void): void;
 declare function F_EventListener(type: DeviceMessageType, handler: (device: Device) => void): void;
 export type EventListener = typeof F_EventListener;
 
@@ -158,6 +153,7 @@ import * as LISK from './lisk';
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
 export type BlockchainDisconnect = (P.$BlockchainDisconnect) => Promise<R.BlockchainDisconnect$>;
+export type BlockchainGetFee = (P.$BlockchainGetFee) => Promise<R.BlockchainGetFee$>;
 export type BlockchainSubscribe = (P.$BlockchainSubscribe) => Promise<R.BlockchainSubscribe$>;
 export type CustomMessage = (P.$CustomMessage) => Promise<R.CustomMessage$>;
 export type RequestLogin = (P.$RequestLogin) => Promise<R.RequestLogin$>;

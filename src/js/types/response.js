@@ -25,6 +25,11 @@ export type BlockchainDisconnect$ = {
     },
 } | Unsuccessful$;
 
+export type BlockchainGetFee$ = {
+    success: true,
+    payload: string,
+} | Unsuccessful$;
+
 export type BlockchainSubscribe$ = {
     success: true,
     payload: {

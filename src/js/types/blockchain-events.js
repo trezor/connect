@@ -2,39 +2,41 @@
 
 import * as BLOCKCHAIN from '../constants/blockchain';
 import type { CoreMessage } from './index';
-import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
-
-type BlockchainBlock = {
-    +type: typeof BLOCKCHAIN.BLOCK,
-    +payload: {
-        hash: string,
-        height: number,
-        coin: CoinInfo | EthereumNetworkInfo,
-    },
-}
-
-type BlockchainNotification = {
-    +type: typeof BLOCKCHAIN.NOTIFICATION,
-    +payload: {
-        notification: any, // TODO: specify notification type
-        coin: CoinInfo | EthereumNetworkInfo,
-    },
-}
+// TODO: move those to public import type { CoinInfo, EthereumNetworkInfo, MiscNetworkInfo } from 'flowtype';
 
 type BlockchainConnect = {
-    +type: typeof BLOCKCHAIN.CONNECT,
-    +payload: {
-        coin: CoinInfo | EthereumNetworkInfo,
+    type: typeof BLOCKCHAIN.CONNECT,
+    payload: {
+        coin: any,
     },
 }
 
 type BlockchainError = {
-    +type: typeof BLOCKCHAIN.ERROR,
-    +payload: {
+    type: typeof BLOCKCHAIN.ERROR,
+    payload: {
         error: string,
-        coin: CoinInfo | EthereumNetworkInfo,
+        coin: any,
     },
 }
+
+type BlockchainBlock = {
+    type: typeof BLOCKCHAIN.BLOCK,
+    payload: {
+        hash: string,
+        height: number,
+        coin: any,
+    },
+}
+
+type BlockchainNotification = {
+    type: typeof BLOCKCHAIN.NOTIFICATION,
+    payload: {
+        notification: any, // TODO: specify notification type
+        coin: any,
+    },
+}
+
+export type BlockchainEvent = BlockchainConnect | BlockchainError | BlockchainBlock | BlockchainNotification;
 
 /* eslint-disable no-redeclare */
 declare function MessageFactory(type: $PropertyType<BlockchainBlock, 'type'>, payload: $PropertyType<BlockchainBlock, 'payload'>): CoreMessage;
