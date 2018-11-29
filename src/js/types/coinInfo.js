@@ -9,7 +9,7 @@ type CoinSupport = {
 };
 
 // copy-paste from 'bitcoinjs-lib-zcash' module
-type BitcoinJsNetwork = {
+type Network = {
     messagePrefix: string,
     bech32: ?string,
     bip32: {
@@ -64,7 +64,7 @@ export type BitcoinNetworkInfo = {
     xPubMagicSegwit: ?number,
 
     // custom
-    network: BitcoinJsNetwork,
+    network: Network,
     zcash: boolean,
     isBitcoin: boolean,
     minFee: number,

@@ -1,9 +1,7 @@
 /* @flow */
 'use strict';
 
-import {
-    address as BitcoinJSAddress,
-} from 'bitcoinjs-lib-zcash';
+import { address as BitcoinJSAddress } from 'bitcoinjs-lib-zcash';
 import bchaddrjs from 'bchaddrjs';
 import type { BitcoinNetworkInfo } from '../types';
 
