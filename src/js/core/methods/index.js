@@ -8,6 +8,7 @@ import AbstractMethod from './AbstractMethod';
 import BlockchainDisconnect from './blockchain/BlockchainDisconnect';
 import BlockchainGetFee from './blockchain/BlockchainGetFee';
 import BlockchainSubscribe from './blockchain/BlockchainSubscribe';
+import BlockchainUnsubscribe from './blockchain/BlockchainUnsubscribe';
 import CardanoGetAddress from './CardanoGetAddress';
 import CardanoGetPublicKey from './CardanoGetPublicKey';
 import CardanoSignTransaction from './CardanoSignTransaction';
@@ -48,6 +49,7 @@ const classes: {[k: string]: any} = {
     'blockchainDisconnect': BlockchainDisconnect,
     'blockchainGetFee': BlockchainGetFee,
     'blockchainSubscribe': BlockchainSubscribe,
+    'blockchainUnsubscribe': BlockchainUnsubscribe,
     'cardanoGetAddress': CardanoGetAddress,
     'cardanoGetPublicKey': CardanoGetPublicKey,
     'cardanoSignTransaction': CardanoSignTransaction,

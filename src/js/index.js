@@ -244,6 +244,10 @@ class TrezorConnect {
         return await call({ method: 'blockchainSubscribe', ...params });
     }
 
+    static blockchainUnsubscribe: $T.BlockchainSubscribe = async (params) => {
+        return await call({ method: 'blockchainUnsubscribe', ...params });
+    }
+
     static customMessage: $T.CustomMessage = async (params) => {
         if (typeof params.callback !== 'function') {
             return {
