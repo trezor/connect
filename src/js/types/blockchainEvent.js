@@ -2,11 +2,12 @@
 
 import * as BLOCKCHAIN from '../constants/blockchain';
 import type { CoreMessage } from './index';
+import type { CoinInfo } from './coinInfo';
 
 export type BlockchainConnect = {
     type: typeof BLOCKCHAIN.CONNECT,
     payload: {
-        coin: any,
+        coin: CoinInfo,
         info: {
             fee: string,
             block: number,
@@ -17,15 +18,15 @@ export type BlockchainConnect = {
 export type BlockchainError = {
     type: typeof BLOCKCHAIN.ERROR,
     payload: {
+        coin: CoinInfo,
         error: string,
-        coin: any,
     },
 }
 
 export type BlockchainBlock = {
     type: typeof BLOCKCHAIN.BLOCK,
     payload: {
-        coin: any,
+        coin: CoinInfo,
         block: number,
         hash: string,
     },
@@ -34,8 +35,8 @@ export type BlockchainBlock = {
 export type BlockchainNotification = {
     type: typeof BLOCKCHAIN.NOTIFICATION,
     payload: {
+        coin: CoinInfo,
         notification: any, // TODO: specify notification type
-        coin: any,
     },
 }
 
