@@ -7,8 +7,7 @@ import { NO_COIN_INFO } from '../../../constants/errors';
 
 import { create as createBlockchainBackend } from '../../../backend/BlockchainLink';
 import { getMiscNetwork } from '../../../data/CoinInfo';
-import type { MiscNetworkInfo } from 'flowtype';
-import type { CoreMessage } from '../../../types';
+import type { CoreMessage, MiscNetworkInfo } from '../../../types';
 
 type Params = {
     coinInfo: MiscNetworkInfo,
@@ -41,7 +40,7 @@ export default class BlockchainDisconnect extends AbstractMethod {
     }
 
     async run(): Promise<{ disconnected: true }> {
-        const backend = await createBlockchainBackend(this.params.coinInfo);
+        const backend = await createBlockchainBackend(this.params.coinInfo, this.postMessage);
         return await backend.getFee();
     }
 }

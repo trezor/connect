@@ -8,15 +8,14 @@ import { NO_COIN_INFO } from '../../../constants/errors';
 
 import { create as createBlockbookBackend } from '../../../backend';
 import { create as createBlockchainBackend } from '../../../backend/BlockchainLink';
-import { getCoinInfoByCurrency, getEthereumNetwork, getMiscNetwork } from '../../../data/CoinInfo';
+import { getCoinInfo } from '../../../data/CoinInfo';
 import { BlockchainMessage } from '../../../message/builder';
-import type { CoinInfo, EthereumNetworkInfo, MiscNetworkInfo } from 'flowtype';
-import type { CoreMessage } from '../../../types';
+import type { CoreMessage, CoinInfo } from '../../../types';
 
 type Params = {
     accounts: Array<string>,
     useBlockchainLink: boolean,
-    coinInfo: CoinInfo | EthereumNetworkInfo | MiscNetworkInfo,
+    coinInfo: CoinInfo,
 }
 
 export default class BlockchainSubscribe extends AbstractMethod {
@@ -35,19 +34,12 @@ export default class BlockchainSubscribe extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
-        let useBlockchainLink = false;
-        let coinInfo: ?(CoinInfo | EthereumNetworkInfo | MiscNetworkInfo) = getCoinInfoByCurrency(payload.coin);
-        if (!coinInfo) {
-            coinInfo = getEthereumNetwork(payload.coin);
-        }
-        if (!coinInfo) {
-            coinInfo = getMiscNetwork(payload.coin);
-            useBlockchainLink = true;
-        }
-
+        const coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         }
+
+        const useBlockchainLink = coinInfo.shortcut === 'xrp';
 
         this.params = {
             accounts: payload.accounts,
@@ -65,34 +57,8 @@ export default class BlockchainSubscribe extends AbstractMethod {
     }
 
     async subscribeBlockchainLink(): Promise<{ subscribed: true }> {
-        const backend = await createBlockchainBackend(this.params.coinInfo);
-
-        backend.subscribe(
-            this.params.accounts,
-            (hash, height) => {
-                this.postMessage(new BlockchainMessage(BLOCKCHAIN.BLOCK, {
-                    coin: this.params.coinInfo,
-                    hash,
-                    height,
-                }));
-            },
-            notification => {
-                this.postMessage(new BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
-                    coin: this.params.coinInfo,
-                    notification,
-                }));
-            },
-            error => {
-                this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
-                    coin: this.params.coinInfo,
-                    error: error.message,
-                }));
-            }
-        );
-
-        this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
-            coin: this.params.coinInfo,
-        }));
+        const backend = await createBlockchainBackend(this.params.coinInfo, this.postMessage);
+        backend.subscribe(this.params.accounts);
 
         return {
             subscribed: true,
@@ -100,16 +66,18 @@ export default class BlockchainSubscribe extends AbstractMethod {
     }
 
     async subscribeHDWallet(): Promise<{ subscribed: true }> {
+        const { coinInfo } = this.params;
+        if (coinInfo.type !== 'bitcoin' && coinInfo.type !== 'ethereum') throw new Error('Invalid CoinInfo object');
         // initialize backend
-        const backend = await createBlockbookBackend(this.params.coinInfo);
+        const backend = await createBlockbookBackend(coinInfo);
 
         backend.subscribe(
             this.params.accounts,
-            (hash, height) => {
+            (hash, block) => {
                 this.postMessage(new BlockchainMessage(BLOCKCHAIN.BLOCK, {
                     coin: this.params.coinInfo,
                     hash,
-                    height,
+                    block,
                 }));
             },
             notification => {
@@ -128,6 +96,10 @@ export default class BlockchainSubscribe extends AbstractMethod {
 
         this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
             coin: this.params.coinInfo,
+            info: {
+                fee: '0',
+                block: 0,
+            },
         }));
 
         return {

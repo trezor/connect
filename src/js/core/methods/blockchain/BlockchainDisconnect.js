@@ -7,13 +7,12 @@ import * as BLOCKCHAIN from '../../../constants/blockchain';
 import { NO_COIN_INFO } from '../../../constants/errors';
 
 import BlockBook, { find as findBackend } from '../../../backend';
-import { getCoinInfoByCurrency, getEthereumNetwork } from '../../../data/CoinInfo';
+import { getCoinInfo } from '../../../data/CoinInfo';
 import { BlockchainMessage } from '../../../message/builder';
-import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
-import type { CoreMessage } from '../../../types';
+import type { CoreMessage, CoinInfo } from '../../../types';
 
 type Params = {
-    coinInfo: CoinInfo | EthereumNetworkInfo,
+    coinInfo: CoinInfo,
 }
 
 export default class BlockchainDisconnect extends AbstractMethod {
@@ -34,9 +33,9 @@ export default class BlockchainDisconnect extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
-        let coinInfo: ?(CoinInfo | EthereumNetworkInfo) = getCoinInfoByCurrency(payload.coin);
+        let coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
-            coinInfo = getEthereumNetwork(payload.coin);
+            coinInfo = getCoinInfo(payload.coin);
         }
 
         if (!coinInfo) {
