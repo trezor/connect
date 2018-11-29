@@ -1,6 +1,5 @@
-import { SRC, JS_SRC, NODE_MODULES } from './constants';
+import { SRC, JS_SRC } from './constants';
 
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import webpack from 'webpack';
 
@@ -13,7 +12,7 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                use: ['babel-loader']
+                use: ['babel-loader'],
             },
             {
                 test: /\.less$/,
@@ -21,11 +20,11 @@ module.exports = {
                 use: [
                     {
                         loader: MiniCssExtractPlugin.loader,
-                        options: { publicPath: '../' }
+                        options: { publicPath: '../' },
                     },
                     'css-loader',
                     'less-loader',
-                ]
+                ],
             },
             {
                 test: /\.(png|gif|jpg)$/,
@@ -33,7 +32,7 @@ module.exports = {
                 query: {
                     outputPath: './images',
                     name: '[name].[ext]',
-                }
+                },
             },
             {
                 test: /\.(ttf|eot|svg|woff|woff2)$/,
@@ -61,7 +60,7 @@ module.exports = {
                     name: '[name].[ext]',
                 },
             },
-        ]
+        ],
     },
 
     resolve: {
@@ -69,7 +68,7 @@ module.exports = {
         alias: {
             'flowtype/tests/get-address': `${ SRC }/flowtype/tests/get-address.js`,
             'flowtype/tests/sign-message': `${ SRC }/flowtype/tests/sign-message.js`,
-        }
+        },
     },
 
     plugins: [
@@ -82,6 +81,6 @@ module.exports = {
     ],
 
     node: {
-        fs: "empty"
-    }
-}
+        fs: 'empty',
+    },
+};

@@ -28,25 +28,25 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                use: ['babel-loader']
+                use: ['babel-loader'],
             },
-        ]
+        ],
     },
     resolve: {
         modules: [ SRC, NODE_MODULES ],
     },
     performance: {
-        hints: false
+        hints: false,
     },
     plugins: [
         new WebpackPreBuildPlugin(() => {
             compileInlineCss();
         }),
 
-        new webpack.optimize.OccurrenceOrderPlugin()
+        new webpack.optimize.OccurrenceOrderPlugin(),
     ],
 
     // optimization: {
     //     minimize: false
     // }
-}
+};
