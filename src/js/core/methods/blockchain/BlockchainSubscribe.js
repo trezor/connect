@@ -14,7 +14,6 @@ import type { CoreMessage, CoinInfo } from '../../../types';
 
 type Params = {
     accounts: Array<string>,
-    useBlockchainLink: boolean,
     coinInfo: CoinInfo,
 }
 
@@ -39,24 +38,21 @@ export default class BlockchainSubscribe extends AbstractMethod {
             throw NO_COIN_INFO;
         }
 
-        const useBlockchainLink = coinInfo.shortcut === 'xrp';
-
         this.params = {
             accounts: payload.accounts,
             coinInfo,
-            useBlockchainLink,
         };
     }
 
     async run(): Promise<{ subscribed: true }> {
-        if (this.params.useBlockchainLink) {
-            return await this.subscribeBlockchainLink();
+        if (this.params.coinInfo.type === 'ripple') {
+            return await this.subscribeBlockchain();
         } else {
-            return await this.subscribeHDWallet();
+            return await this.subscribeBlockbook();
         }
     }
 
-    async subscribeBlockchainLink(): Promise<{ subscribed: true }> {
+    async subscribeBlockchain(): Promise<{ subscribed: true }> {
         const backend = await createBlockchainBackend(this.params.coinInfo, this.postMessage);
         backend.subscribe(this.params.accounts);
 
@@ -65,7 +61,7 @@ export default class BlockchainSubscribe extends AbstractMethod {
         };
     }
 
-    async subscribeHDWallet(): Promise<{ subscribed: true }> {
+    async subscribeBlockbook(): Promise<{ subscribed: true }> {
         const { coinInfo } = this.params;
         if (coinInfo.type !== 'bitcoin' && coinInfo.type !== 'ethereum') throw new Error('Invalid CoinInfo object');
         // initialize backend
