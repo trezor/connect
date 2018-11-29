@@ -29,9 +29,8 @@ import Log, { init as initLog, enable as enableLog } from '../utils/debug';
 import { parse as parseSettings } from '../data/ConnectSettings';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
-import type { UiPromiseResponse } from 'flowtype';
-import type { Device as DeviceTyped, Deferred, CoreMessage } from '../types';
-import type { TransportInfo } from '../types/ui-request';
+import type { Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse } from '../types';
+import type { TransportInfo } from '../types/uiRequest';
 
 // Public variables
 // eslint-disable-next-line no-use-before-define

@@ -470,8 +470,9 @@ export type {
     UiMessage,
     TransportMessageType,
     TransportMessage,
-    BlockchainEvent,
 } from './types';
+
+export * from './types/blockchainEvent';
 
 export type {
     EthereumAccount,

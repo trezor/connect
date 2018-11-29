@@ -3,12 +3,12 @@
 
 import BlockBook from '../../../../backend';
 import type { FeeHandler } from './index';
-import type { CoinInfo } from 'flowtype';
-import type { FeeLevel, FeeLevelInfo } from 'flowtype/fee';
+import type { BitcoinNetworkInfo } from '../../../../types';
+import type { FeeLevel, FeeLevelInfo } from '../../../../types/fee';
 
 let feeLevels: $ReadOnlyArray<FeeLevel> = [];
 
-async function detectWorking(backend: BlockBook, coinInfo: CoinInfo): Promise<boolean> {
+async function detectWorking(backend: BlockBook, coinInfo: BitcoinNetworkInfo): Promise<boolean> {
     feeLevels = Object.keys(coinInfo.defaultFees)
         .sort((levelA, levelB) =>
             coinInfo.defaultFees[levelB] - coinInfo.defaultFees[levelA]

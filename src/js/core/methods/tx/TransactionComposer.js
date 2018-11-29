@@ -15,7 +15,7 @@ import type {
     BuildTxResult,
 } from 'hd-wallet';
 
-import type { FeeLevel, CustomFeeLevel, SelectFeeLevel } from 'flowtype/fee';
+import type { FeeLevel, CustomFeeLevel, SelectFeeLevel } from '../../../types/fee';
 
 const customFeeLevel: CustomFeeLevel = {
     name: 'custom',

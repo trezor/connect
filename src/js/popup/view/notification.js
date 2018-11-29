@@ -3,7 +3,7 @@
 
 import { views } from './common';
 import { getLatestRelease } from '../../data/FirmwareInfo';
-import type { UnexpectedDeviceMode } from '../../types/ui-request';
+import type { UnexpectedDeviceMode } from '../../types/uiRequest';
 
 export const showFirmwareUpdateNotification = (device: $PropertyType<UnexpectedDeviceMode, 'payload'>): void => {
     const container: HTMLElement = document.getElementsByClassName('notification')[0];

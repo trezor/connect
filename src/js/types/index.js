@@ -11,6 +11,8 @@ import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
 import * as DEVICE from '../constants/device';
 
+export * from './coinInfo';
+
 export type CoreMessage = {
     +event: string,
     +type: string,
@@ -18,7 +20,12 @@ export type CoreMessage = {
 
     id?: number, // response id in ResponseMessage
     success?: boolean, // response status in ResponseMessage
-}
+};
+
+export type UiPromiseResponse = {
+    event: string,
+    payload: any,
+};
 
 // Override MessageEvent type to have access to "ports" field and typed "data"
 export interface PostMessageEvent extends Event {
@@ -66,7 +73,7 @@ export type Features = {
     fw_vendor_keys: string,
     unfinished_backup: boolean,
     no_backup: boolean,
-}
+};
 
 export type DeviceStatus = 'available' | 'occupied' | 'used';
 export type DeviceMode = 'normal' | 'bootloader' | 'initialize' | 'seedless';
@@ -98,7 +105,7 @@ export type Settings = {
     transportReconnect?: boolean,
     webusb?: boolean,
     pendingTransportEvent?: boolean,
-}
+};
 
 export type T_POPUP = typeof POPUP;
 export type DeviceMessageType = $Values<typeof DEVICE>;
@@ -121,7 +128,7 @@ export type UiMessage = {
     },
 }
 
-export type { UiResponse } from './ui-response';
+export type { UiResponse } from './uiResponse';
 
 export type TransportMessageType = $Values<typeof TRANSPORT>;
 export type TransportMessage = {
@@ -130,8 +137,7 @@ export type TransportMessage = {
     payload: Object,
 }
 
-import type { BlockchainEvent } from './blockchain-events';
-export type { BlockchainEvent } from './blockchain-events';
+import type { BlockchainEvent } from './blockchainEvent';
 
 /* eslint-disable no-redeclare */
 declare function F_EventListener(type: typeof DEVICE_EVENT, handler: (event: DeviceMessage) => void): void;

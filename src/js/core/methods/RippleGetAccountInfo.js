@@ -12,8 +12,7 @@ import { UiMessage } from '../../message/builder';
 
 import { create as createBackend } from '../../backend/BlockchainLink';
 
-import type { MiscNetworkInfo } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, MiscNetworkInfo } from '../../types';
 import type { RippleAccount } from '../../types/ripple';
 
 type Params = {
@@ -78,7 +77,7 @@ export default class RippleGetAccountInfo extends AbstractMethod {
 
     async run(): Promise<RippleAccount | Array<RippleAccount>> {
         // initialize backend
-        const blockchain = await createBackend(this.params.coinInfo);
+        const blockchain = await createBackend(this.params.coinInfo, this.postMessage);
 
         const responses: Array<RippleAccount> = [];
 

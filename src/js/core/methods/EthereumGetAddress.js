@@ -13,8 +13,7 @@ import { UiMessage } from '../../message/builder';
 
 import type { EthereumAddress } from '../../types/trezor';
 import type { EthereumAddress as EthereumAddressResponse } from '../../types/ethereum';
-import type { CoreMessage } from '../../types';
-import type { EthereumNetworkInfo } from 'flowtype';
+import type { CoreMessage, EthereumNetworkInfo } from '../../types';
 
 type Batch = {
     path: Array<number>,

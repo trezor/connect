@@ -2,16 +2,19 @@
 
 import * as BLOCKCHAIN from '../constants/blockchain';
 import type { CoreMessage } from './index';
-// TODO: move those to public import type { CoinInfo, EthereumNetworkInfo, MiscNetworkInfo } from 'flowtype';
 
-type BlockchainConnect = {
+export type BlockchainConnect = {
     type: typeof BLOCKCHAIN.CONNECT,
     payload: {
         coin: any,
+        info: {
+            fee: string,
+            block: number,
+        },
     },
 }
 
-type BlockchainError = {
+export type BlockchainError = {
     type: typeof BLOCKCHAIN.ERROR,
     payload: {
         error: string,
@@ -19,16 +22,16 @@ type BlockchainError = {
     },
 }
 
-type BlockchainBlock = {
+export type BlockchainBlock = {
     type: typeof BLOCKCHAIN.BLOCK,
     payload: {
-        hash: string,
-        height: number,
         coin: any,
+        block: number,
+        hash: string,
     },
 }
 
-type BlockchainNotification = {
+export type BlockchainNotification = {
     type: typeof BLOCKCHAIN.NOTIFICATION,
     payload: {
         notification: any, // TODO: specify notification type

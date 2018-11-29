@@ -2,7 +2,7 @@
 'use strict';
 
 import type { DefaultMessageResponse } from '../../../device/DeviceCommands';
-import type { CoinInfo } from 'flowtype';
+import type { BitcoinNetworkInfo } from '../../../types';
 import type {
     TxRequest,
     RefTransaction,
@@ -171,7 +171,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
     inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>,
     refTxs: Array<RefTransaction>,
-    coinInfo: CoinInfo,
+    coinInfo: BitcoinNetworkInfo,
     locktime: ?number,
 ): Promise<SignedTx> => {
     // TODO rbf

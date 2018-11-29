@@ -11,9 +11,9 @@ import Device from './Device';
 
 import { getSegwitNetwork } from '../data/CoinInfo';
 
-import type { CoinInfo } from 'flowtype';
+import type { BitcoinNetworkInfo } from '../types';
 import type { Transport } from 'trezor-link';
-import * as trezor from '../types/trezor'; // flowtype
+import * as trezor from '../types/trezor'; // flowtype only
 
 export type MessageResponse<T> = {
     type: string,
@@ -105,7 +105,7 @@ export default class DeviceCommands {
     // Validation of xpub
     async getHDNode(
         path: Array<number>,
-        coinInfo: ?CoinInfo
+        coinInfo: ?BitcoinNetworkInfo
     ): Promise<trezor.HDNodeResponse> {
         const suffix: number = 0;
         const childPath: Array<number> = path.concat([suffix]);
@@ -146,7 +146,7 @@ export default class DeviceCommands {
         return state;
     }
 
-    async getAddress(address_n: Array<number>, coinInfo: CoinInfo, showOnTrezor: boolean): Promise<trezor.Address> {
+    async getAddress(address_n: Array<number>, coinInfo: BitcoinNetworkInfo, showOnTrezor: boolean): Promise<trezor.Address> {
         const response: Object = await this.typedCall('GetAddress', 'Address', {
             address_n,
             coin_name: coinInfo.name,

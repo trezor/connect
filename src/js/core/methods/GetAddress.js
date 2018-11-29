@@ -4,7 +4,7 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getRequiredFirmware } from './helpers/paramsValidator';
 import { validatePath, getLabel } from '../../utils/pathUtils';
-import { getCoinInfoByCurrency, getCoinInfoFromPath, fixCoinInfoNetwork } from '../../data/CoinInfo';
+import { getBitcoinNetwork, fixCoinInfoNetwork } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
 import { uniqBy } from 'lodash';
 
@@ -12,12 +12,11 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { Address } from '../../types/trezor';
-import type { CoinInfo } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 
 type Batch = {
     path: Array<number>,
-    coinInfo: CoinInfo,
+    coinInfo: BitcoinNetworkInfo,
     showOnTrezor: boolean,
 }
 type Params = {
@@ -57,15 +56,15 @@ export default class GetAddress extends AbstractMethod {
             ]);
 
             const path: Array<number> = validatePath(batch.path, 3);
-            let coinInfo: ?CoinInfo;
+            let coinInfo: ?BitcoinNetworkInfo;
             if (batch.coin) {
-                coinInfo = getCoinInfoByCurrency(batch.coin);
+                coinInfo = getBitcoinNetwork(batch.coin);
             }
 
             if (coinInfo && !batch.crossChain) {
                 validateCoinPath(coinInfo, path);
             } else if (!coinInfo) {
-                coinInfo = getCoinInfoFromPath(path);
+                coinInfo = getBitcoinNetwork(path);
             }
 
             let showOnTrezor: boolean = true;
@@ -100,7 +99,7 @@ export default class GetAddress extends AbstractMethod {
         if (bundle.length === 1) {
             this.info = getLabel('Export #NETWORK address', bundle[0].coinInfo);
         } else {
-            const requestedNetworks: Array<?CoinInfo> = bundle.map(b => b.coinInfo);
+            const requestedNetworks: Array<?BitcoinNetworkInfo> = bundle.map(b => b.coinInfo);
             const uniqNetworks = uniqBy(requestedNetworks, (ci) => { return ci ? ci.shortcut : null; });
             if (uniqNetworks.length === 1 && uniqNetworks[0]) {
                 this.info = getLabel('Export multiple #NETWORK addresses', uniqNetworks[0]);

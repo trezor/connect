@@ -4,15 +4,14 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath } from './helpers/paramsValidator';
 import { validatePath, getLabel } from '../../utils/pathUtils';
-import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../data/CoinInfo';
+import { getBitcoinNetwork } from '../../data/CoinInfo';
 import type { MessageSignature } from '../../types/trezor';
-import type { CoinInfo } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 
 type Params = {
     path: Array<number>,
     message: string,
-    coinInfo: ?CoinInfo,
+    coinInfo: ?BitcoinNetworkInfo,
 }
 
 export default class SignMessage extends AbstractMethod {
@@ -33,12 +32,12 @@ export default class SignMessage extends AbstractMethod {
         ]);
 
         const path: Array<number> = validatePath(payload.path);
-        let coinInfo: ?CoinInfo;
+        let coinInfo: ?BitcoinNetworkInfo;
         if (payload.coin) {
-            coinInfo = getCoinInfoByCurrency(payload.coin);
+            coinInfo = getBitcoinNetwork(payload.coin);
             validateCoinPath(coinInfo, path);
         } else {
-            coinInfo = getCoinInfoFromPath(path);
+            coinInfo = getBitcoinNetwork(path);
         }
 
         this.info = getLabel('Sign #NETWORK message', coinInfo);

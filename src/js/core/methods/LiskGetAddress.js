@@ -8,9 +8,8 @@ import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathU
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { UiPromiseResponse } from 'flowtype';
 import type { LiskAddress } from '../../types/trezor';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse } from '../../types';
 import type { LiskAddress as LiskAddressResponse } from '../../types/lisk';
 
 type Batch = {

@@ -8,8 +8,8 @@ import { formatAmount } from '../../utils/formatUtils';
 
 import { container, showView, postMessage } from './common';
 
-import type { SimpleAccount } from 'flowtype';
-import type { SelectAccount } from '../../types/ui-request';
+import type { BitcoinAccount } from '../../types/account';
+import type { SelectAccount } from '../../types/uiRequest';
 
 export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>): void => {
     if (!payload || !Array.isArray(payload.accounts)) return;
@@ -56,7 +56,7 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>):
         if (defaultButton) { buttonContainer.removeChild(defaultButton); }
     };
 
-    const updateButtonValue = (button: HTMLButtonElement, account: SimpleAccount): void => {
+    const updateButtonValue = (button: HTMLButtonElement, account: BitcoinAccount): void => {
         if (button.innerHTML.length < 1) {
             button.innerHTML = `
                 <span class="account-title"></span>
