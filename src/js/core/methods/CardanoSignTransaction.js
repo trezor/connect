@@ -14,7 +14,7 @@ type Params = {
     inputs: Array<CardanoTxInput>,
     outputs: Array<CardanoTxOutput>,
     transactions: Array<string>,
-    network: number,
+    protocol_magic: number,
 }
 
 export default class CardanoSignTransaction extends AbstractMethod {
@@ -23,7 +23,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = ['0', '2.0.8'];
+        this.requiredFirmware = ['0', '2.0.11'];
         this.info = 'Sign Cardano transaction';
 
         const payload: Object = message.payload;
@@ -32,7 +32,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
             { name: 'transactions', type: 'array', obligatory: true },
-            { name: 'network', type: 'number', obligatory: true },
+            { name: 'protocol_magic', type: 'number', obligatory: true },
         ]);
 
         const inputs: Array<CardanoTxInput> = payload.inputs.map(input => {
@@ -73,7 +73,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             inputs,
             outputs,
             transactions: payload.transactions,
-            network: payload.network,
+            protocol_magic: payload.protocol_magic,
         };
     }
 
@@ -83,7 +83,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             this.params.inputs,
             this.params.outputs,
             this.params.transactions,
-            this.params.network,
+            this.params.protocol_magic,
         );
 
         return {

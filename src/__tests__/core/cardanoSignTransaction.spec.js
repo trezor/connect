@@ -35,7 +35,7 @@ export const cardanoSignTransaction = (): TestFunction => {
             inputs,
             outputs,
             transactions,
-            network: 2,
+            protocol_magic: 764824073,
         },
     ];
 

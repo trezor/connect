@@ -28,7 +28,7 @@ export default class CardanoGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['0', '2.0.8'];
+        this.requiredFirmware = ['0', '2.0.11'];
 
         // create a bundle with only one batch if bundle doesn't exists
         const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;

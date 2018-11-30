@@ -31,14 +31,14 @@ export default class CardanoGetPublicKey extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['0', '2.0.8'];
+        this.requiredFirmware = ['0', '2.0.11'];
         this.info = 'Export Cardano public key';
 
         const payload: Object = message.payload;
         let bundledResponse: boolean = true;
         // create a bundle with only one batch
         if (!payload.hasOwnProperty('bundle')) {
-            payload.bundle = [ ...payload ];
+            payload.bundle = [...payload];
             bundledResponse = false;
         }
 
@@ -85,7 +85,7 @@ export default class CardanoGetPublicKey extends AbstractMethod {
         if (this.params.bundle.length > 1) {
             label = 'Export multiple Cardano public keys';
         } else {
-            label = `Export Cardano public key for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) }`;
+            label = `Export Cardano public key for account #${(fromHardened(this.params.bundle[0].path[2]) + 1)}`;
         }
 
         // request confirmation view

@@ -73,7 +73,7 @@ export type $CardanoSignTransaction = $Common & {
     inputs: Array<CardanoInput>,
     outputs: Array<CardanoOutput>,
     transactions: Array<string>,
-    network: number,
+    protocol_magic: number,
 }
 
 export type CardanoSignedTx = {

@@ -1021,8 +1021,8 @@
                     "rule": "optional",
                     "options": {},
                     "type": "uint32",
-                    "name": "network",
-                    "id": 4
+                    "name": "protocol_magic",
+                    "id": 5
                 }
             ],
             "enums": [],
