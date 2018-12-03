@@ -16,13 +16,25 @@ export type RippleAccount = {
     sequence: number,
 }
 
+type RequestedAccount = {
+    address: string,
+    block?: number,
+    mempool?: boolean,
+    history?: boolean,
+} | {
+    path: string,
+    block?: number,
+    mempool?: boolean,
+    history?: boolean,
+};
+
 export type $RippleGetAccountInfo = {
-    account: RippleAccount,
+    account: RequestedAccount,
     coin: string,
 }
 
 export type $$RippleGetAccountInfo = {
-    bundle: Array<RippleAccount>,
+    bundle: Array<RequestedAccount>,
     coin: string,
 }
 

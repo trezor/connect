@@ -58,10 +58,11 @@ export default class Blockchain {
         return await blockchain.getInfo();
     }
 
-    async getAccountInfo(descriptor: string) {
+    async getAccountInfo(descriptor: string, history: ?boolean) {
         const blockchain = BlockchainLink.get(this.coinInfo.shortcut);
         return await blockchain.getAccountInfo({
             descriptor,
+            history,
         });
     }
 
@@ -73,20 +74,23 @@ export default class Blockchain {
     async subscribe(accounts: Array<string>): Promise<void> {
         const blockchain = BlockchainLink.get(this.coinInfo.shortcut);
 
-        blockchain.on('block', (hash, block) => {
-            this.postMessage(new BlockchainMessage(BLOCKCHAIN.BLOCK, {
-                coin: this.coinInfo,
-                hash,
-                block,
-            }));
-        });
+        if (blockchain.listenerCount('block') === 0) {
+            blockchain.on('block', (data) => {
+                this.postMessage(new BlockchainMessage(BLOCKCHAIN.BLOCK, {
+                    coin: this.coinInfo,
+                    ...data,
+                }));
+            });
+        }
 
-        blockchain.on('notification', notification => {
-            this.postMessage(new BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
-                coin: this.coinInfo,
-                notification,
-            }));
-        });
+        if (blockchain.listenerCount('notification') === 0) {
+            blockchain.on('notification', notification => {
+                this.postMessage(new BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
+                    coin: this.coinInfo,
+                    notification,
+                }));
+            });
+        }
 
         blockchain.subscribe({
             type: 'block',

@@ -17,6 +17,7 @@ import type { RippleAccount } from '../../types/ripple';
 
 type Params = {
     accounts: Array<RippleAccount>,
+    history: boolean,
     coinInfo: MiscNetworkInfo,
     bundledResponse: boolean,
 }
@@ -34,6 +35,7 @@ export default class RippleGetAccountInfo extends AbstractMethod {
 
         const payload: Object = message.payload;
         let bundledResponse: boolean = true;
+        let willUseDevice: boolean = false;
         // create a bundle with only one batch
         if (!payload.hasOwnProperty('bundle')) {
             payload.bundle = [ ...payload.account ];
@@ -50,8 +52,10 @@ export default class RippleGetAccountInfo extends AbstractMethod {
             validateParams(batch, [
                 { name: 'address', type: 'string' },
                 { name: 'path', type: 'string' },
-                { name: 'block', type: 'number', obligatory: true },
-                { name: 'transactions', type: 'number', obligatory: true },
+                { name: 'block', type: 'number' },
+                { name: 'transactions', type: 'number' },
+                { name: 'mempool', type: 'boolean' },
+                { name: 'history', type: 'boolean' },
             ]);
             if (!batch.path && !batch.address) {
                 throw new Error('Path or address is missing in account');
@@ -59,6 +63,7 @@ export default class RippleGetAccountInfo extends AbstractMethod {
             // validate path if exists
             if (batch.path) {
                 batch.path = validatePath(batch.path, 5);
+                willUseDevice = true;
             }
         });
 
@@ -66,10 +71,13 @@ export default class RippleGetAccountInfo extends AbstractMethod {
         if (!network) {
             throw NO_COIN_INFO;
         }
+
         this.requiredFirmware = getRequiredFirmware(network, this.requiredFirmware);
+        this.useDevice = willUseDevice;
 
         this.params = {
             accounts: payload.bundle,
+            history: payload.history,
             coinInfo: network,
             bundledResponse,
         };
@@ -93,7 +101,7 @@ export default class RippleGetAccountInfo extends AbstractMethod {
                 account.serializedPath = getSerializedPath(path);
             }
 
-            const freshInfo = await blockchain.getAccountInfo(account.address);
+            const freshInfo = await blockchain.getAccountInfo(account.address, this.params.history);
             const info = {
                 ...account,
                 ...freshInfo,
