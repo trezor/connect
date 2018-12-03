@@ -37,8 +37,8 @@ export default class PushTransaction extends AbstractMethod {
             throw NO_COIN_INFO;
         }
 
-        if (!/^[0-9A-Fa-f]*$/.test(payload.tx)) {
-            throw new Error('Transaction must be hexadecimal');
+        if (coinInfo.type === 'bitcoin' && !/^[0-9A-Fa-f]*$/.test(payload.tx)) {
+            throw new Error('Invalid params: Transaction must be hexadecimal');
         }
 
         this.params = {
@@ -48,7 +48,7 @@ export default class PushTransaction extends AbstractMethod {
     }
 
     async run(): Promise<{ txid: string }> {
-        if (this.params.coinInfo.type === 'ripple') {
+        if (this.params.coinInfo.type === 'misc') {
             return await this.pushBlockchain();
         } else {
             return await this.pushBlockbook();
@@ -65,7 +65,7 @@ export default class PushTransaction extends AbstractMethod {
 
     async pushBlockbook(): Promise<{ txid: string }> {
         const { coinInfo } = this.params;
-        if (coinInfo.type !== 'bitcoin' && coinInfo.type !== 'ethereum') throw new Error('Invalid CoinInfo object');
+        if (coinInfo.type === 'misc') throw new Error('Invalid CoinInfo object');
 
         const backend = await createBlockbookBackend(coinInfo);
         const txid: string = await backend.sendTransactionHex(this.params.tx);
