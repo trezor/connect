@@ -45,7 +45,7 @@ export default class BlockchainUnsubscribe extends AbstractMethod {
     }
 
     async run(): Promise<{ subscribed: true }> {
-        if (this.params.coinInfo.type === 'ripple') {
+        if (this.params.coinInfo.type === 'misc') {
             return await this.subscribeBlockchain();
         } else {
             return await this.subscribeBlockbook();
@@ -63,7 +63,7 @@ export default class BlockchainUnsubscribe extends AbstractMethod {
 
     async subscribeBlockbook(): Promise<{ subscribed: true }> {
         const { coinInfo } = this.params;
-        if (coinInfo.type !== 'bitcoin' && coinInfo.type !== 'ethereum') throw new Error('Invalid CoinInfo object');
+        if (coinInfo.type === 'misc') throw new Error('Invalid CoinInfo object');
         // initialize backend
         const backend = await createBlockbookBackend(coinInfo);
 
