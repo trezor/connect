@@ -155,6 +155,7 @@ import * as ETHEREUM from './ethereum';
 import * as NEM from './nem';
 import * as STELLAR from './stellar';
 import * as LISK from './lisk';
+import * as TEZOS from './tezos';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
@@ -177,6 +178,20 @@ declare function F_CardanoGetPublicKey(params: (P.$Common & { bundle: Array<CARD
 export type CardanoGetPublicKey = typeof F_CardanoGetPublicKey;
 
 export type CardanoSignTransaction = (CARDANO.$CardanoSignTransaction) => Promise<CARDANO.CardanoSignTransaction$>;
+
+/* eslint-disable no-redeclare */
+declare function F_TezosGetAddress(params: (P.$Common & TEZOS.$TezosGetAddress)): Promise<TEZOS.TezosGetAddress$>;
+declare function F_TezosGetAddress(params: (P.$Common & { bundle: Array<TEZOS.$TezosGetAddress> })): Promise<TEZOS.TezosGetAddress$$>;
+/* eslint-enable no-redeclare */
+export type TezosGetAddress = typeof F_TezosGetAddress;
+
+/* eslint-disable no-redeclare */
+declare function F_TezosGetPublicKey(params: (P.$Common & TEZOS.$TezosGetPublicKey)): Promise<TEZOS.TezosGetPublicKey$>;
+declare function F_TezosGetPublicKey(params: (P.$Common & { bundle: Array<TEZOS.$TezosGetPublicKey> })): Promise<TEZOS.TezosGetPublicKey$$>;
+/* eslint-enable no-redeclare */
+export type TezosGetPublicKey = typeof F_TezosGetPublicKey;
+
+export type TezosSignTransaction = (TEZOS.$TezosSignTransaction) => Promise<TEZOS.TezosSignTransaction$>;
 
 /* eslint-disable no-redeclare */
 declare function F_CipherKeyValue(params: (P.$Common & P.$CipherKeyValue)): Promise<R.CipherKeyValue$>;

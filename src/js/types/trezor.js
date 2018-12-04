@@ -493,6 +493,78 @@ export type StellarOperationMessage = {
     bump_to: number,
 }
 
+// Tezos types
+export type TezosAddress = {
+    address: string,
+}
+
+export type TezosPublicKey = {
+    public_key: string,
+}
+
+type TezosContractID = {
+    tag: Array<number>,
+    hash: string,
+}
+
+export type TezosRevealOp = {
+    source: TezosContractID,
+    fee: number,
+    counter: number,
+    gas_limit: number,
+    storage_limit: number,
+    public_key: string,
+}
+
+export type TezosTransactionOp = {
+    source: TezosContractID,
+    destination: TezosContractID,
+    amount: number,
+    parameters?: Array<number>,
+    counter: number,
+    fee: number,
+    gas_limit: number,
+    storage_limit: number,
+}
+
+export type TezosOriginationOp = {
+    source: TezosContractID,
+    manager_pubkey: Array<number>,
+    balance: number,
+    spendable: boolean,
+    delegatable: boolean,
+    delegate: Array<number>,
+    script?: Array<number>,
+    fee: number,
+    counter: number,
+    gas_limit: number,
+    storage_limit: number,
+}
+
+export type TezosDelegationOp = {
+    source: TezosContractID,
+    delegate: TezosContractID,
+    fee: number,
+    counter: number,
+    gas_limit: number,
+    storage_limit: number,
+}
+
+export type TezosTransaction = {
+    address_n: Array<number>,
+    branch: Array<number>,
+    reveal?: TezosRevealOp,
+    transaction?: TezosTransactionOp,
+    origination?: TezosOriginationOp,
+    delegation?: TezosDelegationOp,
+}
+
+export type TezosSignedTx = {
+    signature: string,
+    sig_op_contents: string,
+    operation_hash: string,
+};
+
 // Cardano types
 export type CardanoAddress = {
     address: string,
