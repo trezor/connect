@@ -2,7 +2,7 @@
 'use strict';
 // local modules
 import { reverseBuffer } from '../../../utils/bufferUtils';
-import { isSegwitPath } from '../../../utils/pathUtils';
+import { isSegwitPath, getScriptType } from '../../../utils/pathUtils';
 import { fixPath, convertMultisigPubKey, fixAmount } from './index';
 
 // npm types
@@ -48,7 +48,7 @@ export const inputToTrezor = (input: BuildTxInput, sequence: number): Transactio
         prev_index: index,
         prev_hash: reverseBuffer(hash).toString('hex'),
         address_n: path,
-        script_type: input.segwit ? 'SPENDP2SHWITNESS' : 'SPENDADDRESS',
+        script_type: getScriptType(path) || 'SPENDADDRESS',
         amount,
         sequence,
     };

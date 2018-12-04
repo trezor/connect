@@ -35,19 +35,19 @@ export const getHDPath = (path: string): Array<number> => {
         });
 };
 
-export const isMultisigPath = (path: ?Array<number>): boolean => {
+export const isMultisigPath = (path: Array<number> | any): boolean => {
     return Array.isArray(path) && path[0] === toHardened(48);
 };
 
-export const isSegwitPath = (path: ?Array<number>): boolean => {
+export const isSegwitPath = (path: Array<number> | any): boolean => {
     return Array.isArray(path) && path[0] === toHardened(49);
 };
 
-export const isBech32Path = (path: ?Array<number>): boolean => {
+export const isBech32Path = (path: Array<number> | any): boolean => {
     return Array.isArray(path) && path[0] === toHardened(84);
 };
 
-export const getScriptType = (path: Array<number>): ?string => {
+export const getScriptType = (path: Array<number> | any): ?('SPENDADDRESS' | 'SPENDMULTISIG' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS') => {
     if (!Array.isArray(path) || path.length < 1) return;
     const p1 = fromHardened(path[0]);
     switch (p1) {
@@ -59,6 +59,23 @@ export const getScriptType = (path: Array<number>): ?string => {
             return 'SPENDP2SHWITNESS';
         case 84:
             return 'SPENDWITNESS';
+        default:
+            return;
+    }
+};
+
+export const getOutputScriptType = (path: Array<number> | any): ?('PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS' | 'PAYTOP2SHWITNESS') => {
+    if (!Array.isArray(path) || path.length < 1) return;
+    const p = fromHardened(path[0]);
+    switch (p) {
+        case 44:
+            return 'PAYTOADDRESS';
+        case 48:
+            return 'PAYTOMULTISIG';
+        case 49:
+            return 'PAYTOP2SHWITNESS';
+        case 84:
+            return 'PAYTOWITNESS';
         default:
             return;
     }

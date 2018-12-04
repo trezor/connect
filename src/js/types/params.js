@@ -109,7 +109,7 @@ export type TransactionInput = {
     prev_index: number,
     script_sig?: string,
     sequence?: number,
-    script_type?: 'SPENDADDRESS' | 'SPENDMULTISIG' | 'EXTERNAL' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS',
+    script_type?: 'SPENDADDRESS' | 'SPENDMULTISIG' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS',
     multisig?: MultisigRedeemScriptType,
     amount?: string, // only with segwit
     decred_tree?: number,
@@ -123,7 +123,7 @@ export type TransactionOutput = {
 } | {
     address_n: Array<number>,
     amount: string, // in satoshis
-    script_type: 'PAYTOADDRESS' | 'PAYTOP2SHWITNESS',
+    script_type: 'PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS' | 'PAYTOP2SHWITNESS',
 } | {
     op_return_data: string,
     amount: '0', // fixed value
