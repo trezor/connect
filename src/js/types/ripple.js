@@ -30,12 +30,10 @@ type RequestedAccount = {
 
 export type $RippleGetAccountInfo = {
     account: RequestedAccount,
-    coin: string,
 }
 
 export type $$RippleGetAccountInfo = {
     bundle: Array<RequestedAccount>,
-    coin: string,
 }
 
 export type RippleGetAccountInfo$ = {
