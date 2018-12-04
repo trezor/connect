@@ -113,7 +113,7 @@ export default class DeviceCommands {
             return await this.getBitcoinHDNode(path, coinInfo);
         }
         if (!coinInfo) {
-            return await this.getBitcoinHDNode(path, coinInfo);
+            return await this.getBitcoinHDNode(path);
         }
 
         const suffix: number = 0;
@@ -164,7 +164,7 @@ export default class DeviceCommands {
     // old firmware didn't return keys with proper prefix (ypub, Ltub.. and so on)
     async getBitcoinHDNode(
         path: Array<number>,
-        coinInfo: ?CoinInfo
+        coinInfo?: ?CoinInfo
     ): Promise<trezor.HDNodeResponse> {
         const suffix: number = 0;
         const childPath: Array<number> = path.concat([suffix]);
@@ -208,8 +208,7 @@ export default class DeviceCommands {
             address_n,
             coin_name: coinInfo.name,
             show_display: !!showOnTrezor,
-            script_type: scriptType && scriptType !== 'SPENDMULTISIG' ? scriptType : 'SPENDADDRESS',
-            // script_type: getScriptType(address_n) || 'SPENDADDRESS',
+            script_type: scriptType && scriptType !== 'SPENDMULTISIG' ? scriptType : 'SPENDADDRESS', // script_type 'SPENDMULTISIG' throws Failure_FirmwareError
         });
 
         return {
@@ -224,11 +223,12 @@ export default class DeviceCommands {
         message: string,
         coin: ?string
     ): Promise<trezor.MessageSignature> {
+        const scriptType: ?string = getScriptType(address_n);
         const response: MessageResponse<trezor.MessageSignature> = await this.typedCall('SignMessage', 'MessageSignature', {
             address_n,
             message,
             coin_name: coin || 'Bitcoin',
-            script_type: isSegwitPath(address_n) ? 'SPENDP2SHWITNESS' : undefined,
+            script_type: scriptType && scriptType !== 'SPENDMULTISIG' ? scriptType : 'SPENDADDRESS', // script_type 'SPENDMULTISIG' throws Failure_FirmwareError
         });
         return response.message;
     }
