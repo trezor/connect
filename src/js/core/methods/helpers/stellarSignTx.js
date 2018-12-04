@@ -148,6 +148,8 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
             };
 
         case 'setOptions' :
+            validateParams(op, [{ name: 'signer', type: 'object' }]);
+            if (!op.signer) op.signer = {};
             return {
                 type: 'StellarSetOptionsOp',
                 source_account: op.source,
