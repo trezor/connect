@@ -96,6 +96,7 @@
   },
   "dependencies": {
     "events": "^1.1.1",
+    "trezor-blockchain-link": "^0.0.1",
     "whatwg-fetch": "^2.0.4"
   },
   "npmDependencies": {
