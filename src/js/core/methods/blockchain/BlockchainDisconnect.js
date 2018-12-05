@@ -6,7 +6,8 @@ import { validateParams } from '../helpers/paramsValidator';
 import * as BLOCKCHAIN from '../../../constants/blockchain';
 import { NO_COIN_INFO } from '../../../constants/errors';
 
-import BlockBook, { find as findBackend } from '../../../backend';
+import { find as findBlockbookBackend } from '../../../backend';
+import { find as findBlockchainBackend } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
 import { BlockchainMessage } from '../../../message/builder';
 import type { CoreMessage, CoinInfo } from '../../../types';
@@ -17,7 +18,6 @@ type Params = {
 
 export default class BlockchainDisconnect extends AbstractMethod {
     params: Params;
-    backend: BlockBook;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -48,7 +48,24 @@ export default class BlockchainDisconnect extends AbstractMethod {
     }
 
     async run(): Promise<{ disconnected: true }> {
-        const backend = await findBackend(this.params.coinInfo.name);
+        if (this.params.coinInfo.type === 'misc') {
+            return await this.disconnectBlockchain();
+        } else {
+            return await this.disconnectBlockbook();
+        }
+    }
+
+    async disconnectBlockchain() {
+        const backend = await findBlockchainBackend(this.params.coinInfo.name);
+        backend.disconnect();
+
+        return {
+            disconnected: true,
+        };
+    }
+
+    async disconnectBlockbook() {
+        const backend = await findBlockbookBackend(this.params.coinInfo.name);
 
         if (backend) {
             backend.blockchain.destroy();
