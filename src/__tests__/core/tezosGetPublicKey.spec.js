@@ -17,22 +17,22 @@ export const tezosGetPublicKey = (): TestFunction => {
         {
             method: 'tezosGetPublicKey',
             path: "m/44'/1729'/0'",
-            showOnTrezor: true,
+            showOnTrezor: false,
         },
         {
             method: 'tezosGetPublicKey',
             path: "m/44'/1729'/1'",
-            showOnTrezor: true,
+            showOnTrezor: false,
         },
         {
             method: 'tezosGetPublicKey',
             path: "m/44'/1729'",
-            showOnTrezor: true,
+            showOnTrezor: false,
         },
         {
             method: 'tezosGetPublicKey',
             path: "m/44'/1729'/0",
-            showOnTrezor: true,
+            showOnTrezor: false,
         },
     ];
 
