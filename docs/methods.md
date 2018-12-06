@@ -53,3 +53,8 @@ Every method require an [`Object`](https://developer.mozilla.org/en-US/docs/Web/
 * [TrezorConnect.rippleGetAddress](methods/rippleGetAddress.md)
 * [TrezorConnect.rippleSignTransaction](methods/rippleSignTransaction.md)
 
+### Tezos
+* [TrezorConnect.tezosGetAddress](methods/tezosGetAddress.md)
+* [TrezorConnect.tezosGetPublicKey](methods/tezosGetPublicKey.md)
+* [TrezorConnect.tezosSignTransaction](methods/tezosSignTransaction.md)
+
