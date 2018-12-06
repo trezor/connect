@@ -2,12 +2,6 @@
 
 import type { $Path, $Common } from './params';
 import type { Unsuccessful$ } from './response';
-import type {
-    TezosRevealOp,
-    TezosTransactionOp,
-    TezosOriginationOp,
-    TezosDelegationOp,
-} from './trezor';
 
 // get address
 
@@ -58,10 +52,53 @@ export type TezosGetPublicKey$$ = {
 // sign transaction
 
 export type TezosOperation = {
-    reveal?: TezosRevealOp,
-    transaction?: TezosTransactionOp,
-    origination?: TezosOriginationOp,
-    delegation?: TezosDelegationOp,
+    reveal?: TezosRevealOperation,
+    transaction?: TezosTransactionOperation,
+    origination?: TezosOriginationOperation,
+    delegation?: TezosDelegationOperation,
+}
+
+export type TezosRevealOperation = {
+    source: string,
+    fee: number,
+    counter: number,
+    gas_limit: number,
+    storage_limit: number,
+    public_key: string,
+}
+
+export type TezosTransactionOperation = {
+    source: string,
+    destination: string,
+    amount: number,
+    parameters?: Array<number>,
+    counter: number,
+    fee: number,
+    gas_limit: number,
+    storage_limit: number,
+}
+
+export type TezosOriginationOperation = {
+    source: string,
+    manager_pubkey: string,
+    balance: number,
+    spendable: boolean,
+    delegatable: boolean,
+    delegate: string,
+    script?: Array<number>,
+    fee: number,
+    counter: number,
+    gas_limit: number,
+    storage_limit: number,
+}
+
+export type TezosDelegationOperation = {
+    source: string,
+    delegate: string,
+    fee: number,
+    counter: number,
+    gas_limit: number,
+    storage_limit: number,
 }
 
 export type $TezosSignTransaction = $Common & {

@@ -105,7 +105,7 @@ export type MessageSignature = {
 }
 
 export type MultisigRedeemScriptType = {
-    pubkeys: Array<{ node: string, address_n: Array<number>}>,
+    pubkeys: Array<{ node: string, address_n: Array<number> }>,
     signatures: Array<string>,
     m?: number,
 }
@@ -503,8 +503,8 @@ export type TezosPublicKey = {
 }
 
 type TezosContractID = {
-    tag: Array<number>,
-    hash: string,
+    tag: number,
+    hash: Uint8Array,
 }
 
 export type TezosRevealOp = {
@@ -513,37 +513,37 @@ export type TezosRevealOp = {
     counter: number,
     gas_limit: number,
     storage_limit: number,
-    public_key: string,
+    public_key: Uint8Array,
 }
 
 export type TezosTransactionOp = {
     source: TezosContractID,
     destination: TezosContractID,
     amount: number,
-    parameters?: Array<number>,
     counter: number,
     fee: number,
     gas_limit: number,
     storage_limit: number,
+    parameters?: Array<number>,
 }
 
 export type TezosOriginationOp = {
     source: TezosContractID,
-    manager_pubkey: Array<number>,
+    manager_pubkey: Uint8Array,
     balance: number,
     spendable: boolean,
     delegatable: boolean,
-    delegate: Array<number>,
-    script?: Array<number>,
+    delegate: Uint8Array,
     fee: number,
     counter: number,
     gas_limit: number,
     storage_limit: number,
+    script?: Array<number>,
 }
 
 export type TezosDelegationOp = {
     source: TezosContractID,
-    delegate: TezosContractID,
+    delegate: Uint8Array,
     fee: number,
     counter: number,
     gas_limit: number,
@@ -552,7 +552,7 @@ export type TezosDelegationOp = {
 
 export type TezosTransaction = {
     address_n: Array<number>,
-    branch: Array<number>,
+    branch: Uint8Array,
     reveal?: TezosRevealOp,
     transaction?: TezosTransactionOp,
     origination?: TezosOriginationOp,
@@ -617,11 +617,13 @@ export type LiskAsset =
     { votes: Array<string> } |
     { delegate: { username: string } } |
     { signature: { public_key: string } } |
-    { multisignature: {
-        min: number,
-        life_time: number,
-        keys_group: Array<string>,
-    } };
+    {
+        multisignature: {
+            min: number,
+            life_time: number,
+            keys_group: Array<string>,
+        }
+    };
 
 export type LiskTransaction = {
     type: number,

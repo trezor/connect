@@ -17,22 +17,22 @@ export const tezosGetAddress = (): TestFunction => {
         {
             method: 'tezosGetAddress',
             path: "m/44'/1729'/0'",
-            showOnTrezor: true,
+            showOnTrezor: false,
         },
         {
             method: 'tezosGetAddress',
             path: "m/44'/1729'/1'",
-            showOnTrezor: true,
+            showOnTrezor: false,
         },
         {
             method: 'tezosGetAddress',
             path: "m/44'/1729'",
-            showOnTrezor: true,
+            showOnTrezor: false,
         },
         {
             method: 'tezosGetAddress',
             path: "m/44'/1729'/0",
-            showOnTrezor: true,
+            showOnTrezor: false,
         },
     ];
 
