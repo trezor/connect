@@ -26,7 +26,6 @@
     "build": "rm -rf build && webpack --config ./webpack/config.prod.babel.js --progress",
     "build:inline": "webpack --config ./webpack/config.inline.babel.js --progress",
     "build:npm": "rm -rf npm && babel-node ./scripts/build-npm.js && babel ./npm/lib --out-dir ./npm/lib",
-    "build:npm-alpha": "rm -rf npm && babel-node ./scripts/build-npm-alpha.js && babel ./npm/lib --out-dir ./npm/lib",
     "stats": "webpack --config ./webpack/config.prod.babel.js --json > build/stats.json",
     "test": "bash ./src/__tests__/run.sh",
     "flow": "flow check src/js",
