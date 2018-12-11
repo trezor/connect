@@ -51,13 +51,6 @@ export type TezosGetPublicKey$$ = {
 
 // sign transaction
 
-export type TezosOperation = {
-    reveal?: TezosRevealOperation,
-    transaction?: TezosTransactionOperation,
-    origination?: TezosOriginationOperation,
-    delegation?: TezosDelegationOperation,
-}
-
 export type TezosRevealOperation = {
     source: string,
     fee: number,
@@ -76,7 +69,7 @@ export type TezosTransactionOperation = {
     fee: number,
     gas_limit: number,
     storage_limit: number,
-}
+};
 
 export type TezosOriginationOperation = {
     source: string,
@@ -90,7 +83,7 @@ export type TezosOriginationOperation = {
     counter: number,
     gas_limit: number,
     storage_limit: number,
-}
+};
 
 export type TezosDelegationOperation = {
     source: string,
@@ -99,19 +92,26 @@ export type TezosDelegationOperation = {
     counter: number,
     gas_limit: number,
     storage_limit: number,
-}
+};
+
+export type TezosOperation = {
+    reveal?: TezosRevealOperation,
+    transaction?: TezosTransactionOperation,
+    origination?: TezosOriginationOperation,
+    delegation?: TezosDelegationOperation,
+};
 
 export type $TezosSignTransaction = $Common & {
     address_n: Array<number>,
     branch: string,
     operation: TezosOperation,
-}
+};
 
 export type TezosSignedTx = {
     signatureContents: string,
     signature: string,
     hash: string,
-}
+};
 
 export type TezosSignTransaction$ = {
     success: true,

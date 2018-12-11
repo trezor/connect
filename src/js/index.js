@@ -431,7 +431,7 @@ class TrezorConnect {
     static tezosSignTransaction: $T.TezosSignTransaction = async (params) => {
         return await call({ method: 'tezosSignTransaction', ...params });
     }
-    
+
     static verifyMessage: $T.VerifyMessage = async (params) => {
         return await call({ method: 'verifyMessage', ...params });
     }
