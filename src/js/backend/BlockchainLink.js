@@ -8,15 +8,13 @@ import type { CoinInfo } from '../types';
 import { BlockchainMessage } from '../message/builder';
 import * as BLOCKCHAIN from '../constants/blockchain';
 
-import { Blockchain as BlockchainInstance } from 'blockchain-link';
-
 type Options = {
     coinInfo: CoinInfo,
     postMessage: (message: BlockchainMessage) => void,
 };
 
 export default class Blockchain {
-    blockchain: BlockchainInstance<any>;
+    link: BlockchainLink;
     coinInfo: $ElementType<Options, 'coinInfo'>;
     postMessage: $ElementType<Options, 'postMessage'>;
     error: boolean;
@@ -25,7 +23,7 @@ export default class Blockchain {
         this.coinInfo = options.coinInfo;
         this.postMessage = options.postMessage;
 
-        this.blockchain = BlockchainLink.create({
+        this.link = new BlockchainLink({
             name: this.coinInfo.shortcut,
             worker: RippleWorker,
             server: [
@@ -36,15 +34,15 @@ export default class Blockchain {
     }
 
     async init() {
-        this.blockchain.on('error', error => {
+        this.link.on('error', error => {
             this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
                 coin: this.coinInfo,
                 error: error.message,
             }));
         });
 
-        const networkInfo = await this.blockchain.getInfo();
-        const fee = await this.blockchain.getFee();
+        const networkInfo = await this.link.getInfo();
+        const fee = await this.link.getFee();
 
         this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
             coin: this.coinInfo,
@@ -56,23 +54,23 @@ export default class Blockchain {
     }
 
     async getNetworkInfo() {
-        return await this.blockchain.getInfo();
+        return await this.link.getInfo();
     }
 
-    async getAccountInfo(descriptor: string, history: ?boolean) {
-        return await this.blockchain.getAccountInfo({
+    async getAccountInfo(descriptor: string, history: boolean = true) {
+        return await this.link.getAccountInfo({
             descriptor,
             history,
         });
     }
 
     async getFee() {
-        return await this.blockchain.getFee();
+        return await this.link.getFee();
     }
 
     async subscribe(accounts: Array<string>): Promise<void> {
-        if (this.blockchain.listenerCount('block') === 0) {
-            this.blockchain.on('block', (data) => {
+        if (this.link.listenerCount('block') === 0) {
+            this.link.on('block', (data) => {
                 this.postMessage(new BlockchainMessage(BLOCKCHAIN.BLOCK, {
                     coin: this.coinInfo,
                     ...data,
@@ -80,8 +78,8 @@ export default class Blockchain {
             });
         }
 
-        if (this.blockchain.listenerCount('notification') === 0) {
-            this.blockchain.on('notification', notification => {
+        if (this.link.listenerCount('notification') === 0) {
+            this.link.on('notification', notification => {
                 this.postMessage(new BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
                     coin: this.coinInfo,
                     notification,
@@ -89,27 +87,27 @@ export default class Blockchain {
             });
         }
 
-        this.blockchain.subscribe({
+        this.link.subscribe({
             type: 'block',
         });
 
-        this.blockchain.subscribe({
+        this.link.subscribe({
             type: 'notification',
             addresses: accounts,
         });
     }
 
     async pushTransaction(tx: string): Promise<string> {
-        return await this.blockchain.pushTransaction(tx);
+        return await this.link.pushTransaction(tx);
     }
 
     async disconnect() {
-        this.blockchain.disconnect();
+        this.link.disconnect();
         this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
             coin: this.coinInfo,
             error: 'Disconnected',
         }));
-        remove(this);
+        remove(this); // eslint-disable-line no-use-before-define
     }
 }
 
