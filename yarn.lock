@@ -2666,6 +2666,12 @@ eslint-plugin-flowtype@^2.49.3:
   dependencies:
     lodash "^4.17.10"
 
+eslint-plugin-mocha@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-mocha/-/eslint-plugin-mocha-5.2.0.tgz#d8786d9fff8cb8b5f6e4b61e40395d6568a5c4e2"
+  dependencies:
+    ramda "^0.25.0"
+
 eslint-plugin-promise@^3.8.0:
   version "3.8.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-promise/-/eslint-plugin-promise-3.8.0.tgz#65ebf27a845e3c1e9d6f6a5622ddd3801694b621"
@@ -5912,6 +5918,10 @@ queue@^4.4.2:
   dependencies:
     inherits "~2.0.0"
 
+ramda@^0.25.0:
+  version "0.25.0"
+  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"
+
 randomatic@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/randomatic/-/randomatic-3.0.0.tgz#d35490030eb4f7578de292ce6dfb04a91a128923"
@@ -7059,10 +7069,11 @@ tough-cookie@~2.3.0, tough-cookie@~2.3.3:
   dependencies:
     punycode "^1.4.1"
 
-trezor-blockchain-link@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/trezor-blockchain-link/-/trezor-blockchain-link-0.0.1.tgz#c272bf57838842cf1820adcd85dddf63b43f05ad"
+trezor-blockchain-link@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/trezor-blockchain-link/-/trezor-blockchain-link-0.0.2.tgz#b6b8bab720851b61bfd94b932cae755037c60fa6"
   dependencies:
+    eslint-plugin-mocha "^5.2.0"
     events "^3.0.0"
 
 trezor-link@1.5.5:
