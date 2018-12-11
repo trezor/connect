@@ -57,7 +57,9 @@ export default class BlockchainDisconnect extends AbstractMethod {
 
     async disconnectBlockchain() {
         const backend = await findBlockchainBackend(this.params.coinInfo.name);
-        backend.disconnect();
+        if (backend) {
+            backend.disconnect();
+        }
 
         return {
             disconnected: true,
