@@ -2,7 +2,7 @@
 __added__
 - Added `TrezorConnect.tezosGetAddress` method
 - Added `TrezorConnect.tezosGetPublicKey` method
-- Added `TrezorConnect.signTransaction` method
+- Added `TrezorConnect.tezosSignTransaction` method
 - Added `TrezorConnect.dispose` method
 - Added `TrezorConnect.cancel` method
 
