@@ -441,7 +441,16 @@ class TrezorConnect {
     }
 
     static dispose = (): void => {
-        // TODO
+        iframe.dispose();
+        if (_popupManager) {
+            _popupManager.close();
+        }
+    }
+
+    static cancel = (): void => {
+        if (_popupManager) {
+            _popupManager.emit(POPUP.CLOSED);
+        }
     }
 
     static renderWebUSBButton = (className: ?string): void => {
