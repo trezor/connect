@@ -1,8 +1,8 @@
 /* @flow */
 
-import BlockchainLink from 'blockchain-link';
+import BlockchainLink from 'trezor-blockchain-link';
 /* $FlowIssue loader notation */
-import RippleWorker from 'file-loader?name=ripple4-worker.js!blockchain-link/workers/ripple-worker';
+import RippleWorker from 'file-loader?name=ripple4-worker.js!trezor-blockchain-link/workers/ripple-worker';
 
 import type { CoinInfo } from '../types';
 import { BlockchainMessage } from '../message/builder';

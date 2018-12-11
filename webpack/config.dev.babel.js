@@ -43,7 +43,7 @@ module.exports = {
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: [/node_modules/, /blockchain-link\/build\/workers/],
+                exclude: [/node_modules/, /trezor-blockchain-link\/build\/workers/],
                 use: ['babel-loader'],
             },
             {
