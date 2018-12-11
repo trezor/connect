@@ -496,16 +496,16 @@ export type StellarOperationMessage = {
 // Tezos types
 export type TezosAddress = {
     address: string,
-}
+};
 
 export type TezosPublicKey = {
     public_key: string,
-}
+};
 
 type TezosContractID = {
     tag: number,
     hash: Uint8Array,
-}
+};
 
 export type TezosRevealOp = {
     source: TezosContractID,
@@ -514,7 +514,7 @@ export type TezosRevealOp = {
     gas_limit: number,
     storage_limit: number,
     public_key: Uint8Array,
-}
+};
 
 export type TezosTransactionOp = {
     source: TezosContractID,
@@ -525,7 +525,7 @@ export type TezosTransactionOp = {
     gas_limit: number,
     storage_limit: number,
     parameters?: Array<number>,
-}
+};
 
 export type TezosOriginationOp = {
     source: TezosContractID,
@@ -539,7 +539,7 @@ export type TezosOriginationOp = {
     gas_limit: number,
     storage_limit: number,
     script?: Array<number>,
-}
+};
 
 export type TezosDelegationOp = {
     source: TezosContractID,
@@ -548,7 +548,7 @@ export type TezosDelegationOp = {
     counter: number,
     gas_limit: number,
     storage_limit: number,
-}
+};
 
 export type TezosTransaction = {
     address_n: Array<number>,
@@ -557,7 +557,7 @@ export type TezosTransaction = {
     transaction?: TezosTransactionOp,
     origination?: TezosOriginationOp,
     delegation?: TezosDelegationOp,
-}
+};
 
 export type TezosSignedTx = {
     signature: string,
@@ -622,7 +622,7 @@ export type LiskAsset =
             min: number,
             life_time: number,
             keys_group: Array<string>,
-        }
+        },
     };
 
 export type LiskTransaction = {

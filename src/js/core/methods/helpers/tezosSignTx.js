@@ -6,6 +6,70 @@ import type { TezosOperation } from '../../../types/tezos';
 import type { TezosTransaction } from '../../../types/trezor';
 import { validateParams } from './../helpers/paramsValidator';
 
+const prefix = {
+    B: new Uint8Array([1, 52]),
+    tz1: new Uint8Array([6, 161, 159]),
+    tz2: new Uint8Array([6, 161, 161]),
+    tz3: new Uint8Array([6, 161, 164]),
+    KT1: new Uint8Array([2, 90, 121]),
+    edpk: new Uint8Array([13, 15, 37, 217]),
+    sppk: new Uint8Array([3, 254, 226, 86]),
+    p2pk: new Uint8Array([3, 178, 139, 127]),
+};
+
+const bs58checkDecode = (prefix: Uint8Array, enc: string): Uint8Array => {
+    return bs58check.decode(enc).slice(prefix.length);
+};
+
+const concatArray = (first: Uint8Array, second: Uint8Array): Uint8Array => {
+    const result = new Uint8Array(first.length + second.length);
+    result.set(first);
+    result.set(second, first.length);
+    return result;
+};
+
+// convert publicKeyHash to buffer
+const publicKeyHash2buffer = (publicKeyHash: string): { originated: number, hash: Uint8Array} => {
+    switch (publicKeyHash.substr(0, 3)) {
+        case 'tz1':
+            return {
+                originated: 0,
+                hash: concatArray(new Uint8Array([0]), bs58checkDecode(prefix.tz1, publicKeyHash)),
+            };
+        case 'tz2':
+            return {
+                originated: 0,
+                hash: concatArray(new Uint8Array([1]), bs58checkDecode(prefix.tz2, publicKeyHash)),
+            };
+        case 'tz3':
+            return {
+                originated: 0,
+                hash: concatArray(new Uint8Array([2]), bs58checkDecode(prefix.tz3, publicKeyHash)),
+            };
+        case 'KT1':
+            return {
+                originated: 1,
+                hash: concatArray(bs58checkDecode(prefix.KT1, publicKeyHash), new Uint8Array([0])),
+            };
+        default:
+            throw new Error('Wrong Tezos publicKeyHash address');
+    }
+};
+
+// convert publicKeyHash to buffer
+const publicKey2buffer = (publicKey: string): Uint8Array => {
+    switch (publicKey.substr(0, 4)) {
+        case 'edpk':
+            return concatArray(new Uint8Array([0]), bs58checkDecode(prefix.edpk, publicKey));
+        case 'sppk':
+            return concatArray(new Uint8Array([1]), bs58checkDecode(prefix.sppk, publicKey));
+        case 'p2pk':
+            return concatArray(new Uint8Array([2]), bs58checkDecode(prefix.p2pk, publicKey));
+        default:
+            throw new Error('Wrong Tezos publicKey ');
+    }
+};
+
 export const createTx = (address_n: Array<number>, branch: string, operation: TezosOperation): TezosTransaction => {
     let message: TezosTransaction = {
         address_n,
@@ -167,78 +231,5 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         };
     }
 
-    console.log('[tezosSignTx] message', message)
-
     return message;
 };
-
-const prefix = {
-    B: new Uint8Array([1, 52]),
-    tz1: new Uint8Array([6, 161, 159]),
-    tz2: new Uint8Array([6, 161, 161]),
-    tz3: new Uint8Array([6, 161, 164]),
-    KT1: new Uint8Array([2, 90, 121]),
-    edpk: new Uint8Array([13, 15, 37, 217]),
-    sppk: new Uint8Array([3, 254, 226, 86]),
-    p2pk: new Uint8Array([3, 178, 139, 127]),
-}
-
-// convert publicKeyHash to buffer
-const publicKeyHash2buffer = (publicKeyHash: string): { originated: number, hash: Uint8Array} => {
-
-    switch (publicKeyHash.substr(0, 3)) {
-        case 'tz1':
-            return {
-                originated: 0,
-                hash: concatArray(new Uint8Array([0]), bs58checkDecode(prefix.tz1, publicKeyHash))
-            }
-        case 'tz2':
-            return {
-                originated: 0,
-                hash: concatArray(new Uint8Array([1]), bs58checkDecode(prefix.tz2, publicKeyHash))
-            }
-        case 'tz3':
-            return {
-                originated: 0,
-                hash: concatArray(new Uint8Array([2]), bs58checkDecode(prefix.tz3, publicKeyHash))
-            }
-        case 'KT1':
-            return {
-                originated: 1,
-                hash: concatArray(bs58checkDecode(prefix.KT1, publicKeyHash), new Uint8Array([0]))
-            }
-        default:
-            throw new Error('Wrong Tezos publicKeyHash address');
-    }
-
-}
-
-// convert publicKeyHash to buffer
-const publicKey2buffer = (publicKey: string): Uint8Array => {
-
-    switch (publicKey.substr(0, 4)) {
-        case 'edpk':
-            return concatArray(new Uint8Array([0]), bs58checkDecode(prefix.edpk, publicKey))
-
-        case 'sppk':
-            return concatArray(new Uint8Array([1]), bs58checkDecode(prefix.sppk, publicKey))
-
-        case 'p2pk':
-            return concatArray(new Uint8Array([2]), bs58checkDecode(prefix.p2pk, publicKey))
-
-        default:
-            throw new Error('Wrong Tezos publicKey ');
-    }
-
-}
-
-const bs58checkDecode = (prefix: Uint8Array, enc: string): Uint8Array => {
-    return bs58check.decode(enc).slice(prefix.length)
-}
-
-const concatArray = (first: Uint8Array, second: Uint8Array): Uint8Array => {
-    let result = new Uint8Array(first.length + second.length)
-    result.set(first)
-    result.set(second, first.length)
-    return result
-}
