@@ -22,6 +22,11 @@ type Network = {
     dustThreshold: number,
 };
 
+type BlockchainLink = {
+    type: string,
+    url: Array<string>,
+};
+
 export type BitcoinNetworkInfo = {
     +type: 'bitcoin',
     // address_type: in Network
@@ -30,6 +35,7 @@ export type BitcoinNetworkInfo = {
     // bip115: not used
     bitcore: Array<string>,
     blockbook: Array<string>,
+    blockchainLink: ?BlockchainLink,
     blocktime: number,
     cashAddrPrefix: ?string,
     label: string, // this is human readable format, could be different from "name"
@@ -77,6 +83,7 @@ export type EthereumNetworkInfo = {
     +type: 'ethereum',
     bitcore: Array<string>, // compatibility
     blockbook: Array<string>,
+    blockchainLink: ?BlockchainLink,
     chain: string,
     chainId: number,
     // key not used
@@ -93,6 +100,7 @@ export type MiscNetworkInfo = {
     +type: 'misc',
     bitcore: Array<string>, // compatibility
     blockbook: Array<string>, // compatibility
+    blockchainLink: ?BlockchainLink,
     curve: string,
     // key not used
     // links not used

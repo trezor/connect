@@ -163,6 +163,7 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
             // bip115: not used
             bitcore: coin.bitcore,
             blockbook: coin.blockbook,
+            blockchainLink: null,
             blocktime: Math.round(coin.blocktime_seconds / 60),
             cashAddrPrefix: coin.cashaddr_prefix,
             label: coin.coin_label,
@@ -217,6 +218,7 @@ const parseEthereumNetworksJson = (json: JSON): void => {
             type: 'ethereum',
             blockbook: network.blockbook || [],
             bitcore: [], // legacy compatibility with bitcoin coinInfo
+            blockchainLink: null,
             chain: network.chain,
             chainId: network.chain_id,
             // key not used
@@ -239,6 +241,7 @@ const parseMiscNetworksJSON = (json: JSON): void => {
             type: 'misc',
             blockbook: network.blockbook || [], // legacy compatibility with bitcoin coinInfo
             bitcore: [], // legacy compatibility with bitcoin coinInfo
+            blockchainLink: network.blockchain_link,
             curve: network.curve,
             label: network.name,
             name: network.name,
