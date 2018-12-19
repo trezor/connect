@@ -2,15 +2,25 @@
 
 import BlockchainLink from 'trezor-blockchain-link';
 /* $FlowIssue loader notation */
-import RippleWorker from 'file-loader?name=ripple4-worker.js!trezor-blockchain-link/workers/ripple-worker';
+import RippleWorker from 'file-loader?name=ripple-worker.js!trezor-blockchain-link/workers/ripple-worker';
 
-import type { CoinInfo } from '../types';
 import { BlockchainMessage } from '../message/builder';
 import * as BLOCKCHAIN from '../constants/blockchain';
+
+import type { CoinInfo } from '../types';
+import type { BlockchainBlock, BlockchainLinkTransaction } from '../types/blockchainEvent';
 
 type Options = {
     coinInfo: CoinInfo,
     postMessage: (message: BlockchainMessage) => void,
+};
+
+const getWorker = (type: string): ?string => {
+    switch (type) {
+        case 'ripple':
+            return RippleWorker;
+        default: return null;
+    }
 };
 
 export default class Blockchain {
@@ -23,12 +33,20 @@ export default class Blockchain {
         this.coinInfo = options.coinInfo;
         this.postMessage = options.postMessage;
 
+        const settings = options.coinInfo.blockchainLink;
+        if (!settings) {
+            throw new Error('BlockchainLink settings not found in coins.json');
+        }
+
+        const worker = getWorker(settings.type);
+        if (!worker) {
+            throw new Error('BlockchainLink worker not found');
+        }
+
         this.link = new BlockchainLink({
             name: this.coinInfo.shortcut,
-            worker: RippleWorker,
-            server: [
-                'wss://s.altnet.rippletest.net',
-            ],
+            worker: worker,
+            server: settings.url,
             debug: true,
         });
     }
@@ -70,16 +88,16 @@ export default class Blockchain {
 
     async subscribe(accounts: Array<string>): Promise<void> {
         if (this.link.listenerCount('block') === 0) {
-            this.link.on('block', (data) => {
+            this.link.on('block', (block: $ElementType<BlockchainBlock, 'payload'>) => {
                 this.postMessage(new BlockchainMessage(BLOCKCHAIN.BLOCK, {
                     coin: this.coinInfo,
-                    ...data,
+                    ...block,
                 }));
             });
         }
 
         if (this.link.listenerCount('notification') === 0) {
-            this.link.on('notification', notification => {
+            this.link.on('notification', (notification: BlockchainLinkTransaction) => {
                 this.postMessage(new BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
                     coin: this.coinInfo,
                     notification,
