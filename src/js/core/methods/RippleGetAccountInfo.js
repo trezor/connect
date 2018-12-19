@@ -45,7 +45,7 @@ export default class RippleGetAccountInfo extends AbstractMethod {
         // validate incoming parameters
         validateParams(payload, [
             { name: 'bundle', type: 'array', obligatory: true },
-            // { name: 'coin', type: 'string', obligatory: true },
+            { name: 'coin', type: 'string', obligatory: true },
         ]);
 
         payload.bundle.forEach(batch => {
@@ -67,7 +67,7 @@ export default class RippleGetAccountInfo extends AbstractMethod {
             }
         });
 
-        const network: ?MiscNetworkInfo = getMiscNetwork('xrp');
+        const network: ?MiscNetworkInfo = getMiscNetwork(payload.coin);
         if (!network) {
             throw NO_COIN_INFO;
         }
