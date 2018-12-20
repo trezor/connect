@@ -17,7 +17,7 @@ import type { RippleAccount } from '../../types/ripple';
 
 type Params = {
     accounts: Array<RippleAccount>,
-    history: boolean,
+    level: string,
     coinInfo: MiscNetworkInfo,
     bundledResponse: boolean,
 }
@@ -45,6 +45,7 @@ export default class RippleGetAccountInfo extends AbstractMethod {
         // validate incoming parameters
         validateParams(payload, [
             { name: 'bundle', type: 'array', obligatory: true },
+            { name: 'level', type: 'string' },
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
@@ -77,7 +78,7 @@ export default class RippleGetAccountInfo extends AbstractMethod {
 
         this.params = {
             accounts: payload.bundle,
-            history: payload.history,
+            level: payload.level,
             coinInfo: network,
             bundledResponse,
         };
@@ -101,7 +102,10 @@ export default class RippleGetAccountInfo extends AbstractMethod {
                 account.serializedPath = getSerializedPath(path);
             }
 
-            const freshInfo = await blockchain.getAccountInfo(account.address, this.params.history);
+            const freshInfo = await blockchain.getAccountInfo(account.address, {
+                level: this.params.level,
+                from: account.block,
+            });
             const info = {
                 ...account,
                 ...freshInfo,
