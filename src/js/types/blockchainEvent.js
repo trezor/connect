@@ -9,8 +9,9 @@ export type BlockchainConnect = {
     payload: {
         coin: CoinInfo,
         info: {
-            fee: string,
             block: number,
+            fee: string,
+            reserved?: string,
         },
     },
 }
