@@ -65,7 +65,17 @@ export default class BlockchainSubscribe extends AbstractMethod {
         const { coinInfo } = this.params;
         if (coinInfo.type === 'misc') throw new Error('Invalid CoinInfo object');
         // initialize backend
-        const backend = await createBlockbookBackend(coinInfo);
+
+        let backend;
+        try {
+            backend = await createBlockbookBackend(coinInfo);
+        } catch (error) {
+            this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
+                coin: this.params.coinInfo,
+                error: error.message,
+            }));
+            throw error;
+        }
 
         backend.subscribe(
             this.params.accounts,

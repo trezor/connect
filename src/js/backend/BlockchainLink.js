@@ -9,6 +9,7 @@ import * as BLOCKCHAIN from '../constants/blockchain';
 
 import type { CoinInfo } from '../types';
 import type { BlockchainBlock, BlockchainLinkTransaction } from '../types/blockchainEvent';
+import type { GetAccountInfoOptions } from 'trezor-blockchain-link';
 
 type Options = {
     coinInfo: CoinInfo,
@@ -51,34 +52,52 @@ export default class Blockchain {
         });
     }
 
+    onError(error: string) {
+        this.link.removeAllListeners();
+        this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
+            coin: this.coinInfo,
+            error,
+        }));
+        remove(this); // eslint-disable-line no-use-before-define
+    }
+
     async init() {
-        this.link.on('error', error => {
-            this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
+        this.link.on('connected', async () => {
+            const info = await this.link.getInfo();
+            this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
                 coin: this.coinInfo,
-                error: error.message,
+                info: {
+                    block: info.block,
+                    fee: '0',
+                    reserved: '0',
+                },
             }));
         });
 
-        const networkInfo = await this.link.getInfo();
-        const fee = await this.link.getFee();
+        this.link.on('disconnected', () => {
+            this.onError('Disconnected');
+        });
 
-        this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
-            coin: this.coinInfo,
-            info: {
-                fee,
-                ...networkInfo,
-            },
-        }));
+        this.link.on('error', error => {
+            this.onError(error.message);
+        });
+
+        try {
+            await this.link.connect();
+        } catch (error) {
+            this.onError(error.message);
+            throw error;
+        }
     }
 
     async getNetworkInfo() {
         return await this.link.getInfo();
     }
 
-    async getAccountInfo(descriptor: string, history: boolean = true) {
+    async getAccountInfo(descriptor: string, options?: GetAccountInfoOptions) {
         return await this.link.getAccountInfo({
             descriptor,
-            history,
+            options,
         });
     }
 
@@ -121,11 +140,7 @@ export default class Blockchain {
 
     async disconnect() {
         this.link.disconnect();
-        this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
-            coin: this.coinInfo,
-            error: 'Disconnected',
-        }));
-        remove(this); // eslint-disable-line no-use-before-define
+        this.onError('Disconnected');
     }
 }
 
