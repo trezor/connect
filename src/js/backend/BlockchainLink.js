@@ -64,11 +64,12 @@ export default class Blockchain {
     async init() {
         this.link.on('connected', async () => {
             const info = await this.link.getInfo();
+            const fee = await this.link.estimateFee();
             this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
                 coin: this.coinInfo,
                 info: {
                     block: info.block,
-                    fee: '0',
+                    fee,
                     reserved: '0',
                 },
             }));
@@ -101,8 +102,8 @@ export default class Blockchain {
         });
     }
 
-    async getFee() {
-        return await this.link.getFee();
+    async estimateFee() {
+        return await this.link.estimateFee();
     }
 
     async subscribe(accounts: Array<string>): Promise<void> {
