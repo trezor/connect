@@ -10,8 +10,6 @@ export type BlockchainConnect = {
         coin: CoinInfo,
         info: {
             block: number,
-            fee: string,
-            reserved?: string,
         },
     },
 }
