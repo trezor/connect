@@ -8,7 +8,7 @@ export type $BlockchainDisconnect = {
     coin: string,
 }
 
-export type $BlockchainGetFee = {
+export type $BlockchainEstimateFee = {
     coin: string,
 }
 

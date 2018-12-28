@@ -236,7 +236,7 @@ class TrezorConnect {
         return await call({ method: 'blockchainDisconnect', ...params });
     }
 
-    static blockchainEstimateFee: $T.BlockchainGetFee = async (params) => {
+    static blockchainEstimateFee: $T.BlockchainEstimateFee = async (params) => {
         return await call({ method: 'blockchainEstimateFee', ...params });
     }
 

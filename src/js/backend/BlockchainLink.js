@@ -9,7 +9,7 @@ import * as BLOCKCHAIN from '../constants/blockchain';
 
 import type { CoinInfo } from '../types';
 import type { BlockchainBlock, BlockchainLinkTransaction } from '../types/blockchainEvent';
-import type { GetAccountInfoOptions } from 'trezor-blockchain-link';
+import type { GetAccountInfoOptions, EstimateFeeOptions } from 'trezor-blockchain-link';
 
 type Options = {
     coinInfo: CoinInfo,
@@ -64,13 +64,10 @@ export default class Blockchain {
     async init() {
         this.link.on('connected', async () => {
             const info = await this.link.getInfo();
-            const fee = await this.link.estimateFee();
             this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
                 coin: this.coinInfo,
                 info: {
                     block: info.block,
-                    fee,
-                    reserved: '0',
                 },
             }));
         });
@@ -102,8 +99,8 @@ export default class Blockchain {
         });
     }
 
-    async estimateFee() {
-        return await this.link.estimateFee();
+    async estimateFee(options?: EstimateFeeOptions) {
+        return await this.link.estimateFee(options);
     }
 
     async subscribe(accounts: Array<string>): Promise<void> {
