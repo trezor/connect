@@ -46,7 +46,8 @@ export const load = (storageKey: string, temporary: boolean = false): ?JSON => {
             const cookie: string = window.document.cookie;
             const location: number = cookie.indexOf(encodeURIComponent(storageKey) + '=');
             if (location !== -1) {
-                value = /^([^;]+)/.exec(cookie.slice(location))[1];
+                const json = /^([^;]+)/.exec(cookie.slice(location));
+                value = json ? json[1] : null;
             }
         } catch (ignore) {
             // empty
