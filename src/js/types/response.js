@@ -27,7 +27,7 @@ export type BlockchainDisconnect$ = {
 
 export type BlockchainEstimateFee$ = {
     success: true,
-    payload: string,
+    payload: Array<{ name: string, value: string }>,
 } | Unsuccessful$;
 
 export type BlockchainSubscribe$ = {

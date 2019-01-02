@@ -11,7 +11,7 @@ import type { CoreMessage, MiscNetworkInfo } from '../../../types';
 
 type Params = {
     coinInfo: MiscNetworkInfo,
-}
+};
 
 export default class BlockchainEstimateFee extends AbstractMethod {
     params: Params;
@@ -39,7 +39,7 @@ export default class BlockchainEstimateFee extends AbstractMethod {
         };
     }
 
-    async run(): Promise<{ disconnected: true }> {
+    async run(): Promise<Array<{ name: string, value: string }>> {
         const backend = await createBlockchainBackend(this.params.coinInfo, this.postMessage);
         return await backend.estimateFee();
     }
