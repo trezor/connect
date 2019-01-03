@@ -1,19 +1,43 @@
 [
 	{
 		"required": false,
+		"version": [1, 7, 3],
+		"bootloader_version": [1, 6, 0],
+		"min_bridge_version": [2, 0, 25],
+		"min_firmware_version": [1, 6, 2],
+		"min_bootloader_version": [1, 5, 0],
+		"url": "data/firmware/1/trezor-1.7.3.bin.hex",
+		"fingerprint": "10acc6aa4f24aff36627473b98c23dc4f6d0220d33bc1e09cb572f02410ffdaf",
+		"changelog": "* Stable release, optional update\n* Fix USB issue on some Windows 10 installations"
+	},
+	{
+		"required": false,
+		"version": [1, 7, 2],
+		"bootloader_version": [1, 6, 0],
+		"min_bridge_version": [2, 0, 25],
+		"min_firmware_version": [1, 6, 2],
+		"min_bootloader_version": [1, 5, 0],
+		"url": "data/firmware/1/trezor-1.7.2.bin.hex",
+		"fingerprint": "4d5c7ac191dba315b2433af27c187925fb713d06984cc6f566231d809dd8d370",
+		"changelog": "* Stable release, optional update\n* Add support for OMNI layer: OMNI/MAID/USDT\n* U2F fixes\n* Don't ask for PIN if it has been just set",
+		"notes": "https://blog.trezor.io/trezor-one-1-7-2-support-for-omni-layer-cbf699e4ffae"
+	},
+	{
+		"required": false,
 		"version": [1, 7, 1],
-		"min_bridge_version": [1, 1, 5],
+		"bootloader_version": [1, 6, 0],
+		"min_bridge_version": [2, 0, 25],
 		"min_firmware_version": [1, 6, 2],
 		"min_bootloader_version": [1, 5, 0],
 		"url": "data/firmware/1/trezor-1.7.1.bin.hex",
-		"beta": true,
-		"rollout": 0.1,
 		"fingerprint": "1c303c50bb45d3f35da9e962d8405d0b8e89cc45e122496a48fce3995fa71d48",
-		"changelog": "* Stable release, optional update\n* Switch from HID to WebUSB\n* Add support for Stellar\n* Add support for Lisk\n* Add support for Zcash Sapling hardfork\n* Implement seedless setup"
+		"changelog": "* Stable release, optional update\n* Switch from HID to WebUSB\n* Add support for Stellar\n* Add support for Lisk\n* Add support for Zcash Sapling hardfork\n* Implement seedless setup",
+		"notes": "https://blog.trezor.io/firmware-updates-moving-from-the-beta-wallet-to-stable-c487931c3596"
 	},
 	{
 		"required": false,
 		"version": [1, 6, 3],
+		"bootloader_version": [1, 5, 1],
 		"min_bridge_version": [1, 1, 5],
 		"min_firmware_version": [1, 0, 0],
 		"min_bootloader_version": [1, 0, 0],
@@ -25,6 +49,7 @@
 	{
 		"required": false,
 		"version": [1, 6, 2],
+		"bootloader_version": [1, 5, 0],
 		"min_bridge_version": [1, 1, 5],
 		"min_firmware_version": [1, 0, 0],
 		"min_bootloader_version": [1, 0, 0],
@@ -36,6 +61,7 @@
 	{
 		"required": true,
 		"version": [1, 6, 1],
+		"bootloader_version": [1, 4, 0],
 		"min_bridge_version": [1, 1, 5],
 		"min_firmware_version": [1, 0, 0],
 		"min_bootloader_version": [1, 0, 0],

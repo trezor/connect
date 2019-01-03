@@ -23,7 +23,7 @@ export const showFirmwareUpdateNotification = (device: $PropertyType<UnexpectedD
     notification.innerHTML = view.item(0).innerHTML;
 
     const button = notification.getElementsByClassName('notification-button')[0];
-    const url = release.beta ? 'https://beta-wallet.trezor.io/' : 'https://wallet.trezor.io/';
+    const url = release.channel === 'beta' ? 'https://beta-wallet.trezor.io/' : 'https://wallet.trezor.io/';
     const version = release.version.join('.');
     button.setAttribute('href', `${url}?fw=${version}`);
 
