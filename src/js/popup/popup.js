@@ -153,7 +153,11 @@ const onLoad = () => {
     if (window.location.hash.length > 0) {
         if (window.location.hash.indexOf('unsupported') >= 0) {
             view.initBrowserView({
+                name: '',
+                osname: '',
+                outdated: false,
                 supported: false,
+                mobile: false,
             });
         } else {
             if (window.opener) {
