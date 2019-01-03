@@ -44,12 +44,18 @@ type BlockchainLinkOutput = {
     // amount: string,
 }
 
+type BlockchainLinkToken = {
+    name: string,
+    shortcut: string,
+    value: string,
+}
+
 export type BlockchainLinkTransaction = {
     type: 'send' | 'recv',
-    status: 'pending' | 'confirmed',
-    timestamp?: string,
-    confirmations: number,
-    address: string,
+    timestamp?: string | number,
+    blockHeight: number,
+    blockHash?: string,
+    descriptor: string,
     inputs: Array<BlockchainLinkInput>,
     outputs: Array<BlockchainLinkOutput>,
 
@@ -58,9 +64,8 @@ export type BlockchainLinkTransaction = {
     fee: string,
     total: string,
 
+    tokens?: Array<BlockchainLinkToken>,
     sequence?: number, // eth: nonce || ripple: sequence
-    signature?: string, // ripple: tx signature
-    currency?: string, // eth: tokens
 }
 // copy-paste from blockchain-link end
 
