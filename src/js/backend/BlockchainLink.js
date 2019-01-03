@@ -48,7 +48,7 @@ export default class Blockchain {
             name: this.coinInfo.shortcut,
             worker: worker,
             server: settings.url,
-            debug: true,
+            debug: false,
         });
     }
 
