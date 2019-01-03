@@ -8,13 +8,12 @@ type Release = {
     version: Array<number>,
     min_bridge_version: Array<number>,
     min_firmware_version: Array<number>,
+    bootloader_version: Array<number>,
     min_bootloader_version: Array<number>,
     url: string,
-    beta: boolean,
-    rollout: number,
+    channel: string,
     fingerprint: string,
     changelog: string,
-    notes: string,
 };
 
 const releases: Array<Release> = [];

@@ -24,6 +24,12 @@ export const validateParams = (values: Object, fields: Array<Param>): void => {
                     } else if (value.length < 1) {
                         throw invalidParameter(`Parameter "${ field.name }" is empty.`);
                     }
+                } else if (field.type === 'amount') {
+                    if (typeof value !== 'string') {
+                        throw invalidParameter(`Parameter "${ field.name }" has invalid type. "string" expected.`);
+                    } else if (parseInt(value, 10).toString(10) !== value) {
+                        throw invalidParameter(`Parameter "${ field.name }" has invalid value. Integer representation expected.`);
+                    }
                 } else if (typeof value !== field.type) {
                     // invalid type
                     throw invalidParameter(`Parameter "${ field.name }" has invalid type. "${ field.type }" expected.`);

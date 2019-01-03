@@ -284,9 +284,7 @@ export default class DeviceList extends EventEmitter {
             return false;
         }
         if (this.transport.isOutdated) {
-            // return true; temporary disabled
-            // Issue: https://github.com/trezor/connect/issues/236
-            return false;
+            return true;
         }
         return false;
     }

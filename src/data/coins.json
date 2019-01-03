@@ -55,11 +55,11 @@
             "address_type_p2sh": 196,
             "bech32_prefix": "tb",
             "bip115": false,
-            "bitcore": [
-                "https://testnet-bitcore1.trezor.io",
-                "https://testnet-bitcore2.trezor.io"
+            "bitcore": [],
+            "blockbook": [
+                "https://tbtc1.trezor.io",
+                "https://tbtc2.trezor.io"
             ],
-            "blockbook": [],
             "blocktime_seconds": 600,
             "cashaddr_prefix": null,
             "coin_label": "Testnet",
@@ -541,7 +541,7 @@
                 "connect": true,
                 "trezor1": "1.6.2",
                 "trezor2": "2.0.7",
-                "webwallet": false
+                "webwallet": true
             },
             "url": "https://www.ethereum.org"
         },
@@ -706,7 +706,7 @@
                 "connect": true,
                 "trezor1": "1.6.2",
                 "trezor2": "2.0.7",
-                "webwallet": false
+                "webwallet": true
             },
             "url": "https://ethereumclassic.github.io"
         },
@@ -744,6 +744,22 @@
         },
         {
             "blockbook": [],
+            "chain": "mix",
+            "chain_id": 76,
+            "name": "Mix",
+            "rskip60": false,
+            "shortcut": "MIX",
+            "slip44": 76,
+            "support": {
+                "connect": true,
+                "trezor1": "1.7.2",
+                "trezor2": "2.0.10",
+                "webwallet": false
+            },
+            "url": "https://www.mix-blockchain.org"
+        },
+        {
+            "blockbook": [],
             "chain": "clo",
             "chain_id": 820,
             "name": "Callisto",
@@ -762,7 +778,6 @@
             "blockbook": [],
             "chain": "ath",
             "chain_id": 1620,
-            "duplicate": true,
             "name": "Atheios",
             "rskip60": false,
             "shortcut": "ATH",
@@ -899,6 +914,9 @@
                 "trezor1": false,
                 "trezor2": "2.0.8",
                 "webwallet": false
+            },
+            "wallet": {
+                "AdaLite": "https://adalite.io/app"
             }
         },
         {
@@ -911,7 +929,8 @@
                 "trezor1": "1.7.1",
                 "trezor2": "2.0.7",
                 "webwallet": false
-            }
+            },
+            "wallet": {}
         },
         {
             "curve": "ed25519",
@@ -923,6 +942,9 @@
                 "trezor1": "1.7.1",
                 "trezor2": "2.0.8",
                 "webwallet": false
+            },
+            "wallet": {
+                "Account Viewer": "https://trezor.io/stellar/"
             }
         },
         {
@@ -973,6 +995,9 @@
                 "trezor1": false,
                 "trezor2": "2.0.8",
                 "webwallet": false
+            },
+            "wallet": {
+                "SimpleStaking": "https://simplestaking.com"
             }
         }
     ],
@@ -989,10 +1014,7 @@
                 "trezor2": "2.0.7",
                 "webwallet": false
             },
-            "ticker": "XEM",
-            "wallet": {
-                "Nano Wallet": "https://nem.io/downloads/"
-            }
+            "ticker": "XEM"
         },
         {
             "divisibility": 6,
@@ -1013,10 +1035,7 @@
                 "trezor2": "2.0.7",
                 "webwallet": false
             },
-            "ticker": "DIM",
-            "wallet": {
-                "Nano Wallet": "https://nem.io/downloads/"
-            }
+            "ticker": "DIM"
         },
         {
             "divisibility": 6,
@@ -1033,10 +1052,7 @@
                 "trezor2": "2.0.7",
                 "webwallet": false
             },
-            "ticker": "DIMTOK",
-            "wallet": {
-                "Nano Wallet": "https://nem.io/downloads/"
-            }
+            "ticker": "DIMTOK"
         },
         {
             "divisibility": 0,
@@ -1053,10 +1069,7 @@
                 "trezor2": "2.0.7",
                 "webwallet": false
             },
-            "ticker": "BREEZE",
-            "wallet": {
-                "Nano Wallet": "https://nem.io/downloads/"
-            }
+            "ticker": "BREEZE"
         },
         {
             "divisibility": 0,
@@ -1073,10 +1086,7 @@
                 "trezor2": "2.0.7",
                 "webwallet": false
             },
-            "ticker": "PAC:HRT",
-            "wallet": {
-                "Nano Wallet": "https://nem.io/downloads/"
-            }
+            "ticker": "PAC:HRT"
         },
         {
             "divisibility": 6,
@@ -1097,10 +1107,7 @@
                 "trezor2": "2.0.7",
                 "webwallet": false
             },
-            "ticker": "PAC:CHS",
-            "wallet": {
-                "Nano Wallet": "https://nem.io/downloads/"
-            }
+            "ticker": "PAC:CHS"
         }
     ]
 }

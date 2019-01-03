@@ -9,12 +9,27 @@ __changed__
 - Moved flowtype declarations from ./src/flowtype to ./src/js/types
 - Refactor CoinInfo to 3 types: BitcoinNetworkInfo, EthereumNetworkInfo and MiscNetworkInfo
 
+# 6.0.3
+__added__
+- Added `TrezorConnect.tezosGetAddress` method
+- Added `TrezorConnect.tezosGetPublicKey` method
+- Added `TrezorConnect.tezosSignTransaction` method
+- Added `TrezorConnect.dispose` method
+- Added `TrezorConnect.cancel` method
+
+__changed__
+- Whitelist `trusted` mode for instances hosted locally
+
+__fixed__
+- Stellar signTransaction amount validation
+- Firmware (model) not supported popup screen
 
 # 6.0.2
 __added__
 - Added `TrezorConnect.wipeDevice` method
 - Added `TrezorConnect.resetDevice` method
 - Calling method on device with seedless setup is disabled by default
+
 __changed__
 - Post message to window.parent instead of window.top
 - Authenticating device using BTC testnet path instead of dummy m/1/0/0
@@ -24,6 +39,7 @@ __fixed__
 - WRONG_PREVIOUS_SESSION race condition when switching between tabs and acquiring device
 - removed unnecessary console.logs and build scripts
 - Docker build for npm
+
 __changed__
 - Renamed directory "dist" to "build"
 
@@ -36,9 +52,11 @@ __added__
 - Added `BLOCKCHAIN` events
 - Added `./data/bridge/releases.json`
 - Added bridge release info in TRANSPORT.START and TRANSPORT.ERROR event
+
 __fixed__
 - TRANSPORT.ERROR event when computer goes to sleep
 - unexpectedDeviceMode immediately rejects call in trusted mode
+
 __changed__
 - coins.json merged as one file (removed data/ethereumNetworks.json)
 - License to T-RSL
@@ -57,10 +75,12 @@ __added__
 - Added `TrezorConnect.cardanoGetPublicKey` method
 - Ability to sign hexed ethereum message
 - `network` parameter to `TrezorConnect.cardanoSignTransaction` method
+
 __fixed__
 - TRANSPORT.ERROR event when computer goes to sleep
 - finding backend by name instead of urls
 - proper FW version for Lisk and Stellar
+
 __removed__
 - Removed `TrezorConnect.cardanoSignMessage` method
 - Removed `TrezorConnect.cardanoVerifyMessage` method
@@ -73,17 +93,19 @@ __added__
 - Exception for not supported firmware when value for "trezor1" or "trezor2" inside coins.json is not set
 - Disable customMessage method for devices with official firmware
 - Added new field in `TrezorConnect.signEthereumTransaction` for `Wanchain`
+
 __changed__
 - Separate "getPublicKey" and "getAddress" methods for all coins
+
 __fixed__
 - Device state verification while using multiple instances with the same passphrase
 - ConnectSettings sensitive settings verification in DataManager
 - removed package-lock.json from repository
 
-
 # 5.0.30
 __added__
 - Added 'send-max' and 'opreturn' output types to `TrezorConnect.composeTransaction`
+
 __fixed__
 - Handle popup close event while waiting for iframe handshake
 - Removed ledgerVersion (protocol_version) from StellarSignTransaction method
@@ -104,6 +126,7 @@ __fixed__
 __added__
 - Added support for WebExtensions (Chrome/Firefox)
 - Added host icon for whitelisted domains
+
 __fixed__
 - Fixed passphrase input type (revert to password type)
 - Fixed popup and iframe timeout handling
@@ -113,25 +136,30 @@ __fixed__
 - Fixed handling not initialized iframe
 - Fixed iframe ad-blocker handling
 - Fixed popup views
+
 __changed__
 - Popup as new tab
 
 # 5.0.26
 __added__
 - Added support for Dogecoin and Vertcoin
+
 __fixed__
 - Fixed handling not initialized device
 - SignTransaction: amount as string
 - Handle origin of file://
+
 __changed__
 - Default url in connect
 
 # 5.0.25
 __added__
 - Added documentation
+
 __fixed__
 - filter UI events for popup and trusted apps
 - Fixed `TrezorConnect.signMessage` and `TrezorConnect.verifyMessage` signature to base64 format
+
 __changed__
 - Changed constants prefix from "__" to "-"
 
@@ -160,6 +188,7 @@ __added__
 - Popup warning with outdated firmware and outdated bridge
 - Tests with emulator
 - Added '@babel/runtime' to package dependency
+
 __fixed__
 - Fixed device authentication and popup open delay
 - Minor fixes in popup view
@@ -171,6 +200,7 @@ __fixed__
 __added__
 - Added firmware check against CoinInfo.support values
 - Added outdate firmware warning in popup
+
 __fixed__
 - Fixed `TrezorConnect.requestLogin` parameters
 - Fixed race condition in UI.REQUEST_CONFIRMATION
@@ -180,6 +210,7 @@ __fixed__
 # 5.0.18
 __added__
 - Added iframe lazy loading
+
 __fixed__
 - Build script for npm module
 - Ultimate flow type
@@ -197,10 +228,12 @@ __added__
 - Added `TrezorConnect.requestLogin` method
 - Added cashaddr support for BCH
 - Added documentation
+
 __fixed__
 - Fixed `TrezorConnect.customMessage` logic and security
 - Fixed `TrezorConnect.stellarSignTransaction` parameters compatible with "js-stellar-base"
 - Fixed flowtype declarations for all methods. Params and responses
+
 __removed__
 - Removed unnecessary settings from ConnectSettings
 - Removed unused methods from TrezorConnect
@@ -208,8 +241,10 @@ __removed__
 # 5.0.16
 __added__
 - Added `TrezorConnect.stellarSignTransaction` method
+
 __changed__
 - Changed `TrezorConnect.ethereumSignTransaction` parameters
+
 __removed__
 - Removed type and event fields from RESPONSE
 
@@ -223,6 +258,7 @@ __added__
 - Added `TrezorConnect.nemSignTransaction` method
 - Added `TrezorConnect.stellarGetAddress` method
 - Added `TrezorConnect.customMessage` method
+
 __fixed__
 - Fixed flowtype
 
@@ -232,7 +268,7 @@ __added__
 - Added messages from json instead of config_signed.bin
 - Added popup.html UI/css
 - Karma + Jasmine tests
-__fixed__
+
 __removed__
 - Removed support for Bridge v1 and chrome extension
 

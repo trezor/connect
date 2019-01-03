@@ -68,9 +68,10 @@ export default class DataManager {
             const config: JSON = await httpRequest(configUrl, 'json');
             this.config = parseConfig(config);
 
-            // check if origin is trusted
+            // check if origin is localhost or trusted
+            const isLocalhost: boolean = location.hostname === 'localhost';
             const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || '');
-            this.settings.trustedHost = !!whitelist && !this.settings.popup;
+            this.settings.trustedHost = isLocalhost || (!!whitelist && !this.settings.popup);
             // ensure that popup will be used
             if (!this.settings.trustedHost) {
                 this.settings.popup = true;
