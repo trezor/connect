@@ -1,6 +1,8 @@
 /* @flow */
 'use strict';
 
+import { validateParams } from './paramsValidator';
+
 import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type {
     Transaction as $StellarTransaction,
@@ -88,23 +90,26 @@ const transformSignMessage = (tx: $StellarTransaction): StellarSignTxMessage => 
 const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => {
     switch (op.type) {
         case 'createAccount' :
+            validateParams(op, [{ name: 'startingBalance', type: 'amount' }]);
             return {
                 type: 'StellarCreateAccountOp',
                 new_account: op.destination,
                 source_account: op.source,
-                starting_balance: parseFloat(op.startingBalance),
+                starting_balance: parseInt(op.startingBalance, 10),
             };
 
         case 'payment' :
+            validateParams(op, [{ name: 'amount', type: 'amount' }]);
             return {
                 type: 'StellarPaymentOp',
                 source_account: op.source,
                 destination_account: op.destination,
                 asset: op.asset,
-                amount: parseFloat(op.amount),
+                amount: parseInt(op.amount, 10),
             };
 
         case 'pathPayment' :
+            validateParams(op, [{ name: 'destAmount', type: 'amount' }]);
             return {
                 type: 'StellarPathPaymentOp',
                 source_account: op.source,
@@ -112,16 +117,17 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 send_max: op.sendMax,
                 destination_account: op.destination,
                 destination_asset: op.destAsset,
-                destination_amount: parseFloat(op.destAmount),
+                destination_amount: parseInt(op.destAmount, 10),
                 paths: op.path,
             };
 
         case 'manageOffer' :
+            validateParams(op, [{ name: 'amount', type: 'amount' }]);
             return {
                 type: 'StellarManageOfferOp',
                 source_account: op.source,
                 offer_id: op.offerId,
-                amount: parseFloat(op.amount),
+                amount: parseInt(op.amount, 10),
                 buying_asset: op.buying,
                 selling_asset: op.selling,
                 price_n: op.price.n,
@@ -129,11 +135,12 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
             };
 
         case 'createPassiveOffer' :
+            validateParams(op, [{ name: 'amount', type: 'amount' }]);
             return {
                 type: 'StellarCreatePassiveOfferOp',
                 source_account: op.source,
                 offer_id: op.offerId,
-                amount: parseFloat(op.amount),
+                amount: parseInt(op.amount, 10),
                 buying_asset: op.buying,
                 selling_asset: op.selling,
                 price_n: op.price.n,
@@ -141,6 +148,8 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
             };
 
         case 'setOptions' :
+            validateParams(op, [{ name: 'signer', type: 'object' }]);
+            if (!op.signer) op.signer = {};
             return {
                 type: 'StellarSetOptionsOp',
                 source_account: op.source,
@@ -158,11 +167,12 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
             };
 
         case 'changeTrust' :
+            validateParams(op, [{ name: 'limit', type: 'amount' }]);
             return {
                 type: 'StellarChangeTrustOp',
                 source_account: op.source,
                 asset: op.line,
-                limit: parseFloat(op.limit),
+                limit: parseInt(op.limit, 10),
             };
 
         case 'allowTrust' :

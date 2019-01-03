@@ -3,7 +3,7 @@
 ### Examples
 Bitcoin account 1 using BIP44 derivation path
 ```javascript
-"m/49'0/'0'"
+"m/49'/0/'0'"
 ```
 Bitcoin account 1 using hardended path
 ```javascript
@@ -11,7 +11,7 @@ Bitcoin account 1 using hardended path
 ```
 Bitcoin first address address of account 1 using BIP44 derivation path
 ```javascript
-"m/49'0/'0'/0/0"
+"m/49'/0/'0'/0/0"
 ```
 Bitcoin first address address of account 1 using hardended path
 ```javascript

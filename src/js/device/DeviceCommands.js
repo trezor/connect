@@ -319,6 +319,29 @@ export default class DeviceCommands {
     }
     // Lisk: end
 
+    // Tezos: begin
+    async tezosGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.TezosAddress> {
+        const response: MessageResponse<trezor.TezosAddress> = await this.typedCall('TezosGetAddress', 'TezosAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async tezosGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.TezosPublicKey> {
+        const response: MessageResponse<trezor.TezosPublicKey> = await this.typedCall('TezosGetPublicKey', 'TezosPublicKey', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async tezosSignTransaction(message: trezor.TezosTransaction): Promise<trezor.TezosSignedTx> {
+        const response: MessageResponse<trezor.TezosSignedTx> = await this.typedCall('TezosSignTx', 'TezosSignedTx', message);
+        return response.message;
+    }
+    // Tezos: end
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,
