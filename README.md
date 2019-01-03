@@ -12,7 +12,7 @@ We started tagging versions and releasing them to separate URLs, so we don't bre
 Currently, we are at version 6, which has an url https://connect.trezor.io/6/trezor-connect.js.
 <br> 
 The older version listed below are still working, but new features are not being added.
-* https://connect.trezor.io/5/connect.js,
+* https://connect.trezor.io/5/trezor-connect.js,
 * https://connect.trezor.io/4/connect.js,
 * https://connect.trezor.io/3/connect.js,
 * https://connect.trezor.io/2/connect.js
