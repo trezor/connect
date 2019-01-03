@@ -1,3 +1,5 @@
+/* @flow */
+
 export { init, showView, postMessage } from './common';
 export { initPinView } from './pin';
 export { initPassphraseView } from './passphrase';
@@ -11,3 +13,4 @@ export { initConfirmationView } from './confirmation';
 export { initBrowserView } from './browser';
 export { passphraseOnDeviceView } from './passphraseOnDevice';
 export { firmwareRequiredUpdate } from './firmwareRequiredUpdate';
+export { firmwareNotSupported } from './firmwareNotSupported';

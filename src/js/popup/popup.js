@@ -99,7 +99,7 @@ const handleMessage = (event: PostMessageEvent): void => {
             view.firmwareRequiredUpdate(message.payload);
             break;
         case UI.FIRMWARE_NOT_SUPPORTED :
-            showView('firmware-not-supported');
+            view.firmwareNotSupported(message.payload);
             break;
         case UI.FIRMWARE_OUTDATED :
             showFirmwareUpdateNotification(message.payload);
