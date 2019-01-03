@@ -5,12 +5,15 @@ __added__
 - Added `TrezorConnect.tezosSignTransaction` method
 - Added `TrezorConnect.dispose` method
 - Added `TrezorConnect.cancel` method
+- Added new firmware releases
+- Added new bridge releases
 
 __changed__
 - Whitelist `trusted` mode for instances hosted locally
 
 __fixed__
 - Stellar signTransaction amount validation
+- Stellar signer field validation ("StellarSetOptionsOp" operation in "stellarSignTransaction" method)
 - Firmware (model) not supported popup screen
 
 # 6.0.2
