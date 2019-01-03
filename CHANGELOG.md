@@ -11,6 +11,7 @@ __changed__
 
 __fixed__
 - Stellar signTransaction amount validation
+- Firmware (model) not supported popup screen
 
 # 6.0.2
 __added__
