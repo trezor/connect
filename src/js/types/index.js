@@ -178,7 +178,7 @@ export type CardanoSignTransaction = (CARDANO.$CardanoSignTransaction) => Promis
 
 declare function F_TezosGetAddress(params: (P.$Common & TEZOS.$TezosGetAddress)): Promise<TEZOS.TezosGetAddress$>;
 declare function F_TezosGetAddress(params: (P.$Common & { bundle: Array<TEZOS.$TezosGetAddress> })): Promise<TEZOS.TezosGetAddress$$>;
-/* eslint-enable no-redeclare */
+
 export type TezosGetAddress = typeof F_TezosGetAddress;
 declare function F_TezosGetPublicKey(params: (P.$Common & TEZOS.$TezosGetPublicKey)): Promise<TEZOS.TezosGetPublicKey$>;
 declare function F_TezosGetPublicKey(params: (P.$Common & { bundle: Array<TEZOS.$TezosGetPublicKey> })): Promise<TEZOS.TezosGetPublicKey$$>;
