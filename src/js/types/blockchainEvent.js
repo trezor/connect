@@ -52,9 +52,9 @@ type BlockchainLinkToken = {
 
 export type BlockchainLinkTransaction = {
     type: 'send' | 'recv',
-    timestamp?: string | number,
-    blockHeight: number,
-    blockHash?: string,
+    timestamp: ?number,
+    blockHeight: ?number,
+    blockHash: ?string,
     descriptor: string,
     inputs: Array<BlockchainLinkInput>,
     outputs: Array<BlockchainLinkOutput>,
