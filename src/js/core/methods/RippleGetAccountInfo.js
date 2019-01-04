@@ -13,7 +13,7 @@ import { UiMessage } from '../../message/builder';
 import { create as createBackend } from '../../backend/BlockchainLink';
 
 import type { CoreMessage, MiscNetworkInfo } from '../../types';
-import type { RippleAccount } from '../../types/ripple';
+import type { RippleAccount } from '../../types/account';
 
 type Params = {
     accounts: Array<RippleAccount>,
@@ -93,16 +93,16 @@ export default class RippleGetAccountInfo extends AbstractMethod {
         for (let i = 0; i < this.params.accounts.length; i++) {
             const account = this.params.accounts[i];
             const { path } = account;
-            if (path && !account.address) {
+            if (path && !account.descriptor) {
                 const rippleAddress = await this.device.getCommands().rippleGetAddress(
                     path,
                     false
                 );
-                account.address = rippleAddress.address;
+                account.descriptor = rippleAddress.address;
                 account.serializedPath = getSerializedPath(path);
             }
 
-            const freshInfo = await blockchain.getAccountInfo(account.address, {
+            const freshInfo = await blockchain.getAccountInfo(account.descriptor, {
                 level: this.params.level,
                 from: account.block,
             });
