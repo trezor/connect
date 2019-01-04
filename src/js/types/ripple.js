@@ -2,20 +2,9 @@
 
 import type { $Path, $Common } from './params';
 import type { Unsuccessful$ } from './response';
+import type { RippleAccount } from './account';
 
 // get account info
-
-export type RippleAccount = {
-    address: string,
-    path?: Array<number>,
-    serializedPath?: string,
-    block: number,
-    transactions: number,
-    balance: string,
-    availableBalance: string,
-    sequence: number,
-}
-
 type RequestedAccount = {
     address: string,
     block?: number,

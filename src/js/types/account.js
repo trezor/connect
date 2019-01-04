@@ -11,3 +11,25 @@ export type BitcoinAccount = {
     balance: number,
     transactions: number,
 };
+
+export type EthereumAccount = {
+    descriptor: string,
+    path?: Array<number>,
+    serializedPath?: string,
+    block: number,
+    transactions: number,
+    balance: string,
+    availableBalance: string,
+    nonce: number,
+};
+
+export type RippleAccount = {
+    descriptor: string,
+    path?: Array<number>,
+    serializedPath?: string,
+    block: number,
+    transactions: number,
+    balance: string,
+    availableBalance: string,
+    sequence: number,
+}
