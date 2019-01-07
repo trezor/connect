@@ -62,7 +62,7 @@ export const getSegwitNetwork = (coin: BitcoinNetworkInfo): ?$ElementType<Bitcoi
     return null;
 };
 
-export const getBech32Network = (coin: CoinInfo): ?BitcoinJsNetwork => {
+export const getBech32Network = (coin: BitcoinNetworkInfo): ?$ElementType<BitcoinNetworkInfo, 'network'> => {
     if (coin.segwit && typeof coin.xPubMagicSegwitNative === 'number') {
         return {
             ...coin.network,
