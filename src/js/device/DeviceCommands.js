@@ -6,10 +6,10 @@ import randombytes from 'randombytes';
 
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as hdnodeUtils from '../utils/hdnode';
-import { isSegwitPath, getSerializedPath } from '../utils/pathUtils';
+import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType } from '../utils/pathUtils';
 import Device from './Device';
 
-import { getSegwitNetwork } from '../data/CoinInfo';
+import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
 import type { CoinInfo } from 'flowtype';
 import type { Transport } from 'trezor-link';
@@ -93,11 +93,13 @@ export default class DeviceCommands {
 
     async getPublicKey(
         address_n: Array<number>,
-        coin?: string
+        coin_name: string,
+        script_type?: ?string,
     ): Promise<trezor.PublicKey> {
         const response: MessageResponse<trezor.PublicKey> = await this.typedCall('GetPublicKey', 'PublicKey', {
-            address_n: address_n,
-            coin_name: coin || 'Bitcoin',
+            address_n,
+            coin_name,
+            script_type,
         });
         return response.message;
     }
@@ -107,21 +109,75 @@ export default class DeviceCommands {
         path: Array<number>,
         coinInfo: ?CoinInfo
     ): Promise<trezor.HDNodeResponse> {
+        if (!this.device.atLeast(['1.7.2', '2.0.10'])) {
+            return await this.getBitcoinHDNode(path, coinInfo);
+        }
+        if (!coinInfo) {
+            return await this.getBitcoinHDNode(path);
+        }
+
+        const suffix: number = 0;
+        const childPath: Array<number> = path.concat([suffix]);
+        let network: ?bitcoin.Network;
+        if (isMultisigPath(path)) {
+            network = coinInfo.network;
+        } else if (isSegwitPath(path)) {
+            network = getSegwitNetwork(coinInfo);
+        } else if (isBech32Path(path)) {
+            network = getBech32Network(coinInfo);
+        }
+
+        let scriptType: ?string = getScriptType(path);
+        if (!network) {
+            network = coinInfo.network;
+            if (scriptType !== 'SPENDADDRESS') {
+                scriptType = undefined;
+            }
+        }
+
+        const resKey: trezor.PublicKey = await this.getPublicKey(path, coinInfo.name, scriptType);
+        const childKey: trezor.PublicKey = await this.getPublicKey(childPath, coinInfo.name, scriptType);
+        const publicKey: trezor.PublicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix, network, coinInfo.network);
+
+        const response: trezor.HDNodeResponse = {
+            path,
+            serializedPath: getSerializedPath(path),
+            childNum: publicKey.node.child_num,
+            xpub: publicKey.xpub,
+            chainCode: publicKey.node.chain_code,
+            publicKey: publicKey.node.public_key,
+            fingerprint: publicKey.node.fingerprint,
+            depth: publicKey.node.depth,
+        };
+
+        if (network !== coinInfo.network) {
+            response.xpubSegwit = response.xpub;
+            response.xpub = hdnodeUtils.convertXpub(publicKey.xpub, network, coinInfo.network);
+        }
+
+        return response;
+    }
+
+    // deprecated
+    // legacy method (below FW 1.7.2 & 2.0.10), remove it after next "required" FW update.
+    // keys are exported in BTC format and converted to proper format in hdnodeUtils
+    // old firmware didn't return keys with proper prefix (ypub, Ltub.. and so on)
+    async getBitcoinHDNode(
+        path: Array<number>,
+        coinInfo?: ?CoinInfo
+    ): Promise<trezor.HDNodeResponse> {
         const suffix: number = 0;
         const childPath: Array<number> = path.concat([suffix]);
 
-        // To keep it backward compatible** this keys are exported in BTC format
-        // and converted to proper format in hdnodeUtils
-        // **  old firmware didn't return keys with proper prefix (xpub, Ltub.. and so on)
-        const resKey: trezor.PublicKey = await this.getPublicKey(path);
-        const childKey: trezor.PublicKey = await this.getPublicKey(childPath);
+        const resKey: trezor.PublicKey = await this.getPublicKey(path, 'Bitcoin');
+        const childKey: trezor.PublicKey = await this.getPublicKey(childPath, 'Bitcoin');
         const publicKey: trezor.PublicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix);
 
         const response: trezor.HDNodeResponse = {
             path,
             serializedPath: getSerializedPath(path),
             childNum: publicKey.node.child_num,
-            xpub: coinInfo ? hdnodeUtils.convertXpub(publicKey.xpub, coinInfo.network) : publicKey.xpub,
+            xpub: coinInfo ? hdnodeUtils.convertBitcoinXpub(publicKey.xpub, coinInfo.network) : publicKey.xpub,
             chainCode: publicKey.node.chain_code,
             publicKey: publicKey.node.public_key,
             fingerprint: publicKey.node.fingerprint,
@@ -133,25 +189,26 @@ export default class DeviceCommands {
         if (coinInfo) {
             const segwitNetwork = getSegwitNetwork(coinInfo);
             if (segwitNetwork && isSegwitPath(path)) {
-                response.xpubSegwit = hdnodeUtils.convertXpub(publicKey.xpub, segwitNetwork);
+                response.xpubSegwit = hdnodeUtils.convertBitcoinXpub(publicKey.xpub, segwitNetwork);
             }
         }
         return response;
     }
 
     async getDeviceState(): Promise<string> {
-        const response: trezor.PublicKey = await this.getPublicKey([(49 | 0x80000000) >>> 0, (1 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0]);
+        const response: trezor.PublicKey = await this.getPublicKey([(44 | 0x80000000) >>> 0, (1 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0], 'Testnet', 'SPENDADDRESS');
         const secret: string = `${response.xpub}#${this.device.features.device_id}#${this.device.instance}`;
         const state: string = this.device.getTemporaryState() || bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
         return state;
     }
 
     async getAddress(address_n: Array<number>, coinInfo: CoinInfo, showOnTrezor: boolean): Promise<trezor.Address> {
+        const scriptType: ?string = getScriptType(address_n);
         const response: Object = await this.typedCall('GetAddress', 'Address', {
             address_n,
             coin_name: coinInfo.name,
             show_display: !!showOnTrezor,
-            script_type: isSegwitPath(address_n) ? 'SPENDP2SHWITNESS' : 'SPENDADDRESS',
+            script_type: scriptType && scriptType !== 'SPENDMULTISIG' ? scriptType : 'SPENDADDRESS', // script_type 'SPENDMULTISIG' throws Failure_FirmwareError
         });
 
         return {
@@ -166,11 +223,12 @@ export default class DeviceCommands {
         message: string,
         coin: ?string
     ): Promise<trezor.MessageSignature> {
+        const scriptType: ?string = getScriptType(address_n);
         const response: MessageResponse<trezor.MessageSignature> = await this.typedCall('SignMessage', 'MessageSignature', {
             address_n,
             message,
             coin_name: coin || 'Bitcoin',
-            script_type: isSegwitPath(address_n) ? 'SPENDP2SHWITNESS' : undefined,
+            script_type: scriptType && scriptType !== 'SPENDMULTISIG' ? scriptType : 'SPENDADDRESS', // script_type 'SPENDMULTISIG' throws Failure_FirmwareError
         });
         return response.message;
     }
