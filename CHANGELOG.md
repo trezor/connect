@@ -10,6 +10,7 @@ __added__
 
 __changed__
 - Whitelist `trusted` mode for instances hosted locally
+- Send correct `script_type` in `GetPublicKey` message
 
 __fixed__
 - Stellar signTransaction amount validation
