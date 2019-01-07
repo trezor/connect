@@ -510,7 +510,7 @@ const p2sh = (): SubtestSignTransaction => {
                 {
                     address: '3DKGE1pvPpBAgZj94MbCinwmksewUNNYVR',
                     amount: '390000',
-                    script_type: 'PAYTOSCRIPTHASH',
+                    script_type: 'PAYTOADDRESS',
                 },
             ],
         },

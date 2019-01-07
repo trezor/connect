@@ -3,7 +3,7 @@
 // npm packages
 import bchaddrjs from 'bchaddrjs';
 // local modules
-import { isSegwitPath } from '../../../utils/pathUtils';
+import { getOutputScriptType } from '../../../utils/pathUtils';
 import { isScriptHash, isValidAddress } from '../../../utils/addressUtils';
 import { fixPath, convertMultisigPubKey, fixAmount } from './index';
 import { validateParams } from '../helpers/paramsValidator';
@@ -21,8 +21,9 @@ import type { TransactionOutput } from '../../../types/trezor';
 export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInfo: CoinInfo): Array<TransactionOutput> => {
     const trezorOutputs: Array<TransactionOutput> = outputs.map(fixPath).map(fixAmount).map(convertMultisigPubKey.bind(null, coinInfo.network));
     for (const output of trezorOutputs) {
-        if (output.address_n && isSegwitPath(output.address_n)) {
-            if (output.script_type !== 'PAYTOP2SHWITNESS') throw new Error('Output change script_type should be set to PAYTOP2SHWITNESS');
+        if (output.address_n) {
+            const scriptType = getOutputScriptType(output.address_n) || 'undefined';
+            if (output.script_type !== scriptType) throw new Error(`Output change script_type should be set to ${scriptType}`);
         } else if (typeof output.address === 'string' && !isValidAddress(output.address, coinInfo)) {
             // validate address with coin info
             throw new Error(`Invalid ${ coinInfo.label } output address ${ output.address }`);
@@ -99,13 +100,14 @@ export const outputToTrezor = (output: BuildTxOutput, coinInfo: CoinInfo): Trans
         }
 
         const address_n: Array<number> = _flow_makeArray(output.path);
+        const script_type = getOutputScriptType(address_n) || 'PAYTOADDRESS';
         // $FlowIssue
         const amount: number = output.value;
 
         return {
             address_n,
             amount,
-            script_type: output.segwit ? 'PAYTOP2SHWITNESS' : 'PAYTOADDRESS',
+            script_type,
         };
     }
     const address = output.address;
@@ -123,7 +125,6 @@ export const outputToTrezor = (output: BuildTxOutput, coinInfo: CoinInfo): Trans
     // make sure that cashaddr has prefix
     return {
         address: isCashAddress ? bchaddrjs.toCashAddress(address) : address,
-        // address: address,
         amount: amount,
         script_type: 'PAYTOADDRESS',
     };
