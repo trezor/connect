@@ -62,6 +62,19 @@ export const getSegwitNetwork = (coin: BitcoinNetworkInfo): ?$ElementType<Bitcoi
     return null;
 };
 
+export const getBech32Network = (coin: CoinInfo): ?BitcoinJsNetwork => {
+    if (coin.segwit && typeof coin.xPubMagicSegwitNative === 'number') {
+        return {
+            ...coin.network,
+            bip32: {
+                ...coin.network.bip32,
+                public: coin.xPubMagicSegwitNative,
+            },
+        };
+    }
+    return null;
+};
+
 // fix coinInfo network values from path (segwit/legacy)
 export const fixCoinInfoNetwork = (ci: BitcoinNetworkInfo, path: Array<number>): BitcoinNetworkInfo => {
     const coinInfo = cloneCoinInfo(ci);

@@ -35,8 +35,50 @@ export const getHDPath = (path: string): Array<number> => {
         });
 };
 
+export const isMultisigPath = (path: Array<number> | any): boolean => {
+    return Array.isArray(path) && path[0] === toHardened(48);
+};
+
 export const isSegwitPath = (path: Array<number> | any): boolean => {
     return Array.isArray(path) && path[0] === toHardened(49);
+};
+
+export const isBech32Path = (path: Array<number> | any): boolean => {
+    return Array.isArray(path) && path[0] === toHardened(84);
+};
+
+export const getScriptType = (path: Array<number> | any): ?('SPENDADDRESS' | 'SPENDMULTISIG' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS') => {
+    if (!Array.isArray(path) || path.length < 1) return;
+    const p1 = fromHardened(path[0]);
+    switch (p1) {
+        case 44:
+            return 'SPENDADDRESS';
+        case 48:
+            return 'SPENDMULTISIG';
+        case 49:
+            return 'SPENDP2SHWITNESS';
+        case 84:
+            return 'SPENDWITNESS';
+        default:
+            return;
+    }
+};
+
+export const getOutputScriptType = (path: Array<number> | any): ?('PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS' | 'PAYTOP2SHWITNESS') => {
+    if (!Array.isArray(path) || path.length < 1) return;
+    const p = fromHardened(path[0]);
+    switch (p) {
+        case 44:
+            return 'PAYTOADDRESS';
+        case 48:
+            return 'PAYTOMULTISIG';
+        case 49:
+            return 'PAYTOP2SHWITNESS';
+        case 84:
+            return 'PAYTOWITNESS';
+        default:
+            return;
+    }
 };
 
 export const validatePath = (path: string | Array<number>, length: number = 0, base: boolean = false): Array<number> => {
@@ -59,7 +101,7 @@ export const validatePath = (path: string | Array<number>, length: number = 0, b
     return base ? valid.splice(0, 3) : valid;
 };
 
-export function getSerializedPath(path: Array<number>): string {
+export const getSerializedPath = (path: Array<number>): string => {
     return path.map((i) => {
         const s = (i & ~HD_HARDENED).toString();
         if (i & HD_HARDENED) {
@@ -68,7 +110,7 @@ export function getSerializedPath(path: Array<number>): string {
             return s;
         }
     }).join('/');
-}
+};
 
 export const getPathFromIndex = (bip44purpose: number, bip44cointype: number, index: number): Array<number> => {
     return [
@@ -78,12 +120,12 @@ export const getPathFromIndex = (bip44purpose: number, bip44cointype: number, in
     ];
 };
 
-export function getIndexFromPath(path: Array<number>): number {
+export const getIndexFromPath = (path: Array<number>): number => {
     if (path.length < 3) {
         throw invalidParameter(`getIndexFromPath: invalid path length ${ path.toString() }`);
     }
     return fromHardened(path[2]);
-}
+};
 
 export const getAccountLabel = (path: Array<number>, coinInfo: BitcoinNetworkInfo): string => {
     const coinLabel: string = coinInfo.label;
@@ -134,6 +176,8 @@ export const getPublicKeyLabel = (path: Array<number>, coinInfo: ?BitcoinNetwork
         accountType = `${coinLabel} multisig`;
     } else if (p1 === 44 && hasSegwit) {
         accountType = `${coinLabel} legacy`;
+    } else if (p1 === 84 && hasSegwit) {
+        accountType = `${coinLabel} native segwit`;
     } else {
         accountType = coinLabel;
     }
