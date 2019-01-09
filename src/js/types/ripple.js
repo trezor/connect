@@ -67,6 +67,7 @@ export type RippleGetAddress$$ = {
 type Payment = {
     amount: string,
     destination: string,
+    destinationTag: number,
 }
 
 export type Transaction = {

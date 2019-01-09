@@ -45,6 +45,7 @@ export default class RippleSignTransaction extends AbstractMethod {
         validateParams(transaction.payment, [
             { name: 'amount', type: 'string', obligatory: true },
             { name: 'destination', type: 'string', obligatory: true },
+            { name: 'destinationTag', type: 'number' },
         ]);
 
         this.params = {
@@ -64,6 +65,7 @@ export default class RippleSignTransaction extends AbstractMethod {
             payment: {
                 amount: parseInt(tx.payment.amount),
                 destination: tx.payment.destination,
+                destination_tag: tx.payment.destinationTag,
             },
         });
 
