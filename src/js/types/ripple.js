@@ -6,7 +6,7 @@ import type { RippleAccount } from './account';
 
 // get account info
 type RequestedAccount = {
-    address: string,
+    descriptor: string,
     block?: number,
     mempool?: boolean,
     history?: boolean,

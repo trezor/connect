@@ -51,15 +51,15 @@ export default class RippleGetAccountInfo extends AbstractMethod {
 
         payload.bundle.forEach(batch => {
             validateParams(batch, [
-                { name: 'address', type: 'string' },
+                { name: 'descriptor', type: 'string' },
                 { name: 'path', type: 'string' },
                 { name: 'block', type: 'number' },
                 { name: 'transactions', type: 'number' },
                 { name: 'mempool', type: 'boolean' },
                 { name: 'history', type: 'boolean' },
             ]);
-            if (!batch.path && !batch.address) {
-                throw new Error('Path or address is missing in account');
+            if (!batch.path && !batch.descriptor) {
+                throw new Error('"path" or "descriptor" field is missing in account');
             }
             // validate path if exists
             if (batch.path) {
