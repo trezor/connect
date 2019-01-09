@@ -84,7 +84,7 @@
     "pre-build-webpack": "^0.1.0",
     "sharedworker-loader": "^2.1.1",
     "style-loader": "^0.21.0",
-    "trezor-blockchain-link": "0.0.7",
+    "trezor-blockchain-link": "0.0.8",
     "trezor-link": "1.5.5",
     "uglify-es": "3.3.9",
     "uglifyjs-webpack-plugin": "1.2.5",
