@@ -202,7 +202,7 @@ export default class PopupManager extends EventEmitter {
                     // do nothing
                 });
             });
-        } else if (message === 'window.close') {
+        } else if (message === POPUP.CLOSE_WINDOW) {
             this.emit(POPUP.CLOSED);
             this.close();
         }

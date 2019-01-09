@@ -292,7 +292,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     _callMethods.push(method);
 
-    let messageResponse: ?ResponseMessage;
+    let messageResponse: ?CoreMessage;
 
     if (!browserState.supported) {
         // wait for popup handshake
