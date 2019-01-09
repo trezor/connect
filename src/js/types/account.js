@@ -31,5 +31,6 @@ export type RippleAccount = {
     transactions: number,
     balance: string,
     availableBalance: string,
+    reserve: string,
     sequence: number,
 }
