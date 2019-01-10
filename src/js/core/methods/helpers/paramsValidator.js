@@ -27,8 +27,8 @@ export const validateParams = (values: Object, fields: Array<Param>): void => {
                 } else if (field.type === 'amount') {
                     if (typeof value !== 'string') {
                         throw invalidParameter(`Parameter "${ field.name }" has invalid type. "string" expected.`);
-                    } else if (parseInt(value, 10).toString(10) !== value) {
-                        throw invalidParameter(`Parameter "${ field.name }" has invalid value. Integer representation expected.`);
+                    } else if (isNaN(parseInt(value, 10)) || parseInt(value, 10).toString(10) !== value) {
+                        throw invalidParameter(`Parameter "${ field.name }" has invalid value "${value}". Integer representation expected.`);
                     }
                 } else if (typeof value !== field.type) {
                     // invalid type
