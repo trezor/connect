@@ -7059,9 +7059,9 @@ tough-cookie@~2.3.0, tough-cookie@~2.3.3:
   dependencies:
     punycode "^1.4.1"
 
-trezor-blockchain-link@0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/trezor-blockchain-link/-/trezor-blockchain-link-0.0.8.tgz#8f9bc9e1c97f75955bf0b3d15c6d4604b34abe7c"
+trezor-blockchain-link@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/trezor-blockchain-link/-/trezor-blockchain-link-0.0.9.tgz#ed49d15388916661b5460493aa72b65789674401"
   dependencies:
     events "^3.0.0"
 
