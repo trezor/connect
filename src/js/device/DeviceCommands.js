@@ -273,6 +273,21 @@ export default class DeviceCommands {
         return response.message;
     }
 
+    // Hycon: begin
+    async hyconGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.HyconAddress> {
+        const response: MessageResponse<trezor.HyconAddress> = await this.typedCall('HyconGetAddress', 'HyconAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async hyconSignTx(transaction: trezor.HyconTransaction): Promise<trezor.HyconSignedTx> {
+        const response: MessageResponse<trezor.HyconSignedTx> = await this.typedCall('HyconSignTx', 'HyconSignedTx', transaction);
+        return response.message;
+    }
+    // Hycon: end
+
     async nemGetAddress(address_n: Array<number>, network: number, showOnTrezor: boolean): Promise<trezor.NEMAddress> {
         const response: MessageResponse<trezor.NEMAddress> = await this.typedCall('NEMGetAddress', 'NEMAddress', {
             address_n,
