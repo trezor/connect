@@ -344,6 +344,14 @@ class TrezorConnect {
         return await call({ method: 'ethereumVerifyMessage', ...params });
     }
 
+    static hyconGetAddress: $T.HyconGetAddress = async (params) => {
+        return await call({ method: 'hyconGetAddress', ...params });
+    }
+
+    static hyconSignTransaction: $T.HyconSignTransaction = async (params) => {
+        return await call({ method: 'hyconSignTransaction', ...params });
+    }
+
     static getAccountInfo: $T.GetAccountInfo = async (params) => {
         return await call({ method: 'getAccountInfo', ...params });
     }

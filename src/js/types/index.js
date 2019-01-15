@@ -152,6 +152,7 @@ import * as R from './response';
 import * as CARDANO from './cardano';
 import * as RIPPLE from './ripple';
 import * as ETHEREUM from './ethereum';
+import * as HYCON from './hycon';
 import * as NEM from './nem';
 import * as STELLAR from './stellar';
 import * as LISK from './lisk';
@@ -216,6 +217,14 @@ export type EthereumGetAddress = typeof F_EthereumGetAddress;
 export type EthereumSignMessage = (ETHEREUM.$EthereumSignMessage) => Promise<ETHEREUM.EthereumSignMessage$>;
 export type EthereumSignTransaction = (ETHEREUM.$EthereumSignTransaction) => Promise<ETHEREUM.EthereumSignTransaction$>;
 export type EthereumVerifyMessage = (ETHEREUM.$EthereumVerifyMessage) => Promise<ETHEREUM.EthereumVerifyMessage$>;
+
+/* eslint-disable no-redeclare */
+declare function F_HyconGetAddress(params: (P.$Common & HYCON.$HyconGetAddress)): Promise<HYCON.HyconGetAddress$>;
+declare function F_HyconGetAddress(params: (P.$Common & { bundle: Array<HYCON.$HyconGetAddress> })): Promise<HYCON.HyconGetAddress$$>;
+/* eslint-enable no-redeclare */
+export type HyconGetAddress = typeof F_HyconGetAddress;
+export type HyconSignTransaction = (HYCON.$HyconSignTransaction) => Promise<HYCON.HyconSignTransaction$>;
+
 export type GetAccountInfo = (P.$GetAccountInfo) => Promise<R.GetAccountInfo$>;
 
 /* eslint-disable no-redeclare */

@@ -25,6 +25,8 @@ import { ethereumGetAddress } from './ethereumGetAddress.spec.js';
 import { ethereumSignMessage } from './ethereumSignMessage.spec.js';
 import { ethereumSignTransaction } from './ethereumSignTransaction.spec.js';
 import { ethereumVerifyMessage } from './ethereumVerifyMessage.spec.js';
+import { hyconGetAddress } from './hyconGetAddress.spec.js';
+import { hyconSignTransaction } from './hyconSignTransaction.spec.js';
 import { getAccountInfo } from './getAccountInfo.spec.js';
 import { nemGetAddress } from './nemGetAddress.spec.js';
 import { nemSignTransactionMosaic } from './nemSignTransactionMosaic.spec.js';
@@ -64,6 +66,8 @@ export const testFunctions: AvailableTestFunctions = {
     ethereumSignMessage,
     ethereumSignTransaction,
     ethereumVerifyMessage,
+    hyconGetAddress,
+    hyconSignTransaction,
     getAccountInfo,
     nemGetAddress,
     nemSignTransactionMosaic,

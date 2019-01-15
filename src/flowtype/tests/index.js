@@ -31,6 +31,16 @@ import type {
 } from 'flowtype/tests/ethereum-sign-transaction';
 
 import type {
+    TestHyconGetAddressPayload,
+    ExpectedHyconGetAddressResponse,
+} from 'flowtype/tests/hycon-get-address';
+
+import type {
+    TestHyconSignTransactionPayload,
+    ExpectedHyconSignTransactionResponse,
+} from 'flowtype/tests/hycon-sign-transaction';
+
+import type {
     TestGetAddressPayload,
     ExpectedGetAddressResponse,
 } from 'flowtype/tests/get-address';
@@ -178,6 +188,8 @@ declare module 'flowtype/tests' {
         | TestEthereumGetAddressPayload
         | TestEthereumSignMessagePayload
         | TestEthereumSignTransactionPayload
+        | TestHyconGetAddressPayload
+        | TestHyconSignTransactionPayload
         | TestGetAddressPayload
         | TestGetPublicKeyPayload
         | TestNemGetAddressPayload
@@ -204,6 +216,8 @@ declare module 'flowtype/tests' {
         | ExpectedEthereumGetAddressResponse
         | ExpectedEthereumSignMessageResponse
         | ExpectedEthereumSignTransactionResponse
+        | ExpectedHyconGetAddressResponse
+        | ExpectedHyconSignTransactionResponse
         | ExpectedGetAddressResponse
         | ExpectedGetPublicKeyResponse
         | ExpectedNemGetAddressResponse
@@ -260,6 +274,8 @@ declare module 'flowtype/tests' {
         ethereumSignMessage(): TestFunction,
         ethereumSignTransaction(): TestFunction,
         ethereumVerifyMessage(): TestFunction,
+        hyconGetAddress(): TestFunction,
+        hyconSignTransaction(): TestFunction,
         getAccountInfo(): TestFunction,
         nemGetAddress(): TestFunction,
         nemSignTransactionMosaic(): TestFunction,

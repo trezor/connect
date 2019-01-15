@@ -197,6 +197,18 @@ export type EthereumSignedTx = {
     s: string,
 };
 
+export type HyconAddress = {
+    address: string,
+}
+
+export type HyconTransaction = {
+    address_n: Array<number>,
+    fee: string,
+    amount: string,
+    to: string,
+    nonce: number,
+}
+
 export type Identity = {
     proto?: string,
     user?: string,

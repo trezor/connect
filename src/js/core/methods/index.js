@@ -18,6 +18,8 @@ import EthereumGetAddress from './EthereumGetAddress';
 import EthereumSignMessage from './EthereumSignMessage';
 import EthereumSignTransaction from './EthereumSignTransaction';
 import EthereumVerifyMessage from './EthereumVerifyMessage';
+import HyconGetAddress from './HyconGetAddress';
+import HyconSignTransaction from './HyconSignTransaction';
 import GetAccountInfo from './GetAccountInfo';
 import GetAddress from './GetAddress';
 import GetDeviceState from './GetDeviceState';
@@ -59,6 +61,8 @@ const classes: {[k: string]: any} = {
     'ethereumSignMessage': EthereumSignMessage,
     'ethereumSignTransaction': EthereumSignTransaction,
     'ethereumVerifyMessage': EthereumVerifyMessage,
+    'hyconGetAddress': HyconGetAddress,
+    'hyconSignTransaction': HyconSignTransaction,
     'getAccountInfo': GetAccountInfo,
     'getAddress': GetAddress,
     'getDeviceState': GetDeviceState,

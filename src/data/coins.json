@@ -899,6 +899,19 @@
         },
         {
             "curve": "secp256k1",
+            "name": "Hycon",
+            "shortcut": "HYC",
+            "slip44": 1397,
+            "support": {
+                "connect": true,
+                "trezor1": false,
+                "trezor2": "2.0.8",
+                "webwallet": false
+            },
+            "wallet": {}
+        },
+        {
+            "curve": "secp256k1",
             "name": "Ripple",
             "shortcut": "XRP",
             "slip44": 144,
