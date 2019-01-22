@@ -186,7 +186,7 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
         throw ERROR.NO_TRANSPORT;
     }
 
-    const isWebUsb: boolean = _deviceList.transportVersion().indexOf('webusb') >= 0;
+    const isWebUsb: boolean = _deviceList.transportType().indexOf('webusb') >= 0;
 
     let device: ?Device;
     if (method.devicePath) {
@@ -736,7 +736,7 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceTyped = null): voi
     const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, UI.RECEIVE_DEVICE);
     if (uiPromise && _deviceList) {
         const list: Array<Object> = _deviceList.asArray();
-        const isWebUsb: boolean = _deviceList.transportVersion().indexOf('webusb') >= 0;
+        const isWebUsb: boolean = _deviceList.transportType().indexOf('webusb') >= 0;
 
         if (list.length === 1 && !isWebUsb) {
             // there is only one device. use it
