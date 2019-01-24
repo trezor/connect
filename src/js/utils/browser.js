@@ -21,6 +21,11 @@ export const state: State = {
 };
 
 export const checkBrowser = (): State => {
+    if (typeof window === 'undefined') {
+        state.name = 'nodejs';
+        state.supported = true;
+        return state;
+    }
     const supported = DataManager.getConfig().supportedBrowsers;
     state.name = `${bowser.name}: ${bowser.version}; ${bowser.osname}: ${bowser.osversion};`;
     state.mobile = bowser.mobile;
@@ -41,7 +46,7 @@ export const checkBrowser = (): State => {
 // Parse JSON loaded from config.assets.bridge
 // Find preferred platform using bowser and userAgent
 export const parseBridgeJSON = (json: JSON): JSON => {
-    const osname = bowser.osname.toLowerCase();
+    const osname = bowser.osname ? bowser.osname.toLowerCase() : 'default';
     let preferred: string = '';
     switch (osname) {
         case 'linux': {
