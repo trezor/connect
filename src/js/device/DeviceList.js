@@ -24,7 +24,7 @@ import SharedConnectionWorker from 'sharedworker-loader?name=js/shared-connectio
 const SharedConnectionWorker = () => { return 'not-used-in-node.js' };
 nodejs-imports-end */
 
-const { BridgeV2, Lowlevel, WebUsb, Fallback, Parallel } = TrezorLink;
+const { BridgeV2, Lowlevel, WebUsb, Fallback } = TrezorLink;
 
 export type DeviceListOptions = {
     debug?: boolean,
@@ -68,19 +68,14 @@ export default class DeviceList extends EventEmitter {
         _log.enabled = DataManager.getSettings('debug');
         if (!this.options.transport) {
             const transportTypes: Array<Transport> = [
-                new BridgeV2(null, DataManager.getConfig().resources.bridge),
+                new BridgeV2(null, null, DataManager.assets['bridge'].version.join('.')),
             ];
 
             if (DataManager.getSettings('webusb')) {
-                transportTypes.push(new Parallel({
-                    webusb: {
-                        transport: new Lowlevel(
-                            new WebUsb(),
-                            () => sharedWorkerFactoryWrap()
-                        ),
-                        mandatory: true,
-                    },
-                }));
+                transportTypes.push(new Lowlevel(
+                    new WebUsb(),
+                    () => sharedWorkerFactoryWrap()
+                ));
             }
             this.options.transport = new Fallback(transportTypes);
         }
@@ -264,13 +259,12 @@ export default class DeviceList extends EventEmitter {
         if (this.transport == null) {
             return '';
         }
-        if (this.transport.activeName) {
-            const activeName: any = this.transport.activeName;
+        const activeName: ?string = this.transport.activeName;
+        if (activeName) {
             if (activeName === 'BridgeTransport') {
                 return 'bridge';
-            }
-            if (activeName === 'ExtensionTransport') {
-                return 'extension';
+            } else if (activeName === 'LowlevelTransportWithSharedConnections') {
+                return 'webusb';
             }
             return activeName;
         }
@@ -303,19 +297,14 @@ export default class DeviceList extends EventEmitter {
 
             // $FlowIssue - this all is going around Flow :/
             const activeTransport = transport.activeTransport;
-            if (activeTransport == null || activeTransport.name !== 'ParallelTransport') {
+            if (activeTransport === null || activeTransport.name !== 'LowlevelTransportWithSharedConnections') {
                 return null;
             }
-            const webusbTransport = activeTransport.workingTransports['webusb'];
-            if (webusbTransport == null) {
+            const webusbTransport = activeTransport.plugin;
+            if (webusbTransport === null || webusbTransport.name !== 'WebUsbPlugin') {
                 return null;
             }
-            // one of the HID fallbacks are working -> do not display the message
-            const hidTransport = activeTransport.workingTransports['hid'];
-            if (hidTransport != null) {
-                return null;
-            }
-            return webusbTransport.plugin;
+            return webusbTransport;
         } catch (e) {
             return null;
         }

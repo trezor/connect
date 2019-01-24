@@ -385,7 +385,7 @@ export default class Device extends EventEmitter {
 
         if (this.deferredActions[ DEVICE.ACQUIRED ]) { await this.deferredActions[ DEVICE.ACQUIRED ].promise; }
 
-        if (upcomingDescriptor.session === null) {
+        if (!upcomingDescriptor.session) {
             // corner-case: if device was unacquired but some call to this device was made
             // this will automatically change unacquired device to acquired (without deviceList)
             // emit ACQUIRED event to deviceList which will propagate DEVICE.CONNECT event
@@ -395,7 +395,7 @@ export default class Device extends EventEmitter {
         }
 
         const methodStillRunning = this.commands && !this.commands.disposed;
-        if (upcomingDescriptor.session === null && !methodStillRunning) {
+        if (!upcomingDescriptor.session && !methodStillRunning) {
             // released
             if (this.originalDescriptor.session === this.activitySessionID) {
                 // by myself
@@ -471,11 +471,11 @@ export default class Device extends EventEmitter {
     }
 
     isUsed(): boolean {
-        return this.originalDescriptor.session !== null;
+        return typeof this.originalDescriptor.session === 'string';
     }
 
     isUsedHere(): boolean {
-        return this.originalDescriptor.session !== null && this.originalDescriptor.session === this.activitySessionID;
+        return this.isUsed() && this.originalDescriptor.session === this.activitySessionID;
     }
 
     isUsedElsewhere(): boolean {
