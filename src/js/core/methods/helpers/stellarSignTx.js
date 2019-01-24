@@ -28,7 +28,7 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
         const response: MessageResponse<StellarSignedTx> = await typedCall(type, 'StellarSignedTx', op);
         return response.message;
     } else {
-        await typedCall(type, 'StellarPaymentOp', op);
+        await typedCall(type, 'StellarTxOpRequest', op);
     }
 
     return await processTxRequest(
