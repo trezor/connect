@@ -147,8 +147,11 @@ module.exports = {
         new webpack.IgnorePlugin(/\/iconv-loader$/),
     ],
 
-    // ignoring Node.js import in fastxpub (hd-wallet)
+    // ignore "fs" import in fastxpub (hd-wallet)
+    // ignore "net" and "tls" imports in "ripple-lib"
     node: {
         fs: 'empty',
+        net: 'empty',
+        tls: 'empty',
     },
 };

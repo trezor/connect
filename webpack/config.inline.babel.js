@@ -40,9 +40,11 @@ module.exports = {
         minimize: false,
     },
 
-    // ignoring Node.js import in fastxpub (hd-wallet)
+    // ignoring Node.js imports
     node: {
         fs: 'empty',
         path: 'empty',
+        net: 'empty',
+        tls: 'empty',
     },
 };
