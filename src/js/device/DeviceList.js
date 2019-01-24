@@ -16,8 +16,13 @@ import DataManager from '../data/DataManager';
 import Log, { init as initLog } from '../utils/debug';
 import { resolveAfter } from '../utils/promiseUtils';
 
+// nodejs-replace-start
 /* $FlowIssue loader notation */
 import SharedConnectionWorker from 'sharedworker-loader?name=js/shared-connection-worker.[hash].js!trezor-link/lib/lowlevel/sharedConnectionWorker';
+// nodejs-replace-end
+/* nodejs-imports-start
+const SharedConnectionWorker = () => { return 'not-used-in-node.js' };
+nodejs-imports-end */
 
 const { BridgeV2, Lowlevel, WebUsb, Fallback, Parallel } = TrezorLink;
 

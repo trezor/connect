@@ -1,15 +1,21 @@
 /* @flow */
-
 import BlockchainLink from 'trezor-blockchain-link';
-/* $FlowIssue loader notation */
-import RippleWorker from 'file-loader?name=ripple-worker.js!trezor-blockchain-link/workers/ripple-worker';
-
 import { BlockchainMessage } from '../message/builder';
 import * as BLOCKCHAIN from '../constants/blockchain';
-
 import type { CoinInfo } from '../types';
 import type { BlockchainBlock, BlockchainLinkTransaction } from '../types/blockchainEvent';
 import type { GetAccountInfoOptions, EstimateFeeOptions } from 'trezor-blockchain-link';
+
+// nodejs-replace-start
+/* $FlowIssue loader notation */
+// import RippleWorker from 'worker-loader?name=ripple-worker.js!trezor-blockchain-link/workers/ripple-worker';
+import RippleWorker from 'worker-loader?name=js/ripple-worker.js!trezor-blockchain-link/lib/workers/ripple/index.js';
+// nodejs-replace-end
+/* nodejs-imports-start
+import TinyWorker from 'tiny-worker';
+import path from 'path';
+const RippleWorker = () => { return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './workers/ripple-worker.js')) };
+nodejs-imports-end */
 
 type Options = {
     coinInfo: CoinInfo,
