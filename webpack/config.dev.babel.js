@@ -1,17 +1,15 @@
 import {
     SRC,
     HTML_SRC,
-    DATA_SRC,
     JS_SRC,
-    DIST,
     LIB_NAME,
     NODE_MODULES,
-    PORT
+    PORT,
 } from './constants';
 
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
+// import CopyWebpackPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 module.exports = {
@@ -23,7 +21,7 @@ module.exports = {
         'iframe': `${JS_SRC}iframe/iframe.js`,
         'popup': `${JS_SRC}popup/popup.js`,
         'webusb': `${JS_SRC}webusb/index.js`,
-        'extensionPermissions': `${JS_SRC}webusb/extensionPermissions.js`
+        'extensionPermissions': `${JS_SRC}webusb/extensionPermissions.js`,
     },
     output: {
         filename: '[name].js',
@@ -31,7 +29,7 @@ module.exports = {
         publicPath: '/',
         library: LIB_NAME,
         libraryTarget: 'umd',
-        libraryExport: 'default'
+        libraryExport: 'default',
     },
     devServer: {
         contentBase: SRC,
@@ -45,8 +43,8 @@ module.exports = {
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: /node_modules/,
-                use: ['babel-loader']
+                exclude: [/node_modules/, /trezor-blockchain-link\/build\/workers/],
+                use: ['babel-loader'],
             },
             {
                 test: /\.less$/,
@@ -54,11 +52,11 @@ module.exports = {
                 use: [
                     {
                         loader: MiniCssExtractPlugin.loader,
-                        options: { publicPath: '../' }
+                        options: { publicPath: '../' },
                     },
                     'css-loader',
                     'less-loader',
-                ]
+                ],
             },
             {
                 test: /\.(png|gif|jpg)$/,
@@ -66,7 +64,7 @@ module.exports = {
                 query: {
                     outputPath: './images',
                     name: '[name].[ext]',
-                }
+                },
             },
             {
                 test: /\.(ttf|eot|svg|woff|woff2)$/,
@@ -94,16 +92,16 @@ module.exports = {
                     name: '[name].[ext]',
                 },
             },
-        ]
+        ],
     },
     resolve: {
         modules: [ SRC, NODE_MODULES ],
         alias: {
             // 'flowtype/params': `${SRC}flowtype/empty.js`,
-        }
+        },
     },
     performance: {
-        hints: false
+        hints: false,
     },
     plugins: [
         new MiniCssExtractPlugin({
@@ -113,27 +111,27 @@ module.exports = {
 
         new HtmlWebpackPlugin({
             chunks: ['iframe'],
-            filename: `iframe.html`,
+            filename: 'iframe.html',
             template: `${HTML_SRC}iframe.html`,
-            inject: false
+            inject: false,
         }),
         new HtmlWebpackPlugin({
             chunks: ['popup'],
             filename: 'popup.html',
             template: `${HTML_SRC}popup.html`,
-            inject: false
+            inject: false,
         }),
         new HtmlWebpackPlugin({
             chunks: ['webusb'],
-            filename: `webusb.html`,
+            filename: 'webusb.html',
             template: `${HTML_SRC}webusb.html`,
-            inject: true
+            inject: true,
         }),
         new HtmlWebpackPlugin({
             chunks: ['extensionPermissions'],
-            filename: `extension-permissions.html`,
+            filename: 'extension-permissions.html',
             template: `${HTML_SRC}extension-permissions.html`,
-            inject: true
+            inject: true,
         }),
 
         // new CopyWebpackPlugin([
@@ -149,8 +147,11 @@ module.exports = {
         new webpack.IgnorePlugin(/\/iconv-loader$/),
     ],
 
-    // ignoring Node.js import in fastxpub (hd-wallet)
+    // ignore "fs" import in fastxpub (hd-wallet)
+    // ignore "net" and "tls" imports in "ripple-lib"
     node: {
-        fs: "empty"
-    }
-}
+        fs: 'empty',
+        net: 'empty',
+        tls: 'empty',
+    },
+};

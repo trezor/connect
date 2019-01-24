@@ -2,6 +2,42 @@
 
 import type { $Path, $Common } from './params';
 import type { Unsuccessful$ } from './response';
+import type { RippleAccount } from './account';
+
+// get account info
+type RequestedAccount = {
+    descriptor: string,
+    block?: number,
+    mempool?: boolean,
+    history?: boolean,
+} | {
+    path: string,
+    block?: number,
+    mempool?: boolean,
+    history?: boolean,
+};
+
+export type $RippleGetAccountInfo = {
+    account: RequestedAccount,
+    level?: string,
+    coin: string,
+}
+
+export type $$RippleGetAccountInfo = {
+    bundle: Array<RequestedAccount>,
+    level?: string,
+    coin: string,
+}
+
+export type RippleGetAccountInfo$ = {
+    success: true,
+    payload: RippleAccount,
+} | Unsuccessful$;
+
+export type RippleGetAccountInfo$$ = {
+    success: true,
+    payload: Array<RippleAccount>,
+} | Unsuccessful$;
 
 // get address
 
@@ -31,6 +67,7 @@ export type RippleGetAddress$$ = {
 type Payment = {
     amount: string,
     destination: string,
+    destinationTag?: number,
 }
 
 export type Transaction = {

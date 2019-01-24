@@ -8,8 +8,7 @@ import { getEthereumNetwork } from '../../data/CoinInfo';
 import { toChecksumAddress, getNetworkLabel, messageToHex } from '../../utils/ethereumUtils';
 
 import type { MessageSignature } from '../../types/trezor';
-import type { CoreMessage } from '../../types';
-import type { EthereumNetworkInfo } from 'flowtype';
+import type { CoreMessage, EthereumNetworkInfo } from '../../types';
 
 type Params = {
     path: Array<number>,

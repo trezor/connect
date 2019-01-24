@@ -5,14 +5,14 @@ import Account, { create as createAccount, remove as removeAccount } from '../..
 import BlockBook from '../../../backend';
 import { cloneCoinInfo, fixCoinInfoNetwork } from '../../../data/CoinInfo';
 import { getPathFromIndex } from '../../../utils/pathUtils';
-import type { CoinInfo } from 'flowtype';
+import type { BitcoinNetworkInfo } from '../../../types';
 import type { HDNodeResponse } from '../../../types/trezor';
 import type { AccountInfo } from 'hd-wallet';
 
 export type DiscoveryOptions = {
-    +getHDNode: (path: Array<number>, coinInfo: ?CoinInfo) => Promise<HDNodeResponse>,
+    +getHDNode: (path: Array<number>, coinInfo: ?BitcoinNetworkInfo) => Promise<HDNodeResponse>,
     +backend: BlockBook,
-    +coinInfo: CoinInfo,
+    +coinInfo: BitcoinNetworkInfo,
     +loadInfo?: boolean,
     +limit?: number,
 
@@ -88,7 +88,7 @@ export default class Discovery extends EventEmitter {
         delete this.options;
     }
 
-    async discoverAccount(path: Array<number>, coinInfo: CoinInfo): Promise<?Account> {
+    async discoverAccount(path: Array<number>, coinInfo: BitcoinNetworkInfo): Promise<?Account> {
         if (this.interrupted) return null;
 
         const node: HDNodeResponse = await this.options.getHDNode(path, coinInfo);

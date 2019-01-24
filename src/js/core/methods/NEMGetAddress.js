@@ -10,8 +10,7 @@ import { UiMessage } from '../../message/builder';
 
 import type { NEMAddress } from '../../types/trezor';
 import type { NEMAddress as NEMAddressResponse } from '../../types/nem';
-import type { UiPromiseResponse } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 type Batch = {
     path: Array<number>,

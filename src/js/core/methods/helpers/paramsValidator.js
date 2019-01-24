@@ -4,7 +4,7 @@
 import { invalidParameter } from '../../../constants/errors';
 import { fromHardened } from '../../../utils/pathUtils';
 import semvercmp from 'semver-compare';
-import type { CoinInfo } from 'flowtype';
+import type { CoinInfo } from '../../../types';
 
 type Param = {
     name: string,

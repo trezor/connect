@@ -11,9 +11,9 @@ import Device from './Device';
 
 import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
-import type { CoinInfo } from 'flowtype';
+import type { BitcoinNetworkInfo } from '../types';
 import type { Transport } from 'trezor-link';
-import * as trezor from '../types/trezor'; // flowtype
+import * as trezor from '../types/trezor'; // flowtype only
 
 export type MessageResponse<T> = {
     type: string,
@@ -107,7 +107,7 @@ export default class DeviceCommands {
     // Validation of xpub
     async getHDNode(
         path: Array<number>,
-        coinInfo: ?CoinInfo
+        coinInfo: ?BitcoinNetworkInfo
     ): Promise<trezor.HDNodeResponse> {
         if (!this.device.atLeast(['1.7.2', '2.0.10'])) {
             return await this.getBitcoinHDNode(path, coinInfo);
@@ -164,7 +164,7 @@ export default class DeviceCommands {
     // old firmware didn't return keys with proper prefix (ypub, Ltub.. and so on)
     async getBitcoinHDNode(
         path: Array<number>,
-        coinInfo?: ?CoinInfo
+        coinInfo?: ?BitcoinNetworkInfo
     ): Promise<trezor.HDNodeResponse> {
         const suffix: number = 0;
         const childPath: Array<number> = path.concat([suffix]);
@@ -202,7 +202,7 @@ export default class DeviceCommands {
         return state;
     }
 
-    async getAddress(address_n: Array<number>, coinInfo: CoinInfo, showOnTrezor: boolean): Promise<trezor.Address> {
+    async getAddress(address_n: Array<number>, coinInfo: BitcoinNetworkInfo, showOnTrezor: boolean): Promise<trezor.Address> {
         const scriptType: ?string = getScriptType(address_n);
         const response: Object = await this.typedCall('GetAddress', 'Address', {
             address_n,

@@ -17,8 +17,9 @@ import type {
     AccountInfo,
     AccountLoadStatus,
 } from 'hd-wallet';
-import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
+import type { BitcoinNetworkInfo, EthereumNetworkInfo } from '../types';
 
+// nodejs-replace-start
 /* $FlowIssue loader notation */
 import FastXpubWasm from 'hd-wallet/lib/fastxpub/fastxpub.wasm';
 /* $FlowIssue loader notation */
@@ -27,10 +28,19 @@ import FastXpubWorker from 'worker-loader?name=js/fastxpub-worker.[hash].js!hd-w
 import DiscoveryWorker from 'worker-loader?name=js/discovery-worker.[hash].js!hd-wallet/lib/discovery/worker/inside';
 /* $FlowIssue loader notation */
 import SocketWorker from 'worker-loader?name=js/socketio-worker.[hash].js!hd-wallet/lib/socketio-worker/inside';
+// nodejs-replace-end
+/* nodejs-imports-start
+import TinyWorker from 'tiny-worker';
+import path from 'path';
+const FastXpubWasm = './workers/fastxpub.wasm';
+const FastXpubWorker = () => { return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './workers/fastxpub-worker.js')) };
+const DiscoveryWorker = () => { return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './workers/discovery-worker.js')) };
+const SocketWorker = () => { return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './workers/socketio-worker.js')) };
+nodejs-imports-end */
 
 export type Options = {
     urls: Array<string>,
-    coinInfo: CoinInfo | EthereumNetworkInfo,
+    coinInfo: BitcoinNetworkInfo | EthereumNetworkInfo,
 };
 
 export default class BlockBook {
@@ -70,7 +80,7 @@ export default class BlockBook {
         // this instance will not be used anymore
     }
 
-    async loadCoinInfo(coinInfo: ?(CoinInfo | EthereumNetworkInfo)): Promise<void> {
+    async loadCoinInfo(coinInfo: $ElementType<Options, 'coinInfo'>): Promise<void> {
         const socket = await this.blockchain.socket.promise;
         const networkInfo = await socket.send({ method: 'getInfo', params: [] });
 
@@ -91,7 +101,7 @@ export default class BlockBook {
     async loadAccountInfo(
         xpub: string,
         data: ?AccountInfo,
-        coinInfo: CoinInfo,
+        coinInfo: BitcoinNetworkInfo,
         progress: (progress: AccountLoadStatus) => void,
         setDisposer: (disposer: () => void) => void
     ): Promise<AccountInfo> {
@@ -148,7 +158,7 @@ export default class BlockBook {
     monitorAccountActivity(
         xpub: string,
         data: AccountInfo,
-        coinInfo: CoinInfo,
+        coinInfo: BitcoinNetworkInfo,
     ): Stream<AccountInfo | Error> {
         if (this.error) { throw this.error; }
 

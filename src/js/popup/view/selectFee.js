@@ -6,9 +6,9 @@ import * as UI from '../../constants/ui';
 
 import { container, showView, postMessage } from './common';
 import { formatAmount, formatTime } from '../../utils/formatUtils';
-import type { SelectFee, UpdateCustomFee } from '../../types/ui-request';
-import type { CoinInfo } from 'flowtype';
-import type { SelectFeeLevel } from 'flowtype/fee';
+import type { SelectFee, UpdateCustomFee } from '../../types/uiRequest';
+import type { BitcoinNetworkInfo } from '../../types';
+import type { SelectFeeLevel } from '../../types/fee';
 
 const fees: Array<SelectFeeLevel> = [];
 // reference to currently selected button
@@ -42,7 +42,7 @@ export const updateCustomFee = (payload: $PropertyType<UpdateCustomFee, 'payload
     validation(payload.coinInfo);
 };
 
-const validation = (coinInfo: CoinInfo) => {
+const validation = (coinInfo: BitcoinNetworkInfo) => {
     if (selectedFee) {
         const selectedName: string = selectedFee.getAttribute('data-fee') || 'custom';
         const selectedValue = fees.find(f => f.name === selectedName);

@@ -2,11 +2,11 @@
 'use strict';
 
 import Account from './Account';
-import type { CoinInfo } from 'flowtype';
+import type { BitcoinNetworkInfo } from '../types';
 
 const accounts: Array<Account> = [];
 
-export const create = (path: Array<number>, xpub: string, coinInfo: CoinInfo): Account => {
+export const create = (path: Array<number>, xpub: string, coinInfo: BitcoinNetworkInfo): Account => {
     // TODO check existence
     const account: Account = new Account(path, xpub, coinInfo);
     accounts.push(account);

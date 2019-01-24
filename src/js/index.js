@@ -236,8 +236,16 @@ class TrezorConnect {
         return await call({ method: 'blockchainDisconnect', ...params });
     }
 
+    static blockchainEstimateFee: $T.BlockchainEstimateFee = async (params) => {
+        return await call({ method: 'blockchainEstimateFee', ...params });
+    }
+
     static blockchainSubscribe: $T.BlockchainSubscribe = async (params) => {
         return await call({ method: 'blockchainSubscribe', ...params });
+    }
+
+    static blockchainUnsubscribe: $T.BlockchainSubscribe = async (params) => {
+        return await call({ method: 'blockchainUnsubscribe', ...params });
     }
 
     static customMessage: $T.CustomMessage = async (params) => {
@@ -396,6 +404,10 @@ class TrezorConnect {
         return await call({ method: 'pushTransaction', ...params });
     }
 
+    static rippleGetAccountInfo: $T.RippleGetAccountInfo = async (params) => {
+        return await call({ method: 'rippleGetAccountInfo', ...params });
+    }
+
     static rippleGetAddress: $T.RippleGetAddress = async (params) => {
         return await call({ method: 'rippleGetAddress', ...params });
     }
@@ -483,11 +495,15 @@ export type {
     UiMessage,
     TransportMessageType,
     TransportMessage,
-    BlockchainMessageType,
-    BlockchainMessage,
 } from './types';
 
+export * from './types/blockchainEvent';
+export * from './types/account';
+
 export type {
-    EthereumAccount,
     Transaction as EthereumTransaction,
 } from './types/ethereum';
+
+export type {
+    Transaction as RippleTransaction,
+} from './types/ripple';

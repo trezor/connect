@@ -3,7 +3,7 @@
 
 import { getCoinName } from '../data/CoinInfo';
 import { invalidParameter } from '../constants/errors';
-import type { CoinInfo } from 'flowtype';
+import type { BitcoinNetworkInfo } from '../types';
 
 export const HD_HARDENED: number = 0x80000000;
 export const toHardened = (n: number): number => (n | HD_HARDENED) >>> 0;
@@ -127,7 +127,7 @@ export const getIndexFromPath = (path: Array<number>): number => {
     return fromHardened(path[2]);
 };
 
-export const getAccountLabel = (path: Array<number>, coinInfo: CoinInfo): string => {
+export const getAccountLabel = (path: Array<number>, coinInfo: BitcoinNetworkInfo): string => {
     const coinLabel: string = coinInfo.label;
     const p1: number = fromHardened(path[0]);
     const account: number = fromHardened(path[2]);
@@ -145,7 +145,7 @@ export const getAccountLabel = (path: Array<number>, coinInfo: CoinInfo): string
     return `${ prefix } ${ accountType } <span>account #${realAccountId}</span>`;
 };
 
-export const getPublicKeyLabel = (path: Array<number>, coinInfo: ?CoinInfo): string => {
+export const getPublicKeyLabel = (path: Array<number>, coinInfo: ?BitcoinNetworkInfo): string => {
     let hasSegwit: boolean = false;
     let coinLabel: string = 'Unknown coin';
     if (coinInfo) {
@@ -189,7 +189,7 @@ export const getPublicKeyLabel = (path: Array<number>, coinInfo: ?CoinInfo): str
     }
 };
 
-export const getLabel = (label: string, coinInfo: ?CoinInfo): string => {
+export const getLabel = (label: string, coinInfo: ?BitcoinNetworkInfo): string => {
     if (coinInfo) {
         return label.replace('#NETWORK', coinInfo.label);
     }

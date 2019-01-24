@@ -1,3 +1,14 @@
+# blockchain-link
+__added__
+- Added `TrezorConnect.rippleGetAccountInfo` method
+- Added `TrezorConnect.blockchainGetFee` method
+- Added `TrezorConnect.blockchainUnsubscribe` method
+- Added `BlockchainEvent` (connect/error/block/notification)
+
+__changed__
+- Moved flowtype declarations from ./src/flowtype to ./src/js/types
+- Refactor CoinInfo to 3 types: BitcoinNetworkInfo, EthereumNetworkInfo and MiscNetworkInfo
+
 # 6.0.3
 __added__
 - Added `TrezorConnect.tezosGetAddress` method
