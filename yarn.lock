@@ -7320,9 +7320,9 @@ trezor-blockchain-link@0.0.10:
     tiny-worker "^2.1.2"
     ws "^6.1.2"
 
-trezor-link@1.5.5:
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/trezor-link/-/trezor-link-1.5.5.tgz#2cc21f93551cee429d52cba1fcce68f0d0bdea08"
+trezor-link@1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/trezor-link/-/trezor-link-1.6.1.tgz#917899a25edb817e4b26e8c0be661186a1695924"
   dependencies:
     bigi "^1.4.1"
     ecurve "^1.0.3"

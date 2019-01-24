@@ -90,7 +90,7 @@
     "sharedworker-loader": "^2.1.1",
     "style-loader": "^0.21.0",
     "trezor-blockchain-link": "0.0.10",
-    "trezor-link": "1.5.5",
+    "trezor-link": "1.6.1",
     "uglify-es": "3.3.9",
     "uglifyjs-webpack-plugin": "1.2.5",
     "version-bump-prompt": "^4.1.0",
