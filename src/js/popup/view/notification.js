@@ -20,7 +20,10 @@ export const showFirmwareUpdateNotification = (device: $PropertyType<UnexpectedD
     const view = views.getElementsByClassName('firmware-update-notification');
     const notification = document.createElement('div');
     notification.className = 'firmware-update-notification notification-item';
-    notification.innerHTML = view.item(0).innerHTML;
+    const viewItem = view.item(0);
+    if (viewItem) {
+        notification.innerHTML = viewItem.innerHTML;
+    }
 
     const button = notification.getElementsByClassName('notification-button')[0];
     const url = release.channel === 'beta' ? 'https://beta-wallet.trezor.io/' : 'https://wallet.trezor.io/';
@@ -48,7 +51,10 @@ export const showBridgeUpdateNotification = (): void => {
     const view = views.getElementsByClassName('bridge-update-notification');
     const notification = document.createElement('div');
     notification.className = 'bridge-update-notification notification-item';
-    notification.innerHTML = view.item(0).innerHTML;
+    const viewItem = view.item(0);
+    if (viewItem) {
+        notification.innerHTML = viewItem.innerHTML;
+    }
 
     container.appendChild(notification);
 

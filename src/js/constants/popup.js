@@ -12,3 +12,4 @@ export const HANDSHAKE: 'popup-handshake' = 'popup-handshake';
 export const CLOSE: 'popup-close' = 'popup-close';
 export const CLOSED: 'popup-closed' = 'popup-closed';
 export const CANCEL_POPUP_REQUEST: 'ui-cancel-popup-request' = 'ui-cancel-popup-request';
+export const CLOSE_WINDOW: 'window.close' = 'window.close';

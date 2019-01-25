@@ -63,10 +63,16 @@ export const showView = (className: string): HTMLElement => {
 
     const view: HTMLCollection<HTMLElement> = views.getElementsByClassName(className);
     if (view) {
-        container.innerHTML = view.item(0).outerHTML;
+        const viewItem = view.item(0);
+        if (viewItem) {
+            container.innerHTML = viewItem.outerHTML;
+        }
     } else {
         const unknown: HTMLCollection<HTMLElement> = views.getElementsByClassName('unknown-view');
-        container.innerHTML = unknown.item(0).outerHTML;
+        const unknownItem = unknown.item(0);
+        if (unknownItem) {
+            container.innerHTML = unknownItem.outerHTML;
+        }
     }
     return container;
 };
