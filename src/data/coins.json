@@ -477,6 +477,7 @@
             "address_type": 68,
             "address_type_p2sh": 130,
             "bech32_prefix": null,
+            "bip115": false,
             "bitcore": [
                 "https://explorer01.flashcoin.io"
             ],
@@ -505,19 +506,17 @@
             "segwit": true,
             "shortcut": "FLASH",
             "signed_message_header": "Flashcoin Signed Message:\n",
+            "slip44": 78,
             "support": {
                 "connect": true,
                 "trezor1": "1.7.1",
-                "trezor2": "2.0.9",
+                "trezor2": false,
                 "webwallet": true
             },
             "xprv_magic": "0488ade4",
             "xpub_magic": "0488b21e",
             "xpub_magic_segwit_native": null,
-            "xpub_magic_segwit_p2sh": "049d7cb2",
-            "bip44": 120,
-            "firmware": "stable",
-            "address_prefix": "flashcoin:"
+            "xpub_magic_segwit_p2sh": "049d7cb2"
         }
     ],
     "erc20": [],

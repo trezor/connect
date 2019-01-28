@@ -108,6 +108,49 @@ const ltc = (): SubtestGetAddress => {
     };
 };
 
+const flash = (): SubtestGetAddress => {
+    const testPayloads: Array<TestGetAddressPayload> = [
+        {
+            method: 'getAddress',
+            coin: 'Flashcoin',
+            path: "m/44'/120'/0'/0/0",
+            showOnTrezor: true,
+        },
+        {
+            method: 'getAddress',
+            coin: 'Flashcoin',
+            path: [2147483697, 2147483650, 2147483648, 0, 0],
+            showOnTrezor: true,
+        },
+        {
+            method: 'getAddress',
+            coin: 'Flashcoin',
+            path: "m/44'/120'/0'/0/0",
+            showOnTrezor: true,
+        },
+    ];
+
+    const expectedResponses: Array<ExpectedGetAddressResponse> = [
+        {
+            payload: {
+                address: 'UPoeC2hRrtnMS6gdssYBWoMPeEjBaKjEXF',
+            },
+        },
+        {
+            payload: {
+                address: 'UPoeC2hRrtnMS6gdssYBWoMPeEjBaKjEXF',
+            },
+        },
+        { success: false },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/flash',
+    };
+};
+
 const tbtc = (): SubtestGetAddress => {
     const testPayloads: Array<TestGetAddressPayload> = [
         {
@@ -200,6 +243,7 @@ export const getAddress = (): TestFunction => {
         ltc,
         tbtc,
         bch,
+        flash
     };
     const testName = 'GetAddress';
 
