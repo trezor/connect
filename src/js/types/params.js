@@ -55,12 +55,13 @@ export type $GetAccountInfo = $Common & {
     coin: string,
 }
 
-export type $GetAddress = {
+export type $GetAddress = {|
     path: $Path,
+    address?: string,
     coin?: string,
     showOnTrezor?: boolean,
     crossChain?: boolean,
-}
+|};
 
 export type $GetDeviceState = $Common;
 

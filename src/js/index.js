@@ -349,7 +349,8 @@ class TrezorConnect {
     }
 
     static getAddress: $T.GetAddress = async (params) => {
-        return await call({ method: 'getAddress', ...params });
+        const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
+        return await call({ method: 'getAddress', ...params, useEventListener });
     }
 
     static getDeviceState: $T.GetDeviceState = async (params) => {
