@@ -624,7 +624,7 @@ const onDeviceButtonHandler = async (device: Device, code: string, method: Abstr
     if (!addressRequest || (addressRequest && method.useUi)) {
         await getPopupPromise().promise;
     }
-    const data = method.getButtonRequestData(code);
+    const data = typeof method.getButtonRequestData === 'function' ? method.getButtonRequestData(code) : null;
     // request view
     postMessage(new DeviceMessage(DEVICE.BUTTON, { device: device.toMessageObject(), code: code }));
     postMessage(new UiMessage(UI.REQUEST_BUTTON, { device: device.toMessageObject(), code: code, data }));

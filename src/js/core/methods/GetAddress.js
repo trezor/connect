@@ -3,7 +3,7 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getRequiredFirmware } from './helpers/paramsValidator';
-import { validatePath, getLabel, getSerializedPath } from '../../utils/pathUtils';
+import { validatePath, getLabel } from '../../utils/pathUtils';
 import { getCoinInfoByCurrency, getCoinInfoFromPath, fixCoinInfoNetwork } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
 import { uniqBy } from 'lodash';
@@ -107,19 +107,19 @@ export default class GetAddress extends AbstractMethod {
         this.params = bundle;
     }
 
-    getButtonRequestData(code: string) {
-        if (code === 'ButtonRequest_Address' && this.params.length === 1) {
-            const data = [];
-            for (let i = 0; i < this.params.length; i++) {
-                data.push({
-                    serializedPath: getSerializedPath(this.params[i].path),
-                    address: this.params[i].address || 'not-set',
-                });
-            }
-            return data;
-        }
-        return null;
-    }
+    // getButtonRequestData(code: string) {
+    //     if (code === 'ButtonRequest_Address' && this.params.length === 1) {
+    //         const data = [];
+    //         for (let i = 0; i < this.params.length; i++) {
+    //             data.push({
+    //                 serializedPath: getSerializedPath(this.params[i].path),
+    //                 address: this.params[i].address || 'not-set',
+    //             });
+    //         }
+    //         return data;
+    //     }
+    //     return null;
+    // }
 
     async confirmation(): Promise<boolean> {
         if (this.confirmed) return true;
