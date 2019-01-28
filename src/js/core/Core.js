@@ -395,7 +395,9 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     // device is available
     // set public variables, listeners and run method
     /* eslint-disable no-use-before-define */
-    device.on(DEVICE.BUTTON, onDeviceButtonHandler);
+    device.on(DEVICE.BUTTON, (device, code) => {
+        onDeviceButtonHandler(device, code, method);
+    });
     device.on(DEVICE.PIN, onDevicePinHandler);
     device.on(DEVICE.PASSPHRASE, method.useEmptyPassphrase ? onEmptyPassphraseHandler : onDevicePassphraseHandler);
     device.on(DEVICE.PASSPHRASE_ON_DEVICE, () => {
@@ -616,12 +618,19 @@ const closePopup = (): void => {
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onDeviceButtonHandler = async (device: Device, code: string): Promise<void> => {
+const onDeviceButtonHandler = async (device: Device, code: string, method: AbstractMethod): Promise<void> => {
     // wait for popup handshake
-    await getPopupPromise().promise;
+    const addressRequest = code === 'ButtonRequest_Address';
+    if (!addressRequest || (addressRequest && method.useUi)) {
+        await getPopupPromise().promise;
+    }
+    const data = method.getButtonRequestData(code);
     // request view
     postMessage(new DeviceMessage(DEVICE.BUTTON, { device: device.toMessageObject(), code: code }));
-    postMessage(new UiMessage(UI.REQUEST_BUTTON, { device: device.toMessageObject(), code: code }));
+    postMessage(new UiMessage(UI.REQUEST_BUTTON, { device: device.toMessageObject(), code: code, data }));
+    if (addressRequest && !method.useUi) {
+        postMessage(new UiMessage(UI.ADDRESS_VALIDATION, { data }));
+    }
 };
 
 /**
