@@ -1,13 +1,24 @@
 /* @flow */
 'use strict';
 
-import { showView } from './common';
+import { container, showView } from './common';
+import type { ButtonRequestMessage } from '../../types/ui-request';
 
-export const requestButton = (data: Object): void => {
-    if (data.code === 'ButtonRequest_ConfirmOutput') {
-        showView('check-address');
-    } else if (data.code === 'ButtonRequest_Address') {
-        showView('check-address');
+const showAddressValidation = (payload: $PropertyType<ButtonRequestMessage, 'payload'>) => {
+    // TODO: display different text for exporting bundle, handle bundle_progress
+    showView('check-address');
+    const addressContainer: HTMLElement = container.querySelectorAll('.address-list')[0];
+    const html = (payload.data || []).map(item => {
+        return `<h3>${ item.address }</h3>`;
+    });
+    addressContainer.innerHTML = html.join('');
+};
+
+export const requestButton = (payload: $PropertyType<ButtonRequestMessage, 'payload'>): void => {
+    if (payload.code === 'ButtonRequest_Address') {
+        showAddressValidation(payload);
+    } else if (payload.code === 'ButtonRequest_ConfirmOutput') {
+        showView('confirm-output');
     } else {
         showView('follow-device');
     }

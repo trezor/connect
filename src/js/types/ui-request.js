@@ -37,14 +37,34 @@ export type MessageWithoutPayload = {
 */
 
 export type DeviceMessage = {
-    +type: typeof UI.REQUEST_BUTTON |
-        typeof UI.REQUEST_PIN |
+    +type: typeof UI.REQUEST_PIN |
         typeof UI.INVALID_PIN |
         typeof UI.REQUEST_PASSPHRASE_ON_DEVICE |
         typeof UI.REQUEST_PASSPHRASE |
         typeof UI.INVALID_PASSPHRASE,
     payload: {
         device: Device,
+    },
+};
+
+export type ButtonRequestData = Array<{|
+    serializedPath: string,
+    address: string,
+|}>;
+
+export type ButtonRequestMessage = {
+    +type: typeof UI.REQUEST_BUTTON,
+    payload: {
+        device: Device,
+        code: string,
+        data: ?ButtonRequestData,
+    },
+}
+
+export type AddressValidationMessage = {
+    +type: typeof UI.ADDRESS_VALIDATION,
+    payload: {
+        data: ?ButtonRequestData,
     },
 }
 
@@ -159,6 +179,8 @@ export type UiRequest =
 /* eslint-disable no-redeclare */
 declare function MessageFactory(type: $PropertyType<MessageWithoutPayload, 'type'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<DeviceMessage, 'type'>, payload: $PropertyType<DeviceMessage, 'payload'>): CoreMessage;
+declare function MessageFactory(type: $PropertyType<ButtonRequestMessage, 'type'>, payload: $PropertyType<ButtonRequestMessage, 'payload'>): CoreMessage;
+declare function MessageFactory(type: $PropertyType<AddressValidationMessage, 'type'>, payload: $PropertyType<AddressValidationMessage, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<IFrameHandshake, 'type'>, payload: $PropertyType<IFrameHandshake, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<PopupHandshake, 'type'>, payload: $PropertyType<PopupHandshake, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<RequestPermission, 'type'>, payload: $PropertyType<RequestPermission, 'payload'>): CoreMessage;
