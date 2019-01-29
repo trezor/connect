@@ -102,7 +102,7 @@ export const validatePath = (path: string | Array<number>, length: number = 0, b
 };
 
 export const getSerializedPath = (path: Array<number>): string => {
-    return path.map((i) => {
+    return 'm/' + path.map((i) => {
         const s = (i & ~HD_HARDENED).toString();
         if (i & HD_HARDENED) {
             return s + "'";
