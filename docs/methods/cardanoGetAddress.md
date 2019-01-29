@@ -32,7 +32,7 @@ If certain conditions are fulfilled popup will not be used at all:
 - device is authenticated by pin/passphrase
 - application has `TrezorConnect.on(UI.ADDRESS_VALIDATION, () => {});` listener registered
 - parameter `address` is set
-- parameter `showOnTrezor` si set to `true`
+- parameter `showOnTrezor` is set to `true` (or not set at all)
 - application is requesting ONLY ONE(!) address
 
 
@@ -65,7 +65,6 @@ TrezorConnect.on(UI.ADDRESS_VALIDATION, data => {
 const result = await TrezorConnect.cardanoGetAddress({
     path: "m/44'/1815'/0'/0/0",
     address: "Ae2tdPwUPEZ5YUb8sM3eS8JqKgrRLzhiu71crfuH2MFtqaYr5ACNRdsswsZ",
-    showOnTrezor: true,
 });
 // dont forget to hide your custom UI after you get the result!
 ```
