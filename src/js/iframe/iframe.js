@@ -170,6 +170,7 @@ const targetUiEvent = (message: CoreMessage): boolean => {
 const filterDeviceEvent = (message: CoreMessage): boolean => {
     if (!message.payload) return false;
     // const features: any = message.payload.device ? message.payload.device.features : message.payload.features;
+    // exclude button/pin/passphrase events
     const features: any = message.payload.features;
     if (features) {
         const savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY) || loadStorage(PERMISSIONS_KEY, true);
