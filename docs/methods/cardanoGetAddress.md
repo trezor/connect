@@ -17,14 +17,14 @@ TrezorConnect.cardanoGetAddress(params).then(function(result) {
 [****Optional common params****](commonParams.md)
 #### Exporting single address
 * `path` — *obligatory* `string | Array<number>` minimum length is `5`. [read more](path.md)
-* `address` — *optional* `string` address for validation (read "Handle button request" section below)
+* `address` — *optional* `string` address for validation (read `Handle button request` section below)
 * `showOnTrezor` — *optional* `boolean` determines if address will be displayed on device. Default is set to `true`
 
 #### Exporting bundle of addresses
 * `bundle` - `Array` of Objects with `path` and `showOnTrezor` fields
 
 #### Handle button request
-Since trezor-connect@6.0.4 there is a possibility to handle UI.ADDRESS_VALIDATION event which will be triggered once the address is displayed on the device.
+Since trezor-connect@6.0.4 there is a possibility to handle `UI.ADDRESS_VALIDATION` event which will be triggered once the address is displayed on the device.
 You can handle this event and display custom UI inside of your application.
 
 If certain conditions are fulfilled popup will not be used at all:
@@ -53,7 +53,7 @@ TrezorConnect.cardanoGetAddress({
     ]
 });
 ```
-Validate address using custom UI in your application:
+Validate address using custom UI inside of your application:
 ```javascript
 import TrezorConnect, { UI } from 'trezor-connect';
 
