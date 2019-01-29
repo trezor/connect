@@ -119,6 +119,7 @@ export type UiMessage = {
         device: Device,
         code?: string,
         browser?: any,
+        data?: any,
     },
 }
 

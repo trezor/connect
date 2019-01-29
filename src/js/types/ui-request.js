@@ -47,10 +47,13 @@ export type DeviceMessage = {
     },
 };
 
-export type ButtonRequestData = Array<{|
+export type ButtonRequestAddressData = {|
+    type: 'address',
     serializedPath: string,
     address: string,
-|}>;
+|};
+
+export type ButtonRequestData = ButtonRequestAddressData;
 
 export type ButtonRequestMessage = {
     +type: typeof UI.REQUEST_BUTTON,
