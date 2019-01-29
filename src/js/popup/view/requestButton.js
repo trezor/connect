@@ -9,7 +9,9 @@ const showAddressValidation = (payload: $PropertyType<ButtonRequestMessage, 'pay
     const data = payload.data;
     const dataContainer: HTMLElement = container.querySelectorAll('.button-request-data')[0];
     if (!data || data.type !== 'address') {
-        container.removeChild(dataContainer);
+        if (dataContainer.parentNode) {
+            dataContainer.parentNode.removeChild(dataContainer);
+        }
         return;
     }
 
