@@ -17,20 +17,58 @@
     .animation-pulsate();
   }
 
-  .address-list {
-    padding-bottom: 14px;
-    word-break: break-all;
-    h3 {
+  .button-request-data {
+    padding: 8px 0px;
+    p {
+      margin: 0;
+      animation: none;
+    }
+    .path-value {
       color: @color_divider;
+      font-weight: 400;
+    }
+    .address-value-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      .address-value {
+        word-break: break-all;
+        color: @color_text_secondary;
+      }
+      .clipboard-button {
+        margin-left: 8px;
+        cursor: pointer;
+        svg {
+          padding: 0px !important;
+          width: 24px !important;
+          height: 100% !important;
+          fill: @color_text_secondary;
+          transition: fill 0.3s;
+        }
+
+        &:hover {
+          svg {
+            fill: @color_text_primary;
+          }
+        }
+      }
     }
   }
 }
 
 @media screen and (min-width: 768px) {
   .check-address {
+    max-width: 100%;
     svg {
       height: 63px;
       width: 21.6px;
     }
+  }
+}
+
+@media screen and (max-width: 639px) {
+  .check-address {
+    max-width: 100%;
   }
 }
