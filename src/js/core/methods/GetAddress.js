@@ -1,9 +1,8 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getRequiredFirmware } from './helpers/paramsValidator';
-import { validatePath, getLabel } from '../../utils/pathUtils';
+import { validatePath, getLabel, getSerializedPath } from '../../utils/pathUtils';
 import { getCoinInfoByCurrency, getCoinInfoFromPath, fixCoinInfoNetwork } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
 import { uniqBy } from 'lodash';
@@ -27,13 +26,14 @@ type Params = Array<Batch>;
 export default class GetAddress extends AbstractMethod {
     confirmed: boolean = false;
     params: Params;
+    progress: number = 0;
 
     constructor(message: CoreMessage) {
         super(message);
 
         this.requiredPermissions = ['read'];
 
-        // create a bundle with only one batch
+        // create a bundle with only one batch if bundle doesn't exists
         const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
@@ -107,19 +107,17 @@ export default class GetAddress extends AbstractMethod {
         this.params = bundle;
     }
 
-    // getButtonRequestData(code: string) {
-    //     if (code === 'ButtonRequest_Address' && this.params.length === 1) {
-    //         const data = [];
-    //         for (let i = 0; i < this.params.length; i++) {
-    //             data.push({
-    //                 serializedPath: getSerializedPath(this.params[i].path),
-    //                 address: this.params[i].address || 'not-set',
-    //             });
-    //         }
-    //         return data;
-    //     }
-    //     return null;
-    // }
+    getButtonRequestData(code: string) {
+        if (code === 'ButtonRequest_Address') {
+            const data = {
+                type: 'address',
+                serializedPath: getSerializedPath(this.params[this.progress].path),
+                address: this.params[this.progress].address || 'not-set',
+            };
+            return data;
+        }
+        return null;
+    }
 
     async confirmation(): Promise<boolean> {
         if (this.confirmed) return true;
@@ -147,29 +145,29 @@ export default class GetAddress extends AbstractMethod {
         const responses: Array<Address> = [];
         const bundledResponse = this.params.length > 1;
 
-        if (!bundledResponse) {
+        for (let i = 0; i < this.params.length; i++) {
+            const batch = this.params[i];
             // silently get address and compare with requested address
             // or display as default inside popup
-            const item = this.params[0];
-            const response: Address = await this.device.getCommands().getAddress(
-                item.path,
-                item.coinInfo,
-                false
-            );
-            if (typeof item.address === 'string') {
-                if (item.address !== response.address) {
-                    throw new Error('Addresses do not match');
+            if (batch.showOnTrezor) {
+                const silent = await this.device.getCommands().getAddress(
+                    batch.path,
+                    batch.coinInfo,
+                    false
+                );
+                if (typeof batch.address === 'string') {
+                    if (batch.address !== silent.address) {
+                        throw new Error('Addresses do not match');
+                    }
+                } else {
+                    batch.address = silent.address;
                 }
-            } else {
-                this.params[0].address = response.address;
             }
-        }
 
-        for (let i = 0; i < this.params.length; i++) {
-            const response:Address = await this.device.getCommands().getAddress(
-                this.params[i].path,
-                this.params[i].coinInfo,
-                this.params[i].showOnTrezor
+            const response = await this.device.getCommands().getAddress(
+                batch.path,
+                batch.coinInfo,
+                batch.showOnTrezor
             );
             responses.push(response);
 
@@ -180,6 +178,8 @@ export default class GetAddress extends AbstractMethod {
                     response,
                 }));
             }
+
+            this.progress++;
         }
         return bundledResponse ? responses : responses[0];
     }
