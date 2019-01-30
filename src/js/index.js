@@ -356,6 +356,10 @@ class TrezorConnect {
         return await call({ method: 'ethereumGetAddress', ...params, useEventListener });
     }
 
+    static ethereumGetPublicKey: $T.EthereumGetPublicKey = async (params) => {
+        return await call({ method: 'ethereumGetPublicKey', ...params });
+    }
+
     static ethereumSignMessage: $T.EthereumSignMessage = async (params) => {
         return await call({ method: 'ethereumSignMessage', ...params });
     }

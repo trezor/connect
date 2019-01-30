@@ -189,7 +189,7 @@ export type EthereumTxRequest = {
 
 export type EthereumAddress = {
     address: string,
-}
+};
 
 export type EthereumSignedTx = {
     // v: number,
@@ -217,6 +217,8 @@ export type PublicKey = {
     node: HDPubNode,
     xpub: string,
 };
+
+export type EthereumPublicKey = PublicKey;
 
 // combined PublicKey and bitcoin.HDNode
 export type HDNodeResponse = {

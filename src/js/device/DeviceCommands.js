@@ -257,6 +257,17 @@ export default class DeviceCommands {
         return response.message;
     }
 
+    async ethereumGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.EthereumPublicKey> {
+        if (!this.device.atLeast(['1.8.0', '2.0.11'])) {
+            return await this.getHDNode(address_n);
+        }
+        const response: MessageResponse<trezor.EthereumPublicKey> = await this.typedCall('EthereumGetPublicKey', 'EthereumPublicKey', {
+            address_n: address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
     async ethereumSignMessage(address_n: Array<number>, message: string): Promise<trezor.MessageSignature> {
         const response: MessageResponse<trezor.MessageSignature> = await this.typedCall('EthereumSignMessage', 'EthereumMessageSignature', {
             address_n,
