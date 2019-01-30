@@ -631,7 +631,7 @@ const onDeviceButtonHandler = async (device: Device, code: string, method: Abstr
     postMessage(new DeviceMessage(DEVICE.BUTTON, { device: device.toMessageObject(), code: code }));
     postMessage(new UiMessage(UI.REQUEST_BUTTON, { device: device.toMessageObject(), code: code, data }));
     if (addressRequest && !method.useUi) {
-        postMessage(new UiMessage(UI.ADDRESS_VALIDATION, { data }));
+        postMessage(new UiMessage(UI.ADDRESS_VALIDATION, data));
     }
 };
 
