@@ -380,6 +380,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             // wait for self-release and then carry on
             await device.waitForFirstRun();
         } else {
+            // cancel popup request
+            postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
             postMessage(new ResponseMessage(responseID, false, { error: ERROR.DEVICE_CALL_IN_PROGRESS.message }));
             throw ERROR.DEVICE_CALL_IN_PROGRESS;
         }
