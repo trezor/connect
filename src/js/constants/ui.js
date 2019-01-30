@@ -53,3 +53,4 @@ export const LOGIN_CHALLENGE_REQUEST: 'ui-login_challenge_request' = 'ui-login_c
 export const LOGIN_CHALLENGE_RESPONSE: 'ui-login_challenge_response' = 'ui-login_challenge_response';
 
 export const BUNDLE_PROGRESS: 'ui-bundle_progress' = 'ui-bundle_progress';
+export const ADDRESS_VALIDATION: 'ui-address_validation' = 'ui-address_validation';

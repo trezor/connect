@@ -1,17 +1,16 @@
 /* @flow */
-'use strict';
+import { crypto } from 'bitcoinjs-lib-zcash';
 
 import Device from '../../device/Device';
-
+import DataManager from '../../data/DataManager';
 import * as UI from '../../constants/ui';
 import * as DEVICE from '../../constants/device';
+import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../iframe/storage';
+
 import { UiMessage, DeviceMessage } from '../../message/builder';
 import type { UiPromiseResponse } from 'flowtype';
 import type { Deferred, CoreMessage } from '../../types';
-
-import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../iframe/storage';
-import { crypto } from 'bitcoinjs-lib-zcash';
-import DataManager from '../../data/DataManager';
+import type { ButtonRequestData } from '../../types/ui-request';
 
 export interface MethodInterface {
     +responseID: number,
@@ -41,6 +40,7 @@ export default class AbstractMethod implements MethodInterface {
     allowDeviceMode: Array<string>; // used in device management (like ResetDevice allow !UI.INITIALIZED)
 
     +confirmation: () => Promise<boolean>;
+    +getButtonRequestData: (code: string) => ?ButtonRequestData;
 
     // // callbacks
     postMessage: (message: CoreMessage) => void;

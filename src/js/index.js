@@ -305,7 +305,8 @@ class TrezorConnect {
     }
 
     static cardanoGetAddress: $T.CardanoGetAddress = async (params) => {
-        return await call({ method: 'cardanoGetAddress', ...params });
+        const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
+        return await call({ method: 'cardanoGetAddress', ...params, useEventListener });
     }
 
     static cardanoGetPublicKey: $T.CardanoGetPublicKey = async (params) => {
@@ -329,7 +330,8 @@ class TrezorConnect {
     }
 
     static ethereumGetAddress: $T.EthereumGetAddress = async (params) => {
-        return await call({ method: 'ethereumGetAddress', ...params });
+        const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
+        return await call({ method: 'ethereumGetAddress', ...params, useEventListener });
     }
 
     static ethereumSignMessage: $T.EthereumSignMessage = async (params) => {
@@ -349,7 +351,8 @@ class TrezorConnect {
     }
 
     static getAddress: $T.GetAddress = async (params) => {
-        return await call({ method: 'getAddress', ...params });
+        const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
+        return await call({ method: 'getAddress', ...params, useEventListener });
     }
 
     static getDeviceState: $T.GetDeviceState = async (params) => {
@@ -365,7 +368,8 @@ class TrezorConnect {
     }
 
     static liskGetAddress: $T.LiskGetAddress = async (params) => {
-        return await call({ method: 'liskGetAddress', ...params });
+        const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
+        return await call({ method: 'liskGetAddress', ...params, useEventListener });
     }
 
     static liskGetPublicKey: $T.LiskGetPublicKey = async (params) => {
@@ -385,7 +389,8 @@ class TrezorConnect {
     }
 
     static nemGetAddress: $T.NEMGetAddress = async (params) => {
-        return await call({ method: 'nemGetAddress', ...params });
+        const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
+        return await call({ method: 'nemGetAddress', ...params, useEventListener });
     }
 
     static nemSignTransaction: $T.NEMSignTransaction = async (params) => {
@@ -397,7 +402,8 @@ class TrezorConnect {
     }
 
     static rippleGetAddress: $T.RippleGetAddress = async (params) => {
-        return await call({ method: 'rippleGetAddress', ...params });
+        const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
+        return await call({ method: 'rippleGetAddress', ...params, useEventListener });
     }
 
     static rippleSignTransaction: $T.RippleSignTransaction = async (params) => {
@@ -413,7 +419,8 @@ class TrezorConnect {
     }
 
     static stellarGetAddress: $T.StellarGetAddress = async (params) => {
-        return await call({ method: 'stellarGetAddress', ...params });
+        const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
+        return await call({ method: 'stellarGetAddress', ...params, useEventListener });
     }
 
     static stellarSignTransaction: $T.StellarSignTransaction = async (params) => {
@@ -421,7 +428,8 @@ class TrezorConnect {
     }
 
     static tezosGetAddress: $T.TezosGetAddress = async (params) => {
-        return await call({ method: 'tezosGetAddress', ...params });
+        const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
+        return await call({ method: 'tezosGetAddress', ...params, useEventListener });
     }
 
     static tezosGetPublicKey: $T.TezosGetPublicKey = async (params) => {

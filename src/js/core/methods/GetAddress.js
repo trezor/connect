@@ -1,9 +1,8 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getRequiredFirmware } from './helpers/paramsValidator';
-import { validatePath, getLabel } from '../../utils/pathUtils';
+import { validatePath, getLabel, getSerializedPath } from '../../utils/pathUtils';
 import { getCoinInfoByCurrency, getCoinInfoFromPath, fixCoinInfoNetwork } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
 import { uniqBy } from 'lodash';
@@ -12,47 +11,44 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { Address } from '../../types/trezor';
-import type { CoinInfo } from 'flowtype';
+import type { CoinInfo, UiPromiseResponse } from 'flowtype';
 import type { CoreMessage } from '../../types';
 
 type Batch = {
     path: Array<number>,
+    address: ?string,
     coinInfo: CoinInfo,
     showOnTrezor: boolean,
 }
-type Params = {
-    bundle: Array<Batch>,
-    bundledResponse: boolean,
-}
+
+type Params = Array<Batch>;
 
 export default class GetAddress extends AbstractMethod {
+    confirmed: boolean = false;
     params: Params;
+    progress: number = 0;
 
     constructor(message: CoreMessage) {
         super(message);
 
         this.requiredPermissions = ['read'];
 
-        const payload: Object = message.payload;
-        let bundledResponse: boolean = true;
-        // create a bundle with only one batch
-        if (!payload.hasOwnProperty('bundle')) {
-            payload.bundle = [ ...payload ];
-            bundledResponse = false;
-        }
+        // create a bundle with only one batch if bundle doesn't exists
+        const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
             { name: 'bundle', type: 'array' },
+            { name: 'useEventListener', type: 'boolean' },
         ]);
 
         const bundle = [];
-        let shouldUseUi: boolean = false;
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
                 { name: 'path', obligatory: true },
                 { name: 'coin', type: 'string' },
+                { name: 'address', type: 'string' },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
@@ -72,9 +68,6 @@ export default class GetAddress extends AbstractMethod {
             if (batch.hasOwnProperty('showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
-            if (showOnTrezor) {
-                shouldUseUi = true;
-            }
 
             if (!coinInfo) {
                 throw NO_COIN_INFO;
@@ -88,13 +81,15 @@ export default class GetAddress extends AbstractMethod {
 
             bundle.push({
                 path,
+                address: batch.address,
                 coinInfo,
                 showOnTrezor,
             });
         });
 
-        // this.useUi = !(!shouldUseUi && bundle.length < 2);
-        this.useUi = shouldUseUi;
+        const useEventListener = payload.useEventListener && payload.bundle.length === 1 && typeof payload.bundle[0].address === 'string' && payload.bundle[0].showOnTrezor;
+        this.confirmed = useEventListener;
+        this.useUi = !useEventListener;
 
         // set info
         if (bundle.length === 1) {
@@ -109,30 +104,83 @@ export default class GetAddress extends AbstractMethod {
             }
         }
 
-        this.params = {
-            bundle,
-            bundledResponse,
-        };
+        this.params = bundle;
+    }
+
+    getButtonRequestData(code: string) {
+        if (code === 'ButtonRequest_Address') {
+            const data = {
+                type: 'address',
+                serializedPath: getSerializedPath(this.params[this.progress].path),
+                address: this.params[this.progress].address || 'not-set',
+            };
+            return data;
+        }
+        return null;
+    }
+
+    async confirmation(): Promise<boolean> {
+        if (this.confirmed) return true;
+        // wait for popup window
+        await this.getPopupPromise().promise;
+        // initialize user response promise
+        const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
+
+        const label: string = this.info;
+        // request confirmation view
+        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+            view: 'export-address',
+            label,
+        }));
+
+        // wait for user action
+        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        const resp: string = uiResp.payload;
+
+        this.confirmed = (resp === 'true');
+        return this.confirmed;
     }
 
     async run(): Promise<Address | Array<Address>> {
         const responses: Array<Address> = [];
-        for (let i = 0; i < this.params.bundle.length; i++) {
-            const response:Address = await this.device.getCommands().getAddress(
-                this.params.bundle[i].path,
-                this.params.bundle[i].coinInfo,
-                this.params.bundle[i].showOnTrezor
+        const bundledResponse = this.params.length > 1;
+
+        for (let i = 0; i < this.params.length; i++) {
+            const batch = this.params[i];
+            // silently get address and compare with requested address
+            // or display as default inside popup
+            if (batch.showOnTrezor) {
+                const silent = await this.device.getCommands().getAddress(
+                    batch.path,
+                    batch.coinInfo,
+                    false
+                );
+                if (typeof batch.address === 'string') {
+                    if (batch.address !== silent.address) {
+                        throw new Error('Addresses do not match');
+                    }
+                } else {
+                    batch.address = silent.address;
+                }
+            }
+
+            const response = await this.device.getCommands().getAddress(
+                batch.path,
+                batch.coinInfo,
+                batch.showOnTrezor
             );
             responses.push(response);
 
-            if (this.params.bundledResponse) {
+            if (bundledResponse) {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
                     response,
                 }));
             }
+
+            this.progress++;
         }
-        return this.params.bundledResponse ? responses : responses[0];
+        return bundledResponse ? responses : responses[0];
     }
 }

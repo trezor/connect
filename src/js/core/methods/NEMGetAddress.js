@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
@@ -8,48 +7,41 @@ import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathU
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { NEMAddress } from '../../types/trezor';
-import type { NEMAddress as NEMAddressResponse } from '../../types/nem';
+import type { NEMAddress } from '../../types/nem';
 import type { UiPromiseResponse } from 'flowtype';
 import type { CoreMessage } from '../../types';
 
 type Batch = {
     path: Array<number>,
+    address: ?string,
     network: number,
     showOnTrezor: boolean,
 }
 
-type Params = {
-    bundle: Array<Batch>,
-    bundledResponse: boolean,
-}
+type Params = Array<Batch>;
 
 const MAINNET: number = 0x68; // 104
 const TESTNET: number = 0x98; // 152
 const MIJIN: number = 0x60; // 96
 
 export default class NEMGetAddress extends AbstractMethod {
-    params: Params;
     confirmed: boolean = false;
+    params: Params;
+    progress: number = 0;
 
     constructor(message: CoreMessage) {
         super(message);
 
         this.requiredPermissions = ['read'];
         this.requiredFirmware = ['1.6.2', '2.0.7'];
-        this.info = 'Export NEM address';
 
-        const payload: Object = message.payload;
-        let bundledResponse: boolean = true;
-        // create a bundle with only one batch
-        if (!payload.hasOwnProperty('bundle')) {
-            payload.bundle = [ ...payload ];
-            bundledResponse = false;
-        }
+        // create a bundle with only one batch if bundle doesn't exists
+        const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
             { name: 'bundle', type: 'array' },
+            { name: 'useEventListener', type: 'boolean' },
         ]);
 
         const bundle = [];
@@ -57,6 +49,7 @@ export default class NEMGetAddress extends AbstractMethod {
             // validate incoming parameters for each batch
             validateParams(batch, [
                 { name: 'path', obligatory: true },
+                { name: 'address', type: 'string' },
                 { name: 'network', type: 'number' },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
@@ -69,30 +62,21 @@ export default class NEMGetAddress extends AbstractMethod {
 
             bundle.push({
                 path,
+                address: batch.address,
                 network: batch.network || MAINNET,
                 showOnTrezor,
             });
         });
 
-        this.params = {
-            bundle,
-            bundledResponse,
-        };
-    }
+        const useEventListener = payload.useEventListener && payload.bundle.length === 1 && typeof payload.bundle[0].address === 'string' && payload.bundle[0].showOnTrezor;
+        this.confirmed = useEventListener;
+        this.useUi = !useEventListener;
+        this.params = bundle;
 
-    async confirmation(): Promise<boolean> {
-        if (this.confirmed) return true;
-        // wait for popup window
-        await this.getPopupPromise().promise;
-        // initialize user response promise
-        const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
-
-        let label: string;
-        if (this.params.bundle.length > 1) {
-            label = 'Export multiple NEM addresses';
-        } else {
+        // set info
+        if (bundle.length === 1) {
             let network: string = 'Unknown';
-            switch (this.params.bundle[0].network) {
+            switch (this.params[0].network) {
                 case MAINNET :
                     network = 'Mainnet';
                     break;
@@ -103,10 +87,32 @@ export default class NEMGetAddress extends AbstractMethod {
                     network = 'Mijin';
                     break;
             }
-
-            label = `Export NEM address for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) } on ${ network } network`;
+            this.info = `Export NEM address for account #${ (fromHardened(this.params[0].path[2]) + 1) } on ${ network } network`;
+        } else {
+            this.info = 'Export multiple NEM addresses';
         }
+    }
 
+    getButtonRequestData(code: string) {
+        if (code === 'ButtonRequest_Address') {
+            const data = {
+                type: 'address',
+                serializedPath: getSerializedPath(this.params[this.progress].path),
+                address: this.params[this.progress].address || 'not-set',
+            };
+            return data;
+        }
+        return null;
+    }
+
+    async confirmation(): Promise<boolean> {
+        if (this.confirmed) return true;
+        // wait for popup window
+        await this.getPopupPromise().promise;
+        // initialize user response promise
+        const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
+
+        const label: string = this.info;
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-address',
@@ -121,29 +127,51 @@ export default class NEMGetAddress extends AbstractMethod {
         return this.confirmed;
     }
 
-    async run(): Promise<NEMAddressResponse | Array<NEMAddressResponse>> {
-        const responses: Array<NEMAddressResponse> = [];
-        for (let i = 0; i < this.params.bundle.length; i++) {
-            const response: NEMAddress = await this.device.getCommands().nemGetAddress(
-                this.params.bundle[i].path,
-                this.params.bundle[i].network,
-                this.params.bundle[i].showOnTrezor
+    async run(): Promise<NEMAddress | Array<NEMAddress>> {
+        const responses: Array<NEMAddress> = [];
+        const bundledResponse = this.params.length > 1;
+
+        for (let i = 0; i < this.params.length; i++) {
+            const batch: Batch = this.params[i];
+            // silently get address and compare with requested address
+            // or display as default inside popup
+            if (batch.showOnTrezor) {
+                const silent = await this.device.getCommands().nemGetAddress(
+                    batch.path,
+                    batch.network,
+                    false
+                );
+                if (typeof batch.address === 'string') {
+                    if (batch.address !== silent.address) {
+                        throw new Error('Addresses do not match');
+                    }
+                } else {
+                    batch.address = silent.address;
+                }
+            }
+
+            const response = await this.device.getCommands().nemGetAddress(
+                batch.path,
+                batch.network,
+                batch.showOnTrezor
             );
 
             responses.push({
+                path: batch.path,
+                serializedPath: getSerializedPath(batch.path),
                 address: response.address,
-                path: this.params.bundle[i].path,
-                serializedPath: getSerializedPath(this.params.bundle[i].path),
             });
 
-            if (this.params.bundledResponse) {
+            if (bundledResponse) {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
                     response,
                 }));
             }
+
+            this.progress++;
         }
-        return this.params.bundledResponse ? responses : responses[0];
+        return bundledResponse ? responses : responses[0];
     }
 }
