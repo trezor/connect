@@ -4,6 +4,19 @@
 import { container, showView } from './common';
 import type { ButtonRequestMessage } from '../../types/ui-request';
 
+let toastTimeout;
+
+const showToast = () => {
+    const toast: HTMLElement = container.querySelectorAll('.toast')[0];
+    if (toastTimeout) {
+        clearTimeout(toastTimeout);
+    }
+    toastTimeout = setTimeout(() => {
+        toast.classList.remove('visible');
+    }, 3000);
+    toast.classList.add('visible');
+};
+
 const showAddressValidation = (payload: $PropertyType<ButtonRequestMessage, 'payload'>) => {
     showView('check-address');
     const data = payload.data;
@@ -31,6 +44,8 @@ const showAddressValidation = (payload: $PropertyType<ButtonRequestMessage, 'pay
         el.select();
         document.execCommand('copy');
         dataContainer.removeChild(el);
+
+        showToast();
     };
 };
 

@@ -1,3 +1,12 @@
+@keyframes toast {
+  0%, 100% {
+    opacity: 0;
+  }
+  5%, 75% {
+    opacity: 1.0;
+  }
+}
+
 .check-address {
   display: flex;
   flex-direction: column;
@@ -23,22 +32,42 @@
       margin: 0;
       animation: none;
     }
+
     .path-value {
       color: @color_divider;
       font-weight: 400;
     }
+
     .address-value-container {
+      position: relative;
       display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: center;
+
+      .toast {
+        display: none;
+        position: absolute;
+        background: rgba(0, 0, 0, 0.75);
+        padding: 4px 12px;
+        border-radius: 4px;
+        color: @color_white;
+        font-weight: 400;
+        &.visible {
+          display: block;
+          animation: toast 3s ease-out infinite;
+        }
+      }
+
       .address-value {
         word-break: break-all;
         color: @color_text_secondary;
       }
+
       .clipboard-button {
         margin-left: 8px;
         cursor: pointer;
+
         svg {
           padding: 0px !important;
           width: 24px !important;
