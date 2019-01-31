@@ -8,10 +8,9 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import DataManager from '../../data/DataManager';
 
-import type { UiPromiseResponse } from 'flowtype';
-import type { Identity, SignedIdentity } from '../../types/trezor';
 import type { ConnectSettings } from '../../data/ConnectSettings';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse } from '../../types';
+import type { Identity, SignedIdentity } from '../../types/trezor';
 import type { RequestLogin$ } from '../../types/response';
 
 type Params = {

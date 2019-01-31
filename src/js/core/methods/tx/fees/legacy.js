@@ -9,7 +9,7 @@ import type {
     FeeLevel,
     FeeLevelInfo,
     LegacyBitcoreFeeLevel,
-} from 'flowtype/fee';
+} from '../../../../types/fee';
 
 // special case - when blockchain is empty and returns same levels for all 3,
 // we don't want to show 3 levels

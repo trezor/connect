@@ -11,9 +11,7 @@ import type {
     BuildTxOutput,
 } from 'hd-wallet';
 
-import type {
-    CoinInfo,
-} from 'flowtype';
+import type { BitcoinNetworkInfo } from '../../../types';
 
 import type {
     TransactionInput,
@@ -26,7 +24,7 @@ export const verifyTx = (inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>,
     nodes: ?Array<bitcoin.HDNode>,
     signedTx: SignedTx,
-    coinInfo: CoinInfo,
+    coinInfo: BitcoinNetworkInfo,
 ): void => {
     const bitcoinTx: bitcoin.Transaction = bitcoin.Transaction.fromHex(signedTx.serializedTx, coinInfo.zcash);
 

@@ -2,7 +2,7 @@
 'use strict';
 
 import { container, showView } from './common';
-import type { ButtonRequestMessage } from '../../types/ui-request';
+import type { ButtonRequestMessage } from '../../types/uiRequest';
 
 let toastTimeout;
 

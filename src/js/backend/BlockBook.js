@@ -17,7 +17,7 @@ import type {
     AccountInfo,
     AccountLoadStatus,
 } from 'hd-wallet';
-import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
+import type { BitcoinNetworkInfo, EthereumNetworkInfo } from '../types';
 
 /* $FlowIssue loader notation */
 import FastXpubWasm from 'hd-wallet/lib/fastxpub/fastxpub.wasm';
@@ -30,7 +30,7 @@ import SocketWorker from 'worker-loader?name=js/socketio-worker.[hash].js!hd-wal
 
 export type Options = {
     urls: Array<string>,
-    coinInfo: CoinInfo | EthereumNetworkInfo,
+    coinInfo: BitcoinNetworkInfo | EthereumNetworkInfo,
 };
 
 export default class BlockBook {
@@ -70,7 +70,7 @@ export default class BlockBook {
         // this instance will not be used anymore
     }
 
-    async loadCoinInfo(coinInfo: ?(CoinInfo | EthereumNetworkInfo)): Promise<void> {
+    async loadCoinInfo(coinInfo: $ElementType<Options, 'coinInfo'>): Promise<void> {
         const socket = await this.blockchain.socket.promise;
         const networkInfo = await socket.send({ method: 'getInfo', params: [] });
 
@@ -91,7 +91,7 @@ export default class BlockBook {
     async loadAccountInfo(
         xpub: string,
         data: ?AccountInfo,
-        coinInfo: CoinInfo,
+        coinInfo: BitcoinNetworkInfo,
         progress: (progress: AccountLoadStatus) => void,
         setDisposer: (disposer: () => void) => void
     ): Promise<AccountInfo> {
@@ -148,7 +148,7 @@ export default class BlockBook {
     monitorAccountActivity(
         xpub: string,
         data: AccountInfo,
-        coinInfo: CoinInfo,
+        coinInfo: BitcoinNetworkInfo,
     ): Stream<AccountInfo | Error> {
         if (this.error) { throw this.error; }
 

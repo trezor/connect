@@ -5,7 +5,7 @@ import { parseMessage } from '../message';
 import { UiMessage, ResponseMessage } from '../message/builder';
 import type { CoreMessage, PostMessageEvent } from '../types';
 import DataManager from '../data/DataManager';
-import type { PopupHandshake } from '../types/ui-request';
+import type { PopupHandshake } from '../types/uiRequest';
 
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';

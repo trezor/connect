@@ -16,16 +16,15 @@ import { create as createDeferred } from '../../utils/deferred';
 
 import Account, { create as createAccount } from '../../account';
 import BlockBook, { create as createBackend } from '../../backend';
-import { getCoinInfoByCurrency, fixCoinInfoNetwork, getCoinInfoFromPath } from '../../data/CoinInfo';
+import { getBitcoinNetwork, fixCoinInfoNetwork } from '../../data/CoinInfo';
 import { UiMessage } from '../../message/builder';
-import type { CoinInfo, UiPromiseResponse } from 'flowtype';
 import type { AccountInfo, HDNodeResponse } from '../../types/trezor';
-import type { Deferred, CoreMessage } from '../../types';
+import type { Deferred, CoreMessage, UiPromiseResponse, BitcoinNetworkInfo } from '../../types';
 
 type Params = {
     path: ?Array<number>,
     xpub: ?string,
-    coinInfo: CoinInfo,
+    coinInfo: BitcoinNetworkInfo,
 }
 
 type Response = AccountInfo | {
@@ -53,15 +52,15 @@ export default class GetAccountInfo extends AbstractMethod {
         ]);
 
         let path: Array<number>;
-        let coinInfo: ?CoinInfo;
+        let coinInfo: ?BitcoinNetworkInfo;
         if (payload.coin) {
-            coinInfo = getCoinInfoByCurrency(payload.coin);
+            coinInfo = getBitcoinNetwork(payload.coin);
         }
 
         if (payload.path) {
             path = validatePath(payload.path, 3, true);
             if (!coinInfo) {
-                coinInfo = getCoinInfoFromPath(path);
+                coinInfo = getBitcoinNetwork(path);
             } else if (!payload.crossChain) {
                 validateCoinPath(coinInfo, path);
             }
@@ -130,7 +129,7 @@ export default class GetAccountInfo extends AbstractMethod {
     }
 
     async _getAccountFromPath(path: Array<number>): Promise<Response> {
-        const coinInfo: CoinInfo = fixCoinInfoNetwork(this.params.coinInfo, path);
+        const coinInfo: BitcoinNetworkInfo = fixCoinInfoNetwork(this.params.coinInfo, path);
         const node: HDNodeResponse = await this.device.getCommands().getHDNode(path, coinInfo);
         const account = createAccount(path, node.xpub, coinInfo);
 

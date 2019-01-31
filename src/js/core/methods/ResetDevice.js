@@ -7,9 +7,8 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import { validateParams } from './helpers/paramsValidator';
 
-import type { UiPromiseResponse } from 'flowtype';
 import type { ResetDeviceFlags, Success } from '../../types/trezor';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 export default class GetPublicKey extends AbstractMethod {
     params: ResetDeviceFlags;

@@ -8,9 +8,8 @@ import Discovery from './helpers/Discovery';
 import { NO_COIN_INFO } from '../../constants/errors';
 
 import BlockBook, { create as createBackend } from '../../backend';
-import type { EthereumNetworkInfo } from 'flowtype';
-import type { CoreMessage } from '../../types';
-import type { EthereumAccount } from '../../types/ethereum';
+import type { CoreMessage, EthereumNetworkInfo } from '../../types';
+import type { EthereumAccount } from '../../types/account';
 
 type Params = {
     accounts: Array<EthereumAccount>,

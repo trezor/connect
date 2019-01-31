@@ -4,6 +4,7 @@
 
 import type { $Path, $Common } from './params';
 import type { Unsuccessful$ } from './response';
+import type { EthereumAccount } from './account';
 import type {
     Success,
     MessageSignature,
@@ -25,14 +26,6 @@ export type Transaction = {
 }
 
 // get account info
-
-export type EthereumAccount = {
-    address: string,
-    block: number,
-    transactions: number,
-    balance: string,
-    nonce: number,
-}
 
 export type $EthereumGetAccountInfo = {
     account: EthereumAccount,

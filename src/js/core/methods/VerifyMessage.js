@@ -3,19 +3,18 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
-import { getCoinInfoByCurrency } from '../../data/CoinInfo';
+import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
 import type { Success } from '../../types/trezor';
-import type { CoinInfo } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 
 type Params = {
     address: string,
     signature: string,
     message: string,
-    coinInfo: CoinInfo,
+    coinInfo: BitcoinNetworkInfo,
 }
 
 export default class VerifyMessage extends AbstractMethod {
@@ -37,7 +36,7 @@ export default class VerifyMessage extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
-        const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
+        const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         } else {

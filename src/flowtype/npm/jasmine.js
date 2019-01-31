@@ -6,9 +6,9 @@ type ActionFn = (done: DoneFn) => Promise<void> | void;
 type AssertionFn = (done: DoneFn) => Promise<void> | void;
 
 type Jasmine = {
-    DEFAULT_TIMEOUT_INTERVAL: number;
+    DEFAULT_TIMEOUT_INTERVAL: number,
     // TODO?
-    getEnv(): any;
+    getEnv(): any,
 }
 
 type Expectation = {

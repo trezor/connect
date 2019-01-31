@@ -7,14 +7,13 @@ import * as BLOCKCHAIN from '../../constants/blockchain';
 import { NO_COIN_INFO } from '../../constants/errors';
 
 import BlockBook, { create as createBackend } from '../../backend';
-import { getCoinInfoByCurrency, getEthereumNetwork } from '../../data/CoinInfo';
+import { getCoinInfo } from '../../data/CoinInfo';
 import { BlockchainMessage } from '../../message/builder';
-import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, CoinInfo } from '../../types';
 
 type Params = {
     accounts: Array<string>,
-    coinInfo: CoinInfo | EthereumNetworkInfo,
+    coinInfo: CoinInfo,
 }
 
 export default class BlockchainSubscribe extends AbstractMethod {
@@ -36,10 +35,7 @@ export default class BlockchainSubscribe extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
-        let coinInfo: ?(CoinInfo | EthereumNetworkInfo) = getCoinInfoByCurrency(payload.coin);
-        if (!coinInfo) {
-            coinInfo = getEthereumNetwork(payload.coin);
-        }
+        const coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
 
         if (!coinInfo) {
             throw NO_COIN_INFO;
@@ -52,34 +48,42 @@ export default class BlockchainSubscribe extends AbstractMethod {
     }
 
     async run(): Promise<{ subscribed: true }> {
+        const { coinInfo } = this.params;
+        if (coinInfo.type === 'misc') throw new Error('Invalid CoinInfo object');
+
         // initialize backend
-        this.backend = await createBackend(this.params.coinInfo);
+        this.backend = await createBackend(coinInfo);
 
         this.backend.subscribe(
             this.params.accounts,
             (hash, height) => {
                 this.postMessage(new BlockchainMessage(BLOCKCHAIN.BLOCK, {
-                    coin: this.params.coinInfo,
+                    coin: coinInfo,
                     hash,
+                    block: 0,
                     height,
                 }));
             },
             notification => {
                 this.postMessage(new BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
-                    coin: this.params.coinInfo,
+                    coin: coinInfo,
                     notification,
                 }));
             },
             error => {
                 this.postMessage(new BlockchainMessage(BLOCKCHAIN.ERROR, {
-                    coin: this.params.coinInfo,
+                    coin: coinInfo,
                     error: error.message,
                 }));
             }
         );
 
         this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
-            coin: this.params.coinInfo,
+            coin: coinInfo,
+            info: {
+                fee: '0',
+                block: 0,
+            },
         }));
 
         return {

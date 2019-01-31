@@ -8,8 +8,7 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { NEMAddress } from '../../types/nem';
-import type { UiPromiseResponse } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 type Batch = {
     path: Array<number>,
