@@ -66,9 +66,7 @@ export type ButtonRequestMessage = {
 
 export type AddressValidationMessage = {
     +type: typeof UI.ADDRESS_VALIDATION,
-    payload: {
-        data: ?ButtonRequestData,
-    },
+    payload: ?ButtonRequestData,
 }
 
 /*
