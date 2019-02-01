@@ -12,39 +12,39 @@ export const ethereumGetAddress = (): TestFunction => {
     const testPayloads: Array<TestEthereumGetAddressPayload> = [
         {
             method: 'ethereumGetAddress',
-            path: "m/44'/43'/0'",
+            path: "m/44'/60'/1",
         },
         {
             method: 'ethereumGetAddress',
-            path: [2147483692, 2147483691, 2147483648],
+            path: "m/44'/60'/0/1'",
         },
         {
             method: 'ethereumGetAddress',
-            path: "m/44'/43'/1'",
+            path: "m/44'/60'/0'/9'/0",
         },
         {
             method: 'ethereumGetAddress',
-            path: [-1],
+            path: "m/44'/160'/0'/0/0",
         },
         {
             method: 'ethereumGetAddress',
-            path: [0, 1],
+            path: "m/44'/199'/0'/0/9999",
         },
     ];
     const expectedResponses: Array<ExpectedEthereumGetAddressResponse> = [
         {
             payload: {
-                address: '0x6ae2F16e73Aeac6A2Bbc46cc98a1D2e23661E6Fe',
+                address: '0xeD46C856D0c79661cF7d40FFE0C0C5077c00E898',
             },
         },
         {
             payload: {
-                address: '0x6ae2F16e73Aeac6A2Bbc46cc98a1D2e23661E6Fe',
+                address: '0x6682Fa7F3eC58581b1e576268b5463B4b5c93839',
             },
         },
         {
             payload: {
-                address: '0x64c97F1954602eF09b950aBa4B0d172ACe043392',
+                address: '0xFb3BE0F9717fF5fCF3C58EB49a9Ed67F1BD89D4E',
             },
         },
         { success: false },

@@ -563,6 +563,10 @@ export default class Device extends EventEmitter {
         return 'normal';
     }
 
+    debugLinkDecision() {
+
+    }
+
     // simplified object to pass via postMessage
     toMessageObject(): DeviceTyped {
         if (this.originalDescriptor.path === DEVICE.UNREADABLE) {

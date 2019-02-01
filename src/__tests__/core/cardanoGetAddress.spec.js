@@ -13,7 +13,7 @@ export const cardanoGetAddress = (): TestFunction => {
     const testPayloads: Array<TestCardanoGetAddressPayload> = [
         {
             method: 'cardanoGetAddress',
-            path: "m/44'/1815'/0'/0/0'",
+            path: "m/44'/1815'/0'/0/0",
         },
         {
             method: 'cardanoGetAddress',
@@ -21,29 +21,30 @@ export const cardanoGetAddress = (): TestFunction => {
         },
         {
             method: 'cardanoGetAddress',
-            path: "m/44'/1815'/0'/0/1'",
+            path: "m/44'/1815'/0'/0/1",
         },
         {
             method: 'cardanoGetAddress',
-            path: "m/44'/1815'/0'/0/2'",
+            path: "m/44'/1815'/0'/0/2",
         },
     ];
 
+    // responses from https://github.com/trezor/trezor-core/blob/master/tests/test_apps.cardano.address.py#L71
     const expectedResponses: Array<ExpectedCardanoGetAddressResponse> = [
         {
             payload: {
-                address: 'DdzFFzCqrhst5m97LJq6P8x5ixpQJUAEurzas1kfTiV1uVyx5bKBqhRLjpTNaKKNsyKFCxfcoxVnDkbodL927Fjske2eEuyyXF4McGqd',
+                address: 'Ae2tdPwUPEZ5YUb8sM3eS8JqKgrRLzhiu71crfuH2MFtqaYr5ACNRdsswsZ',
             },
         },
         { success: false },
         {
             payload: {
-                address: 'sxtitePxjp5ubGrpqaAvBAck4S2AQNZeW67ZXb8Yg1Bs3kd5owZo8YEDRPNhuCZXcKDy93cGvtm6vP7jjPb43QWpBN',
+                address: 'Ae2tdPwUPEZJb8r1VZxweSwHDTYtqeYqF39rZmVbrNK62JHd4Wd7Ytsc8eG',
             },
         },
         {
             payload: {
-                address: '2w1sdSJu3GVfqnGAyqAdaWrN8Txv1vCZTN1Pe2AA54ysjWNbNzma3WVtSJfMc6HpM9KEQsdJ7oALPwfQWesRp8QDsFRQpzuNrdq',
+                address: 'Ae2tdPwUPEZFm6Y7aPZGKMyMAK16yA5pWWKU9g73ncUQNZsAjzjhszenCsq',
             },
         },
     ];
