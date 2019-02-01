@@ -10,6 +10,9 @@
 clean:
 	rm -rf dist/
 
+popup:
+	cd ./popup && ./docker/build.sh
+
 dist-rolling-%:
 	git fetch
 	git checkout $*
@@ -30,6 +33,7 @@ dist-stable-v%:
 	mkdir dist/$*/popup/img
 	cp popup/config_signed.bin dist/$*/popup
 	cp popup/coins.json dist/$*/popup
+	cp popup/config.json dist/$*/popup
 	cp popup/popup.html dist/$*/popup
 	cp login_buttons.css dist/$*
 	cp connect.js dist/$*/connect.js

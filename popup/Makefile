@@ -13,7 +13,8 @@ COINS_JSON_TARGET=coins.json
 
 .PHONY: build clean node_modules submodules
 
-build: ${ENTRY} ${SOCKET_WORKER} ${DISCOVERY_WORKER} node_modules submodules
+# build: ${ENTRY} ${SOCKET_WORKER} ${DISCOVERY_WORKER} node_modules submodules (no not fetch submodules, freeze them on current version)
+build: ${ENTRY} ${SOCKET_WORKER} ${DISCOVERY_WORKER} node_modules
 	${BIN}/browserify ${ENTRY} \
 		-g [ uglifyify ] \
 		-d \
