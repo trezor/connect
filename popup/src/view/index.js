@@ -53,7 +53,7 @@ export const promptInfoPermission = (path) => {
         let element = document.getElementById('accountinfo_id');
         element.innerHTML = xpubKeyLabel(path);
         element.callback = (exportInfo) => {
-            showAlert(global.alert);
+            showAlert('#alert_loading');
             if (exportInfo) {
                 resolve();
             } else {
@@ -83,7 +83,7 @@ export const promptXpubKeyPermission = (path) => {
         let e = document.getElementById('xpubkey_id');
         e.textContent = xpubKeyLabel(path);
         e.callback = (exportXpub) => {
-            showAlert(global.alert);
+            showAlert('#alert_loading');
             if (exportXpub) {
                 resolve(path);
             } else {
