@@ -1,0 +1,193 @@
+{
+    "supportedFirmware": {
+        "login": {
+            "min": ["1.6.2", "2.0.7"]
+        },
+        "xpubkey": {
+            "min": ["1.6.2", "2.0.7"]
+        },
+        
+        "accountinfo": {
+            "min": ["1.6.2", "2.0.7"]
+        },
+        "allaccountsinfo": {
+            "min": ["1.6.2", "2.0.7"]
+        },
+        "signtx": {
+            "min": ["1.6.2", "2.0.7"]
+        },
+        "composetx": {
+            "min": ["1.6.2", "2.0.7"]
+        },
+        "signmsg": {
+            "min": ["1.6.2", "2.0.7"]
+        },
+        "verifymsg": {
+            "min": ["1.6.2", "2.0.7"]
+        },
+        
+        "cipherkeyvalue": {
+            "min": ["1.6.2", "2.0.7"]
+        },
+        "getaddress": {
+            "min": ["1.6.2", "2.0.7"]
+        },
+
+        "ethxpubkey": {
+            "min": ["1.6.2", "2.0.7"],
+            "max": ["1.8.0", "2.0.10"]
+        },
+        "signethmsg": {
+            "min": ["1.6.2", "2.0.7"],
+            "max": ["1.8.0", "2.0.10"]
+        },
+        "verifyethmsg": {
+            "min": ["1.6.2", "2.0.7"],
+            "max": ["1.8.0", "2.0.10"]
+        },
+        "ethgetaddress": {
+            "min": ["1.6.2", "2.0.7"],
+            "max": ["1.8.0", "2.0.10"]
+        },
+        "signethtx": {
+            "min": ["1.6.2", "2.0.7"],
+            "max": ["1.8.0", "2.0.10"]
+        },
+
+        "nemGetAddress": {
+            "min": ["1.6.2", "2.0.7"]
+        },
+        "nemSignTx": {
+            "min": ["1.6.2", "2.0.7"]
+        }
+    },
+
+    "_comment": [
+        "Eth networks copied from https://connect.trezor.io/6/data/coins.json Removed testnets with slip44 === 1",
+        "./submodules/trezor-common/tools/cointool.py dump -p -d connect -E erc20 -E bitcoin -E misc -E nem -e blockbook -e key -e chain -e chain_id -e support -e url -o ./src/data/connect4-eth.json"
+    ],
+    
+    "eth": [
+        {
+            "name": "Ethereum",
+            "rskip60": false,
+            "shortcut": "ETH",
+            "slip44": 60
+        },
+        {
+            "name": "Expanse",
+            "rskip60": false,
+            "shortcut": "EXP",
+            "slip44": 40
+        },
+        {
+            "name": "Ubiq",
+            "rskip60": false,
+            "shortcut": "UBQ",
+            "slip44": 108
+        },
+        {
+            "name": "Ethereum Social",
+            "rskip60": false,
+            "shortcut": "ETSC",
+            "slip44": 1128
+        },
+        {
+            "name": "RSK",
+            "rskip60": true,
+            "shortcut": "RBTC",
+            "slip44": 137
+        },
+        {
+            "name": "RSK Testnet",
+            "rskip60": true,
+            "shortcut": "tRBTC",
+            "slip44": 37310
+        },
+        {
+            "name": "GoChain",
+            "rskip60": false,
+            "shortcut": "GO",
+            "slip44": 6060
+        },
+        {
+            "name": "Ethereum Classic",
+            "rskip60": false,
+            "shortcut": "ETC",
+            "slip44": 61
+        },
+        {
+            "name": "Ellaism",
+            "rskip60": false,
+            "shortcut": "ELLA",
+            "slip44": 163
+        },
+        {
+            "name": "Mix",
+            "rskip60": false,
+            "shortcut": "MIX",
+            "slip44": 76
+        },
+        {
+            "name": "Callisto",
+            "rskip60": false,
+            "shortcut": "CLO",
+            "slip44": 820
+        },
+        {
+            "duplicate": true,
+            "name": "Atheios",
+            "rskip60": false,
+            "shortcut": "ATH",
+            "slip44": 1620
+        },
+        {
+            "name": "EtherGem",
+            "rskip60": false,
+            "shortcut": "EGEM",
+            "slip44": 1987
+        },
+        {
+            "name": "EOS Classic",
+            "rskip60": false,
+            "shortcut": "EOSC",
+            "slip44": 2018
+        },
+        {
+            "name": "REOSC Ecosystem",
+            "rskip60": false,
+            "shortcut": "REOSC",
+            "slip44": 2894
+        },
+        {
+            "name": "Ethersocial Network",
+            "rskip60": false,
+            "shortcut": "ESN",
+            "slip44": 31102
+        },
+        {
+            "name": "Akroma",
+            "rskip60": false,
+            "shortcut": "AKA",
+            "slip44": 200625
+        },
+        {
+            "name": "Ether-1",
+            "rskip60": false,
+            "shortcut": "ETHO",
+            "slip44": 1313114
+        },
+        {
+            "name": "Musicoin",
+            "rskip60": false,
+            "shortcut": "MUSIC",
+            "slip44": 184
+        },
+        {
+            "name": "Pirl",
+            "rskip60": false,
+            "shortcut": "PIRL",
+            "slip44": 164
+        }
+    ]
+}
