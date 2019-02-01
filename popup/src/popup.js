@@ -20,6 +20,7 @@ import { getCoinInfoByCurrency } from './backend/CoinInfo';
 import ComposingTransaction, { transformResTxs, validateInputs, validateOutputs } from './backend/ComposingTransaction';
 import { httpRequest, setCurrencyUnits, formatAmount, parseRequiredFirmware } from './utils/utils';
 import { serializePath, isSegwitPath, validateAccountInfoDescription } from './utils/path';
+import firmwareValidation, { FIRMWARE_IS_OLD } from './utils/firmwareValidation';
 import * as Constants from './utils/constants';
 import { promptInfoPermission, promptXpubKeyPermission, showSelectionFees, promptNEMAddressPermission, CHANGE_ACCOUNT } from './view';
 
@@ -237,7 +238,7 @@ function handleLogin(event) {
     show('#operation_login');
 
     initDevice({ emptyPassphrase: true })
-
+        .then((device) => firmwareValidation(device, event))
         .then(function signIdentity(device) { // send SignIdentity
             let handler = errorHandler(() => signIdentity(device));
             return device.session.signIdentity(
@@ -284,7 +285,7 @@ function handleSignMsg(event) {
     show('#operation_signmsg');
 
     initDevice()
-
+        .then((device) => firmwareValidation(device, event))
         .then(function signMessage(device) { // send SignMessage
             let handler = errorHandler(() => signMessage(device));
             return device.session.signMessage(
@@ -331,7 +332,7 @@ function handleEthereumSignMsg(event) {
     show('#operation_signethmsg');
 
     initDevice()
-
+        .then((device) => firmwareValidation(device, event))
         .then(function signEthMessage(device) { // send EthereumSignMessage
             return device.session.signEthMessage(
                 requestedPath,
@@ -372,7 +373,7 @@ function handleVerifyMsg(event) {
     show('#operation_verifymsg');
 
     initDevice()
-
+        .then((device) => firmwareValidation(device, event))
         .then(function verifyMessage(device) { // send VerifyMessage
             return device.session.verifyMessage(
                 address,
@@ -405,7 +406,7 @@ function handleEthereumVerifyMsg(event) {
     show('#operation_verifyethmsg');
 
     initDevice()
-
+        .then((device) => firmwareValidation(device, event))
         .then(function verifyEthereumMessage(device) { // send EthereumVerifyMessage
             return device.session.verifyEthMessage(
                 address,
@@ -443,7 +444,7 @@ function handleCipherKeyValue(event) {
     }
 
     initDevice()
-
+        .then((device) => firmwareValidation(device, event))
         .then(function cipherKeyValue(device) { // send CipherKeyValue
             let handler = errorHandler(() => cipherKeyValue(device));
 
@@ -489,6 +490,7 @@ function handleNEMGetAddress(event) {
     show('#operation_nemaddress');
 
     initDevice()
+        .then((device) => firmwareValidation(device, event))
         .then(getPermission)
         .then(getAddress)
         .then((result) => { // success
@@ -681,6 +683,7 @@ function handleNEMSignTx(event) {
     show('#operation_signtx');
 
     initDevice()
+        .then((device) => firmwareValidation(device, event))
         .then(createTx)
         .then(signTx)
         .then((result) => { // success
@@ -721,6 +724,7 @@ function handleXpubKey(event) {
     show('#operation_xpubkey');
 
     initDevice()
+        .then((device) => firmwareValidation(device, event))
         .then((device) => {
             let getPermission = (path) => {
                 let handler = errorHandler(() => getPermission(path));
@@ -884,6 +888,7 @@ function handleAccountInfo(event) {
     })
     .then(description => {
         return initDevice()
+        .then((device) => firmwareValidation(device, event))
         .then(device => {
             return getAccountByDescription(description)
                 .then((account) => {
@@ -943,7 +948,7 @@ function handleEthereumSignTx(event) {
     show('#operation_signtx');
 
     initDevice()
-
+        .then((device) => firmwareValidation(device, event))
         .then(function signEthTx(device) {
             let handler = errorHandler(() => signEthTx(device));
 
@@ -991,7 +996,7 @@ function handleSignTx(event) {
     show('#operation_signtx');
 
     initDevice()
-
+        .then((device) => firmwareValidation(device, event))
         .then((device) => {
             return getBitcoreBackend().then(() => {
                 const { trezorInputs, bitcoreInputs } = validateInputs(event.data.inputs, backend.coinInfo.network);
@@ -1062,6 +1067,7 @@ function handleGetAddress(event) {
     let segwit = event.data.segwit;
 
     initDevice()
+        .then((device) => firmwareValidation(device, event))
         .then((device) => {
             device.session.getAddress(address, coin, true, segwit)
             .then(response => {
@@ -1083,6 +1089,7 @@ function handleEthereumGetAddress(event) {
     let address = event.data.address_n;
 
     initDevice()
+        .then((device) => firmwareValidation(device, event))
         .then((device) => {
             device.session.ethereumGetAddress(address, true)
             .then(response => {
@@ -1104,6 +1111,7 @@ function handleComposeTx(event) {
     let recipients = event.data.recipients;
 
     initDevice()
+        .then((device) => firmwareValidation(device, event))
         .then((device) => {
 
             const composeTx = () => {
@@ -1276,7 +1284,6 @@ const NO_TRANSPORT = new Error('No trezor.js transport is available');
 const NO_CONNECTED_DEVICES = new Error('No connected devices');
 const DEVICE_IS_BOOTLOADER = new Error('Connected device is in bootloader mode');
 const DEVICE_IS_EMPTY = new Error('Connected device is not initialized');
-const FIRMWARE_IS_OLD = new Error('Firmware of connected device is too old');
 
 const INSUFFICIENT_FUNDS = new Error('Insufficient funds');
 const AMOUNT_TOO_LOW = new Error('Amount is to low');
