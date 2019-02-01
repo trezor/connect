@@ -57,6 +57,12 @@
 
   <pre id="response"></pre>
 
+  <script>
+      if (window.location.hostname === 'localhost') {
+          window.TREZOR_POPUP_ORIGIN = window.location.origin;
+          window.TREZOR_POPUP_URL = window.TREZOR_POPUP_ORIGIN + '/popup/popup.html';
+      }
+  </script>
   <script src="../connect.js"></script>
 
   </body>
