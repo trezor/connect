@@ -6,10 +6,7 @@ node_js:
   - "4.4"
 
 script:
-  - cd popup
-  - npm install -g yarn
-  - npm install
-  - make build
+  - make popup
 
 notifications:
   webhooks:
