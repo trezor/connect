@@ -1,3 +1,4 @@
+import semvercmp from 'semver-compare';
 import { httpRequest } from './utils';
 import { showAlert } from '../view/common';
 import { HD_HARDENED } from './constants';
@@ -36,8 +37,7 @@ const validate = (device, event) => {
         // config not found.
         // resolve without error (skip check)
         if (!config) {
-            resolve(device);
-            return;
+            return device;
         }
 
         const model = device.features ? device.features.major_version - 1 : null;
@@ -45,15 +45,16 @@ const validate = (device, event) => {
 
         // method or model not found.
         // resolve without error (skip check)
-        if (!model || !method) {
-            resolve(device);
-            return;
+        if (isNaN(model) || !method) {
+            return device;
         }
 
         if (method.min && !device.atLeast(method.min[model])) {
             throw FIRMWARE_IS_OLD;
         }
-        if (method.max && device.atLeast(method.max[model])) {
+
+        // if (method.max && device.atLeast(method.max[model])) {
+        if (method.max && method.max[model] !== '0' && semvercmp(device.getVersion(), method.max[model]) > 0) {
             return promptWarning(device, event);
         }
 
@@ -75,7 +76,14 @@ export const promptWarning = (device, event) => {
         };
 
         document.getElementById('fw_version').innerText = device.getVersion();
-        document.getElementById('fw_identity').innerText = event.data.identity.host;
+        // document.getElementsByClassName('fw_identity').innerText = event.data.identity.host;
+        // document.getElementsByClassName('fw_identity');.forEach(el => {
+        //     console.warn("EL", el);
+        // })
+        const identities = document.getElementsByClassName('fw_identity');
+        for (var i = 0; i < identities.length; i++) {
+            identities[i].innerText = event.data.identity.host;
+        }
         
     });
 };
