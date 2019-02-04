@@ -382,6 +382,18 @@ input[type="password"] {
     margin-top: 110px;
 }
 
+#alert_firmware_not_compatible {
+    top: 0;
+    bottom: 0;
+    margin-bottom: auto;
+    margin-top: auto;
+    height: 230px;
+}
+
+#alert_firmware_not_compatible div {
+    padding: 8px 0px;
+}
+
 
 
 /* #alert_accounts.loading #accounts,

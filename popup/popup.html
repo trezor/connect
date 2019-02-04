@@ -9,7 +9,7 @@
     <title>TREZOR Connect</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
-    <link rel="stylesheet" href="./css/popup.css?r=2">
+    <link rel="stylesheet" href="./css/popup.css?r=4">
   </head>
   <body>
     <div id="header">
@@ -82,6 +82,25 @@
         The firmware of your device needs to be upgraded. Please try again after
         upgrading at
         <a href="https://wallet.trezor.io" target="_blank" onclick="closeWindow();">TREZOR Wallet</a>.
+      </div>
+    </div>
+
+    <div id="alert_firmware_not_compatible" class="alert fadeout">
+      <div>
+        The current version of firmware (<span id="fw_version"></span>) may be not compatible with the running version of Trezor Connect.<br/>
+        The current version of firmware contains major changes that could affect the efficient functionality of Trezor Connect.
+      </div>
+      <div>
+        If you’re experiencing any issue as a user, please contact the owner of <strong class="fw_identity"></strong>.<br/>
+        If you are a developer of <strong class="fw_identity"></strong> please, update Trezor Connect to the newest version.
+      </div>
+      <div>
+        <button type="button" onclick="proceedWithFirmware(true);">
+          Proceed
+        </button>
+        <button type="button" onclick="proceedWithFirmware(false);">
+          Cancel
+        </button>
       </div>
     </div>
 
