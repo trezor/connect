@@ -6,7 +6,8 @@ node_js:
   - "4.4"
 
 script:
-  - make popup
+  - cd popup
+  - ./docker/build.sh
 
 notifications:
   webhooks:
