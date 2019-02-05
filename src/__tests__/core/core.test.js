@@ -8,7 +8,7 @@ import { checkBrowser } from '../../js/utils/browser';
 import { settings, testReporter } from './common.js';
 import { CoreEventHandler } from './CoreEventHandler.js';
 
-import { CORE_EVENT, RESPONSE_EVENT, UI_EVENT } from '../../js/constants';
+import { CORE_EVENT } from '../../js/constants';
 import * as DEVICE from '../../js/constants/device';
 import * as IFRAME from '../../js/constants/iframe';
 
@@ -29,7 +29,7 @@ const startTestingPayloads = (testPayloads: Array<TestPayload>, expectedResponse
             handler.setPayloads(testPayloads, expectedResponses, shouldWaitForLastResponse);
 
             handler.startListening();
-            await initTransport(settings);
+            handler._handleDeviceConnect(null, false);
         });
     } else {
         for (let i = 0; i < testPayloads.length; i++) {
@@ -43,8 +43,7 @@ const startTestingPayloads = (testPayloads: Array<TestPayload>, expectedResponse
                 handler.setPayloads(payload, expectedResponse, shouldWaitForLastResponse);
 
                 handler.startListening();
-                handler._handleDeviceConnect(null, false)
-                // await initTransport(settings);
+                handler._handleDeviceConnect(null, false);
             });
         }
     }
@@ -77,16 +76,19 @@ const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> =>
                 console.error('Cannot load debugLink state', event.payload.error);
                 throw new Error(event.payload.error);
             }
-            core.handleMessage({
-                type: IFRAME.CALL,
-                id: 2,
-                payload: {
-                    method: 'wipeDevice',
-                    device: event.payload,
-                },
-            });
-
-            // console.warn("STAT", MNEMONICS[test.mnemonic] === event.payload.mnemonic)
+            if (MNEMONICS[test.mnemonic] === event.payload.mnemonic) {
+                core.removeAllListeners(CORE_EVENT);
+                done();
+            } else {
+                core.handleMessage({
+                    type: IFRAME.CALL,
+                    id: 2,
+                    payload: {
+                        method: 'wipeDevice',
+                        device: event.payload,
+                    },
+                });
+            }
         } else if (event.id === 2) {
             core.handleMessage({
                 type: IFRAME.CALL,
@@ -94,7 +96,7 @@ const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> =>
                 payload: {
                     method: 'loadDevice',
                     device: event.payload,
-                    mnemonic: MNEMONICS['mnemonic_12'],
+                    mnemonic: MNEMONICS[test.mnemonic],
                 },
             });
         } else if (event.id === 3) {

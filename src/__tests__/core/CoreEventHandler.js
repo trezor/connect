@@ -5,7 +5,6 @@ import { Core } from '../../js/core/Core.js';
 import * as POPUP from '../../js/constants/popup';
 import { CORE_EVENT, RESPONSE_EVENT, UI_EVENT } from '../../js/constants';
 import * as UI from '../../js/constants/ui';
-import * as DEVICE from '../../js/constants/device';
 import * as IFRAME from '../../js/constants/iframe';
 
 import type {
@@ -189,10 +188,6 @@ export class CoreEventHandler {
             case RESPONSE_EVENT:
                 this._handleResponseEvent(event);
                 break;
-
-            // case DEVICE.CONNECT:
-            //     this._handleDeviceConnect(event, this._isEmulatorRunning);
-            //     break;
         }
 
         if (event.type === UI.REQUEST_BUTTON) {
