@@ -19,7 +19,6 @@ export const settings = {
     pendingTransportEvent: true,
     supportedBrowser: true,
     extension: null,
-    // excludedDevices: ['emulator21325']
 };
 
 export const httpPost = (url: string, data ?: any): Promise<any> => {
