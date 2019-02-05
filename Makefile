@@ -52,9 +52,7 @@ protobuf:
 # Build coin definitions
 coins:
 	# make submodules
-	# ./submodules/trezor-common/tools/cointool.py dump -p -d connect -e icon -e cooldown -e github -e key -e maintainer -e uri_prefix -e version_group_id -e website -e links -e duplicate -o ./src/data/coins.json
-	# ./submodules/trezor-common/tools/cointool.py dump -p -f slip44=1 -E erc20 -E bitcoin -E misc -E nem -e blockbook -e key -e chain -e chain_id -e support -e url -o ./src/data/connect4-eth.json
-	./submodules/trezor-common/tools/cointool.py dump -p -F slip44=1
+	./submodules/trezor-common/tools/cointool.py dump -p -d connect -e icon -e cooldown -e github -e key -e maintainer -e uri_prefix -e version_group_id -e website -e links -e duplicate -o ./src/data/coins.json
 
 eth-tokens:
 	./submodules/trezor-common/tools/cointool.py dump -p -I erc20 -f chain=eth -e chain -e chain_id -e ens_address -e key -e logo -e social -e support -e type -e website -e shortcut -o ./src/data/ethereumTokens.json

@@ -2143,9 +2143,9 @@
                 {
                     "rule": "required",
                     "options": {},
-                    "type": "string",
+                    "type": "bytes",
                     "name": "address",
-                    "id": 2
+                    "id": 1
                 }
             ],
             "enums": [],
