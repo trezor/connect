@@ -44,7 +44,7 @@ export const ethereumGetAddress = (): TestFunction => {
         },
         {
             payload: {
-                address: '0xFb3BE0F9717fF5fCF3C58EB49a9Ed67F1BD89D4E',
+                address: '0x2cffCE5B7DA9584caD519EFc4715425b630CEF3a',
             },
         },
         { success: false },
