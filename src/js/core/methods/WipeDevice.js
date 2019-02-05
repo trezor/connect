@@ -9,7 +9,7 @@ import { UiMessage } from '../../message/builder';
 import type { Success } from '../../types/trezor';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
 
-export default class GetPublicKey extends AbstractMethod {
+export default class WipeDevice extends AbstractMethod {
     confirmed: boolean = false;
 
     constructor(message: CoreMessage) {

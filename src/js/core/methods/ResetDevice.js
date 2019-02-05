@@ -10,7 +10,7 @@ import { validateParams } from './helpers/paramsValidator';
 import type { ResetDeviceFlags, Success } from '../../types/trezor';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
 
-export default class GetPublicKey extends AbstractMethod {
+export default class ResetDevice extends AbstractMethod {
     params: ResetDeviceFlags;
     confirmed: boolean = false;
 
