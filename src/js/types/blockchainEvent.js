@@ -31,49 +31,11 @@ export type BlockchainBlock = {
     },
 }
 
-// copy-paste from blockchain-link
-type BlockchainLinkInput = {
-    addresses: Array<string>,
-    // amount: string,
-    // fee: string,
-    // total: string,
-}
-
-type BlockchainLinkOutput = {
-    addresses: Array<string>,
-    // amount: string,
-}
-
-type BlockchainLinkToken = {
-    name: string,
-    shortcut: string,
-    value: string,
-}
-
-export type BlockchainLinkTransaction = {
-    type: 'send' | 'recv',
-    timestamp: ?number,
-    blockHeight: ?number,
-    blockHash: ?string,
-    descriptor: string,
-    inputs: Array<BlockchainLinkInput>,
-    outputs: Array<BlockchainLinkOutput>,
-
-    hash: string,
-    amount: string,
-    fee: string,
-    total: string,
-
-    tokens?: Array<BlockchainLinkToken>,
-    sequence?: number, // eth: nonce || ripple: sequence
-}
-// copy-paste from blockchain-link end
-
 export type BlockchainNotification = {
     type: typeof BLOCKCHAIN.NOTIFICATION,
     payload: {
         coin: CoinInfo,
-        notification: BlockchainLinkTransaction,
+        notification: any, // TODO: blockchain-link
     },
 }
 

@@ -11,8 +11,6 @@ import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
 import * as DEVICE from '../constants/device';
 
-export * from './coinInfo';
-
 export type CoreMessage = {
     +event: string,
     +type: string,
@@ -42,7 +40,7 @@ export type Deferred<T> = {
     promise: Promise<T>,
     resolve: (t: T) => void,
     reject: (e: Error) => void,
-};
+}
 
 // copy/paste from trezor.js
 export type Features = {
@@ -179,8 +177,8 @@ export type CardanoSignTransaction = (CARDANO.$CardanoSignTransaction) => Promis
 
 declare function F_TezosGetAddress(params: (P.$Common & TEZOS.$TezosGetAddress)): Promise<TEZOS.TezosGetAddress$>;
 declare function F_TezosGetAddress(params: (P.$Common & { bundle: Array<TEZOS.$TezosGetAddress> })): Promise<TEZOS.TezosGetAddress$$>;
-
 export type TezosGetAddress = typeof F_TezosGetAddress;
+
 declare function F_TezosGetPublicKey(params: (P.$Common & TEZOS.$TezosGetPublicKey)): Promise<TEZOS.TezosGetPublicKey$>;
 declare function F_TezosGetPublicKey(params: (P.$Common & { bundle: Array<TEZOS.$TezosGetPublicKey> })): Promise<TEZOS.TezosGetPublicKey$$>;
 export type TezosGetPublicKey = typeof F_TezosGetPublicKey;
@@ -235,10 +233,6 @@ export type NEMGetAddress = typeof F_NEMGetAddress;
 export type NEMSignTransaction = (NEM.$NEMSignTransaction) => Promise<NEM.NEMSignTransaction$>;
 export type PushTransaction = (P.$PushTransaction) => Promise<R.PushTransaction$>;
 
-declare function F_RippleGetAccountInfo(params: (P.$Common & RIPPLE.$RippleGetAccountInfo)): Promise<RIPPLE.RippleGetAccountInfo$>;
-declare function F_RippleGetAccountInfo(params: (P.$Common & RIPPLE.$$RippleGetAccountInfo)): Promise<RIPPLE.RippleGetAccountInfo$$>;
-export type RippleGetAccountInfo = typeof F_RippleGetAccountInfo;
-
 declare function F_RippleGetAddress(params: (P.$Common & RIPPLE.$RippleGetAddress)): Promise<RIPPLE.RippleGetAddress$>;
 declare function F_RippleGetAddress(params: (P.$Common & { bundle: Array<RIPPLE.$RippleGetAddress> })): Promise<RIPPLE.RippleGetAddress$$>;
 export type RippleGetAddress = typeof F_RippleGetAddress;
@@ -257,3 +251,4 @@ export type VerifyMessage = (P.$VerifyMessage) => Promise<R.VerifyMessage$>;
 export type WipeDevice = (P.$WipeDevice) => Promise<R.WipeDevice$>;
 
 export * from './response';
+export * from './coinInfo';

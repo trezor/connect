@@ -9,7 +9,7 @@ import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../..
 
 import { UiMessage, DeviceMessage } from '../../message/builder';
 import type { Deferred, CoreMessage, UiPromiseResponse } from '../../types';
-import type { ButtonRequestData } from '../../types/ui-request';
+import type { ButtonRequestData } from '../../types/uiRequest';
 
 export interface MethodInterface {
     +responseID: number,

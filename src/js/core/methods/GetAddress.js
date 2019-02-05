@@ -16,7 +16,7 @@ import type { CoreMessage, UiPromiseResponse, BitcoinNetworkInfo } from '../../t
 type Batch = {
     path: Array<number>,
     address: ?string,
-    coinInfo: CoinInfo,
+    coinInfo: BitcoinNetworkInfo,
     showOnTrezor: boolean,
 }
 

@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { toHardened, fromHardened } from '../utils/pathUtils';
 import type { CoinInfo, BitcoinNetworkInfo, EthereumNetworkInfo, MiscNetworkInfo } from '../types';
