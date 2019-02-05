@@ -21,10 +21,14 @@ export default class DebugLinkDecision extends AbstractMethod {
             { name: 'input', type: 'string' },
         ]);
 
-        this.params = payload;
+        this.params = {
+            yes_no: payload.yes_no,
+            up_down: payload.up_down,
+            input: payload.input,
+        };
     }
 
-    async run(): Promise<{ disconnected: true }> {
+    async run(): Promise<{ debugLinkDecision: true }> {
         if (!this.device.hasDebugLink) {
             throw new Error('Device is not a debug link');
         }
@@ -33,6 +37,8 @@ export default class DebugLinkDecision extends AbstractMethod {
         }
 
         this.device.getCommands().debugLinkDecision(this.params);
-        return {};
+        return {
+            debugLinkDecision: true,
+        };
     }
 }

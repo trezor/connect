@@ -46,6 +46,13 @@ export type CustomMessage$ = {
     payload: any,
 } | Unsuccessful$;
 
+export type DebugLinkDecision$ = {
+    success: true,
+    payload: {
+        debugLinkDecision: true,
+    },
+} | Unsuccessful$;
+
 export type ComposeTransaction$ = {
     success: true,
     payload: SignedTx,
