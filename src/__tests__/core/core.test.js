@@ -50,43 +50,56 @@ const startTestingPayloads = (testPayloads: Array<TestPayload>, expectedResponse
     }
 };
 
-// const MNEMONICS = {
-//     'mnemonic_12': 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
-//     'mnemonic_all': 'all all all all all all all all all all all all',
-// };
+const MNEMONICS = {
+    'mnemonic_12': 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
+    'mnemonic_all': 'all all all all all all all all all all all all',
+};
 
 const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> => {
     core = await initCore(settings);
     checkBrowser();
+
+    const handler = new CoreEventHandler(core, null, null);
+    handler.startListening();
+
     core.on(CORE_EVENT, (event: any) => {
         if (event.type === DEVICE.CONNECT) {
-            done();
-            // core.handleMessage({
-            //     type: IFRAME.CALL,
-            //     id: -1,
-            //     payload: {
-            //         method: 'debugLinkGetState',
-            //         device: event.payload,
-            //     },
-            // }, true);
-        } else if (event.id === -1) {
-            // if (!event.success) {
-            //     console.error("Cannot load debugLink state", event.payload.error);
-            //     throw new Error(event.payload.error)
-            // }
-
-            // if (MNEMONICS[test.mnemonic] === event.payload.mnemonic) {
-            //     core.handleMessage({
-            //         type: IFRAME.CALL,
-            //         id: -1,
-            //         payload: {
-            //             method: 'loadDevice',
-            //             device: event.payload,
-            //         },
-            //     }, true);
-            // }
+            core.handleMessage({
+                type: IFRAME.CALL,
+                id: 1,
+                payload: {
+                    method: 'debugLinkGetState',
+                    device: event.payload,
+                },
+            }, true);
+        } else if (event.id === 1) {
+            if (!event.success) {
+                console.error('Cannot load debugLink state', event.payload.error);
+                throw new Error(event.payload.error);
+            }
+            core.handleMessage({
+                type: IFRAME.CALL,
+                id: 2,
+                payload: {
+                    method: 'wipeDevice',
+                    device: event.payload,
+                },
+            });
 
             // console.warn("STAT", MNEMONICS[test.mnemonic] === event.payload.mnemonic)
+        } else if (event.id === 2) {
+            core.handleMessage({
+                type: IFRAME.CALL,
+                id: 3,
+                payload: {
+                    method: 'loadDevice',
+                    device: event.payload,
+                    mnemonic: MNEMONICS['mnemonic_12'],
+                },
+            });
+        } else if (event.id === 3) {
+            core.removeAllListeners(CORE_EVENT);
+            done();
         }
     });
     await initTransport(settings);

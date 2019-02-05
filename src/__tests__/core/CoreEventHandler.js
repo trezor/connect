@@ -190,9 +190,9 @@ export class CoreEventHandler {
                 this._handleResponseEvent(event);
                 break;
 
-            case DEVICE.CONNECT:
-                this._handleDeviceConnect(event, this._isEmulatorRunning);
-                break;
+            // case DEVICE.CONNECT:
+            //     this._handleDeviceConnect(event, this._isEmulatorRunning);
+            //     break;
         }
 
         if (event.type === UI.REQUEST_BUTTON) {
