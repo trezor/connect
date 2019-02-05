@@ -198,7 +198,7 @@ window.addEventListener('beforeunload', () => {
 // global method used in html-inline elements
 window.closeWindow = () => {
     setTimeout(() => {
-        window.postMessage('window.close', window.location.origin);
+        window.postMessage(POPUP.CLOSE_WINDOW, window.location.origin);
         window.close();
     }, 100);
 };

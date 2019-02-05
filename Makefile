@@ -3,7 +3,7 @@ clean:
 
 # manually: goto ./submodules/trezor-common; git checkout master; git pull
 submodules:
-	git submodule update --remote --merge --recursive
+	cd ./submodules/trezor-common; git checkout master; git pull; git submodule update --recursive
 
 # docker build for connect.trezor.io
 build:

@@ -1,33 +1,31 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { validatePath, getSerializedPath } from '../../utils/pathUtils';
-import { toChecksumAddress, getNetworkLabel } from '../../utils/ethereumUtils';
+import { toChecksumAddress, getNetworkLabel, stripHexPrefix } from '../../utils/ethereumUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
 import { uniq } from 'lodash';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { EthereumAddress } from '../../types/trezor';
-import type { EthereumAddress as EthereumAddressResponse } from '../../types/ethereum';
-import type { CoreMessage, EthereumNetworkInfo } from '../../types';
+import type { EthereumAddress } from '../../types/ethereum';
+import type { CoreMessage, UiPromiseResponse, EthereumNetworkInfo } from '../../types';
 
 type Batch = {
     path: Array<number>,
+    address: ?string,
     network: ?EthereumNetworkInfo,
     showOnTrezor: boolean,
 }
 
-type Params = {
-    bundle: Array<Batch>,
-    bundledResponse: boolean,
-}
+type Params = Array<Batch>;
 
 export default class EthereumGetAddress extends AbstractMethod {
+    confirmed: boolean = false;
     params: Params;
+    progress: number = 0;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -35,26 +33,21 @@ export default class EthereumGetAddress extends AbstractMethod {
         this.requiredPermissions = ['read'];
         this.requiredFirmware = ['1.6.2', '2.0.7'];
 
-        const payload: Object = message.payload;
-        let bundledResponse: boolean = true;
-        // create a bundle with only one batch
-        if (!payload.hasOwnProperty('bundle')) {
-            payload.bundle = [ ...payload ];
-            bundledResponse = false;
-        }
+        // create a bundle with only one batch if bundle doesn't exists
+        const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
             { name: 'bundle', type: 'array' },
+            { name: 'useEventListener', type: 'boolean' },
         ]);
 
         const bundle = [];
-        let shouldUseUi: boolean = false;
-
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
                 { name: 'path', obligatory: true },
+                { name: 'address', type: 'string' },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
@@ -65,12 +58,10 @@ export default class EthereumGetAddress extends AbstractMethod {
             if (batch.hasOwnProperty('showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
-            if (showOnTrezor) {
-                shouldUseUi = true;
-            }
 
             bundle.push({
                 path,
+                address: batch.address,
                 network,
                 showOnTrezor,
             });
@@ -89,19 +80,70 @@ export default class EthereumGetAddress extends AbstractMethod {
             }
         }
 
-        this.useUi = shouldUseUi;
+        const useEventListener = payload.useEventListener && payload.bundle.length === 1 && typeof payload.bundle[0].address === 'string' && payload.bundle[0].showOnTrezor;
+        this.confirmed = useEventListener;
+        this.useUi = !useEventListener;
 
-        this.params = {
-            bundle,
-            bundledResponse,
-        };
+        this.params = bundle;
     }
 
-    async run(): Promise<EthereumAddressResponse | Array<EthereumAddressResponse>> {
-        const responses: Array<EthereumAddressResponse> = [];
-        for (let i = 0; i < this.params.bundle.length; i++) {
-            const batch: Batch = this.params.bundle[i];
-            const response: EthereumAddress = await this.device.getCommands().ethereumGetAddress(
+    getButtonRequestData(code: string) {
+        if (code === 'ButtonRequest_Address') {
+            const data = {
+                type: 'address',
+                serializedPath: getSerializedPath(this.params[this.progress].path),
+                address: this.params[this.progress].address || 'not-set',
+            };
+            return data;
+        }
+        return null;
+    }
+
+    async confirmation(): Promise<boolean> {
+        if (this.confirmed) return true;
+        // wait for popup window
+        await this.getPopupPromise().promise;
+        // initialize user response promise
+        const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
+
+        const label: string = this.info;
+        // request confirmation view
+        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+            view: 'export-address',
+            label,
+        }));
+
+        // wait for user action
+        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        const resp: string = uiResp.payload;
+
+        this.confirmed = (resp === 'true');
+        return this.confirmed;
+    }
+
+    async run(): Promise<EthereumAddress | Array<EthereumAddress>> {
+        const responses: Array<EthereumAddress> = [];
+        const bundledResponse = this.params.length > 1;
+
+        for (let i = 0; i < this.params.length; i++) {
+            const batch: Batch = this.params[i];
+            // silently get address and compare with requested address
+            // or display as default inside popup
+            if (batch.showOnTrezor) {
+                const silent = await this.device.getCommands().ethereumGetAddress(
+                    batch.path,
+                    false
+                );
+                if (typeof batch.address === 'string') {
+                    if (stripHexPrefix(batch.address).toLowerCase() !== silent.address.toLowerCase()) {
+                        throw new Error('Addresses do not match');
+                    }
+                } else {
+                    batch.address = toChecksumAddress(silent.address, batch.network);
+                }
+            }
+
+            const response = await this.device.getCommands().ethereumGetAddress(
                 batch.path,
                 batch.showOnTrezor
             );
@@ -113,14 +155,16 @@ export default class EthereumGetAddress extends AbstractMethod {
                 serializedPath: getSerializedPath(batch.path),
             });
 
-            if (this.params.bundledResponse) {
+            if (bundledResponse) {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
                     response,
                 }));
             }
+
+            this.progress++;
         }
-        return this.params.bundledResponse ? responses : responses[0];
+        return bundledResponse ? responses : responses[0];
     }
 }

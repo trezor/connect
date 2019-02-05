@@ -9,6 +9,15 @@ __changed__
 - Moved flowtype declarations from ./src/flowtype to ./src/js/types
 - Refactor CoinInfo to 3 types: BitcoinNetworkInfo, EthereumNetworkInfo and MiscNetworkInfo
 
+# feature/address-validation
+__added__
+- Added `UI.ADDRESS_VALIDATION` event
+
+__changed__
+- `getAddress`, `cardanoGetAddress`, `ethereumGetAddress`, `liskGetAddress`, `nemGetAddress`, `rippleGetAddress`, `stellarGetAddress`, `tezosGetAddress` methods (allow to handle `UI.ADDRESS_VALIDATION` event)
+- refactor `ButtonRequest_Address` view in popup: display address and copy to clipboard button
+
+
 # 6.0.3
 __added__
 - Added `TrezorConnect.tezosGetAddress` method

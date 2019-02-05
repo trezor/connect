@@ -162,14 +162,18 @@ const targetUiEvent = (message: CoreMessage): boolean => {
         UI.CUSTOM_MESSAGE_REQUEST,
         UI.LOGIN_CHALLENGE_REQUEST,
         UI.BUNDLE_PROGRESS,
+        UI.ADDRESS_VALIDATION,
     ];
     return (message.event === UI_EVENT && whitelistedMessages.indexOf(message.type) < 0);
 };
 
 const filterDeviceEvent = (message: CoreMessage): boolean => {
-    if (message.payload && message.payload.features) {
+    if (!message.payload) return false;
+    // const features: any = message.payload.device ? message.payload.device.features : message.payload.features;
+    // exclude button/pin/passphrase events
+    const features: any = message.payload.features;
+    if (features) {
         const savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY) || loadStorage(PERMISSIONS_KEY, true);
-        const features: any = message.payload.features;
         if (savedPermissions && Array.isArray(savedPermissions)) {
             const devicePermissions: Array<Object> = savedPermissions.filter(p => {
                 return (p.origin === DataManager.getSettings('origin') && p.type === 'read' && p.device === features.device_id);
