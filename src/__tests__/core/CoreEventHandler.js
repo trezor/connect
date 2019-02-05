@@ -1,7 +1,6 @@
 /* @flow */
 
 import { Core } from '../../js/core/Core.js';
-import { httpPost } from './common.js';
 
 import * as POPUP from '../../js/constants/popup';
 import { CORE_EVENT, RESPONSE_EVENT, UI_EVENT } from '../../js/constants';
@@ -131,7 +130,7 @@ export class CoreEventHandler {
         console.warn(event);
 
         // ignore debugLinkDecision response
-        if (event.payload.debugLinkDecision) return;
+        if (event.payload.debugLink) return;
 
         if (this._shouldWaitForLastResponse) {
             // TODO: Do something with the intermediate response
@@ -159,35 +158,15 @@ export class CoreEventHandler {
 
     _handleDeviceConnect(event: Object, isEmulatorRunning: boolean) {
         // No features mean that we still don't whether it's a Trezor device
-        if (!event.payload.features) {
-            return;
+        // if (!event.payload.features) {
+        //     return;
+        // }
+        const testPayload = this._getCurrentPayload();
+        let state: string = testPayload.state;
+        if (!state) {
+            state = '';
         }
-
-        // If emulator is running communicate only with the emulator device
-        // TODO: fix this when excludedDevices will work
-        if (!isEmulatorRunning) {
-            if (event.payload.path === 'emulator21324') {
-                const testPayload = this._getCurrentPayload();
-                let state: string = testPayload.state;
-                if (!state) {
-                    state = '';
-                }
-
-                // TODO: payload format would have to be changed?
-                // this._callCoreMessage(testPayload.payload, state);
-                this._callCoreMessage(testPayload, state, true);
-            }
-        } else {
-            const testPayload = this._getCurrentPayload();
-            let state: string = testPayload.state;
-            if (!state) {
-                state = '';
-            }
-
-            // TODO: payload format would have to  be changed?
-            // this._callCoreMessage(testPayload.payload, state);
-            this._callCoreMessage(testPayload, state);
-        }
+        this._callCoreMessage(testPayload, state);
     }
 
     async _handleCoreEvents(event: any): Promise<void> {

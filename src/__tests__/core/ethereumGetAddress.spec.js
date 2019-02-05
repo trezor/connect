@@ -50,10 +50,10 @@ export const ethereumGetAddress = (): TestFunction => {
         { success: false },
         { success: false },
     ];
-    const testName = 'EthereumGetAddress';
 
     return {
-        testName,
+        testName: 'EthereumGetAddress',
+        mnemonic: 'mnemonic_12',
         testPayloads,
         expectedResponses,
     };

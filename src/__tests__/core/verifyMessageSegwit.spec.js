@@ -103,6 +103,7 @@ export const verifyMessageSegwit = (): TestFunction => {
 
     return {
         testName,
+        mnemonic: 'mnemonic_12',
         subtests: {
             ...availableSubtests,
         },

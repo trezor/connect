@@ -8,6 +8,10 @@ import { checkBrowser } from '../../js/utils/browser';
 import { settings, testReporter } from './common.js';
 import { CoreEventHandler } from './CoreEventHandler.js';
 
+import { CORE_EVENT, RESPONSE_EVENT, UI_EVENT } from '../../js/constants';
+import * as DEVICE from '../../js/constants/device';
+import * as IFRAME from '../../js/constants/iframe';
+
 import type {
     TestPayload,
     ExpectedResponse,
@@ -39,10 +43,53 @@ const startTestingPayloads = (testPayloads: Array<TestPayload>, expectedResponse
                 handler.setPayloads(payload, expectedResponse, shouldWaitForLastResponse);
 
                 handler.startListening();
-                await initTransport(settings);
+                handler._handleDeviceConnect(null, false)
+                // await initTransport(settings);
             });
         }
     }
+};
+
+// const MNEMONICS = {
+//     'mnemonic_12': 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
+//     'mnemonic_all': 'all all all all all all all all all all all all',
+// };
+
+const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> => {
+    core = await initCore(settings);
+    checkBrowser();
+    core.on(CORE_EVENT, (event: any) => {
+        if (event.type === DEVICE.CONNECT) {
+            done();
+            // core.handleMessage({
+            //     type: IFRAME.CALL,
+            //     id: -1,
+            //     payload: {
+            //         method: 'debugLinkGetState',
+            //         device: event.payload,
+            //     },
+            // }, true);
+        } else if (event.id === -1) {
+            // if (!event.success) {
+            //     console.error("Cannot load debugLink state", event.payload.error);
+            //     throw new Error(event.payload.error)
+            // }
+
+            // if (MNEMONICS[test.mnemonic] === event.payload.mnemonic) {
+            //     core.handleMessage({
+            //         type: IFRAME.CALL,
+            //         id: -1,
+            //         payload: {
+            //             method: 'loadDevice',
+            //             device: event.payload,
+            //         },
+            //     }, true);
+            // }
+
+            // console.warn("STAT", MNEMONICS[test.mnemonic] === event.payload.mnemonic)
+        }
+    });
+    await initTransport(settings);
 };
 
 const runTest = (test: TestFunction, subtestNames: Array<string>) => {
@@ -54,9 +101,7 @@ const runTest = (test: TestFunction, subtestNames: Array<string>) => {
         jasmine.DEFAULT_TIMEOUT_INTERVAL = 500000;
 
         beforeEach(async (done) => {
-            core = await initCore(settings);
-            checkBrowser();
-            done();
+            await onBeforeEach(test, done);
         });
         afterEach(() => {
             // Deinitialize existing core

@@ -29,30 +29,29 @@ export const cardanoGetAddress = (): TestFunction => {
         },
     ];
 
-    // responses from https://github.com/trezor/trezor-core/blob/master/tests/test_apps.cardano.address.py#L71
+    // responses from https://github.com/trezor/python-trezor/blob/master/trezorlib/tests/device_tests/test_msg_cardano_get_address.py
     const expectedResponses: Array<ExpectedCardanoGetAddressResponse> = [
         {
             payload: {
-                address: 'Ae2tdPwUPEZ5YUb8sM3eS8JqKgrRLzhiu71crfuH2MFtqaYr5ACNRdsswsZ',
+                address: 'Ae2tdPwUPEZLCq3sFv4wVYxwqjMH2nUzBVt1HFr4v87snYrtYq3d3bq2PUQ',
             },
         },
         { success: false },
         {
             payload: {
-                address: 'Ae2tdPwUPEZJb8r1VZxweSwHDTYtqeYqF39rZmVbrNK62JHd4Wd7Ytsc8eG',
+                address: 'Ae2tdPwUPEZEY6pVJoyuNNdLp7VbMB7U7qfebeJ7XGunk5Z2eHarkcN1bHK',
             },
         },
         {
             payload: {
-                address: 'Ae2tdPwUPEZFm6Y7aPZGKMyMAK16yA5pWWKU9g73ncUQNZsAjzjhszenCsq',
+                address: 'Ae2tdPwUPEZ3gZD1QeUHvAqadAV59Zid6NP9VCR9BG5LLAja9YtBUgr6ttK',
             },
         },
     ];
 
-    const testName = 'CardanoGetAddress';
-
     return {
-        testName,
+        testName: 'CardanoGetAddress',
+        mnemonic: 'mnemonic_12',
         testPayloads,
         expectedResponses,
     };

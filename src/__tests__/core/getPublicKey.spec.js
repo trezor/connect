@@ -51,5 +51,6 @@ export const getPublicKey = (): TestFunction => {
         testPayloads,
         expectedResponses,
         testName,
+        mnemonic: 'mnemonic_12',
     };
 };
