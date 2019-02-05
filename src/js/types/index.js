@@ -190,6 +190,7 @@ export type CipherKeyValue = typeof F_CipherKeyValue;
 
 export type ComposeTransaction = (P.$ComposeTransaction) => Promise<R.ComposeTransaction$>;
 export type DebugLinkDecision = (P.$DebugLinkDecision) => Promise<R.DebugLinkDecision$>;
+export type DebugLinkGetState = (P.$DebugLinkGetState) => Promise<R.DebugLinkGetState$>;
 
 declare function F_EthereumGetAccountInfo(params: (ETHEREUM.$EthereumGetAccountInfo)): Promise<ETHEREUM.EthereumGetAccountInfo$>;
 declare function F_EthereumGetAccountInfo(params: (ETHEREUM.$$EthereumGetAccountInfo)): Promise<ETHEREUM.EthereumGetAccountInfo$$>;

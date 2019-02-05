@@ -683,6 +683,12 @@ export type ResetDeviceFlags = {
     no_backup?: boolean,
 }
 
+export type DebugLinkDecision = {
+    yes_no?: boolean,
+    up_down?: boolean,
+    input?: string,
+}
+
 export type DebugLinkState = {
     layout: string,
     pin: string,
