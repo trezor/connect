@@ -1,9 +1,9 @@
 /* @flow */
 
-import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
-import type { CoreMessage } from '../../types';
-import type { $DebugLinkDecision } from '../../types/params';
+import AbstractMethod from '../AbstractMethod';
+import { validateParams } from '../helpers/paramsValidator';
+import type { CoreMessage } from '../../../types';
+import type { $DebugLinkDecision } from '../../../types/params';
 
 export default class DebugLinkDecision extends AbstractMethod {
     params: $DebugLinkDecision;
@@ -28,7 +28,7 @@ export default class DebugLinkDecision extends AbstractMethod {
         };
     }
 
-    async run(): Promise<{ debugLinkDecision: true }> {
+    async run(): Promise<{ debugLink: true }> {
         if (!this.device.hasDebugLink) {
             throw new Error('Device is not a debug link');
         }
@@ -36,9 +36,10 @@ export default class DebugLinkDecision extends AbstractMethod {
             throw new Error('Device is not acquired!');
         }
 
-        this.device.getCommands().debugLinkDecision(this.params);
+        await this.device.getCommands().debugLinkDecision(this.params);
+
         return {
-            debugLinkDecision: true,
+            debugLink: true,
         };
     }
 }

@@ -642,13 +642,25 @@ export default class DeviceCommands {
 
     // DebugLink messages
 
-    async debugLinkDecision(msg: any) {
-        const id = await this.transport.acquire({
+    async debugLinkDecision(msg: any): Promise<void> {
+        const session = await this.transport.acquire({
             path: this.device.originalDescriptor.path,
             previous: this.device.originalDescriptor.debugSession,
         }, true);
 
-        await this.transport.post(id, 'DebugLinkDecision', msg, true);
-        await this.transport.release(id, true, true);
+        await this.transport.post(session, 'DebugLinkDecision', msg, true);
+        await this.transport.release(session, true, true);
+    }
+
+    async debugLinkGetState(msg: any): Promise<trezor.DebugLinkState> {
+        const session = await this.transport.acquire({
+            path: this.device.originalDescriptor.path,
+            previous: this.device.originalDescriptor.debugSession,
+        }, true);
+
+        const response: MessageResponse<trezor.DebugLinkState> = await this.transport.call(session, 'DebugLinkGetState', {}, true);
+        assertType(response, 'DebugLinkState');
+        await this.transport.release(session, true, true);
+        return response.message;
     }
 }
