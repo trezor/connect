@@ -239,7 +239,8 @@ start_emulator() {
 start_transport() {
     cd $trezord_path
     #./trezord-go -e 21324 > /dev/null 2>&1 &
-    ./trezord-go -e 21324 -e 21325 > /dev/null 2>&1 &
+    #./trezord-go -e 21324 -e 21325 > /dev/null 2>&1 &
+    ./trezord-go -ed 21324:21325 > /dev/null 2>&1 &
     #./trezord-go -e 21324 -e 21325 &
     #./trezord-go -e 21325 > /dev/null 2>&1 &
     #./trezord-go &
