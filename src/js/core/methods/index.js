@@ -13,6 +13,7 @@ import CardanoSignTransaction from './CardanoSignTransaction';
 import CipherKeyValue from './CipherKeyValue';
 import ComposeTransaction from './ComposeTransaction';
 import CustomMessage from './CustomMessage';
+import DebugLinkDecision from './DebugLinkDecision';
 import EthereumGetAccountInfo from './EthereumGetAccountInfo';
 import EthereumGetAddress from './EthereumGetAddress';
 import EthereumSignMessage from './EthereumSignMessage';
@@ -54,6 +55,7 @@ const classes: {[k: string]: any} = {
     'cipherKeyValue': CipherKeyValue,
     'composeTransaction': ComposeTransaction,
     'customMessage': CustomMessage,
+    'debugLinkDecision': DebugLinkDecision,
     'ethereumGetAccountInfo': EthereumGetAccountInfo,
     'ethereumGetAddress': EthereumGetAddress,
     'ethereumSignMessage': EthereumSignMessage,
