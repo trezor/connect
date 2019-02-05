@@ -472,6 +472,11 @@ export default class DeviceCommands {
         return response.message;
     }
 
+    async load(flags?: trezor.LoadDeviceFlags): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('LoadDevice', 'Success', flags);
+        return response.message;
+    }
+
     // Sends an async message to the opened device.
     async call(type: string, msg: Object = {}): Promise<DefaultMessageResponse> {
         const logMessage: Object = filterForLog(type, msg);

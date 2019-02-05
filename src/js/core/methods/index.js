@@ -30,6 +30,7 @@ import LiskGetPublicKey from './LiskGetPublicKey';
 import LiskSignMessage from './LiskSignMessage';
 import LiskVerifyMessage from './LiskVerifyMessage';
 import LiskSignTransaction from './LiskSignTransaction';
+import LoadDevice from './LoadDevice';
 import PushTransaction from './PushTransaction';
 import RequestLogin from './RequestLogin';
 import ResetDevice from './ResetDevice';
@@ -73,6 +74,7 @@ const classes: {[k: string]: any} = {
     'liskSignMessage': LiskSignMessage,
     'liskSignTransaction': LiskSignTransaction,
     'liskVerifyMessage': LiskVerifyMessage,
+    'loadDevice': LoadDevice,
     'pushTransaction': PushTransaction,
     'requestLogin': RequestLogin,
     'resetDevice': ResetDevice,

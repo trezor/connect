@@ -702,3 +702,14 @@ export type DebugLinkState = {
     recovery_word_pos: number,
     reset_word_pos: number,
 }
+
+export type LoadDeviceFlags = {
+    mnemonic?: string,
+    node?: HDNode,
+    pin?: string,
+    passphrase_protection?: boolean,
+    language?: string,
+    label?: string,
+    skip_checksum?: boolean,
+    u2f_counter?: number,
+}
