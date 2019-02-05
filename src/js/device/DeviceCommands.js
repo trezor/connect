@@ -481,7 +481,7 @@ export default class DeviceCommands {
         }
 
         try {
-            const res: DefaultMessageResponse = await this.transport.call(this.sessionId, type, msg);
+            const res: DefaultMessageResponse = await this.transport.call(this.sessionId, type, msg, false);
             const logMessage = filterForLog(res.type, res.message);
             if (this.debug) {
                 console.log('[DeviceCommands] [call] Received', res.type, logMessage);
@@ -638,5 +638,17 @@ export default class DeviceCommands {
             reject(new Error('Word callback not configured'));
             // }
         });
+    }
+
+    // DebugLink messages
+
+    async debugLinkDecision(msg: any) {
+        const id = await this.transport.acquire({
+            path: this.device.originalDescriptor.path,
+            previous: this.device.originalDescriptor.debugSession,
+        }, true);
+
+        await this.transport.post(id, 'DebugLinkDecision', msg, true);
+        await this.transport.release(id, true, true);
     }
 }

@@ -19,7 +19,7 @@ import { resolveAfter } from '../utils/promiseUtils';
 /* $FlowIssue loader notation */
 import SharedConnectionWorker from 'sharedworker-loader?name=js/shared-connection-worker.[hash].js!trezor-link/lib/lowlevel/sharedConnectionWorker';
 
-const { BridgeV2, Lowlevel, WebUsb, Fallback, Parallel } = TrezorLink;
+const { BridgeV2, Lowlevel, WebUsb, Fallback } = TrezorLink;
 
 export type DeviceListOptions = {
     debug?: boolean,
@@ -67,15 +67,10 @@ export default class DeviceList extends EventEmitter {
             ];
 
             if (DataManager.getSettings('webusb')) {
-                transportTypes.push(new Parallel({
-                    webusb: {
-                        transport: new Lowlevel(
-                            new WebUsb(),
-                            () => sharedWorkerFactoryWrap()
-                        ),
-                        mandatory: true,
-                    },
-                }));
+                transportTypes.push(new Lowlevel(
+                    new WebUsb(),
+                    () => sharedWorkerFactoryWrap()
+                ));
             }
             this.options.transport = new Fallback(transportTypes);
         }
@@ -92,7 +87,7 @@ export default class DeviceList extends EventEmitter {
             if (webUsbPlugin) {
                 webUsbPlugin.unreadableHidDeviceChange.on('change', async () => {
                     if (webUsbPlugin.unreadableHidDevice) {
-                        const device = await this._createUnacquiredDevice({ path: DEVICE.UNREADABLE, session: null });
+                        const device = await this._createUnacquiredDevice({ path: DEVICE.UNREADABLE, session: null, debugSession: null, debug: false });
                         this.devices[DEVICE.UNREADABLE] = device;
                         this.emit(DEVICE.CONNECT_UNACQUIRED, device.toMessageObject());
                     } else {
@@ -259,13 +254,13 @@ export default class DeviceList extends EventEmitter {
         if (this.transport == null) {
             return '';
         }
-        if (this.transport.activeName) {
-            const activeName: any = this.transport.activeName;
+        const activeName: ?string = this.transport.activeName;
+        if (activeName) {
             if (activeName === 'BridgeTransport') {
                 return 'bridge';
             }
-            if (activeName === 'ExtensionTransport') {
-                return 'extension';
+            if (activeName === 'LowlevelTransportWithSharedConnections') {
+                return 'webusb';
             }
             return activeName;
         }
@@ -292,25 +287,20 @@ export default class DeviceList extends EventEmitter {
     getWebUsbPlugin(): any {
         try {
             const transport: ?Transport = this.transport;
-            if (transport == null) {
+            if (!transport) {
                 return null;
             }
 
             // $FlowIssue - this all is going around Flow :/
             const activeTransport = transport.activeTransport;
-            if (activeTransport == null || activeTransport.name !== 'ParallelTransport') {
+            if (!activeTransport || activeTransport.name !== 'LowlevelTransportWithSharedConnections') {
                 return null;
             }
-            const webusbTransport = activeTransport.workingTransports['webusb'];
-            if (webusbTransport == null) {
+            const webusbTransport = activeTransport.plugin;
+            if (!webusbTransport || webusbTransport.name !== 'WebUsbPlugin') {
                 return null;
             }
-            // one of the HID fallbacks are working -> do not display the message
-            const hidTransport = activeTransport.workingTransports['hid'];
-            if (hidTransport != null) {
-                return null;
-            }
-            return webusbTransport.plugin;
+            return webusbTransport;
         } catch (e) {
             return null;
         }
