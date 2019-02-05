@@ -11,8 +11,7 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { EthereumAddress } from '../../types/ethereum';
-import type { CoreMessage } from '../../types';
-import type { EthereumNetworkInfo, UiPromiseResponse } from 'flowtype';
+import type { CoreMessage, UiPromiseResponse, EthereumNetworkInfo } from '../../types';
 
 type Batch = {
     path: Array<number>,

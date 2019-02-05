@@ -10,7 +10,6 @@ import * as TRANSPORT from '../constants/transport';
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
 import * as DEVICE from '../constants/device';
-import * as BLOCKCHAIN from '../constants/blockchain';
 
 export type CoreMessage = {
     +event: string,
@@ -19,6 +18,11 @@ export type CoreMessage = {
 
     id?: number, // response id in ResponseMessage
     success?: boolean, // response status in ResponseMessage
+}
+
+export type UiPromiseResponse = {
+    event: string,
+    payload: any,
 }
 
 // Override MessageEvent type to have access to "ports" field and typed "data"
@@ -36,7 +40,7 @@ export type Deferred<T> = {
     promise: Promise<T>,
     resolve: (t: T) => void,
     reject: (e: Error) => void,
-};
+}
 
 // copy/paste from trezor.js
 export type Features = {
@@ -123,7 +127,7 @@ export type UiMessage = {
     },
 }
 
-export type { UiResponse } from './ui-response';
+export type { UiResponse } from './uiResponse';
 
 export type TransportMessageType = $Values<typeof TRANSPORT>;
 export type TransportMessage = {
@@ -132,20 +136,14 @@ export type TransportMessage = {
     payload: Object,
 }
 
-export type BlockchainMessageType = $Values<typeof BLOCKCHAIN>;
-export type BlockchainMessage = {
-    event: typeof BLOCKCHAIN_EVENT,
-    type: BlockchainMessageType,
-    payload: Object,
-}
+import type { BlockchainEvent } from './blockchainEvent';
 
 /* eslint-disable no-redeclare */
 declare function F_EventListener(type: typeof DEVICE_EVENT, handler: (event: DeviceMessage) => void): void;
 declare function F_EventListener(type: typeof UI_EVENT, handler: (event: UiMessage) => void): void;
 declare function F_EventListener(type: typeof TRANSPORT_EVENT, handler: (event: TransportMessage) => void): void;
-declare function F_EventListener(type: typeof BLOCKCHAIN_EVENT, handler: (event: BlockchainMessage) => void): void;
+declare function F_EventListener(type: typeof BLOCKCHAIN_EVENT, handler: (event: BlockchainEvent) => void): void;
 declare function F_EventListener(type: DeviceMessageType, handler: (device: Device) => void): void;
-/* eslint-enable no-redeclare */
 export type EventListener = typeof F_EventListener;
 
 import * as P from './params';
@@ -166,52 +164,38 @@ export type CustomMessage = (P.$CustomMessage) => Promise<R.CustomMessage$>;
 export type RequestLogin = (P.$RequestLogin) => Promise<R.RequestLogin$>;
 export type ResetDevice = (P.$ResetDevice) => Promise<R.ResetDevice$>;
 
-/* eslint-disable no-redeclare */
 declare function F_CardanoGetAddress(params: (P.$Common & CARDANO.$CardanoGetAddress)): Promise<CARDANO.CardanoGetAddress$>;
 declare function F_CardanoGetAddress(params: (P.$Common & { bundle: Array<CARDANO.$CardanoGetAddress> })): Promise<CARDANO.CardanoGetAddress$$>;
-/* eslint-enable no-redeclare */
 export type CardanoGetAddress = typeof F_CardanoGetAddress;
 
-/* eslint-disable no-redeclare */
 declare function F_CardanoGetPublicKey(params: (P.$Common & CARDANO.$CardanoGetPublicKey)): Promise<CARDANO.CardanoGetPublicKey$>;
 declare function F_CardanoGetPublicKey(params: (P.$Common & { bundle: Array<CARDANO.$CardanoGetPublicKey> })): Promise<CARDANO.CardanoGetPublicKey$$>;
-/* eslint-enable no-redeclare */
 export type CardanoGetPublicKey = typeof F_CardanoGetPublicKey;
 
 export type CardanoSignTransaction = (CARDANO.$CardanoSignTransaction) => Promise<CARDANO.CardanoSignTransaction$>;
 
-/* eslint-disable no-redeclare */
 declare function F_TezosGetAddress(params: (P.$Common & TEZOS.$TezosGetAddress)): Promise<TEZOS.TezosGetAddress$>;
 declare function F_TezosGetAddress(params: (P.$Common & { bundle: Array<TEZOS.$TezosGetAddress> })): Promise<TEZOS.TezosGetAddress$$>;
-/* eslint-enable no-redeclare */
 export type TezosGetAddress = typeof F_TezosGetAddress;
 
-/* eslint-disable no-redeclare */
 declare function F_TezosGetPublicKey(params: (P.$Common & TEZOS.$TezosGetPublicKey)): Promise<TEZOS.TezosGetPublicKey$>;
 declare function F_TezosGetPublicKey(params: (P.$Common & { bundle: Array<TEZOS.$TezosGetPublicKey> })): Promise<TEZOS.TezosGetPublicKey$$>;
-/* eslint-enable no-redeclare */
 export type TezosGetPublicKey = typeof F_TezosGetPublicKey;
 
 export type TezosSignTransaction = (TEZOS.$TezosSignTransaction) => Promise<TEZOS.TezosSignTransaction$>;
 
-/* eslint-disable no-redeclare */
 declare function F_CipherKeyValue(params: (P.$Common & P.$CipherKeyValue)): Promise<R.CipherKeyValue$>;
 declare function F_CipherKeyValue(params: (P.$Common & { bundle: Array<P.$CipherKeyValue> })): Promise<R.CipherKeyValue$$>;
-/* eslint-enable no-redeclare */
 export type CipherKeyValue = typeof F_CipherKeyValue;
 
 export type ComposeTransaction = (P.$ComposeTransaction) => Promise<R.ComposeTransaction$>;
 
-/* eslint-disable no-redeclare */
 declare function F_EthereumGetAccountInfo(params: (ETHEREUM.$EthereumGetAccountInfo)): Promise<ETHEREUM.EthereumGetAccountInfo$>;
 declare function F_EthereumGetAccountInfo(params: (ETHEREUM.$$EthereumGetAccountInfo)): Promise<ETHEREUM.EthereumGetAccountInfo$$>;
-/* eslint-enable no-redeclare */
 export type EthereumGetAccountInfo = typeof F_EthereumGetAccountInfo;
 
-/* eslint-disable no-redeclare */
 declare function F_EthereumGetAddress(params: (P.$Common & ETHEREUM.$EthereumGetAddress)): Promise<ETHEREUM.EthereumGetAddress$>;
 declare function F_EthereumGetAddress(params: (P.$Common & { bundle: Array<ETHEREUM.$EthereumGetAddress> })): Promise<ETHEREUM.EthereumGetAddress$$>;
-/* eslint-enable no-redeclare */
 export type EthereumGetAddress = typeof F_EthereumGetAddress;
 
 export type EthereumSignMessage = (ETHEREUM.$EthereumSignMessage) => Promise<ETHEREUM.EthereumSignMessage$>;
@@ -219,51 +203,39 @@ export type EthereumSignTransaction = (ETHEREUM.$EthereumSignTransaction) => Pro
 export type EthereumVerifyMessage = (ETHEREUM.$EthereumVerifyMessage) => Promise<ETHEREUM.EthereumVerifyMessage$>;
 export type GetAccountInfo = (P.$GetAccountInfo) => Promise<R.GetAccountInfo$>;
 
-/* eslint-disable no-redeclare */
 declare function F_GetAddress(params: (P.$Common & P.$GetAddress)): Promise<R.GetAddress$>;
 declare function F_GetAddress(params: (P.$Common & { bundle: Array<P.$GetAddress> })): Promise<R.GetAddress$$>;
-/* eslint-enable no-redeclare */
 export type GetAddress = typeof F_GetAddress;
 
 export type GetDeviceState = (P.$GetDeviceState) => Promise<R.GetDeviceState$>;
 export type GetFeatures = (P.$GetFeatures) => Promise<R.GetFeatures$>;
 
-/* eslint-disable no-redeclare */
 declare function F_GetPublicKey(params: (P.$Common & P.$GetPublicKey)): Promise<R.GetPublicKey$>;
 declare function F_GetPublicKey(params: (P.$Common & { bundle: Array<P.$GetPublicKey> })): Promise<R.GetPublicKey$$>;
-/* eslint-enable no-redeclare */
 export type GetPublicKey = typeof F_GetPublicKey;
 
-/* eslint-disable no-redeclare */
 declare function F_LiskGetAddress(params: (P.$Common & LISK.$LiskGetAddress)): Promise<LISK.LiskGetAddress$>;
 declare function F_LiskGetAddress(params: (P.$Common & { bundle: Array<LISK.$LiskGetAddress> })): Promise<LISK.LiskGetAddress$$>;
-/* eslint-enable no-redeclare */
 export type LiskGetAddress = typeof F_LiskGetAddress;
 
-/* eslint-disable no-redeclare */
 declare function F_LiskGetPublicKey(params: (P.$Common & LISK.$LiskGetPublicKey)): Promise<LISK.LiskGetPublicKey$>;
 declare function F_LiskGetPublicKey(params: (P.$Common & { bundle: Array<LISK.$LiskGetPublicKey> })): Promise<LISK.LiskGetPublicKey$$>;
-/* eslint-enable no-redeclare */
 export type LiskGetPublicKey = typeof F_LiskGetPublicKey;
 
 export type LiskSignMessage = (LISK.$LiskSignMessage) => Promise<LISK.LiskSignMessage$>;
 export type LiskSignTransaction = (LISK.$LiskSignTransaction) => Promise<LISK.LiskSignTransaction$>
 export type LiskVerifyMessage = (LISK.$LiskVerifyMessage) => Promise<LISK.LiskVerifyMessage$>;
 
-/* eslint-disable no-redeclare */
 declare function F_NEMGetAddress(params: (P.$Common & NEM.$NEMGetAddress)): Promise<NEM.NEMGetAddress$>;
 declare function F_NEMGetAddress(params: (P.$Common & { bundle: Array<NEM.$NEMGetAddress> })): Promise<NEM.NEMGetAddress$$>;
 
-/* eslint-enable no-redeclare */
 export type NEMGetAddress = typeof F_NEMGetAddress;
 
 export type NEMSignTransaction = (NEM.$NEMSignTransaction) => Promise<NEM.NEMSignTransaction$>;
 export type PushTransaction = (P.$PushTransaction) => Promise<R.PushTransaction$>;
 
-/* eslint-disable no-redeclare */
 declare function F_RippleGetAddress(params: (P.$Common & RIPPLE.$RippleGetAddress)): Promise<RIPPLE.RippleGetAddress$>;
 declare function F_RippleGetAddress(params: (P.$Common & { bundle: Array<RIPPLE.$RippleGetAddress> })): Promise<RIPPLE.RippleGetAddress$$>;
-/* eslint-enable no-redeclare */
 export type RippleGetAddress = typeof F_RippleGetAddress;
 
 export type RippleSignTransaction = (RIPPLE.$RippleSignTransaction) => Promise<RIPPLE.RippleSignTransaction$>;
@@ -271,10 +243,8 @@ export type RippleSignTransaction = (RIPPLE.$RippleSignTransaction) => Promise<R
 export type SignMessage = (P.$SignMessage) => Promise<R.SignMessage$>;
 export type SignTransaction = (P.$SignTransaction) => Promise<R.SignTransaction$>;
 
-/* eslint-disable no-redeclare */
 declare function F_StellarGetAddress(params: (P.$Common & STELLAR.$StellarGetAddress)): Promise<STELLAR.StellarGetAddress$>;
 declare function F_StellarGetAddress(params: (P.$Common & { bundle: Array<STELLAR.$StellarGetAddress> })): Promise<STELLAR.StellarGetAddress$$>;
-/* eslint-enable no-redeclare */
 export type StellarGetAddress = typeof F_StellarGetAddress;
 
 export type StellarSignTransaction = (STELLAR.$StellarSignTransaction) => Promise<STELLAR.StellarSignTransaction$>;
@@ -283,3 +253,4 @@ export type WipeDevice = (P.$WipeDevice) => Promise<R.WipeDevice$>;
 
 // export * from './params';
 export * from './response';
+export * from './coinInfo';

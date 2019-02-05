@@ -4,16 +4,25 @@ import type { Device, CoreMessage } from './index';
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
 
-import type { CoinInfo, BrowserState, SimpleAccount } from 'flowtype';
-import type { SelectFeeLevel } from 'flowtype/fee';
+import type { BitcoinAccount } from './account';
+import type { BitcoinNetworkInfo } from './coinInfo';
+import type { SelectFeeLevel } from './fee';
 
-import type { UiResponseFactory } from './ui-response';
+import type { UiResponseFactory } from './uiResponse';
 import type { ConnectSettings } from '../data/ConnectSettings';
 
 export type TransportInfo = {
     type: string,
     version: string,
     outdated: boolean,
+}
+
+export type BrowserState = {
+    name: string,
+    osname: string,
+    supported: boolean,
+    outdated: boolean,
+    mobile: boolean,
 }
 
 /*
@@ -130,8 +139,8 @@ export type UnexpectedDeviceMode = {
 export type SelectAccount = {
     +type: typeof UI.SELECT_ACCOUNT,
     payload: {
-        accounts: Array<SimpleAccount>,
-        coinInfo: CoinInfo,
+        accounts: Array<BitcoinAccount>,
+        coinInfo: BitcoinNetworkInfo,
         complete?: boolean,
         start?: boolean,
         checkBalance?: boolean,
@@ -141,7 +150,7 @@ export type SelectAccount = {
 export type SelectFee = {
     +type: typeof UI.SELECT_FEE,
     payload: {
-        coinInfo: CoinInfo,
+        coinInfo: BitcoinNetworkInfo,
         feeLevels: Array<SelectFeeLevel>,
     },
 }
@@ -149,7 +158,7 @@ export type SelectFee = {
 export type UpdateCustomFee = {
     +type: typeof UI.UPDATE_CUSTOM_FEE,
     payload: {
-        coinInfo: CoinInfo,
+        coinInfo: BitcoinNetworkInfo,
         level: SelectFeeLevel,
     },
 }

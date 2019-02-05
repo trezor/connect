@@ -3,8 +3,8 @@
 
 import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, RESPONSE_EVENT, BLOCKCHAIN_EVENT } from '../constants';
 import type { CoreMessage } from '../types';
-import type { UiMessageFactory } from '../types/ui-request';
-import type { BlockchainMessageFactory } from '../types/blockchain-events';
+import type { UiMessageFactory } from '../types/uiRequest';
+import type { BlockchainMessageFactory } from '../types/blockchainEvent';
 
 export const UiMessage: UiMessageFactory = (type, payload) => (
     {

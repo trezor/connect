@@ -491,11 +491,11 @@ export type {
     UiMessage,
     TransportMessageType,
     TransportMessage,
-    BlockchainMessageType,
-    BlockchainMessage,
 } from './types';
 
+export * from './types/blockchainEvent';
+export * from './types/account';
+
 export type {
-    EthereumAccount,
     Transaction as EthereumTransaction,
 } from './types/ethereum';

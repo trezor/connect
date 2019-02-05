@@ -12,13 +12,13 @@ import { validateParams } from '../helpers/paramsValidator';
 import type { BuildTxOutput, BuildTxOutputRequest } from 'hd-wallet';
 
 // local types
-import type { CoinInfo } from 'flowtype';
+import type { BitcoinNetworkInfo } from '../../../types';
 import type { TransactionOutput } from '../../../types/trezor';
 
 /** *****
  * SignTransaction: validation
  *******/
-export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInfo: CoinInfo): Array<TransactionOutput> => {
+export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInfo: BitcoinNetworkInfo): Array<TransactionOutput> => {
     const trezorOutputs: Array<TransactionOutput> = outputs.map(fixPath).map(fixAmount).map(convertMultisigPubKey.bind(null, coinInfo.network));
     for (const output of trezorOutputs) {
         if (output.address_n) {
@@ -38,7 +38,7 @@ export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInf
 /** *****
  * ComposeTransaction: validation
  *******/
-export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: CoinInfo): BuildTxOutputRequest => {
+export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: BitcoinNetworkInfo): BuildTxOutputRequest => {
     const validateAddress = (address) => {
         if (!isValidAddress(address, coinInfo)) {
             throw new Error(`Invalid ${ coinInfo.label } output address format`);
@@ -79,7 +79,7 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: CoinInf
 /** *****
  * Transform from hd-wallet format to Trezor
  *******/
-export const outputToTrezor = (output: BuildTxOutput, coinInfo: CoinInfo): TransactionOutput => {
+export const outputToTrezor = (output: BuildTxOutput, coinInfo: BitcoinNetworkInfo): TransactionOutput => {
     if (output.address == null) {
         if (output.opReturnData != null) {
             if (output.value != null) {

@@ -2,7 +2,7 @@
 'use strict';
 
 import createKeccakHash from 'keccak';
-import type { EthereumNetworkInfo } from 'flowtype';
+import type { EthereumNetworkInfo } from '../types';
 
 const hasHexPrefix = (str: string): boolean => {
     return str.slice(0, 2).toLowerCase() === '0x';

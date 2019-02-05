@@ -6,7 +6,7 @@ import * as UI from '../../constants/ui';
 import * as POPUP from '../../constants/popup';
 import { container, iframe, showView, postMessage } from './common';
 import DataManager from '../../data/DataManager';
-import type { SelectDevice } from '../../types/ui-request';
+import type { SelectDevice } from '../../types/uiRequest';
 
 const initWebUsbButton = (webusb: boolean, showLoader: boolean): void => {
     if (!webusb) return;

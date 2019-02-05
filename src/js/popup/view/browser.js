@@ -2,7 +2,7 @@
 'use strict';
 
 import { container, showView } from './common';
-import type { BrowserMessage } from '../../types/ui-request';
+import type { BrowserMessage } from '../../types/uiRequest';
 
 export const initBrowserView = (payload: $PropertyType<BrowserMessage, 'payload'>): void => {
     showView(!payload.supported && payload.mobile ? 'smartphones-not-supported' : 'browser');
