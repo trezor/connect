@@ -189,6 +189,7 @@ declare function F_CipherKeyValue(params: (P.$Common & { bundle: Array<P.$Cipher
 export type CipherKeyValue = typeof F_CipherKeyValue;
 
 export type ComposeTransaction = (P.$ComposeTransaction) => Promise<R.ComposeTransaction$>;
+export type DebugLinkDecision = (P.$DebugLinkDecision) => Promise<void>;
 
 declare function F_EthereumGetAccountInfo(params: (ETHEREUM.$EthereumGetAccountInfo)): Promise<ETHEREUM.EthereumGetAccountInfo$>;
 declare function F_EthereumGetAccountInfo(params: (ETHEREUM.$$EthereumGetAccountInfo)): Promise<ETHEREUM.EthereumGetAccountInfo$$>;

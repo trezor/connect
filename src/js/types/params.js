@@ -49,6 +49,15 @@ export type $CustomMessage = $Common & {
     callback: (request: any) => Promise<?{ message: string, params?: Object }>,
 }
 
+export type $DebugLinkDecision = {
+    device: {
+        path: string,
+    },
+    yes_no?: boolean,
+    up_down?: boolean,
+    input?: string,
+}
+
 export type $GetAccountInfo = $Common & {
     path?: $Path,
     xpub?: string,

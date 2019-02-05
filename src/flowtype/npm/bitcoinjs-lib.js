@@ -1,3 +1,5 @@
+/* @flow */
+
 // TODO import BigInteger from 'bigi'
 // TODO import Point from 'ecurve'
 // For now, I just copy-paste the definition from there
