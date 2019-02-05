@@ -400,7 +400,6 @@ class CreateDeviceHandler {
     async _takeAndCreateDevice(): Promise<void> {
         const device = await Device.fromDescriptor(this.list.transport, this.descriptor);
         this.list.devices[this.path] = device;
-        if (!DataManager.isExcludedDevice(this.path)) { await device.run(); }
         this.list.emit(DEVICE.CONNECT, device.toMessageObject());
     }
 
