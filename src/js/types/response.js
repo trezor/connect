@@ -2,13 +2,13 @@
 
 import type {
     CipheredKeyValue,
-    AccountInfo,
     Address,
     Features,
     HDNodeResponse,
     MessageSignature,
     Success,
     SignedTx,
+    DebugLinkState,
 } from './trezor';
 
 export type Unsuccessful$ = {
@@ -52,14 +52,63 @@ export type CustomMessage$ = {
     payload: any,
 } | Unsuccessful$;
 
+export type DebugLinkDecision$ = {
+    success: true,
+    payload: {
+        debugLink: true,
+    },
+} | Unsuccessful$;
+
+export type DebugLinkGetState$ = {
+    success: true,
+    payload: DebugLinkState & {
+        debugLink: true,
+    },
+} | Unsuccessful$;
+
 export type ComposeTransaction$ = {
     success: true,
     payload: SignedTx,
 } | Unsuccessful$;
 
+// response for getAccountInfo method
+
+// copy from hd-wallet
+export type Utxo = {
+    index: number, // index of output IN THE TRANSACTION
+    transactionHash: string, // hash of the transaction
+    value: number, // how much money sent
+    addressPath: [number, number], // path
+    height: ?number, // null == unconfirmed
+    coinbase: boolean,
+    tsize: number, // total size - in case of segwit, total, with segwit data
+    vsize: number, // virtual size - segwit concept - same as size in non-segwit
+    own: boolean,
+};
+
+export type AccountInfoPayload = {
+    id: number,
+    path: Array<number>,
+    serializedPath: string,
+    xpub: string,
+    address: string,
+    addressIndex: number,
+    addressPath: Array<number>,
+    addressSerializedPath: string,
+    balance: number,
+    confirmed: number,
+    transactions: number,
+    utxo: Array<Utxo>,
+    usedAddresses: Array<{
+        address: string,
+        received: number,
+    }>,
+    unusedAddresses: Array<string>,
+}
+
 export type GetAccountInfo$ = {
     success: true,
-    payload: AccountInfo,
+    payload: AccountInfoPayload,
 } | Unsuccessful$;
 
 export type GetAddress$ = {

@@ -1,7 +1,7 @@
 # Builds
 _old
 build
-npm
+/npm
 npm-node
 
 # Dependency directory

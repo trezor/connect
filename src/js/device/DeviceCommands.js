@@ -472,6 +472,11 @@ export default class DeviceCommands {
         return response.message;
     }
 
+    async load(flags?: trezor.LoadDeviceFlags): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('LoadDevice', 'Success', flags);
+        return response.message;
+    }
+
     // Sends an async message to the opened device.
     async call(type: string, msg: Object = {}): Promise<DefaultMessageResponse> {
         const logMessage: Object = filterForLog(type, msg);
@@ -481,7 +486,7 @@ export default class DeviceCommands {
         }
 
         try {
-            const res: DefaultMessageResponse = await this.transport.call(this.sessionId, type, msg);
+            const res: DefaultMessageResponse = await this.transport.call(this.sessionId, type, msg, false);
             const logMessage = filterForLog(res.type, res.message);
             if (this.debug) {
                 console.log('[DeviceCommands] [call] Received', res.type, logMessage);
@@ -638,5 +643,29 @@ export default class DeviceCommands {
             reject(new Error('Word callback not configured'));
             // }
         });
+    }
+
+    // DebugLink messages
+
+    async debugLinkDecision(msg: any): Promise<void> {
+        const session = await this.transport.acquire({
+            path: this.device.originalDescriptor.path,
+            previous: this.device.originalDescriptor.debugSession,
+        }, true);
+
+        await this.transport.post(session, 'DebugLinkDecision', msg, true);
+        await this.transport.release(session, true, true);
+    }
+
+    async debugLinkGetState(msg: any): Promise<trezor.DebugLinkState> {
+        const session = await this.transport.acquire({
+            path: this.device.originalDescriptor.path,
+            previous: this.device.originalDescriptor.debugSession,
+        }, true);
+
+        const response: MessageResponse<trezor.DebugLinkState> = await this.transport.call(session, 'DebugLinkGetState', {}, true);
+        assertType(response, 'DebugLinkState');
+        await this.transport.release(session, true, true);
+        return response.message;
     }
 }

@@ -1,12 +1,10 @@
 /* @flow */
 
 import { Core } from '../../js/core/Core.js';
-import { httpPost } from './common.js';
 
 import * as POPUP from '../../js/constants/popup';
 import { CORE_EVENT, RESPONSE_EVENT, UI_EVENT } from '../../js/constants';
 import * as UI from '../../js/constants/ui';
-import * as DEVICE from '../../js/constants/device';
 import * as IFRAME from '../../js/constants/iframe';
 
 import type {
@@ -22,13 +20,6 @@ export class CoreEventHandler {
     _doneFn: any;
     _expectFn: any;
 
-    _urlBase: string = 'http://127.0.0.1:21325';
-    _urlEnumerate: string = `${this._urlBase}/enumerate`;
-    _urlAcquire = (devicePath: string, previousSession: number | string = 'null') => `${this._urlBase}/acquire/${devicePath}/${previousSession}`;
-    _urlCall = (session: number | string) => `${this._urlBase}/post/${session}`;
-    _urlRelease = (session: number | string) => `${this._urlBase}/release/${session}`;
-
-    _isHandlingButtonRequest = false;
     // eslint-disable-next-line no-undef
     _isEmulatorRunning = __karma__.config.isEmulatorRunning === 'true';
 
@@ -137,6 +128,9 @@ export class CoreEventHandler {
     _handleResponseEvent(event: Object) {
         console.warn(event);
 
+        // ignore debugLinkDecision response
+        if (event.payload.debugLink) return;
+
         if (this._shouldWaitForLastResponse) {
             // TODO: Do something with the intermediate response
         }
@@ -163,35 +157,15 @@ export class CoreEventHandler {
 
     _handleDeviceConnect(event: Object, isEmulatorRunning: boolean) {
         // No features mean that we still don't whether it's a Trezor device
-        if (!event.payload.features) {
-            return;
+        // if (!event.payload.features) {
+        //     return;
+        // }
+        const testPayload = this._getCurrentPayload();
+        let state: string = testPayload.state;
+        if (!state) {
+            state = '';
         }
-
-        // If emulator is running communicate only with the emulator device
-        // TODO: fix this when excludedDevices will work
-        if (isEmulatorRunning) {
-            if (event.payload.path === 'emulator21324') {
-                const testPayload = this._getCurrentPayload();
-                let state: string = testPayload.state;
-                if (!state) {
-                    state = '';
-                }
-
-                // TODO: payload format would have to be changed?
-                // this._callCoreMessage(testPayload.payload, state);
-                this._callCoreMessage(testPayload, state, true);
-            }
-        } else {
-            const testPayload = this._getCurrentPayload();
-            let state: string = testPayload.state;
-            if (!state) {
-                state = '';
-            }
-
-            // TODO: payload format would have to  be changed?
-            // this._callCoreMessage(testPayload.payload, state);
-            this._callCoreMessage(testPayload, state);
-        }
+        this._callCoreMessage(testPayload, state);
     }
 
     async _handleCoreEvents(event: any): Promise<void> {
@@ -214,88 +188,19 @@ export class CoreEventHandler {
             case RESPONSE_EVENT:
                 this._handleResponseEvent(event);
                 break;
-
-            case DEVICE.CONNECT:
-                this._handleDeviceConnect(event, this._isEmulatorRunning);
-                break;
-        }
-
-        if (event.type === DEVICE.CHANGED &&
-            event.payload.path === 'emulator21325' &&
-            this._isHandlingButtonRequest) {
-            try {
-                setTimeout(async () => {
-                    this._isHandlingButtonRequest = false;
-                    const { session } = await this._enumerate();
-                    this._pressButtonYes(session);
-                }, 501);
-            } catch (error) {
-                console.error('Error on device changed event', [error, event]);
-            }
         }
 
         if (event.type === UI.REQUEST_BUTTON) {
-            try {
-                this._isHandlingButtonRequest = true;
-                const { session, path } = await this._enumerate();
-                this._acquireDevice(session, path);
-            } catch (error) {
-                console.error('Error on request button event', [error, event]);
-            }
+            this._core.handleMessage({
+                type: IFRAME.CALL,
+                id: -1,
+                payload: {
+                    method: 'debugLinkDecision',
+                    device: event.payload.device,
+                    yes_no: true,
+                },
+            }, true);
         }
     }
     // Event handlers: END
-
-    // Debug link communication
-    async _enumerate(): Promise<any> {
-        try {
-            let session: number | string = 'null';
-            let path = '';
-            const devices: Array<any> = JSON.parse(await httpPost(this._urlEnumerate));
-            devices.forEach(d => {
-                if (d.path === 'emulator21325') {
-                    session = d.session;
-                    path = d.path;
-                }
-            });
-            return { session, path };
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async _pressButtonYes(session: number | string): Promise<any> {
-        const protoButtonPressYes = '0064000000020801';
-        try {
-            if (session !== 'null') {
-                await this._callDeviceMethod(session, protoButtonPressYes);
-            } else {
-                throw new Error('Cannot call method when session is null');
-            }
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async _swipeDown(session: number | string): Promise<any> {
-        const protoSwipeDown = '0064000000021000';
-        try {
-            if (session !== 'null') {
-                await this._callDeviceMethod(session, protoSwipeDown);
-            } else {
-                throw new Error('Cannot call method when session is null - unacquired device');
-            }
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async _acquireDevice(session: number | string, path: string): Promise<any> {
-        return httpPost(this._urlAcquire(path, session));
-    }
-
-    async _callDeviceMethod(session: number | string, encodedMethod: string): Promise<any> {
-        return httpPost(this._urlCall(session), encodedMethod);
-    }
-    // Debug link communication: END
 }

@@ -333,6 +333,14 @@ class TrezorConnect {
         return await call({ method: 'composeTransaction', ...params });
     }
 
+    static debugLinkDecision: $T.DebugLinkDecision = async (params) => {
+        return await call({ method: 'debugLinkDecision', ...params });
+    }
+
+    static debugLinkGetState: $T.DebugLinkGetState = async (params) => {
+        return await call({ method: 'debugLinkGetState', ...params });
+    }
+
     static ethereumGetAccountInfo: $T.EthereumGetAccountInfo = async (params) => {
         return await call({ method: 'ethereumGetAccountInfo', ...params });
     }

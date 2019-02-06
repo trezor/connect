@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
 
@@ -7,12 +6,12 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import { validateParams } from './helpers/paramsValidator';
 
-import type { ResetDeviceFlags, Success } from '../../types/trezor';
+import type { LoadDeviceFlags, Success } from '../../types/trezor';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
 
-export default class ResetDevice extends AbstractMethod {
-    params: ResetDeviceFlags;
+export default class LoadDevice extends AbstractMethod {
     confirmed: boolean = false;
+    params: LoadDeviceFlags;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -20,32 +19,30 @@ export default class ResetDevice extends AbstractMethod {
         this.allowDeviceMode = [ UI.INITIALIZE, UI.SEEDLESS ];
         this.useDeviceState = false;
         this.requiredPermissions = ['management'];
-        this.info = 'Setup device';
+        this.info = 'Load device';
 
         const payload: Object = message.payload;
         // validate bundle type
         validateParams(payload, [
-            { name: 'displayRandom', type: 'boolean' },
-            { name: 'strength', type: 'number' },
+            { name: 'mnemonic', type: 'string' },
+            { name: 'node', type: 'Object' },
+            { name: 'pin', type: 'string' },
             { name: 'passphraseProtection', type: 'boolean' },
-            { name: 'pinProtection', type: 'boolean' },
             { name: 'language', type: 'string' },
             { name: 'label', type: 'string' },
+            { name: 'skipChecksum', type: 'boolean' },
             { name: 'u2fCounter', type: 'number' },
-            { name: 'skipBackup', type: 'boolean' },
-            { name: 'noBackup', type: 'boolean' },
         ]);
 
         this.params = {
-            display_random: payload.displayRandom,
-            strength: payload.strength || 256,
+            mnemonic: payload.mnemonic,
+            node: payload.node,
+            pin: payload.pin,
             passphrase_protection: payload.passphraseProtection,
-            pin_protection: payload.pinProtection,
             language: payload.language,
             label: payload.label,
+            skip_checksum: payload.skipChecksum,
             u2f_counter: payload.u2fCounter || Math.floor(Date.now() / 1000),
-            skip_backup: payload.skipBackup,
-            no_backup: payload.noBackup,
         };
     }
 
@@ -59,7 +56,11 @@ export default class ResetDevice extends AbstractMethod {
         // request confirmation view
         this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'device-management',
-            label: 'Do you really you want to create a new wallet?',
+            customConfirmButton: {
+                className: 'wipe',
+                label: `Load ${this.device.toMessageObject().label}`,
+            },
+            label: 'Are you sure you want to load your device?',
         }));
 
         // wait for user action
@@ -71,6 +72,6 @@ export default class ResetDevice extends AbstractMethod {
     }
 
     async run(): Promise<Success> {
-        return await this.device.getCommands().reset(this.params);
+        return await this.device.getCommands().load(this.params);
     }
 }

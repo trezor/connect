@@ -594,6 +594,7 @@ export const signTransaction = (): TestFunction => {
     const testName = 'SignTransaction';
     return {
         testName,
+        mnemonic: 'mnemonic_12',
         subtests: {
             ...availableSubtests,
         },

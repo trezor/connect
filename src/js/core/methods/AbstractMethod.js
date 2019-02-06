@@ -37,6 +37,7 @@ export default class AbstractMethod implements MethodInterface {
     requiredFirmware: Array<string>;
     requiredPermissions: Array<string>;
     allowDeviceMode: Array<string>; // used in device management (like ResetDevice allow !UI.INITIALIZED)
+    debugLink: boolean;
 
     +confirmation: () => Promise<boolean>;
     +getButtonRequestData: (code: string) => ?ButtonRequestData;
@@ -67,6 +68,7 @@ export default class AbstractMethod implements MethodInterface {
         if (this.allowSeedlessDevice) {
             this.allowDeviceMode = [ UI.SEEDLESS ];
         }
+        this.debugLink = false;
         // default values for all methods
         this.requiredFirmware = ['1.0.0', '2.0.0'];
         this.useDevice = true;

@@ -3,12 +3,20 @@ import os
 
 from argparse import ArgumentParser
 
-from trezorlib.client import TrezorClientDebugLink
-from trezorlib.transport import get_transport
+from trezorlib import device, debuglink
+from trezorlib.debuglink import TrezorClientDebugLink
+from trezorlib.transport import enumerate_devices, get_transport
 
 def get_device():
     path = os.environ.get('TREZOR_PATH')
-    return get_transport(path)
+    if path:
+        return get_transport(path)
+    else:
+        devices = enumerate_devices()
+        for d in devices:
+            if hasattr(d, "find_debug"):
+                return d
+        raise RuntimeError("No debuggable device found")
 
 def main():
     parser = ArgumentParser()
@@ -22,22 +30,21 @@ def main():
 
     # Setup link
     wirelink = get_device()
-    debuglink = wirelink.find_debug()
-
     client = TrezorClientDebugLink(wirelink)
-    client.set_debuglink(debuglink)
-    # Setup link: END
+    client.open()
+    device.wipe(client)
 
-    client.wipe_device()
-    client.transport.session_begin()
+    debuglink.load_device_by_mnemonic(
+        client,
+        mnemonic=args.mnemonic,
+        pin=args.pin,
+        passphrase_protection=args.passphrase,
+        label='test'
+    )
 
-    client.load_device_by_mnemonic(
-        mnemonic=args.mnemonic, pin=args.pin, passphrase_protection=args.passphrase, label='test')
 
-
+    print(args.mnemonic)
     print(client.features)
-
-    client.transport.session_end()
     client.close()
 
 if __name__ == '__main__':

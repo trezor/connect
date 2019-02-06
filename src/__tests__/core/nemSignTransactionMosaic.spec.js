@@ -228,6 +228,7 @@ export const nemSignTransactionMosaic = (): TestFunction => {
 
     return {
         testName,
+        mnemonic: 'mnemonic_12',
         subtests: {
             ...availableSubtests,
         },

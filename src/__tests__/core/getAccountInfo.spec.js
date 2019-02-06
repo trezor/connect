@@ -117,6 +117,7 @@ export const getAccountInfo = (): TestFunction => {
     const testName = 'GetAccountInfo';
     return {
         testName,
+        mnemonic: 'mnemonic_12',
         subtests: {
             ...availableSubtests,
         },

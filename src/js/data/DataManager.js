@@ -151,11 +151,6 @@ export default class DataManager {
         return this.config;
     }
 
-    static isExcludedDevice(path: string): boolean {
-        // $FlowIssue: settings.excludedDevices field is intentionally not defined in flowtype. it's used only in tests to exclude debug-link device.
-        return Array.isArray(this.settings.excludedDevices) ? this.settings.excludedDevices.indexOf(path) >= 0 : false;
-    }
-
     static getLatestBridgeVersion(): JSON {
         return DataManager.assets.bridge;
     }

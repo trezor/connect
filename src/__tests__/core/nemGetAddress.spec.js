@@ -41,5 +41,6 @@ export const nemGetAddress = (): TestFunction => {
         testPayloads,
         expectedResponses,
         testName,
+        mnemonic: 'mnemonic_12',
     };
 };

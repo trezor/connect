@@ -67,6 +67,10 @@ TrezorConnect.getAccountInfo({
         addressSerializedPath: Array<number>, // serialized address path
         balance: number,                      // account balance (including unconfirmed transactions)
         confirmed: number,                    // account confirmed balance
+        transactions: number,                 // transactions count
+        utxo: Array<Utxo>,                    // unspent outputs [detail](../../src/js/types/response.js#L57)
+        usedAddresses: Array<{ address: string, received: number }>, // used addresses with received amount
+        unusedAddresses: Array<string>,       // unused addresses
     }
 }
 ```

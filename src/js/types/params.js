@@ -2,6 +2,7 @@
 
 import type {
     MultisigRedeemScriptType,
+    DebugLinkDecision,
 } from './trezor';
 
 export type $BlockchainDisconnect = {
@@ -51,6 +52,18 @@ export type $CustomMessage = $Common & {
     message: string,
     params: JSON,
     callback: (request: any) => Promise<?{ message: string, params?: Object }>,
+}
+
+export type $DebugLinkDecision = DebugLinkDecision & {
+    device: {
+        path: string,
+    },
+}
+
+export type $DebugLinkGetState = {
+    device: {
+        path: string,
+    },
 }
 
 export type $GetAccountInfo = $Common & {

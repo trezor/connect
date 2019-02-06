@@ -92,7 +92,7 @@ export default class DeviceList extends EventEmitter {
             if (webUsbPlugin) {
                 webUsbPlugin.unreadableHidDeviceChange.on('change', async () => {
                     if (webUsbPlugin.unreadableHidDevice) {
-                        const device = await this._createUnacquiredDevice({ path: DEVICE.UNREADABLE, session: null });
+                        const device = await this._createUnacquiredDevice({ path: DEVICE.UNREADABLE, session: null, debugSession: null, debug: false });
                         this.devices[DEVICE.UNREADABLE] = device;
                         this.emit(DEVICE.CONNECT_UNACQUIRED, device.toMessageObject());
                     } else {
@@ -263,7 +263,8 @@ export default class DeviceList extends EventEmitter {
         if (activeName) {
             if (activeName === 'BridgeTransport') {
                 return 'bridge';
-            } else if (activeName === 'LowlevelTransportWithSharedConnections') {
+            }
+            if (activeName === 'LowlevelTransportWithSharedConnections') {
                 return 'webusb';
             }
             return activeName;
@@ -291,17 +292,17 @@ export default class DeviceList extends EventEmitter {
     getWebUsbPlugin(): any {
         try {
             const transport: ?Transport = this.transport;
-            if (transport == null) {
+            if (!transport) {
                 return null;
             }
 
             // $FlowIssue - this all is going around Flow :/
             const activeTransport = transport.activeTransport;
-            if (activeTransport === null || activeTransport.name !== 'LowlevelTransportWithSharedConnections') {
+            if (!activeTransport || activeTransport.name !== 'LowlevelTransportWithSharedConnections') {
                 return null;
             }
             const webusbTransport = activeTransport.plugin;
-            if (webusbTransport === null || webusbTransport.name !== 'WebUsbPlugin') {
+            if (!webusbTransport || webusbTransport.name !== 'WebUsbPlugin') {
                 return null;
             }
             return webusbTransport;
@@ -404,7 +405,7 @@ class CreateDeviceHandler {
     async _takeAndCreateDevice(): Promise<void> {
         const device = await Device.fromDescriptor(this.list.transport, this.descriptor);
         this.list.devices[this.path] = device;
-        if (!DataManager.isExcludedDevice(this.path)) { await device.run(); }
+        await device.run();
         this.list.emit(DEVICE.CONNECT, device.toMessageObject());
     }
 

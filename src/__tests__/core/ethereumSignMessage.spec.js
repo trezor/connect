@@ -41,5 +41,6 @@ export const ethereumSignMessage = (): TestFunction => {
         testPayloads,
         expectedResponses,
         testName,
+        mnemonic: 'mnemonic_12',
     };
 };
