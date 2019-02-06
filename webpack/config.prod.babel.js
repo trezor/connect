@@ -6,7 +6,6 @@ import {
     DIST,
     LIB_NAME,
     NODE_MODULES,
-    PORT
 } from './constants';
 
 import webpack from 'webpack';
@@ -22,7 +21,7 @@ module.exports = {
         'iframe': `${JS_SRC}iframe/iframe.js`,
         'popup': `${JS_SRC}popup/popup.js`,
         'webusb': `${JS_SRC}webusb/index.js`,
-        'extensionPermissions': `${JS_SRC}webusb/extensionPermissions.js`
+        'extensionPermissions': `${JS_SRC}webusb/extensionPermissions.js`,
     },
     output: {
         filename: 'js/[name].[hash].js',
@@ -30,14 +29,14 @@ module.exports = {
         publicPath: './',
         library: LIB_NAME,
         libraryTarget: 'umd',
-        libraryExport: 'default'
+        libraryExport: 'default',
     },
     module: {
         rules: [
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                use: ['babel-loader']
+                use: ['babel-loader'],
             },
             {
                 test: /\.less$/,
@@ -45,11 +44,11 @@ module.exports = {
                 use: [
                     {
                         loader: MiniCssExtractPlugin.loader,
-                        options: { publicPath: '../' }
+                        options: { publicPath: '../' },
                     },
                     'css-loader',
                     'less-loader',
-                ]
+                ],
             },
             {
                 test: /\.(png|gif|jpg)$/,
@@ -57,7 +56,7 @@ module.exports = {
                 query: {
                     outputPath: './images',
                     name: '[name].[hash].[ext]',
-                }
+                },
             },
             {
                 test: /\.(ttf|eot|svg|woff|woff2)$/,
@@ -85,16 +84,13 @@ module.exports = {
                     name: '[name].[hash].[ext]',
                 },
             },
-        ]
+        ],
     },
     resolve: {
         modules: [ SRC, NODE_MODULES ],
-        alias: {
-
-        }
     },
     performance: {
-        hints: false
+        hints: false,
     },
     plugins: [
         new MiniCssExtractPlugin({
@@ -104,9 +100,9 @@ module.exports = {
 
         new HtmlWebpackPlugin({
             chunks: ['iframe'],
-            filename: `iframe.html`,
+            filename: 'iframe.html',
             template: `${HTML_SRC}iframe.html`,
-            inject: false
+            inject: false,
         }),
         new HtmlWebpackPlugin({
             chunks: ['popup'],
@@ -116,22 +112,21 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             chunks: ['webusb'],
-            filename: `webusb.html`,
+            filename: 'webusb.html',
             template: `${HTML_SRC}webusb.html`,
-            inject: true
+            inject: true,
         }),
         new HtmlWebpackPlugin({
             chunks: ['extensionPermissions'],
-            filename: `extension-permissions.html`,
+            filename: 'extension-permissions.html',
             template: `${HTML_SRC}extension-permissions.html`,
-            inject: true
+            inject: true,
         }),
 
         new CopyWebpackPlugin([
             { from: `${HTML_SRC}index.html`, to: `${DIST}index.html` },
             { from: `${HTML_SRC}webusb.html`, to: `${DIST}webusb.html` },
             { from: DATA_SRC, to: `${DIST}data` },
-            //{ from: `${SRC}images`, to: 'images' },
         ]),
 
         // ignore Node.js lib from trezor-link
@@ -155,20 +150,15 @@ module.exports = {
                             'Array', 'BigInteger', 'Boolean', 'Buffer',
                             'ECPair', 'Function', 'Number', 'Point', 'Script',
                         ],
-                    }
-                }
-            })
-        ]
+                    },
+                },
+            }),
+        ],
     },
-    // optimization: {
-    //     minimize: false
-    // },
-
-
 
     // ignoring Node.js import in fastxpub (hd-wallet)
     node: {
-        fs: "empty",
-        path: "empty",
-    }
-}
+        fs: 'empty',
+        path: 'empty',
+    },
+};
