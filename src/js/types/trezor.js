@@ -663,20 +663,6 @@ export type RippleSignedTx = {
     serialized_tx: string,
 }
 
-// GetAccountInfo response
-export type AccountInfo = {
-    id: number,
-    path: Array<number>,
-    serializedPath: string,
-    xpub: string,
-    address: string,
-    addressIndex: number,
-    addressPath: Array<number>,
-    addressSerializedPath: string,
-    balance: number,
-    confirmed: number,
-}
-
 // GetAddress response
 export type Address = {
     address: string,

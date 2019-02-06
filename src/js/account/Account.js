@@ -42,6 +42,18 @@ export default class Account {
         return this.info ? this.info.usedAddresses.length : -1;
     }
 
+    getUsedAddresses(): $ElementType<AccountInfo, 'usedAddresses'> {
+        return this.info ? this.info.usedAddresses : [];
+    }
+
+    getUnusedAddresses(): $ElementType<AccountInfo, 'unusedAddresses'> {
+        return this.info ? this.info.unusedAddresses : [];
+    }
+
+    getTransactionsCount(): number {
+        return this.info ? this.info.transactions.length : this.transactions;
+    }
+
     getChangeIndex(): number {
         return this.info ? this.info.changeIndex : 0;
     }
@@ -78,7 +90,7 @@ export default class Account {
             xpub: this.xpub,
             label: `Account #${this.id + 1}`,
             balance: this.info ? this.info.balance : -1,
-            transactions: this.info ? this.info.transactions.length : this.transactions,
+            transactions: this.getTransactionsCount(),
         };
     }
 }
