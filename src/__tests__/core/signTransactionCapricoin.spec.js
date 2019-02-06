@@ -52,11 +52,11 @@ const signCPC = (): SubtestSignTransaction => {
     };
 };
 
-export const signCapricoinTransaction = (): TestFunction => {
+export const signTransactionCapricoin = (): TestFunction => {
     const availableSubtests = {
         signCPC,
     };
-    const testName = 'SignCapricoinTransaction';
+    const testName = 'SignTransactionCapricoin';
     return {
         testName,
         subtests: {
