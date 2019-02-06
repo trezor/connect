@@ -185,7 +185,7 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
         throw ERROR.NO_TRANSPORT;
     }
 
-    const isWebUsb: boolean = _deviceList.transportVersion().indexOf('webusb') >= 0;
+    const isWebUsb: boolean = _deviceList.transportType().indexOf('webusb') >= 0;
 
     let device: ?Device;
     if (method.devicePath) {
@@ -357,6 +357,19 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     method.device = device;
     method.devicePath = device.getDevicePath();
+
+    // method is a debug link message
+    if (method.debugLink) {
+        try {
+            const response = await method.run();
+            messageResponse = new ResponseMessage(method.responseID, true, response);
+            postMessage(messageResponse);
+            return Promise.resolve();
+        } catch (error) {
+            postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
+            throw error;
+        }
+    }
 
     // find pending calls to this device
     const previousCall: Array<AbstractMethod> = _callMethods.filter(call => call && call !== method && call.devicePath === method.devicePath);
@@ -746,7 +759,7 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceTyped = null): voi
     const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, UI.RECEIVE_DEVICE);
     if (uiPromise && _deviceList) {
         const list: Array<Object> = _deviceList.asArray();
-        const isWebUsb: boolean = _deviceList.transportVersion().indexOf('webusb') >= 0;
+        const isWebUsb = _deviceList.transportType().indexOf('webusb') >= 0;
 
         if (list.length === 1 && !isWebUsb) {
             // there is only one device. use it

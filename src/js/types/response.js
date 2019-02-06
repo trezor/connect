@@ -8,6 +8,7 @@ import type {
     MessageSignature,
     Success,
     SignedTx,
+    DebugLinkState,
 } from './trezor';
 
 export type Unsuccessful$ = {
@@ -44,6 +45,20 @@ export type CipherKeyValue$$ = {
 export type CustomMessage$ = {
     success: true,
     payload: any,
+} | Unsuccessful$;
+
+export type DebugLinkDecision$ = {
+    success: true,
+    payload: {
+        debugLink: true,
+    },
+} | Unsuccessful$;
+
+export type DebugLinkGetState$ = {
+    success: true,
+    payload: DebugLinkState & {
+        debugLink: true,
+    },
 } | Unsuccessful$;
 
 export type ComposeTransaction$ = {

@@ -19,37 +19,6 @@ export const settings = {
     pendingTransportEvent: true,
     supportedBrowser: true,
     extension: null,
-    // excludedDevices: ['emulator21325']
-};
-
-export const httpPost = (url: string, data ?: any): Promise<any> => {
-    return new Promise((resolve, reject) => {
-        const xhr: XMLHttpRequest = new XMLHttpRequest();
-        xhr.open('POST', url);
-        xhr.onload = () => {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                resolve(xhr.response);
-            } else {
-                reject({
-                    status: xhr.status,
-                    statusText: xhr.statusText,
-                    response: xhr.response,
-                    url,
-                });
-            }
-        };
-
-        xhr.onerror = () => {
-            reject({
-                status: xhr.status,
-                statusText: xhr.statusText,
-                response: xhr.response,
-                url,
-            });
-        };
-
-        xhr.send(data);
-    });
 };
 
 export const testReporter: Reporter = {

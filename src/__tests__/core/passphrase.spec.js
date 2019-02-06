@@ -75,6 +75,7 @@ export const passphrase = (): TestFunction => {
     const testName = 'Passphrase';
     return {
         testName,
+        mnemonic: 'mnemonic_12',
         subtests: {
             ...availableSubtests,
         },

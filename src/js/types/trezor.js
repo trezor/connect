@@ -682,3 +682,34 @@ export type ResetDeviceFlags = {
     skip_backup?: boolean,
     no_backup?: boolean,
 }
+
+export type DebugLinkDecision = {
+    yes_no?: boolean,
+    up_down?: boolean,
+    input?: string,
+}
+
+export type DebugLinkState = {
+    layout: string,
+    pin: string,
+    matrix: string,
+    mnemonic: string,
+    node: HDNode,
+    passphrase_protection: boolean,
+    reset_word: string,
+    reset_entropy: string,
+    recovery_fake_word: string,
+    recovery_word_pos: number,
+    reset_word_pos: number,
+}
+
+export type LoadDeviceFlags = {
+    mnemonic?: string,
+    node?: HDNode,
+    pin?: string,
+    passphrase_protection?: boolean,
+    language?: string,
+    label?: string,
+    skip_checksum?: boolean,
+    u2f_counter?: number,
+}

@@ -76,5 +76,6 @@ export const getAddressSegwit = (): TestFunction => {
             ...availableSubtests,
         },
         testName,
+        mnemonic: 'mnemonic_12',
     };
 };

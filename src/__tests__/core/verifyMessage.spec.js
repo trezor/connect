@@ -180,6 +180,7 @@ export const verifyMessage = (): TestFunction => {
 
     return {
         testName,
+        mnemonic: 'mnemonic_12',
         subtests: {
             ...availableSubtests,
         },
