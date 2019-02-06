@@ -1564,16 +1564,10 @@ bitcoin-script@^0.1.1:
     sha1 "^1.1.0"
     sha256 "^0.1.1"
 
-<<<<<<< HEAD
-bitcoinjs-lib-zcash@^3.4.1:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/bitcoinjs-lib-zcash/-/bitcoinjs-lib-zcash-3.4.1.tgz#ea440857188ed3168f66ae8f6ecba603c53e3f22"
-=======
-bitcoinjs-lib-zcash@^3.0.0, bitcoinjs-lib-zcash@^3.4.1:
+bitcoinjs-lib-zcash@^3.4.1, bitcoinjs-lib-zcash@^3.5.2:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/bitcoinjs-lib-zcash/-/bitcoinjs-lib-zcash-3.5.3.tgz#19c74f36a2f9b0bd6680a02087567db8454639e5"
   integrity sha512-F2QfhMV/M+8ffWlm01LTQFn6r9NxhqsuQDWC/BNrsbOZMZMrVQvBI+AjH5u+qkSOBl3DubVSXluIZVSKcELA6A==
->>>>>>> update npm modules (babel7)
   dependencies:
     bech32 "^1.1.2"
     bigi "^1.4.0"
@@ -4016,14 +4010,14 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-hd-wallet@7.14.3:
-  version "7.14.3"
-  resolved "https://registry.yarnpkg.com/hd-wallet/-/hd-wallet-7.14.3.tgz#dd8a8c9196b53c738d55121dc68d31f99f9c5dc5"
-  integrity sha512-AnSj4IIo7lDt1g/NiQbVT/3zPJpq/r2HNAqaVQOzfT0MSyxqizotQZ0SpJLOh8sjhJoNjuSx7iCA6GoxfXi4Qg==
+hd-wallet@^8.0.4:
+  version "8.0.4"
+  resolved "https://registry.yarnpkg.com/hd-wallet/-/hd-wallet-8.0.4.tgz#bff2557b48c158e6adc7f0fd941c04b15e7810fa"
+  integrity sha512-CagzpW4AcRnFc/mwXHWylV0HyrlQ7ey64W9iDYLy2e06RffrjylHG+dVOXIjd4PKlJ661S6JALCXYj+7d3WTIg==
   dependencies:
     babel-cli "^6.26.0"
     bchaddrjs "^0.2.1"
-    bitcoinjs-lib-zcash "^3.4.1"
+    bitcoinjs-lib-zcash "^3.5.2"
     queue "^4.4.2"
     socket.io-client "^1.7.3"
     whatwg-fetch "^0.11.0"
