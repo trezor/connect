@@ -1,16 +1,15 @@
 {
     "presets": [
-        ["env", {
+        ["@babel/preset-env", {
             "useBuiltIns": false,
-            "loose": true
+            "loose": true,
         }]
     ],
     "plugins": [
-        "transform-class-properties",
-        "transform-object-rest-spread",
-        "transform-flow-strip-types",
-        ["transform-runtime", {
-            "polyfill": false,
+        "@babel/plugin-transform-flow-strip-types",
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-proposal-object-rest-spread",
+        ["@babel/plugin-transform-runtime", {
             "regenerator": true
         }]
     ]
