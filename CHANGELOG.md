@@ -1,10 +1,15 @@
-# feature/address-validation
+# 6.0.4
 __added__
 - Added `UI.ADDRESS_VALIDATION` event
 
 __changed__
 - `getAddress`, `cardanoGetAddress`, `ethereumGetAddress`, `liskGetAddress`, `nemGetAddress`, `rippleGetAddress`, `stellarGetAddress`, `tezosGetAddress` methods (allow to handle `UI.ADDRESS_VALIDATION` event)
 - refactor `ButtonRequest_Address` view in popup: display address and copy to clipboard button
+- extend `getAccountInfo` response (utxo, used addresses, unused addresses)
+- export more flowtype declarations (CoinInfo, Accounts)
+
+__fixed__
+- `stellarSignTransaction` with multiple operations
 
 # 6.0.3
 __added__
