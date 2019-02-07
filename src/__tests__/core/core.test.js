@@ -58,7 +58,7 @@ const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> =>
     core = await initCore(settings);
     checkBrowser();
 
-    const handler = new CoreEventHandler(core, null, null);
+    const handler = new CoreEventHandler(core, () => {}, () => {});
     handler.startListening();
 
     core.on(CORE_EVENT, (event: any) => {
@@ -87,7 +87,7 @@ const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> =>
                         method: 'wipeDevice',
                         device: event.payload,
                     },
-                });
+                }, true);
             }
         } else if (event.id === 2) {
             core.handleMessage({
@@ -98,7 +98,7 @@ const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> =>
                     device: event.payload,
                     mnemonic: MNEMONICS[test.mnemonic],
                 },
-            });
+            }, true);
         } else if (event.id === 3) {
             core.removeAllListeners(CORE_EVENT);
             done();

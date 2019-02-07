@@ -279,7 +279,7 @@ prepare_environment() {
 run_karma() {
     cd $base_path
 
-    path_babel_node="./node_modules/babel-cli/bin/babel-node.js"
+    path_babel_node="./node_modules/.bin/babel-node"
     path_karma="./node_modules/karma/bin/karma"
 
     ${path_babel_node} ${path_karma} start --tests="${1}" --isEmulatorRunning="${should_start_emulator}" --printDebug="${should_print_karma_debug}"
