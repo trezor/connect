@@ -42,12 +42,11 @@
     "@babel/node": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.3.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.3.2",
-    "@babel/plugin-transform-flow-strip-types": "^7.2.3",
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-flow": "^7.0.0",
     "@babel/runtime": "^7.3.1",
-    "babel-collect-imports": "^1.1.0",
+    "babel-collect-imports": "https://github.com/szymonlesisz/babel-collect-imports",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.0",
     "bchaddrjs": "^0.2.1",
@@ -102,6 +101,6 @@
     "whatwg-fetch": "^2.0.4"
   },
   "npmDependencies": {
-    "babel-runtime": "^6.26.0"
+    "@babel/runtime": "^7.3.1"
   }
 }
