@@ -86,10 +86,6 @@ export default class BlockBook {
         if (typeof coinInfo.zcash === 'boolean') {
             this.blockchain.zcash = coinInfo.zcash;
         }
-
-        if (typeof coinInfo.hasTimestamp === 'boolean') {
-            this.blockchain.hasTimestamp = coinInfo.hasTimestamp;
-        }
     }
 
     async loadAccountInfo(
@@ -176,7 +172,8 @@ export default class BlockBook {
     async loadTransaction(id: string): Promise<BitcoinJsTransaction> {
         if (this.error) { throw this.error; }
         const tx = await this.blockchain.lookupTransaction(id);
-        return BitcoinJsTransaction.fromHex(tx.hex, tx.zcash, tx.time !== null);
+        // $FlowIssue: add "timestamp?: number" to hd-wallet:bitcore.js TransactionWithHeight
+        return BitcoinJsTransaction.fromHex(tx.hex, tx.zcash, typeof tx.timestamp === 'number');
     }
 
     async loadCurrentHeight(): Promise<number> {
