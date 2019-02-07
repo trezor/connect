@@ -172,8 +172,7 @@ export default class BlockBook {
     async loadTransaction(id: string): Promise<BitcoinJsTransaction> {
         if (this.error) { throw this.error; }
         const tx = await this.blockchain.lookupTransaction(id);
-        // $FlowIssue: add "timestamp?: number" to hd-wallet:bitcore.js TransactionWithHeight
-        return BitcoinJsTransaction.fromHex(tx.hex, tx.zcash, typeof tx.timestamp === 'number');
+        return BitcoinJsTransaction.fromHex(tx.hex, tx.zcash, typeof tx.time === 'number');
     }
 
     async loadCurrentHeight(): Promise<number> {
