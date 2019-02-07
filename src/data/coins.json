@@ -225,7 +225,6 @@
             "fork_id": null,
             "github": "https://github.com/Capricoinofficial/Capricoin",
             "hash_genesis_block": "00000d23fa0fc52c90893adb1181c9ddffb6c797a3e41864b9a23aa2f2981fe3",
-            "icon": "/Users/szymon.lesisz/Workspace/SatoshiLabs/trezor-common/defs/coins/capricoin.png",
             "key": "bitcoin:CPC",
             "maintainer": "Tibor Arpas <tibor.arpas@infinit.sk>",
             "max_address_length": 34,
@@ -249,7 +248,7 @@
             "xprv_magic": 76066276,
             "xpub_magic": 76067358,
             "xpub_magic_segwit_p2sh": 77429938,
-            "xpub_magic_segwit_native": 78792518,
+            "xpub_magic_segwit_native": 78792518
         },
         {
             "address_type": 76,
