@@ -173,8 +173,8 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
     outputs: Array<TransactionOutput>,
     refTxs: Array<RefTransaction>,
     coinInfo: BitcoinNetworkInfo,
-    timestamp: number,
     locktime: ?number,
+    timestamp: ?number,
 ): Promise<SignedTx> => {
     // TODO rbf
     // const sequence: number = locktime ? (0xffffffff - 1) : 0xffffffff;
@@ -190,7 +190,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
         outputs_count: outputs.length,
         coin_name: coinInfo.name,
         lock_time: locktime,
-        timestamp: timestamp,
+        timestamp,
     });
 
     const signed: SignedTx = await processTxRequest(
