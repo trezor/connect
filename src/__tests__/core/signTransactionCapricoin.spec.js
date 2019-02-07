@@ -56,9 +56,9 @@ export const signTransactionCapricoin = (): TestFunction => {
     const availableSubtests = {
         signCPC,
     };
-    const testName = 'SignTransactionCapricoin';
     return {
-        testName,
+        testName: 'SignTransactionCapricoin',
+        mnemonic: 'mnemonic_all',
         subtests: {
             ...availableSubtests,
         },
