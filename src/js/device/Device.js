@@ -342,7 +342,7 @@ export default class Device extends EventEmitter {
     }
 
     async initialize(useEmptyPassphrase: boolean): Promise<void> {
-        const { message } : { message: Features } = await this.commands.initialize(useEmptyPassphrase);
+        const { message }: { message: Features } = await this.commands.initialize(useEmptyPassphrase);
         this.features = message;
         this.featuresNeedsReload = false;
         this.featuresTimestamp = new Date().getTime();
@@ -351,7 +351,7 @@ export default class Device extends EventEmitter {
     }
 
     async getFeatures(): Promise<void> {
-        const { message } : { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
+        const { message }: { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
         this.features = message;
         this.firmwareStatus = checkFirmware([ this.features.major_version, this.features.minor_version, this.features.patch_version ]);
     }

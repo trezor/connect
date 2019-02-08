@@ -109,7 +109,7 @@ export default class BlockBook {
 
         const segwit_s: 'p2sh' | 'off' = coinInfo.segwit ? 'p2sh' : 'off';
 
-        const discovery = this.discovery.discoverAccount(data, xpub, coinInfo.network, segwit_s, !!(coinInfo.cashAddrPrefix));
+        const discovery = this.discovery.discoverAccount(data, xpub, coinInfo.network, segwit_s, !!(coinInfo.cashAddrPrefix), 20, (new Date().getTimezoneOffset()));
         setDisposer(() => discovery.dispose(new Error('Interrupted by user')));
 
         discovery.stream.values.attach(status => {
@@ -163,7 +163,7 @@ export default class BlockBook {
         if (this.error) { throw this.error; }
 
         const segwit_s = coinInfo.segwit ? 'p2sh' : 'off';
-        const res = this.discovery.monitorAccountActivity(data, xpub, coinInfo.network, segwit_s, !!(coinInfo.cashAddrPrefix));
+        const res = this.discovery.monitorAccountActivity(data, xpub, coinInfo.network, segwit_s, !!(coinInfo.cashAddrPrefix), 20, (new Date().getTimezoneOffset()));
 
         this.blockchain.errors.values.attach(() => {
             res.dispose();

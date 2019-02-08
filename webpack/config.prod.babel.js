@@ -88,9 +88,6 @@ module.exports = {
     },
     resolve: {
         modules: [ SRC, NODE_MODULES ],
-        alias: {
-
-        },
     },
     performance: {
         hints: false,
@@ -130,7 +127,6 @@ module.exports = {
             { from: `${HTML_SRC}index.html`, to: `${DIST}index.html` },
             { from: `${HTML_SRC}webusb.html`, to: `${DIST}webusb.html` },
             { from: DATA_SRC, to: `${DIST}data` },
-            // { from: `${SRC}images`, to: 'images' },
         ]),
 
         // ignore Node.js lib from trezor-link
@@ -159,9 +155,6 @@ module.exports = {
             }),
         ],
     },
-    // optimization: {
-    //     minimize: false
-    // },
 
     // ignoring Node.js import in fastxpub (hd-wallet)
     node: {

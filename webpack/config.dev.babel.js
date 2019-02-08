@@ -9,7 +9,6 @@ import {
 
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-// import CopyWebpackPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 module.exports = {
@@ -96,9 +95,6 @@ module.exports = {
     },
     resolve: {
         modules: [ SRC, NODE_MODULES ],
-        alias: {
-            // 'flowtype/params': `${SRC}flowtype/empty.js`,
-        },
     },
     performance: {
         hints: false,
@@ -134,11 +130,6 @@ module.exports = {
             inject: true,
         }),
 
-        // new CopyWebpackPlugin([
-        //     { from: DATA_SRC, to: `${DIST}data` },
-        //     { from: `${SRC}images`, to: 'images' },
-        // ]),
-
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.NamedModulesPlugin(),
@@ -151,7 +142,6 @@ module.exports = {
     // ignore "net" and "tls" imports in "ripple-lib"
     node: {
         fs: 'empty',
-        net: 'empty',
-        tls: 'empty',
+        path: 'empty',
     },
 };
