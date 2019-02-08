@@ -22,8 +22,8 @@ export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInf
     const trezorOutputs: Array<TransactionOutput> = outputs.map(fixPath).map(fixAmount).map(convertMultisigPubKey.bind(null, coinInfo.network));
     for (const output of trezorOutputs) {
         if (output.address_n) {
-            const scriptType = getOutputScriptType(output.address_n) || 'undefined';
-            if (output.script_type !== scriptType) throw new Error(`Output change script_type should be set to ${scriptType}`);
+            const scriptType = getOutputScriptType(output.address_n);
+            if (scriptType && output.script_type !== scriptType) throw new Error(`Output change script_type should be set to ${scriptType}`);
         } else if (typeof output.address === 'string' && !isValidAddress(output.address, coinInfo)) {
             // validate address with coin info
             throw new Error(`Invalid ${ coinInfo.label } output address ${ output.address }`);
