@@ -143,5 +143,7 @@ module.exports = {
     node: {
         fs: 'empty',
         path: 'empty',
+        net: 'empty',
+        tls: 'empty',
     },
 };
