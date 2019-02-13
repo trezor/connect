@@ -514,7 +514,7 @@ export default class Device extends EventEmitter {
         return this.features ? this.features.major_version === 1 : false;
     }
 
-    hasUnexpectedMode(requiredFirmware: Array<string>, allow: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | typeof UI.FIRMWARE | typeof UI.FIRMWARE_NOT_SUPPORTED) {
+    hasUnexpectedMode(allow: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) {
         if (this.features) {
             if (this.isBootloader() && allow.indexOf(UI.BOOTLOADER) < 0) {
                 return UI.BOOTLOADER;
@@ -524,12 +524,6 @@ export default class Device extends EventEmitter {
             }
             if (this.isSeedless() && allow.indexOf(UI.SEEDLESS) < 0) {
                 return UI.SEEDLESS;
-            }
-            if (requiredFirmware[ this.features.major_version - 1 ] === '0') {
-                return UI.FIRMWARE_NOT_SUPPORTED;
-            }
-            if (this.firmwareStatus === 'required' || !this.atLeast(requiredFirmware)) {
-                return UI.FIRMWARE;
             }
         }
         return null;

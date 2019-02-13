@@ -273,6 +273,7 @@ export const parseCoinsJson = (json: JSON): void => {
             case 'eth' :
                 return parseEthereumNetworksJson(coinsObject[key]);
             case 'misc' :
+            case 'nem' :
                 return parseMiscNetworksJSON(coinsObject[key]);
         }
     });
