@@ -1,15 +1,16 @@
 /* @flow */
 import { crypto } from 'bitcoinjs-lib-zcash';
-
+import semvercmp from 'semver-compare';
 import Device from '../../device/Device';
 import DataManager from '../../data/DataManager';
 import * as UI from '../../constants/ui';
 import * as DEVICE from '../../constants/device';
+import * as ERROR from '../../constants/errors';
 import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../iframe/storage';
 
 import { UiMessage, DeviceMessage } from '../../message/builder';
-import type { Deferred, CoreMessage, UiPromiseResponse } from '../../types';
-import type { ButtonRequestData } from '../../types/uiRequest';
+import type { Deferred, CoreMessage, UiPromiseResponse, FirmwareRange } from '../../types';
+import type { FirmwareException, ButtonRequestData } from '../../types/uiRequest';
 
 export interface MethodInterface {
     +responseID: number,
@@ -35,6 +36,7 @@ export default class AbstractMethod implements MethodInterface {
     allowSeedlessDevice: boolean;
 
     requiredFirmware: Array<string>;
+    firmwareRange: FirmwareRange;
     requiredPermissions: Array<string>;
     allowDeviceMode: Array<string>; // used in device management (like ResetDevice allow !UI.INITIALIZED)
 
@@ -49,9 +51,10 @@ export default class AbstractMethod implements MethodInterface {
     removeUiPromise: (promise: Deferred<UiPromiseResponse>) => void;
 
     constructor(message: CoreMessage) {
-        const payload: any = message.payload;
+        const payload: Object = message.payload;
         this.name = payload.method;
         this.responseID = message.id || 0;
+        this.payload = payload;
         this.devicePath = payload.device ? payload.device.path : null;
         this.deviceInstance = payload.device ? payload.device.instance : 0;
         // expected state from method parameter.
@@ -69,6 +72,11 @@ export default class AbstractMethod implements MethodInterface {
         }
         // default values for all methods
         this.requiredFirmware = ['1.0.0', '2.0.0'];
+        this.firmwareRange = {
+            '1': { min: '1.0.0', max: '0' },
+            // '2': { min: '2.0.0', max: '2.0.9' },
+            '2': { min: '2.0.0', max: '0' },
+        };
         this.useDevice = true;
         this.useDeviceState = true;
         this.useUi = true;
@@ -155,6 +163,60 @@ export default class AbstractMethod implements MethodInterface {
         if (emitEvent) {
             this.postMessage(new DeviceMessage(DEVICE.CONNECT, this.device.toMessageObject()));
         }
+    }
+
+    setFirmwareRange(typeOrCoin: string) {
+        // set defaults from deprecated field
+        this.firmwareRange['1'].min = this.requiredFirmware[0];
+        this.firmwareRange['2'].min = this.requiredFirmware[1];
+
+        const range = DataManager.getConfig().supportedFirmware.find(c => c.coinType === typeOrCoin || c.coin === typeOrCoin);
+        if (range) {
+            if (range.excludedMethods && !range.excludedMethods.includes(this.name)) {
+                // not in range. do not change default range
+                return;
+            }
+            const { min, max } = range;
+            // override defaults
+            if (min) {
+                this.firmwareRange['1'].min = min[0];
+                this.firmwareRange['2'].min = min[1];
+            }
+            if (max) {
+                this.firmwareRange['1'].max = max[0];
+                this.firmwareRange['2'].max = max[1];
+            }
+        }
+    }
+
+    async checkFirmwareRange(isUsingPopup: boolean): Promise<?FirmwareException> {
+        const device = this.device;
+        const model = device.features.major_version;
+        const range = this.firmwareRange[model];
+        if (range.min === '0') {
+            return UI.FIRMWARE_NOT_SUPPORTED;
+        }
+        if (device.firmwareStatus === 'required' || semvercmp(device.getVersion(), range.min) < 0) {
+            return UI.FIRMWARE;
+        }
+        if (range.max !== '0' && semvercmp(device.getVersion(), range.max) > 0) {
+            if (isUsingPopup) {
+                // wait for popup handshake
+                await this.getPopupPromise().promise;
+                // initialize user response promise
+                const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, device);
+                // show unexpected state information and wait for confirmation
+                this.postMessage(new UiMessage(UI.FIRMWARE_NOT_COMPATIBLE, device.toMessageObject()));
+
+                const uiResp: UiPromiseResponse = await uiPromise.promise;
+                if (uiResp.payload !== 'true') {
+                    throw ERROR.PERMISSIONS_NOT_GRANTED;
+                }
+            } else {
+                return UI.FIRMWARE_NOT_COMPATIBLE;
+            }
+        }
+        return null;
     }
 
     getCustomMessages(): ?JSON {

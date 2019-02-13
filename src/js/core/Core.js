@@ -412,13 +412,30 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
             // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
-            const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | typeof UI.FIRMWARE | typeof UI.FIRMWARE_NOT_SUPPORTED) = device.hasUnexpectedMode(method.requiredFirmware, method.allowDeviceMode);
+            const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) = device.hasUnexpectedMode(method.allowDeviceMode);
             if (unexpectedMode) {
                 if (isUsingPopup) {
                     // wait for popup handshake
                     await getPopupPromise().promise;
                     // show unexpected state information
                     postMessage(new UiMessage(unexpectedMode, device.toMessageObject()));
+
+                    // wait for device disconnect
+                    await createUiPromise(DEVICE.DISCONNECT, device).promise;
+                    // interrupt process and go to "final" block
+                    return Promise.resolve();
+                } else {
+                    // return error if not using popup
+                    postMessage(new ResponseMessage(method.responseID, false, { error: unexpectedMode }));
+                    return Promise.resolve();
+                }
+            }
+
+            const firmwareException = await method.checkFirmwareRange(isUsingPopup);
+            if (firmwareException) {
+                if (isUsingPopup) {
+                    // show unexpected state information
+                    postMessage(new UiMessage(firmwareException, device.toMessageObject()));
 
                     // wait for device disconnect
                     await createUiPromise(DEVICE.DISCONNECT, device).promise;
