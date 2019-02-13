@@ -35,7 +35,6 @@ export default class AbstractMethod implements MethodInterface {
     useEmptyPassphrase: boolean;
     allowSeedlessDevice: boolean;
 
-    requiredFirmware: Array<string>;
     firmwareRange: FirmwareRange;
     requiredPermissions: Array<string>;
     allowDeviceMode: Array<string>; // used in device management (like ResetDevice allow !UI.INITIALIZED)
@@ -54,7 +53,6 @@ export default class AbstractMethod implements MethodInterface {
         const payload: Object = message.payload;
         this.name = payload.method;
         this.responseID = message.id || 0;
-        this.payload = payload;
         this.devicePath = payload.device ? payload.device.path : null;
         this.deviceInstance = payload.device ? payload.device.instance : 0;
         // expected state from method parameter.
@@ -71,10 +69,8 @@ export default class AbstractMethod implements MethodInterface {
             this.allowDeviceMode = [ UI.SEEDLESS ];
         }
         // default values for all methods
-        this.requiredFirmware = ['1.0.0', '2.0.0'];
         this.firmwareRange = {
             '1': { min: '1.0.0', max: '0' },
-            // '2': { min: '2.0.0', max: '2.0.9' },
             '2': { min: '2.0.0', max: '0' },
         };
         this.useDevice = true;
@@ -162,30 +158,6 @@ export default class AbstractMethod implements MethodInterface {
 
         if (emitEvent) {
             this.postMessage(new DeviceMessage(DEVICE.CONNECT, this.device.toMessageObject()));
-        }
-    }
-
-    setFirmwareRange(typeOrCoin: string) {
-        // set defaults from deprecated field
-        this.firmwareRange['1'].min = this.requiredFirmware[0];
-        this.firmwareRange['2'].min = this.requiredFirmware[1];
-
-        const range = DataManager.getConfig().supportedFirmware.find(c => c.coinType === typeOrCoin || c.coin === typeOrCoin);
-        if (range) {
-            if (range.excludedMethods && !range.excludedMethods.includes(this.name)) {
-                // not in range. do not change default range
-                return;
-            }
-            const { min, max } = range;
-            // override defaults
-            if (min) {
-                this.firmwareRange['1'].min = min[0];
-                this.firmwareRange['2'].min = min[1];
-            }
-            if (max) {
-                this.firmwareRange['1'].max = max[0];
-                this.firmwareRange['2'].max = max[1];
-            }
         }
     }
 
