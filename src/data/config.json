@@ -76,7 +76,6 @@
             ]
         },
         {
-            "coinType": "ripple",
             "excludedMethods": [
                 "rippleSignTransaction"
             ],
@@ -85,7 +84,6 @@
             "comment": ["Since 1.8.0/2.0.11 there is a new protobuf field 'destination_tag' in RippleSignTx"]
         },
         {
-            "coin": "Cardano",
             "excludedMethods": [
                 "cardanoSignTransaction"
             ],
