@@ -37,6 +37,17 @@ export type Deferred<T> = {
     reject: (e: Error) => void,
 };
 
+export type FirmwareRange = {
+    '1': {
+        min: string,
+        max: string,
+    },
+    '2': {
+        min: string,
+        max: string,
+    },
+}
+
 export type Features = {
     vendor: string,
     major_version: number,
