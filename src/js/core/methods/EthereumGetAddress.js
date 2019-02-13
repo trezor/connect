@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getSerializedPath } from '../../utils/pathUtils';
 import { toChecksumAddress, getNetworkLabel } from '../../utils/ethereumUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
@@ -34,7 +34,9 @@ export default class EthereumGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['1.6.2', '2.0.7'];
+        this.firmwareRange['1'].min = '1.6.2';
+        this.firmwareRange['2'].min = '2.0.7';
+        this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
 
         const payload: Object = message.payload;
         let bundledResponse: boolean = true;

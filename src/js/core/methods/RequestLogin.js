@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
@@ -27,6 +27,7 @@ export default class RequestLogin extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
+        this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Login';
         this.useEmptyPassphrase = true;
 

@@ -37,7 +37,6 @@ export default class AbstractMethod implements MethodInterface {
     useDevice: boolean; // use device
     useEmptyPassphrase: boolean;
 
-    requiredFirmware: Array<string>;
     firmwareRange: FirmwareRange;
     requiredPermissions: Array<string>;
 

@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/nemSignTx';
 
@@ -17,6 +17,9 @@ export default class NEMSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
+        this.firmwareRange['1'].min = '1.6.2';
+        this.firmwareRange['2'].min = '2.0.7';
+        this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Sign NEM transaction';
 
         const payload: Object = message.payload;

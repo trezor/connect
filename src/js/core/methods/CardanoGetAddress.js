@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
@@ -31,7 +31,9 @@ export default class CardanoGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['0', '2.0.8'];
+        this.firmwareRange['1'].min = '0';
+        this.firmwareRange['2'].min = '2.0.8';
+        this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Export Cardano address';
 
         const payload: Object = message.payload;
