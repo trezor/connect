@@ -2,7 +2,8 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
+import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
@@ -30,7 +31,7 @@ export default class LiskGetPublicKey extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['1.6.3', '2.0.7'];
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Lisk'), this.firmwareRange);
         this.info = 'Export Lisk public key';
 
         const payload: Object = message.payload;

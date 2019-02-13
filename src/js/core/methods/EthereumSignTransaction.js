@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
 import { stripHexPrefix, getNetworkLabel } from '../../utils/ethereumUtils';
@@ -24,7 +24,6 @@ export default class EthereumSignTx extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = ['1.6.2', '2.0.7'];
 
         const payload: Object = message.payload;
 
@@ -36,6 +35,7 @@ export default class EthereumSignTx extends AbstractMethod {
 
         const path: Array<number> = validatePath(payload.path, 3);
         const network = getEthereumNetwork(path);
+        this.firmwareRange = getFirmwareRange(this.name, network, this.firmwareRange);
 
         this.info = getNetworkLabel('Sign #NETWORK transaction', network);
 

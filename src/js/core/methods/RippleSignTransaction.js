@@ -2,7 +2,8 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
+import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 
 import type { RippleSignedTx } from '../../types/trezor';
@@ -20,7 +21,7 @@ export default class RippleSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = ['0', '2.0.8'];
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Ripple'), this.firmwareRange);
         this.info = 'Sign Ripple transaction';
 
         const payload: Object = message.payload;
