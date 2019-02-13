@@ -59,5 +59,39 @@
             "download": "https://www.mozilla.org/en-US/firefox/new/",
             "update": "https://support.mozilla.org/en-US/kb/update-firefox-latest-version"
         }
-    }
+    },
+    "supportedFirmware": [
+        { 
+            "coinType": "ethereum",
+            "excludedMethods": [
+                "ethereumGetAddress",
+                "ethereumSignMessage"
+            ],
+            "min": ["1.6.2", "2.0.7"],
+            "max": ["1.8.0", "2.0.10"],
+            "comment": [
+                "Since 1.8.0/2.0.11 there are not compatible changes in protobuf messages.",
+                "- Ethereum Address field is typed as string",
+                "- EthereumGetPublicKey message is added"
+            ]
+        },
+        {
+            "coinType": "ripple",
+            "excludedMethods": [
+                "rippleSignTransaction"
+            ],
+            "min": ["0", "2.0.7"],
+            "max": ["0", "2.0.10"],
+            "comment": ["Since 1.8.0/2.0.11 there is a new protobuf field 'destination_tag' in RippleSignTx"]
+        },
+        {
+            "coin": "Cardano",
+            "excludedMethods": [
+                "cardanoSignTransaction"
+            ],
+            "min": ["0", "2.0.8"],
+            "max": ["0", "2.0.10"],
+            "comment": ["Since 1.8.0/2.0.11 there is a new protobuf field 'protocol_magic' in CardanoSignTx"]
+        }
+    ]
 }
