@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinPath } from './helpers/paramsValidator';
+import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import Discovery from './helpers/Discovery';
 import * as UI from '../../constants/ui';
 import { NO_COIN_INFO } from '../../constants/errors';
@@ -70,7 +70,7 @@ export default class GetAccountInfo extends AbstractMethod {
             throw NO_COIN_INFO;
         } else {
             // check required firmware with coinInfo support
-            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+            this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
         }
 
         // delete payload.path;

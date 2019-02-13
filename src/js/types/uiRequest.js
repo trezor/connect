@@ -131,8 +131,10 @@ export type BrowserMessage = {
     payload: BrowserState,
 }
 
+export type FirmwareException = typeof UI.FIRMWARE | typeof UI.FIRMWARE_OUTDATED | typeof UI.FIRMWARE_NOT_SUPPORTED | typeof UI.FIRMWARE_NOT_COMPATIBLE;
+
 export type UnexpectedDeviceMode = {
-    +type: typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE | typeof UI.SEEDLESS | typeof UI.FIRMWARE_OUTDATED | typeof UI.FIRMWARE_NOT_SUPPORTED,
+    +type: typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | FirmwareException,
     payload: Device,
 }
 
