@@ -42,6 +42,17 @@ export type Deferred<T> = {
     reject: (e: Error) => void,
 }
 
+export type FirmwareRange = {
+    '1': {
+        min: string,
+        max: string,
+    },
+    '2': {
+        min: string,
+        max: string,
+    },
+}
+
 // copy/paste from trezor.js
 export type Features = {
     vendor: string,
