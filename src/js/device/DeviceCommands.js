@@ -7,6 +7,7 @@ import randombytes from 'randombytes';
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as hdnodeUtils from '../utils/hdnode';
 import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType } from '../utils/pathUtils';
+import { resolveAfter } from '../utils/promiseUtils';
 import Device from './Device';
 
 import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
@@ -652,9 +653,12 @@ export default class DeviceCommands {
             path: this.device.originalDescriptor.path,
             previous: this.device.originalDescriptor.debugSession,
         }, true);
+        await resolveAfter(501, null); // wait for propagation from bridge
 
         await this.transport.post(session, 'DebugLinkDecision', msg, true);
         await this.transport.release(session, true, true);
+        this.device.originalDescriptor.debugSession = null; // make sure there are no leftovers
+        await resolveAfter(501, null); // wait for propagation from bridge
     }
 
     async debugLinkGetState(msg: any): Promise<trezor.DebugLinkState> {
@@ -662,10 +666,12 @@ export default class DeviceCommands {
             path: this.device.originalDescriptor.path,
             previous: this.device.originalDescriptor.debugSession,
         }, true);
+        await resolveAfter(501, null); // wait for propagation from bridge
 
         const response: MessageResponse<trezor.DebugLinkState> = await this.transport.call(session, 'DebugLinkGetState', {}, true);
         assertType(response, 'DebugLinkState');
         await this.transport.release(session, true, true);
+        await resolveAfter(501, null); // wait for propagation from bridge
         return response.message;
     }
 }
