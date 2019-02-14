@@ -7,6 +7,8 @@ import { parseCoinsJson, parseEthereumNetworksJson } from './CoinInfo';
 import { parseFirmware } from './FirmwareInfo';
 import { Promise } from 'es6-promise';
 import parseUri from 'parse-uri';
+import * as bowser from 'bowser';
+import semvercmp from 'semver-compare';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
 
@@ -89,6 +91,14 @@ export default class DataManager {
             for (const asset of this.config.assets) {
                 const json: JSON = await httpRequest(`${asset.url}?r=${ ts }`, asset.type || 'json');
                 this.assets[ asset.name ] = json;
+            }
+
+            // hotfix webusb + chrome:72
+            const browserName = bowser.name.toLowerCase();
+            if (this.settings.popup && (browserName === 'chrome' || browserName === 'chromium')) {
+                if (semvercmp(bowser.version, '72') >= 0) {
+                    this.settings.webusb = false;
+                }
             }
 
             // parse coins definitions
