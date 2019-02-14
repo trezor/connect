@@ -5,12 +5,11 @@ import AbstractMethod from './AbstractMethod';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
-
-import type { UiPromiseResponse } from 'flowtype';
+import { getFirmwareRange } from './helpers/paramsValidator';
 import type { Success } from '../../types/trezor';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse } from '../../types';
 
-export default class GetPublicKey extends AbstractMethod {
+export default class WipeDevice extends AbstractMethod {
     confirmed: boolean = false;
 
     constructor(message: CoreMessage) {
@@ -19,6 +18,7 @@ export default class GetPublicKey extends AbstractMethod {
         this.allowDeviceMode = [ UI.INITIALIZE, UI.SEEDLESS ];
         this.useDeviceState = false;
         this.requiredPermissions = ['management'];
+        this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Wipe device';
     }
 

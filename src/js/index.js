@@ -325,6 +325,14 @@ class TrezorConnect {
         return await call({ method: 'composeTransaction', ...params });
     }
 
+    static debugLinkDecision: $T.DebugLinkDecision = async (params) => {
+        return await call({ method: 'debugLinkDecision', ...params });
+    }
+
+    static debugLinkGetState: $T.DebugLinkGetState = async (params) => {
+        return await call({ method: 'debugLinkGetState', ...params });
+    }
+
     static ethereumGetAccountInfo: $T.EthereumGetAccountInfo = async (params) => {
         return await call({ method: 'ethereumGetAccountInfo', ...params });
     }
@@ -491,11 +499,11 @@ export type {
     UiMessage,
     TransportMessageType,
     TransportMessage,
-    BlockchainMessageType,
-    BlockchainMessage,
 } from './types';
 
+export * from './types/blockchainEvent';
+export * from './types/account';
+
 export type {
-    EthereumAccount,
     Transaction as EthereumTransaction,
 } from './types/ethereum';

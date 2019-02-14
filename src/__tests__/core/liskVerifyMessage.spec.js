@@ -34,6 +34,7 @@ export const liskVerifyMessage = (): TestFunction => {
 
     return {
         testName,
+        mnemonic: 'mnemonic_12',
         testPayloads,
         expectedResponses,
     };

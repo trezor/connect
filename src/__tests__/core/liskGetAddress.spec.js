@@ -47,6 +47,7 @@ export const liskGetAddress = (): TestFunction => {
 
     return {
         testName,
+        mnemonic: 'mnemonic_12',
         testPayloads,
         expectedResponses,
     };

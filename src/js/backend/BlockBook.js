@@ -17,7 +17,7 @@ import type {
     AccountInfo,
     AccountLoadStatus,
 } from 'hd-wallet';
-import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
+import type { BitcoinNetworkInfo, EthereumNetworkInfo } from '../types';
 
 /* $FlowIssue loader notation */
 import FastXpubWasm from 'hd-wallet/lib/fastxpub/fastxpub.wasm';
@@ -30,7 +30,7 @@ import SocketWorker from 'worker-loader?name=js/socketio-worker.[hash].js!hd-wal
 
 export type Options = {
     urls: Array<string>,
-    coinInfo: CoinInfo | EthereumNetworkInfo,
+    coinInfo: BitcoinNetworkInfo | EthereumNetworkInfo,
 };
 
 export default class BlockBook {
@@ -70,7 +70,7 @@ export default class BlockBook {
         // this instance will not be used anymore
     }
 
-    async loadCoinInfo(coinInfo: ?(CoinInfo | EthereumNetworkInfo)): Promise<void> {
+    async loadCoinInfo(coinInfo: $ElementType<Options, 'coinInfo'>): Promise<void> {
         const socket = await this.blockchain.socket.promise;
         const networkInfo = await socket.send({ method: 'getInfo', params: [] });
 
@@ -91,7 +91,7 @@ export default class BlockBook {
     async loadAccountInfo(
         xpub: string,
         data: ?AccountInfo,
-        coinInfo: CoinInfo,
+        coinInfo: BitcoinNetworkInfo,
         progress: (progress: AccountLoadStatus) => void,
         setDisposer: (disposer: () => void) => void
     ): Promise<AccountInfo> {
@@ -99,7 +99,7 @@ export default class BlockBook {
 
         const segwit_s: 'p2sh' | 'off' = coinInfo.segwit ? 'p2sh' : 'off';
 
-        const discovery = this.discovery.discoverAccount(data, xpub, coinInfo.network, segwit_s, !!(coinInfo.cashAddrPrefix));
+        const discovery = this.discovery.discoverAccount(data, xpub, coinInfo.network, segwit_s, !!(coinInfo.cashAddrPrefix), 20, (new Date().getTimezoneOffset()));
         setDisposer(() => discovery.dispose(new Error('Interrupted by user')));
 
         discovery.stream.values.attach(status => {
@@ -148,12 +148,12 @@ export default class BlockBook {
     monitorAccountActivity(
         xpub: string,
         data: AccountInfo,
-        coinInfo: CoinInfo,
+        coinInfo: BitcoinNetworkInfo,
     ): Stream<AccountInfo | Error> {
         if (this.error) { throw this.error; }
 
         const segwit_s = coinInfo.segwit ? 'p2sh' : 'off';
-        const res = this.discovery.monitorAccountActivity(data, xpub, coinInfo.network, segwit_s, !!(coinInfo.cashAddrPrefix));
+        const res = this.discovery.monitorAccountActivity(data, xpub, coinInfo.network, segwit_s, !!(coinInfo.cashAddrPrefix), 20, (new Date().getTimezoneOffset()));
 
         this.blockchain.errors.values.attach(() => {
             res.dispose();
@@ -172,7 +172,7 @@ export default class BlockBook {
     async loadTransaction(id: string): Promise<BitcoinJsTransaction> {
         if (this.error) { throw this.error; }
         const tx = await this.blockchain.lookupTransaction(id);
-        return BitcoinJsTransaction.fromHex(tx.hex, tx.zcash);
+        return BitcoinJsTransaction.fromHex(tx.hex, tx.zcash, typeof tx.time === 'number');
     }
 
     async loadCurrentHeight(): Promise<number> {

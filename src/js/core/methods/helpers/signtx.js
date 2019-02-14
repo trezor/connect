@@ -2,7 +2,7 @@
 'use strict';
 
 import type { DefaultMessageResponse } from '../../../device/DeviceCommands';
-import type { CoinInfo } from 'flowtype';
+import type { BitcoinNetworkInfo } from '../../../types';
 import type {
     TxRequest,
     RefTransaction,
@@ -63,6 +63,7 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
                 lock_time: reqTx.lock_time,
                 inputs_cnt: reqTx.inputs.length,
                 outputs_cnt: outputCount,
+                timestamp: reqTx.timestamp,
             };
         }
     }
@@ -171,8 +172,9 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
     inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>,
     refTxs: Array<RefTransaction>,
-    coinInfo: CoinInfo,
+    coinInfo: BitcoinNetworkInfo,
     locktime: ?number,
+    timestamp: ?number,
 ): Promise<SignedTx> => {
     // TODO rbf
     // const sequence: number = locktime ? (0xffffffff - 1) : 0xffffffff;
@@ -188,6 +190,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
         outputs_count: outputs.length,
         coin_name: coinInfo.name,
         lock_time: locktime,
+        timestamp,
     });
 
     const signed: SignedTx = await processTxRequest(

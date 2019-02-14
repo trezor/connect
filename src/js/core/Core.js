@@ -29,9 +29,8 @@ import Log, { init as initLog, enable as enableLog } from '../utils/debug';
 import { parse as parseSettings } from '../data/ConnectSettings';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
-import type { UiPromiseResponse } from 'flowtype';
-import type { Device as DeviceTyped, Deferred, CoreMessage } from '../types';
-import type { TransportInfo } from '../types/ui-request';
+import type { Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse } from '../types';
+import type { TransportInfo } from '../types/uiRequest';
 
 // Public variables
 // eslint-disable-next-line no-use-before-define
@@ -186,7 +185,7 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
         throw ERROR.NO_TRANSPORT;
     }
 
-    const isWebUsb: boolean = _deviceList.transportVersion().indexOf('webusb') >= 0;
+    const isWebUsb: boolean = _deviceList.transportType().indexOf('webusb') >= 0;
 
     let device: ?Device;
     if (method.devicePath) {
@@ -359,6 +358,19 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     method.device = device;
     method.devicePath = device.getDevicePath();
 
+    // method is a debug link message
+    if (method.debugLink) {
+        try {
+            const response = await method.run();
+            messageResponse = new ResponseMessage(method.responseID, true, response);
+            postMessage(messageResponse);
+            return Promise.resolve();
+        } catch (error) {
+            postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
+            throw error;
+        }
+    }
+
     // find pending calls to this device
     const previousCall: Array<AbstractMethod> = _callMethods.filter(call => call && call !== method && call.devicePath === method.devicePath);
     if (previousCall.length > 0 && method.overridePreviousCall) {
@@ -413,13 +425,30 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
             // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
-            const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | typeof UI.FIRMWARE | typeof UI.FIRMWARE_NOT_SUPPORTED) = device.hasUnexpectedMode(method.requiredFirmware, method.allowDeviceMode);
+            const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) = device.hasUnexpectedMode(method.allowDeviceMode);
             if (unexpectedMode) {
                 if (isUsingPopup) {
                     // wait for popup handshake
                     await getPopupPromise().promise;
                     // show unexpected state information
                     postMessage(new UiMessage(unexpectedMode, device.toMessageObject()));
+
+                    // wait for device disconnect
+                    await createUiPromise(DEVICE.DISCONNECT, device).promise;
+                    // interrupt process and go to "final" block
+                    return Promise.resolve();
+                } else {
+                    // return error if not using popup
+                    postMessage(new ResponseMessage(method.responseID, false, { error: unexpectedMode }));
+                    return Promise.resolve();
+                }
+            }
+
+            const firmwareException = await method.checkFirmwareRange(isUsingPopup);
+            if (firmwareException) {
+                if (isUsingPopup) {
+                    // show unexpected state information
+                    postMessage(new UiMessage(firmwareException, device.toMessageObject()));
 
                     // wait for device disconnect
                     await createUiPromise(DEVICE.DISCONNECT, device).promise;
@@ -747,7 +776,7 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceTyped = null): voi
     const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, UI.RECEIVE_DEVICE);
     if (uiPromise && _deviceList) {
         const list: Array<Object> = _deviceList.asArray();
-        const isWebUsb: boolean = _deviceList.transportVersion().indexOf('webusb') >= 0;
+        const isWebUsb = _deviceList.transportType().indexOf('webusb') >= 0;
 
         if (list.length === 1 && !isWebUsb) {
             // there is only one device. use it
@@ -877,6 +906,7 @@ export class Core extends EventEmitter {
         if (_deviceList) {
             _deviceList.onBeforeUnload();
         }
+        this.removeAllListeners();
     }
 
     getCurrentMethod(): Array<AbstractMethod> {

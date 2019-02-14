@@ -195,6 +195,55 @@
             "xpub_magic_segwit_p2sh": 77429938
         },
         {
+            "address_type": 28,
+            "address_type_p2sh": 35,
+            "bech32_prefix": null,
+            "bip115": false,
+            "bitcore": [],
+            "blockbook": [
+                "https://blockbook.capricoin.org",
+                "https://blockbook2.capricoin.org",
+                "https://blockbook3.capricoin.org",
+                "https://blockbook4.capricoin.org"
+            ],
+            "blocktime_seconds": 60,
+            "cashaddr_prefix": null,
+            "coin_label": "Capricoin",
+            "coin_name": "Capricoin",
+            "coin_shortcut": "CPC",
+            "curve_name": "secp256k1",
+            "decred": false,
+            "default_fee_b": {
+                "Economy": 7,
+                "High": 20,
+                "Low": 1,
+                "Normal": 14
+            },
+            "dust_limit": 546,
+            "force_bip143": false,
+            "fork_id": null,
+            "hash_genesis_block": "00000d23fa0fc52c90893adb1181c9ddffb6c797a3e41864b9a23aa2f2981fe3",
+            "max_address_length": 34,
+            "maxfee_kb": 2000000,
+            "min_address_length": 27,
+            "minfee_kb": 1000,
+            "name": "Capricoin",
+            "segwit": false,
+            "shortcut": "CPC",
+            "signed_message_header": "Capricoin Signed Message:\n",
+            "slip44": 289,
+            "support": {
+                "connect": true,
+                "trezor1": false,
+                "trezor2": "2.0.10",
+                "webwallet": false
+            },
+            "xprv_magic": 76066276,
+            "xpub_magic": 76067358,
+            "xpub_magic_segwit_native": null,
+            "xpub_magic_segwit_p2sh": null
+        },
+        {
             "address_type": 76,
             "address_type_p2sh": 16,
             "bech32_prefix": null,
@@ -464,8 +513,8 @@
             "slip44": 133,
             "support": {
                 "connect": true,
-                "trezor1": "1.6.2",
-                "trezor2": "2.0.7",
+                "trezor1": "1.7.1",
+                "trezor2": "2.0.8",
                 "webwallet": true
             },
             "xprv_magic": 76066276,
@@ -513,7 +562,8 @@
         },
         {
             "blockbook": [
-                "https://ropsten1.trezor.io"
+                "https://ropsten1.trezor.io",
+                "https://ropsten2.trezor.io"
             ],
             "chain": "rop",
             "chain_id": 3,
@@ -583,7 +633,7 @@
             "chain_id": 30,
             "name": "RSK",
             "rskip60": true,
-            "shortcut": "RSK",
+            "shortcut": "RBTC",
             "slip44": 137,
             "support": {
                 "connect": true,
@@ -599,7 +649,7 @@
             "chain_id": 31,
             "name": "RSK Testnet",
             "rskip60": true,
-            "shortcut": "tRSK",
+            "shortcut": "tRBTC",
             "slip44": 37310,
             "support": {
                 "connect": true,
@@ -774,6 +824,22 @@
         },
         {
             "blockbook": [],
+            "chain": "reosc",
+            "chain_id": 2894,
+            "name": "REOSC Ecosystem",
+            "rskip60": false,
+            "shortcut": "REOSC",
+            "slip44": 2894,
+            "support": {
+                "connect": true,
+                "trezor1": "1.7.2",
+                "trezor2": "2.0.11",
+                "webwallet": false
+            },
+            "url": "https://reosc.io"
+        },
+        {
+            "blockbook": [],
             "chain": "esn",
             "chain_id": 31102,
             "name": "Ethersocial Network",
@@ -855,7 +921,9 @@
     ],
     "misc": [
         {
+            "blockchain_link": {},
             "curve": "ed25519",
+            "decimals": 6,
             "name": "Cardano",
             "shortcut": "ADA",
             "slip44": 1815,
@@ -870,7 +938,9 @@
             }
         },
         {
+            "blockchain_link": {},
             "curve": "ed25519",
+            "decimals": 8,
             "name": "Lisk",
             "shortcut": "LSK",
             "slip44": 134,
@@ -883,7 +953,9 @@
             "wallet": {}
         },
         {
+            "blockchain_link": {},
             "curve": "ed25519",
+            "decimals": 7,
             "name": "Stellar",
             "shortcut": "XLM",
             "slip44": 148,
@@ -898,7 +970,16 @@
             }
         },
         {
+            "blockchain_link": {
+                "type": "ripple",
+                "url": [
+                    "wss://s1.ripple.com",
+                    "wss://s-east.ripple.com",
+                    "wss://s-west.ripple.com"
+                ]
+            },
             "curve": "secp256k1",
+            "decimals": 6,
             "name": "Ripple",
             "shortcut": "XRP",
             "slip44": 144,
@@ -911,7 +992,9 @@
             "wallet": {}
         },
         {
+            "blockchain_link": {},
             "curve": "ed25519",
+            "decimals": 6,
             "name": "Tezos",
             "shortcut": "XTZ",
             "slip44": 1729,

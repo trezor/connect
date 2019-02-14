@@ -75,6 +75,7 @@ export const rippleSignTransaction = (): TestFunction => {
     const testName = 'RippleSignTransaction';
     return {
         testName,
+        mnemonic: 'mnemonic_12',
         testPayloads,
         expectedResponses,
     };

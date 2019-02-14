@@ -54,6 +54,7 @@ const parseRunOptions = (options?: RunOptions): RunOptions => {
 export default class Device extends EventEmitter {
     transport: Transport;
     originalDescriptor: DeviceDescriptor;
+    hasDebugLink: boolean;
 
     firmwareStatus: DeviceFirmwareStatus;
     features: Features;
@@ -91,6 +92,7 @@ export default class Device extends EventEmitter {
         // === immutable properties
         this.transport = transport;
         this.originalDescriptor = descriptor;
+        this.hasDebugLink = descriptor.debug;
 
         // this will be released after first run
         this.firstRunPromise = createDeferred();
@@ -125,8 +127,7 @@ export default class Device extends EventEmitter {
             const sessionID: string = await this.transport.acquire({
                 path: this.originalDescriptor.path,
                 previous: this.originalDescriptor.session,
-                checkPrevious: true,
-            });
+            }, false);
             _log.warn('Expected session id:', sessionID);
             this.activitySessionID = sessionID;
             this.deferredActions[ DEVICE.ACQUIRED ].resolve();
@@ -157,7 +158,7 @@ export default class Device extends EventEmitter {
                 this.commands.dispose();
             }
             try {
-                await this.transport.release(this.activitySessionID, false);
+                await this.transport.release(this.activitySessionID, false, false);
             } catch (err) {
                 // empty
             }
@@ -341,7 +342,7 @@ export default class Device extends EventEmitter {
     }
 
     async initialize(useEmptyPassphrase: boolean): Promise<void> {
-        const { message } : { message: Features } = await this.commands.initialize(useEmptyPassphrase);
+        const { message }: { message: Features } = await this.commands.initialize(useEmptyPassphrase);
         this.features = message;
         this.featuresNeedsReload = false;
         this.featuresTimestamp = new Date().getTime();
@@ -350,7 +351,7 @@ export default class Device extends EventEmitter {
     }
 
     async getFeatures(): Promise<void> {
-        const { message } : { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
+        const { message }: { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
         this.features = message;
         this.firmwareStatus = checkFirmware([ this.features.major_version, this.features.minor_version, this.features.patch_version ]);
     }
@@ -376,16 +377,19 @@ export default class Device extends EventEmitter {
     }
 
     async updateDescriptor(upcomingDescriptor: DeviceDescriptor): Promise<void> {
-        _log.debug('updateDescriptor', 'currentSession', this.originalDescriptor.session, 'upcoming', upcomingDescriptor.session, 'lastUsedID', this.activitySessionID);
+        const originalSession = this.originalDescriptor.session;
+        const upcomingSession = upcomingDescriptor.session;
 
-        if (!this.originalDescriptor.session && !upcomingDescriptor.session && !this.activitySessionID) {
+        _log.debug('updateDescriptor', 'currentSession', originalSession, 'upcoming', upcomingSession, 'lastUsedID', this.activitySessionID);
+
+        if (!originalSession && !upcomingSession && !this.activitySessionID) {
             // no change
             return;
         }
 
         if (this.deferredActions[ DEVICE.ACQUIRED ]) { await this.deferredActions[ DEVICE.ACQUIRED ].promise; }
 
-        if (upcomingDescriptor.session === null) {
+        if (!upcomingSession) {
             // corner-case: if device was unacquired but some call to this device was made
             // this will automatically change unacquired device to acquired (without deviceList)
             // emit ACQUIRED event to deviceList which will propagate DEVICE.CONNECT event
@@ -395,9 +399,9 @@ export default class Device extends EventEmitter {
         }
 
         const methodStillRunning = this.commands && !this.commands.disposed;
-        if (upcomingDescriptor.session === null && !methodStillRunning) {
+        if (!upcomingSession && !methodStillRunning) {
             // released
-            if (this.originalDescriptor.session === this.activitySessionID) {
+            if (originalSession === this.activitySessionID) {
                 // by myself
                 _log.debug('RELEASED BY MYSELF');
                 if (this.deferredActions[ DEVICE.RELEASE ]) {
@@ -414,7 +418,7 @@ export default class Device extends EventEmitter {
         } else {
             // acquired
             // TODO: Case where listen event will dispatch before this.transport.acquire (this.acquire) return ID
-            if (upcomingDescriptor.session === this.activitySessionID) {
+            if (upcomingSession === this.activitySessionID) {
                 // by myself
                 _log.debug('ACQUIRED BY MYSELF');
                 if (this.deferredActions[ DEVICE.ACQUIRE ]) {
@@ -471,11 +475,11 @@ export default class Device extends EventEmitter {
     }
 
     isUsed(): boolean {
-        return this.originalDescriptor.session !== null;
+        return typeof this.originalDescriptor.session === 'string';
     }
 
     isUsedHere(): boolean {
-        return this.originalDescriptor.session !== null && this.originalDescriptor.session === this.activitySessionID;
+        return this.isUsed() && this.originalDescriptor.session === this.activitySessionID;
     }
 
     isUsedElsewhere(): boolean {
@@ -510,7 +514,7 @@ export default class Device extends EventEmitter {
         return this.features ? this.features.major_version === 1 : false;
     }
 
-    hasUnexpectedMode(requiredFirmware: Array<string>, allow: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | typeof UI.FIRMWARE | typeof UI.FIRMWARE_NOT_SUPPORTED) {
+    hasUnexpectedMode(allow: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) {
         if (this.features) {
             if (this.isBootloader() && allow.indexOf(UI.BOOTLOADER) < 0) {
                 return UI.BOOTLOADER;
@@ -520,12 +524,6 @@ export default class Device extends EventEmitter {
             }
             if (this.isSeedless() && allow.indexOf(UI.SEEDLESS) < 0) {
                 return UI.SEEDLESS;
-            }
-            if (requiredFirmware[ this.features.major_version - 1 ] === '0') {
-                return UI.FIRMWARE_NOT_SUPPORTED;
-            }
-            if (this.firmwareStatus === 'required' || !this.atLeast(requiredFirmware)) {
-                return UI.FIRMWARE;
             }
         }
         return null;
@@ -549,7 +547,7 @@ export default class Device extends EventEmitter {
     onBeforeUnload() {
         if (this.isUsedHere() && this.activitySessionID) {
             try {
-                this.transport.release(this.activitySessionID, true);
+                this.transport.release(this.activitySessionID, true, false);
             } catch (err) {
                 // empty
             }

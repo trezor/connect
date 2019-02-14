@@ -1,9 +1,9 @@
 /* @flow */
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinPath, getRequiredFirmware } from './helpers/paramsValidator';
+import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getLabel, getSerializedPath } from '../../utils/pathUtils';
-import { getCoinInfoByCurrency, getCoinInfoFromPath, fixCoinInfoNetwork } from '../../data/CoinInfo';
+import { getBitcoinNetwork, fixCoinInfoNetwork } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
 import { uniqBy } from 'lodash';
 
@@ -11,13 +11,12 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { Address } from '../../types/trezor';
-import type { CoinInfo, UiPromiseResponse } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse, BitcoinNetworkInfo } from '../../types';
 
 type Batch = {
     path: Array<number>,
     address: ?string,
-    coinInfo: CoinInfo,
+    coinInfo: BitcoinNetworkInfo,
     showOnTrezor: boolean,
 }
 
@@ -53,15 +52,15 @@ export default class GetAddress extends AbstractMethod {
             ]);
 
             const path: Array<number> = validatePath(batch.path, 3);
-            let coinInfo: ?CoinInfo;
+            let coinInfo: ?BitcoinNetworkInfo;
             if (batch.coin) {
-                coinInfo = getCoinInfoByCurrency(batch.coin);
+                coinInfo = getBitcoinNetwork(batch.coin);
             }
 
             if (coinInfo && !batch.crossChain) {
                 validateCoinPath(coinInfo, path);
             } else if (!coinInfo) {
-                coinInfo = getCoinInfoFromPath(path);
+                coinInfo = getBitcoinNetwork(path);
             }
 
             let showOnTrezor: boolean = true;
@@ -73,7 +72,7 @@ export default class GetAddress extends AbstractMethod {
                 throw NO_COIN_INFO;
             } else if (coinInfo) {
                 // set required firmware from coinInfo support
-                this.requiredFirmware = getRequiredFirmware(coinInfo, this.requiredFirmware);
+                this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
             }
 
             // fix coinInfo network values (segwit/legacy)
@@ -95,7 +94,7 @@ export default class GetAddress extends AbstractMethod {
         if (bundle.length === 1) {
             this.info = getLabel('Export #NETWORK address', bundle[0].coinInfo);
         } else {
-            const requestedNetworks: Array<?CoinInfo> = bundle.map(b => b.coinInfo);
+            const requestedNetworks: Array<?BitcoinNetworkInfo> = bundle.map(b => b.coinInfo);
             const uniqNetworks = uniqBy(requestedNetworks, (ci) => { return ci ? ci.shortcut : null; });
             if (uniqNetworks.length === 1 && uniqNetworks[0]) {
                 this.info = getLabel('Export multiple #NETWORK addresses', uniqNetworks[0]);

@@ -30,6 +30,7 @@ reset=$(tput sgr0)
 ################# Script vars: END
 
 ################# Device config vars
+mnemonic_all="all all all all all all all all all all all all"
 mnemonic_12="alcohol woman abuse must during monitor noble actual mixed trade anger aisle"
 pin_0=""
 ################# Device config vars: END
@@ -46,6 +47,7 @@ signTransaction_subtests="oneOneFee oneTwoFee oneThreeFee twoTwo testnetOneTwoFe
 signTransactionSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
 signTransactionBgold_subtests="change noChange p2sh p2shWitnessChange sendMultisig1"
 signTransactionBcash_subtests="change noChange oldAddr"
+signTransactionCapricoin_subtests="signCPC oneTwoFee twoTwoFee notEnoughFunds feeTooHigh"
 signTransactionMultisig_subtests="twoOfThree fifteenOfFifteen missingPubkey"
 signTransactionMultisigChange_subtests="externalExternal externalInternal internalExternal multisigExternalExternal"
 
@@ -238,7 +240,8 @@ start_emulator() {
 start_transport() {
     cd $trezord_path
     #./trezord-go -e 21324 > /dev/null 2>&1 &
-    ./trezord-go -e 21324 -e 21325 > /dev/null 2>&1 &
+    #./trezord-go -e 21324 -e 21325 > /dev/null 2>&1 &
+    ./trezord-go -ed 21324:21325 > /dev/null 2>&1 &
     #./trezord-go -e 21324 -e 21325 &
     #./trezord-go -e 21325 > /dev/null 2>&1 &
     #./trezord-go &
@@ -277,7 +280,7 @@ prepare_environment() {
 run_karma() {
     cd $base_path
 
-    path_babel_node="./node_modules/babel-cli/bin/babel-node.js"
+    path_babel_node="./node_modules/.bin/babel-node"
     path_karma="./node_modules/karma/bin/karma"
 
     ${path_babel_node} ${path_karma} start --tests="${1}" --isEmulatorRunning="${should_start_emulator}" --printDebug="${should_print_karma_debug}"

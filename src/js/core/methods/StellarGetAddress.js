@@ -1,15 +1,15 @@
 /* @flow */
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
+import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { UiPromiseResponse } from 'flowtype';
 import type { StellarAddress } from '../../types/stellar';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 type Batch = {
     path: Array<number>,
@@ -28,7 +28,7 @@ export default class StellarGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['1.7.0', '2.0.8'];
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Stellar'), this.firmwareRange);
 
         // create a bundle with only one batch if bundle doesn't exists
         const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;

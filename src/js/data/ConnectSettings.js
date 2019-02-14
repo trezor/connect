@@ -27,7 +27,7 @@ export type ConnectSettings = {
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
-const VERSION: string = '6.0.3';
+const VERSION: string = '6.0.4';
 const versionN: Array<number> = VERSION.split('.').map(s => parseInt(s));
 const DIRECTORY: string = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
 const DEFAULT_DOMAIN: string = `https://connect.trezor.io/${ DIRECTORY }`;
@@ -102,9 +102,6 @@ export const parse = (input: ?Object): ConnectSettings => {
     if (typeof input.extension === 'string') {
         settings.extension = input.extension;
     }
-
-    // $FlowIssue: settings.excludedDevices field is intentionally not defined in flowtype. it's used only in tests to exclude debug-link device.
-    settings.excludedDevices = input.excludedDevices;
 
     currentSettings = settings;
     return currentSettings;

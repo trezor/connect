@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinPath } from './helpers/paramsValidator';
+import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import Discovery from './helpers/Discovery';
 import * as UI from '../../constants/ui';
 import { NO_COIN_INFO } from '../../constants/errors';
@@ -16,21 +16,19 @@ import { create as createDeferred } from '../../utils/deferred';
 
 import Account, { create as createAccount } from '../../account';
 import BlockBook, { create as createBackend } from '../../backend';
-import { getCoinInfoByCurrency, fixCoinInfoNetwork, getCoinInfoFromPath } from '../../data/CoinInfo';
+import { getBitcoinNetwork, fixCoinInfoNetwork } from '../../data/CoinInfo';
 import { UiMessage } from '../../message/builder';
-import type { CoinInfo, UiPromiseResponse } from 'flowtype';
-import type { AccountInfo, HDNodeResponse } from '../../types/trezor';
-import type { Deferred, CoreMessage } from '../../types';
+import type { HDNodeResponse } from '../../types/trezor';
+import type { Deferred, CoreMessage, UiPromiseResponse, BitcoinNetworkInfo } from '../../types';
+import type { AccountInfoPayload } from '../../types/response';
 
 type Params = {
     path: ?Array<number>,
     xpub: ?string,
-    coinInfo: CoinInfo,
+    coinInfo: BitcoinNetworkInfo,
 }
 
-type Response = AccountInfo | {
-    error: string,
-}
+type Response = AccountInfoPayload;
 
 export default class GetAccountInfo extends AbstractMethod {
     params: Params;
@@ -53,15 +51,15 @@ export default class GetAccountInfo extends AbstractMethod {
         ]);
 
         let path: Array<number>;
-        let coinInfo: ?CoinInfo;
+        let coinInfo: ?BitcoinNetworkInfo;
         if (payload.coin) {
-            coinInfo = getCoinInfoByCurrency(payload.coin);
+            coinInfo = getBitcoinNetwork(payload.coin);
         }
 
         if (payload.path) {
             path = validatePath(payload.path, 3, true);
             if (!coinInfo) {
-                coinInfo = getCoinInfoFromPath(path);
+                coinInfo = getBitcoinNetwork(path);
             } else if (!payload.crossChain) {
                 validateCoinPath(coinInfo, path);
             }
@@ -72,7 +70,7 @@ export default class GetAccountInfo extends AbstractMethod {
             throw NO_COIN_INFO;
         } else {
             // check required firmware with coinInfo support
-            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+            this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
         }
 
         // delete payload.path;
@@ -130,7 +128,7 @@ export default class GetAccountInfo extends AbstractMethod {
     }
 
     async _getAccountFromPath(path: Array<number>): Promise<Response> {
-        const coinInfo: CoinInfo = fixCoinInfoNetwork(this.params.coinInfo, path);
+        const coinInfo: BitcoinNetworkInfo = fixCoinInfoNetwork(this.params.coinInfo, path);
         const node: HDNodeResponse = await this.device.getCommands().getHDNode(path, coinInfo);
         const account = createAccount(path, node.xpub, coinInfo);
 
@@ -199,9 +197,7 @@ export default class GetAccountInfo extends AbstractMethod {
         try {
             discovery.start();
         } catch (error) {
-            return {
-                error,
-            };
+            throw error;
         }
 
         // set select account view
@@ -224,13 +220,10 @@ export default class GetAccountInfo extends AbstractMethod {
 
     _response(account: ?Account): Response {
         if (!account) {
-            return {
-                error: 'No account found',
-            };
+            throw new Error('Account not found');
         }
 
         const nextAddress: string = account.getNextAddress();
-
         return {
             id: account.id,
             path: account.path,
@@ -242,6 +235,10 @@ export default class GetAccountInfo extends AbstractMethod {
             xpub: account.xpub,
             balance: account.getBalance(),
             confirmed: account.getConfirmedBalance(),
+            transactions: account.getTransactionsCount(),
+            utxo: account.getUtxos(),
+            usedAddresses: account.getUsedAddresses(),
+            unusedAddresses: account.getUnusedAddresses(),
         };
     }
 

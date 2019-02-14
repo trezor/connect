@@ -9,13 +9,13 @@ import { fixPath, convertMultisigPubKey, fixAmount } from './index';
 import type { BuildTxInput } from 'hd-wallet';
 
 // local types
-import type { CoinInfo } from 'flowtype';
+import type { BitcoinNetworkInfo } from '../../../types';
 import type { TransactionInput } from '../../../types/trezor';
 
 /** *****
  * SignTx: validation
  *******/
-export const validateTrezorInputs = (inputs: Array<TransactionInput>, coinInfo: CoinInfo): Array<TransactionInput> => {
+export const validateTrezorInputs = (inputs: Array<TransactionInput>, coinInfo: BitcoinNetworkInfo): Array<TransactionInput> => {
     return inputs.map(fixPath).map(fixAmount).map(convertMultisigPubKey.bind(null, coinInfo.network));
 };
 

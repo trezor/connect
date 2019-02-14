@@ -4,20 +4,21 @@
 import { getIndexFromPath } from '../utils/pathUtils';
 
 import type { AccountInfo } from 'hd-wallet';
-import type { CoinInfo, SimpleAccount } from 'flowtype';
+import type { BitcoinNetworkInfo } from '../types';
+import type { BitcoinAccount } from '../types/account';
 
 export default class Account {
     id: number;
     path: Array<number>;
     xpub: string;
-    coinInfo: CoinInfo;
+    coinInfo: BitcoinNetworkInfo;
     info: ?AccountInfo;
     transactions: number = 0; // loading status
 
     constructor(
         path: Array<number>,
         xpub: string,
-        coinInfo: CoinInfo,
+        coinInfo: BitcoinNetworkInfo,
     ) {
         this.id = getIndexFromPath(path);
         this.path = path;
@@ -39,6 +40,18 @@ export default class Account {
 
     getNextAddressId(): number {
         return this.info ? this.info.usedAddresses.length : -1;
+    }
+
+    getUsedAddresses(): $ElementType<AccountInfo, 'usedAddresses'> {
+        return this.info ? this.info.usedAddresses : [];
+    }
+
+    getUnusedAddresses(): $ElementType<AccountInfo, 'unusedAddresses'> {
+        return this.info ? this.info.unusedAddresses : [];
+    }
+
+    getTransactionsCount(): number {
+        return this.info ? this.info.transactions.length : this.transactions;
     }
 
     getChangeIndex(): number {
@@ -69,7 +82,7 @@ export default class Account {
         return this.info ? this.info.utxos : [];
     }
 
-    toMessage(): SimpleAccount {
+    toMessage(): BitcoinAccount {
         return {
             id: this.id,
             path: this.path,
@@ -77,7 +90,7 @@ export default class Account {
             xpub: this.xpub,
             label: `Account #${this.id + 1}`,
             balance: this.info ? this.info.balance : -1,
-            transactions: this.info ? this.info.transactions.length : this.transactions,
+            transactions: this.getTransactionsCount(),
         };
     }
 }

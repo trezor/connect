@@ -2,21 +2,20 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinPath, getRequiredFirmware } from './helpers/paramsValidator';
+import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import { getCoinInfoByCurrency, getCoinInfoFromPath } from '../../data/CoinInfo';
+import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getPublicKeyLabel } from '../../utils/pathUtils';
-import type { CoinInfo, UiPromiseResponse } from 'flowtype';
 import type { HDNodeResponse } from '../../types/trezor';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse, BitcoinNetworkInfo } from '../../types';
 
 type Batch = {
     path: Array<number>,
-    coinInfo: ?CoinInfo,
+    coinInfo: ?BitcoinNetworkInfo,
 }
 type Params = {
     bundle: Array<Batch>,
@@ -55,9 +54,9 @@ export default class GetPublicKey extends AbstractMethod {
                 { name: 'crossChain', type: 'boolean' },
             ]);
 
-            let coinInfo: ?CoinInfo;
+            let coinInfo: ?BitcoinNetworkInfo;
             if (batch.coin) {
-                coinInfo = getCoinInfoByCurrency(batch.coin);
+                coinInfo = getBitcoinNetwork(batch.coin);
             }
 
             const path: Array<number> = validatePath(batch.path, coinInfo ? 3 : 0);
@@ -65,7 +64,7 @@ export default class GetPublicKey extends AbstractMethod {
             if (coinInfo && !batch.crossChain) {
                 validateCoinPath(coinInfo, path);
             } else if (!coinInfo) {
-                coinInfo = getCoinInfoFromPath(path);
+                coinInfo = getBitcoinNetwork(path);
             }
             bundle.push({
                 path,
@@ -74,7 +73,7 @@ export default class GetPublicKey extends AbstractMethod {
 
             // set required firmware from coinInfo support
             if (coinInfo) {
-                this.requiredFirmware = getRequiredFirmware(coinInfo, this.requiredFirmware);
+                this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
             }
         });
 
@@ -91,7 +90,6 @@ export default class GetPublicKey extends AbstractMethod {
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
-        // const label = getPublicKeyLabel(this.params.path, this.params.coinInfo);
         let label: string;
         if (this.params.bundle.length > 1) {
             label = 'Export multiple public keys';

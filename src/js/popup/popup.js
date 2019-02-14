@@ -5,7 +5,7 @@ import { parseMessage } from '../message';
 import { UiMessage, ResponseMessage } from '../message/builder';
 import type { CoreMessage, PostMessageEvent } from '../types';
 import DataManager from '../data/DataManager';
-import type { PopupHandshake } from '../types/ui-request';
+import type { PopupHandshake } from '../types/uiRequest';
 
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
@@ -100,6 +100,9 @@ const handleMessage = (event: PostMessageEvent): void => {
             break;
         case UI.FIRMWARE_NOT_SUPPORTED :
             view.firmwareNotSupported(message.payload);
+            break;
+        case UI.FIRMWARE_NOT_COMPATIBLE :
+            view.firmwareNotCompatible(message.payload);
             break;
         case UI.FIRMWARE_OUTDATED :
             showFirmwareUpdateNotification(message.payload);

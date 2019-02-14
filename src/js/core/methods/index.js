@@ -13,6 +13,8 @@ import CardanoSignTransaction from './CardanoSignTransaction';
 import CipherKeyValue from './CipherKeyValue';
 import ComposeTransaction from './ComposeTransaction';
 import CustomMessage from './CustomMessage';
+import DebugLinkDecision from './debuglink/DebugLinkDecision';
+import DebugLinkGetState from './debuglink/DebugLinkGetState';
 import EthereumGetAccountInfo from './EthereumGetAccountInfo';
 import EthereumGetAddress from './EthereumGetAddress';
 import EthereumSignMessage from './EthereumSignMessage';
@@ -28,6 +30,7 @@ import LiskGetPublicKey from './LiskGetPublicKey';
 import LiskSignMessage from './LiskSignMessage';
 import LiskVerifyMessage from './LiskVerifyMessage';
 import LiskSignTransaction from './LiskSignTransaction';
+import LoadDevice from './LoadDevice';
 import PushTransaction from './PushTransaction';
 import RequestLogin from './RequestLogin';
 import ResetDevice from './ResetDevice';
@@ -54,6 +57,8 @@ const classes: {[k: string]: any} = {
     'cipherKeyValue': CipherKeyValue,
     'composeTransaction': ComposeTransaction,
     'customMessage': CustomMessage,
+    'debugLinkDecision': DebugLinkDecision,
+    'debugLinkGetState': DebugLinkGetState,
     'ethereumGetAccountInfo': EthereumGetAccountInfo,
     'ethereumGetAddress': EthereumGetAddress,
     'ethereumSignMessage': EthereumSignMessage,
@@ -69,6 +74,7 @@ const classes: {[k: string]: any} = {
     'liskSignMessage': LiskSignMessage,
     'liskSignTransaction': LiskSignTransaction,
     'liskVerifyMessage': LiskVerifyMessage,
+    'loadDevice': LoadDevice,
     'pushTransaction': PushTransaction,
     'requestLogin': RequestLogin,
     'resetDevice': ResetDevice,

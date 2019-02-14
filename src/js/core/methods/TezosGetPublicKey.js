@@ -2,16 +2,16 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
+import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { UiPromiseResponse } from 'flowtype';
 import type { TezosPublicKey } from '../../types/trezor';
 import type { TezosPublicKey as TezosPublicKeyResponse } from '../../types/tezos';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 type Batch = {
     path: Array<number>,
@@ -31,7 +31,7 @@ export default class TezosGetPublicKey extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['0', '2.0.8'];
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Tezos'), this.firmwareRange);
         this.info = 'Export Tezos public key';
 
         const payload: Object = message.payload;

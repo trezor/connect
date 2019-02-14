@@ -31,6 +31,7 @@ export const ethereumVerifyMessage = (): TestFunction => {
 
     return {
         testName,
+        mnemonic: 'mnemonic_12',
         testPayloads,
         expectedResponses,
     };

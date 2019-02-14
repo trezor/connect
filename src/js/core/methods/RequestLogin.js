@@ -2,16 +2,15 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import DataManager from '../../data/DataManager';
 
-import type { UiPromiseResponse } from 'flowtype';
-import type { Identity, SignedIdentity } from '../../types/trezor';
 import type { ConnectSettings } from '../../data/ConnectSettings';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse } from '../../types';
+import type { Identity, SignedIdentity } from '../../types/trezor';
 import type { RequestLogin$ } from '../../types/response';
 
 type Params = {
@@ -27,6 +26,7 @@ export default class RequestLogin extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
+        this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Login';
         this.useEmptyPassphrase = true;
 

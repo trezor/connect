@@ -44,6 +44,13 @@ export type Config = {
     +resources: Resources,
     +assets: Array<Asset>,
     +supportedBrowsers: { [key: string]: Browser },
+    +supportedFirmware: Array<{|
+        +coinType?: string,
+        +coin?: string,
+        +excludedMethods?: Array<string>,
+        +min?: Array<string>,
+        +max?: Array<string>,
+    |}>,
 }
 
 type AssetCollection = { [key: string]: JSON };
@@ -149,11 +156,6 @@ export default class DataManager {
 
     static getConfig(): Config {
         return this.config;
-    }
-
-    static isExcludedDevice(path: string): boolean {
-        // $FlowIssue: settings.excludedDevices field is intentionally not defined in flowtype. it's used only in tests to exclude debug-link device.
-        return Array.isArray(this.settings.excludedDevices) ? this.settings.excludedDevices.indexOf(path) >= 0 : false;
     }
 
     static getLatestBridgeVersion(): JSON {

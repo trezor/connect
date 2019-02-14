@@ -7,11 +7,12 @@ import randombytes from 'randombytes';
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as hdnodeUtils from '../utils/hdnode';
 import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType } from '../utils/pathUtils';
+import { resolveAfter } from '../utils/promiseUtils';
 import Device from './Device';
 
 import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
-import type { CoinInfo } from 'flowtype';
+import type { BitcoinNetworkInfo } from '../types';
 import type { Transport } from 'trezor-link';
 import * as trezor from '../types/trezor'; // flowtype
 
@@ -107,7 +108,7 @@ export default class DeviceCommands {
     // Validation of xpub
     async getHDNode(
         path: Array<number>,
-        coinInfo: ?CoinInfo
+        coinInfo: ?BitcoinNetworkInfo
     ): Promise<trezor.HDNodeResponse> {
         if (!this.device.atLeast(['1.7.2', '2.0.10'])) {
             return await this.getBitcoinHDNode(path, coinInfo);
@@ -164,7 +165,7 @@ export default class DeviceCommands {
     // old firmware didn't return keys with proper prefix (ypub, Ltub.. and so on)
     async getBitcoinHDNode(
         path: Array<number>,
-        coinInfo?: ?CoinInfo
+        coinInfo?: ?BitcoinNetworkInfo
     ): Promise<trezor.HDNodeResponse> {
         const suffix: number = 0;
         const childPath: Array<number> = path.concat([suffix]);
@@ -202,7 +203,7 @@ export default class DeviceCommands {
         return state;
     }
 
-    async getAddress(address_n: Array<number>, coinInfo: CoinInfo, showOnTrezor: boolean): Promise<trezor.Address> {
+    async getAddress(address_n: Array<number>, coinInfo: BitcoinNetworkInfo, showOnTrezor: boolean): Promise<trezor.Address> {
         const scriptType: ?string = getScriptType(address_n);
         const response: Object = await this.typedCall('GetAddress', 'Address', {
             address_n,
@@ -472,6 +473,11 @@ export default class DeviceCommands {
         return response.message;
     }
 
+    async load(flags?: trezor.LoadDeviceFlags): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('LoadDevice', 'Success', flags);
+        return response.message;
+    }
+
     // Sends an async message to the opened device.
     async call(type: string, msg: Object = {}): Promise<DefaultMessageResponse> {
         const logMessage: Object = filterForLog(type, msg);
@@ -481,7 +487,7 @@ export default class DeviceCommands {
         }
 
         try {
-            const res: DefaultMessageResponse = await this.transport.call(this.sessionId, type, msg);
+            const res: DefaultMessageResponse = await this.transport.call(this.sessionId, type, msg, false);
             const logMessage = filterForLog(res.type, res.message);
             if (this.debug) {
                 console.log('[DeviceCommands] [call] Received', res.type, logMessage);
@@ -638,5 +644,34 @@ export default class DeviceCommands {
             reject(new Error('Word callback not configured'));
             // }
         });
+    }
+
+    // DebugLink messages
+
+    async debugLinkDecision(msg: any): Promise<void> {
+        const session = await this.transport.acquire({
+            path: this.device.originalDescriptor.path,
+            previous: this.device.originalDescriptor.debugSession,
+        }, true);
+        await resolveAfter(501, null); // wait for propagation from bridge
+
+        await this.transport.post(session, 'DebugLinkDecision', msg, true);
+        await this.transport.release(session, true, true);
+        this.device.originalDescriptor.debugSession = null; // make sure there are no leftovers
+        await resolveAfter(501, null); // wait for propagation from bridge
+    }
+
+    async debugLinkGetState(msg: any): Promise<trezor.DebugLinkState> {
+        const session = await this.transport.acquire({
+            path: this.device.originalDescriptor.path,
+            previous: this.device.originalDescriptor.debugSession,
+        }, true);
+        await resolveAfter(501, null); // wait for propagation from bridge
+
+        const response: MessageResponse<trezor.DebugLinkState> = await this.transport.call(session, 'DebugLinkGetState', {}, true);
+        assertType(response, 'DebugLinkState');
+        await this.transport.release(session, true, true);
+        await resolveAfter(501, null); // wait for propagation from bridge
+        return response.message;
     }
 }

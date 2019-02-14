@@ -12,6 +12,14 @@ declare module 'flowtype/tests/sign-transaction' {
         inputs: Array<TransactionInput>,
         outputs: Array<TransactionOutput>,
     };
+    
+    declare export type TestSignCPCTransactionPayload = {
+        method: string,
+        coin: string,
+        timestamp: number,
+        inputs: Array<TransactionInput>,
+        outputs: Array<TransactionOutput>,
+    };
 
     declare export type ExpectedSignTransactionResponse = {
         success?: boolean,

@@ -5,13 +5,12 @@ import AbstractMethod from './AbstractMethod';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 
-import type { UiPromiseResponse } from 'flowtype';
 import type { ResetDeviceFlags, Success } from '../../types/trezor';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse } from '../../types';
 
-export default class GetPublicKey extends AbstractMethod {
+export default class ResetDevice extends AbstractMethod {
     params: ResetDeviceFlags;
     confirmed: boolean = false;
 
@@ -21,6 +20,7 @@ export default class GetPublicKey extends AbstractMethod {
         this.allowDeviceMode = [ UI.INITIALIZE, UI.SEEDLESS ];
         this.useDeviceState = false;
         this.requiredPermissions = ['management'];
+        this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Setup device';
 
         const payload: Object = message.payload;

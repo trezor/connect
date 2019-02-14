@@ -2,7 +2,7 @@
 'use strict';
 
 import { xpubToHDNodeType } from '../../../utils/hdnode';
-import type { Network as BitcoinJsNetwork } from 'bitcoinjs-lib-zcash';
+import type { Network } from 'bitcoinjs-lib-zcash';
 
 export const fixPath = (utxo: any): any => {
     // make sure bip32 indices are unsigned
@@ -20,7 +20,7 @@ export const fixAmount = (utxo: any): any => {
     return utxo;
 };
 
-export const convertMultisigPubKey = (network: BitcoinJsNetwork, utxo: any): any => {
+export const convertMultisigPubKey = (network: Network, utxo: any): any => {
     if (utxo.multisig && utxo.multisig.pubkeys) {
         // convert xpubs to HDNodeTypes
         utxo.multisig.pubkeys.forEach(pk => {

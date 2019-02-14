@@ -1,14 +1,14 @@
 /* @flow */
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
+import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { UiPromiseResponse } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse } from '../../types';
 import type { CardanoAddress } from '../../types/cardano';
 
 type Batch = {
@@ -28,7 +28,7 @@ export default class CardanoGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['0', '2.0.11'];
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Cardano'), this.firmwareRange);
 
         // create a bundle with only one batch if bundle doesn't exists
         const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;

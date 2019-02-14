@@ -1,7 +1,7 @@
 /* @flow */
 
 import { showView } from './common';
-import type { UnexpectedDeviceMode } from '../../types/ui-request';
+import type { UnexpectedDeviceMode } from '../../types/uiRequest';
 
 export const firmwareNotSupported = (device: $PropertyType<UnexpectedDeviceMode, 'payload'>): void => {
     const view = showView('firmware-not-supported');

@@ -205,6 +205,7 @@ export const getAddress = (): TestFunction => {
 
     return {
         testName,
+        mnemonic: 'mnemonic_12',
         subtests: {
             ...availableSubtests,
         },

@@ -2,8 +2,8 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
-import { getCoinInfoByCurrency } from '../../data/CoinInfo';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
+import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
@@ -28,14 +28,15 @@ import type {
     BuildTxInput,
 } from 'hd-wallet';
 
-import type { CoinInfo } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 
 type Params = {
     inputs: Array<TransactionInput>,
     hdInputs: Array<BuildTxInput>,
     outputs: Array<TransactionOutput>,
-    coinInfo: CoinInfo,
+    locktime: ?number,
+    timestamp: ?number,
+    coinInfo: BitcoinNetworkInfo,
     push: boolean,
 }
 
@@ -54,16 +55,18 @@ export default class SignTransaction extends AbstractMethod {
         validateParams(payload, [
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
+            { name: 'locktime', type: 'number' },
+            { name: 'timestamp', type: 'number' },
             { name: 'coin', type: 'string', obligatory: true },
             { name: 'push', type: 'boolean' },
         ]);
 
-        const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
+        const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         } else {
             // set required firmware from coinInfo support
-            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+            this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
             this.info = getLabel('Sign #NETWORK transaction', coinInfo);
         }
 
@@ -92,9 +95,16 @@ export default class SignTransaction extends AbstractMethod {
             inputs,
             hdInputs,
             outputs: payload.outputs,
+            locktime: payload.locktime,
+            timestamp: payload.timestamp,
             coinInfo,
             push: payload.hasOwnProperty('push') ? payload.push : false,
         };
+
+        if (coinInfo.hasTimestamp && !payload.hasOwnProperty('timestamp')) {
+            const d = new Date();
+            this.params.timestamp = Math.round(d.getTime() / 1000);
+        }
     }
 
     async run(): Promise<SignedTx> {
@@ -109,6 +119,8 @@ export default class SignTransaction extends AbstractMethod {
             this.params.outputs,
             refTxs,
             this.params.coinInfo,
+            this.params.locktime,
+            this.params.timestamp,
         );
 
         if (this.params.push) {

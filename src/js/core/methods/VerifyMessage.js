@@ -2,20 +2,19 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
-import { getCoinInfoByCurrency } from '../../data/CoinInfo';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
+import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
 import type { Success } from '../../types/trezor';
-import type { CoinInfo } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 
 type Params = {
     address: string,
     signature: string,
     message: string,
-    coinInfo: CoinInfo,
+    coinInfo: BitcoinNetworkInfo,
 }
 
 export default class VerifyMessage extends AbstractMethod {
@@ -37,12 +36,12 @@ export default class VerifyMessage extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
-        const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
+        const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         } else {
             // check required firmware with coinInfo support
-            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+            this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
             this.info = getLabel('Verify #NETWORK message', coinInfo);
         }
         // TODO: check if message is already a hex

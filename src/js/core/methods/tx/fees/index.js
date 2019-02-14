@@ -9,8 +9,8 @@ import BlockBook from '../../../../backend';
 // import {getCoinInfo, waitForCoinInfo} from '../../../common/CoinInfo';
 // import * as ang from '../../../angularHelper';
 
-import type { CoinInfo } from 'flowtype';
-import type { FeeLevel, FeeLevelInfo } from 'flowtype/fee';
+import type { BitcoinNetworkInfo } from '../../../../types';
+import type { FeeLevel, FeeLevelInfo } from '../../../../types/fee';
 
 type CustomFeeLevelInfo = {
     +type: 'custom',
@@ -30,7 +30,7 @@ export type CustomFeeLevel = {
 
 export type FeeHandler = {
     refresh(backend: BlockBook): Promise<any>,
-    detectWorking(backend: BlockBook, coinInfo: CoinInfo): Promise<boolean>, // should not reject
+    detectWorking(backend: BlockBook, coinInfo: BitcoinNetworkInfo): Promise<boolean>, // should not reject
     getFeeList(): $ReadOnlyArray<FeeLevel>,
     getFee(level: FeeLevelInfo): number,
     getBlocks(fee: number): ?number,
@@ -44,7 +44,7 @@ const handlers: Array<FeeHandler> = [
     preloadedHandler,
 ];
 
-const findWorkingHandler = async (backend: BlockBook, coinInfo: CoinInfo): Promise<FeeHandler> => {
+const findWorkingHandler = async (backend: BlockBook, coinInfo: BitcoinNetworkInfo): Promise<FeeHandler> => {
     for (const handler of handlers) {
         if (await handler.detectWorking(backend, coinInfo)) {
             handler.getFeeList().forEach(level => {
@@ -56,7 +56,7 @@ const findWorkingHandler = async (backend: BlockBook, coinInfo: CoinInfo): Promi
     throw new Error('No handler working');
 };
 
-export const init = async (backend: BlockBook, coinInfo: CoinInfo): Promise<void> => {
+export const init = async (backend: BlockBook, coinInfo: BitcoinNetworkInfo): Promise<void> => {
     feeHandler = await findWorkingHandler(backend, coinInfo);
 
     // TODO: remove interval
@@ -78,7 +78,7 @@ export const getFeeLevels = (): $ReadOnlyArray<FeeLevel> => {
 };
 // bad
 
-export const getActualFee = (level: FeeLevel, coinInfo: CoinInfo): number => {
+export const getActualFee = (level: FeeLevel, coinInfo: BitcoinNetworkInfo): number => {
     if (feeHandler == null) {
         throw new Error('No fee hander');
     }

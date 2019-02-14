@@ -4,8 +4,8 @@
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import * as UI from '../../constants/ui';
-import { getCoinInfoByCurrency } from '../../data/CoinInfo';
-import { validateParams } from './helpers/paramsValidator';
+import { getBitcoinNetwork } from '../../data/CoinInfo';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { resolveAfter } from '../../utils/promiseUtils';
 import { formatAmount } from '../../utils/formatUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
@@ -24,8 +24,7 @@ import * as helper from './helpers/signtx';
 
 import { UiMessage } from '../../message/builder';
 
-import type { CoinInfo, UiPromiseResponse } from 'flowtype';
-import type { CoreMessage } from '../../types';
+import type { CoreMessage, UiPromiseResponse, BitcoinNetworkInfo } from '../../types';
 import type { SignedTx } from '../../types/trezor';
 
 import type {
@@ -35,7 +34,7 @@ import type {
 
 type Params = {
     outputs: Array<BuildTxOutputRequest>,
-    coinInfo: CoinInfo,
+    coinInfo: BitcoinNetworkInfo,
     push: boolean,
 }
 
@@ -57,13 +56,13 @@ export default class ComposeTransaction extends AbstractMethod {
             { name: 'push', type: 'boolean' },
         ]);
 
-        const coinInfo: ?CoinInfo = getCoinInfoByCurrency(payload.coin);
+        const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         }
 
         // set required firmware from coinInfo support
-        this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+        this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
 
         // validate each output and transform into hd-wallet format
         const outputs: Array<BuildTxOutputRequest> = [];
@@ -229,7 +228,7 @@ export default class ComposeTransaction extends AbstractMethod {
         const bjsRefTxs = await this.backend.loadTransactions(getReferencedTransactions(tx.transaction.inputs));
         const refTxs = transformReferencedTransactions(bjsRefTxs);
 
-        const coinInfo: CoinInfo = this.composer.account.coinInfo;
+        const coinInfo: BitcoinNetworkInfo = this.composer.account.coinInfo;
 
         const response = await helper.signTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),

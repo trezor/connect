@@ -24,6 +24,20 @@
                     "type": "uint32",
                     "name": "m",
                     "id": 3
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "HDNodeType",
+                    "name": "nodes",
+                    "id": 4
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 5
                 }
             ],
             "enums": [],
@@ -357,6 +371,20 @@
                     "type": "uint32",
                     "name": "version_group_id",
                     "id": 8
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "timestamp",
+                    "id": 9
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "branch_id",
+                    "id": 10
                 }
             ],
             "enums": [],
@@ -588,6 +616,20 @@
                             "type": "uint32",
                             "name": "version_group_id",
                             "id": 12
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "timestamp",
+                            "id": 13
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "branch_id",
+                            "id": 14
                         }
                     ],
                     "enums": [],
@@ -2115,6 +2157,978 @@
             "oneofs": {}
         },
         {
+            "name": "EosGetPublicKey",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EosPublicKey",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "wif_public_key",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "raw_public_key",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EosSignTx",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "chain_id",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosTxHeader",
+                    "name": "header",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "num_actions",
+                    "id": 4
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "EosTxHeader",
+                    "fields": [
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "expiration",
+                            "id": 1
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "ref_block_num",
+                            "id": 2
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "ref_block_prefix",
+                            "id": 3
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "max_net_usage_words",
+                            "id": 4
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "max_cpu_usage_ms",
+                            "id": 5
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "delay_sec",
+                            "id": 6
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EosTxActionRequest",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "data_size",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EosTxActionAck",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionCommon",
+                    "name": "common",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionTransfer",
+                    "name": "transfer",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionDelegate",
+                    "name": "delegate",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionUndelegate",
+                    "name": "undelegate",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionRefund",
+                    "name": "refund",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionBuyRam",
+                    "name": "buy_ram",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionBuyRamBytes",
+                    "name": "buy_ram_bytes",
+                    "id": 7
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionSellRam",
+                    "name": "sell_ram",
+                    "id": 8
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionVoteProducer",
+                    "name": "vote_producer",
+                    "id": 9
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionUpdateAuth",
+                    "name": "update_auth",
+                    "id": 10
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionDeleteAuth",
+                    "name": "delete_auth",
+                    "id": 11
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionLinkAuth",
+                    "name": "link_auth",
+                    "id": 12
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionUnlinkAuth",
+                    "name": "unlink_auth",
+                    "id": 13
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionNewAccount",
+                    "name": "new_account",
+                    "id": 14
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "EosActionUnknown",
+                    "name": "unknown",
+                    "id": 15
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "EosAsset",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "sint64",
+                            "name": "amount",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "symbol",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosPermissionLevel",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "actor",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "permission",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosAuthorizationKey",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "type",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "key",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "address_n",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "weight",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosAuthorizationAccount",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosPermissionLevel",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "weight",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosAuthorizationWait",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "wait_sec",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "weight",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosAuthorization",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "threshold",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "EosAuthorizationKey",
+                            "name": "keys",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "EosAuthorizationAccount",
+                            "name": "accounts",
+                            "id": 3
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "EosAuthorizationWait",
+                            "name": "waits",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionCommon",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "name",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "EosPermissionLevel",
+                            "name": "authorization",
+                            "id": 3
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionTransfer",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "sender",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "receiver",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAsset",
+                            "name": "quantity",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "memo",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionDelegate",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "sender",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "receiver",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAsset",
+                            "name": "net_quantity",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAsset",
+                            "name": "cpu_quantity",
+                            "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bool",
+                            "name": "transfer",
+                            "id": 5
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionUndelegate",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "sender",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "receiver",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAsset",
+                            "name": "net_quantity",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAsset",
+                            "name": "cpu_quantity",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionRefund",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "owner",
+                            "id": 1
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionBuyRam",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "payer",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "receiver",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAsset",
+                            "name": "quantity",
+                            "id": 3
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionBuyRamBytes",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "payer",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "receiver",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "bytes",
+                            "id": 3
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionSellRam",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "bytes",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionVoteProducer",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "voter",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "proxy",
+                            "id": 2
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "producers",
+                            "id": 3
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionUpdateAuth",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "permission",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "parent",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAuthorization",
+                            "name": "auth",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionDeleteAuth",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "permission",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionLinkAuth",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "code",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "type",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "requirement",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionUnlinkAuth",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "account",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "code",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "type",
+                            "id": 3
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionNewAccount",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "creator",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "name",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAuthorization",
+                            "name": "owner",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EosAuthorization",
+                            "name": "active",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EosActionUnknown",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "data_size",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "data_chunk",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EosSignedTx",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "signature_v",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature_r",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature_s",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EthereumGetPublicKey",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EthereumPublicKey",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "HDNodeType",
+                    "name": "node",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "xpub",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "EthereumGetAddress",
             "fields": [
                 {
@@ -2141,11 +3155,11 @@
             "name": "EthereumAddress",
             "fields": [
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
-                    "type": "bytes",
+                    "type": "string",
                     "name": "address",
-                    "id": 1
+                    "id": 2
                 }
             ],
             "enums": [],
@@ -2187,9 +3201,9 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bytes",
+                    "type": "string",
                     "name": "to",
-                    "id": 5
+                    "id": 11
                 },
                 {
                     "rule": "optional",
@@ -2296,7 +3310,7 @@
                     "id": 1
                 },
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
                     "type": "bytes",
                     "name": "message",
@@ -2315,15 +3329,15 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "address",
-                    "id": 1
+                    "name": "signature",
+                    "id": 2
                 },
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bytes",
-                    "name": "signature",
-                    "id": 2
+                    "type": "string",
+                    "name": "address",
+                    "id": 3
                 }
             ],
             "enums": [],
@@ -2338,13 +3352,6 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "address",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
                     "name": "signature",
                     "id": 2
                 },
@@ -2354,6 +3361,13 @@
                     "type": "bytes",
                     "name": "message",
                     "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "address",
+                    "id": 4
                 }
             ],
             "enums": [],
@@ -3613,7 +4627,7 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "MoneroRctKey",
+                            "type": "MoneroRctKeyPublic",
                             "name": "key",
                             "id": 2
                         }
@@ -3621,7 +4635,7 @@
                     "enums": [],
                     "messages": [
                         {
-                            "name": "MoneroRctKey",
+                            "name": "MoneroRctKeyPublic",
                             "fields": [
                                 {
                                     "rule": "optional",
@@ -3634,7 +4648,7 @@
                                     "rule": "optional",
                                     "options": {},
                                     "type": "bytes",
-                                    "name": "mask",
+                                    "name": "commitment",
                                     "id": 2
                                 }
                             ],
@@ -3749,85 +4763,43 @@
                     "rule": "optional",
                     "options": {},
                     "type": "uint32",
-                    "name": "version",
+                    "name": "rsig_type",
                     "id": 1
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "uint32",
-                    "name": "rsig_type",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
                     "name": "offload_type",
-                    "id": 3
+                    "id": 2
                 },
                 {
                     "rule": "repeated",
                     "options": {},
                     "type": "uint64",
                     "name": "grouping",
-                    "id": 4
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "step",
-                    "id": 5
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint64",
-                    "name": "operation",
-                    "id": 6
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "seed",
-                    "id": 7
+                    "id": 3
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
                     "name": "mask",
-                    "id": 8
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "amount",
-                    "id": 9
+                    "id": 4
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
                     "name": "rsig",
-                    "id": 10
+                    "id": 5
                 },
                 {
                     "rule": "repeated",
                     "options": {},
                     "type": "bytes",
                     "name": "rsig_parts",
-                    "id": 11
-                },
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "MoneroTransactionDestinationEntry",
-                    "name": "outputs",
-                    "id": 12
+                    "id": 6
                 }
             ],
             "enums": [],
@@ -4051,37 +5023,16 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "bool",
-                            "name": "is_multisig",
-                            "id": 11
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "exp_tx_prefix_hash",
-                            "id": 12
-                        },
-                        {
-                            "rule": "repeated",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "use_tx_keys",
-                            "id": 13
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
                             "type": "MoneroTransactionRsigData",
                             "name": "rsig_data",
-                            "id": 14
+                            "id": 11
                         },
                         {
                             "rule": "repeated",
                             "options": {},
                             "type": "uint32",
                             "name": "integrated_indices",
-                            "id": 15
+                            "id": 12
                         }
                     ],
                     "enums": [],
@@ -4097,53 +5048,18 @@
             "name": "MoneroTransactionInitAck",
             "fields": [
                 {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "version",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "status",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "in_memory",
-                    "id": 3
-                },
-                {
                     "rule": "repeated",
                     "options": {},
                     "type": "bytes",
                     "name": "hmacs",
-                    "id": 4
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "many_inputs",
-                    "id": 5
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "many_outputs",
-                    "id": 6
+                    "id": 1
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "MoneroTransactionRsigData",
                     "name": "rsig_data",
-                    "id": 7
+                    "id": 2
                 }
             ],
             "enums": [],
@@ -4157,16 +5073,9 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "uint32",
-                    "name": "version",
-                    "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
                     "type": "MoneroTransactionSourceEntry",
                     "name": "src_entr",
-                    "id": 2
+                    "id": 1
                 }
             ],
             "enums": [],
@@ -4209,14 +5118,14 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "alpha_enc",
+                    "name": "pseudo_out_alpha",
                     "id": 5
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "spend_enc",
+                    "name": "spend_key",
                     "id": 6
                 }
             ],
@@ -4303,15 +5212,7 @@
         },
         {
             "name": "MoneroTransactionAllInputsSetRequest",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "MoneroTransactionRsigData",
-                    "name": "rsig_data",
-                    "id": 1
-                }
-            ],
+            "fields": [],
             "enums": [],
             "messages": [],
             "options": {},
@@ -4443,16 +5344,16 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "MoneroTransactionRsigData",
-                    "name": "rsig_data",
-                    "id": 3
+                    "type": "MoneroRingCtSig",
+                    "name": "rv",
+                    "id": 4
                 },
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "MoneroRingCtSig",
-                    "name": "rv",
-                    "id": 4
+                    "type": "bytes",
+                    "name": "full_message_hash",
+                    "id": 5
                 }
             ],
             "enums": [],
@@ -4488,30 +5389,6 @@
                     "oneofs": {}
                 }
             ],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "MoneroTransactionMlsagDoneRequest",
-            "fields": [],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "MoneroTransactionMlsagDoneAck",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "full_message_hash",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
             "options": {},
             "oneofs": {}
         },
@@ -4557,14 +5434,14 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "alpha_enc",
+                    "name": "pseudo_out_alpha",
                     "id": 6
                 },
                 {
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "spend_enc",
+                    "name": "spend_key",
                     "id": 7
                 }
             ],
@@ -4582,13 +5459,6 @@
                     "type": "bytes",
                     "name": "signature",
                     "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "cout",
-                    "id": 2
                 }
             ],
             "enums": [],
@@ -4798,13 +5668,6 @@
                             "rule": "optional",
                             "options": {},
                             "type": "bytes",
-                            "name": "tag",
-                            "id": 2
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
                             "name": "blob",
                             "id": 3
                         }
@@ -4837,6 +5700,215 @@
                     "id": 1
                 }
             ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroGetTxKeyRequest",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "network_type",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "salt1",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "salt2",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "tx_enc_keys",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "tx_prefix_hash",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "reason",
+                    "id": 7
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "view_public_key",
+                    "id": 8
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroGetTxKeyAck",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "salt",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "tx_keys",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "tx_derivations",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroLiveRefreshStartRequest",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "network_type",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroLiveRefreshStartAck",
+            "fields": [],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroLiveRefreshStepRequest",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "out_key",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "recv_deriv",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "real_out_idx",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "sub_addr_major",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "sub_addr_minor",
+                    "id": 5
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroLiveRefreshStepAck",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "salt",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "key_image",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroLiveRefreshFinalRequest",
+            "fields": [],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "MoneroLiveRefreshFinalAck",
+            "fields": [],
             "enums": [],
             "messages": [],
             "options": {},
@@ -6259,6 +7331,13 @@
                             "type": "string",
                             "name": "destination",
                             "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "destination_tag",
+                            "id": 3
                         }
                     ],
                     "enums": [],
@@ -8422,6 +9501,14 @@
                     "id": 113
                 },
                 {
+                    "name": "MessageType_EthereumGetPublicKey",
+                    "id": 450
+                },
+                {
+                    "name": "MessageType_EthereumPublicKey",
+                    "id": 451
+                },
+                {
                     "name": "MessageType_EthereumGetAddress",
                     "id": 56
                 },
@@ -8770,28 +9857,20 @@
                     "id": 514
                 },
                 {
-                    "name": "MessageType_MoneroTransactionMlsagDoneRequest",
+                    "name": "MessageType_MoneroTransactionSignInputRequest",
                     "id": 515
                 },
                 {
-                    "name": "MessageType_MoneroTransactionMlsagDoneAck",
+                    "name": "MessageType_MoneroTransactionSignInputAck",
                     "id": 516
                 },
                 {
-                    "name": "MessageType_MoneroTransactionSignInputRequest",
+                    "name": "MessageType_MoneroTransactionFinalRequest",
                     "id": 517
                 },
                 {
-                    "name": "MessageType_MoneroTransactionSignInputAck",
-                    "id": 518
-                },
-                {
-                    "name": "MessageType_MoneroTransactionFinalRequest",
-                    "id": 519
-                },
-                {
                     "name": "MessageType_MoneroTransactionFinalAck",
-                    "id": 520
+                    "id": 518
                 },
                 {
                     "name": "MessageType_MoneroKeyImageExportInitRequest",
@@ -8840,6 +9919,62 @@
                 {
                     "name": "MessageType_DebugMoneroDiagAck",
                     "id": 547
+                },
+                {
+                    "name": "MessageType_MoneroGetTxKeyRequest",
+                    "id": 550
+                },
+                {
+                    "name": "MessageType_MoneroGetTxKeyAck",
+                    "id": 551
+                },
+                {
+                    "name": "MessageType_MoneroLiveRefreshStartRequest",
+                    "id": 552
+                },
+                {
+                    "name": "MessageType_MoneroLiveRefreshStartAck",
+                    "id": 553
+                },
+                {
+                    "name": "MessageType_MoneroLiveRefreshStepRequest",
+                    "id": 554
+                },
+                {
+                    "name": "MessageType_MoneroLiveRefreshStepAck",
+                    "id": 555
+                },
+                {
+                    "name": "MessageType_MoneroLiveRefreshFinalRequest",
+                    "id": 556
+                },
+                {
+                    "name": "MessageType_MoneroLiveRefreshFinalAck",
+                    "id": 557
+                },
+                {
+                    "name": "MessageType_EosGetPublicKey",
+                    "id": 600
+                },
+                {
+                    "name": "MessageType_EosPublicKey",
+                    "id": 601
+                },
+                {
+                    "name": "MessageType_EosSignTx",
+                    "id": 602
+                },
+                {
+                    "name": "MessageType_EosTxActionRequest",
+                    "id": 603
+                },
+                {
+                    "name": "MessageType_EosTxActionAck",
+                    "id": 604
+                },
+                {
+                    "name": "MessageType_EosSignedTx",
+                    "id": 605
                 }
             ],
             "options": {}

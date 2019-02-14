@@ -2,14 +2,13 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
 import { toChecksumAddress, getNetworkLabel, messageToHex } from '../../utils/ethereumUtils';
 
 import type { MessageSignature } from '../../types/trezor';
-import type { CoreMessage } from '../../types';
-import type { EthereumNetworkInfo } from 'flowtype';
+import type { CoreMessage, EthereumNetworkInfo } from '../../types';
 
 type Params = {
     path: Array<number>,
@@ -24,7 +23,6 @@ export default class EthereumSignMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        // this.requiredFirmware = ['1.6.2', '2.0.7'];
 
         const payload: Object = message.payload;
 
@@ -37,6 +35,7 @@ export default class EthereumSignMessage extends AbstractMethod {
 
         const path: Array<number> = validatePath(payload.path, 3);
         const network: ?EthereumNetworkInfo = getEthereumNetwork(path);
+        this.firmwareRange = getFirmwareRange(this.name, network, this.firmwareRange);
 
         this.info = getNetworkLabel('Sign #NETWORK message', network);
 

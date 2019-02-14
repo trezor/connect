@@ -152,6 +152,7 @@ export type RefTransaction = {
     bin_outputs: Array<TransactionBinOutput>,
     lock_time: number,
     extra_data: ?string,
+    timestamp: ?number,
 };
 
 export type TxRequestDetails = {
@@ -663,20 +664,6 @@ export type RippleSignedTx = {
     serialized_tx: string,
 }
 
-// GetAccountInfo response
-export type AccountInfo = {
-    id: number,
-    path: Array<number>,
-    serializedPath: string,
-    xpub: string,
-    address: string,
-    addressIndex: number,
-    addressPath: Array<number>,
-    addressSerializedPath: string,
-    balance: number,
-    confirmed: number,
-}
-
 // GetAddress response
 export type Address = {
     address: string,
@@ -695,4 +682,35 @@ export type ResetDeviceFlags = {
     u2f_counter?: number,
     skip_backup?: boolean,
     no_backup?: boolean,
+}
+
+export type DebugLinkDecision = {
+    yes_no?: boolean,
+    up_down?: boolean,
+    input?: string,
+}
+
+export type DebugLinkState = {
+    layout: string,
+    pin: string,
+    matrix: string,
+    mnemonic: string,
+    node: HDNode,
+    passphrase_protection: boolean,
+    reset_word: string,
+    reset_entropy: string,
+    recovery_fake_word: string,
+    recovery_word_pos: number,
+    reset_word_pos: number,
+}
+
+export type LoadDeviceFlags = {
+    mnemonic?: string,
+    node?: HDNode,
+    pin?: string,
+    passphrase_protection?: boolean,
+    language?: string,
+    label?: string,
+    skip_checksum?: boolean,
+    u2f_counter?: number,
 }

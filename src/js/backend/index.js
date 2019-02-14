@@ -3,7 +3,7 @@
 
 import BlockBook from './BlockBook';
 
-import type { CoinInfo, EthereumNetworkInfo } from 'flowtype';
+import type { BitcoinNetworkInfo, EthereumNetworkInfo } from '../types';
 
 const instances: Array<BlockBook> = [];
 
@@ -27,7 +27,7 @@ export const find = (name: string): ?BlockBook => {
     return null;
 };
 
-export const createFromCoinInfo = async (coinInfo: CoinInfo | EthereumNetworkInfo): Promise<BlockBook> => {
+export const create = async (coinInfo: BitcoinNetworkInfo | EthereumNetworkInfo): Promise<BlockBook> => {
     let backend: ?BlockBook = find(coinInfo.name);
     if (!backend) {
         backend = new BlockBook({ urls: [ ...coinInfo.blockbook, ...coinInfo.bitcore ], coinInfo });
@@ -40,10 +40,6 @@ export const createFromCoinInfo = async (coinInfo: CoinInfo | EthereumNetworkInf
         instances.push(backend);
     }
     return backend;
-};
-
-export const create = async (coinInfo: CoinInfo | EthereumNetworkInfo): Promise<BlockBook> => {
-    return await createFromCoinInfo(coinInfo);
 };
 
 export default BlockBook;
