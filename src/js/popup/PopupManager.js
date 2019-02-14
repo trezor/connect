@@ -11,7 +11,7 @@ import { getOrigin } from '../utils/networkUtils';
 import { create as createDeferred } from '../utils/deferred';
 
 // const POPUP_REQUEST_TIMEOUT: number = 602;
-const POPUP_REQUEST_TIMEOUT: number = 999;
+const POPUP_REQUEST_TIMEOUT: number = 850;
 const POPUP_CLOSE_INTERVAL: number = 500;
 const POPUP_OPEN_TIMEOUT: number = 2000;
 
