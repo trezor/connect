@@ -14,7 +14,6 @@ export const cardanoSignTransaction = (): TestFunction => {
         {
             prev_hash: '1af8fa0b754ff99253d983894e63a2b09cbb56c833ba18c3384210163f63dcfc',
             path: "m/44'/1815'/0'/0/1",
-            // address_n: [2147483692, 2147485463, 2147483648, 0, 1],
             prev_index: 0,
             type: 0,
         },
@@ -52,7 +51,7 @@ export const cardanoSignTransaction = (): TestFunction => {
 
     return {
         testName,
-        mnemonic: 'mnemonic_12',
+        mnemonic: 'mnemonic_all',
         testPayloads,
         expectedResponses,
     };

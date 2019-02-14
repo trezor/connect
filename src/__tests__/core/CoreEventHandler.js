@@ -198,6 +198,7 @@ export class CoreEventHandler {
                     method: 'debugLinkDecision',
                     device: event.payload.device,
                     yes_no: true,
+                    up_down: false,
                 },
             }, true);
         }
