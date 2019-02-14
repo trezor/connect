@@ -51,7 +51,7 @@
     "babel-loader": "^8.0.0",
     "bchaddrjs": "^0.2.1",
     "bip44-constants": "^5.0.0",
-    "bitcoinjs-lib-zcash": "https://github.com/karel-3d/bitcoinjs-lib",
+    "bitcoinjs-lib-zcash": "3.6.0",
     "bowser": "^1.9.3",
     "copy-webpack-plugin": "4.6.0",
     "css-loader": "^2.1.0",
