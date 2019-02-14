@@ -234,7 +234,7 @@
             "slip44": 289,
             "support": {
                 "connect": true,
-                "trezor1": "soon",
+                "trezor1": false,
                 "trezor2": "2.0.10",
                 "webwallet": false
             },

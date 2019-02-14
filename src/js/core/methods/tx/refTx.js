@@ -50,6 +50,7 @@ export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>
                 };
             }),
             extra_data: dataStr,
+            timestamp: tx.timestamp,
         };
     });
 };

@@ -47,6 +47,7 @@ signTransaction_subtests="oneOneFee oneTwoFee oneThreeFee twoTwo testnetOneTwoFe
 signTransactionSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
 signTransactionBgold_subtests="change noChange p2sh p2shWitnessChange sendMultisig1"
 signTransactionBcash_subtests="change noChange oldAddr"
+signTransactionCapricoin_subtests="signCPC oneTwoFee twoTwoFee notEnoughFunds feeTooHigh"
 signTransactionMultisig_subtests="twoOfThree fifteenOfFifteen missingPubkey"
 signTransactionMultisigChange_subtests="externalExternal externalInternal internalExternal multisigExternalExternal"
 

@@ -73,6 +73,7 @@ export type BitcoinNetworkInfo = {
     network: Network,
     zcash: boolean,
     isBitcoin: boolean,
+    hasTimestamp: boolean,
     minFee: number,
     maxFee: number,
     // used in backend
