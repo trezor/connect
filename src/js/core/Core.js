@@ -906,6 +906,7 @@ export class Core extends EventEmitter {
         if (_deviceList) {
             _deviceList.onBeforeUnload();
         }
+        this.removeAllListeners();
     }
 
     getCurrentMethod(): Array<AbstractMethod> {
