@@ -3,7 +3,7 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getSerializedPath } from '../../utils/pathUtils';
-import { toChecksumAddress, getNetworkLabel, stripHexPrefix } from '../../utils/ethereumUtils';
+import { getNetworkLabel, stripHexPrefix } from '../../utils/ethereumUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
 import { uniq } from 'lodash';
 
@@ -139,7 +139,7 @@ export default class EthereumGetAddress extends AbstractMethod {
                         throw new Error('Addresses do not match');
                     }
                 } else {
-                    batch.address = toChecksumAddress(silent.address, batch.network);
+                    batch.address = silent.address;
                 }
             }
 
@@ -148,7 +148,6 @@ export default class EthereumGetAddress extends AbstractMethod {
                 batch.showOnTrezor
             );
 
-            response.address = toChecksumAddress(response.address, batch.network);
             responses.push({
                 address: response.address,
                 path: batch.path,

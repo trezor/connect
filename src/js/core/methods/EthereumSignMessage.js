@@ -5,7 +5,7 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
-import { toChecksumAddress, getNetworkLabel, messageToHex } from '../../utils/ethereumUtils';
+import { getNetworkLabel, messageToHex } from '../../utils/ethereumUtils';
 
 import type { MessageSignature } from '../../types/trezor';
 import type { CoreMessage, EthereumNetworkInfo } from '../../types';
@@ -52,7 +52,6 @@ export default class EthereumSignMessage extends AbstractMethod {
             this.params.path,
             this.params.message
         );
-        response.address = toChecksumAddress(response.address, this.params.network);
         return response;
     }
 }
