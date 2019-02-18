@@ -29,8 +29,8 @@ build-connect:
 # Build test
 build-test:
 	make build-connect
-	sed -i '' -e 's/connect.trezor.io/sisyfos.trezor.io\/connect/g' ./build/js/iframe.*.js
-	rsync -avz --delete -e ssh ./build/* admin@dev.sldev.cz:~/sisyfos/www/connect
+	sed -i '' -e 's/connect.trezor.io/sisyfos.trezor.io\/connect/g' ./build/js/iframe.*.js 
+  	rsync -avz --delete -e ssh ./build/* admin@dev.sldev.cz:~/sisyfos/www/connect 
 
 # Version bump
 version-patch:

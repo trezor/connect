@@ -697,6 +697,23 @@ export type ResetDeviceFlags = {
     no_backup?: boolean,
 }
 
+export type FirmwareErase = {
+    length?: number,
+};
+
+export type FirmwareUpload = {
+    payload: Buffer,
+    hash?: string,
+}
+
+export type ChangePin = {
+    remove?: boolean,
+}
+
+export type Flags = {
+    flags: number,
+}
+
 export type DebugLinkDecision = {
     yes_no?: boolean,
     up_down?: boolean,

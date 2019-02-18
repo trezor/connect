@@ -25,7 +25,7 @@ export default class LoadDevice extends AbstractMethod {
         // validate bundle type
         validateParams(payload, [
             { name: 'mnemonic', type: 'string' },
-            { name: 'node', type: 'Object' },
+            { name: 'node', type: 'object' },
             { name: 'pin', type: 'string' },
             { name: 'passphraseProtection', type: 'boolean' },
             { name: 'language', type: 'string' },

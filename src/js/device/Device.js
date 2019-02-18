@@ -261,7 +261,7 @@ export default class Device extends EventEmitter {
         }
 
         // reload features
-        if (this.features && !this.features.bootloader_mode && this.features.initialized) {
+        if (this.features && !options.skipFinalReload) {
             await this.getFeatures();
         }
 
@@ -348,14 +348,17 @@ export default class Device extends EventEmitter {
         this.featuresTimestamp = new Date().getTime();
 
         const currentFW = [ this.features.major_version, this.features.minor_version, this.features.patch_version ];
-        this.firmwareStatus = checkFirmware(currentFW);
+        this.firmwareStatus = checkFirmware(currentFW, this.features);
         this.firmwareRelease = getLatestRelease(currentFW);
     }
 
     async getFeatures(): Promise<void> {
         const { message }: { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
         this.features = message;
-        this.firmwareStatus = checkFirmware([ this.features.major_version, this.features.minor_version, this.features.patch_version ]);
+        this.firmwareStatus = checkFirmware(
+            [ this.features.major_version, this.features.minor_version, this.features.patch_version ],
+            this.features,
+        );
     }
 
     getState(): ?string {
@@ -518,13 +521,13 @@ export default class Device extends EventEmitter {
 
     hasUnexpectedMode(allow: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) {
         if (this.features) {
-            if (this.isBootloader() && allow.indexOf(UI.BOOTLOADER) < 0) {
+            if (this.isBootloader() && !allow.includes(UI.BOOTLOADER)) {
                 return UI.BOOTLOADER;
             }
-            if (!this.isInitialized() && allow.indexOf(UI.INITIALIZE) < 0) {
+            if (!this.isInitialized() && !allow.includes(UI.INITIALIZE)) {
                 return UI.INITIALIZE;
             }
-            if (this.isSeedless() && allow.indexOf(UI.SEEDLESS) < 0) {
+            if (this.isSeedless() && !allow.includes(UI.SEEDLESS)) {
                 return UI.SEEDLESS;
             }
         }

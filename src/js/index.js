@@ -502,6 +502,34 @@ class TrezorConnect {
         return await call({ method: 'wipeDevice', ...params });
     }
 
+    static applyFlags: $T.ApplyFlags = async (params) => {
+        return await call({ method: 'applyFlags', ...params });
+    }
+
+    static applySettings: $T.ApplySettings = async (params) => {
+        return await call({ method: 'applySettings', ...params });
+    }
+
+    static backupDevice: $T.BackupDevice = async () => {
+        return await call({ method: 'backupDevice' });
+    }
+
+    static changePin: $T.ChangePin = async () => {
+        return await call({ method: 'changePin' });
+    }
+
+    static firmwareErase: $T.FirmwareErase = async (params) => {
+        return await call({ method: 'firmwareErase', ...params });
+    }
+
+    static firmwareUpload: $T.FirmwareUpload = async (params) => {
+        return await call({ method: 'firmwareUpload', ...params });
+    }
+
+    static recoveryDevice: $T.RecoveryDevice = async (params) => {
+        return await call({ method: 'recoveryDevice', ...params });
+    }
+
     static dispose = (): void => {
         iframe.dispose();
         if (_popupManager) {
@@ -531,6 +559,7 @@ export {
     DEVICE_EVENT,
     TRANSPORT_EVENT,
     BLOCKCHAIN_EVENT,
+    RESPONSE_EVENT,
 };
 
 export type {

@@ -51,7 +51,8 @@ export type DeviceMessage = {
         typeof UI.INVALID_PIN |
         typeof UI.REQUEST_PASSPHRASE_ON_DEVICE |
         typeof UI.REQUEST_PASSPHRASE |
-        typeof UI.INVALID_PASSPHRASE,
+        typeof UI.INVALID_PASSPHRASE |
+        typeof UI.REQUEST_WORD,
     payload: {
         device: Device,
     },
