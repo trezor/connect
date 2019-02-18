@@ -264,9 +264,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         // transport is missing try to initialize it once again
         // eslint-disable-next-line no-use-before-define
         await initTransport(DataManager.getSettings());
-    } else if (_deviceList) {
-        // restore default messages
-        await _deviceList.reconfigure();
     }
 
     const responseID: number = message.id;
@@ -357,6 +354,12 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     method.device = device;
     method.devicePath = device.getDevicePath();
+
+    if (_deviceList) {
+        // restore default messages
+        const messages = DataManager.findMessages(device.isT1() ? 0 : 1, device.getVersion());
+        await _deviceList.reconfigure(messages);
+    }
 
     // method is a debug link message
     if (method.debugLink) {
@@ -553,7 +556,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 // for CustomMessage method reconfigure transport with custom messages definitions
                 const customMessages = method.getCustomMessages();
                 if (_deviceList && customMessages) {
-                    await _deviceList.reconfigure(customMessages);
+                    await _deviceList.reconfigure(customMessages, true);
                 }
                 const response: Object = await method.run();
                 messageResponse = new ResponseMessage(method.responseID, true, response);
@@ -613,7 +616,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         if (method) { method.dispose(); }
 
         // restore default messages
-        if (_deviceList) { await _deviceList.reconfigure(); }
+        if (_deviceList) { await _deviceList.restoreMessages(); }
 
         if (messageResponse) {
             postMessage(messageResponse);

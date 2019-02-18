@@ -53,6 +53,7 @@ export default class DeviceList extends EventEmitter {
     creatingDevicesDescriptors: {[k: string]: DeviceDescriptor} = {};
 
     defaultMessages: JSON;
+    currentMessages: JSON;
     hasCustomMessages: boolean = false;
     transportStartPending: boolean;
 
@@ -121,27 +122,29 @@ export default class DeviceList extends EventEmitter {
     async _configTransport(transport: Transport): Promise<void> {
         try {
             this.defaultMessages = DataManager.getMessages();
+            this.currentMessages = this.defaultMessages;
             await transport.configure(JSON.stringify(this.defaultMessages));
         } catch (error) {
             throw ERROR.WRONG_TRANSPORT_CONFIG;
         }
     }
 
-    async reconfigure(json?: JSON): Promise<void> {
+    async reconfigure(json: JSON, custom?: boolean): Promise<void> {
+        if (this.currentMessages === json) return;
         try {
-            let config: string;
-            if (!json) {
-                if (!this.hasCustomMessages) {
-                    return;
-                }
-                // back to default messages
-                config = JSON.stringify(this.defaultMessages);
-            } else {
-                // custom messages as JSON
-                config = JSON.stringify(json);
-            }
-            await this.transport.configure(config);
-            this.hasCustomMessages = !!(json);
+            await this.transport.configure(JSON.stringify(json));
+            this.currentMessages = json;
+            this.hasCustomMessages = typeof custom === 'boolean' ? custom : false;
+        } catch (error) {
+            throw ERROR.WRONG_TRANSPORT_CONFIG;
+        }
+    }
+
+    async restoreMessages(): Promise<void> {
+        if (!this.hasCustomMessages) return;
+        try {
+            await this.transport.configure(JSON.stringify(this.defaultMessages));
+            this.hasCustomMessages = false;
         } catch (error) {
             throw ERROR.WRONG_TRANSPORT_CONFIG;
         }
