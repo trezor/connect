@@ -5,6 +5,7 @@ let currentSuite: string = '';
 
 export const settings = {
     configSrc: 'base/src/__tests__/config.json', // constant
+    version: '0',
     debug: __karma__.config.printDebug === 'true',
     origin: 'localhost',
     priority: 0,
@@ -19,6 +20,9 @@ export const settings = {
     pendingTransportEvent: true,
     supportedBrowser: true,
     extension: null,
+    manifest: {
+        email: 'test@satoshilabs.com',
+    },
 };
 
 export const testReporter: Reporter = {
