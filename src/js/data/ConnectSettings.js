@@ -2,6 +2,7 @@
 
 export type ConnectManifest = {
     +email: string,
+    +appUrl: string,
 }
 
 export type ConnectSettings = {
@@ -64,8 +65,12 @@ const parseManifest = (manifest: Object): ?ConnectManifest => {
     if (typeof manifest.email !== 'string') {
         return null;
     }
+    if (typeof manifest.appUrl !== 'string') {
+        return null;
+    }
     return {
         email: manifest.email,
+        appUrl: manifest.appUrl,
     };
 };
 

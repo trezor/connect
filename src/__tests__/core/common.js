@@ -22,6 +22,7 @@ export const settings = {
     extension: null,
     manifest: {
         email: 'test@satoshilabs.com',
+        appUrl: 'test@satoshilabs.com',
     },
 };
 
