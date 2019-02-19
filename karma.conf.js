@@ -3,7 +3,7 @@
 import path from 'path';
 import webpackConfig from './webpack/config.karma.babel';
 
-module.exports = function(config) {
+module.exports = function (config) {
     config.set({
         browserNoActivityTimeout: 1000000,
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -17,7 +17,6 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
 
-
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
@@ -27,27 +26,28 @@ module.exports = function(config) {
         babelPreprocessor: {
             options: {
                 presets: ['env'],
-                sourceMap: 'inline'
+                sourceMap: 'inline',
             },
             filename: function (file) {
                 return file.originalPath.replace(/\.js$/, '.es5.js');
             },
             sourceFileName: function (file) {
                 return file.originalPath;
-            }
+            },
         },
 
         files: [
             // 'src/flowtype/empty.js',
             // 'src/js/core/Core.js',
-            //'node_modules/babel-polyfill/browser.js',
+            // 'node_modules/babel-polyfill/browser.js',
             'src/__tests__/core/core.test.js',
             { pattern: 'src/__tests__/config.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/coins.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/bridge/releases.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/firmware/1/releases.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/firmware/2/releases.json', included: false, served: true, nocache: true },
-            { pattern: 'src/data/messages.json', included: false, served: true, nocache: true },
+            { pattern: 'src/data/messages/messages.json', included: false, served: true, nocache: true },
+            { pattern: 'src/data/messages/messages-v6.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/bridge/latest.txt', included: false, served: true, nocache: true },
         ],
 
@@ -62,7 +62,6 @@ module.exports = function(config) {
 
         // web server port
 
-
         // enable / disable colors in the output (reporters and logs)
         colors: true,
 
@@ -75,10 +74,10 @@ module.exports = function(config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        //browsers: ['chrome_without_security'],
-        //browsers: ['ChromeCanary'],
+        // browsers: ['chrome_without_security'],
+        // browsers: ['ChromeCanary'],
         browsers: ['Chrome'],
-        //browsers: ['Firefox'],
+        // browsers: ['Firefox'],
 
         // customLaunchers: {
         //     chrome_without_security: {
@@ -117,4 +116,4 @@ module.exports = function(config) {
         },
         webpack: webpackConfig,
     });
-}
+};
