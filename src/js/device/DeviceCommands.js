@@ -257,15 +257,33 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    async ethereumGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.EthereumPublicKey> {
+    async ethereumGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.HDNodeResponse> {
         if (!this.device.atLeast(['1.8.0', '2.0.11'])) {
             return await this.getHDNode(address_n);
         }
-        const response: MessageResponse<trezor.EthereumPublicKey> = await this.typedCall('EthereumGetPublicKey', 'EthereumPublicKey', {
+
+        const suffix: number = 0;
+        const childPath: Array<number> = address_n.concat([suffix]);
+        const resKey: MessageResponse<trezor.PublicKey> = await this.typedCall('EthereumGetPublicKey', 'EthereumPublicKey', {
             address_n: address_n,
-            show_display: !!showOnTrezor,
+            show_display: false,
         });
-        return response.message;
+        const childKey: MessageResponse<trezor.PublicKey> = await this.typedCall('EthereumGetPublicKey', 'EthereumPublicKey', {
+            address_n: childPath,
+            show_display: false,
+        });
+        const publicKey: trezor.PublicKey = hdnodeUtils.xpubDerive(resKey.message, childKey.message, suffix);
+
+        return {
+            path: address_n,
+            serializedPath: getSerializedPath(address_n),
+            childNum: publicKey.node.child_num,
+            xpub: publicKey.xpub,
+            chainCode: publicKey.node.chain_code,
+            publicKey: publicKey.node.public_key,
+            fingerprint: publicKey.node.fingerprint,
+            depth: publicKey.node.depth,
+        };
     }
 
     async ethereumSignMessage(address_n: Array<number>, message: string): Promise<trezor.MessageSignature> {
