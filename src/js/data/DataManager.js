@@ -39,12 +39,21 @@ type Asset = {
     type?: string,
     url: string,
 }
+type ProtobufMessages = {
+    name: string,
+    range: {
+        min: Array<string>,
+        max?: Array<string>,
+    },
+    json: string,
+}
 export type Config = {
     +whitelist: Array<WhiteList>,
     +knownHosts: Array<KnownHost>,
     +webusb: Array<WebUSB>,
     +resources: Resources,
     +assets: Array<Asset>,
+    +messages: Array<ProtobufMessages>,
     +supportedBrowsers: { [key: string]: Browser },
     +supportedFirmware: Array<{|
         +coinType?: string,
@@ -67,6 +76,7 @@ export default class DataManager {
     static config: Config;
     static assets: AssetCollection = {};
     static settings: ConnectSettings;
+    static messages: { [key: string]: JSON } = {};
 
     static async load(settings: ConnectSettings): Promise<void> {
         const ts: number = new Date().getTime();
@@ -102,6 +112,11 @@ export default class DataManager {
                 this.assets[ asset.name ] = json;
             }
 
+            for (const protobuf of this.config.messages) {
+                const json: JSON = await httpRequest(`${protobuf.json}?r=${ ts }`, 'json');
+                this.messages[ protobuf.name ] = json;
+            }
+
             // hotfix webusb + chrome:72
             const browserName = bowser.name.toLowerCase();
             if (this.settings.popup && (browserName === 'chrome' || browserName === 'chromium')) {
@@ -124,8 +139,17 @@ export default class DataManager {
         }
     }
 
-    static getMessages(): JSON {
-        return this.assets['messages'];
+    static findMessages(model: number, fw: string): JSON {
+        const messages = this.config.messages.find(m => {
+            const min = m.range.min[model];
+            const max = m.range.max ? m.range.max[model] : fw;
+            return (semvercmp(fw, min) >= 0 && semvercmp(fw, max) <= 0);
+        });
+        return this.messages[messages ? messages.name : 'default'];
+    }
+
+    static getMessages(name?: string): JSON {
+        return this.messages[name || 'default'];
     }
 
     static isWhitelisted(origin: string): ?WhiteList {
