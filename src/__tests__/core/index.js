@@ -23,6 +23,7 @@ import { verifyMessage } from './verifyMessage.spec.js';
 import { verifyMessageSegwit } from './verifyMessageSegwit.spec.js';
 import { verifyMessageSegwitNative } from './verifyMessageSegwitNative.spec.js';
 import { ethereumGetAddress } from './ethereumGetAddress.spec.js';
+import { ethereumGetPublicKey } from './ethereumGetPublicKey.spec.js';
 import { ethereumSignMessage } from './ethereumSignMessage.spec.js';
 import { ethereumSignTransaction } from './ethereumSignTransaction.spec.js';
 import { ethereumVerifyMessage } from './ethereumVerifyMessage.spec.js';
@@ -63,6 +64,7 @@ export const testFunctions: AvailableTestFunctions = {
     verifyMessageSegwit,
     verifyMessageSegwitNative,
     ethereumGetAddress,
+    ethereumGetPublicKey,
     ethereumSignMessage,
     ethereumSignTransaction,
     ethereumVerifyMessage,
