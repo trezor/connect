@@ -298,8 +298,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         await getPopupPromise().promise;
         // show message about browser
         postMessage(new UiMessage(UI.BROWSER_NOT_SUPPORTED, browserState));
-        postMessage(new ResponseMessage(responseID, false, { error: ERROR.BROWSER.message }));
-        throw ERROR.BROWSER;
+        postMessage(new ResponseMessage(responseID, false, { error: ERROR.BROWSER_NOT_SUPPORTED.message }));
+        throw ERROR.BROWSER_NOT_SUPPORTED;
     } else if (browserState.outdated) {
         if (isUsingPopup) {
             // wait for popup handshake
