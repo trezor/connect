@@ -1,8 +1,8 @@
 /* @flow */
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
-import { validatePath, getSerializedPath } from '../../utils/pathUtils';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
+import { validatePath } from '../../utils/pathUtils';
 import { getNetworkLabel } from '../../utils/ethereumUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
 import { uniq } from 'lodash';
@@ -10,10 +10,8 @@ import { uniq } from 'lodash';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { UiPromiseResponse } from 'flowtype';
-import type { CoreMessage } from '../../types';
-import type { EthereumNetworkInfo } from 'flowtype';
-import type { CardanoPublicKey as CardanoPublicKeyResponse } from '../../types/cardano';
+import type { CoreMessage, UiPromiseResponse, EthereumNetworkInfo } from '../../types';
+import type { HDNodeResponse } from '../../types/trezor';
 
 type Batch = {
     path: Array<number>,
@@ -31,7 +29,6 @@ export default class EthereumGetPublicKey extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['1.8.0', '2.0.11'];
 
         // create a bundle with only one batch if bundle doesn't exists
         const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
@@ -51,6 +48,7 @@ export default class EthereumGetPublicKey extends AbstractMethod {
 
             const path: Array<number> = validatePath(batch.path, 3);
             const network: ?EthereumNetworkInfo = getEthereumNetwork(path);
+            this.firmwareRange = getFirmwareRange(this.name, network, this.firmwareRange);
 
             let showOnTrezor: boolean = false;
             if (batch.hasOwnProperty('showOnTrezor')) {
@@ -68,14 +66,14 @@ export default class EthereumGetPublicKey extends AbstractMethod {
 
         // set info
         if (bundle.length === 1) {
-            this.info = getNetworkLabel('Export #NETWORK address', bundle[0].network);
+            this.info = getNetworkLabel('Export #NETWORK public key', bundle[0].network);
         } else {
             const requestedNetworks: Array<?EthereumNetworkInfo> = bundle.map(b => b.network);
             const uniqNetworks = uniq(requestedNetworks);
             if (uniqNetworks.length === 1 && uniqNetworks[0]) {
-                this.info = getNetworkLabel('Export multiple #NETWORK addresses', uniqNetworks[0]);
+                this.info = getNetworkLabel('Export multiple #NETWORK public keys', uniqNetworks[0]);
             } else {
-                this.info = 'Export multiple addresses';
+                this.info = 'Export multiple public keys';
             }
         }
     }
@@ -101,8 +99,8 @@ export default class EthereumGetPublicKey extends AbstractMethod {
         return this.confirmed;
     }
 
-    async run(): Promise<CardanoPublicKeyResponse | Array<CardanoPublicKeyResponse>> {
-        const responses: Array<CardanoPublicKeyResponse> = [];
+    async run(): Promise<HDNodeResponse | Array<HDNodeResponse>> {
+        const responses: Array<HDNodeResponse> = [];
         const bundledResponse = this.params.length > 1;
 
         for (let i = 0; i < this.params.length; i++) {
@@ -111,12 +109,7 @@ export default class EthereumGetPublicKey extends AbstractMethod {
                 batch.path,
                 batch.showOnTrezor
             );
-            responses.push({
-                path: batch.path,
-                serializedPath: getSerializedPath(batch.path),
-                publicKey: response.xpub,
-                node: response.node,
-            });
+            responses.push(response);
 
             if (bundledResponse) {
                 // send progress
