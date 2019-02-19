@@ -211,6 +211,10 @@ declare function F_EthereumGetAddress(params: (P.$Common & ETHEREUM.$EthereumGet
 declare function F_EthereumGetAddress(params: (P.$Common & { bundle: Array<ETHEREUM.$EthereumGetAddress> })): Promise<ETHEREUM.EthereumGetAddress$$>;
 export type EthereumGetAddress = typeof F_EthereumGetAddress;
 
+declare function F_EthereumGetPublicKey(params: (P.$Common & ETHEREUM.$EthereumGetPublicKey)): Promise<ETHEREUM.EthereumGetPublicKey$>;
+declare function F_EthereumGetPublicKey(params: (P.$Common & { bundle: Array<ETHEREUM.$EthereumGetPublicKey> })): Promise<ETHEREUM.EthereumGetPublicKey$$>;
+export type EthereumGetPublicKey = typeof F_EthereumGetPublicKey;
+
 export type EthereumSignMessage = (ETHEREUM.$EthereumSignMessage) => Promise<ETHEREUM.EthereumSignMessage$>;
 export type EthereumSignTransaction = (ETHEREUM.$EthereumSignTransaction) => Promise<ETHEREUM.EthereumSignTransaction$>;
 export type EthereumVerifyMessage = (ETHEREUM.$EthereumVerifyMessage) => Promise<ETHEREUM.EthereumVerifyMessage$>;

@@ -218,8 +218,6 @@ export type PublicKey = {
     xpub: string,
 };
 
-export type EthereumPublicKey = PublicKey;
-
 // combined PublicKey and bitcoin.HDNode
 export type HDNodeResponse = {
     path: Array<number>,
