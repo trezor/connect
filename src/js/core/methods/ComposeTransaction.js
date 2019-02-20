@@ -229,6 +229,7 @@ export default class ComposeTransaction extends AbstractMethod {
         const refTxs = transformReferencedTransactions(bjsRefTxs);
 
         const coinInfo: BitcoinNetworkInfo = this.composer.account.coinInfo;
+        const timestamp = coinInfo.hasTimestamp ? Math.round(new Date().getTime() / 1000) : undefined;
 
         const response = await helper.signTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
@@ -236,6 +237,8 @@ export default class ComposeTransaction extends AbstractMethod {
             tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo)),
             refTxs,
             coinInfo,
+            undefined,
+            timestamp,
         );
 
         if (this.params.push) {
