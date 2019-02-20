@@ -9,6 +9,23 @@ __changed__
 - Moved flowtype declarations from ./src/flowtype to ./src/js/types
 - Refactor CoinInfo to 3 types: BitcoinNetworkInfo, EthereumNetworkInfo and MiscNetworkInfo
 
+# 7.0.0
+__added__
+- Added `TrezorConnect.manifest` method
+- Added DebugLink (emulator) support: `TrezorConnect.debugLinkDecision` and `TrezorConnect.debugLinkGetState` methods
+- Added `TrezorConnect.ethereumGetPublicKey` method (with fallback for older firmware)
+- Added `TrezorConnect.loadDevice` method
+- Added `Capricoin` support (with required changes in `hd-wallet` and `bitcoinjs-lib-zcash` libs)
+- Added `firmwareRange` to every method (validation if device FW is in range: min_required_firmware - max_compatible_firmware declared in config.json)
+- Added conditional protobuf messages (fallback for older FW)
+
+__changed__
+- Upgrade npm modules (babel@7)
+- Changed `network` for `protocol_magic` in `TrezorConnect.cardanoSignTransaction` method
+
+__fixed__
+- ComposeTransaction: fees/legacy detection
+- test with DebugLink device
 
 # 6.0.5
 __changed__
