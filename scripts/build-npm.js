@@ -24,7 +24,6 @@ packageJSON.dependencies = {
     ...packageJSON.npmDependencies,
 };
 delete packageJSON.npmDependencies;
-delete packageJSON.nodeDependencies;
 
 packageJSON.main = 'lib/index.js';
 fs.writeFileSync(path.resolve(npm, 'package.json'), JSON.stringify(packageJSON, null, '  '), 'utf-8');

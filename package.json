@@ -26,10 +26,6 @@
     "build": "rm -rf build && webpack --config ./webpack/config.prod.babel.js --progress",
     "build:inline": "webpack --config ./webpack/config.inline.babel.js --progress",
     "build:npm": "rm -rf npm && babel-node ./scripts/build-npm.js && babel ./npm/lib --out-dir ./npm/lib",
-    "build:npm-node": "rm -rf npm-node && yarn build:npm-node-workers && yarn build:npm-node-lib",
-    "build:npm-node-lib": "babel-node ./scripts/build-npm-node.js && babel ./npm-node/lib --out-dir ./npm-node/lib",
-    "build:npm-node-workers": "webpack --config ./webpack/config.node.babel.js --progress",
-    "build:npm-node-bundle": "webpack --config ./webpack/config.node.bundle.babel.js --progress",
     "stats": "webpack --config ./webpack/config.prod.babel.js --json > build/stats.json",
     "test": "bash ./src/__tests__/run.sh",
     "flow": "flow check src/js",
@@ -88,7 +84,6 @@
     "mini-css-extract-plugin": "^0.5.0",
     "parse-uri": "^1.0.0",
     "pre-build-webpack": "^0.1.0",
-    "replace-in-file": "^3.4.3",
     "sharedworker-loader": "^2.1.1",
     "style-loader": "^0.23.1",
     "trezor-blockchain-link": "0.0.10",
@@ -99,7 +94,6 @@
     "webpack": "^4.12.0",
     "webpack-cli": "^3.0.6",
     "webpack-dev-server": "^3.1.14",
-    "window-or-global": "^1.0.1",
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
@@ -108,19 +102,5 @@
   },
   "npmDependencies": {
     "@babel/runtime": "^7.3.1"
-  },
-  "nodeDependencies": {
-    "@babel/runtime": "^7.3.1",
-    "bchaddrjs": "^0.2.1",
-    "bip44-constants": "^5.0.0",
-    "bitcoinjs-lib-zcash": "^3.4.1",
-    "bowser": "^1.9.3",
-    "es6-promise": "^4.2.2",
-    "hd-wallet": "7.14.3",
-    "keccak": "^1.4.0",
-    "parse-uri": "^1.0.0",
-    "tiny-worker": "^2.1.2",
-    "trezor-blockchain-link": "0.0.9",
-    "trezor-link": "1.5.5"
   }
 }

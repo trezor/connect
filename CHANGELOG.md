@@ -15,7 +15,6 @@ __changed__
 - Delay for popup window
 - Temporary disable webusb (chrome72 issue)
 
-
 # 6.0.4
 __added__
 - Added `UI.ADDRESS_VALIDATION` event
@@ -28,7 +27,6 @@ __changed__
 
 __fixed__
 - `stellarSignTransaction` with multiple operations
-
 
 # 6.0.3
 __added__

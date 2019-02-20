@@ -2,7 +2,6 @@
 _old
 build
 /npm
-npm-node
 
 # Dependency directory
 node_modules
