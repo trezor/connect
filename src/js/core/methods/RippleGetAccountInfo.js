@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, getRequiredFirmware } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getSerializedPath } from '../../utils/pathUtils';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
@@ -29,6 +29,7 @@ export default class RippleGetAccountInfo extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read'];
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Ripple'), this.firmwareRange);
         this.info = 'Export ripple account info';
         this.useDevice = true;
         this.useUi = false;
@@ -73,7 +74,6 @@ export default class RippleGetAccountInfo extends AbstractMethod {
             throw NO_COIN_INFO;
         }
 
-        this.requiredFirmware = getRequiredFirmware(network, this.requiredFirmware);
         this.useDevice = willUseDevice;
 
         this.params = {
