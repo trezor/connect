@@ -69,6 +69,7 @@ export default class DeviceList extends EventEmitter {
         _log.enabled = DataManager.getSettings('debug');
         if (!this.options.transport) {
             const transportTypes: Array<Transport> = [
+                // $FlowIssue: `version` is missing in `JSON`
                 new BridgeV2(null, null, DataManager.assets['bridge'].version.join('.')),
             ];
 

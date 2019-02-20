@@ -2,13 +2,12 @@
 import BlockchainLink from 'trezor-blockchain-link';
 import { BlockchainMessage } from '../message/builder';
 import * as BLOCKCHAIN from '../constants/blockchain';
-import type { CoinInfo } from '../types';
+import type { CoreMessage, CoinInfo } from '../types';
 import type { BlockchainBlock, BlockchainLinkTransaction } from '../types/blockchainEvent';
 import type { GetAccountInfoOptions, EstimateFeeOptions } from 'trezor-blockchain-link';
 
 // nodejs-replace-start
 /* $FlowIssue loader notation */
-// import RippleWorker from 'worker-loader?name=ripple-worker.js!trezor-blockchain-link/workers/ripple-worker';
 import RippleWorker from 'worker-loader?name=js/ripple-worker.js!trezor-blockchain-link/lib/workers/ripple/index.js';
 // nodejs-replace-end
 /* nodejs-imports-start
@@ -19,7 +18,7 @@ nodejs-imports-end */
 
 type Options = {
     coinInfo: CoinInfo,
-    postMessage: (message: BlockchainMessage) => void,
+    postMessage: (message: CoreMessage) => void,
 };
 
 const getWorker = (type: string): ?string => {

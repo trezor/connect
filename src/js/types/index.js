@@ -254,6 +254,10 @@ declare function F_RippleGetAddress(params: (P.$Common & RIPPLE.$RippleGetAddres
 declare function F_RippleGetAddress(params: (P.$Common & { bundle: Array<RIPPLE.$RippleGetAddress> })): Promise<RIPPLE.RippleGetAddress$$>;
 export type RippleGetAddress = typeof F_RippleGetAddress;
 
+declare function F_RippleGetAccountInfo(params: (P.$Common & RIPPLE.$RippleGetAccountInfo)): Promise<RIPPLE.RippleGetAccountInfo$>;
+declare function F_RippleGetAccountInfo(params: (P.$Common & { bundle: Array<RIPPLE.$RippleGetAddress> })): Promise<RIPPLE.RippleGetAccountInfo$$>;
+export type RippleGetAccountInfo = typeof F_RippleGetAccountInfo;
+
 export type RippleSignTransaction = (RIPPLE.$RippleSignTransaction) => Promise<RIPPLE.RippleSignTransaction$>;
 
 export type SignMessage = (P.$SignMessage) => Promise<R.SignMessage$>;
