@@ -101,8 +101,12 @@ const refresh = async (backend: BlockBook): Promise<any> => {
 };
 
 const detectWorking = async (backend: BlockBook): Promise<boolean> => {
-    await refresh(backend);
-    return fees != null;
+    try {
+        await refresh(backend);
+        return fees != null;
+    } catch (e) {
+        return false;
+    }
 };
 
 const getFeeList = (): $ReadOnlyArray<FeeLevel> => {
