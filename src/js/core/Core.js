@@ -355,7 +355,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     method.device = device;
     method.devicePath = device.getDevicePath();
 
-    if (_deviceList) {
+    if (_deviceList && device.features) {
         // restore default messages
         const messages = DataManager.findMessages(device.isT1() ? 0 : 1, device.getVersion());
         await _deviceList.reconfigure(messages);
@@ -460,7 +460,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     return Promise.resolve();
                 } else {
                     // return error if not using popup
-                    postMessage(new ResponseMessage(method.responseID, false, { error: unexpectedMode }));
+                    postMessage(new ResponseMessage(method.responseID, false, { error: firmwareException }));
                     return Promise.resolve();
                 }
             }
