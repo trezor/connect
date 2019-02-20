@@ -7,6 +7,7 @@ import randombytes from 'randombytes';
 import * as bitcoin from 'bitcoinjs-lib-zcash';
 import * as hdnodeUtils from '../utils/hdnode';
 import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType } from '../utils/pathUtils';
+import { resolveAfter } from '../utils/promiseUtils';
 import Device from './Device';
 
 import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
@@ -254,6 +255,35 @@ export default class DeviceCommands {
             show_display: !!showOnTrezor,
         });
         return response.message;
+    }
+
+    async ethereumGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.HDNodeResponse> {
+        if (!this.device.atLeast(['1.8.0', '2.0.11'])) {
+            return await this.getHDNode(address_n);
+        }
+
+        const suffix: number = 0;
+        const childPath: Array<number> = address_n.concat([suffix]);
+        const resKey: MessageResponse<trezor.PublicKey> = await this.typedCall('EthereumGetPublicKey', 'EthereumPublicKey', {
+            address_n: address_n,
+            show_display: false,
+        });
+        const childKey: MessageResponse<trezor.PublicKey> = await this.typedCall('EthereumGetPublicKey', 'EthereumPublicKey', {
+            address_n: childPath,
+            show_display: false,
+        });
+        const publicKey: trezor.PublicKey = hdnodeUtils.xpubDerive(resKey.message, childKey.message, suffix);
+
+        return {
+            path: address_n,
+            serializedPath: getSerializedPath(address_n),
+            childNum: publicKey.node.child_num,
+            xpub: publicKey.xpub,
+            chainCode: publicKey.node.chain_code,
+            publicKey: publicKey.node.public_key,
+            fingerprint: publicKey.node.fingerprint,
+            depth: publicKey.node.depth,
+        };
     }
 
     async ethereumSignMessage(address_n: Array<number>, message: string): Promise<trezor.MessageSignature> {
@@ -652,9 +682,12 @@ export default class DeviceCommands {
             path: this.device.originalDescriptor.path,
             previous: this.device.originalDescriptor.debugSession,
         }, true);
+        await resolveAfter(501, null); // wait for propagation from bridge
 
         await this.transport.post(session, 'DebugLinkDecision', msg, true);
         await this.transport.release(session, true, true);
+        this.device.originalDescriptor.debugSession = null; // make sure there are no leftovers
+        await resolveAfter(501, null); // wait for propagation from bridge
     }
 
     async debugLinkGetState(msg: any): Promise<trezor.DebugLinkState> {
@@ -662,10 +695,12 @@ export default class DeviceCommands {
             path: this.device.originalDescriptor.path,
             previous: this.device.originalDescriptor.debugSession,
         }, true);
+        await resolveAfter(501, null); // wait for propagation from bridge
 
         const response: MessageResponse<trezor.DebugLinkState> = await this.transport.call(session, 'DebugLinkGetState', {}, true);
         assertType(response, 'DebugLinkState');
         await this.transport.release(session, true, true);
+        await resolveAfter(501, null); // wait for propagation from bridge
         return response.message;
     }
 }

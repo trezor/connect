@@ -1,9 +1,14 @@
 /* @flow */
-'use strict';
+
+export type ConnectManifest = {
+    +email: string,
+    +appUrl: string,
+}
 
 export type ConnectSettings = {
     // debug: boolean | {[k: string]: boolean};
     +configSrc: string, // constant
+    +version: string, // constant
     debug: boolean,
     origin: ?string,
     hostLabel?: string,
@@ -20,6 +25,7 @@ export type ConnectSettings = {
     pendingTransportEvent: boolean,
     supportedBrowser?: boolean,
     extension: ?string,
+    manifest: ?ConnectManifest,
 }
 
 /*
@@ -34,7 +40,8 @@ const DEFAULT_DOMAIN: string = `https://connect.trezor.io/${ DIRECTORY }`;
 export const DEFAULT_PRIORITY: number = 2;
 
 const initialSettings: ConnectSettings = {
-    configSrc: './data/config.json', // constant
+    configSrc: 'data/config.json', // constant
+    version: VERSION, // constant
     debug: false,
     origin: null,
     priority: DEFAULT_PRIORITY,
@@ -49,9 +56,23 @@ const initialSettings: ConnectSettings = {
     pendingTransportEvent: true,
     supportedBrowser: typeof navigator !== 'undefined' ? !(/Trident|MSIE/.test(navigator.userAgent)) : true,
     extension: null,
+    manifest: null,
 };
 
 let currentSettings: ConnectSettings = initialSettings;
+
+const parseManifest = (manifest: Object): ?ConnectManifest => {
+    if (typeof manifest.email !== 'string') {
+        return null;
+    }
+    if (typeof manifest.appUrl !== 'string') {
+        return null;
+    }
+    return {
+        email: manifest.email,
+        appUrl: manifest.appUrl,
+    };
+};
 
 export const parse = (input: ?Object): ConnectSettings => {
     if (!input) return currentSettings;
@@ -101,6 +122,10 @@ export const parse = (input: ?Object): ConnectSettings => {
 
     if (typeof input.extension === 'string') {
         settings.extension = input.extension;
+    }
+
+    if (typeof input.manifest === 'object') {
+        settings.manifest = parseManifest(input.manifest);
     }
 
     currentSettings = settings;

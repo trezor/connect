@@ -152,6 +152,8 @@ export type $SignTransaction = $Common & {
     inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>,
     coin: string,
+    locktime?: number,
+    timestamp?: number,
     push?: boolean,
 }
 

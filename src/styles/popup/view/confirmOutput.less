@@ -1,0 +1,38 @@
+.confirm-output {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  
+    svg {
+        height: 49px;
+        width: 40px;
+    }
+  
+    p {
+        margin: 0 auto;
+        font-weight: 600;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .confirm-output {
+        svg {
+            height: 63px;
+            width: 21.6px;
+        }
+    }
+}
+
+@media screen and (max-width: 639px) {
+    .confirm-output {
+        max-width: 100%;
+        svg {
+            height: 49px;
+            width: 40px;
+            padding-top: 0px;
+        }
+        p {
+            font-size: 15px;
+        }
+    }
+}

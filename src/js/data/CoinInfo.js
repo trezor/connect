@@ -166,6 +166,7 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
         const zcash = coin.coin_name.startsWith('Zcash');
         const shortcut = coin.coin_shortcut;
         const isBitcoin = shortcut === 'BTC' || shortcut === 'TEST';
+        const hasTimestamp = shortcut === 'CPC';
 
         bitcoinNetworks.push({
             type: 'bitcoin',
@@ -213,6 +214,7 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
             network, // bitcoinjs network
             zcash,
             isBitcoin,
+            hasTimestamp,
             maxFee: Math.round(coin.maxfee_kb / 1000),
             minFee: Math.round(coin.minfee_kb / 1000),
 
@@ -273,6 +275,7 @@ export const parseCoinsJson = (json: JSON): void => {
             case 'eth' :
                 return parseEthereumNetworksJson(coinsObject[key]);
             case 'misc' :
+            case 'nem' :
                 return parseMiscNetworksJSON(coinsObject[key]);
         }
     });

@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinPath, getRequiredFirmware } from './helpers/paramsValidator';
+import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
@@ -73,7 +73,7 @@ export default class GetPublicKey extends AbstractMethod {
 
             // set required firmware from coinInfo support
             if (coinInfo) {
-                this.requiredFirmware = getRequiredFirmware(coinInfo, this.requiredFirmware);
+                this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
             }
         });
 

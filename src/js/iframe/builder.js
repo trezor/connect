@@ -35,7 +35,8 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
         instance.id = 'trezorconnect';
     }
 
-    const src: string = `${settings.iframeSrc}?${ Date.now() }`;
+    const manifest = `&version=${settings.version}&manifest=${btoa(JSON.stringify(settings.manifest))}`;
+    const src: string = `${settings.iframeSrc}?${ Date.now() }${ manifest }`;
     instance.setAttribute('src', src);
     if (settings.webusb) {
         instance.setAttribute('allow', 'usb');

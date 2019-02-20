@@ -27,13 +27,13 @@ export const cardanoSignTx = async (typedCall: (type: string, resType: string, m
     inputs: Array<CardanoTxInput>,
     outputs: Array<CardanoTxOutput>,
     transactions: Array<string>,
-    network: number,
+    protocol_magic: number,
 ): Promise<CardanoSignedTx> => {
     const response: MessageResponse<CardanoTxRequest> = await typedCall('CardanoSignTx', 'CardanoTxRequest', {
         inputs: inputs,
         outputs: outputs,
         transactions_count: transactions.length,
-        network: network,
+        protocol_magic: protocol_magic,
     });
     return await processTxRequest(typedCall, response.message, transactions);
 };

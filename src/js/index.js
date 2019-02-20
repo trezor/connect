@@ -9,7 +9,7 @@ import * as IFRAME from './constants/iframe';
 import * as UI from './constants/ui';
 import * as DEVICE from './constants/device';
 import * as BLOCKCHAIN from './constants/blockchain';
-import { NO_IFRAME, IFRAME_INITIALIZED, DEVICE_CALL_IN_PROGRESS } from './constants/errors';
+import * as ERROR from './constants/errors';
 
 import PopupManager from './popup/PopupManager';
 import * as iframe from './iframe/builder';
@@ -119,14 +119,18 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
 };
 
 const init = async (settings: Object = {}): Promise<void> => {
-    if (iframe.instance) { throw IFRAME_INITIALIZED; }
+    if (iframe.instance) { throw ERROR.IFRAME_INITIALIZED; }
 
     if (!_settings) {
         _settings = parseSettings(settings);
     }
 
+    if (!_settings.manifest) {
+        throw ERROR.MANIFEST_NOT_SET;
+    }
+
     if (!_settings.supportedBrowser) {
-        throw new Error('Unsupported browser');
+        throw ERROR.BROWSER_NOT_SUPPORTED;
     }
 
     if (!_popupManager) {
@@ -150,13 +154,17 @@ const init = async (settings: Object = {}): Promise<void> => {
 const call = async (params: Object): Promise<Object> => {
     if (!iframe.instance && !iframe.timeout) {
         // init popup with lazy loading before iframe initialization
-        _settings = parseSettings({});
+        _settings = parseSettings(_settings);
+
+        if (!_settings.manifest) {
+            return { success: false, payload: { error: ERROR.MANIFEST_NOT_SET.message } };
+        }
+        if (!_settings.supportedBrowser) {
+            return { success: false, payload: { error: ERROR.BROWSER_NOT_SUPPORTED.message } };
+        }
+
         _popupManager = initPopupManager();
         _popupManager.request(true);
-
-        if (!_settings.supportedBrowser) {
-            return { success: false, payload: { error: 'Unsupported browser' } };
-        }
 
         // auto init with default settings
         try {
@@ -170,7 +178,7 @@ const call = async (params: Object): Promise<Object> => {
 
     if (iframe.timeout) {
         // this.init was called, but iframe doesn't return handshake yet
-        return { success: false, payload: { error: NO_IFRAME.message } };
+        return { success: false, payload: { error: ERROR.NO_IFRAME.message } };
     } else if (iframe.error) {
         // iframe was initialized with error
         return { success: false, payload: { error: iframe.error } };
@@ -185,7 +193,7 @@ const call = async (params: Object): Promise<Object> => {
         const response: ?Object = await iframe.postMessage({ type: IFRAME.CALL, payload: params });
         if (response) {
             // TODO: unlock popupManager request only if there wasn't error "in progress"
-            if (response.payload.error !== DEVICE_CALL_IN_PROGRESS.message) { _popupManager.unlock(); }
+            if (response.payload.error !== ERROR.DEVICE_CALL_IN_PROGRESS.message) { _popupManager.unlock(); }
             return response;
         } else {
             _popupManager.unlock();
@@ -207,6 +215,12 @@ const customMessageResponse = (payload: ?{ message: string, params?: Object }): 
 };
 
 class TrezorConnect {
+    static manifest = (data: Object): void => {
+        _settings = parseSettings({
+            manifest: data,
+        });
+    }
+
     static init = async (settings: $T.Settings): Promise<void> => {
         return await init(settings);
     }
@@ -348,6 +362,10 @@ class TrezorConnect {
     static ethereumGetAddress: $T.EthereumGetAddress = async (params) => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return await call({ method: 'ethereumGetAddress', ...params, useEventListener });
+    }
+
+    static ethereumGetPublicKey: $T.EthereumGetPublicKey = async (params) => {
+        return await call({ method: 'ethereumGetPublicKey', ...params });
     }
 
     static ethereumSignMessage: $T.EthereumSignMessage = async (params) => {

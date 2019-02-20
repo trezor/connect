@@ -42,6 +42,17 @@ export type Deferred<T> = {
     reject: (e: Error) => void,
 }
 
+export type FirmwareRange = {
+    '1': {
+        min: string,
+        max: string,
+    },
+    '2': {
+        min: string,
+        max: string,
+    },
+}
+
 // copy/paste from trezor.js
 export type Features = {
     vendor: string,
@@ -199,6 +210,10 @@ export type EthereumGetAccountInfo = typeof F_EthereumGetAccountInfo;
 declare function F_EthereumGetAddress(params: (P.$Common & ETHEREUM.$EthereumGetAddress)): Promise<ETHEREUM.EthereumGetAddress$>;
 declare function F_EthereumGetAddress(params: (P.$Common & { bundle: Array<ETHEREUM.$EthereumGetAddress> })): Promise<ETHEREUM.EthereumGetAddress$$>;
 export type EthereumGetAddress = typeof F_EthereumGetAddress;
+
+declare function F_EthereumGetPublicKey(params: (P.$Common & ETHEREUM.$EthereumGetPublicKey)): Promise<ETHEREUM.EthereumGetPublicKey$>;
+declare function F_EthereumGetPublicKey(params: (P.$Common & { bundle: Array<ETHEREUM.$EthereumGetPublicKey> })): Promise<ETHEREUM.EthereumGetPublicKey$$>;
+export type EthereumGetPublicKey = typeof F_EthereumGetPublicKey;
 
 export type EthereumSignMessage = (ETHEREUM.$EthereumSignMessage) => Promise<ETHEREUM.EthereumSignMessage$>;
 export type EthereumSignTransaction = (ETHEREUM.$EthereumSignTransaction) => Promise<ETHEREUM.EthereumSignTransaction$>;

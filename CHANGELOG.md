@@ -9,6 +9,13 @@ __changed__
 - Moved flowtype declarations from ./src/flowtype to ./src/js/types
 - Refactor CoinInfo to 3 types: BitcoinNetworkInfo, EthereumNetworkInfo and MiscNetworkInfo
 
+
+# 6.0.5
+__changed__
+- Delay for popup window
+- Temporary disable webusb (chrome72 issue)
+
+
 # 6.0.4
 __added__
 - Added `UI.ADDRESS_VALIDATION` event

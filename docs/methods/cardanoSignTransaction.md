@@ -21,7 +21,7 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 * `inputs` — *obligatory* `Array` of [CardanoInput](../../src/js/types/cardano.js#L31)
 * `outputs` - *obligatory* `Array` of [CardanoOutput](../../src/js/types/cardano.js#L37)
 * `transactions` - *obligatory* `Array` of strings
-* `network` - *obligatory* `Integer` 1 for Testnet and 2 for Mainnet
+* `protcol magic` - *obligatory* `Integer` 764824073 for Mainnet, 1097911063 for Testnet
 
 ### Example
 ```javascript
@@ -52,7 +52,7 @@ TrezorConnect.cardanoSignTransaction({
         "839f8200d818582482582008abb575fac4c39d5bf80683f7f0c37e48f4e3d96e37d1f6611919a7241b456600ff9f8282d818582183581cda4da43db3fca93695e71dab839e72271204d28b9d964d306b8800a8a0001a7a6916a51a00305becffa0",
         "839f8200d818582482582008abb575fac4c39d5bf80683f7f0c37e48f4e3d96e37d1f6611919a7241b456600ff9f8282d818582183581cda4da43db3fca93695e71dab839e72271204d28b9d964d306b8800a8a0001a7a6916a51a00305becffa0",
     ],
-    network: 1
+    protocol_magic: 764824073
 });
 ```
 

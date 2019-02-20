@@ -258,11 +258,12 @@ declare module 'bitcoinjs-lib-zcash' {
     declare class Transaction {
         version: number,
         locktime: number,
+        timestamp?: number,
         ins: Array<Input>,
         outs: Array<Output>,
 
         constructor(): void,
-        static fromHex(hex: string, zcash: boolean): Transaction,
+        static fromHex(hex: string, zcash: boolean, hasTimestamp?: boolean): Transaction,
         static fromBuffer(buffer: Buffer): Transaction,
         toHex(): string,
         addInput(hash: Buffer, index: number, sequence?: ?number, scriptSig?: Buffer): void,

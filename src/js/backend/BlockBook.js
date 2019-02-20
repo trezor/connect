@@ -182,7 +182,7 @@ export default class BlockBook {
     async loadTransaction(id: string): Promise<BitcoinJsTransaction> {
         if (this.error) { throw this.error; }
         const tx = await this.blockchain.lookupTransaction(id);
-        return BitcoinJsTransaction.fromHex(tx.hex, tx.zcash);
+        return BitcoinJsTransaction.fromHex(tx.hex, tx.zcash, typeof tx.time === 'number');
     }
 
     async loadCurrentHeight(): Promise<number> {

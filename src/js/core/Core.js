@@ -264,9 +264,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         // transport is missing try to initialize it once again
         // eslint-disable-next-line no-use-before-define
         await initTransport(DataManager.getSettings());
-    } else if (_deviceList) {
-        // restore default messages
-        await _deviceList.reconfigure();
     }
 
     const responseID: number = message.id;
@@ -298,8 +295,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         await getPopupPromise().promise;
         // show message about browser
         postMessage(new UiMessage(UI.BROWSER_NOT_SUPPORTED, browserState));
-        postMessage(new ResponseMessage(responseID, false, { error: ERROR.BROWSER.message }));
-        throw ERROR.BROWSER;
+        postMessage(new ResponseMessage(responseID, false, { error: ERROR.BROWSER_NOT_SUPPORTED.message }));
+        throw ERROR.BROWSER_NOT_SUPPORTED;
     } else if (browserState.outdated) {
         if (isUsingPopup) {
             // wait for popup handshake
@@ -357,6 +354,12 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
     method.device = device;
     method.devicePath = device.getDevicePath();
+
+    if (_deviceList) {
+        // restore default messages
+        const messages = DataManager.findMessages(device.isT1() ? 0 : 1, device.getVersion());
+        await _deviceList.reconfigure(messages);
+    }
 
     // method is a debug link message
     if (method.debugLink) {
@@ -425,7 +428,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
             // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
-            const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | typeof UI.FIRMWARE | typeof UI.FIRMWARE_NOT_SUPPORTED) = device.hasUnexpectedMode(method.requiredFirmware, method.allowDeviceMode);
+            const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) = device.hasUnexpectedMode(method.allowDeviceMode);
             if (unexpectedMode) {
                 device.keepSession = false;
                 if (isUsingPopup) {
@@ -433,6 +436,23 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     await getPopupPromise().promise;
                     // show unexpected state information
                     postMessage(new UiMessage(unexpectedMode, device.toMessageObject()));
+
+                    // wait for device disconnect
+                    await createUiPromise(DEVICE.DISCONNECT, device).promise;
+                    // interrupt process and go to "final" block
+                    return Promise.resolve();
+                } else {
+                    // return error if not using popup
+                    postMessage(new ResponseMessage(method.responseID, false, { error: unexpectedMode }));
+                    return Promise.resolve();
+                }
+            }
+
+            const firmwareException = await method.checkFirmwareRange(isUsingPopup);
+            if (firmwareException) {
+                if (isUsingPopup) {
+                    // show unexpected state information
+                    postMessage(new UiMessage(firmwareException, device.toMessageObject()));
 
                     // wait for device disconnect
                     await createUiPromise(DEVICE.DISCONNECT, device).promise;
@@ -537,7 +557,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 // for CustomMessage method reconfigure transport with custom messages definitions
                 const customMessages = method.getCustomMessages();
                 if (_deviceList && customMessages) {
-                    await _deviceList.reconfigure(customMessages);
+                    await _deviceList.reconfigure(customMessages, true);
                 }
                 const response: Object = await method.run();
                 messageResponse = new ResponseMessage(method.responseID, true, response);
@@ -597,7 +617,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         if (method) { method.dispose(); }
 
         // restore default messages
-        if (_deviceList) { await _deviceList.reconfigure(); }
+        if (_deviceList) { await _deviceList.restoreMessages(); }
 
         if (messageResponse) {
             postMessage(messageResponse);
@@ -890,6 +910,7 @@ export class Core extends EventEmitter {
         if (_deviceList) {
             _deviceList.onBeforeUnload();
         }
+        this.removeAllListeners();
     }
 
     getCurrentMethod(): Array<AbstractMethod> {

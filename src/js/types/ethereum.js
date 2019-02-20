@@ -9,6 +9,7 @@ import type {
     Success,
     MessageSignature,
     EthereumSignedTx,
+    HDNodeResponse,
 } from './trezor';
 
 export type Transaction = {
@@ -67,6 +68,23 @@ export type EthereumGetAddress$ = {
 export type EthereumGetAddress$$ = {
     success: true,
     payload: Array<EthereumAddress>,
+} | Unsuccessful$;
+
+// get public key
+
+export type $EthereumGetPublicKey = $Common & {
+    path: $Path,
+    showOnTrezor?: boolean,
+}
+
+export type EthereumGetPublicKey$ = {
+    success: true,
+    payload: HDNodeResponse,
+} | Unsuccessful$;
+
+export type EthereumGetPublicKey$$ = {
+    success: true,
+    payload: Array<HDNodeResponse>,
 } | Unsuccessful$;
 
 // sign transaction

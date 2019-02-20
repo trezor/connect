@@ -101,6 +101,9 @@ const handleMessage = (event: PostMessageEvent): void => {
         case UI.FIRMWARE_NOT_SUPPORTED :
             view.firmwareNotSupported(message.payload);
             break;
+        case UI.FIRMWARE_NOT_COMPATIBLE :
+            view.firmwareNotCompatible(message.payload);
+            break;
         case UI.FIRMWARE_OUTDATED :
             showFirmwareUpdateNotification(message.payload);
             break;

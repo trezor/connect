@@ -1,6 +1,4 @@
 /* @flow */
-'use strict';
-
 import createKeccakHash from 'keccak';
 import type { EthereumNetworkInfo } from '../types';
 
@@ -13,6 +11,7 @@ export const stripHexPrefix = (str: string): string => {
 };
 
 export const toChecksumAddress = (address: string, network: ?EthereumNetworkInfo): string => {
+    if (hasHexPrefix(address)) return address;
     let clean = stripHexPrefix(address);
     // different checksum for RSK
     if (network && network.rskip60) clean = network.chainId + '0x' + address;
