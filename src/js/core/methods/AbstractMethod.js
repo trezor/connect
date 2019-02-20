@@ -165,6 +165,7 @@ export default class AbstractMethod implements MethodInterface {
 
     async checkFirmwareRange(isUsingPopup: boolean): Promise<?FirmwareException> {
         const device = this.device;
+        if (!device.features) return null;
         const model = device.features.major_version;
         const range = this.firmwareRange[model];
         if (range.min === '0') {

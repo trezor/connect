@@ -76,6 +76,8 @@
     "supportedFirmware": [
         {
             "excludedMethods": [
+                "rippleGetAccountInfo",
+                "rippleGetAddress",
                 "rippleSignTransaction"
             ],
             "min": ["0", "2.0.11"],
