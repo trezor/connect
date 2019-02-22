@@ -86,7 +86,7 @@ export default class GetAddress extends AbstractMethod {
             });
         });
 
-        const useEventListener = payload.useEventListener && payload.bundle.length === 1 && typeof payload.bundle[0].address === 'string' && payload.bundle[0].showOnTrezor;
+        const useEventListener = payload.useEventListener && bundle.length === 1 && typeof bundle[0].address === 'string' && bundle[0].showOnTrezor;
         this.confirmed = useEventListener;
         this.useUi = !useEventListener;
 
