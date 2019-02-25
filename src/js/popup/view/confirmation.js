@@ -10,6 +10,7 @@ export const initConfirmationView = (data: $PropertyType<RequestConfirmation, 'p
     // Confirmation views:
     // - export xpub
     // - export account info
+    // - no backup
 
     // TODO: Check if correct class names for HTML views
     showView(data.view);
@@ -18,21 +19,27 @@ export const initConfirmationView = (data: $PropertyType<RequestConfirmation, 'p
     const confirmButton: HTMLElement = container.getElementsByClassName('confirm')[0];
     const cancelButton: HTMLElement = container.getElementsByClassName('cancel')[0];
 
-    const { customConfirmButton } = data;
+    const { label, customConfirmButton, customCancelButton } = data;
     if (customConfirmButton) {
-        confirmButton.innerHTML = customConfirmButton.label;
+        confirmButton.innerText = customConfirmButton.label;
         confirmButton.classList.add(customConfirmButton.className);
     }
+    if (customCancelButton) {
+        confirmButton.innerText = customCancelButton.label;
+        confirmButton.classList.add(customCancelButton.className);
+    }
 
-    h3.innerHTML = data.label;
+    if (label) {
+        h3.innerHTML = label;
+    }
 
     confirmButton.onclick = () => {
-        postMessage(new UiMessage(UI.RECEIVE_CONFIRMATION, 'true'));
+        postMessage(new UiMessage(UI.RECEIVE_CONFIRMATION, true));
         showView('loader');
     };
 
     cancelButton.onclick = () => {
-        postMessage(new UiMessage(UI.RECEIVE_CONFIRMATION, 'false'));
+        postMessage(new UiMessage(UI.RECEIVE_CONFIRMATION, false));
         showView('loader');
     };
 };
