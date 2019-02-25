@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getCoinInfoByCurrency } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
@@ -42,7 +42,7 @@ export default class VerifyMessage extends AbstractMethod {
             throw NO_COIN_INFO;
         } else {
             // check required firmware with coinInfo support
-            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+            this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
             this.info = getLabel('Verify #NETWORK message', coinInfo);
         }
         // TODO: check if message is already a hex

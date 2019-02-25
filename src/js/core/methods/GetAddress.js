@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinPath, getRequiredFirmware } from './helpers/paramsValidator';
+import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getLabel } from '../../utils/pathUtils';
 import { getCoinInfoByCurrency, getCoinInfoFromPath, fixCoinInfoNetwork } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
@@ -80,7 +80,7 @@ export default class GetAddress extends AbstractMethod {
                 throw NO_COIN_INFO;
             } else if (coinInfo) {
                 // set required firmware from coinInfo support
-                this.requiredFirmware = getRequiredFirmware(coinInfo, this.requiredFirmware);
+                this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
             }
 
             // fix coinInfo network values (segwit/legacy)

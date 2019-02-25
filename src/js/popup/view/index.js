@@ -10,3 +10,4 @@ export { initPermissionsView } from './permissions';
 export { initConfirmationView } from './confirmation';
 export { initBrowserView } from './browser';
 export { passphraseOnDeviceView } from './passphraseOnDevice';
+export { firmwareNotCompatible } from './firmwareNotCompatible';

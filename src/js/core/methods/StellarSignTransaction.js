@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/stellarSignTx';
 
@@ -22,7 +22,9 @@ export default class StellarSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = ['1.7.0', '2.0.8'];
+        this.firmwareRange['1'].min = '1.7.0';
+        this.firmwareRange['2'].min = '2.0.8';
+        this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Sign Stellar transaction';
 
         const payload: Object = message.payload;

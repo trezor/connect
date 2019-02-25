@@ -516,19 +516,13 @@ export default class Device extends EventEmitter {
         return this.features ? this.features.major_version === 1 : false;
     }
 
-    hasUnexpectedMode(requiredFirmware: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.FIRMWARE | typeof UI.FIRMWARE_NOT_SUPPORTED) {
+    hasUnexpectedMode(): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE) {
         if (this.features) {
             if (this.isBootloader()) {
                 return UI.BOOTLOADER;
             }
             if (!this.isInitialized()) {
                 return UI.INITIALIZE;
-            }
-            if (requiredFirmware[ this.features.major_version - 1 ] === '0') {
-                return UI.FIRMWARE_NOT_SUPPORTED;
-            }
-            if (this.firmwareStatus === 'required' || !this.atLeast(requiredFirmware)) {
-                return UI.FIRMWARE;
             }
         }
         return null;
