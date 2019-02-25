@@ -46,6 +46,13 @@ export type Config = {
     +resources: Resources,
     +assets: Array<Asset>,
     +supportedBrowsers: { [key: string]: Browser },
+    +supportedFirmware: Array<{|
+        +coinType?: string,
+        +coin?: string,
+        +excludedMethods?: Array<string>,
+        +min?: Array<string>,
+        +max?: Array<string>,
+    |}>,
 }
 
 type AssetCollection = { [key: string]: JSON };

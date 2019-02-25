@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams, validateCoinPath } from './helpers/paramsValidator';
+import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getLabel } from '../../utils/pathUtils';
 import { getBitcoinNetwork } from '../../data/CoinInfo';
 import type { MessageSignature } from '../../types/trezor';
@@ -44,7 +44,7 @@ export default class SignMessage extends AbstractMethod {
 
         if (coinInfo) {
             // check required firmware with coinInfo support
-            this.requiredFirmware = [ coinInfo.support.trezor1, coinInfo.support.trezor2 ];
+            this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
         }
 
         const messageHex: string = Buffer.from(payload.message, 'utf8').toString('hex');

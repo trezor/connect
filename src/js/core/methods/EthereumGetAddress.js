@@ -1,7 +1,7 @@
 /* @flow */
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getSerializedPath } from '../../utils/pathUtils';
 import { toChecksumAddress, getNetworkLabel, stripHexPrefix } from '../../utils/ethereumUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
@@ -31,7 +31,6 @@ export default class EthereumGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['1.6.2', '2.0.7'];
 
         // create a bundle with only one batch if bundle doesn't exists
         const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
@@ -53,6 +52,7 @@ export default class EthereumGetAddress extends AbstractMethod {
 
             const path: Array<number> = validatePath(batch.path, 3);
             const network: ?EthereumNetworkInfo = getEthereumNetwork(path);
+            this.firmwareRange = getFirmwareRange(this.name, network, this.firmwareRange);
 
             let showOnTrezor: boolean = true;
             if (batch.hasOwnProperty('showOnTrezor')) {

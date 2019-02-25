@@ -4,7 +4,8 @@
 import { invalidParameter } from '../../../constants/errors';
 import { fromHardened } from '../../../utils/pathUtils';
 import semvercmp from 'semver-compare';
-import type { CoinInfo } from '../../../types';
+import DataManager from '../../../data/DataManager';
+import type { CoinInfo, FirmwareRange } from '../../../types';
 
 type Param = {
     name: string,
@@ -48,17 +49,55 @@ export const validateCoinPath = (coinInfo: ?CoinInfo, path: Array<number>): void
     }
 };
 
-export const getRequiredFirmware = (coinInfo: CoinInfo, current: Array<string>): Array<string> => {
-    if (!coinInfo.support || typeof coinInfo.support.trezor1 !== 'string') {
-        current[0] = '0';
-    } else if (semvercmp(coinInfo.support.trezor1, current[0]) > 0) {
-        current[0] = coinInfo.support.trezor1;
+export const getFirmwareRange = (method: string, coinInfo: ?CoinInfo, current: FirmwareRange): FirmwareRange => {
+    // set minimum required firmware from coins.json (coinInfo)
+    if (coinInfo) {
+        if (!coinInfo.support || typeof coinInfo.support.trezor1 !== 'string') {
+            current['1'].min = '0';
+        } else if (semvercmp(coinInfo.support.trezor1, current['1'].min) > 0) {
+            current['1'].min = coinInfo.support.trezor1;
+        }
+
+        if (!coinInfo.support || typeof coinInfo.support.trezor2 !== 'string') {
+            current['2'].min = '0';
+        } else if (semvercmp(coinInfo.support.trezor2, current['2'].min) > 0) {
+            current['2'].min = coinInfo.support.trezor2;
+        }
     }
 
-    if (!coinInfo.support || typeof coinInfo.support.trezor2 !== 'string') {
-        current[1] = '0';
-    } else if (semvercmp(coinInfo.support.trezor2, current[1]) > 0) {
-        current[1] = coinInfo.support.trezor2;
+    const coinType = coinInfo ? coinInfo.type : null;
+    const shortcut = coinInfo ? coinInfo.shortcut.toLowerCase() : null;
+    // find firmware range in config.json
+    const range = DataManager.getConfig().supportedFirmware.find(c => {
+        if (c.coinType === coinType || c.coin === shortcut) return c;
+        if (c.excludedMethods && c.excludedMethods.includes(method)) {
+            return c;
+        }
+    });
+
+    if (range) {
+        if (range.excludedMethods && !range.excludedMethods.includes(method)) {
+            // not in range. do not change default range
+            return current;
+        }
+        const { min, max } = range;
+        // override defaults
+        if (min) {
+            if (current['1'].min === '0' || semvercmp(current['1'].min, min[0]) < 0) {
+                current['1'].min = min[0];
+            }
+            if (current['2'].min === '0' || semvercmp(current['2'].min, min[1]) < 0) {
+                current['2'].min = min[1];
+            }
+        }
+        if (max) {
+            if (current['1'].max === '0' || semvercmp(current['1'].max, max[0]) < 0) {
+                current['1'].max = max[0];
+            }
+            if (current['2'].max === '0' || semvercmp(current['2'].max, max[1]) < 0) {
+                current['2'].max = max[1];
+            }
+        }
     }
 
     return current;

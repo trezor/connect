@@ -4,7 +4,7 @@
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 
 import type { CoreMessage } from '../../types';
@@ -32,7 +32,7 @@ export default class CipherKeyValue extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        // this.useUi = payload.askOnEncrypt || payload.askOnDecrypt;
+        this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Cypher key value';
         this.useEmptyPassphrase = true;
 

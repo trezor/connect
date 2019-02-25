@@ -2,7 +2,7 @@
 'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import type { Success } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
@@ -21,7 +21,7 @@ export default class EthereumVerifyMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        // this.requiredFirmware = ['1.6.2', '2.0.7'];
+        this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Verify message';
 
         const payload: Object = message.payload;

@@ -14,3 +14,4 @@ export { initBrowserView } from './browser';
 export { passphraseOnDeviceView } from './passphraseOnDevice';
 export { firmwareRequiredUpdate } from './firmwareRequiredUpdate';
 export { firmwareNotSupported } from './firmwareNotSupported';
+export { firmwareNotCompatible } from './firmwareNotCompatible';
