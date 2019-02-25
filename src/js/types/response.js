@@ -15,6 +15,7 @@ export type Unsuccessful$ = {
     success: false,
     payload: {
         error: string,
+        code?: number,
     },
 }
 
