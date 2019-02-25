@@ -102,10 +102,25 @@ export default class LiskGetAddress extends AbstractMethod {
 
         // wait for user action
         const uiResp: UiPromiseResponse = await uiPromise.promise;
-        const resp: string = uiResp.payload;
 
-        this.confirmed = (resp === 'true');
+        this.confirmed = uiResp.payload;
         return this.confirmed;
+    }
+
+    async noBackupConfirmation(): Promise<boolean> {
+        // wait for popup window
+        await this.getPopupPromise().promise;
+        // initialize user response promise
+        const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
+
+        // request confirmation view
+        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+            view: 'no-backup',
+        }));
+
+        // wait for user action
+        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        return uiResp.payload;
     }
 
     async run(): Promise<LiskAddress | Array<LiskAddress>> {
