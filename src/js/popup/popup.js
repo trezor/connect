@@ -12,7 +12,7 @@ import * as UI from '../constants/ui';
 import { getOrigin } from '../utils/networkUtils';
 
 import { showView, postMessage, setOperation, channel, initBroadcast, broadcast } from './view/common';
-import { showFirmwareUpdateNotification, showBridgeUpdateNotification } from './view/notification';
+import { showFirmwareUpdateNotification, showBridgeUpdateNotification, showBackupNotification } from './view/notification';
 
 import * as view from './view';
 // eslint-disable-next-line no-unused-vars
@@ -106,6 +106,9 @@ const handleMessage = (event: PostMessageEvent): void => {
             break;
         case UI.FIRMWARE_OUTDATED :
             showFirmwareUpdateNotification(message.payload);
+            break;
+        case UI.DEVICE_NEEDS_BACKUP :
+            showBackupNotification(message.payload);
             break;
         case UI.BROWSER_NOT_SUPPORTED :
         case UI.BROWSER_OUTDATED :

@@ -86,7 +86,7 @@ export default class GetAddress extends AbstractMethod {
             });
         });
 
-        const useEventListener = payload.useEventListener && payload.bundle.length === 1 && typeof payload.bundle[0].address === 'string' && payload.bundle[0].showOnTrezor;
+        const useEventListener = payload.useEventListener && bundle.length === 1 && typeof bundle[0].address === 'string' && bundle[0].showOnTrezor;
         this.confirmed = useEventListener;
         this.useUi = !useEventListener;
 
@@ -138,6 +138,22 @@ export default class GetAddress extends AbstractMethod {
 
         this.confirmed = (resp === 'true');
         return this.confirmed;
+    }
+
+    async noBackupConfirmation(): Promise<boolean> {
+        // wait for popup window
+        await this.getPopupPromise().promise;
+        // initialize user response promise
+        const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
+
+        // request confirmation view
+        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+            view: 'no-backup',
+        }));
+
+        // wait for user action
+        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        return uiResp.payload === 'true';
     }
 
     async run(): Promise<Address | Array<Address>> {

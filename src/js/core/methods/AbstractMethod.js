@@ -40,6 +40,7 @@ export default class AbstractMethod implements MethodInterface {
     allowDeviceMode: Array<string>; // used in device management (like ResetDevice allow !UI.INITIALIZED)
 
     +confirmation: () => Promise<boolean>;
+    +noBackupConfirmation: () => Promise<boolean>;
     +getButtonRequestData: (code: string) => ?ButtonRequestData;
 
     // // callbacks

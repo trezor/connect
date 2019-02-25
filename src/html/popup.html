@@ -1360,6 +1360,22 @@
         </div>
         <!-- Device management confirmation: END -->
 
+        <!-- No backup confirmation -->
+        <div class="no-backup">
+            <div class="wrapper">
+                <h3>Your Trezor is not backed up!</h3>
+                <p>If your device is ever lost or damaged, your funds will be lost. Backup your device first, to protect your coins against such events.</p>
+            </div>
+            <div class="buttons">
+                <a class="button cancel" href="https://wallet.trezor.io/?backup=1" target="_blank" rel="noreferrer noopener">
+                    <span class="text">Create a backup in 3 minutes.</span>
+                    <span class="exit"></span>
+                </a>
+                <button class="confirm">Proceed, I will take the risk</button>
+            </div>
+        </div>
+        <!-- No backup confirmation: END -->
+
         <!-- Export address -->
         <div class="export-address">
             <div>
@@ -1528,6 +1544,17 @@
                 <span class="close-icon"></span>
             </div>
             <a class="button notification-button" href="https://wallet.trezor.io/" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">Update bridge</a>
+        </div>
+
+        <div class="backup-notification">
+            <div class="header">
+                <div class="left">
+                    <span class="warning-icon"></span>
+                    <h3>Your Trezor is not backed up.</h3>
+                </div>
+                <span class="close-icon"></span>
+            </div>
+            <a class="button notification-button" href="https://wallet.trezor.io/?backup=1" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">Create a backup in 3 minutes.</a>
         </div>
 
     </div>
