@@ -16,8 +16,13 @@ import DataManager from '../data/DataManager';
 import Log, { init as initLog } from '../utils/debug';
 import { resolveAfter } from '../utils/promiseUtils';
 
+// nodejs-replace-start
 /* $FlowIssue loader notation */
 import SharedConnectionWorker from 'sharedworker-loader?name=js/shared-connection-worker.[hash].js!trezor-link/lib/lowlevel/sharedConnectionWorker';
+// nodejs-replace-end
+/* nodejs-imports-start
+const SharedConnectionWorker = () => { return 'not-used-in-node.js' };
+nodejs-imports-end */
 
 const { BridgeV2, Lowlevel, WebUsb, Fallback } = TrezorLink;
 
@@ -64,7 +69,8 @@ export default class DeviceList extends EventEmitter {
         _log.enabled = DataManager.getSettings('debug');
         if (!this.options.transport) {
             const transportTypes: Array<Transport> = [
-                new BridgeV2(null, DataManager.getConfig().resources.bridge),
+                // $FlowIssue: `version` is missing in `JSON`
+                new BridgeV2(null, null, DataManager.assets['bridge'].version.join('.')),
             ];
 
             if (DataManager.getSettings('webusb')) {

@@ -89,7 +89,6 @@ export default class GetPublicKey extends AbstractMethod {
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
-
         let label: string;
         if (this.params.bundle.length > 1) {
             label = 'Export multiple public keys';

@@ -35,7 +35,7 @@ module.exports = {
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: /node_modules/,
+                exclude: [/node_modules/, /trezor-blockchain-link\/build\/workers/],
                 use: ['babel-loader'],
             },
             {
@@ -160,5 +160,7 @@ module.exports = {
     node: {
         fs: 'empty',
         path: 'empty',
+        net: 'empty',
+        tls: 'empty',
     },
 };

@@ -27,7 +27,6 @@ export type Transaction = {
 }
 
 // get account info
-
 export type $EthereumGetAccountInfo = {
     account: EthereumAccount,
     coin: string,

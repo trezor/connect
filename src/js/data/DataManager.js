@@ -88,7 +88,7 @@ export default class DataManager {
             this.config = parseConfig(config);
 
             // check if origin is localhost or trusted
-            const isLocalhost: boolean = location.hostname === 'localhost';
+            const isLocalhost: boolean = typeof window !== 'undefined' ? window.location.hostname === 'localhost' : true;
             const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || '');
             this.settings.trustedHost = (isLocalhost || !!whitelist) && !this.settings.popup;
             // ensure that popup will be used

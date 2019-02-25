@@ -14,7 +14,7 @@ import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
 import type { BitcoinNetworkInfo } from '../types';
 import type { Transport } from 'trezor-link';
-import * as trezor from '../types/trezor'; // flowtype
+import * as trezor from '../types/trezor'; // flowtype only
 
 export type MessageResponse<T> = {
     type: string,

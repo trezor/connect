@@ -19,6 +19,7 @@ import type {
 } from 'hd-wallet';
 import type { BitcoinNetworkInfo, EthereumNetworkInfo } from '../types';
 
+// nodejs-replace-start
 /* $FlowIssue loader notation */
 import FastXpubWasm from 'hd-wallet/lib/fastxpub/fastxpub.wasm';
 /* $FlowIssue loader notation */
@@ -27,6 +28,15 @@ import FastXpubWorker from 'worker-loader?name=js/fastxpub-worker.[hash].js!hd-w
 import DiscoveryWorker from 'worker-loader?name=js/discovery-worker.[hash].js!hd-wallet/lib/discovery/worker/inside';
 /* $FlowIssue loader notation */
 import SocketWorker from 'worker-loader?name=js/socketio-worker.[hash].js!hd-wallet/lib/socketio-worker/inside';
+// nodejs-replace-end
+/* nodejs-imports-start
+import TinyWorker from 'tiny-worker';
+import path from 'path';
+const FastXpubWasm = './workers/fastxpub.wasm';
+const FastXpubWorker = () => { return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './workers/fastxpub-worker.js')) };
+const DiscoveryWorker = () => { return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './workers/discovery-worker.js')) };
+const SocketWorker = () => { return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './workers/socketio-worker.js')) };
+nodejs-imports-end */
 
 export type Options = {
     urls: Array<string>,

@@ -18,12 +18,12 @@ export type CoreMessage = {
 
     id?: number, // response id in ResponseMessage
     success?: boolean, // response status in ResponseMessage
-}
+};
 
 export type UiPromiseResponse = {
     event: string,
     payload: any,
-}
+};
 
 // Override MessageEvent type to have access to "ports" field and typed "data"
 export interface PostMessageEvent extends Event {
@@ -82,7 +82,7 @@ export type Features = {
     fw_vendor_keys: string,
     unfinished_backup: boolean,
     no_backup: boolean,
-}
+};
 
 export type DeviceStatus = 'available' | 'occupied' | 'used';
 export type DeviceMode = 'normal' | 'bootloader' | 'initialize' | 'seedless';
@@ -114,7 +114,7 @@ export type Settings = {
     transportReconnect?: boolean,
     webusb?: boolean,
     pendingTransportEvent?: boolean,
-}
+};
 
 export type T_POPUP = typeof POPUP;
 export type DeviceMessageType = $Values<typeof DEVICE>;
@@ -170,6 +170,7 @@ import * as TEZOS from './tezos';
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
 export type BlockchainDisconnect = (P.$BlockchainDisconnect) => Promise<R.BlockchainDisconnect$>;
+export type BlockchainEstimateFee = (P.$BlockchainEstimateFee) => Promise<R.BlockchainEstimateFee$>;
 export type BlockchainSubscribe = (P.$BlockchainSubscribe) => Promise<R.BlockchainSubscribe$>;
 export type CustomMessage = (P.$CustomMessage) => Promise<R.CustomMessage$>;
 export type RequestLogin = (P.$RequestLogin) => Promise<R.RequestLogin$>;
@@ -192,7 +193,6 @@ export type TezosGetAddress = typeof F_TezosGetAddress;
 declare function F_TezosGetPublicKey(params: (P.$Common & TEZOS.$TezosGetPublicKey)): Promise<TEZOS.TezosGetPublicKey$>;
 declare function F_TezosGetPublicKey(params: (P.$Common & { bundle: Array<TEZOS.$TezosGetPublicKey> })): Promise<TEZOS.TezosGetPublicKey$$>;
 export type TezosGetPublicKey = typeof F_TezosGetPublicKey;
-
 export type TezosSignTransaction = (TEZOS.$TezosSignTransaction) => Promise<TEZOS.TezosSignTransaction$>;
 
 declare function F_CipherKeyValue(params: (P.$Common & P.$CipherKeyValue)): Promise<R.CipherKeyValue$>;
@@ -245,7 +245,6 @@ export type LiskVerifyMessage = (LISK.$LiskVerifyMessage) => Promise<LISK.LiskVe
 
 declare function F_NEMGetAddress(params: (P.$Common & NEM.$NEMGetAddress)): Promise<NEM.NEMGetAddress$>;
 declare function F_NEMGetAddress(params: (P.$Common & { bundle: Array<NEM.$NEMGetAddress> })): Promise<NEM.NEMGetAddress$$>;
-
 export type NEMGetAddress = typeof F_NEMGetAddress;
 
 export type NEMSignTransaction = (NEM.$NEMSignTransaction) => Promise<NEM.NEMSignTransaction$>;
@@ -254,6 +253,10 @@ export type PushTransaction = (P.$PushTransaction) => Promise<R.PushTransaction$
 declare function F_RippleGetAddress(params: (P.$Common & RIPPLE.$RippleGetAddress)): Promise<RIPPLE.RippleGetAddress$>;
 declare function F_RippleGetAddress(params: (P.$Common & { bundle: Array<RIPPLE.$RippleGetAddress> })): Promise<RIPPLE.RippleGetAddress$$>;
 export type RippleGetAddress = typeof F_RippleGetAddress;
+
+declare function F_RippleGetAccountInfo(params: (P.$Common & RIPPLE.$RippleGetAccountInfo)): Promise<RIPPLE.RippleGetAccountInfo$>;
+declare function F_RippleGetAccountInfo(params: (P.$Common & { bundle: Array<RIPPLE.$RippleGetAddress> })): Promise<RIPPLE.RippleGetAccountInfo$$>;
+export type RippleGetAccountInfo = typeof F_RippleGetAccountInfo;
 
 export type RippleSignTransaction = (RIPPLE.$RippleSignTransaction) => Promise<RIPPLE.RippleSignTransaction$>;
 
@@ -268,6 +271,5 @@ export type StellarSignTransaction = (STELLAR.$StellarSignTransaction) => Promis
 export type VerifyMessage = (P.$VerifyMessage) => Promise<R.VerifyMessage$>;
 export type WipeDevice = (P.$WipeDevice) => Promise<R.WipeDevice$>;
 
-// export * from './params';
 export * from './response';
 export * from './coinInfo';

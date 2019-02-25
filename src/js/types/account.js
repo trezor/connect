@@ -12,12 +12,14 @@ export type BitcoinAccount = {
     transactions: number,
 };
 
-// TODO: refactor in blockchain-link
 export type EthereumAccount = {
-    address: string,
+    descriptor: string,
+    path?: Array<number>,
+    serializedPath?: string,
     block: number,
     transactions: number,
     balance: string,
+    availableBalance: string,
     nonce: number,
 };
 

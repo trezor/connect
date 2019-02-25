@@ -46,7 +46,7 @@ export default class EthereumGetAccountInfo extends AbstractMethod {
 
         payload.accounts.forEach(batch => {
             validateParams(batch, [
-                { name: 'address', type: 'string', obligatory: true },
+                { name: 'descriptor', type: 'string', obligatory: true },
                 { name: 'block', type: 'number', obligatory: true },
                 { name: 'transactions', type: 'number', obligatory: true },
             ]);
@@ -77,7 +77,7 @@ export default class EthereumGetAccountInfo extends AbstractMethod {
             const account = this.params.accounts[i];
             const method = 'getAddressHistory';
             const params = [
-                [account.address],
+                [account.descriptor],
                 {
                     start: height,
                     end: account.block,
@@ -90,10 +90,11 @@ export default class EthereumGetAccountInfo extends AbstractMethod {
             const confirmed = await socket.send({method, params});
 
             responses.push({
-                address: account.address,
+                descriptor: account.descriptor,
                 transactions: confirmed.totalCount,
                 block: height,
                 balance: '0', // TODO: fetch balance from blockbook
+                availableBalance: '0', // TODO: fetch balance from blockbook
                 nonce: 0, // TODO: fetch nonce from blockbook
             });
         }

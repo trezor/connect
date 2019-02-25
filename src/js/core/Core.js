@@ -424,6 +424,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
             const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) = device.hasUnexpectedMode(method.allowDeviceMode);
             if (unexpectedMode) {
+                device.keepSession = false;
                 if (isUsingPopup) {
                     // wait for popup handshake
                     await getPopupPromise().promise;
