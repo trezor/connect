@@ -16,7 +16,7 @@ declare type ReceivePermission = {
 
 declare type ReceiveConfirmation = {
     +type: typeof UI.RECEIVE_CONFIRMATION | typeof UI.RECEIVE_PERMISSION,
-    payload: string, // TODO: boolean
+    payload: boolean,
 }
 
 declare type ReceiveDevice = {

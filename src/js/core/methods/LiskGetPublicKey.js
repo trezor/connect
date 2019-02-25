@@ -95,9 +95,8 @@ export default class LiskGetPublicKey extends AbstractMethod {
 
         // wait for user action
         const uiResp: UiPromiseResponse = await uiPromise.promise;
-        const resp: string = uiResp.payload;
 
-        this.confirmed = (resp === 'true');
+        this.confirmed = uiResp.payload;
         return this.confirmed;
     }
 

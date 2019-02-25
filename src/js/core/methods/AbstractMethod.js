@@ -41,6 +41,7 @@ export default class AbstractMethod implements MethodInterface {
     debugLink: boolean;
 
     +confirmation: () => Promise<boolean>;
+    +noBackupConfirmation: () => Promise<boolean>;
     +getButtonRequestData: (code: string) => ?ButtonRequestData;
 
     // // callbacks
@@ -184,7 +185,7 @@ export default class AbstractMethod implements MethodInterface {
                 this.postMessage(new UiMessage(UI.FIRMWARE_NOT_COMPATIBLE, device.toMessageObject()));
 
                 const uiResp: UiPromiseResponse = await uiPromise.promise;
-                if (uiResp.payload !== 'true') {
+                if (!uiResp.payload) {
                     throw ERROR.PERMISSIONS_NOT_GRANTED;
                 }
             } else {
