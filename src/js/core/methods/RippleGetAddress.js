@@ -121,7 +121,7 @@ export default class RippleGetAddress extends AbstractMethod {
 
         // wait for user action
         const uiResp: UiPromiseResponse = await uiPromise.promise;
-        return uiResp.payload;
+        return uiResp.payload === 'true';
     }
 
     async run(): Promise<RippleAddress | Array<RippleAddress>> {

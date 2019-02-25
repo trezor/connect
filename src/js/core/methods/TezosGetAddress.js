@@ -121,7 +121,7 @@ export default class TezosGetAddress extends AbstractMethod {
 
         // wait for user action
         const uiResp: UiPromiseResponse = await uiPromise.promise;
-        return uiResp.payload;
+        return uiResp.payload === 'true';
     }
 
     async run(): Promise<TezosAddress | Array<TezosAddress>> {

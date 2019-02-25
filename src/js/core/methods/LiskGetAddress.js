@@ -121,7 +121,7 @@ export default class LiskGetAddress extends AbstractMethod {
 
         // wait for user action
         const uiResp: UiPromiseResponse = await uiPromise.promise;
-        return uiResp.payload;
+        return uiResp.payload === 'true';
     }
 
     async run(): Promise<LiskAddress | Array<LiskAddress>> {

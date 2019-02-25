@@ -134,7 +134,7 @@ export default class EthereumGetAddress extends AbstractMethod {
 
         // wait for user action
         const uiResp: UiPromiseResponse = await uiPromise.promise;
-        return uiResp.payload;
+        return uiResp.payload === 'true';
     }
 
     async run(): Promise<EthereumAddress | Array<EthereumAddress>> {
