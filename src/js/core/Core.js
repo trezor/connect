@@ -431,6 +431,39 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 }
             }
 
+            // check and request permissions [read, write...]
+            method.checkPermissions();
+            if (!trustedHost && method.requiredPermissions.length > 0) {
+                // show permissions in UI
+                const permitted: boolean = await method.requestPermissions();
+                if (!permitted) {
+                    postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.PERMISSIONS_NOT_GRANTED.message }));
+                    // eslint-disable-next-line no-use-before-define
+                    closePopup();
+                    // interrupt process and go to "final" block
+                    return Promise.resolve();
+                }
+            }
+
+            const deviceNeedsBackup = device.features.needs_backup;
+            if (deviceNeedsBackup && typeof method.noBackupConfirmation === 'function') {
+                const permitted = await method.noBackupConfirmation();
+                if (!permitted) {
+                    postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.PERMISSIONS_NOT_GRANTED.message, code: ERROR.PERMISSIONS_NOT_GRANTED.code }));
+                    // eslint-disable-next-line no-use-before-define
+                    closePopup();
+                    // interrupt process and go to "final" block
+                    return Promise.resolve();
+                }
+            }
+
+            if (deviceNeedsBackup) {
+                // wait for popup handshake
+                await getPopupPromise().promise;
+                // show notification
+                postMessage(new UiMessage(UI.DEVICE_NEEDS_BACKUP, device.toMessageObject()));
+            }
+
             const firmwareException = await method.checkFirmwareRange(isUsingPopup);
             if (firmwareException) {
                 if (isUsingPopup) {
@@ -454,20 +487,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 await getPopupPromise().promise;
                 // show notification
                 postMessage(new UiMessage(UI.FIRMWARE_OUTDATED, device.toMessageObject()));
-            }
-
-            // check and request permissions [read, write...]
-            method.checkPermissions();
-            if (!trustedHost && method.requiredPermissions.length > 0) {
-                // show permissions in UI
-                const permitted: boolean = await method.requestPermissions();
-                if (!permitted) {
-                    postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.PERMISSIONS_NOT_GRANTED.message }));
-                    // eslint-disable-next-line no-use-before-define
-                    closePopup();
-                    // interrupt process and go to "final" block
-                    return Promise.resolve();
-                }
             }
 
             // ask for confirmation [export xpub, export info, sign message]
