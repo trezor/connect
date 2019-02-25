@@ -173,7 +173,7 @@ export default class AbstractMethod implements MethodInterface {
             return UI.FIRMWARE_NOT_SUPPORTED;
         }
         if (device.firmwareStatus === 'required' || semvercmp(device.getVersion(), range.min) < 0) {
-            return UI.FIRMWARE;
+            return UI.FIRMWARE_OLD;
         }
         if (range.max !== '0' && semvercmp(device.getVersion(), range.max) > 0) {
             if (isUsingPopup) {

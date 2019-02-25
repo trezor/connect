@@ -135,7 +135,7 @@ export type BrowserMessage = {
     payload: BrowserState,
 }
 
-export type FirmwareException = typeof UI.FIRMWARE | typeof UI.FIRMWARE_OUTDATED | typeof UI.FIRMWARE_NOT_SUPPORTED | typeof UI.FIRMWARE_NOT_COMPATIBLE | typeof UI.DEVICE_NEEDS_BACKUP;
+export type FirmwareException = typeof UI.FIRMWARE_OLD | typeof UI.FIRMWARE_OUTDATED | typeof UI.FIRMWARE_NOT_SUPPORTED | typeof UI.FIRMWARE_NOT_COMPATIBLE | typeof UI.DEVICE_NEEDS_BACKUP;
 
 export type UnexpectedDeviceMode = {
     +type: typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | FirmwareException,
