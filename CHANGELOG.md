@@ -1,14 +1,3 @@
-# blockchain-link
-__added__
-- Added `TrezorConnect.rippleGetAccountInfo` method
-- Added `TrezorConnect.blockchainGetFee` method
-- Added `TrezorConnect.blockchainUnsubscribe` method
-- Added `BlockchainEvent` (connect/error/block/notification)
-
-__changed__
-- Moved flowtype declarations from ./src/flowtype to ./src/js/types
-- Refactor CoinInfo to 3 types: BitcoinNetworkInfo, EthereumNetworkInfo and MiscNetworkInfo
-
 # 7.0.0
 __added__
 - Added `TrezorConnect.manifest` method
@@ -18,6 +7,11 @@ __added__
 - Added `Capricoin` support (with required changes in `hd-wallet` and `bitcoinjs-lib-zcash` libs)
 - Added `firmwareRange` to every method (validation if device FW is in range: min_required_firmware - max_compatible_firmware declared in config.json)
 - Added conditional protobuf messages (fallback for older FW)
+- Added "device not backed up" confirmation
+- Added `TrezorConnect.rippleGetAccountInfo` method
+- Added `TrezorConnect.blockchainGetFee` method
+- Added `TrezorConnect.blockchainUnsubscribe` method
+- Added `BlockchainEvent` (connect/error/block/notification)
 
 __changed__
 - Upgrade npm modules (babel@7)
@@ -40,7 +34,8 @@ __changed__
 - `getAddress`, `cardanoGetAddress`, `ethereumGetAddress`, `liskGetAddress`, `nemGetAddress`, `rippleGetAddress`, `stellarGetAddress`, `tezosGetAddress` methods (allow to handle `UI.ADDRESS_VALIDATION` event)
 - refactor `ButtonRequest_Address` view in popup: display address and copy to clipboard button
 - extend `getAccountInfo` response (utxo, used addresses, unused addresses)
-- export more flowtype declarations (CoinInfo, Accounts)
+- Moved flowtype declarations from ./src/flowtype to ./src/js/types
+- Refactor CoinInfo to 3 types: BitcoinNetworkInfo, EthereumNetworkInfo and MiscNetworkInfo
 
 __fixed__
 - `stellarSignTransaction` with multiple operations
