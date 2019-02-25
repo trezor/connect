@@ -33,7 +33,7 @@ export const DEVICE_CALL_IN_PROGRESS: TrezorError = new TrezorError(503, 'Device
 export const INVALID_PARAMETERS: TrezorError = new TrezorError(504, 'Invalid parameters');
 export const POPUP_CLOSED = new Error('Popup closed');
 
-export const PERMISSIONS_NOT_GRANTED: TrezorError = new TrezorError(600, 'Permissions not granted');
+export const PERMISSIONS_NOT_GRANTED: TrezorError = new TrezorError(403, 'Permissions not granted');
 
 export const DEVICE_USED_ELSEWHERE: TrezorError = new TrezorError(700, 'Device is used in another window');
 export const INITIALIZATION_FAILED: TrezorError = new TrezorError('Failure_Initialize', 'Initialization failed');
