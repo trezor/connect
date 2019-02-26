@@ -8,6 +8,7 @@ __added__
 - Added `firmwareRange` to every method (validation if device FW is in range: min_required_firmware - max_compatible_firmware declared in config.json)
 - Added conditional protobuf messages (fallback for older FW)
 - Added "device not backed up" confirmation
+- Added `blockchain-link` dependency
 - Added `TrezorConnect.rippleGetAccountInfo` method
 - Added `TrezorConnect.blockchainGetFee` method
 - Added `TrezorConnect.blockchainUnsubscribe` method
@@ -20,6 +21,7 @@ __changed__
 __fixed__
 - ComposeTransaction: fees/legacy detection
 - test with DebugLink device
+- removed "window" references
 
 # 6.0.5
 __changed__
