@@ -1,8 +1,6 @@
 /* @flow */
-'use strict';
 
 import { views } from './common';
-import { getLatestRelease } from '../../data/FirmwareInfo';
 import type { UnexpectedDeviceMode } from '../../types/uiRequest';
 
 export const showFirmwareUpdateNotification = (device: $PropertyType<UnexpectedDeviceMode, 'payload'>): void => {
@@ -13,8 +11,7 @@ export const showFirmwareUpdateNotification = (device: $PropertyType<UnexpectedD
         return;
     }
     if (!device.features) return;
-    const { features } = device;
-    const release = getLatestRelease([ features.major_version, features.minor_version, features.patch_version ]);
+    const release = device.firmwareRelease;
     if (!release) return;
 
     const view = views.getElementsByClassName('firmware-update-notification');

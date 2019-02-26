@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { parseMessage } from '../message';
 import { UiMessage, ResponseMessage } from '../message/builder';
