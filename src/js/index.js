@@ -520,6 +520,7 @@ export {
 export type {
     Device,
     DeviceStatus,
+    FirmwareRelease,
     DeviceFirmwareStatus,
     DeviceMode,
     Features,
