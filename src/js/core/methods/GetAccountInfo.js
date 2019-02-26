@@ -113,6 +113,22 @@ export default class GetAccountInfo extends AbstractMethod {
         return this.confirmed;
     }
 
+    async noBackupConfirmation(): Promise<boolean> {
+        // wait for popup window
+        await this.getPopupPromise().promise;
+        // initialize user response promise
+        const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
+
+        // request confirmation view
+        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+            view: 'no-backup',
+        }));
+
+        // wait for user action
+        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        return uiResp.payload;
+    }
+
     async run(): Promise<Response> {
         // initialize backend
         this.backend = await createBackend(this.params.coinInfo);
