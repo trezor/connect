@@ -96,8 +96,8 @@
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
-    "events": "^1.1.1",
-    "whatwg-fetch": "^2.0.4"
+    "events": "^3.0.0",
+    "whatwg-fetch": "^3.0.0"
   },
   "npmDependencies": {
     "@babel/runtime": "^7.3.1"
