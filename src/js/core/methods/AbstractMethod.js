@@ -1,4 +1,5 @@
 /* @flow */
+
 import { crypto } from 'bitcoinjs-lib-zcash';
 import semvercmp from 'semver-compare';
 import Device from '../../device/Device';
@@ -164,7 +165,7 @@ export default class AbstractMethod implements MethodInterface {
         }
     }
 
-    async checkFirmwareRange(isUsingPopup: boolean): Promise<?FirmwareException> {
+    async checkFirmwareRange(isUsingPopup: boolean): Promise<?$PropertyType<FirmwareException, 'type'>> {
         const device = this.device;
         if (!device.features) return null;
         const model = device.features.major_version;

@@ -1,4 +1,5 @@
 /* @flow */
+
 import type { Device, CoreMessage } from './index';
 
 import * as POPUP from '../constants/popup';
@@ -135,10 +136,13 @@ export type BrowserMessage = {
     payload: BrowserState,
 }
 
-export type FirmwareException = typeof UI.FIRMWARE_OLD | typeof UI.FIRMWARE_OUTDATED | typeof UI.FIRMWARE_NOT_SUPPORTED | typeof UI.FIRMWARE_NOT_COMPATIBLE | typeof UI.DEVICE_NEEDS_BACKUP;
-
 export type UnexpectedDeviceMode = {
-    +type: typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | FirmwareException,
+    +type: typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | typeof UI.DEVICE_NEEDS_BACKUP,
+    payload: Device,
+}
+
+export type FirmwareException = {
+    +type: typeof UI.FIRMWARE_OLD | typeof UI.FIRMWARE_OUTDATED | typeof UI.FIRMWARE_NOT_SUPPORTED | typeof UI.FIRMWARE_NOT_COMPATIBLE,
     payload: Device,
 }
 
@@ -204,6 +208,7 @@ declare function MessageFactory(type: $PropertyType<RequestConfirmation, 'type'>
 declare function MessageFactory(type: $PropertyType<SelectDevice, 'type'>, payload: $PropertyType<SelectDevice, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<BrowserMessage, 'type'>, payload: $PropertyType<BrowserMessage, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<UnexpectedDeviceMode, 'type'>, payload: $PropertyType<UnexpectedDeviceMode, 'payload'>): CoreMessage;
+declare function MessageFactory(type: $PropertyType<FirmwareException, 'type'>, payload: $PropertyType<FirmwareException, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<SelectAccount, 'type'>, payload: $PropertyType<SelectAccount, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<SelectFee, 'type'>, payload: $PropertyType<SelectFee, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<UpdateCustomFee, 'type'>, payload: $PropertyType<UpdateCustomFee, 'payload'>): CoreMessage;

@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 /*
 * Public types accessible from npm library
@@ -84,6 +83,19 @@ export type Features = {
     no_backup: boolean,
 };
 
+export type FirmwareRelease = {
+    required: true,
+    version: Array<number>,
+    min_bridge_version: Array<number>,
+    min_firmware_version: Array<number>,
+    bootloader_version: Array<number>,
+    min_bootloader_version: Array<number>,
+    url: string,
+    channel: string,
+    fingerprint: string,
+    changelog: string,
+};
+
 export type DeviceStatus = 'available' | 'occupied' | 'used';
 export type DeviceMode = 'normal' | 'bootloader' | 'initialize' | 'seedless';
 export type DeviceFirmwareStatus = 'valid' | 'outdated' | 'required';
@@ -93,6 +105,7 @@ export type Device = $Exact<{
     +path: string,
     +label: string,
     +firmware: DeviceFirmwareStatus,
+    +firmwareRelease: ?FirmwareRelease,
     +status: DeviceStatus,
     +mode: DeviceMode,
     state: ?string,
