@@ -1,11 +1,10 @@
 /* @flow */
-'use strict';
 
 import EventEmitter from 'events';
 import semvercmp from 'semver-compare';
 import DeviceCommands from './DeviceCommands';
 
-import type { Device as DeviceTyped, DeviceFirmwareStatus, Features, Deferred } from '../types';
+import type { Device as DeviceTyped, DeviceFirmwareStatus, Features, Deferred, FirmwareRelease } from '../types';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
 import * as UI from '../constants/ui';
@@ -13,7 +12,7 @@ import * as DEVICE from '../constants/device';
 import * as ERROR from '../constants/errors';
 import { create as createDeferred } from '../utils/deferred';
 import DataManager from '../data/DataManager';
-import { checkFirmware } from '../data/FirmwareInfo';
+import { checkFirmware, getLatestRelease } from '../data/FirmwareInfo';
 import Log, { init as initLog } from '../utils/debug';
 
 // custom log
@@ -57,6 +56,7 @@ export default class Device extends EventEmitter {
     hasDebugLink: boolean;
 
     firmwareStatus: DeviceFirmwareStatus;
+    firmwareRelease: ?FirmwareRelease;
     features: Features;
     featuresNeedsReload: boolean = false;
 
@@ -347,7 +347,9 @@ export default class Device extends EventEmitter {
         this.featuresNeedsReload = false;
         this.featuresTimestamp = new Date().getTime();
 
-        this.firmwareStatus = checkFirmware([ this.features.major_version, this.features.minor_version, this.features.patch_version ]);
+        const currentFW = [ this.features.major_version, this.features.minor_version, this.features.patch_version ];
+        this.firmwareStatus = checkFirmware(currentFW);
+        this.firmwareRelease = getLatestRelease(currentFW);
     }
 
     async getFeatures(): Promise<void> {
@@ -586,6 +588,7 @@ export default class Device extends EventEmitter {
                 status: this.isUsedElsewhere() ? 'occupied' : this.featuresNeedsReload ? 'used' : 'available',
                 mode: this.getMode(),
                 firmware: this.firmwareStatus,
+                firmwareRelease: this.firmwareRelease,
                 features: this.features,
             };
         }
