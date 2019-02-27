@@ -116,7 +116,7 @@ export const parse = (input: ?Object): ConnectSettings => {
 
     // local files
     if (typeof window !== 'undefined' && window.location.protocol === 'file:') {
-        settings.origin = window.location.origin + window.location.pathname;
+        settings.origin = `file://${window.location.pathname}`;
         settings.webusb = false;
     }
 
