@@ -281,12 +281,21 @@ class TrezorConnect {
             const loginChallengeListener = async (event: $T.PostMessageEvent) => {
                 const data = event.data;
                 if (data && data.type === UI.LOGIN_CHALLENGE_REQUEST) {
-                    const payload = await callback();
-                    iframe.postMessage({
-                        event: UI_EVENT,
-                        type: UI.LOGIN_CHALLENGE_RESPONSE,
-                        payload,
-                    });
+                    try {
+                        const payload = await callback();
+                        iframe.postMessage({
+                            event: UI_EVENT,
+                            type: UI.LOGIN_CHALLENGE_RESPONSE,
+                            payload,
+                        });
+                    } catch (error) {
+                        console.warn('TrezorConnect.requestLogin: callback error', error);
+                        iframe.postMessage({
+                            event: UI_EVENT,
+                            type: UI.LOGIN_CHALLENGE_RESPONSE,
+                            payload: error.message,
+                        });
+                    }
                 }
             };
 
