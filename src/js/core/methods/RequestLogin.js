@@ -68,6 +68,11 @@ export default class RequestLogin extends AbstractMethod {
             const uiResp: UiPromiseResponse = await this.createUiPromise(UI.LOGIN_CHALLENGE_RESPONSE, this.device).promise;
             const payload: Object = uiResp.payload;
 
+            // error handler
+            if (typeof payload === 'string') {
+                throw new Error(`TrezorConnect.requestLogin callback error: ${payload}`);
+            }
+
             // validate incoming parameters
             validateParams(payload, [
                 { name: 'challengeHidden', type: 'string', obligatory: true },
