@@ -72,5 +72,8 @@
             "download": "https://www.mozilla.org/en-US/firefox/new/",
             "update": "https://support.mozilla.org/en-US/kb/update-firefox-latest-version"
         }
-    }
+    },
+    "supportedFirmware": [
+
+    ]
 }
