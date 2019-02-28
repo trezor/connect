@@ -258,7 +258,7 @@ export default class DeviceCommands {
     }
 
     async ethereumGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.HDNodeResponse> {
-        if (!this.device.atLeast(['1.8.0', '2.0.11'])) {
+        if (!this.device.atLeast(['1.8.1', '2.1.0'])) {
             return await this.getHDNode(address_n);
         }
 
