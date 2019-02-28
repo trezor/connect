@@ -1,4 +1,4 @@
-# 7.0.0
+# 7.0.1
 __added__
 - Added `TrezorConnect.manifest` method
 - Added DebugLink (emulator) support: `TrezorConnect.debugLinkDecision` and `TrezorConnect.debugLinkGetState` methods
