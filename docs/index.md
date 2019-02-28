@@ -11,7 +11,7 @@ yarn add trezor-connect
 
 Include library as inline script:
 ```javascript
-<script src="https://connect.trezor.io/5/trezor-connect.js"></script>
+<script src="https://connect.trezor.io/7/trezor-connect.js"></script>
 ```
 
 ## Initialization
