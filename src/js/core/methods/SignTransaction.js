@@ -21,6 +21,7 @@ import {
 import type {
     TransactionInput,
     TransactionOutput,
+    TransactionOptions,
     SignedTx,
 } from '../../types/trezor';
 
@@ -34,8 +35,7 @@ type Params = {
     inputs: Array<TransactionInput>,
     hdInputs: Array<BuildTxInput>,
     outputs: Array<TransactionOutput>,
-    locktime: ?number,
-    timestamp: ?number,
+    options: TransactionOptions,
     coinInfo: BitcoinNetworkInfo,
     push: boolean,
 }
@@ -53,11 +53,16 @@ export default class SignTransaction extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
+            { name: 'coin', type: 'string', obligatory: true },
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
             { name: 'locktime', type: 'number' },
             { name: 'timestamp', type: 'number' },
-            { name: 'coin', type: 'string', obligatory: true },
+            { name: 'version', type: 'number' },
+            { name: 'expiry', type: 'number' },
+            { name: 'overwintered', type: 'boolean' },
+            { name: 'versionGroupId', type: 'number' },
+            { name: 'branchId', type: 'number' },
             { name: 'push', type: 'boolean' },
         ]);
 
@@ -95,15 +100,22 @@ export default class SignTransaction extends AbstractMethod {
             inputs,
             hdInputs,
             outputs: payload.outputs,
-            locktime: payload.locktime,
-            timestamp: payload.timestamp,
+            options: {
+                lock_time: payload.locktime,
+                timestamp: payload.timestamp,
+                version: payload.version,
+                expiry: payload.expiry,
+                overwintered: payload.overwintered,
+                version_group_id: payload.versionGroupId,
+                branch_id: payload.branchId,
+            },
             coinInfo,
             push: payload.hasOwnProperty('push') ? payload.push : false,
         };
 
         if (coinInfo.hasTimestamp && !payload.hasOwnProperty('timestamp')) {
             const d = new Date();
-            this.params.timestamp = Math.round(d.getTime() / 1000);
+            this.params.options.timestamp = Math.round(d.getTime() / 1000);
         }
     }
 
@@ -118,13 +130,12 @@ export default class SignTransaction extends AbstractMethod {
             this.params.inputs,
             this.params.outputs,
             refTxs,
+            this.params.options,
             this.params.coinInfo,
-            this.params.locktime,
-            this.params.timestamp,
         );
 
         if (this.params.push) {
-            const txid: string = await this.backend.sendTransactionHex(response.serializedTx);
+            const txid = await this.backend.sendTransactionHex(response.serializedTx);
             return {
                 ...response,
                 txid,

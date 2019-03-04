@@ -8,6 +8,7 @@ import type {
     RefTransaction,
     TransactionInput,
     TransactionOutput,
+    TransactionOptions,
     SignTxInfoToTrezor,
     TxRequestSerialized,
     SignedTx,
@@ -48,24 +49,23 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
     if (requestType === 'TXMETA') {
         const outputCount = reqTx.bin_outputs.length;
         const data: ?string = reqTx.extra_data;
-        if (data != null && data.length !== 0) {
-            const data_: string = data;
+        const meta: SignTxInfoToTrezor = {
+            version: reqTx.version,
+            lock_time: reqTx.lock_time,
+            inputs_cnt: reqTx.inputs.length,
+            outputs_cnt: outputCount,
+            timestamp: reqTx.timestamp,
+            version_group_id: reqTx.version_group_id,
+        };
+
+        if (typeof data === 'string' && data.length !== 0) {
             return {
-                version: reqTx.version,
-                lock_time: reqTx.lock_time,
-                inputs_cnt: reqTx.inputs.length,
-                outputs_cnt: outputCount,
-                extra_data_len: data_.length / 2,
-            };
-        } else {
-            return {
-                version: reqTx.version,
-                lock_time: reqTx.lock_time,
-                inputs_cnt: reqTx.inputs.length,
-                outputs_cnt: outputCount,
-                timestamp: reqTx.timestamp,
+                ...meta,
+                extra_data_len: data.length / 2,
             };
         }
+
+        return meta;
     }
     throw new Error(`Unknown request type: ${requestType}`);
 };
@@ -172,12 +172,9 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
     inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>,
     refTxs: Array<RefTransaction>,
+    options: TransactionOptions,
     coinInfo: BitcoinNetworkInfo,
-    locktime: ?number,
-    timestamp: ?number,
 ): Promise<SignedTx> => {
-    // TODO rbf
-    // const sequence: number = locktime ? (0xffffffff - 1) : 0xffffffff;
     const index: {[key: string]: RefTransaction} = {};
     refTxs.forEach((tx: RefTransaction) => {
         index[tx.hash.toLowerCase()] = tx;
@@ -189,8 +186,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
         inputs_count: inputs.length,
         outputs_count: outputs.length,
         coin_name: coinInfo.name,
-        lock_time: locktime,
-        timestamp,
+        ...options,
     });
 
     const signed: SignedTx = await processTxRequest(
