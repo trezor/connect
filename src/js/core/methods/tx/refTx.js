@@ -56,7 +56,7 @@ export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>
 };
 
 const getJoinSplitData = (transaction: BitcoinJsTransaction): ?Buffer => {
-    if (transaction.version < 2) {
+    if (transaction.version < 2 || !transaction.zcash) {
         return null;
     }
     const buffer = transaction.toBuffer();

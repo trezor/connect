@@ -261,6 +261,9 @@ declare module 'bitcoinjs-lib-zcash' {
         timestamp?: number,
         ins: Array<Input>,
         outs: Array<Output>,
+        zcash: boolean,
+        versionGroupId: string,
+        expiry: number,
 
         constructor(): void,
         static fromHex(hex: string, zcash: boolean, hasTimestamp?: boolean): Transaction,
