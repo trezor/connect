@@ -153,6 +153,17 @@ export type RefTransaction = {
     lock_time: number,
     extra_data: ?string,
     timestamp: ?number,
+    version_group_id?: ?number,
+};
+
+export type TransactionOptions = {
+    lock_time?: ?number,
+    timestamp?: ?number,
+    version?: ?number,
+    expiry?: ?number,
+    overwintered?: ?boolean,
+    version_group_id?: ?number,
+    branch_id?: ?number,
 };
 
 export type TxRequestDetails = {
@@ -246,6 +257,8 @@ export type SignTxInfoToTrezor = {
     inputs_cnt: number,
     outputs_cnt: number,
     extra_data_len?: number,
+    timestamp: ?number,
+    version_group_id: ?number,
 };
 
 // NEM types

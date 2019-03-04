@@ -154,6 +154,11 @@ export type $SignTransaction = $Common & {
     coin: string,
     locktime?: number,
     timestamp?: number,
+    version?: number,
+    expiry?: number,
+    overwintered?: boolean,
+    versionGroupId?: number,
+    branchId?: number,
     push?: boolean,
 }
 
