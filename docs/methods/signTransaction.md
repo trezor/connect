@@ -20,9 +20,16 @@ TrezorConnect.signTransaction(params).then(function(result) {
 ### Params 
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L169-L164)
+* `coin` - *obligatory* `string` Determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 * `inputs` - *obligatory* `Array` of [TransactionInput](../../src/js/types/params.js#L137-L148),
 * `outputs` - *obligatory* `Array` of [TransactionOutput](../../src/js/types/params.js#L150-L162),
-* `coin` - *obligatory* `string` Determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
+* `locktime` - *optional* `number`,
+* `version` - *optional* `number` transaction version,
+* `expiry` - *optional* `number`,
+* `versionGroupId` - *optional* `number` ZCash specific field,
+* `overwintered` - *optional* `boolean` ZCash specific field,
+* `timestamp` - *optional* `number` Capricoin specific field,
+* `branchId` - *optional* `number`,
 * `push` - *optional* `boolean` Broadcast signed transaction to blockchain. Default is set to false
 
 ### Example
