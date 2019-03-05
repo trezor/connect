@@ -3,6 +3,7 @@
 import type {
     MultisigRedeemScriptType,
     DebugLinkDecision,
+    RefTransaction,
 } from './trezor';
 
 export type $BlockchainDisconnect = {
@@ -133,6 +134,7 @@ export type TransactionInput = {
     decred_tree?: number,
     decred_script_version?: number,
 }
+
 // modified types from trezor/TransactionOutput (amount: string)
 export type TransactionOutput = {
     address: string,
@@ -151,6 +153,7 @@ export type TransactionOutput = {
 export type $SignTransaction = $Common & {
     inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>,
+    refTxs?: Array<RefTransaction>,
     coin: string,
     locktime?: number,
     timestamp?: number,
