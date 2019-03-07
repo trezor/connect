@@ -23,14 +23,14 @@ TrezorConnect.signTransaction(params).then(function(result) {
 * `coin` - *obligatory* `string` Determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 * `inputs` - *obligatory* `Array` of [TransactionInput](../../src/js/types/params.js#L137-L148),
 * `outputs` - *obligatory* `Array` of [TransactionOutput](../../src/js/types/params.js#L150-L162),
-* `refTxs` - *optional* `Array` of [RefTransaction](../../src/js/types/trezor.js#L148-L157). Referenced transactions are required to sign non-segwit transaction. If you don't want to use build-in `blockbook` backend you can optionally provide those data from your own backend transformed to `Trezor` format. For Segwit transactions this field should be an empty `Array`.
+* `refTxs` - *optional* `Array` of [RefTransaction](../../src/js/types/trezor.js#L148-L157). If you don't want to use build-in `blockbook` backend you can optionally provide those data from your own backend transformed to `Trezor` format.  Referenced transactions are required to sign `non-segwit` inputs. For `segwit` inputs this field should be an empty `Array`.
 * `locktime` - *optional* `number`,
 * `version` - *optional* `number` transaction version,
-* `expiry` - *optional* `number`,
-* `versionGroupId` - *optional* `number` ZCash specific field,
-* `overwintered` - *optional* `boolean` ZCash specific field,
-* `timestamp` - *optional* `number` Capricoin specific field,
-* `branchId` - *optional* `number`,
+* `expiry` - *optional* `number`, only for Decred and Zcash,
+* `versionGroupId` - *optional* `number` only for Zcash, nVersionGroupId when overwintered is set,
+* `overwintered` - *optional* `boolean` only for Zcash
+* `timestamp` - *optional* `number` only for Capricoin, transaction timestamp,
+* `branchId` - *optional* `number`, only for Zcash, BRANCH_ID when overwintered is set
 * `push` - *optional* `boolean` Broadcast signed transaction to blockchain. Default is set to false
 
 ### Example
