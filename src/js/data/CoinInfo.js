@@ -150,6 +150,10 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
     const coinsObject: Object = json;
     Object.keys(coinsObject).forEach(key => {
         const coin = coinsObject[key];
+        const shortcut = coin.coin_shortcut;
+        const isBitcoin = shortcut === 'BTC' || shortcut === 'TEST';
+        const hasTimestamp = shortcut === 'CPC';
+
         const network: $ElementType<BitcoinNetworkInfo, 'network'> = {
             messagePrefix: coin.signed_message_header,
             bech32: coin.bech32_prefix,
@@ -161,12 +165,8 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
             scriptHash: coin.address_type_p2sh,
             wif: 0x80, // doesn't matter, for type correctness
             dustThreshold: 0, // doesn't matter, for type correctness,
+            coin: shortcut.toLowerCase(),
         };
-
-        const zcash = coin.coin_name.startsWith('Zcash');
-        const shortcut = coin.coin_shortcut;
-        const isBitcoin = shortcut === 'BTC' || shortcut === 'TEST';
-        const hasTimestamp = shortcut === 'CPC';
 
         bitcoinNetworks.push({
             type: 'bitcoin',
@@ -212,7 +212,6 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
 
             // custom
             network, // bitcoinjs network
-            zcash,
             isBitcoin,
             hasTimestamp,
             maxFee: Math.round(coin.maxfee_kb / 1000),
@@ -243,6 +242,7 @@ const parseEthereumNetworksJson = (json: JSON): void => {
             slip44: network.slip44,
             support: network.support,
             // url not used
+            network: undefined,
         });
     });
 };
@@ -262,6 +262,7 @@ const parseMiscNetworksJSON = (json: JSON): void => {
             shortcut: network.shortcut,
             slip44: network.slip44,
             support: network.support,
+            network: undefined,
         });
     });
 };

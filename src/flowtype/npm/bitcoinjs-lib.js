@@ -114,6 +114,7 @@ declare module 'bitcoinjs-lib-zcash' {
         wif: number,
         dustThreshold: number,
         bech32: ?string,
+        coin: string,
     }
 
     declare type Output = {
@@ -261,13 +262,15 @@ declare module 'bitcoinjs-lib-zcash' {
         timestamp?: number,
         ins: Array<Input>,
         outs: Array<Output>,
-        zcash: boolean,
         versionGroupId: string,
         expiry: number,
+        dashType: number,
+        dashPayload: number,
+        invalidTransaction: boolean,
 
-        constructor(): void,
-        static fromHex(hex: string, zcash: boolean, hasTimestamp?: boolean): Transaction,
-        static fromBuffer(buffer: Buffer): Transaction,
+        constructor(network?: ?Network): void,
+        static fromHex(hex: string, network: ?Network): Transaction,
+        static fromBuffer(buffer: Buffer, network: ?Network, __noStrict?: boolean): Transaction,
         toHex(): string,
         addInput(hash: Buffer, index: number, sequence?: ?number, scriptSig?: Buffer): void,
         addOutput(scriptPubKey: Buffer, value: number): void,
@@ -286,6 +289,9 @@ declare module 'bitcoinjs-lib-zcash' {
         clone(): Transaction,
         hashForSignature(inIndex: number, prevOutScript: Buffer, hashType: number): Buffer,
         setInputScript(index: number, scriptSig: Buffer): void,
+        getExtraData(): ?Buffer,
+        isDashSpecialTransaction(): boolean,
+        isZcashTransaction(): boolean,
     }
 
     declare class TransactionBuilder {

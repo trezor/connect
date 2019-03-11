@@ -20,6 +20,8 @@ type Network = {
     scriptHash: number,
     wif: number,
     dustThreshold: number,
+    bech32: ?string,
+    coin: string,
 };
 
 type BlockchainLink = {
@@ -71,7 +73,6 @@ export type BitcoinNetworkInfo = {
 
     // custom
     network: Network,
-    zcash: boolean,
     isBitcoin: boolean,
     hasTimestamp: boolean,
     minFee: number,
@@ -95,6 +96,7 @@ export type EthereumNetworkInfo = {
     slip44: number,
     support: CoinSupport,
     // url not used
+    network: typeof undefined, // compatibility
 };
 
 export type MiscNetworkInfo = {
@@ -110,6 +112,7 @@ export type MiscNetworkInfo = {
     shortcut: string,
     slip44: number,
     support: CoinSupport,
+    network: typeof undefined, // compatibility
 };
 
 export type CoinInfo = BitcoinNetworkInfo | EthereumNetworkInfo | MiscNetworkInfo;
