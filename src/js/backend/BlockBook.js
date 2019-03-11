@@ -57,7 +57,7 @@ export default class BlockBook {
         this.options = options;
 
         const worker: FastXpubWorker = new FastXpubWorker();
-        const blockchain: BitcoreBlockchain = new BitcoreBlockchain(this.options.urls, () => new SocketWorker());
+        const blockchain: BitcoreBlockchain = new BitcoreBlockchain(this.options.urls, () => new SocketWorker(), options.coinInfo.network);
         this.blockchain = blockchain;
 
         // // $FlowIssue WebAssembly
@@ -90,11 +90,6 @@ export default class BlockBook {
             if (!coinInfo) {
                 throw new Error('Failed to load coinInfo ' + hash);
             }
-        }
-
-        // set vars
-        if (typeof coinInfo.zcash === 'boolean') {
-            this.blockchain.zcash = coinInfo.zcash;
         }
     }
 
@@ -182,7 +177,7 @@ export default class BlockBook {
     async loadTransaction(id: string): Promise<BitcoinJsTransaction> {
         if (this.error) { throw this.error; }
         const tx = await this.blockchain.lookupTransaction(id);
-        return BitcoinJsTransaction.fromHex(tx.hex, tx.zcash, typeof tx.time === 'number');
+        return BitcoinJsTransaction.fromHex(tx.hex, this.options.coinInfo.network);
     }
 
     async loadCurrentHeight(): Promise<number> {
