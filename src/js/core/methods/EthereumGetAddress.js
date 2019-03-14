@@ -150,7 +150,7 @@ export default class EthereumGetAddress extends AbstractMethod {
                     false
                 );
                 if (typeof batch.address === 'string') {
-                    if (stripHexPrefix(batch.address).toLowerCase() !== silent.address.toLowerCase()) {
+                    if (stripHexPrefix(batch.address).toLowerCase() !== stripHexPrefix(silent.address).toLowerCase()) {
                         throw new Error('Addresses do not match');
                     }
                 } else {
