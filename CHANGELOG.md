@@ -1,3 +1,13 @@
+# 7.0.2
+__added__
+- Added missing params to `TrezorConnect.signTransaction` method [`version`, `expiry`, `overwintered`, `versionGroupId`, `branchId`, `refTxs`]
+- Possibility to use `TrezorConnect.signTransaction` without build-in backend (using `refTxs` field)
+
+__fixed__
+- Fixed `Dash` and `Zcash` special transactions
+- `EthereumGetAddress` address validation
+- Flowtype for `CardanoInput`
+
 # 7.0.1
 __added__
 - Added `TrezorConnect.manifest` method
