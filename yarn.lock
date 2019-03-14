@@ -3937,10 +3937,10 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-hd-wallet@^8.2.0:
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/hd-wallet/-/hd-wallet-8.2.0.tgz#7090136497c0aa2d1cf19233f647420a44521682"
-  integrity sha512-XcrcWsx4nmJB8iQ6iEQfINgU1cTNSqr1lbuFDUVNPTTJrzNnox7Fe66tflAeOnjl2zf/IkZlzGwsSIuHsbw1vg==
+hd-wallet@8.2.3:
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/hd-wallet/-/hd-wallet-8.2.3.tgz#e223886d53ed981f2a0789328aa76d7c76e98be7"
+  integrity sha512-Rk+meKF3H12Ve8pgGrvX71q6JOSECZRQdPTjGDXB7lESr4U0TrfwRCVVZjdQMZmjSNMkNFLvW+ONzEl1o0vJYg==
   dependencies:
     bchaddrjs "^0.2.1"
     bitcoinjs-lib-zcash "3.6.1"
