@@ -1,5 +1,5 @@
 ## Symmetric key-value encryption
-Asks device to encrypt value using the private key derived by given BIP32 path and the given key. IV is always computed automatically.
+Cipher key value provides symmetric encryption in the Trezor device where the user might be forced to confirm the encryption/decryption on the display. The key for the encryption is constructed from the private key on the BIP address, the key displayed on the device, and the two informations about whether to ask for confirmation. It is constructed in such a way, that different path, key or the confirm information will get a different encryption key and IV. So, you cannot "skip" the confirmation by using different input. IV can be either manually set, or it is computed together with the key.The value must be divisible into 16-byte blocks. The application has to pad the blocks itself and ensure safety; for example, by using PKCS7.
 
 More information can be found in [SLIP-0011](https://github.com/satoshilabs/slips/blob/master/slip-0011.md).
 
@@ -22,10 +22,11 @@ Common parameter `useEmptyPassphrase` - is set to `true`
 
 #### Encrypt single value
 * `path` — *obligatory* `string | Array<number>` minimum length is `1`. [read more](path.md)
-* `key` — *optional* `string` // TODO
-* `value` — *optional* `string` hexadecimal value with length a multiple of 16 bytes (32 letters in hexadecimal)
-* `askOnEncrypt` - *optional* `boolean` // TODO
-* `askOnDecrypt` - *optional* `boolean` // TODO
+* `key` — *optional* `string` a message shown on device
+* `value` — *optional* `string` hexadecimal value with length a multiple of 16 bytes (32 letters in hexadecimal). Value is what is actually being encrypted.
+* `askOnEncrypt` - *optional* `boolean` should user confirm encrypt?
+* `askOnDecrypt` - *optional* `boolean` should user confirm decrypt?
+* `iv` - *optional* `string` initialization vector - keep unset if you don't know what it means, it will be computed automatically.
 
 #### Encrypt multiple values
 * `bundle` - `Array` of Objects with `path`, `key`, `value`, `askOnEncrypt`, `askOnDecrypt` fields
