@@ -187,7 +187,7 @@ export type WipeDevice$ = {
     payload: Success,
 } | Unsuccessful$;
 
-export type GetVersion$ = {
+export type GetSettings$ = {
     success: true,
     payload: ConnectSettings,
 } | Unsuccessful$;

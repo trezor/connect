@@ -3,8 +3,9 @@
 import AbstractMethod from './AbstractMethod';
 import DataManager from '../../data/DataManager';
 import type { CoreMessage } from '../../types';
+import type { ConnectSettings } from '../../data/ConnectSettings';
 
-export default class GetPublicKey extends AbstractMethod {
+export default class GetSettings extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = [];
@@ -12,7 +13,7 @@ export default class GetPublicKey extends AbstractMethod {
         this.useUi = false;
     }
 
-    async run(): Promise<Object> {
+    async run(): Promise<ConnectSettings> {
         return DataManager.getSettings();
     }
 }

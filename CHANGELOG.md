@@ -2,7 +2,7 @@
 __added__
 - Added missing params to `TrezorConnect.signTransaction` method [`version`, `expiry`, `overwintered`, `versionGroupId`, `branchId`, `refTxs`]
 - Possibility to use `TrezorConnect.signTransaction` without build-in backend (using `refTxs` field)
-- Added `TrezorConnect.getVersion` method
+- Added `TrezorConnect.getSettings` method
 
 __fixed__
 - Fixed `Dash` and `Zcash` special transactions

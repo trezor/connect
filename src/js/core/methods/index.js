@@ -28,7 +28,7 @@ import GetAddress from './GetAddress';
 import GetDeviceState from './GetDeviceState';
 import GetFeatures from './GetFeatures';
 import GetPublicKey from './GetPublicKey';
-import GetVersion from './GetVersion';
+import GetSettings from './GetSettings';
 import LiskGetAddress from './LiskGetAddress';
 import LiskGetPublicKey from './LiskGetPublicKey';
 import LiskSignMessage from './LiskSignMessage';
@@ -77,7 +77,7 @@ const classes: {[k: string]: any} = {
     'getDeviceState': GetDeviceState,
     'getFeatures': GetFeatures,
     'getPublicKey': GetPublicKey,
-    'getVersion': GetVersion,
+    'getSettings': GetSettings,
     'liskGetAddress': LiskGetAddress,
     'liskGetPublicKey': LiskGetPublicKey,
     'liskSignMessage': LiskSignMessage,
