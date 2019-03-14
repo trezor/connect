@@ -25,12 +25,21 @@ export const getReferencedTransactions = (inputs: Array<BuildTxInput>): Array<st
     return uniq(legacyInputs, utxo => reverseBuffer(utxo.hash).toString('hex')).map(tx => reverseBuffer(tx.hash).toString('hex'));
 };
 
+const getJoinSplitData = (transaction: BitcoinJsTransaction): ?Buffer => {
+    if (transaction.version < 2 || !transaction.zcash) {
+        return null;
+    }
+    const buffer = transaction.toBuffer();
+    const joinsplitByteLength = transaction.joinsplitByteLength();
+    const res = buffer.slice(buffer.length - joinsplitByteLength);
+    return res;
+};
+
 // Transform referenced transactions from Bitcore to Trezor format
 export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>): Array<RefTransaction> => {
     return txs.map(tx => {
-        // eslint-disable-next-line no-use-before-define
         const data = getJoinSplitData(tx);
-        const dataStr = data == null ? null : data.toString('hex');
+        const dataStr = data ? data.toString('hex') : null;
         return {
             lock_time: tx.locktime,
             version: tx.version,
@@ -51,16 +60,8 @@ export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>
             }),
             extra_data: dataStr,
             timestamp: tx.timestamp,
+            version_group_id: tx.zcash ? parseInt(tx.versionGroupId, 16) : null,
+            expiry: tx.expiry,
         };
     });
-};
-
-const getJoinSplitData = (transaction: BitcoinJsTransaction): ?Buffer => {
-    if (transaction.version < 2 || !transaction.zcash) {
-        return null;
-    }
-    const buffer = transaction.toBuffer();
-    const joinsplitByteLength = transaction.joinsplitByteLength();
-    const res = buffer.slice(buffer.length - joinsplitByteLength);
-    return res;
 };

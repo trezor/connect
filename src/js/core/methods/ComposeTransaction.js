@@ -236,9 +236,8 @@ export default class ComposeTransaction extends AbstractMethod {
             tx.transaction.inputs.map(inp => inputToTrezor(inp, 0)),
             tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo)),
             refTxs,
+            { timestamp },
             coinInfo,
-            undefined,
-            timestamp,
         );
 
         if (this.params.push) {

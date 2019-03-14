@@ -21,6 +21,8 @@ import {
 import type {
     TransactionInput,
     TransactionOutput,
+    TransactionOptions,
+    RefTransaction,
     SignedTx,
 } from '../../types/trezor';
 
@@ -34,8 +36,8 @@ type Params = {
     inputs: Array<TransactionInput>,
     hdInputs: Array<BuildTxInput>,
     outputs: Array<TransactionOutput>,
-    locktime: ?number,
-    timestamp: ?number,
+    refTxs: ?Array<RefTransaction>,
+    options: TransactionOptions,
     coinInfo: BitcoinNetworkInfo,
     push: boolean,
 }
@@ -53,11 +55,17 @@ export default class SignTransaction extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
+            { name: 'coin', type: 'string', obligatory: true },
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
+            { name: 'refTxs', type: 'array' },
             { name: 'locktime', type: 'number' },
             { name: 'timestamp', type: 'number' },
-            { name: 'coin', type: 'string', obligatory: true },
+            { name: 'version', type: 'number' },
+            { name: 'expiry', type: 'number' },
+            { name: 'overwintered', type: 'boolean' },
+            { name: 'versionGroupId', type: 'number' },
+            { name: 'branchId', type: 'number' },
             { name: 'push', type: 'boolean' },
         ]);
 
@@ -76,11 +84,26 @@ export default class SignTransaction extends AbstractMethod {
             ]);
         });
 
-        payload.outputs.forEach(utxo => {
-            validateParams(utxo, [
+        payload.outputs.forEach(out => {
+            validateParams(out, [
                 { name: 'amount', type: 'string' },
             ]);
         });
+
+        if (payload.hasOwnProperty('refTxs')) {
+            payload.refTxs.forEach(tx => {
+                validateParams(tx, [
+                    { name: 'hash', type: 'string', obligatory: true },
+                    { name: 'inputs', type: 'array', obligatory: true },
+                    { name: 'bin_outputs', type: 'array', obligatory: true },
+                    { name: 'version', type: 'number', obligatory: true },
+                    { name: 'lock_time', type: 'number', obligatory: true },
+                    { name: 'extra_data', type: 'string' },
+                    { name: 'timestamp', type: 'number' },
+                    { name: 'version_group_id', type: 'number' },
+                ]);
+            });
+        }
 
         const inputs: Array<TransactionInput> = validateTrezorInputs(payload.inputs, coinInfo);
         const hdInputs: Array<BuildTxInput> = inputs.map(inputToHD);
@@ -95,36 +118,52 @@ export default class SignTransaction extends AbstractMethod {
             inputs,
             hdInputs,
             outputs: payload.outputs,
-            locktime: payload.locktime,
-            timestamp: payload.timestamp,
+            refTxs: payload.refTxs,
+            options: {
+                lock_time: payload.locktime,
+                timestamp: payload.timestamp,
+                version: payload.version,
+                expiry: payload.expiry,
+                overwintered: payload.overwintered,
+                version_group_id: payload.versionGroupId,
+                branch_id: payload.branchId,
+            },
             coinInfo,
             push: payload.hasOwnProperty('push') ? payload.push : false,
         };
 
         if (coinInfo.hasTimestamp && !payload.hasOwnProperty('timestamp')) {
             const d = new Date();
-            this.params.timestamp = Math.round(d.getTime() / 1000);
+            this.params.options.timestamp = Math.round(d.getTime() / 1000);
         }
     }
 
     async run(): Promise<SignedTx> {
-        // initialize backend
-        this.backend = await createBackend(this.params.coinInfo);
-        const bjsRefTxs = await this.backend.loadTransactions(getReferencedTransactions(this.params.hdInputs));
-        const refTxs = transformReferencedTransactions(bjsRefTxs);
+        const { device, params } = this;
+
+        let refTxs: Array<RefTransaction> = [];
+        if (!params.refTxs) {
+            // initialize backend
+            const backend = await createBackend(params.coinInfo);
+            const bjsRefTxs = await backend.loadTransactions(getReferencedTransactions(params.hdInputs));
+            refTxs = transformReferencedTransactions(bjsRefTxs);
+            console.warn('REFTXS', refTxs);
+        } else {
+            refTxs = params.refTxs;
+        }
 
         const response = await helper.signTx(
-            this.device.getCommands().typedCall.bind(this.device.getCommands()),
-            this.params.inputs,
-            this.params.outputs,
+            device.getCommands().typedCall.bind(device.getCommands()),
+            params.inputs,
+            params.outputs,
             refTxs,
-            this.params.coinInfo,
-            this.params.locktime,
-            this.params.timestamp,
+            params.options,
+            params.coinInfo,
         );
 
-        if (this.params.push) {
-            const txid: string = await this.backend.sendTransactionHex(response.serializedTx);
+        if (params.push) {
+            const backend = await createBackend(params.coinInfo);
+            const txid = await backend.sendTransactionHex(response.serializedTx);
             return {
                 ...response,
                 txid,
