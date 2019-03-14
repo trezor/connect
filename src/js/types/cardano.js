@@ -57,9 +57,9 @@ export type CardanoGetAddress$$ = $Common & {
 
 type CardanoInput = {
     path: $Path,
-    tx_hash: string,
-    output_index: number,
-    type?: number,
+    prev_hash: string,
+    prev_index: number,
+    type: number,
 }
 type CardanoOutput = {
     path: $Path,

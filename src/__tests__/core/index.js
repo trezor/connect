@@ -14,6 +14,8 @@ import { signMessage } from './signMessage.spec.js';
 import { signMessageSegwit } from './signMessageSegwit.spec.js';
 import { signTransaction } from './signTransaction.spec.js';
 import { signTransactionCapricoin } from './signTransactionCapricoin.spec.js';
+import { signTransactionZcash } from './signTransactionZcash.spec.js';
+import { signTransactionDash } from './signTransactionDash.spec.js';
 import { signTransactionSegwit } from './signTransactionSegwit.spec.js';
 import { signTransactionBgold } from './signTransactionBgold.spec.js';
 import { signTransactionBcash } from './signTransactionBcash.spec.js';
@@ -55,6 +57,8 @@ export const testFunctions: AvailableTestFunctions = {
     signMessageSegwit,
     signTransaction,
     signTransactionCapricoin,
+    signTransactionZcash,
+    signTransactionDash,
     signTransactionSegwit,
     signTransactionBgold,
     signTransactionBcash,

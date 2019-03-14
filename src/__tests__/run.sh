@@ -48,6 +48,8 @@ signTransactionSegwit_subtests="sendP2sh sendP2shChange sendMultisig1"
 signTransactionBgold_subtests="change noChange p2sh p2shWitnessChange sendMultisig1"
 signTransactionBcash_subtests="change noChange oldAddr"
 signTransactionCapricoin_subtests="signCPC oneTwoFee twoTwoFee notEnoughFunds feeTooHigh"
+signTransactionZcash_subtests="signTwoInputsTxVersion1 signInputVersion2 signTwoInputsWithChangeVersion3 signOneInputVersion4"
+signTransactionDash_subtests="normalTx specialInput"
 signTransactionMultisig_subtests="twoOfThree fifteenOfFifteen missingPubkey"
 signTransactionMultisigChange_subtests="externalExternal externalInternal internalExternal multisigExternalExternal"
 
@@ -269,6 +271,7 @@ prepare_environment() {
 
     if [ "${should_start_emulator}" = "true" ]; then
         start_emulator
+        sleep 2
         init_device "${enable_passphrase}"
     fi
     start_transport

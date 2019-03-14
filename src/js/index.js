@@ -221,6 +221,13 @@ class TrezorConnect {
         });
     }
 
+    static getSettings: $T.GetSettings = async () => {
+        if (!iframe.instance) {
+            return { success: false, payload: { error: 'Iframe not initialized yet, you need to call TrezorConnect.init or any other method first.' } };
+        }
+        return await call({ method: 'getSettings' });
+    }
+
     static init = async (settings: $T.Settings): Promise<void> => {
         return await init(settings);
     }

@@ -11,6 +11,8 @@ import type {
     DebugLinkState,
 } from './trezor';
 
+import type { ConnectSettings } from '../data/ConnectSettings';
+
 export type Unsuccessful$ = {
     success: false,
     payload: {
@@ -183,4 +185,9 @@ export type VerifyMessage$ = {
 export type WipeDevice$ = {
     success: true,
     payload: Success,
+} | Unsuccessful$;
+
+export type GetSettings$ = {
+    success: true,
+    payload: ConnectSettings,
 } | Unsuccessful$;

@@ -283,6 +283,7 @@ export type StellarGetAddress = typeof F_StellarGetAddress;
 export type StellarSignTransaction = (STELLAR.$StellarSignTransaction) => Promise<STELLAR.StellarSignTransaction$>;
 export type VerifyMessage = (P.$VerifyMessage) => Promise<R.VerifyMessage$>;
 export type WipeDevice = (P.$WipeDevice) => Promise<R.WipeDevice$>;
+export type GetSettings = () => Promise<R.GetSettings$>;
 
 export * from './response';
 export * from './coinInfo';

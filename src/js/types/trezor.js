@@ -147,12 +147,12 @@ export type TransactionBinOutput = {
 
 export type RefTransaction = {
     hash: string,
-    version: number,
+    version?: ?number,
     inputs: Array<TransactionInput>,
     bin_outputs: Array<TransactionBinOutput>,
-    lock_time: number,
-    extra_data: ?string,
-    timestamp: ?number,
+    lock_time?: ?number,
+    extra_data?: ?string,
+    timestamp?: ?number,
     version_group_id?: ?number,
 };
 
@@ -252,8 +252,8 @@ export type SignTxInfoToTrezor = {
 } | {
     extra_data: string,
 } | {
-    version: number,
-    lock_time: number,
+    version: ?number,
+    lock_time: ?number,
     inputs_cnt: number,
     outputs_cnt: number,
     extra_data_len?: number,
