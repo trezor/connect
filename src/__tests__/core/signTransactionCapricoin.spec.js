@@ -4,13 +4,13 @@ import type {
     SubtestSignTransaction,
 } from 'flowtype/tests';
 import type {
-    TestSignCPCTransactionPayload,
+    TestSignTransactionPayload,
     ExpectedSignTransactionResponse,
 } from 'flowtype/tests/sign-transaction';
 
 const signCPC = (): SubtestSignTransaction => {
     // See tx 1bf227e6e24fe1f8ac98849fe06a2c5b77762e906fcf7e82787675f7f3a10bb8
-    const testPayloads: Array<TestSignCPCTransactionPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Capricoin',
@@ -54,7 +54,7 @@ const signCPC = (): SubtestSignTransaction => {
 
 const oneTwoFee = (): SubtestSignTransaction => {
     // See tx 8302cb4b32815ac47e0d1a63081a7bbef843efeb7e29c414975f33dfe8b50e35
-    const testPayloads: Array<TestSignCPCTransactionPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Capricoin',
@@ -98,7 +98,7 @@ const oneTwoFee = (): SubtestSignTransaction => {
 
 const twoTwoFee = (): SubtestSignTransaction => {
     // See tx f65956f14d960fce26dc03948306516c606dd33b7612d063008fea390d48b12b
-    const testPayloads: Array<TestSignCPCTransactionPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Capricoin',
@@ -147,7 +147,7 @@ const twoTwoFee = (): SubtestSignTransaction => {
 
 const notEnoughFunds = (): SubtestSignTransaction => {
     // See tx 915340ecc7466d287596f1f5b1fa0c1fa78c5b76ede0dff978fd6a1ca31eee24
-    const testPayloads: Array<TestSignCPCTransactionPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Capricoin',
@@ -186,7 +186,7 @@ const notEnoughFunds = (): SubtestSignTransaction => {
 
 const feeTooHigh = (): SubtestSignTransaction => {
     // See tx 1570416eb4302cf52979afd5e6909e37d8fdd874301f7cc87e547e509cb1caa6
-    const testPayloads: Array<TestSignCPCTransactionPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Capricoin',

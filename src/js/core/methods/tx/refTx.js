@@ -47,6 +47,7 @@ export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>
                 };
             }),
             extra_data: extraData ? extraData.toString('hex') : null,
+            lock_time: tx.locktime,
             timestamp: tx.timestamp,
             version_group_id: tx.isZcashTransaction() ? parseInt(tx.versionGroupId, 16) : null,
             expiry: tx.expiry,

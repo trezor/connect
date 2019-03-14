@@ -4,13 +4,13 @@ import type {
     SubtestSignTransaction,
 } from 'flowtype/tests';
 import type {
-    TestSignCPCTransactionPayload,
+    TestSignTransactionPayload,
     ExpectedSignTransactionResponse,
 } from 'flowtype/tests/sign-transaction';
 
 const signInputVersion2 = (): SubtestSignTransaction => {
     // See https://zec1.trezor.io/tx/0f762a2da5252d684fb3510a3104bcfb556fab34583b3b0e1994d0f7409cc075
-    const testPayloads: Array<TestSignCPCTransactionPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Zcash',
@@ -48,7 +48,7 @@ const signInputVersion2 = (): SubtestSignTransaction => {
 
 const signTwoInputsTxVersion1 = (): SubtestSignTransaction => {
     // See https://zec1.trezor.io/tx/e5229ae8c02f74af5e0c2100371710424fa85902c29752498c39921de2246824
-    const testPayloads: Array<TestSignCPCTransactionPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Zcash',
@@ -92,7 +92,7 @@ const signTwoInputsTxVersion1 = (): SubtestSignTransaction => {
 // NOTE: this is not a valid transaction
 const signTwoInputsWithChangeVersion3 = (): SubtestSignTransaction => {
     // Inputs from https://zec1.trezor.io/tx/e2802f0118d9f41f68b65f2b9f4a7c2efc876aee4e8c4b48c4a4deef6b7c0c28
-    const testPayloads: Array<TestSignCPCTransactionPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Zcash',
@@ -146,7 +146,7 @@ const signTwoInputsWithChangeVersion3 = (): SubtestSignTransaction => {
 // NOTE: this is not a valid transaction
 const signOneInputVersion4 = (): SubtestSignTransaction => {
     // Inputs from https://zec1.trezor.io/tx/234b2cf6cb2a50be29f45efae27fe717e3bb31967a72927d122cac1f50988cab
-    const testPayloads: Array<TestSignCPCTransactionPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Zcash',

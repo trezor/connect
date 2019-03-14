@@ -4,13 +4,13 @@ import type {
     SubtestSignTransaction,
 } from 'flowtype/tests';
 import type {
-    TestSignCPCTransactionPayload,
+    TestSignTransactionPayload,
     ExpectedSignTransactionResponse,
 } from 'flowtype/tests/sign-transaction';
 
 const normalTx = (): SubtestSignTransaction => {
     // See https://dash1.trezor.io/tx/be1af4a0e1eaccf86767836b42ee0938cceba16d0dd6c283f476db692c961f41
-    const testPayloads: Array<TestSignCPCTransactionPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Dash',
@@ -49,7 +49,7 @@ const normalTx = (): SubtestSignTransaction => {
 // NOTE: this is not a valid transaction
 const specialInput = (): SubtestSignTransaction => {
     // Input from https://dash1.trezor.io/tx/adb43bcd8fc99d6ed353c30ca8e5bd5996cd7bcf719bd4253f103dfb7227f6ed
-    const testPayloads: Array<TestSignCPCTransactionPayload> = [
+    const testPayloads: Array<TestSignTransactionPayload> = [
         {
             method: 'signTransaction',
             coin: 'Dash',
