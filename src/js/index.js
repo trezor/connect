@@ -133,6 +133,11 @@ const init = async (settings: Object = {}): Promise<void> => {
         throw ERROR.BROWSER_NOT_SUPPORTED;
     }
 
+    if (_settings.lazyLoad) {
+        _settings.lazyLoad = false;
+        return;
+    }
+
     if (!_popupManager) {
         _popupManager = initPopupManager();
     }
