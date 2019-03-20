@@ -7,6 +7,7 @@
     "whitelist": [
         { "origin": "chrome-extension://imloifkgjagghnncjkhggdhalmcnfklk", "priority": 1 },
         { "origin": "chrome-extension://niebkpllfhmpfbffbfifagfgoamhpflf", "priority": 1 },
+        { "origin": "file://", "priority": 2 },
         { "origin": "trezor.io", "priority": 0 },
         { "origin": "sldev.cz", "priority": 0 },
         { "origin": "localhost", "priority": 0 }
@@ -22,7 +23,8 @@
         { "origin": "trezor-connect@trezor.io", "label": "Trezor Connect FF Extension" },
         { "origin": "efbfhenfhihgdcmnfdkhaphjdnopihlf", "label": "Trezor Connect Chrome Extension", "icon": "./data/icons/metamask.svg" },
         { "origin": "mnpfhpndmjholfdlhpkjfmjkgppmodaf", "label": "MetaMask", "icon": "./data/icons/metamask.svg" },
-        { "origin": "webextension@metamask.io", "label": "MetaMask", "icon": "./data/icons/metamask.svg" }
+        { "origin": "webextension@metamask.io", "label": "MetaMask", "icon": "./data/icons/metamask.svg" },
+        { "origin": "file://", "label": " " }
     ],
     "resources": {
         "bridge": "./data/bridge/latest.txt"
