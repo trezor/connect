@@ -168,7 +168,7 @@ export default class PopupManager extends EventEmitter {
             if (!this.lazyLoad) {
                 window.addEventListener('message', this.handleBroadcastRequest, false);
             }
-            this._window = window.open(url, '_blank');
+            this._window = window.open(url, 'modal');
         } else {
             this._window = window.open('', '_blank');
             if (this._window) {
