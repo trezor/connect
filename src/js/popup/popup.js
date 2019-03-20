@@ -2,13 +2,14 @@
 
 import { parseMessage } from '../message';
 import { UiMessage, ResponseMessage } from '../message/builder';
-import type { CoreMessage, PostMessageEvent } from '../types';
+import { getEnv } from '../data/ConnectSettings';
 import DataManager from '../data/DataManager';
 import type { PopupHandshake } from '../types/uiRequest';
 
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
 import { getOrigin } from '../utils/networkUtils';
+// import { sendMessageToOpener } from '../utils/windowUtils';
 
 import { showView, postMessage, setOperation, channel, initBroadcast, broadcast } from './view/common';
 import { showFirmwareUpdateNotification, showBridgeUpdateNotification, showBackupNotification } from './view/notification';
@@ -17,12 +18,18 @@ import * as view from './view';
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/popup.less';
 
+import type { CoreMessage, PostMessageEvent } from '../types';
+
 const handleMessage = (event: PostMessageEvent): void => {
     const data: any = event.data;
     if (!data) return;
 
     if (data.type === POPUP.INIT) {
         window.location.hash = '';
+        if (data.broadcast) {
+            const broadcast = initBroadcast(data.broadcast);
+            broadcast.onmessage = message => handleMessage(message);
+        }
         // eslint-disable-next-line no-use-before-define
         onLoad();
         return;
@@ -163,7 +170,9 @@ const init = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
 };
 
 const onLoad = () => {
+    const env = getEnv();
     if (window.location.hash.length > 0) {
+        // this hash is set from opener
         if (window.location.hash.indexOf('unsupported') >= 0) {
             view.initBrowserView({
                 name: '',
@@ -176,6 +185,7 @@ const onLoad = () => {
             if (window.opener) {
                 window.opener.postMessage(POPUP.INIT, '*');
             } else {
+                // webextension is expecting this message in "content-script" which is running in "this window", above this script
                 window.postMessage(POPUP.INIT, window.location.origin);
             }
         }
@@ -186,6 +196,12 @@ const onLoad = () => {
     // request a content-script of extension
     if (!window.opener && !broadcast) {
         window.postMessage(POPUP.EXTENSION_REQUEST, window.location.origin);
+        return;
+    }
+
+    // request broadcast id (from electron)
+    if (window.opener && env === 'electron') {
+        window.opener.postMessage(POPUP.EXTENSION_REQUEST, '*');
         return;
     }
 
@@ -205,7 +221,7 @@ window.addEventListener('load', onLoad, false);
 window.addEventListener('message', handleMessage, false);
 
 window.addEventListener('beforeunload', () => {
-    // TODO
+    // TODO: disable broadcast-channel, cleanup...
 });
 
 // global method used in html-inline elements

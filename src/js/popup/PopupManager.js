@@ -26,6 +26,7 @@ export default class PopupManager extends EventEmitter {
     closeInterval: number = 0;
     lazyLoad: ?Deferred<boolean>;
     handleLazyLoading: (event: MessageEvent) => void;
+    handleBroadcastRequest: (event: MessageEvent) => void;
     extension: boolean = false;
     handleExtensionConnect: () => void;
     handleExtensionMessage: () => void;
@@ -40,8 +41,10 @@ export default class PopupManager extends EventEmitter {
         this.src = settings.popupSrc;
         this.origin = getOrigin(settings.popupSrc);
         this.handleLazyLoading = this.handleLazyLoading.bind(this);
+        this.handleBroadcastRequest = this.handleBroadcastRequest.bind(this);
         // $FlowIssue chrome not declared outside
         this.extension = (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined');
+
         if (this.extension) {
             this.handleExtensionConnect = this.handleExtensionConnect.bind(this);
             this.handleExtensionMessage = this.handleExtensionMessage.bind(this);
@@ -161,6 +164,11 @@ export default class PopupManager extends EventEmitter {
                     });
                 }
             });
+        } else if (this.settings.env === 'electron') {
+            if (!this.lazyLoad) {
+                window.addEventListener('message', this.handleBroadcastRequest, false);
+            }
+            this._window = window.open(url, '_blank');
         } else {
             this._window = window.open('', '_blank');
             if (this._window) {
@@ -209,6 +217,15 @@ export default class PopupManager extends EventEmitter {
         }
     }
 
+    handleBroadcastRequest(event: MessageEvent): void {
+        if (event.data && event.data === POPUP.EXTENSION_REQUEST) {
+            window.removeEventListener('message', this.handleBroadcastRequest, false);
+            if (this._window) {
+                this._window.postMessage({ type: POPUP.INIT, broadcast: this.broadcast }, this.origin);
+            }
+        }
+    }
+
     setBroadcast(broadcast: ?string) {
         this.broadcast = broadcast;
     }
@@ -230,7 +247,7 @@ export default class PopupManager extends EventEmitter {
         if (this.extension) {
             if (this.extensionPort) { this.extensionPort.postMessage({ type: POPUP.INIT }); }
         } else if (this._window) {
-            this._window.postMessage({ type: POPUP.INIT }, this.origin);
+            this._window.postMessage({ type: POPUP.INIT, broadcast: this.broadcast }, this.origin);
         }
     }
 
