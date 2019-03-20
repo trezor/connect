@@ -24,8 +24,10 @@ import { signTransactionMultisigChange } from './signTransactionMultisigChange.s
 import { verifyMessage } from './verifyMessage.spec.js';
 import { verifyMessageSegwit } from './verifyMessageSegwit.spec.js';
 import { verifyMessageSegwitNative } from './verifyMessageSegwitNative.spec.js';
-import { ethereumGetAddress } from './ethereumGetAddress.spec.js';
 import { ethereumGetPublicKey } from './ethereumGetPublicKey.spec.js';
+import { ethereumGetAddress } from './ethereumGetAddress.spec.js';
+import { kinGetPublicKey } from './kinGetPublicKeyTests.spec.js';
+import { kinSignTransaction } from './kinSignTransactionTests.spec.js';
 import { ethereumSignMessage } from './ethereumSignMessage.spec.js';
 import { ethereumSignTransaction } from './ethereumSignTransaction.spec.js';
 import { ethereumVerifyMessage } from './ethereumVerifyMessage.spec.js';
@@ -67,6 +69,8 @@ export const testFunctions: AvailableTestFunctions = {
     verifyMessage,
     verifyMessageSegwit,
     verifyMessageSegwitNative,
+    kinSignTransaction,
+    kinGetPublicKey,
     ethereumGetAddress,
     ethereumGetPublicKey,
     ethereumSignMessage,
