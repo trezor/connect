@@ -33,7 +33,7 @@ module.exports = {
     devServer: {
         contentBase: SRC,
         hot: false,
-        https: true,
+        // https: true,
         port: PORT,
         // stats: 'minimal',
         inline: true,

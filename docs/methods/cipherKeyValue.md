@@ -18,7 +18,7 @@ TrezorConnect.cipherKeyValue(params).then(function(result) {
 ### Params
 [****Optional common params****](commonParams.md)
 <br>
-Common parameter `useEmptyPassphrase` - is set to `true`
+Common parameter `useEmptyPassphrase` - is always set to `true` and it will be ignored by this method
 
 #### Encrypt single value
 * `path` — *obligatory* `string | Array<number>` minimum length is `1`. [read more](path.md)
