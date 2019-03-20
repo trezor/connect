@@ -970,6 +970,23 @@
             }
         },
         {
+            "blockchain_link": {},
+            "curve": "ed25519",
+            "decimals": 5,
+            "name": "Kin",
+            "shortcut": "KIN",
+            "slip44": 2017,
+            "support": {
+                "connect": true,
+                "trezor1": "1.7.1",
+                "trezor2": "2.0.8",
+                "webwallet": false
+            },
+            "wallet": {
+                "Account Viewer": "https://trezor.io/kin/"
+            }
+        },
+        {
             "blockchain_link": {
                 "type": "ripple",
                 "url": [

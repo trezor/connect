@@ -344,6 +344,18 @@ export default class DeviceCommands {
     // StellarSignTx message can be found inside ./core/methods/helpers/stellarSignTx
     // Stellar: end
 
+    // Kin: begin
+    async kinGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.KinAddress> {
+        const response: MessageResponse<trezor.KinAddress> = await this.typedCall('KinGetAddress', 'KinAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    // KinSignTx message can be found inside ./core/methods/helpers/kinSignTx
+    // Kin: end
+
     // Cardano: begin
     async cardanoGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoPublicKey> {
         const response: MessageResponse<trezor.CardanoPublicKey> = await this.typedCall('CardanoGetPublicKey', 'CardanoPublicKey', {

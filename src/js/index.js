@@ -481,6 +481,15 @@ class TrezorConnect {
         return await call({ method: 'stellarSignTransaction', ...params });
     }
 
+    static kinGetAddress: $T.KinGetAddress = async (params) => {
+        const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
+        return await call({ method: 'kinGetAddress', ...params, useEventListener });
+    }
+
+    static kinSignTransaction: $T.KinSignTransaction = async (params) => {
+        return await call({ method: 'kinSignTransaction', ...params });
+    }
+
     static tezosGetAddress: $T.TezosGetAddress = async (params) => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return await call({ method: 'tezosGetAddress', ...params, useEventListener });

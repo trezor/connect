@@ -507,6 +507,122 @@ export type StellarOperationMessage = {
     bump_to: number,
 }
 
+// Kin types
+
+export type KinAddress = {
+    address: string,
+}
+
+export type KinSignedTx = {
+    public_key: string,
+    signature: string,
+}
+
+export type KinPaymentOp = {
+    type: "KinTxOpRequest",
+    message: {},
+}
+
+export type KinSignTxMessage = {
+    address_n: Array<number>,
+    source_account: string,
+    fee: ?number,
+    sequence_number: ?number,
+    network_passphrase: string,
+    timebounds_start?: number,
+    timebounds_end?: number,
+    memo_type?: number,
+    memo_text?: ?string,
+    memo_id?: ?number,
+    memo_hash?: ?string,
+    num_operations: number,
+}
+
+type KinAsset = {
+    type: string,
+    code?: string,
+    issuer?: string,
+}
+
+export type KinOperationMessage = {
+    type: 'KinCreateAccountOp',
+    new_account: ?string,
+    source_account: string,
+    starting_balance: ?number,
+} | {
+    type: 'KinPaymentOp',
+    source_account: ?string,
+    destination_account: ?string,
+    asset: ?KinAsset,
+    amount: ?number,
+} | {
+    type: 'KinPathPaymentOp',
+    source_account: string,
+    send_asset: ?KinAsset,
+    send_max: ?number,
+    destination_account: ?string,
+    destination_asset: ?KinAsset,
+    destination_amount: ?number,
+    paths: ?Array<KinAsset>,
+} | {
+    type: 'KinManageOfferOp',
+    source_account: string,
+    offer_id: number,
+    amount: number,
+    buying_asset: KinAsset,
+    selling_asset: KinAsset,
+    price_n: number,
+    price_d: number,
+} | {
+    type: 'KinCreatePassiveOfferOp',
+    source_account: string,
+    offer_id: number,
+    amount: number,
+    buying_asset: KinAsset,
+    selling_asset: KinAsset,
+    price_n: number,
+    price_d: number,
+} | {
+    type: 'KinSetOptionsOp',
+    source_account: string,
+    signer_type: ?number,
+    signer_key: ?string,
+    signer_weight: ?number,
+    clear_flags: ?number,
+    set_flags: ?number,
+    master_weight: ?number,
+    low_threshold: ?number,
+    medium_threshold: ?number,
+    high_threshold: ?number,
+    home_domain: ?string,
+    inflation_destination_account: ?string,
+} | {
+    type: 'KinChangeTrustOp',
+    source_account: string,
+    asset: ?KinAsset,
+    limit: ?number,
+} | {
+    type: 'KinAllowTrustOp',
+    source_account: string,
+    trusted_account: string,
+    asset_type: ?number,
+    asset_code: ?string,
+    is_authorized: ?number,
+} | {
+    type: 'KinAccountMergeOp',
+    source_account: string,
+    destination_account: string,
+} | {
+    type: 'KinManageDataOp',
+    source_account: string,
+    key: string,
+    value: string,
+} | {
+    type: 'KinBumpSequenceOp',
+    source_account: string,
+    bump_to: number,
+}
+
 // Tezos types
 export type TezosAddress = {
     address: string,
