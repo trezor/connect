@@ -190,7 +190,7 @@ const init = async (payload: any, origin: string) => {
     parsedSettings.origin = !origin || origin === 'null' ? payload.settings.origin : origin;
 
     let broadcast: ?string;
-    if (parsedSettings.popup && parsedSettings.env !== 'web') {
+    if (parsedSettings.popup) { // && parsedSettings.env !== 'web'
         broadcast = `${parsedSettings.env}-${ new Date().getTime() }`;
         _popupMessagePort = new BroadcastChannel(broadcast);
         _popupMessagePort.onmessage = message => handleMessage(message);

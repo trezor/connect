@@ -2,7 +2,6 @@
 
 import { parseMessage } from '../message';
 import { UiMessage, ResponseMessage } from '../message/builder';
-import { getEnv } from '../data/ConnectSettings';
 import DataManager from '../data/DataManager';
 import type { PopupHandshake } from '../types/uiRequest';
 
@@ -170,7 +169,6 @@ const init = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
 };
 
 const onLoad = () => {
-    const env = getEnv();
     if (window.location.hash.length > 0) {
         // this hash is set from opener
         if (window.location.hash.indexOf('unsupported') >= 0) {
@@ -192,16 +190,15 @@ const onLoad = () => {
         return;
     }
 
-    // if don't have access to opener
-    // request a content-script of extension
-    if (!window.opener && !broadcast) {
-        window.postMessage(POPUP.EXTENSION_REQUEST, window.location.origin);
-        return;
-    }
-
-    // request broadcast id (from electron)
-    if (window.opener && env === 'electron') {
-        window.opener.postMessage(POPUP.EXTENSION_REQUEST, '*');
+    if (!broadcast) {
+        if (!window.opener) {
+            // if don't have access to opener
+            // request a content-script of extension
+            window.postMessage(POPUP.EXTENSION_REQUEST, window.location.origin);
+        } else {
+            // request broadcast id
+            window.opener.postMessage(POPUP.EXTENSION_REQUEST, '*');
+        }
         return;
     }
 
