@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import type { CoreMessage } from '../../types';
 import DataManager from '../../data/DataManager';
@@ -8,10 +7,10 @@ import * as POPUP from '../../constants/popup';
 export const header: HTMLElement = document.getElementsByTagName('header')[0];
 export const container: HTMLElement = (document.getElementById('container'): any);
 export const views: HTMLElement = (document.getElementById('views'): any);
-export let iframe: any; // Window type
+export let iframe: any; // TODO: Window type
 
 export const channel = new MessageChannel();
-export let broadcast: BroadcastChannel;
+export let broadcast: ?BroadcastChannel = null;
 
 export const setOperation = (operation: string): void => {
     const infoPanel: HTMLElement = document.getElementsByClassName('info-panel')[0];
@@ -30,17 +29,18 @@ export const setOperation = (operation: string): void => {
 };
 
 export const init = (): any => {
-    // find iframe
-    if (window.opener) {
-        const iframes: HTMLCollection<any> = window.opener.frames;
-        for (let i = 0; i < iframes.length; i++) {
-            try {
-                if (iframes[i].location.host === window.location.host) {
-                    iframe = iframes[i];
-                }
-            } catch (error) {
-                // empty
+    // tye find iframe in opener window
+    if (!window.opener) return null;
+    const frames: ?HTMLCollection<any> = window.opener.frames;
+    if (!frames) return null; // electron will return undefined
+    for (let i = 0; i < frames.length; i++) {
+        try {
+            // try to get iframe origin, this action will not fail ONLY if location of iframe and popup are the same
+            if (frames[i].location.host === window.location.host) {
+                iframe = frames[i];
             }
+        } catch (error) {
+            // do nothing, try next entry
         }
     }
     return iframe;
@@ -87,6 +87,8 @@ export const postMessage = (message: CoreMessage): void => {
         broadcast.postMessage(message);
         return;
     }
+
+    // deprecated way, remove it later
     if (!window.opener || !iframe) {
         return;
     }
