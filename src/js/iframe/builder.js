@@ -4,6 +4,7 @@
 import { create as createDeferred } from '../utils/deferred';
 import { IFRAME_HANDSHAKE } from '../constants/ui';
 import { IFRAME_TIMEOUT, IFRAME_BLOCKED } from '../constants/errors';
+import { getOrigin } from '../utils/networkUtils';
 import css from './inline-styles';
 import type { Deferred } from '../types';
 import type { ConnectSettings } from '../data/ConnectSettings';
@@ -45,10 +46,7 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
         instance.setAttribute('allow', 'usb');
     }
 
-    // eslint-disable-next-line no-irregular-whitespace, no-useless-escape
-    const iframeSrcHost: ?Array<string> = instance.src.match(/^.+\:\/\/[^\/]+/);
-    if (iframeSrcHost && iframeSrcHost.length > 0) { origin = iframeSrcHost[0]; }
-
+    origin = getOrigin(instance.src);
     timeout = window.setTimeout(() => {
         initPromise.reject(IFRAME_TIMEOUT);
     }, 10000);
