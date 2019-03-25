@@ -130,7 +130,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
             break;
         case POPUP.CLOSED :
             // eslint-disable-next-line no-use-before-define
-            onPopupClosed();
+            onPopupClosed(message.payload ? message.payload.error : null);
             break;
 
         case UI.CHANGE_SETTINGS :
@@ -773,21 +773,20 @@ const onEmptyPassphraseHandler = async (device: Device, callback: (error: any, s
  * @returns {void}
  * @memberof Core
  */
-const onPopupClosed = (): void => {
-    if (!_popupPromise) return;
-
+const onPopupClosed = (customErrorMessage: ?string): void => {
+    const error = customErrorMessage ? new Error(customErrorMessage) : ERROR.POPUP_CLOSED;
     // Device was already acquired. Try to interrupt running action which will throw error from onCall try/catch block
     if (_deviceList && _deviceList.asArray().length > 0) {
         _deviceList.allDevices().forEach(d => {
             if (d.isUsedHere()) {
-                d.interruptionFromUser(ERROR.POPUP_CLOSED);
+                d.interruptionFromUser(error);
             } else {
                 const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, DEVICE.DISCONNECT);
                 if (uiPromise) {
-                    uiPromise.resolve({ event: ERROR.POPUP_CLOSED.message, payload: null });
+                    uiPromise.resolve({ event: error.message, payload: null });
                 } else {
                     _callMethods.forEach(m => {
-                        postMessage(new ResponseMessage(m.responseID, false, { error: ERROR.POPUP_CLOSED.message }));
+                        postMessage(new ResponseMessage(m.responseID, false, { error: error.message }));
                     });
                     _callMethods.splice(0, _callMethods.length);
                 }
@@ -799,12 +798,14 @@ const onPopupClosed = (): void => {
     } else {
         if (_uiPromises.length > 0) {
             _uiPromises.forEach(p => {
-                p.reject(ERROR.POPUP_CLOSED);
+                p.reject(error);
             });
             _uiPromises = [];
         }
-        _popupPromise.reject(ERROR.POPUP_CLOSED);
-        _popupPromise = null;
+        if (_popupPromise) {
+            _popupPromise.reject(error);
+            _popupPromise = null;
+        }
         cleanup();
     }
 };

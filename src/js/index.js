@@ -30,8 +30,8 @@ let _popupManager: PopupManager;
 
 const initPopupManager = (): PopupManager => {
     const pm: PopupManager = new PopupManager(_settings);
-    pm.on(POPUP.CLOSED, () => {
-        iframe.postMessage({ type: POPUP.CLOSED }, false);
+    pm.on(POPUP.CLOSED, payload => {
+        iframe.postMessage({ type: POPUP.CLOSED, payload }, false);
     });
     return pm;
 };
@@ -85,32 +85,22 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
             break;
 
         case UI_EVENT :
-
             if (type === IFRAME.BOOTSTRAP) {
                 iframe.clearTimeout();
                 break;
-            } else if (type === POPUP.BOOTSTRAP) {
-                // Popup did open but is still loading JS
-                _popupManager.cancelOpenTimeout();
+            }
+            if (type === IFRAME.LOADED) {
+                iframe.initPromise.resolve();
+                break;
+            }
+            if (type === IFRAME.ERROR) {
+                iframe.initPromise.reject(new Error(payload.error));
                 break;
             }
 
             // pass UI event up
             eventEmitter.emit(event, message);
             eventEmitter.emit(type, payload);
-
-            if (type === UI.IFRAME_HANDSHAKE) {
-                if (payload.error) {
-                    iframe.initPromise.reject(new Error(payload.error));
-                } else {
-                    _popupManager.setBroadcast(payload.broadcast);
-                    iframe.initPromise.resolve();
-                }
-            } else if (type === POPUP.CANCEL_POPUP_REQUEST) {
-                _popupManager.cancel();
-            } else if (type === UI.CLOSE_UI_WINDOW) {
-                _popupManager.close();
-            }
             break;
 
         default:
@@ -134,6 +124,7 @@ const init = async (settings: Object = {}): Promise<void> => {
     }
 
     if (_settings.lazyLoad) {
+        // reset "lazyLoad" after first use
         _settings.lazyLoad = false;
         return;
     }
@@ -168,13 +159,15 @@ const call = async (params: Object): Promise<Object> => {
             return { success: false, payload: { error: ERROR.BROWSER_NOT_SUPPORTED.message } };
         }
 
-        _popupManager = initPopupManager();
+        if (!_popupManager) {
+            _popupManager = initPopupManager();
+        }
         _popupManager.request(true);
 
         // auto init with default settings
         try {
             await init(_settings);
-            await _popupManager.resolveLazyLoad();
+            // await _popupManager.lazyLoading();
         } catch (error) {
             _popupManager.close();
             return { success: false, payload: { error } };

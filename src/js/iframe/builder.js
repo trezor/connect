@@ -2,7 +2,7 @@
 'use strict';
 
 import { create as createDeferred } from '../utils/deferred';
-import { IFRAME_HANDSHAKE } from '../constants/ui';
+import * as IFRAME from '../constants/iframe';
 import { IFRAME_TIMEOUT, IFRAME_BLOCKED } from '../constants/errors';
 import { getOrigin } from '../utils/networkUtils';
 import css from './inline-styles';
@@ -11,7 +11,7 @@ import type { ConnectSettings } from '../data/ConnectSettings';
 
 export let instance: ?HTMLIFrameElement;
 export let origin: string;
-export const initPromise: Deferred<void> = createDeferred();
+export let initPromise: Deferred<void> = createDeferred();
 export let timeout: number = 0;
 export let error: ?string;
 
@@ -20,6 +20,7 @@ let _messageID: number = 0;
 export const messagePromises: { [key: number]: Deferred<any> } = {};
 
 export const init = async (settings: ConnectSettings): Promise<void> => {
+    initPromise = createDeferred();
     const existedFrame: HTMLIFrameElement = (document.getElementById('trezorconnect'): any);
     if (existedFrame) {
         instance = existedFrame;
@@ -76,7 +77,7 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
         }
 
         instance.contentWindow.postMessage({
-            type: IFRAME_HANDSHAKE,
+            type: IFRAME.INIT,
             payload: {
                 settings,
                 extension,
@@ -102,6 +103,13 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
     try {
         await initPromise.promise;
     } catch (error) {
+        // reset state to allow initialization again
+        if (instance) {
+            if (instance.parentNode) {
+                instance.parentNode.removeChild(instance);
+            }
+            instance = null;
+        }
         throw error.message || error;
     } finally {
         window.clearTimeout(timeout);

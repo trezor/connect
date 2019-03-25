@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { CORE_EVENT, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT } from '../constants';
 import * as POPUP from '../constants/popup';
@@ -25,7 +24,6 @@ let _core: Core;
 
 // custom log
 const _log: Log = initLog('IFrame');
-const _logFromPopup: Log = initLog('Popup');
 
 let _popupMessagePort: ?(MessagePort | BroadcastChannel);
 
@@ -38,56 +36,56 @@ const handleMessage = (event: PostMessageEvent): void => {
     // ignore messages from myself (chrome bug?)
     if (event.source === window || !event.data) return;
     const data = event.data;
+    const id = typeof data.id === 'number' ? data.id : 0;
+
+    const fail = (error: string) => {
+        // eslint-disable-next-line no-use-before-define
+        postMessage(new ResponseMessage(id, false, { error }));
+        // eslint-disable-next-line no-use-before-define
+        postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
+    };
 
     // respond to call
     // TODO: instead of error _core should be initialized automatically
-    if (!_core && data.type === IFRAME.CALL && typeof data.id === 'number') {
-        // eslint-disable-next-line no-use-before-define
-        postMessage(new ResponseMessage(data.id, false, { error: 'Core not initialized yet!' }));
-        // eslint-disable-next-line no-use-before-define
-        postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
+    if (!_core && data.type === IFRAME.CALL) {
+        fail('Core not initialized yet!');
         return;
     }
 
-    // catch first message from connect.js (parent window)
-    if (!DataManager.getSettings('origin') && data.type === UI.IFRAME_HANDSHAKE) {
+    // catch first message from window.opener
+    if (data.type === IFRAME.INIT) {
         // eslint-disable-next-line no-use-before-define
         init(data.payload, event.origin);
         return;
     }
 
-    // handle popup handshake event to get reference to popup MessagePort
-    if (data.type === POPUP.OPENED && event.origin === window.location.origin) {
-        if (_popupMessagePort && _popupMessagePort instanceof BroadcastChannel) {
-            const method = _core.getCurrentMethod()[0];
-            // eslint-disable-next-line no-use-before-define
-            postMessage(new UiMessage(POPUP.HANDSHAKE, {
-                settings: DataManager.getSettings(),
-                transport: _core.getTransportInfo(),
-                method: method ? method.info : null,
-            }));
-        } else {
-            // $FlowIssue
-            if (event.ports.length > 0) {
-                if (!_core) {
-                    event.ports[0].postMessage(POPUP.CLOSE);
-                    return;
-                }
-
-                // $FlowIssue
-                _popupMessagePort = event.ports[0];
-                const method = _core.getCurrentMethod()[0];
-
-                // eslint-disable-next-line no-use-before-define
-                postMessage(new UiMessage(POPUP.HANDSHAKE, {
-                    settings: DataManager.getSettings(),
-                    transport: _core.getTransportInfo(),
-                    method: method ? method.info : null,
-                }));
-            } else {
-                console.warn('POPUP.OPENED: popupMessagePort not found');
-            }
+    // popup handshake initialization process, get reference to message channel
+    if (data.type === POPUP.HANDSHAKE && event.origin === window.location.origin) {
+        if (!_popupMessagePort) {
+            fail('POPUP.OPENED: popupMessagePort not found');
+            return;
         }
+
+        if (!_core) {
+            fail('POPUP.OPENED: Core not initialized');
+            return;
+        }
+
+        if (_popupMessagePort instanceof MessagePort) {
+            if (event.ports.length < 1) {
+                fail('POPUP.OPENED: event.ports not found');
+                return;
+            }
+            _popupMessagePort = event.ports[0];
+        }
+
+        const method = _core.getCurrentMethod()[0];
+        // eslint-disable-next-line no-use-before-define
+        postMessage(new UiMessage(POPUP.HANDSHAKE, {
+            settings: DataManager.getSettings(),
+            transport: _core.getTransportInfo(),
+            method: method ? method.info : null,
+        }));
     }
 
     // clear reference to popup MessagePort
@@ -97,10 +95,10 @@ const handleMessage = (event: PostMessageEvent): void => {
 
     // is message from popup or extension
     const whitelist = DataManager.isWhitelisted(event.origin);
-    const isTrustedDomain: boolean = (event.origin === window.location.origin || !!whitelist);
+    const isTrustedDomain = (event.origin === window.location.origin || !!whitelist);
 
     // ignore messages from domain other then parent.window or popup.window or chrome extension
-    const eventOrigin: string = getOrigin(event.origin);
+    const eventOrigin = getOrigin(event.origin);
     if (!isTrustedDomain && eventOrigin !== DataManager.getSettings('origin') && eventOrigin !== getOrigin(document.referrer)) return;
 
     const message: CoreMessage = parseMessage(data);
@@ -119,7 +117,7 @@ const postMessage = (message: CoreMessage): void => {
 
     const usingPopup: boolean = DataManager.getSettings('popup');
     const trustedHost: boolean = DataManager.getSettings('trustedHost');
-    const handshake: boolean = message.type === UI.IFRAME_HANDSHAKE;
+    const handshake: boolean = message.type === IFRAME.LOADED;
 
     // popup handshake is resolved automatically
     if (!usingPopup) {
@@ -156,9 +154,10 @@ const postMessage = (message: CoreMessage): void => {
 
 const targetUiEvent = (message: CoreMessage): boolean => {
     const whitelistedMessages = [
-        UI.IFRAME_HANDSHAKE,
-        UI.CLOSE_UI_WINDOW,
+        IFRAME.LOADED,
+        IFRAME.ERROR,
         POPUP.CANCEL_POPUP_REQUEST,
+        UI.CLOSE_UI_WINDOW,
         UI.CUSTOM_MESSAGE_REQUEST,
         UI.LOGIN_CHALLENGE_REQUEST,
         UI.BUNDLE_PROGRESS,
@@ -185,20 +184,21 @@ const filterDeviceEvent = (message: CoreMessage): boolean => {
 };
 
 const init = async (payload: any, origin: string) => {
+    if (DataManager.getSettings('origin')) return; // already initialized
     const parsedSettings: ConnectSettings = parseSettings({ ...payload.settings, extension: payload.extension });
     // set origin manually
     parsedSettings.origin = !origin || origin === 'null' ? payload.settings.origin : origin;
 
     let broadcast: ?string;
-    if (parsedSettings.popup) { // && parsedSettings.env !== 'web'
-        broadcast = `${parsedSettings.env}-${ new Date().getTime() }`;
+    if (parsedSettings.popup && typeof BroadcastChannel !== 'undefined') { // && parsedSettings.env !== 'web'
+        broadcast = `${parsedSettings.env}-${parsedSettings.timestamp}`;
         _popupMessagePort = new BroadcastChannel(broadcast);
         _popupMessagePort.onmessage = message => handleMessage(message);
     }
 
-    try {
-        _log.enabled = _logFromPopup.enabled = parsedSettings.debug;
+    _log.enabled = parsedSettings.debug;
 
+    try {
         // initialize core
         _core = await initCore(parsedSettings);
         _core.on(CORE_EVENT, postMessage);
@@ -210,12 +210,11 @@ const init = async (payload: any, origin: string) => {
             await initTransport(parsedSettings);
         }
 
-        postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {
+        postMessage(new UiMessage(IFRAME.LOADED, {
             browser: browserState,
-            broadcast,
         }));
     } catch (error) {
-        postMessage(new UiMessage(UI.IFRAME_HANDSHAKE, {
+        postMessage(new UiMessage(IFRAME.ERROR, {
             browser: browserState,
             error: error.message,
         }));
