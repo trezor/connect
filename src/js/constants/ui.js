@@ -1,7 +1,4 @@
 /* @flow */
-'use strict';
-
-export const IFRAME_HANDSHAKE: 'iframe-handshake' = 'iframe-handshake';
 
 export const TRANSPORT: 'ui-no_transport' = 'ui-no_transport';
 export const BOOTLOADER: 'ui-device_bootloader_mode' = 'ui-device_bootloader_mode';
