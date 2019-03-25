@@ -27,6 +27,7 @@ export type ConnectSettings = {
     extension: ?string,
     manifest: ?ConnectManifest,
     env: string,
+    timestamp: number,
     lazyLoad: boolean,
 }
 
@@ -61,6 +62,7 @@ const initialSettings: ConnectSettings = {
     manifest: null,
     env: 'web',
     lazyLoad: false,
+    timestamp: new Date().getTime(),
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -148,6 +150,10 @@ export const parse = (input: ?Object): ConnectSettings => {
         settings.env = input.env;
     } else {
         settings.env = getEnv();
+    }
+
+    if (typeof input.timestamp === 'number') {
+        settings.timestamp = input.timestamp;
     }
 
     if (typeof input.manifest === 'object') {
