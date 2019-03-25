@@ -3,7 +3,7 @@ language: node_js
 build: trusty
 
 node_js:
-  - "9"
+  - "8.10"
 
 script:
   - npm install -g yarn
