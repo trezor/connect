@@ -1691,10 +1691,9 @@
 
     <script type="text/javascript" async="false">
         if (window.opener) {
-            window.opener.postMessage({
-                event: 'UI_EVENT',
-                type: 'popup-bootstrap',
-            }, '*');
+            window.opener.postMessage({ type: 'popup-bootstrap' }, '*');
+        } else {
+            window.postMessage({ type: 'popup-bootstrap' }, '*');
         }
 
         const popupScript = document.createElement('script');
