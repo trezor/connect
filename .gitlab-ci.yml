@@ -1,0 +1,15 @@
+image: node:8.10
+
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - npm install -g yarn
+    - npm install
+    - make build-connect
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - build
