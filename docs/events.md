@@ -12,7 +12,7 @@ import TrezorConnect, { DEVICE_EVENT, DEVICE } from 'trezor-connect';
 TrezorConnect.on(DEVICE_EVENT, (event) => {
     if (event.type === DEVICE.CONNECT) {
 
-    } else if (DEVICE.DISCONNECT) {
+    } else if (event.type === DEVICE.DISCONNECT) {
 
     }
 });
@@ -27,7 +27,7 @@ var DEVICE = require('trezor-connect').DEVICE;
 TrezorConnect.on(DEVICE_EVENT, (event) => {
     if (event.type === DEVICE.CONNECT) {
 
-    } else if (DEVICE.DISCONNECT) {
+    } else if (event.type === DEVICE.DISCONNECT) {
 
     }
 });
