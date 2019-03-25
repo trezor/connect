@@ -1,63 +1,44 @@
 /* @flow */
 
-import { parseMessage } from '../message';
-import { UiMessage, ResponseMessage } from '../message/builder';
-import DataManager from '../data/DataManager';
-import type { PopupHandshake } from '../types/uiRequest';
-
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
-import { getOrigin } from '../utils/networkUtils';
-// import { sendMessageToOpener } from '../utils/windowUtils';
 
-import { showView, postMessage, setOperation, channel, initBroadcast, broadcast } from './view/common';
-import { showFirmwareUpdateNotification, showBridgeUpdateNotification, showBackupNotification } from './view/notification';
+import { parseMessage } from '../message';
+import { UiMessage } from '../message/builder';
+import DataManager from '../data/DataManager';
+import { getOrigin } from '../utils/networkUtils';
 
 import * as view from './view';
+import { showView, postMessage, setOperation, initMessageChannel, postMessageToParent } from './view/common';
+import { showFirmwareUpdateNotification, showBridgeUpdateNotification, showBackupNotification } from './view/notification';
+
+import type { CoreMessage, PostMessageEvent } from '../types';
+import type { PopupInit, PopupHandshake } from '../types/uiRequest';
+
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/popup.less';
 
-import type { CoreMessage, PostMessageEvent } from '../types';
-
+// handle messages from window.opener and iframe
 const handleMessage = (event: PostMessageEvent): void => {
+    console.warn('HANDLE MESSAGE IN POPUP', event);
     const data: any = event.data;
     if (!data) return;
 
+    // This is message from the window.opener
     if (data.type === POPUP.INIT) {
-        window.location.hash = '';
-        if (data.broadcast) {
-            const broadcast = initBroadcast(data.broadcast);
-            broadcast.onmessage = message => handleMessage(message);
-        }
-        // eslint-disable-next-line no-use-before-define
-        onLoad();
-        return;
-    } else if (data.type === POPUP.EXTENSION_REQUEST) {
-        const broadcast = initBroadcast(data.broadcast);
-        broadcast.onmessage = message => handleMessage(message);
-        // eslint-disable-next-line no-use-before-define
-        onLoad();
+        init(data.payload); // eslint-disable-line no-use-before-define
         return;
     }
 
-    const isMessagePort: boolean = event.target instanceof MessagePort || event.target instanceof BroadcastChannel;
-
-    if (isMessagePort && data === POPUP.CLOSE) {
-        if (window.opener) {
-            window.opener.postMessage(new ResponseMessage(0, false, "Popup couldn't establish connection with iframe."), '*');
-        }
-        window.close();
-        return;
-    }
-    // catch first message from iframe.js and gain settings
-    if (isMessagePort && !DataManager.getSettings('origin') && data.type === POPUP.HANDSHAKE && data.payload) {
-        // eslint-disable-next-line no-use-before-define
-        init(data.payload);
-        return;
-    }
-
-    // ignore messages from origin other then parent.window or white listed
+    // ignore messages from origin other then parent.window or whitelisted
+    const isMessagePort = event.target instanceof MessagePort || event.target instanceof BroadcastChannel;
     if (!isMessagePort && getOrigin(event.origin) !== getOrigin(document.referrer) && !DataManager.isWhitelisted(event.origin)) return;
+
+    // catch first message from iframe
+    if (data.type === POPUP.HANDSHAKE) {
+        handshake(data.payload); // eslint-disable-line no-use-before-define
+        return;
+    }
 
     const message: CoreMessage = parseMessage(event.data);
 
@@ -152,79 +133,59 @@ const handleMessage = (event: PostMessageEvent): void => {
     }
 };
 
-const init = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
+// handle POPUP.INIT message from window.opener
+const init = async (payload: $PropertyType<PopupInit, 'payload'>) => {
     if (!payload) return;
+    try {
+        // load assets
+        await DataManager.load(payload.settings);
+        // initialize message channel
+        const broadcastID = `${payload.settings.env}-${payload.settings.timestamp}`;
+        initMessageChannel(broadcastID, handleMessage);
+        // reset loading hash
+        window.location.hash = '';
+        // handshake with iframe
+        postMessage(new UiMessage(POPUP.HANDSHAKE));
+    } catch (error) {
+        postMessageToParent(new UiMessage(POPUP.ERROR, { error: error.message || error }));
+    }
+};
 
-    await DataManager.load(payload.settings);
+// handle POPUP.HANDSHAKE message from iframe
+const handshake = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
+    if (!payload) return;
     setOperation(payload.method || '');
-
     if (payload.transport && payload.transport.outdated) {
         showBridgeUpdateNotification();
     }
-
-    postMessage(new UiMessage(POPUP.HANDSHAKE));
-
-    // pass popup console to iframe
-    // popupConsole(POPUP.LOG, postMessage);
+    // postMessage(new UiMessage(POPUP.HANDSHAKE));
 };
 
 const onLoad = () => {
-    if (window.location.hash.length > 0) {
-        // this hash is set from opener
-        if (window.location.hash.indexOf('unsupported') >= 0) {
-            view.initBrowserView({
-                name: '',
-                osname: '',
-                outdated: false,
-                supported: false,
-                mobile: false,
-            });
-        } else {
-            if (window.opener) {
-                window.opener.postMessage(POPUP.INIT, '*');
-            } else {
-                // webextension is expecting this message in "content-script" which is running in "this window", above this script
-                window.postMessage(POPUP.INIT, window.location.origin);
-            }
-        }
+    console.log('OPENER ' + window.opener + ' ref: ' + window.parent);
+    // unsupported browser, this hash was set in parent app (PopupManager)
+    // display message and do not continue
+    if (window.location.hash === '#unsupported') {
+        view.initBrowserView({
+            name: '',
+            osname: '',
+            outdated: false,
+            supported: false,
+            mobile: false,
+        });
         return;
     }
 
-    if (!broadcast) {
-        if (!window.opener) {
-            // if don't have access to opener
-            // request a content-script of extension
-            window.postMessage(POPUP.EXTENSION_REQUEST, window.location.origin);
-        } else {
-            // request broadcast id
-            window.opener.postMessage(POPUP.EXTENSION_REQUEST, '*');
-        }
-        return;
-    }
-
-    window.location.hash = '';
-    view.init();
-
-    if (!broadcast) {
-        // future communication will be thru MessageChannel
-        // $FlowIssue (Event !== MessageEvent)
-        channel.port1.onmessage = event => handleMessage(event);
-    }
-
-    postMessage(new UiMessage(POPUP.OPENED));
+    postMessageToParent(new UiMessage(POPUP.LOADED));
 };
 
 window.addEventListener('load', onLoad, false);
 window.addEventListener('message', handleMessage, false);
 
-window.addEventListener('beforeunload', () => {
-    // TODO: disable broadcast-channel, cleanup...
-});
-
 // global method used in html-inline elements
 window.closeWindow = () => {
     setTimeout(() => {
-        window.postMessage(POPUP.CLOSE_WINDOW, window.location.origin);
+        window.postMessage({ type: POPUP.CLOSE_WINDOW }, window.location.origin);
         window.close();
     }, 100);
 };

@@ -1,6 +1,6 @@
 /* @flow */
 
-export { init, showView, postMessage } from './common';
+export { showView, postMessage } from './common';
 export { initPinView } from './pin';
 export { initPassphraseView } from './passphrase';
 export { initInvalidPassphraseView } from './invalidPassphrase';
