@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import EventEmitter from 'events';
 import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT, BLOCKCHAIN_EVENT } from './constants';
@@ -26,7 +25,7 @@ const eventEmitter: EventEmitter = new EventEmitter();
 const _log: Log = initLog('[trezor-connect.js]');
 
 let _settings: ConnectSettings;
-let _popupManager: PopupManager;
+let _popupManager: ?PopupManager;
 
 const initPopupManager = (): PopupManager => {
     const pm: PopupManager = new PopupManager(_settings);
@@ -169,7 +168,9 @@ const call = async (params: Object): Promise<Object> => {
             await init(_settings);
             // await _popupManager.lazyLoading();
         } catch (error) {
-            _popupManager.close();
+            if (_popupManager) {
+                _popupManager.close();
+            }
             return { success: false, payload: { error } };
         }
     }
@@ -184,17 +185,19 @@ const call = async (params: Object): Promise<Object> => {
 
     // request popup window it might be used in the future
     // if (eventEmitter.listeners(UI_EVENT).length < 1) { _popupManager.request(params); }
-    if (_settings.popup) { _popupManager.request(); }
+    if (_settings.popup && _popupManager) { _popupManager.request(); }
 
     // post message to iframe
     try {
         const response: ?Object = await iframe.postMessage({ type: IFRAME.CALL, payload: params });
         if (response) {
             // TODO: unlock popupManager request only if there wasn't error "in progress"
-            if (response.payload.error !== ERROR.DEVICE_CALL_IN_PROGRESS.message) { _popupManager.unlock(); }
+            if (response.payload.error !== ERROR.DEVICE_CALL_IN_PROGRESS.message && _popupManager) { _popupManager.unlock(); }
             return response;
         } else {
-            _popupManager.unlock();
+            if (_popupManager) {
+                _popupManager.unlock();
+            }
             // TODO
             return { success: false, payload: { error: 'No response from iframe' } };
         }
