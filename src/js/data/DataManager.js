@@ -80,7 +80,7 @@ export default class DataManager {
     static messages: { [key: string]: JSON } = {};
 
     static async load(settings: ConnectSettings): Promise<void> {
-        const ts: number = new Date().getTime();
+        const ts: number = settings.timestamp;
         const configUrl: string = `${settings.configSrc}?r=${ ts }`;
 
         try {
@@ -118,11 +118,13 @@ export default class DataManager {
                 this.messages[ protobuf.name ] = json;
             }
 
-            // hotfix webusb + chrome:72
-            const browserName = bowser.name.toLowerCase();
-            if (this.settings.popup && (browserName === 'chrome' || browserName === 'chromium')) {
-                if (semvercmp(bowser.version, '72') >= 0) {
-                    this.settings.webusb = false;
+            // hotfix webusb + chrome:72, allow webextensions
+            if (this.settings.popup && this.settings.webusb && this.settings.env !== 'webextension') {
+                const browserName = bowser.name.toLowerCase();
+                if ((browserName === 'chrome' || browserName === 'chromium')) {
+                    if (semvercmp(bowser.version, '72') >= 0) {
+                        this.settings.webusb = false;
+                    }
                 }
             }
 
