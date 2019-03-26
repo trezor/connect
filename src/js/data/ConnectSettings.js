@@ -161,6 +161,5 @@ export const parse = (input: ?Object): ConnectSettings => {
     }
 
     currentSettings = settings;
-    console.log('SETTING', settings, input);
     return currentSettings;
 };

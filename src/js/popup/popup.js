@@ -20,7 +20,6 @@ import styles from '../../styles/popup.less';
 
 // handle messages from window.opener and iframe
 const handleMessage = (event: PostMessageEvent): void => {
-    console.warn('HANDLE MESSAGE IN POPUP', event);
     const data: any = event.data;
     if (!data) return;
 
@@ -162,7 +161,6 @@ const handshake = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
 };
 
 const onLoad = () => {
-    console.log('OPENER ' + window.opener + ' ref: ' + window.parent);
     // unsupported browser, this hash was set in parent app (PopupManager)
     // display message and do not continue
     if (window.location.hash === '#unsupported') {
