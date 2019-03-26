@@ -9,30 +9,28 @@ export const uploadFirmware = async (
     payload: Buffer,
     offset?: number,
     length?: number,
+    model: number,
 ): trezor.Success => {
     let response: MessageResponse<trezor.Success | FirmwareRequest$> = {};
-    let chunk: Buffer;
-    let type: string = '';
-    while (type !== 'Success') {
-        response = await typedCall('FirmwareUpload', 'FirmwareRequest|Success', {
-            payload: chunk,
+
+    if (model === 1) {
+        response = await typedCall('FirmwareUpload', 'Success', {
+            payload: payload,
         });
-
-        if (response.message) {
-            offset = response.message.offset;
-            length = response.message.length;
-        }
-
-        if (!isNaN(offset) && !isNaN(length)) {
-            const start = offset;
-            const end = offset + length;
-            chunk = payload.slice(start, end);
-        } else {
-            chunk = payload;
-        }
-
-        type = response.type;
+        return response.message;
     }
 
-    return response.message;
+    if (model === 2) {
+        response = await typedCall('FirmwareErase', 'FirmwareRequest', {length: payload.byteLength});
+
+        while (response.type !== 'Success') {
+            const start = response.message.offset;
+            const end = response.message.offset + response.message.length;
+            const chunk = payload.slice(start, end);
+            response = await typedCall('FirmwareUpload', 'FirmwareRequest|Success', {
+                payload: chunk,
+            });
+        }
+        return response.message;
+    }
 };

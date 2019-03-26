@@ -48,6 +48,7 @@ export default class FirmwareUpload extends AbstractMethod {
             params.payload,
             params.offset,
             params.length,
+            device.features.major_version,
         );
 
         return response;
