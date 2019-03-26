@@ -7,6 +7,7 @@
 import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, BLOCKCHAIN_EVENT } from '../constants';
 import * as TRANSPORT from '../constants/transport';
 import * as POPUP from '../constants/popup';
+import * as IFRAME from '../constants/iframe';
 import * as UI from '../constants/ui';
 import * as DEVICE from '../constants/device';
 
@@ -139,7 +140,7 @@ export type DeviceMessage = {
 
 export type T_UI_EVENT = typeof UI_EVENT;
 export type T_UI = typeof UI;
-export type UiMessageType = $Values<typeof UI>;
+export type UiMessageType = $Values<typeof UI> | typeof IFRAME.LOADED | typeof IFRAME.ERROR;
 export type UiMessage = {
     event: typeof UI_EVENT,
     type: UiMessageType,

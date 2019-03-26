@@ -90,11 +90,9 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
             }
             if (type === IFRAME.LOADED) {
                 iframe.initPromise.resolve();
-                break;
             }
             if (type === IFRAME.ERROR) {
                 iframe.initPromise.reject(new Error(payload.error));
-                break;
             }
 
             // pass UI event up
