@@ -2939,6 +2939,25 @@
             }
         },
         {
+            "blockchain_link": {
+                "type": "ripple",
+                "url": [
+                    "wss://s.altnet.rippletest.net"
+                ]
+            },
+            "curve": "secp256k1",
+            "decimals": 6,
+            "name": "Ripple Testnet",
+            "shortcut": "tXRP",
+            "slip44": 1,
+            "support": {
+                "connect": true,
+                "trezor1": null,
+                "trezor2": null,
+                "webwallet": false
+            }
+        },
+        {
             "blockchain_link": {},
             "curve": "ed25519",
             "decimals": 7,
@@ -2971,28 +2990,6 @@
                 "trezor1": false,
                 "trezor2": "2.0.8",
                 "webwallet": false
-            }
-        },
-        {
-            "blockchain_link": {
-                "type": "ripple",
-                "url": [
-                    "wss://s.altnet.rippletest.net"
-                ]
-            },
-            "curve": "secp256k1",
-            "decimals": 6,
-            "name": "Ripple Testnet",
-            "shortcut": "tXRP",
-            "slip44": 1,
-            "support": {
-                "connect": true,
-                "trezor1": false,
-                "trezor2": "2.0.8",
-                "webwallet": false
-            },
-            "wallet": {
-                "Trezor Beta": "https://beta-wallet.trezor.io/next/"
             }
         },
         {
