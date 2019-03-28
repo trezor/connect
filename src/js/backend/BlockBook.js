@@ -51,9 +51,6 @@ export default class BlockBook {
     discovery: Discovery;
 
     constructor(options: Options) {
-        if (options.urls.length < 1) {
-            throw ERROR.BACKEND_NO_URL;
-        }
         this.options = options;
 
         const worker: FastXpubWorker = new FastXpubWorker();
