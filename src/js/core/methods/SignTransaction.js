@@ -147,7 +147,6 @@ export default class SignTransaction extends AbstractMethod {
             const backend = await createBackend(params.coinInfo);
             const bjsRefTxs = await backend.loadTransactions(getReferencedTransactions(params.hdInputs));
             refTxs = transformReferencedTransactions(bjsRefTxs);
-            console.warn('REFTXS', refTxs);
         } else {
             refTxs = params.refTxs;
         }
