@@ -2953,7 +2953,7 @@
             "support": {
                 "connect": true,
                 "trezor1": null,
-                "trezor2": null,
+                "trezor2": "2.0.8",
                 "webwallet": false
             }
         },
