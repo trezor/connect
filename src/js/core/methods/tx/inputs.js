@@ -3,7 +3,7 @@
 // local modules
 import { reverseBuffer } from '../../../utils/bufferUtils';
 import { isSegwitPath, getScriptType } from '../../../utils/pathUtils';
-import { fixPath, convertMultisigPubKey, fixAmount } from './index';
+import { fixPath, convertMultisigPubKey } from './index';
 
 // npm types
 import type { BuildTxInput } from 'hd-wallet';
@@ -16,7 +16,7 @@ import type { TransactionInput } from '../../../types/trezor';
  * SignTx: validation
  *******/
 export const validateTrezorInputs = (inputs: Array<TransactionInput>, coinInfo: BitcoinNetworkInfo): Array<TransactionInput> => {
-    return inputs.map(fixPath).map(fixAmount).map(convertMultisigPubKey.bind(null, coinInfo.network));
+    return inputs.map(fixPath).map(convertMultisigPubKey.bind(null, coinInfo.network));
 };
 
 /** *****
