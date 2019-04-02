@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
@@ -20,7 +19,7 @@ import {
     getReferencedTransactions,
     transformReferencedTransactions,
 } from './tx';
-import * as helper from './helpers/signtx';
+import signTx from './helpers/signtx';
 
 import { UiMessage } from '../../message/builder';
 
@@ -231,7 +230,7 @@ export default class ComposeTransaction extends AbstractMethod {
         const coinInfo: BitcoinNetworkInfo = this.composer.account.coinInfo;
         const timestamp = coinInfo.hasTimestamp ? Math.round(new Date().getTime() / 1000) : undefined;
 
-        const response = await helper.signTx(
+        const response = await signTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             tx.transaction.inputs.map(inp => inputToTrezor(inp, 0)),
             tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo)),
