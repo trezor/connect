@@ -93,6 +93,8 @@ module.exports = {
         hints: false,
     },
     plugins: [
+        new webpack.NormalModuleReplacementPlugin(/.blake2b$/, './blake2b.js'),
+
         new MiniCssExtractPlugin({
             filename: 'css/[name].[hash].css',
             chunkFilename: '[id].css',
