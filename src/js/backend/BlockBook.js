@@ -5,7 +5,8 @@ import {
     BitcoreBlockchain,
     WorkerDiscovery,
 } from 'hd-wallet';
-import { Transaction as BitcoinJsTransaction } from 'bitcoinjs-lib-zcash';
+import { Transaction as BitcoinJsTransaction } from 'trezor-utxo-lib';
+BitcoinJsTransaction.USE_STRING_VALUES = true;
 
 import * as ERROR from '../constants/errors';
 import { getCoinInfoByHash } from '../data/CoinInfo';

@@ -166,6 +166,7 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
             wif: 0x80, // doesn't matter, for type correctness
             dustThreshold: 0, // doesn't matter, for type correctness,
             coin: shortcut.toLowerCase(),
+            consensusBranchId: coin.consensus_branch_id, // zcash, komodo
         };
 
         bitcoinNetworks.push({

@@ -1,6 +1,6 @@
 /* @flow */
 
-import { crypto } from 'bitcoinjs-lib-zcash';
+import { crypto } from 'trezor-utxo-lib';
 import semvercmp from 'semver-compare';
 import Device from '../../device/Device';
 import DataManager from '../../data/DataManager';

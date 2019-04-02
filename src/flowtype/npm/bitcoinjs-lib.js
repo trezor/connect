@@ -102,7 +102,7 @@ declare module 'ecurve' {
 }
 // ---------- copypasta end ----
 
-declare module 'bitcoinjs-lib-zcash' {
+declare module 'trezor-utxo-lib' {
     declare type Network = {
         messagePrefix: string,
         bip32: {
@@ -229,10 +229,6 @@ declare module 'bitcoinjs-lib-zcash' {
         index: number,
         keyPair: ECPair,
         chainCode: Buffer,
-        static fromBase58(
-            str: string,
-            networks: ?(Array<Network> | Network)
-        ): HDNode,
         derive(index: number): HDNode,
         deriveHardened(index: number): HDNode,
         derivePath(path: string): HDNode,
