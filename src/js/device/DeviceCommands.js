@@ -647,7 +647,7 @@ export default class DeviceCommands {
         }
 
         if (res.type === 'WordRequest') {
-            return this._promptWord().then(
+            return this._promptWord(res.message.type).then(
                 word => {
                     return this._commonCall('WordAck', { word: word });
                 },
@@ -698,9 +698,9 @@ export default class DeviceCommands {
         });
     }
 
-    _promptWord(): Promise<string> {
+    _promptWord(type: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            this.device.emit(DEVICE.WORD, this.device, (err, word) => {
+            this.device.emit(DEVICE.WORD, this.device, type, (err, word) => {
                 if (err || word == null) {
                     reject(err);
                 } else {

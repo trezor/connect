@@ -712,10 +712,10 @@ const onDevicePinHandler = async (device: Device, type: string, callback: (error
     callback(null, pin);
 };
 
-const onDeviceWordHandler = async (device: Device, callback: (error: any, success: any) => void): Promise<void> => {
+const onDeviceWordHandler = async (device: Device, type: string, callback: (error: any, success: any) => void): Promise<void> => {
     // wait for popup handshake
     await getPopupPromise().promise;
-    postMessage(new UiMessage(UI.REQUEST_WORD, { device: device.toMessageObject() }));
+    postMessage(new UiMessage(UI.REQUEST_WORD, { device: device.toMessageObject(), type }));
     // wait for word
     const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_WORD, device).promise;
     const word: string = uiResp.payload;
