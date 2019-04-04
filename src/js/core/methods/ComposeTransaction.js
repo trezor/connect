@@ -21,6 +21,7 @@ import {
     transformReferencedTransactions,
 } from './tx';
 import signTx from './helpers/signtx';
+import verifyTx from './helpers/signtxVerify';
 
 import { UiMessage } from '../../message/builder';
 
@@ -228,15 +229,25 @@ export default class ComposeTransaction extends AbstractMethod {
         const bjsRefTxs = await this.backend.loadTransactions(getReferencedTransactions(tx.transaction.inputs));
         const refTxs = transformReferencedTransactions(bjsRefTxs);
 
-        const coinInfo: BitcoinNetworkInfo = this.composer.account.coinInfo;
+        const coinInfo = this.composer.account.coinInfo;
         const timestamp = coinInfo.hasTimestamp ? Math.round(new Date().getTime() / 1000) : undefined;
+        const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0));
+        const outputs = tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo));
 
         const response = await signTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
-            tx.transaction.inputs.map(inp => inputToTrezor(inp, 0)),
-            tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo)),
+            inputs,
+            outputs,
             refTxs,
             { timestamp },
+            coinInfo,
+        );
+
+        await verifyTx(
+            this.device.getCommands().getHDNode.bind(this.device.getCommands()),
+            inputs,
+            outputs,
+            response.serializedTx,
             coinInfo,
         );
 
