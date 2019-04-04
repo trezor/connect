@@ -1,6 +1,6 @@
 /* @flow */
-'use strict';
 
+import BigNumber from 'bignumber.js';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getBitcoinNetwork } from '../../data/CoinInfo';
@@ -8,7 +8,8 @@ import { getLabel } from '../../utils/pathUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
 import BlockBook, { create as createBackend } from '../../backend';
-import * as helper from './helpers/signtx';
+import signTx from './helpers/signtx';
+import verifyTx from './helpers/signtxVerify';
 
 import {
     validateTrezorInputs,
@@ -34,7 +35,6 @@ import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 
 type Params = {
     inputs: Array<TransactionInput>,
-    hdInputs: Array<BuildTxInput>,
     outputs: Array<TransactionOutput>,
     refTxs: ?Array<RefTransaction>,
     options: TransactionOptions,
@@ -80,13 +80,13 @@ export default class SignTransaction extends AbstractMethod {
 
         payload.inputs.forEach(utxo => {
             validateParams(utxo, [
-                { name: 'amount', type: 'string' },
+                { name: 'amount', type: 'amount' },
             ]);
         });
 
         payload.outputs.forEach(out => {
             validateParams(out, [
-                { name: 'amount', type: 'string' },
+                { name: 'amount', type: 'amount' },
             ]);
         });
 
@@ -106,17 +106,17 @@ export default class SignTransaction extends AbstractMethod {
         }
 
         const inputs: Array<TransactionInput> = validateTrezorInputs(payload.inputs, coinInfo);
-        const hdInputs: Array<BuildTxInput> = inputs.map(inputToHD);
         const outputs: Array<TransactionOutput> = validateTrezorOutputs(payload.outputs, coinInfo);
 
-        const total: number = outputs.reduce((t, r) => t + r.amount, 0);
-        if (total <= coinInfo.dustLimit) {
-            throw new Error('Total amount is too low.');
+        const total: BigNumber = outputs.reduce((bn: BigNumber, output: TransactionOutput) => {
+            return bn.plus(typeof output.amount === 'string' ? output.amount : '0');
+        }, new BigNumber(0));
+        if (total.lte(coinInfo.dustLimit)) {
+            throw new Error('Total amount is below dust limit.');
         }
 
         this.params = {
             inputs,
-            hdInputs,
             outputs: payload.outputs,
             refTxs: payload.refTxs,
             options: {
@@ -145,18 +145,27 @@ export default class SignTransaction extends AbstractMethod {
         if (!params.refTxs) {
             // initialize backend
             const backend = await createBackend(params.coinInfo);
-            const bjsRefTxs = await backend.loadTransactions(getReferencedTransactions(params.hdInputs));
+            const hdInputs: Array<BuildTxInput> = params.inputs.map(inputToHD);
+            const bjsRefTxs = await backend.loadTransactions(getReferencedTransactions(hdInputs));
             refTxs = transformReferencedTransactions(bjsRefTxs);
         } else {
             refTxs = params.refTxs;
         }
 
-        const response = await helper.signTx(
+        const response = await signTx(
             device.getCommands().typedCall.bind(device.getCommands()),
             params.inputs,
             params.outputs,
             refTxs,
             params.options,
+            params.coinInfo,
+        );
+
+        await verifyTx(
+            device.getCommands().getHDNode.bind(device.getCommands()),
+            params.inputs,
+            params.outputs,
+            response.serializedTx,
             params.coinInfo,
         );
 

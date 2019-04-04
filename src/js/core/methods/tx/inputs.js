@@ -1,5 +1,5 @@
 /* @flow */
-'use strict';
+
 // local modules
 import { reverseBuffer } from '../../../utils/bufferUtils';
 import { isSegwitPath, getScriptType } from '../../../utils/pathUtils';
@@ -29,11 +29,15 @@ export const inputToHD = (input: TransactionInput): BuildTxInput => {
         if (!input.script_type) throw new Error('Input script_type not set');
         // if (input.script_type !== 'SPENDP2SHWITNESS') throw new Error('Input script_type should be set to SPENDP2SHWITNESS');
     }
+    const address_n = input.address_n;
+    if (!Array.isArray(address_n)) {
+        throw new Error('Input address_n not set');
+    }
 
     return {
         hash: reverseBuffer(Buffer.from(input.prev_hash, 'hex')),
         index: input.prev_index,
-        path: input.address_n,
+        path: address_n,
         amount: input.amount,
         segwit: segwit,
     };

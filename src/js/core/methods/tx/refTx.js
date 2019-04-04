@@ -6,8 +6,6 @@ import { uniq, reverseBuffer } from '../../../utils/bufferUtils';
 
 // npm types
 import type {
-    Input as BitcoinJsInput,
-    Output as BitcoinJsOutput,
     Transaction as BitcoinJsTransaction,
 } from 'trezor-utxo-lib';
 
@@ -33,7 +31,7 @@ export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>
         return {
             version: tx.isDashSpecialTransaction() ? tx.version | tx.type << 16 : tx.version,
             hash: tx.getId(),
-            inputs: tx.ins.map((input: BitcoinJsInput) => {
+            inputs: tx.ins.map(input => {
                 return {
                     prev_index: input.index,
                     sequence: input.sequence,
@@ -41,9 +39,9 @@ export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>
                     script_sig: input.script.toString('hex'),
                 };
             }),
-            bin_outputs: tx.outs.map((output: BitcoinJsOutput) => {
+            bin_outputs: tx.outs.map(output => {
                 return {
-                    amount: output.value,
+                    amount: typeof output.value === 'number' ? output.value.toString() : output.value,
                     script_pubkey: output.script.toString('hex'),
                 };
             }),
