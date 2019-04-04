@@ -72,7 +72,7 @@ export default async (getHDNode: GetHDNode,
 
 const deriveOutputScript = async (getHDNode: GetHDNode, output: TransactionOutput, coinInfo: BitcoinNetworkInfo): Promise<Buffer> => {
     if (output.op_return_data) {
-        return BitcoinJsScript.nullData.output.encode(output.op_return_data);
+        return BitcoinJsScript.nullData.output.encode(Buffer.from(output.op_return_data, 'hex'));
     }
     if (!output.address_n && !output.address) {
         throw new Error('deriveOutputScript: Neither address or address_n is set');
