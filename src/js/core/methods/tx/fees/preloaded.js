@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import BlockBook from '../../../../backend';
 import type { FeeHandler } from './index';
@@ -18,7 +17,7 @@ async function detectWorking(backend: BlockBook, coinInfo: BitcoinNetworkInfo): 
                 id: i,
                 info: {
                     type: 'preloaded',
-                    fee: coinInfo.defaultFees[level],
+                    fee: coinInfo.defaultFees[level].toString(),
                 },
             };
         });
@@ -33,14 +32,14 @@ function getFeeList(): $ReadOnlyArray<FeeLevel> {
     return feeLevels;
 }
 
-function getFee(level: FeeLevelInfo): number {
+function getFee(level: FeeLevelInfo): string {
     if (level.type === 'preloaded') {
         return level.fee;
     }
     throw new Error('Wrong level type');
 }
 
-function getBlocks(fee: number): ?number {
+function getBlocks(fee: string): ?number {
     return null;
 }
 

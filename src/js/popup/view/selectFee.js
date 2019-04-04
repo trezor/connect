@@ -48,7 +48,7 @@ const validation = (coinInfo: BitcoinNetworkInfo) => {
         const selectedValue = fees.find(f => f.name === selectedName);
         const sendButton: HTMLElement = container.getElementsByClassName('send-button')[0];
 
-        if (selectedValue && selectedValue.fee !== 0) {
+        if (selectedValue && selectedValue.fee !== '0') {
             sendButton.removeAttribute('disabled');
             sendButton.innerHTML = `Send ${ formatAmount(selectedValue.total, coinInfo) }`;
         } else {
@@ -84,7 +84,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
                 <span class="fee-subtitle">recommended</span>`;
         }
 
-        if (level.fee) {
+        if (level.fee !== '0') {
             feesComponents.push(`
                 <button data-fee="${level.name}" class="list">
                     <span class="fee-title">${feeName}</span>
@@ -149,20 +149,20 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         }
 
         const composedCustomFee = fees.find(f => f.name === 'custom');
-        let customFeeDefaultValue: number = 0;
+        let customFeeDefaultValue: string = '0';
         if (!composedCustomFee) {
             if (selectedFee) {
                 const selectedName: ?string = selectedFee.getAttribute('data-fee');
                 const selectedValue = fees.find(f => f.name === selectedName);
-                if (selectedValue && selectedValue.fee !== 0) {
+                if (selectedValue && selectedValue.fee !== '0') {
                     customFeeDefaultValue = selectedValue.feePerByte;
                 }
             }
 
-            if (!customFeeDefaultValue) {
-                customFeeDefaultValue = 1; // TODO: get normal
+            if (!customFeeDefaultValue === '0') {
+                customFeeDefaultValue = '1'; // TODO: get normal
             }
-        } else if (composedCustomFee.fee) {
+        } else if (composedCustomFee.fee !== '0') {
             customFeeDefaultValue = composedCustomFee.feePerByte;
         }
 
@@ -172,7 +172,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         focusInput(customFeeDefaultValue);
     };
 
-    const focusInput = (defaultValue: number) => {
+    const focusInput = (defaultValue: string) => {
         const input: HTMLInputElement = container.getElementsByTagName('input')[0];
         setTimeout(() => {
             // eslint-disable-next-line no-use-before-define

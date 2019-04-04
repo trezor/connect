@@ -1,5 +1,6 @@
 /* @flow */
 
+import BigNumber from 'bignumber.js';
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import * as UI from '../../constants/ui';
@@ -65,11 +66,11 @@ export default class ComposeTransaction extends AbstractMethod {
 
         // validate each output and transform into hd-wallet format
         const outputs: Array<BuildTxOutputRequest> = [];
-        let total: number = 0;
+        let total: BigNumber = new BigNumber(0);
         payload.outputs.forEach(out => {
             const output = validateHDOutput(out, coinInfo);
-            if (typeof output.amount === 'number') {
-                total += output.amount;
+            if (typeof output.amount === 'string') {
+                total = total.plus(output.amount);
             }
             outputs.push(output);
         });
@@ -83,8 +84,8 @@ export default class ComposeTransaction extends AbstractMethod {
 
         // if outputs contains regular items
         // check if total amount is not lower than dust limit
-        if (outputs.find(o => o.type === 'complete') !== undefined && total <= coinInfo.dustLimit) {
-            throw new Error('Total amount is too low.');
+        if (outputs.find(o => o.type === 'complete') !== undefined && total.lte(coinInfo.dustLimit)) {
+            throw new Error('Total amount is too low. ' + total.toString());
         }
 
         if (sendMax) {
@@ -175,7 +176,7 @@ export default class ComposeTransaction extends AbstractMethod {
         await composer.init(this.backend);
         this.composer = composer;
 
-        const hasFunds: boolean = await composer.composeAllFeeLevels();
+        const hasFunds = await composer.composeAllFeeLevels();
         if (!hasFunds) {
             // show error view
             this.postMessage(new UiMessage(UI.INSUFFICIENT_FUNDS));
