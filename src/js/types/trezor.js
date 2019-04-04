@@ -151,6 +151,7 @@ export type TransactionOutput = {|
     multisig?: MultisigRedeemScriptType,
     decred_script_version?: number,
 |} | {|
+    amount: '0',
     op_return_data: string,
     script_type: 'PAYTOOPRETURN',
 |};
