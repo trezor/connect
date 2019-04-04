@@ -21,6 +21,14 @@ type Options = {
     postMessage: (message: CoreMessage) => void,
 };
 
+type GetAccountInfoPayload = {
+    details: string,
+    descriptor: string,
+    tokens: ?string,
+    pageSize: number,
+    page: number,
+}
+
 const getWorker = (type: string): ?string => {
     switch (type) {
         case 'ripple':
@@ -97,11 +105,9 @@ export default class Blockchain {
         return await this.link.getInfo();
     }
 
-    async getAccountInfo(descriptor: string, options?: GetAccountInfoOptions) {
-        return await this.link.getAccountInfo({
-            descriptor,
-            options,
-        });
+    async getAccountInfo(payload: GetAccountInfoPayload) {
+        console.log('payload', payload);
+        return await this.link.getAccountInfo(payload);
     }
 
     async estimateFee(options?: EstimateFeeOptions) {

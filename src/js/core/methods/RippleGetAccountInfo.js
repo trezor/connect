@@ -16,7 +16,9 @@ import type { RippleAccount } from '../../types/account';
 
 type Params = {
     accounts: Array<RippleAccount>,
-    level: string,
+    pageSize: number,
+    details: string,
+    page: number | string,
     coinInfo: MiscNetworkInfo,
     bundledResponse: boolean,
 }
@@ -45,7 +47,8 @@ export default class RippleGetAccountInfo extends AbstractMethod {
         // validate incoming parameters
         validateParams(payload, [
             { name: 'bundle', type: 'array', obligatory: true },
-            { name: 'level', type: 'string' },
+            { name: 'details', type: 'string' },
+            { name: 'pageSize', type: 'number' },
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
@@ -77,7 +80,9 @@ export default class RippleGetAccountInfo extends AbstractMethod {
 
         this.params = {
             accounts: payload.bundle,
-            level: payload.level,
+            details: payload.details,
+            pageSize: payload.pageSize,
+            page: payload.page,
             coinInfo: network,
             bundledResponse,
         };
@@ -101,10 +106,13 @@ export default class RippleGetAccountInfo extends AbstractMethod {
                 account.serializedPath = getSerializedPath(path);
             }
 
-            const freshInfo = await blockchain.getAccountInfo(account.descriptor, {
-                level: this.params.level,
-                from: account.block,
+            const freshInfo = await blockchain.getAccountInfo({
+                descriptor: account.descriptor,
+                details: this.params.details,
+                page: this.params.page,
+                pageSize: this.params.pageSize,
             });
+
             const info = {
                 ...account,
                 ...freshInfo,
