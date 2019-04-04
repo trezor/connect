@@ -231,7 +231,7 @@ const parseEthereumNetworksJson = (json: JSON): void => {
             type: 'ethereum',
             blockbook: network.blockbook || [],
             bitcore: [], // legacy compatibility with bitcoin coinInfo
-            blockchainLink: null,
+            blockchainLink: network.blockchain_link,
             chain: network.chain,
             chainId: network.chain_id,
             // key not used

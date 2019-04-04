@@ -7,20 +7,22 @@ import { getEthereumNetwork } from '../../data/CoinInfo';
 import Discovery from './helpers/Discovery';
 import { NO_COIN_INFO } from '../../constants/errors';
 
-import BlockBook, { create as createBackend } from '../../backend';
+import { create as createBackend } from '../../backend/BlockchainLink';
 import type { CoreMessage, EthereumNetworkInfo } from '../../types';
 import type { EthereumAccount } from '../../types/account';
 
 type Params = {
     accounts: Array<EthereumAccount>,
     coinInfo: EthereumNetworkInfo,
+    pageSize: number,
+    details: string,
+    page: number | string,
     bundledResponse: boolean,
 }
 
 export default class EthereumGetAccountInfo extends AbstractMethod {
     params: Params;
     confirmed: boolean = false;
-    backend: BlockBook;
     discovery: ?Discovery;
 
     constructor(message: CoreMessage) {
@@ -42,13 +44,13 @@ export default class EthereumGetAccountInfo extends AbstractMethod {
         validateParams(payload, [
             { name: 'accounts', type: 'array', obligatory: true },
             { name: 'coin', type: 'string', obligatory: true },
+            { name: 'details', type: 'string' },
+            { name: 'pageSize', type: 'number' },
         ]);
 
         payload.accounts.forEach(batch => {
             validateParams(batch, [
                 { name: 'descriptor', type: 'string', obligatory: true },
-                { name: 'block', type: 'number', obligatory: true },
-                { name: 'transactions', type: 'number', obligatory: true },
             ]);
         });
 
@@ -59,70 +61,33 @@ export default class EthereumGetAccountInfo extends AbstractMethod {
 
         this.params = {
             accounts: payload.accounts,
+            details: payload.details,
+            pageSize: payload.pageSize,
+            page: payload.page,
             coinInfo: network,
             bundledResponse,
         };
     }
 
     async run(): Promise<EthereumAccount | Array<EthereumAccount>> {
-        // initialize backend
-        this.backend = await createBackend(this.params.coinInfo);
-
-        const blockchain = this.backend.blockchain;
-        const { height } = await blockchain.lookupSyncStatus();
-
+        const blockchain = await createBackend(this.params.coinInfo, this.postMessage);
         const responses: Array<EthereumAccount> = [];
 
         for (let i = 0; i < this.params.accounts.length; i++) {
             const account = this.params.accounts[i];
-            const method = 'getAddressHistory';
-            const params = [
-                [account.descriptor],
-                {
-                    start: height,
-                    end: account.block,
-                    from: 0,
-                    to: 0,
-                    queryMempol: false,
-                },
-            ];
-            const socket = await blockchain.socket.promise;
-            const confirmed = await socket.send({method, params});
-
-            responses.push({
+            const freshInfo = await blockchain.getAccountInfo({
                 descriptor: account.descriptor,
-                transactions: confirmed.totalCount,
-                block: height,
-                balance: '0', // TODO: fetch balance from blockbook
-                availableBalance: '0', // TODO: fetch balance from blockbook
-                nonce: 0, // TODO: fetch nonce from blockbook
+                details: this.params.details,
+                page: this.params.page,
+                pageSize: this.params.pageSize,
             });
+
+            const info = {
+                ...account,
+                ...freshInfo,
+            };
+            responses.push(info);
         }
         return this.params.bundledResponse ? responses : responses[0];
-
-        /*
-        // This will be useful for BTC-like accounts (multi addresses)
-        const addresses: Array<string> = this.params.accounts.map(a => a.address);
-
-        const socket = await blockchain.socket.promise;
-        const method = 'getAddressHistory';
-        const params = [
-            addresses,
-            {
-                start: height,
-                end: 0,
-                from: 0,
-                to: 0,
-                queryMempol: true
-            }
-        ];
-
-        const response = await socket.send({method, params});
-        return {
-            address: addresses[0],
-            transactions: response.totalCount,
-            block: height
-        }
-        */
     }
 }

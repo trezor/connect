@@ -9,6 +9,8 @@ import type { GetAccountInfoOptions, EstimateFeeOptions } from 'trezor-blockchai
 // nodejs-replace-start
 /* $FlowIssue loader notation */
 import RippleWorker from 'worker-loader?name=js/ripple-worker.js!trezor-blockchain-link/lib/workers/ripple/index.js';
+/* $FlowIssue loader notation */
+import BlockbookWorker from 'worker-loader?name=js/blockbook-worker.js!trezor-blockchain-link/lib/workers/blockbook/index.js';
 // nodejs-replace-end
 /* nodejs-imports-start
 import TinyWorker from 'tiny-worker';
@@ -33,6 +35,9 @@ const getWorker = (type: string): ?string => {
     switch (type) {
         case 'ripple':
             return RippleWorker;
+        case 'ethereum':
+        case 'bitcoin':
+            return BlockbookWorker;
         default: return null;
     }
 };
@@ -51,7 +56,7 @@ export default class Blockchain {
         if (!settings) {
             throw new Error('BlockchainLink settings not found in coins.json');
         }
-
+        console.log('settings', settings);
         const worker = getWorker(settings.type);
         if (!worker) {
             throw new Error('BlockchainLink worker not found');
@@ -176,7 +181,9 @@ export const find = (name: string): ?Blockchain => {
 };
 
 export const create = async (coinInfo: $ElementType<Options, 'coinInfo'>, postMessage: $ElementType<Options, 'postMessage'>): Promise<Blockchain> => {
+    console.log('coinInfo', coinInfo);
     let backend: ?Blockchain = find(coinInfo.name);
+    console.log('backend', backend);
     if (!backend) {
         backend = new Blockchain({
             coinInfo,
