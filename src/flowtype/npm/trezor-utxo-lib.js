@@ -210,7 +210,7 @@ declare module 'trezor-utxo-lib' {
         nullData: {
             output: {
                 check: (script: Stack) => boolean,
-                encode: (scriptHash: string) => Buffer,
+                encode: (scriptHash: Buffer) => Buffer,
                 decode: (script: Buffer) => Buffer,
             },
         },
