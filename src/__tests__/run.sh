@@ -66,7 +66,7 @@ nemSignTransactionMultisig_subtests="aggregateModification multisig multisigSign
 nemSignTransactionOthers_subtests="importanceTransfer provisionNamespace"
 nemSignTransactionTransfers_subtests="simple xemAsMosaic unknownMosaic knownMosaic knownMosaicWithLevy multipleMosaics"
 
-getAccountInfo_subtests="firstAccount zeroBalance pathInvalid zeroBalance xpubInsteadOfPath"
+getAccountInfo_subtests="firstSegwitAccount firstLegacyAccount segwitAccountFromSegwitXpub segwitAccountFromLegacyXpub legacyAccountFromLegacyXpub emptyAccount invalidPath"
 
 passphrase_subtests="correctPassphrase wrongPassphrase"
 ################# Possible subtests: END
