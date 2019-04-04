@@ -1,10 +1,9 @@
 /* @flow */
-'use strict';
 
 import * as DEVICE from '../constants/device';
 import randombytes from 'randombytes';
 
-import * as bitcoin from 'bitcoinjs-lib-zcash';
+import * as bitcoin from 'trezor-utxo-lib';
 import * as hdnodeUtils from '../utils/hdnode';
 import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType } from '../utils/pathUtils';
 import { resolveAfter } from '../utils/promiseUtils';
@@ -109,17 +108,16 @@ export default class DeviceCommands {
     // Validation of xpub
     async getHDNode(
         path: Array<number>,
-        coinInfo: ?BitcoinNetworkInfo
+        coinInfo: ?BitcoinNetworkInfo,
+        validation?: boolean = true,
     ): Promise<trezor.HDNodeResponse> {
         if (!this.device.atLeast(['1.7.2', '2.0.10'])) {
-            return await this.getBitcoinHDNode(path, coinInfo);
+            return await this.getBitcoinHDNode(path, coinInfo, validation);
         }
         if (!coinInfo) {
-            return await this.getBitcoinHDNode(path);
+            return await this.getBitcoinHDNode(path, null, validation);
         }
 
-        const suffix: number = 0;
-        const childPath: Array<number> = path.concat([suffix]);
         let network: ?bitcoin.Network;
         if (isMultisigPath(path)) {
             network = coinInfo.network;
@@ -129,7 +127,7 @@ export default class DeviceCommands {
             network = getBech32Network(coinInfo);
         }
 
-        let scriptType: ?string = getScriptType(path);
+        let scriptType: ?trezor.InputScriptType = getScriptType(path);
         if (!network) {
             network = coinInfo.network;
             if (scriptType !== 'SPENDADDRESS') {
@@ -137,9 +135,16 @@ export default class DeviceCommands {
             }
         }
 
-        const resKey: trezor.PublicKey = await this.getPublicKey(path, coinInfo.name, scriptType);
-        const childKey: trezor.PublicKey = await this.getPublicKey(childPath, coinInfo.name, scriptType);
-        const publicKey: trezor.PublicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix, network, coinInfo.network);
+        let publicKey: trezor.PublicKey;
+        if (!validation) {
+            publicKey = await this.getPublicKey(path, coinInfo.name, scriptType);
+        } else {
+            const suffix: number = 0;
+            const childPath: Array<number> = path.concat([suffix]);
+            const resKey: trezor.PublicKey = await this.getPublicKey(path, coinInfo.name, scriptType);
+            const childKey: trezor.PublicKey = await this.getPublicKey(childPath, coinInfo.name, scriptType);
+            publicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix, network, coinInfo.network);
+        }
 
         const response: trezor.HDNodeResponse = {
             path,
@@ -166,14 +171,20 @@ export default class DeviceCommands {
     // old firmware didn't return keys with proper prefix (ypub, Ltub.. and so on)
     async getBitcoinHDNode(
         path: Array<number>,
-        coinInfo?: ?BitcoinNetworkInfo
+        coinInfo?: ?BitcoinNetworkInfo,
+        validation?: boolean = true,
     ): Promise<trezor.HDNodeResponse> {
-        const suffix: number = 0;
-        const childPath: Array<number> = path.concat([suffix]);
+        let publicKey: trezor.PublicKey;
+        if (!validation) {
+            publicKey = await this.getPublicKey(path, 'Bitcoin');
+        } else {
+            const suffix: number = 0;
+            const childPath: Array<number> = path.concat([suffix]);
 
-        const resKey: trezor.PublicKey = await this.getPublicKey(path, 'Bitcoin');
-        const childKey: trezor.PublicKey = await this.getPublicKey(childPath, 'Bitcoin');
-        const publicKey: trezor.PublicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix);
+            const resKey: trezor.PublicKey = await this.getPublicKey(path, 'Bitcoin');
+            const childKey: trezor.PublicKey = await this.getPublicKey(childPath, 'Bitcoin');
+            publicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix);
+        }
 
         const response: trezor.HDNodeResponse = {
             path,
@@ -205,7 +216,7 @@ export default class DeviceCommands {
     }
 
     async getAddress(address_n: Array<number>, coinInfo: BitcoinNetworkInfo, showOnTrezor: boolean): Promise<trezor.Address> {
-        const scriptType: ?string = getScriptType(address_n);
+        const scriptType: trezor.InputScriptType = getScriptType(address_n);
         const response: Object = await this.typedCall('GetAddress', 'Address', {
             address_n,
             coin_name: coinInfo.name,
@@ -225,7 +236,7 @@ export default class DeviceCommands {
         message: string,
         coin: ?string
     ): Promise<trezor.MessageSignature> {
-        const scriptType: ?string = getScriptType(address_n);
+        const scriptType: trezor.InputScriptType = getScriptType(address_n);
         const response: MessageResponse<trezor.MessageSignature> = await this.typedCall('SignMessage', 'MessageSignature', {
             address_n,
             message,
