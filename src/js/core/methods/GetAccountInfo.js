@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
@@ -27,8 +26,6 @@ type Params = {
     xpub: ?string,
     coinInfo: BitcoinNetworkInfo,
 }
-
-type Response = AccountInfoPayload;
 
 export default class GetAccountInfo extends AbstractMethod {
     params: Params;
@@ -73,12 +70,8 @@ export default class GetAccountInfo extends AbstractMethod {
             this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
         }
 
-        // delete payload.path;
-        // payload.xpub = 'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6'
-        // payload.xpub = 'xpub6BiVtCpG9fQQNBuKZoKzhzmENDKdCeXQsNVPF2Ynt8rhyYznmPURQNDmnNnX9SYahZ1DVTaNtsh3pJ4b2jKvsZhpv2oVj76YETCGztKJ3LM'
-
         this.params = {
-            path: path,
+            path,
             xpub: payload.xpub,
             coinInfo,
         };
@@ -142,14 +135,17 @@ export default class GetAccountInfo extends AbstractMethod {
         }
     }
 
-    async _getAccountFromPath(path: Array<number>): Promise<Response> {
+    // xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G s1
+    // xpub6D1weXBcFAo8CqBbpP4TbH5sxQH8ZkqC5pDEvJ95rNNBZC9zrKmZP2fXMuve7ZRBe18pWQQsGg68jkq24mZchHwYENd8cCiSb71u3KD4AFH l1
+
+    async _getAccountFromPath(path: Array<number>): Promise<AccountInfoPayload> {
         const coinInfo: BitcoinNetworkInfo = fixCoinInfoNetwork(this.params.coinInfo, path);
         const node: HDNodeResponse = await this.device.getCommands().getHDNode(path, coinInfo);
-        const account = createAccount(path, node.xpub, coinInfo);
+        const account = createAccount(path, node, coinInfo);
 
         const discovery: Discovery = this.discovery = new Discovery({
             getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
-            coinInfo: this.params.coinInfo,
+            coinInfo,
             backend: this.backend,
             loadInfo: false,
         });
@@ -158,7 +154,7 @@ export default class GetAccountInfo extends AbstractMethod {
         return this._response(account);
     }
 
-    async _getAccountFromPublicKey(): Promise<Response> {
+    async _getAccountFromPublicKey(): Promise<AccountInfoPayload> {
         const discovery: Discovery = this.discovery = new Discovery({
             getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
             coinInfo: this.params.coinInfo,
@@ -166,9 +162,10 @@ export default class GetAccountInfo extends AbstractMethod {
             loadInfo: false,
         });
 
-        const deferred: Deferred<Response> = createDeferred('account_discovery');
+        const xpub = this.params.xpub || 'unknown';
+        const deferred: Deferred<AccountInfoPayload> = createDeferred('account_discovery');
         discovery.on('update', async (accounts: Array<Account>) => {
-            const account = accounts.find(a => a.xpub === this.params.xpub);
+            const account = accounts.find(a => a.xpub === xpub || a.xpubSegwit === xpub);
             if (account) {
                 discovery.removeAllListeners();
                 discovery.completed = true;
@@ -179,7 +176,7 @@ export default class GetAccountInfo extends AbstractMethod {
             }
         });
         discovery.on('complete', () => {
-            deferred.resolve(this._response(null));
+            deferred.reject(new Error(`Account with xpub ${xpub} not found on device ${this.device.features.label}`));
         });
 
         discovery.start();
@@ -187,7 +184,7 @@ export default class GetAccountInfo extends AbstractMethod {
         return await deferred.promise;
     }
 
-    async _getAccountFromDiscovery(): Promise<Response> {
+    async _getAccountFromDiscovery(): Promise<AccountInfoPayload> {
         const discovery: Discovery = this.discovery = new Discovery({
             getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
             coinInfo: this.params.coinInfo,
@@ -233,13 +230,9 @@ export default class GetAccountInfo extends AbstractMethod {
         return this._response(account);
     }
 
-    _response(account: ?Account): Response {
-        if (!account) {
-            throw new Error('Account not found');
-        }
-
+    _response(account: Account): AccountInfoPayload {
         const nextAddress: string = account.getNextAddress();
-        return {
+        const info = {
             id: account.id,
             path: account.path,
             serializedPath: getSerializedPath(account.path),
@@ -248,6 +241,7 @@ export default class GetAccountInfo extends AbstractMethod {
             addressPath: account.getAddressPath(nextAddress),
             addressSerializedPath: getSerializedPath(account.getAddressPath(nextAddress)),
             xpub: account.xpub,
+            xpubSegwit: account.xpubSegwit,
             balance: account.getBalance(),
             confirmed: account.getConfirmedBalance(),
             transactions: account.getTransactionsCount(),
@@ -255,6 +249,11 @@ export default class GetAccountInfo extends AbstractMethod {
             usedAddresses: account.getUsedAddresses(),
             unusedAddresses: account.getUnusedAddresses(),
         };
+        if (typeof info.xpubSegwit !== 'string') {
+            delete info.xpubSegwit;
+        }
+
+        return info;
     }
 
     dispose() {

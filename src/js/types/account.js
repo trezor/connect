@@ -7,8 +7,9 @@ export type BitcoinAccount = {
     path: Array<number>,
     coinInfo: BitcoinNetworkInfo,
     xpub: string,
+    xpubSegwit?: ?string,
     label: string,
-    balance: number,
+    balance: string,
     transactions: number,
 };
 

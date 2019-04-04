@@ -1,29 +1,31 @@
 /* @flow */
-'use strict';
 
 import { getIndexFromPath } from '../utils/pathUtils';
 
 import type { AccountInfo } from 'hd-wallet';
 import type { BitcoinNetworkInfo } from '../types';
 import type { BitcoinAccount } from '../types/account';
+import type { HDNodeResponse } from '../types/trezor';
 
 export default class Account {
     id: number;
     path: Array<number>;
     xpub: string;
+    xpubSegwit: ?string;
     coinInfo: BitcoinNetworkInfo;
     info: ?AccountInfo;
     transactions: number = 0; // loading status
 
     constructor(
         path: Array<number>,
-        xpub: string,
+        node: HDNodeResponse,
         coinInfo: BitcoinNetworkInfo,
     ) {
         this.id = getIndexFromPath(path);
         this.path = path;
         this.coinInfo = coinInfo;
-        this.xpub = xpub;
+        this.xpub = node.xpub;
+        this.xpubSegwit = node.xpubSegwit;
     }
 
     isUsed() {
@@ -69,13 +71,12 @@ export default class Account {
         return this.path.concat([0, index]);
     }
 
-    getBalance(): number {
-        return this.info ? this.info.balance : 0;
+    getBalance(): string {
+        return this.info ? this.info.balance : '0';
     }
 
-    getConfirmedBalance(): number {
-        if (!this.info) return 0;
-        return this.info.balance;
+    getConfirmedBalance(): string {
+        return this.info ? this.info.balance : '0';
     }
 
     getUtxos(): Array<any> {
@@ -83,14 +84,20 @@ export default class Account {
     }
 
     toMessage(): BitcoinAccount {
-        return {
+        const account: BitcoinAccount = {
             id: this.id,
             path: this.path,
             coinInfo: this.coinInfo,
             xpub: this.xpub,
+            xpubSegwit: this.xpubSegwit,
             label: `Account #${this.id + 1}`,
-            balance: this.info ? this.info.balance : -1,
+            balance: this.info ? this.info.balance : '-1',
             transactions: this.getTransactionsCount(),
         };
+        if (typeof account.xpubSegwit !== 'string') {
+            delete account.xpubSegwit;
+        }
+
+        return account;
     }
 }
