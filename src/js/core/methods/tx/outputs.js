@@ -37,7 +37,7 @@ export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInf
 
         if (output.address_n) {
             const scriptType = getOutputScriptType(output.address_n);
-            if (scriptType && output.script_type !== scriptType) throw new Error(`Output change script_type should be set to ${scriptType}`);
+            if (output.script_type !== scriptType) throw new Error(`Output change script_type should be set to ${scriptType}`);
         }
 
         if (typeof output.address === 'string' && !isValidAddress(output.address, coinInfo)) {
