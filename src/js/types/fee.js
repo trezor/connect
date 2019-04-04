@@ -24,7 +24,7 @@ export type SmartBitcoreFeeLevel = {
 
 type PreloadedFeeLevelInfo = {
     +type: 'preloaded',
-    +fee: number,
+    +fee: string,
 }
 
 type CustomFeeLevelInfo = {
@@ -42,14 +42,14 @@ export type FeeLevelInfo = LegacyBitcoreFeeLevelInfo | SmartBitcoreFeeLevelInfo 
 
 export type SelectFeeLevel = {
     +name: string,
-    +fee: 0,
+    +fee: '0',
     +disabled: true,
 } | {
     +name: string,
-    +fee: number,
-    +feePerByte: number,
+    +fee: string,
+    +feePerByte: string,
     +minutes: number,
-    +total: number,
+    +total: string,
 }
 
 export type FeeLevel = {

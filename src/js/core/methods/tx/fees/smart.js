@@ -1,6 +1,5 @@
 /* @flow */
-'use strict';
-
+import BigNumber from 'bignumber.js';
 import { btckb2satoshib } from '../../../../utils/formatUtils';
 import BlockBook from '../../../../backend';
 import type { FeeHandler } from './index';
@@ -38,7 +37,7 @@ const feeLevels: $ReadOnlyArray<SmartBitcoreFeeLevel> = [
     },
 ];
 
-type Fees = {[i: number]: number};
+type Fees = {[i: number]: string};
 let fees: Fees = {};
 let backend: BlockBook;
 
@@ -55,18 +54,19 @@ async function _refreshQuery(query: Array<number>, res: Fees): Promise<boolean> 
     for (const blocksS in fees) {
         const blocks = parseInt(blocksS);
         const fee = fees[blocks];
-        res[blocks] = Math.round(btckb2satoshib(fee));
+        res[blocks] = btckb2satoshib(fee);
     }
     for (let i = 0; i <= query.length - 2; i++) {
-        if (res[query[i]] < 0) {
+        if (res[query[i]] === '-1') {
             for (let j = query.length - 1; j >= i + 1; j--) {
-                if (res[query[j]] > 0) {
+                const bn = new BigNumber(res[query[j]]);
+                if (bn.gt(0)) {
                     res[query[i]] = res[query[j]];
                 }
             }
         }
     }
-    if (res[query[query.length - 1]] === 1) {
+    if (res[query[query.length - 1]] === '1') {
         return false;
     }
     return true;
@@ -102,38 +102,39 @@ async function detectWorking($backend: BlockBook): Promise<boolean> {
         return false;
     }
     const lfees = await backend.blockchain.estimateSmartTxFees([1007], true);
-    if (lfees[1007] < 0) {
+    if (lfees[1007] === '-1') {
         return false;
     }
     await refresh(true);
     refresh(false);
-    return fees[2] > 0;
+    return new BigNumber(fees[2]).gt(0);
 }
 
 function getFeeList(): $ReadOnlyArray<FeeLevel> {
     return feeLevels;
 }
 
-function getFee(level: FeeLevelInfo): number {
+function getFee(level: FeeLevelInfo): string {
     if (level.type === 'bitcore-smart') {
         if (fees == null) {
             throw new Error('fees is null');
         }
         if (fees[level.blocks] == null) {
-            return 1;
+            return '1';
         }
         return fees[level.blocks];
     }
     throw new Error('Wrong level type');
 }
 
-function getBlocks(fee: number): ?number {
-    if (fee < 1) {
+function getBlocks(fee: string): ?number {
+    const bn = new BigNumber(fee);
+    if (bn.lt(1)) {
         return null;
     }
     for (let block = 1008; block >= 2; block--) {
-        const blockfee = fees[block] == null ? 1 : fees[block];
-        if (blockfee > fee) {
+        const blockfee = fees[block] === null ? '1' : fees[block];
+        if (bn.lt(blockfee)) {
             for (let biggerBlock = block + 1; biggerBlock < 1008; biggerBlock++) {
                 if (fees[biggerBlock] != null) {
                     return biggerBlock;

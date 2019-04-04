@@ -1,39 +1,20 @@
 /* @flow */
-'use strict';
 
 import { legacyBitcoreHandler } from './legacy';
 import { smartBitcoreHandler } from './smart';
 import { preloadedHandler } from './preloaded';
 
 import BlockBook from '../../../../backend';
-// import {getCoinInfo, waitForCoinInfo} from '../../../common/CoinInfo';
-// import * as ang from '../../../angularHelper';
 
 import type { BitcoinNetworkInfo } from '../../../../types';
 import type { FeeLevel, FeeLevelInfo } from '../../../../types/fee';
-
-type CustomFeeLevelInfo = {
-    +type: 'custom',
-    fee: string,
-}
-
-// refreshHack is a "counter", that tells angular, that refresh happened,
-// so it needs to repaint what it can.
-//
-// It is a terrible hack, and at this point it makes no sense to not have the satb directly
-// in the fee level (since it is being re-set by fees anyway), but I don't want to do another rewrite
-export type CustomFeeLevel = {
-    +name: string,
-    +id: number,
-    +info: CustomFeeLevelInfo,
-}
 
 export type FeeHandler = {
     refresh(backend: BlockBook): Promise<any>,
     detectWorking(backend: BlockBook, coinInfo: BitcoinNetworkInfo): Promise<boolean>, // should not reject
     getFeeList(): $ReadOnlyArray<FeeLevel>,
-    getFee(level: FeeLevelInfo): number,
-    getBlocks(fee: number): ?number,
+    getFee(level: FeeLevelInfo): string,
+    getBlocks(fee: string): ?number,
 }
 
 let feeHandler: ?FeeHandler = null;
@@ -58,16 +39,6 @@ const findWorkingHandler = async (backend: BlockBook, coinInfo: BitcoinNetworkIn
 
 export const init = async (backend: BlockBook, coinInfo: BitcoinNetworkInfo): Promise<void> => {
     feeHandler = await findWorkingHandler(backend, coinInfo);
-
-    // TODO: remove interval
-    // setInterval(() => {
-    //     if (feeHandler != null) {
-    //         feeLevels().forEach( (level: FeeLevel) => {
-    //             level.refreshHack = level.refreshHack == null ? 1 : level.refreshHack + 1;
-    //         });
-    //         feeHandler.refresh(backend);
-    //     }
-    // }, 20 * 60 * 1000);
 };
 
 export const getFeeLevels = (): $ReadOnlyArray<FeeLevel> => {
@@ -76,9 +47,8 @@ export const getFeeLevels = (): $ReadOnlyArray<FeeLevel> => {
     }
     return feeHandler.getFeeList();
 };
-// bad
 
-export const getActualFee = (level: FeeLevel, coinInfo: BitcoinNetworkInfo): number => {
+export const getActualFee = (level: FeeLevel, coinInfo: BitcoinNetworkInfo): string => {
     if (feeHandler == null) {
         throw new Error('No fee hander');
     }
@@ -90,12 +60,12 @@ export const getActualFee = (level: FeeLevel, coinInfo: BitcoinNetworkInfo): num
         if ((+(info.fee)) < coinInfo.minFee) {
             throw new Error('');
         }
-        return +(info.fee);
+        return info.fee;
     }
     return feeHandler.getFee(info);
 };
 
-export const getBlocks = (fee: number): ?number => {
+export const getBlocks = (fee: string): ?number => {
     if (feeHandler == null) {
         throw new Error('');
     }

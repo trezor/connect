@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { btckb2satoshib } from '../../../../utils/formatUtils';
 import BlockBook from '../../../../backend';
@@ -49,7 +48,7 @@ const oneFeeLevel: LegacyBitcoreFeeLevel = {
     },
 };
 
-type Fees = {[i: number]: number};
+type Fees = {[i: number]: string};
 // blocks => sat/B
 let fees: ?Fees = null;
 
@@ -63,7 +62,7 @@ const detectEmptyBlockchain = (fees: Fees): boolean => {
 // bitcore sometimes returns "-1" randomly (as does bitcoind)
 // we try all the bigger ones, hopefully we get hit
 // 25 is the largest we can ask
-const getMinFee = (start: number, input: {[blocks: number]: number}): ?number => {
+const getMinFee = (start: number, input: {[blocks: number]: string}): ?string => {
     for (let i = start; i <= 145; i++) {
         if (input[i]) {
             return input[i]; // trying all the bigger ones until the end
@@ -74,7 +73,7 @@ const getMinFee = (start: number, input: {[blocks: number]: number}): ?number =>
 
 // This gets "dirty" bitcore output as input and returns something usable, level -> fee
 const deriveFeeList = (input: Fees): ?Fees => {
-    const res: {[i: number]: number} = {};
+    const res: {[i: number]: string} = {};
     const allblocks = feeLevels.reduce((pr, level) => pr.concat([level.info.blocks]), []);
 
     for (const blocks of allblocks) {
@@ -83,7 +82,7 @@ const deriveFeeList = (input: Fees): ?Fees => {
             return; // if even one is not found at all -> fail
         }
 
-        res[blocks] = Math.round(btckb2satoshib(fee));
+        res[blocks] = btckb2satoshib(fee);
     }
     return res;
 };
@@ -113,7 +112,7 @@ const getFeeList = (): $ReadOnlyArray<FeeLevel> => {
     return emptyBlockchain ? [ oneFeeLevel ] : feeLevels;
 };
 
-const getFee = (level: FeeLevelInfo): number => {
+const getFee = (level: FeeLevelInfo): string => {
     if (level.type === 'bitcore-legacy') {
         if (fees == null) {
             throw new Error('actualFees is null');
@@ -123,7 +122,7 @@ const getFee = (level: FeeLevelInfo): number => {
     throw new Error('Wrong level type');
 };
 
-const getBlocks = (fee: number): ?number => {
+const getBlocks = (fee: string): ?number => {
     if (fees == null) {
         throw new Error('actualFees is null');
     }

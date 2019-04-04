@@ -1,6 +1,6 @@
 /* @flow */
-'use strict';
 
+import BigNumber from 'bignumber.js';
 import {
     buildTx,
 } from 'hd-wallet';
@@ -52,13 +52,13 @@ export default class TransactionComposer {
 
         this.composed = {};
 
-        let prevFee: number = 0;
+        let prevFee: BigNumber = new BigNumber(0);
         let level: FeeLevel;
         let atLeastOneValid: boolean = false;
         for (level of this.feeLevels) {
-            let fee: number = getActualFee(level, this.account.coinInfo);
-            if (prevFee > 0 && prevFee < fee) fee = prevFee;
-            prevFee = fee;
+            let fee: string = getActualFee(level, this.account.coinInfo);
+            if (prevFee.gt(0) && prevFee.lt(fee)) fee = prevFee.toString();
+            prevFee = new BigNumber(fee);
 
             const tx: BuildTxResult = this.compose(fee);
 
@@ -72,7 +72,7 @@ export default class TransactionComposer {
 
         if (!atLeastOneValid) {
             // check with minimal fee
-            const tx: BuildTxResult = this.compose(account.coinInfo.minFee);
+            const tx: BuildTxResult = this.compose(account.coinInfo.minFee.toString());
             if (tx.type === 'final') {
                 // add custom Fee level to list
                 this.feeLevels.push(customFeeLevel);
@@ -85,7 +85,7 @@ export default class TransactionComposer {
         return true;
     }
 
-    composeCustomFee(fee: number): SelectFeeLevel {
+    composeCustomFee(fee: string): SelectFeeLevel {
         const tx: BuildTxResult = this.compose(fee);
         if (!this.composed['custom']) {
             this.feeLevels.push(customFeeLevel);
@@ -102,7 +102,7 @@ export default class TransactionComposer {
         } else {
             return {
                 name: 'custom',
-                fee: 0,
+                fee: '0',
                 disabled: true,
             };
         }
@@ -123,7 +123,7 @@ export default class TransactionComposer {
             } else {
                 list.push({
                     name: level.name,
-                    fee: 0,
+                    fee: '0',
                     disabled: true,
                 });
             }
@@ -131,9 +131,9 @@ export default class TransactionComposer {
         return list;
     }
 
-    compose(fee: number | FeeLevel): BuildTxResult {
+    compose(fee: string | FeeLevel): BuildTxResult {
         const account = this.account;
-        const feeValue: number = typeof fee === 'number' ? fee : getActualFee(fee, account.coinInfo);
+        const feeValue: string = typeof fee === 'string' ? fee : getActualFee(fee, account.coinInfo);
 
         const tx: BuildTxResult = buildTx({
             utxos: account.getUtxos(),
@@ -152,7 +152,7 @@ export default class TransactionComposer {
         return tx;
     }
 
-    getEstimatedTime(fee: number): number {
+    getEstimatedTime(fee: string): number {
         let minutes: number = 0;
         const blocks: ?number = getBlocks(fee);
         if (blocks) {
