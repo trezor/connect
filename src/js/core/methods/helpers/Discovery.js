@@ -1,9 +1,9 @@
 /* @flow */
-'use strict';
+
 import EventEmitter from 'events';
 import Account, { create as createAccount, remove as removeAccount } from '../../../account';
 import BlockBook from '../../../backend';
-import { cloneCoinInfo, fixCoinInfoNetwork } from '../../../data/CoinInfo';
+import { cloneCoinInfo } from '../../../data/CoinInfo';
 import { getPathFromIndex } from '../../../utils/pathUtils';
 import type { BitcoinNetworkInfo } from '../../../types';
 import type { HDNodeResponse } from '../../../types/trezor';
@@ -64,7 +64,7 @@ export default class Discovery extends EventEmitter {
             }
 
             const path: Array<number> = getPathFromIndex(coinInfo.segwit ? 49 : 44, coinInfo.slip44, index);
-            await this.discoverAccount(path, fixCoinInfoNetwork(coinInfo, path));
+            await this.discoverAccount(path, coinInfo);
         }
     }
 
@@ -94,7 +94,7 @@ export default class Discovery extends EventEmitter {
         const node: HDNodeResponse = await this.options.getHDNode(path, coinInfo);
         if (this.interrupted) return null;
 
-        const account = createAccount(path, node.xpub, coinInfo);
+        const account = createAccount(path, node, coinInfo);
         this.accounts.push(account);
         this.emit('update', this.accounts);
 

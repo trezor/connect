@@ -68,7 +68,7 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>):
 
         // TODO: Disable button once an account is fully loaded and its balance is 0
 
-        if (account.balance < 0) {
+        if (account.balance === '-1') {
             status.innerHTML = account.transactions ? `${ account.transactions } transactions` : 'Loading...';
             button.disabled = true;
         } else {

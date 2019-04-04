@@ -1,14 +1,14 @@
 /* @flow */
-'use strict';
 
 import Account from './Account';
 import type { BitcoinNetworkInfo } from '../types';
+import type { HDNodeResponse } from '../types/trezor';
 
 const accounts: Array<Account> = [];
 
-export const create = (path: Array<number>, xpub: string, coinInfo: BitcoinNetworkInfo): Account => {
+export const create = (path: Array<number>, node: HDNodeResponse, coinInfo: BitcoinNetworkInfo): Account => {
     // TODO check existence
-    const account: Account = new Account(path, xpub, coinInfo);
+    const account: Account = new Account(path, node, coinInfo);
     accounts.push(account);
     return account;
 };
