@@ -99,6 +99,7 @@ export const outputToTrezor = (output: BuildTxOutput, coinInfo: BitcoinNetworkIn
         }
         const data: Buffer = output.opReturnData;
         return {
+            amount: '0',
             op_return_data: data.toString('hex'),
             script_type: 'PAYTOOPRETURN',
         };
