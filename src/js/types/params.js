@@ -44,8 +44,19 @@ export type $CipherKeyValue = {
     iv?: string,
 }
 
+type ComposeTransactionOutput = {|
+    amount: string,
+    address: string,
+|} | {|
+    type: 'send-max',
+    address: string,
+|} | {|
+    type: 'opreturn',
+    dataHex: string,
+|};
+
 export type $ComposeTransaction = $Common & {
-    outputs: Array<{ amount: string, address: string }>,
+    outputs: Array<ComposeTransactionOutput>,
     coin: string,
     push?: boolean,
 }
