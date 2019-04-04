@@ -108,11 +108,14 @@ export default class SignTransaction extends AbstractMethod {
         const inputs: Array<TransactionInput> = validateTrezorInputs(payload.inputs, coinInfo);
         const outputs: Array<TransactionOutput> = validateTrezorOutputs(payload.outputs, coinInfo);
 
-        const total: BigNumber = outputs.reduce((bn: BigNumber, output: TransactionOutput) => {
-            return bn.plus(typeof output.amount === 'string' ? output.amount : '0');
-        }, new BigNumber(0));
-        if (total.lte(coinInfo.dustLimit)) {
-            throw new Error('Total amount is below dust limit.');
+        const outputsWithAmount = outputs.filter(output => typeof output.amount === 'string' && !output.hasOwnProperty('op_return_data'));
+        if (outputsWithAmount.length > 0) {
+            const total: BigNumber = outputsWithAmount.reduce((bn: BigNumber, output: TransactionOutput) => {
+                return bn.plus(typeof output.amount === 'string' ? output.amount : '0');
+            }, new BigNumber(0));
+            if (total.lte(coinInfo.dustLimit)) {
+                throw new Error('Total amount is below dust limit.');
+            }
         }
 
         this.params = {
