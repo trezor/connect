@@ -1,9 +1,10 @@
 /* @flow */
-'use strict';
 
+import BigNumber from 'bignumber.js';
 import semvercmp from 'semver-compare';
 import { invalidParameter } from '../../../constants/errors';
 import { fromHardened } from '../../../utils/pathUtils';
+
 import DataManager from '../../../data/DataManager';
 import type { CoinInfo, FirmwareRange } from '../../../types';
 
@@ -28,7 +29,13 @@ export const validateParams = (values: Object, fields: Array<Param>): void => {
                 } else if (field.type === 'amount') {
                     if (typeof value !== 'string') {
                         throw invalidParameter(`Parameter "${ field.name }" has invalid type. "string" expected.`);
-                    } else if (isNaN(parseInt(value, 10)) || parseInt(value, 10).toString(10) !== value) {
+                    }
+                    try {
+                        const bn = new BigNumber(value);
+                        if (bn.toFixed(0) !== value) {
+                            throw new Error('');
+                        }
+                    } catch (error) {
                         throw invalidParameter(`Parameter "${ field.name }" has invalid value "${value}". Integer representation expected.`);
                     }
                 } else if (field.type === 'buffer') {
