@@ -37,6 +37,5 @@ export const formatTime = (n: number): string => {
 };
 
 export const btckb2satoshib = (n: string): string => {
-    // return Math.round(n * 1e5);
-    return new BigNumber(n).times(1e5).toFixed(0);
+    return new BigNumber(n).times(1e5).toFixed(0, BigNumber.ROUND_HALF_UP);
 };
