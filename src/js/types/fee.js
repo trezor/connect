@@ -1,5 +1,7 @@
 /* @flow */
 
+export type BlockFees = {[i: number]: string}; // blocks => sat/B
+
 type LegacyBitcoreFeeLevelInfo = {
     +type: 'bitcore-legacy',
     +blocks: number,

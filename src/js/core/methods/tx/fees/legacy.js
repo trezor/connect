@@ -5,6 +5,7 @@ import BlockBook from '../../../../backend';
 
 import type { FeeHandler } from './index';
 import type {
+    BlockFees,
     FeeLevel,
     FeeLevelInfo,
     LegacyBitcoreFeeLevel,
@@ -48,11 +49,9 @@ const oneFeeLevel: LegacyBitcoreFeeLevel = {
     },
 };
 
-type Fees = {[i: number]: string};
-// blocks => sat/B
-let fees: ?Fees = null;
+let fees: ?BlockFees = null;
 
-const detectEmptyBlockchain = (fees: Fees): boolean => {
+const detectEmptyBlockchain = (fees: BlockFees): boolean => {
     const setFees = new Set();
     Object.keys(fees).forEach(f => setFees.add(fees[parseInt(f)])); // parseInt for flow
     return setFees.size === 1;
@@ -72,8 +71,8 @@ const getMinFee = (start: number, input: {[blocks: number]: string}): ?string =>
 };
 
 // This gets "dirty" bitcore output as input and returns something usable, level -> fee
-const deriveFeeList = (input: Fees): ?Fees => {
-    const res: {[i: number]: string} = {};
+const deriveFeeList = (input: BlockFees): ?BlockFees => {
+    const res: BlockFees = {};
     const allblocks = feeLevels.reduce((pr, level) => pr.concat([level.info.blocks]), []);
 
     for (const blocks of allblocks) {
@@ -91,8 +90,8 @@ const refresh = async (backend: BlockBook): Promise<any> => {
     // I need blocks and blocks+1 in the case that bitcore returns -1 for low levels
     const blockquery = feeLevels.reduce((pr, level) => pr.concat([level.info.blocks, level.info.blocks + 1]), []);
 
-    const readFees: Fees = await backend.blockchain.estimateTxFees(blockquery, true);
-    const newActualFees: ?Fees = deriveFeeList(readFees);
+    const readFees: BlockFees = await backend.blockchain.estimateTxFees(blockquery, true);
+    const newActualFees: ?BlockFees = deriveFeeList(readFees);
     if (newActualFees != null) {
         fees = newActualFees;
         emptyBlockchain = detectEmptyBlockchain(newActualFees);
