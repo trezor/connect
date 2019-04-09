@@ -58,7 +58,7 @@ export default class SignTransaction extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
-            { name: 'refTxs', type: 'array' },
+            { name: 'refTxs', type: 'array', allowEmpty: true },
             { name: 'locktime', type: 'number' },
             { name: 'timestamp', type: 'number' },
             { name: 'version', type: 'number' },
