@@ -120,8 +120,6 @@ export type TransactionInput = {|
     sequence?: number,
     amount?: string, // (segwit, bip143: true, zcash overwinter)
     multisig?: MultisigRedeemScriptType,
-    decred_tree?: number, // only for decred
-    decred_script_version?: number, // only for decred
 |};
 
 // transaction input, parameter of TxAck message, declared by user or downloaded from backend
@@ -130,8 +128,6 @@ export type RefTransactionInput = {|
     prev_index: number,
     script_sig: string,
     sequence: number,
-    decred_tree?: ?number, // ?
-    decred_script_version?: ?number, // ?
     block_hash_bip115?: ?string,
     prev_block_height_bip115?: ?number,
 |};
@@ -143,13 +139,11 @@ export type TransactionOutput = {|
     script_type: 'PAYTOADDRESS',
     amount: string,
     multisig?: MultisigRedeemScriptType,
-    decred_script_version?: number,
 |} | {|
     address_n: Array<number>,
     script_type: OutputScriptType,
     amount: string,
     multisig?: MultisigRedeemScriptType,
-    decred_script_version?: number,
 |} | {|
     amount: '0',
     op_return_data: string,
@@ -159,7 +153,6 @@ export type TransactionOutput = {|
 type TransactionBinOutput = {
     amount: string,
     script_pubkey: string,
-    decred_script_version?: ?number,
 };
 
 export type RefTransaction = {
