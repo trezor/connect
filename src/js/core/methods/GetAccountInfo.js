@@ -135,9 +135,6 @@ export default class GetAccountInfo extends AbstractMethod {
         }
     }
 
-    // xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G s1
-    // xpub6D1weXBcFAo8CqBbpP4TbH5sxQH8ZkqC5pDEvJ95rNNBZC9zrKmZP2fXMuve7ZRBe18pWQQsGg68jkq24mZchHwYENd8cCiSb71u3KD4AFH l1
-
     async _getAccountFromPath(path: Array<number>): Promise<AccountInfoPayload> {
         const coinInfo: BitcoinNetworkInfo = fixCoinInfoNetwork(this.params.coinInfo, path);
         const node: HDNodeResponse = await this.device.getCommands().getHDNode(path, coinInfo);
@@ -162,7 +159,7 @@ export default class GetAccountInfo extends AbstractMethod {
             loadInfo: false,
         });
 
-        const xpub = this.params.xpub || 'unknown';
+        const xpub = this.params.xpub || 'only-for-flow-correctness';
         const deferred: Deferred<AccountInfoPayload> = createDeferred('account_discovery');
         discovery.on('update', async (accounts: Array<Account>) => {
             const account = accounts.find(a => a.xpub === xpub || a.xpubSegwit === xpub);
