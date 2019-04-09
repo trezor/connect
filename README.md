@@ -1,4 +1,7 @@
 # Trezor Connect API version 7.0.2
+[![Build Status](https://travis-ci.org/trezor/connect.png?branch=develop)](https://travis-ci.org/trezor/connect)
+[![NPM](https://img.shields.io/npm/v/trezor-connect.svg)](https://www.npmjs.org/package/trezor-connect)
+[![Known Vulnerabilities](https://snyk.io/test/github/BitGo/bitgo-utxo-lib/badge.svg?targetFile=package.json)](https://snyk.io/test/github/BitGo/bitgo-utxo-lib?targetFile=package.json)
 
 Trezor Connect is a platform for easy integration of Trezor into 3rd party services. It provides API with functionality to access public keys, sign transactions and authenticate users. User interface is presented in a secure popup window served from `https://connect.trezor.io/7/popup.html`
 
