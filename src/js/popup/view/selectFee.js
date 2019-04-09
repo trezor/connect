@@ -196,7 +196,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         sendButton.setAttribute('disabled', 'disabled');
         // $FlowIssue value not found on Event target
         const value = event.currentTarget.value;
-        const valueNum: number = parseInt(value);
+        const valueNum = parseInt(value);
 
         if (isNaN(valueNum)) {
             if (value.length > 0) {
@@ -204,6 +204,8 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
             } else {
                 customFeeLabel.innerHTML = 'Missing fee';
             }
+        } else if (valueNum.toString() !== value) {
+            customFeeLabel.innerHTML = 'Incorrect fee';
         } else if (valueNum < minFee) {
             customFeeLabel.innerHTML = 'Fee is too low';
         } else if (valueNum > maxFee) {
@@ -214,7 +216,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
             const composeCustomFeeTimeoutHandler = () => {
                 postMessage(new UiMessage(UI.RECEIVE_FEE, {
                     type: 'compose-custom',
-                    value: valueNum,
+                    value,
                 }));
 
                 // updateCustomFee({
