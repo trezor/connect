@@ -24,14 +24,11 @@ export const validateTrezorInputs = (inputs: Array<TransactionInput>, coinInfo: 
         validateParams(input, [
             { name: 'prev_hash', type: 'string', obligatory: true },
             { name: 'prev_index', type: 'number', obligatory: true },
-            { name: 'script_type', type: 'string', obligatory: true },
+            { name: 'script_type', type: 'string' },
             { name: 'amount', type: 'string', obligatory: useAmount },
             { name: 'sequence', type: 'number' },
             { name: 'multisig', type: 'object' },
         ]);
-
-        const scriptType = getScriptType(input.address_n);
-        if (input.script_type !== scriptType) throw new Error(`Input script_type should be set to ${scriptType}`);
     }
     return trezorInputs;
 };
