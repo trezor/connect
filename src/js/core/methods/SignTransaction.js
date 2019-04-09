@@ -78,18 +78,6 @@ export default class SignTransaction extends AbstractMethod {
             this.info = getLabel('Sign #NETWORK transaction', coinInfo);
         }
 
-        payload.inputs.forEach(utxo => {
-            validateParams(utxo, [
-                { name: 'amount', type: 'amount' },
-            ]);
-        });
-
-        payload.outputs.forEach(out => {
-            validateParams(out, [
-                { name: 'amount', type: 'amount' },
-            ]);
-        });
-
         if (payload.hasOwnProperty('refTxs')) {
             payload.refTxs.forEach(tx => {
                 validateParams(tx, [
