@@ -18,6 +18,7 @@
             "coin_label": "Bitcoin",
             "coin_name": "Bitcoin",
             "coin_shortcut": "BTC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -65,6 +66,7 @@
             "coin_label": "Testnet",
             "coin_name": "Testnet",
             "coin_shortcut": "TEST",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -106,6 +108,7 @@
             "coin_label": "Actinium",
             "coin_name": "Actinium",
             "coin_shortcut": "ACM",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -147,6 +150,7 @@
             "coin_label": "Axe",
             "coin_name": "Axe",
             "coin_shortcut": "AXE",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -188,6 +192,7 @@
             "coin_label": "BitCash",
             "coin_name": "BitCash",
             "coin_shortcut": "BITC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -232,6 +237,7 @@
             "coin_label": "Bitcloud",
             "coin_name": "Bitcloud",
             "coin_shortcut": "BTDX",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -279,6 +285,7 @@
             "coin_label": "Bitcoin Cash",
             "coin_name": "Bcash",
             "coin_shortcut": "BCH",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -323,6 +330,7 @@
             "coin_label": "Bitcoin Cash Testnet",
             "coin_name": "Bcash Testnet",
             "coin_shortcut": "TBCH",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -370,6 +378,7 @@
             "coin_label": "Bitcoin Gold",
             "coin_name": "Bgold",
             "coin_shortcut": "BTG",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -414,6 +423,7 @@
             "coin_label": "Bitcoin Gold Testnet",
             "coin_name": "Bgold Testnet",
             "coin_shortcut": "TBTG",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -460,6 +470,7 @@
             "coin_label": "Bitcoin Private",
             "coin_name": "Bprivate",
             "coin_shortcut": "BTCP",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -503,6 +514,7 @@
             "coin_label": "Bitcore",
             "coin_name": "Bitcore",
             "coin_shortcut": "BTX",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -544,6 +556,7 @@
             "coin_label": "Bitsend",
             "coin_name": "Bitsend",
             "coin_shortcut": "BSD",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -590,6 +603,7 @@
             "coin_label": "Capricoin",
             "coin_name": "Capricoin",
             "coin_shortcut": "CPC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -640,6 +654,7 @@
             "coin_label": "Dash",
             "coin_name": "Dash",
             "coin_shortcut": "DASH",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -681,6 +696,7 @@
             "coin_label": "Dash Testnet",
             "coin_name": "Dash Testnet",
             "coin_shortcut": "tDASH",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -711,92 +727,6 @@
             "xpub_magic_segwit_p2sh": null
         },
         {
-            "address_type": 1855,
-            "address_type_p2sh": 1818,
-            "bech32_prefix": null,
-            "bip115": false,
-            "bitcore": [
-                "https://mainnet.decred.org"
-            ],
-            "blockbook": [],
-            "blocktime_seconds": 600,
-            "cashaddr_prefix": null,
-            "coin_label": "Decred",
-            "coin_name": "Decred",
-            "coin_shortcut": "DCR",
-            "curve_name": "secp256k1_decred",
-            "decred": true,
-            "default_fee_b": {
-                "Normal": 10
-            },
-            "dust_limit": 546,
-            "force_bip143": false,
-            "fork_id": null,
-            "hash_genesis_block": "298e5cc3d985bfe7f81dc135f360abe089edd4396b86d2de66b0cef42b21d980",
-            "max_address_length": 35,
-            "maxfee_kb": 1000000,
-            "min_address_length": 35,
-            "minfee_kb": 10000,
-            "name": "Decred",
-            "segwit": false,
-            "shortcut": "DCR",
-            "signed_message_header": "Decred Signed Message:\n",
-            "slip44": 42,
-            "support": {
-                "connect": true,
-                "trezor1": "1.6.2",
-                "trezor2": "2.0.8",
-                "webwallet": true
-            },
-            "xprv_magic": 50177256,
-            "xpub_magic": 50178342,
-            "xpub_magic_segwit_native": null,
-            "xpub_magic_segwit_p2sh": null
-        },
-        {
-            "address_type": 3873,
-            "address_type_p2sh": 3836,
-            "bech32_prefix": null,
-            "bip115": false,
-            "bitcore": [
-                "https://testnet.decred.org"
-            ],
-            "blockbook": [],
-            "blocktime_seconds": 600,
-            "cashaddr_prefix": null,
-            "coin_label": "Decred Testnet",
-            "coin_name": "Decred Testnet",
-            "coin_shortcut": "TDCR",
-            "curve_name": "secp256k1_decred",
-            "decred": true,
-            "default_fee_b": {
-                "Normal": 10
-            },
-            "dust_limit": 546,
-            "force_bip143": false,
-            "fork_id": null,
-            "hash_genesis_block": "a649dce53918caf422e9c711c858837e08d626ecfcd198969b24f7b634a49bac",
-            "max_address_length": 35,
-            "maxfee_kb": 10000000,
-            "min_address_length": 35,
-            "minfee_kb": 1000,
-            "name": "Decred Testnet",
-            "segwit": false,
-            "shortcut": "TDCR",
-            "signed_message_header": "Decred Signed Message:\n",
-            "slip44": 1,
-            "support": {
-                "connect": true,
-                "trezor1": "1.6.2",
-                "trezor2": "2.0.8",
-                "webwallet": true
-            },
-            "xprv_magic": 70615959,
-            "xpub_magic": 70617041,
-            "xpub_magic_segwit_native": null,
-            "xpub_magic_segwit_p2sh": null
-        },
-        {
             "address_type": 30,
             "address_type_p2sh": 90,
             "bech32_prefix": null,
@@ -808,6 +738,7 @@
             "coin_label": "Denarius",
             "coin_name": "Denarius",
             "coin_shortcut": "DNR",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -852,6 +783,7 @@
             "coin_label": "DigiByte",
             "coin_name": "DigiByte",
             "coin_shortcut": "DGB",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -902,6 +834,7 @@
             "coin_label": "Dogecoin",
             "coin_name": "Dogecoin",
             "coin_shortcut": "DOGE",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -945,6 +878,7 @@
             "coin_label": "Feathercoin",
             "coin_name": "Feathercoin",
             "coin_shortcut": "FTC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -988,6 +922,7 @@
             "coin_label": "Flashcoin",
             "coin_name": "Flashcoin",
             "coin_shortcut": "FLASH",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1031,6 +966,7 @@
             "coin_label": "Flo",
             "coin_name": "Florincoin",
             "coin_shortcut": "FLO",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1074,6 +1010,7 @@
             "coin_label": "Fujicoin",
             "coin_name": "Fujicoin",
             "coin_shortcut": "FJC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1120,6 +1057,7 @@
             "coin_label": "GIN",
             "coin_name": "Gincoin",
             "coin_shortcut": "GIN",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1163,6 +1101,7 @@
             "coin_label": "GameCredits",
             "coin_name": "GameCredits",
             "coin_shortcut": "GAME",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1193,97 +1132,6 @@
             "xpub_magic_segwit_p2sh": 28471030
         },
         {
-            "address_type": 36,
-            "address_type_p2sh": 5,
-            "bech32_prefix": "grs",
-            "bip115": false,
-            "bitcore": [
-                "https://groestlsight.groestlcoin.org",
-                "https://grsblocks.com"
-            ],
-            "blockbook": [
-                "https://blockbook.groestlcoin.org"
-            ],
-            "blocktime_seconds": 60,
-            "cashaddr_prefix": null,
-            "coin_label": "Groestlcoin",
-            "coin_name": "Groestlcoin",
-            "coin_shortcut": "GRS",
-            "curve_name": "secp256k1_groestl",
-            "decred": false,
-            "default_fee_b": {
-                "Normal": 10
-            },
-            "dust_limit": 546,
-            "force_bip143": false,
-            "fork_id": null,
-            "hash_genesis_block": "00000ac5927c594d49cc0bdb81759d0da8297eb614683d3acb62f0703b639023",
-            "max_address_length": 34,
-            "maxfee_kb": 100000,
-            "min_address_length": 27,
-            "minfee_kb": 1000,
-            "name": "Groestlcoin",
-            "segwit": true,
-            "shortcut": "GRS",
-            "signed_message_header": "GroestlCoin Signed Message:\n",
-            "slip44": 17,
-            "support": {
-                "connect": true,
-                "trezor1": "1.6.2",
-                "trezor2": "2.0.8",
-                "webwallet": true
-            },
-            "xprv_magic": 76066276,
-            "xpub_magic": 76067358,
-            "xpub_magic_segwit_native": 78792518,
-            "xpub_magic_segwit_p2sh": 77429938
-        },
-        {
-            "address_type": 111,
-            "address_type_p2sh": 196,
-            "bech32_prefix": "tgrs",
-            "bip115": false,
-            "bitcore": [
-                "https://groestlsight-test.groestlcoin.org"
-            ],
-            "blockbook": [
-                "https://blockbook-test.groestlcoin.org"
-            ],
-            "blocktime_seconds": 60,
-            "cashaddr_prefix": null,
-            "coin_label": "Groestlcoin Testnet",
-            "coin_name": "Groestlcoin Testnet",
-            "coin_shortcut": "tGRS",
-            "curve_name": "secp256k1_groestl",
-            "decred": false,
-            "default_fee_b": {
-                "Normal": 10
-            },
-            "dust_limit": 546,
-            "force_bip143": false,
-            "fork_id": null,
-            "hash_genesis_block": "000000ffbb50fc9898cdd36ec163e6ba23230164c0052a28876255b7dcf2cd36",
-            "max_address_length": 34,
-            "maxfee_kb": 100000,
-            "min_address_length": 27,
-            "minfee_kb": 1000,
-            "name": "Groestlcoin Testnet",
-            "segwit": true,
-            "shortcut": "tGRS",
-            "signed_message_header": "GroestlCoin Signed Message:\n",
-            "slip44": 1,
-            "support": {
-                "connect": true,
-                "trezor1": "1.6.2",
-                "trezor2": "2.0.8",
-                "webwallet": true
-            },
-            "xprv_magic": 70615956,
-            "xpub_magic": 70617039,
-            "xpub_magic_segwit_native": 73342198,
-            "xpub_magic_segwit_p2sh": 71979618
-        },
-        {
             "address_type": 60,
             "address_type_p2sh": 85,
             "bech32_prefix": null,
@@ -1297,6 +1145,12 @@
             "coin_label": "Komodo",
             "coin_name": "Komodo",
             "coin_shortcut": "KMD",
+            "consensus_branch_id": {
+                "1": 0,
+                "2": 0,
+                "3": 1537743641,
+                "4": 1991772603
+            },
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1340,6 +1194,7 @@
             "coin_label": "Koto",
             "coin_name": "Koto",
             "coin_shortcut": "KOTO",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1387,6 +1242,7 @@
             "coin_label": "Litecoin",
             "coin_name": "Litecoin",
             "coin_shortcut": "LTC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1430,6 +1286,7 @@
             "coin_label": "Litecoin Testnet",
             "coin_name": "Litecoin Testnet",
             "coin_shortcut": "tLTC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1471,6 +1328,7 @@
             "coin_label": "Megacoin",
             "coin_name": "Megacoin",
             "coin_shortcut": "MEC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1517,6 +1375,7 @@
             "coin_label": "Monacoin",
             "coin_name": "Monacoin",
             "coin_shortcut": "MONA",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1558,6 +1417,7 @@
             "coin_label": "MonetaryUnit",
             "coin_name": "MonetaryUnit",
             "coin_shortcut": "MUE",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1599,6 +1459,7 @@
             "coin_label": "Myriad",
             "coin_name": "Myriad",
             "coin_shortcut": "XMY",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1645,6 +1506,7 @@
             "coin_label": "NIX",
             "coin_name": "NIX",
             "coin_shortcut": "NIX",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1689,6 +1551,7 @@
             "coin_label": "Namecoin",
             "coin_name": "Namecoin",
             "coin_shortcut": "NMC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1732,6 +1595,7 @@
             "coin_label": "PIVX",
             "coin_name": "PIVX",
             "coin_shortcut": "PIVX",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1775,6 +1639,7 @@
             "coin_label": "PIVX Testnet",
             "coin_name": "PIVX Testnet",
             "coin_shortcut": "tPIVX",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1818,6 +1683,7 @@
             "coin_label": "Pesetacoin",
             "coin_name": "Pesetacoin",
             "coin_shortcut": "PTC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1859,6 +1725,7 @@
             "coin_label": "Primecoin",
             "coin_name": "Primecoin",
             "coin_shortcut": "XPM",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -1889,94 +1756,6 @@
             "xpub_magic_segwit_p2sh": null
         },
         {
-            "address_type": 58,
-            "address_type_p2sh": 50,
-            "bech32_prefix": "qc",
-            "bip115": false,
-            "bitcore": [],
-            "blockbook": [],
-            "blocktime_seconds": 128,
-            "cashaddr_prefix": null,
-            "coin_label": "Qtum",
-            "coin_name": "Qtum",
-            "coin_shortcut": "QTUM",
-            "curve_name": "secp256k1",
-            "decred": false,
-            "default_fee_b": {
-                "Economy": 500,
-                "High": 2000,
-                "Low": 410,
-                "Normal": 600
-            },
-            "dust_limit": 218400,
-            "force_bip143": false,
-            "fork_id": null,
-            "hash_genesis_block": "000075aef83cf2853580f8ae8ce6f8c3096cfa21d98334d6e3f95e5582ed986c",
-            "max_address_length": 34,
-            "maxfee_kb": 40000000,
-            "min_address_length": 27,
-            "minfee_kb": 400000,
-            "name": "Qtum",
-            "segwit": true,
-            "shortcut": "QTUM",
-            "signed_message_header": "Qtum Signed Message:\n",
-            "slip44": 2301,
-            "support": {
-                "connect": true,
-                "trezor1": "1.8.1",
-                "trezor2": "2.1.1",
-                "webwallet": false
-            },
-            "xprv_magic": 76066276,
-            "xpub_magic": 76067358,
-            "xpub_magic_segwit_native": 78792518,
-            "xpub_magic_segwit_p2sh": 77429938
-        },
-        {
-            "address_type": 120,
-            "address_type_p2sh": 110,
-            "bech32_prefix": "tq",
-            "bip115": false,
-            "bitcore": [],
-            "blockbook": [],
-            "blocktime_seconds": 128,
-            "cashaddr_prefix": null,
-            "coin_label": "Qtum Testnet",
-            "coin_name": "Qtum Testnet",
-            "coin_shortcut": "tQTUM",
-            "curve_name": "secp256k1",
-            "decred": false,
-            "default_fee_b": {
-                "Economy": 500,
-                "High": 2000,
-                "Low": 410,
-                "Normal": 600
-            },
-            "dust_limit": 218400,
-            "force_bip143": false,
-            "fork_id": null,
-            "hash_genesis_block": "0000e803ee215c0684ca0d2f9220594d3f828617972aad66feb2ba51f5e14222",
-            "max_address_length": 34,
-            "maxfee_kb": 40000000,
-            "min_address_length": 27,
-            "minfee_kb": 400000,
-            "name": "Qtum Testnet",
-            "segwit": true,
-            "shortcut": "tQTUM",
-            "signed_message_header": "Qtum Signed Message:\n",
-            "slip44": 1,
-            "support": {
-                "connect": true,
-                "trezor1": "1.8.1",
-                "trezor2": "2.1.1",
-                "webwallet": false
-            },
-            "xprv_magic": 70615956,
-            "xpub_magic": 70617039,
-            "xpub_magic_segwit_native": 73342198,
-            "xpub_magic_segwit_p2sh": 71979618
-        },
-        {
             "address_type": 60,
             "address_type_p2sh": 122,
             "bech32_prefix": null,
@@ -1990,6 +1769,7 @@
             "coin_label": "Ravencoin",
             "coin_name": "Ravencoin",
             "coin_shortcut": "RVN",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -2020,96 +1800,6 @@
             "xpub_magic_segwit_p2sh": null
         },
         {
-            "address_type": 63,
-            "address_type_p2sh": 18,
-            "bech32_prefix": null,
-            "bip115": false,
-            "bitcore": [
-                "https://insight.smartcash.cc"
-            ],
-            "blockbook": [],
-            "blocktime_seconds": 55,
-            "cashaddr_prefix": null,
-            "coin_label": "SmartCash",
-            "coin_name": "SmartCash",
-            "coin_shortcut": "SMART",
-            "curve_name": "secp256k1_smart",
-            "decred": false,
-            "default_fee_b": {
-                "Economy": 10,
-                "High": 200,
-                "Low": 1,
-                "Normal": 100
-            },
-            "dust_limit": 546,
-            "force_bip143": false,
-            "fork_id": null,
-            "hash_genesis_block": "000007acc6970b812948d14ea5a0a13db0fdd07d5047c7e69101fa8b361e05a4",
-            "max_address_length": 34,
-            "maxfee_kb": 1000000,
-            "min_address_length": 27,
-            "minfee_kb": 0,
-            "name": "SmartCash",
-            "segwit": false,
-            "shortcut": "SMART",
-            "signed_message_header": "SmartCash Signed Message:\n",
-            "slip44": 224,
-            "support": {
-                "connect": true,
-                "trezor1": "1.7.1",
-                "trezor2": "2.0.8",
-                "webwallet": false
-            },
-            "xprv_magic": 76066276,
-            "xpub_magic": 76067358,
-            "xpub_magic_segwit_native": null,
-            "xpub_magic_segwit_p2sh": null
-        },
-        {
-            "address_type": 65,
-            "address_type_p2sh": 21,
-            "bech32_prefix": null,
-            "bip115": false,
-            "bitcore": [],
-            "blockbook": [],
-            "blocktime_seconds": 55,
-            "cashaddr_prefix": null,
-            "coin_label": "SmartCash Testnet",
-            "coin_name": "SmartCash Testnet",
-            "coin_shortcut": "tSMART",
-            "curve_name": "secp256k1_smart",
-            "decred": false,
-            "default_fee_b": {
-                "Economy": 10,
-                "High": 200,
-                "Low": 1,
-                "Normal": 100
-            },
-            "dust_limit": 546,
-            "force_bip143": false,
-            "fork_id": null,
-            "hash_genesis_block": "0000027235b5679bcd28c90d03d4bf1a9ba4c07c4efcc1c87d6c68cce25e6e5d",
-            "max_address_length": 35,
-            "maxfee_kb": 1000000,
-            "min_address_length": 27,
-            "minfee_kb": 0,
-            "name": "SmartCash Testnet",
-            "segwit": false,
-            "shortcut": "tSMART",
-            "signed_message_header": "SmartCash Signed Message:\n",
-            "slip44": 224,
-            "support": {
-                "connect": true,
-                "trezor1": "1.7.1",
-                "trezor2": "2.0.8",
-                "webwallet": false
-            },
-            "xprv_magic": 70615956,
-            "xpub_magic": 70617039,
-            "xpub_magic_segwit_native": null,
-            "xpub_magic_segwit_p2sh": null
-        },
-        {
             "address_type": 76,
             "address_type_p2sh": 16,
             "bech32_prefix": "xc",
@@ -2121,6 +1811,7 @@
             "coin_label": "Stakenet",
             "coin_name": "Stakenet",
             "coin_shortcut": "XSN",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -2171,6 +1862,7 @@
             "coin_label": "Vertcoin",
             "coin_name": "Vertcoin",
             "coin_shortcut": "VTC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -2214,6 +1906,7 @@
             "coin_label": "Viacoin",
             "coin_name": "Viacoin",
             "coin_shortcut": "VIA",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -2260,6 +1953,7 @@
             "coin_label": "ZClassic",
             "coin_name": "ZClassic",
             "coin_shortcut": "ZCL",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -2307,6 +2001,12 @@
             "coin_label": "Zcash",
             "coin_name": "Zcash",
             "coin_shortcut": "ZEC",
+            "consensus_branch_id": {
+                "1": 0,
+                "2": 0,
+                "3": 1537743641,
+                "4": 1991772603
+            },
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -2350,6 +2050,12 @@
             "coin_label": "Zcash Testnet",
             "coin_name": "Zcash Testnet",
             "coin_shortcut": "TAZ",
+            "consensus_branch_id": {
+                "1": 0,
+                "2": 0,
+                "3": 1537743641,
+                "4": 1991772603
+            },
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -2393,6 +2099,7 @@
             "coin_label": "Zcoin",
             "coin_name": "Zcoin",
             "coin_shortcut": "XZC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -2437,6 +2144,7 @@
             "coin_label": "Zcoin Testnet",
             "coin_name": "Zcoin Testnet",
             "coin_shortcut": "tXZC",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
@@ -2483,6 +2191,7 @@
             "coin_label": "Zencash",
             "coin_name": "Zencash",
             "coin_shortcut": "ZEN",
+            "consensus_branch_id": null,
             "curve_name": "secp256k1",
             "decred": false,
             "default_fee_b": {
