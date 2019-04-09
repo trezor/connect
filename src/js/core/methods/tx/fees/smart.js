@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { btckb2satoshib } from '../../../../utils/formatUtils';
 import BlockBook from '../../../../backend';
 import type { FeeHandler } from './index';
-import type { FeeLevel, FeeLevelInfo, SmartBitcoreFeeLevel } from '../../../../types/fee';
+import type { BlockFees, FeeLevel, FeeLevelInfo, SmartBitcoreFeeLevel } from '../../../../types/fee';
 
 const feeLevels: $ReadOnlyArray<SmartBitcoreFeeLevel> = [
     {
@@ -37,8 +37,7 @@ const feeLevels: $ReadOnlyArray<SmartBitcoreFeeLevel> = [
     },
 ];
 
-type Fees = {[i: number]: string};
-let fees: Fees = {};
+let fees: BlockFees = {};
 let backend: BlockBook;
 
 function range(from: number, length: number): Array<number> {
@@ -49,8 +48,8 @@ function range(from: number, length: number): Array<number> {
     return res;
 }
 
-async function _refreshQuery(query: Array<number>, res: Fees): Promise<boolean> {
-    const fees = await backend.blockchain.estimateSmartTxFees(query, true);
+async function _refreshQuery(query: Array<number>, res: BlockFees): Promise<boolean> {
+    const fees: BlockFees = await backend.blockchain.estimateSmartTxFees(query, true);
     for (const blocksS in fees) {
         const blocks = parseInt(blocksS);
         const fee = fees[blocks];
