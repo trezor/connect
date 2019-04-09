@@ -10,8 +10,9 @@ import type { CoinInfo, FirmwareRange } from '../../../types';
 
 type Param = {
     name: string,
-    type?: 'string' | 'number' | 'array' | 'buffer' | 'boolean' | 'amount' | 'object',
-    obligatory?: true,
+    type?: string,
+    obligatory?: boolean,
+    allowEmpty?: true,
 }
 
 export const validateParams = (values: Object, fields: Array<Param>): void => {
@@ -23,7 +24,7 @@ export const validateParams = (values: Object, fields: Array<Param>): void => {
                     if (!Array.isArray(value)) {
                         // invalid type
                         throw invalidParameter(`Parameter "${ field.name }" has invalid type. "${ field.type }" expected.`);
-                    } else if (value.length < 1) {
+                    } else if (!field.allowEmpty && value.length < 1) {
                         throw invalidParameter(`Parameter "${ field.name }" is empty.`);
                     }
                 } else if (field.type === 'amount') {
