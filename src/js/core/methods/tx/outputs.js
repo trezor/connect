@@ -27,7 +27,6 @@ export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInf
             { name: 'address', type: 'string' },
             { name: 'amount', type: 'string' },
             { name: 'op_return_data', type: 'string' },
-            { name: 'decred_script_version', type: 'number' },
             { name: 'multisig', type: 'object' },
         ]);
 

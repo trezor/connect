@@ -34,6 +34,7 @@ export type BitcoinNetworkInfo = {
     // address_type: in Network
     // address_type_p2sh: in Network
     // bech32_prefix: in Network
+    // consensus_branch_id in Network
     // bip115: not used
     bitcore: Array<string>,
     blockbook: Array<string>,
@@ -43,9 +44,9 @@ export type BitcoinNetworkInfo = {
     label: string, // this is human readable format, could be different from "name"
     name: string, // this is Trezor readable format
     shortcut: string,
-    // cooldown no used
+    // cooldown not used
     curveName: string,
-    decred: boolean,
+    // decred not used
     defaultFees: {[level: string]: number},
     dustLimit: number,
     forceBip143: boolean,

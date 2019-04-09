@@ -174,6 +174,7 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
             // address_type in Network
             // address_type_p2sh in Network
             // bech32_prefix in Network
+            // consensus_branch_id in Network
             // bip115: not used
             bitcore: coin.bitcore,
             blockbook: coin.blockbook,
@@ -183,9 +184,9 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
             label: coin.coin_label,
             name: coin.coin_name,
             shortcut,
-            // cooldown no used
+            // cooldown not used
             curveName: coin.curve_name,
-            decred: coin.decred,
+            // decred not used
             defaultFees: coin.default_fee_b,
             dustLimit: coin.dust_limit,
             forceBip143: coin.force_bip143,
