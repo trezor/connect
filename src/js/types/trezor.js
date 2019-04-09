@@ -128,8 +128,6 @@ export type RefTransactionInput = {|
     prev_index: number,
     script_sig: string,
     sequence: number,
-    block_hash_bip115?: ?string,
-    prev_block_height_bip115?: ?number,
 |};
 
 export type OutputScriptType = 'PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS' | 'PAYTOP2SHWITNESS';
