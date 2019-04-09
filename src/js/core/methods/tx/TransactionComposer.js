@@ -86,7 +86,7 @@ export default class TransactionComposer {
     }
 
     composeCustomFee(fee: string): SelectFeeLevel {
-        const tx: BuildTxResult = this.compose(fee);
+        const tx: BuildTxResult = this.compose(typeof fee === 'number' ? fee.toString() : fee);
         if (!this.composed['custom']) {
             this.feeLevels.push(customFeeLevel);
         }
