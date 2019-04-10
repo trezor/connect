@@ -1,8 +1,11 @@
 /* @flow */
 
 import AbstractMethod from './AbstractMethod';
-import type { CoreMessage } from '../../types';
+import * as UI from '../../constants/ui';
 import { validateParams } from './helpers/paramsValidator';
+import { UiMessage } from '../../message/builder';
+
+import type { CoreMessage } from '../../types';
 
 type Params = {
     language?: string,
@@ -18,7 +21,8 @@ export default class ApplySettings extends AbstractMethod {
     run: () => Promise<any>;
     constructor(message: CoreMessage) {
         super(message);
-        this.useUi = false;
+        this.requiredPermissions = ['management'];
+        this.useUi = true;
         const payload: Object = message.payload;
 
         validateParams(payload, [
@@ -33,6 +37,27 @@ export default class ApplySettings extends AbstractMethod {
         this.params = {
             label: payload.label,
         };
+    }
+
+    async confirmation(): Promise<boolean> {
+        // wait for popup window
+        await this.getPopupPromise().promise;
+        // initialize user response promise
+        const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
+
+        // request confirmation view
+        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+            view: 'device-management',
+            customConfirmButton: {
+                className: 'wipe',
+                label: `Wipe ${this.device.toMessageObject().label}`,
+            },
+            label: 'Are you sure you want to wipe your device?',
+        }));
+
+        // wait for user action
+        const uiResp = await uiPromise.promise;
+        return uiResp.payload;
     }
 
     async run(): Promise<Object> {
