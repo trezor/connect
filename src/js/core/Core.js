@@ -312,6 +312,12 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         }
     }
 
+    if (isUsingPopup && method.requiredPermissions.includes('management') && !DataManager.isManagementAllowed()) {
+        postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
+        postMessage(new ResponseMessage(responseID, false, { error: ERROR.MANAGEMENT_NOT_ALLOWED.message }));
+        throw ERROR.MANAGEMENT_NOT_ALLOWED;
+    }
+
     // this method is not using the device, there is no need to acquire
     if (!method.useDevice) {
         if (method.useUi) {

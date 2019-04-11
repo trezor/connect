@@ -24,6 +24,7 @@ export const IFRAME_TIMEOUT: TrezorError = new TrezorError(102, 'Iframe timeout'
 export const POPUP_TIMEOUT: TrezorError = new TrezorError(103, 'Popup timeout');
 export const BROWSER_NOT_SUPPORTED: TrezorError = new TrezorError(104, 'Browser not supported');
 export const MANIFEST_NOT_SET: TrezorError = new TrezorError(105, 'Manifest not set. Read more at https://github.com/trezor/connect/blob/develop/docs/index.md');
+export const MANAGEMENT_NOT_ALLOWED: TrezorError = new TrezorError(105, 'Management method not allowed for this configuration');
 
 export const NO_TRANSPORT: TrezorError = new TrezorError(500, 'Transport is missing');
 export const WRONG_TRANSPORT_CONFIG: TrezorError = new TrezorError(5002, 'Wrong config response'); // config_signed
