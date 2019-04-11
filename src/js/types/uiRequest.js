@@ -55,6 +55,7 @@ export type DeviceMessage = {
         typeof UI.REQUEST_WORD,
     payload: {
         device: Device,
+        type?: string, // todo: better flow enum
     },
 };
 

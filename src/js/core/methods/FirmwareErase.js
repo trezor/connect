@@ -3,6 +3,7 @@
 import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 import { validateParams } from './helpers/paramsValidator';
+import { UiMessage } from '../../message/builder';
 
 import type { CoreMessage } from '../../types';
 
@@ -16,7 +17,11 @@ export default class FirmwareErase extends AbstractMethod {
 
     constructor(message: CoreMessage) {
         super(message);
-        this.useUi = false;
+        this.useEmptyPassphrase = true;
+        this.requiredPermissions = ['management'];
+        this.allowDeviceMode = [...this.allowDeviceMode, UI.BOOTLOADER, UI.INITIALIZE];
+        this.useDeviceState = false;
+
         const payload: Object = message.payload;
 
         validateParams(payload, [
@@ -26,11 +31,27 @@ export default class FirmwareErase extends AbstractMethod {
         this.params = {
             length: payload.length,
         };
+    }
 
-        // todo: maybe only bootloader and not 'normal' mode?
-        this.allowDeviceMode = [...this.allowDeviceMode, UI.BOOTLOADER, UI.INITIALIZE];
-        this.useUi = false;
-        this.useDeviceState = false;
+    async confirmation(): Promise<boolean> {
+        // wait for popup window
+        await this.getPopupPromise().promise;
+        // initialize user response promise
+        const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
+
+        // request confirmation view
+        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+            view: 'device-management',
+            customConfirmButton: {
+                className: 'wipe',
+                label: 'Proceed',
+            },
+            label: 'Do you want to erase firmware?',
+        }));
+
+        // wait for user action
+        const uiResp = await uiPromise.promise;
+        return uiResp.payload;
     }
 
     async run(): Promise<Object> {

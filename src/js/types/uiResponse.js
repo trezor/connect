@@ -32,6 +32,11 @@ declare type ReceivePin = {
     payload: string,
 }
 
+declare type ReceiveWord = {
+    +type: typeof UI.RECEIVE_WORD,
+    payload: string,
+}
+
 declare type ReceivePassphrase = {
     +type: typeof UI.RECEIVE_PASSPHRASE,
     payload: {
@@ -80,6 +85,7 @@ export type UiResponse =
     | ReceiveConfirmation
     | ReceiveDevice
     | ReceivePin
+    | ReceiveWord
     | ReceivePassphrase
     | ReceivePassphraseAction
     | ReceiveAccount
@@ -96,6 +102,7 @@ declare function MessageFactory(type: $PropertyType<ReceivePassphraseAction, 'ty
 declare function MessageFactory(type: $PropertyType<ReceiveAccount, 'type'>, payload: $PropertyType<ReceiveAccount, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<ReceiveFee, 'type'>, payload: $PropertyType<ReceiveFee, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<CustomMessageRequest, 'type'>, payload: $PropertyType<CustomMessageRequest, 'payload'>): CoreMessage;
+declare function MessageFactory(type: $PropertyType<ReceiveWord, 'type'>, payload: $PropertyType<ReceiveWord, 'payload'>): CoreMessage;
 /* eslint-enable no-redeclare */
 
 export type UiResponseFactory = typeof MessageFactory;

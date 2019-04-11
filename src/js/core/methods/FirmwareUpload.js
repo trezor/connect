@@ -20,7 +20,10 @@ export default class FirmwareUpload extends AbstractMethod {
 
     constructor(message: CoreMessage) {
         super(message);
-        this.useUi = false;
+        this.useEmptyPassphrase = true;
+        this.requiredPermissions = ['management'];
+        this.allowDeviceMode = [...this.allowDeviceMode, UI.BOOTLOADER, UI.INITIALIZE];
+        this.useDeviceState = false;
 
         const payload: Object = message.payload;
 
@@ -36,9 +39,6 @@ export default class FirmwareUpload extends AbstractMethod {
             offset: payload.offset,
             length: payload.length,
         };
-
-        this.allowDeviceMode = [...this.allowDeviceMode, UI.BOOTLOADER, UI.INITIALIZE];
-        this.useDeviceState = false;
     }
 
     async run(): Promise<Object> {

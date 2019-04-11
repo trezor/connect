@@ -514,8 +514,8 @@ class TrezorConnect {
         return await call({ method: 'backupDevice' });
     }
 
-    static changePin: $T.ChangePin = async () => {
-        return await call({ method: 'changePin' });
+    static changePin: $T.ChangePin = async (params) => {
+        return await call({ method: 'changePin', ...params });
     }
 
     static firmwareErase: $T.FirmwareErase = async (params) => {

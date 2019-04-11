@@ -14,9 +14,9 @@ export default class ChangePin extends AbstractMethod {
 
     constructor(message: CoreMessage) {
         super(message);
-        this.useUi = false;
+        this.useEmptyPassphrase = true;
+        this.requiredPermissions = ['management'];
         const payload: Object = message.payload;
-
         validateParams(payload, [
             { name: 'remove', type: 'boolean' },
         ]);
