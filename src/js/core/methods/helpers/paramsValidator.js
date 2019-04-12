@@ -33,7 +33,7 @@ export const validateParams = (values: Object, fields: Array<Param>): void => {
                     }
                 } else if (field.type === 'buffer') {
                     if (typeof value.constructor.isBuffer === 'function' && value.constructor.isBuffer(value)) {
-                        throw invalidParameter(`Parameter "${ field.name }" has invalid type. "arrayBuffer" expected.`);
+                        throw invalidParameter(`Parameter "${ field.name }" has invalid type. "buffer" expected.`);
                     }
                 } else if (typeof value !== field.type) {
                     // invalid type
