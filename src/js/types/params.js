@@ -28,6 +28,7 @@ export type $Common = {
     useEmptyPassphrase?: boolean,
     allowSeedlessDevice?: boolean,
     keepSession?: boolean,
+    skipFinalReload?: boolean,
 }
 
 export type $Path = string | Array<number>;
