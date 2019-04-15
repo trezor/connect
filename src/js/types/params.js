@@ -186,6 +186,7 @@ export type $ApplySettings = $Common & {
     homescreen?: string,
     passhprase_source: number, // todo: enum [0, 1, 2] // ask, device, host
     auto_lock_delay?: number,
+    display_rotation?: 0 | 90 | 180 | 270,
 };
 
 export type $BackupDevice = $Common;
