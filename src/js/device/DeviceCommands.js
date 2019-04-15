@@ -24,7 +24,8 @@ export type MessageResponse<T> = {
 export type DefaultMessageResponse = MessageResponse<Object>;
 
 function assertType(res: DefaultMessageResponse, resType: string) {
-    if (res.type !== resType) {
+    const splitResTypes = resType.split('|');
+    if (!(splitResTypes.includes(res.type))) {
         throw new TypeError(`Response of unexpected type: ${res.type}. Should be ${resType}`);
     }
 }
@@ -507,6 +508,45 @@ export default class DeviceCommands {
         return response.message;
     }
 
+    async applyFlags(params: trezor.Flags): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('ApplyFlags', 'Success', params);
+        return response.message;
+    }
+
+    async applySettings(params: trezor.ApplySettings): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('ApplySettings', 'Success', params);
+        return response.message;
+    }
+
+    async backupDevice(): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('BackupDevice', 'Success');
+        return response.message;
+    }
+
+    async changePin(params: trezor.ChangePin): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('ChangePin', 'Success', params);
+        return response.message;
+    }
+
+    async firmwareErase(params: trezor.FirmwareErase): Promise<trezor.Success | 'FirmwareRequest'> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall(
+            'FirmwareErase',
+            this.device.features.major_version === 1 ? 'Success' : 'FirmwareRequest',
+            params,
+        );
+        return response.message;
+    }
+
+    async firmwareUpload(params: trezor.FirmwareUpload): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('FirmwareUpload', 'Success', params);
+        return response.message;
+    }
+
+    async recoveryDevice(params: trezor.RecoverDeviceSettings): Promise<trezor.Success> {
+        const response: MessageResponse<trezor.Success> = await this.typedCall('RecoveryDevice', 'Success', params);
+        return response.message;
+    }
+
     // Sends an async message to the opened device.
     async call(type: string, msg: Object = {}): Promise<DefaultMessageResponse> {
         const logMessage: Object = filterForLog(type, msg);
@@ -603,11 +643,11 @@ export default class DeviceCommands {
         if (res.type === 'PassphraseStateRequest') {
             const state: string = res.message.state;
             this.device.setTemporaryState(state);
-            return this._commonCall('PassphraseStateAck', { });
+            return this._commonCall('PassphraseStateAck', {});
         }
 
         if (res.type === 'WordRequest') {
-            return this._promptWord().then(
+            return this._promptWord(res.message.type).then(
                 word => {
                     return this._commonCall('WordAck', { word: word });
                 },
@@ -658,23 +698,17 @@ export default class DeviceCommands {
         });
     }
 
-    _promptWord(): Promise<string> {
+    _promptWord(type: string): Promise<string> {
         return new Promise((resolve, reject) => {
-            // if (!this.session.wordEvent.emit((err, word) => {
-            //     if (err || word == null) {
-            //         reject(err);
-            //     } else {
-            //         resolve(word.toLocaleLowerCase());
-            //     }
-            // })) {
-            //     if (this.session.debug) {
-            //         console.warn('[DeviceCommands] [call] Word callback not configured, cancelling request');
-            //     }
-            reject(new Error('Word callback not configured'));
-            // }
+            this.device.emit(DEVICE.WORD, this.device, type, (err, word) => {
+                if (err || word == null) {
+                    reject(err);
+                } else {
+                    resolve(word.toLocaleLowerCase());
+                }
+            });
         });
     }
-
     // DebugLink messages
 
     async debugLinkDecision(msg: any): Promise<void> {

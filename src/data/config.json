@@ -11,6 +11,11 @@
         { "origin": "sldev.cz", "priority": 0 },
         { "origin": "localhost", "priority": 0 }
     ],
+    "management": [
+        { "origin": "trezor.io" },
+        { "origin": "sldev.cz" },
+        { "origin": "localhost" }
+    ],
     "knownHosts": [
         { "origin": "imloifkgjagghnncjkhggdhalmcnfklk", "label": "Trezor Password Manager (Develop)", "icon": "./data/icons/tpm.jpg" },
         { "origin": "niebkpllfhmpfbffbfifagfgoamhpflf", "label": "Trezor Password Manager" },

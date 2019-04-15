@@ -191,3 +191,42 @@ export type GetSettings$ = {
     success: true,
     payload: ConnectSettings,
 } | Unsuccessful$;
+
+export type ApplyFlags$ = {
+    success: true,
+    payload: Success,
+} | Unsuccessful$;
+
+export type ApplySettings$ = {
+    success: true,
+    payload: Success,
+} | Unsuccessful$;
+
+export type BackupDevice$ = {
+    success: true,
+    payload: Success,
+} | Unsuccessful$;
+
+export type ChangePin$ = {
+    success: true,
+    payload: Success,
+} | Unsuccessful$;
+
+export type FirmwareErase$ = {
+    success: true,
+    payload: Success,
+} | Unsuccessful$;
+
+export type FirmwareRequest$ = {
+    length: number,
+    offset: number,
+}
+export type FirmwareUpload$ = {
+    success: true,
+    payload: Success,
+} | FirmwareRequest$ | Unsuccessful$;
+
+export type RecoveryDevice$ = {
+    success: true,
+    payload: Success,
+} | Unsuccessful$;

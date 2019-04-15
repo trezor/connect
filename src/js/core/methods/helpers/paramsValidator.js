@@ -1,15 +1,15 @@
 /* @flow */
 'use strict';
 
+import semvercmp from 'semver-compare';
 import { invalidParameter } from '../../../constants/errors';
 import { fromHardened } from '../../../utils/pathUtils';
-import semvercmp from 'semver-compare';
 import DataManager from '../../../data/DataManager';
 import type { CoinInfo, FirmwareRange } from '../../../types';
 
 type Param = {
     name: string,
-    type?: string,
+    type?: 'string' | 'number' | 'array' | 'buffer' | 'boolean' | 'amount' | 'object',
     obligatory?: true,
 }
 
@@ -30,6 +30,10 @@ export const validateParams = (values: Object, fields: Array<Param>): void => {
                         throw invalidParameter(`Parameter "${ field.name }" has invalid type. "string" expected.`);
                     } else if (isNaN(parseInt(value, 10)) || parseInt(value, 10).toString(10) !== value) {
                         throw invalidParameter(`Parameter "${ field.name }" has invalid value "${value}". Integer representation expected.`);
+                    }
+                } else if (field.type === 'buffer') {
+                    if (typeof value.constructor.isBuffer === 'function' && value.constructor.isBuffer(value)) {
+                        throw invalidParameter(`Parameter "${ field.name }" has invalid type. "buffer" expected.`);
                     }
                 } else if (typeof value !== field.type) {
                     // invalid type

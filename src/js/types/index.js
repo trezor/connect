@@ -98,7 +98,7 @@ export type FirmwareRelease = {
 
 export type DeviceStatus = 'available' | 'occupied' | 'used';
 export type DeviceMode = 'normal' | 'bootloader' | 'initialize' | 'seedless';
-export type DeviceFirmwareStatus = 'valid' | 'outdated' | 'required';
+export type DeviceFirmwareStatus = 'valid' | 'outdated' | 'required' | 'unknown' | 'none';
 
 export type Device = $Exact<{
     +type: 'acquired',
@@ -284,6 +284,13 @@ export type StellarSignTransaction = (STELLAR.$StellarSignTransaction) => Promis
 export type VerifyMessage = (P.$VerifyMessage) => Promise<R.VerifyMessage$>;
 export type WipeDevice = (P.$WipeDevice) => Promise<R.WipeDevice$>;
 export type GetSettings = () => Promise<R.GetSettings$>;
+export type ApplyFlags = (P.$ApplyFlags) => Promise<R.ApplyFlags$>;
+export type ApplySettings = (P.$ApplySettings) => Promise<R.ApplySettings$>;
+export type BackupDevice = (P.$BackupDevice) => Promise<R.BackupDevice$>;
+export type ChangePin = (P.$ChangePin) => Promise<R.ChangePin$>;
+export type FirmwareErase = (P.$FirmwareErase) => Promise<R.FirmwareErase$>;
+export type FirmwareUpload = (P.$FirmwareUpload) => Promise<R.FirmwareUpload$>;
+export type RecoveryDevice = (P.$RecoveryDevice) => Promise<R.RecoveryDevice$>;
 
 export * from './response';
 export * from './coinInfo';

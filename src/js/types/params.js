@@ -28,6 +28,7 @@ export type $Common = {
     useEmptyPassphrase?: boolean,
     allowSeedlessDevice?: boolean,
     keepSession?: boolean,
+    skipFinalReload?: boolean,
 }
 
 export type $Path = string | Array<number>;
@@ -173,3 +174,43 @@ export type $VerifyMessage = $Common & {
 }
 
 export type $WipeDevice = $Common;
+
+export type $ApplyFlags = $Common & {
+    flags: number,
+};
+
+export type $ApplySettings = $Common & {
+    language?: string,
+    label?: string,
+    use_passphrase?: boolean,
+    homescreen?: string,
+    passhprase_source: number, // todo: enum [0, 1, 2] // ask, device, host
+    auto_lock_delay?: number,
+    display_rotation?: 0 | 90 | 180 | 270,
+};
+
+export type $BackupDevice = $Common;
+
+export type $ChangePin = $Common & {
+    remove?: boolean,
+}
+
+export type $FirmwareErase = $Common & {
+    length?: number,
+}
+
+export type $FirmwareUpload = $Common & {
+    payload: string,
+    hash?: string,
+}
+
+export type $RecoveryDevice = $Common & {
+    word_count?: 12 | 18 | 24,
+    passphrase_protection?: boolean,
+    pin_protection?: boolean,
+    language?: string,
+    enforce_wordlist?: boolean,
+    type?: 0 | 1,
+    u2f_counter?: number,
+    dry_run?: number,
+}

@@ -123,6 +123,9 @@ const handleMessage = (event: PostMessageEvent): void => {
         case UI.REQUEST_PIN :
             view.initPinView(message.payload);
             break;
+        case UI.REQUEST_WORD :
+            view.initWordView(message.payload);
+            break;
         case UI.INVALID_PIN :
             showView('invalid-pin');
             break;

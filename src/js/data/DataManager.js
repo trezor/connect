@@ -49,6 +49,7 @@ type ProtobufMessages = {
 }
 export type Config = {
     +whitelist: Array<WhiteList>,
+    +management: Array<WhiteList>,
     +knownHosts: Array<KnownHost>,
     +webusb: Array<WebUSB>,
     +resources: Resources,
@@ -162,6 +163,19 @@ export default class DataManager {
                 uri.host = parts.slice(parts.length - 2, parts.length).join('.');
             }
             return this.config.whitelist.find(item => (item.origin === origin || item.origin === uri.host));
+        }
+    }
+
+    static isManagementAllowed(): ?WhiteList {
+        if (!this.config) return null;
+        const uri = parseUri(this.settings.origin);
+        if (uri && typeof uri.host === 'string') {
+            const parts: Array<string> = uri.host.split('.');
+            if (parts.length > 2) {
+                // subdomain
+                uri.host = parts.slice(parts.length - 2, parts.length).join('.');
+            }
+            return this.config.management.find(item => (item.origin === this.settings.origin || item.origin === uri.host));
         }
     }
 

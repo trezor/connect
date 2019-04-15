@@ -154,6 +154,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         case UI.RECEIVE_FEE :
         case UI.RECEIVE_BROWSER :
         case UI.CUSTOM_MESSAGE_RESPONSE :
+        case UI.RECEIVE_WORD:
         case UI.LOGIN_CHALLENGE_RESPONSE : {
             const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, message.type);
             if (uiPromise) {
@@ -311,6 +312,12 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         }
     }
 
+    if (isUsingPopup && method.requiredPermissions.includes('management') && !DataManager.isManagementAllowed()) {
+        postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
+        postMessage(new ResponseMessage(responseID, false, { error: ERROR.MANAGEMENT_NOT_ALLOWED.message }));
+        throw ERROR.MANAGEMENT_NOT_ALLOWED;
+    }
+
     // this method is not using the device, there is no need to acquire
     if (!method.useDevice) {
         if (method.useUi) {
@@ -409,6 +416,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         onDeviceButtonHandler(device, code, method);
     });
     device.on(DEVICE.PIN, onDevicePinHandler);
+    device.on(DEVICE.WORD, onDeviceWordHandler);
     device.on(DEVICE.PASSPHRASE, method.useEmptyPassphrase ? onEmptyPassphraseHandler : onDevicePassphraseHandler);
     device.on(DEVICE.PASSPHRASE_ON_DEVICE, () => {
         postMessage(new UiMessage(UI.REQUEST_PASSPHRASE_ON_DEVICE, { device: device.toMessageObject() }));
@@ -607,7 +615,11 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         };
 
         // run inner function
-        await device.run(inner, { keepSession: method.keepSession, useEmptyPassphrase: method.useEmptyPassphrase });
+        await device.run(inner, {
+            keepSession: method.keepSession,
+            useEmptyPassphrase: method.useEmptyPassphrase,
+            skipFinalReload: method.skipFinalReload,
+        });
     } catch (error) {
         if (method) {
             // corner case:
@@ -704,6 +716,17 @@ const onDevicePinHandler = async (device: Device, type: string, callback: (error
     const pin: string = uiResp.payload;
     // callback.apply(null, [null, pin]);
     callback(null, pin);
+};
+
+const onDeviceWordHandler = async (device: Device, type: string, callback: (error: any, success: any) => void): Promise<void> => {
+    // wait for popup handshake
+    await getPopupPromise().promise;
+    postMessage(new UiMessage(UI.REQUEST_WORD, { device: device.toMessageObject(), type }));
+    // wait for word
+    const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_WORD, device).promise;
+    const word: string = uiResp.payload;
+
+    callback(null, word);
 };
 
 /**

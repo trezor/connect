@@ -36,6 +36,7 @@ export const SELECT_FEE: 'ui-select_fee' = 'ui-select_fee';
 export const UPDATE_CUSTOM_FEE: 'ui-update_custom_fee' = 'ui-update_custom_fee';
 export const INSUFFICIENT_FUNDS: 'ui-insufficient_funds' = 'ui-insufficient_funds';
 export const REQUEST_BUTTON: 'ui-button' = 'ui-button';
+export const REQUEST_WORD: 'ui-request_word' = 'ui-request_word';
 
 export const RECEIVE_PERMISSION: 'ui-receive_permission' = 'ui-receive_permission';
 export const RECEIVE_CONFIRMATION: 'ui-receive_confirmation' = 'ui-receive_confirmation';
@@ -45,6 +46,7 @@ export const RECEIVE_DEVICE: 'ui-receive_device' = 'ui-receive_device';
 export const CHANGE_ACCOUNT: 'ui-change_account' = 'ui-change_account';
 export const RECEIVE_ACCOUNT: 'ui-receive_account' = 'ui-receive_account';
 export const RECEIVE_FEE: 'ui-receive_fee' = 'ui-receive_fee';
+export const RECEIVE_WORD: 'ui-receive_word' = 'ui-receive_word';
 
 export const CHANGE_SETTINGS: 'ui-change_settings' = 'ui-change_settings';
 

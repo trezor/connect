@@ -2,6 +2,408 @@
     "package": null,
     "messages": [
         {
+            "name": "BinanceGetAddress",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceAddress",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "address",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceGetPublicKey",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinancePublicKey",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "public_key",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceSignTx",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "msg_count",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "account_number",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "chain_id",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "memo",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "sequence",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "source",
+                    "id": 7
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceTxRequest",
+            "fields": [],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceTransferMsg",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "BinanceInputOutput",
+                    "name": "inputs",
+                    "id": 1
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "BinanceInputOutput",
+                    "name": "outputs",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "BinanceInputOutput",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "address",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "BinanceCoin",
+                            "name": "coins",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "BinanceCoin",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "sint64",
+                            "name": "amount",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "denom",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceOrderMsg",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "id",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "BinanceOrderType",
+                    "name": "ordertype",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "price",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "quantity",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "sender",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "BinanceOrderSide",
+                    "name": "side",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "symbol",
+                    "id": 7
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "BinanceTimeInForce",
+                    "name": "timeinforce",
+                    "id": 8
+                }
+            ],
+            "enums": [
+                {
+                    "name": "BinanceOrderType",
+                    "values": [
+                        {
+                            "name": "OT_UNKNOWN",
+                            "id": 0
+                        },
+                        {
+                            "name": "MARKET",
+                            "id": 1
+                        },
+                        {
+                            "name": "LIMIT",
+                            "id": 2
+                        },
+                        {
+                            "name": "OT_RESERVED",
+                            "id": 3
+                        }
+                    ],
+                    "options": {}
+                },
+                {
+                    "name": "BinanceOrderSide",
+                    "values": [
+                        {
+                            "name": "SIDE_UNKNOWN",
+                            "id": 0
+                        },
+                        {
+                            "name": "BUY",
+                            "id": 1
+                        },
+                        {
+                            "name": "SELL",
+                            "id": 2
+                        }
+                    ],
+                    "options": {}
+                },
+                {
+                    "name": "BinanceTimeInForce",
+                    "values": [
+                        {
+                            "name": "TIF_UNKNOWN",
+                            "id": 0
+                        },
+                        {
+                            "name": "GTE",
+                            "id": 1
+                        },
+                        {
+                            "name": "TIF_RESERVED",
+                            "id": 2
+                        },
+                        {
+                            "name": "IOC",
+                            "id": 3
+                        }
+                    ],
+                    "options": {}
+                }
+            ],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceCancelMsg",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "refid",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "sender",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "symbol",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "BinanceSignedTx",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "public_key",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "json",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "MultisigRedeemScriptType",
             "fields": [
                 {
@@ -121,7 +523,7 @@
             "name": "PublicKey",
             "fields": [
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
                     "type": "HDNodeType",
                     "name": "node",
@@ -1974,8 +2376,8 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "string",
-                    "name": "mnemonic",
+                    "type": "bytes",
+                    "name": "mnemonic_secret",
                     "id": 4
                 },
                 {
@@ -2026,6 +2428,13 @@
                     "type": "uint32",
                     "name": "reset_word_pos",
                     "id": 11
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "mnemonic_type",
+                    "id": 12
                 }
             ],
             "enums": [],
@@ -4071,6 +4480,13 @@
                     "type": "uint32",
                     "name": "auto_lock_delay_ms",
                     "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "display_rotation",
+                    "id": 7
                 }
             ],
             "enums": [
@@ -4725,6 +5141,20 @@
                     "type": "bool",
                     "name": "is_subaddress",
                     "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "original",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "is_integrated",
+                    "id": 5
                 }
             ],
             "enums": [],
@@ -4800,6 +5230,13 @@
                     "type": "bytes",
                     "name": "rsig_parts",
                     "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "bp_version",
+                    "id": 7
                 }
             ],
             "enums": [],
@@ -5033,6 +5470,27 @@
                             "type": "uint32",
                             "name": "integrated_indices",
                             "id": 12
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "client_version",
+                            "id": 13
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "hard_fork",
+                            "id": 14
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "monero_version",
+                            "id": 15
                         }
                     ],
                     "enums": [],
@@ -5257,6 +5715,13 @@
                     "type": "MoneroTransactionRsigData",
                     "name": "rsig_data",
                     "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "is_offloaded_bp",
+                    "id": 4
                 }
             ],
             "enums": [],
@@ -5459,6 +5924,13 @@
                     "type": "bytes",
                     "name": "signature",
                     "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "pseudo_out",
+                    "id": 2
                 }
             ],
             "enums": [],
@@ -9975,6 +10447,46 @@
                 {
                     "name": "MessageType_EosSignedTx",
                     "id": 605
+                },
+                {
+                    "name": "MessageType_BinanceGetAddress",
+                    "id": 700
+                },
+                {
+                    "name": "MessageType_BinanceAddress",
+                    "id": 701
+                },
+                {
+                    "name": "MessageType_BinanceGetPublicKey",
+                    "id": 702
+                },
+                {
+                    "name": "MessageType_BinancePublicKey",
+                    "id": 703
+                },
+                {
+                    "name": "MessageType_BinanceSignTx",
+                    "id": 704
+                },
+                {
+                    "name": "MessageType_BinanceTxRequest",
+                    "id": 705
+                },
+                {
+                    "name": "MessageType_BinanceTransferMsg",
+                    "id": 706
+                },
+                {
+                    "name": "MessageType_BinanceOrderMsg",
+                    "id": 707
+                },
+                {
+                    "name": "MessageType_BinanceCancelMsg",
+                    "id": 708
+                },
+                {
+                    "name": "MessageType_BinanceSignedTx",
+                    "id": 709
                 }
             ],
             "options": {}
