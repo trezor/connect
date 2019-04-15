@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
@@ -9,53 +8,38 @@ import bipWords from '../../utils/bip39';
 
 const initWordPlainView = (payload: $PropertyType<DeviceMessage, 'payload'>): void => {
     showView('word-plain');
-    let word: string = '';
+
+    const deviceName: HTMLElement = container.getElementsByClassName('device-name')[0];
+    const datalist: HTMLElement = container.getElementsByClassName('bip-words')[0];
+    const input: HTMLInputElement = (container.getElementsByClassName('word-input')[0]: any);
+    deviceName.innerText = payload.device.label;
 
     const clearWord = (): void => {
-        const input: HTMLInputElement = (container.getElementsByClassName('word-input')[0]: any);
         input.value = '';
         input.focus();
     };
 
     const submit = (): void => {
-        if (bipWords.includes(word)) {
-            postMessage(new UiMessage(UI.RECEIVE_WORD, word));
-            clearWord();
-        }
+        postMessage(new UiMessage(UI.RECEIVE_WORD, input.value));
+        clearWord();
+        // eslint-disable-next-line no-use-before-define
+        window.removeEventListener('keydown', wordKeyboardHandler);
     };
 
     const wordKeyboardHandler = (event: KeyboardEvent): void => {
         switch (event.keyCode) {
             case 13: // enter,
             case 9: // tab
+                event.preventDefault();
                 submit();
                 break;
         }
     };
 
-    const deviceName: HTMLElement = container.getElementsByClassName('device-name')[0];
-    const input: HTMLInputElement = (container.getElementsByClassName('word-input')[0]: any);
-    const datalist: HTMLElement = container.getElementsByClassName('bip-words')[0];
-    deviceName.innerText = payload.device.label;
-
     bipWords.forEach((word: string) => {
         const item = document.createElement('option');
-        console.warn(item);
         item.value = word;
         datalist.appendChild(item);
-    });
-
-    input.addEventListener('input', (event: Event) => {
-        if (event.target instanceof HTMLInputElement) {
-            word = event.target.value;
-        }
-    });
-
-    input.addEventListener('change', (event: Event) => {
-        if (event.target instanceof HTMLInputElement) {
-            word = event.target.value;
-            submit();
-        }
     });
 
     input.focus();
@@ -68,6 +52,8 @@ const initWordMatrixView = (payload: $PropertyType<DeviceMessage, 'payload'>): v
 
     const submit = (val): void => {
         postMessage(new UiMessage(UI.RECEIVE_WORD, val));
+        // eslint-disable-next-line no-use-before-define
+        window.addEventListener('keydown', keyboardHandler, true);
     };
 
     const keyboardHandler = (event: KeyboardEvent): void => {
