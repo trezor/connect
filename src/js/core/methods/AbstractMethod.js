@@ -64,7 +64,7 @@ export default class AbstractMethod implements MethodInterface {
         this.deviceState = payload.device ? payload.device.state : null;
         this.hasExpectedDeviceState = payload.device ? payload.device.hasOwnProperty('state') : false;
         this.keepSession = typeof payload.keepSession === 'boolean' ? payload.keepSession : false;
-        this.skipFinalReload = typeof payload.skipFinalReload === 'boolean' ? payload.skipFinalReload : false,
+        this.skipFinalReload = typeof payload.skipFinalReload === 'boolean' ? payload.skipFinalReload : false;
         this.overridePreviousCall = typeof payload.override === 'boolean' ? payload.override : false;
         this.overridden = false;
         this.useEmptyPassphrase = typeof payload.useEmptyPassphrase === 'boolean' ? payload.useEmptyPassphrase : false;
