@@ -8,17 +8,20 @@ import type { SubscriptionAccountInfo } from '../types/params';
 import type { BlockchainBlock, BlockchainLinkTransaction } from '../types/blockchainEvent';
 
 // nodejs-replace-start
-/* $FlowIssue loader notation */
-import BlockbookWorker from 'worker-loader?name=js/blockbook-worker.js!@trezor/blockchain-link/lib/workers/blockbook/index.js';
-/* $FlowIssue loader notation */
-import RippleWorker from 'worker-loader?name=js/ripple-worker.js!@trezor/blockchain-link/lib/workers/ripple/index.js';
-// import RippleWorker from 'worker-loader?name=js/ripple-worker.js!@trezor/blockchain-link/lib/workers/blockbook/index.js';
-// nodejs-replace-end
-/* nodejs-imports-start
-import TinyWorker from 'tiny-worker';
-import path from 'path';
-const RippleWorker = () => { return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './workers/ripple-worker.js')) };
-nodejs-imports-end */
+// /* $FlowIssue loader notation */
+// import BlockbookWorker from 'worker-loader?name=js/blockbook-worker.js!@trezor/blockchain-link/lib/workers/blockbook/index.js';
+// /* $FlowIssue loader notation */
+// import RippleWorker from 'worker-loader?name=js/ripple-worker.js!@trezor/blockchain-link/lib/workers/ripple/index.js';
+// // import RippleWorker from 'worker-loader?name=js/ripple-worker.js!@trezor/blockchain-link/lib/workers/blockbook/index.js';
+// // nodejs-replace-end
+// /* nodejs-imports-start
+// import TinyWorker from 'tiny-worker';
+// import path from 'path';
+// const RippleWorker = () => { return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './workers/ripple-worker.js')) };
+// nodejs-imports-end */
+import {
+    RippleWorker,
+} from '../env/browser/workers';
 
 import type { AccountInfoRequest } from '../types/account';
 
