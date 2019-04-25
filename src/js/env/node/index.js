@@ -125,8 +125,7 @@ export const init = async (settings: Object = {}): Promise<void> => {
     if (!_settings) {
         _settings = parseSettings(settings);
     }
-    // $FlowIssue: connectSrc is readonly
-    // _settings.configSrc = path.resolve(global.TREZOR_CONNECT_ASSETS, './data/config.json');
+    // set defaults for node
     _settings.origin = 'http://node.trezor.io/';
     _settings.popup = false;
     _settings.env = 'node';
