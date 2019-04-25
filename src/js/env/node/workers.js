@@ -14,21 +14,20 @@ export const SharedConnectionWorker = () => {
     return 'not-used-in-node.js';
 };
 
-// export const FastXpubWasm = path.resolve(global.TREZOR_CONNECT_ASSETS, './js/fastxpub-worker.js');
 export const FastXpubWasm = './js/fastxpub.wasm';
 
 export const FastXpubWorker = () => {
-    return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './js/fastxpub-worker.js'));
+    return new TinyWorker(path.resolve(__dirname, './fastxpub-worker.js'));
 };
 
 export const DiscoveryWorker = () => {
-    return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './js/discovery-worker.js'));
+    return new TinyWorker(path.resolve(__dirname, './discovery-worker.js'));
 };
 
 export const SocketWorker = () => {
-    return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './js/socketio-worker.js'));
+    return new TinyWorker(path.resolve(__dirname, './socketio-worker.js'));
 };
 
 export const RippleWorker = () => {
-    return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './js/ripple-worker.js'));
+    return new TinyWorker(path.resolve(__dirname, './ripple-worker.js'));
 };
