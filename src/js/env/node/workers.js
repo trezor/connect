@@ -15,7 +15,7 @@ export const SharedConnectionWorker = () => {
 };
 
 // export const FastXpubWasm = path.resolve(global.TREZOR_CONNECT_ASSETS, './js/fastxpub-worker.js');
-export const FastXpubWasm = './build/js/fastxpub.wasm';
+export const FastXpubWasm = './js/fastxpub.wasm';
 
 export const FastXpubWorker = () => {
     return new TinyWorker(path.resolve(global.TREZOR_CONNECT_ASSETS, './js/fastxpub-worker.js'));
