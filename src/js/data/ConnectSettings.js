@@ -43,7 +43,7 @@ const DEFAULT_DOMAIN: string = `https://connect.trezor.io/${ DIRECTORY }`;
 export const DEFAULT_PRIORITY: number = 2;
 
 const initialSettings: ConnectSettings = {
-    configSrc: 'data/config.json', // constant
+    configSrc: './data/config.json', // constant
     version: VERSION, // constant
     debug: false,
     origin: null,
@@ -136,7 +136,7 @@ export const parse = (input: ?Object): ConnectSettings => {
     }
 
     // local files
-    if (typeof window !== 'undefined' && window.location.protocol === 'file:') {
+    if (typeof window !== 'undefined' && window.location && window.location.protocol === 'file:') {
         settings.origin = `file://${window.location.pathname}`;
         settings.webusb = false;
     }
