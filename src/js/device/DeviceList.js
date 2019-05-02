@@ -62,9 +62,14 @@ export default class DeviceList extends EventEmitter {
 
         _log.enabled = DataManager.getSettings('debug');
         if (!this.options.transport) {
+            // $FlowIssue: `version` is missing in `JSON`
+            const bridgeVersion = DataManager.assets['bridge'].version.join('.');
+            const env = DataManager.getSettings('env');
+            if (env === 'react-native' || env === 'node' || env === 'electron') {
+                BridgeV2.setFetch(fetch, true);
+            }
             const transportTypes: Array<Transport> = [
-                // $FlowIssue: `version` is missing in `JSON`
-                new BridgeV2(null, null, DataManager.assets['bridge'].version.join('.')),
+                new BridgeV2(env === 'react-native' ? 'http://10.0.2.2:21325' : null, null, bridgeVersion),
             ];
 
             if (DataManager.getSettings('webusb')) {
