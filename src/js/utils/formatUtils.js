@@ -13,6 +13,11 @@ export const formatAmount = (n: number, coinInfo: BitcoinNetworkInfo): string =>
         const s = (n / 1e5).toString();
         return `${s} mBTC`;
     }
+
+    if(coinInfo.name === 'Flashcoin'){
+        const s = (n / 1e10).toString();
+        return `${s} ${coinInfo.shortcut}`;
+    }
     const s = amount.toString();
     return `${s} ${coinInfo.shortcut}`;
 };
