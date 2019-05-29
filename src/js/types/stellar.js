@@ -48,8 +48,38 @@ export type ManageOfferOperation = {
     price: { n: number, d: number }, // Proto: "price_n" and "price_d"
 }
 
+export type ManageSellOfferOperation = {
+    +type: 'manageSellOffer', // Proto: "StellarManageOfferOp"
+    source: string, // Proto: "source_account"
+    offerId: number, // Proto: "offer_id"
+    amount: string, // Proto: parse to number
+    buying: Asset, // Proto: "buying_asset"
+    selling: Asset, // Proto: "selling_asset"
+    price: { n: number, d: number }, // Proto: "price_n" and "price_d"
+}
+
+export type ManageBuyOfferOperation = {
+    +type: 'manageBuyOffer', // Proto: "StellarManageOfferOp"
+    source: string, // Proto: "source_account"
+    offerId: number, // Proto: "offer_id"
+    buyAmount: string, // Proto: parse to number
+    buying: Asset, // Proto: "buying_asset"
+    selling: Asset, // Proto: "selling_asset"
+    price: { n: number, d: number }, // Proto: "price_n" and "price_d"
+}
+
 export type PassiveOfferOperation = {
     +type: 'createPassiveOffer', // Proto: "StellarCreatePassiveOfferOp"
+    source: string, // Proto: "source_account"
+    offerId: number, // Proto: "offer_id"
+    amount: string, // Proto: parse to number
+    buying: Asset, // Proto: "buying_asset"
+    selling: Asset, // Proto: "selling_asset"
+    price: { n: number, d: number }, // Proto: "price_n" and "price_d"
+}
+
+export type PassiveSellOfferOperation = {
+    +type: 'createPassiveSellOffer', // Proto: "StellarCreatePassiveOfferOp"
     source: string, // Proto: "source_account"
     offerId: number, // Proto: "offer_id"
     amount: string, // Proto: parse to number
