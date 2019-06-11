@@ -1,33 +1,32 @@
 import path from 'path';
 import TinyWorker from 'tiny-worker';
 
-// webpack needs to compile and export those files
-/* eslint-disable no-unused-vars */
-import FastXpubWasmLoader from 'hd-wallet/lib/fastxpub/fastxpub.wasm';
-import FastXpubWorkerLoader from 'worker-loader?name=js/fastxpub-worker.js!hd-wallet/lib/fastxpub/fastxpub.js';
-import DiscoveryWorkerLoader from 'worker-loader?name=js/discovery-worker.js!hd-wallet/lib/discovery/worker/inside';
-import SocketWorkerLoader from 'worker-loader?name=js/socketio-worker.js!hd-wallet/lib/socketio-worker/inside';
-import RippleWorkerLoader from 'worker-loader?name=js/ripple-worker.js!trezor-blockchain-link/lib/workers/ripple/index.js';
-/* eslint-enable no-unused-vars */
-
 export const SharedConnectionWorker = () => {
-    return 'not-used-in-node.js';
+    return null;
 };
 
-export const FastXpubWasm = './js/fastxpub.wasm';
+export const FastXpubWasm = path.resolve(process.cwd(), './node_modules/hd-wallet/lib/fastxpub/fastxpub.wasm');;
 
 export const FastXpubWorker = () => {
-    return new TinyWorker(path.resolve(__dirname, './fastxpub-worker.js'));
+    return new TinyWorker(() => {
+        require('hd-wallet/lib/fastxpub/fastxpub');
+    });
 };
 
 export const DiscoveryWorker = () => {
-    return new TinyWorker(path.resolve(__dirname, './discovery-worker.js'));
+    return new TinyWorker(() => {
+        require('hd-wallet/lib/discovery/worker/inside');
+    });
 };
 
 export const SocketWorker = () => {
-    return new TinyWorker(path.resolve(__dirname, './socketio-worker.js'));
+    return new TinyWorker(() => {
+        require('hd-wallet/lib/socketio-worker/inside');
+    });
 };
 
 export const RippleWorker = () => {
-    return new TinyWorker(path.resolve(__dirname, './ripple-worker.js'));
+    return new TinyWorker(() => {
+        require('trezor-blockchain-link/lib/workers/ripple/index');
+    });
 };
