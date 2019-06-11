@@ -1,15 +1,14 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
+import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import type { UiPromiseResponse } from 'flowtype';
-import type { EosPublicKey } from '../../types/trezor';
-import type { EosPublicKey as EosPublicKeyResponse } from '../../types/eos';
+import type { EosPublicKey } from '../../types/eos';
 import type { CoreMessage } from '../../types';
 
 type Batch = {
@@ -17,10 +16,7 @@ type Batch = {
     showOnTrezor: boolean,
 }
 
-type Params = {
-    bundle: Array<Batch>,
-    bundledResponse: boolean,
-}
+type Params = Array<Batch>;
 
 export default class EosGetPublicKey extends AbstractMethod {
     params: Params;
@@ -30,16 +26,10 @@ export default class EosGetPublicKey extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.requiredFirmware = ['1.7.0', '2.0.8'];
-        this.info = 'Export Eos public key';
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('EOS'), this.firmwareRange);
 
-        const payload: Object = message.payload;
-        let bundledResponse: boolean = true;
-        // create a bundle with only one batch
-        if (!payload.hasOwnProperty('bundle')) {
-            payload.bundle = [ ...payload ];
-            bundledResponse = false;
-        }
+        // create a bundle with only one batch if bundle doesn't exists
+        const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -66,10 +56,14 @@ export default class EosGetPublicKey extends AbstractMethod {
             });
         });
 
-        this.params = {
-            bundle,
-            bundledResponse,
-        };
+        // set info
+        if (bundle.length === 1) {
+            this.info = 'Export Eos public key';
+        } else {
+            this.info = 'Export multiple Eos public keys';
+        }
+
+        this.params = bundle;
     }
 
     async confirmation(): Promise<boolean> {
@@ -80,10 +74,10 @@ export default class EosGetPublicKey extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         let label: string;
-        if (this.params.bundle.length > 1) {
-            label = 'Export multiple Eos public key';
+        if (this.params.length > 1) {
+            label = 'Export multiple Eos public keys';
         } else {
-            label = `Export Eos public key for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) }`;
+            label = `Export Eos public key for account #${ (fromHardened(this.params[0].path[2]) + 1) }`;
         }
 
         // request confirmation view
@@ -94,28 +88,30 @@ export default class EosGetPublicKey extends AbstractMethod {
 
         // wait for user action
         const uiResp: UiPromiseResponse = await uiPromise.promise;
-        const resp: string = uiResp.payload;
 
-        this.confirmed = (resp === 'true');
+        this.confirmed = uiResp.payload;
         return this.confirmed;
     }
 
-    async run(): Promise<EosPublicKeyResponse | Array<EosPublicKeyResponse>> {
-        const responses: Array<EosPublicKeyResponse> = [];
-        for (let i = 0; i < this.params.bundle.length; i++) {
-            const response: EosPublicKey = await this.device.getCommands().eosGetPublicKey(
-                this.params.bundle[i].path,
-                this.params.bundle[i].showOnTrezor
+    async run(): Promise<EosPublicKey | Array<EosPublicKey>> {
+        const responses: Array<EosPublicKey> = [];
+        const bundledResponse = this.params.length > 1;
+
+        for (let i = 0; i < this.params.length; i++) {
+            const batch = this.params[i];
+            const response = await this.device.getCommands().eosGetPublicKey(
+                batch.path,
+                batch.showOnTrezor
             );
 
             responses.push({
                 rawPublicKey: response.raw_public_key,
                 wifPublicKey: response.wif_public_key,
-                path: this.params.bundle[i].path,
-                serializedPath: getSerializedPath(this.params.bundle[i].path),
+                path: batch.path,
+                serializedPath: getSerializedPath(batch.path),
             });
 
-            if (this.params.bundledResponse) {
+            if (bundledResponse) {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
@@ -123,6 +119,6 @@ export default class EosGetPublicKey extends AbstractMethod {
                 }));
             }
         }
-        return this.params.bundledResponse ? responses : responses[0];
+        return bundledResponse ? responses : responses[0];
     }
 }
