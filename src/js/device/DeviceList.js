@@ -16,7 +16,7 @@ import DataManager from '../data/DataManager';
 import Log, { init as initLog } from '../utils/debug';
 import { resolveAfter } from '../utils/promiseUtils';
 
-import { SharedConnectionWorker } from '../env/browser/workers';
+import { SharedConnectionWorker } from '../env/node/workers';
 
 const { BridgeV2, Lowlevel, WebUsb, Fallback } = TrezorLink;
 
@@ -68,8 +68,18 @@ export default class DeviceList extends EventEmitter {
             if (env === 'react-native' || env === 'node' || env === 'electron') {
                 BridgeV2.setFetch(fetch, true);
             }
+
+            let bridgeUrl: ?string;
+            if (env === 'react-native') {
+                if (!process.env.RN_EMULATOR) {
+                    bridgeUrl = 'http://10.36.2.3:21325'; // TODO: remove this. SL laptop just for debugging
+                } else if (process.env.RN_OS === 'android') {
+                    bridgeUrl = 'http://10.0.2.2:21325'; // Android emulator localhost
+                }
+            }
+
             const transportTypes: Array<Transport> = [
-                new BridgeV2(env === 'react-native' ? 'http://10.0.2.2:21325' : null, null, bridgeVersion),
+                new BridgeV2(bridgeUrl, null, bridgeVersion),
             ];
 
             if (DataManager.getSettings('webusb')) {

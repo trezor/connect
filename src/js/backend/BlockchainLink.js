@@ -21,7 +21,7 @@ import type { BlockchainBlock, BlockchainLinkTransaction } from '../types/blockc
 // nodejs-imports-end */
 import {
     RippleWorker,
-} from '../env/browser/workers';
+} from '../env/node/workers';
 
 import type { AccountInfoRequest } from '../types/account';
 

@@ -20,7 +20,7 @@ import {
     renderWebUSBButton,
     cancel,
     dispose,
-} from './env/browser';
+} from './env/node';
 
 class TrezorConnect {
     static manifest = (data: Object): void => {
