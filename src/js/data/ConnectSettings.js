@@ -85,6 +85,9 @@ export const getEnv = (): string => {
     if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined') {
         return 'webextension';
     }
+    if (typeof navigator !== 'undefined' && typeof navigator.product === 'string' && navigator.product.toLowerCase() === 'reactnative') {
+        return 'react-native';
+    }
     if (typeof process !== 'undefined' && process.versions.hasOwnProperty('electron')) {
         return 'electron';
     }
