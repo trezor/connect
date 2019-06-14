@@ -25,7 +25,7 @@ TrezorConnect.stellarSignTransaction(params).then(function(result) {
 ### Example
 ```javascript
 TrezorConnect.stellarSignTransaction(
-    path: "m/44'/1'/0'/0'/0'",
+    path: "m/44'/148'/0'/0'/0'",
     networkPassphrase: "Test SDF Network ; September 2015",
     transaction: {
         source: "GAXSFOOGF4ELO5HT5PTN23T5XE6D5QWL3YBHSVQ2HWOFEJNYYMRJENBV",
