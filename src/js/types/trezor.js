@@ -681,11 +681,10 @@ export type RippleSignedTx = {
 export type EosPublicKey = {
     wif_public_key: string,
     raw_public_key: string,
-  }
+}
 
 export type EosTxActionRequest = {
-    type: "EosTxActionRequest",
-    message: {},
+    data_size: ?number,
 }
 
 export type EosTxHeader = {
@@ -695,7 +694,7 @@ export type EosTxHeader = {
     max_net_usage_words: number,
     max_cpu_usage_ms: number,
     delay_sec: number,
-  }
+}
 
 export type EosSignTx = {
     address_n: Array<number>,
@@ -705,121 +704,118 @@ export type EosSignTx = {
 }
 
 export type EosAsset = {
-    amount: number,
-    symbol: number,
+    amount: string, // uint64 as string
+    symbol: string, // uint64 as string
 }
 
 export type EosPermissionLevel = {
-    actor: number,
-    permission: number,
+    actor: string, // uint64 as string
+    permission: string, // uint64 as string
 }
 
 export type EosAuthorizationKey = {
     type: number,
     key: string,
-    weight: number,
-}
-
-export type EosAuthorizationAccount = {
-    account: EosPermissionLevel,
-    weight: number,
-}
-
-export type EosAuthorizationWait = {
-    wait_sec: number,
+    // address_n?: Array<number>, // this field is not implemented in FW
     weight: number,
 }
 
 export type EosAuthorization = {
     threshold: number,
     keys: Array<EosAuthorizationKey>,
-    accounts: Array<EosAuthorizationAccount>,
-    waits: Array<EosAuthorizationWait>,
+    accounts: Array<{
+        account: EosPermissionLevel,
+        weight: number,
+    }>,
+    waits: Array<{
+        wait_sec: number,
+        weight: number,
+    }>,
 }
 
 export type EosActionCommon = {
-    account: number,
-    name: number,
+    account: string, // uint64 as string
+    name: string, // uint64 as string
     authorization: Array<EosPermissionLevel>,
 }
 
 export type EosActionTransfer = {
-    sender: number,
-    receiver: number,
+    sender: string, // uint64 as string
+    receiver: string, // uint64 as string
     quantity: EosAsset,
-    memo: string,
+    memo?: string,
 }
 
 export type EosActionDelegate = {
-    sender: number,
-    receiver: number,
+    sender: string, // uint64 as string
+    receiver: string, // uint64 as string
     net_quantity: EosAsset,
     cpu_quantity: EosAsset,
-    transfer: boolean,
+    transfer?: boolean,
 }
 
 export type EosActionUndelegate = {
-    sender: number,
-    receiver: number,
+    sender: string, // uint64 as string
+    receiver: string, // uint64 as string
     net_quantity: EosAsset,
     cpu_quantity: EosAsset,
 }
 
 export type EosActionBuyRam = {
-    payer: number,
-    receiver: number,
+    payer: string, // uint64 as string
+    receiver: string, // uint64 as string
     quantity: EosAsset,
 }
 
 export type EosActionBuyRamBytes = {
-    payer: number,
-    receiver: number,
+    payer: string, // uint64 as string
+    receiver: string, // uint64 as string
     bytes: number,
 }
 
 export type EosActionSellRam = {
-    account: number,
+    account: string, // uint64 as string
     bytes: number,
 }
 
 export type EosActionVoteProducer = {
-    voter: number,
-    proxy?: number,
-    producers: Array<number>,
+    voter: string, // uint64 as string
+    proxy: string, // uint64 as string
+    producers: Array<string>, // uint64[] as string
 }
 
 export type EosActionRefund = {
-    owner: number,
+    owner: string, // uint64 as string
 }
 
 export type EosActionUpdateAuth = {
-    account: number,
-    permission: number,
-    parent: number,
+    account: string, // uint64 as string
+    permission: string, // uint64 as string
+    parent: string, // uint64 as string
     auth: EosAuthorization,
 }
 
 export type EosActionDeleteAuth = {
-    account: number,
-    permission: number,
-  }
+    account: string, // uint64 as string
+    permission: string, // uint64 as string
+}
 
 export type EosActionLinkAuth = {
-    account: number,
-    code: number,
-    type: number,
-    requirement: number,
+    account: string, // uint64 as string
+    code: string, // uint64 as string
+    type: string, // uint64 as string
+    requirement: string, // uint64 as string
 }
 
 export type EosActionUnlinkAuth = {
-    account: number,
-    code: number,
-    type: number,
+    account: string, // uint64 as string
+    code: string, // uint64 as string
+    type: string, // uint64 as string
 }
 
 export type EosActionNewAccount = {
-    creator: number,
-    name: number,
+    creator: string, // uint64 as string
+    name: string, // uint64 as string
     owner: EosAuthorization,
     active: EosAuthorization,
 }
@@ -830,41 +826,25 @@ export type EosActionUnknown = {
 }
 
 export type EosTxActionAck = {
-  common: ?EosActionCommon,
-  transfer: ?EosActionTransfer,
-  delegate: ?EosActionDelegate,
-  undelegate: ?EosActionUndelegate,
-  buy_ram: ?EosActionBuyRam,
-  buy_ram_bytes: ?EosActionBuyRamBytes,
-  sell_ram: ?EosActionSellRam,
-  vote_producer: ?EosActionVoteProducer,
-  refund: ?EosActionRefund,
-  update_auth: ?EosActionUpdateAuth,
-  delete_auth: ?EosActionDeleteAuth,
-  link_auth: ?EosActionLinkAuth,
-  unlink_auth: ?EosActionUnlinkAuth,
-  new_account: ?EosActionNewAccount,
-  unknown: ?EosActionUnknown,
+    common?: EosActionCommon,
+    transfer?: EosActionTransfer,
+    delegate?: EosActionDelegate,
+    undelegate?: EosActionUndelegate,
+    refund?: EosActionRefund,
+    buy_ram?: EosActionBuyRam,
+    buy_ram_bytes?: EosActionBuyRamBytes,
+    sell_ram?: EosActionSellRam,
+    vote_producer?: EosActionVoteProducer,
+    update_auth?: EosActionUpdateAuth,
+    delete_auth?: EosActionDeleteAuth,
+    link_auth?: EosActionLinkAuth,
+    unlink_auth?: EosActionUnlinkAuth,
+    new_account?: EosActionNewAccount,
+    unknown?: EosActionUnknown,
 }
 
 export type EosSignedTx = {
-    signature_v: number,
-    signature_r: string,
-    signature_s: string,
-}
-
-// GetAccountInfo response
-export type AccountInfo = {
-    id: number,
-    path: Array<number>,
-    serializedPath: string,
-    xpub: string,
-    address: string,
-    addressIndex: number,
-    addressPath: Array<number>,
-    addressSerializedPath: string,
-    balance: number,
-    confirmed: number,
+    signature: string,
 }
 
 // GetAddress response
