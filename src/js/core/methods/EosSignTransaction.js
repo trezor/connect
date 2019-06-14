@@ -1,18 +1,19 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
-import { validateParams } from './helpers/paramsValidator';
+import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
+import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/eosSignTx';
 
-import type { EosSignedTx } from '../../types/trezor';
-import type { Transaction as $EosTransaction, EosSignedTx as EosSignedTxResponse } from '../../types/eos';
+import type { EosTxHeader, EosTxActionAck, EosSignedTx } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
 type Params = {
     path: Array<number>,
-    transaction: any,
+    chain_id: string,
+    header: ?EosTxHeader,
+    ack: Array<EosTxActionAck>,
 }
 
 export default class EosSignTransaction extends AbstractMethod {
@@ -21,7 +22,7 @@ export default class EosSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.requiredFirmware = ['1.7.0', '2.0.8'];
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('EOS'), this.firmwareRange);
         this.info = 'Sign EOS transaction';
 
         const payload: Object = message.payload;
@@ -32,25 +33,27 @@ export default class EosSignTransaction extends AbstractMethod {
         ]);
 
         const path = validatePath(payload.path, 3);
-        // incoming data should be in stellar-sdk format
-        const transaction: $EosTransaction = payload.transaction;
+        const { chain_id, header, ack } = helper.validate(path, payload.transaction);
+
         this.params = {
             path,
-            transaction,
+            chain_id,
+            header,
+            ack,
         };
     }
 
-    async run(): Promise<EosSignedTxResponse> {
-        const response: EosSignedTx = await helper.eosSignTx(
+    async run(): Promise<EosSignedTx> {
+        const response = await helper.signTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,
-            this.params.transaction
+            this.params.chain_id,
+            this.params.header,
+            this.params.ack,
         );
 
         return {
-            signatureV: response.signature_v,
-            signatureR: response.signature_r,
-            signatureS: response.signature_s,
+            signature: response.signature,
         };
     }
 }

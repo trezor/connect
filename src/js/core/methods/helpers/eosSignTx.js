@@ -1,111 +1,315 @@
 /* @flow */
-'use strict';
+import * as bs58 from 'bs58';
 
 import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type {
     Transaction as $EosTransaction,
-    EosTxActionAck as $EosTxActionAck,
-    // EosTxHeader as $EosTxHeader,
+    EosTxAction as $EosTxAction,
+    EosAuthorization as $EosAuthorization,
 } from '../../../types/eos';
 
-const splitString = (str: ?string, len: number): [string, string] => {
-    if (str == null) {
-        return ['', ''];
-    }
-    const first = str.slice(0, len);
-    const second = str.slice(len);
-    return [first, second];
-};
-
 import type {
+    EosAsset,
+    EosTxActionRequest,
     EosSignedTx,
     EosSignTx,
     EosTxActionAck,
     EosTxHeader,
     EosActionCommon,
-    EosActionTransfer,
-    EosActionDelegate,
-    EosActionUndelegate,
-    EosActionBuyRam,
-    EosActionBuyRamBytes,
-    EosActionSellRam,
-    EosActionVoteProducer,
-    EosActionRefund,
-    EosActionUpdateAuth,
-    EosActionDeleteAuth,
-    EosActionLinkAuth,
-    EosActionUnlinkAuth,
-    EosActionNewAccount,
-    EosActionUnknown,
+    EosAuthorization,
 } from '../../../types/trezor';
 
-const processTxRequest = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
-    actions: Array<EosTxActionAck>,
-    index: number,
-): Promise<EosSignedTx> => {
-    const lastOp: boolean = (index + 1 >= actions.length);
-
-    const action = actions[index];
-
-    if (action.unknown) {
-        const [first, rest] = splitString(action.unknown.data_chunk, 1024 * 2);
-        action.unknown.data_chunk = first;
-        if (rest.length === 0) {
-            if (lastOp) {
-                const response: MessageResponse<EosSignedTx> = await typedCall('EosTxActionAck', 'EosSignedTx', action);
-                return response.message;
-            } else {
-                await typedCall('EosTxActionAck', 'EosTxActionRequest', action);
-            }
-        } else {
-            await typedCall('EosTxActionAck', 'EosTxActionRequest', action);
-            action.unknown.data_chunk = rest;
-            return await processTxRequest(
-                typedCall,
-                actions,
-                index
-            );
+// copied from: https://github.com/EOSIO/eosjs/blob/master/src/eosjs-numeric.ts
+const binaryToDecimal = (bignum: Uint8Array | Array<number>, minDigits = 1) => {
+    const result = Array(minDigits).fill('0'.charCodeAt(0));
+    for (let i = bignum.length - 1; i >= 0; --i) {
+        let carry = bignum[i];
+        for (let j = 0; j < result.length; ++j) {
+            const x = ((result[j] - '0'.charCodeAt(0)) << 8) + carry;
+            result[j] = '0'.charCodeAt(0) + x % 10;
+            carry = (x / 10) | 0;
         }
-    } else {
-        if (lastOp) {
-            const response: MessageResponse<EosSignedTx> = await typedCall('EosTxActionAck', 'EosSignedTx', action);
-            return response.message;
-        } else {
-            await typedCall('EosTxActionAck', 'EosTxActionRequest', action);
+        while (carry) {
+            result.push('0'.charCodeAt(0) + carry % 10);
+            carry = (carry / 10) | 0;
         }
     }
-
-    return await processTxRequest(
-        typedCall,
-        actions,
-        index + 1
-    );
+    result.reverse();
+    return String.fromCharCode(...result);
 };
 
-export const eosSignTx = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
-    address_n: Array<number>,
-    tx: $EosTransaction,
-): Promise<EosSignedTx> => {
-    // eslint-disable-next-line no-use-before-define
-    const message: EosSignTx = prepareSignTx(tx);
-    message.address_n = address_n;
+// copied from: https://github.com/EOSIO/eosjs/blob/master/src/eosjs-serialize.ts
+// "pushName"
+const serialize = (s?: string) => {
+    if (typeof s !== 'string') {
+        throw new Error(`Eos serialization error, "${typeof s}" should be a string`);
+    }
+    function charToSymbol(c: number) {
+        if (c >= 'a'.charCodeAt(0) && c <= 'z'.charCodeAt(0)) {
+            return (c - 'a'.charCodeAt(0)) + 6;
+        }
+        if (c >= '1'.charCodeAt(0) && c <= '5'.charCodeAt(0)) {
+            return (c - '1'.charCodeAt(0)) + 1;
+        }
+        return 0;
+    }
 
-    const actions: Array<EosTxActionAck> = [];
-    tx.actions.forEach(action => {
-        // eslint-disable-next-line no-use-before-define
-        const prepared: ?EosTxActionAck = prepareTxActionAck(action);
-        if (prepared) { actions.push(prepared); }
-    });
+    const a = new Uint8Array(8);
+    let bit = 63;
+    for (let i = 0; i < s.length; ++i) {
+        let c = charToSymbol(s.charCodeAt(i));
+        if (bit < 5) {
+            c = c << 1;
+        }
+        for (let j = 4; j >= 0; --j) {
+            if (bit >= 0) {
+                a[Math.floor(bit / 8)] |= ((c >> j) & 1) << (bit % 8);
+                --bit;
+            }
+        }
+    }
+    return binaryToDecimal(a);
+};
 
-    await typedCall('EosSignTx', 'EosTxActionRequest', message);
+// copied (and slightly modified) from: https://github.com/EOSIO/eosjs/blob/master/src/eosjs-serialize.ts
+// "pushAsset"
+const parseQuantity = (s: string): EosAsset => {
+    if (typeof s !== 'string') {
+        throw new Error(`Eos serialization error. Expected string containing asset, got: ${typeof s}`);
+    }
+    s = s.trim();
+    let pos = 0;
+    let amount = '';
+    let precision = 0;
+    if (s[pos] === '-') {
+        amount += '-';
+        ++pos;
+    }
+    let foundDigit = false;
+    while (pos < s.length && s.charCodeAt(pos) >= '0'.charCodeAt(0) && s.charCodeAt(pos) <= '9'.charCodeAt(0)) {
+        foundDigit = true;
+        amount += s[pos];
+        ++pos;
+    }
+    if (!foundDigit) {
+        throw new Error('Eos serialization error. Asset must begin with a number');
+    }
+    if (s[pos] === '.') {
+        ++pos;
+        while (pos < s.length && s.charCodeAt(pos) >= '0'.charCodeAt(0) && s.charCodeAt(pos) <= '9'.charCodeAt(0)) {
+            amount += s[pos];
+            ++precision;
+            ++pos;
+        }
+    }
+    const symbol = s.substr(pos).trim();
 
-    return await processTxRequest(typedCall, actions, 0);
+    const a = [precision & 0xff];
+    for (let i = 0; i < symbol.length; ++i) {
+        a.push(symbol.charCodeAt(i));
+    }
+    while (a.length < 8) {
+        a.push(0);
+    }
+
+    return {
+        amount,
+        symbol: binaryToDecimal(a.slice(0, 8)),
+    };
 };
 
 // transform incoming parameters to protobuf messages format
-const prepareSignTx = (tx: $EosTransaction): EosSignTx => {
+
+const parseAuth = (a: $EosAuthorization): EosAuthorization => {
+    function keyToBuffer(pk: string) {
+        const len = pk.indexOf('EOS') === 0 ? 3 : 7;
+        const key = bs58.decode(pk.substring(len));
+        // key.slice(0, key.length - 4);
+
+        return {
+            type: 0,
+            key: key.slice(0, key.length - 4),
+        };
+    }
+    return {
+        threshold: a.threshold,
+        keys: a.keys.map(k => {
+            return {
+                weight: k.weight,
+                ...keyToBuffer(k.key),
+            };
+        }),
+        accounts: a.accounts.map(acc => {
+            return {
+                weight: acc.weight,
+                account: {
+                    actor: serialize(acc.permission.actor),
+                    permission: serialize(acc.permission.permission),
+                },
+            };
+        }),
+        waits: a.waits,
+    };
+};
+
+// from: https://github.com/EOSIO/eosjs/blob/master/src/eosjs-serialize.ts
+// "dateToTimePoint"
+const parseDate = (d: string): number => {
+    if (typeof d !== 'string') {
+        throw new Error('Eos serialization error. Header.expiration should be string or number');
+    }
+    if (d.substr(d.length - 1, d.length) !== 'Z') {
+        d += 'Z';
+    }
+    return Date.parse(d) / 1000;
+};
+
+const parseAck = (action: $EosTxAction): EosTxActionAck | null => {
+    switch (action.name) {
+        case 'transfer':
+            return {
+                'transfer': {
+                    sender: serialize(action.data.from),
+                    receiver: serialize(action.data.to),
+                    quantity: parseQuantity(action.data.quantity),
+                    memo: action.data.memo,
+                },
+            };
+        case 'delegatebw':
+            return {
+                'delegate': {
+                    sender: serialize(action.data.from),
+                    receiver: serialize(action.data.receiver),
+                    net_quantity: parseQuantity(action.data.stake_net_quantity),
+                    cpu_quantity: parseQuantity(action.data.stake_cpu_quantity),
+                    transfer: action.data.transfer,
+                },
+            };
+        case 'undelegatebw':
+            return {
+                'undelegate': {
+                    sender: serialize(action.data.from),
+                    receiver: serialize(action.data.receiver),
+                    net_quantity: parseQuantity(action.data.unstake_net_quantity),
+                    cpu_quantity: parseQuantity(action.data.unstake_cpu_quantity),
+                },
+            };
+        case 'buyram':
+            return {
+                'buy_ram': {
+                    payer: serialize(action.data.payer),
+                    receiver: serialize(action.data.receiver),
+                    quantity: parseQuantity(action.data.quantity),
+                },
+            };
+        case 'buyrambytes':
+            return {
+                'buy_ram_bytes': {
+                    payer: serialize(action.data.payer),
+                    receiver: serialize(action.data.receiver),
+                    bytes: action.data.bytes,
+                },
+            };
+        case 'sellram':
+            return {
+                'sell_ram': {
+                    account: serialize(action.data.account),
+                    bytes: action.data.bytes,
+                },
+            };
+        case 'voteproducer':
+            return {
+                'vote_producer': {
+                    voter: serialize(action.data.account),
+                    proxy: serialize(action.data.proxy),
+                    producers: action.data.producers.map(p => serialize(p)),
+                },
+            };
+        case 'refund':
+            return {
+                'refund': {
+                    owner: serialize(action.data.owner),
+                },
+            };
+        case 'updateauth':
+            return {
+                'update_auth': {
+                    account: serialize(action.data.account),
+                    permission: serialize(action.data.permission),
+                    parent: serialize(action.data.parent),
+                    auth: parseAuth(action.data.auth),
+                },
+            };
+        case 'deleteauth':
+            return {
+                'delete_auth': {
+                    account: serialize(action.data.account),
+                    permission: serialize(action.data.permission),
+                },
+            };
+        case 'linkauth':
+            return {
+                'link_auth': {
+                    account: serialize(action.data.account),
+                    code: serialize(action.data.code),
+                    type: serialize(action.data.type),
+                    requirement: serialize(action.data.requirement),
+                },
+            };
+        case 'unlinkauth':
+            return {
+                'unlink_auth': {
+                    account: serialize(action.data.account),
+                    code: serialize(action.data.code),
+                    type: serialize(action.data.type),
+                },
+            };
+        case 'newaccount':
+            return {
+                'new_account': {
+                    creator: serialize(action.data.creator),
+                    name: serialize(action.data.name),
+                    owner: parseAuth(action.data.owner),
+                    active: parseAuth(action.data.active),
+                },
+            };
+        default:
+            return null;
+    }
+};
+
+const parseUnknown = (action: $EosTxAction): EosTxActionAck | null => {
+    if (typeof action.data !== 'string') return null;
+    return {
+        unknown: {
+            data_size: action.data.length / 2,
+            data_chunk: action.data,
+        },
+    };
+};
+
+const parseCommon = (action: $EosTxAction): EosActionCommon => {
+    return {
+        account: serialize(action.account),
+        name: serialize(action.name),
+        authorization: action.authorization.map(a => ({
+            actor: serialize(a.actor),
+            permission: serialize(a.permission),
+        })),
+    };
+};
+
+const parseAction = (action: $EosTxAction): EosTxActionAck => {
+    const ack = parseAck(action) || parseUnknown(action);
+    return {
+        common: parseCommon(action),
+        ...ack,
+    };
+};
+
+export const validate = (address_n: Array<number>, tx: $EosTransaction) => {
     const header: ?EosTxHeader = tx.header ? {
-        expiration: tx.header.expiration,
+        expiration: typeof tx.header.expiration === 'number' ? tx.header.expiration : parseDate(tx.header.expiration),
         ref_block_num: tx.header.refBlockNum,
         ref_block_prefix: tx.header.refBlockPrefix,
         max_net_usage_words: tx.header.maxNetUsageWords,
@@ -113,128 +317,89 @@ const prepareSignTx = (tx: $EosTransaction): EosSignTx => {
         delay_sec: tx.header.delaySec,
     } : null;
 
+    const ack: Array<EosTxActionAck> = [];
+    tx.actions.forEach(action => {
+        ack.push(parseAction(action));
+    });
+
     return {
-        address_n: [], // will be overridden
         chain_id: tx.chainId,
-        header: header,
-        num_actions: tx.actions.length,
+        header,
+        ack,
     };
 };
 
-const prepareTxActionAck = (action: $EosTxActionAck): EosTxActionAck => {
-    const common: ?EosActionCommon = action.common ? {
-        account: action.common.account,
-        name: action.common.name,
-        authorization: [{
-            actor: action.common.authorization[0].actor,
-            permission: action.common.authorization[0].permission,
-        }],
-    } : null;
+// sign transaction logic
 
-    const transfer: ?EosActionTransfer = action.transfer ? {
-        sender: action.transfer.sender,
-        receiver: action.transfer.receiver,
-        quantity: {
-            amount: action.transfer.quantity.amount,
-            symbol: action.transfer.quantity.symbol,
-        },
-        memo: action.transfer.memo,
-    } : null;
+const CHUNK_SIZE = 2048;
+const getDataChunk = (data: string, offset: number) => {
+    if (offset < 0) return null;
+    if (data.length < offset) return null;
+    const o = offset > 0 ? data.length - offset * 2 : 0;
+    return data.substring(o, o + CHUNK_SIZE * 2);
+};
 
-    const delegate: ?EosActionDelegate = action.delegate ? {
-        sender: action.delegate.sender,
-        receiver: action.delegate.receiver,
-        net_quantity: action.delegate.netQuantity,
-        cpu_quantity: action.delegate.cpuQuantity,
-        transfer: action.delegate.transfer,
-    } : null;
+const processTxRequest = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
+    response: MessageResponse<EosTxActionRequest>,
+    actions: Array<EosTxActionAck>,
+    index: number,
+): Promise<EosSignedTx> => {
+    const action = actions[index];
+    const lastOp = (index + 1 >= actions.length);
+    let ack: MessageResponse<EosTxActionRequest>;
+    const requestedDataSize = response.message.data_size;
 
-    const undelegate: ?EosActionUndelegate = action.undelegate ? {
-        sender: action.undelegate.sender,
-        receiver: action.undelegate.receiver,
-        net_quantity: action.undelegate.netQuantity,
-        cpu_quantity: action.undelegate.cpuQuantity,
-    } : null;
+    if (action.unknown) {
+        const unknown = action.unknown;
+        const offset = typeof requestedDataSize === 'number' ? requestedDataSize : 0;
+        const data_chunk = getDataChunk(unknown.data_chunk, offset);
+        const act = {
+            common: action.common,
+            unknown: {
+                data_size: unknown.data_size,
+                data_chunk,
+            },
+        };
+        const sent = offset > 0 ? unknown.data_size - offset + CHUNK_SIZE : CHUNK_SIZE;
+        const lastChunk = sent >= unknown.data_size;
 
-    const buy_ram: ?EosActionBuyRam = action.buyRam ? {
-        payer: action.buyRam.payer,
-        receiver: action.buyRam.receiver,
-        quantity: action.buyRam.quantity,
-    } : null;
+        if (lastOp && lastChunk) {
+            const response: MessageResponse<EosSignedTx> = await typedCall('EosTxActionAck', 'EosSignedTx', act);
+            return response.message;
+        } else {
+            ack = await typedCall('EosTxActionAck', 'EosTxActionRequest', act);
+            if (lastChunk) {
+                index++;
+            }
+        }
+    } else {
+        if (lastOp) {
+            const response: MessageResponse<EosSignedTx> = await typedCall('EosTxActionAck', 'EosSignedTx', action);
+            return response.message;
+        }
+        ack = await typedCall('EosTxActionAck', 'EosTxActionRequest', action);
+        index++;
+    }
 
-    const buy_ram_bytes: ?EosActionBuyRamBytes = action.buyRamBytes ? {
-        payer: action.buyRamBytes.payer,
-        receiver: action.buyRamBytes.receiver,
-        bytes: action.buyRamBytes.bytes,
-    } : null;
+    return await processTxRequest(
+        typedCall,
+        ack,
+        actions,
+        index
+    );
+};
 
-    const sell_ram: ?EosActionSellRam = action.sellRam ? {
-        account: action.sellRam.account,
-        bytes: action.sellRam.bytes,
-    } : null;
-
-    const vote_producer: ?EosActionVoteProducer = action.voteProducer ? {
-        voter: action.voteProducer.voter,
-        proxy: action.voteProducer.proxy,
-        producers: action.voteProducer.producers,
-    } : null;
-
-    const refund: ?EosActionRefund = action.refund ? {
-        owner: action.refund.owner,
-    } : null;
-
-    const update_auth: ?EosActionUpdateAuth = action.updateAuth ? {
-        account: action.updateAuth.account,
-        permission: action.updateAuth.permission,
-        parent: action.updateAuth.parent,
-        auth: action.updateAuth.auth,
-    } : null;
-
-    const delete_auth: ?EosActionDeleteAuth = action.deleteAuth ? {
-        account: action.deleteAuth.account,
-        permission: action.deleteAuth.permission,
-    } : null;
-
-    const link_auth: ?EosActionLinkAuth = action.linkAuth ? {
-        account: action.linkAuth.account,
-        code: action.linkAuth.code,
-        type: action.linkAuth.type,
-        requirement: action.linkAuth.requirement,
-    } : null;
-
-    const unlink_auth: ?EosActionUnlinkAuth = action.unlinkAuth ? {
-        account: action.unlinkAuth.account,
-        code: action.unlinkAuth.code,
-        type: action.unlinkAuth.type,
-    } : null;
-
-    const new_account: ?EosActionNewAccount = action.newAccount ? {
-        creator: action.newAccount.creator,
-        name: action.newAccount.name,
-        owner: action.newAccount.owner,
-        active: action.newAccount.active,
-    } : null;
-
-    const unknown: ?EosActionUnknown = action.unknown ? {
-        data_size: action.unknown.dataSize,
-        data_chunk: action.unknown.data,
-    } : null;
-
-    return {
-        common,
-        transfer,
-        delegate,
-        undelegate,
-        buy_ram,
-        buy_ram_bytes,
-        sell_ram,
-        vote_producer,
-        refund,
-        update_auth,
-        delete_auth,
-        link_auth,
-        unlink_auth,
-        new_account,
-        unknown,
-    };
+export const signTx = async (typedCall: (type: string, resType: string, msg: EosSignTx) => Promise<DefaultMessageResponse>,
+    address_n: Array<number>,
+    chain_id: string,
+    header: ?EosTxHeader,
+    actions: Array<EosTxActionAck>,
+): Promise<EosSignedTx> => {
+    const response = await typedCall('EosSignTx', 'EosTxActionRequest', {
+        address_n,
+        chain_id,
+        header,
+        num_actions: actions.length,
+    });
+    return await processTxRequest(typedCall, response, actions, 0);
 };
