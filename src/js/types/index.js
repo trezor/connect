@@ -293,12 +293,13 @@ export type FirmwareErase = (P.$FirmwareErase) => Promise<R.FirmwareErase$>;
 export type FirmwareUpload = (P.$FirmwareUpload) => Promise<R.FirmwareUpload$>;
 export type RecoveryDevice = (P.$RecoveryDevice) => Promise<R.RecoveryDevice$>;
 
-/* eslint-disable no-redeclare */
 declare function F_EosGetPublicKey(params: (P.$Common & EOS.$EosGetPublicKey)): Promise<EOS.EosGetPublicKey$>;
 declare function F_EosGetPublicKey(params: (P.$Common & { bundle: Array<EOS.$EosGetPublicKey> })): Promise<EOS.EosGetPublicKey$$>;
-/* eslint-enable no-redeclare */
+
 export type EosGetPublicKey = typeof F_EosGetPublicKey;
 export type EosSignTx = (EOS.$EosSignTx) => Promise<EOS.EosSignTx$>;
+
+/* eslint-enable no-redeclare */
 
 export * from './response';
 export * from './coinInfo';

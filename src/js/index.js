@@ -493,7 +493,7 @@ class TrezorConnect {
     static tezosSignTransaction: $T.TezosSignTransaction = async (params) => {
         return await call({ method: 'tezosSignTransaction', ...params });
     }
-  
+
     static eosGetPublicKey: $T.EosGetPublicKey = async (params) => {
         return await call({ method: 'eosGetPublicKey', ...params });
     }
