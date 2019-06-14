@@ -5,7 +5,7 @@ trap 'cleanup' INT
 # Assuming this script is in the root of "trezor-connect"
 base_path=`pwd`
 trezord_path="${base_path}/../trezord-go"
-emulator_path="${base_path}/../trezor-core"
+emulator_path="${base_path}/../trezor-firmware/core"
 
 should_start_emulator="true"
 

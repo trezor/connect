@@ -9,6 +9,8 @@ import type {
     ExpectedCardanoGetAddressResponse,
 } from 'flowtype/tests/cardano-get-address';
 
+// vectors from https://github.com/trezor/trezor-firmware/tree/master/python/trezorlib/tests/device_tests/test_msg_cardano_get_address.py
+
 export const cardanoGetAddress = (): TestFunction => {
     const testPayloads: Array<TestCardanoGetAddressPayload> = [
         {
@@ -29,7 +31,6 @@ export const cardanoGetAddress = (): TestFunction => {
         },
     ];
 
-    // responses from https://github.com/trezor/python-trezor/blob/master/trezorlib/tests/device_tests/test_msg_cardano_get_address.py
     const expectedResponses: Array<ExpectedCardanoGetAddressResponse> = [
         {
             payload: {
