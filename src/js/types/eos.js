@@ -146,12 +146,16 @@ export type EosTxAction = Action & {
 export type Transaction = {
     chainId: string,
     header: ?EosTxHeader,
-    actions: Array<EosTxAction | Action & { name: string, data: string }>,
+    actions: Array<EosTxAction>,
 }
 
 export type $EosSignTx = $Common & {
     path: $Path,
-    transaction: Transaction,
+    transaction: {
+        chainId: string,
+        header: ?EosTxHeader,
+        actions: Array<EosTxAction | Action & { name: string, data: string }>,
+    },
 }
 
 export type EosSignTx$ = {
