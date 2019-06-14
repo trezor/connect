@@ -1,6 +1,6 @@
 [
 	{
-		"version": [2, 0, 25],
+		"version": [2, 0, 27],
 		"directory": "bridge/{version}/",
 		"packages": [
 			{
@@ -36,6 +36,6 @@
 				"signature": "trezor-bridge-{version}-win32-install.exe.asc"
 			}
 		],
-		"changelog": "* Use interrupt reads without timeouts even on FreeBSD and linux\n* Stop using hidapi for t1 on linux\n* Lowlevel code cleanup\n* Add debuglink support (UDP + libusb)\n* Add support for one-directional calls (read, write)\n* Fix windows 7 driver installer when run first time"
+		"changelog": "* Fix Certificate issue on Windows"
 	}
 ]
