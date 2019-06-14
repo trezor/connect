@@ -141,15 +141,12 @@ export type EosTxAction = Action & {
         owner: EosAuthorization,
         active: EosAuthorization,
     },
-} | Action & {
-    name: 'unknown',
-    data: string,
 }
 
 export type Transaction = {
     chainId: string,
     header: ?EosTxHeader,
-    actions: Array<EosTxAction>,
+    actions: Array<EosTxAction | Action & { name: string, data: string }>,
 }
 
 export type $EosSignTx = $Common & {
