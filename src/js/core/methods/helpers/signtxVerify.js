@@ -6,7 +6,7 @@ import {
     crypto as BitcoinJsCrypto,
     script as BitcoinJsScript,
     Transaction as BitcoinJsTransaction,
-} from 'trezor-utxo-lib';
+} from '@trezor/utxo-lib';
 import { isScriptHash, getAddressScriptType, getAddressHash } from '../../../utils/addressUtils';
 import { getOutputScriptType } from '../../../utils/pathUtils';
 

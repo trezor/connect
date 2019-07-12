@@ -2,7 +2,7 @@
 'use strict';
 
 import { xpubToHDNodeType } from '../../../utils/hdnode';
-import type { Network } from 'trezor-utxo-lib';
+import type { Network } from '@trezor/utxo-lib';
 
 export const fixPath = (utxo: any): any => {
     // make sure bip32 indices are unsigned

@@ -1,13 +1,13 @@
 /* @flow */
 
-import { coins as BitcoinJSCoins } from 'trezor-utxo-lib';
+import { coins as BitcoinJSCoins } from '@trezor/utxo-lib';
 // local modules
 import { uniq, reverseBuffer } from '../../../utils/bufferUtils';
 
 // npm types
 import type {
     Transaction as BitcoinJsTransaction,
-} from 'trezor-utxo-lib';
+} from '@trezor/utxo-lib';
 
 import type { BuildTxInput } from 'hd-wallet';
 

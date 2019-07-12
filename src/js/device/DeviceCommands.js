@@ -3,7 +3,7 @@
 import * as DEVICE from '../constants/device';
 import randombytes from 'randombytes';
 
-import * as bitcoin from 'trezor-utxo-lib';
+import * as bitcoin from '@trezor/utxo-lib';
 import * as hdnodeUtils from '../utils/hdnode';
 import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType } from '../utils/pathUtils';
 import { resolveAfter } from '../utils/promiseUtils';
