@@ -1,7 +1,7 @@
 /* @flow */
 
 import * as trezor from '../types/trezor';
-import * as bitcoin from 'trezor-utxo-lib';
+import * as bitcoin from '@trezor/utxo-lib';
 import * as ecurve from 'ecurve';
 
 const curve = ecurve.getCurveByName('secp256k1');

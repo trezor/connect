@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import { address as BitcoinJSAddress } from 'trezor-utxo-lib';
+import { address as BitcoinJSAddress } from '@trezor/utxo-lib';
 import bchaddrjs from 'bchaddrjs';
 import type { BitcoinNetworkInfo } from '../types';
 
@@ -60,7 +60,7 @@ const isBech32 = (address: string): boolean => {
 export const isScriptHash = (address: string, coinInfo: BitcoinNetworkInfo): boolean => {
     if (!isBech32(address)) {
         // Cashaddr format (with prefix) is neither base58 nor bech32, so it would fail
-        // in trezor-utxo-lib. For this reason, we use legacy format here
+        // in @trezor/utxo-lib. For this reason, we use legacy format here
         if (coinInfo.cashAddrPrefix) {
             address = bchaddrjs.toLegacyAddress(address);
         }

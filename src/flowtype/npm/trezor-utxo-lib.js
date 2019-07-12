@@ -107,7 +107,7 @@ declare module 'ecurve' {
 }
 // ---------- copypasta end ----
 
-declare module 'trezor-utxo-lib' {
+declare module '@trezor/utxo-lib' {
     declare type Network = {
         messagePrefix: string,
         bip32: {

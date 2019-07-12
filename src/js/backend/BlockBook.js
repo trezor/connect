@@ -5,7 +5,7 @@ import {
     BitcoreBlockchain,
     WorkerDiscovery,
 } from 'hd-wallet';
-import { Transaction as BitcoinJsTransaction } from 'trezor-utxo-lib';
+import { Transaction as BitcoinJsTransaction } from '@trezor/utxo-lib';
 BitcoinJsTransaction.USE_STRING_VALUES = true;
 
 import * as ERROR from '../constants/errors';
