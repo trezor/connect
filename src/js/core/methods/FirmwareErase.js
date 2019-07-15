@@ -21,6 +21,7 @@ export default class FirmwareErase extends AbstractMethod {
         this.requiredPermissions = ['management'];
         this.allowDeviceMode = [...this.allowDeviceMode, UI.BOOTLOADER, UI.INITIALIZE];
         this.useDeviceState = false;
+        this.allowFirmwareStatus = [...this.allowFirmwareStatus, 'required'];
 
         const payload: Object = message.payload;
 

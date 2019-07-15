@@ -40,6 +40,7 @@ export default class AbstractMethod implements MethodInterface {
     firmwareRange: FirmwareRange;
     requiredPermissions: Array<string>;
     allowDeviceMode: Array<string>; // used in device management (like ResetDevice allow !UI.INITIALIZED)
+    allowFirmwareStatus: Array<string>;
     debugLink: boolean;
 
     +confirmation: () => Promise<boolean>;
@@ -73,6 +74,7 @@ export default class AbstractMethod implements MethodInterface {
         if (this.allowSeedlessDevice) {
             this.allowDeviceMode = [ UI.SEEDLESS ];
         }
+        this.allowFirmwareStatus = ['valid', 'outdated'];
         this.debugLink = false;
         // default values for all methods
         this.firmwareRange = {
@@ -175,9 +177,15 @@ export default class AbstractMethod implements MethodInterface {
         if (range.min === '0') {
             return UI.FIRMWARE_NOT_SUPPORTED;
         }
-        if (device.firmwareStatus === 'required' || semvercmp(device.getVersion(), range.min) < 0) {
+
+        if (semvercmp(device.getVersion(), range.min) < 0) {
             return UI.FIRMWARE_OLD;
         }
+
+        if (!this.allowDeviceMode.includes(device.firmwareStatus)) {
+            return UI.FIRMWARE_OLD;
+        }
+
         if (range.max !== '0' && semvercmp(device.getVersion(), range.max) > 0) {
             if (isUsingPopup) {
                 // wait for popup handshake
