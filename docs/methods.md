@@ -30,6 +30,10 @@ Every method require an [`Object`](https://developer.mozilla.org/en-US/docs/Web/
 * [TrezorConnect.ethereumSignMessage](methods/ethereumSignMessage.md)
 * [TrezorConnect.ethereumVerifyMessage](methods/ethereumVerifyMessage.md)
 
+### Eos
+* [TrezorConnect.eosGetPublicKey](methods/eosGetPublicKey.md)
+* [TrezorConnect.eosSignTransaction](methods/eosSignTransaction.md)
+
 ### NEM
 * [TrezorConnect.nemGetAddress](methods/nemGetAddress.md)
 * [TrezorConnect.nemSignTransaction](methods/nemSignTransaction.md)
