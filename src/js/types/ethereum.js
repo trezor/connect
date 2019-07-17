@@ -4,7 +4,6 @@
 
 import type { $Path, $Common } from './params';
 import type { Unsuccessful$ } from './response';
-import type { EthereumAccount } from './account';
 import type {
     Success,
     MessageSignature,
@@ -25,27 +24,6 @@ export type Transaction = {
     r: string,
     s: string,
 }
-
-// get account info
-export type $EthereumGetAccountInfo = {
-    account: EthereumAccount,
-    coin: string,
-}
-
-export type $$EthereumGetAccountInfo = {
-    accounts: Array<EthereumAccount>,
-    coin: string,
-}
-
-export type EthereumGetAccountInfo$ = {
-    success: true,
-    payload: EthereumAccount,
-} | Unsuccessful$;
-
-export type EthereumGetAccountInfo$$ = {
-    success: true,
-    payload: Array<EthereumAccount>,
-} | Unsuccessful$;
 
 // get address
 

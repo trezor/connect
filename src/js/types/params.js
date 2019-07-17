@@ -81,9 +81,21 @@ export type $DebugLinkGetState = {
 }
 
 export type $GetAccountInfo = $Common & {
-    path?: $Path,
-    xpub?: string,
     coin: string,
+    path?: string,
+    descriptor?: string,
+    details?: 'basic' | 'txs',
+    tokens?: 'nonzero' | 'used' | 'derived',
+    page?: number,
+    pageSize?: number,
+    from?: number,
+    to?: number,
+    contractFilter?: string,
+    gap?: number,
+    marker?: {
+        ledger: number,
+        seq: number,
+    },
 }
 
 export type $GetAddress = {|

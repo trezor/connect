@@ -11,6 +11,8 @@ import type {
     DebugLinkState,
 } from './trezor';
 
+import type { AccountInfo } from './account';
+
 import type { ConnectSettings } from '../data/ConnectSettings';
 
 export type Unsuccessful$ = {
@@ -112,7 +114,12 @@ export type AccountInfoPayload = {
 
 export type GetAccountInfo$ = {
     success: true,
-    payload: AccountInfoPayload,
+    payload: AccountInfo,
+} | Unsuccessful$;
+
+export type GetAccountInfo$$ = {
+    success: true,
+    payload: Array<AccountInfo>,
 } | Unsuccessful$;
 
 export type GetAddress$ = {
