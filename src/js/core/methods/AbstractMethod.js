@@ -27,6 +27,7 @@ export default class AbstractMethod implements MethodInterface {
     hasExpectedDeviceState: boolean;
     keepSession: boolean;
     skipFinalReload: boolean;
+    skipFirmwareCheck: boolean;
     overridePreviousCall: boolean;
     overridden: boolean;
     name: string; // method name
@@ -40,7 +41,6 @@ export default class AbstractMethod implements MethodInterface {
     firmwareRange: FirmwareRange;
     requiredPermissions: Array<string>;
     allowDeviceMode: Array<string>; // used in device management (like ResetDevice allow !UI.INITIALIZED)
-    allowFirmwareStatus: Array<string>;
     debugLink: boolean;
 
     +confirmation: () => Promise<boolean>;
@@ -66,15 +66,15 @@ export default class AbstractMethod implements MethodInterface {
         this.hasExpectedDeviceState = payload.device ? payload.device.hasOwnProperty('state') : false;
         this.keepSession = typeof payload.keepSession === 'boolean' ? payload.keepSession : false;
         this.skipFinalReload = typeof payload.skipFinalReload === 'boolean' ? payload.skipFinalReload : false;
+        this.skipFirmwareCheck = false;
         this.overridePreviousCall = typeof payload.override === 'boolean' ? payload.override : false;
         this.overridden = false;
         this.useEmptyPassphrase = typeof payload.useEmptyPassphrase === 'boolean' ? payload.useEmptyPassphrase : false;
         this.allowSeedlessDevice = typeof payload.allowSeedlessDevice === 'boolean' ? payload.allowSeedlessDevice : false;
-        this.allowDeviceMode = [];
+        this.allowDeviceMode = [ UI.NOT_IN_BOOTLOADER ];
         if (this.allowSeedlessDevice) {
-            this.allowDeviceMode = [ UI.SEEDLESS ];
+            this.allowDeviceMode = [ ...this.allowDeviceMode, UI.SEEDLESS ];
         }
-        this.allowFirmwareStatus = ['valid', 'outdated'];
         this.debugLink = false;
         // default values for all methods
         this.firmwareRange = {
@@ -170,6 +170,9 @@ export default class AbstractMethod implements MethodInterface {
     }
 
     async checkFirmwareRange(isUsingPopup: boolean): Promise<?$PropertyType<FirmwareException, 'type'>> {
+        if (this.skipFirmwareCheck) {
+            return null;
+        }
         const device = this.device;
         if (!device.features) return null;
         const model = device.features.major_version;
@@ -178,11 +181,7 @@ export default class AbstractMethod implements MethodInterface {
             return UI.FIRMWARE_NOT_SUPPORTED;
         }
 
-        if (semvercmp(device.getVersion(), range.min) < 0) {
-            return UI.FIRMWARE_OLD;
-        }
-
-        if (!this.allowDeviceMode.includes(device.firmwareStatus)) {
+        if (device.firmwareStatus === 'required' || semvercmp(device.getVersion(), range.min) < 0) {
             return UI.FIRMWARE_OLD;
         }
 

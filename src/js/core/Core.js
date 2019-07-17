@@ -428,6 +428,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         const MAX_PIN_TRIES: number = 3;
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
+            console.warn('innter');
             // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
             const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) = device.hasUnexpectedMode(method.allowDeviceMode);
             if (unexpectedMode) {
