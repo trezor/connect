@@ -13,6 +13,7 @@ export default class DebugLinkDecision extends AbstractMethod {
         this.useDevice = true;
         this.debugLink = true;
         this.useUi = false;
+        this.requiredPermissions = ['management'];
 
         const payload: Object = message.payload;
         validateParams(payload, [
