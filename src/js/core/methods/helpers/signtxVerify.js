@@ -98,6 +98,10 @@ const deriveOutputScript = async (getHDNode: GetHDNode, output: TransactionOutpu
         return deriveWitnessOutput(pkh);
     }
 
+    if (scriptType === 'PAYTOWITNESS') {
+        return deriveBech32Output(pkh);
+    }
+
     throw new Error('Unknown script type ' + scriptType);
 };
 
@@ -129,4 +133,14 @@ const deriveWitnessOutput = (pkh: Buffer): Buffer => {
     scriptPubKey[22] = 0x87;
     addressBytes.copy(scriptPubKey, 2);
     return scriptPubKey;
+};
+
+const deriveBech32Output = (pkh: Buffer): Buffer => {
+    // see https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki#Segwit_address_format
+    // address derivation + test vectors
+    const scriptSig = Buffer.alloc(pkh.length + 2);
+    scriptSig[0] = 0;
+    scriptSig[1] = 0x14;
+    pkh.copy(scriptSig, 2);
+    return scriptSig;
 };

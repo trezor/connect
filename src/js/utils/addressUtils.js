@@ -84,7 +84,8 @@ export const isScriptHash = (address: string, coinInfo: BitcoinNetworkInfo): boo
     throw new Error('Unknown address type.');
 };
 
-export const getAddressScriptType = (address: string, coinInfo: BitcoinNetworkInfo): 'PAYTOSCRIPTHASH' | 'PAYTOADDRESS' => {
+export const getAddressScriptType = (address: string, coinInfo: BitcoinNetworkInfo): 'PAYTOSCRIPTHASH' | 'PAYTOADDRESS' | 'PAYTOWITNESS' => {
+    if (isBech32(address)) return 'PAYTOWITNESS';
     return isScriptHash(address, coinInfo) ? 'PAYTOSCRIPTHASH' : 'PAYTOADDRESS';
 };
 
