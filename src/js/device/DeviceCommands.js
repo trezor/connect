@@ -6,12 +6,14 @@ import randombytes from 'randombytes';
 import * as bitcoin from '@trezor/utxo-lib';
 import * as hdnodeUtils from '../utils/hdnode';
 import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType } from '../utils/pathUtils';
+import { getAccountAddressN } from '../utils/accountUtils';
+import { toChecksumAddress } from '../utils/ethereumUtils';
 import { resolveAfter } from '../utils/promiseUtils';
 import Device from './Device';
 
 import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
-import type { BitcoinNetworkInfo } from '../types';
+import type { CoinInfo, BitcoinNetworkInfo, EthereumNetworkInfo } from '../types';
 import type { Transport } from 'trezor-link';
 import * as trezor from '../types/trezor'; // flowtype only
 
@@ -261,11 +263,12 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    async ethereumGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.EthereumAddress> {
+    async ethereumGetAddress(address_n: Array<number>, network: ?EthereumNetworkInfo, showOnTrezor?: boolean = true): Promise<trezor.EthereumAddress> {
         const response: MessageResponse<trezor.EthereumAddress> = await this.typedCall('EthereumGetAddress', 'EthereumAddress', {
             address_n: address_n,
             show_display: !!showOnTrezor,
         });
+        response.message.address = toChecksumAddress(response.message.address, network);
         return response.message;
     }
 
@@ -759,5 +762,30 @@ export default class DeviceCommands {
         await this.transport.release(session, true, true);
         await resolveAfter(501, null); // wait for propagation from bridge
         return response.message;
+    }
+
+    async getAccountDescriptor(coinInfo: CoinInfo, indexOrPath: number | Array<number>): Promise<?{ descriptor: string, address_n: number[] }> {
+        const address_n = Array.isArray(indexOrPath) ? indexOrPath : getAccountAddressN(coinInfo, indexOrPath);
+        if (coinInfo.type === 'bitcoin') {
+            const resp = await this.getHDNode(address_n, coinInfo);
+            return {
+                descriptor: resp.xpubSegwit || resp.xpub,
+                address_n,
+            };
+        } else if (coinInfo.type === 'ethereum') {
+            const resp = await this.ethereumGetAddress(address_n, coinInfo, false);
+            return {
+                descriptor: resp.address,
+                address_n,
+            };
+        } else if (coinInfo.shortcut === 'XRP' || coinInfo.shortcut === 'tXRP') {
+            const resp = await this.rippleGetAddress(address_n, false);
+            return {
+                descriptor: resp.address,
+                address_n,
+            };
+        }
+
+        return;
     }
 }
