@@ -6,8 +6,8 @@ import * as POPUP from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
 import * as UI from '../constants/ui';
 
-import type { BitcoinAccount } from './account';
-import type { BitcoinNetworkInfo } from './coinInfo';
+import type { DiscoveryAccount } from './account';
+import type { BitcoinNetworkInfo, CoinInfo } from './coinInfo';
 import type { SelectFeeLevel } from './fee';
 
 import type { UiResponseFactory } from './uiResponse';
@@ -178,11 +178,11 @@ export type FirmwareException = {
 export type SelectAccount = {
     +type: typeof UI.SELECT_ACCOUNT,
     payload: {
-        accounts: Array<BitcoinAccount>,
-        coinInfo: BitcoinNetworkInfo,
-        complete?: boolean,
-        start?: boolean,
-        checkBalance?: boolean,
+        type: 'start' | 'progress' | 'end',
+        coinInfo: CoinInfo,
+        accountTypes?: Array<'normal' | 'segwit' | 'legacy'>,
+        accounts?: Array<DiscoveryAccount>,
+        preventEmpty?: boolean,
     },
 }
 
@@ -198,7 +198,7 @@ export type UpdateCustomFee = {
     +type: typeof UI.UPDATE_CUSTOM_FEE,
     payload: {
         coinInfo: BitcoinNetworkInfo,
-        level: SelectFeeLevel,
+        feeLevels: Array<SelectFeeLevel>,
     },
 }
 

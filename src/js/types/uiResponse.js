@@ -52,7 +52,7 @@ declare type ReceivePassphraseAction = {
 
 declare type ReceiveAccount = {
     +type: typeof UI.RECEIVE_ACCOUNT,
-    payload: ?string,
+    payload: ?number,
 }
 
 declare type ReceiveFee = {
