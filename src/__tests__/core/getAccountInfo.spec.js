@@ -21,7 +21,7 @@ const firstSegwitAccount = (): SubtestGetAccountInfo => {
     const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
         {
             payload: {
-                xpub: 'ypub6Y5EDdQK9nQzpNeMtgXxhBB3SoLk2SyR2MFLQYsBkAusAHpaQNxTTwefgnL9G3oFGrRS9VkVvyY1SaApFAzQPZ99wto5etdReeE3XFkkMZt',
+                descriptor: 'ypub6Y5EDdQK9nQzpNeMtgXxhBB3SoLk2SyR2MFLQYsBkAusAHpaQNxTTwefgnL9G3oFGrRS9VkVvyY1SaApFAzQPZ99wto5etdReeE3XFkkMZt',
             },
         },
     ];
@@ -44,7 +44,7 @@ const firstLegacyAccount = (): SubtestGetAccountInfo => {
     const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
         {
             payload: {
-                xpub: 'xpub6D1weXBcFAo8CqBbpP4TbH5sxQH8ZkqC5pDEvJ95rNNBZC9zrKmZP2fXMuve7ZRBe18pWQQsGg68jkq24mZchHwYENd8cCiSb71u3KD4AFH',
+                descriptor: 'xpub6D1weXBcFAo8CqBbpP4TbH5sxQH8ZkqC5pDEvJ95rNNBZC9zrKmZP2fXMuve7ZRBe18pWQQsGg68jkq24mZchHwYENd8cCiSb71u3KD4AFH',
             },
         },
     ];
@@ -69,15 +69,10 @@ const emptyAccount = (): SubtestGetAccountInfo => {
     const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
         {
             payload: {
-                address: '2N4xuu4hZrLPbbCBZx2nr4A2CUdFauY2VDd',
-                addressIndex: 0,
-                addressPath: [2147483697, 2147483649, 2147483904, 0, 0],
                 balance: '0',
-                transactions: 0,
-                utxo: [],
-                usedAddresses: [],
-                xpub: 'upub5Eo1frmiD2QQL6L5x5toFyJVZQuFijQTwiDK7S7KDkgCNykDJtG4TApkdv23L5MDLgRuxMJQEucxXVio2ciKCqfx6Y41skKTZhxNjSgJ6pU',
-                xpubSegwit: 'upub5Eo1frmiD2QQL6L5x5toFyJVZQuFijQTwiDK7S7KDkgCNykDJtG4TApkdv23L5MDLgRuxMJQEucxXVio2ciKCqfx6Y41skKTZhxNjSgJ6pU',
+                availableBalance: '0',
+                empty: true,
+                descriptor: 'upub5Eo1frmiD2QQL6L5x5toFyJVZQuFijQTwiDK7S7KDkgCNykDJtG4TApkdv23L5MDLgRuxMJQEucxXVio2ciKCqfx6Y41skKTZhxNjSgJ6pU',
             },
         },
     ];
@@ -91,19 +86,19 @@ const emptyAccount = (): SubtestGetAccountInfo => {
 
 // Specifies an xpub instead of a path
 // Should get same response as with the path
-const segwitAccountFromSegwitXpub = (): SubtestGetAccountInfo => {
+const segwitAccountFromDescriptor = (): SubtestGetAccountInfo => {
     const testPayloads: Array<TestGetAccountInfoPayload> = [
         {
             method: 'getAccountInfo',
             coin: 'Bitcoin',
-            xpub: 'ypub6Y5EDdQK9nQzpNeMtgXxhBB3SoLk2SyR2MFLQYsBkAusAHpaQNxTTwefgnL9G3oFGrRS9VkVvyY1SaApFAzQPZ99wto5etdReeE3XFkkMZt',
+            descriptor: 'ypub6Y5EDdQK9nQzpNeMtgXxhBB3SoLk2SyR2MFLQYsBkAusAHpaQNxTTwefgnL9G3oFGrRS9VkVvyY1SaApFAzQPZ99wto5etdReeE3XFkkMZt',
         },
     ];
     const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
         {
             payload: {
-                xpub: 'xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G',
-                xpubSegwit: 'ypub6Y5EDdQK9nQzpNeMtgXxhBB3SoLk2SyR2MFLQYsBkAusAHpaQNxTTwefgnL9G3oFGrRS9VkVvyY1SaApFAzQPZ99wto5etdReeE3XFkkMZt',
+                empty: false,
+                descriptor: 'ypub6Y5EDdQK9nQzpNeMtgXxhBB3SoLk2SyR2MFLQYsBkAusAHpaQNxTTwefgnL9G3oFGrRS9VkVvyY1SaApFAzQPZ99wto5etdReeE3XFkkMZt',
             },
         },
     ];
@@ -111,23 +106,22 @@ const segwitAccountFromSegwitXpub = (): SubtestGetAccountInfo => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/segwitAccountFromSegwitXpub',
+        specName: '/segwitAccountFromDescriptor',
     };
 };
 
-const segwitAccountFromLegacyXpub = (): SubtestGetAccountInfo => {
+const legacyAccountFromDescriptor = (): SubtestGetAccountInfo => {
     const testPayloads: Array<TestGetAccountInfoPayload> = [
         {
             method: 'getAccountInfo',
             coin: 'Bitcoin',
-            xpub: 'xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G',
+            descriptor: 'xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G',
         },
     ];
     const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
         {
             payload: {
-                xpub: 'xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G',
-                xpubSegwit: 'ypub6Y5EDdQK9nQzpNeMtgXxhBB3SoLk2SyR2MFLQYsBkAusAHpaQNxTTwefgnL9G3oFGrRS9VkVvyY1SaApFAzQPZ99wto5etdReeE3XFkkMZt',
+                descriptor: 'xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G',
             },
         },
     ];
@@ -135,22 +129,23 @@ const segwitAccountFromLegacyXpub = (): SubtestGetAccountInfo => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/segwitAccountFromSegwitXpub',
+        specName: '/legacyAccountFromDescriptor',
     };
 };
 
-const legacyAccountFromLegacyXpub = (): SubtestGetAccountInfo => {
+const ethereumAccount = (): SubtestGetAccountInfo => {
     const testPayloads: Array<TestGetAccountInfoPayload> = [
         {
             method: 'getAccountInfo',
-            coin: 'Bitcoin',
-            xpub: 'xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G',
+            coin: 'eth',
+            path: "m/44'/60'/0'/0/0",
         },
     ];
     const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
         {
             payload: {
-                xpub: 'xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G',
+                descriptor: '0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8',
+                balance: '21000',
             },
         },
     ];
@@ -158,7 +153,79 @@ const legacyAccountFromLegacyXpub = (): SubtestGetAccountInfo => {
     return {
         testPayloads,
         expectedResponses,
-        specName: '/segwitAccountFromSegwitXpub',
+        specName: '/ethereumAccount',
+    };
+};
+
+const ethereumAccountFromDescriptor = (): SubtestGetAccountInfo => {
+    const testPayloads: Array<TestGetAccountInfoPayload> = [
+        {
+            method: 'getAccountInfo',
+            coin: 'eth',
+            descriptor: '0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8',
+        },
+    ];
+    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+        {
+            payload: {
+                descriptor: '0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8',
+                balance: '21000',
+            },
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/ethereumAccountFromDescriptor',
+    };
+};
+
+const rippleAccount = (): SubtestGetAccountInfo => {
+    const testPayloads: Array<TestGetAccountInfoPayload> = [
+        {
+            method: 'getAccountInfo',
+            coin: 'xrp',
+            path: "m/44'/144'/0'/0/0",
+        },
+    ];
+    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+        {
+            payload: {
+                descriptor: 'rh5ZnEVySAy7oGd3nebT3wrohGDrsNS83E',
+                empty: true,
+            },
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/rippleAccount',
+    };
+};
+
+const rippleAccountFromDescriptor = (): SubtestGetAccountInfo => {
+    const testPayloads: Array<TestGetAccountInfoPayload> = [
+        {
+            method: 'getAccountInfo',
+            coin: 'xrp',
+            descriptor: 'rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj',
+        },
+    ];
+    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+        {
+            payload: {
+                descriptor: 'rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj',
+                balance: '20000000',
+            },
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/rippleAccountFromDescriptor',
     };
 };
 
@@ -187,11 +254,14 @@ export const getAccountInfo = (): TestFunction => {
     const availableSubtests = {
         firstSegwitAccount,
         firstLegacyAccount,
-        segwitAccountFromSegwitXpub,
-        segwitAccountFromLegacyXpub,
-        legacyAccountFromLegacyXpub,
+        segwitAccountFromDescriptor,
+        legacyAccountFromDescriptor,
         emptyAccount,
         invalidPath,
+        ethereumAccount,
+        ethereumAccountFromDescriptor,
+        rippleAccount,
+        rippleAccountFromDescriptor,
     };
     const testName = 'GetAccountInfo';
     return {
