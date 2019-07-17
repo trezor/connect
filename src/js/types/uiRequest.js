@@ -139,7 +139,7 @@ export type BrowserMessage = {
 }
 
 export type UnexpectedDeviceMode = {
-    +type: typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | typeof UI.DEVICE_NEEDS_BACKUP,
+    +type: typeof UI.BOOTLOADER | typeof UI.NOT_IN_BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | typeof UI.DEVICE_NEEDS_BACKUP,
     payload: Device,
 }
 

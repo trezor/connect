@@ -519,20 +519,23 @@ export default class Device extends EventEmitter {
         return this.features ? this.features.major_version === 1 : false;
     }
 
-    hasUnexpectedMode(allow: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.NOT_IN_BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) {
-        console.warn('hasUnexpectedMode', allow, this.isBootloader());
+    hasUnexpectedMode(allow: Array<string>, require: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.NOT_IN_BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) {
+        // both allow and require cases might generate single unexpected mode
         if (this.features) {
+            // allow cases
             if (this.isBootloader() && !allow.includes(UI.BOOTLOADER)) {
                 return UI.BOOTLOADER;
-            }
-            if (!this.isBootloader() && !allow.includes(UI.NOT_IN_BOOTLOADER)) {
-                return UI.NOT_IN_BOOTLOADER;
             }
             if (!this.isInitialized() && !allow.includes(UI.INITIALIZE)) {
                 return UI.INITIALIZE;
             }
             if (this.isSeedless() && !allow.includes(UI.SEEDLESS)) {
                 return UI.SEEDLESS;
+            }
+
+            // require cases
+            if (!this.isBootloader() && require.includes(UI.BOOTLOADER)) {
+                return UI.NOT_IN_BOOTLOADER;
             }
         }
         return null;

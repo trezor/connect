@@ -41,6 +41,7 @@ export default class AbstractMethod implements MethodInterface {
     firmwareRange: FirmwareRange;
     requiredPermissions: Array<string>;
     allowDeviceMode: Array<string>; // used in device management (like ResetDevice allow !UI.INITIALIZED)
+    requireDeviceMode: Array<string>;
     debugLink: boolean;
 
     +confirmation: () => Promise<boolean>;
@@ -71,9 +72,10 @@ export default class AbstractMethod implements MethodInterface {
         this.overridden = false;
         this.useEmptyPassphrase = typeof payload.useEmptyPassphrase === 'boolean' ? payload.useEmptyPassphrase : false;
         this.allowSeedlessDevice = typeof payload.allowSeedlessDevice === 'boolean' ? payload.allowSeedlessDevice : false;
-        this.allowDeviceMode = [ UI.NOT_IN_BOOTLOADER ];
+        this.allowDeviceMode = [];
+        this.requireDeviceMode = [];
         if (this.allowSeedlessDevice) {
-            this.allowDeviceMode = [ ...this.allowDeviceMode, UI.SEEDLESS ];
+            this.allowDeviceMode = [ UI.SEEDLESS ];
         }
         this.debugLink = false;
         // default values for all methods
