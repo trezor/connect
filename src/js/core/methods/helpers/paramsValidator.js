@@ -10,9 +10,9 @@ import type { CoinInfo, FirmwareRange } from '../../../types';
 
 type Param = {
     name: string,
-    type?: string,
+    type?: 'string' | 'number' | 'array' | 'buffer' | 'boolean' | 'amount' | 'object',
     obligatory?: boolean,
-    allowEmpty?: true,
+    allowEmpty?: boolean,
 }
 
 export const validateParams = (values: Object, fields: Array<Param>): void => {
@@ -80,12 +80,14 @@ export const getFirmwareRange = (method: string, coinInfo: ?CoinInfo, current: F
     const coinType = coinInfo ? coinInfo.type : null;
     const shortcut = coinInfo ? coinInfo.shortcut.toLowerCase() : null;
     // find firmware range in config.json
-    const range = DataManager.getConfig().supportedFirmware.find(c => {
-        if (c.coinType === coinType || c.coin === shortcut) return c;
-        if (c.excludedMethods && c.excludedMethods.includes(method)) {
-            return c;
-        }
-    });
+    const { supportedFirmware } = DataManager.getConfig();
+    const range =
+        supportedFirmware.find(c => (
+            c.coinType === coinType ||
+            (Array.isArray(c.coin) && c.coin.includes(shortcut)) ||
+            (typeof c.coin === 'string' && c.coin === shortcut)
+        )) ||
+            supportedFirmware.find(c => (!c.coinType && !c.coin && c.excludedMethods && c.excludedMethods.includes(method)));
 
     if (range) {
         if (range.excludedMethods && !range.excludedMethods.includes(method)) {

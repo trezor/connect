@@ -82,20 +82,25 @@
         }
     },
     "supportedFirmware": [
-        {	
-            "excludedMethods": [	
-                "rippleGetAccountInfo",	
-                "rippleGetAddress",	
-                "rippleSignTransaction"	
-            ],	
-            "min": ["0", "2.1.0"],	
-            "comment": ["Since firmware 2.1.0 there is a new protobuf field 'destination_tag' in RippleSignTx"]	
-        },	
-        {	
-            "excludedMethods": [	
-                "cardanoSignTransaction"	
-            ],	
-            "min": ["0", "2.1.0"],	
+        {
+            "coin": ["xrp", "txrp"],
+            "excludedMethods": ["getAccountInfo"],
+            "min": ["0", "2.1.0"],
+            "comment": ["Since firmware 2.1.0 there is a new protobuf field 'destination_tag' in RippleSignTx"]
+        },
+        {
+            "excludedMethods": [
+                "rippleGetAddress",
+                "rippleSignTransaction"
+            ],
+            "min": ["0", "2.1.0"],
+            "comment": ["Since firmware 2.1.0 there is a new protobuf field 'destination_tag' in RippleSignTx"]
+        },
+        {
+            "excludedMethods": [
+                "cardanoSignTransaction"
+            ],
+            "min": ["0", "2.1.0"],
             "comment": ["Since firmware 2.1.0 there is a new protobuf field 'protocol_magic' in CardanoSignTx"]	
         }
     ]

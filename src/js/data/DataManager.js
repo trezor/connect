@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { httpRequest } from '../utils/networkUtils';
 import { parseBridgeJSON } from '../utils/browser';
@@ -58,7 +57,7 @@ export type Config = {
     +supportedBrowsers: { [key: string]: Browser },
     +supportedFirmware: Array<{|
         +coinType?: string,
-        +coin?: string,
+        +coin?: string | string[],
         +excludedMethods?: Array<string>,
         +min?: Array<string>,
         +max?: Array<string>,
