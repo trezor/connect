@@ -7,7 +7,7 @@ import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
-import BlockBook, { create as createBackend } from '../../backend';
+import { initBlockchain } from '../../backend/BlockchainLink';
 import signTx from './helpers/signtx';
 import verifyTx from './helpers/signtxVerify';
 
@@ -44,7 +44,6 @@ type Params = {
 
 export default class SignTransaction extends AbstractMethod {
     params: Params;
-    backend: BlockBook;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -135,10 +134,13 @@ export default class SignTransaction extends AbstractMethod {
         let refTxs: Array<RefTransaction> = [];
         if (!params.refTxs) {
             // initialize backend
-            const backend = await createBackend(params.coinInfo);
             const hdInputs: Array<BuildTxInput> = params.inputs.map(inputToHD);
-            const bjsRefTxs = await backend.loadTransactions(getReferencedTransactions(hdInputs));
-            refTxs = transformReferencedTransactions(bjsRefTxs);
+            const refTxsIds = getReferencedTransactions(hdInputs);
+            if (refTxsIds.length > 0) {
+                const blockchain = await initBlockchain(params.coinInfo);
+                const bjsRefTxs = await blockchain.getReferencedTransactions(refTxsIds);
+                refTxs = transformReferencedTransactions(bjsRefTxs);
+            }
         } else {
             refTxs = params.refTxs;
         }
@@ -161,8 +163,8 @@ export default class SignTransaction extends AbstractMethod {
         );
 
         if (params.push) {
-            const backend = await createBackend(params.coinInfo);
-            const txid = await backend.sendTransactionHex(response.serializedTx);
+            const blockchain = await initBlockchain(params.coinInfo);
+            const txid = await blockchain.pushTransaction(response.serializedTx);
             return {
                 ...response,
                 txid,
