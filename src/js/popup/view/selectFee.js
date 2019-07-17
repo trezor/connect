@@ -26,35 +26,43 @@ export const updateCustomFee = (payload: $PropertyType<UpdateCustomFee, 'payload
         return;
     }
 
-    const lastFee = fees[fees.length - 1];
-    if (lastFee.name === 'custom') {
-        fees[fees.length - 1] = payload.level;
-    } else {
-        fees.push(payload.level);
+    // replace values
+    fees.splice(0, fees.length);
+    // add new fees from message
+    fees.push(...payload.feeLevels);
+
+    const customFee = fees.find(f => f.name === 'custom');
+    if (customFee) {
+        if (customFee.fee === '0') {
+            customFeeLabel.innerHTML = 'Insufficient funds';
+        } else {
+            customFeeLabel.innerHTML = `
+                <span class="fee-amount">${formatAmount(customFee.fee, payload.coinInfo)}</span>
+                <span class="fee-time">${formatTime(customFee.minutes)}</span>
+            `;
+        }
     }
 
-    if (payload.level.fee) {
-        customFeeLabel.innerHTML = formatAmount(payload.level.fee, payload.coinInfo);
-    } else {
-        customFeeLabel.innerHTML = 'Insufficient funds';
-    }
     // eslint-disable-next-line no-use-before-define
     validation(payload.coinInfo);
 };
 
 const validation = (coinInfo: BitcoinNetworkInfo) => {
-    if (selectedFee) {
-        const selectedName: string = selectedFee.getAttribute('data-fee') || 'custom';
-        const selectedValue = fees.find(f => f.name === selectedName);
-        const sendButton: HTMLElement = container.getElementsByClassName('send-button')[0];
+    const sendButton: HTMLElement = container.getElementsByClassName('send-button')[0];
+    if (!selectedFee) {
+        sendButton.setAttribute('disabled', 'disabled');
+        sendButton.innerHTML = 'Send';
+        return;
+    }
+    const selectedName: string = selectedFee.getAttribute('data-fee') || 'custom';
+    const selectedValue = fees.find(f => f.name === selectedName);
 
-        if (selectedValue && selectedValue.fee !== '0') {
-            sendButton.removeAttribute('disabled');
-            sendButton.innerHTML = `Send ${ formatAmount(selectedValue.total, coinInfo) }`;
-        } else {
-            sendButton.setAttribute('disabled', 'disabled');
-            sendButton.innerHTML = 'Send';
-        }
+    if (selectedValue && selectedValue.fee !== '0') {
+        sendButton.removeAttribute('disabled');
+        sendButton.innerHTML = `Send ${ formatAmount(selectedValue.total, coinInfo) }`;
+    } else {
+        sendButton.setAttribute('disabled', 'disabled');
+        sendButton.innerHTML = 'Send';
     }
 };
 
@@ -79,7 +87,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         if (level.name === 'custom') return;
 
         let feeName: string = level.name;
-        if (level.name === 'normal' && level.fee) {
+        if (level.name === 'normal' && level.fee !== '0') {
             feeName = `<span>${level.name}</span>
                 <span class="fee-subtitle">recommended</span>`;
         }
@@ -113,7 +121,6 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
     // references to html elements
     const sendButton: HTMLElement = container.getElementsByClassName('send-button')[0];
     const opener: HTMLElement = container.getElementsByClassName('opener')[0];
-    const custom: HTMLElement = container.getElementsByClassName('custom-fee')[0];
     const customFeeLabel = opener.getElementsByClassName('fee-info')[0];
 
     const onFeeSelect = (event: MouseEvent): void => {
@@ -128,21 +135,16 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         }
     };
 
-    // find all buttons excluding custom fee button
+    // find all buttons which has composed transaction and add click event listener to it
     const feeButtons: NodeList<HTMLElement> = feeList.querySelectorAll('[data-fee]');
     for (let i = 0; i < feeButtons.length; i++) {
         feeButtons.item(i).addEventListener('click', onFeeSelect);
-
-        // Select normal fee on default
-        if (feeButtons.item(i).dataset.fee === 'normal') {
-            feeButtons.item(i).click();
-        }
     }
 
     // custom fee button logic
     let composingTimeout: number = 0;
     opener.onclick = () => {
-        if (custom.className.indexOf('active') >= 0) return;
+        if (opener.className.indexOf('active') >= 0) return;
 
         if (selectedFee) {
             selectedFee.classList.remove('active');
@@ -166,8 +168,8 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
             customFeeDefaultValue = composedCustomFee.feePerByte;
         }
 
-        custom.classList.add('active');
-        selectedFee = custom;
+        opener.classList.add('active');
+        selectedFee = opener;
         // eslint-disable-next-line no-use-before-define
         focusInput(customFeeDefaultValue);
     };
@@ -218,17 +220,6 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
                     type: 'compose-custom',
                     value,
                 }));
-
-                // updateCustomFee({
-                //     fee: {
-                //         name: "custom",
-                //         minutes: 10,
-                //         fee: 123,
-                //         bytes: 200,
-                //         feePerByte: 30
-                //     },
-                //     coinInfo: data.coinInfo,
-                // })
             };
 
             composingTimeout = window.setTimeout(composeCustomFeeTimeoutHandler, 800);
@@ -250,6 +241,22 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
             type: 'send',
             value: selectedName || 'custom',
         }));
+        showView('loader');
     };
+
+    // select default fee level
+    const defaultLevel = feeList.querySelectorAll('[data-fee="normal"]')[0];
+    if (defaultLevel) {
+        defaultLevel.click();
+    } else {
+        // normal level not available, try to select first active button or custom fee
+        const allLevels = feeList.querySelectorAll('.list');
+        for (let i = 0; i < allLevels.length; i++) {
+            if (!allLevels[i].hasAttribute('disabled')) {
+                allLevels[i].click();
+                break;
+            }
+        }
+    }
 };
 

@@ -14,7 +14,7 @@ export type SelectFeeLevel = {
 
 export type FeeLevel = {
     type: 'bitcoin',
-    name: 'high' | 'normal' | 'economy' | 'low' | 'custom',
+    name: string,
     info: {
         fee: string,
         blocks: number,
