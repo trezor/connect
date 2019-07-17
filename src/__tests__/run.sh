@@ -53,6 +53,8 @@ signTransactionZcash_subtests="signTwoInputsTxVersion1 signInputVersion2 signTwo
 signTransactionDash_subtests="normalTx specialInput"
 signTransactionMultisig_subtests="twoOfThree fifteenOfFifteen missingPubkey"
 signTransactionMultisigChange_subtests="externalExternal externalInternal internalExternal multisigExternalExternal"
+signTransactionMultisigBech32_subtests="sendBech32 sendP2sh sendAddress"
+signTransactionMultisigDoge_subtests="regular bigInput"
 
 verifyMessage_subtests="verify verifyLong verifyTestnet verifyBcash verifyBitcoind"
 verifyMessageSegwit_subtests="verify verifyLong verifyTestnet"
@@ -67,9 +69,9 @@ nemSignTransactionMultisig_subtests="aggregateModification multisig multisigSign
 nemSignTransactionOthers_subtests="importanceTransfer provisionNamespace"
 nemSignTransactionTransfers_subtests="simple xemAsMosaic unknownMosaic knownMosaic knownMosaicWithLevy multipleMosaics"
 
-getAccountInfo_subtests="firstSegwitAccount firstLegacyAccount segwitAccountFromSegwitXpub segwitAccountFromLegacyXpub legacyAccountFromLegacyXpub emptyAccount invalidPath"
+getAccountInfo_subtests="firstSegwitAccount firstLegacyAccount emptyAccount segwitAccountFromDescriptor legacyAccountFromDescriptor ethereumAccount ethereumAccountFromDescriptor rippleAccount rippleAccountFromDescriptor invalidPath"
 
-passphrase_subtests="correctPassphrase wrongPassphrase"
+# passphrase_subtests="correctPassphrase wrongPassphrase"
 ################# Possible subtests: END
 
 
