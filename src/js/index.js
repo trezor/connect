@@ -526,6 +526,10 @@ class TrezorConnect {
         return await call({ method: 'firmwareUpload', ...params });
     }
 
+    static firmwareUpdate: $T.FirmwareUpload = async (params) => {
+        return await call({ method: 'firmwareUpdate', ...params });
+    }
+
     static recoveryDevice: $T.RecoveryDevice = async (params) => {
         return await call({ method: 'recoveryDevice', ...params });
     }

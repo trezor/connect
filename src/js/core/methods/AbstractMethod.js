@@ -27,6 +27,7 @@ export default class AbstractMethod implements MethodInterface {
     hasExpectedDeviceState: boolean;
     keepSession: boolean;
     skipFinalReload: boolean;
+    skipFirmwareCheck: boolean;
     overridePreviousCall: boolean;
     overridden: boolean;
     name: string; // method name
@@ -40,6 +41,7 @@ export default class AbstractMethod implements MethodInterface {
     firmwareRange: FirmwareRange;
     requiredPermissions: Array<string>;
     allowDeviceMode: Array<string>; // used in device management (like ResetDevice allow !UI.INITIALIZED)
+    requireDeviceMode: Array<string>;
     debugLink: boolean;
 
     +confirmation: () => Promise<boolean>;
@@ -65,11 +67,13 @@ export default class AbstractMethod implements MethodInterface {
         this.hasExpectedDeviceState = payload.device ? payload.device.hasOwnProperty('state') : false;
         this.keepSession = typeof payload.keepSession === 'boolean' ? payload.keepSession : false;
         this.skipFinalReload = typeof payload.skipFinalReload === 'boolean' ? payload.skipFinalReload : false;
+        this.skipFirmwareCheck = false;
         this.overridePreviousCall = typeof payload.override === 'boolean' ? payload.override : false;
         this.overridden = false;
         this.useEmptyPassphrase = typeof payload.useEmptyPassphrase === 'boolean' ? payload.useEmptyPassphrase : false;
         this.allowSeedlessDevice = typeof payload.allowSeedlessDevice === 'boolean' ? payload.allowSeedlessDevice : false;
         this.allowDeviceMode = [];
+        this.requireDeviceMode = [];
         if (this.allowSeedlessDevice) {
             this.allowDeviceMode = [ UI.SEEDLESS ];
         }
@@ -168,16 +172,25 @@ export default class AbstractMethod implements MethodInterface {
     }
 
     async checkFirmwareRange(isUsingPopup: boolean): Promise<?$PropertyType<FirmwareException, 'type'>> {
+        if (this.skipFirmwareCheck) {
+            return null;
+        }
         const device = this.device;
         if (!device.features) return null;
         const model = device.features.major_version;
         const range = this.firmwareRange[model];
+
+        if (device.firmwareStatus === 'none') {
+            return UI.FIRMWARE_NOT_INSTALLED;
+        }
         if (range.min === '0') {
             return UI.FIRMWARE_NOT_SUPPORTED;
         }
+
         if (device.firmwareStatus === 'required' || semvercmp(device.getVersion(), range.min) < 0) {
             return UI.FIRMWARE_OLD;
         }
+
         if (range.max !== '0' && semvercmp(device.getVersion(), range.max) > 0) {
             if (isUsingPopup) {
                 // wait for popup handshake
