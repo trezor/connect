@@ -179,6 +179,10 @@ export default class AbstractMethod implements MethodInterface {
         if (!device.features) return null;
         const model = device.features.major_version;
         const range = this.firmwareRange[model];
+
+        if (device.firmwareStatus === 'none') {
+            return UI.FIRMWARE_NOT_INSTALLED;
+        }
         if (range.min === '0') {
             return UI.FIRMWARE_NOT_SUPPORTED;
         }

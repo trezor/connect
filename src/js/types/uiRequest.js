@@ -144,7 +144,11 @@ export type UnexpectedDeviceMode = {
 }
 
 export type FirmwareException = {
-    +type: typeof UI.FIRMWARE_OLD | typeof UI.FIRMWARE_OUTDATED | typeof UI.FIRMWARE_NOT_SUPPORTED | typeof UI.FIRMWARE_NOT_COMPATIBLE,
+    +type: typeof UI.FIRMWARE_OLD
+        | typeof UI.FIRMWARE_OUTDATED
+        | typeof UI.FIRMWARE_NOT_SUPPORTED
+        | typeof UI.FIRMWARE_NOT_COMPATIBLE
+        | typeof UI.FIRMWARE_NOT_INSTALLED,
     payload: Device,
 }
 

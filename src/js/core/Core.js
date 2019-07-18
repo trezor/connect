@@ -428,6 +428,24 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         const MAX_PIN_TRIES: number = 3;
         // This function will run inside Device.run() after device will be acquired and initialized
         const inner = async (): Promise<void> => {
+            const firmwareException = await method.checkFirmwareRange(isUsingPopup);
+            if (firmwareException) {
+                if (isUsingPopup) {
+                    await getPopupPromise().promise;
+                    // show unexpected state information
+                    postMessage(new UiMessage(firmwareException, device.toMessageObject()));
+
+                    // wait for device disconnect
+                    await createUiPromise(DEVICE.DISCONNECT, device).promise;
+                    // interrupt process and go to "final" block
+                    return Promise.resolve();
+                } else {
+                    // return error if not using popup
+                    postMessage(new ResponseMessage(method.responseID, false, { error: firmwareException }));
+                    return Promise.resolve();
+                }
+            }
+
             // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
             const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.NOT_IN_BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) = device.hasUnexpectedMode(method.allowDeviceMode, method.requireDeviceMode);
             if (unexpectedMode) {
@@ -480,23 +498,6 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 await getPopupPromise().promise;
                 // show notification
                 postMessage(new UiMessage(UI.DEVICE_NEEDS_BACKUP, device.toMessageObject()));
-            }
-
-            const firmwareException = await method.checkFirmwareRange(isUsingPopup);
-            if (firmwareException) {
-                if (isUsingPopup) {
-                    // show unexpected state information
-                    postMessage(new UiMessage(firmwareException, device.toMessageObject()));
-
-                    // wait for device disconnect
-                    await createUiPromise(DEVICE.DISCONNECT, device).promise;
-                    // interrupt process and go to "final" block
-                    return Promise.resolve();
-                } else {
-                    // return error if not using popup
-                    postMessage(new ResponseMessage(method.responseID, false, { error: firmwareException }));
-                    return Promise.resolve();
-                }
             }
 
             // notify if firmware is outdated but not required

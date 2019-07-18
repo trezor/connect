@@ -96,6 +96,9 @@ const handleMessage = (event: PostMessageEvent): void => {
         case UI.SEEDLESS :
             showView('seedless');
             break;
+        case UI.FIRMWARE_NOT_INSTALLED :
+            showView('firmware-install');
+            break;
         case UI.FIRMWARE_OLD :
             view.firmwareRequiredUpdate(message.payload);
             break;
