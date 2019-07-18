@@ -32,6 +32,7 @@ reset=$(tput sgr0)
 ################# Device config vars
 mnemonic_all="all all all all all all all all all all all all"
 mnemonic_12="alcohol woman abuse must during monitor noble actual mixed trade anger aisle"
+mnemonic_abandon="abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
 pin_0=""
 ################# Device config vars: END
 

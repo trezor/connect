@@ -345,6 +345,18 @@ export default class DeviceCommands {
     // StellarSignTx message can be found inside ./core/methods/helpers/stellarSignTx
     // Stellar: end
 
+    // EOS: begin
+    async eosGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.EosPublicKey> {
+        const response: MessageResponse<trezor.EosPublicKey> = await this.typedCall('EosGetPublicKey', 'EosPublicKey', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    // EosSignTx message can be found inside ./core/methods/helpers/eosSignTx
+    // EOS: end
+
     // Cardano: begin
     async cardanoGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoPublicKey> {
         const response: MessageResponse<trezor.CardanoPublicKey> = await this.typedCall('CardanoGetPublicKey', 'CardanoPublicKey', {

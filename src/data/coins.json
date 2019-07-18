@@ -2635,6 +2635,20 @@
         },
         {
             "blockchain_link": {},
+            "curve": "secp256k1",
+            "decimals": 4,
+            "name": "EOS",
+            "shortcut": "EOS",
+            "slip44": 194,
+            "support": {
+                "connect": true,
+                "trezor1": false,
+                "trezor2": "2.1.1",
+                "webwallet": false
+            }
+        },
+        {
+            "blockchain_link": {},
             "curve": "ed25519",
             "decimals": 8,
             "name": "Lisk",
