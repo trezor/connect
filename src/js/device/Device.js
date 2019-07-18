@@ -451,7 +451,7 @@ export default class Device extends EventEmitter {
     }
 
     isBootloader(): boolean {
-        return this.features.bootloader_mode && (typeof this.features.firmware_present === 'boolean' && this.features.firmware_present);
+        return this.features.bootloader_mode;
     }
 
     isInitialized(): boolean {
@@ -519,8 +519,10 @@ export default class Device extends EventEmitter {
         return this.features ? this.features.major_version === 1 : false;
     }
 
-    hasUnexpectedMode(allow: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) {
+    hasUnexpectedMode(allow: Array<string>, require: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.NOT_IN_BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) {
+        // both allow and require cases might generate single unexpected mode
         if (this.features) {
+            // allow cases
             if (this.isBootloader() && !allow.includes(UI.BOOTLOADER)) {
                 return UI.BOOTLOADER;
             }
@@ -529,6 +531,11 @@ export default class Device extends EventEmitter {
             }
             if (this.isSeedless() && !allow.includes(UI.SEEDLESS)) {
                 return UI.SEEDLESS;
+            }
+
+            // require cases
+            if (!this.isBootloader() && require.includes(UI.BOOTLOADER)) {
+                return UI.NOT_IN_BOOTLOADER;
             }
         }
         return null;

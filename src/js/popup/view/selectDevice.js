@@ -62,7 +62,7 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
 
     // Show readable devices first
     payload.devices.sort((d1, d2) => {
-        if (d1.type === 'unreadable' && !d2.type !== 'unreadable') {
+        if (d1.type === 'unreadable' && d2.type !== 'unreadable') {
             return 1;
         } else if (d1.type !== 'unreadable' && d2.type === 'unreadable') {
             return -1;

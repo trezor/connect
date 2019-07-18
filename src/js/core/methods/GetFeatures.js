@@ -13,6 +13,7 @@ export default class GetFeatures extends AbstractMethod {
         this.useUi = false;
         this.allowDeviceMode = [...this.allowDeviceMode, UI.INITIALIZE];
         this.useDeviceState = false;
+        this.skipFirmwareCheck = true;
     }
 
     async run(): Promise<Object> {

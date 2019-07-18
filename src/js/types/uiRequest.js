@@ -139,12 +139,16 @@ export type BrowserMessage = {
 }
 
 export type UnexpectedDeviceMode = {
-    +type: typeof UI.BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | typeof UI.DEVICE_NEEDS_BACKUP,
+    +type: typeof UI.BOOTLOADER | typeof UI.NOT_IN_BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS | typeof UI.DEVICE_NEEDS_BACKUP,
     payload: Device,
 }
 
 export type FirmwareException = {
-    +type: typeof UI.FIRMWARE_OLD | typeof UI.FIRMWARE_OUTDATED | typeof UI.FIRMWARE_NOT_SUPPORTED | typeof UI.FIRMWARE_NOT_COMPATIBLE,
+    +type: typeof UI.FIRMWARE_OLD
+        | typeof UI.FIRMWARE_OUTDATED
+        | typeof UI.FIRMWARE_NOT_SUPPORTED
+        | typeof UI.FIRMWARE_NOT_COMPATIBLE
+        | typeof UI.FIRMWARE_NOT_INSTALLED,
     payload: Device,
 }
 

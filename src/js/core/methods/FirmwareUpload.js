@@ -22,8 +22,10 @@ export default class FirmwareUpload extends AbstractMethod {
         super(message);
         this.useEmptyPassphrase = true;
         this.requiredPermissions = ['management'];
-        this.allowDeviceMode = [...this.allowDeviceMode, UI.BOOTLOADER, UI.INITIALIZE];
+        this.allowDeviceMode = [UI.BOOTLOADER, UI.INITIALIZE];
+        this.requireDeviceMode = [UI.BOOTLOADER];
         this.useDeviceState = false;
+        this.skipFirmwareCheck = true;
 
         const payload: Object = message.payload;
 
