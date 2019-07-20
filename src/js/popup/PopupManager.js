@@ -131,7 +131,7 @@ export default class PopupManager extends EventEmitter {
         if (this.extension) {
             // $FlowIssue chrome not declared outside
             chrome.windows.getCurrent(null, currentWindow => {
-                // Request comming from extension popup,
+                // Request coming from extension popup,
                 // create new window above instead of opening new tab
                 if (currentWindow.type !== 'normal') {
                     // $FlowIssue chrome not declared outside
@@ -176,6 +176,7 @@ export default class PopupManager extends EventEmitter {
                 return;
             }
             this.extensionPort = port;
+            // $FlowIssue need to update ChromePort definition
             this.extensionPort.onMessage.addListener(this.handleExtensionMessage);
         } else if (port.name === 'trezor-usb-permissions') {
             port.postMessage({ broadcast: this.broadcast });

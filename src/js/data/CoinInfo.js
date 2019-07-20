@@ -7,9 +7,15 @@ const bitcoinNetworks: Array<BitcoinNetworkInfo> = [];
 const ethereumNetworks: Array<EthereumNetworkInfo> = [];
 const miscNetworks: Array<MiscNetworkInfo> = [];
 
-export const cloneCoinInfo: <T>(info: T) => T = (ci) => {
-    return JSON.parse(JSON.stringify(ci));
-};
+export function cloneCoinInfo<T>(info: T): T {
+    const jsonString = JSON.stringify(info);
+    if (jsonString === undefined) {
+        // jsonString === undefined IF and only IF obj === undefined
+        // therefore no need to clone
+        return info;
+    }
+    return JSON.parse(jsonString);
+}
 
 export const getBitcoinNetwork = (pathOrName: Array<number> | string): ?BitcoinNetworkInfo => {
     const networks: Array<BitcoinNetworkInfo> = cloneCoinInfo(bitcoinNetworks);
