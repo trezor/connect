@@ -1,8 +1,7 @@
 /* @flow */
 import BigNumber from 'bignumber.js';
-import {
-    buildTx,
-} from 'hd-wallet';
+import { Transaction as BitcoinJsTransaction } from '@trezor/utxo-lib';
+import { buildTx } from 'hd-wallet';
 
 import Fees from './Fees';
 import { initBlockchain } from '../../../backend/BlockchainLink';
@@ -54,8 +53,8 @@ export default class TransactionComposer {
                 height: u.blockHeight,
                 tsize: 0, // doesn't matter
                 vsize: 0, // doesn't matter
-                coinbase: typeof u.coinbase === 'string',
-                own: allAddresses.indexOf(u.address) >= 0,
+                coinbase: typeof u.coinbase === 'boolean' ? u.coinbase : false, // decide it it can be spent immediately (false) or after 100 conf (true)
+                own: allAddresses.indexOf(u.address) >= 0, // decide if it can be spent immediately (own) or after 6 conf (not own)
             };
         });
     }
@@ -80,8 +79,6 @@ export default class TransactionComposer {
                 const tx: BuildTxResult = this.compose(level.info.fee);
                 if (tx.type === 'final') {
                     atLeastOneValid = true;
-                } else if (tx.type === 'error' && tx.error === 'TWO-SEND-MAX') {
-                    throw new Error('Cannot compose transaction with two send-max outputs');
                 }
                 this.composed[ level.name ] = tx;
             }
