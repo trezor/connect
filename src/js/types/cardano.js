@@ -55,13 +55,13 @@ export type CardanoGetAddress$$ = $Common & {
 
 // Sign transaction
 
-type CardanoInput = {
+export type CardanoInput = {
     path: $Path,
     prev_hash: string,
     prev_index: number,
     type: number,
 }
-type CardanoOutput = {
+export type CardanoOutput = {
     path: $Path,
     amount: string,
 } | {

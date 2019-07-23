@@ -10,8 +10,7 @@ import type {
     ExpectedCardanoSignTransactionResponse,
 } from 'flowtype/tests/cardano-sign-transaction';
 
-// Data from:
-// https://github.com/trezor/python-trezor/blob/master/trezorlib/tests/device_tests/test_msg_cardano_sign_transaction.py
+// vectors from https://github.com/trezor/trezor-firmware/tree/master/python/trezorlib/tests/device_tests/test_msg_cardano_sign_transaction.py
 
 const signMainnetNoChange = (): SubtestSignTransaction => {
     const inputs = [

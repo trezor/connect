@@ -52,6 +52,7 @@ const startTestingPayloads = (testPayloads: Array<TestPayload>, expectedResponse
 const MNEMONICS = {
     'mnemonic_12': 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
     'mnemonic_all': 'all all all all all all all all all all all all',
+    'mnemonic_abandon': 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
 };
 
 const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> => {

@@ -5,7 +5,7 @@ trap 'cleanup' INT
 # Assuming this script is in the root of "trezor-connect"
 base_path=`pwd`
 trezord_path="${base_path}/../trezord-go"
-emulator_path="${base_path}/../trezor-core"
+emulator_path="${base_path}/../trezor-firmware/core"
 
 should_start_emulator="true"
 
@@ -32,6 +32,7 @@ reset=$(tput sgr0)
 ################# Device config vars
 mnemonic_all="all all all all all all all all all all all all"
 mnemonic_12="alcohol woman abuse must during monitor noble actual mixed trade anger aisle"
+mnemonic_abandon="abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
 pin_0=""
 ################# Device config vars: END
 

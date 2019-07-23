@@ -2,7 +2,13 @@
 'use strict';
 
 export function clone<T>(obj: T): T {
-    return JSON.parse(JSON.stringify(obj));
+    const jsonString = JSON.stringify(obj);
+    if (jsonString === undefined) {
+        // jsonString === undefined IF and only IF obj === undefined
+        // therefore no need to clone
+        return obj;
+    }
+    return JSON.parse(jsonString);
 }
 
 export function entries<T>(obj: { [string]: T }): Array<[string, T]> {

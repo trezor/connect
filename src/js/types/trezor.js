@@ -677,6 +677,176 @@ export type RippleSignedTx = {
     serialized_tx: string,
 }
 
+// EOS types
+export type EosPublicKey = {
+    wif_public_key: string,
+    raw_public_key: string,
+}
+
+export type EosTxActionRequest = {
+    data_size: ?number,
+}
+
+export type EosTxHeader = {
+    expiration: number,
+    ref_block_num: number,
+    ref_block_prefix: number,
+    max_net_usage_words: number,
+    max_cpu_usage_ms: number,
+    delay_sec: number,
+}
+
+export type EosSignTx = {
+    address_n: Array<number>,
+    chain_id: string,
+    header: ?EosTxHeader,
+    num_actions: number,
+}
+
+export type EosAsset = {
+    amount: string, // uint64 as string
+    symbol: string, // uint64 as string
+}
+
+export type EosPermissionLevel = {
+    actor: string, // uint64 as string
+    permission: string, // uint64 as string
+}
+
+export type EosAuthorizationKey = {
+    type: number,
+    key: string,
+    // address_n?: Array<number>, // this field is not implemented in FW
+    weight: number,
+}
+
+export type EosAuthorization = {
+    threshold: number,
+    keys: Array<EosAuthorizationKey>,
+    accounts: Array<{
+        account: EosPermissionLevel,
+        weight: number,
+    }>,
+    waits: Array<{
+        wait_sec: number,
+        weight: number,
+    }>,
+}
+
+export type EosActionCommon = {
+    account: string, // uint64 as string
+    name: string, // uint64 as string
+    authorization: Array<EosPermissionLevel>,
+}
+
+export type EosActionTransfer = {
+    sender: string, // uint64 as string
+    receiver: string, // uint64 as string
+    quantity: EosAsset,
+    memo?: string,
+}
+
+export type EosActionDelegate = {
+    sender: string, // uint64 as string
+    receiver: string, // uint64 as string
+    net_quantity: EosAsset,
+    cpu_quantity: EosAsset,
+    transfer?: boolean,
+}
+
+export type EosActionUndelegate = {
+    sender: string, // uint64 as string
+    receiver: string, // uint64 as string
+    net_quantity: EosAsset,
+    cpu_quantity: EosAsset,
+}
+
+export type EosActionBuyRam = {
+    payer: string, // uint64 as string
+    receiver: string, // uint64 as string
+    quantity: EosAsset,
+}
+
+export type EosActionBuyRamBytes = {
+    payer: string, // uint64 as string
+    receiver: string, // uint64 as string
+    bytes: number,
+}
+
+export type EosActionSellRam = {
+    account: string, // uint64 as string
+    bytes: number,
+}
+
+export type EosActionVoteProducer = {
+    voter: string, // uint64 as string
+    proxy: string, // uint64 as string
+    producers: Array<string>, // uint64[] as string
+}
+
+export type EosActionRefund = {
+    owner: string, // uint64 as string
+}
+
+export type EosActionUpdateAuth = {
+    account: string, // uint64 as string
+    permission: string, // uint64 as string
+    parent: string, // uint64 as string
+    auth: EosAuthorization,
+}
+
+export type EosActionDeleteAuth = {
+    account: string, // uint64 as string
+    permission: string, // uint64 as string
+}
+
+export type EosActionLinkAuth = {
+    account: string, // uint64 as string
+    code: string, // uint64 as string
+    type: string, // uint64 as string
+    requirement: string, // uint64 as string
+}
+
+export type EosActionUnlinkAuth = {
+    account: string, // uint64 as string
+    code: string, // uint64 as string
+    type: string, // uint64 as string
+}
+
+export type EosActionNewAccount = {
+    creator: string, // uint64 as string
+    name: string, // uint64 as string
+    owner: EosAuthorization,
+    active: EosAuthorization,
+}
+
+export type EosActionUnknown = {
+    data_size: number,
+    data_chunk: string,
+}
+
+export type EosTxActionAck = {
+    common?: EosActionCommon,
+    transfer?: EosActionTransfer,
+    delegate?: EosActionDelegate,
+    undelegate?: EosActionUndelegate,
+    refund?: EosActionRefund,
+    buy_ram?: EosActionBuyRam,
+    buy_ram_bytes?: EosActionBuyRamBytes,
+    sell_ram?: EosActionSellRam,
+    vote_producer?: EosActionVoteProducer,
+    update_auth?: EosActionUpdateAuth,
+    delete_auth?: EosActionDeleteAuth,
+    link_auth?: EosActionLinkAuth,
+    unlink_auth?: EosActionUnlinkAuth,
+    new_account?: EosActionNewAccount,
+    unknown?: EosActionUnknown,
+}
+
+export type EosSignedTx = {
+    signature: string,
+}
+
 // GetAddress response
 export type Address = {
     address: string,

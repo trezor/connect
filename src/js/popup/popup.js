@@ -84,15 +84,20 @@ const handleMessage = (event: PostMessageEvent): void => {
         case UI.REQUEST_BUTTON :
             view.requestButton(message.payload);
             break;
-
         case UI.BOOTLOADER :
             showView('bootloader');
+            break;
+        case UI.NOT_IN_BOOTLOADER :
+            showView('not-in-bootloader');
             break;
         case UI.INITIALIZE :
             showView('initialize');
             break;
         case UI.SEEDLESS :
             showView('seedless');
+            break;
+        case UI.FIRMWARE_NOT_INSTALLED :
+            showView('firmware-install');
             break;
         case UI.FIRMWARE_OLD :
             view.firmwareRequiredUpdate(message.payload);

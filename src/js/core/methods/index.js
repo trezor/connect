@@ -50,6 +50,8 @@ import StellarSignTransaction from './StellarSignTransaction';
 import TezosGetAddress from './TezosGetAddress';
 import TezosGetPublicKey from './TezosGetPublicKey';
 import TezosSignTransaction from './TezosSignTransaction';
+import EosGetPublicKey from './EosGetPublicKey';
+import EosSignTransaction from './EosSignTransaction';
 import VerifyMessage from './VerifyMessage';
 import WipeDevice from './WipeDevice';
 import ApplyFlags from './ApplyFlags';
@@ -58,6 +60,7 @@ import BackupDevice from './BackupDevice';
 import ChangePin from './ChangePin';
 import FirmwareErase from './FirmwareErase';
 import FirmwareUpload from './FirmwareUpload';
+import FirmwareUpdate from './FirmwareUpdate';
 import RecoveryDevice from './RecoveryDevice';
 
 const classes: {[k: string]: any} = {
@@ -106,6 +109,8 @@ const classes: {[k: string]: any} = {
     'tezosGetAddress': TezosGetAddress,
     'tezosGetPublicKey': TezosGetPublicKey,
     'tezosSignTransaction': TezosSignTransaction,
+    'eosGetPublicKey': EosGetPublicKey,
+    'eosSignTransaction': EosSignTransaction,
     'verifyMessage': VerifyMessage,
     'wipeDevice': WipeDevice,
     'applyFlags': ApplyFlags,
@@ -114,6 +119,7 @@ const classes: {[k: string]: any} = {
     'changePin': ChangePin,
     'firmwareErase': FirmwareErase,
     'firmwareUpload': FirmwareUpload,
+    'firmwareUpdate': FirmwareUpdate,
     'recoveryDevice': RecoveryDevice,
 };
 
