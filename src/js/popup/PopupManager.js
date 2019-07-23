@@ -173,6 +173,7 @@ export default class PopupManager extends EventEmitter {
         window.clearTimeout(this.openTimeout);
 
         this.extensionPort = port;
+        // $FlowIssue need to update ChromePort definition
         this.extensionPort.onMessage.addListener(this.handleExtensionMessage);
     }
 
