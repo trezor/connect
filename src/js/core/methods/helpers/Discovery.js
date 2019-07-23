@@ -91,7 +91,7 @@ export default class Discovery extends EventEmitter {
             const descriptor = await this.commands.getAccountDescriptor(this.coinInfo, path);
 
             if (!descriptor) {
-                throw new Error('no descriptor');
+                throw new Error('Discovery descriptor not found');
             }
             if (this.interrupted) return;
 

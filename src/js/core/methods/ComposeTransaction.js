@@ -79,7 +79,6 @@ export default class ComposeTransaction extends AbstractMethod {
             outputs.push(output);
         });
 
-        // TODO: check if sendmax is set more than once
         const sendMax: boolean = outputs.find(o => o.type === 'send-max') !== undefined;
 
         // there should be only one output when using send-max option
@@ -148,7 +147,7 @@ export default class ComposeTransaction extends AbstractMethod {
         const response: string | SignedTx = await this.selectFee(account, utxo);
         // check for interruption
         if (!this.discovery) {
-            throw new Error('selectFee response after dispose');
+            throw new Error('ComposeTransaction selectFee response received after dispose');
         }
 
         if (typeof response === 'string') {
@@ -305,6 +304,7 @@ export default class ComposeTransaction extends AbstractMethod {
         }
 
         const timestamp = coinInfo.hasTimestamp ? Math.round(new Date().getTime() / 1000) : undefined;
+        // const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, (0xffffffff - 2))); // TODO: RBF
         const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0));
         const outputs = tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo));
 
