@@ -1,9 +1,9 @@
 /* @flow */
-
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getSerializedPath } from '../../utils/pathUtils';
+import { getAccountLabel } from '../../utils/accountUtils';
 import { resolveAfter } from '../../utils/promiseUtils';
 import { getCoinInfo } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
@@ -22,18 +22,19 @@ type Params = Array<Request>;
 
 export default class GetAccountInfo extends AbstractMethod {
     params: Params;
-    confirmed: boolean = false;
+    confirmationLabel: string;
     discovery: Discovery | typeof undefined = undefined;
 
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read'];
-        // this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Ripple'), this.firmwareRange);
         this.info = 'Export account info';
         this.useDevice = true;
         this.useUi = true;
 
+        // assume that device will not be used
         let willUseDevice = false;
+
         // create a bundle with only one batch if bundle doesn't exists
         const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
@@ -71,36 +72,26 @@ export default class GetAccountInfo extends AbstractMethod {
             // validate path if exists
             if (batch.path) {
                 batch.address_n = validatePath(batch.path, 3);
+                // since there is no descriptor device will be used
                 willUseDevice = typeof batch.descriptor !== 'string';
             }
             if (!batch.path && !batch.descriptor) {
                 if (payload.bundle.length > 1) {
                     throw Error('Discovery for multiple coins in not supported');
                 }
+                // device will be used in Discovery
                 willUseDevice = true;
             }
             batch.coinInfo = coinInfo;
 
+            // set firmware range
             this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
         });
 
-        // set info
-        // if (payload.bundle.length === 1) {
-        //     this.info = getNetworkLabel('Export #NETWORK account', payload.bundle[0].network);
-        // } else {
-        //     const requestedNetworks: Array<?EthereumNetworkInfo> = payload.bundle.map(b => b.network);
-        //     const uniqNetworks = uniq(requestedNetworks);
-        //     if (uniqNetworks.length === 1 && uniqNetworks[0]) {
-        //         this.info = getNetworkLabel('Export multiple #NETWORK accounts', uniqNetworks[0]);
-        //     } else {
-        //         this.info = 'Export multiple accounts';
-        //     }
-        // }
+        this.params = payload.bundle;
 
         this.useDevice = willUseDevice;
         this.useUi = willUseDevice;
-
-        this.params = payload.bundle;
     }
 
     async confirmation(): Promise<boolean> {
@@ -109,12 +100,52 @@ export default class GetAccountInfo extends AbstractMethod {
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
-        const label: string = this.info;
-        // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'export-address',
-            label,
-        }));
+        if (this.params.length === 1 && !this.params[0].path && !this.params[0].descriptor) {
+            // request confirmation view
+            this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'export-account-info',
+                label: `Export info for ${ this.params[0].coinInfo.label } account of your selection`,
+                customConfirmButton: {
+                    label: 'Proceed to account selection',
+                    className: 'not-empty-css',
+                },
+            }));
+        } else {
+            const keys: { [coin: string]: { coinInfo: CoinInfo, values: Array<string | number[]>} } = {};
+            this.params.forEach(b => {
+                if (!keys[b.coinInfo.label]) {
+                    keys[b.coinInfo.label] = {
+                        coinInfo: b.coinInfo,
+                        values: [],
+                    };
+                }
+                keys[b.coinInfo.label].values.push(b.descriptor || b.address_n);
+            });
+
+            // prepare html for popup
+            const str: string[] = [];
+            Object.keys(keys).forEach((k, i, a) => {
+                const details = keys[k];
+                details.values.forEach((acc, i) => {
+                    // if (i === 0) str += this.params.length > 1 ? ': ' : ' ';
+                    // if (i > 0) str += ', ';
+                    str.push('<span>');
+                    str.push(k);
+                    str.push(' ');
+                    if (typeof acc === 'string') {
+                        str.push(acc);
+                    } else {
+                        str.push(getAccountLabel(acc, details.coinInfo));
+                    }
+                    str.push('</span>');
+                });
+            });
+
+            this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'export-account-info',
+                label: `Export info for: ${str.join('')}`,
+            }));
+        }
 
         // wait for user action
         const uiResp = await uiPromise.promise;
@@ -157,13 +188,13 @@ export default class GetAccountInfo extends AbstractMethod {
                     request.coinInfo,
                     address_n,
                 );
-                if (!accountDescriptor) throw new Error('no descriptor');
-                descriptor = accountDescriptor.descriptor;
+                if (accountDescriptor) {
+                    descriptor = accountDescriptor.descriptor;
+                }
             }
 
             if (typeof descriptor !== 'string') {
-                // this shouldn't happened
-                throw new Error('no descriptor');
+                throw new Error('GetAccountInfo: descriptor not found');
             }
 
             // initialize backend

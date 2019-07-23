@@ -1,5 +1,5 @@
 /* @flow */
-import { toHardened } from './pathUtils';
+import { fromHardened, toHardened } from './pathUtils';
 import type { CoinInfo } from '../types';
 
 type Bip44Options = {
@@ -31,28 +31,22 @@ export const getAccountAddressN = (coinInfo: CoinInfo, accountIndex: number, bip
     }
 };
 
-// export const getNetworkInfo = (label: string, networks: CoinInfo[]): string => {
-//     if (networks.length === 1) {
-//         const name = networks[0].name.toLowerCase().indexOf('testnet') >= 0 ? 'Testnet' : networks[0].name;
-//         return label.replace('#NETWORK', name);
-//     } else {
-//         const uniqNetworks: CoinInfo[] = [];
-//         networks.forEach(n => {
-//             if (uniqNetworks.indexOf(n) < 0) {
-//                 uniqNetworks.push(n);
-//             }
-//         });
+export const getAccountLabel = (path: number[], coinInfo: CoinInfo): string => {
+    if (coinInfo.type === 'bitcoin') {
+        const accountType: number = fromHardened(path[0]);
+        const account: number = fromHardened(path[2]);
+        let prefix: string = '';
 
-//         if (uniqNetworks.length === 1) {
-//             const name = uniqNetworks[0].name.toLowerCase().indexOf('testnet') >= 0 ? 'Testnet' : uniqNetworks[0].name;
-//             return label.replace('#NETWORK', name);
-//         } else {
-
-//         }
-//     }
-//     if (network) {
-//         const name: string = network.name.toLowerCase().indexOf('testnet') >= 0 ? 'Testnet' : network.name;
-//         return label.replace('#NETWORK', name);
-//     }
-//     return label.replace('#NETWORK', '');
-// };
+        if (accountType === 48) {
+            prefix = 'multisig';
+        } else if (accountType === 49 && coinInfo.segwit) {
+            prefix = 'segwit';
+        } else if (accountType === 44 && coinInfo.segwit) {
+            prefix = 'legacy';
+        }
+        return `${ prefix } <span>account #${(account + 1)}</span>`;
+    } else {
+        const account: number = fromHardened(path[4]);
+        return `account #${(account + 1)}`;
+    }
+};
