@@ -243,8 +243,6 @@ const parseEthereumNetworksJson = (json: JSON): void => {
         const network = networksObject[key];
         ethereumNetworks.push({
             type: 'ethereum',
-            blockbook: network.blockbook || [],
-            bitcore: [], // legacy compatibility with bitcoin coinInfo
             blockchainLink: network.blockchain_link,
             blocktime: Math.round(network.blocktime_seconds / 60),
             chain: network.chain,
@@ -272,8 +270,6 @@ const parseMiscNetworksJSON = (json: JSON): void => {
         const network = networksObject[key];
         miscNetworks.push({
             type: 'misc',
-            blockbook: network.blockbook || [], // legacy compatibility with bitcoin coinInfo
-            bitcore: [], // legacy compatibility with bitcoin coinInfo
             blockchainLink: network.blockchain_link,
             blocktime: Math.round(network.blocktime_seconds / 60),
             curve: network.curve,
