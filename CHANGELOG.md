@@ -1,3 +1,13 @@
+# 7.0.4
+__added__
+- Added EOS methods `TrezorConnect.eosGetPublicKey` and `TrezorConnect.eosSignTransaction`
+- Added `TrezorConnect.firmwareUpdate` (management method)
+- Added new firmware releases
+- Added new bridge releases
+__fixed__
+- Dependencies security vulnerabilities
+- Minor fixes in flowtype and tests
+
 # 7.0.3
 __added__
 - Added management methods `applyFlags`, `applySettings`, `backupDevice`, `changePin`, `firmwareErase`, `firmwareUpload`, `recoveryDevice`
