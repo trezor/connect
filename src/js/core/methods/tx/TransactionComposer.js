@@ -1,6 +1,5 @@
 /* @flow */
 import BigNumber from 'bignumber.js';
-import { Transaction as BitcoinJsTransaction } from '@trezor/utxo-lib';
 import { buildTx } from 'hd-wallet';
 
 import Fees from './Fees';
