@@ -21,6 +21,8 @@ nodejs-imports-end */
 
 import type { AccountInfoRequest } from '../types/account';
 
+BitcoinJsTransaction.USE_STRING_VALUES = true;
+
 type Options = {
     coinInfo: CoinInfo,
     postMessage: (message: CoreMessage) => void,

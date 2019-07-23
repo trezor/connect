@@ -31,6 +31,8 @@ type GetHDNode = (path: Array<number>, coinInfo: ?BitcoinNetworkInfo, validation
 
 const changePaths: Array<number> = [];
 
+BitcoinJsTransaction.USE_STRING_VALUES = true;
+
 export default async (getHDNode: GetHDNode,
     inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>,
