@@ -1,3 +1,7 @@
+# 7.0.5
+__fixed__
+- Url encoding in `TrezorConnect.manifest`
+
 # 7.0.4
 __added__
 - Added EOS methods `TrezorConnect.eosGetPublicKey` and `TrezorConnect.eosSignTransaction`
