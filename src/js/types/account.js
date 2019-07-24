@@ -34,6 +34,14 @@ export type AccountTransaction = {
 
     targets: TransactionTarget[],
     tokens: TokenTransfer[],
+    rbf?: boolean,
+    ethereumSpecific?: {
+        status: number,
+        nonce: number,
+        gasLimit: number,
+        gasUsed?: number,
+        gasPrice: string,
+    },
 };
 
 type TokenInfo = {
@@ -55,7 +63,7 @@ type Address = {
     received?: string,
 };
 
-type AccountAddresses = {
+export type AccountAddresses = {
     change: Address[],
     used: Address[],
     unused: Address[],
@@ -69,7 +77,7 @@ export type AccountUtxo = {
     address: string,
     path: string,
     confirmations: number,
-    coinbase?: string,
+    coinbase?: boolean,
 }
 
 export type AccountInfo = {
