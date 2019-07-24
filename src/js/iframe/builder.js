@@ -35,10 +35,11 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
         instance.id = 'trezorconnect';
     }
 
-    const manifestParam = settings.manifest
+    const manifestString = settings.manifest
         ? JSON.stringify(settings.manifest)
         : 'undefined'; // note: btoa(undefined) === btoa('undefined') === "dW5kZWZpbmVk"
-    const src: string = `${settings.iframeSrc}?${ Date.now() }${ manifestParam }`;
+    const manifest = `&version=${settings.version}&manifest=${encodeURIComponent(btoa(JSON.stringify(manifestString)))}`;
+    const src: string = `${settings.iframeSrc}?${ Date.now() }${ manifest }`;
     instance.setAttribute('src', src);
     if (settings.webusb) {
         instance.setAttribute('allow', 'usb');
