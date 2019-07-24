@@ -2,9 +2,9 @@
 
 import AbstractMethod from '../AbstractMethod';
 import { validateParams } from '../helpers/paramsValidator';
-import { NO_COIN_INFO } from '../../../constants/errors';
+import { NO_COIN_INFO, backendNotSupported } from '../../../constants/errors';
 
-import { create as createBlockchainBackend } from '../../../backend/BlockchainLink';
+import { initBlockchain } from '../../../backend/BlockchainLink';
 import { getMiscNetwork } from '../../../data/CoinInfo';
 import type { CoreMessage, MiscNetworkInfo } from '../../../types';
 
@@ -32,6 +32,9 @@ export default class BlockchainEstimateFee extends AbstractMethod {
         if (!coinInfo) {
             throw NO_COIN_INFO;
         }
+        if (!coinInfo.blockchainLink) {
+            throw backendNotSupported(coinInfo.name);
+        }
 
         this.params = {
             coinInfo,
@@ -39,7 +42,7 @@ export default class BlockchainEstimateFee extends AbstractMethod {
     }
 
     async run(): Promise<Array<{ name: string, value: string }>> {
-        const backend = await createBlockchainBackend(this.params.coinInfo, this.postMessage);
+        const backend = await initBlockchain(this.params.coinInfo, this.postMessage);
         return await backend.estimateFee();
     }
 }

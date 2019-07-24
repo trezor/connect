@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { buildTx } from 'hd-wallet';
 
 import Fees from './Fees';
-import { initBlockchain } from '../../../backend/BlockchainLink';
+import BlockchainLink from '../../../backend/BlockchainLink';
 import { getHDPath } from '../../../utils/pathUtils';
 
 import type {
@@ -58,12 +58,11 @@ export default class TransactionComposer {
         });
     }
 
-    async init() {
-        const blockchain = await initBlockchain(this.coinInfo);
+    async init(blockchain: BlockchainLink) {
         const { blockHeight } = await blockchain.getNetworkInfo();
         this.blockHeight = blockHeight;
 
-        await this.feeLevels.load();
+        await this.feeLevels.load(blockchain);
     }
 
     // Composing fee levels for SelectFee view in popup

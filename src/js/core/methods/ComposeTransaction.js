@@ -10,7 +10,7 @@ import * as UI from '../../constants/ui';
 import { getBitcoinNetwork, fixCoinInfoNetwork } from '../../data/CoinInfo';
 
 import { formatAmount } from '../../utils/formatUtils';
-import { NO_COIN_INFO } from '../../constants/errors';
+import { NO_COIN_INFO, backendNotSupported } from '../../constants/errors';
 
 import { initBlockchain } from '../../backend/BlockchainLink';
 
@@ -63,6 +63,9 @@ export default class ComposeTransaction extends AbstractMethod {
         const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
+        }
+        if (!coinInfo.blockchainLink) {
+            throw backendNotSupported(coinInfo.name);
         }
 
         // set required firmware from coinInfo support
@@ -160,7 +163,7 @@ export default class ComposeTransaction extends AbstractMethod {
 
     async selectAccount(): Promise<{ account: DiscoveryAccount, utxo: AccountUtxo[] }> {
         const { coinInfo } = this.params;
-        const blockchain = await initBlockchain(coinInfo);
+        const blockchain = await initBlockchain(coinInfo, this.postMessage);
         const dfd = this.createUiPromise(UI.RECEIVE_ACCOUNT, this.device);
 
         if (this.discovery && this.discovery.completed) {
@@ -237,13 +240,15 @@ export default class ComposeTransaction extends AbstractMethod {
     async selectFee(account: DiscoveryAccount, utxo: AccountUtxo[]): Promise<string | SignedTx> {
         const { coinInfo, outputs } = this.params;
 
+        // get backend instance (it should be initialized before)
+        const blockchain = await initBlockchain(coinInfo, this.postMessage);
         const composer = new TransactionComposer({
             account,
             utxo,
             coinInfo,
             outputs,
         });
-        await composer.init();
+        await composer.init(blockchain);
 
         // try to compose multiple transactions with different fee levels
         // check if any of composed transactions is valid
@@ -298,7 +303,7 @@ export default class ComposeTransaction extends AbstractMethod {
         let refTxs = [];
         const refTxsIds = getReferencedTransactions(tx.transaction.inputs);
         if (refTxsIds.length > 0) {
-            const blockchain = await initBlockchain(coinInfo);
+            const blockchain = await initBlockchain(coinInfo, this.postMessage);
             const bjsRefTxs = await blockchain.getReferencedTransactions(refTxsIds);
             refTxs = transformReferencedTransactions(bjsRefTxs);
         }
@@ -326,7 +331,7 @@ export default class ComposeTransaction extends AbstractMethod {
         );
 
         if (this.params.push) {
-            const blockchain = await initBlockchain(coinInfo);
+            const blockchain = await initBlockchain(coinInfo, this.postMessage);
             const txid: string = await blockchain.pushTransaction(response.serializedTx);
             return {
                 ...response,

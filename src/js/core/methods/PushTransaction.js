@@ -3,7 +3,7 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { getCoinInfo } from '../../data/CoinInfo';
-import { NO_COIN_INFO } from '../../constants/errors';
+import { NO_COIN_INFO, backendNotSupported } from '../../constants/errors';
 import { initBlockchain } from '../../backend/BlockchainLink';
 
 import type { CoreMessage, CoinInfo } from '../../types';
@@ -33,6 +33,9 @@ export default class PushTransaction extends AbstractMethod {
         const coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
+        }
+        if (!coinInfo.blockchainLink) {
+            throw backendNotSupported(coinInfo.name);
         }
 
         if (coinInfo.type === 'bitcoin' && !/^[0-9A-Fa-f]*$/.test(payload.tx)) {

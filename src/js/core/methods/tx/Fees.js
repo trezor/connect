@@ -1,6 +1,6 @@
 /* @flow */
 import BigNumber from 'bignumber.js';
-import { initBlockchain } from '../../../backend/BlockchainLink';
+import BlockchainLink from '../../../backend/BlockchainLink';
 import { feePerUnit } from '../../../utils/formatUtils';
 import type { CoinInfo } from '../../../types';
 import type { FeeLevel } from '../../../types/fee';
@@ -44,9 +44,8 @@ export default class FeeLevels {
         }
     }
 
-    async load() {
+    async load(blockchain: BlockchainLink) {
         try {
-            const blockchain = await initBlockchain(this.coinInfo);
             // get predefined blocks and fill gaps between them
             const blocks: number[] = this.levels.map(l => l.info.blocks).reduce((result: any, bl: number) => {
                 // return first value

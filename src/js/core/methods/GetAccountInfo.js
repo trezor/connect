@@ -6,7 +6,7 @@ import { validatePath, getSerializedPath } from '../../utils/pathUtils';
 import { getAccountLabel } from '../../utils/accountUtils';
 import { resolveAfter } from '../../utils/promiseUtils';
 import { getCoinInfo } from '../../data/CoinInfo';
-import { NO_COIN_INFO } from '../../constants/errors';
+import { NO_COIN_INFO, backendNotSupported } from '../../constants/errors';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
@@ -67,7 +67,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 throw NO_COIN_INFO;
             }
             if (!coinInfo.blockchainLink) {
-                throw new Error('BlockchainLink support not found for ' + coinInfo.name);
+                throw backendNotSupported(coinInfo.name);
             }
             // validate path if exists
             if (batch.path) {
@@ -198,7 +198,7 @@ export default class GetAccountInfo extends AbstractMethod {
             }
 
             // initialize backend
-            const blockchain = await initBlockchain(request.coinInfo);
+            const blockchain = await initBlockchain(request.coinInfo, this.postMessage);
 
             // get account info from backend
             const info = await blockchain.getAccountInfo({
@@ -240,7 +240,7 @@ export default class GetAccountInfo extends AbstractMethod {
 
     async discover(request: Request) {
         const { coinInfo } = request;
-        const blockchain = await initBlockchain(coinInfo);
+        const blockchain = await initBlockchain(coinInfo, this.postMessage);
         const dfd = this.createUiPromise(UI.RECEIVE_ACCOUNT, this.device);
 
         const discovery = new Discovery({
