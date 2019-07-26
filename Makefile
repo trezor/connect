@@ -45,6 +45,7 @@ sync-%:
 	# Before first use: Install awscli (pip install awscli)
 	# Configure access credentials (aws configure), region is "eu-central-1"
 	aws s3 sync --delete --cache-control 'public, max-age=3600' build/ s3://connect.trezor.io/$*/
+	aws cloudfront create-invalidation --distribution-id E3LVNAOGT94E37 --paths '/*'
 
 # Build messages.json from protobuf
 protobuf:
