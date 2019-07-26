@@ -1,4 +1,6 @@
 # 7.0.5
+__added__
+- Added cloudfront cache invalidation
 __fixed__
 - Url encoding in `TrezorConnect.manifest`
 
