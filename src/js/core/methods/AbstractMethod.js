@@ -83,6 +83,7 @@ export default class AbstractMethod implements MethodInterface {
             '1': { min: '1.0.0', max: '0' },
             '2': { min: '2.0.0', max: '0' },
         };
+        this.requiredPermissions = [];
         this.useDevice = true;
         this.useDeviceState = true;
         this.useUi = true;

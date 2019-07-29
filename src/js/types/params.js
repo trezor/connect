@@ -6,6 +6,7 @@ import type {
     RefTransaction,
     DebugLinkDecision,
 } from './trezor';
+import type { AccountAddresses } from './account';
 
 export type $BlockchainDisconnect = {
     coin: string,
@@ -15,9 +16,14 @@ export type $BlockchainEstimateFee = {
     coin: string,
 }
 
+export type SubscriptionAccountInfo = {
+    descriptor: string,
+    addresses?: AccountAddresses, // bitcoin addresses
+}
+
 export type $BlockchainSubscribe = {
-    accounts: Array<any>,
     coin: string,
+    accounts: SubscriptionAccountInfo[],
 }
 
 export type $Common = {

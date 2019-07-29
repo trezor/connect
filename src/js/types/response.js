@@ -38,7 +38,7 @@ export type BlockchainEstimateFee$ = {
 export type BlockchainSubscribe$ = {
     success: true,
     payload: {
-        subscribed: true,
+        subscribed: boolean,
     },
 } | Unsuccessful$;
 
