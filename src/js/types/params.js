@@ -14,6 +14,16 @@ export type $BlockchainDisconnect = {
 
 export type $BlockchainEstimateFee = {
     coin: string,
+    request?: {
+        blocks?: number[],
+        specific?: {
+            conservative?: boolean, // btc
+            txsize?: number, // btc transaction size
+            from?: string, // eth from
+            to?: string, // eth to
+            data?: string, // eth tx data
+        },
+    },
 }
 
 export type SubscriptionAccountInfo = {

@@ -32,7 +32,11 @@ export type BlockchainDisconnect$ = {
 
 export type BlockchainEstimateFee$ = {
     success: true,
-    payload: Array<{ name: string, value: string }>,
+    payload: {
+        feePerUnit: string,
+        feePerTx?: string,
+        feeLimit?: string,
+    }[],
 } | Unsuccessful$;
 
 export type BlockchainSubscribe$ = {

@@ -5,11 +5,14 @@ import { validateParams } from '../helpers/paramsValidator';
 import { NO_COIN_INFO, backendNotSupported } from '../../../constants/errors';
 
 import { initBlockchain } from '../../../backend/BlockchainLink';
-import { getMiscNetwork } from '../../../data/CoinInfo';
-import type { CoreMessage, MiscNetworkInfo } from '../../../types';
+import { getCoinInfo } from '../../../data/CoinInfo';
+import type { CoreMessage, CoinInfo } from '../../../types';
+import type { $BlockchainEstimateFee } from '../../../types/params';
+import type { BlockchainEstimateFee$ } from '../../../types/response';
 
 type Params = {
-    coinInfo: MiscNetworkInfo,
+    coinInfo: CoinInfo,
+    request: $ElementType<$BlockchainEstimateFee, 'request'>,
 };
 
 export default class BlockchainEstimateFee extends AbstractMethod {
@@ -25,9 +28,27 @@ export default class BlockchainEstimateFee extends AbstractMethod {
         // validate incoming parameters
         validateParams(payload, [
             { name: 'coin', type: 'string', obligatory: true },
+            { name: 'request', type: 'object' },
         ]);
 
-        const coinInfo: ?MiscNetworkInfo = getMiscNetwork(payload.coin);
+        const request: $ElementType<$BlockchainEstimateFee, 'request'> = payload.request;
+
+        if (request) {
+            validateParams(request, [
+                { name: 'blocks', type: 'array' },
+                { name: 'specific', type: 'object' },
+            ]);
+            if (request.specific) {
+                validateParams(request.specific, [
+                    { name: 'conservative', type: 'boolean' },
+                    { name: 'data', type: 'string' },
+                    { name: 'from', type: 'string' },
+                    { name: 'to', type: 'string' },
+                    { name: 'txsize', type: 'number' },
+                ]);
+            }
+        }
+        const coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
 
         if (!coinInfo) {
             throw NO_COIN_INFO;
@@ -38,11 +59,13 @@ export default class BlockchainEstimateFee extends AbstractMethod {
 
         this.params = {
             coinInfo,
+            request,
         };
     }
 
-    async run(): Promise<Array<{ name: string, value: string }>> {
-        const backend = await initBlockchain(this.params.coinInfo, this.postMessage);
-        return await backend.estimateFee();
+    async run(): Promise<$ElementType<BlockchainEstimateFee$, 'payload'>> {
+        const { coinInfo, request } = this.params;
+        const backend = await initBlockchain(coinInfo, this.postMessage);
+        return await backend.estimateFee(request || {});
     }
 }
