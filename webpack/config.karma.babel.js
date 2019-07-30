@@ -44,14 +44,6 @@ module.exports = {
             },
             {
                 type: 'javascript/auto',
-                test: /\.wasm$/,
-                loader: 'file-loader',
-                query: {
-                    name: 'js/[name].[ext]',
-                },
-            },
-            {
-                type: 'javascript/auto',
                 test: /\.json/,
                 exclude: /node_modules/,
                 loader: 'file-loader',

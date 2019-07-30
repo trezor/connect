@@ -33,14 +33,6 @@ module.exports = {
                 exclude: [/node_modules/],
                 use: ['babel-loader'],
             },
-            {
-                type: 'javascript/auto',
-                test: /\.wasm$/,
-                loader: 'file-loader',
-                query: {
-                    name: 'js/[name].[ext]',
-                },
-            },
         ],
     },
     resolve: {
@@ -59,7 +51,7 @@ module.exports = {
         new webpack.NormalModuleReplacementPlugin(/.blake2b$/, './blake2b.js'),
         new webpack.NormalModuleReplacementPlugin(/env\/browser$/, './env/react-native'),
         new webpack.NormalModuleReplacementPlugin(/env\/browser\/workers$/, '../env/react-native/workers'),
-        new webpack.NormalModuleReplacementPlugin(/utils\/networkUtils$/, '../env/react-native/networkUtils'),
+        new webpack.NormalModuleReplacementPlugin(/env\/node\/networkUtils$/, '../env/react-native/networkUtils'),
 
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),

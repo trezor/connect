@@ -9,7 +9,7 @@ import {
 
 import webpack from 'webpack';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
-// import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
 
 module.exports = {
     mode: 'production',
@@ -39,14 +39,6 @@ module.exports = {
                 exclude: [/node_modules/],
                 use: ['babel-loader'],
             },
-            {
-                type: 'javascript/auto',
-                test: /\.wasm$/,
-                loader: 'file-loader',
-                query: {
-                    name: 'js/[name].[ext]',
-                },
-            },
         ],
     },
     resolve: {
@@ -57,15 +49,12 @@ module.exports = {
     },
     plugins: [
         new webpack.NormalModuleReplacementPlugin(/.blake2b$/, './blake2b.js'),
-        new webpack.NormalModuleReplacementPlugin(/env\/browser$/, './env/node'),
-        new webpack.NormalModuleReplacementPlugin(/env\/browser\/workers$/, '../env/node/workers'),
-        new webpack.NormalModuleReplacementPlugin(/utils\/networkUtils$/, '../env/node/networkUtils'),
-        new webpack.NormalModuleReplacementPlugin(/whatwg-fetch$/, 'node-fetch'),
-        // https://github.com/socketio/engine.io-client/issues/609
-        new webpack.NormalModuleReplacementPlugin(
-            /engine.io-client\/lib\/transports\/websocket\.js/,
-            `${__dirname}/js/engine.io-websocket.js`
-        ),
+        // new webpack.NormalModuleReplacementPlugin(/whatwg-fetch$/, 'node-fetch'),
+        // // https://github.com/socketio/engine.io-client/issues/609
+        // new webpack.NormalModuleReplacementPlugin(
+        //     /engine.io-client\/lib\/transports\/websocket\.js/,
+        //     `${__dirname}/js/engine.io-websocket.js`
+        // ),
 
         new CopyWebpackPlugin([
             { from: DATA_SRC, to: `${DIST}data` },
