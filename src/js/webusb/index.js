@@ -1,6 +1,6 @@
 /* @flow */
 
-import { httpRequest } from '../utils/networkUtils';
+import { httpRequest } from '../env/browser/networkUtils';
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/webusb.less';
 

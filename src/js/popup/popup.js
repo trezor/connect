@@ -6,7 +6,7 @@ import * as UI from '../constants/ui';
 import { parseMessage } from '../message';
 import { UiMessage } from '../message/builder';
 import DataManager from '../data/DataManager';
-import { getOrigin } from '../utils/networkUtils';
+import { getOrigin } from '../env/browser/networkUtils';
 
 import * as view from './view';
 import { showView, postMessage, setOperation, initMessageChannel, postMessageToParent } from './view/common';

@@ -1,6 +1,6 @@
 /* @flow */
 
-import { httpRequest } from '../utils/networkUtils';
+import { httpRequest } from '../env/node/networkUtils';
 import { parseBridgeJSON } from '../utils/browser';
 import { DEFAULT_PRIORITY } from '../data/ConnectSettings';
 import { parseCoinsJson } from './CoinInfo';

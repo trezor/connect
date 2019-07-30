@@ -18,7 +18,7 @@ import type { CoreMessage, PostMessageEvent } from '../types';
 import Log, { init as initLog } from '../utils/debug';
 import { sendMessage } from '../utils/windowsUtils';
 import { checkBrowser, state as browserState } from '../utils/browser';
-import { getOrigin } from '../utils/networkUtils';
+import { getOrigin } from '../env/browser/networkUtils';
 import { load as loadStorage, PERMISSIONS_KEY } from './storage';
 let _core: Core;
 

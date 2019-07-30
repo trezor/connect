@@ -7,7 +7,7 @@ import * as UI from '../constants/ui';
 import { showPopupRequest } from './showPopupRequest';
 import type { ConnectSettings } from '../data/ConnectSettings';
 import type { CoreMessage, Deferred } from '../types';
-import { getOrigin } from '../utils/networkUtils';
+import { getOrigin } from '../env/browser/networkUtils';
 import { create as createDeferred } from '../utils/deferred';
 
 // const POPUP_REQUEST_TIMEOUT: number = 602;
