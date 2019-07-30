@@ -1,15 +1,18 @@
 /* @flow */
-'use strict';
 
-import type { BitcoinNetworkInfo } from '../types';
+import BigNumber from 'bignumber.js';
+import type { BitcoinNetworkInfo, CoinInfo } from '../types';
 
-const currencyUnits = 'mbtc2';
+const currencyUnits = 'btc';
 
-// TODO: chagne currency units
+export const formatAmount = (n: string, coinInfo: CoinInfo): string => {
+    return new BigNumber(n).div(10 ** coinInfo.decimals).toString(10) + ' ' + coinInfo.shortcut;
+};
 
-export const formatAmount = (n: number, coinInfo: BitcoinNetworkInfo): string => {
+export const formatAmountOld = (n: number, coinInfo: BitcoinNetworkInfo): string => {
     const amount = (n / 1e8);
-    if (coinInfo.isBitcoin && currencyUnits === 'mbtc' && amount <= 0.1 && n !== 0) {
+    // if (coinInfo.isBitcoin && currencyUnits === 'mbtc' && amount <= 0.1 && n !== 0) {
+    if (currencyUnits === 'mbtc' && amount <= 0.1 && n !== 0) {
         const s = (n / 1e5).toString();
         return `${s} mBTC`;
     }
@@ -36,6 +39,10 @@ export const formatTime = (n: number): string => {
     return res;
 };
 
-export const btckb2satoshib = (n: number): number => {
-    return Math.round(n * 1e5);
+export const btckb2satoshib = (n: string): string => {
+    return new BigNumber(n).times(1e5).toFixed(0, BigNumber.ROUND_HALF_UP);
+};
+
+export const feePerUnit = (fee: string, coinInfo: CoinInfo) => {
+    return new BigNumber(fee).div(1000).integerValue(BigNumber.ROUND_CEIL).toString();
 };

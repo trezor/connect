@@ -1,14 +1,15 @@
 /* @flow */
-'use strict';
 
+import BigNumber from 'bignumber.js';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
-import { NO_COIN_INFO } from '../../constants/errors';
+import { NO_COIN_INFO, backendNotSupported } from '../../constants/errors';
 
-import BlockBook, { create as createBackend } from '../../backend';
-import * as helper from './helpers/signtx';
+import { initBlockchain } from '../../backend/BlockchainLink';
+import signTx from './helpers/signtx';
+import verifyTx from './helpers/signtxVerify';
 
 import {
     validateTrezorInputs,
@@ -34,7 +35,6 @@ import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 
 type Params = {
     inputs: Array<TransactionInput>,
-    hdInputs: Array<BuildTxInput>,
     outputs: Array<TransactionOutput>,
     refTxs: ?Array<RefTransaction>,
     options: TransactionOptions,
@@ -44,7 +44,6 @@ type Params = {
 
 export default class SignTransaction extends AbstractMethod {
     params: Params;
-    backend: BlockBook;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -58,7 +57,7 @@ export default class SignTransaction extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
-            { name: 'refTxs', type: 'array' },
+            { name: 'refTxs', type: 'array', allowEmpty: true },
             { name: 'locktime', type: 'number' },
             { name: 'timestamp', type: 'number' },
             { name: 'version', type: 'number' },
@@ -78,18 +77,6 @@ export default class SignTransaction extends AbstractMethod {
             this.info = getLabel('Sign #NETWORK transaction', coinInfo);
         }
 
-        payload.inputs.forEach(utxo => {
-            validateParams(utxo, [
-                { name: 'amount', type: 'string' },
-            ]);
-        });
-
-        payload.outputs.forEach(out => {
-            validateParams(out, [
-                { name: 'amount', type: 'string' },
-            ]);
-        });
-
         if (payload.hasOwnProperty('refTxs')) {
             payload.refTxs.forEach(tx => {
                 validateParams(tx, [
@@ -106,17 +93,20 @@ export default class SignTransaction extends AbstractMethod {
         }
 
         const inputs: Array<TransactionInput> = validateTrezorInputs(payload.inputs, coinInfo);
-        const hdInputs: Array<BuildTxInput> = inputs.map(inputToHD);
         const outputs: Array<TransactionOutput> = validateTrezorOutputs(payload.outputs, coinInfo);
 
-        const total: number = outputs.reduce((t, r) => t + r.amount, 0);
-        if (total <= coinInfo.dustLimit) {
-            throw new Error('Total amount is too low.');
+        const outputsWithAmount = outputs.filter(output => typeof output.amount === 'string' && !output.hasOwnProperty('op_return_data'));
+        if (outputsWithAmount.length > 0) {
+            const total: BigNumber = outputsWithAmount.reduce((bn: BigNumber, output: TransactionOutput) => {
+                return bn.plus(typeof output.amount === 'string' ? output.amount : '0');
+            }, new BigNumber(0));
+            if (total.lte(coinInfo.dustLimit)) {
+                throw new Error('Total amount is below dust limit.');
+            }
         }
 
         this.params = {
             inputs,
-            hdInputs,
             outputs: payload.outputs,
             refTxs: payload.refTxs,
             options: {
@@ -144,14 +134,21 @@ export default class SignTransaction extends AbstractMethod {
         let refTxs: Array<RefTransaction> = [];
         if (!params.refTxs) {
             // initialize backend
-            const backend = await createBackend(params.coinInfo);
-            const bjsRefTxs = await backend.loadTransactions(getReferencedTransactions(params.hdInputs));
-            refTxs = transformReferencedTransactions(bjsRefTxs);
+            const hdInputs: Array<BuildTxInput> = params.inputs.map(inputToHD);
+            const refTxsIds = getReferencedTransactions(hdInputs);
+            if (refTxsIds.length > 0) {
+                if (!params.coinInfo.blockchainLink) {
+                    throw backendNotSupported(params.coinInfo.name);
+                }
+                const blockchain = await initBlockchain(params.coinInfo, this.postMessage);
+                const bjsRefTxs = await blockchain.getReferencedTransactions(refTxsIds);
+                refTxs = transformReferencedTransactions(bjsRefTxs);
+            }
         } else {
             refTxs = params.refTxs;
         }
 
-        const response = await helper.signTx(
+        const response = await signTx(
             device.getCommands().typedCall.bind(device.getCommands()),
             params.inputs,
             params.outputs,
@@ -160,9 +157,20 @@ export default class SignTransaction extends AbstractMethod {
             params.coinInfo,
         );
 
+        await verifyTx(
+            device.getCommands().getHDNode.bind(device.getCommands()),
+            params.inputs,
+            params.outputs,
+            response.serializedTx,
+            params.coinInfo,
+        );
+
         if (params.push) {
-            const backend = await createBackend(params.coinInfo);
-            const txid = await backend.sendTransactionHex(response.serializedTx);
+            if (!params.coinInfo.blockchainLink) {
+                throw backendNotSupported(params.coinInfo.name);
+            }
+            const blockchain = await initBlockchain(params.coinInfo, this.postMessage);
+            const txid = await blockchain.pushTransaction(response.serializedTx);
             return {
                 ...response,
                 txid,

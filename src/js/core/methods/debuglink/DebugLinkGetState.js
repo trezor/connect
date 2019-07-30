@@ -10,6 +10,7 @@ export default class DebugLinkGetState extends AbstractMethod {
         this.useDevice = true;
         this.debugLink = true;
         this.useUi = false;
+        this.requiredPermissions = ['management'];
     }
 
     async run(): Promise<DebugLinkState> {

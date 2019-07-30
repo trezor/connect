@@ -13,6 +13,16 @@
                 "https://btc4.trezor.io",
                 "https://btc5.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://btc1.trezor.io",
+                    "https://btc2.trezor.io",
+                    "https://btc3.trezor.io",
+                    "https://btc4.trezor.io",
+                    "https://btc5.trezor.io"
+                ]
+            },
             "blocktime_seconds": 600,
             "cashaddr_prefix": null,
             "coin_label": "Bitcoin",
@@ -61,6 +71,13 @@
                 "https://tbtc1.trezor.io",
                 "https://tbtc2.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://tbtc1.trezor.io",
+                    "https://tbtc2.trezor.io"
+                ]
+            },
             "blocktime_seconds": 600,
             "cashaddr_prefix": null,
             "coin_label": "Testnet",
@@ -280,6 +297,16 @@
                 "https://bch4.trezor.io",
                 "https://bch5.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://bch1.trezor.io",
+                    "https://bch2.trezor.io",
+                    "https://bch3.trezor.io",
+                    "https://bch4.trezor.io",
+                    "https://bch5.trezor.io"
+                ]
+            },
             "blocktime_seconds": 600,
             "cashaddr_prefix": "bitcoincash",
             "coin_label": "Bitcoin Cash",
@@ -373,6 +400,16 @@
                 "https://btg4.trezor.io",
                 "https://btg5.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://btg1.trezor.io",
+                    "https://btg2.trezor.io",
+                    "https://btg3.trezor.io",
+                    "https://btg4.trezor.io",
+                    "https://btg5.trezor.io"
+                ]
+            },
             "blocktime_seconds": 600,
             "cashaddr_prefix": null,
             "coin_label": "Bitcoin Gold",
@@ -649,6 +686,16 @@
                 "https://dash4.trezor.io",
                 "https://dash5.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://dash1.trezor.io",
+                    "https://dash2.trezor.io",
+                    "https://dash3.trezor.io",
+                    "https://dash4.trezor.io",
+                    "https://dash5.trezor.io"
+                ]
+            },
             "blocktime_seconds": 150,
             "cashaddr_prefix": null,
             "coin_label": "Dash",
@@ -778,6 +825,13 @@
                 "https://dgb1.trezor.io",
                 "https://dgb2.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://dgb1.trezor.io",
+                    "https://dgb2.trezor.io"
+                ]
+            },
             "blocktime_seconds": 15,
             "cashaddr_prefix": null,
             "coin_label": "DigiByte",
@@ -829,6 +883,16 @@
                 "https://doge4.trezor.io",
                 "https://doge5.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://doge1.trezor.io",
+                    "https://doge2.trezor.io",
+                    "https://doge3.trezor.io",
+                    "https://doge4.trezor.io",
+                    "https://doge5.trezor.io"
+                ]
+            },
             "blocktime_seconds": 60,
             "cashaddr_prefix": null,
             "coin_label": "Dogecoin",
@@ -1237,6 +1301,16 @@
                 "https://ltc4.trezor.io",
                 "https://ltc5.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://ltc1.trezor.io",
+                    "https://ltc2.trezor.io",
+                    "https://ltc3.trezor.io",
+                    "https://ltc4.trezor.io",
+                    "https://ltc5.trezor.io"
+                ]
+            },
             "blocktime_seconds": 150,
             "cashaddr_prefix": null,
             "coin_label": "Litecoin",
@@ -1546,6 +1620,13 @@
                 "https://nmc1.trezor.io",
                 "https://nmc2.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://nmc1.trezor.io",
+                    "https://nmc2.trezor.io"
+                ]
+            },
             "blocktime_seconds": 600,
             "cashaddr_prefix": null,
             "coin_label": "Namecoin",
@@ -1857,6 +1938,16 @@
                 "https://vtc4.trezor.io",
                 "https://vtc5.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://vtc1.trezor.io",
+                    "https://vtc2.trezor.io",
+                    "https://vtc3.trezor.io",
+                    "https://vtc4.trezor.io",
+                    "https://vtc5.trezor.io"
+                ]
+            },
             "blocktime_seconds": 150,
             "cashaddr_prefix": null,
             "coin_label": "Vertcoin",
@@ -1996,6 +2087,16 @@
                 "https://zec4.trezor.io",
                 "https://zec5.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://zec1.trezor.io",
+                    "https://zec2.trezor.io",
+                    "https://zec3.trezor.io",
+                    "https://zec4.trezor.io",
+                    "https://zec5.trezor.io"
+                ]
+            },
             "blocktime_seconds": 150,
             "cashaddr_prefix": null,
             "coin_label": "Zcash",
@@ -2229,6 +2330,13 @@
                 "https://eth1.trezor.io",
                 "https://eth2.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://eth1.trezor.io",
+                    "https://eth2.trezor.io"
+                ]
+            },
             "chain": "eth",
             "chain_id": 1,
             "name": "Ethereum",
@@ -2264,6 +2372,13 @@
                 "https://ropsten1.trezor.io",
                 "https://ropsten2.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://ropsten1.trezor.io",
+                    "https://ropsten2.trezor.io"
+                ]
+            },
             "chain": "rop",
             "chain_id": 3,
             "name": "Ethereum Testnet Ropsten",
@@ -2395,6 +2510,13 @@
                 "https://etc1.trezor.io",
                 "https://etc2.trezor.io"
             ],
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://etc1.trezor.io",
+                    "https://etc2.trezor.io"
+                ]
+            },
             "chain": "etc",
             "chain_id": 61,
             "name": "Ethereum Classic",

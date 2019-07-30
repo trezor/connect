@@ -370,10 +370,6 @@ class TrezorConnect {
         return await call({ method: 'debugLinkGetState', ...params });
     }
 
-    static ethereumGetAccountInfo: $T.EthereumGetAccountInfo = async (params) => {
-        return await call({ method: 'ethereumGetAccountInfo', ...params });
-    }
-
     static ethereumGetAddress: $T.EthereumGetAddress = async (params) => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return await call({ method: 'ethereumGetAddress', ...params, useEventListener });
@@ -448,10 +444,6 @@ class TrezorConnect {
 
     static pushTransaction: $T.PushTransaction = async (params) => {
         return await call({ method: 'pushTransaction', ...params });
-    }
-
-    static rippleGetAccountInfo: $T.RippleGetAccountInfo = async (params) => {
-        return await call({ method: 'rippleGetAccountInfo', ...params });
     }
 
     static rippleGetAddress: $T.RippleGetAddress = async (params) => {

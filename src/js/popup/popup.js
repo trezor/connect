@@ -20,6 +20,7 @@ import styles from '../../styles/popup.less';
 
 // handle messages from window.opener and iframe
 const handleMessage = (event: PostMessageEvent): void => {
+    console.warn('HANDLE MESSAGE IN POPUP', event);
     const data: any = event.data;
     if (!data) return;
 

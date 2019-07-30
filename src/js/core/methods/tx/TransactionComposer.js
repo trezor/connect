@@ -1,129 +1,136 @@
 /* @flow */
-'use strict';
+import BigNumber from 'bignumber.js';
+import { buildTx } from 'hd-wallet';
 
-import {
-    buildTx,
-} from 'hd-wallet';
-
-import Account from '../../../account';
-import BlockBook from '../../../backend';
-
-import { init as initFees, getFeeLevels, getActualFee, getBlocks } from './fees';
+import Fees from './Fees';
+import BlockchainLink from '../../../backend/BlockchainLink';
+import { getHDPath } from '../../../utils/pathUtils';
 
 import type {
+    UtxoInfo,
     BuildTxOutputRequest,
     BuildTxResult,
 } from 'hd-wallet';
 
-import type { FeeLevel, CustomFeeLevel, SelectFeeLevel } from '../../../types/fee';
+import type { BitcoinNetworkInfo } from '../../../types';
+import type { DiscoveryAccount, AccountUtxo } from '../../../types/account';
+import type { SelectFeeLevel } from '../../../types/fee';
 
-const customFeeLevel: CustomFeeLevel = {
-    name: 'custom',
-    id: 4,
-    info: {
-        type: 'custom',
-        fee: '10',
-    },
-};
+type Options = {
+    account: DiscoveryAccount,
+    utxo: AccountUtxo[],
+    outputs: BuildTxOutputRequest[],
+    coinInfo: BitcoinNetworkInfo,
+}
 
 export default class TransactionComposer {
-    account: Account;
-    outputs: Array<BuildTxOutputRequest>;
-    currentHeight: number;
-    feeLevels: Array<FeeLevel> = [];
-    // composed: Array<BuildTxResult> = [];
+    account: DiscoveryAccount;
+    utxos: UtxoInfo[];
+    outputs: BuildTxOutputRequest[];
+    coinInfo: BitcoinNetworkInfo;
+    blockHeight: number = 0;
+    feeLevels: Fees;
     composed: {[key: string]: BuildTxResult} = {};
 
-    constructor(account: Account, outputs: Array<BuildTxOutputRequest>) {
-        this.account = account;
-        this.outputs = outputs;
+    constructor(options: Options) {
+        this.account = options.account;
+        this.outputs = options.outputs;
+        this.coinInfo = options.coinInfo;
+        this.blockHeight = 0;
+        this.feeLevels = new Fees(options.coinInfo);
+
+        // map to hd-wallet/buildTx format
+        const { addresses } = options.account;
+        const allAddresses: string[] = !addresses ? [] : addresses.used.concat(addresses.unused).concat(addresses.change).map(a => a.address);
+        this.utxos = options.utxo.map(u => {
+            const addressPath = getHDPath(u.path);
+            return {
+                index: u.vout,
+                transactionHash: u.txid,
+                value: u.amount,
+                addressPath: [addressPath[3], addressPath[4]],
+                height: u.blockHeight,
+                tsize: 0, // doesn't matter
+                vsize: 0, // doesn't matter
+                coinbase: typeof u.coinbase === 'boolean' ? u.coinbase : false, // decide it it can be spent immediately (false) or after 100 conf (true)
+                own: allAddresses.indexOf(u.address) >= 0, // decide if it can be spent immediately (own) or after 6 conf (not own)
+            };
+        });
     }
 
-    async init(backend: BlockBook) {
-        await initFees(backend, this.account.coinInfo);
-        this.feeLevels = [ ...getFeeLevels() ];
-        this.currentHeight = await backend.loadCurrentHeight();
+    async init(blockchain: BlockchainLink) {
+        const { blockHeight } = await blockchain.getNetworkInfo();
+        this.blockHeight = blockHeight;
+
+        await this.feeLevels.load(blockchain);
     }
 
     // Composing fee levels for SelectFee view in popup
-    // async composeAllFeeLevels(): Promise<Array<BuildTxResult>> {
-    async composeAllFeeLevels(): Promise<boolean> {
-        const account = this.account;
+    composeAllFeeLevels(): boolean {
+        const { levels } = this.feeLevels;
+        if (this.utxos.length < 1) return false;
 
         this.composed = {};
-
-        let prevFee: number = 0;
-        let level: FeeLevel;
         let atLeastOneValid: boolean = false;
-        for (level of this.feeLevels) {
-            let fee: number = getActualFee(level, this.account.coinInfo);
-            if (prevFee > 0 && prevFee < fee) fee = prevFee;
-            prevFee = fee;
-
-            const tx: BuildTxResult = this.compose(fee);
-
-            if (tx.type === 'final') {
-                atLeastOneValid = true;
-            } else if (tx.type === 'error' && tx.error === 'TWO-SEND-MAX') {
-                throw new Error('Cannot compose transaction with two send-max outputs');
+        for (const level of levels) {
+            if (level.info.fee !== '0') {
+                const tx: BuildTxResult = this.compose(level.info.fee);
+                if (tx.type === 'final') {
+                    atLeastOneValid = true;
+                }
+                this.composed[ level.name ] = tx;
             }
-            this.composed[ level.name ] = tx;
         }
 
         if (!atLeastOneValid) {
-            // check with minimal fee
-            const tx: BuildTxResult = this.compose(account.coinInfo.minFee);
-            if (tx.type === 'final') {
-                // add custom Fee level to list
-                this.feeLevels.push(customFeeLevel);
-                this.composed['custom'] = tx;
-            } else {
-                return false;
+            const lastLevel = levels[levels.length - 1];
+            let lastFee = new BigNumber(lastLevel.info.fee);
+            while (lastFee.gt(this.coinInfo.minFee) && this.composed['custom'] === undefined) {
+                lastFee = lastFee.minus(1);
+
+                const tx = this.compose(lastFee.toString());
+                if (tx.type === 'final') {
+                    this.feeLevels.updateCustomFee(tx.feePerByte);
+                    this.composed['custom'] = tx;
+                    return true;
+                }
             }
+
+            return false;
         }
 
         return true;
     }
 
-    composeCustomFee(fee: number): SelectFeeLevel {
+    composeCustomFee(fee: string) {
         const tx: BuildTxResult = this.compose(fee);
-        if (!this.composed['custom']) {
-            this.feeLevels.push(customFeeLevel);
-        }
         this.composed['custom'] = tx;
         if (tx.type === 'final') {
-            return {
-                name: 'custom',
-                fee: tx.fee,
-                feePerByte: tx.feePerByte,
-                minutes: this.getEstimatedTime(tx.fee),
-                total: tx.totalSpent,
-            };
+            this.feeLevels.updateCustomFee(tx.feePerByte);
         } else {
-            return {
-                name: 'custom',
-                fee: 0,
-                disabled: true,
-            };
+            this.feeLevels.updateCustomFee(fee);
         }
     }
 
     getFeeLevelList(): Array<SelectFeeLevel> {
         const list: Array<SelectFeeLevel> = [];
-        this.feeLevels.forEach(level => {
-            const tx: BuildTxResult = this.composed[level.name];
+        const { levels } = this.feeLevels;
+        levels.forEach(level => {
+            const tx = this.composed[level.name];
             if (tx && tx.type === 'final') {
+                const feePerByte = new BigNumber(tx.feePerByte).integerValue(BigNumber.ROUND_FLOOR).toString();
+                const blocks = this.feeLevels.getBlocks(feePerByte);
                 list.push({
                     name: level.name,
                     fee: tx.fee,
-                    feePerByte: tx.feePerByte,
-                    minutes: this.getEstimatedTime(tx.fee),
+                    feePerByte: feePerByte,
+                    minutes: blocks * this.coinInfo.blocktime,
                     total: tx.totalSpent,
                 });
             } else {
                 list.push({
                     name: level.name,
-                    fee: 0,
+                    fee: '0',
                     disabled: true,
                 });
             }
@@ -131,34 +138,27 @@ export default class TransactionComposer {
         return list;
     }
 
-    compose(fee: number | FeeLevel): BuildTxResult {
+    compose(feeRate: string): BuildTxResult {
         const account = this.account;
-        const feeValue: number = typeof fee === 'number' ? fee : getActualFee(fee, account.coinInfo);
+        const { addresses } = account;
+        if (!addresses) return { type: 'error', error: 'ADDRESSES-NOT-SET' };
+        const changeId = addresses.change.findIndex(a => a.transfers < 1);
+        if (changeId < 0) return { type: 'error', error: 'CHANGE-ADDRESS-NOT-SET' };
+        const changeAddress = addresses.change[changeId].address;
 
-        const tx: BuildTxResult = buildTx({
-            utxos: account.getUtxos(),
+        return buildTx({
+            utxos: this.utxos,
             outputs: this.outputs,
-            height: this.currentHeight,
-            feeRate: feeValue,
-            segwit: account.coinInfo.segwit,
-            inputAmounts: (account.coinInfo.segwit || account.coinInfo.forkid !== null),
-            basePath: account.getPath(),
-            network: account.coinInfo.network,
-            changeId: account.getChangeIndex(),
-            changeAddress: account.getNextChangeAddress(),
-            dustThreshold: account.coinInfo.dustLimit,
+            height: this.blockHeight,
+            feeRate,
+            segwit: this.coinInfo.segwit,
+            inputAmounts: (this.coinInfo.segwit || this.coinInfo.forkid !== null),
+            basePath: account.address_n,
+            network: this.coinInfo.network,
+            changeId,
+            changeAddress,
+            dustThreshold: this.coinInfo.dustLimit,
         });
-
-        return tx;
-    }
-
-    getEstimatedTime(fee: number): number {
-        let minutes: number = 0;
-        const blocks: ?number = getBlocks(fee);
-        if (blocks) {
-            minutes = this.account.coinInfo.blocktime * blocks;
-        }
-        return minutes;
     }
 
     dispose() {

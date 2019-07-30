@@ -50,6 +50,9 @@ export const INVALID_PIN_ERROR_MESSAGE: string = 'PIN invalid';
 export const WEBUSB_ERROR_MESSAGE: string = 'NetworkError: Unable to claim interface.';
 
 // BlockBook
+export const backendNotSupported = (coinName: string): TrezorError => {
+    return new TrezorError('backend_error', `BlockchainLink support not found for ${coinName}`);
+};
 export const BACKEND_NO_URL: TrezorError = new TrezorError('Backend_init', 'Url not found');
 
 export const NO_COIN_INFO: TrezorError = invalidParameter('Coin not found.');

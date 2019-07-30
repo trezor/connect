@@ -1,129 +1,160 @@
 /* @flow */
-'use strict';
 import EventEmitter from 'events';
-import Account, { create as createAccount, remove as removeAccount } from '../../../account';
-import BlockBook from '../../../backend';
-import { cloneCoinInfo, fixCoinInfoNetwork } from '../../../data/CoinInfo';
-import { getPathFromIndex } from '../../../utils/pathUtils';
-import type { BitcoinNetworkInfo } from '../../../types';
-import type { HDNodeResponse } from '../../../types/trezor';
-import type { AccountInfo } from 'hd-wallet';
+import Blockchain from '../../../backend/BlockchainLink';
+import DeviceCommands from '../../../device/DeviceCommands';
+import { getAccountAddressN } from '../../../utils/accountUtils';
+import { formatAmount } from '../../../utils/formatUtils';
 
-export type DiscoveryOptions = {
-    +getHDNode: (path: Array<number>, coinInfo: ?BitcoinNetworkInfo) => Promise<HDNodeResponse>,
-    +backend: BlockBook,
-    +coinInfo: BitcoinNetworkInfo,
-    +loadInfo?: boolean,
-    +limit?: number,
+import type { CoinInfo } from '../../../types';
+import type { DiscoveryAccountType, DiscoveryAccount, AccountInfoRequest } from '../../../types/account';
 
-    discoverLegacyAccounts?: boolean,
-    legacyAddressOnSegwit?: boolean,
-    accounts?: Array<Account>,
-    discoveryLimit?: number,
-    onStart?: (newAccount: Account, allAccounts: Array<Account>) => void,
-    onError?: (error: Error) => void,
+type DiscoveryType = {
+    type: DiscoveryAccountType,
+    getPath: (index: number) => number[],
+}
+
+type DiscoveryOptions = {
+    blockchain: Blockchain,
+    commands: DeviceCommands,
+    limit?: number,
 }
 
 export default class Discovery extends EventEmitter {
-    accounts: Array<Account> = [];
-    interrupted: boolean = false;
-    completed: boolean = false;
-    options: DiscoveryOptions;
-    loadInfo: boolean = true;
-    limit: number = 10;
-    disposer: () => void;
+    types: DiscoveryType[] = [];
+    typeIndex: number;
+    accounts: DiscoveryAccount[];
+    coinInfo: CoinInfo;
+    blockchain: Blockchain;
+    commands: DeviceCommands;
+    index: number;
+    interrupted: boolean;
+    completed: boolean;
 
     constructor(options: DiscoveryOptions) {
         super();
-        if (typeof options.loadInfo === 'boolean') {
-            this.loadInfo = options.loadInfo;
+
+        this.accounts = [];
+        this.index = 0;
+        this.typeIndex = 0;
+        this.interrupted = false;
+        this.completed = false;
+        this.blockchain = options.blockchain;
+        this.commands = options.commands;
+        this.coinInfo = options.blockchain.coinInfo;
+        const { coinInfo } = this;
+
+        // set discovery types
+        if (coinInfo.type === 'bitcoin') {
+            // Bitcoin-like coins could have multiple discovery types (bech32, segwit, legacy)
+            // path utility wrapper. bip44 purpose can be set as well
+            const getDescriptor = (purpose: number, index: number) => {
+                return getAccountAddressN(coinInfo, index, { purpose });
+            };
+            // add bech32 discovery type
+            if (coinInfo.xPubMagicSegwitNative) {
+                this.types.push({
+                    type: 'normal',
+                    getPath: getDescriptor.bind(this, 84),
+                });
+            }
+            // add segwit discovery type (normal if bech32 is not supported)
+            if (coinInfo.xPubMagicSegwit) {
+                this.types.push({
+                    type: this.types.length > 0 ? 'segwit' : 'normal',
+                    getPath: getDescriptor.bind(this, 49),
+                });
+            }
+            // add legacy discovery type (normal if bech32 and segwit are not supported)
+            this.types.push({
+                type: this.types.length > 0 ? 'legacy' : 'normal',
+                getPath: getDescriptor.bind(this, 44),
+            });
+        } else {
+            // other coins has only normal discovery type
+            this.types.push({
+                type: 'normal',
+                getPath: getAccountAddressN.bind(this, coinInfo),
+            });
         }
-        if (typeof options.limit === 'number') {
-            this.limit = 10;
-        }
-        this.options = options;
     }
 
-    async start(): Promise<void> {
+    async start(details?: $ElementType<AccountInfoRequest, 'details'>): Promise<void> {
+        const limit = 10; // TODO: move to options
         this.interrupted = false;
         while (!this.completed && !this.interrupted) {
-            const prevAccount: ?Account = this.accounts[ this.accounts.length - 1 ];
-            let index = prevAccount ? prevAccount.id + 1 : 0;
-            const coinInfo = cloneCoinInfo(prevAccount ? prevAccount.coinInfo : this.options.coinInfo);
+            const accountType = this.types[this.typeIndex];
+            const label = `Account #${(this.index + 1)}`;
+            const overTheLimit = this.index >= limit;
 
-            if (index >= this.limit || (this.loadInfo && prevAccount && !prevAccount.isUsed())) {
-                if (!coinInfo.segwit) {
-                    this.completed = true;
-                    this.emit('complete', this.accounts);
-                    return;
-                } else {
-                    coinInfo.network = this.options.coinInfo.network;
-                    coinInfo.segwit = false;
-                    index = 0;
-                }
+            // get descriptor from device
+            const path = accountType.getPath(this.index);
+            const descriptor = await this.commands.getAccountDescriptor(this.coinInfo, path);
+
+            if (!descriptor) {
+                throw new Error('Discovery descriptor not found');
+            }
+            if (this.interrupted) return;
+
+            const account: DiscoveryAccount = {
+                ...descriptor,
+                type: accountType.type,
+                label,
+            };
+
+            // remove duplicates (restore uncompleted discovery)
+            this.accounts = this.accounts.filter(a => a.descriptor !== account.descriptor);
+
+            // if index is below visible limit
+            // add incomplete account info (without balance) and emit "progress"
+            // this should render "Loading..." status
+            if (!overTheLimit) {
+                this.accounts.push(account);
+                this.emit('progress', this.accounts);
             }
 
-            const path: Array<number> = getPathFromIndex(coinInfo.segwit ? 49 : 44, coinInfo.slip44, index);
-            await this.discoverAccount(path, fixCoinInfoNetwork(coinInfo, path));
+            // get account info from backend
+            const info = await this.blockchain.getAccountInfo({ descriptor: account.descriptor, details });
+            if (this.interrupted) return;
+
+            // remove previously added incomplete account info
+            this.accounts = this.accounts.filter(a => a.descriptor !== account.descriptor);
+
+            // check if account should be displayed
+            // eg: empty account with index 11 should not be rendered
+            if (!overTheLimit || (overTheLimit && !info.empty)) {
+                const balance = formatAmount(info.availableBalance, this.coinInfo);
+                this.accounts.push({
+                    ...account,
+                    empty: info.empty,
+                    balance,
+                    addresses: info.addresses,
+                });
+                this.emit('progress', this.accounts);
+            }
+
+            // last account was empty. switch to next discovery type or complete the discovery process
+            if (info.empty) {
+                if (this.typeIndex + 1 < this.types.length) {
+                    this.typeIndex++;
+                    this.index = 0;
+                } else {
+                    this.emit('complete');
+                    this.completed = true;
+                }
+            } else {
+                this.index++;
+            }
         }
     }
 
     stop() {
         this.interrupted = !this.completed;
-        if (this.disposer) { this.disposer(); }
-
-        // if last account was not completely loaded
-        // remove it from list
-        const lastAccount: ?Account = this.accounts[ this.accounts.length - 1 ];
-        if (lastAccount && !lastAccount.info) {
-            this.accounts.splice(this.accounts.length - 1, 1);
-            removeAccount(lastAccount);
-        }
     }
 
     dispose() {
-        // TODO: clear up all references
-        this.accounts.forEach(a => removeAccount(a));
         delete this.accounts;
-        delete this.options;
-    }
-
-    async discoverAccount(path: Array<number>, coinInfo: BitcoinNetworkInfo): Promise<?Account> {
-        if (this.interrupted) return null;
-
-        const node: HDNodeResponse = await this.options.getHDNode(path, coinInfo);
-        if (this.interrupted) return null;
-
-        const account = createAccount(path, node.xpub, coinInfo);
-        this.accounts.push(account);
-        this.emit('update', this.accounts);
-
-        if (!this.loadInfo) { return account; }
-
-        await this.getAccountInfo(account);
-        if (this.interrupted) return null;
-
-        this.emit('update', this.accounts);
-
-        return account;
-    }
-
-    async getAccountInfo(account: Account): Promise<AccountInfo> {
-        const info = await this.options.backend.loadAccountInfo(
-            account.xpub,
-            // account.id > 0 && !account.coinInfo.segwit ? "xpub6CjVMW1nZaGASd9NSoQv1WXHKUAdsHqYv8hb9B8zMGz1M5eVsQmcbtBnfhsejQT3Fc43gnjU141E2JrHxwqt5QT5qTyavxBkyK1iAGHxwyN" : account.xpub,
-            account.info,
-            account.coinInfo,
-            (progress) => {
-                account.transactions = progress.transactions;
-                this.emit('update', this.accounts);
-            },
-            (disposer) => {
-                this.disposer = disposer;
-            }
-        );
-        account.info = info;
-
-        return info;
+        delete this.blockchain;
+        delete this.coinInfo;
     }
 }
+

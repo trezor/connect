@@ -1,15 +1,13 @@
 /* @flow */
-'use strict';
 
+import { coins as BitcoinJSCoins } from '@trezor/utxo-lib';
 // local modules
 import { uniq, reverseBuffer } from '../../../utils/bufferUtils';
 
 // npm types
 import type {
-    Input as BitcoinJsInput,
-    Output as BitcoinJsOutput,
     Transaction as BitcoinJsTransaction,
-} from 'bitcoinjs-lib-zcash';
+} from '@trezor/utxo-lib';
 
 import type { BuildTxInput } from 'hd-wallet';
 
@@ -29,10 +27,11 @@ export const getReferencedTransactions = (inputs: Array<BuildTxInput>): Array<st
 export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>): Array<RefTransaction> => {
     return txs.map(tx => {
         const extraData = tx.getExtraData();
+        const version_group_id = BitcoinJSCoins.isZcash(tx.network) ? parseInt(tx.versionGroupId, 16) : null;
         return {
-            version: tx.isDashSpecialTransaction() ? tx.version | tx.dashType << 16 : tx.version,
+            version: tx.isDashSpecialTransaction() ? tx.version | tx.type << 16 : tx.version,
             hash: tx.getId(),
-            inputs: tx.ins.map((input: BitcoinJsInput) => {
+            inputs: tx.ins.map(input => {
                 return {
                     prev_index: input.index,
                     sequence: input.sequence,
@@ -40,16 +39,16 @@ export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>
                     script_sig: input.script.toString('hex'),
                 };
             }),
-            bin_outputs: tx.outs.map((output: BitcoinJsOutput) => {
+            bin_outputs: tx.outs.map(output => {
                 return {
-                    amount: output.value,
+                    amount: typeof output.value === 'number' ? output.value.toString() : output.value,
                     script_pubkey: output.script.toString('hex'),
                 };
             }),
             extra_data: extraData ? extraData.toString('hex') : null,
             lock_time: tx.locktime,
             timestamp: tx.timestamp,
-            version_group_id: tx.isZcashTransaction() ? parseInt(tx.versionGroupId, 16) : null,
+            version_group_id,
             expiry: tx.expiry,
         };
     });

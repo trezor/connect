@@ -1,21 +1,10 @@
 /* @flow */
-'use strict';
 
 import * as trezor from '../types/trezor';
-import * as bitcoin from 'bitcoinjs-lib-zcash';
+import * as bitcoin from '@trezor/utxo-lib';
 import * as ecurve from 'ecurve';
 
 const curve = ecurve.getCurveByName('secp256k1');
-
-export const derivePubKeyHash = (
-    nodes: Array<bitcoin.HDNode>,
-    nodeIx: number,
-    addressIx: number
-): Buffer => {
-    const node = nodes[nodeIx].derive(addressIx);
-    const pkh: Buffer = node.getIdentifier();
-    return pkh;
-};
 
 const pubNode2bjsNode = (
     node: trezor.HDPubNode,
