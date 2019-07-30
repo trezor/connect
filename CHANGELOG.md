@@ -1,3 +1,19 @@
+# 8.0.0
+__breaking_changes__
+- Changed communication process between host, iframe and popup. BroadcastChannel is used as default, postMessage as fallback
+- Completely rewritten backend layer. Old way using hd-wallet and bitcore/blockbook-api-v1 is dropped in favour of `@trezor/blockchain-link`
+- `BigInteger` support for Bitcoin transactions using `@trezor/utxo-lib` and `hd-wallet@bigint`
+- `TrezorConnect.rippleGetAccountInfo` and `TrezorConnect.ethereumGetAccountInfo` merged to `TrezorConnect.getAccountInfo`
+- `TrezorConnect.getAccountInfo` parameters
+
+__added__
+- Added `lazyLoad` parameter to `TrezorConnect.init`
+- Added bech32 accounts support
+- Webextension usb permissions iframe dynamically included into html
+- Added correct `script_type` to `TransactionInput` and `TransactionOutput` of Bitcoin-like TxRequest protobuf message
+- Added signed transaction validation for Bitcoin `signTransaction` and `composeTransaction` methods
+
+
 # 7.0.5
 __added__
 - Added cloudfront cache invalidation
