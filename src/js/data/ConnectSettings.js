@@ -26,6 +26,9 @@ export type ConnectSettings = {
     supportedBrowser?: boolean,
     extension: ?string,
     manifest: ?ConnectManifest,
+    env: string,
+    timestamp: number,
+    lazyLoad: boolean,
 }
 
 /*
@@ -57,6 +60,9 @@ const initialSettings: ConnectSettings = {
     supportedBrowser: typeof navigator !== 'undefined' ? !(/Trident|MSIE/.test(navigator.userAgent)) : true,
     extension: null,
     manifest: null,
+    env: 'web',
+    lazyLoad: false,
+    timestamp: new Date().getTime(),
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -72,6 +78,17 @@ const parseManifest = (manifest: Object): ?ConnectManifest => {
         email: manifest.email,
         appUrl: manifest.appUrl,
     };
+};
+
+export const getEnv = (): string => {
+    // $FlowIssue: chrome is not declared outside the project
+    if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined') {
+        return 'webextension';
+    }
+    if (typeof process !== 'undefined' && process.versions.hasOwnProperty('electron')) {
+        return 'electron';
+    }
+    return 'web';
 };
 
 export const parse = (input: ?Object): ConnectSettings => {
@@ -110,6 +127,10 @@ export const parse = (input: ?Object): ConnectSettings => {
         settings.popup = input.popup;
     }
 
+    if (typeof input.lazyLoad === 'boolean') {
+        settings.lazyLoad = input.lazyLoad;
+    }
+
     if (typeof input.pendingTransportEvent === 'boolean') {
         settings.pendingTransportEvent = input.pendingTransportEvent;
     }
@@ -122,6 +143,17 @@ export const parse = (input: ?Object): ConnectSettings => {
 
     if (typeof input.extension === 'string') {
         settings.extension = input.extension;
+    }
+
+    // $FlowIssue chrome is not declared outside
+    if (typeof input.env === 'string') {
+        settings.env = input.env;
+    } else {
+        settings.env = getEnv();
+    }
+
+    if (typeof input.timestamp === 'number') {
+        settings.timestamp = input.timestamp;
     }
 
     if (typeof input.manifest === 'object') {

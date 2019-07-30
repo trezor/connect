@@ -1,9 +1,10 @@
 /* @flow */
-'use strict';
+
 // local modules
 import { reverseBuffer } from '../../../utils/bufferUtils';
-import { isSegwitPath, getScriptType } from '../../../utils/pathUtils';
-import { fixPath, convertMultisigPubKey, fixAmount } from './index';
+import { validatePath, isSegwitPath, getScriptType } from '../../../utils/pathUtils';
+import { fixPath, convertMultisigPubKey } from './index';
+import { validateParams } from '../helpers/paramsValidator';
 
 // npm types
 import type { BuildTxInput } from 'hd-wallet';
@@ -16,26 +17,32 @@ import type { TransactionInput } from '../../../types/trezor';
  * SignTx: validation
  *******/
 export const validateTrezorInputs = (inputs: Array<TransactionInput>, coinInfo: BitcoinNetworkInfo): Array<TransactionInput> => {
-    return inputs.map(fixPath).map(fixAmount).map(convertMultisigPubKey.bind(null, coinInfo.network));
+    const trezorInputs = inputs.map(fixPath).map(convertMultisigPubKey.bind(null, coinInfo.network));
+    for (const input of trezorInputs) {
+        validatePath(input.address_n);
+        const useAmount = isSegwitPath(input.address_n);
+        validateParams(input, [
+            { name: 'prev_hash', type: 'string', obligatory: true },
+            { name: 'prev_index', type: 'number', obligatory: true },
+            { name: 'script_type', type: 'string' },
+            { name: 'amount', type: 'string', obligatory: useAmount },
+            { name: 'sequence', type: 'number' },
+            { name: 'multisig', type: 'object' },
+        ]);
+    }
+    return trezorInputs;
 };
 
 /** *****
- * Transform from Trezor format to hd-wallet
+ * Transform from Trezor format to hd-wallet, called from SignTx to get refTxs from bitcore
  *******/
 export const inputToHD = (input: TransactionInput): BuildTxInput => {
-    const segwit = isSegwitPath(input.address_n);
-    if (segwit) {
-        if (!input.amount) throw new Error('Input amount not set');
-        if (!input.script_type) throw new Error('Input script_type not set');
-        // if (input.script_type !== 'SPENDP2SHWITNESS') throw new Error('Input script_type should be set to SPENDP2SHWITNESS');
-    }
-
     return {
         hash: reverseBuffer(Buffer.from(input.prev_hash, 'hex')),
         index: input.prev_index,
         path: input.address_n,
         amount: input.amount,
-        segwit: segwit,
+        segwit: isSegwitPath(input.address_n),
     };
 };
 
@@ -45,10 +52,10 @@ export const inputToHD = (input: TransactionInput): BuildTxInput => {
 export const inputToTrezor = (input: BuildTxInput, sequence: number): TransactionInput => {
     const { hash, index, path, amount } = input;
     return {
+        address_n: path,
         prev_index: index,
         prev_hash: reverseBuffer(hash).toString('hex'),
-        address_n: path,
-        script_type: getScriptType(path) || 'SPENDADDRESS',
+        script_type: getScriptType(path),
         amount,
         sequence,
     };

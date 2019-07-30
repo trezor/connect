@@ -174,6 +174,10 @@ export class CoreEventHandler {
                 this._handleUiWindowRequest();
                 break;
 
+            case UI.REQUEST_CONFIRMATION:
+                this._core.handleMessage({ event: UI_EVENT, type: UI.RECEIVE_CONFIRMATION, payload: true }, true);
+                break;
+
             case UI.REQUEST_PASSPHRASE: {
                 let passphrase = this._getCurrentPayload().passphrase;
                 if (!passphrase) {

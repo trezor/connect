@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import { address as BitcoinJSAddress } from 'bitcoinjs-lib-zcash';
+import { address as BitcoinJSAddress } from '@trezor/utxo-lib';
 import bchaddrjs from 'bchaddrjs';
 import type { BitcoinNetworkInfo } from '../types';
 
@@ -59,9 +59,8 @@ const isBech32 = (address: string): boolean => {
 
 export const isScriptHash = (address: string, coinInfo: BitcoinNetworkInfo): boolean => {
     if (!isBech32(address)) {
-        // cashaddr hack
         // Cashaddr format (with prefix) is neither base58 nor bech32, so it would fail
-        // in bitcoinjs-lib-zchash. For this reason, we use legacy format here
+        // in @trezor/utxo-lib. For this reason, we use legacy format here
         if (coinInfo.cashAddrPrefix) {
             address = bchaddrjs.toLegacyAddress(address);
         }
@@ -83,4 +82,15 @@ export const isScriptHash = (address: string, coinInfo: BitcoinNetworkInfo): boo
         }
     }
     throw new Error('Unknown address type.');
+};
+
+export const getAddressScriptType = (address: string, coinInfo: BitcoinNetworkInfo): 'PAYTOSCRIPTHASH' | 'PAYTOADDRESS' | 'PAYTOWITNESS' => {
+    if (isBech32(address)) return 'PAYTOWITNESS';
+    return isScriptHash(address, coinInfo) ? 'PAYTOSCRIPTHASH' : 'PAYTOADDRESS';
+};
+
+export const getAddressHash = (address: string): Buffer => {
+    if (isBech32(address)) return BitcoinJSAddress.fromBech32(address).data;
+    if (isValidCashAddress(address)) return BitcoinJSAddress.fromBase58Check(bchaddrjs.toLegacyAddress(address)).hash;
+    return BitcoinJSAddress.fromBase58Check(address).hash;
 };

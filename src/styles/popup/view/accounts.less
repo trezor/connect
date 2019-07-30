@@ -81,6 +81,19 @@
         }
     }
 
+    &.segwit {
+        .select-account-list.segwit {
+            display: block;
+        }
+        .tab-selection.segwit {
+            cursor: pointer;
+            color: @color_green_primary;
+            &:after {
+                border-color: @color_green_primary;
+            }
+        }
+    }
+
     &.legacy {
         .select-account-list.legacy {
             display: block;

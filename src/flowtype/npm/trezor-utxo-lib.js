@@ -22,6 +22,9 @@ declare class $npm$bigi$BigInteger {
     shiftLeft(o: number): $npm$bigi$BigInteger,
     shiftRight(o: number): $npm$bigi$BigInteger,
     isProbablePrime(): boolean,
+    min(i: $npm$bigi$BigInteger): $npm$bigi$BigInteger,
+    max(i: $npm$bigi$BigInteger): $npm$bigi$BigInteger,
+    compareTo(i: $npm$bigi$BigInteger): number,
 
     static fromByteArrayUnsigned(array: Array<number>): $npm$bigi$BigInteger,
     static fromBuffer(buffer: Buffer): $npm$bigi$BigInteger,
@@ -32,6 +35,8 @@ declare class $npm$bigi$BigInteger {
     toBuffer(): Buffer,
     toDERInteger(): Buffer,
     toHex(): string,
+
+    static ZERO: $npm$bigi$BigInteger,
 }
 
 declare module 'bigi' {
@@ -102,7 +107,7 @@ declare module 'ecurve' {
 }
 // ---------- copypasta end ----
 
-declare module 'bitcoinjs-lib-zcash' {
+declare module '@trezor/utxo-lib' {
     declare type Network = {
         messagePrefix: string,
         bip32: {
@@ -119,7 +124,7 @@ declare module 'bitcoinjs-lib-zcash' {
 
     declare type Output = {
         script: Buffer,
-        value: number,
+        value: number | string,
     };
 
     declare type Input = {
@@ -128,6 +133,18 @@ declare module 'bitcoinjs-lib-zcash' {
         index: number,
         sequence: number,
     };
+
+    declare var coins: {
+        isBitcoin(network: Network): boolean,
+        isBitcoinCash(network: Network): boolean,
+        isBitcoinSV(network: Network): boolean,
+        isBitcoinGold(network: Network): boolean,
+        isDash(network: Network): boolean,
+        isLitecoin(network: Network): boolean,
+        isZcash(network: Network): boolean,
+        isKomodo(network: Network): boolean,
+        isCapricoin(network: Network): boolean,
+    }
 
     declare var address: {
         fromBase58Check(address: string): {hash: Buffer, version: number},
@@ -190,6 +207,13 @@ declare module 'bitcoinjs-lib-zcash' {
                 decode: (script: Buffer) => Buffer,
             },
         },
+        nullData: {
+            output: {
+                check: (script: Stack) => boolean,
+                encode: (scriptHash: Buffer) => Buffer,
+                decode: (script: Buffer) => Buffer,
+            },
+        },
     };
 
     declare var crypto: {
@@ -229,10 +253,6 @@ declare module 'bitcoinjs-lib-zcash' {
         index: number,
         keyPair: ECPair,
         chainCode: Buffer,
-        static fromBase58(
-            str: string,
-            networks: ?(Array<Network> | Network)
-        ): HDNode,
         derive(index: number): HDNode,
         deriveHardened(index: number): HDNode,
         derivePath(path: string): HDNode,
@@ -257,6 +277,7 @@ declare module 'bitcoinjs-lib-zcash' {
     }
 
     declare class Transaction {
+        network: Network,
         version: number,
         locktime: number,
         timestamp?: number,
@@ -264,9 +285,8 @@ declare module 'bitcoinjs-lib-zcash' {
         outs: Array<Output>,
         versionGroupId: string,
         expiry: number,
-        dashType: number,
-        dashPayload: number,
-        invalidTransaction: boolean,
+        type: number,
+        extra_payload: number,
 
         constructor(network?: ?Network): void,
         static fromHex(hex: string, network: ?Network): Transaction,
@@ -292,6 +312,8 @@ declare module 'bitcoinjs-lib-zcash' {
         getExtraData(): ?Buffer,
         isDashSpecialTransaction(): boolean,
         isZcashTransaction(): boolean,
+
+        static USE_STRING_VALUES: boolean,
     }
 
     declare class TransactionBuilder {

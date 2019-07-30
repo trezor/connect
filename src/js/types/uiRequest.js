@@ -3,10 +3,11 @@
 import type { Device, CoreMessage } from './index';
 
 import * as POPUP from '../constants/popup';
+import * as IFRAME from '../constants/iframe';
 import * as UI from '../constants/ui';
 
-import type { BitcoinAccount } from './account';
-import type { BitcoinNetworkInfo } from './coinInfo';
+import type { DiscoveryAccount } from './account';
+import type { BitcoinNetworkInfo, CoinInfo } from './coinInfo';
 import type { SelectFeeLevel } from './fee';
 
 import type { UiResponseFactory } from './uiResponse';
@@ -33,7 +34,7 @@ export type BrowserState = {
 export type MessageWithoutPayload = {
     +type: typeof UI.REQUEST_UI_WINDOW |
         typeof POPUP.CANCEL_POPUP_REQUEST |
-        typeof POPUP.OPENED |
+        typeof POPUP.LOADED |
         typeof UI.TRANSPORT |
         typeof UI.RECEIVE_BROWSER |
         typeof UI.CHANGE_ACCOUNT |
@@ -85,17 +86,39 @@ export type AddressValidationMessage = {
 * Messages to UI
 */
 
-export type IFrameHandshake = {
-    +type: typeof UI.IFRAME_HANDSHAKE,
+export type IFrameLoaded = {
+    +type: typeof IFRAME.LOADED,
     payload: {
         browser: BrowserState,
+    },
+}
+
+export type IFrameError = {
+    type: typeof IFRAME.ERROR,
+    payload: {
+        browser: BrowserState,
+        error: string,
+    },
+}
+
+export type PopupInit = {
+    +type: typeof POPUP.INIT,
+    payload: {
+        settings: ConnectSettings, // those are settings from window.opener
+    },
+}
+
+export type PopupError = {
+    type: typeof POPUP.ERROR,
+    payload: {
+        error: string,
     },
 }
 
 export type PopupHandshake = {
     +type: typeof POPUP.HANDSHAKE,
     payload?: {
-        settings: ConnectSettings,
+        settings: ConnectSettings, // those are settings from the iframe, they could be different from window.opener settings
         method: ?string,
         transport: ?TransportInfo,
     },
@@ -155,11 +178,11 @@ export type FirmwareException = {
 export type SelectAccount = {
     +type: typeof UI.SELECT_ACCOUNT,
     payload: {
-        accounts: Array<BitcoinAccount>,
-        coinInfo: BitcoinNetworkInfo,
-        complete?: boolean,
-        start?: boolean,
-        checkBalance?: boolean,
+        type: 'start' | 'progress' | 'end',
+        coinInfo: CoinInfo,
+        accountTypes?: Array<'normal' | 'segwit' | 'legacy'>,
+        accounts?: Array<DiscoveryAccount>,
+        preventEmpty?: boolean,
     },
 }
 
@@ -175,7 +198,7 @@ export type UpdateCustomFee = {
     +type: typeof UI.UPDATE_CUSTOM_FEE,
     payload: {
         coinInfo: BitcoinNetworkInfo,
-        level: SelectFeeLevel,
+        feeLevels: Array<SelectFeeLevel>,
     },
 }
 
@@ -190,7 +213,7 @@ export type BundleProgress = {
 export type UiRequest =
     MessageWithoutPayload
     | DeviceMessage
-    | IFrameHandshake
+    | IFrameLoaded
     | PopupHandshake
     | RequestPermission
     | RequestConfirmation
@@ -207,7 +230,9 @@ declare function MessageFactory(type: $PropertyType<MessageWithoutPayload, 'type
 declare function MessageFactory(type: $PropertyType<DeviceMessage, 'type'>, payload: $PropertyType<DeviceMessage, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<ButtonRequestMessage, 'type'>, payload: $PropertyType<ButtonRequestMessage, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<AddressValidationMessage, 'type'>, payload: $PropertyType<AddressValidationMessage, 'payload'>): CoreMessage;
-declare function MessageFactory(type: $PropertyType<IFrameHandshake, 'type'>, payload: $PropertyType<IFrameHandshake, 'payload'>): CoreMessage;
+declare function MessageFactory(type: $PropertyType<IFrameLoaded, 'type'>, payload: $PropertyType<IFrameLoaded, 'payload'>): CoreMessage;
+declare function MessageFactory(type: $PropertyType<IFrameError, 'type'>, payload: $PropertyType<IFrameError, 'payload'>): CoreMessage;
+declare function MessageFactory(type: $PropertyType<PopupError, 'type'>, payload: $PropertyType<PopupError, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<PopupHandshake, 'type'>, payload: $PropertyType<PopupHandshake, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<RequestPermission, 'type'>, payload: $PropertyType<RequestPermission, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<RequestConfirmation, 'type'>, payload: $PropertyType<RequestConfirmation, 'payload'>): CoreMessage;

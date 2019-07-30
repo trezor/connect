@@ -1,10 +1,12 @@
 /* @flow */
 
 import type {
-    MultisigRedeemScriptType,
-    DebugLinkDecision,
+    TransactionInput,
+    TransactionOutput,
     RefTransaction,
+    DebugLinkDecision,
 } from './trezor';
+import type { AccountAddresses } from './account';
 
 export type $BlockchainDisconnect = {
     coin: string,
@@ -12,11 +14,26 @@ export type $BlockchainDisconnect = {
 
 export type $BlockchainEstimateFee = {
     coin: string,
+    request?: {
+        blocks?: number[],
+        specific?: {
+            conservative?: boolean, // btc
+            txsize?: number, // btc transaction size
+            from?: string, // eth from
+            to?: string, // eth to
+            data?: string, // eth tx data
+        },
+    },
+}
+
+export type SubscriptionAccountInfo = {
+    descriptor: string,
+    addresses?: AccountAddresses, // bitcoin addresses
 }
 
 export type $BlockchainSubscribe = {
-    accounts: Array<any>,
     coin: string,
+    accounts: SubscriptionAccountInfo[],
 }
 
 export type $Common = {
@@ -43,8 +60,19 @@ export type $CipherKeyValue = {
     iv?: string,
 }
 
+type ComposeTransactionOutput = {|
+    amount: string,
+    address: string,
+|} | {|
+    type: 'send-max',
+    address: string,
+|} | {|
+    type: 'opreturn',
+    dataHex: string,
+|};
+
 export type $ComposeTransaction = $Common & {
-    outputs: Array<{ amount: string, address: string }>,
+    outputs: Array<ComposeTransactionOutput>,
     coin: string,
     push?: boolean,
 }
@@ -69,9 +97,21 @@ export type $DebugLinkGetState = {
 }
 
 export type $GetAccountInfo = $Common & {
-    path?: $Path,
-    xpub?: string,
     coin: string,
+    path?: string,
+    descriptor?: string,
+    details?: 'basic' | 'txs',
+    tokens?: 'nonzero' | 'used' | 'derived',
+    page?: number,
+    pageSize?: number,
+    from?: number,
+    to?: number,
+    contractFilter?: string,
+    gap?: number,
+    marker?: {
+        ledger: number,
+        seq: number,
+    },
 }
 
 export type $GetAddress = {|
@@ -120,35 +160,6 @@ export type $SignMessage = $Common & {
     path: $Path,
     coin: string,
     message: string,
-}
-
-// modified types from trezor/TransactionInput (amount: string)
-export type TransactionInput = {
-    address_n?: Array<number>,
-    prev_hash: string,
-    prev_index: number,
-    script_sig?: string,
-    sequence?: number,
-    script_type?: 'SPENDADDRESS' | 'SPENDMULTISIG' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS',
-    multisig?: MultisigRedeemScriptType,
-    amount?: string, // only with segwit
-    decred_tree?: number,
-    decred_script_version?: number,
-}
-
-// modified types from trezor/TransactionOutput (amount: string)
-export type TransactionOutput = {
-    address: string,
-    amount: string, // in satoshis
-    script_type: 'PAYTOADDRESS',
-} | {
-    address_n: Array<number>,
-    amount: string, // in satoshis
-    script_type: 'PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS' | 'PAYTOP2SHWITNESS',
-} | {
-    op_return_data: string,
-    amount: '0', // fixed value
-    script_type: 'PAYTOOPRETURN',
 }
 
 export type $SignTransaction = $Common & {

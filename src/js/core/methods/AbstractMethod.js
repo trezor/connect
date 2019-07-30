@@ -1,6 +1,6 @@
 /* @flow */
 
-import { crypto } from 'bitcoinjs-lib-zcash';
+import { crypto } from '@trezor/utxo-lib';
 import semvercmp from 'semver-compare';
 import Device from '../../device/Device';
 import DataManager from '../../data/DataManager';
@@ -83,6 +83,7 @@ export default class AbstractMethod implements MethodInterface {
             '1': { min: '1.0.0', max: '0' },
             '2': { min: '2.0.0', max: '0' },
         };
+        this.requiredPermissions = [];
         this.useDevice = true;
         this.useDeviceState = true;
         this.useUi = true;

@@ -24,6 +24,9 @@ export const settings = {
         email: 'test@satoshilabs.com',
         appUrl: 'test@satoshilabs.com',
     },
+    env: 'web',
+    lazyLoad: false,
+    timestamp: new Date().getTime(),
 };
 
 export const testReporter: Reporter = {

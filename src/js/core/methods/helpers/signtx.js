@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import type { DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type { BitcoinNetworkInfo } from '../../../types';
@@ -168,7 +167,7 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
     );
 };
 
-export const signTx = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
+export default async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     inputs: Array<TransactionInput>,
     outputs: Array<TransactionOutput>,
     refTxs: Array<RefTransaction>,
@@ -198,9 +197,6 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
         inputs,
         outputs
     );
-
-    // TODO: validate tx
-    // verifyTx(inputs, outputs, null, signed, coinInfo);
 
     return signed;
 };

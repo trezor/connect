@@ -34,11 +34,11 @@ build-test:
 
 # Version bump
 version-patch:
-	yarn bump --patch --grep ./README.md ./src/js/data/ConnectSettings.js
+	yarn bump --patch --grep ./README.md ./src/js/data/ConnectSettings.js ./src/js/webextension/trezor-usb-permissions.js
 version-minor:
-	yarn bump --minor --grep ./README.md ./src/js/data/ConnectSettings.js
+	yarn bump --minor --grep ./README.md ./src/js/data/ConnectSettings.js ./src/js/webextension/trezor-usb-permissions.js
 version-major:
-	yarn bump --major --grep ./README.md ./src/js/data/ConnectSettings.js
+	yarn bump --major --grep ./README.md ./src/js/data/ConnectSettings.js ./src/js/webextension/trezor-usb-permissions.js
 
 # Sync build
 sync-%:
@@ -55,7 +55,7 @@ protobuf:
 # Build coin definitions
 coins:
 	# make submodules
-	./submodules/trezor-common/tools/cointool.py dump -p -d connect -e icon -e cooldown -e github -e key -e maintainer -e uri_prefix -e version_group_id -e website -e links -e duplicate -e wallet -o ./src/data/coins.json
+	./submodules/trezor-common/tools/cointool.py dump -p -d connect -e icon -e cooldown -e github -e key -e maintainer -e uri_prefix -e version_group_id -e website -e links -e duplicate -e wallet -e bitcore -e blockbook -o ./src/data/coins.json
 
 eth-tokens:
 	./submodules/trezor-common/tools/cointool.py dump -p -I erc20 -f chain=eth -e chain -e chain_id -e ens_address -e key -e logo -e social -e support -e type -e website -e shortcut -o ./src/data/ethereumTokens.json

@@ -17,7 +17,6 @@ import ComposeTransaction from './ComposeTransaction';
 import CustomMessage from './CustomMessage';
 import DebugLinkDecision from './debuglink/DebugLinkDecision';
 import DebugLinkGetState from './debuglink/DebugLinkGetState';
-import EthereumGetAccountInfo from './EthereumGetAccountInfo';
 import EthereumGetAddress from './EthereumGetAddress';
 import EthereumGetPublicKey from './EthereumGetPublicKey';
 import EthereumSignMessage from './EthereumSignMessage';
@@ -38,7 +37,6 @@ import LoadDevice from './LoadDevice';
 import PushTransaction from './PushTransaction';
 import RequestLogin from './RequestLogin';
 import ResetDevice from './ResetDevice';
-import RippleGetAccountInfo from './RippleGetAccountInfo';
 import RippleGetAddress from './RippleGetAddress';
 import RippleSignTransaction from './RippleSignTransaction';
 import NEMGetAddress from './NEMGetAddress';
@@ -76,7 +74,6 @@ const classes: {[k: string]: any} = {
     'customMessage': CustomMessage,
     'debugLinkDecision': DebugLinkDecision,
     'debugLinkGetState': DebugLinkGetState,
-    'ethereumGetAccountInfo': EthereumGetAccountInfo,
     'ethereumGetAddress': EthereumGetAddress,
     'ethereumGetPublicKey': EthereumGetPublicKey,
     'ethereumSignMessage': EthereumSignMessage,
@@ -97,7 +94,6 @@ const classes: {[k: string]: any} = {
     'pushTransaction': PushTransaction,
     'requestLogin': RequestLogin,
     'resetDevice': ResetDevice,
-    'rippleGetAccountInfo': RippleGetAccountInfo,
     'rippleGetAddress': RippleGetAddress,
     'rippleSignTransaction': RippleSignTransaction,
     'nemGetAddress': NEMGetAddress,

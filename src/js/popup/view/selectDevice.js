@@ -21,7 +21,7 @@ const initWebUsbButton = (webusb: boolean, showLoader: boolean): void => {
 
     button.onclick = async () => {
         if (!iframe) {
-            window.postMessage(POPUP.EXTENSION_USB_PERMISSIONS, window.location.origin);
+            window.postMessage({ type: POPUP.EXTENSION_USB_PERMISSIONS }, window.location.origin);
             return;
         }
 

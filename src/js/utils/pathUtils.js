@@ -1,9 +1,9 @@
 /* @flow */
-'use strict';
 
 import { getCoinName } from '../data/CoinInfo';
 import { invalidParameter } from '../constants/errors';
 import type { BitcoinNetworkInfo } from '../types';
+import type { InputScriptType, OutputScriptType } from '../types/trezor';
 
 export const HD_HARDENED: number = 0x80000000;
 export const toHardened = (n: number): number => (n | HD_HARDENED) >>> 0;
@@ -35,24 +35,22 @@ export const getHDPath = (path: string): Array<number> => {
         });
 };
 
-export const isMultisigPath = (path: Array<number> | any): boolean => {
+export const isMultisigPath = (path: ?Array<number>): boolean => {
     return Array.isArray(path) && path[0] === toHardened(48);
 };
 
-export const isSegwitPath = (path: Array<number> | any): boolean => {
+export const isSegwitPath = (path: ?Array<number>): boolean => {
     return Array.isArray(path) && path[0] === toHardened(49);
 };
 
-export const isBech32Path = (path: Array<number> | any): boolean => {
+export const isBech32Path = (path: ?Array<number>): boolean => {
     return Array.isArray(path) && path[0] === toHardened(84);
 };
 
-export const getScriptType = (path: Array<number> | any): ?('SPENDADDRESS' | 'SPENDMULTISIG' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS') => {
-    if (!Array.isArray(path) || path.length < 1) return;
+export const getScriptType = (path: ?Array<number>): InputScriptType => {
+    if (!Array.isArray(path) || path.length < 1) return 'SPENDADDRESS';
     const p1 = fromHardened(path[0]);
     switch (p1) {
-        case 44:
-            return 'SPENDADDRESS';
         case 48:
             return 'SPENDMULTISIG';
         case 49:
@@ -60,16 +58,14 @@ export const getScriptType = (path: Array<number> | any): ?('SPENDADDRESS' | 'SP
         case 84:
             return 'SPENDWITNESS';
         default:
-            return;
+            return 'SPENDADDRESS';
     }
 };
 
-export const getOutputScriptType = (path: Array<number> | any): ?('PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS' | 'PAYTOP2SHWITNESS') => {
-    if (!Array.isArray(path) || path.length < 1) return;
+export const getOutputScriptType = (path: ?Array<number>): OutputScriptType => {
+    if (!Array.isArray(path) || path.length < 1) return 'PAYTOADDRESS';
     const p = fromHardened(path[0]);
     switch (p) {
-        case 44:
-            return 'PAYTOADDRESS';
         case 48:
             return 'PAYTOMULTISIG';
         case 49:
@@ -77,7 +73,7 @@ export const getOutputScriptType = (path: Array<number> | any): ?('PAYTOADDRESS'
         case 84:
             return 'PAYTOWITNESS';
         default:
-            return;
+            return 'PAYTOADDRESS';
     }
 };
 

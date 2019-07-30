@@ -1,16 +1,18 @@
 /* @flow */
-'use strict';
 
+import BigNumber from 'bignumber.js';
 import semvercmp from 'semver-compare';
 import { invalidParameter } from '../../../constants/errors';
 import { fromHardened } from '../../../utils/pathUtils';
+
 import DataManager from '../../../data/DataManager';
 import type { CoinInfo, FirmwareRange } from '../../../types';
 
 type Param = {
     name: string,
     type?: 'string' | 'number' | 'array' | 'buffer' | 'boolean' | 'amount' | 'object',
-    obligatory?: true,
+    obligatory?: boolean,
+    allowEmpty?: boolean,
 }
 
 export const validateParams = (values: Object, fields: Array<Param>): void => {
@@ -22,13 +24,19 @@ export const validateParams = (values: Object, fields: Array<Param>): void => {
                     if (!Array.isArray(value)) {
                         // invalid type
                         throw invalidParameter(`Parameter "${ field.name }" has invalid type. "${ field.type }" expected.`);
-                    } else if (value.length < 1) {
+                    } else if (!field.allowEmpty && value.length < 1) {
                         throw invalidParameter(`Parameter "${ field.name }" is empty.`);
                     }
                 } else if (field.type === 'amount') {
                     if (typeof value !== 'string') {
                         throw invalidParameter(`Parameter "${ field.name }" has invalid type. "string" expected.`);
-                    } else if (isNaN(parseInt(value, 10)) || parseInt(value, 10).toString(10) !== value) {
+                    }
+                    try {
+                        const bn = new BigNumber(value);
+                        if (bn.toFixed(0) !== value) {
+                            throw new Error('');
+                        }
+                    } catch (error) {
                         throw invalidParameter(`Parameter "${ field.name }" has invalid value "${value}". Integer representation expected.`);
                     }
                 } else if (field.type === 'buffer') {
@@ -72,12 +80,14 @@ export const getFirmwareRange = (method: string, coinInfo: ?CoinInfo, current: F
     const coinType = coinInfo ? coinInfo.type : null;
     const shortcut = coinInfo ? coinInfo.shortcut.toLowerCase() : null;
     // find firmware range in config.json
-    const range = DataManager.getConfig().supportedFirmware.find(c => {
-        if (c.coinType === coinType || c.coin === shortcut) return c;
-        if (c.excludedMethods && c.excludedMethods.includes(method)) {
-            return c;
-        }
-    });
+    const { supportedFirmware } = DataManager.getConfig();
+    const range =
+        supportedFirmware.find(c => (
+            c.coinType === coinType ||
+            (Array.isArray(c.coin) && c.coin.includes(shortcut)) ||
+            (typeof c.coin === 'string' && c.coin === shortcut)
+        )) ||
+            supportedFirmware.find(c => (!c.coinType && !c.coin && c.excludedMethods && c.excludedMethods.includes(method)));
 
     if (range) {
         if (range.excludedMethods && !range.excludedMethods.includes(method)) {

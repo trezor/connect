@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import EventEmitter from 'events';
 import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT, BLOCKCHAIN_EVENT } from './constants';
@@ -26,12 +25,12 @@ const eventEmitter: EventEmitter = new EventEmitter();
 const _log: Log = initLog('[trezor-connect.js]');
 
 let _settings: ConnectSettings;
-let _popupManager: PopupManager;
+let _popupManager: ?PopupManager;
 
 const initPopupManager = (): PopupManager => {
     const pm: PopupManager = new PopupManager(_settings);
-    pm.on(POPUP.CLOSED, () => {
-        iframe.postMessage({ type: POPUP.CLOSED }, false);
+    pm.on(POPUP.CLOSED, payload => {
+        iframe.postMessage({ type: POPUP.CLOSED, payload }, false);
     });
     return pm;
 };
@@ -85,32 +84,20 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
             break;
 
         case UI_EVENT :
-
             if (type === IFRAME.BOOTSTRAP) {
                 iframe.clearTimeout();
                 break;
-            } else if (type === POPUP.BOOTSTRAP) {
-                // Popup did open but is still loading JS
-                _popupManager.cancelOpenTimeout();
-                break;
+            }
+            if (type === IFRAME.LOADED) {
+                iframe.initPromise.resolve();
+            }
+            if (type === IFRAME.ERROR) {
+                iframe.initPromise.reject(new Error(payload.error));
             }
 
             // pass UI event up
             eventEmitter.emit(event, message);
             eventEmitter.emit(type, payload);
-
-            if (type === UI.IFRAME_HANDSHAKE) {
-                if (payload.error) {
-                    iframe.initPromise.reject(new Error(payload.error));
-                } else {
-                    _popupManager.setBroadcast(payload.broadcast);
-                    iframe.initPromise.resolve();
-                }
-            } else if (type === POPUP.CANCEL_POPUP_REQUEST) {
-                _popupManager.cancel();
-            } else if (type === UI.CLOSE_UI_WINDOW) {
-                _popupManager.close();
-            }
             break;
 
         default:
@@ -131,6 +118,12 @@ const init = async (settings: Object = {}): Promise<void> => {
 
     if (!_settings.supportedBrowser) {
         throw ERROR.BROWSER_NOT_SUPPORTED;
+    }
+
+    if (_settings.lazyLoad) {
+        // reset "lazyLoad" after first use
+        _settings.lazyLoad = false;
+        return;
     }
 
     if (!_popupManager) {
@@ -163,15 +156,19 @@ const call = async (params: Object): Promise<Object> => {
             return { success: false, payload: { error: ERROR.BROWSER_NOT_SUPPORTED.message } };
         }
 
-        _popupManager = initPopupManager();
+        if (!_popupManager) {
+            _popupManager = initPopupManager();
+        }
         _popupManager.request(true);
 
         // auto init with default settings
         try {
             await init(_settings);
-            await _popupManager.resolveLazyLoad();
+            // await _popupManager.lazyLoading();
         } catch (error) {
-            _popupManager.close();
+            if (_popupManager) {
+                _popupManager.close();
+            }
             return { success: false, payload: { error } };
         }
     }
@@ -186,17 +183,19 @@ const call = async (params: Object): Promise<Object> => {
 
     // request popup window it might be used in the future
     // if (eventEmitter.listeners(UI_EVENT).length < 1) { _popupManager.request(params); }
-    if (_settings.popup) { _popupManager.request(); }
+    if (_settings.popup && _popupManager) { _popupManager.request(); }
 
     // post message to iframe
     try {
         const response: ?Object = await iframe.postMessage({ type: IFRAME.CALL, payload: params });
         if (response) {
             // TODO: unlock popupManager request only if there wasn't error "in progress"
-            if (response.payload.error !== ERROR.DEVICE_CALL_IN_PROGRESS.message) { _popupManager.unlock(); }
+            if (response.payload.error !== ERROR.DEVICE_CALL_IN_PROGRESS.message && _popupManager) { _popupManager.unlock(); }
             return response;
         } else {
-            _popupManager.unlock();
+            if (_popupManager) {
+                _popupManager.unlock();
+            }
             // TODO
             return { success: false, payload: { error: 'No response from iframe' } };
         }
@@ -371,10 +370,6 @@ class TrezorConnect {
         return await call({ method: 'debugLinkGetState', ...params });
     }
 
-    static ethereumGetAccountInfo: $T.EthereumGetAccountInfo = async (params) => {
-        return await call({ method: 'ethereumGetAccountInfo', ...params });
-    }
-
     static ethereumGetAddress: $T.EthereumGetAddress = async (params) => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return await call({ method: 'ethereumGetAddress', ...params, useEventListener });
@@ -449,10 +444,6 @@ class TrezorConnect {
 
     static pushTransaction: $T.PushTransaction = async (params) => {
         return await call({ method: 'pushTransaction', ...params });
-    }
-
-    static rippleGetAccountInfo: $T.RippleGetAccountInfo = async (params) => {
-        return await call({ method: 'rippleGetAccountInfo', ...params });
     }
 
     static rippleGetAddress: $T.RippleGetAddress = async (params) => {
@@ -563,6 +554,7 @@ class TrezorConnect {
 export default TrezorConnect;
 
 export {
+    IFRAME,
     TRANSPORT,
     UI,
     DEVICE,

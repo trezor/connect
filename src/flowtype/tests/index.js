@@ -225,7 +225,6 @@ declare module 'flowtype/tests' {
         | ExpectedVerifyMessageResponse
         | ExpectedGetAccountInfoResponse
         | ExpectedNemSignTransactionResponse
-        | ExpectedPassphraseResponse
         | ExpectedLiskGetAddressResponse
         | ExpectedLiskSignMessageResponse
         | ExpectedLiskVerifyMessageResponse
@@ -245,7 +244,6 @@ declare module 'flowtype/tests' {
     | SubtestVerifyMessage
     | SubtestGetAccountInfo
     | SubtestNemSignTransaction
-    | SubtestPassphrase
     | SubtestTezosSignTransaction
     | SubtestLiskSignTransaction
     | SubtestLiskSignTransaction
@@ -284,7 +282,6 @@ declare module 'flowtype/tests' {
         nemSignTransactionMultisig(): TestFunction,
         nemSignTransactionOthers(): TestFunction,
         nemSignTransactionTransfers(): TestFunction,
-        passphrase(): TestFunction,
         liskGetAddress(): TestFunction,
         liskSignMessage(): TestFunction,
         liskVerifyMessage(): TestFunction,

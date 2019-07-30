@@ -42,7 +42,7 @@ module.exports = {
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: [/node_modules/, /trezor-blockchain-link\/build\/workers/],
+                exclude: [/node_modules/],
                 use: ['babel-loader'],
             },
             {
@@ -100,6 +100,8 @@ module.exports = {
         hints: false,
     },
     plugins: [
+        new webpack.NormalModuleReplacementPlugin(/.blake2b$/, './blake2b.js'),
+
         new MiniCssExtractPlugin({
             filename: '[name].css',
             chunkFilename: '[id].css',

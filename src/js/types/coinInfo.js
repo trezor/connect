@@ -34,18 +34,19 @@ export type BitcoinNetworkInfo = {
     // address_type: in Network
     // address_type_p2sh: in Network
     // bech32_prefix: in Network
+    // consensus_branch_id in Network
     // bip115: not used
-    bitcore: Array<string>,
-    blockbook: Array<string>,
+    // bitcore: not used
+    // blockbook: not used
     blockchainLink: ?BlockchainLink,
     blocktime: number,
     cashAddrPrefix: ?string,
     label: string, // this is human readable format, could be different from "name"
     name: string, // this is Trezor readable format
     shortcut: string,
-    // cooldown no used
+    // cooldown not used
     curveName: string,
-    decred: boolean,
+    // decred not used
     defaultFees: {[level: string]: number},
     dustLimit: number,
     forceBip143: boolean,
@@ -79,16 +80,19 @@ export type BitcoinNetworkInfo = {
     maxFee: number,
     // used in backend
     blocks?: number,
+    decimals: number,
 };
 
 export type EthereumNetworkInfo = {
     +type: 'ethereum',
-    bitcore: Array<string>, // compatibility
-    blockbook: Array<string>,
     blockchainLink: ?BlockchainLink,
+    blocktime: number,
     chain: string,
     chainId: number,
     // key not used
+    defaultFees: {[level: string]: number},
+    minFee: number,
+    maxFee: number,
     label: string, // compatibility
     name: string,
     shortcut: string,
@@ -97,15 +101,18 @@ export type EthereumNetworkInfo = {
     support: CoinSupport,
     // url not used
     network: typeof undefined, // compatibility
+    decimals: number,
 };
 
 export type MiscNetworkInfo = {
     +type: 'misc',
-    bitcore: Array<string>, // compatibility
-    blockbook: Array<string>, // compatibility
     blockchainLink: ?BlockchainLink,
+    blocktime: number,
     curve: string,
     // key not used
+    defaultFees: {[level: string]: number},
+    minFee: number,
+    maxFee: number,
     // links not used
     label: string, // compatibility
     name: string,
@@ -113,6 +120,7 @@ export type MiscNetworkInfo = {
     slip44: number,
     support: CoinSupport,
     network: typeof undefined, // compatibility
+    decimals: number,
 };
 
 export type CoinInfo = BitcoinNetworkInfo | EthereumNetworkInfo | MiscNetworkInfo;

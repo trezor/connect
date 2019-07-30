@@ -1,17 +1,19 @@
 /* @flow */
-'use strict';
 
+import BigNumber from 'bignumber.js';
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
-import * as UI from '../../constants/ui';
-import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { resolveAfter } from '../../utils/promiseUtils';
-import { formatAmount } from '../../utils/formatUtils';
-import { NO_COIN_INFO } from '../../constants/errors';
 
-import BlockBook, { create as createBackend } from '../../backend';
-import Account from '../../account';
+import * as UI from '../../constants/ui';
+import { getBitcoinNetwork, fixCoinInfoNetwork } from '../../data/CoinInfo';
+
+import { formatAmount } from '../../utils/formatUtils';
+import { NO_COIN_INFO, backendNotSupported } from '../../constants/errors';
+
+import { initBlockchain } from '../../backend/BlockchainLink';
+
 import TransactionComposer from './tx/TransactionComposer';
 import {
     validateHDOutput,
@@ -20,17 +22,18 @@ import {
     getReferencedTransactions,
     transformReferencedTransactions,
 } from './tx';
-import * as helper from './helpers/signtx';
+import signTx from './helpers/signtx';
+import verifyTx from './helpers/signtxVerify';
 
 import { UiMessage } from '../../message/builder';
-
-import type { CoreMessage, UiPromiseResponse, BitcoinNetworkInfo } from '../../types';
-import type { SignedTx } from '../../types/trezor';
 
 import type {
     BuildTxOutputRequest,
     BuildTxResult,
 } from 'hd-wallet';
+import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
+import type { SignedTx } from '../../types/trezor';
+import type { DiscoveryAccount, AccountUtxo } from '../../types/account';
 
 type Params = {
     outputs: Array<BuildTxOutputRequest>,
@@ -40,13 +43,14 @@ type Params = {
 
 export default class ComposeTransaction extends AbstractMethod {
     params: Params;
-    backend: BlockBook;
-    discovery: ?Discovery;
-    composer: TransactionComposer;
+    discovery: Discovery | typeof undefined;
 
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
+
+        this.useDevice = true;
+        this.useUi = true;
 
         const payload: Object = message.payload;
         // validate incoming parameters
@@ -60,17 +64,20 @@ export default class ComposeTransaction extends AbstractMethod {
         if (!coinInfo) {
             throw NO_COIN_INFO;
         }
+        if (!coinInfo.blockchainLink) {
+            throw backendNotSupported(coinInfo.name);
+        }
 
         // set required firmware from coinInfo support
         this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
 
         // validate each output and transform into hd-wallet format
         const outputs: Array<BuildTxOutputRequest> = [];
-        let total: number = 0;
+        let total: BigNumber = new BigNumber(0);
         payload.outputs.forEach(out => {
             const output = validateHDOutput(out, coinInfo);
-            if (typeof output.amount === 'number') {
-                total += output.amount;
+            if (typeof output.amount === 'string') {
+                total = total.plus(output.amount);
             }
             outputs.push(output);
         });
@@ -84,14 +91,14 @@ export default class ComposeTransaction extends AbstractMethod {
 
         // if outputs contains regular items
         // check if total amount is not lower than dust limit
-        if (outputs.find(o => o.type === 'complete') !== undefined && total <= coinInfo.dustLimit) {
-            throw new Error('Total amount is too low.');
+        if (outputs.find(o => o.type === 'complete') !== undefined && total.lte(coinInfo.dustLimit)) {
+            throw new Error('Total amount is too low. ');
         }
 
         if (sendMax) {
             this.info = 'Send maximum amount';
         } else {
-            this.info = `Send ${ formatAmount(total, coinInfo) }`;
+            this.info = `Send ${ formatAmount(total.toString(), coinInfo) }`;
         }
 
         this.params = {
@@ -102,81 +109,150 @@ export default class ComposeTransaction extends AbstractMethod {
     }
 
     async run(): Promise<SignedTx> {
-        // initialize backend
-        this.backend = await createBackend(this.params.coinInfo);
-
         // discover accounts and wait for user action
-        const account = await this._getAccount();
-        if (account instanceof Account) {
-            // wait for fee selection
-            const response: string | SignedTx = await this._getFee(account);
-            if (typeof response === 'string') {
-                // back to account selection
-                return await this.run();
-            } else {
-                return response;
-            }
+        const { account, utxo } = await this.selectAccount();
+
+        // const account = {
+        //     address_n: [2147483697, 2147483649, 2147483648],
+
+        //     addresses: {change: [{
+        //         transfers: 0,
+        //         path: "m/49'/0'/0'/1/0",
+        //         address: '3BS7JLzQi7cW1V5w3iS4iwMZmZzhjJGsd3',
+        //     }], used: [], unused: []},
+        //     balance: '0.00018833 TEST',
+        //     descriptor: 'upub5Df5hVPH2yM4Khs85P8nkq3x9GRcvX3FgDitXDcqSJDXgMJjVmpWPRqwqHExjQcezkjDDyU1u3ij1wUPXHaYqRHehuGtBvSPzcocpKu3wUz',
+        //     empty: false,
+        //     label: 'Account #1',
+        //     type: 'segwit',
+        // };
+        // const utxo = [
+        //     // {
+        //     //     address: '2N1VPCeEUXFdZepHJgbzSZgoi6nGrGFgeRH',
+        //     //     amount: '18833',
+        //     //     blockHeight: 1450749,
+        //     //     confirmations: 117994,
+        //     //     path: "m/49'/1'/0'/1/0",
+        //     //     txid: 'ee7720c3350ff500b8b6a3a477fb71ef35e37c18f1929a586324791e6c5a11dd',
+        //     //     vout: 1,
+        //     // },
+        //     {
+        //         address: '3Jdnbtqg3f8YberUzEirLLAumsp7RYt4Kw',
+        //         amount: '498666',
+        //         blockHeight: 527112,
+        //         confirmations: 117994,
+        //         path: "m/49'/0'/0'/1/0",
+        //         txid: '941eb4e6deded748848388cb110d7fdfc8ff9512028f21efd39854bdb1e34305',
+        //         vout: 1,
+        //     },
+        // ];
+        // wait for fee selection
+        const response: string | SignedTx = await this.selectFee(account, utxo);
+        // check for interruption
+        if (!this.discovery) {
+            throw new Error('ComposeTransaction selectFee response received after dispose');
+        }
+
+        if (typeof response === 'string') {
+            // back to account selection
+            return this.run();
         } else {
-            throw new Error(account.error);
+            return response;
         }
     }
 
-    async _getAccount(): Promise<Account | { error: string }> {
-        const discovery: Discovery = this.discovery || new Discovery({
-            getHDNode: this.device.getCommands().getHDNode.bind(this.device.getCommands()),
-            coinInfo: this.params.coinInfo,
-            backend: this.backend,
-        });
+    async selectAccount(): Promise<{ account: DiscoveryAccount, utxo: AccountUtxo[] }> {
+        const { coinInfo } = this.params;
+        const blockchain = await initBlockchain(coinInfo, this.postMessage);
+        const dfd = this.createUiPromise(UI.RECEIVE_ACCOUNT, this.device);
 
-        discovery.on('update', (accounts: Array<Account>) => {
+        if (this.discovery && this.discovery.completed) {
+            const { discovery } = this;
             this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
-                coinInfo: this.params.coinInfo,
-                accounts: accounts.map(a => a.toMessage()),
-                checkBalance: true,
+                type: 'end',
+                coinInfo,
+                accountTypes: discovery.types.map(t => t.type),
+                accounts: discovery.accounts,
             }));
-        });
-
-        discovery.on('complete', (accounts: Array<Account>) => {
-            this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
-                coinInfo: this.params.coinInfo,
-                accounts: accounts.map(a => a.toMessage()),
-                checkBalance: true,
-                complete: true,
-            }));
-        });
-
-        if (!this.discovery) {
-            this.discovery = discovery;
+            const uiResp = await dfd.promise;
+            const account = discovery.accounts[uiResp.payload];
+            const utxo = await blockchain.getAccountUtxo(account.descriptor);
+            return {
+                account,
+                utxo,
+            };
         }
-        discovery.start();
+        // initialize backend
+
+        const discovery = this.discovery || new Discovery({
+            blockchain,
+            commands: this.device.getCommands(),
+        });
+        this.discovery = discovery;
+
+        discovery.on('progress', (accounts: Array<any>) => {
+            this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
+                type: 'progress',
+                // preventEmpty: true,
+                coinInfo,
+                accounts,
+            }));
+        });
+        discovery.on('complete', () => {
+            this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
+                type: 'end',
+                coinInfo,
+            }));
+        });
+
+        // get accounts with addresses (tokens)
+        discovery.start('tokens').catch(error => {
+            // catch error from discovery process
+            dfd.reject(error);
+        });
 
         // set select account view
         // this view will be updated from discovery events
         this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
-            coinInfo: this.params.coinInfo,
-            accounts: discovery.accounts.map(a => a.toMessage()),
-            checkBalance: true,
-            start: true,
-            complete: discovery.completed,
+            type: 'start',
+            accountTypes: discovery.types.map(t => t.type),
+            coinInfo,
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await this.createUiPromise(UI.RECEIVE_ACCOUNT, this.device).promise;
+        const uiResp = await dfd.promise;
         discovery.removeAllListeners();
         discovery.stop();
 
-        const resp: number = parseInt(uiResp.payload);
-        return discovery.accounts[resp];
+        if (!discovery.completed) {
+            await resolveAfter(501); // temporary solution, TODO: immediately resolve will cause "device call in progress"
+        }
+
+        const account = discovery.accounts[uiResp.payload];
+        this.params.coinInfo = fixCoinInfoNetwork(this.params.coinInfo, account.address_n);
+        const utxo = await blockchain.getAccountUtxo(account.descriptor);
+        return {
+            account,
+            utxo,
+        };
     }
 
-    async _getFee(account: Account): Promise<string | SignedTx> {
-        if (this.composer) { this.composer.dispose(); }
+    async selectFee(account: DiscoveryAccount, utxo: AccountUtxo[]): Promise<string | SignedTx> {
+        const { coinInfo, outputs } = this.params;
 
-        const composer: TransactionComposer = new TransactionComposer(account, this.params.outputs);
-        await composer.init(this.backend);
-        this.composer = composer;
+        // get backend instance (it should be initialized before)
+        const blockchain = await initBlockchain(coinInfo, this.postMessage);
+        const composer = new TransactionComposer({
+            account,
+            utxo,
+            coinInfo,
+            outputs,
+        });
+        await composer.init(blockchain);
 
-        const hasFunds: boolean = await composer.composeAllFeeLevels();
+        // try to compose multiple transactions with different fee levels
+        // check if any of composed transactions is valid
+        const hasFunds = composer.composeAllFeeLevels();
         if (!hasFunds) {
             // show error view
             this.postMessage(new UiMessage(UI.INSUFFICIENT_FUNDS));
@@ -194,54 +270,69 @@ export default class ComposeTransaction extends AbstractMethod {
         }));
 
         // wait for user action
-        // const uiResp: UiPromiseResponse = await this.createUiPromise(UI.RECEIVE_FEE, this.device).promise;
-        return await this._selectFeeUiResponse();
+        return await this._selectFeeUiResponse(composer);
     }
 
-    async _selectFeeUiResponse(): Promise<string | SignedTx> {
+    async _selectFeeUiResponse(composer: TransactionComposer): Promise<string | SignedTx> {
         const resp = await this.createUiPromise(UI.RECEIVE_FEE, this.device).promise;
         switch (resp.payload.type) {
             case 'compose-custom':
                 // recompose custom fee level with requested value
+                composer.composeCustomFee(resp.payload.value);
                 this.postMessage(new UiMessage(UI.UPDATE_CUSTOM_FEE, {
-                    level: this.composer.composeCustomFee(resp.payload.value),
+                    feeLevels: composer.getFeeLevelList(),
                     coinInfo: this.params.coinInfo,
                 }));
 
                 // wait for user action
-                return await this._selectFeeUiResponse();
+                return await this._selectFeeUiResponse(composer);
 
             case 'send':
-                return await this._send(resp.payload.value);
+                return await this._sign(composer.composed[resp.payload.value]);
 
-            case 'change-account':
             default:
                 return 'change-account';
         }
     }
 
-    async _send(feeLevel: string): Promise<SignedTx> {
-        const tx: BuildTxResult = this.composer.composed[feeLevel];
-
+    async _sign(tx: BuildTxResult): Promise<SignedTx> {
         if (tx.type !== 'final') throw new Error('Trying to sign unfinished tx');
 
-        const bjsRefTxs = await this.backend.loadTransactions(getReferencedTransactions(tx.transaction.inputs));
-        const refTxs = transformReferencedTransactions(bjsRefTxs);
+        const { coinInfo } = this.params;
 
-        const coinInfo: BitcoinNetworkInfo = this.composer.account.coinInfo;
+        let refTxs = [];
+        const refTxsIds = getReferencedTransactions(tx.transaction.inputs);
+        if (refTxsIds.length > 0) {
+            const blockchain = await initBlockchain(coinInfo, this.postMessage);
+            const bjsRefTxs = await blockchain.getReferencedTransactions(refTxsIds);
+            refTxs = transformReferencedTransactions(bjsRefTxs);
+        }
+
         const timestamp = coinInfo.hasTimestamp ? Math.round(new Date().getTime() / 1000) : undefined;
+        // const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, (0xffffffff - 2))); // TODO: RBF
+        const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0));
+        const outputs = tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo));
 
-        const response = await helper.signTx(
+        const response = await signTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
-            tx.transaction.inputs.map(inp => inputToTrezor(inp, 0)),
-            tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo)),
+            inputs,
+            outputs,
             refTxs,
             { timestamp },
             coinInfo,
         );
 
+        await verifyTx(
+            this.device.getCommands().getHDNode.bind(this.device.getCommands()),
+            inputs,
+            outputs,
+            response.serializedTx,
+            coinInfo,
+        );
+
         if (this.params.push) {
-            const txid: string = await this.backend.sendTransactionHex(response.serializedTx);
+            const blockchain = await initBlockchain(coinInfo, this.postMessage);
+            const txid: string = await blockchain.pushTransaction(response.serializedTx);
             return {
                 ...response,
                 txid,
@@ -252,14 +343,11 @@ export default class ComposeTransaction extends AbstractMethod {
     }
 
     dispose() {
-        if (this.discovery) {
-            const d = this.discovery;
-            d.stop();
-            d.removeAllListeners();
-        }
-
-        if (this.composer) {
-            this.composer.dispose();
+        const { discovery } = this;
+        if (discovery) {
+            discovery.stop();
+            discovery.removeAllListeners();
+            this.discovery = undefined;
         }
     }
 }

@@ -110,45 +110,53 @@ export type MultisigRedeemScriptType = {
     m?: number,
 }
 
-export type TransactionInput = {
-    address_n?: Array<number>,
+export type InputScriptType = 'SPENDADDRESS' | 'SPENDMULTISIG' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS';
+// transaction input, parameter of SignTx message, declared by user
+export type TransactionInput = {|
+    address_n: Array<number>,
     prev_hash: string,
     prev_index: number,
-    script_sig?: string,
+    script_type: InputScriptType,
     sequence?: number,
-    script_type?: 'SPENDADDRESS' | 'SPENDMULTISIG' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS',
+    amount?: string, // (segwit, bip143: true, zcash overwinter)
     multisig?: MultisigRedeemScriptType,
-    amount?: number, // only with segwit
-    decred_tree?: number,
-    decred_script_version?: number,
-};
+|};
 
-export type TransactionOutput = {
+// transaction input, parameter of TxAck message, declared by user or downloaded from backend
+export type RefTransactionInput = {|
+    prev_hash: string,
+    prev_index: number,
+    script_sig: string,
+    sequence: number,
+|};
+
+export type OutputScriptType = 'PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS' | 'PAYTOP2SHWITNESS';
+// transaction output, parameter of SignTx message, declared by user
+export type TransactionOutput = {|
     address: string,
-    amount: number, // in satoshis
     script_type: 'PAYTOADDRESS',
-} | {
+    amount: string,
+    multisig?: MultisigRedeemScriptType,
+|} | {|
     address_n: Array<number>,
-    amount: number, // in satoshis
-    script_type: 'PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS' | 'PAYTOP2SHWITNESS',
-} | {
+    script_type: OutputScriptType,
+    amount: string,
+    multisig?: MultisigRedeemScriptType,
+|} | {|
+    amount: '0',
     op_return_data: string,
-    amount: 0, // fixed
     script_type: 'PAYTOOPRETURN',
-}
-// TODO:
-// "multisig": MultisigRedeemScriptType field, where?
-// "decred_script_version": number field, where?
+|};
 
-export type TransactionBinOutput = {
-    amount: number,
+type TransactionBinOutput = {
+    amount: string,
     script_pubkey: string,
 };
 
 export type RefTransaction = {
     hash: string,
     version?: ?number,
-    inputs: Array<TransactionInput>,
+    inputs: Array<RefTransactionInput>,
     bin_outputs: Array<TransactionBinOutput>,
     lock_time?: ?number,
     extra_data?: ?string,
@@ -244,7 +252,7 @@ export type HDNodeResponse = {
 
 // this is what Trezor asks for
 export type SignTxInfoToTrezor = {
-    inputs: Array<TransactionInput>,
+    inputs: Array<TransactionInput | RefTransactionInput>,
 } | {
     bin_outputs: Array<TransactionBinOutput>,
 } | {

@@ -11,6 +11,8 @@ import type {
     DebugLinkState,
 } from './trezor';
 
+import type { AccountInfo } from './account';
+
 import type { ConnectSettings } from '../data/ConnectSettings';
 
 export type Unsuccessful$ = {
@@ -30,13 +32,17 @@ export type BlockchainDisconnect$ = {
 
 export type BlockchainEstimateFee$ = {
     success: true,
-    payload: Array<{ name: string, value: string }>,
+    payload: {
+        feePerUnit: string,
+        feePerTx?: string,
+        feeLimit?: string,
+    }[],
 } | Unsuccessful$;
 
 export type BlockchainSubscribe$ = {
     success: true,
     payload: {
-        subscribed: true,
+        subscribed: boolean,
     },
 } | Unsuccessful$;
 
@@ -94,24 +100,30 @@ export type AccountInfoPayload = {
     path: Array<number>,
     serializedPath: string,
     xpub: string,
+    xpubSegwit?: ?string,
     address: string,
     addressIndex: number,
     addressPath: Array<number>,
     addressSerializedPath: string,
-    balance: number,
-    confirmed: number,
+    balance: string,
+    confirmed: string,
     transactions: number,
     utxo: Array<Utxo>,
     usedAddresses: Array<{
         address: string,
-        received: number,
+        received: string,
     }>,
     unusedAddresses: Array<string>,
 }
 
 export type GetAccountInfo$ = {
     success: true,
-    payload: AccountInfoPayload,
+    payload: AccountInfo,
+} | Unsuccessful$;
+
+export type GetAccountInfo$$ = {
+    success: true,
+    payload: Array<AccountInfo>,
 } | Unsuccessful$;
 
 export type GetAddress$ = {
