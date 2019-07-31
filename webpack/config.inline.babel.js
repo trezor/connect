@@ -3,8 +3,8 @@ import {
     JS_SRC,
     DIST,
     LIB_NAME,
-    NODE_MODULES,
 } from './constants';
+import webpack from 'webpack';
 
 module.exports = {
     mode: 'production',
@@ -23,18 +23,22 @@ module.exports = {
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: [/node_modules/],
+                exclude: /node_modules/,
                 use: ['babel-loader'],
             },
         ],
     },
     resolve: {
-        modules: [ SRC, NODE_MODULES ],
+        modules: [ SRC, 'node_modules' ],
     },
     performance: {
         hints: false,
     },
-    plugins: [],
+    plugins: [
+        new webpack.NormalModuleReplacementPlugin(/env\/node$/, './env/browser'),
+        new webpack.NormalModuleReplacementPlugin(/env\/node\/workers$/, '../env/browser/workers'),
+        new webpack.NormalModuleReplacementPlugin(/env\/node\/networkUtils$/, '../env/browser/networkUtils'),
+    ],
 
     optimization: {
         minimize: false,

@@ -3,7 +3,6 @@ import {
     JS_SRC,
     DIST,
     LIB_NAME,
-    NODE_MODULES,
 } from './constants';
 
 import webpack from 'webpack';
@@ -30,16 +29,16 @@ module.exports = {
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: [/node_modules/],
+                exclude: /node_modules/,
                 use: ['babel-loader'],
             },
         ],
     },
     resolve: {
-        modules: [ SRC, NODE_MODULES ],
+        modules: [ SRC, 'node_modules' ],
     },
     resolveLoader: {
-        modules: [ NODE_MODULES ],
+        modules: [ 'node_modules' ],
         alias: {
             'react-native-worker': `${__dirname}/js/react-native-worker.js`,
         },
