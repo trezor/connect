@@ -15,7 +15,7 @@ fse.copySync(src, lib, {
         if (src.indexOf('_old') >= 0) return false;
         const ext = src.split('.').pop();
         if (ext === 'js') {
-            // fse.copySync(src, dest + '.flow');
+            fse.copySync(src, dest + '.flow');
         }
         return true;
     },
