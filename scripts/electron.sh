@@ -1,2 +1,0 @@
-yarn build && rm -rf ../electron-app-boilerplate/src/trezor-connect && cp -R ./build ../electron-app-boilerplate/src/trezor-connect
-yarn build:npm && rm -rf ../electron-app-boilerplate/node_modules/trezor-connect && cp -R ./npm ../electron-app-boilerplate/node_modules/trezor-connect
