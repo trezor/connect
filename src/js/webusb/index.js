@@ -43,7 +43,7 @@ const handleMessage = async (event: MessageEvent): Promise<void> => {
             try {
                 await usb.requestDevice({filters});
             } catch (error) {
-                console.warn('Webusb error', error);
+                // empty
             }
         }
     };

@@ -46,21 +46,25 @@ export default class Log {
 
     log(...args: Array<any>): void {
         this.addMessage('log', this.prefix, ...args);
+        // eslint-disable-next-line no-console
         if (this.enabled) { console.log(this.prefix, ...args); }
     }
 
     error(...args: Array<any>): void {
         this.addMessage('error', this.prefix, ...args);
+        // eslint-disable-next-line no-console
         if (this.enabled) { console.error(this.prefix, ...args); }
     }
 
     warn(...args: Array<any>): void {
         this.addMessage('warn', this.prefix, ...args);
+        // eslint-disable-next-line no-console
         if (this.enabled) { console.warn(this.prefix, ...args); }
     }
 
     debug(...args: Array<any>): void {
         this.addMessage('debug', this.prefix, ...args);
+        // eslint-disable-next-line no-console
         if (this.enabled) { console.log('%c' + this.prefix, this.css, ...args); }
     }
 }

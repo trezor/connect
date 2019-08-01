@@ -42,7 +42,7 @@
             "args": "none",
             "vars": "all"
         }],
-        "no-console": 0,
+        "no-console": 1,
         "quotes": [2, "single", "avoid-escape"],
         "linebreak-style": [
             2,

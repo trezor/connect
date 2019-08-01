@@ -35,7 +35,7 @@ const init = (label: string) => {
                 await usb.requestDevice({filters});
                 sendMessage('usb-permissions-close', '*');
             } catch (error) {
-                console.warn('Webusb error', error);
+                // empty
             }
         }
     };

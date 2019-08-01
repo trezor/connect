@@ -120,7 +120,6 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
     ];
 
     if (!isTrustedOrigin && safeMessages.indexOf(message.type) === -1) {
-        console.warn('Message not trusted', message);
         return;
     }
 

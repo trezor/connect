@@ -285,7 +285,6 @@ export const requestLogin: $T.RequestLogin = async (params) => {
                         payload,
                     });
                 } catch (error) {
-                    console.warn('TrezorConnect.requestLogin: callback error', error);
                     iframe.postMessage({
                         event: UI_EVENT,
                         type: UI.LOGIN_CHALLENGE_RESPONSE,
