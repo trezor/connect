@@ -270,6 +270,7 @@ export default class PopupManager extends EventEmitter {
             this.extensionPort = null;
         }
 
+        // switch to previously focused tab
         if (this.extensionTabId) {
             // $FlowIssue chrome not declared outside
             chrome.tabs.update(this.extensionTabId, { active: true });
@@ -278,8 +279,13 @@ export default class PopupManager extends EventEmitter {
 
         if (this._window) {
             if (this.settings.env === 'webextension') {
+                // eslint-disable-next-line no-unused-vars
+                let _e: any;
                 // $FlowIssue chrome not declared outside
-                chrome.tabs.remove(this._window.id);
+                chrome.tabs.remove(this._window.id, () => {
+                    _e = chrome.runtime.lastError;
+                });
+                _e = chrome.runtime.lastError;
             } else {
                 this._window.close();
             }
