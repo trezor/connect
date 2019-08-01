@@ -11,7 +11,7 @@ import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 
 module.exports = {
     mode: 'production',
@@ -129,18 +129,16 @@ module.exports = {
         new webpack.IgnorePlugin(/\/iconv-loader$/),
     ],
 
-    // bitcoinjs-lib NOTE:
+    // @trezor/utxo-lib NOTE:
     // When uglifying the javascript, you must exclude the following variable names from being mangled:
-    // Array, BigInteger, Boolean, ECPair, Function, Number, Point and Script.
+    // Array, BigInteger, Boolean, Buffer, ECPair, Function, Number, Point and Script.
     // This is because of the function-name-duck-typing used in typeforce.
     optimization: {
         minimizer: [
-            new UglifyJsPlugin({
+            new TerserPlugin({
                 parallel: true,
-                uglifyOptions: {
-                    compress: {
-                        warnings: false,
-                    },
+                terserOptions: {
+                    ecma: 6,
                     mangle: {
                         reserved: [
                             'Array', 'BigInteger', 'Boolean', 'Buffer',
