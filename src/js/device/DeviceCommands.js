@@ -768,7 +768,7 @@ export default class DeviceCommands {
     async getAccountDescriptor(coinInfo: CoinInfo, indexOrPath: number | Array<number>): Promise<?{ descriptor: string, address_n: number[] }> {
         const address_n = Array.isArray(indexOrPath) ? indexOrPath : getAccountAddressN(coinInfo, indexOrPath);
         if (coinInfo.type === 'bitcoin') {
-            const resp = await this.getHDNode(address_n, coinInfo);
+            const resp = await this.getHDNode(address_n, coinInfo, false);
             return {
                 descriptor: resp.xpubSegwit || resp.xpub,
                 address_n,
