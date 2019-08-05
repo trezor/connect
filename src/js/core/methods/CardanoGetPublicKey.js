@@ -18,13 +18,11 @@ type Batch = {
     showOnTrezor: boolean,
 }
 
-type Params = {
-    bundle: Array<Batch>,
-    bundledResponse: boolean,
-}
+type Params = Array<Batch>;
 
 export default class CardanoGetPublicKey extends AbstractMethod {
     params: Params;
+    hasBundle: boolean;
     confirmed: boolean = false;
 
     constructor(message: CoreMessage) {
@@ -34,13 +32,9 @@ export default class CardanoGetPublicKey extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Cardano'), this.firmwareRange);
         this.info = 'Export Cardano public key';
 
-        const payload: Object = message.payload;
-        let bundledResponse: boolean = true;
-        // create a bundle with only one batch
-        if (!payload.hasOwnProperty('bundle')) {
-            payload.bundle = [...payload];
-            bundledResponse = false;
-        }
+        // create a bundle with only one batch if bundle doesn't exists
+        this.hasBundle = message.payload.hasOwnProperty('bundle');
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -68,10 +62,7 @@ export default class CardanoGetPublicKey extends AbstractMethod {
             });
         });
 
-        this.params = {
-            bundle,
-            bundledResponse,
-        };
+        this.params = bundle;
     }
 
     async confirmation(): Promise<boolean> {
@@ -82,10 +73,10 @@ export default class CardanoGetPublicKey extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         let label: string;
-        if (this.params.bundle.length > 1) {
+        if (this.params.length > 1) {
             label = 'Export multiple Cardano public keys';
         } else {
-            label = `Export Cardano public key for account #${(fromHardened(this.params.bundle[0].path[2]) + 1)}`;
+            label = `Export Cardano public key for account #${(fromHardened(this.params[0].path[2]) + 1)}`;
         }
 
         // request confirmation view
@@ -103,8 +94,8 @@ export default class CardanoGetPublicKey extends AbstractMethod {
 
     async run(): Promise<CardanoPublicKeyResponse | Array<CardanoPublicKeyResponse>> {
         const responses: Array<CardanoPublicKeyResponse> = [];
-        for (let i = 0; i < this.params.bundle.length; i++) {
-            const batch: Batch = this.params.bundle[i];
+        for (let i = 0; i < this.params.length; i++) {
+            const batch: Batch = this.params[i];
             const response: CardanoPublicKey = await this.device.getCommands().cardanoGetPublicKey(
                 batch.path,
                 batch.showOnTrezor
@@ -116,7 +107,7 @@ export default class CardanoGetPublicKey extends AbstractMethod {
                 node: response.node,
             });
 
-            if (this.params.bundledResponse) {
+            if (this.hasBundle) {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
@@ -124,6 +115,6 @@ export default class CardanoGetPublicKey extends AbstractMethod {
                 }));
             }
         }
-        return this.params.bundledResponse ? responses : responses[0];
+        return this.hasBundle ? responses : responses[0];
     }
 }

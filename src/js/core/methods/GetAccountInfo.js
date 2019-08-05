@@ -22,7 +22,7 @@ type Params = Array<Request>;
 
 export default class GetAccountInfo extends AbstractMethod {
     params: Params;
-    confirmationLabel: string;
+    hasBundle: boolean;
     discovery: Discovery | typeof undefined = undefined;
 
     constructor(message: CoreMessage) {
@@ -36,7 +36,8 @@ export default class GetAccountInfo extends AbstractMethod {
         let willUseDevice = false;
 
         // create a bundle with only one batch if bundle doesn't exists
-        const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
+        this.hasBundle = message.payload.hasOwnProperty('bundle');
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -175,7 +176,6 @@ export default class GetAccountInfo extends AbstractMethod {
         }
 
         const responses: AccountInfo[] = [];
-        const bundledResponse = this.params.length > 1;
 
         for (let i = 0; i < this.params.length; i++) {
             const request = this.params[i];
@@ -228,14 +228,14 @@ export default class GetAccountInfo extends AbstractMethod {
             });
 
             // send progress to UI
-            if (bundledResponse) {
+            if (this.hasBundle) {
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
                     response: info,
                 }));
             }
         }
-        return bundledResponse ? responses : responses[0];
+        return this.hasBundle ? responses : responses[0];
     }
 
     async discover(request: Request) {

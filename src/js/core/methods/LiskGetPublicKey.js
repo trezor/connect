@@ -18,13 +18,11 @@ type Batch = {
     showOnTrezor: boolean,
 }
 
-type Params = {
-    bundle: Array<Batch>,
-    bundledResponse: boolean,
-}
+type Params = Array<Batch>;
 
 export default class LiskGetPublicKey extends AbstractMethod {
     params: Params;
+    hasBundle: boolean;
     confirmed: boolean = false;
 
     constructor(message: CoreMessage) {
@@ -34,13 +32,9 @@ export default class LiskGetPublicKey extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Lisk'), this.firmwareRange);
         this.info = 'Export Lisk public key';
 
-        const payload: Object = message.payload;
-        let bundledResponse: boolean = true;
-        // create a bundle with only one batch
-        if (!payload.hasOwnProperty('bundle')) {
-            payload.bundle = [ ...payload ];
-            bundledResponse = false;
-        }
+        // create a bundle with only one batch if bundle doesn't exists
+        this.hasBundle = message.payload.hasOwnProperty('bundle');
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -67,10 +61,7 @@ export default class LiskGetPublicKey extends AbstractMethod {
             });
         });
 
-        this.params = {
-            bundle,
-            bundledResponse,
-        };
+        this.params = bundle;
     }
 
     async confirmation(): Promise<boolean> {
@@ -81,10 +72,10 @@ export default class LiskGetPublicKey extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         let label: string;
-        if (this.params.bundle.length > 1) {
+        if (this.params.length > 1) {
             label = 'Export multiple Lisk public keys';
         } else {
-            label = `Export Lisk public key for account #${ (fromHardened(this.params.bundle[0].path[2]) + 1) }`;
+            label = `Export Lisk public key for account #${ (fromHardened(this.params[0].path[2]) + 1) }`;
         }
 
         // request confirmation view
@@ -102,18 +93,19 @@ export default class LiskGetPublicKey extends AbstractMethod {
 
     async run(): Promise<LiskPublicKeyResponse | Array<LiskPublicKeyResponse>> {
         const responses: Array<LiskPublicKeyResponse> = [];
-        for (let i = 0; i < this.params.bundle.length; i++) {
+        for (let i = 0; i < this.params.length; i++) {
+            const batch: Batch = this.params[i];
             const response: LiskPublicKey = await this.device.getCommands().liskGetPublicKey(
-                this.params.bundle[i].path,
-                this.params.bundle[i].showOnTrezor
+                batch.path,
+                batch.showOnTrezor
             );
             responses.push({
                 publicKey: response.public_key,
-                path: this.params.bundle[i].path,
-                serializedPath: getSerializedPath(this.params.bundle[i].path),
+                path: batch.path,
+                serializedPath: getSerializedPath(batch.path),
             });
 
-            if (this.params.bundledResponse) {
+            if (this.hasBundle) {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
@@ -121,6 +113,6 @@ export default class LiskGetPublicKey extends AbstractMethod {
                 }));
             }
         }
-        return this.params.bundledResponse ? responses : responses[0];
+        return this.hasBundle ? responses : responses[0];
     }
 }

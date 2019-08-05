@@ -27,6 +27,7 @@ const MIJIN: number = 0x60; // 96
 export default class NEMGetAddress extends AbstractMethod {
     confirmed: boolean = false;
     params: Params;
+    hasBundle: boolean;
     progress: number = 0;
 
     constructor(message: CoreMessage) {
@@ -36,7 +37,8 @@ export default class NEMGetAddress extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('NEM'), this.firmwareRange);
 
         // create a bundle with only one batch if bundle doesn't exists
-        const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
+        this.hasBundle = message.payload.hasOwnProperty('bundle');
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -144,7 +146,6 @@ export default class NEMGetAddress extends AbstractMethod {
 
     async run(): Promise<NEMAddress | Array<NEMAddress>> {
         const responses: Array<NEMAddress> = [];
-        const bundledResponse = this.params.length > 1;
 
         for (let i = 0; i < this.params.length; i++) {
             const batch: Batch = this.params[i];
@@ -177,7 +178,7 @@ export default class NEMGetAddress extends AbstractMethod {
                 address: response.address,
             });
 
-            if (bundledResponse) {
+            if (this.hasBundle) {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
@@ -187,6 +188,6 @@ export default class NEMGetAddress extends AbstractMethod {
 
             this.progress++;
         }
-        return bundledResponse ? responses : responses[0];
+        return this.hasBundle ? responses : responses[0];
     }
 }

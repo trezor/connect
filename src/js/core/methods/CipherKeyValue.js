@@ -19,13 +19,11 @@ type Batch = {
     askOnDecrypt: boolean,
     iv: string,
 }
-type Params = {
-    bundle: Array<Batch>,
-    bundledResponse: boolean,
-}
+type Params = Array<Batch>;
 
 export default class CipherKeyValue extends AbstractMethod {
     params: Params;
+    hasBundle: boolean;
     confirmed: boolean = false;
 
     constructor(message: CoreMessage) {
@@ -36,13 +34,9 @@ export default class CipherKeyValue extends AbstractMethod {
         this.info = 'Cypher key value';
         this.useEmptyPassphrase = true;
 
-        const payload: Object = message.payload;
-        let bundledResponse: boolean = true;
-        // create a bundle with only one batch
-        if (!payload.hasOwnProperty('bundle')) {
-            payload.bundle = [{ ...payload }];
-            bundledResponse = false;
-        }
+        // create a bundle with only one batch if bundle doesn't exists
+        this.hasBundle = message.payload.hasOwnProperty('bundle');
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -75,16 +69,13 @@ export default class CipherKeyValue extends AbstractMethod {
             });
         });
 
-        this.params = {
-            bundle,
-            bundledResponse,
-        };
+        this.params = bundle;
     }
 
     async run(): Promise<CipheredKeyValue | Array<CipheredKeyValue>> {
         const responses: Array<CipheredKeyValue> = [];
-        for (let i = 0; i < this.params.bundle.length; i++) {
-            const batch = this.params.bundle[i];
+        for (let i = 0; i < this.params.length; i++) {
+            const batch = this.params[i];
             const response: CipheredKeyValue = await this.device.getCommands().cipherKeyValue(
                 batch.path,
                 batch.key,
@@ -96,7 +87,7 @@ export default class CipherKeyValue extends AbstractMethod {
             );
             responses.push(response);
 
-            if (this.params.bundledResponse) {
+            if (this.hasBundle) {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
@@ -104,6 +95,6 @@ export default class CipherKeyValue extends AbstractMethod {
                 }));
             }
         }
-        return this.params.bundledResponse ? responses : responses[0];
+        return this.hasBundle ? responses : responses[0];
     }
 }

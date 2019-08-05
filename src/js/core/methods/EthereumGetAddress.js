@@ -25,6 +25,7 @@ type Params = Array<Batch>;
 export default class EthereumGetAddress extends AbstractMethod {
     confirmed: boolean = false;
     params: Params;
+    hasBundle: boolean;
     progress: number = 0;
 
     constructor(message: CoreMessage) {
@@ -33,7 +34,8 @@ export default class EthereumGetAddress extends AbstractMethod {
         this.requiredPermissions = ['read'];
 
         // create a bundle with only one batch if bundle doesn't exists
-        const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
+        this.hasBundle = message.payload.hasOwnProperty('bundle');
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -138,7 +140,6 @@ export default class EthereumGetAddress extends AbstractMethod {
 
     async run(): Promise<EthereumAddress | Array<EthereumAddress>> {
         const responses: Array<EthereumAddress> = [];
-        const bundledResponse = this.params.length > 1;
 
         for (let i = 0; i < this.params.length; i++) {
             const batch = this.params[i];
@@ -172,7 +173,7 @@ export default class EthereumGetAddress extends AbstractMethod {
                 serializedPath: getSerializedPath(batch.path),
             });
 
-            if (bundledResponse) {
+            if (this.hasBundle) {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
@@ -182,6 +183,6 @@ export default class EthereumGetAddress extends AbstractMethod {
 
             this.progress++;
         }
-        return bundledResponse ? responses : responses[0];
+        return this.hasBundle ? responses : responses[0];
     }
 }
