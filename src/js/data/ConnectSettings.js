@@ -85,12 +85,21 @@ export const getEnv = (): string => {
     if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined') {
         return 'webextension';
     }
-    if (typeof navigator !== 'undefined' && typeof navigator.product === 'string' && navigator.product.toLowerCase() === 'reactnative') {
-        return 'react-native';
+    if (typeof navigator !== 'undefined') {
+        if (typeof navigator.product === 'string' && navigator.product.toLowerCase() === 'reactnative') {
+            return 'react-native';
+        }
+        const userAgent = navigator.userAgent.toLowerCase();
+        if (userAgent.indexOf(' electron/') > -1) {
+            return 'electron';
+        }
     }
-    if (typeof process !== 'undefined' && process.versions.hasOwnProperty('electron')) {
-        return 'electron';
-    }
+    // if (typeof navigator !== 'undefined' && typeof navigator.product === 'string' && navigator.product.toLowerCase() === 'reactnative') {
+    //     return 'react-native';
+    // }
+    // if (typeof process !== 'undefined' && process.versions.hasOwnProperty('electron')) {
+    //     return 'electron';
+    // }
     return 'web';
 };
 
