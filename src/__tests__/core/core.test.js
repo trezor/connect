@@ -50,9 +50,9 @@ const startTestingPayloads = (testPayloads: Array<TestPayload>, expectedResponse
 };
 
 const MNEMONICS = {
-    'mnemonic_12': 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
-    'mnemonic_all': 'all all all all all all all all all all all all',
-    'mnemonic_abandon': 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
+    'mnemonic_12': ['alcohol woman abuse must during monitor noble actual mixed trade anger aisle'],
+    'mnemonic_all': ['all all all all all all all all all all all all'],
+    'mnemonic_abandon': ['abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about'],
 };
 
 const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> => {
@@ -97,7 +97,7 @@ const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> =>
                 payload: {
                     method: 'loadDevice',
                     device: event.payload,
-                    mnemonic: MNEMONICS[test.mnemonic],
+                    mnemonics: MNEMONICS[test.mnemonic],
                 },
             }, true);
         } else if (event.id === 3) {

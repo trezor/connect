@@ -74,7 +74,7 @@ export type LoadDeviceSettings = {
     label?: string,
     skip_checksum?: boolean,
 
-    mnemonic?: string,
+    mnemonics?: Array<string>,
     node?: HDNode,
     payload?: string, // will be converted
 
@@ -913,7 +913,7 @@ export type DebugLinkState = {
 }
 
 export type LoadDeviceFlags = {
-    mnemonic?: string,
+    mnemonics?: Array<string>,
     node?: HDNode,
     pin?: string,
     passphrase_protection?: boolean,
