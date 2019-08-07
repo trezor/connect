@@ -26,9 +26,11 @@ internal.forEach(file => {
 });
 
 delete packageJSON.devDependencies;
+delete packageJSON.extendedDependencies;
 delete packageJSON.scripts;
 delete packageJSON.bin;
 delete packageJSON['react-native'];
+delete packageJSON.private;
 delete packageJSON.extendedDependencies;
 
 packageJSON.main = 'lib/index.js';
