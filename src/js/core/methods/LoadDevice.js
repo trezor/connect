@@ -72,11 +72,13 @@ export default class LoadDevice extends AbstractMethod {
     async run(): Promise<Success> {
         // todo: remove when listed firmwares become mandatory
         if (!this.device.atLeast(['1.8.2', '2.1.2'])) {
-            // $FlowIssue
+            if (!this.params.mnemonics || typeof this.params.mnemonics[0] !== 'string') {
+                throw new Error('invalid mnemonic array. should contain at least one mnemonic string');
+            }
             this.params.mnemonic = this.params.mnemonics[0];
-            // $FlowIssue
             delete this.params.mnemonics;
         }
+
         return await this.device.getCommands().load(this.params);
     }
 }
