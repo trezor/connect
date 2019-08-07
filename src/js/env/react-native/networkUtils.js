@@ -14,6 +14,8 @@ exports.httpRequest = function httpRequest(url, type) {
             return require('../../../data/firmware/2/releases.json');
         case './data/messages/messages-v6.json':
             return require('../../../data/messages/messages-v6.json');
+        case './data/messages/messages-v7.json':
+            return require('../../../data/messages/messages-v7.json');
         case './data/messages/messages.json':
             return require('../../../data/messages/messages.json');
         default:
