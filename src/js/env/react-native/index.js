@@ -39,12 +39,6 @@ export const dispose = () => {
     // }
 };
 
-export const cancel = () => {
-    // if (_popupManager) {
-    //     _popupManager.emit(POPUP.CLOSED);
-    // }
-};
-
 // handle message received from iframe
 const handleMessage = (message: $T.CoreMessage): void => {
     // TODO: destructuring with type
@@ -270,4 +264,11 @@ export const requestLogin: $T.RequestLogin = async (params) => {
     } else {
         return await call({ method: 'requestLogin', ...params });
     }
+};
+
+export const cancel = (error?: string) => {
+    postMessage({
+        type: POPUP.CLOSED,
+        payload: error ? { error } : null,
+    }, false);
 };

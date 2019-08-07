@@ -273,8 +273,8 @@ class TrezorConnect {
         dispose();
     }
 
-    static cancel = (): void => {
-        cancel();
+    static cancel = (error?: string): void => {
+        cancel(error);
     }
 
     static renderWebUSBButton = (className: ?string): void => {

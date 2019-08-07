@@ -27,8 +27,11 @@ let _popupManager: ?PopupManager;
 
 const initPopupManager = (): PopupManager => {
     const pm = new PopupManager(_settings);
-    pm.on(POPUP.CLOSED, () => {
-        iframe.postMessage({ type: POPUP.CLOSED }, false);
+    pm.on(POPUP.CLOSED, (error?: string) => {
+        iframe.postMessage({
+            type: POPUP.CLOSED,
+            payload: error ? { error } : null,
+        }, false);
     });
     return pm;
 };
@@ -46,9 +49,9 @@ export const dispose = () => {
     }
 };
 
-export const cancel = () => {
+export const cancel = (error?: string) => {
     if (_popupManager) {
-        _popupManager.emit(POPUP.CLOSED);
+        _popupManager.emit(POPUP.CLOSED, error);
     }
 };
 
