@@ -212,7 +212,7 @@ export default class GetAccountInfo extends AbstractMethod {
 
         const responses: Array<AccountInfo | null> = [];
 
-        const sendProgress = (progress: number, response: any, error?: string) => {
+        const sendProgress = (progress: number, response: AccountInfo | null, error?: string) => {
             if (!this.hasBundle || this.device.getCommands().disposed) return;
             // send progress to UI
             this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
@@ -233,9 +233,6 @@ export default class GetAccountInfo extends AbstractMethod {
             // get descriptor from device
             if (address_n && typeof descriptor !== 'string') {
                 try {
-                    if (request.coinInfo.shortcut.toLowerCase() === 'bch' || request.coinInfo.shortcut.toLowerCase() === 'dash') {
-                        throw new Error('BCH BREAK!');
-                    }
                     const accountDescriptor = await commands.getAccountDescriptor(
                         request.coinInfo,
                         address_n,
@@ -279,10 +276,6 @@ export default class GetAccountInfo extends AbstractMethod {
                     gap: request.gap,
                     marker: request.marker,
                 });
-
-                if (request.path === "m/49'/0'/1'") {
-                    throw new Error('BTC BREAK!');
-                }
 
                 if (commands.disposed) break;
 
