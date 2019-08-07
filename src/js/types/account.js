@@ -81,6 +81,7 @@ export type AccountUtxo = {
 }
 
 export type AccountInfo = {
+    empty: boolean,
     path: string,
     descriptor: string, // address or xpub
     balance: string,
@@ -118,7 +119,7 @@ export type AccountInfo = {
 export type AccountInfoRequest = {
     coin: string,
     path?: string,
-    descriptor: string,
+    descriptor?: string,
     details?: 'basic' | 'tokens' | 'tokenBalances' | 'txids' | 'txs',
     tokens?: 'nonzero' | 'used' | 'derived',
     page?: number,

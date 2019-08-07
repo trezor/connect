@@ -18,7 +18,7 @@ import type { CoreMessage, PostMessageEvent } from '../types';
 import Log, { init as initLog } from '../utils/debug';
 import { sendMessage } from '../utils/windowsUtils';
 import { checkBrowser, state as browserState } from '../utils/browser';
-import { getOrigin } from '../utils/networkUtils';
+import { getOrigin } from '../env/browser/networkUtils';
 import { load as loadStorage, PERMISSIONS_KEY } from './storage';
 let _core: Core;
 
@@ -142,8 +142,6 @@ const postMessage = (message: CoreMessage): void => {
     if (usingPopup && targetUiEvent(message)) {
         if (_popupMessagePort) {
             _popupMessagePort.postMessage(message);
-        } else {
-            console.warn('iframe postMessage: popupMessagePort not found');
         }
     } else {
         let origin: ?string = DataManager.getSettings('origin');

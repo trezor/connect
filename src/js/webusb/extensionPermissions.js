@@ -1,6 +1,6 @@
 /* @flow */
 
-import { httpRequest } from '../utils/networkUtils';
+import { httpRequest } from '../env/browser/networkUtils';
 import { sendMessage } from '../utils/windowsUtils';
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/popup.less';
@@ -35,7 +35,7 @@ const init = (label: string) => {
                 await usb.requestDevice({filters});
                 sendMessage('usb-permissions-close', '*');
             } catch (error) {
-                console.warn('Webusb error', error);
+                // empty
             }
         }
     };

@@ -17,13 +17,11 @@ type Batch = {
     path: Array<number>,
     coinInfo: ?BitcoinNetworkInfo,
 }
-type Params = {
-    bundle: Array<Batch>,
-    bundledResponse: boolean,
-}
+type Params = Array<Batch>;
 
 export default class GetPublicKey extends AbstractMethod {
     params: Params;
+    hasBundle: boolean;
     confirmed: boolean = false;
 
     constructor(message: CoreMessage) {
@@ -32,13 +30,9 @@ export default class GetPublicKey extends AbstractMethod {
         this.requiredPermissions = ['read'];
         this.info = 'Export public key';
 
-        const payload: Object = message.payload;
-        let bundledResponse: boolean = true;
-        // create a bundle with only one batch
-        if (!payload.hasOwnProperty('bundle')) {
-            payload.bundle = [ ...payload ];
-            bundledResponse = false;
-        }
+        // create a bundle with only one batch if bundle doesn't exists
+        this.hasBundle = message.payload.hasOwnProperty('bundle');
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -77,10 +71,7 @@ export default class GetPublicKey extends AbstractMethod {
             }
         });
 
-        this.params = {
-            bundle,
-            bundledResponse,
-        };
+        this.params = bundle;
     }
 
     async confirmation(): Promise<boolean> {
@@ -90,10 +81,10 @@ export default class GetPublicKey extends AbstractMethod {
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
         let label: string;
-        if (this.params.bundle.length > 1) {
+        if (this.params.length > 1) {
             label = 'Export multiple public keys';
         } else {
-            label = getPublicKeyLabel(this.params.bundle[0].path, this.params.bundle[0].coinInfo);
+            label = getPublicKeyLabel(this.params[0].path, this.params[0].coinInfo);
         }
 
         // request confirmation view
@@ -111,14 +102,15 @@ export default class GetPublicKey extends AbstractMethod {
 
     async run(): Promise<HDNodeResponse | Array<HDNodeResponse>> {
         const responses: Array<HDNodeResponse> = [];
-        for (let i = 0; i < this.params.bundle.length; i++) {
+        for (let i = 0; i < this.params.length; i++) {
+            const batch: Batch = this.params[i];
             const response: HDNodeResponse = await this.device.getCommands().getHDNode(
-                this.params.bundle[i].path,
-                this.params.bundle[i].coinInfo
+                batch.path,
+                batch.coinInfo
             );
             responses.push(response);
 
-            if (this.params.bundledResponse) {
+            if (this.hasBundle) {
                 // send progress
                 this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
@@ -126,6 +118,6 @@ export default class GetPublicKey extends AbstractMethod {
                 }));
             }
         }
-        return this.params.bundledResponse ? responses : responses[0];
+        return this.hasBundle ? responses : responses[0];
     }
 }

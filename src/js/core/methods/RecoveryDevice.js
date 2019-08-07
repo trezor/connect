@@ -75,7 +75,6 @@ export default class RecoveryDevice extends AbstractMethod {
 
         // wait for user action
         const uiResp = await uiPromise.promise;
-        console.warn('uiResp');
         return uiResp.payload;
     }
 

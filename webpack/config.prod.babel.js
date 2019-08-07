@@ -5,14 +5,13 @@ import {
     JS_SRC,
     DIST,
     LIB_NAME,
-    NODE_MODULES,
 } from './constants';
 
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import UglifyJsPlugin from 'uglifyjs-webpack-plugin';
+import TerserPlugin from 'terser-webpack-plugin';
 
 module.exports = {
     mode: 'production',
@@ -35,7 +34,7 @@ module.exports = {
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: [/node_modules/],
+                exclude: /node_modules/,
                 use: ['babel-loader'],
             },
             {
@@ -68,14 +67,6 @@ module.exports = {
             },
             {
                 type: 'javascript/auto',
-                test: /\.wasm$/,
-                loader: 'file-loader',
-                query: {
-                    name: 'js/[name].[hash].[ext]',
-                },
-            },
-            {
-                type: 'javascript/auto',
                 test: /\.json/,
                 exclude: /node_modules/,
                 loader: 'file-loader',
@@ -87,13 +78,16 @@ module.exports = {
         ],
     },
     resolve: {
-        modules: [ SRC, NODE_MODULES ],
+        modules: [ SRC, 'node_modules' ],
     },
     performance: {
         hints: false,
     },
     plugins: [
         new webpack.NormalModuleReplacementPlugin(/.blake2b$/, './blake2b.js'),
+        new webpack.NormalModuleReplacementPlugin(/env\/node$/, './env/browser'),
+        new webpack.NormalModuleReplacementPlugin(/env\/node\/workers$/, '../env/browser/workers'),
+        new webpack.NormalModuleReplacementPlugin(/env\/node\/networkUtils$/, '../env/browser/networkUtils'),
 
         new MiniCssExtractPlugin({
             filename: 'css/[name].[hash].css',
@@ -135,18 +129,16 @@ module.exports = {
         new webpack.IgnorePlugin(/\/iconv-loader$/),
     ],
 
-    // bitcoinjs-lib NOTE:
+    // @trezor/utxo-lib NOTE:
     // When uglifying the javascript, you must exclude the following variable names from being mangled:
-    // Array, BigInteger, Boolean, ECPair, Function, Number, Point and Script.
+    // Array, BigInteger, Boolean, Buffer, ECPair, Function, Number, Point and Script.
     // This is because of the function-name-duck-typing used in typeforce.
     optimization: {
         minimizer: [
-            new UglifyJsPlugin({
+            new TerserPlugin({
                 parallel: true,
-                uglifyOptions: {
-                    compress: {
-                        warnings: false,
-                    },
+                terserOptions: {
+                    ecma: 6,
                     mangle: {
                         reserved: [
                             'Array', 'BigInteger', 'Boolean', 'Buffer',

@@ -578,6 +578,7 @@ export default class DeviceCommands {
         const logMessage: Object = filterForLog(type, msg);
 
         if (this.debug) {
+            // eslint-disable-next-line no-console
             console.log('[DeviceCommands] [call] Sending', type, logMessage, this.transport);
         }
 
@@ -585,11 +586,13 @@ export default class DeviceCommands {
             const res: DefaultMessageResponse = await this.transport.call(this.sessionId, type, msg, false);
             const logMessage = filterForLog(res.type, res.message);
             if (this.debug) {
+                // eslint-disable-next-line no-console
                 console.log('[DeviceCommands] [call] Received', res.type, logMessage);
             }
             return res;
         } catch (error) {
             if (this.debug) {
+                // eslint-disable-next-line no-console
                 console.warn('[DeviceCommands] [call] Received error', error);
             }
             // TODO: throw trezor error
@@ -697,9 +700,8 @@ export default class DeviceCommands {
                     }
                 });
             } else {
-                // if (this.session.debug) {
+                // eslint-disable-next-line no-console
                 console.warn('[DeviceCommands] [call] PIN callback not configured, cancelling request');
-                // }
                 reject(new Error('PIN callback not configured'));
             }
         });
@@ -716,9 +718,8 @@ export default class DeviceCommands {
                     }
                 });
             } else {
-                // if (this.session.debug) {
+                // eslint-disable-next-line no-console
                 console.warn('[DeviceCommands] [call] Passphrase callback not configured, cancelling request');
-                // }
                 reject(new Error('Passphrase callback not configured'));
             }
         });
@@ -767,7 +768,7 @@ export default class DeviceCommands {
     async getAccountDescriptor(coinInfo: CoinInfo, indexOrPath: number | Array<number>): Promise<?{ descriptor: string, address_n: number[] }> {
         const address_n = Array.isArray(indexOrPath) ? indexOrPath : getAccountAddressN(coinInfo, indexOrPath);
         if (coinInfo.type === 'bitcoin') {
-            const resp = await this.getHDNode(address_n, coinInfo);
+            const resp = await this.getHDNode(address_n, coinInfo, false);
             return {
                 descriptor: resp.xpubSegwit || resp.xpub,
                 address_n,

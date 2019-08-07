@@ -111,7 +111,6 @@ export default class FeeLevels {
             });
         } catch (error) {
             // empty
-            console.error(error);
         }
 
         return this.levels;

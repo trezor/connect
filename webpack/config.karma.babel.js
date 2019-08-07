@@ -44,14 +44,6 @@ module.exports = {
             },
             {
                 type: 'javascript/auto',
-                test: /\.wasm$/,
-                loader: 'file-loader',
-                query: {
-                    name: 'js/[name].[ext]',
-                },
-            },
-            {
-                type: 'javascript/auto',
                 test: /\.json/,
                 exclude: /node_modules/,
                 loader: 'file-loader',
@@ -64,7 +56,7 @@ module.exports = {
     },
 
     resolve: {
-        modules: [ JS_SRC, './node_modules' ],
+        modules: [ JS_SRC, 'node_modules' ],
         alias: {
             'flowtype/tests/get-address': `${ SRC }/flowtype/tests/get-address.js`,
             'flowtype/tests/sign-message': `${ SRC }/flowtype/tests/sign-message.js`,
@@ -73,6 +65,9 @@ module.exports = {
 
     plugins: [
         new webpack.NormalModuleReplacementPlugin(/.blake2b$/, './blake2b.js'),
+        new webpack.NormalModuleReplacementPlugin(/env\/node$/, './env/browser'),
+        new webpack.NormalModuleReplacementPlugin(/env\/node\/workers$/, '../env/browser/workers'),
+        new webpack.NormalModuleReplacementPlugin(/env\/node\/networkUtils$/, '../env/browser/networkUtils'),
         new MiniCssExtractPlugin({
             filename: '[name].css',
             chunkFilename: '[id].css',

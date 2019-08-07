@@ -16,13 +16,7 @@ import DataManager from '../data/DataManager';
 import Log, { init as initLog } from '../utils/debug';
 import { resolveAfter } from '../utils/promiseUtils';
 
-// nodejs-replace-start
-/* $FlowIssue loader notation */
-import SharedConnectionWorker from 'sharedworker-loader?name=js/shared-connection-worker.[hash].js!trezor-link/lib/lowlevel/sharedConnectionWorker';
-// nodejs-replace-end
-/* nodejs-imports-start
-const SharedConnectionWorker = () => { return 'not-used-in-node.js' };
-nodejs-imports-end */
+import { SharedConnectionWorker } from '../env/node/workers';
 
 const { BridgeV2, Lowlevel, WebUsb, Fallback } = TrezorLink;
 
@@ -68,9 +62,24 @@ export default class DeviceList extends EventEmitter {
 
         _log.enabled = DataManager.getSettings('debug');
         if (!this.options.transport) {
+            // $FlowIssue: `version` is missing in `JSON`
+            const bridgeVersion = DataManager.assets['bridge'].version.join('.');
+            const env = DataManager.getSettings('env');
+            if (env === 'react-native' || env === 'node' || env === 'electron') {
+                BridgeV2.setFetch(fetch, true);
+            }
+
+            let bridgeUrl: ?string;
+            if (env === 'react-native') {
+                if (!process.env.RN_EMULATOR) {
+                    bridgeUrl = 'http://10.36.2.3:21325'; // TODO: remove this. SL laptop just for debugging
+                } else if (process.env.RN_OS === 'android') {
+                    bridgeUrl = 'http://10.0.2.2:21325'; // Android emulator localhost
+                }
+            }
+
             const transportTypes: Array<Transport> = [
-                // $FlowIssue: `version` is missing in `JSON`
-                new BridgeV2(null, null, DataManager.assets['bridge'].version.join('.')),
+                new BridgeV2(bridgeUrl, null, bridgeVersion),
             ];
 
             if (DataManager.getSettings('webusb')) {

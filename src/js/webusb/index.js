@@ -1,6 +1,6 @@
 /* @flow */
 
-import { httpRequest } from '../utils/networkUtils';
+import { httpRequest } from '../env/browser/networkUtils';
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/webusb.less';
 
@@ -43,7 +43,7 @@ const handleMessage = async (event: MessageEvent): Promise<void> => {
             try {
                 await usb.requestDevice({filters});
             } catch (error) {
-                console.warn('Webusb error', error);
+                // empty
             }
         }
     };

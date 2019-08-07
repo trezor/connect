@@ -43,7 +43,7 @@ const DEFAULT_DOMAIN: string = `https://connect.trezor.io/${ DIRECTORY }`;
 export const DEFAULT_PRIORITY: number = 2;
 
 const initialSettings: ConnectSettings = {
-    configSrc: 'data/config.json', // constant
+    configSrc: './data/config.json', // constant
     version: VERSION, // constant
     debug: false,
     origin: null,
@@ -85,9 +85,21 @@ export const getEnv = (): string => {
     if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined') {
         return 'webextension';
     }
-    if (typeof process !== 'undefined' && process.versions.hasOwnProperty('electron')) {
-        return 'electron';
+    if (typeof navigator !== 'undefined') {
+        if (typeof navigator.product === 'string' && navigator.product.toLowerCase() === 'reactnative') {
+            return 'react-native';
+        }
+        const userAgent = navigator.userAgent.toLowerCase();
+        if (userAgent.indexOf(' electron/') > -1) {
+            return 'electron';
+        }
     }
+    // if (typeof navigator !== 'undefined' && typeof navigator.product === 'string' && navigator.product.toLowerCase() === 'reactnative') {
+    //     return 'react-native';
+    // }
+    // if (typeof process !== 'undefined' && process.versions.hasOwnProperty('electron')) {
+    //     return 'electron';
+    // }
     return 'web';
 };
 
@@ -136,7 +148,7 @@ export const parse = (input: ?Object): ConnectSettings => {
     }
 
     // local files
-    if (typeof window !== 'undefined' && window.location.protocol === 'file:') {
+    if (typeof window !== 'undefined' && window.location && window.location.protocol === 'file:') {
         settings.origin = `file://${window.location.pathname}`;
         settings.webusb = false;
     }

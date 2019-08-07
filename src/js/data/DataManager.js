@@ -1,6 +1,6 @@
 /* @flow */
 
-import { httpRequest } from '../utils/networkUtils';
+import { httpRequest } from '../env/node/networkUtils';
 import { parseBridgeJSON } from '../utils/browser';
 import { DEFAULT_PRIORITY } from '../data/ConnectSettings';
 import { parseCoinsJson } from './CoinInfo';
@@ -79,8 +79,8 @@ export default class DataManager {
     static messages: { [key: string]: JSON } = {};
 
     static async load(settings: ConnectSettings): Promise<void> {
-        const ts: number = settings.timestamp;
-        const configUrl: string = `${settings.configSrc}?r=${ ts }`;
+        const ts: string = settings.env === 'web' ? `?r=${settings.timestamp}` : '';
+        const configUrl: string = `${settings.configSrc}${ts}`;
 
         try {
             this.settings = settings;
@@ -88,7 +88,7 @@ export default class DataManager {
             this.config = parseConfig(config);
 
             // check if origin is localhost or trusted
-            const isLocalhost: boolean = typeof window !== 'undefined' ? window.location.hostname === 'localhost' : true;
+            const isLocalhost: boolean = typeof window !== 'undefined' && window.location ? window.location.hostname === 'localhost' : true;
             const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || '');
             this.settings.trustedHost = (isLocalhost || !!whitelist) && !this.settings.popup;
             // ensure that popup will be used
@@ -108,12 +108,12 @@ export default class DataManager {
             }
 
             for (const asset of this.config.assets) {
-                const json: JSON = await httpRequest(`${asset.url}?r=${ ts }`, asset.type || 'json');
+                const json: JSON = await httpRequest(`${asset.url}${ts}`, asset.type || 'json');
                 this.assets[ asset.name ] = json;
             }
 
             for (const protobuf of this.config.messages) {
-                const json: JSON = await httpRequest(`${protobuf.json}?r=${ ts }`, 'json');
+                const json: JSON = await httpRequest(`${protobuf.json}${ts}`, 'json');
                 this.messages[ protobuf.name ] = json;
             }
 

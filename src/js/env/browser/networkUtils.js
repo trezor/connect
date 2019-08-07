@@ -17,15 +17,6 @@ export const httpRequest = async (url: string, type: string = 'text'): any => {
     } else {
         throw new Error(`httpRequest error: ${ url} ${response.statusText}`);
     }
-
-    // return fetch(url, { credentials: 'same-origin' }).then((response) => {
-    //     if (response.status === 200) {
-
-    //         return response.text().then(result => (json ? JSON.parse(result) : result));
-    //     } else {
-    //         throw new Error(response.statusText);
-    //     }
-    // })
 };
 
 export const getOrigin = (url: string) => {

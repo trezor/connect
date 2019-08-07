@@ -120,7 +120,6 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
     ];
 
     if (!isTrustedOrigin && safeMessages.indexOf(message.type) === -1) {
-        console.warn('Message not trusted', message);
         return;
     }
 
@@ -778,6 +777,7 @@ const onPopupClosed = (customErrorMessage: ?string): void => {
     // Device was already acquired. Try to interrupt running action which will throw error from onCall try/catch block
     if (_deviceList && _deviceList.asArray().length > 0) {
         _deviceList.allDevices().forEach(d => {
+            d.keepSession = false; // clear session on release
             if (d.isUsedHere()) {
                 d.interruptionFromUser(error);
             } else {

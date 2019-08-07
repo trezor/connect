@@ -46,7 +46,7 @@ declare var chrome: {
         get: (id: number, callback: (tab: ?ChromeTab) => void) => void,
         highlight: (options: Object, callback?: () => void) => void,
         update: (id: number, options: Object) => void,
-        remove: (id: number) => void,
+        remove: (id: number, callback?: () => void) => void,
     },
 }
 

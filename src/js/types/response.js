@@ -123,7 +123,7 @@ export type GetAccountInfo$ = {
 
 export type GetAccountInfo$$ = {
     success: true,
-    payload: Array<AccountInfo>,
+    payload: Array<AccountInfo | null>,
 } | Unsuccessful$;
 
 export type GetAddress$ = {

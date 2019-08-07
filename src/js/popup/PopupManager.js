@@ -7,7 +7,7 @@ import * as UI from '../constants/ui';
 import { showPopupRequest } from './showPopupRequest';
 import type { ConnectSettings } from '../data/ConnectSettings';
 import type { CoreMessage, Deferred } from '../types';
-import { getOrigin } from '../utils/networkUtils';
+import { getOrigin } from '../env/browser/networkUtils';
 import { create as createDeferred } from '../utils/deferred';
 
 // const POPUP_REQUEST_TIMEOUT: number = 602;
@@ -270,6 +270,7 @@ export default class PopupManager extends EventEmitter {
             this.extensionPort = null;
         }
 
+        // switch to previously focused tab
         if (this.extensionTabId) {
             // $FlowIssue chrome not declared outside
             chrome.tabs.update(this.extensionTabId, { active: true });
@@ -278,8 +279,13 @@ export default class PopupManager extends EventEmitter {
 
         if (this._window) {
             if (this.settings.env === 'webextension') {
+                // eslint-disable-next-line no-unused-vars
+                let _e: any;
                 // $FlowIssue chrome not declared outside
-                chrome.tabs.remove(this._window.id);
+                chrome.tabs.remove(this._window.id, () => {
+                    _e = chrome.runtime.lastError;
+                });
+                _e = chrome.runtime.lastError;
             } else {
                 this._window.close();
             }
