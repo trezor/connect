@@ -61,7 +61,8 @@ export const validateCoinPath = (coinInfo: ?CoinInfo, path: Array<number>): void
     }
 };
 
-export const getFirmwareRange = (method: string, coinInfo: ?CoinInfo, current: FirmwareRange): FirmwareRange => {
+export const getFirmwareRange = (method: string, coinInfo: ?CoinInfo, currentRange: FirmwareRange): FirmwareRange => {
+    const current: FirmwareRange = JSON.parse(JSON.stringify(currentRange));
     // set minimum required firmware from coins.json (coinInfo)
     if (coinInfo) {
         if (!coinInfo.support || typeof coinInfo.support.trezor1 !== 'string') {
