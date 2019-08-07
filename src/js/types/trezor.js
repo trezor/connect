@@ -73,7 +73,7 @@ export type LoadDeviceSettings = {
     language?: string,
     label?: string,
     skip_checksum?: boolean,
-
+    mnemonics?: Array<string>,
     mnemonic?: string,
     node?: HDNode,
     payload?: string, // will be converted
@@ -913,6 +913,7 @@ export type DebugLinkState = {
 }
 
 export type LoadDeviceFlags = {
+    mnemonics?: Array<string>,
     mnemonic?: string,
     node?: HDNode,
     pin?: string,

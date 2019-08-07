@@ -35,6 +35,7 @@ export default class ResetDevice extends AbstractMethod {
             { name: 'u2fCounter', type: 'number' },
             { name: 'skipBackup', type: 'boolean' },
             { name: 'noBackup', type: 'boolean' },
+            { name: 'backupType', type: 'number' },
         ]);
 
         this.params = {
@@ -47,6 +48,7 @@ export default class ResetDevice extends AbstractMethod {
             u2f_counter: payload.u2fCounter || Math.floor(Date.now() / 1000),
             skip_backup: payload.skipBackup,
             no_backup: payload.noBackup,
+            backup_type: payload.backupType,
         };
     }
 

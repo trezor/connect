@@ -15,7 +15,6 @@ export default class LoadDevice extends AbstractMethod {
 
     constructor(message: CoreMessage) {
         super(message);
-
         this.allowDeviceMode = [ UI.INITIALIZE, UI.SEEDLESS ];
         this.useDeviceState = false;
         this.requiredPermissions = ['management'];
@@ -24,7 +23,7 @@ export default class LoadDevice extends AbstractMethod {
         const payload: Object = message.payload;
         // validate bundle type
         validateParams(payload, [
-            { name: 'mnemonic', type: 'string' },
+            { name: 'mnemonics', type: 'array' },
             { name: 'node', type: 'object' },
             { name: 'pin', type: 'string' },
             { name: 'passphraseProtection', type: 'boolean' },
@@ -35,7 +34,7 @@ export default class LoadDevice extends AbstractMethod {
         ]);
 
         this.params = {
-            mnemonic: payload.mnemonic,
+            mnemonics: payload.mnemonics,
             node: payload.node,
             pin: payload.pin,
             passphrase_protection: payload.passphraseProtection,
@@ -71,6 +70,15 @@ export default class LoadDevice extends AbstractMethod {
     }
 
     async run(): Promise<Success> {
+        // todo: remove when listed firmwares become mandatory
+        if (!this.device.atLeast(['1.8.2', '2.1.2'])) {
+            if (!this.params.mnemonics || typeof this.params.mnemonics[0] !== 'string') {
+                throw new Error('invalid mnemonic array. should contain at least one mnemonic string');
+            }
+            this.params.mnemonic = this.params.mnemonics[0];
+            delete this.params.mnemonics;
+        }
+
         return await this.device.getCommands().load(this.params);
     }
 }
