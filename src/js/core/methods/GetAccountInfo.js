@@ -6,7 +6,7 @@ import { validatePath, getSerializedPath } from '../../utils/pathUtils';
 import { getAccountLabel } from '../../utils/accountUtils';
 import { resolveAfter } from '../../utils/promiseUtils';
 import { getCoinInfo } from '../../data/CoinInfo';
-import { NO_COIN_INFO, backendNotSupported } from '../../constants/errors';
+import { NO_COIN_INFO, backendNotSupported, TrezorError } from '../../constants/errors';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
@@ -16,9 +16,10 @@ import { initBlockchain } from '../../backend/BlockchainLink';
 import type { CoreMessage, CoinInfo } from '../../types';
 import type { $GetAccountInfo } from '../../types/params';
 import type { AccountInfo } from '../../types/account';
+import type { FirmwareException } from '../../types/uiRequest';
 
 type Request = $GetAccountInfo & { address_n: number[], coinInfo: CoinInfo };
-type Params = Array<Request>;
+type Params = Request[];
 
 export default class GetAccountInfo extends AbstractMethod {
     params: Params;
@@ -169,70 +170,147 @@ export default class GetAccountInfo extends AbstractMethod {
         return uiResp.payload;
     }
 
-    async run(): Promise<AccountInfo | AccountInfo[]> {
+    // override AbstractMethod function
+    // this is a special case where we want to check firmwareRange in bundle
+    // and return error with bundle indexes
+    async checkFirmwareRange(isUsingPopup: boolean): Promise<?$PropertyType<FirmwareException, 'type'>> {
+        // for popup mode use it like it was before
+        if (isUsingPopup || this.params.length === 1) {
+            return super.checkFirmwareRange(isUsingPopup);
+        }
+        // for trusted mode check each batch and return error with invalid bundle indexes
+        const defaultRange = {
+            '1': { min: '1.0.0', max: '0' },
+            '2': { min: '2.0.0', max: '0' },
+        };
+        // find invalid ranges
+        const invalid = [];
+        for (let i = 0; i < this.params.length; i++) {
+            // set FW range for current batch
+            this.firmwareRange = getFirmwareRange(this.name, this.params[i].coinInfo, defaultRange);
+            const exception = await super.checkFirmwareRange(false);
+            if (exception) {
+                invalid.push({
+                    index: i,
+                    exception,
+                    coin: this.params[i].coin,
+                });
+            }
+        }
+        // return invalid ranges in custom error
+        if (invalid.length > 0) {
+            throw new TrezorError('bundle_fw_exception', JSON.stringify(invalid));
+        }
+        return null;
+    }
+
+    async run(): Promise<AccountInfo | Array<AccountInfo | null> | null> {
         // address_n and descriptor are not set. use discovery
         if (this.params.length === 1 && !this.params[0].address_n && !this.params[0].descriptor) {
             return this.discover(this.params[0]);
         }
 
-        const responses: AccountInfo[] = [];
+        const responses: Array<AccountInfo | null> = [];
+
+        const sendProgress = (progress: number, response: any, error?: string) => {
+            if (!this.hasBundle || this.device.getCommands().disposed) return;
+            // send progress to UI
+            this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+                progress,
+                response,
+                error,
+            }));
+        };
 
         for (let i = 0; i < this.params.length; i++) {
             const request = this.params[i];
             const { address_n } = request;
             let descriptor = request.descriptor;
+            const commands = this.device.getCommands();
+
+            if (commands.disposed) break;
 
             // get descriptor from device
             if (address_n && typeof descriptor !== 'string') {
-                const accountDescriptor = await this.device.getCommands().getAccountDescriptor(
-                    request.coinInfo,
-                    address_n,
-                );
-                if (accountDescriptor) {
-                    descriptor = accountDescriptor.descriptor;
+                try {
+                    if (request.coinInfo.shortcut.toLowerCase() === 'bch' || request.coinInfo.shortcut.toLowerCase() === 'dash') {
+                        throw new Error('BCH BREAK!');
+                    }
+                    const accountDescriptor = await commands.getAccountDescriptor(
+                        request.coinInfo,
+                        address_n,
+                    );
+                    if (accountDescriptor) {
+                        descriptor = accountDescriptor.descriptor;
+                    }
+                } catch (error) {
+                    if (this.hasBundle) {
+                        responses.push(null);
+                        sendProgress(i, null, error.message);
+                        continue;
+                    } else {
+                        throw error;
+                    }
                 }
             }
 
-            if (typeof descriptor !== 'string') {
-                throw new Error('GetAccountInfo: descriptor not found');
-            }
+            if (commands.disposed) break;
 
-            // initialize backend
-            const blockchain = await initBlockchain(request.coinInfo, this.postMessage);
+            try {
+                if (typeof descriptor !== 'string') {
+                    throw new Error('GetAccountInfo: descriptor not found');
+                }
 
-            // get account info from backend
-            const info = await blockchain.getAccountInfo({
-                descriptor,
-                details: request.details,
-                tokens: request.tokens,
-                page: request.page,
-                pageSize: request.pageSize,
-                from: request.from,
-                to: request.to,
-                contractFilter: request.contractFilter,
-                gap: request.gap,
-                marker: request.marker,
-            });
+                // initialize backend
+                const blockchain = await initBlockchain(request.coinInfo, this.postMessage);
 
-            let utxo: $ElementType<AccountInfo, 'utxo'>;
-            if (request.coinInfo.type === 'bitcoin' && typeof request.details === 'string' && request.details !== 'basic') {
-                utxo = await blockchain.getAccountUtxo(descriptor);
-            }
+                if (commands.disposed) break;
 
-            // add account to responses
-            responses.push({
-                path: request.path,
-                ...info,
-                descriptor, // override descriptor (otherwise eth checksum is lost)
-                utxo,
-            });
+                // get account info from backend
+                const info = await blockchain.getAccountInfo({
+                    descriptor,
+                    details: request.details,
+                    tokens: request.tokens,
+                    page: request.page,
+                    pageSize: request.pageSize,
+                    from: request.from,
+                    to: request.to,
+                    contractFilter: request.contractFilter,
+                    gap: request.gap,
+                    marker: request.marker,
+                });
 
-            // send progress to UI
-            if (this.hasBundle) {
-                this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
-                    progress: i,
-                    response: info,
-                }));
+                if (request.path === "m/49'/0'/1'") {
+                    throw new Error('BTC BREAK!');
+                }
+
+                if (commands.disposed) break;
+
+                let utxo: $ElementType<AccountInfo, 'utxo'>;
+                if (request.coinInfo.type === 'bitcoin' && typeof request.details === 'string' && request.details !== 'basic') {
+                    utxo = await blockchain.getAccountUtxo(descriptor);
+                }
+
+                if (commands.disposed) break;
+
+                // add account to responses
+                const account: AccountInfo = {
+                    path: request.path,
+                    ...info,
+                    descriptor, // override descriptor (otherwise eth checksum is lost)
+                    utxo,
+                };
+                responses.push(account);
+
+                sendProgress(i, account);
+            } catch (error) {
+                if (this.hasBundle) {
+                    responses.push(null);
+                    sendProgress(i, null, error.message);
+                    continue;
+                } else {
+                    throw error;
+                }
             }
         }
         return this.hasBundle ? responses : responses[0];
