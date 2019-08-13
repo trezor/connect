@@ -230,6 +230,19 @@ class TrezorConnect {
         return await call({ method: 'eosSignTransaction', ...params });
     }
 
+    static binanceGetAddress: $T.BinanceGetAddress = async (params) => {
+        const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
+        return await call({ method: 'binanceGetAddress', ...params, useEventListener });
+    }
+
+    static binanceGetPublicKey: $T.BinanceGetPublicKey = async (params) => {
+        return await call({ method: 'binanceGetPublicKey', ...params });
+    }
+
+    static binanceSignTransaction: $T.BinanceSignTransaction = async (params) => {
+        return await call({ method: 'binanceSignTransaction', ...params });
+    }
+
     static verifyMessage: $T.VerifyMessage = async (params) => {
         return await call({ method: 'verifyMessage', ...params });
     }

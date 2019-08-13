@@ -855,6 +855,67 @@ export type EosSignedTx = {
     signature: string,
 }
 
+// Binance types
+export type BinanceAddress = {
+    address: string,
+}
+
+export type BinancePublicKey = {
+    public_key: string,
+}
+
+export type BinanceSignTx = {
+    address_n: Array<number>,
+    msg_count: number,
+    chain_id: string,
+    account_number: number,
+    memo?: string,
+    sequence: number,
+    source: number,
+}
+
+export type BinanceTxRequest = {
+
+}
+
+export type BinanceInputOutput = {
+    address: string,
+    coins: {
+        amount: number,
+        denom: string,
+    },
+}
+
+export type BinanceTransferMsg = {
+    inputs: BinanceInputOutput[],
+    outputs: BinanceInputOutput[],
+}
+
+export type BinanceOrderMsg = {
+    id: string,
+    ordertype: number, // 'OT_UNKNOWN' | 'MARKET' | 'LIMIT' | 'OT_RESERVED',
+    price: number,
+    quantity: number,
+    sender: string,
+    side: number, // 'SIDE_UNKNOWN' | 'BUY' | 'SELL',
+    symbol: string,
+    timeinforce: number, // 'TIF_UNKNOWN' | 'GTE' | 'TIF_RESERVED' | 'IOC',
+}
+
+export type BinanceCancelMsg = {
+    refid: string,
+    sender: string,
+    symbol: string,
+}
+
+export type BinanceMessage = BinanceTransferMsg | BinanceOrderMsg | BinanceCancelMsg;
+
+export type BinanceSignedTx = {
+    signature: string,
+    public_key: string,
+    json: string,
+}
+
 // GetAddress response
 export type Address = {
     address: string,
