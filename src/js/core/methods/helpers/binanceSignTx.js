@@ -85,9 +85,9 @@ export const validate = (tx: BinanceTransaction): PreparedBinanceTransaction => 
 
     if (tx.cancelOrder) {
         validateParams(tx.cancelOrder, [
-            { name: 'refid', type: 'array', obligatory: true },
-            { name: 'sender', type: 'array', obligatory: true },
-            { name: 'symbol', type: 'array', obligatory: true },
+            { name: 'refid', type: 'string', obligatory: true },
+            { name: 'sender', type: 'string', obligatory: true },
+            { name: 'symbol', type: 'string', obligatory: true },
         ]);
         preparedTx.messages.push({
             type: 'BinanceCancelMsg',
