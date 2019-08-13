@@ -62,3 +62,7 @@ Every method require an [`Object`](https://developer.mozilla.org/en-US/docs/Web/
 * [TrezorConnect.tezosGetPublicKey](methods/tezosGetPublicKey.md)
 * [TrezorConnect.tezosSignTransaction](methods/tezosSignTransaction.md)
 
+### Binance
+* [TrezorConnect.binanceGetAddress](methods/binanceGetAddress.md)
+* [TrezorConnect.binanceGetPublicKey](methods/binanceGetPublicKey.md)
+* [TrezorConnect.binanceSignTransaction](methods/binanceSignTransaction.md)
