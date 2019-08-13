@@ -913,7 +913,6 @@ export type BinanceMessage = BinanceTransferMsg | BinanceOrderMsg | BinanceCance
 export type BinanceSignedTx = {
     signature: string,
     public_key: string,
-    json: string,
 }
 
 // GetAddress response
