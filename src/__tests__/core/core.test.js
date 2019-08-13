@@ -55,10 +55,18 @@ const MNEMONICS = {
     'mnemonic_abandon': ['abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about'],
 };
 
+const MNEMONICS_SECRET = {
+    'mnemonic_12': '616c636f686f6c20776f6d616e206162757365206d75737420647572696e67206d6f6e69746f72206e6f626c652061637475616c206d6978656420747261646520616e676572206169736c65',
+    'mnemonic_all': '616c6c20616c6c20616c6c20616c6c20616c6c20616c6c20616c6c20616c6c20616c6c20616c6c20616c6c20616c6c',
+    'mnemonic_abandon': '6162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e2061626f7574',
+};
+
 const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> => {
     core = await initCore(settings);
     checkBrowser();
 
+    const mnemonics = Array.isArray(test.mnemonic) ? test.mnemonic : MNEMONICS[test.mnemonic];
+    const mnemonicsSecret = typeof test.mnemonic_secret === 'string' ? test.mnemonic_secret : typeof test.mnemonic === 'string' ? MNEMONICS_SECRET[test.mnemonic] : null;
     const handler = new CoreEventHandler(core, () => {}, () => {});
     handler.startListening();
 
@@ -77,7 +85,8 @@ const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> =>
                 console.error('Cannot load debugLink state', event.payload.error);
                 throw new Error(event.payload.error);
             }
-            if (MNEMONICS[test.mnemonic] === event.payload.mnemonic) {
+
+            if (mnemonics === event.payload.mnemonic || mnemonicsSecret === event.payload.mnemonic_secret) {
                 core.removeAllListeners(CORE_EVENT);
                 done();
             } else {
@@ -97,7 +106,7 @@ const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> =>
                 payload: {
                     method: 'loadDevice',
                     device: event.payload,
-                    mnemonics: MNEMONICS[test.mnemonic],
+                    mnemonics,
                 },
             }, true);
         } else if (event.id === 3) {

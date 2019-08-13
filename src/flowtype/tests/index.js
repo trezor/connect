@@ -251,7 +251,8 @@ declare module 'flowtype/tests' {
 
     declare export type TestFunction = {
         testName: string,
-        mnemonic: string,
+        mnemonic: string | Array<string>,
+        mnemonic_secret?: string,
         testPayloads?: Array<TestPayload>,
         expectedResponses?: Array<ExpectedResponse>,
         subtests?: { [k: string]: () => SubtestFunction },
