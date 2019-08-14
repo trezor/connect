@@ -142,7 +142,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
 
         case TRANSPORT.DISABLE_WEBUSB :
             // eslint-disable-next-line no-use-before-define
-            disableWebusbTransport();
+            disableWebUSBTransport();
             break;
 
         // messages from UI (popup/modal...)
@@ -1048,16 +1048,16 @@ const reconnectTransport = async (): Promise<void> => {
     }
 };
 
-const disableWebusbTransport = async (): Promise<void> => {
+const disableWebUSBTransport = async (): Promise<void> => {
+    if (!_deviceList) return;
+    if (_deviceList.transportType() !== 'webusb') return;
     // override settings
     const settings = DataManager.getSettings();
     settings.webusb = false;
 
     try {
         // disconnect previous device list
-        if (_deviceList) {
-            _deviceList.onBeforeUnload();
-        }
+        _deviceList.onBeforeUnload();
         // and init with new settings, without webusb
         await initDeviceList(settings);
     } catch (error) {
