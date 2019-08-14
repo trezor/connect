@@ -23,9 +23,7 @@ import { create as createDeferred } from '../utils/deferred';
 import { resolveAfter } from '../utils/promiseUtils';
 import { state as browserState } from '../utils/browser';
 
-import Log, { init as initLog, enable as enableLog } from '../utils/debug';
-
-import { parse as parseSettings } from '../data/ConnectSettings';
+import Log, { init as initLog } from '../utils/debug';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
 import type { Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse } from '../types';
@@ -113,10 +111,11 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
     const safeMessages: Array<string> = [
         IFRAME.CALL,
         POPUP.CLOSED,
-        UI.CHANGE_SETTINGS,
+        // UI.CHANGE_SETTINGS,
         UI.CUSTOM_MESSAGE_RESPONSE,
         UI.LOGIN_CHALLENGE_RESPONSE,
         TRANSPORT.RECONNECT,
+        TRANSPORT.DISABLE_WEBUSB,
     ];
 
     if (!isTrustedOrigin && safeMessages.indexOf(message.type) === -1) {
@@ -132,13 +131,18 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
             onPopupClosed(message.payload ? message.payload.error : null);
             break;
 
-        case UI.CHANGE_SETTINGS :
-            enableLog(parseSettings(message.payload).debug);
-            break;
+            // case UI.CHANGE_SETTINGS :
+            //     enableLog(parseSettings(message.payload).debug);
+            //     break;
 
         case TRANSPORT.RECONNECT :
             // eslint-disable-next-line no-use-before-define
             reconnectTransport();
+            break;
+
+        case TRANSPORT.DISABLE_WEBUSB :
+            // eslint-disable-next-line no-use-before-define
+            disableWebusbTransport();
             break;
 
         // messages from UI (popup/modal...)
@@ -1036,6 +1040,26 @@ const reconnectTransport = async (): Promise<void> => {
 
     try {
         await initDeviceList(DataManager.getSettings());
+    } catch (error) {
+        postMessage(new TransportMessage(TRANSPORT.ERROR, {
+            error: error.message || error,
+            bridge: DataManager.getLatestBridgeVersion(),
+        }));
+    }
+};
+
+const disableWebusbTransport = async (): Promise<void> => {
+    // override settings
+    const settings = DataManager.getSettings();
+    settings.webusb = false;
+
+    try {
+        // disconnect previous device list
+        if (_deviceList) {
+            _deviceList.onBeforeUnload();
+        }
+        // and init with new settings, without webusb
+        await initDeviceList(settings);
     } catch (error) {
         postMessage(new TransportMessage(TRANSPORT.ERROR, {
             error: error.message || error,

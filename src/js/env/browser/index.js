@@ -15,6 +15,7 @@ import * as POPUP from '../../constants/popup';
 import * as IFRAME from '../../constants/iframe';
 import * as UI from '../../constants/ui';
 import * as ERROR from '../../constants/errors';
+import * as TRANSPORT from '../../constants/transport';
 
 import type { ConnectSettings } from '../../data/ConnectSettings';
 import * as $T from '../../types';
@@ -305,4 +306,11 @@ export const requestLogin: $T.RequestLogin = async (params) => {
     } else {
         return await call({ method: 'requestLogin', ...params });
     }
+};
+
+export const disableWebUSB = () => {
+    iframe.postMessage({
+        event: UI_EVENT,
+        type: TRANSPORT.DISABLE_WEBUSB,
+    });
 };
