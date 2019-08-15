@@ -90,7 +90,7 @@ export type EosTxAction = Action & {
         from: string,
         receiver: string,
         unstake_net_quantity: string,
-        unstake_cpu_quantity: string
+        unstake_cpu_quantity: string,
     },
 } | Action & {
     name: 'buyram',

@@ -1,5 +1,5 @@
 ## Eos: sign transaction
-Asks device to sign given transaction using the private key derived by given BIP32 path. User is asked to confirm all transaction
+Asks device to sign given transaction using the private key derived by given [BIP44 path](path.md). User is asked to confirm all transaction
 details on Trezor.
 
 ES6
@@ -18,12 +18,12 @@ TrezorConnect.eosSignTransaction(params).then(function(result) {
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L69-L72)
 * `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
-* `transaction` - *obligatory* `Object` type of [Transaction](../../src/js/types/eos.js#L146) "0x" prefix for each field is optional
+* `transaction` - *obligatory* `Object` type of [Transaction](../../src/js/types/eos.js#L145-L149)
 
-### Example
+### Transfer example
 ```javascript
 TrezorConnect.eosSignTransaction({
-    path: "m/44'/60'/0'",
+    path: "m/44'/194'/0'/0/0",
     transaction: {
         chainId: 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f',
         header: {
@@ -53,7 +53,7 @@ TrezorConnect.eosSignTransaction({
 ```
 
 ### Result
-###### [flowtype](../../src/js/types/eos.js#L161)
+###### [flowtype](../../src/js/types/eos.js#L160-L163)
 ```javascript
 {
     success: true,

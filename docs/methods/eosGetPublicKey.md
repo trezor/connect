@@ -1,5 +1,5 @@
 ## Eos: get public key
-Display requested public key derived by given BIP32 path on device and returns it to caller. 
+Display requested public key derived by given [BIP44 path](path.md) on device and returns it to caller. 
 User is presented with a description of the requested public key and asked to confirm the export.
 
 ES6
@@ -24,7 +24,7 @@ TrezorConnect.eosGetPublicKey(params).then(function(result) {
 * `bundle` - `Array` of Objects with `path` and `showOnTrezor` fields
 
 ### Example
-Displays public key derived from BIP32 path:
+Displays public key derived from BIP44 path:
 ```javascript
 TrezorConnect.eosGetPublicKey({
     path: "m/44'/194'/0'/0/0"
@@ -39,21 +39,6 @@ TrezorConnect.eosGetPublicKey({
         { path: "m/44'/194'/0'/0/2", showOnTrezor: false }  // public key 3
     ]
 });
-```
-Validate address using custom UI inside of your application:
-```javascript
-import TrezorConnect, { UI } from 'trezor-connect';
-
-TrezorConnect.on(UI.ADDRESS_VALIDATION, data => {
-    console.log("Handle button request", data.address, data.serializedPath);
-    // here you can display custom UI inside of your app
-});
-
-const result = await TrezorConnect.eosGetPublicKey({
-    path: "m/44'/194'/0'/0/0",
-    address: "0x73d0385F4d8E00C5e6504C6030F47BF6212736A8",
-});
-// dont forget to hide your custom UI after you get the result!
 ```
 
 ### Result

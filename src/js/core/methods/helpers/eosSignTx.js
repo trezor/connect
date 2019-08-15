@@ -199,7 +199,7 @@ const parseAck = (action: $EosTxAction): EosTxActionAck | null => {
                 'buy_ram': {
                     payer: serialize(action.data.payer),
                     receiver: serialize(action.data.receiver),
-                    quantity: parseQuantity(action.data.quantity),
+                    quantity: parseQuantity(action.data.quant),
                 },
             };
         case 'buyrambytes':
@@ -220,7 +220,7 @@ const parseAck = (action: $EosTxAction): EosTxActionAck | null => {
         case 'voteproducer':
             return {
                 'vote_producer': {
-                    voter: serialize(action.data.account),
+                    voter: serialize(action.data.voter),
                     proxy: serialize(action.data.proxy),
                     producers: action.data.producers.map(p => serialize(p)),
                 },
