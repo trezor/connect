@@ -1,5 +1,5 @@
 ## Path
-- `path` - `string | Array<number>` in [BIP44](https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki) path scheme or `Array` of hardended numbers.
+- `path` - `string | Array<number>` in [BIP44](https://github.com/trezor/trezor-firmware/blob/master/core/docs/misc/coins-bip44-paths.md) path scheme or `Array` of hardended numbers.
 ### Examples
 Bitcoin account 1 using BIP44 derivation path
 ```javascript
