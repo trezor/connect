@@ -90,15 +90,14 @@ export type EosTxAction = Action & {
         from: string,
         receiver: string,
         unstake_net_quantity: string,
-        unstake_cpu_quantity: string,
-        transfer?: boolean,
+        unstake_cpu_quantity: string
     },
 } | Action & {
     name: 'buyram',
     data: {
         payer: string,
         receiver: string,
-        quantity: string,
+        quant: string,
     },
 } | Action & {
     name: 'buyrambytes',
@@ -109,7 +108,7 @@ export type EosTxAction = Action & {
 } | Action & {
     name: 'voteproducer',
     data: {
-        account: string,
+        voter: string,
         proxy: string,
         producers: Array<string>,
     },
