@@ -1,4 +1,4 @@
-const VERSION = '8.0.0';
+const VERSION = '8.0.1';
 const versionN = VERSION.split('.').map(s => parseInt(s));
 const DIRECTORY = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
 const url = 'https://connect.trezor.io/' + DIRECTORY;

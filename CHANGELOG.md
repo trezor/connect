@@ -1,3 +1,9 @@
+# 8.0.1
+#### Added
+- Added `TrezorConnect.disableWebUSB` method
+#### Fixed
+- renamed EOS actions parameters 'buyram': quantity > quant, 'voteproducer': data.account > data.voter
+
 # 8.0.0
 #### Breaking changes
 - Changed communication process between host, iframe and popup. BroadcastChannel is used as default, postMessage as fallback
@@ -6,7 +12,7 @@
 - `TrezorConnect.rippleGetAccountInfo` and `TrezorConnect.ethereumGetAccountInfo` merged to `TrezorConnect.getAccountInfo`
 - `TrezorConnect.getAccountInfo` parameters
 
-__added__
+#### Added
 - Added nodejs support
 - Added `lazyLoad` parameter to `TrezorConnect.init`
 - Added bech32 accounts support
