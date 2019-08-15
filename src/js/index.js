@@ -18,6 +18,7 @@ import {
     requestLogin,
     uiResponse,
     renderWebUSBButton,
+    disableWebUSB,
     cancel,
     dispose,
 } from './env/node';
@@ -279,6 +280,10 @@ class TrezorConnect {
 
     static renderWebUSBButton = (className: ?string): void => {
         renderWebUSBButton(className);
+    }
+
+    static disableWebUSB = async () => {
+        disableWebUSB();
     }
 }
 

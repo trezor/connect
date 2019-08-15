@@ -272,3 +272,7 @@ export const cancel = (error?: string) => {
         payload: error ? { error } : null,
     }, false);
 };
+
+export const disableWebUSB = () => {
+    throw new Error('This version of trezor-connect is not suitable to work without browser');
+};
