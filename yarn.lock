@@ -7237,10 +7237,10 @@ tough-cookie@~2.4.3:
     psl "^1.1.24"
     punycode "^1.4.1"
 
-trezor-link@1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/trezor-link/-/trezor-link-1.6.4.tgz#88d6c88b1af040b9ff39102054bbbff5eca766e2"
-  integrity sha512-VNAtAj6J8z1Pamydd5BPIV8D8k5cGx/YYS2UgEevT9n8o7HPu3ADYg1qRSBcAh4Z+VGfcBd6HrsRTe+//Nycxw==
+trezor-link@1.6.5:
+  version "1.6.5"
+  resolved "https://registry.yarnpkg.com/trezor-link/-/trezor-link-1.6.5.tgz#06c54f4e1033debe9a92dc88807c2e27a323b1fe"
+  integrity sha512-ynQGA5t6CRl62Kjam4bfU1KMgcNPaWZwElPd1YTobzGRb8VtsZBzPM9U2w9cPXGImYkBHXTcgOaBhkTFlLFStw==
   dependencies:
     bigi "^1.4.1"
     ecurve "^1.0.3"

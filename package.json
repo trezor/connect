@@ -104,7 +104,7 @@
     "style-loader": "^0.23.1",
     "terser-webpack-plugin": "^1.4.1",
     "tiny-worker": "^2.2.0",
-    "trezor-link": "1.6.4",
+    "trezor-link": "1.6.5",
     "uglify-es": "3.3.9",
     "version-bump-prompt": "^4.1.0",
     "webpack": "^4.38.0",
