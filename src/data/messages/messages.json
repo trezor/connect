@@ -389,13 +389,6 @@
                     "type": "bytes",
                     "name": "public_key",
                     "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "string",
-                    "name": "json",
-                    "id": 3
                 }
             ],
             "enums": [],
@@ -2355,7 +2348,22 @@
         },
         {
             "name": "DebugLinkGetState",
-            "fields": [],
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wait_word_list",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wait_word_pos",
+                    "id": 2
+                }
+            ],
             "enums": [],
             "messages": [],
             "options": {},
@@ -4435,9 +4443,79 @@
                     "type": "bool",
                     "name": "recovery_mode",
                     "id": 29
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "Feature",
+                    "name": "features",
+                    "id": 30
                 }
             ],
-            "enums": [],
+            "enums": [
+                {
+                    "name": "Feature",
+                    "values": [
+                        {
+                            "name": "Feature_Bitcoin",
+                            "id": 1
+                        },
+                        {
+                            "name": "Feature_Bitcoin_like",
+                            "id": 2
+                        },
+                        {
+                            "name": "Feature_Binance",
+                            "id": 3
+                        },
+                        {
+                            "name": "Feature_Cardano",
+                            "id": 4
+                        },
+                        {
+                            "name": "Feature_Crypto",
+                            "id": 5
+                        },
+                        {
+                            "name": "Feature_EOS",
+                            "id": 6
+                        },
+                        {
+                            "name": "Feature_Ethereum",
+                            "id": 7
+                        },
+                        {
+                            "name": "Feature_Lisk",
+                            "id": 8
+                        },
+                        {
+                            "name": "Feature_Monero",
+                            "id": 9
+                        },
+                        {
+                            "name": "Feature_NEM",
+                            "id": 10
+                        },
+                        {
+                            "name": "Feature_Ripple",
+                            "id": 11
+                        },
+                        {
+                            "name": "Feature_Stellar",
+                            "id": 12
+                        },
+                        {
+                            "name": "Feature_Tezos",
+                            "id": 13
+                        },
+                        {
+                            "name": "Feature_U2F",
+                            "id": 14
+                        }
+                    ],
+                    "options": {}
+                }
+            ],
             "messages": [],
             "options": {},
             "oneofs": {}
