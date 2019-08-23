@@ -1,3 +1,12 @@
+# 8.0.2
+#### Added
+- Added `Device.Features.features` field
+#### Changed
+- `CoinInfo.blockchainLink` field generated from `coins.json:blockbook` for BTC-like and ETH-like
+#### Updated 
+- supported coins
+- protobuf messages
+
 # 8.0.1
 #### Added
 - Added `TrezorConnect.disableWebUSB` method
