@@ -43,6 +43,28 @@ const parseRunOptions = (options?: RunOptions): RunOptions => {
     return options;
 };
 
+const parseFeatures = (features: Features): Features => {
+    if (!features.features || features.features.length === 0) {
+        features.features = [
+            'Feature_Bitcoin',
+            'Feature_Bitcoin_like',
+            'Feature_Binance',
+            'Feature_Cardano',
+            'Feature_Crypto',
+            'Feature_EOS',
+            'Feature_Ethereum',
+            'Feature_Lisk',
+            'Feature_Monero',
+            'Feature_NEM',
+            'Feature_Ripple',
+            'Feature_Stellar',
+            'Feature_Tezos',
+            'Feature_U2F',
+        ];
+    }
+    return features;
+};
+
 /**
  *
  *
@@ -343,7 +365,7 @@ export default class Device extends EventEmitter {
 
     async initialize(useEmptyPassphrase: boolean): Promise<void> {
         const { message }: { message: Features } = await this.commands.initialize(useEmptyPassphrase);
-        this.features = message;
+        this.features = parseFeatures(message);
         this.featuresNeedsReload = false;
         this.featuresTimestamp = new Date().getTime();
 
@@ -354,7 +376,7 @@ export default class Device extends EventEmitter {
 
     async getFeatures(): Promise<void> {
         const { message }: { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
-        this.features = message;
+        this.features = parseFeatures(message);
         this.firmwareStatus = checkFirmware(
             [ this.features.major_version, this.features.minor_version, this.features.patch_version ],
             this.features,

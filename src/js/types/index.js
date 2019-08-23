@@ -82,6 +82,7 @@ export type Features = {
     fw_vendor_keys: string,
     unfinished_backup: boolean,
     no_backup: boolean,
+    features: Array<string>,
 };
 
 export type FirmwareRelease = {
