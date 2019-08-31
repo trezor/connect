@@ -1569,8 +1569,8 @@
                 "trezor2": "2.0.5",
                 "webwallet": true
             },
-            "xprv_magic": 70615955,
-            "xpub_magic": 70616782,
+            "xprv_magic": 76066276,
+            "xpub_magic": 76067358,
             "xpub_magic_segwit_native": null,
             "xpub_magic_segwit_p2sh": null
         },
