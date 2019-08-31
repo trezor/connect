@@ -1533,7 +1533,7 @@
             "bech32_prefix": null,
             "bip115": false,
             "blockbook": [
-                "https://blockbook.flurbo.xyz/",
+                "https://blockbook.flurbo.xyz",
                 "https://blockbook.unobtanium.uno"
             ],
             "blocktime_seconds": 30,
