@@ -605,17 +605,13 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     postMessage(new ResponseMessage(method.responseID, false, { error: error.message, code: error.code }));
                 }
 
-                // device.release();
                 device.removeAllListeners();
                 // eslint-disable-next-line no-use-before-define
                 closePopup();
                 // eslint-disable-next-line no-use-before-define
                 cleanup();
-
                 return Promise.resolve();
             }
-            // eslint-disable-next-line no-use-before-define
-            closePopup();
         };
 
         // run inner function
@@ -633,28 +629,26 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             if (_deviceList && error.message === ERROR.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE) {
                 _deviceList.enumerate();
             }
-            // cancel popup request
-            postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST)); // TODO: should it be here?
-            postMessage(new ResponseMessage(method.responseID, false, { error: error.message || error, code: error.code }));
-
-            // eslint-disable-next-line no-use-before-define
-            closePopup();
+            messageResponse = new ResponseMessage(method.responseID, false, { error: error.message || error, code: error.code });
         }
     } finally {
         // Work done
         _log.log('onCall::finally', messageResponse);
+        const response = messageResponse;
+        if (response) {
+            await device.cleanup();
+            // eslint-disable-next-line no-use-before-define
+            closePopup();
+            // eslint-disable-next-line no-use-before-define
+            cleanup();
 
-        device.cleanup();
-        // eslint-disable-next-line no-use-before-define
-        cleanup();
+            if (method) {
+                method.dispose();
+            }
 
-        if (method) { method.dispose(); }
-
-        // restore default messages
-        if (_deviceList) { await _deviceList.restoreMessages(); }
-
-        if (messageResponse) {
-            postMessage(messageResponse);
+            // restore default messages
+            if (_deviceList) { await _deviceList.restoreMessages(); }
+            postMessage(response);
         }
     }
 };
@@ -677,6 +671,9 @@ const cleanup = (): void => {
  * @memberof Core
  */
 const closePopup = (): void => {
+    if (_popupPromise) {
+        postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
+    }
     postMessage(new UiMessage(UI.CLOSE_UI_WINDOW));
 };
 

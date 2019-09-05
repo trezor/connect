@@ -178,20 +178,24 @@ export default class Device extends EventEmitter {
         if (this.isUsedHere() && !this.keepSession && this.activitySessionID) {
             if (this.commands) {
                 this.commands.dispose();
+                if (this.commands.callPromise) {
+                    await this.commands.callPromise;
+                }
             }
             try {
                 await this.transport.release(this.activitySessionID, false, false);
+                if (this.deferredActions[ DEVICE.RELEASE ]) await this.deferredActions[ DEVICE.RELEASE ].promise;
             } catch (err) {
                 // empty
             }
         }
     }
 
-    cleanup(): void {
-        this.release();
+    async cleanup(): Promise<void> {
         this.removeAllListeners();
         // make sure that DEVICE_CALL_IN_PROGRESS will not be thrown
         this.runPromise = null;
+        await this.release();
     }
 
     async run(
@@ -229,11 +233,6 @@ export default class Device extends EventEmitter {
             // reject inner defer
             this.runPromise.reject(error);
             this.runPromise = null;
-
-            // release device
-            if (this.deferredActions[ DEVICE.RELEASE ]) {
-                this.release();
-            }
         }
     }
 
@@ -252,7 +251,7 @@ export default class Device extends EventEmitter {
         fn?: () => Promise<X>,
         options: RunOptions
     ): Promise<any> {
-        if (!this.isUsedHere()) {
+        if (!this.isUsedHere() || this.commands.disposed) {
             // acquire session
             await this.acquire();
 
@@ -291,8 +290,6 @@ export default class Device extends EventEmitter {
         if ((!this.keepSession && typeof options.keepSession !== 'boolean') || options.keepSession === false) {
             this.keepSession = false;
             await this.release();
-            // wait for release event
-            if (this.deferredActions[ DEVICE.RELEASE ]) await this.deferredActions[ DEVICE.RELEASE ].promise;
         }
 
         if (this.runPromise) { this.runPromise.resolve(); }

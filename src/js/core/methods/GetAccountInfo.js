@@ -222,11 +222,12 @@ export default class GetAccountInfo extends AbstractMethod {
             }));
         };
 
+        const commands = this.device.getCommands();
+
         for (let i = 0; i < this.params.length; i++) {
             const request = this.params[i];
             const { address_n } = request;
             let descriptor = request.descriptor;
-            const commands = this.device.getCommands();
 
             if (commands.disposed) break;
 
@@ -306,6 +307,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 }
             }
         }
+        if (commands.disposed) return new Promise(() => {});
         return this.hasBundle ? responses : responses[0];
     }
 

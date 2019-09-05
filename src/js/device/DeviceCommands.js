@@ -73,6 +73,7 @@ export default class DeviceCommands {
     sessionId: string;
     debug: boolean;
     disposed: boolean;
+    callPromise: Promise<DefaultMessageResponse>;
 
     constructor(
         device: Device,
@@ -583,7 +584,8 @@ export default class DeviceCommands {
         }
 
         try {
-            const res: DefaultMessageResponse = await this.transport.call(this.sessionId, type, msg, false);
+            this.callPromise = this.transport.call(this.sessionId, type, msg, false);
+            const res: DefaultMessageResponse = await this.callPromise;
             const logMessage = filterForLog(res.type, res.message);
             if (this.debug) {
                 // eslint-disable-next-line no-console
