@@ -1,3 +1,9 @@
+# 8.0.3
+#### Fixed
+- `TrezorConnect.cancel` race condition between device release and returned response
+#### Updated 
+- protobuf messages
+
 # 8.0.2
 #### Added
 - Added `Device.Features.features` field
