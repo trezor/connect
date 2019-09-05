@@ -1,4 +1,6 @@
 # 8.0.3
+#### Added
+- Added `Binance Chain (BNB)` support
 #### Fixed
 - `TrezorConnect.cancel` race condition between device release and returned response
 #### Updated 
