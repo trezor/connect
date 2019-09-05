@@ -4238,6 +4238,84 @@
             "oneofs": {}
         },
         {
+            "name": "HederaGetPublicKey",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "HederaPublicKey",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "public_key",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "HederaSignTx",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "transaction",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "HederaSignedTx",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "Features",
             "fields": [
                 {
@@ -9364,6 +9442,22 @@
                 {
                     "name": "MessageType_BinanceSignedTx",
                     "id": 709
+                },
+                {
+                    "name": "MessageType_HederaSignTx",
+                    "id": 800
+                },
+                {
+                    "name": "MessageType_HederaSignedTx",
+                    "id": 801
+                },
+                {
+                    "name": "MessageType_HederaGetPublicKey",
+                    "id": 802
+                },
+                {
+                    "name": "MessageType_HederaPublicKey",
+                    "id": 803
                 }
             ],
             "options": {}

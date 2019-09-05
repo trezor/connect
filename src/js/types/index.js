@@ -246,6 +246,12 @@ declare function F_GetPublicKey(params: (P.$Common & P.$GetPublicKey)): Promise<
 declare function F_GetPublicKey(params: (P.$Common & { bundle: Array<P.$GetPublicKey> })): Promise<R.GetPublicKey$$>;
 export type GetPublicKey = typeof F_GetPublicKey;
 
+declare function F_HederaGetPublicKey(params: (P.$Common & HEDERA.$HederaGetPublicKey)): Promise<HEDERA.HederaGetPublicKey$>;
+declare function F_HederaGetPublicKey(params: (P.$Common & { bundle: Array<HEDERA.$HederaGetPublicKey> })): Promise<HEDERA.HederaGetPublicKey$$>;
+export type HederaGetPublicKey = typeof F_HederaGetPublicKey;
+
+export type HederaSignTransaction = (HEDERA.$HederaSignTransaction) => Promise<HEDERA.HederaSignTransaction$>
+
 declare function F_LiskGetAddress(params: (P.$Common & LISK.$LiskGetAddress)): Promise<LISK.LiskGetAddress$>;
 declare function F_LiskGetAddress(params: (P.$Common & { bundle: Array<LISK.$LiskGetAddress> })): Promise<LISK.LiskGetAddress$$>;
 export type LiskGetAddress = typeof F_LiskGetAddress;

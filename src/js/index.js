@@ -149,6 +149,14 @@ class TrezorConnect {
         return await call({ method: 'getPublicKey', ...params });
     }
 
+    static hederaGetPublicKey: $T.HederaGetPublicKey = async (params) => {
+        return await call({ method: 'hederaGetPublicKey', ...params });
+    }
+
+    static hederaSignTransaction: $T.HederaSignTx = async (params) => {
+        return await call({ method: 'hederaSignTransaction', ...params });
+    }
+
     static liskGetAddress: $T.LiskGetAddress = async (params) => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return await call({ method: 'liskGetAddress', ...params, useEventListener });

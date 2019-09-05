@@ -391,6 +391,24 @@ export default class DeviceCommands {
     // CardanoSignTx message can be found inside ./core/methods/helpers/cardanoSignTx
     // Cardano: end
 
+    // Hedera: begin
+    async hederaGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.HederaPublicKey> {
+        const response: MessageResponse<trezor.HederaPublicKey> = await this.typedCall('HederaGetPublicKey', 'HederaPublicKey', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async hederaSignTx(address_n: Array<number>, transaction: string): Promise<trezor.HederaSignedTx> {
+        const response: MessageResponse<trezor.HederaSignedTx> = await this.typedCall('HederaSignTx', 'HederaSignedTx', {
+            address_n,
+            transaction,
+        });
+        return response.message;
+    }
+    // Hedera: end
+
     // Lisk: begin
     async liskGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskAddress> {
         const response: MessageResponse<trezor.LiskAddress> = await this.typedCall('LiskGetAddress', 'LiskAddress', {

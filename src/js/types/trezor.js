@@ -620,6 +620,15 @@ export type CardanoTxRequest = {
     tx_body: string,
 };
 
+// Hedera types
+export type HederaPublicKey = {
+    public_key: string,
+}
+
+export type HederaSignedTx = {
+    signature: string,
+}
+
 // Lisk types
 export type LiskAddress = {
     address: string,

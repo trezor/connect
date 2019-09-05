@@ -28,6 +28,8 @@ import GetDeviceState from './GetDeviceState';
 import GetFeatures from './GetFeatures';
 import GetPublicKey from './GetPublicKey';
 import GetSettings from './GetSettings';
+import HederaGetPublicKey from './HederaGetPublicKey';
+import HederaSignTransaction from './HederaSignTransaction';
 import LiskGetAddress from './LiskGetAddress';
 import LiskGetPublicKey from './LiskGetPublicKey';
 import LiskSignMessage from './LiskSignMessage';
@@ -85,6 +87,8 @@ const classes: {[k: string]: any} = {
     'getFeatures': GetFeatures,
     'getPublicKey': GetPublicKey,
     'getSettings': GetSettings,
+    'hederaGetPublicKey': HederaGetPublicKey,
+    'hederaSignTransaction': HederaSignTransaction,
     'liskGetAddress': LiskGetAddress,
     'liskGetPublicKey': LiskGetPublicKey,
     'liskSignMessage': LiskSignMessage,
