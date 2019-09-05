@@ -4447,70 +4447,78 @@
                 {
                     "rule": "repeated",
                     "options": {},
-                    "type": "Feature",
-                    "name": "features",
+                    "type": "Capability",
+                    "name": "capabilities",
                     "id": 30
                 }
             ],
             "enums": [
                 {
-                    "name": "Feature",
+                    "name": "Capability",
                     "values": [
                         {
-                            "name": "Feature_Bitcoin",
+                            "name": "Capability_Bitcoin",
                             "id": 1
                         },
                         {
-                            "name": "Feature_Bitcoin_like",
+                            "name": "Capability_Bitcoin_like",
                             "id": 2
                         },
                         {
-                            "name": "Feature_Binance",
+                            "name": "Capability_Binance",
                             "id": 3
                         },
                         {
-                            "name": "Feature_Cardano",
+                            "name": "Capability_Cardano",
                             "id": 4
                         },
                         {
-                            "name": "Feature_Crypto",
+                            "name": "Capability_Crypto",
                             "id": 5
                         },
                         {
-                            "name": "Feature_EOS",
+                            "name": "Capability_EOS",
                             "id": 6
                         },
                         {
-                            "name": "Feature_Ethereum",
+                            "name": "Capability_Ethereum",
                             "id": 7
                         },
                         {
-                            "name": "Feature_Lisk",
+                            "name": "Capability_Lisk",
                             "id": 8
                         },
                         {
-                            "name": "Feature_Monero",
+                            "name": "Capability_Monero",
                             "id": 9
                         },
                         {
-                            "name": "Feature_NEM",
+                            "name": "Capability_NEM",
                             "id": 10
                         },
                         {
-                            "name": "Feature_Ripple",
+                            "name": "Capability_Ripple",
                             "id": 11
                         },
                         {
-                            "name": "Feature_Stellar",
+                            "name": "Capability_Stellar",
                             "id": 12
                         },
                         {
-                            "name": "Feature_Tezos",
+                            "name": "Capability_Tezos",
                             "id": 13
                         },
                         {
-                            "name": "Feature_U2F",
+                            "name": "Capability_U2F",
                             "id": 14
+                        },
+                        {
+                            "name": "Capability_Shamir",
+                            "id": 15
+                        },
+                        {
+                            "name": "Capability_ShamirGroups",
+                            "id": 16
                         }
                     ],
                     "options": {}
