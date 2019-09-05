@@ -202,7 +202,7 @@ export class CoreEventHandler {
                     method: 'debugLinkDecision',
                     device: event.payload.device,
                     yes_no: true,
-                    up_down: false,
+                    // up_down: false, // from 2.1.1 there is no need to swipe, TODO: make compatible with older fw!
                 },
             }, true);
         }

@@ -50,7 +50,7 @@ sync-%:
 # Build messages.json from protobuf
 protobuf:
 	make -C ./submodules/trezor-common/protob combine
-	./node_modules/.bin/proto2js ./submodules/trezor-common/protob/combined.proto > ./src/data/messages.I.json
+	./node_modules/.bin/proto2js ./submodules/trezor-common/protob/combined.proto > ./src/data/messages/messagesN.json
 
 # Build coin definitions
 coins:

@@ -50,6 +50,9 @@ import TezosGetPublicKey from './TezosGetPublicKey';
 import TezosSignTransaction from './TezosSignTransaction';
 import EosGetPublicKey from './EosGetPublicKey';
 import EosSignTransaction from './EosSignTransaction';
+import BinanceGetPublicKey from './BinanceGetPublicKey';
+import BinanceGetAddress from './BinanceGetAddress';
+import BinanceSignTransaction from './BinanceSignTransaction';
 import VerifyMessage from './VerifyMessage';
 import WipeDevice from './WipeDevice';
 import ApplyFlags from './ApplyFlags';
@@ -107,6 +110,9 @@ const classes: {[k: string]: any} = {
     'tezosSignTransaction': TezosSignTransaction,
     'eosGetPublicKey': EosGetPublicKey,
     'eosSignTransaction': EosSignTransaction,
+    'binanceGetPublicKey': BinanceGetPublicKey,
+    'binanceGetAddress': BinanceGetAddress,
+    'binanceSignTransaction': BinanceSignTransaction,
     'verifyMessage': VerifyMessage,
     'wipeDevice': WipeDevice,
     'applyFlags': ApplyFlags,

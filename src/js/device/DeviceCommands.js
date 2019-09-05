@@ -458,6 +458,24 @@ export default class DeviceCommands {
     }
     // Tezos: end
 
+    // Binance: begin
+    async binanceGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.BinanceAddress> {
+        const response: MessageResponse<trezor.BinanceAddress> = await this.typedCall('BinanceGetAddress', 'BinanceAddress', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+
+    async binanceGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.BinancePublicKey> {
+        const response: MessageResponse<trezor.BinancePublicKey> = await this.typedCall('BinanceGetPublicKey', 'BinancePublicKey', {
+            address_n,
+            show_display: !!showOnTrezor,
+        });
+        return response.message;
+    }
+    // Binance: end
+
     async cipherKeyValue(
         address_n: Array<number>,
         key: string,

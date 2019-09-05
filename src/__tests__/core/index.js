@@ -48,6 +48,7 @@ import { rippleGetAddress } from './rippleGetAddress.spec.js';
 import { rippleSignTransaction } from './rippleSignTransaction.spec.js';
 import { eosGetPublicKey } from './eosGetPublicKey.spec';
 import { eosSignTransaction } from './eosSignTransaction.spec';
+import { binanceSignTransaction } from './binanceSignTransaction.spec';
 import { applySettings } from './applySettings.spec';
 import { applyFlags } from './applyFlags.spec';
 
@@ -96,6 +97,7 @@ export const testFunctions: AvailableTestFunctions = {
     rippleSignTransaction,
     eosGetPublicKey,
     eosSignTransaction,
+    binanceSignTransaction,
     applySettings,
     applyFlags,
 };

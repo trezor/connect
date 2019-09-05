@@ -2559,6 +2559,20 @@
     "misc": [
         {
             "blockchain_link": null,
+            "curve": "secp256k1",
+            "decimals": 8,
+            "name": "Binance Chain",
+            "shortcut": "BNB",
+            "slip44": 714,
+            "support": {
+                "connect": true,
+                "trezor1": false,
+                "trezor2": "2.1.4",
+                "webwallet": false
+            }
+        },
+        {
+            "blockchain_link": null,
             "curve": "ed25519",
             "decimals": 6,
             "name": "Cardano",

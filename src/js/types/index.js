@@ -182,6 +182,7 @@ import * as STELLAR from './stellar';
 import * as LISK from './lisk';
 import * as TEZOS from './tezos';
 import * as EOS from './eos';
+import * as BINANCE from './binance';
 
 // export type UiResponseFn = (settings: UiResponse) => void;
 export type ChangeSettings = (settings: Settings) => void;
@@ -297,6 +298,15 @@ declare function F_EosGetPublicKey(params: (P.$Common & { bundle: Array<EOS.$Eos
 
 export type EosGetPublicKey = typeof F_EosGetPublicKey;
 export type EosSignTx = (EOS.$EosSignTx) => Promise<EOS.EosSignTx$>;
+
+declare function F_BinanceGetAddress(params: (P.$Common & BINANCE.$BinanceGetAddress)): Promise<BINANCE.BinanceGetAddress$>;
+declare function F_BinanceGetAddress(params: (P.$Common & { bundle: Array<BINANCE.$BinanceGetAddress> })): Promise<BINANCE.BinanceGetAddress$$>;
+export type BinanceGetAddress = typeof F_BinanceGetAddress;
+
+declare function F_BinanceGetPublicKey(params: (P.$Common & BINANCE.$BinanceGetPublicKey)): Promise<BINANCE.BinanceGetPublicKey$>;
+declare function F_BinanceGetPublicKey(params: (P.$Common & { bundle: Array<BINANCE.$BinanceGetPublicKey> })): Promise<BINANCE.BinanceGetPublicKey$$>;
+export type BinanceGetPublicKey = typeof F_BinanceGetPublicKey;
+export type BinanceSignTransaction = (BINANCE.$BinanceSignTransaction) => Promise<BINANCE.BinanceSignTransaction$>;
 
 /* eslint-enable no-redeclare */
 
