@@ -5,6 +5,7 @@
 - `TrezorConnect.cancel` race condition between device release and returned response
 #### Updated 
 - protobuf messages
+- firmware releases
 
 # 8.0.2
 #### Added
