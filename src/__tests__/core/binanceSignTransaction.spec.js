@@ -5,15 +5,23 @@ import type {
     SubtestSignTransaction,
 } from 'flowtype/tests';
 
-import type {
-    TestCardanoSignTransactionPayload,
-    ExpectedCardanoSignTransactionResponse,
-} from 'flowtype/tests/cardano-sign-transaction';
+type TransactionPayload = {
+    method: string,
+    path: string,
+    transaction: any,
+};
+
+type ExpectedResponse = {
+    payload: {
+        public_key: string,
+        signature: string,
+    },
+};
 
 // vectors from https://github.com/binance-chain/javascript-sdk/blob/master/__tests__/fixtures/placeOrder.json
 
 const transfer = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestCardanoSignTransactionPayload> = [
+    const testPayloads: Array<TransactionPayload> = [
         {
             method: 'binanceSignTransaction',
             path: "m/44'/714'/0'/0/0",
@@ -45,7 +53,7 @@ const transfer = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedCardanoSignTransactionResponse> = [
+    const expectedResponses: Array<ExpectedResponse> = [
         {
             payload: {
                 public_key: '029729a52e4e3c2b4a4e52aa74033eedaf8ba1df5ab6d1f518fd69e67bbd309b0e',
@@ -62,7 +70,7 @@ const transfer = (): SubtestSignTransaction => {
 };
 
 const placeOrder = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestCardanoSignTransactionPayload> = [
+    const testPayloads: Array<TransactionPayload> = [
         {
             method: 'binanceSignTransaction',
             path: "m/44'/714'/0'/0/0",
@@ -86,7 +94,7 @@ const placeOrder = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedCardanoSignTransactionResponse> = [
+    const expectedResponses: Array<ExpectedResponse> = [
         {
             payload: {
                 public_key: '029729a52e4e3c2b4a4e52aa74033eedaf8ba1df5ab6d1f518fd69e67bbd309b0e',
@@ -103,7 +111,7 @@ const placeOrder = (): SubtestSignTransaction => {
 };
 
 const cancelOrder = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestCardanoSignTransactionPayload> = [
+    const testPayloads: Array<TransactionPayload> = [
         {
             method: 'binanceSignTransaction',
             path: "m/44'/714'/0'/0/0",
@@ -122,7 +130,7 @@ const cancelOrder = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedCardanoSignTransactionResponse> = [
+    const expectedResponses: Array<ExpectedResponse> = [
         {
             payload: {
                 public_key: '029729a52e4e3c2b4a4e52aa74033eedaf8ba1df5ab6d1f518fd69e67bbd309b0e',
