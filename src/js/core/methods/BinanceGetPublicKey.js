@@ -28,7 +28,8 @@ export default class BinanceGetPublicKey extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Binance'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('BNB'), this.firmwareRange);
+        console.warn('FW', this.firmwareRange);
         this.info = 'Export Binance public key';
 
         // create a bundle with only one batch if bundle doesn't exists

@@ -25,7 +25,7 @@ export default class BinanceSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Binance'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('BNB'), this.firmwareRange);
         this.info = 'Sign Binance transaction';
 
         const payload: Object = message.payload;

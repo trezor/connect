@@ -29,7 +29,7 @@ export default class BinanceGetAddress extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Binance'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('BNB'), this.firmwareRange);
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = message.payload.hasOwnProperty('bundle');
