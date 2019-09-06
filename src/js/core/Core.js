@@ -441,11 +441,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     // wait for device disconnect
                     await createUiPromise(DEVICE.DISCONNECT, device).promise;
                     // interrupt process and go to "final" block
-                    return Promise.resolve();
+                    return Promise.reject({ error: 'Cancelled' });
                 } else {
                     // return error if not using popup
-                    postMessage(new ResponseMessage(method.responseID, false, { error: firmwareException }));
-                    return Promise.resolve();
+                    return Promise.reject(firmwareException);
                 }
             }
 
@@ -462,11 +461,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     // wait for device disconnect
                     await createUiPromise(DEVICE.DISCONNECT, device).promise;
                     // interrupt process and go to "final" block
-                    return Promise.resolve();
+                    return Promise.reject(unexpectedMode);
                 } else {
-                    // return error if not using popup
-                    postMessage(new ResponseMessage(method.responseID, false, { error: unexpectedMode }));
-                    return Promise.resolve();
+                    // throw error if not using popup
+                    return Promise.reject(unexpectedMode);
                 }
             }
 
@@ -474,13 +472,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             method.checkPermissions();
             if (!trustedHost && method.requiredPermissions.length > 0) {
                 // show permissions in UI
-                const permitted: boolean = await method.requestPermissions();
+                const permitted = await method.requestPermissions();
                 if (!permitted) {
-                    postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.PERMISSIONS_NOT_GRANTED.message }));
-                    // eslint-disable-next-line no-use-before-define
-                    closePopup();
                     // interrupt process and go to "final" block
-                    return Promise.resolve();
+                    return Promise.reject(ERROR.PERMISSIONS_NOT_GRANTED.message);
                 }
             }
 
@@ -488,11 +483,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             if (deviceNeedsBackup && typeof method.noBackupConfirmation === 'function') {
                 const permitted = await method.noBackupConfirmation();
                 if (!permitted) {
-                    postMessage(new ResponseMessage(method.responseID, false, { error: ERROR.PERMISSIONS_NOT_GRANTED.message, code: ERROR.PERMISSIONS_NOT_GRANTED.code }));
-                    // eslint-disable-next-line no-use-before-define
-                    closePopup();
                     // interrupt process and go to "final" block
-                    return Promise.resolve();
+                    return Promise.reject({ error: ERROR.PERMISSIONS_NOT_GRANTED.message, code: ERROR.PERMISSIONS_NOT_GRANTED.code });
                 }
             }
 
@@ -514,13 +506,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             // ask for confirmation [export xpub, export info, sign message]
             if (!trustedHost && typeof method.confirmation === 'function') {
                 // show confirmation in UI
-                const confirmed: boolean = await method.confirmation();
+                const confirmed = await method.confirmation();
                 if (!confirmed) {
-                    postMessage(new ResponseMessage(method.responseID, false, { error: 'Cancelled' }));
-                    // eslint-disable-next-line no-use-before-define
-                    closePopup();
                     // interrupt process and go to "final" block
-                    return Promise.resolve();
+                    return Promise.reject({ error: 'Cancelled' });
                 }
             }
 
@@ -563,14 +552,14 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     return inner();
                 } else {
                     // other error
-                    postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
+                    // postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
                     // eslint-disable-next-line no-use-before-define
-                    closePopup();
+                    // closePopup();
                     // clear cached passphrase. it's not valid
                     device.clearPassphrase();
                     device.setState(null);
                     // interrupt process and go to "final" block
-                    return Promise.resolve();
+                    return Promise.reject(error.message);
                 }
             }
 
@@ -592,25 +581,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 const response: Object = await method.run();
                 messageResponse = new ResponseMessage(method.responseID, true, response);
             } catch (error) {
-                // device.clearPassphrase();
-
-                if (!method) {
-                    return Promise.resolve();
-                }
-
-                if (error.custom) {
-                    delete error.custom;
-                    postMessage(new ResponseMessage(method.responseID, false, error));
-                } else {
-                    postMessage(new ResponseMessage(method.responseID, false, { error: error.message, code: error.code }));
-                }
-
-                device.removeAllListeners();
-                // eslint-disable-next-line no-use-before-define
-                closePopup();
-                // eslint-disable-next-line no-use-before-define
-                cleanup();
-                return Promise.resolve();
+                return Promise.reject({ error: error.message, code: error.code });
             }
         };
 
