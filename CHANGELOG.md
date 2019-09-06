@@ -1,3 +1,14 @@
+# 8.0.4 (server side only)
+#### Added
+- Added `Unobtanium` support
+#### Fixed
+- `pendingTransport` race condition using lazyLoading and multiple devices connected
+- simplified `Core` error rejection
+- `BNB` firmware range
+#### Updated 
+- protobuf messages
+- firmware releases
+
 # 8.0.3
 #### Added
 - Added `Binance Chain (BNB)` support
