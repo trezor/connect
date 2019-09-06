@@ -6,8 +6,7 @@
 - simplified `Core` error rejection
 - `BNB` firmware range
 #### Updated 
-- protobuf messages
-- firmware releases
+- coins.json
 
 # 8.0.3
 #### Added
