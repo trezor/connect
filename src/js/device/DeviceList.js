@@ -60,7 +60,7 @@ export default class DeviceList extends EventEmitter {
     defaultMessages: JSON;
     currentMessages: JSON;
     hasCustomMessages: boolean = false;
-    transportStartPending: boolean;
+    transportStartPending: number = 0;
 
     constructor(options: ?DeviceListOptions) {
         super();
@@ -157,9 +157,11 @@ export default class DeviceList extends EventEmitter {
     }
 
     resolveTransportEvent(): void {
-        if (this.transportStartPending) {
-            this.transportStartPending = false;
-            this.stream.emit(TRANSPORT.START);
+        if (this.transportStartPending > 0) {
+            this.transportStartPending--;
+            if (this.transportStartPending === 0) {
+                this.stream.emit(TRANSPORT.START);
+            }
         }
     }
 
@@ -183,8 +185,8 @@ export default class DeviceList extends EventEmitter {
     async _initStream(): Promise<void> {
         const stream: DescriptorStream = new DescriptorStream(this.transport);
 
-        stream.on(TRANSPORT.START_PENDING, (): void => {
-            this.transportStartPending = true;
+        stream.on(TRANSPORT.START_PENDING, (pending: number): void => {
+            this.transportStartPending = pending;
         });
 
         stream.on(TRANSPORT.START, (): void => {
