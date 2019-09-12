@@ -1,6 +1,7 @@
 # 8.0.5 (server side only)
 #### Fixed
 - fix `disconnect`-`method response` race condition
+- `getAccountInfo` runtime error when using descriptor without path
 - Firmware releases channel (beta-wallet)
 
 # 8.0.4 (server side only)
