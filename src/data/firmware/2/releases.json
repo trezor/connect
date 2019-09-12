@@ -7,7 +7,8 @@
 		"min_bootloader_version": [2, 0, 0],
 		"url": "data/firmware/2/trezor-2.1.5.bin",
 		"fingerprint": "40e4bfaf3c5ec77872c1aaaac085aafcc443f60279ca2bb38d29c669233fdf62",
-		"changelog": "* Introduce Bitcoin-only firmware\n* Fix for sluggish U2F authentication when using Shamir\n* Fix UI for Shamir with 33 words\n* Fix Wanchain signing"
+		"changelog": "* Introduce Bitcoin-only firmware\n* Fix for sluggish U2F authentication when using Shamir\n* Fix UI for Shamir with 33 words\n* Fix Wanchain signing",
+		"channel": "beta"
 	},
 	{
 		"required": false,

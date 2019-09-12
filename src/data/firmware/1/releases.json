@@ -8,7 +8,8 @@
 		"min_bootloader_version": [1, 5, 0],
 		"url": "data/firmware/1/trezor-1.8.3.bin",
 		"fingerprint": "496aecfab867504b2283a9f057a0b2fd9d17970a22c81f6ad74232e7b914ce68",
-		"changelog": "* Introduce Bitcoin-only firmware"
+		"changelog": "* Introduce Bitcoin-only firmware",
+		"channel": "beta"
 	},
 	{
 		"required": false,
