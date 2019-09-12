@@ -233,7 +233,7 @@ export default class GetAccountInfo extends AbstractMethod {
             // get descriptor from device
             if (address_n && typeof descriptor !== 'string') {
                 try {
-                    const accountDescriptor = await this.disposed.getAccountDescriptor(
+                    const accountDescriptor = await this.device.getCommands().getAccountDescriptor(
                         request.coinInfo,
                         address_n,
                     );
@@ -251,7 +251,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 }
             }
 
-            if (this.disposed.disposed) break;
+            if (this.disposed) break;
 
             try {
                 if (typeof descriptor !== 'string') {
@@ -261,7 +261,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 // initialize backend
                 const blockchain = await initBlockchain(request.coinInfo, this.postMessage);
 
-                if (this.disposed.disposed) break;
+                if (this.disposed) break;
 
                 // get account info from backend
                 const info = await blockchain.getAccountInfo({
@@ -277,14 +277,14 @@ export default class GetAccountInfo extends AbstractMethod {
                     marker: request.marker,
                 });
 
-                if (this.disposed.disposed) break;
+                if (this.disposed) break;
 
                 let utxo: $ElementType<AccountInfo, 'utxo'>;
                 if (request.coinInfo.type === 'bitcoin' && typeof request.details === 'string' && request.details !== 'basic') {
                     utxo = await blockchain.getAccountUtxo(descriptor);
                 }
 
-                if (this.disposed.disposed) break;
+                if (this.disposed) break;
 
                 // add account to responses
                 const account: AccountInfo = {
