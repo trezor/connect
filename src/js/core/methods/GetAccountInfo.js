@@ -23,6 +23,7 @@ type Params = Request[];
 
 export default class GetAccountInfo extends AbstractMethod {
     params: Params;
+    disposed: boolean = false;
     hasBundle: boolean;
     discovery: Discovery | typeof undefined = undefined;
 
@@ -222,19 +223,17 @@ export default class GetAccountInfo extends AbstractMethod {
             }));
         };
 
-        const commands = this.device.getCommands();
-
         for (let i = 0; i < this.params.length; i++) {
             const request = this.params[i];
             const { address_n } = request;
             let descriptor = request.descriptor;
 
-            if (commands.disposed) break;
+            if (this.disposed) break;
 
             // get descriptor from device
             if (address_n && typeof descriptor !== 'string') {
                 try {
-                    const accountDescriptor = await commands.getAccountDescriptor(
+                    const accountDescriptor = await this.disposed.getAccountDescriptor(
                         request.coinInfo,
                         address_n,
                     );
@@ -252,7 +251,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 }
             }
 
-            if (commands.disposed) break;
+            if (this.disposed.disposed) break;
 
             try {
                 if (typeof descriptor !== 'string') {
@@ -262,7 +261,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 // initialize backend
                 const blockchain = await initBlockchain(request.coinInfo, this.postMessage);
 
-                if (commands.disposed) break;
+                if (this.disposed.disposed) break;
 
                 // get account info from backend
                 const info = await blockchain.getAccountInfo({
@@ -278,14 +277,14 @@ export default class GetAccountInfo extends AbstractMethod {
                     marker: request.marker,
                 });
 
-                if (commands.disposed) break;
+                if (this.disposed.disposed) break;
 
                 let utxo: $ElementType<AccountInfo, 'utxo'>;
                 if (request.coinInfo.type === 'bitcoin' && typeof request.details === 'string' && request.details !== 'basic') {
                     utxo = await blockchain.getAccountUtxo(descriptor);
                 }
 
-                if (commands.disposed) break;
+                if (this.disposed.disposed) break;
 
                 // add account to responses
                 const account: AccountInfo = {
@@ -307,7 +306,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 }
             }
         }
-        if (commands.disposed) return new Promise(() => {});
+        if (this.disposed) return new Promise(() => {});
         return this.hasBundle ? responses : responses[0];
     }
 
@@ -384,6 +383,7 @@ export default class GetAccountInfo extends AbstractMethod {
     }
 
     dispose() {
+        this.disposed = true;
         const { discovery } = this;
         if (discovery) {
             discovery.removeAllListeners();
