@@ -1,3 +1,8 @@
+# 8.0.5 (server side only)
+#### Fixed
+- fix `disconnect`-`method response` race condition
+- Firmware releases channel (beta-wallet)
+
 # 8.0.4 (server side only)
 #### Added
 - Added `Unobtanium` support
