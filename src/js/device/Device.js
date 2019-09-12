@@ -179,7 +179,11 @@ export default class Device extends EventEmitter {
             if (this.commands) {
                 this.commands.dispose();
                 if (this.commands.callPromise) {
-                    await this.commands.callPromise;
+                    try {
+                        await this.commands.callPromise;
+                    } catch (error) {
+                        this.commands.callPromise = undefined;
+                    }
                 }
             }
             try {
@@ -462,7 +466,10 @@ export default class Device extends EventEmitter {
         // TODO: cleanup everything
         _log.debug('DISCONNECT CLEANUP!');
         // don't try to release
-        delete this.deferredActions[ DEVICE.RELEASE ];
+        if (this.deferredActions[DEVICE.RELEASE]) {
+            this.deferredActions[DEVICE.RELEASE].resolve();
+            delete this.deferredActions[ DEVICE.RELEASE ];
+        }
 
         this.interruptionFromUser(new Error('Device disconnected'));
 
