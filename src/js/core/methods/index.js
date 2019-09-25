@@ -60,7 +60,6 @@ import ApplySettings from './ApplySettings';
 import BackupDevice from './BackupDevice';
 import ChangePin from './ChangePin';
 import FirmwareErase from './FirmwareErase';
-import FirmwareUpload from './FirmwareUpload';
 import FirmwareUpdate from './FirmwareUpdate';
 import RecoveryDevice from './RecoveryDevice';
 
@@ -120,7 +119,6 @@ const classes: {[k: string]: any} = {
     'backupDevice': BackupDevice,
     'changePin': ChangePin,
     'firmwareErase': FirmwareErase,
-    'firmwareUpload': FirmwareUpload,
     'firmwareUpdate': FirmwareUpdate,
     'recoveryDevice': RecoveryDevice,
 };

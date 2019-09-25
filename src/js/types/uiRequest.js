@@ -210,6 +210,14 @@ export type BundleProgress = {
     },
 }
 
+export type FirmwareProgress = {
+    +type: typeof UI.FIRMWARE_PROGRESS,
+    payload: {
+        device: Device,
+        progress: number,
+    },
+}
+
 export type UiRequest =
     MessageWithoutPayload
     | DeviceMessage
@@ -244,6 +252,8 @@ declare function MessageFactory(type: $PropertyType<SelectAccount, 'type'>, payl
 declare function MessageFactory(type: $PropertyType<SelectFee, 'type'>, payload: $PropertyType<SelectFee, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<UpdateCustomFee, 'type'>, payload: $PropertyType<UpdateCustomFee, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<BundleProgress, 'type'>, payload: $PropertyType<BundleProgress, 'payload'>): CoreMessage;
+declare function MessageFactory(type: $PropertyType<FirmwareProgress, 'type'>, payload: $PropertyType<FirmwareProgress, 'payload'>): CoreMessage;
+
 /* eslint-enable no-redeclare */
 
 export type UiMessageFactory = UiResponseFactory & typeof MessageFactory;

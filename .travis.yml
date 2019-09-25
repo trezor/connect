@@ -7,7 +7,8 @@ node_js:
 
 script:
   - npm install -g yarn
-  - npm install
+  - yarn
+  - yarn flow
   - make build-connect
 
 notifications:

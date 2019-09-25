@@ -10,12 +10,18 @@ import type { CoreMessage } from '../../types';
 type Params = {
     length?: number,
 }
-
+/**
+ * Perform firmware erase.
+ * For model one it works as expected - it erases firmware and responds with success message
+ * For model T it does nothing, it only responds with FirmwareRequest message
+ */
 export default class FirmwareErase extends AbstractMethod {
     params: Params;
     run: () => Promise<any>;
 
     constructor(message: CoreMessage) {
+        console.warn('erase waaa');
+
         super(message);
         this.useEmptyPassphrase = true;
         this.requiredPermissions = ['management'];

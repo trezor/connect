@@ -271,10 +271,6 @@ class TrezorConnect {
         return await call({ method: 'firmwareErase', ...params });
     }
 
-    static firmwareUpload: $T.FirmwareUpload = async (params) => {
-        return await call({ method: 'firmwareUpload', ...params });
-    }
-
     static firmwareUpdate: $T.FirmwareUpload = async (params) => {
         return await call({ method: 'firmwareUpdate', ...params });
     }
