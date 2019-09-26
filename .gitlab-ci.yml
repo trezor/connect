@@ -2,6 +2,7 @@ image: node:8.10
 
 stages:
   - build
+  - deploy
 
 build:
   stage: build
