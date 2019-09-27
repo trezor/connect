@@ -5,16 +5,12 @@ import * as UI from '../../constants/ui';
 import { validateParams } from './helpers/paramsValidator';
 import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
-import * as trezor from '../../types/trezor'; // flowtype only
+import type { FirmwareUpload } from '../../types/trezor'; // flowtype only
 
 import type { CoreMessage } from '../../types';
 
-type Params = trezor.FirmwareUpload & {
-    length: number,
-}
-
 export default class FirmwareUpdate extends AbstractMethod {
-    params: Params;
+    params: FirmwareUpload;
     run: () => Promise<any>;
 
     constructor(message: CoreMessage) {
