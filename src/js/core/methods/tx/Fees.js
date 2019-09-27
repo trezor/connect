@@ -6,10 +6,16 @@ import type { CoinInfo } from '../../../types';
 import type { FeeLevel } from '../../../types/fee';
 
 const BLOCKS = {
-    'high': 1,
-    'normal': 6,
-    'economy': 36,
-    'low': 144 * 3,
+    btc: {
+        'high': 1,
+        'normal': 6,
+        'economy': 36,
+        'low': 144 * 3,
+    },
+};
+
+const getDefaultBlocks = (shortcut: string, label: string) => {
+    return BLOCKS[shortcut] && BLOCKS[shortcut][label] ? BLOCKS[shortcut][label] : 1;
 };
 
 export default class FeeLevels {
@@ -25,29 +31,26 @@ export default class FeeLevels {
         this.levels = Object.keys(coinInfo.defaultFees).sort((levelA, levelB) =>
             coinInfo.defaultFees[levelB] - coinInfo.defaultFees[levelA]
         ).map((level, id) => {
-            const name = level.toLowerCase();
-            const blocks = BLOCKS[name] || 0; // TODO: get this value from trezor-common
+            const label = level.toLowerCase();
+            const blocks = getDefaultBlocks(coinInfo.shortcut.toLowerCase(), label); // TODO: get this value from trezor-common
             return {
-                type: 'bitcoin',
-                name,
-                info: {
-                    fee: coinInfo.defaultFees[level].toString(),
-                    blocks,
-                },
+                label,
+                feePerUnit: coinInfo.defaultFees[level].toString(),
+                blocks,
             };
         });
 
         // if there is only one fee level in coinInfo ("Normal")
         // assume that it will be probably mined in next two blocks
-        if (this.levels.length === 1) {
-            this.levels[0].info.blocks = 1;
-        }
+        // if (this.levels.length === 1) {
+        //     this.levels[0].info.blocks = 1;
+        // }
     }
 
     async load(blockchain: BlockchainLink) {
         try {
             // get predefined blocks and fill gaps between them
-            const blocks: number[] = this.levels.map(l => l.info.blocks).reduce((result: any, bl: number) => {
+            const blocks: number[] = this.levels.map(l => l.blocks).reduce((result: any, bl: number) => {
                 // return first value
                 if (result.length === 0) return result.concat([bl]);
                 // get previous block request
@@ -106,8 +109,8 @@ export default class FeeLevels {
 
             // finally update fee levels with new values
             this.levels.forEach(l => {
-                l.info.blocks = this.updateBlocks(l.info.blocks);
-                l.info.fee = this.blocks[l.info.blocks];
+                l.blocks = this.updateBlocks(l.blocks);
+                l.feePerUnit = this.blocks[l.blocks];
             });
         } catch (error) {
             // empty
@@ -142,17 +145,14 @@ export default class FeeLevels {
         return this.blocks.indexOf(lower);
     }
 
-    updateCustomFee(fee: string) {
-        this.levels = this.levels.filter(l => l.name !== 'custom');
+    updateCustomFee(feePerUnit: string) {
+        this.levels = this.levels.filter(l => l.label !== 'custom');
 
-        const blocks = this.getBlocks(fee);
+        const blocks = this.getBlocks(feePerUnit);
         this.levels.push({
-            type: 'bitcoin',
-            name: 'custom',
-            info: {
-                fee,
-                blocks,
-            },
+            label: 'custom',
+            feePerUnit,
+            blocks,
         });
     }
 }

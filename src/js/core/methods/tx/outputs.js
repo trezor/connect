@@ -73,8 +73,21 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: Bitcoin
                 address: output.address,
             };
 
+        case 'noaddress' :
+            validateParams(output, [
+                { name: 'amount', type: 'string', obligatory: true },
+            ]);
+            return {
+                type: 'noaddress',
+                amount: output.amount,
+            };
+
+        case 'send-max-noaddress' :
+            return {
+                type: 'send-max-noaddress',
+            };
+
         default :
-        case 'complete' :
             validateParams(output, [
                 { name: 'amount', type: 'string', obligatory: true },
                 { name: 'address', type: 'string', obligatory: true },

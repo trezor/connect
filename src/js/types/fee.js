@@ -13,26 +13,16 @@ export type SelectFeeLevel = {
 }
 
 export type FeeLevel = {
-    type: 'bitcoin',
-    name: string,
-    info: {
-        fee: string,
-        blocks: number,
-    },
-} | {
-    type: 'ethereum',
-    name: string,
-    info: {
-        fee: string,
-        gasLimit: string,
-        gasPrice: string,
-        blocks: number,
-    },
-} | {
-    type: 'ripple',
-    name: string,
-    info: {
-        fee: string,
-        blocks: number,
-    },
+    label: string,
+    feePerUnit: string,
+    feePerTx?: string,
+    feeLimit?: string,
+    blocks: number,
+};
+
+export type FeeInfo = {
+    blockTime: number,
+    minFee: number,
+    maxFee: number,
+    levels: FeeLevel[],
 }

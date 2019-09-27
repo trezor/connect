@@ -73,18 +73,18 @@ export default class TransactionComposer {
         this.composed = {};
         let atLeastOneValid: boolean = false;
         for (const level of levels) {
-            if (level.info.fee !== '0') {
-                const tx: BuildTxResult = this.compose(level.info.fee);
+            if (level.feePerUnit !== '0') {
+                const tx: BuildTxResult = this.compose(level.feePerUnit);
                 if (tx.type === 'final') {
                     atLeastOneValid = true;
                 }
-                this.composed[ level.name ] = tx;
+                this.composed[ level.label ] = tx;
             }
         }
 
         if (!atLeastOneValid) {
             const lastLevel = levels[levels.length - 1];
-            let lastFee = new BigNumber(lastLevel.info.fee);
+            let lastFee = new BigNumber(lastLevel.feePerUnit);
             while (lastFee.gt(this.coinInfo.minFee) && this.composed['custom'] === undefined) {
                 lastFee = lastFee.minus(1);
 
@@ -116,12 +116,12 @@ export default class TransactionComposer {
         const list: Array<SelectFeeLevel> = [];
         const { levels } = this.feeLevels;
         levels.forEach(level => {
-            const tx = this.composed[level.name];
+            const tx = this.composed[level.label];
             if (tx && tx.type === 'final') {
                 const feePerByte = new BigNumber(tx.feePerByte).integerValue(BigNumber.ROUND_FLOOR).toString();
                 const blocks = this.feeLevels.getBlocks(feePerByte);
                 list.push({
-                    name: level.name,
+                    name: level.label,
                     fee: tx.fee,
                     feePerByte: feePerByte,
                     minutes: blocks * this.coinInfo.blocktime,
@@ -129,7 +129,7 @@ export default class TransactionComposer {
                 });
             } else {
                 list.push({
-                    name: level.name,
+                    name: level.label,
                     fee: '0',
                     disabled: true,
                 });
@@ -145,6 +145,22 @@ export default class TransactionComposer {
         const changeId = addresses.change.findIndex(a => a.transfers < 1);
         if (changeId < 0) return { type: 'error', error: 'CHANGE-ADDRESS-NOT-SET' };
         const changeAddress = addresses.change[changeId].address;
+
+        // const par = {
+        //     utxos: this.utxos,
+        //     outputs: this.outputs,
+        //     height: this.blockHeight,
+        //     feeRate,
+        //     segwit: this.coinInfo.segwit,
+        //     inputAmounts: (this.coinInfo.segwit || this.coinInfo.forkid !== null),
+        //     basePath: account.address_n,
+        //     network: this.coinInfo.network,
+        //     changeId,
+        //     changeAddress,
+        //     dustThreshold: this.coinInfo.dustLimit,
+        // };
+
+        // console.log('AAA!', par);
 
         return buildTx({
             utxos: this.utxos,
