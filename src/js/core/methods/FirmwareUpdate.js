@@ -10,7 +10,6 @@ import type { CoreMessage } from '../../types';
 
 export type Params = {
     payload: Buffer,
-    offset?: number,
     length: number,
 }
 
@@ -31,13 +30,11 @@ export default class FirmwareUpdate extends AbstractMethod {
 
         validateParams(payload, [
             { name: 'payload', type: 'buffer', obligatory: true },
-            { name: 'hash', type: 'string' },
-            { name: 'offset', type: 'number' },
+            // { name: 'hash', type: 'string' },
         ]);
 
         this.params = {
             payload: payload.payload,
-            offset: payload.offset,
             length: payload.payload.byteLength,
         };
     }

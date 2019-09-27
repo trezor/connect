@@ -3,7 +3,7 @@
 import type { DefaultMessageResponse, MessageResponse } from '../../../device/DeviceCommands';
 import type { FirmwareRequest$ } from '../../../types/response';
 import * as trezor from '../../../types/trezor'; // flowtype only
-import { DeviceMessage } from '../../../message/builder';
+import { UiMessage } from '../../../message/builder';
 import Device from '../../../device/Device';
 import * as UI from '../../../constants/ui';
 import * as DEVICE from '../../../constants/device';
@@ -22,7 +22,7 @@ const postConfirmationMessage = (device: Device) => {
 };
 
 const postProgressMessage = (device, progress, postMessage) => {
-    postMessage(new DeviceMessage(UI.FIRMWARE_PROGRESS, {
+    postMessage(new UiMessage(UI.FIRMWARE_PROGRESS, {
         device: device.toMessageObject(),
         progress,
     }));
