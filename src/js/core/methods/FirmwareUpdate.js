@@ -5,11 +5,11 @@ import * as UI from '../../constants/ui';
 import { validateParams } from './helpers/paramsValidator';
 import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
+import * as trezor from '../../types/trezor'; // flowtype only
 
 import type { CoreMessage } from '../../types';
 
-export type Params = {
-    payload: Buffer,
+type Params = trezor.FirmwareUpload & {
     length: number,
 }
 

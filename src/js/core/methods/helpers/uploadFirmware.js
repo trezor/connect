@@ -9,8 +9,9 @@ import * as UI from '../../../constants/ui';
 import * as DEVICE from '../../../constants/device';
 
 import type { CoreMessage } from '../../../types';
-
-import type { Params } from '../FirmwareUpdate';
+type Params = trezor.FirmwareUpload & {
+    length: number,
+}
 
 // firmware does not send button message but user still must press button to continue
 // with fw update.
