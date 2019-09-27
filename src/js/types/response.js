@@ -224,11 +224,6 @@ export type ChangePin$ = {
     payload: Success,
 } | Unsuccessful$;
 
-export type FirmwareErase$ = {
-    success: true,
-    payload: Success,
-} | Unsuccessful$;
-
 export type FirmwareRequest$ = {
     length: number,
     offset: number,

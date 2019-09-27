@@ -5,18 +5,12 @@ import * as UI from '../../constants/ui';
 import { validateParams } from './helpers/paramsValidator';
 import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
+import type { FirmwareUpload } from '../../types/trezor'; // flowtype only
 
 import type { CoreMessage } from '../../types';
 
-type Params = {
-    payload: Buffer,
-    hash?: string,
-    offset?: number,
-    length?: number,
-}
-
 export default class FirmwareUpdate extends AbstractMethod {
-    params: Params;
+    params: FirmwareUpload;
     run: () => Promise<any>;
 
     constructor(message: CoreMessage) {
@@ -32,15 +26,12 @@ export default class FirmwareUpdate extends AbstractMethod {
 
         validateParams(payload, [
             { name: 'payload', type: 'buffer', obligatory: true },
-            { name: 'hash', type: 'string' },
-            { name: 'offset', type: 'number' },
-            { name: 'length', type: 'number' },
+            // { name: 'hash', type: 'string' },
         ]);
 
         this.params = {
             payload: payload.payload,
-            offset: payload.offset,
-            length: payload.length,
+            length: payload.payload.byteLength,
         };
     }
 
@@ -67,16 +58,11 @@ export default class FirmwareUpdate extends AbstractMethod {
 
     async run(): Promise<Object> {
         const { device, params } = this;
-        await this.device.getCommands().firmwareErase({
-            length: this.params.length,
-        });
-
         const response = await uploadFirmware(
-            device.getCommands().typedCall.bind(device.getCommands()),
-            params.payload,
-            params.offset,
-            params.length,
-            device.features.major_version,
+            this.device.getCommands().typedCall.bind(this.device.getCommands()),
+            this.postMessage,
+            device,
+            params,
         );
 
         return response;

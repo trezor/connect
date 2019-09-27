@@ -206,10 +206,6 @@ export type $ChangePin = $Common & {
     remove?: boolean,
 }
 
-export type $FirmwareErase = $Common & {
-    length?: number,
-}
-
 export type $FirmwareUpload = $Common & {
     payload: string,
     hash?: string,

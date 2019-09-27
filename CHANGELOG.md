@@ -1,3 +1,9 @@
+# 8.0.6
+#### Removed
+- removed standalone `firmwareErase` and `firmwareUpload` methods.
+#### Added
+- `firmwareUpdate` method now emits `ButtonRequest_FirmwareUpdate` event and `ui-firmware-progress` event;
+
 # 8.0.5 (server side only)
 #### Fixed
 - fix `disconnect`-`method response` race condition

@@ -37,6 +37,7 @@ export const UPDATE_CUSTOM_FEE: 'ui-update_custom_fee' = 'ui-update_custom_fee';
 export const INSUFFICIENT_FUNDS: 'ui-insufficient_funds' = 'ui-insufficient_funds';
 export const REQUEST_BUTTON: 'ui-button' = 'ui-button';
 export const REQUEST_WORD: 'ui-request_word' = 'ui-request_word';
+export const FIRMWARE_PROGRESS: 'ui-firmware-progress' = 'ui-firmware-progress';
 
 export const RECEIVE_PERMISSION: 'ui-receive_permission' = 'ui-receive_permission';
 export const RECEIVE_CONFIRMATION: 'ui-receive_confirmation' = 'ui-receive_confirmation';

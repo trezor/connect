@@ -941,7 +941,8 @@ export type FirmwareErase = {
 
 export type FirmwareUpload = {
     payload: Buffer,
-    hash?: string,
+    length: number,
+    // hash?: string,
 }
 
 export type ChangePin = {

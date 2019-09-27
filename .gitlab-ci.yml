@@ -8,7 +8,8 @@ build:
   stage: build
   script:
     - npm install -g yarn
-    - npm install
+    - yarn
+    - yarn flow
     - make build-connect
   artifacts:
     expire_in: 1 week
