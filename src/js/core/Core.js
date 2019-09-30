@@ -581,7 +581,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 const response: Object = await method.run();
                 messageResponse = new ResponseMessage(method.responseID, true, response);
             } catch (error) {
-                return Promise.reject({ error: error.message, code: error.code });
+                return Promise.reject(error);
             }
         };
 
