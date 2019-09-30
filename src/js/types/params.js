@@ -25,18 +25,16 @@ export type $BlockchainEstimateFee = {
         },
         feeLevels?: 'preloaded' | 'smart',
     },
-    // account?: {
-    //     path: string,
-    //     addresses: AccountAddresses,
-    //     utxo: AccountUtxo[],
-    // },
-    // feeLevels?: FeeLevel[],
-    // preload?: boolean,
 }
 
 export type SubscriptionAccountInfo = {
     descriptor: string,
     addresses?: AccountAddresses, // bitcoin addresses
+}
+
+export type $BlockchainGetTransactions = {
+    coin: string,
+    txs: string[],
 }
 
 export type $BlockchainSubscribe = {

@@ -42,8 +42,8 @@ type Params = {
     outputs: BuildTxOutputRequest[],
     coinInfo: BitcoinNetworkInfo,
     push: boolean,
-    account: $ElementType<Payload, 'account'>,
-    feeLevels: $ElementType<Payload, 'feeLevels'>,
+    account?: $ElementType<Payload, 'account'>,
+    feeLevels?: $ElementType<Payload, 'feeLevels'>,
 }
 
 export default class ComposeTransaction extends AbstractMethod {
@@ -60,6 +60,7 @@ export default class ComposeTransaction extends AbstractMethod {
             { name: 'outputs', type: 'array', obligatory: true, allowEmpty: true },
             { name: 'coin', type: 'string', obligatory: true },
             { name: 'push', type: 'boolean' },
+            { name: 'account', type: 'object' },
             { name: 'feeLevels', type: 'array' },
         ]);
 
@@ -104,8 +105,7 @@ export default class ComposeTransaction extends AbstractMethod {
             this.info = `Send ${ formatAmount(total.toString(), coinInfo) }`;
         }
 
-        this.useDevice = !payload.account;
-        this.useUi = !payload.account;
+        this.useDevice = this.useUi = !payload.account && !payload.feeLevels;
 
         this.params = {
             outputs,
@@ -116,8 +116,8 @@ export default class ComposeTransaction extends AbstractMethod {
         };
     }
 
-    async precompose(account: $ElementType<Payload, 'account'>): Promise<PrecomposedTransaction[]> {
-        const { coinInfo, outputs, feeLevels } = this.params;
+    async precompose(account: $ElementType<Payload, 'account'>, feeLevels: $ElementType<Payload, 'feeLevels'>): Promise<PrecomposedTransaction[]> {
+        const { coinInfo, outputs } = this.params;
         const composer = new TransactionComposer({
             account: {
                 type: 'normal',
@@ -135,7 +135,6 @@ export default class ComposeTransaction extends AbstractMethod {
         // TODO: make it possible without it (offline composing)
         const blockchain = await initBlockchain(this.params.coinInfo, this.postMessage);
         await composer.init(blockchain);
-        // const hasFunds = composer.composeCustomFee(feeRate);
         return feeLevels.map(level => {
             composer.composeCustomFee(level.feePerUnit);
             const tx = composer.composed.custom;
@@ -153,11 +152,6 @@ export default class ComposeTransaction extends AbstractMethod {
                         inputs,
                         outputs,
                     },
-                    // ...tx,
-                    // transaction: {
-                    //     inputs,
-                    //     outputs,
-                    // },
                 };
             }
             return tx;
@@ -165,47 +159,13 @@ export default class ComposeTransaction extends AbstractMethod {
     }
 
     async run(): Promise<SignedTx | PrecomposedTransaction[]> {
-        if (this.params.account) {
-            return this.precompose(this.params.account);
+        if (this.params.account && this.params.feeLevels) {
+            return this.precompose(this.params.account, this.params.feeLevels);
         }
 
         // discover accounts and wait for user action
         const { account, utxo } = await this.selectAccount();
 
-        // const account = {
-        //     address_n: [2147483697, 2147483649, 2147483648],
-
-        //     addresses: {change: [{
-        //         transfers: 0,
-        //         path: "m/49'/0'/0'/1/0",
-        //         address: '3BS7JLzQi7cW1V5w3iS4iwMZmZzhjJGsd3',
-        //     }], used: [], unused: []},
-        //     balance: '0.00018833 TEST',
-        //     descriptor: 'upub5Df5hVPH2yM4Khs85P8nkq3x9GRcvX3FgDitXDcqSJDXgMJjVmpWPRqwqHExjQcezkjDDyU1u3ij1wUPXHaYqRHehuGtBvSPzcocpKu3wUz',
-        //     empty: false,
-        //     label: 'Account #1',
-        //     type: 'segwit',
-        // };
-        // const utxo = [
-        //     // {
-        //     //     address: '2N1VPCeEUXFdZepHJgbzSZgoi6nGrGFgeRH',
-        //     //     amount: '18833',
-        //     //     blockHeight: 1450749,
-        //     //     confirmations: 117994,
-        //     //     path: "m/49'/1'/0'/1/0",
-        //     //     txid: 'ee7720c3350ff500b8b6a3a477fb71ef35e37c18f1929a586324791e6c5a11dd',
-        //     //     vout: 1,
-        //     // },
-        //     {
-        //         address: '3Jdnbtqg3f8YberUzEirLLAumsp7RYt4Kw',
-        //         amount: '498666',
-        //         blockHeight: 527112,
-        //         confirmations: 117994,
-        //         path: "m/49'/0'/0'/1/0",
-        //         txid: '941eb4e6deded748848388cb110d7fdfc8ff9512028f21efd39854bdb1e34305',
-        //         vout: 1,
-        //     },
-        // ];
         // wait for fee selection
         const response: string | SignedTx = await this.selectFee(account, utxo);
         // check for interruption

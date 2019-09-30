@@ -38,6 +38,11 @@ export type BlockchainEstimateFee$ = {
     payload: FeeInfo,
 } | Unsuccessful$;
 
+export type BlockchainGetTransactions$ = {
+    success: true,
+    payload: Array<any>,
+} | Unsuccessful$;
+
 export type BlockchainSubscribe$ = {
     success: true,
     payload: {

@@ -146,22 +146,6 @@ export default class TransactionComposer {
         if (changeId < 0) return { type: 'error', error: 'CHANGE-ADDRESS-NOT-SET' };
         const changeAddress = addresses.change[changeId].address;
 
-        // const par = {
-        //     utxos: this.utxos,
-        //     outputs: this.outputs,
-        //     height: this.blockHeight,
-        //     feeRate,
-        //     segwit: this.coinInfo.segwit,
-        //     inputAmounts: (this.coinInfo.segwit || this.coinInfo.forkid !== null),
-        //     basePath: account.address_n,
-        //     network: this.coinInfo.network,
-        //     changeId,
-        //     changeAddress,
-        //     dustThreshold: this.coinInfo.dustLimit,
-        // };
-
-        // console.log('AAA!', par);
-
         return buildTx({
             utxos: this.utxos,
             outputs: this.outputs,
