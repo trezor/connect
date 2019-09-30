@@ -188,6 +188,7 @@ import * as BINANCE from './binance';
 export type ChangeSettings = (settings: Settings) => void;
 export type BlockchainDisconnect = (P.$BlockchainDisconnect) => Promise<R.BlockchainDisconnect$>;
 export type BlockchainEstimateFee = (P.$BlockchainEstimateFee) => Promise<R.BlockchainEstimateFee$>;
+export type BlockchainGetTransactions = (P.$BlockchainGetTransactions) => Promise<R.BlockchainGetTransactions$>;
 export type BlockchainSubscribe = (P.$BlockchainSubscribe) => Promise<R.BlockchainSubscribe$>;
 export type CustomMessage = (P.$CustomMessage) => Promise<R.CustomMessage$>;
 export type RequestLogin = (P.$RequestLogin) => Promise<R.RequestLogin$>;

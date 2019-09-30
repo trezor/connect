@@ -15,6 +15,7 @@ import type {
 
 import type { FeeInfo } from './fee';
 import type { AccountInfo } from './account';
+import type { GetTransactionResponse } from './transactions';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
 
@@ -40,7 +41,7 @@ export type BlockchainEstimateFee$ = {
 
 export type BlockchainGetTransactions$ = {
     success: true,
-    payload: Array<any>,
+    payload: Array<GetTransactionResponse>,
 } | Unsuccessful$;
 
 export type BlockchainSubscribe$ = {
