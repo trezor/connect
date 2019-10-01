@@ -185,7 +185,7 @@ export default class PopupManager extends EventEmitter {
         if (data.type === POPUP.ERROR) {
             // handle popup error
             const errorMessage = (data.payload && typeof data.payload.error === 'string') ? data.payload.error : null;
-            this.emit(POPUP.CLOSED, errorMessage ? { error: `Popup error: ${errorMessage}` } : null);
+            this.emit(POPUP.CLOSED, errorMessage ? `Popup error: ${errorMessage}` : null);
             this.close();
         } else if (data.type === POPUP.LOADED) {
             this.iframeHandshake.promise.then(resolve => {
@@ -226,9 +226,9 @@ export default class PopupManager extends EventEmitter {
         } else if (data.type === POPUP.BOOTSTRAP) {
             // popup is opened properly, now wait for POPUP.LOADED message
             window.clearTimeout(this.openTimeout);
-        } else if (data.type === POPUP.ERROR) {
+        } else if (data.type === POPUP.ERROR && this._window) {
             const errorMessage = (data.payload && typeof data.payload.error === 'string') ? data.payload.error : null;
-            this.emit(POPUP.CLOSED, errorMessage ? { error: `Popup error: ${errorMessage}` } : null);
+            this.emit(POPUP.CLOSED, errorMessage ? `Popup error: ${errorMessage}` : null);
             this.close();
         } else if (data.type === POPUP.LOADED) {
             // popup is successfully loaded

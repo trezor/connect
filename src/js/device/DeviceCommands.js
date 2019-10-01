@@ -73,7 +73,7 @@ export default class DeviceCommands {
     sessionId: string;
     debug: boolean;
     disposed: boolean;
-    callPromise: ?Promise<DefaultMessageResponse>;
+    callPromise: ?Promise<DefaultMessageResponse> = undefined;
 
     constructor(
         device: Device,

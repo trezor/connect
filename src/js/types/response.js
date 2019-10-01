@@ -7,11 +7,15 @@ import type {
     HDNodeResponse,
     MessageSignature,
     Success,
+    TransactionInput,
+    TransactionOutput,
     SignedTx,
     DebugLinkState,
 } from './trezor';
 
+import type { FeeInfo } from './fee';
 import type { AccountInfo } from './account';
+import type { GetTransactionResponse } from './transactions';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
 
@@ -32,11 +36,12 @@ export type BlockchainDisconnect$ = {
 
 export type BlockchainEstimateFee$ = {
     success: true,
-    payload: {
-        feePerUnit: string,
-        feePerTx?: string,
-        feeLimit?: string,
-    }[],
+    payload: FeeInfo,
+} | Unsuccessful$;
+
+export type BlockchainGetTransactions$ = {
+    success: true,
+    payload: Array<GetTransactionResponse>,
 } | Unsuccessful$;
 
 export type BlockchainSubscribe$ = {
@@ -78,6 +83,35 @@ export type DebugLinkGetState$ = {
 export type ComposeTransaction$ = {
     success: true,
     payload: SignedTx,
+} | Unsuccessful$;
+
+// copy/paste from hd-wallet/buildTx
+export type PrecomposedTransaction = {
+    type: 'error',
+    error: string,
+} | {
+    type: 'nonfinal',
+    max: string,
+    totalSpent: string, // all the outputs, no fee, no change
+    fee: string,
+    feePerByte: string,
+    bytes: number,
+} | {
+    type: 'final',
+    max: string,
+    totalSpent: string, // all the outputs, no fee, no change
+    fee: string,
+    feePerByte: string,
+    bytes: number,
+    transaction: {
+        inputs: TransactionInput[],
+        outputs: TransactionOutput[],
+    },
+}
+
+export type ComposeTransaction$$ = {
+    success: true,
+    payload: PrecomposedTransaction[],
 } | Unsuccessful$;
 
 // response for getAccountInfo method

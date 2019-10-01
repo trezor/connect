@@ -441,7 +441,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     // wait for device disconnect
                     await createUiPromise(DEVICE.DISCONNECT, device).promise;
                     // interrupt process and go to "final" block
-                    return Promise.reject({ error: 'Cancelled' });
+                    return Promise.reject('Cancelled');
                 } else {
                     // return error if not using popup
                     return Promise.reject(firmwareException);
@@ -484,7 +484,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 const permitted = await method.noBackupConfirmation();
                 if (!permitted) {
                     // interrupt process and go to "final" block
-                    return Promise.reject({ error: ERROR.PERMISSIONS_NOT_GRANTED.message, code: ERROR.PERMISSIONS_NOT_GRANTED.code });
+                    return Promise.reject({ message: ERROR.PERMISSIONS_NOT_GRANTED.message, code: ERROR.PERMISSIONS_NOT_GRANTED.code });
                 }
             }
 
@@ -509,7 +509,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 const confirmed = await method.confirmation();
                 if (!confirmed) {
                     // interrupt process and go to "final" block
-                    return Promise.reject({ error: 'Cancelled' });
+                    return Promise.reject('Cancelled');
                 }
             }
 
@@ -581,7 +581,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                 const response: Object = await method.run();
                 messageResponse = new ResponseMessage(method.responseID, true, response);
             } catch (error) {
-                return Promise.reject({ error: error.message, code: error.code });
+                return Promise.reject({ message: error.message, code: error.code });
             }
         };
 

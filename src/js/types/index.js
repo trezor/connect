@@ -188,6 +188,7 @@ import * as BINANCE from './binance';
 export type ChangeSettings = (settings: Settings) => void;
 export type BlockchainDisconnect = (P.$BlockchainDisconnect) => Promise<R.BlockchainDisconnect$>;
 export type BlockchainEstimateFee = (P.$BlockchainEstimateFee) => Promise<R.BlockchainEstimateFee$>;
+export type BlockchainGetTransactions = (P.$BlockchainGetTransactions) => Promise<R.BlockchainGetTransactions$>;
 export type BlockchainSubscribe = (P.$BlockchainSubscribe) => Promise<R.BlockchainSubscribe$>;
 export type CustomMessage = (P.$CustomMessage) => Promise<R.CustomMessage$>;
 export type RequestLogin = (P.$RequestLogin) => Promise<R.RequestLogin$>;
@@ -216,7 +217,11 @@ declare function F_CipherKeyValue(params: (P.$Common & P.$CipherKeyValue)): Prom
 declare function F_CipherKeyValue(params: (P.$Common & { bundle: Array<P.$CipherKeyValue> })): Promise<R.CipherKeyValue$$>;
 export type CipherKeyValue = typeof F_CipherKeyValue;
 
-export type ComposeTransaction = (P.$ComposeTransaction) => Promise<R.ComposeTransaction$>;
+declare function F_ComposeTransaction(params: (P.$Common & P.$ComposeTransaction)): Promise<R.ComposeTransaction$>;
+declare function F_ComposeTransaction(params: (P.$Common & P.$$ComposeTransaction)): Promise<R.ComposeTransaction$$>;
+export type ComposeTransaction = typeof F_ComposeTransaction;
+// export type ComposeTransaction = (P.$ComposeTransaction) => Promise<R.ComposeTransaction$>;
+
 export type DebugLinkDecision = (P.$DebugLinkDecision) => Promise<R.DebugLinkDecision$>;
 export type DebugLinkGetState = (P.$DebugLinkGetState) => Promise<R.DebugLinkGetState$>;
 

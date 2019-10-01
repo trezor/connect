@@ -6,6 +6,7 @@ import * as BLOCKCHAIN from '../constants/blockchain';
 import type { CoreMessage, CoinInfo } from '../types';
 import type { SubscriptionAccountInfo } from '../types/params';
 import type { BlockchainBlock, BlockchainLinkTransaction } from '../types/blockchainEvent';
+import type { GetTransactionResponse } from '../types/transactions';
 
 import {
     BlockbookWorker,
@@ -123,6 +124,12 @@ export default class Blockchain {
     async loadTransaction(id: string): Promise<BitcoinJsTransaction> {
         const tx = await this.link.getTransaction(id);
         return BitcoinJsTransaction.fromHex(tx.hex, this.coinInfo.network);
+    }
+
+    async getTransactions(txs: string[]): Promise<GetTransactionResponse[]> {
+        return Promise.all(
+            txs.map(id => this.link.getTransaction(id))
+        );
     }
 
     async getReferencedTransactions(txs: string[]): Promise<BitcoinJsTransaction[]> {

@@ -6,7 +6,7 @@ import type {
     RefTransaction,
     DebugLinkDecision,
 } from './trezor';
-import type { AccountAddresses } from './account';
+import type { AccountAddresses, AccountUtxo } from './account';
 
 export type $BlockchainDisconnect = {
     coin: string,
@@ -23,12 +23,18 @@ export type $BlockchainEstimateFee = {
             to?: string, // eth to
             data?: string, // eth tx data
         },
+        feeLevels?: 'preloaded' | 'smart',
     },
 }
 
 export type SubscriptionAccountInfo = {
     descriptor: string,
     addresses?: AccountAddresses, // bitcoin addresses
+}
+
+export type $BlockchainGetTransactions = {
+    coin: string,
+    txs: string[],
 }
 
 export type $BlockchainSubscribe = {
@@ -69,13 +75,31 @@ type ComposeTransactionOutput = {|
 |} | {|
     type: 'opreturn',
     dataHex: string,
+|} | {|
+    type: 'noaddress',
+    amount: string,
+|} | {|
+    type: 'send-max-noaddress',
 |};
 
-export type $ComposeTransaction = $Common & {
+export type $ComposeTransaction = {|
     outputs: Array<ComposeTransactionOutput>,
     coin: string,
     push?: boolean,
-}
+|}
+
+export type $$ComposeTransaction = {|
+    outputs: Array<ComposeTransactionOutput>,
+    coin: string,
+    account: {
+        path: string,
+        addresses: AccountAddresses,
+        utxo: AccountUtxo[],
+    },
+    feeLevels: {
+        feePerUnit: string,
+    }[],
+|}
 
 export type $CustomMessage = $Common & {
     messages?: JSON,
