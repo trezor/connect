@@ -122,8 +122,8 @@ export default class Blockchain {
     }
 
     async loadTransaction(id: string): Promise<BitcoinJsTransaction> {
-        const tx = await this.link.getTransaction(id);
-        return BitcoinJsTransaction.fromHex(tx.hex, this.coinInfo.network);
+        const transaction = await this.link.getTransaction(id);
+        return BitcoinJsTransaction.fromHex(transaction.tx.hex, this.coinInfo.network);
     }
 
     async getTransactions(txs: string[]): Promise<GetTransactionResponse[]> {
