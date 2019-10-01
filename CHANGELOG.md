@@ -1,8 +1,12 @@
 # 8.0.6
+#### Added
+- `firmwareUpdate` method now emits `ButtonRequest_FirmwareUpdate` event and `ui-firmware-progress` event
+- `blockchainGetTransactions` and `blockchainEstimateFee` methods
+- `composeTransaction` returns precomposed transaction for account
+#### Fixed
+- Removed unnecessary error wrapper (core.js)
 #### Removed
 - removed standalone `firmwareErase` and `firmwareUpload` methods.
-#### Added
-- `firmwareUpdate` method now emits `ButtonRequest_FirmwareUpdate` event and `ui-firmware-progress` event;
 
 # 8.0.5 (server side only)
 #### Fixed
