@@ -2,7 +2,7 @@
 'use strict';
 
 import * as bs58check from 'bs58check';
-import type { TezosOperation } from '../../../types/tezos';
+import type { TezosOperation, TezosSecondaryOperation } from '../../../types/tezos';
 import type { TezosTransaction } from '../../../types/trezor';
 import { validateParams } from './../helpers/paramsValidator';
 
@@ -70,7 +70,7 @@ const publicKey2buffer = (publicKey: string): Uint8Array => {
     }
 };
 
-export const createTx = (address_n: Array<number>, branch: string, operation: TezosOperation): TezosTransaction => {
+export const createTx = (address_n: Array<number>, branch: string, operation: TezosOperation, secondaryOperation: TezosSecondaryOperation): TezosTransaction => {
     let message: TezosTransaction = {
         address_n,
         branch: bs58checkDecode(prefix.B, branch),
@@ -93,10 +93,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         message = {
             ...message,
             reveal: {
-                source: {
-                    tag: publicKeyHash2buffer(reveal.source).originated,
-                    hash: publicKeyHash2buffer(reveal.source).hash,
-                },
+                source: publicKeyHash2buffer(reveal.source).hash,
                 public_key: publicKey2buffer(reveal.public_key),
                 fee: reveal.fee,
                 counter: reveal.counter,
@@ -124,10 +121,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         message = {
             ...message,
             transaction: {
-                source: {
-                    tag: publicKeyHash2buffer(transaction.source).originated,
-                    hash: publicKeyHash2buffer(transaction.source).hash,
-                },
+                source: publicKeyHash2buffer(transaction.source).hash,
                 destination: {
                     tag: publicKeyHash2buffer(transaction.destination).originated,
                     hash: publicKeyHash2buffer(transaction.destination).hash,
@@ -150,6 +144,46 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                 },
             };
         }
+
+        if (secondaryOperation.kt_delegation) {
+            const kt_delegation = secondaryOperation.kt_delegation
+            if (kt_delegation.hasOwnProperty('delegate')) {
+                message = {
+                    ...message,
+                    transaction: {
+                        ...message.transaction,
+                        kt_delegation: {
+                            delegate: publicKeyHash2buffer(kt_delegation.delegate).hash
+                        },
+                    },
+                };
+            } else {
+                message = {
+                    ...message,
+                    transaction: {
+                        ...message.transaction,
+                        kt_delegation: {
+                            delegate: new Uint8Array([0])
+                        },
+                    },
+                };
+            }
+        }
+
+        if (secondaryOperation.kt_transfer) {
+            const kt_transfer = secondaryOperation.kt_transfer
+
+            message = {
+                ...message,
+                transaction: {
+                    ...message.transaction,
+                    kt_transfer: {
+                        amount: kt_transfer.amount,
+                        destination: publicKeyHash2buffer(kt_transfer.destination).hash,
+                    }
+                }
+            }
+        }
     }
 
     // origination
@@ -159,11 +193,11 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         // validate origination parameters
         validateParams(origination, [
             { name: 'source', type: 'string', obligatory: true },
-            { name: 'manager_pubkey', type: 'string', obligatory: true },
+            //{ name: 'manager_pubkey', type: 'string', obligatory: true },
             { name: 'delegate', type: 'string', obligatory: true },
             { name: 'balance', type: 'number', obligatory: true },
-            { name: 'spendable', type: 'boolean', obligatory: true },
-            { name: 'delegatable', type: 'boolean', obligatory: true },
+            //{ name: 'spendable', type: 'boolean', obligatory: true },
+            //{ name: 'delegatable', type: 'boolean', obligatory: true },
             { name: 'fee', type: 'number', obligatory: true },
             { name: 'counter', type: 'number', obligatory: true },
             { name: 'gas_limit', type: 'number', obligatory: true },
@@ -173,15 +207,12 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         message = {
             ...message,
             origination: {
-                source: {
-                    tag: publicKeyHash2buffer(origination.source).originated,
-                    hash: publicKeyHash2buffer(origination.source).hash,
-                },
-                manager_pubkey: publicKeyHash2buffer(origination.manager_pubkey).hash,
+                source: publicKeyHash2buffer(origination.source).hash,
+                //manager_pubkey: publicKeyHash2buffer(origination.manager_pubkey).hash,
                 delegate: publicKeyHash2buffer(origination.delegate).hash,
                 balance: origination.balance,
-                spendable: origination.spendable,
-                delegatable: origination.delegatable,
+                //spendable: origination.spendable,
+                //delegatable: origination.delegatable,
                 fee: origination.fee,
                 counter: origination.counter,
                 gas_limit: origination.gas_limit,
@@ -218,10 +249,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         message = {
             ...message,
             delegation: {
-                source: {
-                    tag: publicKeyHash2buffer(delegation.source).originated,
-                    hash: publicKeyHash2buffer(delegation.source).hash,
-                },
+                source: publicKeyHash2buffer(delegation.source).hash,
                 delegate: publicKeyHash2buffer(delegation.delegate).hash,
                 fee: delegation.fee,
                 counter: delegation.counter,

@@ -58,7 +58,16 @@ export type TezosRevealOperation = {
     gas_limit: number,
     storage_limit: number,
     public_key: string,
-}
+};
+
+export type TezosKtDelegationOperation = {
+    delegate: string,
+};
+
+export type TezosKtTransferOperation = {
+    amount: number,
+    destination: string,
+};
 
 export type TezosTransactionOperation = {
     source: string,
@@ -100,6 +109,11 @@ export type TezosOperation = {
     origination?: TezosOriginationOperation,
     delegation?: TezosDelegationOperation,
 };
+
+export type TezosSecondaryOperation = {
+    kt_delegation?: TezosKtDelegationOperation,
+    kt_transfer?: TezosKtTransferOperation,
+}
 
 export type $TezosSignTransaction = $Common & {
     address_n: Array<number>,
