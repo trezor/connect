@@ -118,13 +118,11 @@ export default class TransactionComposer {
         levels.forEach(level => {
             const tx = this.composed[level.label];
             if (tx && tx.type === 'final') {
-                const feePerByte = new BigNumber(tx.feePerByte).integerValue(BigNumber.ROUND_FLOOR).toString();
-                const blocks = this.feeLevels.getBlocks(feePerByte);
                 list.push({
                     name: level.label,
                     fee: tx.fee,
-                    feePerByte: feePerByte,
-                    minutes: blocks * this.coinInfo.blocktime,
+                    feePerByte: level.feePerUnit,
+                    minutes: level.blocks * this.coinInfo.blocktime,
                     total: tx.totalSpent,
                 });
             } else {
