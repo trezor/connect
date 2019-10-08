@@ -99,9 +99,7 @@ export default class Blockchain {
             const info = await this.link.getInfo();
             this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
                 coin: this.coinInfo,
-                info: {
-                    block: info.block,
-                },
+                ...info,
             }));
         });
 

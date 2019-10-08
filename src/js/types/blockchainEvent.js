@@ -8,9 +8,14 @@ export type BlockchainConnect = {
     type: typeof BLOCKCHAIN.CONNECT,
     payload: {
         coin: CoinInfo,
-        info: {
-            block: number,
-        },
+        url: string,
+        blockHash: string,
+        blockHeight: number,
+        decimals: number,
+        name: string,
+        shortcut: string,
+        testnet: boolean,
+        version: string,
     },
 }
 
@@ -26,8 +31,8 @@ export type BlockchainBlock = {
     type: typeof BLOCKCHAIN.BLOCK,
     payload: {
         coin: CoinInfo,
-        block: number,
-        hash: string,
+        blockHash: string,
+        blockHeight: number,
     },
 }
 
