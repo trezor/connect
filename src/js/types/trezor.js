@@ -675,7 +675,7 @@ export type RippleTransaction = {
     sequence?: number,
     last_ledger_sequence?: number,
     payment: {
-        amount: number,
+        amount: string,
         destination: string,
     },
 }
