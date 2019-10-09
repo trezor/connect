@@ -649,8 +649,8 @@ export type LiskAsset =
 
 export type LiskTransaction = {
     type: number,
-    fee: number,
-    amount: number,
+    fee: string,
+    amount: string,
     timestamp: number,
     recipient_id?: string,
     sender_public_key?: string,
