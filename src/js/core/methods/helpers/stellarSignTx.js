@@ -65,14 +65,14 @@ const transformSignMessage = (tx: $StellarTransaction): StellarSignTxMessage => 
     const timebounds = tx.timebounds ? {
         timebounds_start: tx.timebounds.minTime,
         timebounds_end: tx.timebounds.maxTime,
-    } : null;
+    } : undefined;
 
     const memo = tx.memo ? {
         memo_type: tx.memo.type,
         memo_text: tx.memo.text,
         memo_id: tx.memo.id,
         memo_hash: tx.memo.hash,
-    } : null;
+    } : undefined;
 
     return {
         address_n: [], // will be overridden
@@ -95,7 +95,7 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 type: 'StellarCreateAccountOp',
                 new_account: op.destination,
                 source_account: op.source,
-                starting_balance: parseInt(op.startingBalance, 10),
+                starting_balance: op.startingBalance,
             };
 
         case 'payment' :
@@ -105,7 +105,7 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 source_account: op.source,
                 destination_account: op.destination,
                 asset: op.asset,
-                amount: parseInt(op.amount, 10),
+                amount: op.amount,
             };
 
         case 'pathPayment' :
@@ -117,7 +117,7 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 send_max: op.sendMax,
                 destination_account: op.destination,
                 destination_asset: op.destAsset,
-                destination_amount: parseInt(op.destAmount, 10),
+                destination_amount: op.destAmount,
                 paths: op.path,
             };
 
@@ -127,7 +127,7 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 type: 'StellarManageOfferOp',
                 source_account: op.source,
                 offer_id: op.offerId,
-                amount: parseInt(op.amount, 10),
+                amount: op.amount,
                 buying_asset: op.buying,
                 selling_asset: op.selling,
                 price_n: op.price.n,
@@ -140,7 +140,7 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 type: 'StellarCreatePassiveOfferOp',
                 source_account: op.source,
                 offer_id: op.offerId,
-                amount: parseInt(op.amount, 10),
+                amount: op.amount,
                 buying_asset: op.buying,
                 selling_asset: op.selling,
                 price_n: op.price.n,
@@ -171,8 +171,8 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
             return {
                 type: 'StellarChangeTrustOp',
                 source_account: op.source,
-                asset: op.line,
-                limit: parseInt(op.limit, 10),
+                asset: op.asset,
+                limit: op.limit,
             };
 
         case 'allowTrust' :
@@ -204,7 +204,7 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
             return {
                 type: 'StellarBumpSequenceOp',
                 source_account: op.source,
-                bump_to: op.to,
+                bump_to: op.bumpTo,
             };
     }
 };

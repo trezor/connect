@@ -16,7 +16,7 @@ export type CreateAccountOperation = {
     +type: 'createAccount', // Proto: "StellarCreateAccountOp"
     destination: string, // Proto: "new_account",
     source: string, // Proto: "source_account"
-    startingBalance: string, // Proto: "starting_balance" > parse to number
+    startingBalance: string, // Proto: "starting_balance"
 }
 
 export type PaymentOperation = {
@@ -24,7 +24,7 @@ export type PaymentOperation = {
     source: string, // Proto: "source_account"
     destination: string, // Proto: "destination_account"
     asset: Asset, // Proto: ok
-    amount: string, // Proto: parse to number
+    amount: string, // Proto: ok
 }
 
 export type PathPaymentOperation = {
@@ -34,7 +34,7 @@ export type PathPaymentOperation = {
     sendMax: number, // Proto: "send_max"
     destination: string, // Proto: "destination_account"
     destAsset?: Asset, // Proto: "destination_asset"
-    destAmount?: string, // Proto "destination_amount" > parse to number
+    destAmount?: string, // Proto "destination_amount"
     path?: Array<Asset>, // Proto: "paths"
 }
 
@@ -42,7 +42,7 @@ export type ManageOfferOperation = {
     +type: 'manageOffer', // Proto: "StellarManageOfferOp"
     source: string, // Proto: "source_account"
     offerId: number, // Proto: "offer_id"
-    amount: string, // Proto: parse to number
+    amount: string, // Proto: ok
     buying: Asset, // Proto: "buying_asset"
     selling: Asset, // Proto: "selling_asset"
     price: { n: number, d: number }, // Proto: "price_n" and "price_d"
@@ -52,7 +52,7 @@ export type PassiveOfferOperation = {
     +type: 'createPassiveOffer', // Proto: "StellarCreatePassiveOfferOp"
     source: string, // Proto: "source_account"
     offerId: number, // Proto: "offer_id"
-    amount: string, // Proto: parse to number
+    amount: string, // Proto: ok
     buying: Asset, // Proto: "buying_asset"
     selling: Asset, // Proto: "selling_asset"
     price: { n: number, d: number }, // Proto: "price_n" and "price_d"
@@ -79,8 +79,8 @@ export type SetOptionsOperation = {
 export type ChangeTrustOperation = {
     +type: 'changeTrust', // Proto: "StellarChangeTrustOp"
     source: string, // Proto: "source_account"
-    line?: Asset, // Proto: "asset"
-    limit: string, // Proto: parse to number
+    asset?: Asset, // Proto: ok
+    limit: string, // Proto: ok
 }
 
 export type AllowTrustOperation = {
@@ -109,7 +109,7 @@ export type ManageDataOperation = {
 export type BumpSequenceOperation = {
     +type: 'bumpSequence', // Proto: "StellarBumpSequenceOp"
     source: string, // Proto: "source_account"
-    to: number, // Proto: "bump_to"
+    bumpTo: number, // Proto: "bump_to"
 }
 
 // (?) Missing in Proto messages, but present in Stellar API
