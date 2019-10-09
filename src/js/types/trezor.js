@@ -611,7 +611,7 @@ export type CardanoTxInput = {
 export type CardanoTxOutput = {
     address?: string,
     address_n?: Array<number>,
-    amount: number,
+    amount: string,
 };
 
 export type CardanoTxRequest = {

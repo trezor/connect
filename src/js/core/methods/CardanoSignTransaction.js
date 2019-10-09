@@ -54,18 +54,18 @@ export default class CardanoSignTransaction extends AbstractMethod {
         const outputs: Array<CardanoTxOutput> = payload.outputs.map(output => {
             validateParams(output, [
                 { name: 'address', type: 'string' },
-                { name: 'amount', type: 'string', obligatory: true },
+                { name: 'amount', type: 'amount', obligatory: true },
             ]);
 
             if (output.path) {
                 return {
                     address_n: validatePath(output.path, 5),
-                    amount: parseInt(output.amount),
+                    amount: output.amount,
                 };
             } else {
                 return {
                     address: output.address,
-                    amount: parseInt(output.amount),
+                    amount: output.amount,
                 };
             }
         });
