@@ -556,8 +556,8 @@ export type TezosTransactionOp = {
     gas_limit: number,
     storage_limit: number,
     parameters?: Array<number>,
-    kt_delegation?: TezosKtDelegationOp,
-    kt_transfer?: TezosKtTransferOp,
+    smart_contract_delegation?: TezosKtDelegationOp,
+    smart_contract_transfer?: TezosKtTransferOp,
 };
 
 export type TezosOriginationOp = {

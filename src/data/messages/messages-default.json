@@ -4450,13 +4450,6 @@
                     "type": "Capability",
                     "name": "capabilities",
                     "id": 30
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "BackupType",
-                    "name": "backup_type",
-                    "id": 31
                 }
             ],
             "enums": [
@@ -4648,41 +4641,6 @@
                 }
             ],
             "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "SdProtect",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "SdProtectOperationType",
-                    "name": "operation",
-                    "id": 1
-                }
-            ],
-            "enums": [
-                {
-                    "name": "SdProtectOperationType",
-                    "values": [
-                        {
-                            "name": "DISABLE",
-                            "id": 0
-                        },
-                        {
-                            "name": "ENABLE",
-                            "id": 1
-                        },
-                        {
-                            "name": "REFRESH",
-                            "id": 2
-                        }
-                    ],
-                    "options": {}
-                }
-            ],
             "messages": [],
             "options": {},
             "oneofs": {}
@@ -4912,14 +4870,33 @@
                 {
                     "rule": "optional",
                     "options": {
-                        "default": "Bip39"
+                        "default": "ResetDeviceBackupType_Bip39"
                     },
-                    "type": "BackupType",
+                    "type": "ResetDeviceBackupType",
                     "name": "backup_type",
                     "id": 10
                 }
             ],
-            "enums": [],
+            "enums": [
+                {
+                    "name": "ResetDeviceBackupType",
+                    "values": [
+                        {
+                            "name": "ResetDeviceBackupType_Bip39",
+                            "id": 0
+                        },
+                        {
+                            "name": "ResetDeviceBackupType_Slip39_Single_Group",
+                            "id": 1
+                        },
+                        {
+                            "name": "ResetDeviceBackupType_Slip39_Multiple_Groups",
+                            "id": 2
+                        }
+                    ],
+                    "options": {}
+                }
+            ],
             "messages": [],
             "options": {},
             "oneofs": {}
@@ -8314,9 +8291,9 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "bytes",
+                            "type": "TezosContractID",
                             "name": "source",
-                            "id": 7
+                            "id": 1
                         },
                         {
                             "rule": "optional",
@@ -8365,9 +8342,9 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "bytes",
+                            "type": "TezosContractID",
                             "name": "source",
-                            "id": 9
+                            "id": 1
                         },
                         {
                             "rule": "optional",
@@ -8417,64 +8394,10 @@
                             "type": "bytes",
                             "name": "parameters",
                             "id": 8
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TezosTransactionSmartContractDelegationOp",
-                            "name": "smart_contract_delegation",
-                            "id": 10
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TezosTransactionSmartContractTransferOp",
-                            "name": "smart_contract_transfer",
-                            "id": 11
                         }
                     ],
                     "enums": [],
-                    "messages": [
-                        {
-                            "name": "TezosTransactionSmartContractDelegationOp",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "bytes",
-                                    "name": "delegate",
-                                    "id": 1
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TezosTransactionSmartContractTransferOp",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "amount",
-                                    "id": 1
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "bytes",
-                                    "name": "recipient",
-                                    "id": 2
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        }
-                    ],
+                    "messages": [],
                     "options": {},
                     "oneofs": {}
                 },
@@ -8484,9 +8407,9 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "bytes",
+                            "type": "TezosContractID",
                             "name": "source",
-                            "id": 12
+                            "id": 1
                         },
                         {
                             "rule": "optional",
@@ -8570,9 +8493,9 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "bytes",
+                            "type": "TezosContractID",
                             "name": "source",
-                            "id": 7
+                            "id": 1
                         },
                         {
                             "rule": "optional",
@@ -8736,142 +8659,6 @@
             "oneofs": {}
         },
         {
-            "name": "WebAuthnListResidentCredentials",
-            "fields": [],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "WebAuthnAddResidentCredential",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "credential_id",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "WebAuthnRemoveResidentCredential",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "index",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "WebAuthnCredentials",
-            "fields": [
-                {
-                    "rule": "repeated",
-                    "options": {},
-                    "type": "WebAuthnCredential",
-                    "name": "credentials",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [
-                {
-                    "name": "WebAuthnCredential",
-                    "fields": [
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "uint32",
-                            "name": "index",
-                            "id": 1
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "id",
-                            "id": 2
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "rp_id",
-                            "id": 3
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "rp_name",
-                            "id": 4
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bytes",
-                            "name": "user_id",
-                            "id": 5
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "user_name",
-                            "id": 6
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "string",
-                            "name": "user_display_name",
-                            "id": 7
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "uint32",
-                            "name": "creation_time",
-                            "id": 8
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bool",
-                            "name": "hmac_secret",
-                            "id": 9
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "bool",
-                            "name": "use_sign_count",
-                            "id": 10
-                        }
-                    ],
-                    "enums": [],
-                    "messages": [],
-                    "options": {},
-                    "oneofs": {}
-                }
-            ],
-            "options": {},
-            "oneofs": {}
-        },
-        {
             "ref": "google.protobuf.EnumValueOptions",
             "fields": [
                 {
@@ -8949,24 +8736,6 @@
                 {
                     "name": "SPENDP2SHWITNESS",
                     "id": 4
-                }
-            ],
-            "options": {}
-        },
-        {
-            "name": "BackupType",
-            "values": [
-                {
-                    "name": "Bip39",
-                    "id": 0
-                },
-                {
-                    "name": "Slip39_Basic",
-                    "id": 1
-                },
-                {
-                    "name": "Slip39_Advanced",
-                    "id": 2
                 }
             ],
             "options": {}
@@ -9097,10 +8866,6 @@
                 {
                     "name": "MessageType_SetU2FCounter",
                     "id": 63
-                },
-                {
-                    "name": "MessageType_SdProtect",
-                    "id": 79
                 },
                 {
                     "name": "MessageType_FirmwareErase",
@@ -9685,22 +9450,6 @@
                 {
                     "name": "MessageType_BinanceSignedTx",
                     "id": 709
-                },
-                {
-                    "name": "MessageType_WebAuthnListResidentCredentials",
-                    "id": 800
-                },
-                {
-                    "name": "MessageType_WebAuthnCredentials",
-                    "id": 801
-                },
-                {
-                    "name": "MessageType_WebAuthnAddResidentCredential",
-                    "id": 802
-                },
-                {
-                    "name": "MessageType_WebAuthnRemoveResidentCredential",
-                    "id": 803
                 }
             ],
             "options": {}

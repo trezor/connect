@@ -111,8 +111,8 @@ export type TezosOperation = {
 };
 
 export type TezosSecondaryOperation = {
-    kt_delegation?: TezosKtDelegationOperation,
-    kt_transfer?: TezosKtTransferOperation,
+    smart_contract_delegation?: TezosKtDelegationOperation,
+    smart_contract_transfer?: TezosKtTransferOperation,
 }
 
 export type $TezosSignTransaction = $Common & {

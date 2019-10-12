@@ -145,15 +145,15 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             };
         }
 
-        if (secondaryOperation.kt_delegation) {
-            const kt_delegation = secondaryOperation.kt_delegation
-            if (kt_delegation.hasOwnProperty('delegate')) {
+        if (transaction.hasOwnProperty('smart_contract_delegation') && secondaryOperation.smart_contract_delegation) {
+            const smart_contract_delegation = secondaryOperation.smart_contract_delegation
+            if (smart_contract_delegation.hasOwnProperty('delegate')) {
                 message = {
                     ...message,
                     transaction: {
                         ...message.transaction,
-                        kt_delegation: {
-                            delegate: publicKeyHash2buffer(kt_delegation.delegate).hash
+                        smart_contract_delegation: {
+                            delegate: publicKeyHash2buffer(smart_contract_delegation.delegate).hash
                         },
                     },
                 };
@@ -162,7 +162,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                     ...message,
                     transaction: {
                         ...message.transaction,
-                        kt_delegation: {
+                        smart_contract_delegation: {
                             delegate: new Uint8Array([0])
                         },
                     },
@@ -170,16 +170,16 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             }
         }
 
-        if (secondaryOperation.kt_transfer) {
-            const kt_transfer = secondaryOperation.kt_transfer
+        else if (transaction.hasOwnProperty('smart_contract_transfer') && secondaryOperation.smart_contract_transfer) {
+            const smart_contract_transfer = secondaryOperation.smart_contract_transfer
 
             message = {
                 ...message,
                 transaction: {
                     ...message.transaction,
-                    kt_transfer: {
-                        amount: kt_transfer.amount,
-                        destination: publicKeyHash2buffer(kt_transfer.destination).hash,
+                    smart_contract_transfer: {
+                        amount: smart_contract_transfer.amount,
+                        destination: publicKeyHash2buffer(smart_contract_transfer.destination).hash,
                     }
                 }
             }
