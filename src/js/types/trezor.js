@@ -538,13 +538,13 @@ export type TezosRevealOp = {
     public_key: Uint8Array,
 };
 
-export type TezosKtDelegationOp = {
+export type TezosTransactionSmartContractDelegationOp = {
     delegate?: Uint8Array,
 };
 
-export type TezosKtTransferOp = {
+export type TezosTransactionSmartContractTransferOp = {
     amount: number,
-    destination: Uint8Array,
+    recipient: Uint8Array,
 };
 
 export type TezosTransactionOp = {
@@ -556,8 +556,8 @@ export type TezosTransactionOp = {
     gas_limit: number,
     storage_limit: number,
     parameters?: Array<number>,
-    smart_contract_delegation?: TezosKtDelegationOp,
-    smart_contract_transfer?: TezosKtTransferOp,
+    smart_contract_delegation?: TezosTransactionSmartContractDelegationOp,
+    smart_contract_transfer?: TezosTransactionSmartContractTransferOp,
 };
 
 export type TezosOriginationOp = {

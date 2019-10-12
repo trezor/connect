@@ -60,13 +60,13 @@ export type TezosRevealOperation = {
     public_key: string,
 };
 
-export type TezosKtDelegationOperation = {
+export type TezosTransactionSmartContractDelegationOp = {
     delegate: string,
 };
 
-export type TezosKtTransferOperation = {
+export type TezosTransactionSmartContractTransferOp = {
     amount: number,
-    destination: string,
+    recipient: string,
 };
 
 export type TezosTransactionOperation = {

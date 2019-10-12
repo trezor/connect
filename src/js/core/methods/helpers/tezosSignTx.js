@@ -145,7 +145,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             };
         }
 
-        if (transaction.hasOwnProperty('smart_contract_delegation') && secondaryOperation.smart_contract_delegation) {
+        if (secondaryOperation.smart_contract_delegation) {
             const smart_contract_delegation = secondaryOperation.smart_contract_delegation
             if (smart_contract_delegation.hasOwnProperty('delegate')) {
                 message = {
@@ -170,16 +170,15 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             }
         }
 
-        else if (transaction.hasOwnProperty('smart_contract_transfer') && secondaryOperation.smart_contract_transfer) {
+        else if (secondaryOperation.smart_contract_transfer) {
             const smart_contract_transfer = secondaryOperation.smart_contract_transfer
-
             message = {
                 ...message,
                 transaction: {
                     ...message.transaction,
                     smart_contract_transfer: {
                         amount: smart_contract_transfer.amount,
-                        destination: publicKeyHash2buffer(smart_contract_transfer.destination).hash,
+                        recipient: publicKeyHash2buffer(smart_contract_transfer.recipient).hash,
                     }
                 }
             }
