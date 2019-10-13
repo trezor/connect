@@ -7,7 +7,7 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/tezosSignTx';
 
-import type { TezosOperation, TezosSecondaryOperation } from '../../types/tezos';
+import type { TezosOperation } from '../../types/tezos';
 import type { TezosTransaction, TezosSignedTx } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
@@ -31,14 +31,12 @@ export default class TezosSignTransaction extends AbstractMethod {
             { name: 'path', obligatory: true },
             { name: 'branch', type: 'string', obligatory: true },
             { name: 'operation', obligatory: true },
-            { name: 'secondaryOperation', obligatory: false},
         ]);
 
         const path = validatePath(payload.path, 3);
         const branch: string = payload.branch;
         const operation: TezosOperation = payload.operation;
-        const secondaryOperation: TezosSecondaryOperation = payload.secondaryOperation
-        const transaction = helper.createTx(path, branch, operation, secondaryOperation);
+        const transaction = helper.createTx(path, branch, operation);
 
         this.params = {
             transaction,

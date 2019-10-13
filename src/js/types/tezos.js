@@ -78,6 +78,8 @@ export type TezosTransactionOperation = {
     fee: number,
     gas_limit: number,
     storage_limit: number,
+    // smart_contract_delegation?: TezosTransactionSmartContractDelegationOp,
+    // smart_contract_transfer?: TezosTransactionSmartContractTransferOp,
 };
 
 export type TezosOriginationOperation = {
@@ -109,11 +111,6 @@ export type TezosOperation = {
     origination?: TezosOriginationOperation,
     delegation?: TezosDelegationOperation,
 };
-
-export type TezosSecondaryOperation = {
-    smart_contract_delegation?: TezosKtDelegationOperation,
-    smart_contract_transfer?: TezosKtTransferOperation,
-}
 
 export type $TezosSignTransaction = $Common & {
     address_n: Array<number>,

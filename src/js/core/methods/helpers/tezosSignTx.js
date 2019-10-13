@@ -2,7 +2,7 @@
 'use strict';
 
 import * as bs58check from 'bs58check';
-import type { TezosOperation, TezosSecondaryOperation } from '../../../types/tezos';
+import type { TezosOperation } from '../../../types/tezos';
 import type { TezosTransaction } from '../../../types/trezor';
 import { validateParams } from './../helpers/paramsValidator';
 
@@ -29,7 +29,7 @@ const concatArray = (first: Uint8Array, second: Uint8Array): Uint8Array => {
 };
 
 // convert publicKeyHash to buffer
-const publicKeyHash2buffer = (publicKeyHash: string): { originated: number, hash: Uint8Array} => {
+const publicKeyHash2buffer = (publicKeyHash: string): { originated: number, hash: Uint8Array } => {
     switch (publicKeyHash.substr(0, 3)) {
         case 'tz1':
             return {
@@ -70,7 +70,7 @@ const publicKey2buffer = (publicKey: string): Uint8Array => {
     }
 };
 
-export const createTx = (address_n: Array<number>, branch: string, operation: TezosOperation, secondaryOperation: TezosSecondaryOperation): TezosTransaction => {
+export const createTx = (address_n: Array<number>, branch: string, operation: TezosOperation): TezosTransaction => {
     let message: TezosTransaction = {
         address_n,
         branch: bs58checkDecode(prefix.B, branch),
@@ -145,44 +145,48 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             };
         }
 
-        if (secondaryOperation.smart_contract_delegation) {
-            const smart_contract_delegation = secondaryOperation.smart_contract_delegation
-            if (smart_contract_delegation.hasOwnProperty('delegate')) {
-                message = {
-                    ...message,
-                    transaction: {
-                        ...message.transaction,
-                        smart_contract_delegation: {
-                            delegate: publicKeyHash2buffer(smart_contract_delegation.delegate).hash
-                        },
-                    },
-                };
-            } else {
-                message = {
-                    ...message,
-                    transaction: {
-                        ...message.transaction,
-                        smart_contract_delegation: {
-                            delegate: new Uint8Array([0])
-                        },
-                    },
-                };
-            }
-        }
+        // //  add parameters for smart contract delegation
+        // if (transaction.hasOwnProperty('smart_contract_delegation')) {
+        //     const smart_contract_delegation = transaction.smart_contract_delegation;
 
-        else if (secondaryOperation.smart_contract_transfer) {
-            const smart_contract_transfer = secondaryOperation.smart_contract_transfer
-            message = {
-                ...message,
-                transaction: {
-                    ...message.transaction,
-                    smart_contract_transfer: {
-                        amount: smart_contract_transfer.amount,
-                        recipient: publicKeyHash2buffer(smart_contract_transfer.recipient).hash,
-                    }
-                }
-            }
-        }
+        //     // validate smart contract delegation parameters
+        //     validateParams(smart_contract_delegation, [
+        //         { name: 'delegate', type: 'string', obligatory: true },
+        //     ]);
+
+        //     message = {
+        //         ...message,
+        //         transaction: {
+        //             ...message.transaction,
+        //             smart_contract_delegation: {
+        //                 delegate: publicKeyHash2buffer(smart_contract_delegation.delegate).hash
+        //             },
+        //         },
+        //     };
+        // }
+
+        // //  add parameters for smart contract transfer
+        // if (transaction.hasOwnProperty('smart_contract_transfer')) {
+        //     const smart_contract_transfer = transaction.smart_contract_transfer;
+
+        //     // validate smart contract delegation parameters
+        //     validateParams(smart_contract_transfer, [
+        //         { name: 'amount', type: 'number', obligatory: true },
+        //         { name: 'recipient', type: 'string', obligatory: true },
+        //     ]);
+
+        //     message = {
+        //         ...message,
+        //         transaction: {
+        //             ...message.transaction,
+        //             smart_contract_transfer: {
+        //                 amount: smart_contract_transfer.amount,
+        //                 recipient: publicKeyHash2buffer(smart_contract_transfer.recipient).hash,
+        //             }
+        //         }
+        //     }
+        // }
+
     }
 
     // origination
@@ -192,11 +196,8 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         // validate origination parameters
         validateParams(origination, [
             { name: 'source', type: 'string', obligatory: true },
-            //{ name: 'manager_pubkey', type: 'string', obligatory: true },
             { name: 'delegate', type: 'string', obligatory: true },
             { name: 'balance', type: 'number', obligatory: true },
-            //{ name: 'spendable', type: 'boolean', obligatory: true },
-            //{ name: 'delegatable', type: 'boolean', obligatory: true },
             { name: 'fee', type: 'number', obligatory: true },
             { name: 'counter', type: 'number', obligatory: true },
             { name: 'gas_limit', type: 'number', obligatory: true },
@@ -207,11 +208,8 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             ...message,
             origination: {
                 source: publicKeyHash2buffer(origination.source).hash,
-                //manager_pubkey: publicKeyHash2buffer(origination.manager_pubkey).hash,
                 delegate: publicKeyHash2buffer(origination.delegate).hash,
                 balance: origination.balance,
-                //spendable: origination.spendable,
-                //delegatable: origination.delegatable,
                 fee: origination.fee,
                 counter: origination.counter,
                 gas_limit: origination.gas_limit,
