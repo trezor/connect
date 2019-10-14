@@ -214,7 +214,7 @@ export default class GetAccountInfo extends AbstractMethod {
         const responses: Array<AccountInfo | null> = [];
 
         const sendProgress = (progress: number, response: AccountInfo | null, error?: string) => {
-            if (!this.hasBundle || this.device.getCommands().disposed) return;
+            if (!this.hasBundle || (this.device && this.device.getCommands().disposed)) return;
             // send progress to UI
             this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
                 progress,

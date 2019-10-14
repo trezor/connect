@@ -90,7 +90,11 @@ export type EthereumNetworkInfo = {
     chain: string,
     chainId: number,
     // key not used
-    defaultFees: {[level: string]: number},
+    defaultFees: {
+        label: string,
+        feePerUnit: string,
+        feeLimit: string,
+    }[],
     minFee: number,
     maxFee: number,
     label: string, // compatibility

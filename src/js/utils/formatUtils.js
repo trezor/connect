@@ -42,7 +42,3 @@ export const formatTime = (n: number): string => {
 export const btckb2satoshib = (n: string): string => {
     return new BigNumber(n).times(1e5).toFixed(0, BigNumber.ROUND_HALF_UP);
 };
-
-export const feePerUnit = (fee: string, coinInfo: CoinInfo) => {
-    return new BigNumber(fee).div(1000).integerValue(BigNumber.ROUND_CEIL).toString();
-};
