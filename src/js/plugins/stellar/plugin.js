@@ -2,7 +2,7 @@ const StellarSdk = require('stellar-sdk');
 const BigNumber = require('bignumber.js');
 
 /**
- * Transforms StellarSdk.Signer to trezor-connect Signer
+ * Transforms StellarSdk.Signer to TrezorConnect.StellarTransaction.Signer
  * @param {StellarSdk.Signer} signer
  * @returns { type: 1 | 2 | 3, key: string, weight: number }
  */
@@ -30,7 +30,7 @@ const transformSigner = (signer) => {
 };
 
 /**
- * Transforms StellarSdk.Asset to trezor-connect Asset
+ * Transforms StellarSdk.Asset to TrezorConnect.StellarTransaction.Asset
  * @param {StellarSdk.Asset} asset
  * @returns { type: 0 | 1 | 2, code: string, issuer?: string }
  */
@@ -58,7 +58,7 @@ const transformAmount = (amount) => {
 };
 
 /**
- * Transforms StellarSdk.Operation.type to trezor-connect Operation.type
+ * Transforms StellarSdk.Operation.type to TrezorConnect.StellarTransaction.Operation.type
  * @param {string} type
  * @returns {string}
  */
@@ -80,7 +80,7 @@ const transformType = (type) => {
 };
 
 /**
- * Transforms StellarSdk.Memo to trezor-connect Transaction.Memo
+ * Transforms StellarSdk.Memo to TrezorConnect.StellarTransaction.Memo
  * @param {string} type
  * @returns {string}
  */
@@ -102,7 +102,7 @@ const transformMemo = (memo) => {
 };
 
 /**
- * Transforms StellarSdk.Transaction.timeBounds to trezor-connect Transaction.timebounds
+ * Transforms StellarSdk.Transaction.timeBounds to TrezorConnect.StellarTransaction.timebounds
  * @param {string} path
  * @param {StellarSdk.Transaction.timeBounds} timebounds
  * @returns {minTime: number, maxTime: number}
@@ -117,10 +117,10 @@ const transformTimebounds = (timebounds) => {
 };
 
 /**
- * Transforms StellarSdk.Transaction to trezor-connect Transaction
+ * Transforms StellarSdk.Transaction to TrezorConnect.StellarTransaction
  * @param {string} path
  * @param {StellarSdk.Transaction} transaction
- * @returns {string}
+ * @returns {TrezorConnect.StellarTransaction}
  */
 const transformTransaction = (path, transaction) => {
     const amounts = ['amount', 'sendMax', 'destAmount', 'startingBalance', 'limit'];
