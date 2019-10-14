@@ -8421,56 +8421,64 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "TezosTransactionSmartContractDelegationOp",
-                            "name": "smart_contract_delegation",
+                            "type": "TezosManagerSmartContractParams",
+                            "name": "manager_smart_contract_params",
                             "id": 10
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
-                            "type": "TezosTransactionSmartContractTransferOp",
-                            "name": "smart_contract_transfer",
-                            "id": 11
                         }
                     ],
                     "enums": [],
                     "messages": [
                         {
-                            "name": "TezosTransactionSmartContractDelegationOp",
+                            "name": "TezosManagerSmartContractParams",
                             "fields": [
                                 {
                                     "rule": "optional",
                                     "options": {},
                                     "type": "bytes",
-                                    "name": "delegate",
-                                    "id": 1
-                                }
-                            ],
-                            "enums": [],
-                            "messages": [],
-                            "options": {},
-                            "oneofs": {}
-                        },
-                        {
-                            "name": "TezosTransactionSmartContractTransferOp",
-                            "fields": [
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint64",
-                                    "name": "amount",
+                                    "name": "set_delegate",
                                     "id": 1
                                 },
                                 {
                                     "rule": "optional",
                                     "options": {},
-                                    "type": "bytes",
-                                    "name": "recipient",
+                                    "type": "bool",
+                                    "name": "cancel_delegate",
                                     "id": 2
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "TezosManagerSmartContractTransfer",
+                                    "name": "transfer",
+                                    "id": 3
                                 }
                             ],
                             "enums": [],
-                            "messages": [],
+                            "messages": [
+                                {
+                                    "name": "TezosManagerSmartContractTransfer",
+                                    "fields": [
+                                        {
+                                            "rule": "optional",
+                                            "options": {},
+                                            "type": "bytes",
+                                            "name": "destination",
+                                            "id": 1
+                                        },
+                                        {
+                                            "rule": "optional",
+                                            "options": {},
+                                            "type": "uint64",
+                                            "name": "amount",
+                                            "id": 2
+                                        }
+                                    ],
+                                    "enums": [],
+                                    "messages": [],
+                                    "options": {},
+                                    "oneofs": {}
+                                }
+                            ],
                             "options": {},
                             "oneofs": {}
                         }

@@ -60,13 +60,15 @@ export type TezosRevealOperation = {
     public_key: string,
 };
 
-export type TezosTransactionSmartContractDelegationOp = {
-    delegate: string,
+export type TezosManagerSmartContractParams = {
+    set_delegate?: string,
+    cancel_delegate?: bool,
+    transfer?: TezosManagerSmartContractTransfer
 };
 
-export type TezosTransactionSmartContractTransferOp = {
+export type TezosManagerSmartContractTransfer = {
+    destination: string,
     amount: number,
-    recipient: string,
 };
 
 export type TezosTransactionOperation = {
@@ -78,8 +80,9 @@ export type TezosTransactionOperation = {
     fee: number,
     gas_limit: number,
     storage_limit: number,
-    smart_contract_delegation?: TezosTransactionSmartContractDelegationOp,
-    smart_contract_transfer?: TezosTransactionSmartContractTransferOp,
+    // smart_contract_delegation?: TezosTransactionSmartContractDelegationOp,
+    // smart_contract_transfer?: TezosTransactionSmartContractTransferOp,
+    manager_smart_contract_params?: TezosManagerSmartContractParams,
 };
 
 export type TezosOriginationOperation = {

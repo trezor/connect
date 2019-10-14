@@ -145,64 +145,105 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             };
         }
 
+        if (transaction.hasOwnProperty('manager_smart_contract_params')) {
+            const manager_smart_contract_params = transaction.manager_smart_contract_params
 
-        //  add parameters for smart contract delegation
-        if (transaction.hasOwnProperty('smart_contract_delegation')) {
-            const smart_contract_delegation = transaction.smart_contract_delegation;
+            validateParams(manager_smart_contract_params, [
+                { name: 'set_delegate', type: 'string', obligatory: false },
+                { name: 'cancel_delegate', type: 'boolean' , obligatory: false},
+                { name: 'transfer', type: 'object', obligatory: false}
+            ]);
 
-            if (typeof smart_contract_delegation !== 'undefined') {
-                // validate smart contract delegation parameters
-                validateParams(smart_contract_delegation, [
-                    { name: 'delegate', type: 'string', obligatory: false },
-                ]);
-            
-                if (smart_contract_delegation.hasOwnProperty('delegate')) {
-                    message = {
-                        ...message,
-                        transaction: {
-                            ...message.transaction,
-                            smart_contract_delegation: {
-                                delegate: publicKeyHash2buffer(smart_contract_delegation.delegate).hash
-                            },
+            if (manager_smart_contract_params.hasOwnProperty('set_delegate')) {
+                message = {
+                    ...message,
+                    transaction: {
+                        ...message.transaction,
+                        manager_smart_contract_params: {
+                            set_delegate: publicKeyHash2buffer(manager_smart_contract_params.set_delegate).hash
                         },
-                    };
-                // if the property delegate is not set, we withdraw the delegation
-                } else {
-                    message = {
-                        ...message,
-                        transaction: {
-                            ...message.transaction,
-                            smart_contract_delegation: {},
-                        },
-                    };
-                }
+                    },
+                };
             }
-        }
 
-        //  add parameters for smart contract transfer
-        if (transaction.hasOwnProperty('smart_contract_transfer')) {
-            const smart_contract_transfer = transaction.smart_contract_transfer;
+            if (manager_smart_contract_params.hasOwnProperty('cancel_delegate')) {
+                message = {
+                    ...message,
+                    transaction: {
+                        ...message.transaction,
+                        manager_smart_contract_params: {
+                            cancel_delegate: true,
+                        },
+                    },
+                };
+            }
 
-            if (typeof smart_contract_transfer !== 'undefined') {
-                // validate smart contract transfer parameters
-                validateParams(smart_contract_transfer, [
+            if (manager_smart_contract_params.hasOwnProperty('transfer')) {
+                const transfer = manager_smart_contract_params.transfer
+
+                validateParams(transfer, [
                     { name: 'amount', type: 'number', obligatory: true },
-                    { name: 'recipient', type: 'string', obligatory: true },
+                    { name: 'destination', type: 'string', obligatory: true },
                 ]);
 
                 message = {
                     ...message,
                     transaction: {
                         ...message.transaction,
-                        smart_contract_transfer: {
-                            amount: smart_contract_transfer.amount,
-                            recipient: publicKeyHash2buffer(smart_contract_transfer.recipient).hash,
-                        }
-                    }
-                }
+                        manager_smart_contract_params: {
+                            transfer: {
+                                destination: publicKeyHash2buffer(manager_smart_contract_params.transfer.destination).hash,
+                                amount: manager_smart_contract_params.transfer.amount
+                            },
+                        },
+                    },
+                };
             }
         }
-    }
+
+    //     //  add parameters for smart contract delegation
+    //     if (transaction.hasOwnProperty('smart_contract_delegation')) {
+    //         const smart_contract_delegation = transaction.smart_contract_delegation;
+
+    //         // validate smart contract delegation parameters
+    //         validateParams(smart_contract_delegation, [
+    //             { name: 'delegate', type: 'string', obligatory: false },
+    //         ]);
+            
+    //         message = {
+    //             ...message,
+    //             transaction: {
+    //                 ...message.transaction,
+    //                 smart_contract_delegation: {
+    //                     delegate: publicKeyHash2buffer(smart_contract_delegation.delegate).hash
+    //                 },
+    //             },
+    //         };
+    //     }
+
+    //     //  add parameters for smart contract transfer
+    //     if (transaction.hasOwnProperty('smart_contract_transfer')) {
+    //         const smart_contract_transfer = transaction.smart_contract_transfer;
+
+    //         // validate smart contract delegation parameters
+    //         validateParams(smart_contract_transfer, [
+    //             { name: 'amount', type: 'number', obligatory: true },
+    //             { name: 'recipient', type: 'string', obligatory: true },
+    //         ]);
+
+    //         message = {
+    //             ...message,
+    //             transaction: {
+    //                 ...message.transaction,
+    //                 smart_contract_transfer: {
+    //                     amount: smart_contract_transfer.amount,
+    //                     recipient: publicKeyHash2buffer(smart_contract_transfer.recipient).hash,
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    // }
 
     // origination
     if (operation.origination) {
@@ -273,3 +314,4 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
 
     return message;
 };
+}
