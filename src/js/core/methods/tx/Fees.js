@@ -176,7 +176,7 @@ export default class FeeLevels {
         try {
             const response = await blockchain.estimateFee({ blocks });
             response.forEach((r, i) => {
-                this.blocks[blocks[i]] = this.coinInfo.type === 'bitcoin' ? feePerKB(r.feePerUnit) : r.feePerUnit;
+                this.blocks[blocks[i]] = feePerKB(r.feePerUnit);
             });
             if (this.levels.length === 1) {
                 const lowest = findLowest(this.blocks);
