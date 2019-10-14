@@ -62,6 +62,7 @@ export const stellarSignTx = async (typedCall: (type: string, resType: string, m
 
 // transform incoming parameters to protobuf messages format
 const transformSignMessage = (tx: $StellarTransaction): StellarSignTxMessage => {
+    // timebounds_start and timebounds_end are the only fields which needs to be converted to number
     const timebounds = tx.timebounds ? {
         timebounds_start: tx.timebounds.minTime,
         timebounds_end: tx.timebounds.maxTime,
@@ -90,16 +91,22 @@ const transformSignMessage = (tx: $StellarTransaction): StellarSignTxMessage => 
 const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => {
     switch (op.type) {
         case 'createAccount' :
-            validateParams(op, [{ name: 'startingBalance', type: 'amount' }]);
+            validateParams(op, [
+                { name: 'destination', type: 'string', obligatory: true },
+                { name: 'startingBalance', type: 'amount', obligatory: true },
+            ]);
             return {
                 type: 'StellarCreateAccountOp',
-                new_account: op.destination,
                 source_account: op.source,
+                new_account: op.destination,
                 starting_balance: op.startingBalance,
             };
 
         case 'payment' :
-            validateParams(op, [{ name: 'amount', type: 'amount' }]);
+            validateParams(op, [
+                { name: 'destination', type: 'string', obligatory: true },
+                { name: 'amount', type: 'amount', obligatory: true },
+            ]);
             return {
                 type: 'StellarPaymentOp',
                 source_account: op.source,
@@ -109,7 +116,7 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
             };
 
         case 'pathPayment' :
-            validateParams(op, [{ name: 'destAmount', type: 'amount' }]);
+            validateParams(op, [{ name: 'destAmount', type: 'amount', obligatory: true }]);
             return {
                 type: 'StellarPathPaymentOp',
                 source_account: op.source,
@@ -121,41 +128,40 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 paths: op.path,
             };
 
-        case 'manageOffer' :
-            validateParams(op, [{ name: 'amount', type: 'amount' }]);
-            return {
-                type: 'StellarManageOfferOp',
-                source_account: op.source,
-                offer_id: op.offerId,
-                amount: op.amount,
-                buying_asset: op.buying,
-                selling_asset: op.selling,
-                price_n: op.price.n,
-                price_d: op.price.d,
-            };
-
         case 'createPassiveOffer' :
-            validateParams(op, [{ name: 'amount', type: 'amount' }]);
+            validateParams(op, [{ name: 'amount', type: 'amount', obligatory: true }]);
             return {
                 type: 'StellarCreatePassiveOfferOp',
                 source_account: op.source,
-                offer_id: op.offerId,
-                amount: op.amount,
                 buying_asset: op.buying,
                 selling_asset: op.selling,
+                amount: op.amount,
                 price_n: op.price.n,
                 price_d: op.price.d,
             };
 
-        case 'setOptions' :
-            validateParams(op, [{ name: 'signer', type: 'object' }]);
-            if (!op.signer) op.signer = {};
+        case 'manageOffer' :
+            validateParams(op, [{ name: 'amount', type: 'amount', obligatory: true }]);
             return {
-                type: 'StellarSetOptionsOp',
+                type: 'StellarManageOfferOp',
                 source_account: op.source,
+                buying_asset: op.buying,
+                selling_asset: op.selling,
+                amount: op.amount,
+                offer_id: op.offerId,
+                price_n: op.price.n,
+                price_d: op.price.d,
+            };
+
+        case 'setOptions' : {
+            const signer = op.signer ? {
                 signer_type: op.signer.type,
                 signer_key: op.signer.key,
                 signer_weight: op.signer.weight,
+            } : undefined;
+            return {
+                type: 'StellarSetOptionsOp',
+                source_account: op.source,
                 clear_flags: op.clearFlags,
                 set_flags: op.setFlags,
                 master_weight: op.masterWeight,
@@ -164,14 +170,16 @@ const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => 
                 high_threshold: op.highThreshold,
                 home_domain: op.homeDomain,
                 inflation_destination_account: op.inflationDest,
+                ...signer,
             };
+        }
 
         case 'changeTrust' :
             validateParams(op, [{ name: 'limit', type: 'amount' }]);
             return {
                 type: 'StellarChangeTrustOp',
                 source_account: op.source,
-                asset: op.asset,
+                asset: op.line,
                 limit: op.limit,
             };
 
