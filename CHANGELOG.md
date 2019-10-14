@@ -5,6 +5,9 @@
 #### Fixed
 - `stellarSignTransaction` parameters types (number > string, add required and optional params)
 - `blockchainEstimateFee` method (smart fees)
+- `cardanoSingTransaction` amount type to string
+- `liskSingTransaction` amount type to string
+- `rippleSingTransaction` amount type to string
 
 # 8.0.6
 #### Added
