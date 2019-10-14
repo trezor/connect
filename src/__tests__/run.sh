@@ -71,6 +71,8 @@ nemSignTransactionTransfers_subtests="simple xemAsMosaic unknownMosaic knownMosa
 
 getAccountInfo_subtests="firstSegwitAccount firstLegacyAccount emptyAccount segwitAccountFromDescriptor legacyAccountFromDescriptor ethereumAccount ethereumAccountFromDescriptor rippleAccount rippleAccountFromDescriptor invalidPath"
 
+stellarSignTransaction_subtests="createAccount accountMerge payment setOptions manageData pathPayment createPassiveOffer manageOffer changeTrust allowTrust bumpSequence withMemo"
+
 # passphrase_subtests="correctPassphrase wrongPassphrase"
 ################# Possible subtests: END
 

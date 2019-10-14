@@ -51,6 +51,7 @@ import { eosSignTransaction } from './eosSignTransaction.spec';
 import { binanceSignTransaction } from './binanceSignTransaction.spec';
 import { applySettings } from './applySettings.spec';
 import { applyFlags } from './applyFlags.spec';
+import { stellarSignTransaction } from './stellarSignTransaction.spec';
 
 export const testFunctions: AvailableTestFunctions = {
     cardanoGetAddress,
@@ -100,4 +101,5 @@ export const testFunctions: AvailableTestFunctions = {
     binanceSignTransaction,
     applySettings,
     applyFlags,
+    stellarSignTransaction,
 };
