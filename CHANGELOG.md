@@ -1,3 +1,11 @@
+# 8.0.7
+#### Added
+- `stellarSignTransaction` plugin - a tool for transforming StellarSDK.Transaction object into TrezorConnect.StellarTransaction
+- `stellarSignTransaction` missing tests
+#### Fixed
+- `stellarSignTransaction` parameters types (number > string, add required and optional params)
+- `blockchainEstimateFee` method (smart fees)
+
 # 8.0.6
 #### Added
 - `firmwareUpdate` method now emits `ButtonRequest_FirmwareUpdate` event and `ui-firmware-progress` event
