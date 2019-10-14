@@ -78,8 +78,8 @@ export type TezosTransactionOperation = {
     fee: number,
     gas_limit: number,
     storage_limit: number,
-    // smart_contract_delegation?: TezosTransactionSmartContractDelegationOp,
-    // smart_contract_transfer?: TezosTransactionSmartContractTransferOp,
+    smart_contract_delegation?: TezosTransactionSmartContractDelegationOp,
+    smart_contract_transfer?: TezosTransactionSmartContractTransferOp,
 };
 
 export type TezosOriginationOperation = {
