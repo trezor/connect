@@ -50,3 +50,33 @@ TrezorConnect.manifest({
 
 * [Events](events.md)
 
+## Running local version (develop/stable)
+- clone repository: `git clone git@github.com:trezor/connect.git`
+- install node_modules: `yarn`
+- run localhost server: `yarn dev`
+
+Initialize in project
+```javascript
+TrezorConnect.init({
+    connectSrc: 'https://localhost:8088/',
+    lazyLoad: true, // this param will prevent iframe injection until TrezorConnect.method will be called
+    manifest: {
+        email: 'developer@xyz.com',
+        appUrl: 'http://your.application.com',
+    }
+})
+```
+
+## Running local version (custom branch)
+In order to run a branch which isn't published to npm registry and this branch requires changes (mostly happened when new a method is added to TrezorConnect interface)
+- git checkout `custom-feature-branch`
+- yarn build:npm
+
+Install builded lib in your project:
+#### Using `yarn link`
+* cd ./npm && yarn link
+* Inside your project: `yarn install trezor-connect`
+#### Using local files
+* Inside your project: `yarn install trezor-connect@file:/[local-path-to-repository]/npm`
+
+
