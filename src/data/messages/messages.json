@@ -8421,15 +8421,15 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "TezosManagerSmartContractParams",
-                            "name": "manager_smart_contract_params",
+                            "type": "TezosParametersManager",
+                            "name": "parameters_manager",
                             "id": 10
                         }
                     ],
                     "enums": [],
                     "messages": [
                         {
-                            "name": "TezosManagerSmartContractParams",
+                            "name": "TezosParametersManager",
                             "fields": [
                                 {
                                     "rule": "optional",
@@ -8448,7 +8448,7 @@
                                 {
                                     "rule": "optional",
                                     "options": {},
-                                    "type": "TezosManagerSmartContractTransfer",
+                                    "type": "TezosManagerTransfer",
                                     "name": "transfer",
                                     "id": 3
                                 }
@@ -8456,7 +8456,7 @@
                             "enums": [],
                             "messages": [
                                 {
-                                    "name": "TezosManagerSmartContractTransfer",
+                                    "name": "TezosManagerTransfer",
                                     "fields": [
                                         {
                                             "rule": "optional",

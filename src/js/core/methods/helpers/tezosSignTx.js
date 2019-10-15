@@ -145,41 +145,41 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             };
         }
 
-        if (transaction.hasOwnProperty('manager_smart_contract_params')) {
-            const manager_smart_contract_params = transaction.manager_smart_contract_params
+        if (transaction.hasOwnProperty('parameters_manager')) {
+            const parameters_manager = transaction.parameters_manager
 
-            validateParams(manager_smart_contract_params, [
+            validateParams(parameters_manager, [
                 { name: 'set_delegate', type: 'string', obligatory: false },
                 { name: 'cancel_delegate', type: 'boolean' , obligatory: false},
                 { name: 'transfer', type: 'object', obligatory: false}
             ]);
 
-            if (manager_smart_contract_params.hasOwnProperty('set_delegate')) {
+            if (parameters_manager.hasOwnProperty('set_delegate')) {
                 message = {
                     ...message,
                     transaction: {
                         ...message.transaction,
-                        manager_smart_contract_params: {
-                            set_delegate: publicKeyHash2buffer(manager_smart_contract_params.set_delegate).hash
+                        parameters_manager: {
+                            set_delegate: publicKeyHash2buffer(parameters_manager.set_delegate).hash
                         },
                     },
                 };
             }
 
-            if (manager_smart_contract_params.hasOwnProperty('cancel_delegate')) {
+            if (parameters_manager.hasOwnProperty('cancel_delegate')) {
                 message = {
                     ...message,
                     transaction: {
                         ...message.transaction,
-                        manager_smart_contract_params: {
+                        parameters_manager: {
                             cancel_delegate: true,
                         },
                     },
                 };
             }
 
-            if (manager_smart_contract_params.hasOwnProperty('transfer')) {
-                const transfer = manager_smart_contract_params.transfer
+            if (parameters_manager.hasOwnProperty('transfer')) {
+                const transfer = parameters_manager.transfer
 
                 validateParams(transfer, [
                     { name: 'amount', type: 'number', obligatory: true },
@@ -190,10 +190,10 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                     ...message,
                     transaction: {
                         ...message.transaction,
-                        manager_smart_contract_params: {
+                        parameters_manager: {
                             transfer: {
-                                destination: publicKeyHash2buffer(manager_smart_contract_params.transfer.destination).hash,
-                                amount: manager_smart_contract_params.transfer.amount
+                                destination: publicKeyHash2buffer(parameters_manager.transfer.destination).hash,
+                                amount: parameters_manager.transfer.amount
                             },
                         },
                     },
