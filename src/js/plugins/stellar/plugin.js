@@ -163,7 +163,7 @@ const transformTransaction = (path, transaction) => {
             operation.assetType = transformAsset(allowTrustAsset).type;
         }
 
-        if (operation.type === 'manageData') {
+        if (operation.type === 'manageData' && operation.value) {
             // stringify is not necessary, Buffer is also accepted
             operation.value = operation.value.toString('hex');
         }
