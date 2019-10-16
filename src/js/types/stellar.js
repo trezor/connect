@@ -101,7 +101,7 @@ export type ManageDataOperation = {
     +type: 'manageData', // Proto: "StellarManageDataOp"
     source?: string, // Proto: "source_account"
     name: string, // Proto: "key"
-    value: string | Buffer, // Proto: "value"
+    value: string | Buffer | typeof undefined, // Proto: "value"
 }
 
 // (?) Missing in stellar API but present in Proto messages

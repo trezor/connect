@@ -508,7 +508,7 @@ export type StellarOperationMessage = {
     type: 'StellarManageDataOp',
     source_account?: string,
     key: string,
-    value: string | Buffer,
+    value: string | Buffer | typeof undefined,
 } | {
     type: 'StellarBumpSequenceOp',
     source_account?: string,
