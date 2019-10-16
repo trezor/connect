@@ -134,6 +134,11 @@ const transformTransaction = (path, transaction) => {
             operation.signer = transformSigner(operation.signer);
         }
 
+        // transform asset path
+        if (operation.path) {
+          operation.path = operation.path.map(transformAsset);
+        }
+
         // transform "price" field to { n: number, d: number }
         if (typeof operation.price === 'string') {
             const xdrOperation = transaction.tx.operations()[i];
@@ -163,7 +168,7 @@ const transformTransaction = (path, transaction) => {
             operation.assetType = transformAsset(allowTrustAsset).type;
         }
 
-        if (operation.type === 'manageData') {
+        if (operation.type === 'manageData' && operation.value) {
             // stringify is not necessary, Buffer is also accepted
             operation.value = operation.value.toString('hex');
         }
