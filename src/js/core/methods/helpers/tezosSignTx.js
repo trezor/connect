@@ -192,7 +192,10 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                         ...message.transaction,
                         parameters_manager: {
                             transfer: {
-                                destination: publicKeyHash2buffer(transfer.destination).hash,
+                                destination: {
+                                    tag: publicKeyHash2buffer(transfer.destination).originated,
+                                    hash: publicKeyHash2buffer(transfer.destination).hash,
+                                },
                                 amount: transfer.amount
                             },
                         },

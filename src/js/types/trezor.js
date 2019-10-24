@@ -546,7 +546,7 @@ export type TezosParametersManager = {
 
 export type TezosManagerTransfer = {
     amount: number,
-    destination: Uint8Array,
+    destination: TezosContractID,
 };
 
 export type TezosTransactionOp = {

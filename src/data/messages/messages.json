@@ -8461,7 +8461,7 @@
                                         {
                                             "rule": "optional",
                                             "options": {},
-                                            "type": "bytes",
+                                            "type": "TezosContractID",
                                             "name": "destination",
                                             "id": 1
                                         },
