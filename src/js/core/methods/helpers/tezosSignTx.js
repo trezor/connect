@@ -145,16 +145,16 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             };
         }
 
-        if (transaction.hasOwnProperty('parameters_manager')) {
+        if (transaction.parameters_manager) {
             const parameters_manager = transaction.parameters_manager
 
             validateParams(parameters_manager, [
                 { name: 'set_delegate', type: 'string', obligatory: false },
-                { name: 'cancel_delegate', type: 'boolean' , obligatory: false},
-                { name: 'transfer', type: 'object', obligatory: false}
+                { name: 'cancel_delegate', type: 'boolean', obligatory: false },
+                { name: 'transfer', type: 'object', obligatory: false }
             ]);
 
-            if (parameters_manager.hasOwnProperty('set_delegate')) {
+            if (parameters_manager.set_delegate) {
                 message = {
                     ...message,
                     transaction: {
@@ -178,7 +178,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                 };
             }
 
-            if (parameters_manager.hasOwnProperty('transfer')) {
+            if (parameters_manager.transfer) {
                 const transfer = parameters_manager.transfer
 
                 validateParams(transfer, [
@@ -192,58 +192,15 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                         ...message.transaction,
                         parameters_manager: {
                             transfer: {
-                                destination: publicKeyHash2buffer(parameters_manager.transfer.destination).hash,
-                                amount: parameters_manager.transfer.amount
+                                destination: publicKeyHash2buffer(transfer.destination).hash,
+                                amount: transfer.amount
                             },
                         },
                     },
                 };
             }
         }
-
-    //     //  add parameters for smart contract delegation
-    //     if (transaction.hasOwnProperty('smart_contract_delegation')) {
-    //         const smart_contract_delegation = transaction.smart_contract_delegation;
-
-    //         // validate smart contract delegation parameters
-    //         validateParams(smart_contract_delegation, [
-    //             { name: 'delegate', type: 'string', obligatory: false },
-    //         ]);
-            
-    //         message = {
-    //             ...message,
-    //             transaction: {
-    //                 ...message.transaction,
-    //                 smart_contract_delegation: {
-    //                     delegate: publicKeyHash2buffer(smart_contract_delegation.delegate).hash
-    //                 },
-    //             },
-    //         };
-    //     }
-
-    //     //  add parameters for smart contract transfer
-    //     if (transaction.hasOwnProperty('smart_contract_transfer')) {
-    //         const smart_contract_transfer = transaction.smart_contract_transfer;
-
-    //         // validate smart contract delegation parameters
-    //         validateParams(smart_contract_transfer, [
-    //             { name: 'amount', type: 'number', obligatory: true },
-    //             { name: 'recipient', type: 'string', obligatory: true },
-    //         ]);
-
-    //         message = {
-    //             ...message,
-    //             transaction: {
-    //                 ...message.transaction,
-    //                 smart_contract_transfer: {
-    //                     amount: smart_contract_transfer.amount,
-    //                     recipient: publicKeyHash2buffer(smart_contract_transfer.recipient).hash,
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    // }
+    }
 
     // origination
     if (operation.origination) {
@@ -314,4 +271,3 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
 
     return message;
 };
-}

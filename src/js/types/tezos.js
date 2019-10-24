@@ -64,7 +64,7 @@ export type TezosParametersManager = {
     set_delegate?: string,
     cancel_delegate?: bool,
     transfer?: TezosManagerTransfer
-};
+}
 
 export type TezosManagerTransfer = {
     destination: string,
@@ -75,13 +75,11 @@ export type TezosTransactionOperation = {
     source: string,
     destination: string,
     amount: number,
-    parameters?: Array<number>,
     counter: number,
     fee: number,
     gas_limit: number,
     storage_limit: number,
-    // smart_contract_delegation?: TezosTransactionSmartContractDelegationOp,
-    // smart_contract_transfer?: TezosTransactionSmartContractTransferOp,
+    parameters?: Array<number>,
     parameters_manager?: TezosParametersManager,
 };
 
