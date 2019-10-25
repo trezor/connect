@@ -1711,13 +1711,6 @@
                     "type": "ButtonRequestType",
                     "name": "code",
                     "id": 1
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "string",
-                    "name": "data",
-                    "id": 2
                 }
             ],
             "enums": [
@@ -2329,8 +2322,8 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bool",
-                    "name": "up_down",
+                    "type": "DebugSwipeDirection",
+                    "name": "swipe",
                     "id": 2
                 },
                 {
@@ -2339,6 +2332,66 @@
                     "type": "string",
                     "name": "input",
                     "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "x",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "y",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wait",
+                    "id": 6
+                }
+            ],
+            "enums": [
+                {
+                    "name": "DebugSwipeDirection",
+                    "values": [
+                        {
+                            "name": "UP",
+                            "id": 0
+                        },
+                        {
+                            "name": "DOWN",
+                            "id": 1
+                        },
+                        {
+                            "name": "LEFT",
+                            "id": 2
+                        },
+                        {
+                            "name": "RIGHT",
+                            "id": 3
+                        }
+                    ],
+                    "options": {}
+                }
+            ],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "DebugLinkLayout",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "string",
+                    "name": "lines",
+                    "id": 1
                 }
             ],
             "enums": [],
@@ -2362,6 +2415,13 @@
                     "type": "bool",
                     "name": "wait_word_pos",
                     "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wait_layout",
+                    "id": 3
                 }
             ],
             "enums": [],
@@ -2455,6 +2515,13 @@
                     "type": "uint32",
                     "name": "mnemonic_type",
                     "id": 12
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "string",
+                    "name": "layout_lines",
+                    "id": 13
                 }
             ],
             "enums": [],
@@ -4457,6 +4524,20 @@
                     "type": "BackupType",
                     "name": "backup_type",
                     "id": 31
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "sd_card_present",
+                    "id": 32
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "sd_protection",
+                    "id": 33
                 }
             ],
             "enums": [
@@ -9241,6 +9322,10 @@
                 {
                     "name": "MessageType_DebugLinkFlashErase",
                     "id": 113
+                },
+                {
+                    "name": "MessageType_DebugLinkLayout",
+                    "id": 9001
                 },
                 {
                     "name": "MessageType_EthereumGetPublicKey",
