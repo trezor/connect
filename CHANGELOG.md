@@ -1,3 +1,7 @@
+# 8.0.8
+#### Fixed
+- `tezosSignTransaction` Babylon fork update, exclude firmware lower than 2.1.8
+
 # 8.0.7
 #### Added
 - `stellarSignTransaction` plugin - a tool for transforming StellarSDK.Transaction object into TrezorConnect.StellarTransaction
