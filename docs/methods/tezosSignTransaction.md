@@ -26,17 +26,44 @@ TrezorConnect.tezosSignTransaction(params).then(function(result) {
 Sign transaction operation
 ```javascript
 TrezorConnect.tezosSignTransaction({
-    path: "m/44'/1729'/0'",
-    branch: "BKk7ZsvvkQSntQ31j2Hxsw8bfYtUKGjsKHT2aQrxAqUYyQUHxmM",
+    path: "m/44'/1729'/10'",
+    branch: "BLGUkzwvguFu8ei8eLW3KgCbdtrMmv1UCqMvUpHHTGq1UPxypHS",
     operation: {
         transaction: {
-            source: "tz1ckrgqGGGBt4jGDmwFhtXc1LNpZJUnA9F2",
-            destination: "tz1cTfmc5uuBr2DmHDgkXTAoEcufvXLwq5TP",
-            counter: 20449,
-            amount: 1000000000,
+            source: "tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo",
+            destination: "tz1Kef7BSg6fo75jk37WkKRYSnJDs69KVqt9",
+            counter: 297,
+            amount: 200000,
             fee: 10000,
             gas_limit: 11000,
-            storage_limit: 277
+            storage_limit: 0
+        }
+    }
+});
+```
+
+Sign the first transaction of the account with reveal operation
+```javascript
+TrezorConnect.tezosSignTransaction({
+    path: "m/44'/1729'/10'",
+    branch: "BLGUkzwvguFu8ei8eLW3KgCbdtrMmv1UCqMvUpHHTGq1UPxypHS",
+    operation: {
+        reveal: {
+            source: 'tz1ekQapZCX4AXxTJhJZhroDKDYLHDHegvm1',
+            counter: 575424,
+            fee: 10000,
+            gas_limit: 20000,
+            storage_limit: 0,
+            public_key: 'edpkuTPqWjcApwyD3VdJhviKM5C13zGk8c4m87crgFarQboF3Mp56f',
+        },
+        transaction: {
+            source: 'tz1ekQapZCX4AXxTJhJZhroDKDYLHDHegvm1',
+            destination: 'tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo',
+            counter: 575425,
+            amount: 100000,
+            fee: 10000,
+            gas_limit: 20000,
+            storage_limit: 0,
         }
     }
 });
@@ -57,8 +84,7 @@ TrezorConnect.tezosSignTransaction({
             counter: 20450,
             gas_limit: 10100,
             storage_limit: 277,
-            spendable: true,
-            delegatable: true
+            script: "0000001c02000000170500036805010368050202000000080316053d036d03420000000a010000000568656c6c6f"
         }
     }
 });
@@ -70,21 +96,107 @@ TrezorConnect.tezosSignTransaction({
     path: "m/44'/1729'/0'",
     branch: "BMXAKyvzcH1sGQMqpvqXsZGskYU4GuY9Y14c9g3LcNzMRtfLzFa",
     operation: {
-        reveal: {
-            source: "KT1XYKxAFhtpTKWyoK2MrAQsMQ39KyV7NyA9",
-            public_key: "edpkuxZ5W8c2jmcaGuCFZxRDSWxS7hp98zcwj2YpUZkJWs5F7UMuF6",
-            counter: 1,
-            fee: 10000,
-            gas_limit: 10100,
-            storage_limit: 277
-        },
         delegation: {
-            source: "KT1XYKxAFhtpTKWyoK2MrAQsMQ39KyV7NyA9",
-            delegate: "tz1boot3mLsohEn4pV9Te3hQihH6N8U3ks59",
-            counter: 2,
+            source: 'tz1Kef7BSg6fo75jk37WkKRYSnJDs69KVqt9',
+            delegate: 'tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo',
+            fee: 20000,
+            counter: 564565,
+            gas_limit: 20000,
+            storage_limit: 0,
+        }
+    }
+});
+```
+
+Sign delegation from a KT account (smart contract with `manager.tz` script)
+```javascript
+TrezorConnect.tezosSignTransaction({
+    path: "m/44'/1729'/0'",
+    branch: "BMdPMLXNyMTDp4vR6g7y8mWPk7KZbjoXH3gyWD1Tze43UE3BaPm",
+    operation: {
+        transaction: {
+            source: 'tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo',
+            destination: 'KT1SBj7e8ZhV2VvJtoc73dNRDLRJ9P6VjuVN',
+            counter: 292,
+            amount: 0,
             fee: 10000,
-            gas_limit: 10100,
-            storage_limit: 277
+            gas_limit: 36283,
+            storage_limit: 0,
+            parameters_manager: {
+                set_delegate: "tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo"
+            }
+        }
+    }
+});
+```
+
+Sign cancel delegation from a KT account (smart contract with `manager.tz` script)
+```javascript
+TrezorConnect.tezosSignTransaction({
+    path: "m/44'/1729'/0'",
+    branch: "BL6oaFJeEjtYxafJqEL8hXvSCZmM5d4quyAqjzkBhXvrX97JbQs",
+    operation: {
+        transaction: {
+            source: 'tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo',
+            destination: 'KT1SBj7e8ZhV2VvJtoc73dNRDLRJ9P6VjuVN',
+            counter: 293,
+            amount: 0,
+            fee: 10000,
+            gas_limit: 36283,
+            storage_limit: 0,
+            parameters_manager: {
+                cancel_delegate: true,
+            }
+        }
+    }
+});
+```
+
+Sign transaction operation from a KT account (smart contract with `manager.tz` script) to a tz account (implicit account)
+```javascript
+TrezorConnect.tezosSignTransaction({
+    path: "m/44'/1729'/0'",
+    branch: "BMCKRpEsFYQTdZy8BSLuFqkHmxwXrnRpKncdoVMbeGoggLG3bND",
+    operation: {
+        transaction: {
+            source: 'tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo',
+            destination: 'KT1SBj7e8ZhV2VvJtoc73dNRDLRJ9P6VjuVN',
+            counter: 294,
+            amount: 0,
+            fee: 10000,
+            gas_limit: 36283,
+            storage_limit: 0,
+            parameters_manager: {
+                transfer: {
+                    amount: 200,
+                    destination: 'tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo'
+                }
+            }
+        }
+    }
+});
+```
+
+Sign transaction operation from a KT account (smart contract with `manager.tz` script) to another KT account (smart contract with `manager.tz` script)
+```javascript
+TrezorConnect.tezosSignTransaction({
+    path: "m/44'/1729'/0'",
+    branch: "BMCKRpEsFYQTdZy8BSLuFqkHmxwXrnRpKncdoVMbeGoggLG3bND",
+    operation: {
+        transaction: {
+            source: 'tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo',
+            destination: 'KT1SBj7e8ZhV2VvJtoc73dNRDLRJ9P6VjuVN',
+            counter: 294,
+            amount: 0,
+            fee: 10000,
+            gas_limit: 36283,
+            storage_limit: 0,
+            parameters_manager: {
+                transfer: {
+                    amount: 200,
+                    destination: 'tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo'
+                }
+            }
         }
     }
 });
