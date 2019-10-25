@@ -89,7 +89,7 @@ export type TezosOriginationOperation = {
     balance: number,
     spendable: boolean,
     delegatable: boolean,
-    delegate: string,
+    delegate?: string,
     script?: Array<number>,
     fee: number,
     counter: number,

@@ -563,11 +563,8 @@ export type TezosTransactionOp = {
 
 export type TezosOriginationOp = {
     source: Uint8Array,
-    //manager_pubkey: Uint8Array,
     balance: number,
-    //spendable: boolean,
-    //delegatable: boolean,
-    delegate: Uint8Array,
+    delegate?: Uint8Array,
     fee: number,
     counter: number,
     gas_limit: number,

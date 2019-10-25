@@ -212,7 +212,6 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         // validate origination parameters
         validateParams(origination, [
             { name: 'source', type: 'string', obligatory: true },
-            { name: 'delegate', type: 'string', obligatory: true },
             { name: 'balance', type: 'number', obligatory: true },
             { name: 'fee', type: 'number', obligatory: true },
             { name: 'counter', type: 'number', obligatory: true },
@@ -224,7 +223,6 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             ...message,
             origination: {
                 source: publicKeyHash2buffer(origination.source).hash,
-                delegate: publicKeyHash2buffer(origination.delegate).hash,
                 balance: origination.balance,
                 fee: origination.fee,
                 counter: origination.counter,
@@ -242,6 +240,16 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                     script: origination.script,
                 },
             };
+        }
+
+        if (origination.delegate) {
+            message = {
+                ...message,
+                origination: {
+                    ...message.origination,
+                    delegate: publicKeyHash2buffer(origination.delegate).hash,
+                }
+            }
         }
     }
 
