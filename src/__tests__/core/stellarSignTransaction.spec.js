@@ -321,6 +321,48 @@ const setOptions = () => {
                 ]
             }
         },
+        // noop
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'setOptions',
+                    }
+                ]
+            }
+        },
+        // remove signer
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'setOptions',
+                        signer: {
+                            type: 0,
+                            key: '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
+                            weight: 0
+                        }
+                    }
+                ]
+            }
+        },
+        // unset homeDomain
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'setOptions',
+                        homeDomain: '',
+                    },
+                ]
+            }
+        },
     ];
 
     const expectedResponses = [
@@ -366,6 +408,24 @@ const setOptions = () => {
                 signature: 'db6adf70eaf10621396a4a4db27597f323e000ea5c95b6a356a5d469730d78bd34d29d4e845862d39d2dd7e18d469a123727d5b0918dbed948086a47e24b0301',
             },
         },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: '837c9a09112a111a457a52f81194488c08ed2989059bb597490b1b918380d5ad2b8061f8892068f2ebfb8d51d81b722c274d9a4fec90d5aa071c91dc66e68f0e',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: '82bade0d47be0ec690ba2ee301fcf354d7635dbad108900a82ed7b9fc7f340d76e6e85c00388fe56cc6a3b856b339d6f15abd4d965e4590b0286c7e5f4620907',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: 'ce69d6bced2cc8a4280a22cb9fa109b3b6fd8e9ac06f78e18f7675ba77651dc7435fbbc0d392ab4396a833de37be42100fa3a55f7d8cd56c8252983042045108',
+            },
+        },
     ];
 
     return {
@@ -385,11 +445,39 @@ const manageData = () => {
                     {
                         type: 'manageData',
                         name: 'data',
-                        value: '616263', // Buffer.from('abc')
+                        value: '616263', // Buffer.from('abc').toString('hex')
                     }
                 ]
             }
-        }
+        },
+        // Buffer value
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'manageData',
+                        name: 'data',
+                        value: '001083', // Buffer.from("ABCD", "base64").toString('hex')
+                    }
+                ]
+            }
+        },
+        // remove entry
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'manageData',
+                        name: 'data',
+                        value: null,
+                    }
+                ]
+            }
+        },
     ];
 
     const expectedResponses = [
@@ -397,6 +485,18 @@ const manageData = () => {
             payload: {
                 publicKey: PUBLIC_KEY,
                 signature: '3136bc7e684cec1c58628f6463544a40516b83f3157f3b2088f4ae3fbf922598e14373f5b9c3792549df983e78f3850b44f8d54ddfb46188d2ea149c2eea5b09',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: '0bbd890aceb16e3aeb27827e3663769f80830bd118ebaa899eb957f6b4b7676a4819c6993b2ec794c2cdacf6dfa3731fd9219cc4acf7e14cba0a82c9c21acd0d',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: 'c1ebb8d2b23a9145dfec9a465702484ed6130a824dc5d4eb2a1c98f011b463ad9de6eee3d241942aa0aa33a215390f465c375a4c6800e947a1c14b17b3206709',
             },
         },
     ];
@@ -508,6 +608,41 @@ const pathPayment = () => {
                 ]
             }
         },
+        // with path
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'pathPayment',
+                        sendAsset: {
+                            type: 0,
+                            code: 'XLM',
+                        },
+                        sendMax: '500111000',
+                        destination: 'GBOVKZBEM2YYLOCDCUXJ4IMRKHN4LCJAE7WEAEA2KF562XFAGDBOB64V',
+                        destAsset: {
+                            type: 0,
+                            code: 'XLM',
+                        },
+                        destAmount: '500111000',
+                        path: [
+                            {
+                                type: 1,
+                                code: 'X',
+                                issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                            },
+                            {
+                                type: 2,
+                                code: 'ABCDEFGHIJKL',
+                                issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                            },
+                        ],
+                    }
+                ]
+            }
+        },
     ];
 
     const expectedResponses = [
@@ -533,6 +668,12 @@ const pathPayment = () => {
             payload: {
                 publicKey: PUBLIC_KEY,
                 signature: 'b4d3b04c55ff0d0565691e1197baa33d245013217f35fdb41b7509672c52549bc3a41d7e77990f17b0d4e435ece31a2610ede619bcf3a2723823d6f143af7402',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: 'c6999c263fa4ab9f22cdfaef42101b4b4706bf17fca3867e6a0a69a1fc7034932d0fb01db610e8e973eef379d4714f44f0b60acf45524bc7aa94fbbdae259e0f',
             },
         },
     ];
@@ -652,6 +793,31 @@ const createPassiveOffer = () => {
                 ]
             }
         },
+        // { n, d } price
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'createPassiveOffer',
+                        selling: {
+                            type: 0,
+                            code: 'XLM',
+                        },
+                        buying: {
+                            type: 0,
+                            code: 'XLM',
+                        },
+                        amount: '500111000',
+                        price: {
+                            n: 1024,
+                            d: 100,
+                        },
+                    }
+                ]
+            }
+        },
     ];
 
     const expectedResponses = [
@@ -677,6 +843,12 @@ const createPassiveOffer = () => {
             payload: {
                 publicKey: PUBLIC_KEY,
                 signature: 'f62241ec7f84371150109d097e4c6fca1202eb95f94ac3400e3d8cc149e0c53cc2db84879279bb83d0b43343eb4e0f6d4181d4ff899cb647aa177ac466889907',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: '32fdececbc1d1731dce6979d3e0c77cb433b8c12cb242decc9706b7ca6bebf8534bea71603556612cb44badfda230b0f6886ca3f51546e989a97cb91d4871304',
             },
         },
     ];
@@ -800,6 +972,84 @@ const manageOffer = () => {
                 ]
             }
         },
+        // { n, d } price
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'manageOffer',
+                        selling: {
+                            type: 0,
+                            code: 'XLM',
+                        },
+                        buying: {
+                            type: 0,
+                            code: 'XLM',
+                        },
+                        amount: '500111000',
+                        price: {
+                            n: 1024,
+                            d: 100,
+                        },
+                        offerId: '0',
+                    }
+                ]
+            }
+        },
+        // new offer
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'manageOffer',
+                        selling: {
+                            type: 0,
+                            code: 'XLM',
+                        },
+                        buying: {
+                            type: 0,
+                            code: 'XLM',
+                        },
+                        amount: '500111000',
+                        price: {
+                            n: 500111,
+                            d: 10000,
+                        },
+                        offerId: '0',
+                    }
+                ]
+            }
+        },
+        // remove offer
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'manageOffer',
+                        selling: {
+                            type: 0,
+                            code: 'XLM',
+                        },
+                        buying: {
+                            type: 0,
+                            code: 'XLM',
+                        },
+                        amount: '0',
+                        price: {
+                            n: 500111,
+                            d: 10000,
+                        },
+                        offerId: '101',
+                    }
+                ]
+            }
+        },
     ];
 
     const expectedResponses = [
@@ -825,6 +1075,24 @@ const manageOffer = () => {
             payload: {
                 publicKey: PUBLIC_KEY,
                 signature: '77538169e48b405b45c8a0de6bc317e0ef7326300335da39c9632b56d3b9638ec309b8248032097943d2e82b9083caf30f2fb5fb43e851da7886c60020cd1409',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: '9e814c4f9c44a4b54451672fd7135b8cc3b2233e811167efb2e9e5f284c291d0ac41a1c9aa252f6893d8db0bb46aa6e78ecfe8edd8993fd8c6b1a243a1c8b40e',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: 'b81209bb37b9408f01762bb276e913697032137bdbc007ba9db883391bc8b6b0b7e3cc299efede60081a343ace6ac9e1036d7466516250784d4eb09b76099104',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: 'cb974b89e0286c9c616f12cb377ccfcf7a4d7c262a75721013248972a8f2b69b5462bb368c425a3df2f06846ce1de62fb458b0d862feb289af670361621cbc08',
             },
         },
     ];
@@ -891,6 +1159,42 @@ const changeTrust = () => {
                 ]
             }
         },
+        // with arbitrary limit
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'changeTrust',
+                        line: {
+                            type: 1,
+                            code: 'X',
+                            issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                        },
+                        limit: '10000000000',
+                    }
+                ]
+            }
+        },
+        // remove trust
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'changeTrust',
+                        line: {
+                            type: 1,
+                            code: 'X',
+                            issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                        },
+                        limit: '0',
+                    }
+                ]
+            }
+        },
     ];
 
     const expectedResponses = [
@@ -911,7 +1215,19 @@ const changeTrust = () => {
                 publicKey: PUBLIC_KEY,
                 signature: '42913cbacba413ee6bcaec9ee99c982e0c557d941a500902981f05015252313b26a1c1ae9886a795e4ef41f40b5aabd92f464c07428a3c79bfa79a67aa139e06',
             },
-        }
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: '544ae7d8f5740b9794e4f42117c30aeb6ca4b82ff4334dea8ff4a06b443e151e8cb5de7aaadc98d0dc4459ca51c02dbe72716d802c8def483b9409550886a700',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: 'fd26fef29dc5ce8b011206a277de10c35fdef484e665213c0a034003193d75183e0667a2dd876b17323c56900974080ed28fe51bd6b1ed89095632e38e048400',
+            },
+        },
     ];
 
     return {
@@ -939,6 +1255,21 @@ const allowTrust = () => {
                 ]
             }
         },
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                operations: [
+                    {
+                        type: 'allowTrust',
+                        trustor: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                        assetType: 1,
+                        assetCode: 'XLM',
+                        authorize: false,
+                    }
+                ]
+            }
+        },
     ];
 
     const expectedResponses = [
@@ -946,6 +1277,12 @@ const allowTrust = () => {
             payload: {
                 publicKey: PUBLIC_KEY,
                 signature: 'a1166e3f66adad2e4f82457e9e15613be589235690504c83a1a332c4ccfada5a44eb9ccd4714a9dd6ef7bf4e120700efd2b901e762eb7baafc94116025f4ed08',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: 'bb40e85b8e4c771cb18408ef610cffc1aad5411294500da09178157994a17a7c317bb45e795b2d965779f7385d5361508c7e591ae9c9c9f6fdb7e3b1c2d3e105',
             },
         },
     ];
@@ -1026,8 +1363,8 @@ const withMemo = () => {
             transaction: {
                 ...transactionCommon,
                 timebounds: {
-                    minTime: '0',
-                    maxTime: '1580800029',
+                    minTime: 0,
+                    maxTime: 1580800029,
                 },
                 memo: {
                     type: 1,
@@ -1042,8 +1379,8 @@ const withMemo = () => {
             transaction: {
                 ...transactionCommon,
                 timebounds: {
-                    minTime: '0',
-                    maxTime: '1580800029',
+                    minTime: 0,
+                    maxTime: 1580800029,
                 },
                 memo: {
                     type: 1,
@@ -1069,6 +1406,34 @@ const withMemo = () => {
                         type: 'bumpSequence',
                         bumpTo: '9223372036854775807'
                     }
+                ],
+            }
+        },
+        // timebounds - minTime only
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                timebounds: {
+                    minTime: 1000000000,
+                    maxTime: 0,
+                },
+                operations: [
+                    { type: 'setOptions' },
+                ],
+            }
+        },
+        // timebounds - minTime only
+        {
+            ...header,
+            transaction: {
+                ...transactionCommon,
+                timebounds: {
+                    minTime: 1000000000,
+                    maxTime: 1580800029,
+                },
+                operations: [
+                    { type: 'setOptions' },
                 ],
             }
         },
@@ -1109,6 +1474,18 @@ const withMemo = () => {
             payload: {
                 publicKey: PUBLIC_KEY,
                 signature: '7683b67f489789ace2f8eccabcc543943da3a64fcd4bd2356ec3c7538eac5c83349e78479a4a886c2bde0ae63307bfd321159e30b4f69a0961b049a8e972a109',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: '38099504f25a2578e447cd6257f43343b7b957689d8e8698e94ee66660b6fe32b9ec9848840279026e95953d8fb175b86a0813be7e5e015cd58d51553ec97909',
+            },
+        },
+        {
+            payload: {
+                publicKey: PUBLIC_KEY,
+                signature: '57c79a904825c748e30dda9ea7a868d6d939d76a573fe7fc8e174dcacd6581c5a34e5252bcc619b5b141feef21bc9d69da471f7090a17406136e11dbc1b06e04',
             },
         },
     ];
