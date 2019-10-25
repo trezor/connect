@@ -85,12 +85,9 @@ export type TezosTransactionOperation = {
 
 export type TezosOriginationOperation = {
     source: string,
-    manager_pubkey: string,
     balance: number,
-    spendable: boolean,
-    delegatable: boolean,
     delegate?: string,
-    script?: Array<number>,
+    script: Array<number>,
     fee: number,
     counter: number,
     gas_limit: number,

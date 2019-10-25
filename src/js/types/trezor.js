@@ -569,7 +569,7 @@ export type TezosOriginationOp = {
     counter: number,
     gas_limit: number,
     storage_limit: number,
-    script?: Array<number>,
+    script: Array<number>,
 };
 
 export type TezosDelegationOp = {

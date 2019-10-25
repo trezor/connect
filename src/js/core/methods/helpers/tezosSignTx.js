@@ -217,6 +217,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             { name: 'counter', type: 'number', obligatory: true },
             { name: 'gas_limit', type: 'number', obligatory: true },
             { name: 'storage_limit', type: 'number', obligatory: true },
+            { name: 'script', type: 'string', obligatory: true }
         ]);
 
         message = {
@@ -228,19 +229,9 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                 counter: origination.counter,
                 gas_limit: origination.gas_limit,
                 storage_limit: origination.storage_limit,
+                script: origination.script,
             },
         };
-
-        //  add script to origination
-        if (origination.hasOwnProperty('script')) {
-            message = {
-                ...message,
-                origination: {
-                    ...message.origination,
-                    script: origination.script,
-                },
-            };
-        }
 
         if (origination.delegate) {
             message = {
