@@ -530,7 +530,7 @@ type TezosContractID = {
 };
 
 export type TezosRevealOp = {
-    source: TezosContractID,
+    source: Uint8Array,
     fee: number,
     counter: number,
     gas_limit: number,
@@ -538,8 +538,19 @@ export type TezosRevealOp = {
     public_key: Uint8Array,
 };
 
+export type TezosParametersManager = {
+    set_delegate?: Uint8Array,
+    cancel_delegate?: bool,
+    transfer?: TezosManagerTransfer,
+};
+
+export type TezosManagerTransfer = {
+    amount: number,
+    destination: TezosContractID,
+};
+
 export type TezosTransactionOp = {
-    source: TezosContractID,
+    source: Uint8Array,
     destination: TezosContractID,
     amount: number,
     counter: number,
@@ -547,24 +558,22 @@ export type TezosTransactionOp = {
     gas_limit: number,
     storage_limit: number,
     parameters?: Array<number>,
+    parameters_manager?: TezosParametersManager,
 };
 
 export type TezosOriginationOp = {
-    source: TezosContractID,
-    manager_pubkey: Uint8Array,
+    source: Uint8Array,
     balance: number,
-    spendable: boolean,
-    delegatable: boolean,
-    delegate: Uint8Array,
+    delegate?: Uint8Array,
     fee: number,
     counter: number,
     gas_limit: number,
     storage_limit: number,
-    script?: Array<number>,
+    script: Array<number>,
 };
 
 export type TezosDelegationOp = {
-    source: TezosContractID,
+    source: Uint8Array,
     delegate: Uint8Array,
     fee: number,
     counter: number,
