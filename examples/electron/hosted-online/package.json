@@ -1,0 +1,51 @@
+{
+    "name": "trezor-connect-electron-hosted-online",
+    "version": "1.0.0",
+    "description": "Simple electron app with trezor-connect",
+    "main": "src/electron.js",
+    "author": "Satoshilabs s.r.o <info@satoshilabs.com>",
+    "license": "MIT",
+    "scripts": {
+        "dev": "electron .",
+        "build:mac": "electron-builder --mac",
+        "build:linux": "electron-builder --linux",
+        "build:win": "electron-builder --win"
+    },
+    "build": {
+        "appId": "${name}",
+        "productName": "TrezorConnectExample",
+        "copyright": "Copyright © year ${author}",
+        "asar": false,
+        "electronVersion": "7.0.0",
+        "directories": {
+            "output": "build"
+        },
+        "files": [
+            "src/*.js",
+            "src/index.html",
+            "package.json"
+        ],
+        "dmg": {
+            "contents": [{
+                    "x": 410,
+                    "y": 150,
+                    "type": "link",
+                    "path": "/Applications"
+                },
+                {
+                    "x": 130,
+                    "y": 150,
+                    "type": "file"
+                }
+            ]
+        },
+        "linux": {
+            "executableName": "TrezorConnectExample",
+            "artifactName": "TrezorConnectExample.${ext}"
+        }
+    },
+    "devDependencies": {
+        "electron": "^7.0.0",
+        "electron-builder": "^21.2.0"
+    }
+  }
