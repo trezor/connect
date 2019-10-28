@@ -144,6 +144,7 @@ module.exports = {
                         reserved: [
                             'Array', 'BigInteger', 'Boolean', 'Buffer',
                             'ECPair', 'Function', 'Number', 'Point', 'Script',
+                            'RippledError',
                         ],
                     },
                 },

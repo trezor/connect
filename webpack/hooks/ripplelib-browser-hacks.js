@@ -8,8 +8,12 @@ exports.setPrototypeOf = setPrototypeOf;
 function getConstructorName(object) {
     console.warn("getConstructorName1", object.constructor.name, object.constructor);
     if (!object.constructor.name) {
+        const constructorString = object.constructor.toString();
+        const functionConstructor = constructorString.match(/^function\s+([^(]*)/);
+        const classConstructor = constructorString.match(/^class\s([^\s]*)/);
         try {
-            return object.constructor.toString().match(/^function\s+([^(]*)/)[1];
+            return functionConstructor ? functionConstructor[1] : classConstructor[1];
+            // return object.constructor.toString().match(/^function\s+([^(]*)/)[1];
         } catch (error) {
             var str = object.constructor.toString();
             console.warn("getConstructorName:str", str);
