@@ -1,5 +1,5 @@
 {
-    "name": "trezor-connect-electron-hosted-locally-nodejs",
+    "name": "trezor-connect-electron-hosted-locally-dom",
     "version": "1.0.0",
     "description": "Simple electron app with trezor-connect",
     "main": "src/electron.js",
@@ -7,6 +7,7 @@
     "license": "MIT",
     "scripts": {
         "dev": "electron .",
+        "build:connect": "webpack --config ./webpack/build.connect.js --progress",
         "build:mac": "electron-builder --mac",
         "build:linux": "electron-builder --linux",
         "build:win": "electron-builder --win"
@@ -26,7 +27,8 @@
             "package.json"
         ],
         "dmg": {
-            "contents": [{
+            "contents": [
+                {
                     "x": 410,
                     "y": 150,
                     "type": "link",
@@ -44,11 +46,18 @@
             "artifactName": "TrezorConnectExample.${ext}"
         }
     },
-    "dependencies": {
-        "trezor-connect": "^8.0.8-extended"
-    },
     "devDependencies": {
+        "@babel/cli": "^7.6.4",
+        "@babel/core": "^7.6.4",
+        "babel-loader": "^8.0.6",
+        "copy-webpack-plugin": "^5.0.4",
         "electron": "^7.0.0",
-        "electron-builder": "^21.2.0"
+        "electron-builder": "^21.2.0",
+        "html-webpack-plugin": "^3.2.0",
+        "terser-webpack-plugin": "^2.2.1",
+        "trezor-connect": "8.0.8-extended",
+        "webpack": "^4.38.0",
+        "webpack-cli": "^3.3.6",
+        "webpack-dev-server": "^3.7.2"
     }
-  }
+}
