@@ -6,12 +6,15 @@ function setPrototypeOf(object, prototype) {
 }
 exports.setPrototypeOf = setPrototypeOf;
 function getConstructorName(object) {
-    console.warn("getConstructorName1", object.constructor.name);
+    console.warn("getConstructorName1", object.constructor.name, object.constructor);
     if (!object.constructor.name) {
         try {
             return object.constructor.toString().match(/^function\s+([^(]*)/)[1];
         } catch (error) {
-            console.warn("getConstructorName1", object.constructor.toString())
+            var str = object.constructor.toString();
+            console.warn("getConstructorName:str", str);
+            console.warn("getConstructorName:match", object.constructor.toString().match(/^function\s+([^(]*)/));
+            console.warn("getConstructorName:error", error);
             return "RippledError";
         }
     }
