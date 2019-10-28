@@ -93,6 +93,8 @@ module.exports = {
         hints: false,
     },
     plugins: [
+        new webpack.NormalModuleReplacementPlugin(/browser-hacks$/, `${__dirname}/hooks/ripplelib-browser-hacks.js`),
+        
         new MiniCssExtractPlugin({
             filename: 'css/[name].[hash].css',
             chunkFilename: '[id].css',
