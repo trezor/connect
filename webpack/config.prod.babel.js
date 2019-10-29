@@ -88,6 +88,7 @@ module.exports = {
         new webpack.NormalModuleReplacementPlugin(/env\/node$/, './env/browser'),
         new webpack.NormalModuleReplacementPlugin(/env\/node\/workers$/, '../env/browser/workers'),
         new webpack.NormalModuleReplacementPlugin(/env\/node\/networkUtils$/, '../env/browser/networkUtils'),
+        new webpack.NormalModuleReplacementPlugin(/browser-hacks$/, `${__dirname}/hooks/ripplelib-browser-hacks.js`),
 
         new MiniCssExtractPlugin({
             filename: 'css/[name].[hash].css',
