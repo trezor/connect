@@ -3,7 +3,6 @@ import {
     JS_SRC,
     DIST,
     LIB_NAME,
-    NODE_MODULES,
 } from './constants';
 
 module.exports = {
@@ -23,13 +22,13 @@ module.exports = {
         rules: [
             {
                 test: /\.jsx?$/,
-                exclude: [/node_modules/, /trezor-blockchain-link\/build\/workers/],
+                exclude: /node_modules/,
                 use: ['babel-loader'],
             },
         ],
     },
     resolve: {
-        modules: [ SRC, NODE_MODULES ],
+        modules: [SRC, 'node_modules'],
     },
     performance: {
         hints: false,
