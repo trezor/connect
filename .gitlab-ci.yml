@@ -2,14 +2,37 @@ image: node:8.10
 
 stages:
   - build
+  - deploy
 
 build:
   stage: build
   script:
     - npm install -g yarn
-    - npm install
+    - yarn
+    - yarn flow
     - make build-connect
   artifacts:
     expire_in: 1 week
     paths:
       - build
+
+deploy review:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  dependencies:
+    - build
+  environment:
+    name: $CI_BUILD_REF_NAME
+    url: $BASE_REVIEW_URL/$CI_BUILD_REF_NAME
+  script:
+    - echo "Deploy a review app"
+    - '[ -z "${DEPLOY_BASE_DIR}" ] && echo "Deploy base dir cannot be empty" && exit 255'
+    - env
+    - mkdir -p "${DEPLOY_BASE_DIR}/${CI_BUILD_REF_NAME}"
+    - echo "Copy dev build to web server ${DEPLOY_BASE_DIR}/${CI_BUILD_REF_NAME}..."
+    - rsync --delete -va build/ "${DEPLOY_BASE_DIR}/${CI_BUILD_REF_NAME}/"
+  only:
+    - branches
+  tags:
+    - deploy
