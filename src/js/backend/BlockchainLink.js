@@ -1,14 +1,14 @@
 /* @flow */
-import BlockchainLink from 'trezor-blockchain-link';
+import BlockchainLink from '@trezor/blockchain-link';
 import { BlockchainMessage } from '../message/builder';
 import * as BLOCKCHAIN from '../constants/blockchain';
 import type { CoreMessage, CoinInfo } from '../types';
 import type { BlockchainBlock, BlockchainLinkTransaction } from '../types/blockchainEvent';
-import type { GetAccountInfoOptions, EstimateFeeOptions } from 'trezor-blockchain-link';
+// import type { GetAccountInfoOptions, EstimateFeeOptions } from 'trezor-blockchain-link';
 
 // nodejs-replace-start
 /* $FlowIssue loader notation */
-import RippleWorker from 'worker-loader?name=js/ripple-worker.js!trezor-blockchain-link/lib/workers/ripple/index.js';
+import RippleWorker from 'worker-loader?name=js/ripple-worker.js!@trezor/blockchain-link/lib/workers/ripple/index.js';
 // nodejs-replace-end
 /* nodejs-imports-start
 import TinyWorker from 'tiny-worker';
@@ -29,6 +29,7 @@ const getWorker = (type: string): ?string => {
     }
 };
 
+// let counter = 0;
 export default class Blockchain {
     link: BlockchainLink;
     coinInfo: $ElementType<Options, 'coinInfo'>;
@@ -53,8 +54,12 @@ export default class Blockchain {
             name: this.coinInfo.shortcut,
             worker: worker,
             server: settings.url,
+            // server: counter > 2 ? ['wss://s-east.ripple.com'] : ['ws://localhost:8085'],
+            // server: ['ws://localhost:8085'],
+            // server: ['wss://s-east.ripple.com'],
             debug: false,
         });
+        // counter++;
     }
 
     onError(error: string) {
@@ -72,7 +77,7 @@ export default class Blockchain {
             this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
                 coin: this.coinInfo,
                 info: {
-                    block: info.block,
+                    block: info.blockHeight,
                 },
             }));
         });
@@ -97,14 +102,25 @@ export default class Blockchain {
         return await this.link.getInfo();
     }
 
-    async getAccountInfo(descriptor: string, options?: GetAccountInfoOptions) {
-        return await this.link.getAccountInfo({
+    async getAccountInfo(descriptor: string, options?: any) {
+        //const serverInfo = await this.link.getInfo();
+        console.log("DESC", descriptor, options)
+        const info = await this.link.getAccountInfo({
             descriptor,
             options,
         });
+
+        console.log("INFO!", info);
+
+        return {
+            ...info,
+            ...info.misc,
+            block: 1000, //serverInfo.blockHeight,
+            transactions: [],
+        };
     }
 
-    async estimateFee(options?: EstimateFeeOptions) {
+    async estimateFee(options?: any) {
         return await this.link.estimateFee(options);
     }
 
@@ -127,12 +143,14 @@ export default class Blockchain {
             });
         }
 
-        this.link.subscribe({
+        await this.link.subscribe({
             type: 'block',
         });
 
-        this.link.subscribe({
-            type: 'notification',
+        console.log("SUBSCRIBE", accounts);
+
+        return this.link.subscribe({
+            type: 'addresses',
             addresses: accounts,
         });
     }
