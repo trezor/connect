@@ -46,7 +46,7 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-flow": "^7.0.0",
     "@babel/runtime": "^7.5.5",
-    "@trezor/blockchain-link": "1.0.4",
+    "@trezor/blockchain-link": "1.0.5",
     "babel-collect-imports": "https://github.com/szymonlesisz/babel-collect-imports",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.0",

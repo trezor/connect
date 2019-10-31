@@ -3,7 +3,7 @@ import BlockchainLink from '@trezor/blockchain-link';
 import { BlockchainMessage } from '../message/builder';
 import * as BLOCKCHAIN from '../constants/blockchain';
 import type { CoreMessage, CoinInfo } from '../types';
-import type { BlockchainBlock, BlockchainLinkTransaction } from '../types/blockchainEvent';
+// import type { BlockchainBlock, BlockchainLinkTransaction } from '../../../types/blockchainEvent';
 // import type { GetAccountInfoOptions, EstimateFeeOptions } from 'trezor-blockchain-link';
 
 // nodejs-replace-start
@@ -29,9 +29,9 @@ const getWorker = (type: string): ?string => {
     }
 };
 
-// let counter = 0;
 export default class Blockchain {
     link: BlockchainLink;
+    currentBlockHeight: number = 0;
     coinInfo: $ElementType<Options, 'coinInfo'>;
     postMessage: $ElementType<Options, 'postMessage'>;
     error: boolean;
@@ -54,12 +54,8 @@ export default class Blockchain {
             name: this.coinInfo.shortcut,
             worker: worker,
             server: settings.url,
-            // server: counter > 2 ? ['wss://s-east.ripple.com'] : ['ws://localhost:8085'],
-            // server: ['ws://localhost:8085'],
-            // server: ['wss://s-east.ripple.com'],
             debug: false,
         });
-        // counter++;
     }
 
     onError(error: string) {
@@ -74,6 +70,7 @@ export default class Blockchain {
     async init() {
         this.link.on('connected', async () => {
             const info = await this.link.getInfo();
+            this.currentBlockHeight = info.blockHeight;
             this.postMessage(new BlockchainMessage(BLOCKCHAIN.CONNECT, {
                 coin: this.coinInfo,
                 info: {
@@ -103,42 +100,54 @@ export default class Blockchain {
     }
 
     async getAccountInfo(descriptor: string, options?: any) {
-        //const serverInfo = await this.link.getInfo();
-        console.log("DESC", descriptor, options)
         const info = await this.link.getAccountInfo({
             descriptor,
-            options,
         });
-
-        console.log("INFO!", info);
 
         return {
             ...info,
             ...info.misc,
-            block: 1000, //serverInfo.blockHeight,
+            block: this.currentBlockHeight,
             transactions: [],
         };
     }
 
     async estimateFee(options?: any) {
-        return await this.link.estimateFee(options);
+        return await this.link.estimateFee();
     }
 
-    async subscribe(accounts: Array<string>): Promise<void> {
+    async subscribe(accounts: Array<string>) {
         if (this.link.listenerCount('block') === 0) {
-            this.link.on('block', (block: $ElementType<BlockchainBlock, 'payload'>) => {
+            this.link.on('block', (info: { blockHeight: number, blockHash: string }) => {
+                // since new @trezor/blockchain-link Block event has different format
+                this.currentBlockHeight = info.blockHeight;
                 this.postMessage(new BlockchainMessage(BLOCKCHAIN.BLOCK, {
                     coin: this.coinInfo,
-                    ...block,
+                    block: info.blockHeight,
+                    hash: info.blockHash,
                 }));
             });
         }
 
         if (this.link.listenerCount('notification') === 0) {
-            this.link.on('notification', (notification: BlockchainLinkTransaction) => {
+            this.link.on('notification', (notification: any) => {
+                const { descriptor, tx } = notification;
+                // since new @trezor/blockchain-link Transaction event has different format
                 this.postMessage(new BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
                     coin: this.coinInfo,
-                    notification,
+                    notification: {
+                        type: tx.type,
+                        timestamp: tx.blockTime,
+                        blockHeight: tx.blockHeight,
+                        blockHash: tx.blockHash,
+                        descriptor,
+                        inputs: tx.targets,
+                        outputs: tx.targets,
+                        hash: tx.txid,
+                        amount: tx.amount,
+                        fee: tx.fee,
+                        total: tx.amount,
+                    },
                 }));
             });
         }
@@ -147,15 +156,13 @@ export default class Blockchain {
             type: 'block',
         });
 
-        console.log("SUBSCRIBE", accounts);
-
         return this.link.subscribe({
             type: 'addresses',
             addresses: accounts,
         });
     }
 
-    async pushTransaction(tx: string): Promise<string> {
+    async pushTransaction(tx: string) {
         return await this.link.pushTransaction(tx);
     }
 
