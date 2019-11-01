@@ -113,7 +113,15 @@ export default class Blockchain {
     }
 
     async estimateFee(options?: any) {
-        return await this.link.estimateFee();
+        // since new @trezor/blockchain-link Fee response has different format
+        // this method is used only with XRP so we can assume that there is only 1 feeLevel
+        const levels = await this.link.estimateFee();
+        return [
+            {
+                name: 'Normal',
+                value: levels[0].feePerUnit,
+            },
+        ];
     }
 
     async subscribe(accounts: Array<string>) {
