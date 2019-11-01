@@ -747,10 +747,10 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@trezor/blockchain-link@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@trezor/blockchain-link/-/blockchain-link-1.0.3.tgz#a374632708739f7a7ff75ebf91cd3a5c459fbe72"
-  integrity sha512-WuDuSEm0mKy1gjoRZ85+qas653GTAbRrP4yYkiv2cs/1lJ2w1Fgqx9gbauYZbNUD6wdj2c0UM1SjTJ7LhK9RYA==
+"@trezor/blockchain-link@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@trezor/blockchain-link/-/blockchain-link-1.0.5.tgz#e7d1284b824b108eb5d55f67b99e9827cee7f389"
+  integrity sha512-174LmgLCOlQMprS6yTFXN3HhHXMbfjeiLson3weu+U/XE2cZ47zwMY9LbO5D8tIlx1/Q6KGARmrhTkOtYHsgBg==
   dependencies:
     es6-promise "^4.2.8"
     events "^3.0.0"
