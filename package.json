@@ -1,6 +1,6 @@
 {
   "name": "trezor-connect",
-  "version": "8.0.8",
+  "version": "8.0.9",
   "author": "Trezor <info@trezor.io>",
   "homepage": "https://github.com/trezor/connect",
   "description": "High-level javascript interface for Trezor hardware wallet.",
@@ -60,7 +60,7 @@
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-flow": "^7.0.0",
-    "@trezor/blockchain-link": "^1.0.3",
+    "@trezor/blockchain-link": "^1.0.5",
     "@trezor/utxo-lib": "^0.0.2",
     "babel-collect-imports": "https://github.com/szymonlesisz/babel-collect-imports",
     "babel-eslint": "^10.0.1",

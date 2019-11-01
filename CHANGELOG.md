@@ -1,3 +1,7 @@
+# 8.0.9
+#### Fixed
+- `getAccountInfo` bump @trezor/blockchain-link version with fixed ripple auto reconnection and ripple-lib issue https://github.com/ripple/ripple-lib/issues/1066
+
 # 8.0.8
 #### Fixed
 - `tezosSignTransaction` Babylon fork update, exclude firmware lower than 2.1.8
