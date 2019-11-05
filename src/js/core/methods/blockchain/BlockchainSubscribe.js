@@ -53,7 +53,7 @@ export default class BlockchainSubscribe extends AbstractMethod {
 
     async subscribeBlockchain(): Promise<{ subscribed: true }> {
         const backend = await createBlockchainBackend(this.params.coinInfo, this.postMessage);
-        backend.subscribe(this.params.accounts);
+        await backend.subscribe(this.params.accounts);
 
         return {
             subscribed: true,
