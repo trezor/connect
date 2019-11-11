@@ -107,7 +107,7 @@ export const parse = (input: ?Object): ConnectSettings => {
     if (!input) return currentSettings;
 
     const settings: ConnectSettings = { ...currentSettings };
-    if (input.hasOwnProperty('debug')) {
+    if (Object.prototype.hasOwnProperty.call(input, 'debug')) {
         if (Array.isArray(input)) {
             // enable log with prefix
         } if (typeof input.debug === 'boolean') {

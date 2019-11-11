@@ -29,7 +29,7 @@ const handleMessage = async (event: MessageEvent): Promise<void> => {
     if (data.style) {
         const css: {[k: string]: string} = JSON.parse(data.style);
         for (const key of Object.keys(css)) {
-            if (button.style.hasOwnProperty(key)) {
+            if (Object.prototype.hasOwnProperty.call(button.style, key)) {
                 button.style.setProperty(key, css[key]);
             }
         }

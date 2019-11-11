@@ -17,7 +17,7 @@ type Param = {
 
 export const validateParams = (values: Object, fields: Array<Param>): void => {
     fields.forEach(field => {
-        if (values.hasOwnProperty(field.name)) {
+        if (Object.prototype.hasOwnProperty.call(values, field.name)) {
             const value = values[field.name];
             if (field.type) {
                 if (field.type === 'array') {

@@ -31,7 +31,7 @@ export default class CustomMessage extends AbstractMethod {
             { name: 'params', type: 'object', obligatory: true },
         ]);
 
-        if (payload.hasOwnProperty('messages')) {
+        if (Object.prototype.hasOwnProperty.call(payload, 'messages')) {
             try {
                 JSON.parse(JSON.stringify(payload.messages));
             } catch (error) {

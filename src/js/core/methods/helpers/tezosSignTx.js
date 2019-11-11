@@ -135,7 +135,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         };
 
         //  add parameters to transaction
-        if (transaction.hasOwnProperty('parameters')) {
+        if (Object.prototype.hasOwnProperty.call(transaction, 'parameters')) {
             message = {
                 ...message,
                 transaction: {
@@ -166,7 +166,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                 };
             }
 
-            if (parameters_manager.hasOwnProperty('cancel_delegate')) {
+            if (Object.prototype.hasOwnProperty.call(parameters_manager, 'cancel_delegate')) {
                 message = {
                     ...message,
                     transaction: {

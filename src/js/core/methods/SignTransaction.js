@@ -77,7 +77,7 @@ export default class SignTransaction extends AbstractMethod {
             this.info = getLabel('Sign #NETWORK transaction', coinInfo);
         }
 
-        if (payload.hasOwnProperty('refTxs')) {
+        if (Object.prototype.hasOwnProperty.call(payload, 'refTxs')) {
             payload.refTxs.forEach(tx => {
                 validateParams(tx, [
                     { name: 'hash', type: 'string', obligatory: true },
@@ -95,7 +95,7 @@ export default class SignTransaction extends AbstractMethod {
         const inputs: Array<TransactionInput> = validateTrezorInputs(payload.inputs, coinInfo);
         const outputs: Array<TransactionOutput> = validateTrezorOutputs(payload.outputs, coinInfo);
 
-        const outputsWithAmount = outputs.filter(output => typeof output.amount === 'string' && !output.hasOwnProperty('op_return_data'));
+        const outputsWithAmount = outputs.filter(output => typeof output.amount === 'string' && !Object.prototype.hasOwnProperty.call(output, 'op_return_data'));
         if (outputsWithAmount.length > 0) {
             const total: BigNumber = outputsWithAmount.reduce((bn: BigNumber, output: TransactionOutput) => {
                 return bn.plus(typeof output.amount === 'string' ? output.amount : '0');
@@ -119,10 +119,10 @@ export default class SignTransaction extends AbstractMethod {
                 branch_id: payload.branchId,
             },
             coinInfo,
-            push: payload.hasOwnProperty('push') ? payload.push : false,
+            push: typeof payload.push === 'boolean' ? payload.push : false,
         };
 
-        if (coinInfo.hasTimestamp && !payload.hasOwnProperty('timestamp')) {
+        if (coinInfo.hasTimestamp && !Object.prototype.hasOwnProperty.call(payload, 'timestamp')) {
             const d = new Date();
             this.params.options.timestamp = Math.round(d.getTime() / 1000);
         }
