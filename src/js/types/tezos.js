@@ -62,8 +62,8 @@ export type TezosRevealOperation = {
 
 export type TezosParametersManager = {
     set_delegate?: string,
-    cancel_delegate?: bool,
-    transfer?: TezosManagerTransfer
+    cancel_delegate?: boolean,
+    transfer?: TezosManagerTransfer,
 }
 
 export type TezosManagerTransfer = {

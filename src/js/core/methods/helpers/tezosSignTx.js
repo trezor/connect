@@ -146,12 +146,12 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
         }
 
         if (transaction.parameters_manager) {
-            const parameters_manager = transaction.parameters_manager
+            const parameters_manager = transaction.parameters_manager;
 
             validateParams(parameters_manager, [
                 { name: 'set_delegate', type: 'string', obligatory: false },
                 { name: 'cancel_delegate', type: 'boolean', obligatory: false },
-                { name: 'transfer', type: 'object', obligatory: false }
+                { name: 'transfer', type: 'object', obligatory: false },
             ]);
 
             if (parameters_manager.set_delegate) {
@@ -160,7 +160,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                     transaction: {
                         ...message.transaction,
                         parameters_manager: {
-                            set_delegate: publicKeyHash2buffer(parameters_manager.set_delegate).hash
+                            set_delegate: publicKeyHash2buffer(parameters_manager.set_delegate).hash,
                         },
                     },
                 };
@@ -179,7 +179,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             }
 
             if (parameters_manager.transfer) {
-                const transfer = parameters_manager.transfer
+                const transfer = parameters_manager.transfer;
 
                 validateParams(transfer, [
                     { name: 'amount', type: 'number', obligatory: true },
@@ -196,7 +196,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                                     tag: publicKeyHash2buffer(transfer.destination).originated,
                                     hash: publicKeyHash2buffer(transfer.destination).hash,
                                 },
-                                amount: transfer.amount
+                                amount: transfer.amount,
                             },
                         },
                     },
@@ -217,7 +217,7 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
             { name: 'counter', type: 'number', obligatory: true },
             { name: 'gas_limit', type: 'number', obligatory: true },
             { name: 'storage_limit', type: 'number', obligatory: true },
-            { name: 'script', type: 'string', obligatory: true }
+            { name: 'script', type: 'string', obligatory: true },
         ]);
 
         message = {
@@ -239,8 +239,8 @@ export const createTx = (address_n: Array<number>, branch: string, operation: Te
                 origination: {
                     ...message.origination,
                     delegate: publicKeyHash2buffer(origination.delegate).hash,
-                }
-            }
+                },
+            };
         }
     }
 
