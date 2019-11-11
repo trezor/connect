@@ -306,9 +306,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             await getPopupPromise().promise;
             // show message about browser
             postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));
-            // TODO: wait for user interaction
-            // const uiPromise: Deferred<UiPromiseResponse> = createUiPromise(UI.RECEIVE_BROWSER);
-            // const uiResp: UiPromiseResponse = await uiPromise.promise;
+            return Promise.resolve();
         } else {
             // just show message about browser
             postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));

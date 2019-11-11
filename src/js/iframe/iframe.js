@@ -61,22 +61,17 @@ const handleMessage = (event: PostMessageEvent): void => {
 
     // popup handshake initialization process, get reference to message channel
     if (data.type === POPUP.HANDSHAKE && event.origin === window.location.origin) {
-        if (!_popupMessagePort) {
-            fail('POPUP.OPENED: popupMessagePort not found');
-            return;
-        }
-
-        if (!_core) {
-            fail('POPUP.OPENED: Core not initialized');
-            return;
-        }
-
-        if (_popupMessagePort instanceof MessagePort) {
-            if (event.ports.length < 1) {
-                fail('POPUP.OPENED: event.ports not found');
+        if (!_popupMessagePort || _popupMessagePort instanceof MessagePort) {
+            if (!event.ports || event.ports.length < 1) {
+                fail('POPUP.HANDSHAKE: popupMessagePort not found');
                 return;
             }
             _popupMessagePort = event.ports[0];
+        }
+
+        if (!_core) {
+            fail('POPUP.HANDSHAKE: Core not initialized');
+            return;
         }
 
         const method = _core.getCurrentMethod()[0];
