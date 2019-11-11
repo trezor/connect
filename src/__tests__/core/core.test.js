@@ -1,7 +1,6 @@
 /* @flow */
-/* eslint  no-undef: 0 */
+/* eslint no-undef: 0 */
 
-import '@babel/polyfill';
 import { testFunctions } from './index.js';
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
 import { checkBrowser } from '../../js/utils/browser';

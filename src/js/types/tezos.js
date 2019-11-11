@@ -60,16 +60,16 @@ export type TezosRevealOperation = {
     public_key: string,
 };
 
+export type TezosManagerTransfer = {
+    destination: string,
+    amount: number,
+};
+
 export type TezosParametersManager = {
     set_delegate?: string,
     cancel_delegate?: boolean,
     transfer?: TezosManagerTransfer,
 }
-
-export type TezosManagerTransfer = {
-    destination: string,
-    amount: number,
-};
 
 export type TezosTransactionOperation = {
     source: string,

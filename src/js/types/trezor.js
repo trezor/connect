@@ -538,15 +538,15 @@ export type TezosRevealOp = {
     public_key: Uint8Array,
 };
 
+export type TezosManagerTransfer = {
+    amount: number,
+    destination: TezosContractID,
+};
+
 export type TezosParametersManager = {
     set_delegate?: Uint8Array,
     cancel_delegate?: boolean,
     transfer?: TezosManagerTransfer,
-};
-
-export type TezosManagerTransfer = {
-    amount: number,
-    destination: TezosContractID,
 };
 
 export type TezosTransactionOp = {

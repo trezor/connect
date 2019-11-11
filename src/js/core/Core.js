@@ -359,8 +359,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         throw error;
     }
 
-    method.device = device;
-    method.devicePath = device.getDevicePath();
+    method.setDevice(device);
 
     // method is a debug link message
     if (method.debugLink) {
@@ -890,6 +889,7 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
             await _deviceList.waitForTransportFirstEvent();
         }
     } catch (error) {
+        // eslint-disable-next-line require-atomic-updates
         _deviceList = null;
         if (!settings.transportReconnect) {
             throw error;

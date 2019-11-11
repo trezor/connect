@@ -89,6 +89,11 @@ export default class AbstractMethod implements MethodInterface {
         this.useUi = true;
     }
 
+    setDevice(device: Device) {
+        this.device = device;
+        this.devicePath = device.getDevicePath();
+    }
+
     async run(): Promise<Object | Array<Object>> {
         // to override
         return new Promise(resolve => resolve({}));
