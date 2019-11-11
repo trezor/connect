@@ -631,12 +631,8 @@ export default class DeviceCommands {
     }
 
     async _commonCall(type: string, msg: Object): Promise<DefaultMessageResponse> {
-        try {
-            const resp = await this.call(type, msg);
-            return await this._filterCommonTypes(resp);
-        } catch (error) {
-            throw error;
-        }
+        const resp = await this.call(type, msg);
+        return this._filterCommonTypes(resp);
     }
 
     async _filterCommonTypes(res: DefaultMessageResponse): Promise<DefaultMessageResponse> {
