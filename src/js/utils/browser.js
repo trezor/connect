@@ -1,7 +1,7 @@
 /* @flow */
 'use strict';
 
-import * as bowser from 'bowser';
+import Bowser from 'bowser';
 import DataManager from '../data/DataManager';
 
 type State = {
@@ -26,17 +26,18 @@ export const checkBrowser = (): State => {
         state.supported = true;
         return state;
     }
+    const { browser, os, platform } = Bowser.parse(window.navigator.userAgent);
     const supported = DataManager.getConfig().supportedBrowsers;
-    state.name = `${bowser.name}: ${bowser.version}; ${bowser.osname}: ${bowser.osversion};`;
-    state.mobile = bowser.mobile;
-    state.osname = bowser.osname;
-    if (bowser.mobile && typeof navigator.usb === 'undefined') {
+    state.name = `${browser.name}: ${browser.version}; ${os.name}: ${os.version};`;
+    state.mobile = platform.type !== 'desktop';
+    state.osname = os.name;
+    if (state.mobile && typeof navigator.usb === 'undefined') {
         state.supported = false;
     } else {
-        const isSupported: any = supported[ bowser.name.toLowerCase() ];
+        const isSupported: any = supported[browser.name.toLowerCase()];
         if (isSupported) {
             state.supported = true;
-            state.outdated = isSupported.version > parseInt(bowser.version, 10);
+            state.outdated = isSupported.version > parseInt(browser.version, 10);
         }
     }
 
@@ -44,25 +45,28 @@ export const checkBrowser = (): State => {
 };
 
 // Parse JSON loaded from config.assets.bridge
-// Find preferred platform using bowser and userAgent
 export const parseBridgeJSON = (json: JSON): JSON => {
-    const osname = bowser.osname ? bowser.osname.toLowerCase() : 'default';
     let preferred: string = '';
-    switch (osname) {
-        case 'linux': {
-            const agent = navigator.userAgent;
-            const isRpm = agent.match(/CentOS|Fedora|Mandriva|Mageia|Red Hat|Scientific|SUSE/) ? 'rpm' : 'deb';
-            const is64x = agent.match(/Linux i[3456]86/) ? '32' : '64';
-            preferred = `${isRpm}${is64x}`;
+    if (typeof window !== 'undefined') {
+        // Find preferred platform using bowser and userAgent
+        const agent = window.navigator.userAgent;
+        const browser = Bowser.getParser(agent);
+        const { name } = browser.getOS();
+        switch (name) {
+            case 'linux': {
+                const isRpm = agent.match(/CentOS|Fedora|Mandriva|Mageia|Red Hat|Scientific|SUSE/) ? 'rpm' : 'deb';
+                const is64x = agent.match(/Linux i[3456]86/) ? '32' : '64';
+                preferred = `${isRpm}${is64x}`;
+            }
+                break;
+            case 'macos':
+                preferred = 'mac';
+                break;
+            case 'windows':
+                preferred = 'win';
+                break;
+            default: break;
         }
-            break;
-        case 'macos':
-            preferred = 'mac';
-            break;
-        case 'windows':
-            preferred = 'win';
-            break;
-        default: break;
     }
 
     // $FlowIssue indexer property is missing in `JSON`
@@ -78,4 +82,14 @@ export const parseBridgeJSON = (json: JSON): JSON => {
     latest.changelog = latest.changelog.replace(/\n/g, '').split('* ');
     latest.changelog.splice(0, 1);
     return JSON.parse(JSON.stringify(latest).replace(/{version}/g, version));
+};
+
+export const isWebUsbAvailable = () => {
+    if (typeof window === 'undefined') return false;
+    const { browser } = Bowser.parse(window.navigator.userAgent);
+    const browserName = browser.name.toLowerCase();
+    if ((browserName === 'chrome' || browserName === 'chromium') && parseInt(browser.version, 10) >= 72) {
+        return false;
+    }
+    return typeof window.navigator.usb !== 'undefined';
 };
