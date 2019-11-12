@@ -152,9 +152,7 @@ export default class Discovery extends EventEmitter {
     }
 
     dispose() {
-        delete this.accounts;
-        delete this.blockchain;
-        delete this.coinInfo;
+        this.accounts = [];
     }
 }
 

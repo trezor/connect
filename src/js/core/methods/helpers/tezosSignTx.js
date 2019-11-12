@@ -71,7 +71,7 @@ const publicKey2buffer = (publicKey: string): Uint8Array => {
 };
 
 export const createTx = (address_n: Array<number>, branch: string, operation: TezosOperation): TezosTransaction => {
-    let message: TezosTransaction = {
+    let message = {
         address_n,
         branch: bs58checkDecode(prefix.B, branch),
     };

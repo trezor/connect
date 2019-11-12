@@ -28,7 +28,7 @@ export type TezosGetAddress$$ = {
 
 // get public key
 
-export type TezosPublicKey = $Common & {
+export type TezosPublicKey = {
     publicKey: string,
     path: Array<number>,
     serializedPath: string,
