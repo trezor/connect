@@ -23,6 +23,7 @@ import { signTransactionMultisig } from './signTransactionMultisig.spec.js';
 import { signTransactionMultisigChange } from './signTransactionMultisigChange.spec.js';
 import { signTransactionBech32 } from './signTransactionBech32.spec.js';
 import { signTransactionDoge } from './signTransactionDoge.spec.js';
+import { signTransactionKomodo } from './signTransactionKomodo.spec.js';
 import { verifyMessage } from './verifyMessage.spec.js';
 import { verifyMessageSegwit } from './verifyMessageSegwit.spec.js';
 import { verifyMessageSegwitNative } from './verifyMessageSegwitNative.spec.js';
@@ -73,6 +74,7 @@ export const testFunctions: AvailableTestFunctions = {
     signTransactionMultisigChange,
     signTransactionBech32,
     signTransactionDoge,
+    signTransactionKomodo,
     verifyMessage,
     verifyMessageSegwit,
     verifyMessageSegwitNative,
