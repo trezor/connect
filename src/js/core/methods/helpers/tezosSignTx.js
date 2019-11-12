@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import * as bs58check from 'bs58check';
 import type { TezosOperation } from '../../../types/tezos';

@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import type { EthereumTxRequest, EthereumSignedTx } from '../../../types/trezor';
 import type { DefaultMessageResponse } from '../../../device/DeviceCommands';

@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, RESPONSE_EVENT, BLOCKCHAIN_EVENT } from '../constants';
 import type { CoreMessage } from '../types';

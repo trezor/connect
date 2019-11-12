@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { xpubToHDNodeType } from '../../../utils/hdnode';
 import type { Network } from '@trezor/utxo-lib';

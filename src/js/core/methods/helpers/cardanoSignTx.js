@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type {

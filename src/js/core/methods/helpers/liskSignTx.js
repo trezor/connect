@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import type { Transaction as RawTransaction } from '../../../types/lisk';
 

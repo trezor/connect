@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 // device list events
 export const CONNECT: 'device-connect' = 'device-connect';

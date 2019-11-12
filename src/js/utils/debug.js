@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 // https://stackoverflow.com/questions/7505623/colors-in-javascript-console
 // https://github.com/pimterry/loglevel/blob/master/lib/loglevel.js

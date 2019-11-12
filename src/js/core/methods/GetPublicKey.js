@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';

@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 const layerID: string = 'TrezorConnectInteractionLayer';
 

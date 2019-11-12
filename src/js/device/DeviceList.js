@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import EventEmitter from 'events';
 import * as TRANSPORT from '../constants/transport';

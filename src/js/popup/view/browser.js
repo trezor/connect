@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { container, showView } from './common';
 import type { BrowserMessage } from '../../types/uiRequest';

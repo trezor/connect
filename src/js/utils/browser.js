@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import Bowser from 'bowser';
 import DataManager from '../data/DataManager';

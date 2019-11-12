@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 export function clone<T>(obj: T): T {
     const jsonString = JSON.stringify(obj);
