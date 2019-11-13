@@ -20,8 +20,8 @@ export default class DebugLinkGetState extends AbstractMethod {
 
         const response: DebugLinkState = await this.device.getCommands().debugLinkGetState();
         return {
-            debugLink: true,
             ...response,
+            debugLink: true,
         };
     }
 }

@@ -415,7 +415,7 @@ export type StellarPaymentOp = {
     message: {},
 }
 
-export type StellarSignTxMessage = {
+export type StellarSignTxMessage = {|
     address_n: Array<number>,
     source_account: string,
     fee: number,
@@ -423,12 +423,12 @@ export type StellarSignTxMessage = {
     network_passphrase: string,
     timebounds_start?: number,
     timebounds_end?: number,
-    memo_type: number,
+    memo_type?: number,
     memo_text?: string | typeof undefined,
     memo_id?: string | typeof undefined,
     memo_hash?: string | Buffer | typeof undefined,
     num_operations: number,
-}
+|}
 
 export type StellarAsset = {
     type: 0 | 1 | 2,
@@ -477,9 +477,9 @@ export type StellarOperationMessage = {
 } | {
     type: 'StellarSetOptionsOp',
     source_account?: string,
-    signer_type: number,
-    signer_key: string | Buffer | typeof undefined,
-    signer_weight: number | typeof undefined,
+    signer_type?: number | typeof undefined,
+    signer_key?: string | Buffer | typeof undefined,
+    signer_weight?: number | typeof undefined,
     clear_flags: ?number,
     set_flags: ?number,
     master_weight: ?(number | string),
@@ -538,15 +538,15 @@ export type TezosRevealOp = {
     public_key: Uint8Array,
 };
 
-export type TezosParametersManager = {
-    set_delegate?: Uint8Array,
-    cancel_delegate?: bool,
-    transfer?: TezosManagerTransfer,
-};
-
 export type TezosManagerTransfer = {
     amount: number,
     destination: TezosContractID,
+};
+
+export type TezosParametersManager = {
+    set_delegate?: Uint8Array,
+    cancel_delegate?: boolean,
+    transfer?: TezosManagerTransfer,
 };
 
 export type TezosTransactionOp = {
@@ -962,11 +962,11 @@ export type Flags = {
     flags: number,
 }
 
-export type DebugLinkDecision = {
+export type DebugLinkDecision = {|
     yes_no?: boolean,
     up_down?: boolean,
     input?: string,
-}
+|}
 
 export type DebugLinkState = {
     layout: string,

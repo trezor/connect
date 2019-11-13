@@ -41,13 +41,8 @@ export const dispose = () => {
 
 // handle message received from iframe
 const handleMessage = (message: $T.CoreMessage): void => {
-    // TODO: destructuring with type
-    // https://github.com/Microsoft/TypeScript/issues/240
-    // const { id, event, type, data, error }: CoreMessage = message;
-    const id: number = message.id || 0;
-    const event: string = message.event;
-    const type: string = message.type;
-    const payload: any = message.payload;
+    const { event, type, payload } = message;
+    const id = message.id || 0;
 
     if (type === UI.REQUEST_UI_WINDOW) {
         _core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, true);
@@ -59,13 +54,12 @@ const handleMessage = (message: $T.CoreMessage): void => {
     switch (event) {
         case RESPONSE_EVENT :
             if (messagePromises[id]) {
-                // clear unnecessary fields from message object
-                delete message.type;
-                delete message.event;
-                // delete message.id;
-                // message.__id = id;
                 // resolve message promise (send result of call method)
-                messagePromises[id].resolve(message);
+                messagePromises[id].resolve({
+                    id,
+                    success: message.success,
+                    payload,
+                });
                 delete messagePromises[id];
             } else {
                 _log.warn(`Unknown message id ${id}`);
@@ -210,7 +204,6 @@ export const customMessage: $T.CustomMessage = async (params) => {
 
     // TODO: set message listener only if iframe is loaded correctly
     const callback = params.callback;
-    delete params.callback;
     const customMessageListener = async (event: $T.PostMessageEvent) => {
         const data = event.data;
         if (data && data.type === UI.CUSTOM_MESSAGE_REQUEST) {
@@ -224,7 +217,7 @@ export const customMessage: $T.CustomMessage = async (params) => {
     };
     _core.on(CORE_EVENT, customMessageListener);
 
-    const response = await call({ method: 'customMessage', ...params });
+    const response = await call({ method: 'customMessage', ...params, callback: null });
     _core.removeListener(CORE_EVENT, customMessageListener);
     return response;
 };
@@ -233,7 +226,6 @@ export const requestLogin: $T.RequestLogin = async (params) => {
     // $FlowIssue: property callback not found
     if (typeof params.callback === 'function') {
         const callback = params.callback;
-        delete params.callback; // delete callback value. this field cannot be sent using postMessage function
 
         // TODO: set message listener only if iframe is loaded correctly
         const loginChallengeListener = async (event: $T.PostMessageEvent) => {
@@ -258,7 +250,7 @@ export const requestLogin: $T.RequestLogin = async (params) => {
 
         _core.on(CORE_EVENT, loginChallengeListener);
 
-        const response = await call({ method: 'requestLogin', ...params, asyncChallenge: true });
+        const response = await call({ method: 'requestLogin', ...params, asyncChallenge: true, callback: null });
         _core.removeListener(CORE_EVENT, loginChallengeListener);
         return response;
     } else {

@@ -32,8 +32,8 @@ export default class EthereumGetPublicKey extends AbstractMethod {
         this.requiredPermissions = ['read'];
 
         // create a bundle with only one batch if bundle doesn't exists
-        this.hasBundle = message.payload.hasOwnProperty('bundle');
-        const payload: Object = !message.payload.hasOwnProperty('bundle') ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
+        this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -53,7 +53,7 @@ export default class EthereumGetPublicKey extends AbstractMethod {
             this.firmwareRange = getFirmwareRange(this.name, network, this.firmwareRange);
 
             let showOnTrezor: boolean = false;
-            if (batch.hasOwnProperty('showOnTrezor')) {
+            if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
 

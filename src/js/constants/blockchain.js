@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 // blockchain events
 export const ERROR: 'blockchain-error' = 'blockchain-error';

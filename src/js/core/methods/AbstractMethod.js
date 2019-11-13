@@ -64,7 +64,7 @@ export default class AbstractMethod implements MethodInterface {
         // expected state from method parameter.
         // it could be null
         this.deviceState = payload.device ? payload.device.state : null;
-        this.hasExpectedDeviceState = payload.device ? payload.device.hasOwnProperty('state') : false;
+        this.hasExpectedDeviceState = payload.device ? Object.prototype.hasOwnProperty.call(payload.device, 'state') : false;
         this.keepSession = typeof payload.keepSession === 'boolean' ? payload.keepSession : false;
         this.skipFinalReload = typeof payload.skipFinalReload === 'boolean' ? payload.skipFinalReload : false;
         this.skipFirmwareCheck = false;
@@ -87,6 +87,11 @@ export default class AbstractMethod implements MethodInterface {
         this.useDevice = true;
         this.useDeviceState = true;
         this.useUi = true;
+    }
+
+    setDevice(device: Device) {
+        this.device = device;
+        this.devicePath = device.getDevicePath();
     }
 
     async run(): Promise<Object | Array<Object>> {

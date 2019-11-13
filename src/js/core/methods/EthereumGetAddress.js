@@ -34,7 +34,7 @@ export default class EthereumGetAddress extends AbstractMethod {
         this.requiredPermissions = ['read'];
 
         // create a bundle with only one batch if bundle doesn't exists
-        this.hasBundle = message.payload.hasOwnProperty('bundle');
+        this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
         const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
@@ -57,7 +57,7 @@ export default class EthereumGetAddress extends AbstractMethod {
             this.firmwareRange = getFirmwareRange(this.name, network, this.firmwareRange);
 
             let showOnTrezor: boolean = true;
-            if (batch.hasOwnProperty('showOnTrezor')) {
+            if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
 

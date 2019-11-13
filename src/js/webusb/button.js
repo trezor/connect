@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 const render = (className: ?string, url: string, origin: ?string) => {
     const query = className || '.trezor-webusb-button';

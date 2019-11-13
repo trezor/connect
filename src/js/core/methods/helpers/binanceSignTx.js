@@ -9,24 +9,30 @@ import type {
 } from '../../../types/trezor';
 import type {
     BinanceTransaction,
+    PreparedMessage,
     PreparedBinanceTransaction,
 } from '../../../types/binance';
 
 const processTxRequest = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     response: MessageResponse<BinanceTxRequest>,
-    messages: $ElementType<PreparedBinanceTransaction, 'messages'>,
+    messages: PreparedMessage[],
     index: number,
 ): Promise<BinanceSignedTx> => {
     const msg = messages[index];
     const type = msg.type;
-    delete msg.type; // 'type' is not a protobuf field and needs to be removed
     const lastOp = (index + 1 >= messages.length);
 
     if (lastOp) {
-        const response: MessageResponse<BinanceSignedTx> = await typedCall(type, 'BinanceSignedTx', msg);
+        const response: MessageResponse<BinanceSignedTx> = await typedCall(type, 'BinanceSignedTx', {
+            ...msg,
+            type: null, // 'type' is not a protobuf field and needs to be removed
+        });
         return response.message;
     }
-    const ack: MessageResponse<BinanceTxRequest> = await typedCall(type, 'BinanceTxRequest', msg);
+    const ack: MessageResponse<BinanceTxRequest> = await typedCall(type, 'BinanceTxRequest', {
+        ...msg,
+        type: null, // 'type' is not a protobuf field and needs to be removed
+    });
     index++;
 
     return await processTxRequest(
@@ -57,19 +63,21 @@ export const validate = (tx: BinanceTransaction): PreparedBinanceTransaction => 
         messages: [],
     };
 
-    if (tx.transfer) {
-        validateParams(tx.transfer, [
+    const { transfer, placeOrder, cancelOrder } = tx;
+
+    if (transfer) {
+        validateParams(transfer, [
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
         ]);
         preparedTx.messages.push({
-            ...tx.transfer,
+            ...transfer,
             type: 'BinanceTransferMsg',
         });
     }
 
-    if (tx.placeOrder) {
-        validateParams(tx.placeOrder, [
+    if (placeOrder) {
+        validateParams(placeOrder, [
             { name: 'id', type: 'string' },
             { name: 'ordertype', type: 'number' },
             { name: 'price', type: 'number' },
@@ -78,20 +86,20 @@ export const validate = (tx: BinanceTransaction): PreparedBinanceTransaction => 
             { name: 'side', type: 'number' },
         ]);
         preparedTx.messages.push({
+            ...placeOrder,
             type: 'BinanceOrderMsg',
-            ...tx.placeOrder,
         });
     }
 
-    if (tx.cancelOrder) {
+    if (cancelOrder) {
         validateParams(tx.cancelOrder, [
             { name: 'refid', type: 'string', obligatory: true },
             { name: 'sender', type: 'string', obligatory: true },
             { name: 'symbol', type: 'string', obligatory: true },
         ]);
         preparedTx.messages.push({
+            ...cancelOrder,
             type: 'BinanceCancelMsg',
-            ...tx.cancelOrder,
         });
     }
 

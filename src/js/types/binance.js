@@ -34,7 +34,7 @@ export type BinanceGetAddress$$ = {
 
 // get public key
 
-export type BinancePublicKey = $Common & {
+export type BinancePublicKey = {
     publicKey: string,
     path: Array<number>,
     serializedPath: string,
@@ -70,7 +70,7 @@ export type BinanceTransaction = {
     cancelOrder?: BinanceCancelMsg,
 }
 
-type PreparedMessage = BinanceTransferMsg & {
+export type PreparedMessage = BinanceTransferMsg & {
     type: 'BinanceTransferMsg',
 } | BinanceOrderMsg & {
     type: 'BinanceOrderMsg',

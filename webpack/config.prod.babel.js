@@ -16,7 +16,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 module.exports = {
     mode: 'production',
     entry: {
-        'trezor-connect': ['@babel/polyfill', `${JS_SRC}index.js`],
+        'trezor-connect': `${JS_SRC}index.js`,
         'iframe': `${JS_SRC}iframe/iframe.js`,
         'popup': `${JS_SRC}popup/popup.js`,
         'webusb': `${JS_SRC}webusb/index.js`,

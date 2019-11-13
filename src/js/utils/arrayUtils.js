@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 // export default function () {
 //     if (!Array.isArray) {

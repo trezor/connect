@@ -181,7 +181,7 @@ const buyRam = (): SubtestEosSignTransaction => {
                     data: {
                         payer: "miniminimini",
                         receiver: "miniminimini",
-                        quantity: '1000000000.0000 EOS',
+                        quant: '1000000000.0000 EOS',
                     },
                 }]
             },
@@ -316,7 +316,7 @@ const voteProducer = (): SubtestEosSignTransaction => {
                     }],
                     name: 'voteproducer',
                     data: {
-                        account: "miniminimini",
+                        voter: "miniminimini",
                         proxy: '',
                         producers: [
                             "argentinaeos",

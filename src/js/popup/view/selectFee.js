@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';

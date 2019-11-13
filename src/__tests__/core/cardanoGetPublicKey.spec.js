@@ -8,6 +8,8 @@ import type {
     ExpectedCardanoGetPublicKeyResponse,
 } from 'flowtype/tests/cardano-get-public-key';
 
+// https://github.com/trezor/trezor-firmware/blob/master/core/tests/test_apps.cardano.get_public_key.py
+
 export const cardanoGetPublicKey = (): TestFunction => {
     const testPayloads: Array<TestCardanoGetPublicKeyPayload> = [
         {
@@ -56,7 +58,7 @@ export const cardanoGetPublicKey = (): TestFunction => {
 
     return {
         testName,
-        mnemonic: 'mnemonic_12',
+        mnemonic: 'mnemonic_all',
         testPayloads,
         expectedResponses,
     };

@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
@@ -33,7 +32,7 @@ export default class TezosGetPublicKey extends AbstractMethod {
         this.info = 'Export Tezos public key';
 
         // create a bundle with only one batch if bundle doesn't exists
-        this.hasBundle = message.payload.hasOwnProperty('bundle');
+        this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
         const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
 
         // validate bundle type
@@ -51,7 +50,7 @@ export default class TezosGetPublicKey extends AbstractMethod {
 
             const path: Array<number> = validatePath(batch.path, 3);
             let showOnTrezor: boolean = true;
-            if (batch.hasOwnProperty('showOnTrezor')) {
+            if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
 

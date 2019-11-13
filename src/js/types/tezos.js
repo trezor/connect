@@ -28,7 +28,7 @@ export type TezosGetAddress$$ = {
 
 // get public key
 
-export type TezosPublicKey = $Common & {
+export type TezosPublicKey = {
     publicKey: string,
     path: Array<number>,
     serializedPath: string,
@@ -60,16 +60,16 @@ export type TezosRevealOperation = {
     public_key: string,
 };
 
-export type TezosParametersManager = {
-    set_delegate?: string,
-    cancel_delegate?: bool,
-    transfer?: TezosManagerTransfer
-}
-
 export type TezosManagerTransfer = {
     destination: string,
     amount: number,
 };
+
+export type TezosParametersManager = {
+    set_delegate?: string,
+    cancel_delegate?: boolean,
+    transfer?: TezosManagerTransfer,
+}
 
 export type TezosTransactionOperation = {
     source: string,

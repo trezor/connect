@@ -1,13 +1,12 @@
 /* @flow */
 
 import { httpRequest } from '../env/node/networkUtils';
-import { parseBridgeJSON } from '../utils/browser';
+import { parseBridgeJSON, isWebUsbAvailable } from '../utils/browser';
 import { DEFAULT_PRIORITY } from '../data/ConnectSettings';
 import { parseCoinsJson } from './CoinInfo';
 import { parseFirmware } from './FirmwareInfo';
 import { Promise } from 'es6-promise';
 import parseUri from 'parse-uri';
-import * as bowser from 'bowser';
 import semvercmp from 'semver-compare';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
@@ -82,63 +81,56 @@ export default class DataManager {
         const ts: string = settings.env === 'web' ? `?r=${settings.timestamp}` : '';
         const configUrl: string = `${settings.configSrc}${ts}`;
 
-        try {
-            this.settings = settings;
-            const config: JSON = await httpRequest(configUrl, 'json');
-            this.config = parseConfig(config);
+        this.settings = settings;
+        const config: JSON = await httpRequest(configUrl, 'json');
+        this.config = parseConfig(config);
 
-            // check if origin is localhost or trusted
-            const isLocalhost: boolean = typeof window !== 'undefined' && window.location ? window.location.hostname === 'localhost' : true;
-            const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || '');
-            this.settings.trustedHost = (isLocalhost || !!whitelist) && !this.settings.popup;
-            // ensure that popup will be used
-            if (!this.settings.trustedHost) {
-                this.settings.popup = true;
-            }
-            // ensure that debug is disabled
-            if (this.settings.debug && !this.settings.trustedHost && !whitelist) {
-                this.settings.debug = false;
-            }
-            this.settings.priority = DataManager.getPriority(whitelist);
-
-            const knownHost: ?KnownHost = DataManager.getHostLabel(this.settings.extension || this.settings.origin || '');
-            if (knownHost) {
-                this.settings.hostLabel = knownHost.label;
-                this.settings.hostIcon = knownHost.icon;
-            }
-
-            for (const asset of this.config.assets) {
-                const json: JSON = await httpRequest(`${asset.url}${ts}`, asset.type || 'json');
-                this.assets[ asset.name ] = json;
-            }
-
-            for (const protobuf of this.config.messages) {
-                const json: JSON = await httpRequest(`${protobuf.json}${ts}`, 'json');
-                this.messages[ protobuf.name ] = json;
-            }
-
-            // hotfix webusb + chrome:72, allow webextensions
-            if (this.settings.popup && this.settings.webusb && this.settings.env !== 'webextension') {
-                const browserName = bowser.name.toLowerCase();
-                if ((browserName === 'chrome' || browserName === 'chromium')) {
-                    if (semvercmp(bowser.version, '72') >= 0) {
-                        this.settings.webusb = false;
-                    }
-                }
-            }
-
-            // parse bridge JSON
-            this.assets['bridge'] = parseBridgeJSON(this.assets['bridge']);
-
-            // parse coins definitions
-            parseCoinsJson(this.assets['coins']);
-
-            // parse firmware definitions
-            parseFirmware(this.assets['firmware-t1']);
-            parseFirmware(this.assets['firmware-t2']);
-        } catch (error) {
-            throw error;
+        // check if origin is localhost or trusted
+        const isLocalhost: boolean = typeof window !== 'undefined' && window.location ? window.location.hostname === 'localhost' : true;
+        const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || '');
+        this.settings.trustedHost = (isLocalhost || !!whitelist) && !this.settings.popup;
+        // ensure that popup will be used
+        if (!this.settings.trustedHost) {
+            this.settings.popup = true;
         }
+        // ensure that debug is disabled
+        if (this.settings.debug && !this.settings.trustedHost && !whitelist) {
+            this.settings.debug = false;
+        }
+        this.settings.priority = DataManager.getPriority(whitelist);
+
+        const knownHost: ?KnownHost = DataManager.getHostLabel(this.settings.extension || this.settings.origin || '');
+        if (knownHost) {
+            this.settings.hostLabel = knownHost.label;
+            this.settings.hostIcon = knownHost.icon;
+        }
+
+        for (const asset of this.config.assets) {
+            const json: JSON = await httpRequest(`${asset.url}${ts}`, asset.type || 'json');
+            this.assets[ asset.name ] = json;
+        }
+
+        for (const protobuf of this.config.messages) {
+            const json: JSON = await httpRequest(`${protobuf.json}${ts}`, 'json');
+            this.messages[ protobuf.name ] = json;
+        }
+
+        // hotfix webusb + chrome:72, allow webextensions
+        if (this.settings.popup && this.settings.webusb && this.settings.env !== 'webextension') {
+            if (!isWebUsbAvailable()) {
+                this.settings.webusb = false;
+            }
+        }
+
+        // parse bridge JSON
+        this.assets['bridge'] = parseBridgeJSON(this.assets['bridge']);
+
+        // parse coins definitions
+        parseCoinsJson(this.assets['coins']);
+
+        // parse firmware definitions
+        parseFirmware(this.assets['firmware-t1']);
+        parseFirmware(this.assets['firmware-t2']);
     }
 
     static findMessages(model: number, fw: string): JSON {

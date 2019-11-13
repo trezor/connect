@@ -30,7 +30,7 @@ const handleMessage = (event: PostMessageEvent): void => {
     }
 
     // ignore messages from origin other then parent.window or whitelisted
-    const isMessagePort = event.target instanceof MessagePort || event.target instanceof BroadcastChannel;
+    const isMessagePort = event.target instanceof MessagePort || (typeof BroadcastChannel !== 'undefined' && event.target instanceof BroadcastChannel);
     if (!isMessagePort && getOrigin(event.origin) !== getOrigin(document.referrer) && !DataManager.isWhitelisted(event.origin)) return;
 
     // catch first message from iframe

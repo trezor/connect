@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 // This file reads descriptor with very little logic, and sends it to layers above
 

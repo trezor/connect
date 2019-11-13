@@ -306,9 +306,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             await getPopupPromise().promise;
             // show message about browser
             postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));
-            // TODO: wait for user interaction
-            // const uiPromise: Deferred<UiPromiseResponse> = createUiPromise(UI.RECEIVE_BROWSER);
-            // const uiResp: UiPromiseResponse = await uiPromise.promise;
+            return Promise.resolve();
         } else {
             // just show message about browser
             postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));
@@ -361,8 +359,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         throw error;
     }
 
-    method.device = device;
-    method.devicePath = device.getDevicePath();
+    method.setDevice(device);
 
     // method is a debug link message
     if (method.debugLink) {
@@ -892,6 +889,7 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
             await _deviceList.waitForTransportFirstEvent();
         }
     } catch (error) {
+        // eslint-disable-next-line require-atomic-updates
         _deviceList = null;
         if (!settings.transportReconnect) {
             throw error;

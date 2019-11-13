@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import EventEmitter from 'events';
 import * as TRANSPORT from '../constants/transport';
@@ -234,15 +233,12 @@ export default class DeviceList extends EventEmitter {
     ): Promise<Device> {
         const currentDescriptor = (this.stream.current && this.stream.current.find(d => d.path === descriptor.path)) || descriptor;
         _log.debug('Creating Unacquired Device', currentDescriptor);
-        try {
-            const device = await Device.createUnacquired(this.transport, currentDescriptor);
-            device.once(DEVICE.ACQUIRED, () => {
-                this.emit(DEVICE.CONNECT, device.toMessageObject());
-            });
-            return device;
-        } catch (error) {
-            throw error;
-        }
+
+        const device = await Device.createUnacquired(this.transport, currentDescriptor);
+        device.once(DEVICE.ACQUIRED, () => {
+            this.emit(DEVICE.CONNECT, device.toMessageObject());
+        });
+        return device;
     }
 
     getDevice(path: string): Device {
@@ -363,12 +359,8 @@ export const getDeviceList = async (): Promise<DeviceList> => {
     const list = new DeviceList({
         rememberDevicePassphrase: true,
     });
-    try {
-        await list.init();
-        return list;
-    } catch (error) {
-        throw error;
-    }
+    await list.init();
+    return list;
 };
 
 // Helper class for creating new device

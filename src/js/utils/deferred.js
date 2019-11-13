@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 import type { Deferred } from '../types';
 
 export type AsyncDeferred<T> = {
@@ -14,6 +13,7 @@ export function create<T>(arg?: (() => Promise<void>) | string, device?: any): D
     let localReject: (e?: ?Error) => void = (e: ?Error) => {};
     let id: string;
 
+    // eslint-disable-next-line no-async-promise-executor
     const promise: Promise<T> = new Promise(async (resolve, reject) => {
         localResolve = resolve;
         localReject = reject;

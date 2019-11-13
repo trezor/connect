@@ -136,7 +136,7 @@ const transformTransaction = (path, transaction) => {
 
         // transform asset path
         if (operation.path) {
-          operation.path = operation.path.map(transformAsset);
+            operation.path = operation.path.map(transformAsset);
         }
 
         // transform "price" field to { n: number, d: number }

@@ -8,6 +8,8 @@ import type {
     ExpectedRippleSignTransactionResponse,
 } from 'flowtype/tests/ripple-sign-transaction';
 
+// https://github.com/trezor/trezor-firmware/blob/master/tests/device_tests/test_msg_ripple_sign_tx.py
+
 export const rippleSignTransaction = (): TestFunction => {
     const testPayloads: Array<TestRippleSignTransactionPayload> = [
         {
@@ -39,6 +41,22 @@ export const rippleSignTransaction = (): TestFunction => {
             method: 'rippleSignTransaction',
             path: "m/44'/144'/0'/0/2",
             transaction: {
+                flags: 0,
+                fee: '100',
+                sequence: 100,
+                maxLedgerVersion: 333111,
+                payment: {
+                    amount: '100000009',
+                    destination: 'rNaqKtKrMSwpwZSzRckPf7S96DkimjkF4H',
+                    destinationTag: 123456,
+                },
+            },
+        },
+        // fee too low
+        {
+            method: 'rippleSignTransaction',
+            path: "m/44'/144'/0'/0/2",
+            transaction: {
                 fee: '1',
                 flags: 1,
                 sequence: 1,
@@ -53,20 +71,20 @@ export const rippleSignTransaction = (): TestFunction => {
     const expectedResponses: Array<ExpectedRippleSignTransactionResponse> = [
         {
             payload: {
-                signature: '304402200ca685c17bfdc88bcf3b256d6a1b9ac10144459619c2b3ced0124e3549608909022036282a5bb8330d8e8d8b798d8c13582ff7284876e32974c87e9ecd9aa4a53d4d',
-                serializedTx: '12000022800000002400000019614000000005f5e1006840000000000186a073210382acb77117eae7d1d3406f83c7f353d30129bad7f59d8518f68f22d1d69a376e7446304402200ca685c17bfdc88bcf3b256d6a1b9ac10144459619c2b3ced0124e3549608909022036282a5bb8330d8e8d8b798d8c13582ff7284876e32974c87e9ecd9aa4a53d4d811428c4348871a02d480ffdf2f192110185db13cfd983147148ebebf7304ccdf1676fefcf9734cf1e780826',
+                signature: '3045022100e243ef623675eeeb95965c35c3e06d63a9fc68bb37e17dc87af9c0af83ec057e02206ca8aa5eaab8396397aef6d38d25710441faf7c79d292ee1d627df15ad9346c0',
+                serializedTx: '12000022800000002400000019614000000005f5e1006840000000000186a0732102131facd1eab748d6cddc492f54b04e8c35658894f4add2232ebc5afe7521dbe474473045022100e243ef623675eeeb95965c35c3e06d63a9fc68bb37e17dc87af9c0af83ec057e02206ca8aa5eaab8396397aef6d38d25710441faf7c79d292ee1d627df15ad9346c081148fb40e1ffa5d557ce9851a535af94965e0dd098883147148ebebf7304ccdf1676fefcf9734cf1e780826',
             },
         },
         {
             payload: {
-                signature: '3045022100cdc10a493081e7000c416462e07cbfa728640597ebd1b8e7ccc12c82b0b55bc50220235d8b2413a8ae9087654f930c54b2d0a270c4a384ea63bbc97ee31afa67ded9',
-                serializedTx: '1200002280000000240000000161400000000000000168400000000000000a732103503d63adead5038efde53ee6d00e091f68d80095eb65af7a2fdc98e4bc074ae474473045022100cdc10a493081e7000c416462e07cbfa728640597ebd1b8e7ccc12c82b0b55bc50220235d8b2413a8ae9087654f930c54b2d0a270c4a384ea63bbc97ee31afa67ded98114f2020b0923eb870997c3c6b914a36304ce91359183148fb40e1ffa5d557ce9851a535af94965e0dd0988',
+                signature: '3044022069900e6e578997fad5189981b74b16badc7ba8b9f1052694033fa2779113ddc002206c8006ada310edf099fb22c0c12073550c8fc73247b236a974c5f1144831dd5f',
+                serializedTx: '1200002280000000240000000161400000000000000168400000000000000a732103dbed1e77cb91a005e2ec71afbccce5444c9be58276665a3859040f692de8fed274463044022069900e6e578997fad5189981b74b16badc7ba8b9f1052694033fa2779113ddc002206c8006ada310edf099fb22c0c12073550c8fc73247b236a974c5f1144831dd5f8114bdf86f3ae715ba346b7772ea0e133f48828b766483148fb40e1ffa5d557ce9851a535af94965e0dd0988',
             },
         },
         {
             payload: {
-                signature: '304402205cc716cd6a3af8f525faff914e737f811a38112ad948676ee260cc0436b72cce02207fba07bf5c4b79680c0ab08b6b4e643a1097c2df8cbf50fd1768c772f73e3138',
-                serializedTx: '12000022800000002400000064201b00051537614000000005f5e109684000000000000064732103503d63adead5038efde53ee6d00e091f68d80095eb65af7a2fdc98e4bc074ae47446304402205cc716cd6a3af8f525faff914e737f811a38112ad948676ee260cc0436b72cce02207fba07bf5c4b79680c0ab08b6b4e643a1097c2df8cbf50fd1768c772f73e31388114f2020b0923eb870997c3c6b914a36304ce91359183148fb40e1ffa5d557ce9851a535af94965e0dd0988',
+                signature: '30450221008770743a472bb2d1c746a53ef131cc17cc118d538ec910ca928d221db4494cf702201e4ef242d6c3bff110c3cc3897a471fed0f5ac10987ea57da63f98dfa01e94df',
+                serializedTx: '120000228000000024000000642e0001e240201b00051537614000000005f5e109684000000000000064732103dbed1e77cb91a005e2ec71afbccce5444c9be58276665a3859040f692de8fed2744730450221008770743a472bb2d1c746a53ef131cc17cc118d538ec910ca928d221db4494cf702201e4ef242d6c3bff110c3cc3897a471fed0f5ac10987ea57da63f98dfa01e94df8114bdf86f3ae715ba346b7772ea0e133f48828b766483148fb40e1ffa5d557ce9851a535af94965e0dd0988',
             },
         },
         { success: false },
@@ -75,7 +93,7 @@ export const rippleSignTransaction = (): TestFunction => {
     const testName = 'RippleSignTransaction';
     return {
         testName,
-        mnemonic: 'mnemonic_12',
+        mnemonic: 'mnemonic_all',
         testPayloads,
         expectedResponses,
     };

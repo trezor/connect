@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 export const PERMISSIONS_KEY: string = 'trezorconnect_permissions';
 export const CONFIRMATION_KEY: string = 'trezorconnect_confirmations';

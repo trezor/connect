@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { validateParams } from './paramsValidator';
 
@@ -22,13 +21,18 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
     const lastOp: boolean = (index + 1 >= operations.length);
     const op = operations[index];
     const type: string = op.type;
-    delete op.type;
 
     if (lastOp) {
-        const response: MessageResponse<StellarSignedTx> = await typedCall(type, 'StellarSignedTx', op);
+        const response: MessageResponse<StellarSignedTx> = await typedCall(type, 'StellarSignedTx', {
+            ...op,
+            type: null, // 'type' is not a protobuf field and needs to be removed
+        });
         return response.message;
     } else {
-        await typedCall(type, 'StellarTxOpRequest', op);
+        await typedCall(type, 'StellarTxOpRequest', {
+            ...op,
+            type: null, // 'type' is not a protobuf field and needs to be removed
+        });
     }
 
     return await processTxRequest(
@@ -63,12 +67,12 @@ export const stellarSignTx = async (typedCall: (type: string, resType: string, m
 // transform incoming parameters to protobuf messages format
 const transformSignMessage = (tx: $StellarTransaction): StellarSignTxMessage => {
     // timebounds_start and timebounds_end are the only fields which needs to be converted to number
-    const timebounds = tx.timebounds ? {
+    const timebounds: ?$Shape<StellarSignTxMessage> = tx.timebounds ? {
         timebounds_start: tx.timebounds.minTime,
         timebounds_end: tx.timebounds.maxTime,
     } : undefined;
 
-    const memo = tx.memo ? {
+    const memo: ?$Shape<StellarSignTxMessage> = tx.memo ? {
         memo_type: tx.memo.type,
         memo_text: tx.memo.text,
         memo_id: tx.memo.id,

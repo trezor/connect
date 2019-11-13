@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 export function clone<T>(obj: T): T {
     const jsonString = JSON.stringify(obj);
@@ -34,7 +33,7 @@ export function snapshot(obj: any) {
     const temp = new obj.constructor();
 
     for (const key in obj) {
-        if (obj.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
             temp[key] = snapshot(obj[key]);
         }
     }

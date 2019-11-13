@@ -182,10 +182,10 @@ export default async (typedCall: (type: string, resType: string, msg: Object) =>
     const serializedTx: {serialized: string} = {serialized: ''};
 
     const response: DefaultMessageResponse = await typedCall('SignTx', 'TxRequest', {
+        ...options,
         inputs_count: inputs.length,
         outputs_count: outputs.length,
         coin_name: coinInfo.name,
-        ...options,
     });
 
     const signed: SignedTx = await processTxRequest(

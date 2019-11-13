@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 // slight hack to make Flow happy, but to allow Node to set its own fetch
 // Request, RequestOptions and Response are built-in types of Flow for fetch API

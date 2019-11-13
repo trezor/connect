@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 export const CORE_EVENT: 'CORE_EVENT' = 'CORE_EVENT';
 export const UI_EVENT: 'UI_EVENT' = 'UI_EVENT';

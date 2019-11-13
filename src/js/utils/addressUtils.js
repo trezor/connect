@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { address as BitcoinJSAddress } from '@trezor/utxo-lib';
 import bchaddrjs from 'bchaddrjs';

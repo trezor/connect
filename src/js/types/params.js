@@ -8,11 +8,11 @@ import type {
 } from './trezor';
 import type { AccountAddresses, AccountUtxo } from './account';
 
-export type $BlockchainDisconnect = {
+export type $BlockchainDisconnect = {|
     coin: string,
-}
+|}
 
-export type $BlockchainEstimateFee = {
+export type $BlockchainEstimateFee = {|
     coin: string,
     request?: {
         blocks?: number[],
@@ -25,24 +25,24 @@ export type $BlockchainEstimateFee = {
         },
         feeLevels?: 'preloaded' | 'smart',
     },
-}
+|}
 
 export type SubscriptionAccountInfo = {
     descriptor: string,
     addresses?: AccountAddresses, // bitcoin addresses
 }
 
-export type $BlockchainGetTransactions = {
+export type $BlockchainGetTransactions = {|
     coin: string,
     txs: string[],
-}
+|}
 
-export type $BlockchainSubscribe = {
+export type $BlockchainSubscribe = {|
     coin: string,
     accounts: SubscriptionAccountInfo[],
-}
+|}
 
-export type $Common = {
+export type $Common = {|
     device?: {
         path: string,
         instance?: ?number,
@@ -52,7 +52,7 @@ export type $Common = {
     allowSeedlessDevice?: boolean,
     keepSession?: boolean,
     skipFinalReload?: boolean,
-}
+|}
 
 export type $Path = string | Array<number>;
 
@@ -114,11 +114,11 @@ export type $DebugLinkDecision = DebugLinkDecision & {
     },
 }
 
-export type $DebugLinkGetState = {
+export type $DebugLinkGetState = {|
     device: {
         path: string,
     },
-}
+|}
 
 export type $GetAccountInfo = $Common & {
     coin: string,

@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 import { create as createDeferred } from '../utils/deferred';
 import * as IFRAME from '../constants/iframe';
@@ -114,6 +113,7 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
             if (instance.parentNode) {
                 instance.parentNode.removeChild(instance);
             }
+            // eslint-disable-next-line require-atomic-updates
             instance = null;
         }
         throw error.message || error;

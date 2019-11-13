@@ -1,5 +1,4 @@
 /* @flow */
-'use strict';
 
 export class TrezorError extends Error {
     code: number | string;
