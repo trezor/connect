@@ -2,7 +2,7 @@
 
 import { getCoinName } from '../data/CoinInfo';
 import { invalidParameter } from '../constants/errors';
-import type { BitcoinNetworkInfo } from '../types';
+import type { BitcoinNetworkInfo, CoinInfo } from '../types';
 import type { InputScriptType, OutputScriptType } from '../types/trezor';
 
 export const HD_HARDENED: number = 0x80000000;
@@ -185,7 +185,7 @@ export const getPublicKeyLabel = (path: Array<number>, coinInfo: ?BitcoinNetwork
     }
 };
 
-export const getLabel = (label: string, coinInfo: ?BitcoinNetworkInfo): string => {
+export const getLabel = (label: string, coinInfo: ?CoinInfo): string => {
     if (coinInfo) {
         return label.replace('#NETWORK', coinInfo.label);
     }
