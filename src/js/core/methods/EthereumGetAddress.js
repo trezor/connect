@@ -4,8 +4,7 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getSerializedPath } from '../../utils/pathUtils';
 import { getNetworkLabel, stripHexPrefix } from '../../utils/ethereumUtils';
-import { getEthereumNetwork } from '../../data/CoinInfo';
-import { uniq } from 'lodash';
+import { getEthereumNetwork, getUniqueNetworks } from '../../data/CoinInfo';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
@@ -52,11 +51,11 @@ export default class EthereumGetAddress extends AbstractMethod {
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
-            const path: Array<number> = validatePath(batch.path, 3);
-            const network: ?EthereumNetworkInfo = getEthereumNetwork(path);
+            const path = validatePath(batch.path, 3);
+            const network = getEthereumNetwork(path);
             this.firmwareRange = getFirmwareRange(this.name, network, this.firmwareRange);
 
-            let showOnTrezor: boolean = true;
+            let showOnTrezor = true;
             if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
@@ -73,8 +72,8 @@ export default class EthereumGetAddress extends AbstractMethod {
         if (bundle.length === 1) {
             this.info = getNetworkLabel('Export #NETWORK address', bundle[0].network);
         } else {
-            const requestedNetworks: Array<?EthereumNetworkInfo> = bundle.map(b => b.network);
-            const uniqNetworks = uniq(requestedNetworks);
+            const requestedNetworks = bundle.map(b => b.network);
+            const uniqNetworks = getUniqueNetworks(requestedNetworks);
             if (uniqNetworks.length === 1 && uniqNetworks[0]) {
                 this.info = getNetworkLabel('Export multiple #NETWORK addresses', uniqNetworks[0]);
             } else {

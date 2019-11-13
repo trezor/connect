@@ -3,9 +3,8 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getLabel, getSerializedPath } from '../../utils/pathUtils';
-import { getBitcoinNetwork, fixCoinInfoNetwork } from '../../data/CoinInfo';
+import { getBitcoinNetwork, fixCoinInfoNetwork, getUniqueNetworks } from '../../data/CoinInfo';
 import { NO_COIN_INFO } from '../../constants/errors';
-import { uniqBy } from 'lodash';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
@@ -96,8 +95,8 @@ export default class GetAddress extends AbstractMethod {
         if (bundle.length === 1) {
             this.info = getLabel('Export #NETWORK address', bundle[0].coinInfo);
         } else {
-            const requestedNetworks: Array<?BitcoinNetworkInfo> = bundle.map(b => b.coinInfo);
-            const uniqNetworks = uniqBy(requestedNetworks, (ci) => { return ci ? ci.shortcut : null; });
+            const requestedNetworks = bundle.map(b => b.coinInfo);
+            const uniqNetworks = getUniqueNetworks(requestedNetworks);
             if (uniqNetworks.length === 1 && uniqNetworks[0]) {
                 this.info = getLabel('Export multiple #NETWORK addresses', uniqNetworks[0]);
             } else {

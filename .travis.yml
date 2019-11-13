@@ -9,6 +9,8 @@ script:
   - npm install -g yarn
   - yarn
   - yarn flow
+  - yarn eslint
+  - yarn test:unit
   - make build-connect
 
 notifications:

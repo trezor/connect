@@ -1,6 +1,6 @@
 /* @flow */
 import createKeccakHash from 'keccak';
-import type { EthereumNetworkInfo } from '../types';
+import type { EthereumNetworkInfo, CoinInfo } from '../types';
 
 const hasHexPrefix = (str: string): boolean => {
     return str.slice(0, 2).toLowerCase() === '0x';
@@ -27,7 +27,7 @@ export const toChecksumAddress = (address: string, network: ?EthereumNetworkInfo
     return response;
 };
 
-export const getNetworkLabel = (label: string, network: ?EthereumNetworkInfo): string => {
+export const getNetworkLabel = (label: string, network: ?CoinInfo): string => {
     if (network) {
         const name: string = network.name.toLowerCase().indexOf('testnet') >= 0 ? 'Testnet' : network.name;
         return label.replace('#NETWORK', name);

@@ -10,6 +10,8 @@ build:
     - npm install -g yarn
     - yarn
     - yarn flow
+    - yarn eslint
+    - yarn test:unit
     - make build-connect
   artifacts:
     expire_in: 1 week
