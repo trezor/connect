@@ -15,13 +15,15 @@
     "plugins": [
         "standard",
         "promise",
-        "flowtype"
+        "flowtype",
+        "jest"
     ],
     "env": {
         "es6": true,
         "node": true,
         "browser": true,
-        "webextensions": true
+        "webextensions": true,
+        "jest": true
     },
     "globals": {
 
