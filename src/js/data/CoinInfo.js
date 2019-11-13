@@ -323,3 +323,10 @@ export const parseCoinsJson = (json: JSON): void => {
         }
     });
 };
+
+export const getUniqueNetworks = (networks: Array<?CoinInfo>): CoinInfo[] => {
+    return networks.reduce((result: CoinInfo[], info: ?CoinInfo) => {
+        if (!info || result.find(i => i.shortcut === info.shortcut)) return result;
+        return result.concat(info);
+    }, []);
+};

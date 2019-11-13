@@ -2,7 +2,7 @@
 
 import { coins as BitcoinJSCoins } from '@trezor/utxo-lib';
 // local modules
-import { uniq, reverseBuffer } from '../../../utils/bufferUtils';
+import { reverseBuffer } from '../../../utils/bufferUtils';
 
 // npm types
 import type {
@@ -14,13 +14,17 @@ import type { BuildTxInput } from 'hd-wallet';
 // local types
 import type { RefTransaction } from '../../../types/trezor';
 
-// Get array of referenced transactions ids
+// Get array of unique referenced transactions ids
 export const getReferencedTransactions = (inputs: Array<BuildTxInput>): Array<string> => {
     const legacyInputs = inputs.filter(utxo => !utxo.segwit);
     if (legacyInputs.length < 1) {
         return [];
     }
-    return uniq(legacyInputs, utxo => reverseBuffer(utxo.hash).toString('hex')).map(tx => reverseBuffer(tx.hash).toString('hex'));
+    return legacyInputs.reduce((result: string[], utxo: BuildTxInput) => {
+        const hash = reverseBuffer(utxo.hash).toString('hex');
+        if (result.includes(hash)) return result;
+        return result.concat(hash);
+    }, []);
 };
 
 // Transform referenced transactions from Bitcore to Trezor format
