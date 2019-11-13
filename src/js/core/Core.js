@@ -300,7 +300,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         postMessage(new UiMessage(UI.BROWSER_NOT_SUPPORTED, browserState));
         postMessage(new ResponseMessage(responseID, false, { error: ERROR.BROWSER_NOT_SUPPORTED.message }));
         throw ERROR.BROWSER_NOT_SUPPORTED;
-    } else if (browserState.outdated) {
+    }
+    if (browserState.outdated) {
         if (isUsingPopup) {
             // wait for popup handshake
             await getPopupPromise().promise;
@@ -311,6 +312,13 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             // just show message about browser
             postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));
         }
+    }
+    if (browserState.experimental) {
+        if (isUsingPopup) {
+            // wait for popup handshake
+            await getPopupPromise().promise;
+        }
+        postMessage(new UiMessage(UI.BROWSER_EXPERIMENTAL, browserState));
     }
 
     if (isUsingPopup && method.requiredPermissions.includes('management') && !DataManager.isManagementAllowed()) {

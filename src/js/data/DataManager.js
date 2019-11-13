@@ -28,6 +28,7 @@ type Browser = {
     +version: number,
     +download: string,
     +update: string,
+    +experimental?: boolean,
 }
 type Resources = {
     bridge: string,

@@ -91,12 +91,14 @@
         "safari": {
             "version": 13,
             "download": "https://support.apple.com/downloads/safari",
-            "update": "https://support.apple.com/downloads/safari"
+            "update": "https://support.apple.com/downloads/safari",
+            "experimental": true
         },
         "opera": {
             "version": 64,
             "download": "https://www.opera.com/download",
-            "update": "https://www.opera.com/download"
+            "update": "https://www.opera.com/download",
+            "experimental": true
         }
     },
     "supportedFirmware": [

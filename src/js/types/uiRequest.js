@@ -157,7 +157,7 @@ export type SelectDevice = {
 }
 
 export type BrowserMessage = {
-    +type: typeof UI.BROWSER_NOT_SUPPORTED | typeof UI.BROWSER_OUTDATED,
+    +type: typeof UI.BROWSER_NOT_SUPPORTED | typeof UI.BROWSER_OUTDATED | typeof UI.BROWSER_EXPERIMENTAL,
     payload: BrowserState,
 }
 

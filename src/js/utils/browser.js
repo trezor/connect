@@ -8,6 +8,7 @@ type State = {
     osname: string,
     supported: boolean,
     outdated: boolean,
+    experimental: boolean,
     mobile: boolean,
 }
 
@@ -16,6 +17,7 @@ export const state: State = {
     osname: 'unknown',
     supported: false,
     outdated: false,
+    experimental: false,
     mobile: false,
 };
 
@@ -33,10 +35,11 @@ export const checkBrowser = (): State => {
     if (state.mobile && typeof navigator.usb === 'undefined') {
         state.supported = false;
     } else {
-        const isSupported: any = supported[browser.name.toLowerCase()];
-        if (isSupported) {
+        const supportedBrowser = supported[browser.name.toLowerCase()];
+        if (supportedBrowser) {
             state.supported = true;
-            state.outdated = isSupported.version > parseInt(browser.version, 10);
+            state.outdated = supportedBrowser.version > parseInt(browser.version, 10);
+            state.experimental = supportedBrowser.experimental;
         }
     }
 

@@ -14,6 +14,7 @@ export const FIRMWARE_NOT_INSTALLED: 'ui-device_firmware_not_installed' = 'ui-de
 export const DEVICE_NEEDS_BACKUP: 'ui-device_needs_backup' = 'ui-device_needs_backup';
 export const BROWSER_NOT_SUPPORTED: 'ui-browser_not_supported' = 'ui-browser_not_supported';
 export const BROWSER_OUTDATED: 'ui-browser_outdated' = 'ui-browser_outdated';
+export const BROWSER_EXPERIMENTAL: 'ui-browser_experimental' = 'ui-browser_experimental';
 export const RECEIVE_BROWSER: 'ui-receive_browser' = 'ui-receive_browser';
 
 export const REQUEST_UI_WINDOW: 'ui-request_window' = 'ui-request_window';

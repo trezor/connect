@@ -10,7 +10,12 @@ import { getOrigin } from '../env/browser/networkUtils';
 
 import * as view from './view';
 import { showView, postMessage, setOperation, initMessageChannel, postMessageToParent } from './view/common';
-import { showFirmwareUpdateNotification, showBridgeUpdateNotification, showBackupNotification } from './view/notification';
+import {
+    showFirmwareUpdateNotification,
+    showBridgeUpdateNotification,
+    showBackupNotification,
+    showBrowserExperimentalNotification,
+} from './view/notification';
 
 import type { CoreMessage, PostMessageEvent } from '../types';
 import type { PopupInit, PopupHandshake } from '../types/uiRequest';
@@ -104,7 +109,9 @@ const handleMessage = (event: PostMessageEvent): void => {
         case UI.BROWSER_OUTDATED :
             view.initBrowserView(message.payload);
             break;
-
+        case UI.BROWSER_EXPERIMENTAL :
+            showBrowserExperimentalNotification(message.payload);
+            break;
         case UI.REQUEST_PERMISSION :
             view.initPermissionsView(message.payload);
             break;
