@@ -3,7 +3,6 @@
 
 import { testFunctions } from './index.js';
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
-import { checkBrowser } from '../../js/utils/browser';
 import { settings, testReporter } from './common.js';
 import { CoreEventHandler } from './CoreEventHandler.js';
 
@@ -62,7 +61,6 @@ const MNEMONICS_SECRET = {
 
 const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> => {
     core = await initCore(settings);
-    checkBrowser();
 
     const mnemonics = Array.isArray(test.mnemonic) ? test.mnemonic : MNEMONICS[test.mnemonic];
     const mnemonicsSecret = typeof test.mnemonic_secret === 'string' ? test.mnemonic_secret : typeof test.mnemonic === 'string' ? MNEMONICS_SECRET[test.mnemonic] : null;

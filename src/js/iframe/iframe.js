@@ -17,9 +17,8 @@ import type { CoreMessage, PostMessageEvent } from '../types';
 
 import Log, { init as initLog } from '../utils/debug';
 import { sendMessage } from '../utils/windowsUtils';
-import { checkBrowser, state as browserState } from '../utils/browser';
 import { getOrigin } from '../env/browser/networkUtils';
-import { load as loadStorage, PERMISSIONS_KEY } from './storage';
+import { load as loadStorage, PERMISSIONS_KEY } from '../storage';
 let _core: Core;
 
 // custom log
@@ -195,19 +194,12 @@ const init = async (payload: any, origin: string) => {
         _core = await initCore(parsedSettings);
         _core.on(CORE_EVENT, postMessage);
 
-        // check if browser is supported
-        checkBrowser();
-        if (browserState.supported) {
-            // initialize transport and wait for the first transport event (start or error)
-            await initTransport(parsedSettings);
-        }
+        // initialize transport and wait for the first transport event (start or error)
+        await initTransport(parsedSettings);
 
-        postMessage(new UiMessage(IFRAME.LOADED, {
-            browser: browserState,
-        }));
+        postMessage(new UiMessage(IFRAME.LOADED));
     } catch (error) {
         postMessage(new UiMessage(IFRAME.ERROR, {
-            browser: browserState,
             error: error.message,
         }));
     }

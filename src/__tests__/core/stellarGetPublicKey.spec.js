@@ -2,7 +2,6 @@
 /* eslint-disable */
 
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
-import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 export const stellarGetPublicKeyTests = (): void => {
@@ -11,7 +10,6 @@ export const stellarGetPublicKeyTests = (): void => {
 
         beforeEach(async (done) => {
             core = await initCore(settings);
-            checkBrowser();
             done();
         });
         afterEach(() => {

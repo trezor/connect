@@ -5,7 +5,6 @@
 // https://github.com/trezor/trezor-firmware/blob/master/tests/device_tests/test_msg_stellar_sign_transaction.py
 
 import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
-import { checkBrowser } from '../../js/utils/browser';
 import { settings, CoreEventHandler } from './common.js';
 
 const header = {
