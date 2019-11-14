@@ -1,5 +1,6 @@
 /* @flow */
 
+export const BROWSER_KEY: string = 'trezorconnect_browser';
 export const PERMISSIONS_KEY: string = 'trezorconnect_permissions';
 export const CONFIRMATION_KEY: string = 'trezorconnect_confirmations';
 
