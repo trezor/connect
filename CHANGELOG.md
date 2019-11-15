@@ -1,3 +1,10 @@
+# 8.0.10
+#### Fixed
+- Browser validation moved from Core to popup, not restricted anymore
+- Browser validation
+#### Updated
+- Update outdated and remove unused node_modules dependencies
+
 # 8.0.9
 #### Fixed
 - `getAccountInfo` bump @trezor/blockchain-link version with fixed ripple auto reconnection and ripple-lib issue https://github.com/ripple/ripple-lib/issues/1066

@@ -34,11 +34,11 @@ build-test:
 
 # Version bump
 version-patch:
-	yarn bump --patch --grep ./README.md ./src/js/data/ConnectSettings.js ./src/js/plugins/webextension/trezor-usb-permissions.js
+	yarn bump patch ./package.json ./README.md ./src/js/data/ConnectSettings.js ./src/js/plugins/webextension/trezor-usb-permissions.js
 version-minor:
-	yarn bump --minor --grep ./README.md ./src/js/data/ConnectSettings.js ./src/js/plugins/webextension/trezor-usb-permissions.js
+	yarn bump minor ./package.json ./README.md ./src/js/data/ConnectSettings.js ./src/js/plugins/webextension/trezor-usb-permissions.js
 version-major:
-	yarn bump --major --grep ./README.md ./src/js/data/ConnectSettings.js ./src/js/plugins/webextension/trezor-usb-permissions.js
+	yarn bump major ./package.json ./README.md ./src/js/data/ConnectSettings.js ./src/js/plugins/webextension/trezor-usb-permissions.js
 
 # Sync build
 sync-%:

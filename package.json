@@ -1,6 +1,6 @@
 {
   "name": "trezor-connect",
-  "version": "8.0.9",
+  "version": "8.0.10",
   "author": "Trezor <info@trezor.io>",
   "homepage": "https://github.com/trezor/connect",
   "description": "High-level javascript interface for Trezor hardware wallet.",
@@ -29,9 +29,6 @@
     "./lib/env/node/workers": "./lib/env/react-native/workers",
     "./lib/env/node/networkUtils": "./lib/env/react-native/networkUtils"
   },
-  "bin": {
-    "bump": "./node_modules/version-bump-prompt/bin/bump"
-  },
   "scripts": {
     "dev": "webpack-dev-server --config ./webpack/config.dev.babel.js --mode development",
     "build": "rm -rf build && webpack --config ./webpack/config.prod.babel.js --progress",
@@ -48,8 +45,7 @@
     "eslint": "eslint src/js",
     "eslint-tests": "eslint src/__tests__",
     "eslint-tests-fix": "eslint --fix src/__tests__",
-    "eslint-fix": "eslint --fix src/js",
-    "bump": "bump --patch"
+    "eslint-fix": "eslint --fix src/js"
   },
   "devDependencies": {
     "@babel/cli": "^7.7.0",
