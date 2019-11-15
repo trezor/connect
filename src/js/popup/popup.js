@@ -137,7 +137,8 @@ const init = async (payload: $PropertyType<PopupInit, 'payload'>) => {
     const { settings } = payload;
 
     try {
-        // load assets
+        // load config only to get supported browsers list.
+        // local settings will be replaced after POPUP.HANDSHAKE event from iframe
         await DataManager.load(settings, false);
         // initialize message channel
         const broadcastID = `${settings.env}-${settings.timestamp}`;
@@ -154,11 +155,12 @@ const init = async (payload: $PropertyType<PopupInit, 'payload'>) => {
 // handle POPUP.HANDSHAKE message from iframe
 const handshake = async (payload: $PropertyType<PopupHandshake, 'payload'>) => {
     if (!payload) return;
+    // replace local settings with values from iframe (parent origin etc.)
+    DataManager.settings = payload.settings;
     setOperation(payload.method || '');
     if (payload.transport && payload.transport.outdated) {
         showBridgeUpdateNotification();
     }
-    // postMessage(new UiMessage(POPUP.HANDSHAKE));
 };
 
 const onLoad = () => {
