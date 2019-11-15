@@ -1,4 +1,6 @@
 # 8.0.10
+#### Added
+- Jest unit tests
 #### Fixed
 - Browser validation moved from Core to popup, not restricted anymore
 - Browser validation
