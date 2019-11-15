@@ -123,7 +123,6 @@
     "bowser": "^2.7.0",
     "hd-wallet": "9.0.0-bigint.6",
     "keccak": "^2.0.0",
-    "lodash": "^4.17.15",
     "node-fetch": "^2.6.0",
     "parse-uri": "^1.0.0",
     "tiny-worker": "^2.3.0",
