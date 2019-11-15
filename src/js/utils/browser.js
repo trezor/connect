@@ -1,9 +1,7 @@
 /* @flow */
-
 import Bowser from 'bowser';
-import DataManager from '../data/DataManager';
 
-type State = {
+export type BrowserState = {
     name: string,
     osname: string,
     supported: boolean,
@@ -11,7 +9,7 @@ type State = {
     mobile: boolean,
 }
 
-export const state: State = {
+export const state: BrowserState = {
     name: 'unknown',
     osname: 'unknown',
     supported: false,
@@ -19,28 +17,35 @@ export const state: State = {
     mobile: false,
 };
 
-export const checkBrowser = (): State => {
-    if (typeof window === 'undefined') {
-        state.name = 'nodejs';
-        state.supported = true;
-        return state;
-    }
+export type Browser = {
+    version: number,
+    download: string,
+    update: string,
+}
+
+export const getBrowserState = (supportedBrowsers: { [key: string]: Browser }): BrowserState => {
+    if (typeof window === 'undefined') return state;
     const { browser, os, platform } = Bowser.parse(window.navigator.userAgent);
-    const supported = DataManager.getConfig().supportedBrowsers;
-    state.name = `${browser.name}: ${browser.version}; ${os.name}: ${os.version};`;
-    state.mobile = platform.type !== 'desktop';
-    state.osname = os.name;
-    if (state.mobile && typeof navigator.usb === 'undefined') {
-        state.supported = false;
-    } else {
-        const isSupported: any = supported[browser.name.toLowerCase()];
-        if (isSupported) {
-            state.supported = true;
-            state.outdated = isSupported.version > parseInt(browser.version, 10);
-        }
+    const mobile = platform.type !== 'desktop';
+    let supported = !!supportedBrowsers[browser.name.toLowerCase()];
+    let outdated = false;
+
+    if (mobile && typeof navigator.usb === 'undefined') {
+        supported = false;
+    }
+    if (supported) {
+        const { version } = supportedBrowsers[browser.name.toLowerCase()];
+        outdated = version > parseInt(browser.version, 10);
+        supported = !outdated;
     }
 
-    return state;
+    return {
+        name: `${browser.name}: ${browser.version}; ${os.name}: ${os.version};`,
+        osname: os.name,
+        mobile,
+        supported,
+        outdated,
+    };
 };
 
 // Parse JSON loaded from config.assets.bridge

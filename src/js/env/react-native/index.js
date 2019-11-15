@@ -4,7 +4,6 @@ import EventEmitter from 'events';
 import { parse as parseSettings } from '../../data/ConnectSettings';
 import Log, { init as initLog } from '../../utils/debug';
 
-import { state as browserState } from '../../utils/browser';
 import { Core, init as initCore, initTransport } from '../../core/Core';
 import { create as createDeferred } from '../../utils/deferred';
 
@@ -122,10 +121,6 @@ export const init = async (settings: Object = {}): Promise<void> => {
         throw ERROR.MANIFEST_NOT_SET;
     }
 
-    if (!_settings.supportedBrowser) {
-        throw ERROR.BROWSER_NOT_SUPPORTED;
-    }
-
     if (_settings.lazyLoad) {
         // reset "lazyLoad" after first use
         _settings.lazyLoad = false;
@@ -133,10 +128,6 @@ export const init = async (settings: Object = {}): Promise<void> => {
     }
 
     _log.enabled = _settings.debug;
-
-    // instead of "checkBrowser"
-    browserState.name = 'nodejs';
-    browserState.supported = true;
 
     _core = await initCore(_settings);
     _core.on(CORE_EVENT, handleMessage);

@@ -1136,17 +1136,17 @@
         <!-- Firmware not compatible: END -->
 
         <!-- Browser not supported -->
-        <div class="browser">
+        <div class="browser-not-supported">
             <div>
-                <h3></h3>
-                <p></p>
+                <h3>Unsupported browser</h3>
+                <p>The web browser you're using has not been tested, and you may experience limited functionality.</p>
+                <p>We recommend that you use one of the officially supported web browsers.</p>
             </div>
 
             <div class="wrapper">
                 <a href="https://www.google.com/chrome/" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">
                     <div class="icon">
                         <svg width="42px" height="42px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <title>Chrome</title>
                             <defs>
                                 <path d="M18.0935073,41.2980057 C7.88534838,39.979161 0,31.2757197 0,20.7354476 C0,16.5738044 1.22926896,12.69851 3.345424,9.45103782 L12.1228849,24.6540461 C13.6185445,27.9396056 16.9370531,30.2245507 20.7906603,30.2245507 C22.3303089,30.2245507 23.7845408,29.8598101 25.0712277,29.2122395 L18.0935073,41.2980057 Z M19.6351374,41.4394102 L28.0406785,26.8805858 C29.452872,25.2249418 30.3050303,23.0794465 30.3050303,20.7354476 C30.3050303,17.3181925 28.4938559,14.3228365 25.7766688,12.6521375 L39.9423353,12.6521375 C40.9976526,15.1361324 41.5813207,17.8678095 41.5813207,20.7354476 C41.5813207,32.1873191 32.273025,41.4708952 20.7906603,41.4708952 C20.4029153,41.4708952 20.0176494,41.4603088 19.6351374,41.4394102 Z M4.23845803,8.18623351 C8.03623185,3.21125967 14.0374326,0 20.7906603,0 C28.8444148,0 35.8286037,4.56719338 39.2814537,11.2463444 L20.4382763,11.2463444 L20.4382763,11.2527322 C15.4628168,11.4334027 11.4621873,15.4243778 11.2825853,20.3870184 L4.23845892,8.18623355 Z M20.7906603,28.1158611 C16.703717,28.1158611 13.3905948,24.8115374 13.3905948,20.7354476 C13.3905948,16.6593577 16.703717,13.355034 20.7906603,13.355034 C24.8776037,13.355034 28.1907259,16.6593577 28.1907259,20.7354476 C28.1907259,24.8115374 24.8776037,28.1158611 20.7906603,28.1158611 Z"
                                     id="path-1"></path>
@@ -1192,7 +1192,6 @@
                 <a href="https://www.mozilla.org/firefox/new/" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">
                     <div class="icon">
                         <svg width="43px" height="43px" viewBox="0 0 43 43" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <title>Firefox</title>
                             <defs>
                                 <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
                                     <stop stop-color="#FACC31" offset="0%"></stop>
@@ -1223,6 +1222,14 @@
                         <p>Firefox</p>
                     </div>
                 </a>
+            </div>
+            <div class="buttons">
+                <button class="cancel">I acknowledge and wish to continue</button>
+                <label class="custom-checkbox">
+                    <input class="remember-permissions" type="checkbox" />
+                    <span class="indicator"></span>
+                    Don't warn me again
+                </label>
             </div>
         </div>
         <!-- Browser not supported: END -->
@@ -1317,7 +1324,7 @@
                 </svg>
             </div>
 
-            <button class="cancel">Close</button>
+            <button class="cancel" onclick="window.closeWindow();">Close</button>
         </div>
         <!-- Smartphones not supported: END -->
 

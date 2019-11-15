@@ -19,14 +19,6 @@ export type TransportInfo = {
     outdated: boolean,
 }
 
-export type BrowserState = {
-    name: string,
-    osname: string,
-    supported: boolean,
-    outdated: boolean,
-    mobile: boolean,
-}
-
 /*
 * Messages without payload
 */
@@ -34,9 +26,9 @@ export type BrowserState = {
 export type MessageWithoutPayload = {
     +type: typeof UI.REQUEST_UI_WINDOW |
         typeof POPUP.CANCEL_POPUP_REQUEST |
+        typeof IFRAME.LOADED |
         typeof POPUP.LOADED |
         typeof UI.TRANSPORT |
-        typeof UI.RECEIVE_BROWSER |
         typeof UI.CHANGE_ACCOUNT |
         typeof UI.INSUFFICIENT_FUNDS |
         typeof UI.CLOSE_UI_WINDOW |
@@ -86,17 +78,9 @@ export type AddressValidationMessage = {
 * Messages to UI
 */
 
-export type IFrameLoaded = {
-    +type: typeof IFRAME.LOADED,
-    payload: {
-        browser: BrowserState,
-    },
-}
-
 export type IFrameError = {
     type: typeof IFRAME.ERROR,
     payload: {
-        browser: BrowserState,
         error: string,
     },
 }
@@ -154,11 +138,6 @@ export type SelectDevice = {
         devices: Array<Device>,
         webusb: boolean,
     },
-}
-
-export type BrowserMessage = {
-    +type: typeof UI.BROWSER_NOT_SUPPORTED | typeof UI.BROWSER_OUTDATED,
-    payload: BrowserState,
 }
 
 export type UnexpectedDeviceMode = {
@@ -221,12 +200,10 @@ export type FirmwareProgress = {
 export type UiRequest =
     MessageWithoutPayload
     | DeviceMessage
-    | IFrameLoaded
     | PopupHandshake
     | RequestPermission
     | RequestConfirmation
     | SelectDevice
-    | BrowserMessage
     | UnexpectedDeviceMode
     | SelectAccount
     | SelectFee
@@ -238,14 +215,12 @@ declare function MessageFactory(type: $PropertyType<MessageWithoutPayload, 'type
 declare function MessageFactory(type: $PropertyType<DeviceMessage, 'type'>, payload: $PropertyType<DeviceMessage, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<ButtonRequestMessage, 'type'>, payload: $PropertyType<ButtonRequestMessage, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<AddressValidationMessage, 'type'>, payload: $PropertyType<AddressValidationMessage, 'payload'>): CoreMessage;
-declare function MessageFactory(type: $PropertyType<IFrameLoaded, 'type'>, payload: $PropertyType<IFrameLoaded, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<IFrameError, 'type'>, payload: $PropertyType<IFrameError, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<PopupError, 'type'>, payload: $PropertyType<PopupError, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<PopupHandshake, 'type'>, payload: $PropertyType<PopupHandshake, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<RequestPermission, 'type'>, payload: $PropertyType<RequestPermission, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<RequestConfirmation, 'type'>, payload: $PropertyType<RequestConfirmation, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<SelectDevice, 'type'>, payload: $PropertyType<SelectDevice, 'payload'>): CoreMessage;
-declare function MessageFactory(type: $PropertyType<BrowserMessage, 'type'>, payload: $PropertyType<BrowserMessage, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<UnexpectedDeviceMode, 'type'>, payload: $PropertyType<UnexpectedDeviceMode, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<FirmwareException, 'type'>, payload: $PropertyType<FirmwareException, 'payload'>): CoreMessage;
 declare function MessageFactory(type: $PropertyType<SelectAccount, 'type'>, payload: $PropertyType<SelectAccount, 'payload'>): CoreMessage;

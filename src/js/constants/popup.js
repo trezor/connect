@@ -10,7 +10,7 @@ export const INIT: 'popup-init' = 'popup-init';
 export const ERROR: 'popup-error' = 'popup-error';
 // Message to webextensions, opens "trezor-usb-permission.html" within webextension
 export const EXTENSION_USB_PERMISSIONS: 'open-usb-permissions' = 'open-usb-permissions';
-// Message called from both [popup > iframe] then [popup > iframe > popup] in this exact order.
+// Message called from both [popup > iframe] then [iframe > popup] in this exact order.
 // Firstly popup call iframe to resolve popup promise in Core
 // Then iframe reacts to POPUP.HANDSHAKE message and sends ConnectSettings, transport information and requested method details back to popup
 export const HANDSHAKE: 'popup-handshake' = 'popup-handshake';

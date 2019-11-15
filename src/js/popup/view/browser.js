@@ -1,18 +1,55 @@
 /* @flow */
+import { container, showView, postMessage } from './common';
+import { UiMessage } from '../../message/builder';
+import DataManager from '../../data/DataManager';
+import * as POPUP from '../../constants/popup';
+import { load as loadStorage, save as saveStorage, BROWSER_KEY } from '../../storage';
+import { getBrowserState } from '../../utils/browser';
 
-import { container, showView } from './common';
-import type { BrowserMessage } from '../../types/uiRequest';
+const validateBrowser = () => {
+    const state = getBrowserState(DataManager.getConfig().supportedBrowsers);
+    if (!state.supported) {
+        const permitted = loadStorage(BROWSER_KEY);
+        return !permitted ? state : null;
+    }
+    return;
+};
 
-export const initBrowserView = (payload: $PropertyType<BrowserMessage, 'payload'>): void => {
-    showView(!payload.supported && payload.mobile ? 'smartphones-not-supported' : 'browser');
+export const initBrowserView = (validation: boolean = true) => {
+    if (!validation) {
+        showView('browser-not-supported');
+        const buttons: HTMLElement = container.getElementsByClassName('buttons')[0];
+        if (buttons && buttons.parentNode) {
+            buttons.parentNode.removeChild(buttons);
+        }
+        return;
+    }
+    const state = validateBrowser();
+    if (!state) {
+        postMessage(new UiMessage(POPUP.HANDSHAKE));
+        return;
+    }
+    if (state.mobile) {
+        showView('smartphones-not-supported');
+        return;
+    }
+
+    showView('browser-not-supported');
 
     const h3: HTMLElement = container.getElementsByTagName('h3')[0];
-    const p: HTMLElement = container.getElementsByTagName('p')[0];
-    if (!payload.supported && !payload.mobile) {
-        h3.innerText = 'Unsupported browser';
-        p.innerText = 'Please use one of the supported browsers.';
-    } else if (payload.outdated) {
+    const ackButton: HTMLElement = container.getElementsByClassName('cancel')[0];
+    const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName('remember-permissions')[0]: any);
+
+    if (state.outdated) {
         h3.innerText = 'Outdated browser';
-        p.innerText = 'Please update your browser.';
     }
+
+    ackButton.onclick = () => {
+        if (rememberCheckbox && rememberCheckbox.checked) {
+            saveStorage(BROWSER_KEY, true);
+        }
+
+        postMessage(new UiMessage(POPUP.HANDSHAKE));
+        showView('loader');
+    };
 };
