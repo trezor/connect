@@ -29,7 +29,7 @@ export const initBrowserView = (validation: boolean = true) => {
         postMessage(new UiMessage(POPUP.HANDSHAKE));
         return;
     }
-    if (!state.mobile) {
+    if (state.mobile) {
         showView('smartphones-not-supported');
         return;
     }
