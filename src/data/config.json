@@ -87,18 +87,6 @@
             "version": 54,
             "download": "https://www.mozilla.org/en-US/firefox/new/",
             "update": "https://support.mozilla.org/en-US/kb/update-firefox-latest-version"
-        },
-        "safari": {
-            "version": 13,
-            "download": "https://support.apple.com/downloads/safari",
-            "update": "https://support.apple.com/downloads/safari",
-            "experimental": true
-        },
-        "opera": {
-            "version": 64,
-            "download": "https://www.opera.com/download",
-            "update": "https://www.opera.com/download",
-            "experimental": true
         }
     },
     "supportedFirmware": [
