@@ -40,6 +40,7 @@ delete packageJSON.extendedDependencies;
 delete packageJSON.scripts;
 delete packageJSON.bin;
 delete packageJSON.private;
+packageJSON.version = packageJSON.version + '-extended';
 packageJSON.main = 'lib/index.js';
 
 fse.writeFileSync(path.resolve(npm, 'package.json'), JSON.stringify(packageJSON, null, '  '), 'utf-8');
