@@ -9,12 +9,11 @@ import DataManager from '../data/DataManager';
 import { getOrigin } from '../env/browser/networkUtils';
 
 import * as view from './view';
-import { showView, postMessage, setOperation, initMessageChannel, postMessageToParent } from './view/common';
+import { showView, setOperation, initMessageChannel, postMessageToParent } from './view/common';
 import {
     showFirmwareUpdateNotification,
     showBridgeUpdateNotification,
     showBackupNotification,
-    showBrowserExperimentalNotification,
 } from './view/notification';
 
 import type { CoreMessage, PostMessageEvent } from '../types';
@@ -48,7 +47,7 @@ const handleMessage = (event: PostMessageEvent): void => {
 
     switch (message.type) {
         case UI.LOADING :
-        case UI.REQUEST_UI_WINDOW :
+        // case UI.REQUEST_UI_WINDOW :
             showView('loader');
             break;
         case UI.SET_OPERATION :
@@ -105,13 +104,6 @@ const handleMessage = (event: PostMessageEvent): void => {
         case UI.DEVICE_NEEDS_BACKUP :
             showBackupNotification(message.payload);
             break;
-        case UI.BROWSER_NOT_SUPPORTED :
-        case UI.BROWSER_OUTDATED :
-            view.initBrowserView(message.payload);
-            break;
-        case UI.BROWSER_EXPERIMENTAL :
-            showBrowserExperimentalNotification(message.payload);
-            break;
         case UI.REQUEST_PERMISSION :
             view.initPermissionsView(message.payload);
             break;
@@ -142,18 +134,20 @@ const handleMessage = (event: PostMessageEvent): void => {
 // handle POPUP.INIT message from window.opener
 const init = async (payload: $PropertyType<PopupInit, 'payload'>) => {
     if (!payload) return;
+    const { settings } = payload;
+
     try {
         // load assets
-        await DataManager.load(payload.settings);
+        await DataManager.load(settings, false);
         // initialize message channel
-        const broadcastID = `${payload.settings.env}-${payload.settings.timestamp}`;
+        const broadcastID = `${settings.env}-${settings.timestamp}`;
         initMessageChannel(broadcastID, handleMessage);
         // reset loading hash
         window.location.hash = '';
         // handshake with iframe
-        postMessage(new UiMessage(POPUP.HANDSHAKE));
+        view.initBrowserView();
     } catch (error) {
-        postMessageToParent(new UiMessage(POPUP.ERROR, { error: error.message || error }));
+        postMessageToParent(new UiMessage(POPUP.ERROR, { error }));
     }
 };
 
@@ -171,13 +165,7 @@ const onLoad = () => {
     // unsupported browser, this hash was set in parent app (PopupManager)
     // display message and do not continue
     if (window.location.hash === '#unsupported') {
-        view.initBrowserView({
-            name: '',
-            osname: '',
-            outdated: false,
-            supported: false,
-            mobile: false,
-        });
+        view.initBrowserView(false);
         return;
     }
 

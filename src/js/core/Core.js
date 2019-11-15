@@ -21,7 +21,6 @@ import { find as findMethod } from './methods';
 import { create as createDeferred } from '../utils/deferred';
 
 import { resolveAfter } from '../utils/promiseUtils';
-import { state as browserState } from '../utils/browser';
 
 import Log, { init as initLog } from '../utils/debug';
 
@@ -155,7 +154,6 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         case UI.RECEIVE_ACCOUNT :
         case UI.CHANGE_ACCOUNT :
         case UI.RECEIVE_FEE :
-        case UI.RECEIVE_BROWSER :
         case UI.CUSTOM_MESSAGE_RESPONSE :
         case UI.RECEIVE_WORD:
         case UI.LOGIN_CHALLENGE_RESPONSE : {
@@ -259,22 +257,17 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         throw ERROR.INVALID_PARAMETERS;
     }
 
+    const responseID = message.id;
+    const trustedHost = DataManager.getSettings('trustedHost');
+    const isUsingPopup = DataManager.getSettings('popup');
+
     if (_preferredDevice && !message.payload.device) {
         message.payload.device = _preferredDevice;
     }
 
-    if (!_deviceList && !DataManager.getSettings('transportReconnect')) {
-        // transport is missing try to initialize it once again
-        // eslint-disable-next-line no-use-before-define
-        await initTransport(DataManager.getSettings());
-    }
-
-    const responseID: number = message.id;
-    const trustedHost: boolean = DataManager.getSettings('trustedHost');
-    const isUsingPopup: boolean = DataManager.getSettings('popup');
-
     // find method and parse incoming params
     let method: AbstractMethod;
+    let messageResponse: ?CoreMessage;
     try {
         method = findMethod(message);
         // bind callbacks
@@ -286,66 +279,40 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     } catch (error) {
         postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
         postMessage(new ResponseMessage(responseID, false, { error: ERROR.INVALID_PARAMETERS.message + ': ' + error.message }));
-        throw ERROR.INVALID_PARAMETERS;
+        return Promise.resolve();
     }
 
     _callMethods.push(method);
 
-    let messageResponse: ?CoreMessage;
+    // this method is not using the device, there is no need to acquire
+    if (!method.useDevice) {
+        try {
+            if (method.useUi) {
+                // wait for popup handshake
+                await getPopupPromise().promise;
+            } else {
+                // cancel popup request
+                postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
+            }
+            const response = await method.run();
+            messageResponse = new ResponseMessage(method.responseID, true, response);
+        } catch (error) {
+            messageResponse = new ResponseMessage(method.responseID, false, { error: error.message });
+        }
+        postMessage(messageResponse);
+        return Promise.resolve();
+    }
 
-    if (!browserState.supported) {
-        // wait for popup handshake
-        await getPopupPromise().promise;
-        // show message about browser
-        postMessage(new UiMessage(UI.BROWSER_NOT_SUPPORTED, browserState));
-        postMessage(new ResponseMessage(responseID, false, { error: ERROR.BROWSER_NOT_SUPPORTED.message }));
-        throw ERROR.BROWSER_NOT_SUPPORTED;
-    }
-    if (browserState.outdated) {
-        if (isUsingPopup) {
-            // wait for popup handshake
-            await getPopupPromise().promise;
-            // show message about browser
-            postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));
-            return Promise.resolve();
-        } else {
-            // just show message about browser
-            postMessage(new UiMessage(UI.BROWSER_OUTDATED, browserState));
-        }
-    }
-    if (browserState.experimental) {
-        if (isUsingPopup) {
-            // wait for popup handshake
-            await getPopupPromise().promise;
-        }
-        postMessage(new UiMessage(UI.BROWSER_EXPERIMENTAL, browserState));
+    if (!_deviceList && !DataManager.getSettings('transportReconnect')) {
+        // transport is missing try to initialize it once again
+        // eslint-disable-next-line no-use-before-define
+        await initTransport(DataManager.getSettings());
     }
 
     if (isUsingPopup && method.requiredPermissions.includes('management') && !DataManager.isManagementAllowed()) {
         postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
         postMessage(new ResponseMessage(responseID, false, { error: ERROR.MANAGEMENT_NOT_ALLOWED.message }));
-        throw ERROR.MANAGEMENT_NOT_ALLOWED;
-    }
-
-    // this method is not using the device, there is no need to acquire
-    if (!method.useDevice) {
-        if (method.useUi) {
-            // wait for popup handshake
-            await getPopupPromise().promise;
-        } else {
-            // cancel popup request
-            postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
-        }
-
-        try {
-            const response: Object = await method.run();
-            messageResponse = new ResponseMessage(method.responseID, true, response);
-            postMessage(messageResponse);
-            return Promise.resolve();
-        } catch (error) {
-            postMessage(new ResponseMessage(method.responseID, false, { error: error.message }));
-            throw error;
-        }
+        return Promise.resolve();
     }
 
     // find device
@@ -404,7 +371,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             await device.waitForFirstRun();
         } else {
             // cancel popup request
-            postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
+            // postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
             postMessage(new ResponseMessage(responseID, false, { error: ERROR.DEVICE_CALL_IN_PROGRESS.message }));
             throw ERROR.DEVICE_CALL_IN_PROGRESS;
         }
@@ -769,7 +736,6 @@ const onPopupClosed = (customErrorMessage: ?string): void => {
                 }
             }
         });
-
         cleanup();
     // Waiting for device. Throw error before onCall try/catch block
     } else {

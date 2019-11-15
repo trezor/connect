@@ -10,6 +10,7 @@ import parseUri from 'parse-uri';
 import semvercmp from 'semver-compare';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
+import type { Browser } from '../utils/browser';
 
 type WhiteList = {
     +priority: number,
@@ -24,12 +25,7 @@ type WebUSB = {
     +vendorId: string,
     +productId: string,
 }
-type Browser = {
-    +version: number,
-    +download: string,
-    +update: string,
-    +experimental?: boolean,
-}
+
 type Resources = {
     bridge: string,
 }
@@ -78,12 +74,10 @@ export default class DataManager {
     static settings: ConnectSettings;
     static messages: { [key: string]: JSON } = {};
 
-    static async load(settings: ConnectSettings): Promise<void> {
+    static async load(settings: ConnectSettings, withAssets: boolean = true): Promise<void> {
         const ts: string = settings.env === 'web' ? `?r=${settings.timestamp}` : '';
-        const configUrl: string = `${settings.configSrc}${ts}`;
-
         this.settings = settings;
-        const config: JSON = await httpRequest(configUrl, 'json');
+        const config: JSON = await httpRequest(`${settings.configSrc}${ts}`, 'json');
         this.config = parseConfig(config);
 
         // check if origin is localhost or trusted
@@ -106,6 +100,15 @@ export default class DataManager {
             this.settings.hostIcon = knownHost.icon;
         }
 
+        // hotfix webusb + chrome:72, allow webextensions
+        if (this.settings.popup && this.settings.webusb && this.settings.env !== 'webextension') {
+            if (!isWebUsbAvailable()) {
+                this.settings.webusb = false;
+            }
+        }
+
+        if (!withAssets) return;
+
         for (const asset of this.config.assets) {
             const json: JSON = await httpRequest(`${asset.url}${ts}`, asset.type || 'json');
             this.assets[ asset.name ] = json;
@@ -114,13 +117,6 @@ export default class DataManager {
         for (const protobuf of this.config.messages) {
             const json: JSON = await httpRequest(`${protobuf.json}${ts}`, 'json');
             this.messages[ protobuf.name ] = json;
-        }
-
-        // hotfix webusb + chrome:72, allow webextensions
-        if (this.settings.popup && this.settings.webusb && this.settings.env !== 'webextension') {
-            if (!isWebUsbAvailable()) {
-                this.settings.webusb = false;
-            }
         }
 
         // parse bridge JSON

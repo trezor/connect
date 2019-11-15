@@ -7,7 +7,6 @@ import * as UI from '../constants/ui';
 
 import { parse as parseSettings } from '../data/ConnectSettings';
 import DataManager from '../data/DataManager';
-import type { ConnectSettings } from '../data/ConnectSettings';
 
 import { Core, init as initCore, initTransport } from '../core/Core';
 import { parseMessage } from '../message';
@@ -23,7 +22,6 @@ let _core: Core;
 
 // custom log
 const _log: Log = initLog('IFrame');
-
 let _popupMessagePort: ?(MessagePort | BroadcastChannel);
 
 // Wrapper which listen events from Core
@@ -177,7 +175,7 @@ const filterDeviceEvent = (message: CoreMessage): boolean => {
 
 const init = async (payload: any, origin: string) => {
     if (DataManager.getSettings('origin')) return; // already initialized
-    const parsedSettings: ConnectSettings = parseSettings({ ...payload.settings, extension: payload.extension });
+    const parsedSettings = parseSettings({ ...payload.settings, extension: payload.extension });
     // set origin manually
     parsedSettings.origin = !origin || origin === 'null' ? payload.settings.origin : origin;
 

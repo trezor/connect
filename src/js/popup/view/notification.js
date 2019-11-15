@@ -1,7 +1,7 @@
 /* @flow */
 
 import { views } from './common';
-import type { UnexpectedDeviceMode, BrowserMessage } from '../../types/uiRequest';
+import type { UnexpectedDeviceMode } from '../../types/uiRequest';
 
 export const showFirmwareUpdateNotification = (device: $PropertyType<UnexpectedDeviceMode, 'payload'>): void => {
     const container: HTMLElement = document.getElementsByClassName('notification')[0];
@@ -74,32 +74,6 @@ export const showBackupNotification = (device: $PropertyType<UnexpectedDeviceMod
     const view = views.getElementsByClassName('backup-notification');
     const notification = document.createElement('div');
     notification.className = 'backup-notification notification-item';
-    const viewItem = view.item(0);
-    if (viewItem) {
-        notification.innerHTML = viewItem.innerHTML;
-    }
-
-    container.appendChild(notification);
-
-    const close = notification.querySelector('.close-icon');
-    if (close) {
-        close.addEventListener('click', () => {
-            container.removeChild(notification);
-        });
-    }
-};
-
-export const showBrowserExperimentalNotification = (device: $PropertyType<BrowserMessage, 'payload'>): void => {
-    const container: HTMLElement = document.getElementsByClassName('notification')[0];
-    const warning: ?HTMLElement = container.querySelector('.browser-experimental-notification');
-    if (warning) {
-        // already exists
-        return;
-    }
-
-    const view = views.getElementsByClassName('browser-experimental-notification');
-    const notification = document.createElement('div');
-    notification.className = 'browser-experimental-notification notification-item';
     const viewItem = view.item(0);
     if (viewItem) {
         notification.innerHTML = viewItem.innerHTML;
