@@ -1,4 +1,6 @@
 # Builds
+coverage
+__pycache__
 _old
 build
 /npm
