@@ -18,6 +18,14 @@ proc = None
 def start():
     global proc
     if proc is None:
+        # TODO:
+        # - check if emulator process is already running and kill it if so
+        # - detect if Popen process starts without error (if udp port is listening)
+        # - run custom firmware
+        # - run T1 emulator
+        # - run T1 & T2 emulator at once
+        # - run two T2/T1 emulators
+        # - add some debug param to catch stdout in parent app
         proc = Popen(
             "./emu.sh",
             cwd="../trezor-firmware/core",
@@ -30,15 +38,7 @@ def start():
             preexec_fn=os.setsid
         )
         
-        time.sleep(3)
-        # proc.kill()
-        # proc.terminate()
-        # output, error = proc.communicate()
-        # if proc.returncode != 0: 
-        # 	print("emulator failed %d %s %s" % (proc.returncode, output, error))
-        
-    else:
-        print("emulator uz mam!")
+        time.sleep(3) # replace this with "wait_for_emulator" process
 
 def stop():
     global proc

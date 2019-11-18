@@ -5,22 +5,27 @@ from subprocess import Popen, PIPE
 
 proc = None
 
-def findProcess():
-    ps = Popen("ps -ef | grep trezord-go", shell=True, stdout=PIPE)
-    output = ps.stdout.read()
-    ps.stdout.close()
-    ps.wait()
-    return output
+# def findProcess():
+#     ps = Popen("ps -ef | grep trezord-go", shell=True, stdout=PIPE)
+#     output = ps.stdout.read()
+#     ps.stdout.close()
+#     ps.wait()
+#     return output
 
 def start():
     global proc
     if proc is None:
-        findProcess()
+        # findProcess()
+        # TODO:
+        # - check if trezord process is already running and kill it if so
+        # - check if Popen process starts without error (if 21325 port is listening)
+        # - custom path to binary (?)
+        # - add some debug param to catch stdout in parent app
         proc = Popen(
             ["../trezord-go/trezord-go -ed 21324:21325"],
-            # stdout=PIPE,
+            stdout=PIPE,
             stderr=PIPE,
-            stdout=sys.stdout,
+            # stdout=sys.stdout,
             # stdout=sys.stderr,
             shell=True,
             preexec_fn=os.setsid

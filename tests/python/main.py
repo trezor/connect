@@ -7,18 +7,20 @@ from websocket_server import WebsocketServer
 import emulator
 import bridge
 
+def cleanup():
+    emulator.stop()
+    bridge.stop()
+
+atexit.register(cleanup)
 
 # Called for every client connecting (after handshake)
 def new_client(client, server):
     welcome = json.dumps({"type": "client", "id": client['id']})
-    print(welcome)
     server.send_message_to_all(welcome)
-
 
 # Called for every client disconnecting
 def client_left(client, server):
     print("Client(%d) disconnected" % client['id'])
-
 
 # Called when a client sends a message
 def message_received(client, server, message):
@@ -61,20 +63,10 @@ def message_received(client, server, message):
         if response is not None:
             server.send_message(client, json.dumps(dict(response, id=cmdId, success=True)))
     except Exception as e:
-        print("Runtime error: ", message, e)
         server.send_message(client, json.dumps({"id": cmdId, "success": False, "error": str(e)}))
-
-
-def cleanup():
-    print("CLEANUP")
-    emulator.stop()
-    bridge.stop()
-atexit.register(cleanup)
 
 server = WebsocketServer(9001)
 server.set_fn_new_client(new_client)
 server.set_fn_client_left(client_left)
 server.set_fn_message_received(message_received)
 server.run_forever()
-
-
