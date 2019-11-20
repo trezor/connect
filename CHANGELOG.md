@@ -2,8 +2,9 @@
 #### Added
 - Jest unit tests
 #### Fixed
-- Browser validation moved from Core to popup, not restricted anymore
-- Browser validation
+- Browser validation logic moved from Core to popup, not restricted anymore
+- popupMessagePort assignment for browsers without BroadcastChannel support
+- multiple eslint/flow fixes
 #### Updated
 - Update outdated and remove unused node_modules dependencies
 
