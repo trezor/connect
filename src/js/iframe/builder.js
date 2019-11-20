@@ -137,10 +137,11 @@ const injectStyleSheet = (): void => {
     if (style.styleSheet) { // IE
         // $FlowIssue
         style.styleSheet.cssText = css;
+        head.appendChild(style);
     } else {
         style.appendChild(document.createTextNode(css));
+        head.append(style);
     }
-    head.append(style);
 };
 
 const handleIframeBlocked = (): void => {

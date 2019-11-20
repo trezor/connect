@@ -1,8 +1,6 @@
 /* @flow */
 
-import Promise from 'es6-promise';
-
-export async function resolveAfter(msec: number, value: any): Promise {
+export async function resolveAfter(msec: number, value: any) {
     return await new Promise((resolve) => {
         setTimeout(resolve, msec, value);
     });

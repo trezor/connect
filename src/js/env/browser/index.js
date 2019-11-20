@@ -131,10 +131,6 @@ export const init = async (settings: Object = {}): Promise<void> => {
         throw ERROR.MANIFEST_NOT_SET;
     }
 
-    if (!_settings.supportedBrowser) {
-        throw ERROR.BROWSER_NOT_SUPPORTED;
-    }
-
     if (_settings.lazyLoad) {
         // reset "lazyLoad" after first use
         _settings.lazyLoad = false;
@@ -160,9 +156,6 @@ export const call = async (params: Object): Promise<Object> => {
 
         if (!_settings.manifest) {
             return { success: false, payload: { error: ERROR.MANIFEST_NOT_SET.message } };
-        }
-        if (!_settings.supportedBrowser) {
-            return { success: false, payload: { error: ERROR.BROWSER_NOT_SUPPORTED.message } };
         }
 
         if (!_popupManager) {

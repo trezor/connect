@@ -5,7 +5,6 @@ import { parseBridgeJSON, isWebUsbAvailable } from '../utils/browser';
 import { DEFAULT_PRIORITY } from '../data/ConnectSettings';
 import { parseCoinsJson } from './CoinInfo';
 import { parseFirmware } from './FirmwareInfo';
-import { Promise } from 'es6-promise';
 import parseUri from 'parse-uri';
 import semvercmp from 'semver-compare';
 

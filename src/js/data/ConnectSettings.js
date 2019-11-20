@@ -57,7 +57,7 @@ const initialSettings: ConnectSettings = {
     transportReconnect: false,
     webusb: true,
     pendingTransportEvent: true,
-    supportedBrowser: typeof navigator !== 'undefined' ? !(/Trident|MSIE/.test(navigator.userAgent)) : true,
+    supportedBrowser: typeof navigator !== 'undefined' ? !(/Trident|MSIE|Edge/.test(navigator.userAgent)) : true,
     extension: null,
     manifest: null,
     env: 'web',
