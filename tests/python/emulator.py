@@ -63,6 +63,8 @@ def get_bridge_device():
 def setup_device(mnemonic, pin, passphrase_protection, label):
     # Setup link
     # transport = get_udp_device()
+    # TODO:
+    # - check if device is acquired otherwise throws "wrong previous session" from bridge
     transport = get_bridge_device()
     client = TrezorClientDebugLink(transport)
     client.open()

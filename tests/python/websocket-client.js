@@ -25,7 +25,7 @@ export function createDeferred<T>(id: number | string): Deferred<T> {
     };
 }
 
-const DEFAULT_TIMEOUT = 20 * 1000;
+const DEFAULT_TIMEOUT = 10000;
 const DEFAULT_PING_TIMEOUT = 50 * 1000;
 
 export default class Socket extends EventEmitter {
@@ -131,7 +131,7 @@ export default class Socket extends EventEmitter {
             const dfd = this.messages.find(m => m.id === id);
             if (dfd) {
                 if (!success) {
-                    dfd.reject(new Error('websocket_error_message' + resp.error.message));
+                    dfd.reject(new Error(resp.error));
                 } else {
                     dfd.resolve(resp);
                 }

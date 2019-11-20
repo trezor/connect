@@ -30,6 +30,7 @@ def start():
             shell=True,
             preexec_fn=os.setsid
         )
+        # TODO: - add else condition and check if trezord is running and if i own this process (trezord pid is the same with proc pid)
 
 def stop():
     global proc
