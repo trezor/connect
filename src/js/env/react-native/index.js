@@ -32,10 +32,10 @@ export const manifest = (data: any) => {
 };
 
 export const dispose = () => {
-    // iframe.dispose();
-    // if (_popupManager) {
-    //     _popupManager.close();
-    // }
+    eventEmitter.removeAllListeners();
+    _settings = null;
+    _core.onBeforeUnload();
+    _core = null;
 };
 
 // handle message received from iframe
