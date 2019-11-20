@@ -1,7 +1,7 @@
 /* @flow */
 
 import { httpRequest } from '../env/node/networkUtils';
-import { parseBridgeJSON, isWebUsbAvailable } from '../utils/browser';
+import { parseBridgeJSON } from '../utils/browser';
 import { DEFAULT_PRIORITY } from '../data/ConnectSettings';
 import { parseCoinsJson } from './CoinInfo';
 import { parseFirmware } from './FirmwareInfo';
