@@ -12,7 +12,7 @@ module.exports = {
     // collectCoverage: true,
     // collectCoverageFrom: ['**/src/**/*.js'],
     // modulePathIgnorePatterns: ['node_modules'],
-    setupFiles: ['./tests/jest.setup.js'],
+    setupFiles: ['./tests/common.setup.js', './tests/jest.setup.js'],
     globalSetup: './tests/jest.globalSetup.js',
     globalTeardown: './tests/jest.globalTeardown.js',
     transform: {
