@@ -100,11 +100,11 @@ export default class DataManager {
         }
 
         // hotfix webusb + chrome:72, allow webextensions
-        if (this.settings.popup && this.settings.webusb && this.settings.env !== 'webextension') {
-            if (!isWebUsbAvailable()) {
-                this.settings.webusb = false;
-            }
-        }
+        // if (this.settings.popup && this.settings.webusb && this.settings.env !== 'webextension') {
+        //     if (!isWebUsbAvailable()) {
+        //         this.settings.webusb = false;
+        //     }
+        // }
 
         if (!withAssets) return;
 

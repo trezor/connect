@@ -79,12 +79,13 @@ export const getIframeElement = (): any => {
 
 // initialize message channel with iframe element
 export const initMessageChannel = (id: string, handler: any): void => {
+    const hasIframe = getIframeElement();
     if (typeof BroadcastChannel !== 'undefined') {
         broadcast = new BroadcastChannel(id);
         broadcast.onmessage = handler;
         return;
     }
-    if (!getIframeElement()) {
+    if (!hasIframe) {
         throw new Error('unable to establish connection with iframe');
     }
     channel.port1.onmessage = handler;
