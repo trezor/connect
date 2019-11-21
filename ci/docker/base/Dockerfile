@@ -8,7 +8,7 @@ RUN apt-get install -y curl
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 
 # yarn
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
 
 # deps
 RUN apt-get update
