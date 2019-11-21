@@ -7,12 +7,9 @@ RUN apt-get install -y curl
 # node 8
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 
-# yarn
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-
 # deps
 RUN apt-get update
-RUN apt-get install -y build-essential scons libsdl2-dev libsdl2-image-dev golang git nodejs yarn pipenv
+RUN apt-get install -y build-essential scons libsdl2-dev libsdl2-image-dev golang git nodejs pipenv
 
 # create main folder
 RUN mkdir ~/libs
