@@ -1,5 +1,8 @@
 FROM debian:10
 
+# curl
+RUN apt-get install -y curl
+
 # node 8
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
 
