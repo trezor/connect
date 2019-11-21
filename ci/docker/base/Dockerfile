@@ -1,6 +1,8 @@
 FROM debian:10
 
 # deps
+RUN apt-get update
+RUN apt-get install -y build-essential
 RUN apt-get install scons libsdl2-dev libsdl2-image-dev
 
 # create folder for libs
