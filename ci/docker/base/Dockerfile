@@ -1,6 +1,7 @@
 FROM debian:10
 
 # curl
+RUN apt-get update
 RUN apt-get install -y curl
 
 # node 8
