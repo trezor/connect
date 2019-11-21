@@ -14,6 +14,6 @@ RUN go get github.com/trezor/trezord-go
 RUN go build github.com/trezor/trezord-go
 
 # download and build EMULATOR
-RUN https://github.com/trezor/trezor-firmware.git
+RUN git clone https://github.com/trezor/trezor-firmware.git
 RUN cd ~/trezor-firmware/core
 RUN pipenv run make build_unix
