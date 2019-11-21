@@ -1,8 +1,26 @@
 image: node:8.10
 
 stages:
+  - setup environment
   - build
-  - deploy
+  - deploy to dev servers
+
+build & push image:
+  stage: setup environment
+  when: manual
+  before_script:
+    - docker login $CI_REGISTRY -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    CONTAINER_NAME: "$CI_REGISTRY/satoshilabs/trezor/connect/base"
+  image: docker
+  services:
+    - docker:dind
+  script:
+    - docker pull $CONTAINER_NAME:latest || true
+    - docker build --tag $CONTAINER_NAME:$CI_COMMIT_SHA --tag $CONTAINER_NAME:latest ./ci/docker/base
+    - docker push $CONTAINER_NAME:$CI_COMMIT_SHA
+    - docker push $CONTAINER_NAME:latest
 
 build:
   stage: build
@@ -19,7 +37,7 @@ build:
       - build
 
 deploy review:
-  stage: deploy
+  stage: deploy to dev servers
   variables:
     GIT_STRATEGY: none
   dependencies:
