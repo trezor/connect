@@ -1,19 +1,24 @@
 FROM debian:10
 
+# node 8
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+
+# yarn
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+
 # deps
 RUN apt-get update
-RUN apt-get install -y build-essential
-RUN apt-get install scons libsdl2-dev libsdl2-image-dev golang git --assume-yes
+RUN apt-get install -y build-essential scons libsdl2-dev libsdl2-image-dev golang git nodejs yarn pipenv
 
-# create folder for libs
+# create main folder
 RUN mkdir ~/libs
 RUN cd ~/libs
 
-# download and build BRIDGE
+# bridge
 RUN go get github.com/trezor/trezord-go
 RUN go build github.com/trezor/trezord-go
 
-# download and build EMULATOR
+# emulator
 RUN git clone https://github.com/trezor/trezor-firmware.git
 RUN cd ./trezor-firmware/core
 RUN pipenv run make build_unix
