@@ -2,6 +2,7 @@ import sys
 import os
 import json
 import atexit
+from termcolor import colored
 
 from websocket_server import WebsocketServer
 import emulator
@@ -20,11 +21,11 @@ def new_client(client, server):
 
 # Called for every client disconnecting
 def client_left(client, server):
-    print("Client(%d) disconnected" % client['id'])
+    print(colored("Client(%d) disconnected" % client['id'], "blue"))
 
 # Called when a client sends a message
 def message_received(client, server, message):
-    print("Client(%d) said: %s" % (client['id'], message))
+    print("Client(%d) request: %s" % (client['id'], message))
     try:
         cmd = json.loads(message)
     except:
@@ -59,10 +60,11 @@ def message_received(client, server, message):
             emulator.stop()
             bridge.stop()
             os._exit(1)
-
+        print("Client(%d) response: %s" % (client['id'], str(response)))
         if response is not None:
             server.send_message(client, json.dumps(dict(response, id=cmdId, success=True)))
     except Exception as e:
+        print("Client(%d) response: %s" % (client['id'], str(e)))
         server.send_message(client, json.dumps({"id": cmdId, "success": False, "error": str(e)}))
 
 server = WebsocketServer(9001)

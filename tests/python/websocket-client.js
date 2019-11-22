@@ -25,8 +25,8 @@ export function createDeferred<T>(id: number | string): Deferred<T> {
     };
 }
 
-const DEFAULT_TIMEOUT = 10000;
-const DEFAULT_PING_TIMEOUT = 50 * 1000;
+const DEFAULT_TIMEOUT = 6000;
+// const DEFAULT_PING_TIMEOUT = 50 * 1000;
 
 export default class Socket extends EventEmitter {
     options: any;
@@ -36,6 +36,7 @@ export default class Socket extends EventEmitter {
     subscriptions: Subscription[] = [];
     pingTimeout: ReturnType<typeof setTimeout> | undefined;
     connectionTimeout: ReturnType<typeof setTimeout> | undefined;
+    disconnectRequest: Deferred<any> | undefined;
 
     constructor(options: Options) {
         super();
@@ -59,13 +60,13 @@ export default class Socket extends EventEmitter {
     }
 
     setPingTimeout() {
-        if (this.pingTimeout) {
-            clearTimeout(this.pingTimeout);
-        }
-        this.pingTimeout = setTimeout(
-            this.onPing.bind(this),
-            this.options.pingTimeout || DEFAULT_PING_TIMEOUT
-        );
+        // if (this.pingTimeout) {
+        //     clearTimeout(this.pingTimeout);
+        // }
+        // this.pingTimeout = setTimeout(
+        //     this.onPing.bind(this),
+        //     this.options.pingTimeout || DEFAULT_PING_TIMEOUT
+        // );
     }
 
     onTimeout() {
@@ -79,24 +80,24 @@ export default class Socket extends EventEmitter {
                 // empty
             }
         } else {
-            this.messages.forEach(m => m.reject(new Error('websocket_timeout')));
+            this.messages.forEach(m => m.reject(new Error('Websocket timeout ' + this.options.name)));
             ws.close();
         }
     }
 
     async onPing() {
         // make sure that connection is alive if there are subscriptions
-        if (this.ws && this.isConnected()) {
-            if (this.subscriptions.length > 0 || this.options.keepAlive) {
-                await this.getBlockHash(0);
-            } else {
-                try {
-                    this.ws.close();
-                } catch (error) {
-                    // empty
-                }
-            }
-        }
+        // if (this.ws && this.isConnected()) {
+        //     if (this.subscriptions.length > 0 || this.options.keepAlive) {
+        //         await this.getBlockHash(0);
+        //     } else {
+        //         try {
+        //             this.ws.close();
+        //         } catch (error) {
+        //             // empty
+        //         }
+        //     }
+        // }
     }
 
     onError() {
@@ -172,7 +173,7 @@ export default class Socket extends EventEmitter {
         const ws = new WebSocket(url);
         ws.once('error', error => {
             this.dispose();
-            dfd.reject(new Error('websocket_runtime_error', error.message));
+            dfd.reject(error);
         });
         ws.on('open', () => {
             this.init();
@@ -198,6 +199,9 @@ export default class Socket extends EventEmitter {
         ws.on('error', this.onError.bind(this));
         ws.on('message', this.onmessage.bind(this));
         ws.on('close', () => {
+            if (this.disconnectRequest) {
+                this.disconnectRequest.resolve();
+            }
             this.emit('disconnected');
             this.dispose();
         });
@@ -208,6 +212,8 @@ export default class Socket extends EventEmitter {
             this.ws.close();
         }
         // this.dispose();
+        this.disconnectRequest = createDeferred(0);
+        return this.disconnectRequest.promise;
     }
 
     isConnected() {
@@ -232,5 +238,6 @@ export default class Socket extends EventEmitter {
         }
 
         this.removeAllListeners();
+        this.disconnectRequest = undefined;
     }
 }
