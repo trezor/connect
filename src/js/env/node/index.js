@@ -34,7 +34,9 @@ export const manifest = (data: any) => {
 export const dispose = () => {
     eventEmitter.removeAllListeners();
     _settings = null;
-    _core.onBeforeUnload();
+    if (_core) {
+        _core.onBeforeUnload();
+    }
     _core = null;
 };
 
@@ -116,6 +118,7 @@ export const init = async (settings: Object = {}): Promise<void> => {
     _settings.origin = 'http://node.trezor.io/';
     _settings.popup = false;
     _settings.env = 'node';
+    _log.enabled = _settings.debug;
 
     if (!_settings.manifest) {
         throw ERROR.MANIFEST_NOT_SET;
@@ -126,8 +129,6 @@ export const init = async (settings: Object = {}): Promise<void> => {
         _settings.lazyLoad = false;
         return;
     }
-
-    _log.enabled = _settings.debug;
 
     _core = await initCore(_settings);
     _core.on(CORE_EVENT, handleMessage);

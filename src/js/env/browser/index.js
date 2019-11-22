@@ -141,8 +141,6 @@ export const init = async (settings: Object = {}): Promise<void> => {
         _popupManager = initPopupManager();
     }
 
-    _log.enabled = _settings.debug;
-
     window.addEventListener('message', handleMessage);
     window.addEventListener('beforeunload', dispose);
 

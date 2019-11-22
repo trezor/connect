@@ -34,7 +34,9 @@ export const manifest = (data: any) => {
 export const dispose = () => {
     eventEmitter.removeAllListeners();
     _settings = null;
-    _core.onBeforeUnload();
+    if (_core) {
+        _core.onBeforeUnload();
+    }
     _core = null;
 };
 
@@ -121,13 +123,12 @@ export const init = async (settings: Object = {}): Promise<void> => {
         throw ERROR.MANIFEST_NOT_SET;
     }
 
+    _log.enabled = _settings.debug;
     if (_settings.lazyLoad) {
         // reset "lazyLoad" after first use
         _settings.lazyLoad = false;
         return;
     }
-
-    _log.enabled = _settings.debug;
 
     _core = await initCore(_settings);
     _core.on(CORE_EVENT, handleMessage);
