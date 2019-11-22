@@ -583,6 +583,7 @@ export default class Device extends EventEmitter {
     }
 
     onBeforeUnload() {
+        this.removeAllListeners();
         if (this.isUsedHere() && this.activitySessionID) {
             try {
                 this.transport.release(this.activitySessionID, true, false);

@@ -243,6 +243,7 @@ export default class DeviceList extends EventEmitter {
         }
 
         this.allDevices().forEach(device => device.onBeforeUnload());
+        this.removeAllListeners();
     }
 
     disconnectDevices() {

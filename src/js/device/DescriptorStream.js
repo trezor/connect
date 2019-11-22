@@ -99,6 +99,7 @@ export default class DescriptorStream extends EventEmitter {
 
     stop(): void {
         this.listening = false;
+        this.removeAllListeners();
     }
 
     _diff(currentN: ?Array<DeviceDescriptor>, descriptors: Array<DeviceDescriptor>): DeviceDescriptorDiff {
