@@ -241,6 +241,9 @@ export default class DeviceList extends EventEmitter {
         if (this.stream) {
             this.stream.stop();
         }
+        if (this.transport) {
+            this.transport.stop();
+        }
 
         this.allDevices().forEach(device => device.onBeforeUnload());
         this.removeAllListeners();
