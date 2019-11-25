@@ -44,6 +44,7 @@ export const manifest = (data: any) => {
 };
 
 export const dispose = () => {
+    eventEmitter.removeAllListeners();
     iframe.dispose();
     if (_popupManager) {
         _popupManager.close();

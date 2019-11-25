@@ -233,6 +233,7 @@ export default class PopupManager extends EventEmitter {
         } else if (data.type === POPUP.LOADED) {
             // popup is successfully loaded
             this.iframeHandshake.promise.then(() => {
+                if (!this._window) return;
                 this._window.postMessage({
                     type: POPUP.INIT,
                     payload: {
