@@ -25,13 +25,6 @@ fixtures.forEach((testCase, i) => {
                 console.log("init error", error)
                 done(error);
             }
-
-            process.on('exit', () => {
-                console.log("EXIT!")
-                // if (global.pythonProcess) {
-                //     console.log("EXIT!")
-                // }
-            });
         }, 20000);
 
         afterAll(async (done) => {
@@ -48,7 +41,7 @@ fixtures.forEach((testCase, i) => {
         testCase.tests.forEach(t => {
             it(t.description, async (done) => {
                 if (t.customTimeout) {
-                    jest.setTimeout(500000);
+                    jest.setTimeout(t.customTimeout);
                 }
                 if (!controller) {
                     // expect(controller).not.toEqual(undefined);

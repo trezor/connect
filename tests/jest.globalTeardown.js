@@ -7,5 +7,6 @@ module.exports = function () {
         } catch (error) {
             // console.log("Kill pythonProcess error", error);
         }
+        global.pythonProcess = null;
     }
 };
