@@ -1,20 +1,12 @@
-import { JS_SRC, HTML_SRC } from './constants';
+import { SRC, JS_SRC } from './constants';
 
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import webpack from 'webpack';
 
 module.exports = {
     cache: true,
     mode: 'development',
     devtool: 'inline-source-map',
-    entry: {
-        'iframe': `${JS_SRC}iframe/iframe.js`,
-        'popup': ['./tests/browser/popupController.js', `${JS_SRC}popup/popup.js`],
-    },
-    output: {
-        filename: '[name].js',
-    },
     module: {
         rules: [
             {
@@ -65,6 +57,10 @@ module.exports = {
 
     resolve: {
         modules: [ JS_SRC, 'node_modules' ],
+        alias: {
+            'flowtype/tests/get-address': `${ SRC }/flowtype/tests/get-address.js`,
+            'flowtype/tests/sign-message': `${ SRC }/flowtype/tests/sign-message.js`,
+        },
     },
 
     plugins: [
@@ -72,23 +68,9 @@ module.exports = {
         new webpack.NormalModuleReplacementPlugin(/env\/node$/, './env/browser'),
         new webpack.NormalModuleReplacementPlugin(/env\/node\/workers$/, '../env/browser/workers'),
         new webpack.NormalModuleReplacementPlugin(/env\/node\/networkUtils$/, '../env/browser/networkUtils'),
-        new webpack.NormalModuleReplacementPlugin(/ws$/, '@trezor/blockchain-link/lib/utils/ws'),
         new MiniCssExtractPlugin({
             filename: '[name].css',
             chunkFilename: '[id].css',
-        }),
-
-        new HtmlWebpackPlugin({
-            chunks: ['iframe'],
-            filename: 'iframe.html',
-            template: `${HTML_SRC}iframe.html`,
-            inject: false,
-        }),
-        new HtmlWebpackPlugin({
-            chunks: ['popup'],
-            filename: 'popup.html',
-            template: `${HTML_SRC}popup.html`,
-            inject: false,
         }),
         // ignore Node.js lib from trezor-link
         new webpack.IgnorePlugin(/\/iconv-loader$/),

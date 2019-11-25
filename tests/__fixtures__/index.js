@@ -13,6 +13,5 @@ export default [
     getPublicKey,
     signTransaction,
     rippleGetAddress,
-    // rippleGetAddress,
     // binanceSignTransaction,
 ];

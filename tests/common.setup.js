@@ -62,7 +62,7 @@ const initTrezorConnect = async (controller, options) => {
         debug: false,
         // lazyLoad: true,
         popup: false,
-        pendingTransportEvent: true,
+        // pendingTransportEvent: false,
         ...options,
     });
 
