@@ -51,7 +51,7 @@ export const getBrowserState = (supportedBrowsers: { [key: string]: Browser }): 
 // Parse JSON loaded from config.assets.bridge
 export const parseBridgeJSON = (json: JSON): JSON => {
     let preferred: string = '';
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && window.navigator && window.navigator.userAgent) {
         // Find preferred platform using bowser and userAgent
         const agent = window.navigator.userAgent;
         const browser = Bowser.getParser(agent);
