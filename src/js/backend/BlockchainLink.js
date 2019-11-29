@@ -46,7 +46,7 @@ type Fee = {
     feeLimit?: string,
 }
 
-const getWorker = (type: string): ?string => {
+const getWorker = (type: string): ?(string | () => Worker) => {
     switch (type) {
         case 'blockbook':
             return BlockbookWorker;
