@@ -18,20 +18,22 @@ const initWebUsbButton = (webusb: boolean, showLoader: boolean): void => {
         button.innerHTML = '<span class="plus"></span><span class="text">Pair devices</span>';
     }
 
-    button.onclick = async () => {
-        if (!iframe) {
+    const usb = iframe ? iframe.clientInformation.usb : null;
+    const onClick = async () => {
+        if (!usb) {
             window.postMessage({ type: POPUP.EXTENSION_USB_PERMISSIONS }, window.location.origin);
             return;
         }
-
-        const usb = iframe.clientInformation.usb;
         try {
             await usb.requestDevice({ filters: DataManager.getConfig().webusb });
             if (showLoader) { showView('loader'); }
         } catch (error) {
             // empty, do nothing
+            console.log('E', error);
         }
     };
+
+    button.onclick = onClick;
 };
 
 export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): void => {

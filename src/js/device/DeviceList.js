@@ -6,7 +6,6 @@ import * as DEVICE from '../constants/device';
 import * as ERROR from '../constants/errors';
 import DescriptorStream from './DescriptorStream';
 import type { DeviceDescriptorDiff } from './DescriptorStream';
-// import Device from './Device';
 import Device from './Device';
 import type { Device as DeviceTyped } from '../types';
 import TrezorLink from 'trezor-link';
@@ -15,9 +14,8 @@ import DataManager from '../data/DataManager';
 import Log, { init as initLog } from '../utils/debug';
 import { resolveAfter } from '../utils/promiseUtils';
 
-import { SharedConnectionWorker } from '../env/node/workers';
-
-const { BridgeV2, Lowlevel, WebUsb, Fallback } = TrezorLink;
+import { WebUsbPlugin, ReactNativeUsbPlugin } from '../env/node/workers';
+const { BridgeV2, Fallback } = TrezorLink;
 
 export type DeviceListOptions = {
     debug?: boolean,
@@ -34,14 +32,6 @@ export type DeviceListOptions = {
 
 // custom log
 const _log: Log = initLog('DeviceList');
-
-function sharedWorkerFactoryWrap() {
-    if (typeof window.SharedWorker !== 'undefined') {
-        return new SharedConnectionWorker();
-    } else {
-        return null;
-    }
-}
 
 export default class DeviceList extends EventEmitter {
     options: DeviceListOptions;
@@ -64,29 +54,23 @@ export default class DeviceList extends EventEmitter {
             // $FlowIssue: `version` is missing in `JSON`
             const bridgeVersion = DataManager.assets['bridge'].version.join('.');
             const env = DataManager.getSettings('env');
-            if (env === 'react-native' || env === 'node' || env === 'electron') {
+            if (env === 'node' || env === 'electron') {
                 BridgeV2.setFetch(fetch, true);
             }
 
-            let bridgeUrl: ?string;
-            if (env === 'react-native') {
-                if (!process.env.RN_EMULATOR) {
-                    bridgeUrl = 'http://10.36.2.3:21325'; // TODO: remove this. SL laptop just for debugging
-                } else if (process.env.RN_OS === 'android') {
-                    bridgeUrl = 'http://10.0.2.2:21325'; // Android emulator localhost
-                }
-            }
-
-            const transportTypes: Array<Transport> = [
-                new BridgeV2(bridgeUrl, null, bridgeVersion),
+            const transportTypes: Transport[] = [
+                new BridgeV2(null, null, bridgeVersion),
             ];
 
-            if (DataManager.getSettings('webusb')) {
-                transportTypes.push(new Lowlevel(
-                    new WebUsb(),
-                    () => sharedWorkerFactoryWrap()
-                ));
+            if (env === 'react-native' && typeof ReactNativeUsbPlugin !== 'undefined') {
+                transportTypes.splice(0, 1); // remove bridge
+                transportTypes.push(ReactNativeUsbPlugin());
             }
+
+            if (DataManager.getSettings('webusb') && typeof WebUsbPlugin !== 'undefined') {
+                transportTypes.push(WebUsbPlugin());
+            }
+
             this.options.transport = new Fallback(transportTypes);
         }
         if (this.options.debug === undefined) {
@@ -137,7 +121,7 @@ export default class DeviceList extends EventEmitter {
         try {
             this.defaultMessages = DataManager.getMessages();
             this.currentMessages = this.defaultMessages;
-            await transport.configure(JSON.stringify(this.defaultMessages));
+            await transport.configure(this.defaultMessages);
         } catch (error) {
             throw ERROR.WRONG_TRANSPORT_CONFIG;
         }
@@ -146,7 +130,7 @@ export default class DeviceList extends EventEmitter {
     async reconfigure(json: JSON, custom?: boolean): Promise<void> {
         if (this.currentMessages === json) return;
         try {
-            await this.transport.configure(JSON.stringify(json));
+            await this.transport.configure(json);
             this.currentMessages = json;
             this.hasCustomMessages = typeof custom === 'boolean' ? custom : false;
         } catch (error) {
@@ -157,7 +141,7 @@ export default class DeviceList extends EventEmitter {
     async restoreMessages(): Promise<void> {
         if (!this.hasCustomMessages) return;
         try {
-            await this.transport.configure(JSON.stringify(this.defaultMessages));
+            await this.transport.configure(this.defaultMessages);
             this.hasCustomMessages = false;
         } catch (error) {
             throw ERROR.WRONG_TRANSPORT_CONFIG;
