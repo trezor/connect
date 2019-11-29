@@ -9138,10 +9138,10 @@ tr46@^1.0.1:
   dependencies:
     punycode "^2.1.0"
 
-trezor-link@1.6.6:
-  version "1.6.6"
-  resolved "https://registry.yarnpkg.com/trezor-link/-/trezor-link-1.6.6.tgz#61b90f20f579be70537cb76dd2e3e390a6aa71e5"
-  integrity sha512-GzbK+8Q+onK836eVJSAd3ewao2VxtKO8KBx53leKtDvnO2Hgw8QzOEjxvfIZ0LJIhmoNJkm6sbyxezX4R3Pduw==
+trezor-link@1.6.7:
+  version "1.6.7"
+  resolved "https://registry.yarnpkg.com/trezor-link/-/trezor-link-1.6.7.tgz#674a80d1efbc44db2908b77fbfb3c56e0d5ecdb4"
+  integrity sha512-Eqi8OFd4eI+c1KTsGTONt4K4P2Lba6ijXx8S1cHuvPGV5UYj65+PiG/e9Ze4OVuHPvWKk4ilYOCcUPEmDZYYDA==
   dependencies:
     bigi "^1.4.1"
     ecurve "^1.0.3"
