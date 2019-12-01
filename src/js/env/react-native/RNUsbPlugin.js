@@ -11,13 +11,12 @@ type TrezorDeviceInfoDebug = {
 interface RNBridge {
     enumerate(): Promise<TrezorDeviceInfoDebug[]>,
     acquire(path: string, debugLink: boolean): Promise<void>,
-    release(serialNumber: string, debugLink: boolean, closePort: boolean): Promise<void>,
-    // write(serialNumber: string, debugLink: boolean, data: Uint8Array): Promise<void>,
-    write(serialNumber: any): Promise<void>,
-    read(serialNumber: any): Promise<{ data: string }>,
+    release(path: string, debugLink: boolean, closePort: boolean): Promise<void>,
+    write(path: string, debugLink: boolean, data: string): Promise<void>,
+    read(path: string, debugLink: boolean): Promise<{ data: string }>,
 }
 
-const bufferToHex = (buffer: ArrayBuffer) => {
+const bufferToHex = (buffer: ArrayBuffer): string => {
     return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
 };
 
@@ -57,14 +56,14 @@ export default class ReactNativePlugin {
         return this.usb.enumerate();
     }
 
-    async send(path: string, data: ArrayBuffer, _debugLink: boolean) {
-        return this.usb.write({ path, data, dataHex: bufferToHex(data), debug: false });
+    async send(path: string, data: ArrayBuffer, debugLink: boolean) {
+        const dataHex = bufferToHex(data);
+        return this.usb.write(path, debugLink, dataHex);
     }
 
-    async receive(path: string, debug: boolean): Promise<ArrayBuffer> {
-        const { data } = await this.usb.read({ path, debug });
-        const buffer = toArrayBuffer(Buffer.from(data, 'hex'));
-        return buffer;
+    async receive(path: string, debugLink: boolean) {
+        const { data } = await this.usb.read(path, debugLink);
+        return toArrayBuffer(Buffer.from(data, 'hex'));
     }
 
     async connect(path: string, debugLink: boolean) {
