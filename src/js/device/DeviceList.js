@@ -148,7 +148,7 @@ export default class DeviceList extends EventEmitter {
         });
 
         stream.on(TRANSPORT.START, () => {
-            this.emit(TRANSPORT.START, this._getTransportInfo());
+            this.emit(TRANSPORT.START, this.getTransportInfo());
         });
 
         stream.on(TRANSPORT.UPDATE, (diff: DeviceDescriptorDiff) => {
@@ -229,7 +229,7 @@ export default class DeviceList extends EventEmitter {
         return transport.name;
     }
 
-    _getTransportInfo() {
+    getTransportInfo() {
         return {
             type: this.transportType(),
             version: this.transport.version,
