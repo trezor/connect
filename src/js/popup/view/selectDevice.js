@@ -29,7 +29,6 @@ const initWebUsbButton = (webusb: boolean, showLoader: boolean): void => {
             if (showLoader) { showView('loader'); }
         } catch (error) {
             // empty, do nothing
-            console.log('E', error);
         }
     };
 
