@@ -4,7 +4,7 @@ import { UiMessage } from '../../message/builder';
 import DataManager from '../../data/DataManager';
 import * as POPUP from '../../constants/popup';
 import { load as loadStorage, save as saveStorage, BROWSER_KEY } from '../../storage';
-import { getBrowserState } from '../../utils/browser';
+import { getBrowserState } from '../../env/browser/browserUtils';
 
 const validateBrowser = () => {
     const state = getBrowserState(DataManager.getConfig().supportedBrowsers);
