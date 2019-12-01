@@ -1,28 +1,33 @@
 /* @flow */
 
 import { httpRequest } from '../env/node/networkUtils';
-import { parseBridgeJSON, isWebUsbAvailable } from '../utils/browser';
 import { DEFAULT_PRIORITY } from '../data/ConnectSettings';
 import { parseCoinsJson } from './CoinInfo';
 import { parseFirmware } from './FirmwareInfo';
+import { parseBridgeJSON } from './TransportInfo';
 import parseUri from 'parse-uri';
 import semvercmp from 'semver-compare';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
-import type { Browser } from '../utils/browser';
 
 type WhiteList = {
-    +priority: number,
-    +origin: string,
+    priority: number,
+    origin: string,
 }
 type KnownHost = {
-    +origin: string,
-    +label?: string,
-    +icon?: string,
+    origin: string,
+    label?: string,
+    icon?: string,
+}
+
+type SupportedBrowser = {
+    version: number,
+    download: string,
+    update: string,
 }
 type WebUSB = {
-    +vendorId: string,
-    +productId: string,
+    vendorId: string,
+    productId: string,
 }
 
 type Resources = {
@@ -36,26 +41,26 @@ type Asset = {
 type ProtobufMessages = {
     name: string,
     range: {
-        min: Array<string>,
-        max?: Array<string>,
+        min: string[],
+        max?: string[],
     },
     json: string,
 }
 export type Config = {
-    +whitelist: Array<WhiteList>,
-    +management: Array<WhiteList>,
-    +knownHosts: Array<KnownHost>,
-    +webusb: Array<WebUSB>,
-    +resources: Resources,
-    +assets: Array<Asset>,
-    +messages: Array<ProtobufMessages>,
-    +supportedBrowsers: { [key: string]: Browser },
-    +supportedFirmware: Array<{|
-        +coinType?: string,
-        +coin?: string | string[],
-        +excludedMethods?: Array<string>,
-        +min?: Array<string>,
-        +max?: Array<string>,
+    whitelist: WhiteList[],
+    management: WhiteList[],
+    knownHosts: KnownHost[],
+    webusb: WebUSB[],
+    resources: Resources,
+    assets: Asset[],
+    messages: ProtobufMessages[],
+    supportedBrowsers: { [key: string]: SupportedBrowser },
+    supportedFirmware: Array<{|
+        coinType?: string,
+        coin?: string | string[],
+        excludedMethods?: string[],
+        min?: string[],
+        max?: string[],
     |}>,
 }
 
@@ -73,22 +78,22 @@ export default class DataManager {
     static settings: ConnectSettings;
     static messages: { [key: string]: JSON } = {};
 
-    static async load(settings: ConnectSettings, withAssets: boolean = true): Promise<void> {
-        const ts: string = settings.env === 'web' ? `?r=${settings.timestamp}` : '';
+    static async load(settings: ConnectSettings, withAssets: boolean = true) {
+        const ts = settings.env === 'web' ? `?r=${settings.timestamp}` : '';
         this.settings = settings;
-        const config: JSON = await httpRequest(`${settings.configSrc}${ts}`, 'json');
+        const config = await httpRequest(`${settings.configSrc}${ts}`, 'json');
         this.config = parseConfig(config);
 
         // check if origin is localhost or trusted
-        const isLocalhost: boolean = typeof window !== 'undefined' && window.location ? window.location.hostname === 'localhost' : true;
-        const whitelist: ?WhiteList = DataManager.isWhitelisted(this.settings.origin || '');
+        const isLocalhost = typeof window !== 'undefined' && window.location ? window.location.hostname === 'localhost' : true;
+        const whitelist = DataManager.isWhitelisted(this.settings.origin || '');
         this.settings.trustedHost = (isLocalhost || !!whitelist) && !this.settings.popup;
         // ensure that popup will be used
         if (!this.settings.trustedHost) {
             this.settings.popup = true;
         }
         // ensure that debug is disabled
-        if (this.settings.debug && !this.settings.trustedHost && !whitelist) {
+        if (!this.settings.trustedHost && !whitelist) {
             this.settings.debug = false;
         }
         this.settings.priority = DataManager.getPriority(whitelist);
@@ -101,9 +106,7 @@ export default class DataManager {
 
         // hotfix webusb + chrome:72, allow webextensions
         if (this.settings.popup && this.settings.webusb && this.settings.env !== 'webextension') {
-            if (!isWebUsbAvailable()) {
-                this.settings.webusb = false;
-            }
+            this.settings.webusb = false;
         }
 
         if (!withAssets) return;
@@ -119,7 +122,7 @@ export default class DataManager {
         }
 
         // parse bridge JSON
-        this.assets['bridge'] = parseBridgeJSON(this.assets['bridge']);
+        parseBridgeJSON(this.assets['bridge']);
 
         // parse coins definitions
         parseCoinsJson(this.assets['coins']);
@@ -155,8 +158,8 @@ export default class DataManager {
         }
     }
 
-    static isManagementAllowed(): ?WhiteList {
-        if (!this.config) return null;
+    static isManagementAllowed() {
+        if (!this.config) return;
         const uri = parseUri(this.settings.origin);
         if (uri && typeof uri.host === 'string') {
             const parts: Array<string> = uri.host.split('.');
@@ -168,14 +171,14 @@ export default class DataManager {
         }
     }
 
-    static getPriority(whitelist: ?WhiteList): number {
+    static getPriority(whitelist: ?WhiteList) {
         if (whitelist) {
             return whitelist.priority;
         }
         return DEFAULT_PRIORITY;
     }
 
-    static getHostLabel(origin: string): ?KnownHost {
+    static getHostLabel(origin: string) {
         return this.config.knownHosts.find(host => host.origin === origin);
     }
 
@@ -187,15 +190,11 @@ export default class DataManager {
         return this.settings;
     }
 
-    static getDebugSettings(type: string): boolean {
+    static getDebugSettings(type: string) {
         return false;
     }
 
-    static getConfig(): Config {
+    static getConfig() {
         return this.config;
-    }
-
-    static getLatestBridgeVersion(): JSON {
-        return DataManager.assets.bridge;
     }
 }
