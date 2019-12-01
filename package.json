@@ -126,6 +126,6 @@
     "node-fetch": "^2.6.0",
     "parse-uri": "^1.0.0",
     "tiny-worker": "^2.3.0",
-    "trezor-link": "1.6.6"
+    "trezor-link": "1.6.7"
   }
 }
