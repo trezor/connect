@@ -1,3 +1,9 @@
+# 8.0.11
+#### Added
+- React native transport
+#### Updated
+- TRANSPORT_EVENT "bridge" field send only in browser env. Whole logic moved from Core/DataManager to iframe
+
 # 8.0.10
 #### Added
 - Jest unit tests
