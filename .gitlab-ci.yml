@@ -19,7 +19,7 @@ build & push image:
         - docker:dind
     script:
         - docker pull $CONTAINER_NAME:latest || true
-        - docker build --tag $CONTAINER_NAME:$CI_COMMIT_SHA --tag $CONTAINER_NAME:latest .
+        - docker build --tag $CONTAINER_NAME:$CI_COMMIT_SHA --tag $CONTAINER_NAME:latest ./ci
         - docker push $CONTAINER_NAME:$CI_COMMIT_SHA
         - docker push $CONTAINER_NAME:latest
 
