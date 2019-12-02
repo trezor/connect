@@ -26,7 +26,10 @@ def start():
         # - run two T2/T1 emulators
         proc = Popen(
             # ["./emulator", "-O0", "-X", "heapsize=20M", "-m", "main"],
-            "./tests/python/emulator-mac -O0 -X heapsize=20M -m main",
+            # "./tests/python/emulator-mac -O0 -X heapsize=20M -m main",
+
+            "./tests/python/trezor-emu-core-v2.1.4 -O0 -X heapsize=20M -m main",
+
             shell=True,
             preexec_fn=os.setsid
         )
