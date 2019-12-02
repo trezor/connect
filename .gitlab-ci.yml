@@ -1,5 +1,4 @@
-# image: node:8.10
-image: registry.gitlab.com/satoshilabs/trezor/connect/base:latest
+image: registry.gitlab.com/satoshilabs/trezor/connect/base:e840893bd2a011e8f612b42b22f1640406a2a381
 
 stages:
   - docker
