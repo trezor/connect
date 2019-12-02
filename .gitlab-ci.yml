@@ -27,7 +27,7 @@ build:
   stage: build
   script:
     - yarn
-    # - yarn flow
+    - yarn flow
     - yarn eslint
     - yarn test:unit
     - yarn test
