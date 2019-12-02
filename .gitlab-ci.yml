@@ -26,13 +26,12 @@ build & push image:
 build:
   stage: build
   script:
-    # - npm install -g yarn
     - yarn
     # - yarn flow
-    # - yarn eslint
-    # - yarn test:unit
+    - yarn eslint
+    - yarn test:unit
     - yarn test
-    # - make build-connect
+    - make build-connect
   artifacts:
     expire_in: 1 week
     paths:
