@@ -44,16 +44,12 @@ def start():
         # - check if Popen process starts without error (if 21325 port is listening)
         # - custom path to binary (?)
         
-        # proc = Popen(
-        #     # "~/go/src/github.com/trezor/trezord-go/trezord-go -ed 21324:21325",
-        #     shell=True,
-        #     preexec_fn=os.setsid
-        # )
+        # "~/go/src/github.com/trezor/trezord-go/trezord-go -ed 21324:21325",
+
         base = "./tests/python/trezord-go -ed 21324:21325"
-        command = base + " -u=false" if 'CI' in os.environ else command
+        command = base + " -u=false" if 'CI' in os.environ else base
         proc = Popen(
             command,
-            # "./packages/suite-web/test/trezord-go -ed 21324:21325",
             shell=True,
             preexec_fn=os.setsid
         )
