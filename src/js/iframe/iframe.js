@@ -17,6 +17,7 @@ import type { CoreMessage, PostMessageEvent } from '../types';
 import Log, { init as initLog } from '../utils/debug';
 import { sendMessage } from '../utils/windowsUtils';
 import { getOrigin } from '../env/browser/networkUtils';
+import { suggestBridgeInstaller } from '../env/browser/browserUtils';
 import { load as loadStorage, PERMISSIONS_KEY } from '../storage';
 let _core: Core;
 
@@ -128,6 +129,11 @@ const postMessage = (message: CoreMessage): void => {
     // eslint-disable-next-line no-use-before-define
     if (!trustedHost && message.event === DEVICE_EVENT && !filterDeviceEvent(message)) {
         return;
+    }
+
+    if (message.event === TRANSPORT_EVENT) {
+        // add preferred bridge installer
+        message.payload.bridge = suggestBridgeInstaller();
     }
 
     // eslint-disable-next-line no-use-before-define

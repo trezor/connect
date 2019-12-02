@@ -19,14 +19,11 @@ import AbstractMethod from './methods/AbstractMethod';
 import { find as findMethod } from './methods';
 
 import { create as createDeferred } from '../utils/deferred';
-
 import { resolveAfter } from '../utils/promiseUtils';
-
 import Log, { init as initLog } from '../utils/debug';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
 import type { Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse } from '../types';
-import type { TransportInfo } from '../types/uiRequest';
 
 // Public variables
 // eslint-disable-next-line no-use-before-define
@@ -113,7 +110,6 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         // UI.CHANGE_SETTINGS,
         UI.CUSTOM_MESSAGE_RESPONSE,
         UI.LOGIN_CHALLENGE_RESPONSE,
-        TRANSPORT.RECONNECT,
         TRANSPORT.DISABLE_WEBUSB,
     ];
 
@@ -133,11 +129,6 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
             // case UI.CHANGE_SETTINGS :
             //     enableLog(parseSettings(message.payload).debug);
             //     break;
-
-        case TRANSPORT.RECONNECT :
-            // eslint-disable-next-line no-use-before-define
-            reconnectTransport();
-            break;
 
         case TRANSPORT.DISABLE_WEBUSB :
             // eslint-disable-next-line no-use-before-define
@@ -186,7 +177,7 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
         throw ERROR.NO_TRANSPORT;
     }
 
-    const isWebUsb: boolean = _deviceList.transportType().indexOf('webusb') >= 0;
+    const isWebUsb = _deviceList.transportType() === 'WebUsbPlugin';
 
     let device: ?Device;
     if (method.devicePath) {
@@ -814,9 +805,7 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceTyped = null): voi
  */
 const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
     try {
-        _deviceList = new DeviceList({
-            rememberDevicePassphrase: true,
-        });
+        _deviceList = new DeviceList();
 
         _deviceList.on(DEVICE.CONNECT, (device: DeviceTyped) => {
             handleDeviceSelectionChanges();
@@ -845,10 +834,8 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
             }
 
             _deviceList = null;
-            postMessage(new TransportMessage(TRANSPORT.ERROR, {
-                error: error.message || error,
-                bridge: DataManager.getLatestBridgeVersion(),
-            }));
+
+            postMessage(new TransportMessage(TRANSPORT.ERROR, { error: error.message || error }));
             // if transport fails during app lifetime, try to reconnect
             if (settings.transportReconnect) {
                 await resolveAfter(1000, null);
@@ -856,7 +843,7 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
             }
         });
 
-        _deviceList.on(TRANSPORT.START, (transportType) => postMessage(new TransportMessage(TRANSPORT.START, transportType)));
+        _deviceList.on(TRANSPORT.START, transportType => postMessage(new TransportMessage(TRANSPORT.START, transportType)));
 
         await _deviceList.init();
         if (_deviceList) {
@@ -865,13 +852,10 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
     } catch (error) {
         // eslint-disable-next-line require-atomic-updates
         _deviceList = null;
+        postMessage(new TransportMessage(TRANSPORT.ERROR, { error: error.message || error }));
         if (!settings.transportReconnect) {
             throw error;
         } else {
-            postMessage(new TransportMessage(TRANSPORT.ERROR, {
-                error: error.message || error,
-                bridge: DataManager.getLatestBridgeVersion(),
-            }));
             await resolveAfter(3000, null);
             // try to reconnect
             await initDeviceList(settings);
@@ -889,31 +873,25 @@ export class Core extends EventEmitter {
         super();
     }
 
-    handleMessage(message: Object, isTrustedOrigin: boolean): void {
+    handleMessage(message: Object, isTrustedOrigin: boolean) {
         handleMessage(message, isTrustedOrigin);
     }
 
-    onBeforeUnload(): void {
+    onBeforeUnload() {
         if (_deviceList) {
             _deviceList.onBeforeUnload();
         }
         this.removeAllListeners();
     }
 
-    getCurrentMethod(): Array<AbstractMethod> {
+    getCurrentMethod() {
         return _callMethods;
     }
 
-    getTransportInfo(): ?TransportInfo {
+    getTransportInfo() {
         if (_deviceList) {
-            return {
-                type: _deviceList.transportType(),
-                version: _deviceList.transportVersion(),
-                outdated: _deviceList.transportOutdated(),
-                bridge: DataManager.getLatestBridgeVersion(),
-            };
+            return _deviceList.getTransportInfo();
         }
-        return null;
     }
 }
 
@@ -936,7 +914,7 @@ export const initCore = (): Core => {
  * @memberof Core
  */
 
-export const initData = async (settings: ConnectSettings): Promise<void> => {
+export const initData = async (settings: ConnectSettings) => {
     try {
         await DataManager.load(settings);
     } catch (error) {
@@ -945,7 +923,7 @@ export const initData = async (settings: ConnectSettings): Promise<void> => {
     }
 };
 
-export const init = async (settings: ConnectSettings): Promise<Core> => {
+export const init = async (settings: ConnectSettings) => {
     try {
         _log.enabled = settings.debug;
         await DataManager.load(settings);
@@ -958,7 +936,7 @@ export const init = async (settings: ConnectSettings): Promise<Core> => {
     }
 };
 
-export const initTransport = async (settings: ConnectSettings): Promise<void> => {
+export const initTransport = async (settings: ConnectSettings) => {
     try {
         if (!settings.transportReconnect) {
             // try only once, if it fails kill and throw initialization error
@@ -973,22 +951,7 @@ export const initTransport = async (settings: ConnectSettings): Promise<void> =>
     }
 };
 
-const reconnectTransport = async (): Promise<void> => {
-    if (DataManager.getSettings('transportReconnect')) {
-        return;
-    }
-
-    try {
-        await initDeviceList(DataManager.getSettings());
-    } catch (error) {
-        postMessage(new TransportMessage(TRANSPORT.ERROR, {
-            error: error.message || error,
-            bridge: DataManager.getLatestBridgeVersion(),
-        }));
-    }
-};
-
-const disableWebUSBTransport = async (): Promise<void> => {
+const disableWebUSBTransport = async () => {
     if (!_deviceList) return;
     if (_deviceList.transportType() !== 'webusb') return;
     // override settings
@@ -1001,9 +964,6 @@ const disableWebUSBTransport = async (): Promise<void> => {
         // and init with new settings, without webusb
         await initDeviceList(settings);
     } catch (error) {
-        postMessage(new TransportMessage(TRANSPORT.ERROR, {
-            error: error.message || error,
-            bridge: DataManager.getLatestBridgeVersion(),
-        }));
+        // do nothing
     }
 };

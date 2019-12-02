@@ -56,7 +56,7 @@
     "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-flow": "^7.0.0",
-    "@trezor/blockchain-link": "^1.0.5",
+    "@trezor/blockchain-link": "^1.0.6",
     "@trezor/utxo-lib": "^0.0.2",
     "babel-collect-imports": "https://github.com/szymonlesisz/babel-collect-imports",
     "babel-eslint": "^10.0.3",
@@ -102,7 +102,7 @@
     "style-loader": "^1.0.0",
     "terser-webpack-plugin": "^2.2.1",
     "tiny-worker": "^2.3.0",
-    "trezor-link": "1.6.6",
+    "trezor-link": "1.6.7",
     "uglify-es": "3.3.9",
     "version-bump-prompt": "^5.0.6",
     "webpack": "^4.41.2",
@@ -116,7 +116,7 @@
     "whatwg-fetch": "^3.0.0"
   },
   "extendedDependencies": {
-    "@trezor/blockchain-link": "^1.0.5",
+    "@trezor/blockchain-link": "^1.0.6",
     "@trezor/utxo-lib": "^0.0.2",
     "bchaddrjs": "^0.4.4",
     "bignumber.js": "^9.0.0",
@@ -126,6 +126,6 @@
     "node-fetch": "^2.6.0",
     "parse-uri": "^1.0.0",
     "tiny-worker": "^2.3.0",
-    "trezor-link": "1.6.6"
+    "trezor-link": "1.6.7"
   }
 }
