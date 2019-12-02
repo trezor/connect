@@ -49,9 +49,10 @@ def start():
         #     shell=True,
         #     preexec_fn=os.setsid
         # )
-        command = "./tests/python/trezord-go -ed 21324:21325"
+        base = "./tests/python/trezord-go -ed 21324:21325"
+        command = base + " -u=false" if 'CI' in os.environ else command
         proc = Popen(
-            command + " -u false" if 'CI' in os.environ else command,
+            command,
             # "./packages/suite-web/test/trezord-go -ed 21324:21325",
             shell=True,
             preexec_fn=os.setsid
