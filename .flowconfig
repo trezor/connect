@@ -9,6 +9,7 @@
 .*/npm/.*
 .*/npm-extended/.*
 .*/build/.*
+.*/tests/.*
 
 [libs]
 ./node_modules/trezor-link/flowtype/chrome.js

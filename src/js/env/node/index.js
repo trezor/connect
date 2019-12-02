@@ -33,10 +33,12 @@ export const manifest = (data: any) => {
 
 export const dispose = () => {
     eventEmitter.removeAllListeners();
-    _settings = null;
     if (_core) {
         _core.onBeforeUnload();
     }
+    // $FlowIssue
+    _settings = null;
+    // $FlowIssue
     _core = null;
 };
 
