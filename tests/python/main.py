@@ -44,6 +44,9 @@ def message_received(client, server, message):
         elif cmdType == "emulator-stop":
             emulator.stop()
             response = { "success": True }
+        elif cmdType == "emulator-wipe":
+            emulator.wipe_device()
+            response = { "success": True }
         elif cmdType == "emulator-setup":
             emulator.setup_device(cmd["mnemonic"], cmd["pin"], cmd["passphrase_protection"], cmd["label"])
             response = { "success": True }

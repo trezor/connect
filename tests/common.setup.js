@@ -31,7 +31,6 @@ const MNEMONICS = {
 // }(window.open);
 
 const setup = async (controller, options) => {
-    const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
     controller.on('connect', () => {
 
     });
@@ -39,16 +38,23 @@ const setup = async (controller, options) => {
     await controller.send({ type: 'bridge-start', version: '2' }); // TODO: add optional path param
     // await controller.send({ type: 'emulator-stop' });
     await controller.send({ type: 'emulator-start', model: 'T' }); // TODO: add model T1/TT
-    await controller.send({
-        type: 'emulator-setup',
-        firmware: '2.1.8',
-        mnemonic,
-        pin: options.pin || '',
-        passphrase_protection: false,
-        label: options.label || 'TrezorT',
-        backup: false,
-        options,
-    }); // TODO: add more options (backup, initialized etc.), add optional fw/model param
+
+    if (options.wipe) {
+        await controller.send({ type: 'emulator-wipe' });
+    } else {
+        const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
+
+        await controller.send({
+            type: 'emulator-setup',
+            firmware: '2.1.8',
+            mnemonic,
+            pin: options.pin || '',
+            passphrase_protection: false,
+            label: options.label || 'TrezorT',
+            backup: false,
+            options,
+        }); // TODO: add more options (backup, initialized etc.), add optional fw/model param
+    }
 };
 
 const initTrezorConnect = async (controller, options) => {

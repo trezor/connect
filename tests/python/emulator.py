@@ -58,6 +58,14 @@ def get_bridge_device():
         return d
     raise RuntimeError("No debuggable device found")
 
+def wipe_device():
+    transport = get_bridge_device()
+    print(transport)
+    client = TrezorClientDebugLink(transport)
+    client.open()
+    device.wipe(client)
+    client.close()
+
 def setup_device(mnemonic, pin, passphrase_protection, label):
     # Setup link
     # transport = get_udp_device()

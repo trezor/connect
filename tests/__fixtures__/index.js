@@ -4,7 +4,10 @@ import getAddress from './getAddress';
 import getPublicKey from './getPublicKey';
 import signTransaction from './signTransaction';
 import rippleGetAddress from './rippleGetAddress';
-import binanceSignTransaction from './binanceSignTransaction';
+// import binanceSignTransaction from './binanceSignTransaction';
+import wipeDevice from './wipeDevice';
+import resetDevice from './resetDevice';
+import cardanoGetAddress from './cardanoGetAddress';
 
 export default [
     applyFlags,
@@ -13,5 +16,10 @@ export default [
     getPublicKey,
     signTransaction,
     rippleGetAddress,
+    wipeDevice,
+    cardanoGetAddress,
+    resetDevice,
+
+    // TODO: 2.1.4 returns ui-device_firmware_old
     // binanceSignTransaction,
 ];
