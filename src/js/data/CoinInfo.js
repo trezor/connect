@@ -163,7 +163,7 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
         const coin = coinsObject[key];
         const shortcut = coin.coin_shortcut;
         const isBitcoin = shortcut === 'BTC' || shortcut === 'TEST';
-        const hasTimestamp = shortcut === 'CPC';
+        const hasTimestamp = shortcut === 'CPC' || shortcut === 'PPC' || shortcut === 'tPPC';
 
         const network: $ElementType<BitcoinNetworkInfo, 'network'> = {
             messagePrefix: coin.signed_message_header,
@@ -237,7 +237,7 @@ const parseBitcoinNetworksJson = (json: JSON): void => {
 
             // used in backend ?
             blocks: Math.round(coin.blocktime_seconds / 60),
-            decimals: 8,
+            decimals: coin.decimals,
         });
     });
 };
