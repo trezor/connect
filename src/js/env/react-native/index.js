@@ -106,8 +106,9 @@ const postMessage = (message: any, usePromise: boolean = true) => {
         _messageID++;
         message.id = _messageID;
         messagePromises[_messageID] = createDeferred();
+        const { promise } = messagePromises[_messageID];
         _core.handleMessage(message, true);
-        return messagePromises[_messageID].promise;
+        return promise;
     }
 
     _core.handleMessage(message, true);

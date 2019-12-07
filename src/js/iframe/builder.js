@@ -161,8 +161,9 @@ export const postMessage = (message: any, usePromise: boolean = true): ?Promise<
         _messageID++;
         message.id = _messageID;
         messagePromises[_messageID] = createDeferred();
+        const { promise } = messagePromises[_messageID];
         instance.contentWindow.postMessage(message, origin);
-        return messagePromises[_messageID].promise;
+        return promise;
     }
 
     instance.contentWindow.postMessage(message, origin);
