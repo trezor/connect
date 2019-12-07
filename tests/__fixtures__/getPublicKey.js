@@ -47,21 +47,21 @@ export default {
                 xpub: 'xpub6D1weXBcFAo8CqBbpP4TbH5sxQH8ZkqC5pDEvJ95rNNBZC9zrKmZP2fXMuve7ZRBe18pWQQsGg68jkq24mZchHwYENd8cCiSb71u3KD4AFH',
             },
         },
-        // {
-        //     description: 'Invalid path',
-        //     params: {
-        //         path: [-1],
-        //         coin: 'ltc',
-        //     },
-        //     result: false,
-        // },
-        // {
-        //     description: 'Invalid path (too short)',
-        //     params: {
-        //         path: [0, 1],
-        //         coin: 'Litecoin',
-        //     },
-        //     result: false,
-        // },
+        {
+            description: 'Invalid path',
+            params: {
+                path: [-1],
+                coin: 'ltc',
+            },
+            result: false,
+        },
+        {
+            description: 'Invalid path (too short)',
+            params: {
+                path: [0, 1],
+                coin: 'Litecoin',
+            },
+            result: false,
+        },
     ],
 };
