@@ -8,21 +8,21 @@ import rippleGetAddress from './rippleGetAddress';
 import wipeDevice from './wipeDevice';
 import resetDevice from './resetDevice';
 import cardanoGetAddress from './cardanoGetAddress';
-import cardanoGetPublicKey from './cardanoGetPublicKey';
-import cardanoSignTransation from './cardanoSignTransaction';
+// import cardanoGetPublicKey from './cardanoGetPublicKey';
+// import cardanoSignTransation from './cardanoSignTransaction';
 
 export default [
-    // applyFlags,
-    // applySettings,
-    // getAddress,
-    // getPublicKey,
-    // signTransaction,
-    // rippleGetAddress,
-    // wipeDevice,
-    // cardanoGetAddress,
+    applyFlags,
+    applySettings,
+    getAddress,
+    getPublicKey,
+    signTransaction,
+    rippleGetAddress,
+    wipeDevice,
+    cardanoGetAddress,
 
     // TODO: yields different results
-    cardanoSignTransation,
+    // cardanoSignTransation,
 
     // TODO: yields different results
     // cardanoGetPublicKey,
