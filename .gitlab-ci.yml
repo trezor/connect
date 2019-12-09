@@ -1,4 +1,4 @@
-image: registry.gitlab.com/satoshilabs/trezor/connect/base:e840893bd2a011e8f612b42b22f1640406a2a381
+image: registry.gitlab.com/satoshilabs/trezor/connect/base:0678551246801d5d28d5eda4949cdeb99f3685e7
 
 stages:
   - docker
