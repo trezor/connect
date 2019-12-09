@@ -1,6 +1,4 @@
-# FROM node:8.10
 # buster means deb:10 which equals trezor-firmware docker
-
 FROM node:8.16-buster
 
 # trezor emu
