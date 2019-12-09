@@ -15,13 +15,13 @@ export default {
                 publicKey: 'a938c8554ae04616cfaae7cd0eb557475082c4e910242ce774967e0bd7492408cbf6ab47c8eb1a0477fc40b25dbb6c4a99454edb97d6fe5acedd3e238ef46fe0',
             },
         },
-        // {
-        //     description: "m/44'/1815'",
-        //     params: {
-        //     path: "m/44'/1815'",
-        //     },
-        //     result: false,
-        // },
+        {
+            description: "m/44'/1815'",
+            params: {
+                path: "m/44'/1815'",
+            },
+            result: false,
+        },
         {
             description: "m/44'/1815'/0/0/0",
             params: {
