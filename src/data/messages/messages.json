@@ -1691,6 +1691,10 @@
                             "id": 12
                         },
                         {
+                            "name": "Failure_WipeCodeMismatch",
+                            "id": 13
+                        },
+                        {
                             "name": "Failure_FirmwareError",
                             "id": 99
                         }
@@ -1831,6 +1835,14 @@
                         {
                             "name": "PinMatrixRequestType_NewSecond",
                             "id": 3
+                        },
+                        {
+                            "name": "PinMatrixRequestType_WipeCodeFirst",
+                            "id": 4
+                        },
+                        {
+                            "name": "PinMatrixRequestType_WipeCodeSecond",
+                            "id": 5
                         }
                     ],
                     "options": {}
@@ -4538,6 +4550,13 @@
                     "type": "bool",
                     "name": "sd_protection",
                     "id": 33
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wipe_code_protection",
+                    "id": 34
                 }
             ],
             "enums": [
@@ -4734,6 +4753,22 @@
             "oneofs": {}
         },
         {
+            "name": "ChangeWipeCode",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "remove",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "SdProtect",
             "fields": [
                 {
@@ -4866,13 +4901,6 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "HDNodeType",
-                    "name": "node",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
                     "type": "string",
                     "name": "pin",
                     "id": 3
@@ -4913,6 +4941,20 @@
                     "type": "uint32",
                     "name": "u2f_counter",
                     "id": 8
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "needs_backup",
+                    "id": 9
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "no_backup",
+                    "id": 10
                 }
             ],
             "enums": [],
@@ -5179,6 +5221,30 @@
         },
         {
             "name": "SetU2FCounter",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "u2f_counter",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "GetNextU2FCounter",
+            "fields": [],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "NextU2FCounter",
             "fields": [
                 {
                     "rule": "optional",
@@ -9190,6 +9256,18 @@
                 {
                     "name": "MessageType_SdProtect",
                     "id": 79
+                },
+                {
+                    "name": "MessageType_GetNextU2FCounter",
+                    "id": 80
+                },
+                {
+                    "name": "MessageType_NextU2FCounter",
+                    "id": 81
+                },
+                {
+                    "name": "MessageType_ChangeWipeCode",
+                    "id": 82
                 },
                 {
                     "name": "MessageType_FirmwareErase",
