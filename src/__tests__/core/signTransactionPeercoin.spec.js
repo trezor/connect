@@ -14,7 +14,7 @@ const signPPC = (): SubtestSignTransaction => {
         {
             method: 'signTransaction',
             coin: 'Peercoin',
-            timestamp: 1573218223,
+            timestamp: 1573209226,
             inputs: [
                 {
                     address_n: [2147483692, 2147483654, 2147483648, 0, 0],
@@ -52,7 +52,7 @@ const signPPC = (): SubtestSignTransaction => {
                         },
                     ],
                     version: 1,
-                    timestamp: 1573210591,
+                    timestamp: 1573209046,
                     lock_time: 0,
                 },
             ],
@@ -96,6 +96,7 @@ const notEnoughFunds = (): SubtestSignTransaction => {
                 },
             ],
             // since Peercoin doesn't have blockbook v2 implemented
+            // https://blockbook.peercoin.net/tx/41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d
             refTxs: [
                 {
                     hash: '41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d',
@@ -118,7 +119,7 @@ const notEnoughFunds = (): SubtestSignTransaction => {
                         },
                     ],
                     version: 1,
-                    timestamp: 1573210591,
+                    timestamp: 1573209046,
                     lock_time: 0,
                 },
             ],

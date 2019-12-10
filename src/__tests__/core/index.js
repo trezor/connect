@@ -24,6 +24,7 @@ import { signTransactionMultisigChange } from './signTransactionMultisigChange.s
 import { signTransactionBech32 } from './signTransactionBech32.spec.js';
 import { signTransactionDoge } from './signTransactionDoge.spec.js';
 import { signTransactionKomodo } from './signTransactionKomodo.spec.js';
+import { signTransactionPeercoin } from './signTransactionPeercoin.spec';
 import { verifyMessage } from './verifyMessage.spec.js';
 import { verifyMessageSegwit } from './verifyMessageSegwit.spec.js';
 import { verifyMessageSegwitNative } from './verifyMessageSegwitNative.spec.js';
@@ -75,6 +76,7 @@ export const testFunctions: AvailableTestFunctions = {
     signTransactionBech32,
     signTransactionDoge,
     signTransactionKomodo,
+    signTransactionPeercoin,
     verifyMessage,
     verifyMessageSegwit,
     verifyMessageSegwitNative,
