@@ -186,12 +186,165 @@ const signOneInputVersion4 = (): SubtestSignTransaction => {
     };
 };
 
+const testnetVersion4 = (): SubtestSignTransaction => {
+    // https://tzec1.trezor.io/tx/0cef132c1d6d67f11cfa48f7fca3209da29cf872ac782354bedb686e61a17a78
+    const testPayloads = [
+        {
+            method: 'signTransaction',
+            coin: 'taz',
+            version: 4,
+            overwintered: true,
+            versionGroupId: 0x892f2085,
+            inputs: [
+                {
+                    address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 0],
+                    prev_hash: 'e3820602226974b1dd87b7113cc8aea8c63e5ae29293991e7bfa80c126930368',
+                    prev_index: 0,
+                    amount: '300000000',
+                },
+            ],
+            outputs: [
+                {
+                    address: 'tmJ1xYxP8XNTtCoDgvdmQPSrxh5qZJgy65Z',
+                    amount: '299998060',
+                    script_type: 'PAYTOADDRESS',
+                },
+            ],
+            refTxs: [
+                {
+                    hash: '4e8e8c5a5524cb8b20d05aefd5b1fd004d6c8c584e3e314876f13edb5ba0eead',
+                    inputs: [
+                        {
+                            prev_hash: '7afab9216fee6763ffbd6a412d46d68c480220af093c9becee6f79d41b954b13',
+                            prev_index: 0,
+                            script_sig: '473044022064e1e5f957308fcc91f7b174113c8e3cb8060b1404ae823ab3f77f313d5b557b02204b2afcde9ef8b61f5e85192c38fb82307d077ec91d2c8249aa69e19967df8c0c01210201d494a45f36f545443bafd1a9050b02f448dd236bb4ce2602f83978980b98f2',
+                            sequence: 4294967294,
+                        },
+                        {
+                            prev_hash: '67abe6288fdec766e106a46125727eb7c608266950746fc10d1d1c69645f68af',
+                            prev_index: 0,
+                            script_sig: '47304402207f63a484ee75900ce2b0e2a5f0d52f2cfb5d1475588576f645c20ecf5e04659a02205c9b614ca846b0cb9ff4a72ca8482c9aed542282b9ee8eaa70a5f472408f3f04012103e974b89ace172f24bb25f8137d19c4205c5cf6bb6505454230ea172f54152d08',
+                            sequence: 4294967294,
+                        },
+                    ],
+                    bin_outputs: [
+                        {
+                            amount: '300000000',
+                            script_pubkey: '76a914a579388225827d9f2fe9014add644487808c695d88ac',
+                        },
+                        {
+                            amount: '1251648',
+                            script_pubkey: '76a91474374446b18916decd3292384ea73006ebd268ba88ac',
+                        },
+                    ],
+                    version: 3,
+                    overwintered: true,
+                    timestamp: 1531122666,
+                    lock_time: 261287,
+                },
+            ],
+        },
+    ];
+
+    const expectedResponses = [
+        {
+            payload: {
+                serializedTx: '0400008085202f890168039326c180fa7b1e999392e25a3ec6a8aec83c11b787ddb1746922020682e3000000006b483045022100f28298891f48706697a6f898ac18e39ce2c7cebe547b585d51cc22d80b1b21a602201a807b8a18544832d95d1e3ada82c0617bc6d97d3f24d1fb4801ac396647aa880121030e669acac1f280d1ddf441cd2ba5e97417bf2689e4bbec86df4f831bf9f7ffd0ffffffff016c9be111000000001976a9145b157a678a10021243307e4bb58f36375aa80e1088ac00000000000000000000000000000000000000',
+            },
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/signOneInputVersion4',
+    };
+};
+
+const testnetBlossomFork = (): SubtestSignTransaction => {
+    // https://tzec1.trezor.io/tx/737eb78fc69f30ec9eff04359a1551969e026472ae5530e287a838047e237098
+    const testPayloads = [
+        {
+            method: 'signTransaction',
+            coin: 'taz',
+            version: 4,
+            overwintered: true,
+            versionGroupId: 0x892f2085,
+            branchId: 0x2bb40e60,
+            inputs: [
+                {
+                    address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 4],
+                    prev_hash: '86850826b043dd9826b4700c555c06bc8b5713938b4e47cb5ecd60679c6d81dc',
+                    prev_index: 1,
+                    amount: '50000000',
+                },
+            ],
+            outputs: [
+                {
+                    address: 'tmPixaSEroFtgMRTiNcQj9uPdxSMWA3dz2j',
+                    amount: '49998050',
+                    script_type: 'PAYTOADDRESS',
+                },
+            ],
+            refTxs: [
+                {
+                    hash: '86850826b043dd9826b4700c555c06bc8b5713938b4e47cb5ecd60679c6d81dc',
+                    inputs: [
+                        {
+                            prev_hash: '11c140a0228e7b0acc6a64b05fccc45e35baacd95987b5a2bd22224abc6be1f6',
+                            prev_index: 1,
+                            script_sig: '4730440220376326ae123d6ebec7f3c9e2b5ae209f44bebc66f9d17abde9eed4b7f529ccd20220151d679a1ea5de66442639472c92c0b7c838549404744b62b1eca3ffaa3c2ef20121022f16499c44a27f263c33741368222828c730fd1062215ba8481b15331f428fe3',
+                            sequence: 4294967295,
+                        },
+                        {
+                            prev_hash: '56f4846719dd83a51d170f6f970b1341508d5579163f636547debce2774f2d24',
+                            prev_index: 1,
+                            script_sig: '48304502210084714bd8b6063a74e8eb5116385ea590389400fc79a9ec8df2b0fee833b7f4d002204883986f8853a1aabb6ead9d8fc4d171bcf1fe42702f08c285f00bb3bffbdeae0121020d70ec7da45380b4d521aa887b6cbaac3aa8857ec475dfddc221d21f908b40e7',
+                            sequence: 4294967294,
+                        },
+                    ],
+                    bin_outputs: [
+                        {
+                            amount: '49996210',
+                            script_pubkey: '76a9145887384835b98c089f51e1f6bcaf228ffa486fd788ac',
+                        },
+                        {
+                            amount: '50000000',
+                            script_pubkey: '76a914548cb80e45b1d36312fe0cb075e5e337e3c54cef88ac',
+                        },
+                    ],
+                    version: 4,
+                    overwintered: true,
+                    timestamp: 1576071557,
+                    lock_time: 0,
+                },
+            ],
+        },
+    ];
+
+    const expectedResponses = [
+        {
+            payload: {
+                serializedTx: '0400008085202f8901dc816d9c6760cd5ecb474e8b9313578bbc065c550c70b42698dd43b026088586010000006a47304402200e512b8da8fc2b76e9cafb3a1dd565ee45cc6f918ad6d47c945d0e07747be5f00220384032b3daec39082b1917438fc82bc9733c69ee9e6c43fbf3505c50508860dd01210313a443e806f25052ac7363adc689fcfa72893f2a51a35ab5e096ed5e6cd8517effffffff01e2e8fa02000000001976a91499af2ecbf5892079e0297c59b91981b067da36a988ac00000000000000000000000000000000000000',
+            },
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/testnetBlossomFork',
+    };
+};
+
 export const signTransactionZcash = (): TestFunction => {
     const availableSubtests = {
         signTwoInputsTxVersion1,
         signInputVersion2,
         signTwoInputsWithChangeVersion3,
         signOneInputVersion4,
+        testnetVersion4,
+        testnetBlossomFork,
     };
     return {
         testName: 'SignTransactionZcash',
