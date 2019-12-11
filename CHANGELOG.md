@@ -1,3 +1,9 @@
+# 8.0.12
+#### Added
+- Peercoin support
+#### Updated
+- ZCash Blossom fork (updated branch_id)
+
 # 8.0.11
 #### Added
 - React native transport
