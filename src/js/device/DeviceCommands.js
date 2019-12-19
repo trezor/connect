@@ -218,7 +218,7 @@ export default class DeviceCommands {
         return state;
     }
 
-  async getAddress(address_n: Array<number>, coinInfo: BitcoinNetworkInfo, showOnTrezor: boolean, multisig?: trezor.MultisigRedeemScriptType, scriptType?: trezor.InputScriptType): Promise<trezor.Address> {
+    async getAddress(address_n: Array<number>, coinInfo: BitcoinNetworkInfo, showOnTrezor: boolean, multisig?: trezor.MultisigRedeemScriptType, scriptType?: trezor.InputScriptType): Promise<trezor.Address> {
         if (!scriptType) { scriptType = getScriptType(address_n); }
         const response: Object = await this.typedCall('GetAddress', 'Address', {
             address_n,
