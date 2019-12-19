@@ -5,6 +5,8 @@ import type {
     TransactionOutput,
     RefTransaction,
     DebugLinkDecision,
+    MultisigRedeemScriptType,
+    InputScriptType,
 } from './trezor';
 import type { AccountAddresses, AccountUtxo } from './account';
 
@@ -144,6 +146,8 @@ export type $GetAddress = {|
     coin?: string,
     showOnTrezor?: boolean,
     crossChain?: boolean,
+    multisig?: MultisigRedeemScriptType,
+    scriptType?: InputScriptType,
 |};
 
 export type $GetDeviceState = $Common;

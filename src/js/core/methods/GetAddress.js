@@ -9,7 +9,7 @@ import { NO_COIN_INFO } from '../../constants/errors';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { Address } from '../../types/trezor';
+import type { Address, MultisigRedeemScriptType, InputScriptType } from '../../types/trezor';
 import type { CoreMessage, UiPromiseResponse, BitcoinNetworkInfo } from '../../types';
 
 type Batch = {
@@ -17,6 +17,8 @@ type Batch = {
     address: ?string,
     coinInfo: BitcoinNetworkInfo,
     showOnTrezor: boolean,
+    multisig?: MultisigRedeemScriptType,
+    scriptType?: InputScriptType,
 }
 
 type Params = Array<Batch>;
@@ -50,6 +52,8 @@ export default class GetAddress extends AbstractMethod {
                 { name: 'coin', type: 'string' },
                 { name: 'address', type: 'string' },
                 { name: 'showOnTrezor', type: 'boolean' },
+                { name: 'multisig', type: 'object' },
+                { name: 'scriptType', type: 'string' },
             ]);
 
             const path: Array<number> = validatePath(batch.path, 3);
@@ -84,6 +88,8 @@ export default class GetAddress extends AbstractMethod {
                 address: batch.address,
                 coinInfo,
                 showOnTrezor,
+                multisig: batch.multisig,
+                scriptType: batch.scriptType,
             });
         });
 
@@ -167,7 +173,9 @@ export default class GetAddress extends AbstractMethod {
                 const silent = await this.device.getCommands().getAddress(
                     batch.path,
                     batch.coinInfo,
-                    false
+                    false,
+                    batch.multisig,
+                    batch.scriptType,
                 );
                 if (typeof batch.address === 'string') {
                     if (batch.address !== silent.address) {
@@ -181,7 +189,9 @@ export default class GetAddress extends AbstractMethod {
             const response = await this.device.getCommands().getAddress(
                 batch.path,
                 batch.coinInfo,
-                batch.showOnTrezor
+                batch.showOnTrezor,
+                batch.multisig,
+                batch.scriptType,
             );
             responses.push(response);
 
