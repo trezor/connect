@@ -10,6 +10,7 @@ import { cardanoSignTransaction } from './cardanoSignTransaction.spec.js';
 import { getPublicKey } from './getPublicKey.spec.js';
 import { getAddress } from './getAddress.spec.js';
 import { getAddressSegwit } from './getAddressSegwit.spec.js';
+import { getAddressMultisig } from './getAddressMultisig.spec.js';
 import { signMessage } from './signMessage.spec.js';
 import { signMessageSegwit } from './signMessageSegwit.spec.js';
 import { signTransaction } from './signTransaction.spec.js';
@@ -62,6 +63,7 @@ export const testFunctions: AvailableTestFunctions = {
     getPublicKey,
     getAddress,
     getAddressSegwit,
+    getAddressMultisig,
     signMessage,
     signMessageSegwit,
     signTransaction,
