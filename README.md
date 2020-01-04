@@ -1,4 +1,4 @@
-# Trezor Connect API version 8.0.12
+# Trezor Connect API version 8.0.13
 [![Build Status](https://travis-ci.org/trezor/connect.png?branch=develop)](https://travis-ci.org/trezor/connect)
 [![NPM](https://img.shields.io/npm/v/trezor-connect.svg)](https://www.npmjs.org/package/trezor-connect)
 [![Known Vulnerabilities](https://snyk.io/test/github/trezor/connect/badge.svg?targetFile=package.json)](https://snyk.io/test/github/trezor/connect?targetFile=package.json)

@@ -1,3 +1,10 @@
+# 8.0.13
+#### Fixed
+- `getAddress` for multisig addresses #509
+- `bundle` params spread #514
+- promise resolved multiple times #513
+- functions used as classes #512
+
 # 8.0.12
 #### Added
 - Peercoin support
