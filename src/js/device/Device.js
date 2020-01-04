@@ -299,8 +299,10 @@ export default class Device extends EventEmitter {
         if (this.runPromise) { this.runPromise.resolve(); }
         this.runPromise = null;
 
-        this.loaded = true;
-        this.firstRunPromise.resolve(true);
+        if (!this.loaded) {
+            this.loaded = true;
+            this.firstRunPromise.resolve(true);
+        }
     }
 
     getCommands(): DeviceCommands {
