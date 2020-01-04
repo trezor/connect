@@ -64,7 +64,7 @@ export default class RecoveryDevice extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'device-management',
             customConfirmButton: {
                 className: 'confirm',

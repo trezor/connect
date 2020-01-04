@@ -59,7 +59,7 @@ export default class ResetDevice extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'device-management',
             label: 'Do you really you want to create a new wallet?',
         }));

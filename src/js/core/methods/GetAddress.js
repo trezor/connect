@@ -134,7 +134,7 @@ export default class GetAddress extends AbstractMethod {
 
         const label: string = this.info;
         // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-address',
             label,
         }));
@@ -153,7 +153,7 @@ export default class GetAddress extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'no-backup',
         }));
 
@@ -197,7 +197,7 @@ export default class GetAddress extends AbstractMethod {
 
             if (this.hasBundle) {
                 // send progress
-                this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+                this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
                     response,
                 }));

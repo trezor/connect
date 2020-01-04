@@ -38,9 +38,9 @@ const handleMessage = (event: PostMessageEvent): void => {
 
     const fail = (error: string) => {
         // eslint-disable-next-line no-use-before-define
-        postMessage(new ResponseMessage(id, false, { error }));
+        postMessage(ResponseMessage(id, false, { error }));
         // eslint-disable-next-line no-use-before-define
-        postMessage(new UiMessage(POPUP.CANCEL_POPUP_REQUEST));
+        postMessage(UiMessage(POPUP.CANCEL_POPUP_REQUEST));
     };
 
     // respond to call
@@ -74,7 +74,7 @@ const handleMessage = (event: PostMessageEvent): void => {
 
         const method = _core.getCurrentMethod()[0];
         // eslint-disable-next-line no-use-before-define
-        postMessage(new UiMessage(POPUP.HANDSHAKE, {
+        postMessage(UiMessage(POPUP.HANDSHAKE, {
             settings: DataManager.getSettings(),
             transport: _core.getTransportInfo(),
             method: method ? method.info : null,
@@ -201,9 +201,9 @@ const init = async (payload: any, origin: string) => {
         // initialize transport and wait for the first transport event (start or error)
         await initTransport(parsedSettings);
 
-        postMessage(new UiMessage(IFRAME.LOADED));
+        postMessage(UiMessage(IFRAME.LOADED));
     } catch (error) {
-        postMessage(new UiMessage(IFRAME.ERROR, {
+        postMessage(UiMessage(IFRAME.ERROR, {
             error: error.message,
         }));
     }

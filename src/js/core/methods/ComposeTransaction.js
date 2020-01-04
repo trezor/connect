@@ -188,7 +188,7 @@ export default class ComposeTransaction extends AbstractMethod {
 
         if (this.discovery && this.discovery.completed) {
             const { discovery } = this;
-            this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
+            this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
                 type: 'end',
                 coinInfo,
                 accountTypes: discovery.types.map(t => t.type),
@@ -211,7 +211,7 @@ export default class ComposeTransaction extends AbstractMethod {
         this.discovery = discovery;
 
         discovery.on('progress', (accounts: Array<any>) => {
-            this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
+            this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
                 type: 'progress',
                 // preventEmpty: true,
                 coinInfo,
@@ -219,7 +219,7 @@ export default class ComposeTransaction extends AbstractMethod {
             }));
         });
         discovery.on('complete', () => {
-            this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
+            this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
                 type: 'end',
                 coinInfo,
             }));
@@ -233,7 +233,7 @@ export default class ComposeTransaction extends AbstractMethod {
 
         // set select account view
         // this view will be updated from discovery events
-        this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
+        this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
             type: 'start',
             accountTypes: discovery.types.map(t => t.type),
             coinInfo,
@@ -275,7 +275,7 @@ export default class ComposeTransaction extends AbstractMethod {
         const hasFunds = composer.composeAllFeeLevels();
         if (!hasFunds) {
             // show error view
-            this.postMessage(new UiMessage(UI.INSUFFICIENT_FUNDS));
+            this.postMessage(UiMessage(UI.INSUFFICIENT_FUNDS));
             // wait few seconds...
             await resolveAfter(2000, null);
             // and go back to discovery
@@ -284,7 +284,7 @@ export default class ComposeTransaction extends AbstractMethod {
 
         // set select account view
         // this view will be updated from discovery events
-        this.postMessage(new UiMessage(UI.SELECT_FEE, {
+        this.postMessage(UiMessage(UI.SELECT_FEE, {
             feeLevels: composer.getFeeLevelList(),
             coinInfo: this.params.coinInfo,
         }));
@@ -299,7 +299,7 @@ export default class ComposeTransaction extends AbstractMethod {
             case 'compose-custom':
                 // recompose custom fee level with requested value
                 composer.composeCustomFee(resp.payload.value);
-                this.postMessage(new UiMessage(UI.UPDATE_CUSTOM_FEE, {
+                this.postMessage(UiMessage(UI.UPDATE_CUSTOM_FEE, {
                     feeLevels: composer.getFeeLevelList(),
                     coinInfo: this.params.coinInfo,
                 }));

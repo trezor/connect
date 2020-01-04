@@ -61,7 +61,7 @@ export default class RequestLogin extends AbstractMethod {
     async run(): Promise<$PropertyType<RequestLogin$, 'payload'>> {
         if (this.params.asyncChallenge) {
             // send request to developer
-            this.postMessage(new UiMessage(UI.LOGIN_CHALLENGE_REQUEST));
+            this.postMessage(UiMessage(UI.LOGIN_CHALLENGE_REQUEST));
 
             // wait for response from developer
             const uiResp: UiPromiseResponse = await this.createUiPromise(UI.LOGIN_CHALLENGE_RESPONSE, this.device).promise;

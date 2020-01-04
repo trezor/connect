@@ -57,7 +57,7 @@ export default class CustomMessage extends AbstractMethod {
         const response = await this.device.getCommands()._commonCall(this.params.message, this.params.params);
 
         // send result to developer
-        this.postMessage(new UiMessage(UI.CUSTOM_MESSAGE_REQUEST, response));
+        this.postMessage(UiMessage(UI.CUSTOM_MESSAGE_REQUEST, response));
 
         // wait for response from developer
         const uiResp: UiPromiseResponse = await this.createUiPromise(UI.CUSTOM_MESSAGE_RESPONSE, this.device).promise;

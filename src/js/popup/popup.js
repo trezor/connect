@@ -148,7 +148,7 @@ const init = async (payload: $PropertyType<PopupInit, 'payload'>) => {
         // handshake with iframe
         view.initBrowserView();
     } catch (error) {
-        postMessageToParent(new UiMessage(POPUP.ERROR, { error }));
+        postMessageToParent(UiMessage(POPUP.ERROR, { error }));
     }
 };
 
@@ -171,7 +171,7 @@ const onLoad = () => {
         return;
     }
 
-    postMessageToParent(new UiMessage(POPUP.LOADED));
+    postMessageToParent(UiMessage(POPUP.LOADED));
 };
 
 window.addEventListener('load', onLoad, false);

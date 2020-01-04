@@ -20,7 +20,7 @@ const postConfirmationMessage = (device: Device) => {
 };
 
 const postProgressMessage = (device, progress, postMessage) => {
-    postMessage(new UiMessage(UI.FIRMWARE_PROGRESS, {
+    postMessage(UiMessage(UI.FIRMWARE_PROGRESS, {
         device: device.toMessageObject(),
         progress,
     }));

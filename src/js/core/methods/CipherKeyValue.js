@@ -88,7 +88,7 @@ export default class CipherKeyValue extends AbstractMethod {
 
             if (this.hasBundle) {
                 // send progress
-                this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+                this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
                     response,
                 }));

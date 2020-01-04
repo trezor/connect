@@ -104,7 +104,7 @@ export default class AbstractMethod implements MethodInterface {
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_PERMISSION, this.device);
-        this.postMessage(new UiMessage(UI.REQUEST_PERMISSION, {
+        this.postMessage(UiMessage(UI.REQUEST_PERMISSION, {
             permissions: this.requiredPermissions,
             device: this.device.toMessageObject(),
         }));
@@ -173,7 +173,7 @@ export default class AbstractMethod implements MethodInterface {
         saveStorage(PERMISSIONS_KEY, savedPermissions.concat(permissionsToSave), temporary);
 
         if (emitEvent) {
-            this.postMessage(new DeviceMessage(DEVICE.CONNECT, this.device.toMessageObject()));
+            this.postMessage(DeviceMessage(DEVICE.CONNECT, this.device.toMessageObject()));
         }
     }
 
@@ -204,7 +204,7 @@ export default class AbstractMethod implements MethodInterface {
                 // initialize user response promise
                 const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, device);
                 // show unexpected state information and wait for confirmation
-                this.postMessage(new UiMessage(UI.FIRMWARE_NOT_COMPATIBLE, device.toMessageObject()));
+                this.postMessage(UiMessage(UI.FIRMWARE_NOT_COMPATIBLE, device.toMessageObject()));
 
                 const uiResp: UiPromiseResponse = await uiPromise.promise;
                 if (!uiResp.payload) {

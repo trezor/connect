@@ -78,7 +78,7 @@ export default class TezosGetPublicKey extends AbstractMethod {
         }
 
         // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-address',
             label,
         }));
@@ -106,7 +106,7 @@ export default class TezosGetPublicKey extends AbstractMethod {
 
             if (this.hasBundle) {
                 // send progress
-                this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+                this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
                     response,
                 }));

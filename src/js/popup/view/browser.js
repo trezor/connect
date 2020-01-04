@@ -26,7 +26,7 @@ export const initBrowserView = (validation: boolean = true) => {
     }
     const state = validateBrowser();
     if (!state) {
-        postMessage(new UiMessage(POPUP.HANDSHAKE));
+        postMessage(UiMessage(POPUP.HANDSHAKE));
         return;
     }
     if (state.mobile) {
@@ -49,7 +49,7 @@ export const initBrowserView = (validation: boolean = true) => {
             saveStorage(BROWSER_KEY, true);
         }
 
-        postMessage(new UiMessage(POPUP.HANDSHAKE));
+        postMessage(UiMessage(POPUP.HANDSHAKE));
         showView('loader');
     };
 };

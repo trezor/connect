@@ -101,7 +101,7 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
     }
 
     confirmButton.onclick = () => {
-        postMessage(new UiMessage(UI.RECEIVE_PERMISSION, {
+        postMessage(UiMessage(UI.RECEIVE_PERMISSION, {
             remember: (rememberCheckbox && rememberCheckbox.checked),
             granted: true,
         }));
@@ -109,7 +109,7 @@ export const initPermissionsView = (payload: $PropertyType<RequestPermission, 'p
     };
 
     cancelButton.onclick = () => {
-        postMessage(new UiMessage(UI.RECEIVE_PERMISSION, {
+        postMessage(UiMessage(UI.RECEIVE_PERMISSION, {
             remember: (rememberCheckbox && rememberCheckbox.checked),
             granted: false,
         }));

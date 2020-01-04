@@ -20,7 +20,7 @@ const initWordPlainView = (payload: $PropertyType<DeviceMessage, 'payload'>): vo
     };
 
     const submit = (): void => {
-        postMessage(new UiMessage(UI.RECEIVE_WORD, input.value));
+        postMessage(UiMessage(UI.RECEIVE_WORD, input.value));
         clearWord();
         // eslint-disable-next-line no-use-before-define
         window.removeEventListener('keydown', wordKeyboardHandler);
@@ -51,7 +51,7 @@ const initWordMatrixView = (payload: $PropertyType<DeviceMessage, 'payload'>): v
     showView('word-matrix');
 
     const submit = (val): void => {
-        postMessage(new UiMessage(UI.RECEIVE_WORD, val));
+        postMessage(UiMessage(UI.RECEIVE_WORD, val));
         // eslint-disable-next-line no-use-before-define
         window.addEventListener('keydown', keyboardHandler, true);
     };

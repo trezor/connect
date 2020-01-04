@@ -75,7 +75,7 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
         deviceButton.className = 'list';
         if (device.type !== 'unreadable') {
             deviceButton.addEventListener('click', () => {
-                postMessage(new UiMessage(UI.RECEIVE_DEVICE, {
+                postMessage(UiMessage(UI.RECEIVE_DEVICE, {
                     remember: (rememberCheckbox && rememberCheckbox.checked),
                     device,
                 }));

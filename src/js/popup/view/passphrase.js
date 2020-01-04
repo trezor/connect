@@ -62,7 +62,7 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
         window.removeEventListener('keydown', handleWindowKeydown);
 
         showView('loader');
-        postMessage(new UiMessage(UI.RECEIVE_PASSPHRASE, {
+        postMessage(UiMessage(UI.RECEIVE_PASSPHRASE, {
             save: true,
             value: input1.value,
         }));

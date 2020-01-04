@@ -105,7 +105,7 @@ export default class GetAccountInfo extends AbstractMethod {
 
         if (this.params.length === 1 && !this.params[0].path && !this.params[0].descriptor) {
             // request confirmation view
-            this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+            this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
                 view: 'export-account-info',
                 label: `Export info for ${ this.params[0].coinInfo.label } account of your selection`,
                 customConfirmButton: {
@@ -144,7 +144,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 });
             });
 
-            this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+            this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
                 view: 'export-account-info',
                 label: `Export info for: ${str.join('')}`,
             }));
@@ -162,7 +162,7 @@ export default class GetAccountInfo extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(new UiMessage(UI.REQUEST_CONFIRMATION, {
+        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'no-backup',
         }));
 
@@ -216,7 +216,7 @@ export default class GetAccountInfo extends AbstractMethod {
         const sendProgress = (progress: number, response: AccountInfo | null, error?: string) => {
             if (!this.hasBundle || (this.device && this.device.getCommands().disposed)) return;
             // send progress to UI
-            this.postMessage(new UiMessage(UI.BUNDLE_PROGRESS, {
+            this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
                 progress,
                 response,
                 error,
@@ -320,14 +320,14 @@ export default class GetAccountInfo extends AbstractMethod {
             commands: this.device.getCommands(),
         });
         discovery.on('progress', (accounts: Array<any>) => {
-            this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
+            this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
                 type: 'progress',
                 coinInfo,
                 accounts,
             }));
         });
         discovery.on('complete', () => {
-            this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
+            this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
                 type: 'end',
                 coinInfo,
             }));
@@ -339,7 +339,7 @@ export default class GetAccountInfo extends AbstractMethod {
 
         // set select account view
         // this view will be updated from discovery events
-        this.postMessage(new UiMessage(UI.SELECT_ACCOUNT, {
+        this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
             type: 'start',
             accountTypes: discovery.types.map(t => t.type),
             coinInfo,
