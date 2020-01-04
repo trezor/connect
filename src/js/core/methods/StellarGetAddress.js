@@ -33,7 +33,7 @@ export default class StellarGetAddress extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ ...message.payload ] } : message.payload;
+        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
