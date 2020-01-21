@@ -76,7 +76,7 @@ export default class DeviceList extends EventEmitter {
             _log.debug('Initializing transports');
             await transport.init(_log.enabled);
             _log.debug('Configuring transports');
-            await transport.configure(this.defaultMessages);
+            await transport.configure(JSON.stringify(this.defaultMessages));
             _log.debug('Configuring transports done');
 
             const { activeName } = transport;
@@ -98,7 +98,7 @@ export default class DeviceList extends EventEmitter {
     async reconfigure(json: JSON, custom?: boolean) {
         if (this.currentMessages === json) return;
         try {
-            await this.transport.configure(json);
+            await this.transport.configure(JSON.stringify(json));
             this.currentMessages = json;
             this.hasCustomMessages = typeof custom === 'boolean' ? custom : false;
         } catch (error) {
@@ -109,7 +109,7 @@ export default class DeviceList extends EventEmitter {
     async restoreMessages() {
         if (!this.hasCustomMessages) return;
         try {
-            await this.transport.configure(this.defaultMessages);
+            await this.transport.configure(JSON.stringify(this.defaultMessages));
             this.hasCustomMessages = false;
         } catch (error) {
             throw ERROR.WRONG_TRANSPORT_CONFIG;
