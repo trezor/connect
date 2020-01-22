@@ -321,8 +321,8 @@ export default class Device extends EventEmitter {
             }
 
             // T1: forget passphrase cached in internal state
-            if (this.isT1()) {
-                delete this.internalState[this.instance];
+            if (this.isT1() && !this.useLegacyPassphrase()) {
+                this.setInternalState(undefined);
             }
         }
         this.instance = instance;
@@ -332,7 +332,7 @@ export default class Device extends EventEmitter {
         return this.instance;
     }
 
-    setInternalState(state?: string) {
+    setInternalState(state: ?string) {
         if (typeof state !== 'string') {
             delete this.internalState[this.instance];
         } else {
@@ -344,7 +344,7 @@ export default class Device extends EventEmitter {
         return this.internalState[this.instance];
     }
 
-    setExternalState(state?: string) {
+    setExternalState(state: ?string) {
         if (!state) {
             delete this.internalState[this.instance];
             delete this.externalState[this.instance];
@@ -354,7 +354,7 @@ export default class Device extends EventEmitter {
     }
 
     getExternalState(): ?string {
-        return this.internalState[this.instance];
+        return this.externalState[this.instance];
     }
 
     async validateState() {
@@ -379,10 +379,10 @@ export default class Device extends EventEmitter {
         const legacy = this.useLegacyPassphrase();
         const payload = {};
         if (!legacy) {
-            payload.session_id = this.internalState[this.instance];
+            payload.session_id = this.getInternalState();
         }
         if (legacy && !this.isT1()) {
-            payload.state = this.internalState[this.instance];
+            payload.state = this.getInternalState();
             if (useEmptyPassphrase) {
                 payload.skip_passphrase = useEmptyPassphrase;
                 payload.state = null;

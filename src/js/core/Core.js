@@ -179,11 +179,11 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
 
     const isWebUsb = _deviceList.transportType() === 'WebUsbPlugin';
 
-    let device: ?Device;
+    let device;
     if (method.devicePath) {
         device = _deviceList.getDevice(method.devicePath);
     } else {
-        let devicesCount: number = _deviceList.length();
+        let devicesCount = _deviceList.length();
         let selectedDevicePath: string;
         if (devicesCount === 1 && !isWebUsb) {
             // there is only one device available. use it
@@ -243,7 +243,7 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
  * @returns {Promise<void>}
  * @memberof Core
  */
-export const onCall = async (message: CoreMessage): Promise<void> => {
+export const onCall = async (message: CoreMessage) => {
     if (!message.id || !message.payload) {
         throw ERROR.INVALID_PARAMETERS;
     }
