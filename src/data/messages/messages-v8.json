@@ -1774,6 +1774,10 @@
                             "id": 13
                         },
                         {
+                            "name": "ButtonRequest_PassphraseType",
+                            "id": 14
+                        },
+                        {
                             "name": "ButtonRequest_UnknownDerivationPath",
                             "id": 15
                         },
@@ -1788,10 +1792,6 @@
                         {
                             "name": "ButtonRequest_Warning",
                             "id": 18
-                        },
-                        {
-                            "name": "ButtonRequest_PassphraseEntry",
-                            "id": 19
                         }
                     ],
                     "options": {}
@@ -1875,7 +1875,7 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bool",
-                    "name": "_deprecated_on_device",
+                    "name": "on_device",
                     "id": 1
                 }
             ],
@@ -1897,11 +1897,35 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bool",
-                    "name": "on_device",
+                    "type": "bytes",
+                    "name": "state",
                     "id": 2
                 }
             ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "PassphraseStateRequest",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "state",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "PassphraseStateAck",
+            "fields": [],
             "enums": [],
             "messages": [],
             "options": {},
@@ -2379,38 +2403,6 @@
                     "options": {},
                     "type": "string",
                     "name": "lines",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "DebugLinkReseedRandom",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "value",
-                    "id": 1
-                }
-            ],
-            "enums": [],
-            "messages": [],
-            "options": {},
-            "oneofs": {}
-        },
-        {
-            "name": "DebugLinkRecordScreen",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "string",
-                    "name": "target_directory",
                     "id": 1
                 }
             ],
@@ -4308,8 +4300,15 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bytes",
-                    "name": "session_id",
+                    "name": "state",
                     "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "skip_passphrase",
+                    "id": 2
                 }
             ],
             "enums": [],
@@ -4558,20 +4557,6 @@
                     "type": "bool",
                     "name": "wipe_code_protection",
                     "id": 34
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "session_id",
-                    "id": 35
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "passphrase_always_on_device",
-                    "id": 36
                 }
             ],
             "enums": [
@@ -4641,10 +4626,6 @@
                         {
                             "name": "Capability_ShamirGroups",
                             "id": 16
-                        },
-                        {
-                            "name": "Capability_PassphraseEntry",
-                            "id": 17
                         }
                     ],
                     "options": {}
@@ -4696,6 +4677,13 @@
                 {
                     "rule": "optional",
                     "options": {},
+                    "type": "PassphraseSourceType",
+                    "name": "passphrase_source",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
                     "type": "uint32",
                     "name": "auto_lock_delay_ms",
                     "id": 6
@@ -4706,16 +4694,28 @@
                     "type": "uint32",
                     "name": "display_rotation",
                     "id": 7
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "passphrase_always_on_device",
-                    "id": 8
                 }
             ],
-            "enums": [],
+            "enums": [
+                {
+                    "name": "PassphraseSourceType",
+                    "values": [
+                        {
+                            "name": "ASK",
+                            "id": 0
+                        },
+                        {
+                            "name": "DEVICE",
+                            "id": 1
+                        },
+                        {
+                            "name": "HOST",
+                            "id": 2
+                        }
+                    ],
+                    "options": {}
+                }
+            ],
             "messages": [],
             "options": {},
             "oneofs": {}
@@ -4915,7 +4915,7 @@
                 {
                     "rule": "optional",
                     "options": {
-                        "default": "en-US"
+                        "default": "english"
                     },
                     "type": "string",
                     "name": "language",
@@ -4998,7 +4998,7 @@
                 {
                     "rule": "optional",
                     "options": {
-                        "default": "en-US"
+                        "default": "english"
                     },
                     "type": "string",
                     "name": "language",
@@ -5106,7 +5106,7 @@
                 {
                     "rule": "optional",
                     "options": {
-                        "default": "en-US"
+                        "default": "english"
                     },
                     "type": "string",
                     "name": "language",
@@ -5324,13 +5324,6 @@
                     "type": "MoneroMultisigKLRki",
                     "name": "multisig_kLRki",
                     "id": 9
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "subaddr_minor",
-                    "id": 10
                 }
             ],
             "enums": [],
@@ -5965,13 +5958,6 @@
                     "type": "bytes",
                     "name": "pseudo_out_hmac",
                     "id": 5
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "orig_idx",
-                    "id": 6
                 }
             ],
             "enums": [],
@@ -6227,13 +6213,6 @@
                     "type": "bytes",
                     "name": "spend_key",
                     "id": 7
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "orig_idx",
-                    "id": 8
                 }
             ],
             "enums": [],
@@ -6302,13 +6281,6 @@
                     "type": "bytes",
                     "name": "tx_enc_keys",
                     "id": 4
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bytes",
-                    "name": "opening_key",
-                    "id": 5
                 }
             ],
             "enums": [],
@@ -9254,6 +9226,14 @@
                     "id": 42
                 },
                 {
+                    "name": "MessageType_PassphraseStateRequest",
+                    "id": 77
+                },
+                {
+                    "name": "MessageType_PassphraseStateAck",
+                    "id": 78
+                },
+                {
                     "name": "MessageType_RecoveryDevice",
                     "id": 45
                 },
@@ -9424,14 +9404,6 @@
                 {
                     "name": "MessageType_DebugLinkLayout",
                     "id": 9001
-                },
-                {
-                    "name": "MessageType_DebugLinkReseedRandom",
-                    "id": 9002
-                },
-                {
-                    "name": "MessageType_DebugLinkRecordScreen",
-                    "id": 9003
                 },
                 {
                     "name": "MessageType_EthereumGetPublicKey",

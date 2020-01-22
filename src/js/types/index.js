@@ -83,6 +83,8 @@ export type Features = {
     unfinished_backup: boolean,
     no_backup: boolean,
     features: Array<string>,
+    session_id?: string,
+    passphrase_always_on_device?: boolean,
 };
 
 export type FirmwareRelease = {
