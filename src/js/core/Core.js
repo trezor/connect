@@ -372,7 +372,10 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     device.setInstance(method.deviceInstance);
 
     if (method.hasExpectedDeviceState) {
-        device.setExpectedState(method.deviceState);
+        device.setExternalState(method.deviceState);
+        // device.setExternalState(undefined);
+        // device.setExternalState('mkqRFzxmkCGX9jxgpqqFHcxRUmLJcLDBer'); // TT
+        // device.setExternalState("myVxNL6mDH7iPLF1YpQYxT3mYcipNHLCLm"); // T1
     }
 
     // device is available
@@ -484,9 +487,8 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
 
             // Make sure that device will display pin/passphrase
             try {
-                const deviceState: string = method.useDeviceState ? await device.getCommands().getDeviceState() : 'null';
-                const validState: boolean = !method.useDeviceState || method.useEmptyPassphrase || device.validateExpectedState(deviceState);
-                if (!validState) {
+                const invalidDeviceState = method.useDeviceState ? await device.validateState() : undefined;
+                if (invalidDeviceState) {
                     if (isUsingPopup) {
                         // initialize user response promise
                         const uiPromise = createUiPromise(UI.INVALID_PASSPHRASE_ACTION, device);
@@ -496,12 +498,13 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                         const uiResp: UiPromiseResponse = await uiPromise.promise;
                         const resp: boolean = uiResp.payload;
                         if (resp) {
-                            // initialize to reset device state
-                            await device.getCommands().initialize(method.useEmptyPassphrase);
+                            // reset internal device state and try again
+                            device.setInternalState(undefined);
+                            await device.initialize(method.useEmptyPassphrase);
                             return inner();
                         } else {
                             // set new state as requested
-                            device.setState(deviceState);
+                            device.setExternalState(invalidDeviceState);
                         }
                     } else {
                         throw ERROR.INVALID_STATE;
@@ -519,8 +522,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     // eslint-disable-next-line no-use-before-define
                     // closePopup();
                     // clear cached passphrase. it's not valid
-                    device.clearPassphrase();
-                    device.setState(null);
+                    device.setInternalState(undefined);
                     // interrupt process and go to "final" block
                     return Promise.reject(error.message);
                 }
@@ -671,24 +673,23 @@ const onDeviceWordHandler = async (device: Device, type: string, callback: (erro
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onDevicePassphraseHandler = async (device: Device, callback: (error: any, success: any) => void): Promise<void> => {
-    const cachedPassphrase: ?string = device.getPassphrase();
-    if (typeof cachedPassphrase === 'string') {
-        callback(null, cachedPassphrase);
-        return;
-    }
-
+const onDevicePassphraseHandler = async (device: Device, callback: (response: any) => void) => {
     // wait for popup handshake
     await getPopupPromise().promise;
     // request passphrase view
-    postMessage(UiMessage(UI.REQUEST_PASSPHRASE, { device: device.toMessageObject() }));
+    postMessage(UiMessage(UI.REQUEST_PASSPHRASE, { device: device.toMessageObject(), passphraseOnDevice: !device.isT1() && !device.useLegacyPassphrase() }));
     // wait for passphrase
 
     const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_PASSPHRASE, device).promise;
-    const value: string = uiResp.payload.value;
+    const passphrase: string = uiResp.payload.value;
+    const passphraseOnDevice: boolean = uiResp.payload.passphraseOnDevice;
     const cache: boolean = uiResp.payload.save;
-    device.setPassphrase(cache ? value : null);
-    callback(null, value);
+    // send as PassphrasePromptResponse
+    callback({
+        passphrase: passphrase.normalize('NFKD'),
+        passphraseOnDevice,
+        cache,
+    });
 };
 
 /**
@@ -698,8 +699,9 @@ const onDevicePassphraseHandler = async (device: Device, callback: (error: any, 
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onEmptyPassphraseHandler = async (device: Device, callback: (error: any, success: any) => void): Promise<void> => {
-    callback(null, '');
+const onEmptyPassphraseHandler = async (device: Device, callback: (response: any) => void) => {
+    // send as PassphrasePromptResponse
+    callback({ passphrase: '' });
 };
 
 /**
