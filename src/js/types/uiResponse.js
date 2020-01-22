@@ -42,6 +42,7 @@ declare type ReceivePassphrase = {|
     payload: {
         save: boolean,
         value: string,
+        passphraseOnDevice?: boolean,
     },
 |}
 
