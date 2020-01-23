@@ -49,7 +49,6 @@ export type DeviceMessage = {
     payload: {
         device: Device,
         type?: string, // todo: better flow enum
-        passphraseOnDevice?: boolean,
     },
 };
 
