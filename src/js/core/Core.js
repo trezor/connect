@@ -678,7 +678,7 @@ const onDevicePassphraseHandler = async (device: Device, callback: (response: an
     // wait for popup handshake
     await getPopupPromise().promise;
     // request passphrase view
-    postMessage(UiMessage(UI.REQUEST_PASSPHRASE, { device: device.toMessageObject(), passphraseOnDevice: !device.isT1() && !device.useLegacyPassphrase() }));
+    postMessage(UiMessage(UI.REQUEST_PASSPHRASE, { device: device.toMessageObject() }));
     // wait for passphrase
 
     const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_PASSPHRASE, device).promise;
