@@ -18,6 +18,7 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
     let inputType: string = 'password';
 
     deviceNameSpan.innerText = payload.device.label;
+    const passphraseOnDevice = payload.device.features && payload.device.features.session_id;
 
     /* Functions */
     const validation = () => {
@@ -87,7 +88,7 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
     enter.addEventListener('click', handleEnterClick);
     window.addEventListener('keydown', handleWindowKeydown, false);
 
-    if (payload.passphraseOnDevice) {
+    if (passphraseOnDevice) {
         const onDevice: HTMLButtonElement = (container.getElementsByClassName('passphraseOnDevice')[0]: any);
         onDevice.style.display = 'block';
         onDevice.addEventListener('click', () => {
