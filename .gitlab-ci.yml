@@ -7,7 +7,6 @@ stages:
 build:
   stage: build
   script:
-    - npm install -g yarn
     - yarn
     - yarn flow
     - yarn eslint
