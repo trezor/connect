@@ -1,9 +1,9 @@
 /* @flow */
 
 import BigNumber from 'bignumber.js';
-import semvercmp from 'semver-compare';
 import { invalidParameter } from '../../../constants/errors';
 import { fromHardened } from '../../../utils/pathUtils';
+import { versionCompare } from '../../../utils/arrayUtils';
 
 import DataManager from '../../../data/DataManager';
 import type { CoinInfo, FirmwareRange } from '../../../types';
@@ -67,13 +67,13 @@ export const getFirmwareRange = (method: string, coinInfo: ?CoinInfo, currentRan
     if (coinInfo) {
         if (!coinInfo.support || typeof coinInfo.support.trezor1 !== 'string') {
             current['1'].min = '0';
-        } else if (semvercmp(coinInfo.support.trezor1, current['1'].min) > 0) {
+        } else if (versionCompare(coinInfo.support.trezor1, current['1'].min) > 0) {
             current['1'].min = coinInfo.support.trezor1;
         }
 
         if (!coinInfo.support || typeof coinInfo.support.trezor2 !== 'string') {
             current['2'].min = '0';
-        } else if (semvercmp(coinInfo.support.trezor2, current['2'].min) > 0) {
+        } else if (versionCompare(coinInfo.support.trezor2, current['2'].min) > 0) {
             current['2'].min = coinInfo.support.trezor2;
         }
     }
@@ -98,18 +98,18 @@ export const getFirmwareRange = (method: string, coinInfo: ?CoinInfo, currentRan
         const { min, max } = range;
         // override defaults
         if (min) {
-            if (current['1'].min === '0' || semvercmp(current['1'].min, min[0]) < 0) {
+            if (current['1'].min === '0' || versionCompare(current['1'].min, min[0]) < 0) {
                 current['1'].min = min[0];
             }
-            if (current['2'].min === '0' || semvercmp(current['2'].min, min[1]) < 0) {
+            if (current['2'].min === '0' || versionCompare(current['2'].min, min[1]) < 0) {
                 current['2'].min = min[1];
             }
         }
         if (max) {
-            if (current['1'].max === '0' || semvercmp(current['1'].max, max[0]) < 0) {
+            if (current['1'].max === '0' || versionCompare(current['1'].max, max[0]) < 0) {
                 current['1'].max = max[0];
             }
-            if (current['2'].max === '0' || semvercmp(current['2'].max, max[1]) < 0) {
+            if (current['2'].max === '0' || versionCompare(current['2'].max, max[1]) < 0) {
                 current['2'].max = max[1];
             }
         }

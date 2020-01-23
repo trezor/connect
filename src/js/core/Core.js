@@ -392,6 +392,11 @@ export const onCall = async (message: CoreMessage) => {
     });
     /* eslint-enable no-use-before-define */
 
+    // try to reconfigure messages before Initialize
+    if (_deviceList) {
+        await _deviceList.reconfigure(device.getVersion());
+    }
+
     try {
         let PIN_TRIES: number = 1;
         const MAX_PIN_TRIES: number = 3;
@@ -480,9 +485,8 @@ export const onCall = async (message: CoreMessage) => {
             }
 
             if (_deviceList) {
-                // restore default messages
-                const messages = DataManager.findMessages(device.isT1() ? 0 : 1, device.getVersion());
-                await _deviceList.reconfigure(messages);
+                // reconfigure protobuf messages
+                await _deviceList.reconfigure(device.getVersion());
             }
 
             // Make sure that device will display pin/passphrase
@@ -677,7 +681,7 @@ const onDevicePassphraseHandler = async (device: Device, callback: (response: an
     // wait for popup handshake
     await getPopupPromise().promise;
     // request passphrase view
-    postMessage(UiMessage(UI.REQUEST_PASSPHRASE, { device: device.toMessageObject(), passphraseOnDevice: !device.isT1() && !device.useLegacyPassphrase() }));
+    postMessage(UiMessage(UI.REQUEST_PASSPHRASE, { device: device.toMessageObject() }));
     // wait for passphrase
 
     const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_PASSPHRASE, device).promise;

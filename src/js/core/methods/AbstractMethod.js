@@ -1,13 +1,13 @@
 /* @flow */
 
 import { crypto } from '@trezor/utxo-lib';
-import semvercmp from 'semver-compare';
 import Device from '../../device/Device';
 import DataManager from '../../data/DataManager';
 import * as UI from '../../constants/ui';
 import * as DEVICE from '../../constants/device';
 import * as ERROR from '../../constants/errors';
 import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../storage';
+import { versionCompare } from '../../utils/arrayUtils';
 
 import { UiMessage, DeviceMessage } from '../../message/builder';
 import type { Deferred, CoreMessage, UiPromiseResponse, FirmwareRange } from '../../types';
@@ -183,7 +183,8 @@ export default class AbstractMethod implements MethodInterface {
         }
         const device = this.device;
         if (!device.features) return null;
-        const model = device.features.major_version;
+        const version = device.getVersion();
+        const model = version[0];
         const range = this.firmwareRange[model];
 
         if (device.firmwareStatus === 'none') {
@@ -193,11 +194,11 @@ export default class AbstractMethod implements MethodInterface {
             return UI.FIRMWARE_NOT_SUPPORTED;
         }
 
-        if (device.firmwareStatus === 'required' || semvercmp(device.getVersion(), range.min) < 0) {
+        if (device.firmwareStatus === 'required' || versionCompare(version, range.min) < 0) {
             return UI.FIRMWARE_OLD;
         }
 
-        if (range.max !== '0' && semvercmp(device.getVersion(), range.max) > 0) {
+        if (range.max !== '0' && versionCompare(version, range.max) > 0) {
             if (isUsingPopup) {
                 // wait for popup handshake
                 await this.getPopupPromise().promise;

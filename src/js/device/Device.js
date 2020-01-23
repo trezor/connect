@@ -1,7 +1,6 @@
 /* @flow */
 
 import EventEmitter from 'events';
-import semvercmp from 'semver-compare';
 import DeviceCommands from './DeviceCommands';
 
 import type { Device as DeviceTyped, DeviceFirmwareStatus, Features, Deferred, FirmwareRelease } from '../types';
@@ -13,6 +12,7 @@ import * as ERROR from '../constants/errors';
 import { create as createDeferred } from '../utils/deferred';
 import DataManager from '../data/DataManager';
 import { checkFirmware, getLatestRelease } from '../data/FirmwareInfo';
+import { versionCompare } from '../utils/arrayUtils';
 import Log, { init as initLog } from '../utils/debug';
 
 // custom log
@@ -91,14 +91,11 @@ export default class Device extends EventEmitter {
 
     activitySessionID: ?string;
 
-    featuresTimestamp: number = 0;
-
     commands: DeviceCommands;
 
     keepSession: boolean = false;
 
     instance: number = 0;
-
     internalState: string[] = [];
     externalState: string[] = [];
 
@@ -372,40 +369,40 @@ export default class Device extends EventEmitter {
     }
 
     useLegacyPassphrase() {
-        return !this.atLeast(['1.8.9', '2.1.9']);
+        return !this.atLeast(['1.9.0', '2.3.0']);
     }
 
-    async initialize(useEmptyPassphrase: boolean): Promise<void> {
-        const legacy = this.useLegacyPassphrase();
-        const payload = {};
-        if (!legacy) {
-            payload.session_id = this.getInternalState();
-        }
-        if (legacy && !this.isT1()) {
-            payload.state = this.getInternalState();
-            if (useEmptyPassphrase) {
-                payload.skip_passphrase = useEmptyPassphrase;
-                payload.state = null;
+    async initialize(useEmptyPassphrase: boolean) {
+        let payload;
+        if (this.features) {
+            const legacy = this.useLegacyPassphrase();
+            const internalState = this.getInternalState();
+            payload = {};
+            if (!legacy && internalState) {
+                payload.session_id = internalState;
+            }
+            if (legacy && !this.isT1()) {
+                payload.state = internalState;
+                if (useEmptyPassphrase) {
+                    payload.skip_passphrase = useEmptyPassphrase;
+                    payload.state = null;
+                }
             }
         }
 
         const { message }: { message: Features } = await this.commands.typedCall('Initialize', 'Features', payload);
         this.features = parseFeatures(message);
         this.featuresNeedsReload = false;
-        this.featuresTimestamp = new Date().getTime();
-
-        const currentFW = [ this.features.major_version, this.features.minor_version, this.features.patch_version ];
-        this.firmwareStatus = checkFirmware(currentFW, this.features);
-        this.firmwareRelease = getLatestRelease(currentFW);
+        this.firmwareStatus = checkFirmware(this.getVersion(), this.features);
+        this.firmwareRelease = getLatestRelease(this.getVersion());
     }
 
     async getFeatures() {
         const { message }: { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
         this.features = parseFeatures(message);
-        this.firmwareStatus = checkFirmware(
-            [ this.features.major_version, this.features.minor_version, this.features.patch_version ],
-            this.features,
-        );
+        this.featuresNeedsReload = false;
+        this.firmwareStatus = checkFirmware(this.getVersion(), this.features);
+        this.firmwareRelease = getLatestRelease(this.getVersion());
     }
 
     isUnacquired(): boolean {
@@ -500,18 +497,19 @@ export default class Device extends EventEmitter {
         return this.inconsistent;
     }
 
-    getVersion(): string {
+    getVersion(): number[] {
+        if (!this.features) return [];
         return [
             this.features.major_version,
             this.features.minor_version,
             this.features.patch_version,
-        ].join('.');
+        ];
     }
 
     atLeast(versions: string[] | string) {
         if (!this.features) return false;
         const modelVersion = typeof versions === 'string' ? versions : versions[this.features.major_version - 1];
-        return semvercmp(this.getVersion(), modelVersion) >= 0;
+        return versionCompare(this.getVersion(), modelVersion) >= 0;
     }
 
     isUsed(): boolean {

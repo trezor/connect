@@ -6,7 +6,7 @@ import { parseCoinsJson } from './CoinInfo';
 import { parseFirmware } from './FirmwareInfo';
 import { parseBridgeJSON } from './TransportInfo';
 import parseUri from 'parse-uri';
-import semvercmp from 'semver-compare';
+import { versionCompare } from '../utils/arrayUtils';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
 
@@ -132,17 +132,15 @@ export default class DataManager {
         parseFirmware(this.assets['firmware-t2']);
     }
 
-    static findMessages(model: number, fw: string): JSON {
+    static getProtobufMessages(version?: number[]): JSON {
+        if (!version) return this.messages['default'];
+        const model = version[0] - 1;
         const messages = this.config.messages.find(m => {
             const min = m.range.min[model];
-            const max = m.range.max ? m.range.max[model] : fw;
-            return (semvercmp(fw, min) >= 0 && semvercmp(fw, max) <= 0);
+            const max = m.range.max ? m.range.max[model] : version;
+            return (versionCompare(version, min) >= 0 && versionCompare(version, max) <= 0);
         });
         return this.messages[messages ? messages.name : 'default'];
-    }
-
-    static getMessages(name?: string): JSON {
-        return this.messages[name || 'default'];
     }
 
     static isWhitelisted(origin: string): ?WhiteList {
