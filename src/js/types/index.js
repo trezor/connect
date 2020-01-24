@@ -120,10 +120,12 @@ export type Device = $Exact<{
     +type: 'unacquired',
     +path: string,
     +label: string,
+    features?: typeof undefined,
 }> | $Exact<{
     +type: 'unreadable',
     +path: string,
     +label: string,
+    features?: typeof undefined,
 }>
 
 export type Settings = {
