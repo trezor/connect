@@ -82,9 +82,9 @@ export type Features = {
     fw_vendor_keys: string,
     unfinished_backup: boolean,
     no_backup: boolean,
-    features: Array<string>,
     session_id?: string,
     passphrase_always_on_device?: boolean,
+    capabilities?: string[],
 };
 
 export type FirmwareRelease = {
@@ -103,6 +103,7 @@ export type FirmwareRelease = {
 export type DeviceStatus = 'available' | 'occupied' | 'used';
 export type DeviceMode = 'normal' | 'bootloader' | 'initialize' | 'seedless';
 export type DeviceFirmwareStatus = 'valid' | 'outdated' | 'required' | 'unknown' | 'none';
+export type UnavailableCapability = 'no-capability' | 'no-support' | 'update-required' | 'trezor-connect-outdated' | string[];
 
 export type Device = $Exact<{
     +type: 'acquired',
@@ -114,6 +115,7 @@ export type Device = $Exact<{
     +mode: DeviceMode,
     state: ?string,
     features: Features,
+    unavailableCapabilities: { [key: string]: UnavailableCapability },
 }> | $Exact<{
     +type: 'unacquired',
     +path: string,

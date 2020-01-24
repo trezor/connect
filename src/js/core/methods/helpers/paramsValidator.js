@@ -3,7 +3,7 @@
 import BigNumber from 'bignumber.js';
 import { invalidParameter } from '../../../constants/errors';
 import { fromHardened } from '../../../utils/pathUtils';
-import { versionCompare } from '../../../utils/arrayUtils';
+import { versionCompare } from '../../../utils/deviceFeaturesUtils';
 
 import DataManager from '../../../data/DataManager';
 import type { CoinInfo, FirmwareRange } from '../../../types';

@@ -6,7 +6,7 @@ import { parseCoinsJson } from './CoinInfo';
 import { parseFirmware } from './FirmwareInfo';
 import { parseBridgeJSON } from './TransportInfo';
 import parseUri from 'parse-uri';
-import { versionCompare } from '../utils/arrayUtils';
+import { versionCompare } from '../utils/deviceFeaturesUtils';
 
 import type { ConnectSettings } from '../data/ConnectSettings';
 

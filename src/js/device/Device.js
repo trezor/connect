@@ -3,7 +3,7 @@
 import EventEmitter from 'events';
 import DeviceCommands from './DeviceCommands';
 
-import type { Device as DeviceTyped, DeviceFirmwareStatus, Features, Deferred, FirmwareRelease } from '../types';
+import type { Device as DeviceTyped, DeviceFirmwareStatus, Features, Deferred, FirmwareRelease, UnavailableCapability } from '../types';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
 import * as UI from '../constants/ui';
@@ -11,8 +11,9 @@ import * as DEVICE from '../constants/device';
 import * as ERROR from '../constants/errors';
 import { create as createDeferred } from '../utils/deferred';
 import DataManager from '../data/DataManager';
+import { getAllNetworks } from '../data/CoinInfo';
 import { checkFirmware, getLatestRelease } from '../data/FirmwareInfo';
-import { versionCompare } from '../utils/arrayUtils';
+import { versionCompare, parseCapabilities, getUnavailableCapabilities } from '../utils/deviceFeaturesUtils';
 import Log, { init as initLog } from '../utils/debug';
 
 // custom log
@@ -41,28 +42,6 @@ export type RunOptions = {
 const parseRunOptions = (options?: RunOptions): RunOptions => {
     if (!options) options = {};
     return options;
-};
-
-const parseFeatures = (features: Features): Features => {
-    if (!features.features || features.features.length === 0) {
-        features.features = [
-            'Feature_Bitcoin',
-            'Feature_Bitcoin_like',
-            'Feature_Binance',
-            'Feature_Cardano',
-            'Feature_Crypto',
-            'Feature_EOS',
-            'Feature_Ethereum',
-            'Feature_Lisk',
-            'Feature_Monero',
-            'Feature_NEM',
-            'Feature_Ripple',
-            'Feature_Stellar',
-            'Feature_Tezos',
-            'Feature_U2F',
-        ];
-    }
-    return features;
 };
 
 /**
@@ -98,6 +77,7 @@ export default class Device extends EventEmitter {
     instance: number = 0;
     internalState: string[] = [];
     externalState: string[] = [];
+    unavailableCapabilities: { [key: string]: UnavailableCapability } = {};
 
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
         super();
@@ -391,18 +371,25 @@ export default class Device extends EventEmitter {
         }
 
         const { message }: { message: Features } = await this.commands.typedCall('Initialize', 'Features', payload);
-        this.features = parseFeatures(message);
-        this.featuresNeedsReload = false;
-        this.firmwareStatus = checkFirmware(this.getVersion(), this.features);
-        this.firmwareRelease = getLatestRelease(this.getVersion());
+        this._updateFeatures(message);
     }
 
     async getFeatures() {
         const { message }: { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
-        this.features = parseFeatures(message);
+        this._updateFeatures(message);
+    }
+
+    _updateFeatures(feat: Features) {
+        feat.capabilities = parseCapabilities(feat);
+        const version = [feat.major_version, feat.minor_version, feat.patch_version];
+        // check if FW version did change
+        if (versionCompare(version, this.getVersion()) !== 0) {
+            this.unavailableCapabilities = getUnavailableCapabilities(feat, getAllNetworks(), DataManager.getConfig().supportedFirmware);
+            this.firmwareStatus = checkFirmware(version, feat);
+            this.firmwareRelease = getLatestRelease(version);
+        }
+        this.features = feat;
         this.featuresNeedsReload = false;
-        this.firmwareStatus = checkFirmware(this.getVersion(), this.features);
-        this.firmwareRelease = getLatestRelease(this.getVersion());
     }
 
     isUnacquired(): boolean {
@@ -618,6 +605,7 @@ export default class Device extends EventEmitter {
                 firmware: this.firmwareStatus,
                 firmwareRelease: this.firmwareRelease,
                 features: this.features,
+                unavailableCapabilities: this.unavailableCapabilities,
             };
         }
     }

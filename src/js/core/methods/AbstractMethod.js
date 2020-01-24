@@ -7,7 +7,7 @@ import * as UI from '../../constants/ui';
 import * as DEVICE from '../../constants/device';
 import * as ERROR from '../../constants/errors';
 import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../storage';
-import { versionCompare } from '../../utils/arrayUtils';
+import { versionCompare } from '../../utils/deviceFeaturesUtils';
 
 import { UiMessage, DeviceMessage } from '../../message/builder';
 import type { Deferred, CoreMessage, UiPromiseResponse, FirmwareRange } from '../../types';

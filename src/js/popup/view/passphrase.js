@@ -17,8 +17,9 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
 
     let inputType: string = 'password';
 
-    deviceNameSpan.innerText = payload.device.label;
-    const passphraseOnDevice = payload.device.features && payload.device.features.session_id;
+    const { label, features } = payload.device;
+    deviceNameSpan.innerText = label;
+    const passphraseOnDevice = features && features.capabilities && features.capabilities.includes('Capability_PassphraseEntry');
 
     /* Functions */
     const validation = () => {
