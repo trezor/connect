@@ -5,7 +5,7 @@ import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import type { Success } from '../../types/trezor';
 import type { CoreMessage } from '../../types';
 
-import { stripHexPrefix, messageToHex } from '../../utils/ethereumUtils';
+import { stripHexPrefix, messageToHex } from '../../utils/formatUtils';
 
 type Params = {
     address: string,

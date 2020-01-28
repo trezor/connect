@@ -6,6 +6,7 @@ import { validatePath, getLabel } from '../../utils/pathUtils';
 import { getBitcoinNetwork } from '../../data/CoinInfo';
 import type { MessageSignature } from '../../types/trezor';
 import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
+import { messageToHex } from '../../utils/formatUtils';
 
 type Params = {
     path: Array<number>,
@@ -28,6 +29,7 @@ export default class SignMessage extends AbstractMethod {
             { name: 'path', obligatory: true },
             { name: 'coin', type: 'string' },
             { name: 'message', type: 'string', obligatory: true },
+            { name: 'hex', type: 'boolean' },
         ]);
 
         const path: Array<number> = validatePath(payload.path);
@@ -46,7 +48,7 @@ export default class SignMessage extends AbstractMethod {
             this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
         }
 
-        const messageHex: string = Buffer.from(payload.message, 'utf8').toString('hex');
+        const messageHex: string = payload.hex ? messageToHex(payload.message) : Buffer.from(payload.message, 'utf8').toString('hex');
         this.params = {
             path,
             message: messageHex,

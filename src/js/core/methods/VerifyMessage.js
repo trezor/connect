@@ -8,6 +8,7 @@ import { NO_COIN_INFO } from '../../constants/errors';
 
 import type { Success } from '../../types/trezor';
 import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
+import { messageToHex } from '../../utils/formatUtils';
 
 type Params = {
     address: string,
@@ -33,6 +34,7 @@ export default class VerifyMessage extends AbstractMethod {
             { name: 'signature', type: 'string', obligatory: true },
             { name: 'message', type: 'string', obligatory: true },
             { name: 'coin', type: 'string', obligatory: true },
+            { name: 'hex', type: 'boolean' },
         ]);
 
         const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
@@ -43,8 +45,7 @@ export default class VerifyMessage extends AbstractMethod {
             this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
             this.info = getLabel('Verify #NETWORK message', coinInfo);
         }
-        // TODO: check if message is already a hex
-        const messageHex: string = Buffer.from(payload.message, 'utf8').toString('hex');
+        const messageHex: string = payload.hex ? messageToHex(payload.message) : Buffer.from(payload.message, 'utf8').toString('hex');
         const signatureHex: string = Buffer.from(payload.signature, 'base64').toString('hex');
 
         this.params = {

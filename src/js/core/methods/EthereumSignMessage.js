@@ -4,7 +4,8 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
-import { toChecksumAddress, getNetworkLabel, messageToHex } from '../../utils/ethereumUtils';
+import { toChecksumAddress, getNetworkLabel } from '../../utils/ethereumUtils';
+import { messageToHex } from '../../utils/formatUtils';
 
 import type { MessageSignature } from '../../types/trezor';
 import type { CoreMessage, EthereumNetworkInfo } from '../../types';
