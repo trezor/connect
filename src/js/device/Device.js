@@ -228,7 +228,7 @@ export default class Device extends EventEmitter {
         fn?: () => Promise<X>,
         options: RunOptions
     ): Promise<any> {
-        if (!this.isUsedHere() || this.commands.disposed) {
+        if (!this.isUsedHere() || this.commands.disposed || !this.getExternalState()) {
             // acquire session
             await this.acquire();
 
@@ -322,7 +322,7 @@ export default class Device extends EventEmitter {
     }
 
     setExternalState(state: ?string) {
-        if (!state) {
+        if (typeof state !== 'string') {
             delete this.internalState[this.instance];
             delete this.externalState[this.instance];
         } else {
