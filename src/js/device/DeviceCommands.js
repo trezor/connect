@@ -536,14 +536,14 @@ export default class DeviceCommands {
         return await this.typedCall('ClearSession', 'Success', settings);
     }
 
-    async getDeviceState(): Promise<string> {
+    async getDeviceState() {
         const response = await this.typedCall('GetAddress', 'Address', {
             address_n: [(44 | 0x80000000) >>> 0, (1 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0, 0, 0],
             coin_name: 'Testnet',
             script_type: 'SPENDADDRESS',
         });
         // bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
-        const state = response.message.address;
+        const state: string = response.message.address;
         return state;
     }
 

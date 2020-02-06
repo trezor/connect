@@ -373,9 +373,6 @@ export const onCall = async (message: CoreMessage) => {
 
     if (method.hasExpectedDeviceState) {
         device.setExternalState(method.deviceState);
-        // device.setExternalState(undefined);
-        // device.setExternalState('mkqRFzxmkCGX9jxgpqqFHcxRUmLJcLDBer'); // TT
-        // device.setExternalState("myVxNL6mDH7iPLF1YpQYxT3mYcipNHLCLm"); // T1
     }
 
     // device is available
