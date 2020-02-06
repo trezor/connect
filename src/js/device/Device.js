@@ -335,16 +335,18 @@ export default class Device extends EventEmitter {
     }
 
     async validateState() {
+        if (!this.features) return;
         const expectedState = this.getExternalState();
         const state = await this.commands.getDeviceState();
-        if (!this.useLegacyPassphrase() && this.features && this.features.session_id) {
+        const uniqueState = `${state}@${this.features.device_id}:${this.instance}`;
+        if (!this.useLegacyPassphrase() && this.features.session_id) {
             this.setInternalState(this.features.session_id);
         }
-        if (expectedState && expectedState !== state) {
-            return state;
+        if (expectedState && expectedState !== uniqueState) {
+            return uniqueState;
         }
         if (!expectedState) {
-            this.setExternalState(state);
+            this.setExternalState(uniqueState);
         }
     }
 
