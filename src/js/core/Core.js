@@ -953,7 +953,7 @@ export const initTransport = async (settings: ConnectSettings) => {
 
 const disableWebUSBTransport = async () => {
     if (!_deviceList) return;
-    if (_deviceList.transportType() !== 'webusb') return;
+    if (_deviceList.transportType() !== 'WebUsbPlugin') return;
     // override settings
     const settings = DataManager.getSettings();
     settings.webusb = false;
