@@ -20,7 +20,7 @@ export type EosGetPublicKey = {
 export type EosPublicKey = {
     wifPublicKey: string;
     rawPublicKey: string;
-    path: Array<number>;
+    path: number[];
     serializedPath: string;
 }
 
@@ -37,7 +37,7 @@ export type EosTxHeader = {
 
 export type EosAuthorization = {
     threshold: number;
-    keys: Array<EosAuthorizationKey>;
+    keys: EosAuthorizationKey[];
     accounts: Array<{
         permission: EosPermissionLevel;
         weight: number;
@@ -50,7 +50,7 @@ export type EosAuthorization = {
 
 type Action = {
     account: string;
-    authorization: Array<EosPermissionLevel>;
+    authorization: EosPermissionLevel[];
 }
 
 export type EosTxAction = Action & {
@@ -96,7 +96,7 @@ export type EosTxAction = Action & {
     data: {
         voter: string;
         proxy: string;
-        producers: Array<string>;
+        producers: string[];
     };
 } | Action & {
     name: 'refund';
@@ -128,13 +128,13 @@ export type EosTxAction = Action & {
     };
 }
 
-export type Transaction = {
-    chainId: string;
-    header: ?EosTxHeader;
-    actions: Array<EosTxAction>;
-}
+// export type Transaction = {
+//     chainId: string;
+//     header: ?EosTxHeader;
+//     actions: EosTxAction[];
+// }
 
-export type EosSignTx = {
+export type EosSignTransaction = {
     path: string | number[];
     transaction: {
         chainId: string;

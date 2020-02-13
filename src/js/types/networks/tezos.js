@@ -4,25 +4,26 @@
 
 export type TezosGetAddress = {
     path: string | number[];
+    address?: string;
     showOnTrezor?: boolean;
 }
 
 export type TezosAddress = {
     address: string;
-    path: Array<number>;
+    path: number[];
     serializedPath: string;
 }
 
 // get public key
 
-export type $TezosGetPublicKey = {
+export type TezosGetPublicKey = {
     path: string | number[];
     showOnTrezor?: boolean;
 }
 
 export type TezosPublicKey = {
     publicKey: string;
-    path: Array<number>;
+    path: number[];
     serializedPath: string;
 }
 
@@ -56,7 +57,7 @@ export type TezosTransactionOperation = {
     fee: number;
     gas_limit: number;
     storage_limit: number;
-    parameters?: Array<number>;
+    parameters?: number[];
     parameters_manager?: TezosParametersManager;
 };
 
@@ -64,7 +65,7 @@ export type TezosOriginationOperation = {
     source: string;
     balance: number;
     delegate?: string;
-    script: Array<number>;
+    script: string;
     fee: number;
     counter: number;
     gas_limit: number;
@@ -88,13 +89,7 @@ export type TezosOperation = {
 };
 
 export type TezosSignTransaction = {
-    address_n: Array<number>;
+    path: string | number[];
     branch: string;
     operation: TezosOperation;
-};
-
-export type TezosSignedTx = {
-    signatureContents: string;
-    signature: string;
-    hash: string;
 };

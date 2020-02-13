@@ -28,7 +28,7 @@ export type BinancePublicKey = {
 // sign transaction
 // fields taken from https://github.com/binance-chain/javascript-sdk/blob/master/src/tx/index.js
 
-export type BinanceTransaction = {
+export type BinanceSDKTransaction = {
     chain_id: string;
     account_number?: number; // default 0
     memo?: string;
@@ -51,15 +51,11 @@ export type BinancePreparedMessage =
           type: 'BinanceCancelMsg';
       });
 
-export type BinancePreparedTransaction = BinanceTransaction & {
+export type BinancePreparedTransaction = BinanceSDKTransaction & {
     messages: BinancePreparedMessage[];
 };
 
 export type BinanceSignTransaction = {
-    transaction: BinancePreparedMessage;
-};
-
-export type BinanceSignedTransaction = {
-    success: true;
-    payload: BinanceSignedTx;
+    path: string | number[];
+    transaction: BinanceSDKTransaction;
 };

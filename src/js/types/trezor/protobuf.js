@@ -38,17 +38,6 @@ export type Features = {
     no_backup: boolean;
 };
 
-export type ResetDeviceSettings = {
-    display_random?: boolean;
-    strength?: number;
-    passphrase_protection?: boolean;
-    pin_protection?: boolean;
-    language?: string;
-    label?: string;
-    u2f_counter?: number;
-    skip_backup?: boolean;
-};
-
 export type HDPrivNode = {
     depth: number;
     fingerprint: number;
@@ -67,53 +56,48 @@ export type HDPubNode = {
 
 export type HDNode = HDPubNode | HDPrivNode;
 
-export type LoadDeviceSettings = {
-    pin?: string;
-    passphrase_protection?: boolean;
-    language?: string;
-    label?: string;
-    skip_checksum?: boolean;
-    mnemonics?: Array<string>;
-    mnemonic?: string;
-    node?: HDNode;
-    payload?: string; // will be converted
-
-    u2f_counter?: number;
+export type PublicKey = {
+    node: HDPubNode;
+    xpub: string;
 };
 
-export type RecoverDeviceSettings = {
-    word_count?: number;
-    passphrase_protection?: boolean;
-    pin_protection?: boolean;
-    language?: string;
-    label?: string;
-    enforce_wordlist?: boolean;
-    type?: number;
-    u2f_counter?: number;
+// combined Bitcoin.PublicKey and Bitcoin.HDNode
+export type HDNodeResponse = {
+    path: Array<number>;
+    serializedPath: string;
+    childNum: number;
+    xpub: string;
+    xpubSegwit?: string;
+    chainCode: string;
+    publicKey: string;
+    fingerprint: number;
+    depth: number;
 };
 
-export type ApplySettings = {
-    language?: string;
-    label?: string;
-    use_passphrase?: boolean;
-    homescreen?: string;
-};
+// Bitcoin.getAddress response
+export type Address = {
+    address: string;
+    path: number[];
+}
 
 export type MessageSignature = {
     address: string;
     signature: string;
 }
 
+// Bitcoin.signTransaction
+
 export type MultisigRedeemScriptType = {
-    pubkeys: Array<{ node: string | HDPubNode; address_n: Array<number> }>;
-    signatures: Array<string>;
+    pubkeys: Array<{ node: string | HDPubNode; address_n: number[] }>;
+    signatures: string[];
     m?: number;
 }
 
 export type InputScriptType = 'SPENDADDRESS' | 'SPENDMULTISIG' | 'SPENDWITNESS' | 'SPENDP2SHWITNESS';
+
 // transaction input, parameter of SignTx message, declared by user
 export type TransactionInput = {|
-    address_n: Array<number>;
+    address_n: number[];
     prev_hash: string;
     prev_index: number;
     script_type: InputScriptType;
@@ -122,15 +106,8 @@ export type TransactionInput = {|
     multisig?: MultisigRedeemScriptType;
 |};
 
-// transaction input, parameter of TxAck message, declared by user or downloaded from backend
-export type RefTransactionInput = {|
-    prev_hash: string;
-    prev_index: number;
-    script_sig: string;
-    sequence: number;
-|};
-
 export type OutputScriptType = 'PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS' | 'PAYTOP2SHWITNESS';
+
 // transaction output, parameter of SignTx message, declared by user
 export type TransactionOutput = {|
     address: string;
@@ -152,6 +129,14 @@ type TransactionBinOutput = {
     amount: string;
     script_pubkey: string;
 };
+
+// transaction input, parameter of TxAck message, declared by user or downloaded from backend
+export type RefTransactionInput = {|
+    prev_hash: string;
+    prev_index: number;
+    script_sig: string;
+    sequence: number;
+|};
 
 export type RefTransaction = {
     hash: string;
@@ -194,10 +179,11 @@ export type TxRequest = {
 };
 
 export type SignedTx = {
-    signatures: Array<string>;
+    signatures: string[];
     serializedTx: string;
-    txid?: string;
 };
+
+// Ethereum.signTransaction
 
 export type EthereumTxRequest = {
     data_length?: number;
@@ -230,24 +216,6 @@ export type SignedIdentity = {
     address: string;
     public_key: string;
     signature: string;
-};
-
-export type PublicKey = {
-    node: HDPubNode;
-    xpub: string;
-};
-
-// combined PublicKey and bitcoin.HDNode
-export type HDNodeResponse = {
-    path: Array<number>;
-    serializedPath: string;
-    childNum: number;
-    xpub: string;
-    xpubSegwit?: string;
-    chainCode: string;
-    publicKey: string;
-    fingerprint: number;
-    depth: number;
 };
 
 // this is what Trezor asks for
@@ -731,15 +699,15 @@ export type EosPermissionLevel = {
 }
 
 export type EosAuthorizationKey = {
-    type: number;
+    type?: number;
     key: string;
-    // address_n?: Array<number>, // this field is not implemented in FW
+    address_n?: number[]; // this field is not implemented in FW?
     weight: number;
 }
 
 export type EosAuthorization = {
     threshold: number;
-    keys: Array<EosAuthorizationKey>;
+    keys: EosAuthorizationKey[];
     accounts: Array<{
         account: EosPermissionLevel;
         weight: number;
@@ -892,7 +860,7 @@ export type BinanceInputOutput = {
     coins: {
         amount: number;
         denom: string;
-    };
+    }[];
 }
 
 export type BinanceTransferMsg = {
@@ -922,13 +890,6 @@ export type BinanceMessage = BinanceTransferMsg | BinanceOrderMsg | BinanceCance
 export type BinanceSignedTx = {
     signature: string;
     public_key: string;
-}
-
-// GetAddress response
-export type Address = {
-    address: string;
-    path: Array<number>;
-    serializedPath: string;
 }
 
 // Reset device flags
@@ -993,3 +954,46 @@ export type LoadDeviceFlags = {
     skip_checksum?: boolean;
     u2f_counter?: number;
 }
+
+export type RecoverDeviceSettings = {
+    word_count?: number;
+    passphrase_protection?: boolean;
+    pin_protection?: boolean;
+    language?: string;
+    label?: string;
+    enforce_wordlist?: boolean;
+    type?: number;
+    u2f_counter?: number;
+};
+
+export type LoadDeviceSettings = {
+    pin?: string;
+    passphrase_protection?: boolean;
+    language?: string;
+    label?: string;
+    skip_checksum?: boolean;
+    mnemonics?: Array<string>;
+    mnemonic?: string;
+    node?: HDNode;
+    payload?: string; // will be converted
+
+    u2f_counter?: number;
+};
+
+export type ResetDeviceSettings = {
+    display_random?: boolean;
+    strength?: number;
+    passphrase_protection?: boolean;
+    pin_protection?: boolean;
+    language?: string;
+    label?: string;
+    u2f_counter?: number;
+    skip_backup?: boolean;
+};
+
+export type ApplySettings = {
+    language?: string;
+    label?: string;
+    use_passphrase?: boolean;
+    homescreen?: string;
+};

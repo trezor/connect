@@ -73,42 +73,42 @@ export type BlockchainNotification = {
     notification: BlockchainLinkTransaction;
 }
 
-export type SubscriptionAccountInfo = {
+export type BlockchainSubscribeAccount = {
     descriptor: string;
     addresses?: AccountAddresses; // bitcoin addresses
 }
 
-export type BlockchainSubscribeParams = {
-    accounts: SubscriptionAccountInfo[];
+export type BlockchainSubscribe = {
+    accounts: BlockchainSubscribeAccount[];
     coin: string;
 }
 
-export type BlockchainSubscribeResponse = {
+export type BlockchainSubscribed = {
     subscribed: boolean;
 }
 
-export type BlockchainDisconnectParams= {
+export type BlockchainDisconnect = {
     coin: string;
 }
 
-export type BlockchainDisconnectResponse = {
-    subscribed: boolean;
+export type BlockchainDisconnected = {
+    disconnected: boolean;
 }
 
-export type BlockchainGetTransactionsParams = {
+export type BlockchainGetTransactions = {
     coin: string;
     txs: string[];
 }
 
-export type BlockchainGetTransactionResponse = {
+export type BlockchainTransactions = Array<{
     type: 'blockbook';
     tx: BlockbookTransaction;
 } | {
     type: 'ripple';
     tx: RippleTransaction;
-}
+}>;
 
-export type BlockchainEstimateFeeParams = {
+export type BlockchainEstimateFee = {
     coin: string;
     request?: {
         blocks?: number[];
@@ -123,7 +123,7 @@ export type BlockchainEstimateFeeParams = {
     };
 }
 
-export type BlockchainEstimateFeeResponse = {
+export type BlockchainEstimatedFee = {
     blockTime: number;
     minFee: number;
     maxFee: number;

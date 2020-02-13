@@ -105,7 +105,7 @@ export type StellarManageDataOperation = {
 export type StellarBumpSequenceOperation = {
     +type: 'bumpSequence'; // Proto: "StellarBumpSequenceOp"
     source?: string; // Proto: "source_account"
-    bumpTo: number; // Proto: "bump_to"
+    bumpTo: string; // Proto: "bump_to"
 }
 
 // (?) Missing in Proto messages, but present in Stellar API
@@ -159,6 +159,7 @@ export type StellarSignedTx = {
 
 export type StellarGetAddress = {
     path: string | number[];
+    address?: string;
     showOnTrezor?: boolean;
 }
 

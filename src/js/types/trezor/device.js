@@ -42,7 +42,7 @@ export type FirmwareRelease = {
     changelog: string;
 }
 
-export interface Features {
+export type Features = {
     bootloader_hash?: string | null;
     bootloader_mode?: boolean | null;
     device_id: string | null;

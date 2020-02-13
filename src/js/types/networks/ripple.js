@@ -4,12 +4,13 @@
 
 export type RippleGetAddress = {
     path: string | number[];
+    address?: string;
     showOnTrezor?: boolean;
 }
 
 export type RippleAddress = {
     address: string;
-    path: Array<number>;
+    path: number[];
     serializedPath: string;
 }
 

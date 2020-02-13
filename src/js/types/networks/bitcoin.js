@@ -1,22 +1,12 @@
 /* @flow */
-// import { CommonParams } from './params';
-
-// getAddress params
-// export type GetAddress = {
-//     path: string | number[];
-//     address?: string;
-//     showOnTrezor?: boolean;
-//     coin?: string;
-//     crossChain?: boolean;
-//     bundle?: typeof undefined;
-// };
-
-// // getAddress response
-// export type Address = {
-//     address: string;
-//     path: number[];
-//     serializedPath: string;
-// };
+import type {
+    TransactionInput,
+    TransactionOutput,
+    RefTransaction,
+    Address as ProtobufAddress,
+    SignedTx,
+    // MultisigRedeemScriptType,
+} from '../trezor/protobuf';
 
 // getAddress params
 export type GetAddress = {
@@ -28,9 +18,7 @@ export type GetAddress = {
 };
 
 // getAddress response
-export type Address = {
-    address: string;
-    path: number[];
+export type Address = ProtobufAddress & {
     serializedPath: string;
 };
 
@@ -41,18 +29,90 @@ export type GetPublicKey = {
     crossChain?: boolean;
 };
 
-// getPublicKey response
-export type PublicKey = {
-    path: number[]; // hardended path
-    serializedPath: string; // serialized path
-    xpub: string; // xpub in legacy format
-    xpubSegwit?: string; // optional for segwit accounts: xpub in segwit format
-    chainCode: string; // BIP32 serialization format
-    childNum: number; // BIP32 serialization format
-    publicKey: string; // BIP32 serialization format
-    fingerprint: number; // BIP32 serialization format
-    depth: number; // BIP32 serialization format
+// export type Input = {
+//     address_n: number[];
+//     prev_index: number;
+//     prev_hash: string;
+//     amount?: string; // Required for: segwit || bip143: true || zcash overwinter
+//     script_type: InputScriptType;
+//     multisig?: MultisigRedeemScriptType;
+// }
+
+export type RegularOutput = {
+    address: string;
+    amount: string;
+    script_type?: 'PAYTOADDRESS';
+}
+
+export type InternalOutput = {
+    address_n: number[];
+    amount: string;
+    script_type?: string;
+}
+
+export type SendMaxOutput = {
+    type: 'send-max';
+    address: string;
+}
+
+export type OpReturnOutput = {
+    type: 'opreturn';
+    dataHex: string;
+}
+export type NoAddressOutput = {
+    type: 'noaddress';
+    amount: string;
+}
+
+export type NoAddressSendMaxOutput = {
+    type: 'send-max-noaddress';
+}
+
+export type ComposeOutput =
+    | RegularOutput
+    | InternalOutput
+    | SendMaxOutput
+    | OpReturnOutput
+    | NoAddressOutput
+    | NoAddressSendMaxOutput;
+
+// export type BinOutput = {
+//     amount: number;
+//     script_pubkey: string;
+// }
+
+// extended type of protobuf.RefTransactionInput
+// returned by `getReferencedTransactions` method
+// transformed to protobuf by `transformReferencedTransactions` util
+// export type RefTransaction = {
+//     hash: string;
+//     version?: number;
+//     inputs: Input[];
+//     bin_outputs: BinOutput[];
+//     lock_time?: number;
+//     extra_data?: string;
+//     timestamp?: number;
+//     version_group_id?: number;
+// }
+
+// signTransaction params
+export type SignTransaction = {
+    inputs: TransactionInput[];
+    outputs: TransactionOutput[];
+    refTxs?: RefTransaction[];
+    coin: string;
+    locktime?: number;
+    timestamp?: number;
+    version?: number;
+    expiry?: number;
+    overwintered?: boolean;
+    versionGroupId?: number;
+    branchId?: number;
+    push?: boolean;
 };
+export type SignedTransaction = SignedTx & {
+    txid?: string;
+}
 
 // push transaction params
 export type PushTransaction = {
@@ -61,92 +121,19 @@ export type PushTransaction = {
 };
 
 // push transaction response
-export type PushTransactionResponse = {
+export type PushedTransaction = {
     txid: string;
 };
 
-export interface Input {
-    address_n: number[];
-    prev_index: number;
-    prev_hash: string;
-    amount: string;
-    script_type: string;
-}
-
-export interface RegularOutput {
-    address: string;
-    amount: string;
-    script_type?: string;
-}
-
-export interface InternalOutput {
-    address_n: number[];
-    amount: string;
-    script_type?: string;
-}
-
-export interface SendMaxOutput {
-    type: 'send-max';
-    address: string;
-}
-
-export interface OpReturnOutput {
-    type: 'opreturn';
-    dataHex: string;
-}
-export interface NoAddressOutput {
-    type: 'noaddress';
-    amount: string;
-}
-
-export interface NoAddressSendMaxOutput {
-    type: 'send-max-noaddress';
-}
-
-export type Output =
-    | RegularOutput
-    | InternalOutput
-    | SendMaxOutput
-    | OpReturnOutput
-    | NoAddressOutput
-    | NoAddressSendMaxOutput;
-
-export interface BinOutput {
-    amount: number;
-    script_pubkey: string;
-}
-
-export interface RefTransaction {
-    hash: string;
-    version?: number;
-    inputs: Input[];
-    bin_outputs: BinOutput[];
-    lock_time?: number;
-    extra_data?: string;
-    timestamp?: number;
-    version_group_id?: number;
-}
-
-// signTransaction params
-export type SignTransaction = {
-    inputs: Input[];
-    outputs: Output[];
-    refTxs?: RefTransaction[];
+export type SignMessage = {
+    path: string | number[];
     coin: string;
-    locktime?: number;
-    version?: number;
-    expiry?: number;
-    branchId?: number;
-    push?: boolean;
+    message: string;
 };
 
-export interface SignedTransaction {
-    signatures: string[]; // signer signatures
-    serializedTx: string; // serialized transaction
-    txid?: string; // blockchain transaction id
-}
-
-export interface SignedMessage {
-    address: string; // signer address
-    signature: string; // signature in base64 format
-}
+export type VerifyMessage = {
+    address: string;
+    signature: string;
+    message: string;
+    coin: string;
+};

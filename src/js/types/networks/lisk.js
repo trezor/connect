@@ -2,23 +2,23 @@
 // Lisk types
 // https://lisk.io/documentation/lisk-elements/user-guide/transactions
 
-export type VoteAsset = {
+type VoteAsset = {
     votes: Array<string>;
 }
 
-export type SignatureAsset = {
+type SignatureAsset = {
     signature: {
         publicKey: string;
     };
 }
 
-export type DelegateAsset = {
+type DelegateAsset = {
     delegate: {
         username: string;
     };
 }
 
-export type MultisignatureAsset = {
+type MultisignatureAsset = {
     multisignature: {
        min: number;
        lifetime: number;
@@ -26,11 +26,11 @@ export type MultisignatureAsset = {
     };
 }
 
-export type DataAsset = {
+type DataAsset = {
     data: string;
 }
 
-export type Asset = SignatureAsset | MultisignatureAsset | DelegateAsset | VoteAsset | DataAsset;
+export type LiskAsset = SignatureAsset | MultisignatureAsset | DelegateAsset | VoteAsset | DataAsset;
 
 export type LiskTransaction = {
     type: number;
@@ -41,7 +41,7 @@ export type LiskTransaction = {
     senderPublicKey?: string;
     requesterPublicKey?: string;
     signature?: string;
-    asset?: Asset;
+    asset?: LiskAsset;
 }
 
 // methods parameters
@@ -50,6 +50,7 @@ export type LiskTransaction = {
 
 export type LiskGetAddress = {
     path: string | number[];
+    address?: string;
     showOnTrezor?: boolean;
 }
 
@@ -72,6 +73,13 @@ export type LiskPublicKey = {
     publicKey: string;
 }
 
+// sign transaction
+
+export type LiskSignTransaction = {
+    path: string | number[];
+    transaction: LiskTransaction;
+}
+
 // sign message
 
 export type LiskSignMessage = {
@@ -83,15 +91,6 @@ export type LiskMessageSignature = {
     publicKey: string;
     signature: string;
 }
-
-// sign transaction
-
-export type LiskSignTransaction = {
-    path: string | number[];
-    transaction: LiskTransaction;
-}
-
-export { LiskSignedTx } from '../trezor/protobuf';
 
 // verify message
 

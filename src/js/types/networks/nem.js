@@ -8,7 +8,7 @@ type MosaicID = {
 }
 
 type MosaicDefinition = {
-    levy: {
+    levy?: {
         type: number;
         fee: number;
         recipient: string;
@@ -16,10 +16,16 @@ type MosaicDefinition = {
     };
     id: MosaicID;
     description: string;
-    properties: Array<{
-        name: string;
+    properties?: Array<{
+        name: 'divisibility' | 'initialSupply' | 'supplyMutable' | 'transferable';
         value: string;
     }>;
+}
+
+export type NEMMosaic = {
+    mosaicId: MosaicID;
+    name: string;
+    quantity: number;
 }
 
 type Modification = {
@@ -33,62 +39,127 @@ type Message = {
     publicKey?: string; // not present in sdk
 }
 
-export type Mosaic = {
-    mosaicId: MosaicID;
-    quantity: number;
-}
-
-export type NEMTransaction = {
-    timeStamp: number;
-    amount: number;
-    signature: string;
-    fee: number;
-    recipient: string;
-    type: number;
-    deadline: number;
-    message: Message;
+type TransactionCommon = {
     version: number;
-    signer: string;
-    mosaics: Array<Mosaic>;
+    timeStamp: number;
+    fee: number;
+    deadline?: number;
+    signer?: string;
+};
 
-    // not present in sdk
-    otherTrans: NEMTransaction;
+export type NEMTransferTransaction = TransactionCommon & {
+    type: 0x0101;
+    recipient: string;
+    amount: number;
+    mosaics?: NEMMosaic[];
+    message?: Message;
+};
+
+export type NEMImportanceTransaction = TransactionCommon & {
+    type: 0x0801;
     importanceTransfer: {
         mode: number;
         publicKey: string;
     };
+};
 
-    modifications: Array<Modification>;
+export type NEMAggregateModificationTransaction = TransactionCommon & {
+    type: 0x1001;
+    modifications?: Modification[];
     minCosignatories: {
         relativeChange: number;
-        // TODO
     };
+};
 
+export type NEMProvisionNamespaceTransaction = TransactionCommon & {
+    type: 0x2001;
     newPart?: string;
+    parent?: string;
     rentalFeeSink?: string;
     rentalFee?: number;
-    parent?: string;
+};
 
+export type NEMMosaicCreationTransaction = TransactionCommon & {
+    type: 0x4001;
     mosaicDefinition: MosaicDefinition;
-    creationFeeSink: string;
-    creationFee: number;
+    creationFeeSink?: string;
+    creationFee?: number;
+};
 
+export type NEMSupplyChangeTransaction = TransactionCommon & {
+    type: 0x4002;
     mosaicId: MosaicID;
     supplyType: number;
-    delta: number;
-}
+    delta?: number;
+};
+
+type Transaction =
+    | NEMTransferTransaction
+    | NEMImportanceTransaction
+    | NEMAggregateModificationTransaction
+    | NEMProvisionNamespaceTransaction
+    | NEMMosaicCreationTransaction
+    | NEMSupplyChangeTransaction;
+
+export type NEMMultisigTransaction = TransactionCommon & {
+    type: 0x0102 | 0x1002 | 0x1004;
+    otherTrans: Transaction;
+};
+
+export type NEMTransaction = Transaction | NEMMultisigTransaction;
+
+// export type NEMTransaction2 = {
+//     version: number;
+//     timeStamp: number;
+//     amount: number;
+//     signature?: string;
+//     fee: number;
+//     recipient?: string;
+//     type?: number;
+//     deadline?: number;
+//     message?: Message;
+
+//     signer?: string;
+//     mosaics?: Array<Mosaic>;
+
+//     // not present in sdk
+//     otherTrans?: NEMTransaction;
+//     importanceTransfer?: {
+//         mode: number;
+//         publicKey: string;
+//     };
+
+//     modifications?: Array<Modification>;
+//     minCosignatories?: {
+//         relativeChange: number;
+//     };
+
+//     newPart?: string;
+//     rentalFeeSink?: string;
+//     rentalFee?: number;
+//     parent?: string;
+
+//     mosaicDefinition?: MosaicDefinition;
+//     creationFeeSink?: string;
+//     creationFee?: number;
+
+//     mosaicId?: MosaicID;
+//     supplyType?: number;
+//     delta?: number;
+// }
 
 // get address
 
-export type $NEMGetAddress = {
+export type NEMGetAddress = {
     path: string | number[];
+    address?: string;
     network: number;
     showOnTrezor?: boolean;
 }
 
 export type NEMAddress = {
     address: string;
-    path: Array<number>;
+    path: number[];
     serializedPath: string;
 }
 
@@ -98,5 +169,3 @@ export type NEMSignTransaction = {
     path: string | number[];
     transaction: NEMTransaction;
 }
-
-export { NEMSignedTx } from '../trezor/protobuf';

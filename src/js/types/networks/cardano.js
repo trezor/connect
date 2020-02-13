@@ -11,7 +11,7 @@ export type CardanoGetPublicKey = {
 }
 
 export type CardanoPublicKey = {
-    path: Array<number>;
+    path: number[];
     serializedPath: string;
     publicKey: string;
     node: HDPubNode;
@@ -21,6 +21,7 @@ export type CardanoPublicKey = {
 
 export type CardanoGetAddress = {
     path: string | number[];
+    address?: string;
     showOnTrezor?: boolean;
 }
 
@@ -47,9 +48,9 @@ export type CardanoOutput = {
 }
 
 export type CardanoSignTransaction = {
-    inputs: Array<CardanoInput>;
-    outputs: Array<CardanoOutput>;
-    transactions: Array<string>;
+    inputs: CardanoInput[];
+    outputs: CardanoOutput[];
+    transactions: string[];
     protocol_magic: number;
 }
 

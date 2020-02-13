@@ -2,29 +2,11 @@
 // Ethereum types
 // https://github.com/ethereumjs/ethereumjs-tx
 
-import type {
-    MessageSignature,
-    HDNodeResponse,
-} from '../trezor/protobuf';
-
-export type EthereumTransaction = {
-    to: string;
-    value: string;
-    gasPrice: string;
-    gasLimit: string;
-    nonce: string;
-    data?: string;
-    chainId?: number;
-    txType?: number;
-    v: string;
-    r: string;
-    s: string;
-}
-
 // get address
 
 export type EthereumGetAddress = {
     path: string | number[];
+    address?: string;
     showOnTrezor?: boolean;
 }
 
@@ -41,16 +23,23 @@ export type EthereumGetPublicKey = {
     showOnTrezor?: boolean;
 }
 
-export type EthereumPublicKey = HDNodeResponse;
-
 // sign transaction
+
+export type EthereumTransaction = {
+    to: string;
+    value: string;
+    gasPrice: string;
+    gasLimit: string;
+    nonce: string;
+    data?: string;
+    chainId?: number;
+    txType?: number;
+}
 
 export type EthereumSignTransaction = {
     path: string | number[];
     transaction: EthereumTransaction;
 }
-
-export { EthereumSignedTx } from '../trezor/protobuf';
 
 // sign message
 
@@ -59,8 +48,6 @@ export type EthereumSignMessage = {
     message: string;
     hex?: boolean;
 };
-
-export type EthereumMessageSignature = MessageSignature;
 
 // verify message
 
