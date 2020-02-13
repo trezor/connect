@@ -7,28 +7,32 @@ import Log, { init as initLog } from '../../utils/debug';
 import { Core, init as initCore, initTransport } from '../../core/Core';
 import { create as createDeferred } from '../../utils/deferred';
 
-import { CORE_EVENT, UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT, BLOCKCHAIN_EVENT } from '../../constants';
-import * as POPUP from '../../constants/popup';
-import * as IFRAME from '../../constants/iframe';
-import * as UI from '../../constants/ui';
-import * as ERROR from '../../constants/errors';
+import {
+    CORE_EVENT,
+    UI_EVENT,
+    DEVICE_EVENT,
+    RESPONSE_EVENT,
+    TRANSPORT_EVENT,
+    BLOCKCHAIN_EVENT,
+    POPUP,
+    IFRAME,
+    UI,
+    ERRORS,
+} from '../../constants';
 
-import type { ConnectSettings } from '../../data/ConnectSettings';
 import * as $T from '../../types';
 
 export const eventEmitter = new EventEmitter();
 const _log: Log = initLog('[trezor-connect.js]');
 
-let _settings: ConnectSettings;
+let _settings: $T.ConnectSettings;
 let _core: Core;
 
 let _messageID: number = 0;
 export const messagePromises: { [key: number]: $T.Deferred<any> } = {};
 
-export const manifest = (data: any) => {
-    _settings = parseSettings({
-        manifest: data,
-    });
+export const manifest = (manifest: $T.Manifest) => {
+    _settings = parseSettings({ manifest });
 };
 
 export const dispose = () => {
@@ -92,7 +96,7 @@ const handleMessage = (message: $T.CoreMessage): void => {
     }
 };
 
-const postMessage = (message: any, usePromise: boolean = true): ?Promise<void> => {
+const postMessage = (message: any, usePromise: boolean = true) => {
     if (!_core) {
         throw new Error('postMessage: _core not found');
     }
@@ -105,10 +109,9 @@ const postMessage = (message: any, usePromise: boolean = true): ?Promise<void> =
     }
 
     _core.handleMessage(message, true);
-    return null;
 };
 
-export const init = async (settings: Object = {}): Promise<void> => {
+export const init = async (settings: $Shape<$T.ConnectSettings> = {}): Promise<void> => {
     if (!_settings) {
         _settings = parseSettings(settings);
     }
@@ -118,7 +121,7 @@ export const init = async (settings: Object = {}): Promise<void> => {
     _settings.env = 'node';
 
     if (!_settings.manifest) {
-        throw ERROR.MANIFEST_NOT_SET;
+        throw ERRORS.MANIFEST_NOT_SET;
     }
 
     if (_settings.lazyLoad) {
@@ -127,7 +130,7 @@ export const init = async (settings: Object = {}): Promise<void> => {
         return;
     }
 
-    _log.enabled = _settings.debug;
+    _log.enabled = !!_settings.debug;
 
     _core = await initCore(_settings);
     _core.on(CORE_EVENT, handleMessage);
@@ -135,7 +138,7 @@ export const init = async (settings: Object = {}): Promise<void> => {
     await initTransport(_settings);
 };
 
-export const call = async (params: Object): Promise<Object> => {
+export const call = async (params: any): Promise<any> => {
     if (!_core) {
         _settings = parseSettings({ debug: false, popup: false });
 
@@ -148,7 +151,7 @@ export const call = async (params: Object): Promise<Object> => {
     }
 
     try {
-        const response: ?Object = await postMessage({ type: IFRAME.CALL, payload: params });
+        const response = await postMessage({ type: IFRAME.CALL, payload: params });
         if (response) {
             return response;
         } else {
@@ -160,7 +163,7 @@ export const call = async (params: Object): Promise<Object> => {
     }
 };
 
-const customMessageResponse = (payload: ?{ message: string, params?: Object }): void => {
+const customMessageResponse = (payload: ?{ message: string; params?: Object }): void => {
     _core.handleMessage({
         event: UI_EVENT,
         type: UI.CUSTOM_MESSAGE_RESPONSE,
@@ -169,21 +172,22 @@ const customMessageResponse = (payload: ?{ message: string, params?: Object }): 
 };
 
 export const uiResponse = (response: $T.UiResponse): void => {
-    _core.handleMessage({ event: UI_EVENT, ...response }, true);
+    const { type, payload } = response;
+    _core.handleMessage({ event: UI_EVENT, type, payload }, true);
 };
 
 export const renderWebUSBButton = (className: ?string): void => {
     // webUSBButton(className, _settings.webusbSrc, iframe.origin);
 };
 
-export const getSettings: $T.GetSettings = async () => {
+export const getSettings = async (): $T.Response<$T.ConnectSettings> => {
     if (!_core) {
         return { success: false, payload: { error: 'Core not initialized yet, you need to call TrezorConnect.init or any other method first.' } };
     }
-    return await call({ method: 'getSettings' });
+    return call({ method: 'getSettings' });
 };
 
-export const customMessage: $T.CustomMessage = async (params) => {
+export const customMessage: $PropertyType<$T.API, 'customMessage'> = async (params) => {
     if (typeof params.callback !== 'function') {
         return {
             success: false,
@@ -213,8 +217,7 @@ export const customMessage: $T.CustomMessage = async (params) => {
     return response;
 };
 
-export const requestLogin: $T.RequestLogin = async (params) => {
-    // $FlowIssue: property callback not found
+export const requestLogin: $PropertyType<$T.API, 'requestLogin'> = async (params) => {
     if (typeof params.callback === 'function') {
         const callback = params.callback;
 
@@ -245,7 +248,7 @@ export const requestLogin: $T.RequestLogin = async (params) => {
         _core.removeListener(CORE_EVENT, loginChallengeListener);
         return response;
     } else {
-        return await call({ method: 'requestLogin', ...params });
+        return call({ method: 'requestLogin', ...params });
     }
 };
 

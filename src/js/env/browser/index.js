@@ -10,20 +10,25 @@ import { parseMessage } from '../../message';
 import { parse as parseSettings } from '../../data/ConnectSettings';
 import Log, { init as initLog } from '../../utils/debug';
 
-import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT, BLOCKCHAIN_EVENT } from '../../constants';
-import * as POPUP from '../../constants/popup';
-import * as IFRAME from '../../constants/iframe';
-import * as UI from '../../constants/ui';
-import * as ERROR from '../../constants/errors';
-import * as TRANSPORT from '../../constants/transport';
+import {
+    UI_EVENT,
+    DEVICE_EVENT,
+    RESPONSE_EVENT,
+    TRANSPORT_EVENT,
+    BLOCKCHAIN_EVENT,
+    POPUP,
+    IFRAME,
+    UI,
+    ERRORS,
+    TRANSPORT,
+} from '../../constants';
 
-import type { ConnectSettings } from '../../data/ConnectSettings';
 import * as $T from '../../types';
 
 export const eventEmitter = new EventEmitter();
 const _log: Log = initLog('[trezor-connect.js]');
 
-let _settings: ConnectSettings;
+let _settings: $T.ConnectSettings;
 let _popupManager: ?PopupManager;
 
 const initPopupManager = (): PopupManager => {
@@ -120,15 +125,15 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
     }
 };
 
-export const init = async (settings: Object = {}): Promise<void> => {
-    if (iframe.instance) { throw ERROR.IFRAME_INITIALIZED; }
+export const init = async (settings: $Shape<$T.ConnectSettings> = {}): Promise<void> => {
+    if (iframe.instance) { throw ERRORS.IFRAME_INITIALIZED; }
 
     if (!_settings) {
         _settings = parseSettings(settings);
     }
 
     if (!_settings.manifest) {
-        throw ERROR.MANIFEST_NOT_SET;
+        throw ERRORS.MANIFEST_NOT_SET;
     }
 
     if (_settings.lazyLoad) {
@@ -141,7 +146,7 @@ export const init = async (settings: Object = {}): Promise<void> => {
         _popupManager = initPopupManager();
     }
 
-    _log.enabled = _settings.debug;
+    _log.enabled = !!_settings.debug;
 
     window.addEventListener('message', handleMessage);
     window.addEventListener('beforeunload', dispose);
@@ -149,13 +154,13 @@ export const init = async (settings: Object = {}): Promise<void> => {
     await iframe.init(_settings);
 };
 
-export const call = async (params: Object): Promise<Object> => {
+export const call = async (params: any): Promise<any> => {
     if (!iframe.instance && !iframe.timeout) {
         // init popup with lazy loading before iframe initialization
         _settings = parseSettings(_settings);
 
         if (!_settings.manifest) {
-            return { success: false, payload: { error: ERROR.MANIFEST_NOT_SET.message } };
+            return { success: false, payload: { error: ERRORS.MANIFEST_NOT_SET.message } };
         }
 
         if (!_popupManager) {
@@ -176,7 +181,7 @@ export const call = async (params: Object): Promise<Object> => {
 
     if (iframe.timeout) {
         // this.init was called, but iframe doesn't return handshake yet
-        return { success: false, payload: { error: ERROR.NO_IFRAME.message } };
+        return { success: false, payload: { error: ERRORS.NO_IFRAME.message } };
     } else if (iframe.error) {
         // iframe was initialized with error
         return { success: false, payload: { error: iframe.error } };
@@ -190,7 +195,7 @@ export const call = async (params: Object): Promise<Object> => {
         const response: ?Object = await iframe.postMessage({ type: IFRAME.CALL, payload: params });
         if (response) {
             // TODO: unlock popupManager request only if there wasn't error "in progress"
-            if (response.payload.error !== ERROR.DEVICE_CALL_IN_PROGRESS.message && _popupManager) { _popupManager.unlock(); }
+            if (response.payload.error !== ERRORS.DEVICE_CALL_IN_PROGRESS.message && _popupManager) { _popupManager.unlock(); }
             return response;
         } else {
             if (_popupManager) {
@@ -204,7 +209,7 @@ export const call = async (params: Object): Promise<Object> => {
     }
 };
 
-const customMessageResponse = (payload: ?{ message: string, params?: Object }): void => {
+const customMessageResponse = (payload: ?{ message: string; params?: Object }): void => {
     iframe.postMessage({
         event: UI_EVENT,
         type: UI.CUSTOM_MESSAGE_RESPONSE,
@@ -213,21 +218,22 @@ const customMessageResponse = (payload: ?{ message: string, params?: Object }): 
 };
 
 export const uiResponse = (response: $T.UiResponse): void => {
-    iframe.postMessage({ event: UI_EVENT, ...response });
+    const { type, payload } = response;
+    iframe.postMessage({ event: UI_EVENT, type, payload });
 };
 
 export const renderWebUSBButton = (className: ?string): void => {
     webUSBButton(className, _settings.webusbSrc, iframe.origin);
 };
 
-export const getSettings: $T.GetSettings = async () => {
+export const getSettings = async (): $T.Response<$T.ConnectSettings> => {
     if (!iframe.instance) {
         return { success: false, payload: { error: 'Iframe not initialized yet, you need to call TrezorConnect.init or any other method first.' } };
     }
     return await call({ method: 'getSettings' });
 };
 
-export const customMessage: $T.CustomMessage = async (params) => {
+export const customMessage: $PropertyType<$T.API, 'customMessage'> = async (params) => {
     if (typeof params.callback !== 'function') {
         return {
             success: false,
@@ -257,7 +263,7 @@ export const customMessage: $T.CustomMessage = async (params) => {
     return response;
 };
 
-export const requestLogin: $T.RequestLogin = async (params) => {
+export const requestLogin: $PropertyType<$T.API, 'requestLogin'> = async (params) => {
     // $FlowIssue: property callback not found
     if (typeof params.callback === 'function') {
         const callback = params.callback;
