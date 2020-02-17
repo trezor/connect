@@ -25,29 +25,29 @@ export default class ResetDevice extends AbstractMethod {
         const payload: Object = message.payload;
         // validate bundle type
         validateParams(payload, [
-            { name: 'displayRandom', type: 'boolean' },
+            { name: 'display_random', type: 'boolean' },
             { name: 'strength', type: 'number' },
-            { name: 'passphraseProtection', type: 'boolean' },
-            { name: 'pinProtection', type: 'boolean' },
+            { name: 'passphrase_protection', type: 'boolean' },
+            { name: 'pin_protection', type: 'boolean' },
             { name: 'language', type: 'string' },
             { name: 'label', type: 'string' },
-            { name: 'u2fCounter', type: 'number' },
-            { name: 'skipBackup', type: 'boolean' },
-            { name: 'noBackup', type: 'boolean' },
-            { name: 'backupType', type: 'number' },
+            { name: 'u2f_counter', type: 'number' },
+            { name: 'skip_backup', type: 'boolean' },
+            { name: 'no_backup', type: 'boolean' },
+            { name: 'backup_type', type: 'number' },
         ]);
 
         this.params = {
-            display_random: payload.displayRandom,
+            display_random: payload.display_random,
             strength: payload.strength || 256,
-            passphrase_protection: payload.passphraseProtection,
-            pin_protection: payload.pinProtection,
+            passphrase_protection: payload.passphrase_protection,
+            pin_protection: payload.pin_protection,
             language: payload.language,
             label: payload.label,
-            u2f_counter: payload.u2fCounter || Math.floor(Date.now() / 1000),
-            skip_backup: payload.skipBackup,
-            no_backup: payload.noBackup,
-            backup_type: payload.backupType,
+            u2f_counter: payload.u2f_counter || Math.floor(Date.now() / 1000),
+            skip_backup: payload.skip_backup,
+            no_backup: payload.no_backup,
+            backup_type: payload.backup_type,
         };
     }
 

@@ -3,12 +3,12 @@
 export type ResetDevice = {
     strength?: number;
     label?: string;
-    u2fCounter?: number;
-    pinProtection?: boolean;
-    passphraseProtection?: boolean;
-    skipBackup?: boolean;
-    noBackup?: boolean;
-    backupType?: 0 | 1;
+    u2f_counter?: number;
+    pin_protection?: boolean;
+    passphrase_protection?: boolean;
+    skip_backup?: boolean;
+    no_backup?: boolean;
+    backup_type?: 0 | 1;
 }
 
 export type ApplySettings = {

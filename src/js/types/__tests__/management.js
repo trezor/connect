@@ -5,12 +5,12 @@ export const management = async () => {
     TrezorConnect.resetDevice({
         strength: 1,
         label: 'My Trezor',
-        u2fCounter: 0,
-        pinProtection: true,
-        passphraseProtection: true,
-        skipBackup: false,
-        noBackup: false,
-        backupType: 0,
+        u2f_counter: 0,
+        pin_protection: true,
+        passphrase_protection: true,
+        skip_backup: false,
+        no_backup: false,
+        backup_type: 0,
     });
 
     TrezorConnect.wipeDevice({});
