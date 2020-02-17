@@ -1,15 +1,15 @@
 /* @flow */
 
-export type Unsuccessful = {|
+export type Unsuccessful = {
     success: false;
     payload: { error: string; code?: string | number };
-|};
+};
 
-export type Success<T> = {|
+export type Success<T> = {
     success: true;
     id: number;
     payload: T;
-|};
+};
 
 export type Response<T> = Promise<Success<T> | Unsuccessful>;
 export type BundledResponse<T> = Promise<Success<T[]> | Unsuccessful>;
@@ -35,7 +35,7 @@ export type ConnectSettings = {
     pendingTransportEvent?: boolean;
     lazyLoad?: boolean;
     // internal part, not to be accepted from .init()
-    origin: ?string;
+    origin?: string;
     configSrc: string;
     iframeSrc: string;
     popupSrc: string;
@@ -47,7 +47,7 @@ export type ConnectSettings = {
     extension?: string;
     env: 'node' | 'web' | 'webextension' | 'electron' | 'react-native';
     timestamp: number;
-}
+};
 
 export type CommonParams = {
     device?: {
@@ -85,13 +85,13 @@ export interface PostMessageEvent extends Event {
     lastEventId: string;
     source: WindowProxy;
     ports: Array<MessagePort>;
-    data: ?CoreMessage;
+    data?: CoreMessage;
 }
 
 export type Deferred<T> = {
     id?: string;
-    device: ?any;
+    device?: any;
     promise: Promise<T>;
     resolve: (t: T) => void;
     reject: (e: Error) => void;
-}
+};

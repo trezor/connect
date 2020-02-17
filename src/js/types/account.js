@@ -224,19 +224,6 @@ export type ComposeParams = {
     feeLevels?: typeof undefined;
 }
 
-export type VerifyMessage = {
-    address: string;
-    message: string;
-    signature: string;
-    coin: string;
-}
-
-export type SignMessage = {
-    path: string | number[];
-    message: string;
-    coin?: string;
-}
-
 export type DiscoveryAccountType = 'normal' | 'segwit' | 'legacy';
 
 export type DiscoveryAccount = {

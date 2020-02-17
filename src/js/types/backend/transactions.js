@@ -47,50 +47,50 @@ export type BlockbookTransaction = {
 
 // ripple-lib
 
-type RippleAmount = {
+type RippleLibAmount = {
     value: string;
     currency: string;
     issuer?: string;
     counterparty?: string;
 }
 
-type RippleAdjustment = {
+type RippleLibAdjustment = {
     address: string;
-    amount: RippleAmount;
+    amount: RippleLibAmount;
     tag?: number;
 }
 
-type RippleMemo = {
+type RippleLibMemo = {
     type?: string;
     format?: string;
     data?: string;
 }
 
-type RippleOutcome = {
+type RippleLibOutcome = {
     result: string;
     ledgerVersion: number;
     indexInLedger: number;
     fee: string;
     balanceChanges: {
-        [key: string]: RippleAmount[];
+        [key: string]: RippleLibAmount[];
     };
     orderbookChanges: any;
     timestamp?: string;
 }
 
-export type RippleTransaction = {
+export type RippleLibTransaction = {
     type: string;
     specification: {
-        source: RippleAdjustment;
-        destination: RippleAdjustment;
+        source: RippleLibAdjustment;
+        destination: RippleLibAdjustment;
         paths?: string;
-        memos?: RippleMemo[];
+        memos?: RippleLibMemo[];
         invoiceID?: string;
         allowPartialPayment?: boolean;
         noDirectRipple?: boolean;
         limitQuality?: boolean;
     };
-    outcome: RippleOutcome;
+    outcome: RippleLibOutcome;
     id: string;
     address: string;
     sequence: number;

@@ -30,5 +30,5 @@ export type CustomMessage = {
     messages?: JSON | Object;
     message: string;
     params: JSON | Object;
-    callback: (request: any) => Promise<?{ message: string; params?: Object }>;
+    callback: (request: any) => Promise<{ message: string; params?: Object }>;
 };

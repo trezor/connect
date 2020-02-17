@@ -20,7 +20,6 @@ const initialSettings: ConnectSettings = {
     configSrc: './data/config.json', // constant
     version: VERSION, // constant
     debug: false,
-    origin: null,
     priority: DEFAULT_PRIORITY,
     trustedHost: false,
     connectSrc: DEFAULT_DOMAIN,

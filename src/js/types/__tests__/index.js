@@ -82,7 +82,7 @@ export const events = async () => {
     });
     TrezorConnect.off(DEVICE_EVENT, () => {});
     // $FlowIssue: invalid event type
-    TrezorConnect.off('DEVICE-EVENT', () => {});
+    TrezorConnect.off('DEVICE---EVENT', () => {});
 
     TrezorConnect.on(TRANSPORT_EVENT, event => {
         if (event.type === TRANSPORT.START) {
@@ -94,19 +94,21 @@ export const events = async () => {
     TrezorConnect.off(TRANSPORT_EVENT, () => {});
 
     TrezorConnect.on(UI_EVENT, event => {
-        if (event.type === TRANSPORT.START) {
-            (event.payload.type: string);
-            (event.payload.version: string);
-            (event.payload.outdated: boolean);
+        if (event.type === UI.BUNDLE_PROGRESS) {
+            (event.payload.progress: number);
         }
     });
     TrezorConnect.off(UI_EVENT, () => {});
 
     TrezorConnect.on(BLOCKCHAIN_EVENT, event => {
-        if (event.type === TRANSPORT.START) {
-            (event.payload.type: string);
-            (event.payload.version: string);
-            (event.payload.outdated: boolean);
+        if (event.type === BLOCKCHAIN.CONNECT) {
+            (event.payload.blockHash: string);
+            (event.payload.shortcut: string);
+            (event.payload.testnet: boolean);
+        }
+        if (event.type === BLOCKCHAIN.BLOCK) {
+            (event.payload.blockHash: string);
+            (event.payload.blockHeight: number);
         }
     });
     TrezorConnect.off(BLOCKCHAIN_EVENT, () => {});

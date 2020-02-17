@@ -20,7 +20,6 @@ type Network = {
     scriptHash: number;
     wif: number;
     dustThreshold: number;
-    bech32: ?string;
     coin: string;
 };
 
@@ -32,7 +31,7 @@ type BlockchainLink = {
 type DefaultFees = {[level: 'High' | 'Normal' | 'Economy' | 'Low']: number};
 
 export type BitcoinNetworkInfo = {
-    +type: 'bitcoin';
+    type: 'bitcoin';
     // address_type: in Network
     // address_type_p2sh: in Network
     // bech32_prefix: in Network
@@ -86,7 +85,7 @@ export type BitcoinNetworkInfo = {
 };
 
 export type EthereumNetworkInfo = {
-    +type: 'ethereum';
+    type: 'ethereum';
     blockchainLink: ?BlockchainLink;
     blocktime: number;
     chain: string;
@@ -111,7 +110,7 @@ export type EthereumNetworkInfo = {
 };
 
 export type MiscNetworkInfo = {
-    +type: 'misc' | 'nem';
+    type: 'misc' | 'nem';
     blockchainLink: ?BlockchainLink;
     blocktime: number;
     curve: string;

@@ -269,7 +269,7 @@ type ReceivePassphraseAction = {
 
 type ReceiveAccount = {
     type: typeof UI.RECEIVE_ACCOUNT;
-    payload: ?number;
+    payload?: number;
 }
 
 type ReceiveFee = {
@@ -320,14 +320,14 @@ export interface UiMessageBuilder {
     (type: FT<FirmwareProgress>, payload: FP<FirmwareProgress>): CoreMessage;
     (type: FT<CustomMessageRequest>, payload: FP<CustomMessageRequest>): CoreMessage;
     // ui response
-    (type: FT<ReceivePermission>, FP<ReceivePermission>): CoreMessage;
-    (type: FT<ReceiveConfirmation>, FP<ReceiveConfirmation>): CoreMessage;
-    (type: FT<ReceiveDevice>, FP<ReceiveDevice>): CoreMessage;
-    (type: FT<ReceivePin>, FP<ReceivePin>): CoreMessage;
-    (type: FT<ReceivePassphrase>, FP<ReceivePassphrase>): CoreMessage;
-    (type: FT<ReceivePassphraseAction>, FP<ReceivePassphraseAction>): CoreMessage;
-    (type: FT<ReceiveAccount>, FP<ReceiveAccount>): CoreMessage;
-    (type: FT<ReceiveFee>, FP<ReceiveFee>): CoreMessage;
-    (type: FT<CustomMessageRequest>, FP<CustomMessageRequest>): CoreMessage;
-    (type: FT<ReceiveWord>, FP<ReceiveWord>): CoreMessage;
+    (type: FT<ReceivePermission>, payload: FP<ReceivePermission>): CoreMessage;
+    (type: FT<ReceiveConfirmation>, payload: FP<ReceiveConfirmation>): CoreMessage;
+    (type: FT<ReceiveDevice>, payload: FP<ReceiveDevice>): CoreMessage;
+    (type: FT<ReceivePin>, payload: FP<ReceivePin>): CoreMessage;
+    (type: FT<ReceivePassphrase>, payload: FP<ReceivePassphrase>): CoreMessage;
+    (type: FT<ReceivePassphraseAction>, payload: FP<ReceivePassphraseAction>): CoreMessage;
+    (type: FT<ReceiveAccount>, payload: FP<ReceiveAccount>): CoreMessage;
+    (type: FT<ReceiveFee>, payload: FP<ReceiveFee>): CoreMessage;
+    (type: FT<CustomMessageRequest>, payload: FP<CustomMessageRequest>): CoreMessage;
+    (type: FT<ReceiveWord>, payload: FP<ReceiveWord>): CoreMessage;
 }

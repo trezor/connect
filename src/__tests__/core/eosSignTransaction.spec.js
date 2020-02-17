@@ -126,7 +126,6 @@ const undelegate = () => {
                         receiver: 'maximaximaxi',
                         unstake_net_quantity: '1.0000 EOS',
                         unstake_cpu_quantity: '1.0000 EOS',
-                        transfer: true,
                     },
                 }],
             },

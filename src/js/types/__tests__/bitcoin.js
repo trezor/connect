@@ -322,7 +322,8 @@ export const composeTransaction = async () => {
             (tx.error: string);
         }
         if (tx.type === 'nonfinal') {
-            (tx.transaction: any);
+            (tx.bytes: number);
+            (tx.feePerByte: string);
         }
         if (tx.type === 'final') {
             (tx.transaction.inputs: any[]);
@@ -404,6 +405,19 @@ export const getAccountInfo = async () => {
         // (payload.misc: string);
         // (payload.page: string);
         // (payload.marker: string);
+    }
+
+    // bundle
+    const bundlePK = await TrezorConnect.getAccountInfo({ bundle: [{ path: 'm/44', coin: 'btc' }] });
+    (bundlePK.success: boolean);
+    if (bundlePK.success) {
+        bundlePK.payload.forEach(item => {
+            (item.empty: boolean);
+        });
+        // $FlowIssue: payload is Address[]
+        (bundlePK.payload.xpub: string);
+    } else {
+        (bundlePK.payload.error: string);
     }
 };
 
