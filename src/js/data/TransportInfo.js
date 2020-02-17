@@ -1,15 +1,15 @@
 /* @flow */
 
 export type BridgeInfo = {
-    version: number[],
-    directory: string,
+    version: number[];
+    directory: string;
     packages: {
-        name: string,
-        platform: string[],
-        url: string,
-        signature?: string,
-        preferred?: boolean,
-    }[],
+        name: string;
+        platform: string[];
+        url: string;
+        signature?: string;
+        preferred?: boolean;
+    }[];
 }
 
 const info: BridgeInfo = {

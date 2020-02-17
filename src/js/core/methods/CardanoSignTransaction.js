@@ -6,15 +6,15 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/cardanoSignTx';
 
-import type { CardanoTxInput, CardanoTxOutput, CardanoSignedTx } from '../../types/trezor';
-import type { CardanoSignedTx as CardanoSignedTxResponse } from '../../types/cardano';
+import type { CardanoTxInput, CardanoTxOutput, CardanoSignedTx } from '../../types/trezor/protobuf';
+import type { CardanoSignedTx as CardanoSignedTxResponse } from '../../types/networks/cardano';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    inputs: Array<CardanoTxInput>,
-    outputs: Array<CardanoTxOutput>,
-    transactions: Array<string>,
-    protocol_magic: number,
+    inputs: Array<CardanoTxInput>;
+    outputs: Array<CardanoTxOutput>;
+    transactions: Array<string>;
+    protocol_magic: number;
 }
 
 export default class CardanoSignTransaction extends AbstractMethod {

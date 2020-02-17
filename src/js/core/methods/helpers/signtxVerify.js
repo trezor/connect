@@ -15,7 +15,7 @@ import type {
     TransactionInput,
     TransactionOutput,
     HDNodeResponse,
-} from '../../../types/trezor';
+} from '../../../types/trezor/protobuf';
 
 type GetHDNode = (path: Array<number>, coinInfo: ?BitcoinNetworkInfo, validation?: boolean) => Promise<HDNodeResponse>;
 

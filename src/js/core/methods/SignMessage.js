@@ -4,13 +4,13 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getLabel } from '../../utils/pathUtils';
 import { getBitcoinNetwork } from '../../data/CoinInfo';
-import type { MessageSignature } from '../../types/trezor';
+import type { MessageSignature } from '../../types/trezor/protobuf';
 import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 
 type Params = {
-    path: Array<number>,
-    message: string,
-    coinInfo: ?BitcoinNetworkInfo,
+    path: Array<number>;
+    message: string;
+    coinInfo: ?BitcoinNetworkInfo;
 }
 
 export default class SignMessage extends AbstractMethod {

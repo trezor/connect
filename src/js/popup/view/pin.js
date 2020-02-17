@@ -3,7 +3,7 @@
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
-import type { DeviceMessage } from '../../types/uiRequest';
+import type { DeviceMessage } from '../../types/events';
 
 const isSubmitButtonDisabled = (isDisabled: boolean) => {
     const submitButton: HTMLElement = container.getElementsByClassName('submit')[0];

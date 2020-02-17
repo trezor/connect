@@ -11,7 +11,7 @@ import type { BuildTxInput } from 'hd-wallet';
 
 // local types
 import type { BitcoinNetworkInfo } from '../../../types';
-import type { TransactionInput } from '../../../types/trezor';
+import type { TransactionInput } from '../../../types/trezor/protobuf';
 
 /** *****
  * SignTx: validation

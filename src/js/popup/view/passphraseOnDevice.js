@@ -1,6 +1,6 @@
 /* @flow */
 import { container, showView } from './common';
-import type { DeviceMessage } from '../../types/uiRequest';
+import type { DeviceMessage } from '../../types/events';
 
 export const passphraseOnDeviceView = (payload: $PropertyType<DeviceMessage, 'payload'>): void => {
     showView('passphrase-on-device');

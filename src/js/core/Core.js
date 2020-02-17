@@ -21,9 +21,7 @@ import { find as findMethod } from './methods';
 import { create as createDeferred } from '../utils/deferred';
 import { resolveAfter } from '../utils/promiseUtils';
 import Log, { init as initLog } from '../utils/debug';
-
-import type { ConnectSettings } from '../data/ConnectSettings';
-import type { Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse } from '../types';
+import type { ConnectSettings, Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse } from '../types';
 
 // Public variables
 // eslint-disable-next-line no-use-before-define
@@ -928,7 +926,7 @@ export const initData = async (settings: ConnectSettings) => {
 
 export const init = async (settings: ConnectSettings) => {
     try {
-        _log.enabled = settings.debug;
+        _log.enabled = !!settings.debug;
         await DataManager.load(settings);
         await initCore();
         return _core;

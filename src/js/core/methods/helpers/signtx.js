@@ -11,7 +11,7 @@ import type {
     SignTxInfoToTrezor,
     TxRequestSerialized,
     SignedTx,
-} from '../../../types/trezor';
+} from '../../../types/trezor/protobuf';
 
 const requestPrevTxInfo = (reqTx: RefTransaction,
     requestType: string,

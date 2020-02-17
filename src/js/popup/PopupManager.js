@@ -5,8 +5,7 @@ import * as POPUP from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
 import * as UI from '../constants/ui';
 import { showPopupRequest } from './showPopupRequest';
-import type { ConnectSettings } from '../data/ConnectSettings';
-import type { CoreMessage, Deferred } from '../types';
+import type { ConnectSettings, CoreMessage, Deferred } from '../types';
 import { getOrigin } from '../env/browser/networkUtils';
 import { create as createDeferred } from '../utils/deferred';
 

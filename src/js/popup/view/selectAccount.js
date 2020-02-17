@@ -6,7 +6,7 @@ import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
 
 import type { DiscoveryAccount } from '../../types/account';
-import type { SelectAccount } from '../../types/uiRequest';
+import type { SelectAccount } from '../../types/events';
 
 const setHeader = (payload: $PropertyType<SelectAccount, 'payload'>) => {
     const h3: HTMLElement = container.getElementsByTagName('h3')[0];

@@ -1,49 +1,34 @@
 /* @flow */
 import { Transaction as BitcoinJsTransaction } from '@trezor/utxo-lib';
-import BlockchainLink from '@trezor/blockchain-link';
+import BlockchainLink, { GetAccountInfo } from '@trezor/blockchain-link';
 import { BlockchainMessage } from '../message/builder';
 import * as BLOCKCHAIN from '../constants/blockchain';
-import type { CoreMessage, CoinInfo } from '../types';
-import type { SubscriptionAccountInfo } from '../types/params';
-import type { BlockchainBlock, BlockchainLinkTransaction } from '../types/blockchainEvent';
-import type { GetTransactionResponse } from '../types/transactions';
+import type {
+    CoreMessage,
+    CoinInfo,
+    BlockchainBlock,
+    BlockchainLinkTransaction,
+    BlockchainSubscribeAccount,
+    BlockchainTransactions,
+} from '../types';
 
 import {
     BlockbookWorker,
     RippleWorker,
 } from '../env/node/workers';
 
-import type { AccountInfoRequest } from '../types/account';
-
 BitcoinJsTransaction.USE_STRING_VALUES = true;
 
 type Options = {
-    coinInfo: CoinInfo,
-    postMessage: (message: CoreMessage) => void,
-};
-
-// duplicate from blockchain-link
-type GetAccountInfo = {
-    descriptor: string,
-    details?: $ElementType<AccountInfoRequest, 'details'>,
-    tokens?: $ElementType<AccountInfoRequest, 'tokens'>,
-    page?: number, // blockbook only, page index
-    pageSize?: number, // how many transactions on page
-    from?: number,
-    to?: number,
-    contractFilter?: string, // blockbook only, ethereum token filter
-    gap?: number, // blockbook only, derived addresses gap
-    marker?: {
-        ledger: number,
-        seq: number,
-    },
+    coinInfo: CoinInfo;
+    postMessage: (message: CoreMessage) => void;
 };
 
 // duplicate from blockchain-link
 type Fee = {
-    feePerUnit: string,
-    feePerTx?: string,
-    feeLimit?: string,
+    feePerUnit: string;
+    feePerTx?: string;
+    feeLimit?: string;
 }
 
 const getWorker = (type: string): ?(string | () => Worker) => {
@@ -124,7 +109,7 @@ export default class Blockchain {
         return BitcoinJsTransaction.fromHex(transaction.tx.hex, this.coinInfo.network);
     }
 
-    async getTransactions(txs: string[]): Promise<GetTransactionResponse[]> {
+    async getTransactions(txs: string[]): Promise<BlockchainTransactions[]> {
         return Promise.all(
             txs.map(id => this.link.getTransaction(id))
         );
@@ -169,10 +154,10 @@ export default class Blockchain {
         return this.link.estimateFee(request);
     }
 
-    async subscribe(accounts: SubscriptionAccountInfo[]): Promise<{ subscribed: boolean }> {
+    async subscribe(accounts: BlockchainSubscribeAccount[]): Promise<{ subscribed: boolean }> {
         // set block listener if it wasn't set before
         if (this.link.listenerCount('block') === 0) {
-            this.link.on('block', (block: $ElementType<BlockchainBlock, 'payload'>) => {
+            this.link.on('block', (block: BlockchainBlock) => {
                 this.postMessage(BlockchainMessage(BLOCKCHAIN.BLOCK, {
                     coin: this.coinInfo,
                     ...block,
@@ -198,7 +183,7 @@ export default class Blockchain {
         });
     }
 
-    async unsubscribe(accounts?: SubscriptionAccountInfo[]): Promise<any> {
+    async unsubscribe(accounts?: BlockchainSubscribeAccount[]): Promise<any> {
         if (!accounts) {
             this.link.removeAllListeners('block');
             this.link.removeAllListeners('notification');
@@ -240,7 +225,7 @@ export const find = (name: string): ?Blockchain => {
     return null;
 };
 
-export const initBlockchain = async (coinInfo: $ElementType<Options, 'coinInfo'>, postMessage: $ElementType<Options, 'postMessage'>): Promise<Blockchain> => {
+export const initBlockchain = async (coinInfo: $ElementType<Options, 'coinInfo'>, postMessage: $ElementType<Options, 'postMessage'>) => {
     let backend: ?Blockchain = find(coinInfo.name);
     if (!backend) {
         backend = new Blockchain({

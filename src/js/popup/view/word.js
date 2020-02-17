@@ -3,7 +3,7 @@
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
-import type { DeviceMessage } from '../../types/uiRequest';
+import type { DeviceMessage } from '../../types/events';
 import bipWords from '../../utils/bip39';
 
 const initWordPlainView = (payload: $PropertyType<DeviceMessage, 'payload'>): void => {

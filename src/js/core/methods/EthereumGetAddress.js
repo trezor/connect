@@ -9,14 +9,14 @@ import { getEthereumNetwork, getUniqueNetworks } from '../../data/CoinInfo';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { EthereumAddress } from '../../types/ethereum';
+import type { EthereumAddress } from '../../types/networks/ethereum';
 import type { CoreMessage, UiPromiseResponse, EthereumNetworkInfo } from '../../types';
 
 type Batch = {
-    path: Array<number>,
-    address: ?string,
-    network: ?EthereumNetworkInfo,
-    showOnTrezor: boolean,
+    path: Array<number>;
+    address: ?string;
+    network: ?EthereumNetworkInfo;
+    showOnTrezor: boolean;
 }
 
 type Params = Array<Batch>;

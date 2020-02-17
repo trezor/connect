@@ -3,7 +3,7 @@
 import { getCoinName } from '../data/CoinInfo';
 import { invalidParameter } from '../constants/errors';
 import type { BitcoinNetworkInfo, CoinInfo } from '../types';
-import type { InputScriptType, OutputScriptType } from '../types/trezor';
+import type { InputScriptType, OutputScriptType } from '../types/trezor/protobuf';
 
 export const HD_HARDENED: number = 0x80000000;
 export const toHardened = (n: number): number => (n | HD_HARDENED) >>> 0;

@@ -33,17 +33,15 @@ import type {
     BuildTxResult,
 } from 'hd-wallet';
 import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
-import type { SignedTx } from '../../types/trezor';
-import type { $$ComposeTransaction as Payload } from '../../types/params';
-import type { PrecomposedTransaction } from '../../types/response';
-import type { DiscoveryAccount, AccountUtxo } from '../../types/account';
+import type { SignedTx } from '../../types/trezor/protobuf';
+import type { DiscoveryAccount, AccountUtxo, PrecomposeParams, PrecomposedTransaction } from '../../types/account';
 
 type Params = {
-    outputs: BuildTxOutputRequest[],
-    coinInfo: BitcoinNetworkInfo,
-    push: boolean,
-    account?: $ElementType<Payload, 'account'>,
-    feeLevels?: $ElementType<Payload, 'feeLevels'>,
+    outputs: BuildTxOutputRequest[];
+    coinInfo: BitcoinNetworkInfo;
+    push: boolean;
+    account?: $ElementType<PrecomposeParams, 'account'>;
+    feeLevels?: $ElementType<PrecomposeParams, 'feeLevels'>;
 }
 
 export default class ComposeTransaction extends AbstractMethod {
@@ -116,7 +114,7 @@ export default class ComposeTransaction extends AbstractMethod {
         };
     }
 
-    async precompose(account: $ElementType<Payload, 'account'>, feeLevels: $ElementType<Payload, 'feeLevels'>): Promise<PrecomposedTransaction[]> {
+    async precompose(account: $ElementType<PrecomposeParams, 'account'>, feeLevels: $ElementType<PrecomposeParams, 'feeLevels'>): Promise<PrecomposedTransaction[]> {
         const { coinInfo, outputs } = this.params;
         const composer = new TransactionComposer({
             account: {
@@ -181,7 +179,7 @@ export default class ComposeTransaction extends AbstractMethod {
         }
     }
 
-    async selectAccount(): Promise<{ account: DiscoveryAccount, utxo: AccountUtxo[] }> {
+    async selectAccount(): Promise<{ account: DiscoveryAccount; utxo: AccountUtxo[] }> {
         const { coinInfo } = this.params;
         const blockchain = await initBlockchain(coinInfo, this.postMessage);
         const dfd = this.createUiPromise(UI.RECEIVE_ACCOUNT, this.device);

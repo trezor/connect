@@ -2,7 +2,7 @@
 import BigNumber from 'bignumber.js';
 import BlockchainLink from '../../../backend/BlockchainLink';
 import type { CoinInfo } from '../../../types';
-import type { FeeLevel } from '../../../types/fee';
+import type { FeeLevel } from '../../../types/account';
 
 type Blocks = Array<string | typeof undefined>;
 const BLOCKS = {
@@ -121,10 +121,10 @@ export default class FeeLevels {
 
         // sort fee levels from coinInfo
         // and transform in to FeeLevel object
-        this.levels = Object.keys(coinInfo.defaultFees)
-            .sort((levelA, levelB) => coinInfo.defaultFees[levelB] - coinInfo.defaultFees[levelA])
+        const keys = Object.keys(coinInfo.defaultFees);
+        this.levels = keys.sort((levelA, levelB) => coinInfo.defaultFees[levelB] - coinInfo.defaultFees[levelA])
             .map(level => {
-                const label = level.toLowerCase();
+                const label: any = level.toLowerCase();
                 const blocks = getDefaultBlocks(shortcut, label); // TODO: get this value from trezor-common
                 return {
                     label,

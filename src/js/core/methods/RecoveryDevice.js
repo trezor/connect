@@ -8,15 +8,15 @@ import { UiMessage } from '../../message/builder';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    word_count?: number,
-    passphrase_protection?: boolean,
-    pin_protection?: boolean,
-    language?: string,
-    label?: string,
-    enforce_wordlist?: boolean,
-    type?: number,
-    u2f_counter?: number,
-    dry_run?: boolean,
+    word_count?: number;
+    passphrase_protection?: boolean;
+    pin_protection?: boolean;
+    language?: string;
+    label?: string;
+    enforce_wordlist?: boolean;
+    type?: number;
+    u2f_counter?: number;
+    dry_run?: boolean;
 }
 
 export default class RecoveryDevice extends AbstractMethod {

@@ -8,13 +8,13 @@ import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathU
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { TezosPublicKey } from '../../types/trezor';
-import type { TezosPublicKey as TezosPublicKeyResponse } from '../../types/tezos';
+import type { TezosPublicKey } from '../../types/trezor/protobuf';
+import type { TezosPublicKey as TezosPublicKeyResponse } from '../../types/networks/tezos';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 type Batch = {
-    path: Array<number>,
-    showOnTrezor: boolean,
+    path: Array<number>;
+    showOnTrezor: boolean;
 }
 
 type Params = Array<Batch>;

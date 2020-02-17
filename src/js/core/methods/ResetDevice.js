@@ -6,7 +6,7 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 
-import type { ResetDeviceFlags, Success } from '../../types/trezor';
+import type { ResetDeviceFlags, Success } from '../../types/trezor/protobuf';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 export default class ResetDevice extends AbstractMethod {

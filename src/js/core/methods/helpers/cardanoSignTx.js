@@ -6,7 +6,7 @@ import type {
     CardanoSignedTx,
     CardanoTxInput,
     CardanoTxOutput,
-} from '../../../types/trezor';
+} from '../../../types/trezor/protobuf';
 
 const processTxRequest = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     request: CardanoTxRequest,

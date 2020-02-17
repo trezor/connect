@@ -1,6 +1,5 @@
 /* @flow */
 
-import { crypto } from '@trezor/utxo-lib';
 import Device from '../../device/Device';
 import DataManager from '../../data/DataManager';
 import * as UI from '../../constants/ui';
@@ -10,12 +9,11 @@ import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../..
 import { versionCompare } from '../../utils/deviceFeaturesUtils';
 
 import { UiMessage, DeviceMessage } from '../../message/builder';
-import type { Deferred, CoreMessage, UiPromiseResponse, FirmwareRange } from '../../types';
-import type { FirmwareException, ButtonRequestData } from '../../types/uiRequest';
+import type { Deferred, CoreMessage, UiPromiseResponse, FirmwareRange, FirmwareException, ButtonRequestData } from '../../types';
 
 export interface MethodInterface {
-    +responseID: number,
-    +device: Device,
+    +responseID: number;
+    +device: Device;
 }
 
 export default class AbstractMethod implements MethodInterface {
@@ -220,13 +218,6 @@ export default class AbstractMethod implements MethodInterface {
 
     getCustomMessages(): ?JSON {
         return null;
-    }
-
-    __hash(permission: string): string {
-        const host: string = DataManager.getSettings('origin');
-        const secret: string = `${permission}#${this.device.features.device_id}#${host}`;
-        const hash: Buffer = crypto.hash256(Buffer.from(secret, 'binary'));
-        return hash.toString('hex');
     }
 
     dispose() {

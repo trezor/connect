@@ -12,7 +12,7 @@ import type {
 import type { BuildTxInput } from 'hd-wallet';
 
 // local types
-import type { RefTransaction } from '../../../types/trezor';
+import type { RefTransaction } from '../../../types/trezor/protobuf';
 
 // Get array of unique referenced transactions ids
 export const getReferencedTransactions = (inputs: Array<BuildTxInput>): Array<string> => {

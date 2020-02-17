@@ -3,10 +3,10 @@ import * as bs58 from 'bs58';
 
 import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type {
-    Transaction as $EosTransaction,
+    EosSDKTransaction,
     EosTxAction as $EosTxAction,
     EosAuthorization as $EosAuthorization,
-} from '../../../types/eos';
+} from '../../../types/networks/eos';
 
 import type {
     EosAsset,
@@ -17,7 +17,9 @@ import type {
     EosTxHeader,
     EosActionCommon,
     EosAuthorization,
-} from '../../../types/trezor';
+} from '../../../types/trezor/protobuf';
+
+type Action = $EosTxAction; // | $EosActionCommon & { name: string; data: string };
 
 // copied from: https://github.com/EOSIO/eosjs/blob/master/src/eosjs-numeric.ts
 const binaryToDecimal = (bignum: Uint8Array | Array<number>, minDigits = 1) => {
@@ -164,7 +166,7 @@ const parseDate = (d: string): number => {
     return Date.parse(d) / 1000;
 };
 
-const parseAck = (action: $EosTxAction): EosTxActionAck | null => {
+const parseAck = (action: Action): EosTxActionAck | null => {
     switch (action.name) {
         case 'transfer':
             return {
@@ -278,7 +280,7 @@ const parseAck = (action: $EosTxAction): EosTxActionAck | null => {
     }
 };
 
-const parseUnknown = (action: $EosTxAction): EosTxActionAck | null => {
+const parseUnknown = (action: Action): EosTxActionAck | null => {
     if (typeof action.data !== 'string') return null;
     return {
         unknown: {
@@ -288,7 +290,7 @@ const parseUnknown = (action: $EosTxAction): EosTxActionAck | null => {
     };
 };
 
-const parseCommon = (action: $EosTxAction): EosActionCommon => {
+const parseCommon = (action: Action): EosActionCommon => {
     return {
         account: serialize(action.account),
         name: serialize(action.name),
@@ -299,7 +301,7 @@ const parseCommon = (action: $EosTxAction): EosActionCommon => {
     };
 };
 
-const parseAction = (action: $EosTxAction): EosTxActionAck => {
+const parseAction = (action: any): EosTxActionAck => {
     const ack = parseAck(action) || parseUnknown(action);
     return {
         common: parseCommon(action),
@@ -307,7 +309,7 @@ const parseAction = (action: $EosTxAction): EosTxActionAck => {
     };
 };
 
-export const validate = (address_n: Array<number>, tx: $EosTransaction) => {
+export const validate = (address_n: Array<number>, tx: EosSDKTransaction) => {
     const header: ?EosTxHeader = tx.header ? {
         expiration: typeof tx.header.expiration === 'number' ? tx.header.expiration : parseDate(tx.header.expiration),
         ref_block_num: tx.header.refBlockNum,

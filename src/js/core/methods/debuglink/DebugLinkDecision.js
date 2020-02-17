@@ -3,7 +3,7 @@
 import AbstractMethod from '../AbstractMethod';
 import { validateParams } from '../helpers/paramsValidator';
 import type { CoreMessage } from '../../../types';
-import type { DebugLinkDecision as $DebugLinkDecision } from '../../../types/trezor';
+import type { DebugLinkDecision as $DebugLinkDecision } from '../../../types/trezor/protobuf';
 
 export default class DebugLinkDecision extends AbstractMethod {
     params: $DebugLinkDecision;

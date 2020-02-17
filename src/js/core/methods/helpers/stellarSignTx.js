@@ -4,15 +4,15 @@ import { validateParams } from './paramsValidator';
 
 import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type {
-    Transaction as $StellarTransaction,
-    Operation as $StellarOperation,
-} from '../../../types/stellar';
+    StellarTransaction,
+    StellarOperation,
+} from '../../../types/networks/stellar';
 
 import type {
     StellarSignedTx,
     StellarSignTxMessage,
     StellarOperationMessage,
-} from '../../../types/trezor';
+} from '../../../types/trezor/protobuf';
 
 const processTxRequest = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     operations: Array<StellarOperationMessage>,
@@ -45,7 +45,7 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
 export const stellarSignTx = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     address_n: Array<number>,
     networkPassphrase: string,
-    tx: $StellarTransaction,
+    tx: StellarTransaction,
 ): Promise<StellarSignedTx> => {
     // eslint-disable-next-line no-use-before-define
     const message: StellarSignTxMessage = transformSignMessage(tx);
@@ -65,7 +65,7 @@ export const stellarSignTx = async (typedCall: (type: string, resType: string, m
 };
 
 // transform incoming parameters to protobuf messages format
-const transformSignMessage = (tx: $StellarTransaction): StellarSignTxMessage => {
+const transformSignMessage = (tx: StellarTransaction): StellarSignTxMessage => {
     // timebounds_start and timebounds_end are the only fields which needs to be converted to number
     const timebounds: ?$Shape<StellarSignTxMessage> = tx.timebounds ? {
         timebounds_start: tx.timebounds.minTime,
@@ -92,7 +92,7 @@ const transformSignMessage = (tx: $StellarTransaction): StellarSignTxMessage => 
 };
 
 // transform incoming parameters to protobuf messages format
-const transformOperation = (op: $StellarOperation): ?StellarOperationMessage => {
+const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
     switch (op.type) {
         case 'createAccount' :
             validateParams(op, [

@@ -1,13 +1,12 @@
 /* @flow */
-
-import * as trezor from '../types/trezor';
 import * as bitcoin from '@trezor/utxo-lib';
 import * as ecurve from 'ecurve';
+import type { PublicKey, HDPubNode } from '../types/trezor/protobuf';
 
 const curve = ecurve.getCurveByName('secp256k1');
 
 const pubNode2bjsNode = (
-    node: trezor.HDPubNode,
+    node: HDPubNode,
     network: bitcoin.Network
 ): bitcoin.HDNode => {
     const chainCode = Buffer.from(node.chain_code, 'hex');
@@ -51,10 +50,10 @@ export const convertBitcoinXpub = (xpub: string, network: bitcoin.Network): stri
 // converts from internal PublicKey format to bitcoin.js HDNode
 // network info is necessary. throws error on wrong xpub
 const pubKey2bjsNode = (
-    key: trezor.PublicKey,
+    key: PublicKey,
     network: bitcoin.Network
 ): bitcoin.HDNode => {
-    const keyNode: trezor.HDPubNode = key.node;
+    const keyNode: HDPubNode = key.node;
     const bjsNode: bitcoin.HDNode = pubNode2bjsNode(keyNode, network);
     const bjsXpub: string = bjsNode.toBase58();
     const keyXpub: string = convertXpub(key.xpub, network);
@@ -85,12 +84,12 @@ const checkDerivation = (
     }
 };
 
-export const xpubDerive = (xpub: trezor.PublicKey,
-    childXPub: trezor.PublicKey,
+export const xpubDerive = (xpub: PublicKey,
+    childXPub: PublicKey,
     suffix: number,
     network?: bitcoin.Network,
     requestedNetwork?: bitcoin.Network
-): trezor.PublicKey => {
+): PublicKey => {
     const resNode: bitcoin.HDNode = pubKey2bjsNode(xpub, network || bitcoin.networks.bitcoin);
     const childNode: bitcoin.HDNode = pubKey2bjsNode(childXPub, network || bitcoin.networks.bitcoin);
     checkDerivation(resNode, childNode, suffix);
@@ -98,7 +97,7 @@ export const xpubDerive = (xpub: trezor.PublicKey,
     return xpub;
 };
 
-export const xpubToHDNodeType = (xpub: string, network: bitcoin.Network): trezor.HDPubNode => {
+export const xpubToHDNodeType = (xpub: string, network: bitcoin.Network): HDPubNode => {
     const hd = bitcoin.HDNode.fromBase58(xpub, network);
     return {
         depth: hd.depth,

@@ -3,11 +3,11 @@ import Bowser from 'bowser';
 import { getBridgeInfo } from '../../data/TransportInfo';
 
 export type BrowserState = {
-    name: string,
-    osname: string,
-    supported: boolean,
-    outdated: boolean,
-    mobile: boolean,
+    name: string;
+    osname: string;
+    supported: boolean;
+    outdated: boolean;
+    mobile: boolean;
 }
 
 export const state: BrowserState = {
@@ -19,9 +19,9 @@ export const state: BrowserState = {
 };
 
 type SupportedBrowser = {
-    version: number,
-    download: string,
-    update: string,
+    version: number;
+    download: string;
+    update: string;
 };
 
 export const getBrowserState = (supportedBrowsers: { [key: string]: SupportedBrowser }): BrowserState => {

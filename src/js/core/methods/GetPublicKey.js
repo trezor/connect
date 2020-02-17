@@ -9,12 +9,12 @@ import { UiMessage } from '../../message/builder';
 
 import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getPublicKeyLabel } from '../../utils/pathUtils';
-import type { HDNodeResponse } from '../../types/trezor';
+import type { HDNodeResponse } from '../../types/trezor/protobuf';
 import type { CoreMessage, UiPromiseResponse, BitcoinNetworkInfo } from '../../types';
 
 type Batch = {
-    path: Array<number>,
-    coinInfo: ?BitcoinNetworkInfo,
+    path: Array<number>;
+    coinInfo: ?BitcoinNetworkInfo;
 }
 type Params = Array<Batch>;
 

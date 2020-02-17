@@ -5,13 +5,13 @@ import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 
-import type { RippleSignedTx } from '../../types/trezor';
-import type { Transaction as $RippleTransaction, RippleSignedTx as RippleSignedTxResponse } from '../../types/ripple';
+import type { RippleSignedTx } from '../../types/trezor/protobuf';
+import type { RippleTransaction, RippleSignedTx as RippleSignedTxResponse } from '../../types/networks/ripple';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    path: Array<number>,
-    transaction: $RippleTransaction,
+    path: Array<number>;
+    transaction: RippleTransaction;
 }
 
 export default class RippleSignTransaction extends AbstractMethod {
@@ -32,7 +32,7 @@ export default class RippleSignTransaction extends AbstractMethod {
 
         const path = validatePath(payload.path, 5);
         // incoming data should be in ripple-sdk format
-        const transaction: $RippleTransaction = payload.transaction;
+        const transaction: RippleTransaction = payload.transaction;
 
         validateParams(transaction, [
             { name: 'fee', type: 'string' },
@@ -55,7 +55,7 @@ export default class RippleSignTransaction extends AbstractMethod {
     }
 
     async run(): Promise<RippleSignedTxResponse> {
-        const tx: $RippleTransaction = this.params.transaction;
+        const tx = this.params.transaction;
         const response: RippleSignedTx = await this.device.getCommands().rippleSignTx({
             address_n: this.params.path,
             fee: parseInt(tx.fee),

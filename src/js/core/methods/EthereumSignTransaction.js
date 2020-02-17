@@ -8,12 +8,12 @@ import { stripHexPrefix, getNetworkLabel } from '../../utils/ethereumUtils';
 import * as helper from './helpers/ethereumSignTx';
 
 import type { CoreMessage } from '../../types';
-import type { EthereumSignedTx } from '../../types/trezor';
-import type { Transaction as EthereumTransaction } from '../../types/ethereum';
+import type { EthereumSignedTx } from '../../types/trezor/protobuf';
+import type { EthereumTransaction } from '../../types/networks/ethereum';
 
 type Params = {
-    path: Array<number>,
-    transaction: EthereumTransaction,
+    path: Array<number>;
+    transaction: EthereumTransaction;
 }
 
 export default class EthereumSignTx extends AbstractMethod {

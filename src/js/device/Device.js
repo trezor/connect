@@ -24,19 +24,19 @@ export type RunOptions = {
     // skipFinalReload - normally, after action, features are reloaded again
     //                   because some actions modify the features
     //                   but sometimes, you don't need that and can skip that
-    skipFinalReload?: boolean,
+    skipFinalReload?: boolean;
     // waiting - if waiting and someone else holds the session, it waits until it's free
     //          and if it fails on acquire (because of more tabs acquiring simultaneously),
     //          it tries repeatedly
-    waiting?: boolean,
-    onlyOneActivity?: boolean,
+    waiting?: boolean;
+    onlyOneActivity?: boolean;
 
     // cancel popup request when we are sure that there is no need to authenticate
     // Method gets called after run() fetch new Features but before trezor-link dispatch "acquire" event
-    cancelPopupRequest?: Function,
+    cancelPopupRequest?: Function;
 
-    keepSession?: boolean,
-    useEmptyPassphrase?: boolean,
+    keepSession?: boolean;
+    useEmptyPassphrase?: boolean;
 }
 
 const parseRunOptions = (options?: RunOptions): RunOptions => {
@@ -338,7 +338,7 @@ export default class Device extends EventEmitter {
         if (!this.features) return;
         const expectedState = this.getExternalState();
         const state = await this.commands.getDeviceState();
-        const uniqueState = `${state}@${this.features.device_id}:${this.instance}`;
+        const uniqueState = `${state}@${this.features.device_id || 'device_id'}:${this.instance}`;
         if (!this.useLegacyPassphrase() && this.features.session_id) {
             this.setInternalState(this.features.session_id);
         }
@@ -471,15 +471,15 @@ export default class Device extends EventEmitter {
     }
 
     isBootloader(): boolean {
-        return this.features.bootloader_mode;
+        return this.features && !!this.features.bootloader_mode;
     }
 
     isInitialized(): boolean {
-        return this.features.initialized;
+        return this.features && this.features.initialized;
     }
 
     isSeedless(): boolean {
-        return this.features.no_backup;
+        return this.features && this.features.no_backup;
     }
 
     isInconsistent(): boolean {

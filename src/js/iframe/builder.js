@@ -5,8 +5,7 @@ import * as IFRAME from '../constants/iframe';
 import { IFRAME_TIMEOUT, IFRAME_BLOCKED } from '../constants/errors';
 import { getOrigin } from '../env/browser/networkUtils';
 import css from './inline-styles';
-import type { Deferred } from '../types';
-import type { ConnectSettings } from '../data/ConnectSettings';
+import type { ConnectSettings, Deferred } from '../types';
 
 export let instance: ?HTMLIFrameElement;
 export let origin: string;

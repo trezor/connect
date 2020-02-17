@@ -6,17 +6,17 @@ import { getAccountAddressN } from '../../../utils/accountUtils';
 import { formatAmount } from '../../../utils/formatUtils';
 
 import type { CoinInfo } from '../../../types';
-import type { DiscoveryAccountType, DiscoveryAccount, AccountInfoRequest } from '../../../types/account';
+import type { DiscoveryAccountType, DiscoveryAccount, GetAccountInfo } from '../../../types/account';
 
 type DiscoveryType = {
-    type: DiscoveryAccountType,
-    getPath: (index: number) => number[],
+    type: DiscoveryAccountType;
+    getPath: (index: number) => number[];
 }
 
 type DiscoveryOptions = {
-    blockchain: Blockchain,
-    commands: DeviceCommands,
-    limit?: number,
+    blockchain: Blockchain;
+    commands: DeviceCommands;
+    limit?: number;
 }
 
 export default class Discovery extends EventEmitter {
@@ -78,7 +78,7 @@ export default class Discovery extends EventEmitter {
         }
     }
 
-    async start(details?: $ElementType<AccountInfoRequest, 'details'>): Promise<void> {
+    async start(details?: $ElementType<GetAccountInfo, 'details'>): Promise<void> {
         const limit = 10; // TODO: move to options
         this.interrupted = false;
         while (!this.completed && !this.interrupted) {

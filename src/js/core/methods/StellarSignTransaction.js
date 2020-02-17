@@ -6,14 +6,14 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/stellarSignTx';
 
-import type { StellarSignedTx } from '../../types/trezor';
-import type { Transaction as $StellarTransaction, StellarSignedTx as StellarSignedTxResponse } from '../../types/stellar';
+import type { StellarSignedTx } from '../../types/trezor/protobuf';
+import type { StellarTransaction, StellarSignedTx as StellarSignedTxResponse } from '../../types/networks/stellar';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    path: Array<number>,
-    networkPassphrase: string,
-    transaction: any,
+    path: Array<number>;
+    networkPassphrase: string;
+    transaction: any;
 }
 
 export default class StellarSignTransaction extends AbstractMethod {
@@ -35,7 +35,7 @@ export default class StellarSignTransaction extends AbstractMethod {
 
         const path = validatePath(payload.path, 3);
         // incoming data should be in stellar-sdk format
-        const transaction: $StellarTransaction = payload.transaction;
+        const transaction: StellarTransaction = payload.transaction;
         this.params = {
             path,
             networkPassphrase: payload.networkPassphrase,

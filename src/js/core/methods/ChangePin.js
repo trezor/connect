@@ -5,7 +5,7 @@ import type { CoreMessage } from '../../types';
 import { validateParams } from './helpers/paramsValidator';
 
 type Params = {
-    remove?: boolean,
+    remove?: boolean;
 }
 
 export default class ChangePin extends AbstractMethod {

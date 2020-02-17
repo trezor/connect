@@ -5,9 +5,9 @@ import * as UI from '../../constants/ui';
 
 import { container, showView, postMessage } from './common';
 import { formatAmount, formatTime } from '../../utils/formatUtils';
-import type { SelectFee, UpdateCustomFee } from '../../types/uiRequest';
+import type { SelectFee, UpdateCustomFee } from '../../types/events';
 import type { BitcoinNetworkInfo } from '../../types';
-import type { SelectFeeLevel } from '../../types/fee';
+import type { SelectFeeLevel } from '../../types/account';
 
 const fees: Array<SelectFeeLevel> = [];
 // reference to currently selected button

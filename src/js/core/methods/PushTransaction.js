@@ -9,8 +9,8 @@ import { initBlockchain } from '../../backend/BlockchainLink';
 import type { CoreMessage, CoinInfo } from '../../types';
 
 type Params = {
-    tx: string,
-    coinInfo: CoinInfo,
+    tx: string;
+    coinInfo: CoinInfo;
 }
 
 export default class PushTransaction extends AbstractMethod {

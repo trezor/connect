@@ -6,7 +6,7 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import { validateParams } from './helpers/paramsValidator';
 
-import type { LoadDeviceFlags, Success } from '../../types/trezor';
+import type { LoadDeviceFlags, Success } from '../../types/trezor/protobuf';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 export default class LoadDevice extends AbstractMethod {
