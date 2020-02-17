@@ -1,0 +1,36 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "lib": [
+            "es6"
+        ],
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "baseUrl": "../",
+        "typeRoots": [
+            "../"
+        ],
+        "types": [],
+        "noEmit": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "files": [
+        "index.d.ts",
+        "./__tests__/binance.ts",
+        "./__tests__/bitcoin.ts",
+        "./__tests__/blockchain.ts",
+        "./__tests__/cardano.ts",
+        "./__tests__/eos.ts",
+        "./__tests__/ethereum.ts",
+        "./__tests__/index.ts",
+        "./__tests__/lisk.ts",
+        "./__tests__/management.ts",
+        "./__tests__/misc.ts",
+        "./__tests__/nem.ts",
+        "./__tests__/ripple.ts",
+        "./__tests__/stellar.ts",
+        "./__tests__/tezos.ts"
+    ]
+}
