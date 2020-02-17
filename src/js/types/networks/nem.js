@@ -9,10 +9,10 @@ type MosaicID = {
 
 type MosaicDefinition = {
     levy?: {
-        type: number;
-        fee: number;
-        recipient: string;
-        mosaicId: MosaicID;
+        type?: number;
+        fee?: number;
+        recipient?: string;
+        mosaicId?: MosaicID;
     };
     id: MosaicID;
     description: string;
@@ -24,7 +24,6 @@ type MosaicDefinition = {
 
 export type NEMMosaic = {
     mosaicId: MosaicID;
-    name: string;
     quantity: number;
 }
 
@@ -34,8 +33,8 @@ type Modification = {
 }
 
 type Message = {
-    payload: string;
-    type: number;
+    payload?: string;
+    type?: number;
     publicKey?: string; // not present in sdk
 }
 
@@ -50,7 +49,7 @@ type TransactionCommon = {
 export type NEMTransferTransaction = TransactionCommon & {
     type: 0x0101;
     recipient: string;
-    amount: number;
+    amount: number | string;
     mosaics?: NEMMosaic[];
     message?: Message;
 };
@@ -107,46 +106,6 @@ export type NEMMultisigTransaction = TransactionCommon & {
 };
 
 export type NEMTransaction = Transaction | NEMMultisigTransaction;
-
-// export type NEMTransaction2 = {
-//     version: number;
-//     timeStamp: number;
-//     amount: number;
-//     signature?: string;
-//     fee: number;
-//     recipient?: string;
-//     type?: number;
-//     deadline?: number;
-//     message?: Message;
-
-//     signer?: string;
-//     mosaics?: Array<Mosaic>;
-
-//     // not present in sdk
-//     otherTrans?: NEMTransaction;
-//     importanceTransfer?: {
-//         mode: number;
-//         publicKey: string;
-//     };
-
-//     modifications?: Array<Modification>;
-//     minCosignatories?: {
-//         relativeChange: number;
-//     };
-
-//     newPart?: string;
-//     rentalFeeSink?: string;
-//     rentalFee?: number;
-//     parent?: string;
-
-//     mosaicDefinition?: MosaicDefinition;
-//     creationFeeSink?: string;
-//     creationFee?: number;
-
-//     mosaicId?: MosaicID;
-//     supplyType?: number;
-//     delta?: number;
-// }
 
 // get address
 

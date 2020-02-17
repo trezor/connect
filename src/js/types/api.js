@@ -22,8 +22,8 @@ import * as Events from './events';
 import * as Blockchain from './backend/blockchain';
 
 interface Bundled<Parm, Resp> {
-    (params: P.CommonParams & Parm): P.Response<Resp>;
-    (params: P.CommonParams & P.Bundle<Parm>): P.BundledResponse<Resp>;
+    (params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<Parm>}>): P.Response<Resp>;
+    (params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<P.Bundle<Parm>>}>): P.BundledResponse<Resp>;
 }
 
 interface Mixed<P1, P2, R1, R2> {

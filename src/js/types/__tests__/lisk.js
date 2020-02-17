@@ -45,7 +45,6 @@ export const liskGetAddress = async () => {
         path: 'm/44',
         address: 'a',
         showOnTrezor: true,
-        crossChain: true,
     });
 
     // with invalid params

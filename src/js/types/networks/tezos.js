@@ -65,7 +65,7 @@ export type TezosOriginationOperation = {
     source: string;
     balance: number;
     delegate?: string;
-    script: string;
+    script: string | number[];
     fee: number;
     counter: number;
     gas_limit: number;

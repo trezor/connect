@@ -6,7 +6,7 @@ import {
     IFRAME,
     POPUP,
 } from '../constants';
-import type { ConnectSettings } from './params';
+import type { ConnectSettings, CoreMessage } from './params';
 import type { Device } from './trezor/device';
 import type { DiscoveryAccount, SelectFeeLevel } from './account';
 import type { CoinInfo, BitcoinNetworkInfo } from './networks/coinInfo';
@@ -46,7 +46,7 @@ export type MessageWithoutPayload = {
 }
 
 export type DeviceMessage = {
-    +type: typeof UI.REQUEST_PIN |
+    type: typeof UI.REQUEST_PIN |
         typeof UI.INVALID_PIN |
         typeof UI.REQUEST_PASSPHRASE_ON_DEVICE |
         typeof UI.REQUEST_PASSPHRASE |
@@ -182,7 +182,7 @@ export type UpdateCustomFee = {
 }
 
 export type BundleProgress = {
-    +type: typeof UI.BUNDLE_PROGRESS;
+    type: typeof UI.BUNDLE_PROGRESS;
     payload: {
         progress: number;
         response: Object;
@@ -190,10 +190,21 @@ export type BundleProgress = {
 }
 
 export type FirmwareProgress = {
-    +type: typeof UI.FIRMWARE_PROGRESS;
+    type: typeof UI.FIRMWARE_PROGRESS;
     payload: {
         device: Device;
         progress: number;
+    };
+}
+
+/*
+* Callback message for CustomMessage method
+*/
+export type CustomMessageRequest = {
+    type: typeof UI.CUSTOM_MESSAGE_REQUEST;
+    payload: {
+        type: string;
+        message: Object;
     };
 }
 
@@ -209,172 +220,114 @@ export type UiEvent =
     | SelectFee
     | UpdateCustomFee
     | BundleProgress
+    | CustomMessageRequest;
 
-/*
-export type UiEvent =
-| {
-      type: | typeof UI.REQUEST_PIN
-          | typeof UI.INVALID_PIN
-          | typeof UI.REQUEST_PASSPHRASE_ON_DEVICE
-          | typeof UI.REQUEST_PASSPHRASE
-          | typeof UI.INVALID_PASSPHRASE
-          | typeof UI.REQUEST_WORD;
-      payload: {
-          device: Device;
-          type?: string;
-      };
-  }
-| {
-      type: typeof UI.REQUEST_BUTTON;
-      payload: {
-          device: Device;
-          code: string;
-          data?: ButtonRequestData;
-      };
-  }
-| {
-      type: typeof UI.REQUEST_PERMISSION;
-      payload: {
-          permissions: string[];
-          device: Device;
-      };
-  }
-| {
-      type: typeof UI.REQUEST_CONFIRMATION;
-      payload: {
-          view: string;
-          label?: string;
-          customConfirmButton?: {
-              className: string;
-              label: string;
-          };
-          customCancelButton?: {
-              className: string;
-              label: string;
-          };
-      };
-  }
-| {
-      type: typeof UI.ADDRESS_VALIDATION;
-      payload: ButtonRequestData;
-  }
-| {
-      type: | typeof UI.REQUEST_UI_WINDOW
-          | typeof POPUP.CANCEL_POPUP_REQUEST
-          | typeof IFRAME.LOADED
-          | typeof POPUP.LOADED
-          | typeof UI.TRANSPORT
-          | typeof UI.CHANGE_ACCOUNT
-          | typeof UI.INSUFFICIENT_FUNDS
-          | typeof UI.CLOSE_UI_WINDOW
-          | typeof UI.LOGIN_CHALLENGE_REQUEST;
-      payload?: typeof undefined;
-  }
-| {
-      type: typeof UI.BUNDLE_PROGRESS;
-      payload: {
-            progress: number;
-            response: any;
-      };
-  }
-| {
-      type: typeof UI.FIRMWARE_PROGRESS;
-      payload: {
-          progress: number;
-      };
-  }
-| {
-    type: typeof UI.SELECT_DEVICE;
+type ReceivePermission = {
+    type: typeof UI.RECEIVE_PERMISSION;
     payload: {
-        devices: Device[];
-        webusb: boolean;
+        granted: boolean;
+        remember: boolean;
     };
-  }
-| {
-    type: typeof UI.SELECT_ACCOUNT;
-    payload: {
-        type: 'start' | 'progress' | 'end';
-        coinInfo: CoinInfo;
-        accountTypes?: Array<'normal' | 'segwit' | 'legacy'>;
-        accounts?: Array<DiscoveryAccount>;
-        preventEmpty?: boolean;
-    };
-  }
-| {
-    type: typeof UI.SELECT_FEE;
-    payload: {
-        coinInfo: BitcoinNetworkInfo;
-        feeLevels: Array<SelectFeeLevel>;
-    };
-  }
-| {
-    type: typeof UI.UPDATE_CUSTOM_FEE;
-    payload: {
-        coinInfo: BitcoinNetworkInfo;
-        feeLevels: Array<SelectFeeLevel>;
-    };
-  };
-*/
+}
 
-/*
-* messages from UI passed via TrezorConnect.uiResponse
-*/
+type ReceiveConfirmation = {
+    type: typeof UI.RECEIVE_CONFIRMATION;
+    payload: boolean;
+}
+
+type ReceiveDevice = {
+    type: typeof UI.RECEIVE_DEVICE;
+    payload: {
+        device: Device;
+        remember: boolean;
+    };
+}
+
+type ReceivePin = {
+    type: typeof UI.RECEIVE_PIN;
+    payload: string;
+}
+
+type ReceiveWord = {
+    type: typeof UI.RECEIVE_WORD;
+    payload: string;
+}
+
+type ReceivePassphrase = {
+    type: typeof UI.RECEIVE_PASSPHRASE;
+    payload: {
+        save: boolean;
+        value: string;
+        passphraseOnDevice?: boolean;
+    };
+}
+
+type ReceivePassphraseAction = {
+    type: typeof UI.INVALID_PASSPHRASE_ACTION;
+    payload: boolean;
+}
+
+type ReceiveAccount = {
+    type: typeof UI.RECEIVE_ACCOUNT;
+    payload: ?number;
+}
+
+type ReceiveFee = {
+    type: typeof UI.RECEIVE_FEE;
+    payload: {
+        type: 'compose-custom';
+        value: number;
+    } | {
+        type: 'change-account';
+    } | {
+        type: 'send';
+        value: string;
+    };
+}
+
 export type UiResponse =
-| {
-      type: typeof UI.RECEIVE_PERMISSION;
-      payload: {
-          granted: boolean;
-          remember: boolean;
-      };
-  }
-| {
-      type: typeof UI.RECEIVE_CONFIRMATION;
-      payload: boolean;
-  }
-| {
-      type: typeof UI.RECEIVE_DEVICE;
-      payload: {
-          device: Device;
-          remember: boolean;
-      };
-  }
-| {
-      type: typeof UI.RECEIVE_PIN | typeof UI.RECEIVE_WORD;
-      payload: string;
-  }
-| {
-      type: typeof UI.RECEIVE_PASSPHRASE;
-      payload: {
-          save: boolean;
-          value: string;
-          passphraseOnDevice?: boolean;
-      };
-  }
-| {
-      type: typeof UI.INVALID_PASSPHRASE_ACTION;
-      payload: boolean;
-  }
-| {
-      type: typeof UI.RECEIVE_ACCOUNT;
-      payload: ?number;
-  }
-| {
-      type: typeof UI.RECEIVE_FEE;
-      payload: {
-          type: 'compose-custom';
-          value: number;
-      } | {
-          type: 'change-account';
-      } | {
-          type: 'send';
-          value: string;
-      };
-  };
+    ReceivePermission
+    | ReceiveConfirmation
+    | ReceiveDevice
+    | ReceivePin
+    | ReceiveWord
+    | ReceivePassphrase
+    | ReceivePassphraseAction
+    | ReceiveAccount
+    | ReceiveFee
+    | CustomMessageRequest;
 
-export type CustomMessageRequest = {
-    type: typeof UI.CUSTOM_MESSAGE_REQUEST;
-    payload: {
-        type: string;
-        message: Object;
-    };
+type FT<T> = $PropertyType<T, 'type'>;
+type FP<T> = $PropertyType<T, 'payload'>;
+
+export interface UiMessageBuilder {
+    (type: FT<MessageWithoutPayload>): CoreMessage;
+    (type: FT<DeviceMessage>, payload: FP<DeviceMessage>): CoreMessage;
+    (type: FT<ButtonRequestMessage>, payload: FP<ButtonRequestMessage>): CoreMessage;
+    (type: FT<AddressValidationMessage>, payload: FP<AddressValidationMessage>): CoreMessage;
+    (type: FT<IFrameError>, payload: FP<IFrameError>): CoreMessage;
+    (type: FT<PopupError>, payload: FP<PopupError>): CoreMessage;
+    (type: FT<PopupHandshake>, payload: FP<PopupHandshake>): CoreMessage;
+    (type: FT<RequestPermission>, payload: FP<RequestPermission>): CoreMessage;
+    (type: FT<RequestConfirmation>, payload: FP<RequestConfirmation>): CoreMessage;
+    (type: FT<SelectDevice>, payload: FP<SelectDevice>): CoreMessage;
+    (type: FT<UnexpectedDeviceMode>, payload: FP<UnexpectedDeviceMode>): CoreMessage;
+    (type: FT<FirmwareException>, payload: FP<FirmwareException>): CoreMessage;
+    (type: FT<SelectAccount>, payload: FP<SelectAccount>): CoreMessage;
+    (type: FT<SelectFee>, payload: FP<SelectFee>): CoreMessage;
+    (type: FT<UpdateCustomFee>, payload: FP<UpdateCustomFee>): CoreMessage;
+    (type: FT<BundleProgress>, payload: FP<BundleProgress>): CoreMessage;
+    (type: FT<FirmwareProgress>, payload: FP<FirmwareProgress>): CoreMessage;
+    (type: FT<CustomMessageRequest>, payload: FP<CustomMessageRequest>): CoreMessage;
+    // ui response
+    (type: FT<ReceivePermission>, FP<ReceivePermission>): CoreMessage;
+    (type: FT<ReceiveConfirmation>, FP<ReceiveConfirmation>): CoreMessage;
+    (type: FT<ReceiveDevice>, FP<ReceiveDevice>): CoreMessage;
+    (type: FT<ReceivePin>, FP<ReceivePin>): CoreMessage;
+    (type: FT<ReceivePassphrase>, FP<ReceivePassphrase>): CoreMessage;
+    (type: FT<ReceivePassphraseAction>, FP<ReceivePassphraseAction>): CoreMessage;
+    (type: FT<ReceiveAccount>, FP<ReceiveAccount>): CoreMessage;
+    (type: FT<ReceiveFee>, FP<ReceiveFee>): CoreMessage;
+    (type: FT<CustomMessageRequest>, FP<CustomMessageRequest>): CoreMessage;
+    (type: FT<ReceiveWord>, FP<ReceiveWord>): CoreMessage;
 }

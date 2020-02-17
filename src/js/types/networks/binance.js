@@ -1,9 +1,10 @@
 /* @flow */
-import type { BinanceTransferMsg, BinanceOrderMsg, BinanceCancelMsg, BinanceSignedTx } from '../trezor/protobuf';
+import type { BinanceTransferMsg, BinanceOrderMsg, BinanceCancelMsg } from '../trezor/protobuf';
 
 // get address
 export type BinanceGetAddress = {
     path: string | number[];
+    address?: string;
     showOnTrezor?: boolean;
 };
 

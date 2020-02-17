@@ -10,14 +10,14 @@ export type StellarAsset = {
 }
 
 export type StellarCreateAccountOperation = {
-    +type: 'createAccount'; // Proto: "StellarCreateAccountOp"
+    type: 'createAccount'; // Proto: "StellarCreateAccountOp"
     source?: string; // Proto: "source_account"
     destination: string; // Proto: "new_account",
     startingBalance: string; // Proto: "starting_balance"
 }
 
 export type StellarPaymentOperation = {
-    +type: 'payment'; // Proto: "StellarPaymentOp"
+    type: 'payment'; // Proto: "StellarPaymentOp"
     source?: string; // Proto: "source_account"
     destination: string; // Proto: "destination_account"
     asset?: StellarAsset | typeof undefined; // Proto: ok
@@ -25,7 +25,7 @@ export type StellarPaymentOperation = {
 }
 
 export type StellarPathPaymentOperation = {
-    +type: 'pathPayment'; // Proto: "StellarPathPaymentOp"
+    type: 'pathPayment'; // Proto: "StellarPathPaymentOp"
     source?: string; // Proto: "source_account"
     sendAsset: StellarAsset; // Proto: "send_asset"
     sendMax: string; // Proto: "send_max"
@@ -36,7 +36,7 @@ export type StellarPathPaymentOperation = {
 }
 
 export type StellarPassiveOfferOperation = {
-    +type: 'createPassiveOffer'; // Proto: "StellarCreatePassiveOfferOp"
+    type: 'createPassiveOffer'; // Proto: "StellarCreatePassiveOfferOp"
     source?: string; // Proto: "source_account"
     buying: StellarAsset; // Proto: "buying_asset"
     selling: StellarAsset; // Proto: "selling_asset"
@@ -45,7 +45,7 @@ export type StellarPassiveOfferOperation = {
 }
 
 export type StellarManageOfferOperation = {
-    +type: 'manageOffer'; // Proto: "StellarManageOfferOp"
+    type: 'manageOffer'; // Proto: "StellarManageOfferOp"
     source?: string; // Proto: "source_account"
     buying: StellarAsset; // Proto: "buying_asset"
     selling: StellarAsset; // Proto: "selling_asset"
@@ -55,7 +55,7 @@ export type StellarManageOfferOperation = {
 }
 
 export type StellarSetOptionsOperation = {
-    +type: 'setOptions'; // Proto: "StellarSetOptionsOp"
+    type: 'setOptions'; // Proto: "StellarSetOptionsOp"
     source?: string; // Proto: "source_account"
     signer?: {
         type: 0 | 1 | 2;
@@ -73,14 +73,14 @@ export type StellarSetOptionsOperation = {
 }
 
 export type StellarChangeTrustOperation = {
-    +type: 'changeTrust'; // Proto: "StellarChangeTrustOp"
+    type: 'changeTrust'; // Proto: "StellarChangeTrustOp"
     source?: string; // Proto: "source_account"
     line: StellarAsset; // Proto: ok
     limit?: string; // Proto: ok
 }
 
 export type StellarAllowTrustOperation = {
-    +type: 'allowTrust'; // Proto: "StellarAllowTrustOp"
+    type: 'allowTrust'; // Proto: "StellarAllowTrustOp"
     source?: string; // Proto: "source_account"
     trustor: string; // Proto: "trusted_account"
     assetCode: string; // Proto: "asset_code"
@@ -89,21 +89,21 @@ export type StellarAllowTrustOperation = {
 }
 
 export type StellarAccountMergeOperation = {
-    +type: 'accountMerge'; // Proto: "StellarAccountMergeOp"
+    type: 'accountMerge'; // Proto: "StellarAccountMergeOp"
     source?: string; // Proto: "source_account"
     destination: string; // Proto: "destination_account"
 }
 
 export type StellarManageDataOperation = {
-    +type: 'manageData'; // Proto: "StellarManageDataOp"
+    type: 'manageData'; // Proto: "StellarManageDataOp"
     source?: string; // Proto: "source_account"
     name: string; // Proto: "key"
-    value: string | Buffer | typeof undefined; // Proto: "value"
+    value?: ?(string | Buffer); // Proto: "value"
 }
 
 // (?) Missing in stellar API but present in Proto messages
 export type StellarBumpSequenceOperation = {
-    +type: 'bumpSequence'; // Proto: "StellarBumpSequenceOp"
+    type: 'bumpSequence'; // Proto: "StellarBumpSequenceOp"
     source?: string; // Proto: "source_account"
     bumpTo: string; // Proto: "bump_to"
 }
@@ -130,7 +130,7 @@ export type StellarOperation = StellarCreateAccountOperation
 export type StellarTransaction = {
     source: string; // Proto: "source_account"
     fee: number; // Proto: ok
-    sequence: string; // Proto: "sequence_number"
+    sequence: string | number; // Proto: "sequence_number"
     timebounds?: {
         minTime: number; // Proto: "timebounds_start"
         maxTime: number; // Proto: "timebounds_end"

@@ -48,12 +48,12 @@ export type EosAuthorization = {
     }>;
 }
 
-type Action = {
+export type EosTxActionCommon = {
     account: string;
     authorization: EosPermissionLevel[];
 }
 
-export type EosTxAction = Action & {
+export type EosTxAction = EosTxActionCommon & {
     name: 'transfer';
     data: {
         from: string;
@@ -61,7 +61,7 @@ export type EosTxAction = Action & {
         quantity: string;
         memo?: string;
     };
-} | Action & {
+} | EosTxActionCommon & {
     name: 'delegatebw';
     data: {
         from: string;
@@ -70,7 +70,7 @@ export type EosTxAction = Action & {
         stake_cpu_quantity: string;
         transfer?: boolean;
     };
-} | Action & {
+} | EosTxActionCommon & {
     name: 'undelegatebw';
     data: {
         from: string;
@@ -78,30 +78,30 @@ export type EosTxAction = Action & {
         unstake_net_quantity: string;
         unstake_cpu_quantity: string;
     };
-} | Action & {
+} | EosTxActionCommon & {
     name: 'buyram';
     data: {
         payer: string;
         receiver: string;
         quant: string;
     };
-} | Action & {
+} | EosTxActionCommon & {
     name: 'buyrambytes';
     data: EosActionBuyRamBytes;
-} | Action & {
+} | EosTxActionCommon & {
     name: 'sellram';
     data: EosActionSellRam;
-} | Action & {
+} | EosTxActionCommon & {
     name: 'voteproducer';
     data: {
         voter: string;
         proxy: string;
         producers: string[];
     };
-} | Action & {
+} | EosTxActionCommon & {
     name: 'refund';
     data: EosActionRefund;
-} | Action & {
+} | EosTxActionCommon & {
     name: 'updateauth';
     data: {
         account: string;
@@ -109,16 +109,16 @@ export type EosTxAction = Action & {
         parent: string;
         auth: EosAuthorization;
     };
-} | Action & {
+} | EosTxActionCommon & {
     name: 'deleteauth';
     data: EosActionDeleteAuth;
-} | Action & {
+} | EosTxActionCommon & {
     name: 'linkauth';
     data: EosActionLinkAuth;
-} | Action & {
+} | EosTxActionCommon & {
     name: 'unlinkauth';
     data: EosActionUnlinkAuth;
-} | Action & {
+} | EosTxActionCommon & {
     name: 'newaccount';
     data: {
         creator: string;
@@ -128,19 +128,19 @@ export type EosTxAction = Action & {
     };
 }
 
-// export type Transaction = {
-//     chainId: string;
-//     header: ?EosTxHeader;
-//     actions: EosTxAction[];
-// }
+// | EosTxActionCommon & {|
+//     name: string;
+//     data: string;
+// |};
+
+export type EosSDKTransaction = {
+    chainId: string;
+    header: ?EosTxHeader;
+    actions: Array<EosTxAction | EosTxActionCommon & { name: string; data: string }>;
+    // actions: EosTxAction[];
+}
 
 export type EosSignTransaction = {
     path: string | number[];
-    transaction: {
-        chainId: string;
-        header: ?EosTxHeader;
-        actions: Array<EosTxAction | Action & { name: string; data: string }>;
-    };
+    transaction: EosSDKTransaction;
 }
-
-export { EosSignedTx } from '../trezor/protobuf';

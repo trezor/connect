@@ -100,7 +100,7 @@ export type TransactionInput = {|
     address_n: number[];
     prev_hash: string;
     prev_index: number;
-    script_type: InputScriptType;
+    script_type?: InputScriptType;
     sequence?: number;
     amount?: string; // (segwit, bip143: true, zcash overwinter)
     multisig?: MultisigRedeemScriptType;
@@ -266,7 +266,7 @@ export type NEMTransfer = {
     mosaics: ?Array<NEMMosaic>;
     public_key: ?string;
     recipient: ?string;
-    amount: ?number;
+    amount: number | string;
     payload: ?string;
 }
 
@@ -387,7 +387,7 @@ export type StellarSignTxMessage = {|
     address_n: Array<number>;
     source_account: string;
     fee: number;
-    sequence_number: string;
+    sequence_number: string | number;
     network_passphrase: string;
     timebounds_start?: number;
     timebounds_end?: number;
@@ -476,11 +476,11 @@ export type StellarOperationMessage = {
     type: 'StellarManageDataOp';
     source_account?: string;
     key: string;
-    value: string | Buffer | typeof undefined;
+    value: ?(string | Buffer);
 } | {
     type: 'StellarBumpSequenceOp';
     source_account?: string;
-    bump_to: number;
+    bump_to: string | number;
 }
 
 // Tezos types
@@ -537,7 +537,7 @@ export type TezosOriginationOp = {
     counter: number;
     gas_limit: number;
     storage_limit: number;
-    script: Array<number>;
+    script: string | number[];
 };
 
 export type TezosDelegationOp = {
@@ -633,7 +633,7 @@ export type LiskTransaction = {
     sender_public_key?: string;
     requester_public_key?: string;
     signature?: string;
-    asset?: LiskAsset;
+    asset?: LiskAsset | {};
 }
 
 export type LiskSignedTx = {

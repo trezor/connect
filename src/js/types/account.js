@@ -1,5 +1,4 @@
 /* @flow */
-import type { ComposeOutput } from './networks/bitcoin';
 import type { TransactionInput, TransactionOutput } from './trezor/protobuf';
 
 // getAccountInfo params
@@ -137,6 +136,46 @@ export type AccountInfo = {
         seq: number;
     };
 }
+
+// Compose transaction
+
+export type RegularOutput = {
+    address: string;
+    amount: string;
+    script_type?: 'PAYTOADDRESS';
+}
+
+export type InternalOutput = {
+    address_n: number[];
+    amount: string;
+    script_type?: string;
+}
+
+export type SendMaxOutput = {
+    type: 'send-max';
+    address: string;
+}
+
+export type OpReturnOutput = {
+    type: 'opreturn';
+    dataHex: string;
+}
+export type NoAddressOutput = {
+    type: 'noaddress';
+    amount: string;
+}
+
+export type NoAddressSendMaxOutput = {
+    type: 'send-max-noaddress';
+}
+
+export type ComposeOutput =
+    | RegularOutput
+    | InternalOutput
+    | SendMaxOutput
+    | OpReturnOutput
+    | NoAddressOutput
+    | NoAddressSendMaxOutput;
 
 export type PrecomposeParams = {
     outputs: ComposeOutput[];

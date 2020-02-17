@@ -3,6 +3,7 @@ import { BLOCKCHAIN } from '../../constants';
 import type { CoinInfo } from '../networks/coinInfo';
 import type { AccountAddresses, FeeLevel } from '../account';
 import type { BlockbookTransaction, RippleTransaction } from './transactions';
+import type { CoreMessage } from '../params';
 
 export type BlockchainInfo = {
     coin: CoinInfo;
@@ -147,3 +148,10 @@ export type BlockchainEvent =
     type: typeof BLOCKCHAIN.NOTIFICATION;
     payload: BlockchainNotification;
 };
+
+export interface BlockchainMessageBuilder {
+    (type: typeof BLOCKCHAIN.CONNECT, payload: BlockchainInfo): CoreMessage;
+    (type: typeof BLOCKCHAIN.BLOCK, payload: BlockchainBlock): CoreMessage;
+    (type: typeof BLOCKCHAIN.NOTIFICATION, payload: BlockchainNotification): CoreMessage;
+    (type: typeof BLOCKCHAIN.ERROR, payload: BlockchainError): CoreMessage;
+}

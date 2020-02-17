@@ -46,7 +46,6 @@ export const nemGetAddress = async () => {
         network: 1,
         address: 'a',
         showOnTrezor: true,
-        crossChain: true,
     });
 
     // with invalid params
