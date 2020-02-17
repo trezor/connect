@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
+import type { LiskSignMessage } from '../../js/types';
 
-import type {
-    TestLiskSignMessagePayload,
-    ExpectedLiskSignMessageResponse,
-} from 'flowtype/tests/lisk-sign-message';
-
-export const liskSignMessage = (): TestFunction => {
-    const testPayloads: Array<TestLiskSignMessagePayload> = [
+export const liskSignMessage = () => {
+    const testPayloads: LiskSignMessage[] = [
         {
             method: 'liskSignMessage',
             path: "m/44'/134'/0'/1'",
@@ -22,7 +15,7 @@ export const liskSignMessage = (): TestFunction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedLiskSignMessageResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 publicKey: 'a129381c1c077f9d8cb70ac48dcbbf3535bd4d5767dc363438e95fb9f1211704',

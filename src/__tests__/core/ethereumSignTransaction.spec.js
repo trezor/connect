@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestEthereumSignTransaction,
-} from 'flowtype/tests';
-import type {
-    TestEthereumSignTransactionPayload,
-    ExpectedEthereumSignTransactionResponse,
-} from 'flowtype/tests/ethereum-sign-transaction';
+import type { EthereumSignTransaction } from '../../js/types';
 
-const knownErc20Token = (): SubtestEthereumSignTransaction => {
-    const testPayloads: Array<TestEthereumSignTransactionPayload> = [
+const knownErc20Token = () => {
+    const testPayloads: EthereumSignTransaction[] = [
         {
             method: 'ethereumSignTransaction',
             path: "m/44'/60'/0'",
@@ -24,7 +17,7 @@ const knownErc20Token = (): SubtestEthereumSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 r: '0xaa0c28d61c7c9382a256ead609d5b713cfe17c3aa3a6facb6b60342883db448e',
@@ -40,8 +33,8 @@ const knownErc20Token = (): SubtestEthereumSignTransaction => {
     };
 };
 
-const unknownErc20Token = (): SubtestEthereumSignTransaction => {
-    const testPayloads: Array<TestEthereumSignTransactionPayload> = [
+const unknownErc20Token = () => {
+    const testPayloads: EthereumSignTransaction[] = [
         {
             method: 'ethereumSignTransaction',
             path: "m/44'/60'/0'",
@@ -56,7 +49,7 @@ const unknownErc20Token = (): SubtestEthereumSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 r: '0xafd33dc30cf829e3fde2575f189b9f80a6e7cfe3bbad8554f1015b29c33fb13d',
@@ -72,8 +65,8 @@ const unknownErc20Token = (): SubtestEthereumSignTransaction => {
     };
 };
 
-const noData = (): SubtestEthereumSignTransaction => {
-    const testPayloads: Array<TestEthereumSignTransactionPayload> = [
+const noData = () => {
+    const testPayloads: EthereumSignTransaction[] = [
         {
             method: 'ethereumSignTransaction',
             path: "m/44'/60'/0'",
@@ -97,7 +90,7 @@ const noData = (): SubtestEthereumSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 r: '0xff2676c3d23f4ed59b41a284348b6e4cc56fa4b4c06ab2cd2cfa0fc85d3d5b72',
@@ -121,8 +114,8 @@ const noData = (): SubtestEthereumSignTransaction => {
     };
 };
 
-const data = (): SubtestEthereumSignTransaction => {
-    const testPayloads: Array<TestEthereumSignTransactionPayload> = [
+const data = () => {
+    const testPayloads: EthereumSignTransaction[] = [
         {
             method: 'ethereumSignTransaction',
             path: "m/44'/60'/0'",
@@ -149,7 +142,7 @@ const data = (): SubtestEthereumSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 r: '0xc07ca9b87ebf87620396a16cd575ac68dbef0eb0b22481f8f62facfe40fc4c7a',
@@ -173,8 +166,8 @@ const data = (): SubtestEthereumSignTransaction => {
     };
 };
 
-const message = (): SubtestEthereumSignTransaction => {
-    const testPayloads: Array<TestEthereumSignTransactionPayload> = [
+const message = () => {
+    const testPayloads: EthereumSignTransaction[] = [
         {
             method: 'ethereumSignTransaction',
             path: "m/44'/60'/0'",
@@ -188,7 +181,7 @@ const message = (): SubtestEthereumSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 r: '0xce5c299678f8ba333c219a3f70f01f7281bf4716cf4c2d47518f689cf3344dc4',
@@ -205,8 +198,8 @@ const message = (): SubtestEthereumSignTransaction => {
     };
 };
 
-const newContract = (): SubtestEthereumSignTransaction => {
-    const testPayloads: Array<TestEthereumSignTransactionPayload> = [
+const newContract = () => {
+    const testPayloads: EthereumSignTransaction[] = [
         {
             method: 'ethereumSignTransaction',
             path: "m/44'/60'/0'",
@@ -231,7 +224,7 @@ const newContract = (): SubtestEthereumSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
+    const expectedResponses = [
         {
             success: false,
             payload: {
@@ -254,8 +247,8 @@ const newContract = (): SubtestEthereumSignTransaction => {
     };
 };
 
-const sanityChecks = (): SubtestEthereumSignTransaction => {
-    const testPayloads: Array<TestEthereumSignTransactionPayload> = [
+const sanityChecks = () => {
+    const testPayloads: EthereumSignTransaction[] = [
         {
             // Gas overflow
             method: 'ethereumSignTransaction',
@@ -272,6 +265,7 @@ const sanityChecks = (): SubtestEthereumSignTransaction => {
             // No gas price
             method: 'ethereumSignTransaction',
             path: "m/44'/60'/0'",
+            // $FlowIssue: intentional
             transaction: {
                 nonce: '0x1e240',
                 gasLimit: '0x2710',
@@ -283,6 +277,7 @@ const sanityChecks = (): SubtestEthereumSignTransaction => {
             // No gas limit
             method: 'ethereumSignTransaction',
             path: "m/44'/60'/0'",
+            // $FlowIssue: intentional
             transaction: {
                 nonce: '0x1e240',
                 gasPrice: '0x2710',
@@ -294,6 +289,7 @@ const sanityChecks = (): SubtestEthereumSignTransaction => {
             // No nonce
             method: 'ethereumSignTransaction',
             path: "m/44'/60'/0'",
+            // $FlowIssue: intentional
             transaction: {
                 gasLimit: '0x2710',
                 to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
@@ -301,7 +297,7 @@ const sanityChecks = (): SubtestEthereumSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
+    const expectedResponses = [
         {
             success: false,
             payload: {
@@ -320,8 +316,8 @@ const sanityChecks = (): SubtestEthereumSignTransaction => {
     };
 };
 
-const noDataEip155 = (): SubtestEthereumSignTransaction => {
-    const testPayloads: Array<TestEthereumSignTransactionPayload> = [
+const noDataEip155 = () => {
+    const testPayloads: EthereumSignTransaction[] = [
         {
             method: 'ethereumSignTransaction',
             path: "m/44'/1'/0'/0/0",
@@ -347,7 +343,7 @@ const noDataEip155 = (): SubtestEthereumSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 r: '0x39aa7798b8debf2db32945d929d25bd9c514e7f7e6a1f1c72bcbf0600f9f2db3',
@@ -371,8 +367,8 @@ const noDataEip155 = (): SubtestEthereumSignTransaction => {
     };
 };
 
-const dataEip155 = (): SubtestEthereumSignTransaction => {
-    const testPayloads: Array<TestEthereumSignTransactionPayload> = [
+const dataEip155 = () => {
+    const testPayloads: EthereumSignTransaction[] = [
         {
             method: 'ethereumSignTransaction',
             path: "m/44'/1'/0'/0/0",
@@ -426,7 +422,7 @@ const dataEip155 = (): SubtestEthereumSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 r: '0xdbae2f01331e274f24831afadaa86f1da08c9cf9e28b120acc17ec4a748c533a',
@@ -464,7 +460,7 @@ const dataEip155 = (): SubtestEthereumSignTransaction => {
     };
 };
 
-export const ethereumSignTransaction = (): TestFunction => {
+export const ethereumSignTransaction = () => {
     const testName = 'EthereumSignTransaction';
     const availableSubtests = {
         knownErc20Token,

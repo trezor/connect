@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
+import type { EthereumGetAddress } from '../../js/types';
 
-import type {
-    TestEthereumGetAddressPayload,
-    ExpectedEthereumGetAddressResponse,
-} from 'flowtype/tests/ethereum-get-address';
-
-export const ethereumGetAddress = (): TestFunction => {
-    const testPayloads: Array<TestEthereumGetAddressPayload> = [
+export const ethereumGetAddress = () => {
+    const testPayloads: EthereumGetAddress[] = [
         {
             method: 'ethereumGetAddress',
             path: "m/44'/60'/1",
@@ -31,7 +24,7 @@ export const ethereumGetAddress = (): TestFunction => {
             path: "m/44'/199'/0'/0/9999",
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumGetAddressResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 address: '0xeD46C856D0c79661cF7d40FFE0C0C5077c00E898',

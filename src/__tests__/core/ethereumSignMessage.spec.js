@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
+import type { EthereumSignMessage } from '../../js/types';
 
-import type {
-    TestEthereumSignMessagePayload,
-    ExpectedEthereumSignMessageResponse,
-} from 'flowtype/tests/ethereum-sign-message';
-
-export const ethereumSignMessage = (): TestFunction => {
-    const testPayloads: Array<TestEthereumSignMessagePayload> = [
+export const ethereumSignMessage = () => {
+    const testPayloads: EthereumSignMessage[] = [
         {
             method: 'ethereumSignMessage',
             path: "m/44'/60'/0'",
@@ -21,7 +14,7 @@ export const ethereumSignMessage = (): TestFunction => {
             message: 'VeryLongMessage!'.repeat(64),
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumSignMessageResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 address: '0xAE2B111b634f8FB3942B13b98c824B0F1060cacB',

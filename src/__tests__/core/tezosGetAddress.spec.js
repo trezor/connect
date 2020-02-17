@@ -1,19 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
+import type { TezosGetAddress } from '../../js/types';
 
-import type {
-    TestTezosGetAddressPayload,
-    ExpectedTezosGetAddressResponse,
-} from 'flowtype/tests/tezos-get-address';
-
-type ErrorResponse = {
-    success: false,
-}
-
-export const tezosGetAddress = (): TestFunction => {
-    const testPayloads: Array<TestTezosGetAddressPayload> = [
+export const tezosGetAddress = () => {
+    const testPayloads: TezosGetAddress[] = [
         {
             method: 'tezosGetAddress',
             path: "m/44'/1729'/0'",
@@ -36,7 +25,7 @@ export const tezosGetAddress = (): TestFunction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedTezosGetAddressResponse | ErrorResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 address: 'tz1ckrgqGGGBt4jGDmwFhtXc1LNpZJUnA9F2',
@@ -51,10 +40,8 @@ export const tezosGetAddress = (): TestFunction => {
         { success: false },
     ];
 
-    const testName = 'TezosGetAddress';
-
     return {
-        testName,
+        testName: 'TezosGetAddress',
         mnemonic: 'mnemonic_12',
         testPayloads,
         expectedResponses,

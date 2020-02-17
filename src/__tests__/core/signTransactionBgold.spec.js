@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestSignTransaction,
-} from 'flowtype/tests';
-import type {
-    TestSignTransactionPayload,
-    ExpectedSignTransactionResponse,
-} from 'flowtype/tests/sign-transaction';
+import type { SignTransaction } from '../../js/types';
 
-const change = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const change = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -37,7 +30,7 @@ const change = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -55,8 +48,8 @@ const change = (): SubtestSignTransaction => {
     };
 };
 
-const noChange = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const noChange = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -87,7 +80,7 @@ const noChange = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -106,8 +99,8 @@ const noChange = (): SubtestSignTransaction => {
     };
 };
 
-const p2sh = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const p2sh = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -136,7 +129,7 @@ const p2sh = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -154,8 +147,8 @@ const p2sh = (): SubtestSignTransaction => {
     };
 };
 
-const p2shWitnessChange = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const p2shWitnessChange = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -184,7 +177,7 @@ const p2shWitnessChange = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -202,11 +195,11 @@ const p2shWitnessChange = (): SubtestSignTransaction => {
     };
 };
 
-const sendMultisig1 = (): SubtestSignTransaction => {
+const sendMultisig1 = () => {
     const address_n = [999 | 0x80000000, 1 | 0x80000000, 1 | 0x80000000, 2, 0];
     address_n[2] = 0x80000003;
 
-    const testPayloads: Array<TestSignTransactionPayload> = [
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Bgold',
@@ -246,7 +239,7 @@ const sendMultisig1 = (): SubtestSignTransaction => {
             ],
         },
     ];
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -264,7 +257,7 @@ const sendMultisig1 = (): SubtestSignTransaction => {
     };
 };
 
-export const signTransactionBgold = (): TestFunction => {
+export const signTransactionBgold = () => {
     const availableSubtests = {
         change,
         noChange,

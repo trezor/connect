@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
+import type { GetPublicKey } from '../../js/types';
 
-import type {
-    TestGetPublicKeyPayload,
-    ExpectedGetPublicKeyResponse,
-} from 'flowtype/tests/get-public-key';
-
-export const getPublicKey = (): TestFunction => {
-    const testPayloads: Array<TestGetPublicKeyPayload> = [
+export const getPublicKey = () => {
+    const testPayloads: GetPublicKey[] = [
         {
             method: 'getPublicKey',
             coin: 'btc',
@@ -31,7 +24,7 @@ export const getPublicKey = (): TestFunction => {
             path: [0, 1],
         },
     ];
-    const expectedResponses: Array<ExpectedGetPublicKeyResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 xpub: 'xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G',

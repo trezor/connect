@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestLiskSignTransaction,
-} from 'flowtype/tests';
-import type {
-    TestLiskSignTransactionPayload,
-    ExpectedLiskSignTransactionResponse,
-} from 'flowtype/tests/lisk-sign-transaction';
+import type { LiskSignTransaction } from '../../js/types';
 
-const liskSignTxTransfer = (): SubtestLiskSignTransaction => {
-    const testPayloads: Array<TestLiskSignTransactionPayload> = [
+const liskSignTxTransfer = () => {
+    const testPayloads: LiskSignTransaction[] = [
         {
             method: 'liskSignTransaction',
             path: "m/44'/134'/0'/0'",
@@ -19,11 +12,10 @@ const liskSignTxTransfer = (): SubtestLiskSignTransaction => {
                 timestamp: 57525937,
                 type: 0,
                 fee: '10000000',
-                asset: {},
             },
         },
     ];
-    const expectedResponses: Array<ExpectedLiskSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'b62717d581e5713bca60b758b661e6cfa091addc6caedd57534e06cda805943ee80797b9fb9a1e1b2bd584e292d2a7f832a4d1b3f15f00e1ee1b72de7e195a08',
@@ -38,8 +30,8 @@ const liskSignTxTransfer = (): SubtestLiskSignTransaction => {
     };
 };
 
-const liskSignTxTransferWithData = (): SubtestLiskSignTransaction => {
-    const testPayloads: Array<TestLiskSignTransactionPayload> = [
+const liskSignTxTransferWithData = () => {
+    const testPayloads: LiskSignTransaction[] = [
         {
             method: 'liskSignTransaction',
             path: "m/44'/134'/0'/0'",
@@ -55,7 +47,7 @@ const liskSignTxTransferWithData = (): SubtestLiskSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedLiskSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: '5dd0dbb87ee46f3e985b1ef2df85cb0bec481e8601d150388f73e198cdd57a698eab076c7cd5b281fbb6a83dd3dc64d91a6eccd1614dffd46f101194ffa3a004',
@@ -70,8 +62,8 @@ const liskSignTxTransferWithData = (): SubtestLiskSignTransaction => {
     };
 };
 
-const liskSignTxSecondSignature = (): SubtestLiskSignTransaction => {
-    const testPayloads: Array<TestLiskSignTransactionPayload> = [
+const liskSignTxSecondSignature = () => {
+    const testPayloads: LiskSignTransaction[] = [
         {
             method: 'liskSignTransaction',
             path: "m/44'/134'/0'/0'",
@@ -88,7 +80,7 @@ const liskSignTxSecondSignature = (): SubtestLiskSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedLiskSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'f02bdc40a7599c21d29db4080ff1ff8934f76eedf5b0c4fa695c8a64af2f0b40a5c4f92db203863eebbbfad8f0611a23f451ed8bb711490234cdfb034728fd01',
@@ -103,8 +95,8 @@ const liskSignTxSecondSignature = (): SubtestLiskSignTransaction => {
     };
 };
 
-const liskSignTxDelegateRegistration = (): SubtestLiskSignTransaction => {
-    const testPayloads: Array<TestLiskSignTransactionPayload> = [
+const liskSignTxDelegateRegistration = () => {
+    const testPayloads: LiskSignTransaction[] = [
         {
             method: 'liskSignTransaction',
             path: "m/44'/134'/0'/0'",
@@ -121,7 +113,7 @@ const liskSignTxDelegateRegistration = (): SubtestLiskSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedLiskSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: '5ac02b2882b9d7d0f944e48baadc27de1296cc08c3533f7c8e380fbbb9fb4a6ac81b5dc57060d7d8c68912eea24eb6e39024801bccc0d55020e2052b0c2bb701',
@@ -136,8 +128,8 @@ const liskSignTxDelegateRegistration = (): SubtestLiskSignTransaction => {
     };
 };
 
-const liskSignTxCastVotes = (): SubtestLiskSignTransaction => {
-    const testPayloads: Array<TestLiskSignTransactionPayload> = [
+const liskSignTxCastVotes = () => {
+    const testPayloads: LiskSignTransaction[] = [
         {
             method: 'liskSignTransaction',
             path: "m/44'/134'/0'/0'",
@@ -155,7 +147,7 @@ const liskSignTxCastVotes = (): SubtestLiskSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedLiskSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: '1d0599a8387edaa4a6d309b8a78accd1ceaff20ff9d87136b01cba0efbcb9781c13dc2b0bab5a1ea4f196d8dcc9dbdbd2d56dbffcc088fc77686b2e2c2fe560f',
@@ -170,8 +162,8 @@ const liskSignTxCastVotes = (): SubtestLiskSignTransaction => {
     };
 };
 
-const liskSignTxMultisignature = (): SubtestLiskSignTransaction => {
-    const testPayloads: Array<TestLiskSignTransactionPayload> = [
+const liskSignTxMultisignature = () => {
+    const testPayloads: LiskSignTransaction[] = [
         {
             method: 'liskSignTransaction',
             path: "m/44'/134'/0'/0'",
@@ -193,7 +185,7 @@ const liskSignTxMultisignature = (): SubtestLiskSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedLiskSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: '88923866c2d500a6927715699ab41a0f58ea4b52e552d90e923bc24ac9da240f2328c93f9ce043a1da4937d4b61c7f57c02fc931f9824d06b24731e7be23c506',
@@ -208,7 +200,7 @@ const liskSignTxMultisignature = (): SubtestLiskSignTransaction => {
     };
 };
 
-export const liskSignTransaction = (): TestFunction => {
+export const liskSignTransaction = () => {
     const testName = 'LiskSignTransaction';
     const availableSubtests = {
         liskSignTxTransfer,

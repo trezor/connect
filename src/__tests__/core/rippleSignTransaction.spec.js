@@ -1,17 +1,10 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
-
-import type {
-    TestRippleSignTransactionPayload,
-    ExpectedRippleSignTransactionResponse,
-} from 'flowtype/tests/ripple-sign-transaction';
+import type { RippleSignTransaction } from '../../js/types';
 
 // https://github.com/trezor/trezor-firmware/blob/master/tests/device_tests/test_msg_ripple_sign_tx.py
 
-export const rippleSignTransaction = (): TestFunction => {
-    const testPayloads: Array<TestRippleSignTransactionPayload> = [
+export const rippleSignTransaction = () => {
+    const testPayloads: RippleSignTransaction[] = [
         {
             method: 'rippleSignTransaction',
             path: "m/44'/144'/0'/0/0",
@@ -68,7 +61,7 @@ export const rippleSignTransaction = (): TestFunction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedRippleSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: '3045022100e243ef623675eeeb95965c35c3e06d63a9fc68bb37e17dc87af9c0af83ec057e02206ca8aa5eaab8396397aef6d38d25710441faf7c79d292ee1d627df15ad9346c0',

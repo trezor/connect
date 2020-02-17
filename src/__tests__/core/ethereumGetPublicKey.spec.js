@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
+import type { EthereumGetPublicKey } from '../../js/types';
 
-import type {
-    TestEthereumGetAddressPayload,
-    ExpectedEthereumGetAddressResponse,
-} from 'flowtype/tests/ethereum-get-address';
-
-export const ethereumGetPublicKey = (): TestFunction => {
-    const testPayloads: Array<TestEthereumGetAddressPayload> = [
+export const ethereumGetPublicKey = () => {
+    const testPayloads: EthereumGetPublicKey[] = [
         {
             method: 'ethereumGetPublicKey',
             path: "m/44'/60'/0'",
@@ -23,7 +16,7 @@ export const ethereumGetPublicKey = (): TestFunction => {
             path: "m/44'/60'/0'/0/0",
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumGetAddressResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 xpub: 'xpub6D54vV8eUYHMVBZCnz4SLjuiQngXURVCGKKGoJrWUDRegdMByLTJKfRs64q3UKiQCsSHJPtCQehTvERczdghS7gb8oedWSyNDtBU1zYDJtb',

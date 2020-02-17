@@ -1,19 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
+import type { TezosGetPublicKey } from '../../js/types';
 
-import type {
-    TestTezosGetPublicKeyPayload,
-    ExpectedTezosGetPublicKeyResponse,
-} from 'flowtype/tests/tezos-get-public-key';
-
-type ErrorResponse = {
-    success: false,
-}
-
-export const tezosGetPublicKey = (): TestFunction => {
-    const testPayloads: Array<TestTezosGetPublicKeyPayload> = [
+export const tezosGetPublicKey = () => {
+    const testPayloads: TezosGetPublicKey[] = [
         {
             method: 'tezosGetPublicKey',
             path: "m/44'/1729'/0'",
@@ -36,7 +25,7 @@ export const tezosGetPublicKey = (): TestFunction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedTezosGetPublicKeyResponse | ErrorResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 publicKey: 'edpkuxZ5W8c2jmcaGuCFZxRDSWxS7hp98zcwj2YpUZkJWs5F7UMuF6',

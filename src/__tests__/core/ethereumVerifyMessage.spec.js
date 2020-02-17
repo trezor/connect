@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
+import type { EthereumVerifyMessage } from '../../js/types';
 
-import type {
-    TestEthereumVerifyMessagePayload,
-    ExpectedEthereumVerifyMessageResponse,
-} from 'flowtype/tests/ethereum-verify-message';
-
-export const ethereumVerifyMessage = (): TestFunction => {
-    const testPayloads: Array<TestEthereumVerifyMessagePayload> = [
+export const ethereumVerifyMessage = () => {
+    const testPayloads: EthereumVerifyMessage[] = [
         {
             method: 'ethereumVerifyMessage',
             address: 'cb3864960e8db1a751212c580af27ee8867d688f',
@@ -23,7 +16,7 @@ export const ethereumVerifyMessage = (): TestFunction => {
             message: 'VeryLongMessage!'.repeat(64),
         },
     ];
-    const expectedResponses: Array<ExpectedEthereumVerifyMessageResponse> = [
+    const expectedResponses = [
         { success: true },
         { success: true },
     ];

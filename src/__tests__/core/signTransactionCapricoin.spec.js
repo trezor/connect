@@ -1,16 +1,9 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestSignTransaction,
-} from 'flowtype/tests';
-import type {
-    TestSignTransactionPayload,
-    ExpectedSignTransactionResponse,
-} from 'flowtype/tests/sign-transaction';
+import type { SignTransaction } from '../../js/types';
 
-const signCPC = (): SubtestSignTransaction => {
+const signCPC = () => {
     // See tx 1bf227e6e24fe1f8ac98849fe06a2c5b77762e906fcf7e82787675f7f3a10bb8
-    const testPayloads: Array<TestSignTransactionPayload> = [
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Capricoin',
@@ -88,7 +81,7 @@ const signCPC = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 serializedTx: '01000000665ccf5b025f23e76913e3e53bc20a6c5db1607cc162d197c7dd791689da4ee81cc806f53b000000006b483045022100fce7ccbeb9524f36d118ebcfebcb133a05c236c4478e2051cfd5c9632920aee602206921b7be1a81f30cce3d8e7dba4597fc16a2761c42321c49d65eeacdfe3781250121021fcf98aee04939ec7df5762f426dc2d1db8026e3a73c3bbe44749dacfbb61230ffffffff8c5e2c3ff2a6758e423f6d99f8ecf9f856e0e8ba29276dd7ff2d1b1f41e6a6f3010000006a473044022015d967166fe9f89fbed8747328b1c4658aa1d7163e731c5fd5908feafe08e9a6022028af30801098418bd298cc60b143c52c48466f5791256721304b6eba4fdf0b3c0121021fcf98aee04939ec7df5762f426dc2d1db8026e3a73c3bbe44749dacfbb61230ffffffff01a0782d00000000001976a914818437acfd15780debd31f3fd21d4ca678bb36d188ac00000000',
@@ -103,9 +96,9 @@ const signCPC = (): SubtestSignTransaction => {
     };
 };
 
-const oneTwoFee = (): SubtestSignTransaction => {
+const oneTwoFee = () => {
     // See tx 8302cb4b32815ac47e0d1a63081a7bbef843efeb7e29c414975f33dfe8b50e35
-    const testPayloads: Array<TestSignTransactionPayload> = [
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Capricoin',
@@ -152,7 +145,7 @@ const oneTwoFee = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 serializedTx: '0100000034b1cd5b0124ee1ea31c6afd78f9dfe0ed765b8ca71f0cfab1f5f19675286d46c7ec405391000000006b483045022100d1ea4b08fa18b6c672d859939b4729f6c7aedb86ccf6dec8fd951cf49116415502206690a32ae8e0a02bbcae6102cedae0d14d2291f758eff786f85eb4642145a2f50121021fcf98aee04939ec7df5762f426dc2d1db8026e3a73c3bbe44749dacfbb61230ffffffff02184f0700000000001976a914b5fcce71b52fe2a05479610906e6aa81f4a6e76488ac40420f00000000001976a914544e87b53141b883b392d114168c5403899756c488ac00000000',
@@ -167,9 +160,9 @@ const oneTwoFee = (): SubtestSignTransaction => {
     };
 };
 
-const twoTwoFee = (): SubtestSignTransaction => {
+const twoTwoFee = () => {
     // See tx f65956f14d960fce26dc03948306516c606dd33b7612d063008fea390d48b12b
-    const testPayloads: Array<TestSignTransactionPayload> = [
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Capricoin',
@@ -238,7 +231,7 @@ const twoTwoFee = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 serializedTx: '01000000f6efcd5b02d810ce8b12fe515ecf29540eb5a440941b279606349612498f0d7a7a45cb003d000000006a47304402202a69b2ec8eba6f3b71b3064571f712093d41aa9058e4ac241c0afea3d6da77b0022026c07274b4a65059082373e515fc2fe0631ff12c35fdbe6b7007d17f41fa155c0121021fcf98aee04939ec7df5762f426dc2d1db8026e3a73c3bbe44749dacfbb61230ffffffffa158ffd52844c3372c900d95bf49ddda0fe3c8802ec85d60aaa2282da653458c000000006a473044022010ef754dd83044a2e5ccca4b25193cd2662461a0a02c00b7d88b2a73c6d388c602205a8f8844fe1eb1f1f5b1c199165a1487879b82fb012c831809e2a822ec32ca070121034e9fef46313529347cddd19994817f446a3667a0652e57dc8cfe24a8c903f0f1ffffffff02b0e20d00000000001976a914818437acfd15780debd31f3fd21d4ca678bb36d188ac88130000000000001976a914fe251c9c3f10efafe8ede9b2a6d58c326622cc7388ac00000000',
@@ -253,9 +246,9 @@ const twoTwoFee = (): SubtestSignTransaction => {
     };
 };
 
-const notEnoughFunds = (): SubtestSignTransaction => {
+const notEnoughFunds = () => {
     // See tx 915340ecc7466d287596f1f5b1fa0c1fa78c5b76ede0dff978fd6a1ca31eee24
-    const testPayloads: Array<TestSignTransactionPayload> = [
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Capricoin',
@@ -297,7 +290,7 @@ const notEnoughFunds = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 code: 'Failure_NotEnoughFunds',
@@ -312,9 +305,9 @@ const notEnoughFunds = (): SubtestSignTransaction => {
     };
 };
 
-const feeTooHigh = (): SubtestSignTransaction => {
+const feeTooHigh = () => {
     // See tx 1570416eb4302cf52979afd5e6909e37d8fdd874301f7cc87e547e509cb1caa6
-    const testPayloads: Array<TestSignTransactionPayload> = [
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Capricoin',
@@ -355,7 +348,7 @@ const feeTooHigh = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 serializedTx: '01000000cabfcd5b01bbfd9ff673b26e20ec3f4bd02252eb124883699bd881d63cde9582de54bba9f8000000006b483045022100d4302192de219a5a2d3c0ff9a6e60669031243bf94eae5cdad0031c813f0baea02204656145c113c6d144af80e6d9d2cfd0caa394180afa90ffd2197ec08bcf807380121034e9fef46313529347cddd19994817f446a3667a0652e57dc8cfe24a8c903f0f1ffffffff01301b0f00000000001976a914369df3cc0eb7acd7f0e0491a225a2ddad5ce3d4a88ac00000000',
@@ -370,7 +363,7 @@ const feeTooHigh = (): SubtestSignTransaction => {
     };
 };
 
-export const signTransactionCapricoin = (): TestFunction => {
+export const signTransactionCapricoin = () => {
     return {
         testName: 'SignTransactionCapricoin',
         mnemonic: 'mnemonic_all',

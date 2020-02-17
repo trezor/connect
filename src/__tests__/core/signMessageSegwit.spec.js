@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestSignMessage,
-} from 'flowtype/tests';
-import type {
-    TestSignMessagePayload,
-    ExpectedSignMessageResponse,
-} from 'flowtype/tests/sign-message';
+import type { SignMessage } from '../../js/types';
 
-const sign = (): SubtestSignMessage => {
-    const testPayloads: Array<TestSignMessagePayload> = [
+const sign = () => {
+    const testPayloads: SignMessage[] = [
         {
             method: 'signMessage',
             coin: 'Bitcoin',
@@ -20,7 +13,7 @@ const sign = (): SubtestSignMessage => {
 
     const signature = '23d2cc1b2946f403b9acc71a70d3ab8d3ed7575a4d8fe91310ff2a7bb68246a81b77331e4245b9163a398925c78497c2daa3bbb482fc1a0b7c0255068e79f40a67';
     const signatureBuffer = Buffer.from(signature, 'hex');
-    const expectedResponses: Array<ExpectedSignMessageResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 address: '3Pm1J6dXuugmkTgM5PdidR9UssSWwdy5Vh',
@@ -36,7 +29,7 @@ const sign = (): SubtestSignMessage => {
     };
 };
 
-const signLong = (): SubtestSignMessage => {
+const signLong = () => {
     const testPayloads = [
         {
             method: 'signMessage',
@@ -64,7 +57,7 @@ const signLong = (): SubtestSignMessage => {
     };
 };
 
-export const signMessageSegwit = (): TestFunction => {
+export const signMessageSegwit = () => {
     const availableSubtests = {
         sign,
         signLong,

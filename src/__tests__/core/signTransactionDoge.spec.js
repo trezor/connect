@@ -1,17 +1,10 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestSignTransaction,
-} from 'flowtype/tests';
-import type {
-    TestSignTransactionPayload,
-    ExpectedSignTransactionResponse,
-} from 'flowtype/tests/sign-transaction';
+import type { SignTransaction } from '../../js/types';
 
 // Note: this transaction is not valid
 // it uses some inputs from coin exchange to test big amounts calculation
-const bigAmounts = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const bigAmounts = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Doge',
@@ -38,7 +31,7 @@ const bigAmounts = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -56,7 +49,7 @@ const bigAmounts = (): SubtestSignTransaction => {
     };
 };
 
-export const signTransactionDoge = (): TestFunction => {
+export const signTransactionDoge = () => {
     const availableSubtests = {
         bigAmounts,
     };

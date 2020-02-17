@@ -1,21 +1,14 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestVerifyMessage,
-} from 'flowtype/tests';
-import type {
-    TestVerifyMessagePayload,
-    ExpectedVerifyMessageResponse,
-} from 'flowtype/tests/verify-message';
+import type { VerifyMessage } from '../../js/types';
 
-const verify = (): SubtestVerifyMessage => {
-    const testPayloads: Array<TestVerifyMessagePayload> = [
+const verify = () => {
+    const testPayloads: VerifyMessage[] = [
         {
             // trezor pubkey - OK
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: 'bc1qyjjkmdpu7metqt5r36jf872a34syws33s82q2j',
-            signature: '289e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80',
+            signature: Buffer.from('289e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80', 'hex').toString('base64'),
             message: 'This is an example of a signed message.',
         },
         {
@@ -23,7 +16,7 @@ const verify = (): SubtestVerifyMessage => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: 'bc1qyjjkmdpu7metqt5r36jf872a34syws33s82q2j',
-            signature: '289e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be00',
+            signature: Buffer.from('289e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be00', 'hex').toString('base64'),
             message: 'This is an example of a signed message.',
         },
         {
@@ -31,12 +24,12 @@ const verify = (): SubtestVerifyMessage => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: 'bc1qyjjkmdpu7metqt5r36jf872a34syws33s82q2j',
-            signature: '289e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80',
+            signature: Buffer.from('289e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80', 'hex').toString('base64'),
             message: 'This is an example of a signed message!',
         },
     ];
 
-    const expectedResponses: Array<ExpectedVerifyMessageResponse> = [
+    const expectedResponses = [
         { success: true },
         { success: false },
         { success: false },
@@ -49,18 +42,18 @@ const verify = (): SubtestVerifyMessage => {
     };
 };
 
-const verifyLong = (): SubtestVerifyMessage => {
-    const testPayloads: Array<TestVerifyMessagePayload> = [
+const verifyLong = () => {
+    const testPayloads: VerifyMessage[] = [
         {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: 'bc1qyjjkmdpu7metqt5r36jf872a34syws33s82q2j',
-            signature: '285ff795c29aef7538f8b3bdb2e8add0d0722ad630a140b6aefd504a5a895cbd867cbb00981afc50edd0398211e8d7c304bb8efa461181bc0afa67ea4a720a89ed',
+            signature: Buffer.from('285ff795c29aef7538f8b3bdb2e8add0d0722ad630a140b6aefd504a5a895cbd867cbb00981afc50edd0398211e8d7c304bb8efa461181bc0afa67ea4a720a89ed', 'hex').toString('base64'),
             message: 'VeryLongMessage!'.repeat(64),
         },
     ];
 
-    const expectedResponses: Array<ExpectedVerifyMessageResponse> = [
+    const expectedResponses = [
         { success: true },
     ];
 
@@ -71,18 +64,18 @@ const verifyLong = (): SubtestVerifyMessage => {
     };
 };
 
-const verifyTestnet = (): SubtestVerifyMessage => {
-    const testPayloads: Array<TestVerifyMessagePayload> = [
+const verifyTestnet = () => {
+    const testPayloads: VerifyMessage[] = [
         {
             method: 'verifyMessage',
             coin: 'Testnet',
             address: 'tb1qyjjkmdpu7metqt5r36jf872a34syws336p3n3p',
-            signature: '289e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80',
+            signature: Buffer.from('289e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80', 'hex').toString('base64'),
             message: 'This is an example of a signed message.',
         },
     ];
 
-    const expectedResponses: Array<ExpectedVerifyMessageResponse> = [
+    const expectedResponses = [
         { success: true },
     ];
 
@@ -93,7 +86,7 @@ const verifyTestnet = (): SubtestVerifyMessage => {
     };
 };
 
-export const verifyMessageSegwitNative = (): TestFunction => {
+export const verifyMessageSegwitNative = () => {
     const availableSubtests = {
         verify,
         verifyLong,

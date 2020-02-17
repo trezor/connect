@@ -1,5 +1,8 @@
+/* @flow */
+import type { ApplyFlags } from '../../js/types';
+
 export const applyFlags = () => {
-    const testPayloads = [
+    const testPayloads: ApplyFlags[] = [
         {
             method: 'applyFlags',
             flags: 1,

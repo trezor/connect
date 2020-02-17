@@ -1,16 +1,8 @@
 /* @flow */
+import type { LiskVerifyMessage } from '../../js/types';
 
-import type {
-    TestFunction,
-} from 'flowtype/tests';
-
-import type {
-    TestLiskVerifyMessagePayload,
-    ExpectedLiskVerifyMessageResponse,
-} from 'flowtype/tests/lisk-verify-message';
-
-export const liskVerifyMessage = (): TestFunction => {
-    const testPayloads: Array<TestLiskVerifyMessagePayload> = [
+export const liskVerifyMessage = () => {
+    const testPayloads: LiskVerifyMessage[] = [
         {
             method: 'liskVerifyMessage',
             publicKey: 'a129381c1c077f9d8cb70ac48dcbbf3535bd4d5767dc363438e95fb9f1211704',
@@ -25,7 +17,7 @@ export const liskVerifyMessage = (): TestFunction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedLiskVerifyMessageResponse> = [
+    const expectedResponses = [
         { success: true },
         { success: true },
     ];

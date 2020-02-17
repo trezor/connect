@@ -10,16 +10,10 @@ import { CORE_EVENT } from '../../js/constants';
 import * as DEVICE from '../../js/constants/device';
 import * as IFRAME from '../../js/constants/iframe';
 
-import type {
-    TestPayload,
-    ExpectedResponse,
-    TestFunction,
-} from 'flowtype/tests';
-
 let core: Core;
 
 // Functions
-const startTestingPayloads = (testPayloads: Array<TestPayload>, expectedResponses: Array<ExpectedResponse>, specNames: Array<string>, isTestingPassphrase: boolean) => {
+const startTestingPayloads = (testPayloads: any[], expectedResponses: any[], specNames: string[], isTestingPassphrase: boolean) => {
     if (isTestingPassphrase) {
         it('passphrase', async (done) => {
             const handler = new CoreEventHandler(core, expect, done);
@@ -59,7 +53,7 @@ const MNEMONICS_SECRET = {
     'mnemonic_abandon': '6162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e206162616e646f6e2061626f7574',
 };
 
-const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> => {
+const onBeforeEach = async (test: any, done: Function): Promise<any> => {
     core = await initCore(settings);
 
     const mnemonics = Array.isArray(test.mnemonic) ? test.mnemonic : MNEMONICS[test.mnemonic];
@@ -114,7 +108,7 @@ const onBeforeEach = async (test: TestFunction, done: Function): Promise<any> =>
     await initTransport(settings);
 };
 
-const runTest = (test: TestFunction, subtestNames: Array<string>) => {
+const runTest = (test: any, subtestNames: Array<string>) => {
     const { testName } = test;
     const hasSubtests = !!test.subtests;
     const isTestingPassphrase = testName === 'passphrase';
@@ -215,8 +209,8 @@ testsArr.forEach(testItem => {
 
 // Iterate through the config object and run each test
 for (const testName in config) {
-    const subtestNames: Array<string> = config[testName];
+    const subtestNames: string[] = config[testName];
 
-    const test: TestFunction = testFunctions[testName]();
+    const test = testFunctions[testName]();
     runTest(test, subtestNames);
 }

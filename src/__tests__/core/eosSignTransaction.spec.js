@@ -1,20 +1,11 @@
-/* todo: flow */
-/* eslint-disable */
 /* @flow */
-import type {
-    TestFunction,
-    SubtestEosSignTransaction,
-} from 'flowtype/tests';
-import type {
-    TestEosSignTransactionPayload,
-    ExpectedEosSignTransactionResponse,
-} from 'flowtype/tests/eos-sign-transaction';
+import type { EosSignTransaction } from '../../js/types';
 
 // test vectors:
 // https://github.com/trezor/trezor-firmware/blob/master/python/trezorlib/tests/device_tests/test_msg_eos_signtx.py
 
-const transfer = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const transfer = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -41,14 +32,14 @@ const transfer = (): SubtestEosSignTransaction => {
                         quantity: '1.0000 EOS',
                         memo: 'testtest',
                     },
-                }]
+                }],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
-                signature: "SIG_K1_JveDuew7oyKjgLmApra3NmKArx3QH6HVmatgkLYeUYWv7aGaoQPFyjBwAdcxuo2Skq9wRgsizos92h9iq9i5JbeHh7zNuo",
+                signature: 'SIG_K1_JveDuew7oyKjgLmApra3NmKArx3QH6HVmatgkLYeUYWv7aGaoQPFyjBwAdcxuo2Skq9wRgsizos92h9iq9i5JbeHh7zNuo',
             },
         },
     ];
@@ -60,8 +51,8 @@ const transfer = (): SubtestEosSignTransaction => {
     };
 };
 
-const delegate = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const delegate = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -89,14 +80,14 @@ const delegate = (): SubtestEosSignTransaction => {
                         stake_cpu_quantity: '1.0000 EOS',
                         transfer: true,
                     },
-                }]
+                }],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
-                signature: "SIG_K1_Juju8Wjzyn38nuvgS1KT3koKQLHxMMfqVHrp5jMjv4QLU2pUG6EbiJD7D1EHE6xP8DRuwFLVUNR38nTyUKC1Eiz33WocUE",
+                signature: 'SIG_K1_Juju8Wjzyn38nuvgS1KT3koKQLHxMMfqVHrp5jMjv4QLU2pUG6EbiJD7D1EHE6xP8DRuwFLVUNR38nTyUKC1Eiz33WocUE',
             },
         },
     ];
@@ -108,8 +99,8 @@ const delegate = (): SubtestEosSignTransaction => {
     };
 };
 
-const undelegate = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const undelegate = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -137,14 +128,14 @@ const undelegate = (): SubtestEosSignTransaction => {
                         unstake_cpu_quantity: '1.0000 EOS',
                         transfer: true,
                     },
-                }]
+                }],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
-                signature: "SIG_K1_K3XXUzCUkT2HEdrJTz1CdDDKZbLMShmyEjknQozGhy4F21yUetr1nEe2vUgmGebk2nyYe49R5nkA155J5yFBBaLsTcSdBL",
+                signature: 'SIG_K1_K3XXUzCUkT2HEdrJTz1CdDDKZbLMShmyEjknQozGhy4F21yUetr1nEe2vUgmGebk2nyYe49R5nkA155J5yFBBaLsTcSdBL',
             },
         },
     ];
@@ -156,8 +147,8 @@ const undelegate = (): SubtestEosSignTransaction => {
     };
 };
 
-const buyRam = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const buyRam = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -179,18 +170,18 @@ const buyRam = (): SubtestEosSignTransaction => {
                     }],
                     name: 'buyram',
                     data: {
-                        payer: "miniminimini",
-                        receiver: "miniminimini",
+                        payer: 'miniminimini',
+                        receiver: 'miniminimini',
                         quant: '1000000000.0000 EOS',
                     },
-                }]
+                }],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
-                signature: "SIG_K1_K4gU5S9g7rS6MojaPwWppEBCBbPrJm1pyJtVR9mts1sBq5xyN7nJv3FGnrBR7ByjanboCtK4ogY35sNPFX1F5qoZW7BkF9",
+                signature: 'SIG_K1_K4gU5S9g7rS6MojaPwWppEBCBbPrJm1pyJtVR9mts1sBq5xyN7nJv3FGnrBR7ByjanboCtK4ogY35sNPFX1F5qoZW7BkF9',
             },
         },
     ];
@@ -202,8 +193,8 @@ const buyRam = (): SubtestEosSignTransaction => {
     };
 };
 
-const buyRamBytes = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const buyRamBytes = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -225,18 +216,18 @@ const buyRamBytes = (): SubtestEosSignTransaction => {
                     }],
                     name: 'buyrambytes',
                     data: {
-                        payer: "miniminimini",
-                        receiver: "miniminimini",
+                        payer: 'miniminimini',
+                        receiver: 'miniminimini',
                         bytes: 1023,
                     },
-                }]
+                }],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
-                signature: "SIG_K1_K618wK9f27YxHoPG9hoUCsazZXzxumBj3V9MqcTUh9yCocvP1uFZQAmGmZLhsAtuC2TRR4gtqbeQj57FniYd5i4faQCb6t",
+                signature: 'SIG_K1_K618wK9f27YxHoPG9hoUCsazZXzxumBj3V9MqcTUh9yCocvP1uFZQAmGmZLhsAtuC2TRR4gtqbeQj57FniYd5i4faQCb6t',
             },
         },
     ];
@@ -248,8 +239,8 @@ const buyRamBytes = (): SubtestEosSignTransaction => {
     };
 };
 
-const sellRam = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const sellRam = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -271,17 +262,17 @@ const sellRam = (): SubtestEosSignTransaction => {
                     }],
                     name: 'sellram',
                     data: {
-                        account: "miniminimini",
+                        account: 'miniminimini',
                         bytes: 1024,
                     },
-                }]
+                }],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
-                signature: "SIG_K1_JusrCS7H5DR53qke7edoWvJuLiQS2VQ84CsN5NWmWYVa7wmJVjh3Hcg5hH42zF8KjAmmvHtaJZ3wkortTW9eds1eoiKsrj",
+                signature: 'SIG_K1_JusrCS7H5DR53qke7edoWvJuLiQS2VQ84CsN5NWmWYVa7wmJVjh3Hcg5hH42zF8KjAmmvHtaJZ3wkortTW9eds1eoiKsrj',
             },
         },
     ];
@@ -293,8 +284,8 @@ const sellRam = (): SubtestEosSignTransaction => {
     };
 };
 
-const voteProducer = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const voteProducer = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -316,48 +307,48 @@ const voteProducer = (): SubtestEosSignTransaction => {
                     }],
                     name: 'voteproducer',
                     data: {
-                        voter: "miniminimini",
+                        voter: 'miniminimini',
                         proxy: '',
                         producers: [
-                            "argentinaeos",
-                            "bitfinexeos1",
-                            "cryptolions1",
-                            "eos42freedom",
-                            "eosamsterdam",
-                            "eosasia11111",
-                            "eosauthority",
-                            "eosbeijingbp",
-                            "eosbixinboot",
-                            "eoscafeblock",
-                            "eoscanadacom",
-                            "eoscannonchn",
-                            "eoscleanerbp",
-                            "eosdacserver",
-                            "eosfishrocks",
-                            "eosflytomars",
-                            "eoshuobipool",
-                            "eosisgravity",
-                            "eoslaomaocom",
-                            "eosliquideos",
-                            "eosnewyorkio",
-                            "eosriobrazil",
-                            "eosswedenorg",
-                            "eostribeprod",
-                            "helloeoscnbp",
-                            "jedaaaaaaaaa",
-                            "libertyblock",
-                            "starteosiobp",
-                            "teamgreymass",
+                            'argentinaeos',
+                            'bitfinexeos1',
+                            'cryptolions1',
+                            'eos42freedom',
+                            'eosamsterdam',
+                            'eosasia11111',
+                            'eosauthority',
+                            'eosbeijingbp',
+                            'eosbixinboot',
+                            'eoscafeblock',
+                            'eoscanadacom',
+                            'eoscannonchn',
+                            'eoscleanerbp',
+                            'eosdacserver',
+                            'eosfishrocks',
+                            'eosflytomars',
+                            'eoshuobipool',
+                            'eosisgravity',
+                            'eoslaomaocom',
+                            'eosliquideos',
+                            'eosnewyorkio',
+                            'eosriobrazil',
+                            'eosswedenorg',
+                            'eostribeprod',
+                            'helloeoscnbp',
+                            'jedaaaaaaaaa',
+                            'libertyblock',
+                            'starteosiobp',
+                            'teamgreymass',
                         ],
                     },
-                }]
+                }],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
-                signature: "SIG_K1_JxgVhc6ExoTHee3Djrciwmmf2Xck7NLgvAtC2gfgV4Wj2AqMXEb6aKMhpUcTV59VTR1DdnPF1XbiCcJViJiU3zsk1kQz89",
+                signature: 'SIG_K1_JxgVhc6ExoTHee3Djrciwmmf2Xck7NLgvAtC2gfgV4Wj2AqMXEb6aKMhpUcTV59VTR1DdnPF1XbiCcJViJiU3zsk1kQz89',
             },
         },
     ];
@@ -369,8 +360,8 @@ const voteProducer = (): SubtestEosSignTransaction => {
     };
 };
 
-const refund = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const refund = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -392,16 +383,16 @@ const refund = (): SubtestEosSignTransaction => {
                     }],
                     name: 'refund',
                     data: {
-                        owner: "miniminimini",
+                        owner: 'miniminimini',
                     },
-                }]
+                }],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
-                signature: "SIG_K1_JwWZSSKQZL1hCdMmwEAKjs3r15kau5gaBrQczKy65QANANzovV6U4XbVUZQkZzaQrNGYAtgxrU1WJ1smWgXZNqtKVQUZqc",
+                signature: 'SIG_K1_JwWZSSKQZL1hCdMmwEAKjs3r15kau5gaBrQczKy65QANANzovV6U4XbVUZQkZzaQrNGYAtgxrU1WJ1smWgXZNqtKVQUZqc',
             },
         },
     ];
@@ -413,8 +404,8 @@ const refund = (): SubtestEosSignTransaction => {
     };
 };
 
-const updateAuth = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const updateAuth = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -449,7 +440,7 @@ const updateAuth = (): SubtestEosSignTransaction => {
                                 {
                                     weight: 2,
                                     key: 'EOS8Dkj827FpinZBGmhTM28B85H9eXiFH5XzvLoeukCJV5sKfLc6K',
-                                }
+                                },
                             ],
                             accounts: [{
                                 permission: {
@@ -461,19 +452,19 @@ const updateAuth = (): SubtestEosSignTransaction => {
                             waits: [
                                 {
                                     wait_sec: 55,
-                                    weight: 4
-                                }
-                            ]
+                                    weight: 4,
+                                },
+                            ],
                         },
                     },
-                }]
+                }],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
-                signature: "SIG_K1_JuNuwmJm7nLfpxbCqXZMxZoU56TzBh8F5PH7ZyPvQMti6QxJbErDGbKCAaHhoRxwWKzv5kj6kX3WyWys6jAzVe9pDhXB1k",
+                signature: 'SIG_K1_JuNuwmJm7nLfpxbCqXZMxZoU56TzBh8F5PH7ZyPvQMti6QxJbErDGbKCAaHhoRxwWKzv5kj6kX3WyWys6jAzVe9pDhXB1k',
             },
         },
     ];
@@ -485,8 +476,8 @@ const updateAuth = (): SubtestEosSignTransaction => {
     };
 };
 
-const deleteAuth = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const deleteAuth = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -511,14 +502,14 @@ const deleteAuth = (): SubtestEosSignTransaction => {
                         account: 'maximaximaxi',
                         permission: 'active',
                     },
-                }]
+                }],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
-                signature: "SIG_K1_KjPTp8jCtgBKQWqsndhrH4pdCGiks76Q1qBt9e8MtexW6FQg3FzfVFKDU4SvyVDyFs3worn6RyW6WYavw76ACNqcqkCYjf",
+                signature: 'SIG_K1_KjPTp8jCtgBKQWqsndhrH4pdCGiks76Q1qBt9e8MtexW6FQg3FzfVFKDU4SvyVDyFs3worn6RyW6WYavw76ACNqcqkCYjf',
             },
         },
     ];
@@ -530,8 +521,8 @@ const deleteAuth = (): SubtestEosSignTransaction => {
     };
 };
 
-const linkAuth = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const linkAuth = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -558,14 +549,14 @@ const linkAuth = (): SubtestEosSignTransaction => {
                         type: 'whatever',
                         requirement: 'active',
                     },
-                }]
+                }],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
-                signature: "SIG_K1_Kgs3JdLNqTyGz7uyNiuYLK8sy5qhVQWozrBY7bJWKsjrWAxNyDQUKqHsHmTom5rGY21vYdXmCpi4msU6XeMgWvi4bsBxTx",
+                signature: 'SIG_K1_Kgs3JdLNqTyGz7uyNiuYLK8sy5qhVQWozrBY7bJWKsjrWAxNyDQUKqHsHmTom5rGY21vYdXmCpi4msU6XeMgWvi4bsBxTx',
             },
         },
     ];
@@ -577,8 +568,8 @@ const linkAuth = (): SubtestEosSignTransaction => {
     };
 };
 
-const unlinkAuth = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const unlinkAuth = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -604,11 +595,11 @@ const unlinkAuth = (): SubtestEosSignTransaction => {
                         code: 'eosbet',
                         type: 'whatever',
                     },
-                }]
+                }],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'SIG_K1_K1ioB5KMRC2mmTwYsGwsFU51ENp1XdSBUrb4bxUCLYhoq7Y733WaLZ4Soq9fdrkaJS8uJ3R7Z1ZjyEKRHU8HU4s4MA86zB',
@@ -623,8 +614,8 @@ const unlinkAuth = (): SubtestEosSignTransaction => {
     };
 };
 
-const newAccount = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const newAccount = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -655,7 +646,7 @@ const newAccount = (): SubtestEosSignTransaction => {
                                     {
                                         key: 'EOS8Dkj827FpinZBGmhTM28B85H9eXiFH5XzvLoeukCJV5sKfLc6K',
                                         weight: 1,
-                                    }
+                                    },
                                 ],
                                 accounts: [],
                                 waits: [],
@@ -666,7 +657,7 @@ const newAccount = (): SubtestEosSignTransaction => {
                                     {
                                         key: 'EOS8Dkj827FpinZBGmhTM28B85H9eXiFH5XzvLoeukCJV5sKfLc6K',
                                         weight: 1,
-                                    }
+                                    },
                                 ],
                                 accounts: [],
                                 waits: [],
@@ -677,7 +668,7 @@ const newAccount = (): SubtestEosSignTransaction => {
                         account: 'eosio',
                         name: 'buyrambytes',
                         authorization: [
-                            {actor: 'miniminimini', permission: 'active'}
+                            {actor: 'miniminimini', permission: 'active'},
                         ],
                         data: {
                             payer: 'miniminimini',
@@ -686,10 +677,10 @@ const newAccount = (): SubtestEosSignTransaction => {
                         },
                     },
                     {
-                        account: "eosio",
-                        name: "delegatebw",
+                        account: 'eosio',
+                        name: 'delegatebw',
                         authorization: [
-                            {actor: "miniminimini", permission: "active"}
+                            {actor: 'miniminimini', permission: 'active'},
                         ],
                         data: {
                             from: 'miniminimini',
@@ -698,12 +689,12 @@ const newAccount = (): SubtestEosSignTransaction => {
                             stake_cpu_quantity: '1.0000 EOS',
                             transfer: true,
                         },
-                    }
-                ]
+                    },
+                ],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'SIG_K1_KhjdS1gKUHR4jKbN3YSdNbPbEqnUVM1Nt6ybdzEAwsUtfbCRJDwpQwPRuEau48CyvhYC5fKo5BiWMPQJbQPrg5ErHThieU',
@@ -718,8 +709,8 @@ const newAccount = (): SubtestEosSignTransaction => {
     };
 };
 
-const setContract = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const setContract = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -735,26 +726,26 @@ const setContract = (): SubtestEosSignTransaction => {
                 },
                 actions: [
                     {
-                        account: "eosio1",
-                        name: "setcode",
+                        account: 'eosio1',
+                        name: 'setcode',
                         authorization: [
-                            {"actor": "ednazztokens", "permission": "active"}
+                            {'actor': 'ednazztokens', 'permission': 'active'},
                         ],
                         data: '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
                     },
                     {
-                        account: "eosio1",
-                        name: "setabi",
+                        account: 'eosio1',
+                        name: 'setabi',
                         authorization: [
-                            {"actor": "ednazztokens", "permission": "active"}
+                            {'actor': 'ednazztokens', 'permission': 'active'},
                         ],
                         data: '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
                     },
-                ]
+                ],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'SIG_K1_KiG8c8t2SQkSfrEbD9BwJoYT133BPFLx3gu8sAzJadXyFk1EXKYAsgx4tkjt79G6ofuaQzJPAfDqy1FSpgLRbhbeFH9omd',
@@ -769,8 +760,8 @@ const setContract = (): SubtestEosSignTransaction => {
     };
 };
 
-const unknown = (): SubtestEosSignTransaction => {
-    const testPayloads: Array<TestEosSignTransactionPayload> = [
+const unknown = () => {
+    const testPayloads: EosSignTransaction[] = [
         {
             method: 'eosSignTransaction',
             path: "m/44'/194'/0'/0/0",
@@ -786,18 +777,18 @@ const unknown = (): SubtestEosSignTransaction => {
                 },
                 actions: [
                     {
-                        "account": "foocontract",
-                        "name": "baraction",
-                        "authorization": [
-                            {"actor": "miniminimini", "permission": "active"}
+                        'account': 'foocontract',
+                        'name': 'baraction',
+                        'authorization': [
+                            {'actor': 'miniminimini', 'permission': 'active'},
                         ],
-                        "data": "deadbeef",
+                        'data': 'deadbeef',
                     },
-                ]
+                ],
             },
         },
     ];
-    const expectedResponses: Array<ExpectedEosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'SIG_K1_JvoJtrHpQJjHAZzEBhiQm75iimYabcAVNDvz8mkempLh6avSJgnXm5JzCCUEBjDtW3syByfXknmgr93Sw3P9RNLnwySmv6',
@@ -812,7 +803,7 @@ const unknown = (): SubtestEosSignTransaction => {
     };
 };
 
-export const eosSignTransaction = (): TestFunction => {
+export const eosSignTransaction = () => {
     const testName = 'EosSignTransaction';
 
     return {

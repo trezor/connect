@@ -7,15 +7,10 @@ import { CORE_EVENT, RESPONSE_EVENT, UI_EVENT } from '../../js/constants';
 import * as UI from '../../js/constants/ui';
 import * as IFRAME from '../../js/constants/iframe';
 
-import type {
-    TestPayload,
-    ExpectedResponse,
-} from 'flowtype/tests';
-
 export class CoreEventHandler {
     _core: Core;
-    _payload: Array<TestPayload> | TestPayload;
-    _expectedResponse: Array<ExpectedResponse> | ExpectedResponse;
+    _payload: any | any[];
+    _expectedResponse: any | any[];
 
     _doneFn: any;
     _expectFn: any;
@@ -38,8 +33,8 @@ export class CoreEventHandler {
 
     // Public Functions
     setPayloads(
-        testPayload: Array<TestPayload> | TestPayload,
-        expectedResponse: Array<ExpectedResponse> | ExpectedResponse,
+        testPayload: any | any[],
+        expectedResponse: any | any[],
         shouldWaitForLastResponse: boolean) {
         if (shouldWaitForLastResponse) {
             if (!Array.isArray(testPayload) || !Array.isArray(expectedResponse)) {
@@ -62,11 +57,11 @@ export class CoreEventHandler {
     }
     // Public Functions: END
 
-    _getCurrentPayload(): TestPayload {
+    _getCurrentPayload(): any {
         return this._shouldWaitForLastResponse ? this._payload[this._responseIndex] : this._payload;
     }
 
-    _getCurrentExpectedResponse(): TestPayload {
+    _getCurrentExpectedResponse() {
         return this._shouldWaitForLastResponse ? this._expectedResponse[this._responseIndex] : this._expectedResponse;
     }
 
@@ -126,8 +121,6 @@ export class CoreEventHandler {
     }
 
     _handleResponseEvent(event: Object) {
-        console.warn(event);
-
         // ignore debugLinkDecision response
         if (event.payload.debugLink) return;
 
@@ -150,6 +143,7 @@ export class CoreEventHandler {
             this._callCoreMessage(nextTestPayload, state);
         } else {
             const expectedResponse = this._getCurrentExpectedResponse();
+            console.log('Response:', expectedResponse, event);
             this._compareExpectedResponseToActual(expectedResponse, event);
             this._doneFn();
         }

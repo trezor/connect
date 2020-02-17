@@ -1,5 +1,8 @@
+/* @flow */
+import type { ApplySettings } from '../../js/types';
+
 export const applySettings = () => {
-    const testPayloads = [
+    const testPayloads: ApplySettings[] = [
         {
             method: 'applySettings',
             label: 'hello',

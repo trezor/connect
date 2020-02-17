@@ -1,28 +1,11 @@
 /* @flow */
-
-import type {
-    TestFunction,
-    SubtestSignTransaction,
-} from 'flowtype/tests';
-
-type TransactionPayload = {
-    method: string,
-    path: string,
-    transaction: any,
-};
-
-type ExpectedResponse = {
-    payload: {
-        public_key: string,
-        signature: string,
-    },
-};
+import type { BinanceSignTransaction } from '../../js/types';
 
 // vectors from https://github.com/binance-chain/javascript-sdk/blob/master/__tests__/fixtures/placeOrder.json
 // https://github.com/trezor/trezor-firmware/blob/master/core/tests/test_apps.binance.sign_tx.py
 
-const transfer = (): SubtestSignTransaction => {
-    const testPayloads: Array<TransactionPayload> = [
+const transfer = () => {
+    const testPayloads: BinanceSignTransaction[] = [
         {
             method: 'binanceSignTransaction',
             path: "m/44'/714'/0'/0/0",
@@ -54,7 +37,7 @@ const transfer = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 public_key: '029729a52e4e3c2b4a4e52aa74033eedaf8ba1df5ab6d1f518fd69e67bbd309b0e',
@@ -70,8 +53,8 @@ const transfer = (): SubtestSignTransaction => {
     };
 };
 
-const placeOrder = (): SubtestSignTransaction => {
-    const testPayloads: Array<TransactionPayload> = [
+const placeOrder = () => {
+    const testPayloads: BinanceSignTransaction[] = [
         {
             method: 'binanceSignTransaction',
             path: "m/44'/714'/0'/0/0",
@@ -95,7 +78,7 @@ const placeOrder = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 public_key: '029729a52e4e3c2b4a4e52aa74033eedaf8ba1df5ab6d1f518fd69e67bbd309b0e',
@@ -111,8 +94,8 @@ const placeOrder = (): SubtestSignTransaction => {
     };
 };
 
-const cancelOrder = (): SubtestSignTransaction => {
-    const testPayloads: Array<TransactionPayload> = [
+const cancelOrder = () => {
+    const testPayloads: BinanceSignTransaction[] = [
         {
             method: 'binanceSignTransaction',
             path: "m/44'/714'/0'/0/0",
@@ -131,7 +114,7 @@ const cancelOrder = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 public_key: '029729a52e4e3c2b4a4e52aa74033eedaf8ba1df5ab6d1f518fd69e67bbd309b0e',
@@ -147,7 +130,7 @@ const cancelOrder = (): SubtestSignTransaction => {
     };
 };
 
-export const binanceSignTransaction = (): TestFunction => {
+export const binanceSignTransaction = () => {
     const subtests = {
         transfer,
         placeOrder,

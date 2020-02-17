@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestGetAddress,
-} from 'flowtype/tests';
-import type {
-    TestGetAddressPayload,
-    ExpectedGetAddressResponse,
-} from 'flowtype/tests/get-address';
+import type { GetAddress } from '../../js/types';
 
-const showSegwit = (): SubtestGetAddress => {
-    const testPayloads: Array<TestGetAddressPayload> = [
+const showSegwit = () => {
+    const testPayloads: GetAddress[] = [
         {
             method: 'getAddress',
             coin: 'Bitcoin',
@@ -35,7 +28,7 @@ const showSegwit = (): SubtestGetAddress => {
             showOnTrezor: true,
         },
     ];
-    const expectedResponses: Array<ExpectedGetAddressResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 address: '3AnYTd2FGxJLNKL1AzxfW3FJMntp9D2KKX',
@@ -65,7 +58,7 @@ const showSegwit = (): SubtestGetAddress => {
     };
 };
 
-export const getAddressSegwit = (): TestFunction => {
+export const getAddressSegwit = () => {
     const availableSubtests = {
         showSegwit,
     };
