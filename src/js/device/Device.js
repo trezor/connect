@@ -1,10 +1,9 @@
 /* @flow */
 
 import EventEmitter from 'events';
-import semvercmp from 'semver-compare';
 import DeviceCommands from './DeviceCommands';
 
-import type { Device as DeviceTyped, DeviceFirmwareStatus, Features, Deferred, FirmwareRelease } from '../types';
+import type { Device as DeviceTyped, DeviceFirmwareStatus, Features, Deferred, FirmwareRelease, UnavailableCapability } from '../types';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
 import * as UI from '../constants/ui';
@@ -12,7 +11,9 @@ import * as DEVICE from '../constants/device';
 import * as ERROR from '../constants/errors';
 import { create as createDeferred } from '../utils/deferred';
 import DataManager from '../data/DataManager';
+import { getAllNetworks } from '../data/CoinInfo';
 import { checkFirmware, getLatestRelease } from '../data/FirmwareInfo';
+import { versionCompare, parseCapabilities, getUnavailableCapabilities } from '../utils/deviceFeaturesUtils';
 import Log, { init as initLog } from '../utils/debug';
 
 // custom log
@@ -43,28 +44,6 @@ const parseRunOptions = (options?: RunOptions): RunOptions => {
     return options;
 };
 
-const parseFeatures = (features: Features): Features => {
-    if (!features.features || features.features.length === 0) {
-        features.features = [
-            'Feature_Bitcoin',
-            'Feature_Bitcoin_like',
-            'Feature_Binance',
-            'Feature_Cardano',
-            'Feature_Crypto',
-            'Feature_EOS',
-            'Feature_Ethereum',
-            'Feature_Lisk',
-            'Feature_Monero',
-            'Feature_NEM',
-            'Feature_Ripple',
-            'Feature_Stellar',
-            'Feature_Tezos',
-            'Feature_U2F',
-        ];
-    }
-    return features;
-};
-
 /**
  *
  *
@@ -91,20 +70,14 @@ export default class Device extends EventEmitter {
 
     activitySessionID: ?string;
 
-    featuresTimestamp: number = 0;
-
     commands: DeviceCommands;
-
-    // cachedPassphrase: ?string;
-    cachedPassphrase: Array<?string> = [];
 
     keepSession: boolean = false;
 
     instance: number = 0;
-
-    state: ?string;
-    expectedState: ?string;
-    temporaryState: ?string;
+    internalState: string[] = [];
+    externalState: string[] = [];
+    unavailableCapabilities: { [key: string]: UnavailableCapability } = {};
 
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
         super();
@@ -255,13 +228,18 @@ export default class Device extends EventEmitter {
         fn?: () => Promise<X>,
         options: RunOptions
     ): Promise<any> {
-        if (!this.isUsedHere() || this.commands.disposed) {
+        if (!this.isUsedHere() || this.commands.disposed || !this.getExternalState()) {
             // acquire session
             await this.acquire();
 
             // update features
             try {
-                await this.initialize(!!options.useEmptyPassphrase);
+                if (fn) {
+                    await this.initialize(!!options.useEmptyPassphrase);
+                } else {
+                    // do not initialize while firstRunPromise otherwise `features.session_id` could be affected
+                    await this.getFeatures();
+                }
             } catch (error) {
                 this.inconsistent = true;
                 await this.deferredActions[ DEVICE.ACQUIRE ].promise;
@@ -286,7 +264,7 @@ export default class Device extends EventEmitter {
         }
 
         // reload features
-        if (this.features && !options.skipFinalReload) {
+        if (this.loaded && this.features && !options.skipFinalReload) {
             await this.getFeatures();
         }
 
@@ -319,9 +297,9 @@ export default class Device extends EventEmitter {
                 this.keepSession = false;
             }
 
-            // T1: forget cached passphrase
-            if (this.isT1()) {
-                this.clearPassphrase();
+            // T1: forget passphrase cached in internal state
+            if (this.isT1() && !this.useLegacyPassphrase()) {
+                this.setInternalState(undefined);
             }
         }
         this.instance = instance;
@@ -331,75 +309,89 @@ export default class Device extends EventEmitter {
         return this.instance;
     }
 
-    // set expected state from method parameter
-    setExpectedState(state: ?string): void {
-        if (!state) {
-            this.setState(null); // T2 reset state
-            this.setPassphrase(null); // T1 reset password
-        }
-        this.expectedState = state;
-        // T2: set "temporaryState" the same as "expectedState", it may change if device will request for passphrase [after PassphraseStateRequest message]
-        // this solves the issue with different instances but the same passphrases,
-        // where device state passed in "initialize" is correct from device point of view
-        // but "expectedState" and "temporaryState" are different strings
-        if (!this.isT1()) {
-            this.temporaryState = state;
+    setInternalState(state: ?string) {
+        if (typeof state !== 'string') {
+            delete this.internalState[this.instance];
+        } else {
+            this.internalState[this.instance] = state;
         }
     }
 
-    getExpectedState(): ?string {
-        return this.expectedState;
+    getInternalState(): ?string {
+        return this.internalState[this.instance];
     }
 
-    setPassphrase(pass: ?string): void {
-        if (this.isT1()) {
-            this.cachedPassphrase[ this.instance ] = pass;
+    setExternalState(state: ?string) {
+        if (typeof state !== 'string') {
+            delete this.internalState[this.instance];
+            delete this.externalState[this.instance];
+        } else {
+            this.externalState[this.instance] = state;
         }
     }
 
-    getPassphrase(): ?string {
-        return this.cachedPassphrase[ this.instance ];
+    getExternalState(): ?string {
+        return this.externalState[this.instance];
     }
 
-    clearPassphrase(): void {
-        this.cachedPassphrase[ this.instance ] = null;
-        this.keepSession = false;
+    async validateState() {
+        if (!this.features) return;
+        const expectedState = this.getExternalState();
+        const state = await this.commands.getDeviceState();
+        const uniqueState = `${state}@${this.features.device_id}:${this.instance}`;
+        if (!this.useLegacyPassphrase() && this.features.session_id) {
+            this.setInternalState(this.features.session_id);
+        }
+        if (expectedState && expectedState !== uniqueState) {
+            return uniqueState;
+        }
+        if (!expectedState) {
+            this.setExternalState(uniqueState);
+        }
     }
 
-    async initialize(useEmptyPassphrase: boolean): Promise<void> {
-        const { message }: { message: Features } = await this.commands.initialize(useEmptyPassphrase);
-        this.features = parseFeatures(message);
-        this.featuresNeedsReload = false;
-        this.featuresTimestamp = new Date().getTime();
-
-        const currentFW = [ this.features.major_version, this.features.minor_version, this.features.patch_version ];
-        this.firmwareStatus = checkFirmware(currentFW, this.features);
-        this.firmwareRelease = getLatestRelease(currentFW);
+    useLegacyPassphrase() {
+        return !this.atLeast(['1.9.0', '2.3.0']);
     }
 
-    async getFeatures(): Promise<void> {
+    async initialize(useEmptyPassphrase: boolean) {
+        let payload;
+        if (this.features) {
+            const legacy = this.useLegacyPassphrase();
+            const internalState = this.getInternalState();
+            payload = {};
+            if (!legacy && internalState) {
+                payload.session_id = internalState;
+            }
+            if (legacy && !this.isT1()) {
+                payload.state = internalState;
+                if (useEmptyPassphrase) {
+                    payload.skip_passphrase = useEmptyPassphrase;
+                    payload.state = null;
+                }
+            }
+        }
+
+        const { message }: { message: Features } = await this.commands.typedCall('Initialize', 'Features', payload);
+        this._updateFeatures(message);
+    }
+
+    async getFeatures() {
         const { message }: { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
-        this.features = parseFeatures(message);
-        this.firmwareStatus = checkFirmware(
-            [ this.features.major_version, this.features.minor_version, this.features.patch_version ],
-            this.features,
-        );
+        this._updateFeatures(message);
     }
 
-    getState(): ?string {
-        return this.state ? this.state : null;
-    }
-
-    setState(state: ?string): void {
-        this.state = state;
-    }
-
-    setTemporaryState(state: ?string): void {
-        this.temporaryState = state;
-    }
-
-    getTemporaryState(): ?string {
-        return this.temporaryState;
+    _updateFeatures(feat: Features) {
+        feat.capabilities = parseCapabilities(feat);
+        const version = [feat.major_version, feat.minor_version, feat.patch_version];
+        // check if FW version did change
+        if (versionCompare(version, this.getVersion()) !== 0) {
+            this.unavailableCapabilities = getUnavailableCapabilities(feat, getAllNetworks(), DataManager.getConfig().supportedFirmware);
+            this.firmwareStatus = checkFirmware(version, feat);
+            this.firmwareRelease = getLatestRelease(version);
+        }
+        this.features = feat;
+        this.featuresNeedsReload = false;
     }
 
     isUnacquired(): boolean {
@@ -494,17 +486,19 @@ export default class Device extends EventEmitter {
         return this.inconsistent;
     }
 
-    getVersion(): string {
+    getVersion(): number[] {
+        if (!this.features) return [];
         return [
             this.features.major_version,
             this.features.minor_version,
             this.features.patch_version,
-        ].join('.');
+        ];
     }
 
-    atLeast(versions: Array<string>): boolean {
-        const modelVersion = versions[ this.features.major_version - 1 ];
-        return semvercmp(this.getVersion(), modelVersion) >= 0;
+    atLeast(versions: string[] | string) {
+        if (!this.features) return false;
+        const modelVersion = typeof versions === 'string' ? versions : versions[this.features.major_version - 1];
+        return versionCompare(this.getVersion(), modelVersion) >= 0;
     }
 
     isUsed(): boolean {
@@ -569,21 +563,6 @@ export default class Device extends EventEmitter {
         return null;
     }
 
-    validateExpectedState(state: string): boolean {
-        if (!this.isT1()) {
-            const currentState: ?string = this.getExpectedState() || this.getState();
-            if (!currentState) {
-                this.setState(state);
-                return true;
-            } else if (currentState !== state) {
-                return false;
-            }
-        } else if (this.getExpectedState() && this.getExpectedState() !== state) {
-            return false;
-        }
-        return true;
-    }
-
     onBeforeUnload() {
         if (this.isUsedHere() && this.activitySessionID) {
             try {
@@ -622,12 +601,13 @@ export default class Device extends EventEmitter {
                 type: 'acquired',
                 path: this.originalDescriptor.path,
                 label: label,
-                state: this.state,
+                state: this.getExternalState(),
                 status: this.isUsedElsewhere() ? 'occupied' : this.featuresNeedsReload ? 'used' : 'available',
                 mode: this.getMode(),
                 firmware: this.firmwareStatus,
                 firmwareRelease: this.firmwareRelease,
                 features: this.features,
+                unavailableCapabilities: this.unavailableCapabilities,
             };
         }
     }

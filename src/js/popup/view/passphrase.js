@@ -17,7 +17,9 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
 
     let inputType: string = 'password';
 
-    deviceNameSpan.innerText = payload.device.label;
+    const { label, features } = payload.device;
+    deviceNameSpan.innerText = label;
+    const passphraseOnDevice = features && features.capabilities && features.capabilities.includes('Capability_PassphraseEntry');
 
     /* Functions */
     const validation = () => {
@@ -55,24 +57,24 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
         toggleInputFontStyle(input1);
         toggleInputFontStyle(input2);
     };
-    const handleEnterClick = () => {
-        input1.blur();
-        input2.blur();
-        // eslint-disable-next-line no-use-before-define
-        window.removeEventListener('keydown', handleWindowKeydown);
-
-        showView('loader');
-        postMessage(UiMessage(UI.RECEIVE_PASSPHRASE, {
-            save: true,
-            value: input1.value,
-        }));
-    };
     const handleWindowKeydown = (e: KeyboardEvent) => {
         if (e.key === 'Enter') {
             e.preventDefault();
             enter.click();
         }
     };
+    const handleEnterClick = () => {
+        input1.blur();
+        input2.blur();
+        window.removeEventListener('keydown', handleWindowKeydown);
+
+        showView('loader');
+        postMessage(UiMessage(UI.RECEIVE_PASSPHRASE, {
+            value: input1.value,
+            save: true,
+        }));
+    };
+
     /* Functions: END */
     input1.addEventListener('input', () => {
         validation();
@@ -86,6 +88,20 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
     toggle.addEventListener('click', handleToggleClick);
     enter.addEventListener('click', handleEnterClick);
     window.addEventListener('keydown', handleWindowKeydown, false);
+
+    if (passphraseOnDevice) {
+        const onDevice: HTMLButtonElement = (container.getElementsByClassName('passphraseOnDevice')[0]: any);
+        onDevice.style.display = 'block';
+        onDevice.addEventListener('click', () => {
+            window.removeEventListener('keydown', handleWindowKeydown);
+            showView('loader');
+            postMessage(UiMessage(UI.RECEIVE_PASSPHRASE, {
+                value: '',
+                passphraseOnDevice: true,
+                save: true,
+            }));
+        });
+    }
 
     input1.focus();
 };

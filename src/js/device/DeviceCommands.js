@@ -24,6 +24,12 @@ export type MessageResponse<T> = {
 
 export type DefaultMessageResponse = MessageResponse<Object>;
 
+export type PassphrasePromptResponse = {
+    passphrase?: string,
+    passphraseOnDevice?: boolean,
+    cache?: boolean,
+};
+
 function assertType(res: DefaultMessageResponse, resType: string) {
     const splitResTypes = resType.split('|');
     if (!(splitResTypes.includes(res.type))) {
@@ -211,13 +217,6 @@ export default class DeviceCommands {
         return response;
     }
 
-    async getDeviceState(): Promise<string> {
-        const response: trezor.PublicKey = await this.getPublicKey([(44 | 0x80000000) >>> 0, (1 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0], 'Testnet', 'SPENDADDRESS');
-        const secret: string = `${response.xpub}#${this.device.features.device_id}#${this.device.instance}`;
-        const state: string = this.device.getTemporaryState() || bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
-        return state;
-    }
-
     async getAddress(
         address_n: Array<number>,
         coinInfo: BitcoinNetworkInfo,
@@ -239,7 +238,7 @@ export default class DeviceCommands {
                 }
             });
         }
-        const response: Object = await this.typedCall('GetAddress', 'Address', {
+        const response = await this.typedCall('GetAddress', 'Address', {
             address_n,
             coin_name: coinInfo.name,
             show_display: !!showOnTrezor,
@@ -533,29 +532,19 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    // async clearSession(): Promise<MessageResponse<trezor.Success>> {
     async clearSession(settings: Object): Promise<MessageResponse<trezor.Success>> {
         return await this.typedCall('ClearSession', 'Success', settings);
     }
 
-    async initialize(useEmptyPassphrase: boolean = false): Promise<DefaultMessageResponse> {
-        if (this.disposed) {
-            throw new Error('DeviceCommands already disposed');
-        }
-
-        const payload = {};
-        if (!this.device.isT1()) {
-            // T2 features
-            payload.state = this.device.getExpectedState() || this.device.getState();
-            if (useEmptyPassphrase) {
-                payload.skip_passphrase = useEmptyPassphrase;
-                payload.state = null;
-            }
-        }
-
-        const response = await this.call('Initialize', payload);
-        assertType(response, 'Features');
-        return response;
+    async getDeviceState() {
+        const response = await this.typedCall('GetAddress', 'Address', {
+            address_n: [(44 | 0x80000000) >>> 0, (1 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0, 0, 0],
+            coin_name: 'Testnet',
+            script_type: 'SPENDADDRESS',
+        });
+        // bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
+        const state: string = response.message.address;
+        return state;
     }
 
     async wipe(): Promise<trezor.Success> {
@@ -663,8 +652,16 @@ export default class DeviceCommands {
             return Promise.reject(e);
         }
 
+        if (res.type === 'Features') {
+            return Promise.resolve(res);
+        }
+
         if (res.type === 'ButtonRequest') {
-            this.device.emit('button', this.device, res.message.code);
+            if (res.message.code === 'ButtonRequest_PassphraseEntry') {
+                this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE, this.device);
+            } else {
+                this.device.emit(DEVICE.BUTTON, this.device, res.message.code);
+            }
             return this._commonCall('ButtonAck', {});
         }
 
@@ -686,16 +683,32 @@ export default class DeviceCommands {
         }
 
         if (res.type === 'PassphraseRequest') {
-            const state: ?string = !this.device.isT1() ? (this.device.getExpectedState() || this.device.getState()) : null;
+            const state = this.device.getInternalState();
+            const legacy = this.device.useLegacyPassphrase();
+            const legacyT1 = legacy && this.device.isT1();
 
-            if (res.message.on_device) {
+            // T1 fw lower than x,x,x, passphrase is cached in internal state
+            if (legacyT1 && typeof state === 'string') {
+                return this._commonCall('PassphraseAck', { passphrase: state });
+            }
+
+            // TT fw lower than 2.3.0, entering passphrase on device
+            if (legacy && res.message.on_device) {
                 this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE, this.device);
                 return this._commonCall('PassphraseAck', { state });
             }
 
             return this._promptPassphrase().then(
-                passphrase => {
-                    return this._commonCall('PassphraseAck', { passphrase, state });
+                response => {
+                    const { passphrase, passphraseOnDevice, cache } = response;
+                    if (legacyT1) {
+                        this.device.setInternalState(cache ? passphrase : undefined);
+                        return this._commonCall('PassphraseAck', { passphrase });
+                    } else if (legacy) {
+                        return this._commonCall('PassphraseAck', { passphrase, state });
+                    } else {
+                        return !passphraseOnDevice ? this._commonCall('PassphraseAck', { passphrase }) : this._commonCall('PassphraseAck', { on_device: true });
+                    }
                 },
                 err => {
                     return this._commonCall('Cancel', {}).catch(e => {
@@ -705,9 +718,11 @@ export default class DeviceCommands {
             );
         }
 
+        // TT fw lower than 2.3.0, device send his current state
+        // new passphrase design set this value from `features.session_id`
         if (res.type === 'PassphraseStateRequest') {
             const state: string = res.message.state;
-            this.device.setTemporaryState(state);
+            this.device.setInternalState(state);
             return this._commonCall('PassphraseStateAck', {});
         }
 
@@ -743,14 +758,14 @@ export default class DeviceCommands {
         });
     }
 
-    _promptPassphrase(): Promise<string> {
+    _promptPassphrase(): Promise<PassphrasePromptResponse> {
         return new Promise((resolve, reject) => {
             if (this.device.listenerCount(DEVICE.PASSPHRASE) > 0) {
-                this.device.emit(DEVICE.PASSPHRASE, this.device, (err, passphrase) => {
-                    if (err || passphrase == null) {
-                        reject(err);
+                this.device.emit(DEVICE.PASSPHRASE, this.device, (response: PassphrasePromptResponse, error?: Error) => {
+                    if (error) {
+                        reject(error);
                     } else {
-                        resolve(passphrase.normalize('NFKD'));
+                        resolve(response);
                     }
                 });
             } else {

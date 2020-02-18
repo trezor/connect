@@ -179,11 +179,11 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
 
     const isWebUsb = _deviceList.transportType() === 'WebUsbPlugin';
 
-    let device: ?Device;
+    let device;
     if (method.devicePath) {
         device = _deviceList.getDevice(method.devicePath);
     } else {
-        let devicesCount: number = _deviceList.length();
+        let devicesCount = _deviceList.length();
         let selectedDevicePath: string;
         if (devicesCount === 1 && !isWebUsb) {
             // there is only one device available. use it
@@ -243,7 +243,7 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
  * @returns {Promise<void>}
  * @memberof Core
  */
-export const onCall = async (message: CoreMessage): Promise<void> => {
+export const onCall = async (message: CoreMessage) => {
     if (!message.id || !message.payload) {
         throw ERROR.INVALID_PARAMETERS;
     }
@@ -372,7 +372,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
     device.setInstance(method.deviceInstance);
 
     if (method.hasExpectedDeviceState) {
-        device.setExpectedState(method.deviceState);
+        device.setExternalState(method.deviceState);
     }
 
     // device is available
@@ -388,6 +388,11 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
         postMessage(UiMessage(UI.REQUEST_PASSPHRASE_ON_DEVICE, { device: device.toMessageObject() }));
     });
     /* eslint-enable no-use-before-define */
+
+    // try to reconfigure messages before Initialize
+    if (_deviceList) {
+        await _deviceList.reconfigure(device.getVersion());
+    }
 
     try {
         let PIN_TRIES: number = 1;
@@ -477,16 +482,14 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
             }
 
             if (_deviceList) {
-                // restore default messages
-                const messages = DataManager.findMessages(device.isT1() ? 0 : 1, device.getVersion());
-                await _deviceList.reconfigure(messages);
+                // reconfigure protobuf messages
+                await _deviceList.reconfigure(device.getVersion());
             }
 
             // Make sure that device will display pin/passphrase
             try {
-                const deviceState: string = method.useDeviceState ? await device.getCommands().getDeviceState() : 'null';
-                const validState: boolean = !method.useDeviceState || method.useEmptyPassphrase || device.validateExpectedState(deviceState);
-                if (!validState) {
+                const invalidDeviceState = method.useDeviceState ? await device.validateState() : undefined;
+                if (invalidDeviceState) {
                     if (isUsingPopup) {
                         // initialize user response promise
                         const uiPromise = createUiPromise(UI.INVALID_PASSPHRASE_ACTION, device);
@@ -496,12 +499,13 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                         const uiResp: UiPromiseResponse = await uiPromise.promise;
                         const resp: boolean = uiResp.payload;
                         if (resp) {
-                            // initialize to reset device state
-                            await device.getCommands().initialize(method.useEmptyPassphrase);
+                            // reset internal device state and try again
+                            device.setInternalState(undefined);
+                            await device.initialize(method.useEmptyPassphrase);
                             return inner();
                         } else {
                             // set new state as requested
-                            device.setState(deviceState);
+                            device.setExternalState(invalidDeviceState);
                         }
                     } else {
                         throw ERROR.INVALID_STATE;
@@ -519,8 +523,7 @@ export const onCall = async (message: CoreMessage): Promise<void> => {
                     // eslint-disable-next-line no-use-before-define
                     // closePopup();
                     // clear cached passphrase. it's not valid
-                    device.clearPassphrase();
-                    device.setState(null);
+                    device.setInternalState(undefined);
                     // interrupt process and go to "final" block
                     return Promise.reject(error.message);
                 }
@@ -671,13 +674,7 @@ const onDeviceWordHandler = async (device: Device, type: string, callback: (erro
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onDevicePassphraseHandler = async (device: Device, callback: (error: any, success: any) => void): Promise<void> => {
-    const cachedPassphrase: ?string = device.getPassphrase();
-    if (typeof cachedPassphrase === 'string') {
-        callback(null, cachedPassphrase);
-        return;
-    }
-
+const onDevicePassphraseHandler = async (device: Device, callback: (response: any) => void) => {
     // wait for popup handshake
     await getPopupPromise().promise;
     // request passphrase view
@@ -685,10 +682,15 @@ const onDevicePassphraseHandler = async (device: Device, callback: (error: any, 
     // wait for passphrase
 
     const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_PASSPHRASE, device).promise;
-    const value: string = uiResp.payload.value;
+    const passphrase: string = uiResp.payload.value;
+    const passphraseOnDevice: boolean = uiResp.payload.passphraseOnDevice;
     const cache: boolean = uiResp.payload.save;
-    device.setPassphrase(cache ? value : null);
-    callback(null, value);
+    // send as PassphrasePromptResponse
+    callback({
+        passphrase: passphrase.normalize('NFKD'),
+        passphraseOnDevice,
+        cache,
+    });
 };
 
 /**
@@ -698,8 +700,9 @@ const onDevicePassphraseHandler = async (device: Device, callback: (error: any, 
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onEmptyPassphraseHandler = async (device: Device, callback: (error: any, success: any) => void): Promise<void> => {
-    callback(null, '');
+const onEmptyPassphraseHandler = async (device: Device, callback: (response: any) => void) => {
+    // send as PassphrasePromptResponse
+    callback({ passphrase: '' });
 };
 
 /**

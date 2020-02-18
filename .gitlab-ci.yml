@@ -1,4 +1,4 @@
-image: node:8.10
+image: node:12.14.1
 
 stages:
   - build
@@ -7,7 +7,6 @@ stages:
 build:
   stage: build
   script:
-    - npm install -g yarn
     - yarn
     - yarn flow
     - yarn eslint

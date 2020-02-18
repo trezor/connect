@@ -232,6 +232,7 @@
             </div>
             <div>
                 <button class="confirm submit" tabindex="4">Enter</button>
+                <button class="cancel passphraseOnDevice" tabindex="5" style="display: none;">Enter passphrase on device</button>
                 <div class="error-container">
                     <p class="error">Passphrases do not match!</p>
                 </div>
@@ -323,8 +324,8 @@
             </div>
 
             <div class="buttons">
-                <button class="confirm submit" tabindex="4">Yes, use this passphrase</button>
-                <button class="cancel">No, Try again</button>
+                <button class="confirm retry">No, Try again</button>
+                <button class="cancel useCurrent" tabindex="4">Yes, use this passphrase</button>
             </div>
         </div>
         <!-- invalid passphrase: END -->

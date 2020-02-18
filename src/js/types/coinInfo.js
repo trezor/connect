@@ -109,7 +109,7 @@ export type EthereumNetworkInfo = {
 };
 
 export type MiscNetworkInfo = {
-    +type: 'misc',
+    +type: 'misc' | 'nem',
     blockchainLink: ?BlockchainLink,
     blocktime: number,
     curve: string,

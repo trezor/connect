@@ -66,7 +66,7 @@ export default class DeviceList extends EventEmitter {
         }
 
         this.transport = new Fallback(transports);
-        this.defaultMessages = DataManager.getMessages();
+        this.defaultMessages = DataManager.getProtobufMessages();
         this.currentMessages = this.defaultMessages;
     }
 
@@ -95,11 +95,14 @@ export default class DeviceList extends EventEmitter {
         }
     }
 
-    async reconfigure(json: JSON, custom?: boolean) {
-        if (this.currentMessages === json) return;
+    async reconfigure(messages: JSON | number[], custom?: boolean) {
+        if (Array.isArray(messages)) {
+            messages = DataManager.getProtobufMessages(messages);
+        }
+        if (this.currentMessages === messages) return;
         try {
-            await this.transport.configure(JSON.stringify(json));
-            this.currentMessages = json;
+            await this.transport.configure(JSON.stringify(messages));
+            this.currentMessages = messages;
             this.hasCustomMessages = typeof custom === 'boolean' ? custom : false;
         } catch (error) {
             throw ERROR.WRONG_TRANSPORT_CONFIG;
