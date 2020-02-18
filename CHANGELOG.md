@@ -1,3 +1,12 @@
+# 8.1.0
+#### Added
+- Support for FW 1.9.0 and 2.3.0 (passphrase redesign)
+- Typescript types
+#### Fixed
+- General cleanup in flowtype declarations
+- disableWebUsb method
+- trezor-link protobuf messages overrides
+
 # 8.0.13
 #### Fixed
 - `getAddress` for multisig addresses #509
