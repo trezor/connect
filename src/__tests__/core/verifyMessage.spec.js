@@ -8,15 +8,16 @@ const verify = () => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T',
-            signature: Buffer.from(/* btoa( */'1ba77e01a9e17ba158b962cfef5f13dfed676ffc2b4bada24e58f784458b52b97421470d001d53d5880cf5e10e76f02be3e80bf21e18398cbd41e8c3b4af74c8c2'/* ) */, 'hex').toString('base64'),
-            message: 'This is an example of a signed message.',
+            signature: Buffer.from('1ba77e01a9e17ba158b962cfef5f13dfed676ffc2b4bada24e58f784458b52b97421470d001d53d5880cf5e10e76f02be3e80bf21e18398cbd41e8c3b4af74c8c2', 'hex').toString('base64'),
+            message: Buffer.from('This is an example of a signed message.', 'utf-8').toString('hex'),
+            hex: true,
         },
         {
             // compressed pubkey - wrong sig
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T',
-            signature: Buffer.from(/* btoa( */'1ba77e01a9e17ba158b962cfef5f13dfed676ffc2b4bada24e58f784458b52b97421470d001d53d5880cf5e10e76f02be3e80bf21e18398cbd41e8c3b4af74c800'/* ) */, 'hex').toString('base64'),
+            signature: Buffer.from('1ba77e01a9e17ba158b962cfef5f13dfed676ffc2b4bada24e58f784458b52b97421470d001d53d5880cf5e10e76f02be3e80bf21e18398cbd41e8c3b4af74c800', 'hex').toString('base64'),
             message: 'This is an example of a signed message.',
         },
         {
@@ -24,7 +25,7 @@ const verify = () => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '1JwSSubhmg6iPtRjtyqhUYYH7bZg3Lfy1T',
-            signature: Buffer.from(/* btoa( */'1ba77e01a9e17ba158b962cfef5f13dfed676ffc2b4bada24e58f784458b52b97421470d001d53d5880cf5e10e76f02be3e80bf21e18398cbd41e8c3b4af74c8c2'/* ) */, 'hex').toString('base64'),
+            signature: Buffer.from('1ba77e01a9e17ba158b962cfef5f13dfed676ffc2b4bada24e58f784458b52b97421470d001d53d5880cf5e10e76f02be3e80bf21e18398cbd41e8c3b4af74c8c2', 'hex').toString('base64'),
             message: 'This is an example of a signed message!',
         },
         {
@@ -32,7 +33,7 @@ const verify = () => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '1C7zdTfnkzmr13HfA2vNm5SJYRK6nEKyq8',
-            signature: Buffer.from(/* btoa( */'1f44e3e461f7ca9f57c472ce1a28214df1de1dadefb6551a32d1907b80c74d5a1fbfd6daaba12dd8cb06699ce3f6941fbe0f3957b5802d13076181046e741eaaaf'/* ) */, 'hex').toString('base64'),
+            signature: Buffer.from('1f44e3e461f7ca9f57c472ce1a28214df1de1dadefb6551a32d1907b80c74d5a1fbfd6daaba12dd8cb06699ce3f6941fbe0f3957b5802d13076181046e741eaaaf', 'hex').toString('base64'),
             message: 'This is an example of a signed message.',
         },
         {
@@ -40,7 +41,7 @@ const verify = () => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '1C7zdTfnkzmr13HfA2vNm5SJYRK6nEKyq8',
-            signature: Buffer.from(/* btoa( */'1f44e3e461f7ca9f57c472ce1a28214df1de1dadefb6551a32d1907b80c74d5a1fbfd6daaba12dd8cb06699ce3f6941fbe0f3957b5802d13076181046e741eaa00'/* ) */, 'hex').toString('base64'),
+            signature: Buffer.from('1f44e3e461f7ca9f57c472ce1a28214df1de1dadefb6551a32d1907b80c74d5a1fbfd6daaba12dd8cb06699ce3f6941fbe0f3957b5802d13076181046e741eaa00', 'hex').toString('base64'),
             message: 'This is an example of a signed message.',
         },
         {
@@ -48,15 +49,16 @@ const verify = () => {
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '14LmW5k4ssUrtbAB4255zdqv3b4w1TuX9e',
-            signature: Buffer.from(/* btoa( */'209e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80'/* ) */, 'hex').toString('base64'),
-            message: 'This is an example of a signed message.',
+            signature: Buffer.from('209e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80', 'hex').toString('base64'),
+            message: Buffer.from('This is an example of a signed message.', 'utf-8').toString('hex'),
+            hex: true,
         },
         {
             // trezor pubkey - wrong msg
             method: 'verifyMessage',
             coin: 'Bitcoin',
             address: '14LmW5k4ssUrtbAB4255zdqv3b4w1TuX9e',
-            signature: Buffer.from(/* btoa( */'209e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80'/* ) */, 'hex').toString('base64'),
+            signature: Buffer.from('209e23edf0e4e47ff1dec27f32cd78c50e74ef018ee8a6adf35ae17c7a9b0dd96f48b493fd7dbab03efb6f439c6383c9523b3bbc5f1a7d158a6af90ab154e9be80', 'hex').toString('base64'),
             message: 'This is an example of a signed message!',
         },
     ];

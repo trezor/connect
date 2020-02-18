@@ -7,7 +7,8 @@ const sign = () => {
             method: 'signMessage',
             coin: 'Bitcoin',
             path: [0],
-            message: 'This is an example of a signed message.',
+            message: Buffer.from('This is an example of a signed message.', 'utf-8').toString('hex'),
+            hex: true,
         },
     ];
 
@@ -35,7 +36,8 @@ const signTestnet = () => {
             method: 'signMessage',
             coin: 'Testnet',
             path: "m/49'/1'/0'",
-            message: 'This is an example of a signed message.',
+            message: Buffer.from('This is an example of a signed message.', 'utf-8').toString('hex'),
+            hex: true,
         },
     ];
 
