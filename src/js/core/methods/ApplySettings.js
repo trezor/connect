@@ -8,12 +8,12 @@ import { UiMessage } from '../../message/builder';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    language?: string,
-    label?: string,
-    use_passphrase?: boolean,
-    homescreen?: string,
-    passhprase_source?: number,
-    auto_lock_delay_ms?: number,
+    language?: string;
+    label?: string;
+    use_passphrase?: boolean;
+    homescreen?: string;
+    passhprase_source?: number;
+    auto_lock_delay_ms?: number;
 }
 
 export default class ApplySettings extends AbstractMethod {

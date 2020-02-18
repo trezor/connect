@@ -9,10 +9,10 @@ import DataManager from '../../../data/DataManager';
 import type { CoinInfo, FirmwareRange } from '../../../types';
 
 type Param = {
-    name: string,
-    type?: 'string' | 'number' | 'array' | 'buffer' | 'boolean' | 'amount' | 'object',
-    obligatory?: boolean,
-    allowEmpty?: boolean,
+    name: string;
+    type?: 'string' | 'number' | 'array' | 'buffer' | 'boolean' | 'amount' | 'object';
+    obligatory?: boolean;
+    allowEmpty?: boolean;
 }
 
 export const validateParams = (values: Object, fields: Array<Param>): void => {

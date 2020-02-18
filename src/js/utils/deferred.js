@@ -2,10 +2,10 @@
 import type { Deferred } from '../types';
 
 export type AsyncDeferred<T> = {
-    promise: Promise<T>,
-    resolve: (t: T) => void,
-    reject: (e: Error) => void,
-    run: Function,
+    promise: Promise<T>;
+    resolve: (t: T) => void;
+    reject: (e: Error) => void;
+    run: Function;
 };
 
 export function create<T>(arg?: (() => Promise<void>) | string, device?: any): Deferred<T> {

@@ -6,16 +6,18 @@ import { NO_COIN_INFO, backendNotSupported } from '../../../constants/errors';
 import Fees from '../tx/Fees';
 import { initBlockchain } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
-import type { CoreMessage, CoinInfo } from '../../../types';
-import type { $BlockchainEstimateFee } from '../../../types/params';
-import type { BlockchainEstimateFee$ } from '../../../types/response';
+import type {
+    CoreMessage,
+    CoinInfo,
+    BlockchainEstimateFee as BlockchainEstimateFeeParams,
+    BlockchainEstimatedFee,
+} from '../../../types';
 
-type Request = $ElementType<$BlockchainEstimateFee, 'request'>;
-type Response = $ElementType<BlockchainEstimateFee$, 'payload'>
+type Request = $ElementType<BlockchainEstimateFeeParams, 'request'>;
 
 type Params = {
-    coinInfo: CoinInfo,
-    request: Request,
+    coinInfo: CoinInfo;
+    request: Request;
 };
 
 export default class BlockchainEstimateFee extends AbstractMethod {
@@ -26,7 +28,7 @@ export default class BlockchainEstimateFee extends AbstractMethod {
         this.useDevice = false;
         this.useUi = false;
 
-        const payload: $BlockchainEstimateFee = message.payload;
+        const payload: BlockchainEstimateFeeParams = message.payload;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -67,7 +69,7 @@ export default class BlockchainEstimateFee extends AbstractMethod {
         };
     }
 
-    async run(): Promise<Response> {
+    async run(): Promise<BlockchainEstimatedFee> {
         const { coinInfo, request } = this.params;
         const feeInfo = {
             blockTime: coinInfo.blocktime,

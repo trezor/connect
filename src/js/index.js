@@ -1,13 +1,5 @@
 /* @flow */
-
-import { UI_EVENT, DEVICE_EVENT, RESPONSE_EVENT, TRANSPORT_EVENT, BLOCKCHAIN_EVENT } from './constants';
-import * as TRANSPORT from './constants/transport';
-import * as IFRAME from './constants/iframe';
-import * as UI from './constants/ui';
-import * as DEVICE from './constants/device';
-import * as BLOCKCHAIN from './constants/blockchain';
-
-import * as $T from './types';
+import { UI } from './constants';
 import {
     eventEmitter,
     manifest,
@@ -22,317 +14,270 @@ import {
     cancel,
     dispose,
 } from './env/node';
+import type { API } from './types';
 
-class TrezorConnect {
-    static manifest = (data: Object): void => {
-        manifest(data);
-    }
+const TrezorConnect: API = {
+    manifest,
+    init: settings => init(settings),
+    getSettings,
 
-    static getSettings: $T.GetSettings = async () => {
-        return await getSettings();
-    }
-
-    static init = async (settings: $T.Settings): Promise<void> => {
-        return await init(settings);
-    }
-
-    static on: $T.EventListener = (type, fn): void => {
+    on: (type, fn) => {
         eventEmitter.on(type, fn);
-    }
+    },
 
-    static off: $T.EventListener = (type, fn): void => {
+    off: (type, fn) => {
         eventEmitter.removeListener(type, fn);
-    }
+    },
 
-    static uiResponse = (response: $T.UiResponse): void => {
-        uiResponse(response);
-    }
+    uiResponse,
 
     // methods
 
-    static blockchainDisconnect: $T.BlockchainDisconnect = async (params) => {
-        return await call({ method: 'blockchainDisconnect', ...params });
-    }
+    blockchainDisconnect: params => {
+        return call({ method: 'blockchainDisconnect', ...params });
+    },
 
-    static blockchainEstimateFee: $T.BlockchainEstimateFee = async (params) => {
-        return await call({ method: 'blockchainEstimateFee', ...params });
-    }
+    blockchainEstimateFee: params => {
+        return call({ method: 'blockchainEstimateFee', ...params });
+    },
 
-    static blockchainGetTransactions: $T.BlockchainGetTransactions = async (params) => {
-        return await call({ method: 'blockchainGetTransactions', ...params });
-    }
+    blockchainGetTransactions: params => {
+        return call({ method: 'blockchainGetTransactions', ...params });
+    },
 
-    static blockchainSubscribe: $T.BlockchainSubscribe = async (params) => {
-        return await call({ method: 'blockchainSubscribe', ...params });
-    }
+    blockchainSubscribe: params => {
+        return call({ method: 'blockchainSubscribe', ...params });
+    },
 
-    static blockchainUnsubscribe: $T.BlockchainSubscribe = async (params) => {
-        return await call({ method: 'blockchainUnsubscribe', ...params });
-    }
+    blockchainUnsubscribe: params => {
+        return call({ method: 'blockchainUnsubscribe', ...params });
+    },
 
-    static customMessage: $T.CustomMessage = async (params) => {
-        return await customMessage(params);
-    }
+    customMessage: params => {
+        return customMessage(params);
+    },
 
-    static requestLogin: $T.RequestLogin = async (params) => {
-        return await requestLogin(params);
-    }
+    requestLogin: params => {
+        return requestLogin(params);
+    },
 
-    static resetDevice: $T.ResetDevice = async (params) => {
-        return await call({ method: 'resetDevice', ...params });
-    }
-
-    static cardanoGetAddress: $T.CardanoGetAddress = async (params) => {
+    cardanoGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
-        return await call({ method: 'cardanoGetAddress', ...params, useEventListener });
-    }
+        return call({ method: 'cardanoGetAddress', ...params, useEventListener });
+    },
 
-    static cardanoGetPublicKey: $T.CardanoGetPublicKey = async (params) => {
-        return await call({ method: 'cardanoGetPublicKey', ...params });
-    }
+    cardanoGetPublicKey: params => {
+        return call({ method: 'cardanoGetPublicKey', ...params });
+    },
 
-    static cardanoSignTransaction: $T.CardanoSignTransaction = async (params) => {
-        return await call({ method: 'cardanoSignTransaction', ...params });
-    }
+    cardanoSignTransaction: params => {
+        return call({ method: 'cardanoSignTransaction', ...params });
+    },
 
-    static cipherKeyValue: $T.CipherKeyValue = async (params) => {
-        return await call({ method: 'cipherKeyValue', ...params });
-    }
+    cipherKeyValue: params => {
+        return call({ method: 'cipherKeyValue', ...params });
+    },
 
-    static composeTransaction: $T.ComposeTransaction = async (params) => {
-        return await call({ method: 'composeTransaction', ...params });
-    }
+    composeTransaction: params => {
+        return call({ method: 'composeTransaction', ...params });
+    },
 
-    static debugLinkDecision: $T.DebugLinkDecision = async (params) => {
-        return await call({ method: 'debugLinkDecision', ...params });
-    }
+    debugLinkDecision: params => {
+        return call({ method: 'debugLinkDecision', ...params });
+    },
 
-    static debugLinkGetState: $T.DebugLinkGetState = async (params) => {
-        return await call({ method: 'debugLinkGetState', ...params });
-    }
+    debugLinkGetState: params => {
+        return call({ method: 'debugLinkGetState', ...params });
+    },
 
-    static ethereumGetAddress: $T.EthereumGetAddress = async (params) => {
+    ethereumGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
-        return await call({ method: 'ethereumGetAddress', ...params, useEventListener });
-    }
+        return call({ method: 'ethereumGetAddress', ...params, useEventListener });
+    },
 
-    static ethereumGetPublicKey: $T.EthereumGetPublicKey = async (params) => {
-        return await call({ method: 'ethereumGetPublicKey', ...params });
-    }
+    ethereumGetPublicKey: params => {
+        return call({ method: 'ethereumGetPublicKey', ...params });
+    },
 
-    static ethereumSignMessage: $T.EthereumSignMessage = async (params) => {
-        return await call({ method: 'ethereumSignMessage', ...params });
-    }
+    ethereumSignMessage: params => {
+        return call({ method: 'ethereumSignMessage', ...params });
+    },
 
-    static ethereumSignTransaction: $T.EthereumSignTransaction = async (params) => {
-        return await call({ method: 'ethereumSignTransaction', ...params });
-    }
+    ethereumSignTransaction: params => {
+        return call({ method: 'ethereumSignTransaction', ...params });
+    },
 
-    static ethereumVerifyMessage: $T.EthereumVerifyMessage = async (params) => {
-        return await call({ method: 'ethereumVerifyMessage', ...params });
-    }
+    ethereumVerifyMessage: params => {
+        return call({ method: 'ethereumVerifyMessage', ...params });
+    },
 
-    static getAccountInfo: $T.GetAccountInfo = async (params) => {
-        return await call({ method: 'getAccountInfo', ...params });
-    }
+    getAccountInfo: params => {
+        return call({ method: 'getAccountInfo', ...params });
+    },
 
-    static getAddress: $T.GetAddress = async (params) => {
+    getAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
-        return await call({ method: 'getAddress', ...params, useEventListener });
-    }
+        return call({ method: 'getAddress', ...params, useEventListener });
+    },
 
-    static getDeviceState: $T.GetDeviceState = async (params) => {
-        return await call({ method: 'getDeviceState', ...params });
-    }
+    getDeviceState: params => {
+        return call({ method: 'getDeviceState', ...params });
+    },
 
-    static getFeatures: $T.GetFeatures = async (params) => {
-        return await call({ method: 'getFeatures', ...params });
-    }
+    getFeatures: params => {
+        return call({ method: 'getFeatures', ...params });
+    },
 
-    static getPublicKey: $T.GetPublicKey = async (params) => {
-        return await call({ method: 'getPublicKey', ...params });
-    }
+    getPublicKey: params => {
+        return call({ method: 'getPublicKey', ...params });
+    },
 
-    static liskGetAddress: $T.LiskGetAddress = async (params) => {
+    liskGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
-        return await call({ method: 'liskGetAddress', ...params, useEventListener });
-    }
+        return call({ method: 'liskGetAddress', ...params, useEventListener });
+    },
 
-    static liskGetPublicKey: $T.LiskGetPublicKey = async (params) => {
-        return await call({ method: 'liskGetPublicKey', ...params });
-    }
+    liskGetPublicKey: params => {
+        return call({ method: 'liskGetPublicKey', ...params });
+    },
 
-    static liskSignMessage: $T.LiskSignMessage = async (params) => {
-        return await call({ method: 'liskSignMessage', ...params });
-    }
+    liskSignMessage: params => {
+        return call({ method: 'liskSignMessage', ...params });
+    },
 
-    static liskSignTransaction: $T.LiskSignTransaction = async (params) => {
-        return await call({ method: 'liskSignTransaction', ...params });
-    }
+    liskSignTransaction: params => {
+        return call({ method: 'liskSignTransaction', ...params });
+    },
 
-    static liskVerifyMessage: $T.LiskVerifyMessage = async (params) => {
-        return await call({ method: 'liskVerifyMessage', ...params });
-    }
+    liskVerifyMessage: params => {
+        return call({ method: 'liskVerifyMessage', ...params });
+    },
 
-    static nemGetAddress: $T.NEMGetAddress = async (params) => {
+    nemGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
-        return await call({ method: 'nemGetAddress', ...params, useEventListener });
-    }
+        return call({ method: 'nemGetAddress', ...params, useEventListener });
+    },
 
-    static nemSignTransaction: $T.NEMSignTransaction = async (params) => {
-        return await call({ method: 'nemSignTransaction', ...params });
-    }
+    nemSignTransaction: params => {
+        return call({ method: 'nemSignTransaction', ...params });
+    },
 
-    static pushTransaction: $T.PushTransaction = async (params) => {
-        return await call({ method: 'pushTransaction', ...params });
-    }
+    pushTransaction: params => {
+        return call({ method: 'pushTransaction', ...params });
+    },
 
-    static rippleGetAddress: $T.RippleGetAddress = async (params) => {
+    rippleGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
-        return await call({ method: 'rippleGetAddress', ...params, useEventListener });
-    }
+        return call({ method: 'rippleGetAddress', ...params, useEventListener });
+    },
 
-    static rippleSignTransaction: $T.RippleSignTransaction = async (params) => {
-        return await call({ method: 'rippleSignTransaction', ...params });
-    }
+    rippleSignTransaction: params => {
+        return call({ method: 'rippleSignTransaction', ...params });
+    },
 
-    static signMessage: $T.SignMessage = async (params) => {
-        return await call({ method: 'signMessage', ...params });
-    }
+    signMessage: params => {
+        return call({ method: 'signMessage', ...params });
+    },
 
-    static signTransaction: $T.SignTransaction = async (params) => {
-        return await call({ method: 'signTransaction', ...params });
-    }
+    signTransaction: params => {
+        return call({ method: 'signTransaction', ...params });
+    },
 
-    static stellarGetAddress: $T.StellarGetAddress = async (params) => {
+    stellarGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
-        return await call({ method: 'stellarGetAddress', ...params, useEventListener });
-    }
+        return call({ method: 'stellarGetAddress', ...params, useEventListener });
+    },
 
-    static stellarSignTransaction: $T.StellarSignTransaction = async (params) => {
-        return await call({ method: 'stellarSignTransaction', ...params });
-    }
+    stellarSignTransaction: params => {
+        return call({ method: 'stellarSignTransaction', ...params });
+    },
 
-    static tezosGetAddress: $T.TezosGetAddress = async (params) => {
+    tezosGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
-        return await call({ method: 'tezosGetAddress', ...params, useEventListener });
-    }
+        return call({ method: 'tezosGetAddress', ...params, useEventListener });
+    },
 
-    static tezosGetPublicKey: $T.TezosGetPublicKey = async (params) => {
-        return await call({ method: 'tezosGetPublicKey', ...params });
-    }
+    tezosGetPublicKey: params => {
+        return call({ method: 'tezosGetPublicKey', ...params });
+    },
 
-    static tezosSignTransaction: $T.TezosSignTransaction = async (params) => {
-        return await call({ method: 'tezosSignTransaction', ...params });
-    }
+    tezosSignTransaction: params => {
+        return call({ method: 'tezosSignTransaction', ...params });
+    },
 
-    static eosGetPublicKey: $T.EosGetPublicKey = async (params) => {
-        return await call({ method: 'eosGetPublicKey', ...params });
-    }
+    eosGetPublicKey: params => {
+        return call({ method: 'eosGetPublicKey', ...params });
+    },
 
-    static eosSignTransaction: $T.EosSignTx = async (params) => {
-        return await call({ method: 'eosSignTransaction', ...params });
-    }
+    eosSignTransaction: params => {
+        return call({ method: 'eosSignTransaction', ...params });
+    },
 
-    static binanceGetAddress: $T.BinanceGetAddress = async (params) => {
+    binanceGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
-        return await call({ method: 'binanceGetAddress', ...params, useEventListener });
-    }
+        return call({ method: 'binanceGetAddress', ...params, useEventListener });
+    },
 
-    static binanceGetPublicKey: $T.BinanceGetPublicKey = async (params) => {
-        return await call({ method: 'binanceGetPublicKey', ...params });
-    }
+    binanceGetPublicKey: params => {
+        return call({ method: 'binanceGetPublicKey', ...params });
+    },
 
-    static binanceSignTransaction: $T.BinanceSignTransaction = async (params) => {
-        return await call({ method: 'binanceSignTransaction', ...params });
-    }
+    binanceSignTransaction: params => {
+        return call({ method: 'binanceSignTransaction', ...params });
+    },
 
-    static verifyMessage: $T.VerifyMessage = async (params) => {
-        return await call({ method: 'verifyMessage', ...params });
-    }
+    verifyMessage: params => {
+        return call({ method: 'verifyMessage', ...params });
+    },
 
-    static wipeDevice: $T.WipeDevice = async (params) => {
-        return await call({ method: 'wipeDevice', ...params });
-    }
+    resetDevice: params => {
+        return call({ method: 'resetDevice', ...params });
+    },
 
-    static applyFlags: $T.ApplyFlags = async (params) => {
-        return await call({ method: 'applyFlags', ...params });
-    }
+    wipeDevice: params => {
+        return call({ method: 'wipeDevice', ...params });
+    },
 
-    static applySettings: $T.ApplySettings = async (params) => {
-        return await call({ method: 'applySettings', ...params });
-    }
+    applyFlags: params => {
+        return call({ method: 'applyFlags', ...params });
+    },
 
-    static backupDevice: $T.BackupDevice = async () => {
-        return await call({ method: 'backupDevice' });
-    }
+    applySettings: params => {
+        return call({ method: 'applySettings', ...params });
+    },
 
-    static changePin: $T.ChangePin = async (params) => {
-        return await call({ method: 'changePin', ...params });
-    }
+    backupDevice: params => {
+        return call({ method: 'backupDevice' });
+    },
 
-    static firmwareUpdate: $T.FirmwareUpload = async (params) => {
-        return await call({ method: 'firmwareUpdate', ...params });
-    }
+    changePin: params => {
+        return call({ method: 'changePin', ...params });
+    },
 
-    static recoveryDevice: $T.RecoveryDevice = async (params) => {
-        return await call({ method: 'recoveryDevice', ...params });
-    }
+    firmwareUpdate: params => {
+        return call({ method: 'firmwareUpdate', ...params });
+    },
 
-    static dispose = (): void => {
+    recoveryDevice: params => {
+        return call({ method: 'recoveryDevice', ...params });
+    },
+
+    dispose: () => {
         dispose();
-    }
+    },
 
-    static cancel = (error?: string): void => {
-        cancel(error);
-    }
+    cancel,
 
-    static renderWebUSBButton = (className: ?string): void => {
+    renderWebUSBButton: (className: ?string) => {
         renderWebUSBButton(className);
-    }
+    },
 
-    static disableWebUSB = async () => {
+    disableWebUSB: () => {
         disableWebUSB();
-    }
-}
+    },
+};
 
 export default TrezorConnect;
 
-export {
-    IFRAME,
-    TRANSPORT,
-    UI,
-    DEVICE,
-    BLOCKCHAIN,
-    UI_EVENT,
-    DEVICE_EVENT,
-    TRANSPORT_EVENT,
-    BLOCKCHAIN_EVENT,
-    RESPONSE_EVENT,
-};
-
-export type {
-    Device,
-    DeviceStatus,
-    FirmwareRelease,
-    DeviceFirmwareStatus,
-    DeviceMode,
-    Features,
-    DeviceMessageType,
-    DeviceMessage,
-    UiMessageType,
-    UiMessage,
-    TransportMessageType,
-    TransportMessage,
-} from './types';
-
-export * from './types/blockchainEvent';
-export * from './types/account';
-
-export type {
-    Transaction as EthereumTransaction,
-} from './types/ethereum';
-
-export type {
-    Transaction as RippleTransaction,
-} from './types/ripple';
+export * from './constants';
+export * from './types';

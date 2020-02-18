@@ -1,8 +1,8 @@
 /* @flow */
 
 import * as bs58check from 'bs58check';
-import type { TezosOperation } from '../../../types/tezos';
-import type { TezosTransaction } from '../../../types/trezor';
+import type { TezosOperation } from '../../../types/networks/tezos';
+import type { TezosTransaction } from '../../../types/trezor/protobuf';
 import { validateParams } from './../helpers/paramsValidator';
 
 const prefix = {
@@ -28,7 +28,7 @@ const concatArray = (first: Uint8Array, second: Uint8Array): Uint8Array => {
 };
 
 // convert publicKeyHash to buffer
-const publicKeyHash2buffer = (publicKeyHash: string): { originated: number, hash: Uint8Array } => {
+const publicKeyHash2buffer = (publicKeyHash: string): { originated: number; hash: Uint8Array } => {
     switch (publicKeyHash.substr(0, 3)) {
         case 'tz1':
             return {

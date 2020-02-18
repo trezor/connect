@@ -4,7 +4,7 @@ import { UiMessage } from '../../message/builder';
 import DataManager from '../../data/DataManager';
 import * as UI from '../../constants/ui';
 import { showView, postMessage } from './common';
-import type { UnexpectedDeviceMode } from '../../types/uiRequest';
+import type { UnexpectedDeviceMode } from '../../types/events';
 
 export const firmwareNotCompatible = (device: $PropertyType<UnexpectedDeviceMode, 'payload'>): void => {
     const view = showView('firmware-not-compatible');

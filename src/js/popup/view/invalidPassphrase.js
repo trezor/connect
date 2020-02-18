@@ -3,7 +3,7 @@
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
-import type { DeviceMessage } from '../../types/uiRequest';
+import type { DeviceMessage } from '../../types/events';
 
 export const initInvalidPassphraseView = (payload: $PropertyType<DeviceMessage, 'payload'>): void => {
     showView('invalid-passphrase');

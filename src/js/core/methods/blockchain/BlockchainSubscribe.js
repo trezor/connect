@@ -6,12 +6,11 @@ import { NO_COIN_INFO, backendNotSupported } from '../../../constants/errors';
 
 import { initBlockchain } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
-import type { CoreMessage, CoinInfo } from '../../../types';
-import type { SubscriptionAccountInfo } from '../../../types/params';
+import type { CoreMessage, CoinInfo, BlockchainSubscribeAccount } from '../../../types';
 
 type Params = {
-    accounts: SubscriptionAccountInfo[],
-    coinInfo: CoinInfo,
+    accounts: BlockchainSubscribeAccount[];
+    coinInfo: CoinInfo;
 }
 
 export default class BlockchainSubscribe extends AbstractMethod {

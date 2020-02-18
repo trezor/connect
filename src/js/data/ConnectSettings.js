@@ -1,52 +1,25 @@
 /* @flow */
 
-export type ConnectManifest = {
-    +email: string,
-    +appUrl: string,
-}
-
-export type ConnectSettings = {
-    // debug: boolean | {[k: string]: boolean};
-    +configSrc: string, // constant
-    +version: string, // constant
-    debug: boolean,
-    origin: ?string,
-    hostLabel?: string,
-    hostIcon?: string,
-    priority: number,
-    trustedHost: boolean,
-    connectSrc: string,
-    iframeSrc: string,
-    popup: boolean,
-    popupSrc: string,
-    webusbSrc: string,
-    transportReconnect: boolean,
-    webusb: boolean,
-    pendingTransportEvent: boolean,
-    supportedBrowser?: boolean,
-    extension: ?string,
-    manifest: ?ConnectManifest,
-    env: string,
-    timestamp: number,
-    lazyLoad: boolean,
-}
+import type {
+    Manifest,
+    ConnectSettings,
+} from '../types';
 
 /*
  * Initial settings for connect.
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
-const VERSION: string = '8.0.13';
-const versionN: Array<number> = VERSION.split('.').map(s => parseInt(s));
-const DIRECTORY: string = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
-const DEFAULT_DOMAIN: string = `https://connect.trezor.io/${ DIRECTORY }`;
-export const DEFAULT_PRIORITY: number = 2;
+const VERSION = '8.0.13';
+const versionN = VERSION.split('.').map(s => parseInt(s));
+const DIRECTORY = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
+const DEFAULT_DOMAIN = `https://connect.trezor.io/${ DIRECTORY }`;
+export const DEFAULT_PRIORITY = 2;
 
 const initialSettings: ConnectSettings = {
     configSrc: './data/config.json', // constant
     version: VERSION, // constant
     debug: false,
-    origin: null,
     priority: DEFAULT_PRIORITY,
     trustedHost: false,
     connectSrc: DEFAULT_DOMAIN,
@@ -58,7 +31,6 @@ const initialSettings: ConnectSettings = {
     webusb: true,
     pendingTransportEvent: true,
     supportedBrowser: typeof navigator !== 'undefined' ? !(/Trident|MSIE|Edge/.test(navigator.userAgent)) : true,
-    extension: null,
     manifest: null,
     env: 'web',
     lazyLoad: false,
@@ -67,20 +39,18 @@ const initialSettings: ConnectSettings = {
 
 let currentSettings: ConnectSettings = initialSettings;
 
-const parseManifest = (manifest: Object): ?ConnectManifest => {
-    if (typeof manifest.email !== 'string') {
-        return null;
-    }
-    if (typeof manifest.appUrl !== 'string') {
-        return null;
-    }
+const parseManifest = (manifest: ?Manifest): ?Manifest => {
+    if (!manifest) return;
+    if (typeof manifest.email !== 'string') return;
+    if (typeof manifest.appUrl !== 'string') return;
+
     return {
         email: manifest.email,
         appUrl: manifest.appUrl,
     };
 };
 
-export const getEnv = (): string => {
+export const getEnv = () => {
     // $FlowIssue: chrome is not declared outside the project
     if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined') {
         return 'webextension';
@@ -103,9 +73,7 @@ export const getEnv = (): string => {
     return 'web';
 };
 
-export const parse = (input: ?Object): ConnectSettings => {
-    if (!input) return currentSettings;
-
+export const parse = (input: $Shape<ConnectSettings> = {}) => {
     const settings: ConnectSettings = { ...currentSettings };
     if (Object.prototype.hasOwnProperty.call(input, 'debug')) {
         if (Array.isArray(input)) {
@@ -118,14 +86,14 @@ export const parse = (input: ?Object): ConnectSettings => {
     }
 
     if (typeof input.connectSrc === 'string') {
-        // TODO: escape string, validate url
         settings.connectSrc = input.connectSrc;
     } else if (typeof window !== 'undefined' && typeof window.__TREZOR_CONNECT_SRC === 'string') {
         settings.connectSrc = window.__TREZOR_CONNECT_SRC;
     }
-    settings.iframeSrc = `${ settings.connectSrc }iframe.html`;
-    settings.popupSrc = `${ settings.connectSrc }popup.html`;
-    settings.webusbSrc = `${ settings.connectSrc }webusb.html`;
+    const src = settings.connectSrc || DEFAULT_DOMAIN;
+    settings.iframeSrc = `${src}iframe.html`;
+    settings.popupSrc = `${src}popup.html`;
+    settings.webusbSrc = `${src}webusb.html`;
 
     if (typeof input.transportReconnect === 'boolean') {
         settings.transportReconnect = input.transportReconnect;
@@ -157,7 +125,6 @@ export const parse = (input: ?Object): ConnectSettings => {
         settings.extension = input.extension;
     }
 
-    // $FlowIssue chrome is not declared outside
     if (typeof input.env === 'string') {
         settings.env = input.env;
     } else {

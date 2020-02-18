@@ -1,16 +1,8 @@
 /* @flow */
+import type { LiskGetAddress } from '../../js/types';
 
-import type {
-    TestFunction,
-} from 'flowtype/tests';
-
-import type {
-    TestLiskGetAddressPayload,
-    ExpectedLiskGetAddressResponse,
-} from 'flowtype/tests/lisk-get-address';
-
-export const liskGetAddress = (): TestFunction => {
-    const testPayloads: Array<TestLiskGetAddressPayload> = [
+export const liskGetAddress = () => {
+    const testPayloads: LiskGetAddress[] = [
         {
             method: 'liskGetAddress',
             path: "m/44'/134'/0'",
@@ -25,7 +17,7 @@ export const liskGetAddress = (): TestFunction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedLiskGetAddressResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 address: '17563781916205589679L',

@@ -4,16 +4,16 @@
 import { NativeModules } from 'react-native';
 
 type TrezorDeviceInfoDebug = {
-    path: string,
-    debug: boolean,
+    path: string;
+    debug: boolean;
 };
 
 interface RNBridge {
-    enumerate(): Promise<TrezorDeviceInfoDebug[]>,
-    acquire(path: string, debugLink: boolean): Promise<void>,
-    release(path: string, debugLink: boolean, closePort: boolean): Promise<void>,
-    write(path: string, debugLink: boolean, data: string): Promise<void>,
-    read(path: string, debugLink: boolean): Promise<{ data: string }>,
+    enumerate(): Promise<TrezorDeviceInfoDebug[]>;
+    acquire(path: string, debugLink: boolean): Promise<void>;
+    release(path: string, debugLink: boolean, closePort: boolean): Promise<void>;
+    write(path: string, debugLink: boolean, data: string): Promise<void>;
+    read(path: string, debugLink: boolean): Promise<{ data: string }>;
 }
 
 const bufferToHex = (buffer: ArrayBuffer): string => {

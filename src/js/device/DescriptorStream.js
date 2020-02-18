@@ -12,13 +12,13 @@ import { resolveAfter } from '../utils/promiseUtils';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
 export type DeviceDescriptorDiff = {
-    didUpdate: boolean,
-    connected: Array<DeviceDescriptor>,
-    disconnected: Array<DeviceDescriptor>,
-    changedSessions: Array<DeviceDescriptor>,
-    acquired: Array<DeviceDescriptor>,
-    released: Array<DeviceDescriptor>,
-    descriptors: Array<DeviceDescriptor>,
+    didUpdate: boolean;
+    connected: Array<DeviceDescriptor>;
+    disconnected: Array<DeviceDescriptor>;
+    changedSessions: Array<DeviceDescriptor>;
+    acquired: Array<DeviceDescriptor>;
+    released: Array<DeviceDescriptor>;
+    descriptors: Array<DeviceDescriptor>;
 };
 
 // custom log

@@ -1,13 +1,13 @@
 /* @flow */
 
 import type { DefaultMessageResponse, MessageResponse } from '../../../device/DeviceCommands';
-import type { FirmwareRequest$ } from '../../../types/response';
+import type { FirmwareRequest } from '../../../types/trezor/management';
 import { UiMessage } from '../../../message/builder';
 import Device from '../../../device/Device';
 import * as UI from '../../../constants/ui';
 import * as DEVICE from '../../../constants/device';
 
-import type { FirmwareUpload, Success } from '../../../types/trezor'; // flowtype only
+import type { FirmwareUpload, Success } from '../../../types/trezor/protobuf'; // flowtype only
 import type { CoreMessage } from '../../../types';
 
 // firmware does not send button message but user still must press button to continue
@@ -33,7 +33,7 @@ export const uploadFirmware = async (
     params: FirmwareUpload,
 ): Success => {
     const { payload, length } = params;
-    let response: MessageResponse<Success | FirmwareRequest$> = {};
+    let response: MessageResponse<Success | FirmwareRequest> = {};
 
     if (device.features.major_version === 1) {
         postConfirmationMessage(device);

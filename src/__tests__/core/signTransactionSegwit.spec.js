@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestSignTransaction,
-} from 'flowtype/tests';
-import type {
-    TestSignTransactionPayload,
-    ExpectedSignTransactionResponse,
-} from 'flowtype/tests/sign-transaction';
+import type { SignTransaction } from '../../js/types';
 
-const sendP2sh = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const sendP2sh = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -37,7 +30,7 @@ const sendP2sh = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -55,8 +48,8 @@ const sendP2sh = (): SubtestSignTransaction => {
     };
 };
 
-const sendP2shChange = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const sendP2shChange = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -84,7 +77,7 @@ const sendP2shChange = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -102,10 +95,10 @@ const sendP2shChange = (): SubtestSignTransaction => {
     };
 };
 
-const sendMultisig1 = (): SubtestSignTransaction => {
+const sendMultisig1 = () => {
     const address = [999 | 0x80000000, 1 | 0x80000000, 1 | 0x80000000, 2, 0];
     address[2] = 0x80000003;
-    const testPayloads: Array<TestSignTransactionPayload> = [
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -146,7 +139,7 @@ const sendMultisig1 = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -164,7 +157,7 @@ const sendMultisig1 = (): SubtestSignTransaction => {
     };
 };
 
-export const signTransactionSegwit = (): TestFunction => {
+export const signTransactionSegwit = () => {
     const availableSubtests = {
         sendP2sh,
         sendP2shChange,

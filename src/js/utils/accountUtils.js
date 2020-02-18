@@ -3,8 +3,8 @@ import { fromHardened, toHardened } from './pathUtils';
 import type { CoinInfo } from '../types';
 
 type Bip44Options = {
-    purpose?: number,
-    coinType?: number,
+    purpose?: number;
+    coinType?: number;
 }
 
 export const getAccountAddressN = (coinInfo: CoinInfo, accountIndex: number, bip44?: Bip44Options): number[] => {

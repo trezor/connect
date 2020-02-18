@@ -25,7 +25,7 @@ import type {
     TransactionOptions,
     RefTransaction,
     SignedTx,
-} from '../../types/trezor';
+} from '../../types/trezor/protobuf';
 
 import type {
     BuildTxInput,
@@ -34,12 +34,12 @@ import type {
 import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 
 type Params = {
-    inputs: Array<TransactionInput>,
-    outputs: Array<TransactionOutput>,
-    refTxs: ?Array<RefTransaction>,
-    options: TransactionOptions,
-    coinInfo: BitcoinNetworkInfo,
-    push: boolean,
+    inputs: Array<TransactionInput>;
+    outputs: Array<TransactionOutput>;
+    refTxs: ?Array<RefTransaction>;
+    options: TransactionOptions;
+    coinInfo: BitcoinNetworkInfo;
+    push: boolean;
 }
 
 export default class SignTransaction extends AbstractMethod {

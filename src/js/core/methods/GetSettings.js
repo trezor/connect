@@ -2,8 +2,7 @@
 
 import AbstractMethod from './AbstractMethod';
 import DataManager from '../../data/DataManager';
-import type { CoreMessage } from '../../types';
-import type { ConnectSettings } from '../../data/ConnectSettings';
+import type { ConnectSettings, CoreMessage } from '../../types';
 
 export default class GetSettings extends AbstractMethod {
     constructor(message: CoreMessage) {

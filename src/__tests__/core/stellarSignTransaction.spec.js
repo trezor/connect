@@ -1,31 +1,28 @@
-/* todo: flow */
-/* eslint-disable */
+/* @flow */
+import type { StellarSignTransaction } from '../../js/types';
 
 // Test data from:
 // https://github.com/trezor/trezor-firmware/blob/master/tests/device_tests/test_msg_stellar_sign_transaction.py
 
-import { Core, init as initCore, initTransport } from '../../js/core/Core.js';
-import { settings, CoreEventHandler } from './common.js';
-
 const header = {
     method: 'stellarSignTransaction',
-    path: `m/44'/148'/0'`,
+    path: "m/44'/148'/0'",
     networkPassphrase: 'Test SDF Network ; September 2015',
-}
+};
 
 const transactionCommon = {
     source: 'GAK5MSF74TJW6GLM7NLTL76YZJKM2S4CGP3UH4REJHPHZ4YBZW2GSBPW',
     fee: 100,
-    sequence: 4294967296,
+    sequence: '4294967296',
     memo: {
         type: 0,
     },
-}
+};
 
 const PUBLIC_KEY = '15d648bfe4d36f196cfb5735ffd8ca54cd4b8233f743f22449de7cf301cdb469';
 
 const createAccount = () => {
-    const testPayloads = [
+    const testPayloads: StellarSignTransaction[] = [
         {
             ...header,
             transaction: {
@@ -35,9 +32,9 @@ const createAccount = () => {
                         type: 'createAccount',
                         destination: 'GBOVKZBEM2YYLOCDCUXJ4IMRKHN4LCJAE7WEAEA2KF562XFAGDBOB64V',
                         startingBalance: '1000333000',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
     ];
 
@@ -54,11 +51,11 @@ const createAccount = () => {
         specName: '/createAccount',
         testPayloads,
         expectedResponses,
-    }
-}
+    };
+};
 
 const accountMerge = () => {
-    const testPayloads = [
+    const testPayloads: StellarSignTransaction[] = [
         {
             ...header,
             transaction: {
@@ -67,10 +64,10 @@ const accountMerge = () => {
                     {
                         type: 'accountMerge',
                         destination: 'GBOVKZBEM2YYLOCDCUXJ4IMRKHN4LCJAE7WEAEA2KF562XFAGDBOB64V',
-                    }
-                ]
-            }
-        }
+                    },
+                ],
+            },
+        },
     ];
 
     const expectedResponses = [
@@ -86,11 +83,11 @@ const accountMerge = () => {
         specName: '/accountMerge',
         testPayloads,
         expectedResponses,
-    }
-}
+    };
+};
 
 const payment = () => {
-    const testPayloads = [
+    const testPayloads: StellarSignTransaction[] = [
         // asset type native
         {
             ...header,
@@ -105,9 +102,9 @@ const payment = () => {
                             code: 'XLM',
                         },
                         amount: '500111000',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // asset type alphanum4
         {
@@ -123,10 +120,10 @@ const payment = () => {
                             type: 1,
                             code: 'X',
                             issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
-                        }
-                    }
-                ]
-            }
+                        },
+                    },
+                ],
+            },
         },
         // asset type alphanum12
         {
@@ -142,11 +139,11 @@ const payment = () => {
                             type: 2,
                             code: 'ABCDEFGHIJKL',
                             issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
-                        }
-                    }
-                ]
-            }
-        }
+                        },
+                    },
+                ],
+            },
+        },
     ];
 
     const expectedResponses = [
@@ -174,11 +171,11 @@ const payment = () => {
         specName: '/payment',
         testPayloads,
         expectedResponses,
-    }
-}
+    };
+};
 
 const bumpSequence = () => {
-    const testPayloads = [
+    const testPayloads: StellarSignTransaction[] = [
         {
             ...header,
             transaction: {
@@ -187,10 +184,10 @@ const bumpSequence = () => {
                     {
                         type: 'bumpSequence',
                         bumpTo: '9223372036854775807',
-                    }
-                ]
-            }
-        }
+                    },
+                ],
+            },
+        },
     ];
 
     const expectedResponses = [
@@ -206,13 +203,11 @@ const bumpSequence = () => {
         specName: '/bumpSequence',
         testPayloads,
         expectedResponses,
-    }
-}
-
-
+    };
+};
 
 const setOptions = () => {
-    const testPayloads = [
+    const testPayloads: StellarSignTransaction[] = [
         // inflationDest
         {
             ...header,
@@ -222,9 +217,9 @@ const setOptions = () => {
                     {
                         type: 'setOptions',
                         inflationDest: 'GAFXTC5OV5XQD66T7WGOB2HUVUC3ZVJDJMBDPTVQYV3G3K7TUHC6CLBR',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // signer with ed25519PublicKey
         {
@@ -238,10 +233,10 @@ const setOptions = () => {
                             type: 0,
                             key: '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
                             weight: 2,
-                        }
-                    }
-                ]
-            }
+                        },
+                    },
+                ],
+            },
         },
         // signer with sha256Hash
         {
@@ -255,10 +250,10 @@ const setOptions = () => {
                             type: 2,
                             key: '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
                             weight: 2,
-                        }
-                    }
-                ]
-            }
+                        },
+                    },
+                ],
+            },
         },
         // signer with preAuthTx
         {
@@ -272,10 +267,10 @@ const setOptions = () => {
                             type: 1,
                             key: '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
                             weight: 2,
-                        }
-                    }
-                ]
-            }
+                        },
+                    },
+                ],
+            },
         },
         // medThreshold
         {
@@ -286,9 +281,9 @@ const setOptions = () => {
                     {
                         type: 'setOptions',
                         medThreshold: 0,
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // Threshold + clearFlags
         {
@@ -301,9 +296,9 @@ const setOptions = () => {
                         clearFlags: 0,
                         lowThreshold: 0,
                         highThreshold: 3,
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // homedomain
         {
@@ -316,9 +311,9 @@ const setOptions = () => {
                         setFlags: 3,
                         masterWeight: 4,
                         homeDomain: 'hello',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // noop
         {
@@ -328,9 +323,9 @@ const setOptions = () => {
                 operations: [
                     {
                         type: 'setOptions',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // remove signer
         {
@@ -343,11 +338,11 @@ const setOptions = () => {
                         signer: {
                             type: 0,
                             key: '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
-                            weight: 0
-                        }
-                    }
-                ]
-            }
+                            weight: 0,
+                        },
+                    },
+                ],
+            },
         },
         // unset homeDomain
         {
@@ -359,8 +354,8 @@ const setOptions = () => {
                         type: 'setOptions',
                         homeDomain: '',
                     },
-                ]
-            }
+                ],
+            },
         },
     ];
 
@@ -431,11 +426,11 @@ const setOptions = () => {
         specName: '/setOptions',
         testPayloads,
         expectedResponses,
-    }
-}
+    };
+};
 
 const manageData = () => {
-    const testPayloads = [
+    const testPayloads: StellarSignTransaction[] = [
         {
             ...header,
             transaction: {
@@ -445,9 +440,9 @@ const manageData = () => {
                         type: 'manageData',
                         name: 'data',
                         value: '616263', // Buffer.from('abc').toString('hex')
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // Buffer value
         {
@@ -459,9 +454,9 @@ const manageData = () => {
                         type: 'manageData',
                         name: 'data',
                         value: '001083', // Buffer.from("ABCD", "base64").toString('hex')
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // remove entry
         {
@@ -473,9 +468,9 @@ const manageData = () => {
                         type: 'manageData',
                         name: 'data',
                         value: null,
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
     ];
 
@@ -504,11 +499,11 @@ const manageData = () => {
         specName: '/manageData',
         testPayloads,
         expectedResponses,
-    }
-}
+    };
+};
 
 const pathPayment = () => {
-    const testPayloads = [
+    const testPayloads: StellarSignTransaction[] = [
         // asset native
         {
             ...header,
@@ -528,9 +523,9 @@ const pathPayment = () => {
                             code: 'XLM',
                         },
                         destAmount: '500111000',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // asset alphanum4
         {
@@ -553,9 +548,9 @@ const pathPayment = () => {
                             issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
                         },
                         destAmount: '500111000',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // asset alphanum12
         {
@@ -578,9 +573,9 @@ const pathPayment = () => {
                             issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
                         },
                         destAmount: '500111000',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // asset types combined
         {
@@ -603,9 +598,9 @@ const pathPayment = () => {
                             issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
                         },
                         destAmount: '500111000',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // with path
         {
@@ -638,9 +633,9 @@ const pathPayment = () => {
                                 issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
                             },
                         ],
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
     ];
 
@@ -681,11 +676,11 @@ const pathPayment = () => {
         specName: '/pathPayment',
         testPayloads,
         expectedResponses,
-    }
-}
+    };
+};
 
 const createPassiveOffer = () => {
-    const testPayloads = [
+    const testPayloads: StellarSignTransaction[] = [
         // asset native
         {
             ...header,
@@ -707,9 +702,9 @@ const createPassiveOffer = () => {
                             n: 500111,
                             d: 10000,
                         },
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // asset alphanum4
         {
@@ -734,9 +729,9 @@ const createPassiveOffer = () => {
                             n: 500111,
                             d: 10000,
                         },
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // asset alphanum12
         {
@@ -761,9 +756,9 @@ const createPassiveOffer = () => {
                             n: 500111,
                             d: 10000,
                         },
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // asset combined
         {
@@ -788,9 +783,9 @@ const createPassiveOffer = () => {
                             n: 500111,
                             d: 10000,
                         },
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // { n, d } price
         {
@@ -813,9 +808,9 @@ const createPassiveOffer = () => {
                             n: 1024,
                             d: 100,
                         },
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
     ];
 
@@ -856,11 +851,11 @@ const createPassiveOffer = () => {
         specName: '/createPassiveOffer',
         testPayloads,
         expectedResponses,
-    }
-}
+    };
+};
 
 const manageOffer = () => {
-    const testPayloads = [
+    const testPayloads: StellarSignTransaction[] = [
         // asset native
         {
             ...header,
@@ -883,9 +878,9 @@ const manageOffer = () => {
                             d: 10000,
                         },
                         offerId: '101',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // asset alphanum4
         {
@@ -911,9 +906,9 @@ const manageOffer = () => {
                             d: 10000,
                         },
                         offerId: '101',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // asset alphanum12
         {
@@ -939,9 +934,9 @@ const manageOffer = () => {
                             d: 10000,
                         },
                         offerId: '101',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // asset combined
         {
@@ -967,9 +962,9 @@ const manageOffer = () => {
                             d: 10000,
                         },
                         offerId: '101',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // { n, d } price
         {
@@ -993,9 +988,9 @@ const manageOffer = () => {
                             d: 100,
                         },
                         offerId: '0',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // new offer
         {
@@ -1019,9 +1014,9 @@ const manageOffer = () => {
                             d: 10000,
                         },
                         offerId: '0',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // remove offer
         {
@@ -1045,9 +1040,9 @@ const manageOffer = () => {
                             d: 10000,
                         },
                         offerId: '101',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
     ];
 
@@ -1100,11 +1095,11 @@ const manageOffer = () => {
         specName: '/manageOffer',
         testPayloads,
         expectedResponses,
-    }
-}
+    };
+};
 
 const changeTrust = () => {
-    const testPayloads = [
+    const testPayloads: StellarSignTransaction[] = [
         // asset native
         {
             ...header,
@@ -1118,9 +1113,9 @@ const changeTrust = () => {
                             code: 'XLM',
                         },
                         limit: '9223372036854775807',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // asset alphanum4
         {
@@ -1136,9 +1131,9 @@ const changeTrust = () => {
                             issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
                         },
                         limit: '9223372036854775807',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // asset alphanum12
         {
@@ -1154,9 +1149,9 @@ const changeTrust = () => {
                             issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
                         },
                         limit: '9223372036854775807',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // with arbitrary limit
         {
@@ -1172,9 +1167,9 @@ const changeTrust = () => {
                             issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
                         },
                         limit: '10000000000',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         // remove trust
         {
@@ -1190,9 +1185,9 @@ const changeTrust = () => {
                             issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
                         },
                         limit: '0',
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
     ];
 
@@ -1233,11 +1228,11 @@ const changeTrust = () => {
         specName: '/changeTrust',
         testPayloads,
         expectedResponses,
-    }
-}
+    };
+};
 
 const allowTrust = () => {
-    const testPayloads = [
+    const testPayloads: StellarSignTransaction[] = [
         // asset native
         {
             ...header,
@@ -1250,9 +1245,9 @@ const allowTrust = () => {
                         assetType: 1,
                         assetCode: 'XLM',
                         authorize: true,
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
         {
             ...header,
@@ -1265,9 +1260,9 @@ const allowTrust = () => {
                         assetType: 1,
                         assetCode: 'XLM',
                         authorize: false,
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         },
     ];
 
@@ -1290,11 +1285,10 @@ const allowTrust = () => {
         specName: '/allowTrust',
         testPayloads,
         expectedResponses,
-    }
-}
+    };
+};
 
 const withMemo = () => {
-
     const operations = [
         {
             type: 'payment',
@@ -1304,10 +1298,10 @@ const withMemo = () => {
                 type: 0,
                 code: 'XLM',
             },
-        }
+        },
     ];
 
-    const testPayloads = [
+    const testPayloads: StellarSignTransaction[] = [
         // memo type text
         {
             ...header,
@@ -1318,7 +1312,7 @@ const withMemo = () => {
                     text: 'foobar',
                 },
                 operations,
-            }
+            },
         },
         // memo type id
         {
@@ -1330,7 +1324,7 @@ const withMemo = () => {
                     id: '1234567890',
                 },
                 operations,
-            }
+            },
         },
         // memo type hash
         {
@@ -1342,7 +1336,7 @@ const withMemo = () => {
                     hash: '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
                 },
                 operations,
-            }
+            },
         },
         // memo type return
         {
@@ -1354,7 +1348,7 @@ const withMemo = () => {
                     hash: '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
                 },
                 operations,
-            }
+            },
         },
         // payment with timeBounds and memo text
         {
@@ -1370,7 +1364,7 @@ const withMemo = () => {
                     text: 'foobar',
                 },
                 operations,
-            }
+            },
         },
         // multiple operations with timeBounds and memo text
         {
@@ -1391,22 +1385,22 @@ const withMemo = () => {
                         type: 'payment',
                         destination: 'GBOVKZBEM2YYLOCDCUXJ4IMRKHN4LCJAE7WEAEA2KF562XFAGDBOB64V',
                         asset: {
-                           type: 0,
-                           code: 'XLM',
+                            type: 0,
+                            code: 'XLM',
                         },
-                        amount: '500111000'
+                        amount: '500111000',
                     },
                     {
                         type: 'createAccount',
                         destination: 'GBOVKZBEM2YYLOCDCUXJ4IMRKHN4LCJAE7WEAEA2KF562XFAGDBOB64V',
-                        startingBalance: '1000333000'
+                        startingBalance: '1000333000',
                     },
                     {
                         type: 'bumpSequence',
-                        bumpTo: '9223372036854775807'
-                    }
+                        bumpTo: '9223372036854775807',
+                    },
                 ],
-            }
+            },
         },
         // timebounds - minTime only
         {
@@ -1420,7 +1414,7 @@ const withMemo = () => {
                 operations: [
                     { type: 'setOptions' },
                 ],
-            }
+            },
         },
         // timebounds - minTime only
         {
@@ -1434,7 +1428,7 @@ const withMemo = () => {
                 operations: [
                     { type: 'setOptions' },
                 ],
-            }
+            },
         },
     ];
 
@@ -1493,10 +1487,10 @@ const withMemo = () => {
         specName: '/withMemo',
         testPayloads,
         expectedResponses,
-    }
-}
+    };
+};
 
-export const stellarSignTransaction = (): void => {
+export const stellarSignTransaction = () => {
     const subtests = {
         createAccount,
         accountMerge,

@@ -12,30 +12,30 @@ export function setFetch(fetch: any) {
 }
 
 type ProtoInstallerShort = {
-    shortUrl: string,
-    label: string,
-    platform: string | Array<string>,
+    shortUrl: string;
+    label: string;
+    platform: string | Array<string>;
 }
 
 type ProtoInstaller = {
-    url: string,
-    label: string,
-    platform: string | Array<string>,
+    url: string;
+    label: string;
+    platform: string | Array<string>;
 }
 
 export type BridgeInstaller = {
-    version: string,
-    url: string,
-    label: string,
-    platform: string | Array<string>,
-    preferred: boolean,
+    version: string;
+    url: string;
+    label: string;
+    platform: string | Array<string>;
+    preferred: boolean;
 };
 
 export type UdevInstaller = {
-    url: string,
-    label: string,
-    platform: string | Array<string>,
-    preferred: boolean,
+    url: string;
+    label: string;
+    platform: string | Array<string>;
+    preferred: boolean;
 };
 
 function fillInstallerUrl(installer: ProtoInstallerShort, domain: string): ProtoInstaller {
@@ -86,8 +86,8 @@ const UDEV_INSTALLERS: Array<ProtoInstallerShort> = [{
 }];
 
 type UdevOptions = {
-    platform?: string,
-    domain?: string,
+    platform?: string;
+    domain?: string;
 };
 
 export function udevInstallers(options: ?UdevOptions): Array<UdevInstaller> {
@@ -108,7 +108,7 @@ export function udevInstallers(options: ?UdevOptions): Array<UdevInstaller> {
 }
 
 type VersionOptions = {
-    bridgeUrl?: string,
+    bridgeUrl?: string;
 }
 
 export function latestVersion(options: ?VersionOptions): Promise<string> {
@@ -129,10 +129,10 @@ export function latestVersion(options: ?VersionOptions): Promise<string> {
 }
 
 type BridgeOptions = {
-    platform?: string,
-    version?: string,
-    bridgeUrl?: string,
-    domain?: string,
+    platform?: string;
+    version?: string;
+    bridgeUrl?: string;
+    domain?: string;
 };
 
 // Returns a list of bridge installers, with download URLs and a mark on

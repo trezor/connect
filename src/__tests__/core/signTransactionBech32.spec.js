@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestSignTransaction,
-} from 'flowtype/tests';
-import type {
-    TestSignTransactionPayload,
-    ExpectedSignTransactionResponse,
-} from 'flowtype/tests/sign-transaction';
+import type { SignTransaction } from '../../js/types';
 
-const threeOutputs = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const threeOutputs = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -44,7 +37,7 @@ const threeOutputs = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -62,8 +55,8 @@ const threeOutputs = (): SubtestSignTransaction => {
     };
 };
 
-const threeInputs = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const threeInputs = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -104,7 +97,7 @@ const threeInputs = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -122,8 +115,8 @@ const threeInputs = (): SubtestSignTransaction => {
     };
 };
 
-const opReturn = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const opReturn = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Testnet',
@@ -152,7 +145,7 @@ const opReturn = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -170,7 +163,7 @@ const opReturn = (): SubtestSignTransaction => {
     };
 };
 
-export const signTransactionBech32 = (): TestFunction => {
+export const signTransactionBech32 = () => {
     const availableSubtests = {
         threeOutputs,
         threeInputs,

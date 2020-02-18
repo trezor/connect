@@ -8,9 +8,9 @@ import { UiMessage } from '../../message/builder';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 type Params = {
-    customMessages: JSON,
-    message: string,
-    params: any,
+    customMessages: JSON;
+    message: string;
+    params: any;
 }
 
 export default class CustomMessage extends AbstractMethod {

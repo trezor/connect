@@ -19,7 +19,6 @@ export const settings = {
     webusb: true,
     pendingTransportEvent: true,
     supportedBrowser: true,
-    extension: null,
     manifest: {
         email: 'test@satoshilabs.com',
         appUrl: 'test@satoshilabs.com',

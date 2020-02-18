@@ -33,7 +33,7 @@
         "flowtype/use-flow-type": 1,
         "flowtype/object-type-delimiter": [
             2,
-            "comma"
+            "semicolon"
         ],
         "flowtype/delimiter-dangle": [
             2,

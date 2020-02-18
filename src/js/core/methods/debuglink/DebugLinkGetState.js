@@ -2,7 +2,7 @@
 
 import AbstractMethod from '../AbstractMethod';
 import type { CoreMessage } from '../../../types';
-import type { DebugLinkState } from '../../../types/trezor';
+import type { DebugLinkState } from '../../../types/trezor/protobuf';
 
 export default class DebugLinkGetState extends AbstractMethod {
     constructor(message: CoreMessage) {

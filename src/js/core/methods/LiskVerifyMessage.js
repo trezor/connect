@@ -3,13 +3,13 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
-import type { Success } from '../../types/trezor';
+import type { Success } from '../../types/trezor/protobuf';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    publicKey: string,
-    signature: string,
-    message: string,
+    publicKey: string;
+    signature: string;
+    message: string;
 }
 
 export default class LiskVerifyMessage extends AbstractMethod {

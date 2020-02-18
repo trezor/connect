@@ -8,13 +8,13 @@ import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathU
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { LiskPublicKey } from '../../types/trezor';
+import type { LiskPublicKey } from '../../types/trezor/protobuf';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
-import type { LiskPublicKey as LiskPublicKeyResponse } from '../../types/lisk';
+import type { LiskPublicKey as LiskPublicKeyResponse } from '../../types/networks/lisk';
 
 type Batch = {
-    path: Array<number>,
-    showOnTrezor: boolean,
+    path: Array<number>;
+    showOnTrezor: boolean;
 }
 
 type Params = Array<Batch>;

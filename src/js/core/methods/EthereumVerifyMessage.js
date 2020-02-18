@@ -2,15 +2,15 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-import type { Success } from '../../types/trezor';
+import type { Success } from '../../types/trezor/protobuf';
 import type { CoreMessage } from '../../types';
 
 import { stripHexPrefix, messageToHex } from '../../utils/ethereumUtils';
 
 type Params = {
-    address: string,
-    signature: string,
-    message: string,
+    address: string;
+    signature: string;
+    message: string;
 }
 
 export default class EthereumVerifyMessage extends AbstractMethod {

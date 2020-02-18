@@ -7,12 +7,12 @@ import { validatePath } from '../../utils/pathUtils';
 import { prepareTx } from './helpers/liskSignTx';
 
 import type { CoreMessage } from '../../types';
-import type { LiskTransaction, LiskSignedTx } from '../../types/trezor';
-import type { Transaction as $LiskTransaction } from '../../types/lisk';
+import type { LiskTransaction, LiskSignedTx } from '../../types/trezor/protobuf';
+import type { LiskTransaction as LiskParsedTransaction } from '../../types/networks/lisk';
 
 type Params = {
-    path: Array<number>,
-    transaction: LiskTransaction,
+    path: Array<number>;
+    transaction: LiskTransaction;
 }
 
 export default class LiskSignTransaction extends AbstractMethod {
@@ -36,7 +36,7 @@ export default class LiskSignTransaction extends AbstractMethod {
 
         this.info = 'Sign Lisk transaction';
 
-        const tx: $LiskTransaction = payload.transaction;
+        const tx: LiskParsedTransaction = payload.transaction;
         validateParams(tx, [
             { name: 'type', type: 'number', obligatory: true },
             { name: 'fee', type: 'string', obligatory: true },
@@ -48,7 +48,7 @@ export default class LiskSignTransaction extends AbstractMethod {
         ]);
 
         const transaction: LiskTransaction = prepareTx(tx);
-
+        if (!transaction.asset) transaction.asset = {};
         this.params = {
             path,
             transaction,

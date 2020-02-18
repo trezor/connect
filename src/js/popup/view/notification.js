@@ -1,7 +1,7 @@
 /* @flow */
 
 import { views } from './common';
-import type { UnexpectedDeviceMode } from '../../types/uiRequest';
+import type { UnexpectedDeviceMode } from '../../types/events';
 
 export const showFirmwareUpdateNotification = (device: $PropertyType<UnexpectedDeviceMode, 'payload'>): void => {
     const container: HTMLElement = document.getElementsByClassName('notification')[0];

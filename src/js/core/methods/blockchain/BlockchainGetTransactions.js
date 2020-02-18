@@ -9,8 +9,8 @@ import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo } from '../../../types';
 
 type Params = {
-    txs: string[],
-    coinInfo: CoinInfo,
+    txs: string[];
+    coinInfo: CoinInfo;
 }
 
 export default class BlockchainGetTransactions extends AbstractMethod {

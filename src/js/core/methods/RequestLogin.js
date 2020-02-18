@@ -7,16 +7,15 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import DataManager from '../../data/DataManager';
 
-import type { ConnectSettings } from '../../data/ConnectSettings';
-import type { CoreMessage, UiPromiseResponse } from '../../types';
-import type { Identity, SignedIdentity } from '../../types/trezor';
-import type { RequestLogin$ } from '../../types/response';
+import type { ConnectSettings, CoreMessage, UiPromiseResponse } from '../../types';
+import type { Identity, SignedIdentity } from '../../types/trezor/protobuf';
+import type { Login } from '../../types/misc';
 
 type Params = {
-    asyncChallenge: boolean,
-    identity: Identity,
-    challengeHidden: string,
-    challengeVisual: string,
+    asyncChallenge: boolean;
+    identity: Identity;
+    challengeHidden: string;
+    challengeVisual: string;
 }
 
 export default class RequestLogin extends AbstractMethod {
@@ -58,7 +57,7 @@ export default class RequestLogin extends AbstractMethod {
         };
     }
 
-    async run(): Promise<$PropertyType<RequestLogin$, 'payload'>> {
+    async run(): Promise<Login> {
         if (this.params.asyncChallenge) {
             // send request to developer
             this.postMessage(UiMessage(UI.LOGIN_CHALLENGE_REQUEST));

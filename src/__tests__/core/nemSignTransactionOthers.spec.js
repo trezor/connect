@@ -1,24 +1,16 @@
 /* @flow */
-import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
+import type { NEMSignTransaction } from '../../js/types';
+import { NEM_IMPORTANCE_TRANSFER, NEM_PROVISION_NAMESPACE } from '../../js/core/methods/helpers/nemSignTx.js';
 
-import type {
-    TestFunction,
-    SubtestNemSignTransaction,
-} from 'flowtype/tests';
-import type {
-    TestNemSignTransactionPayload,
-    ExpectedNemSignTransactionResponse,
-} from 'flowtype/tests/nem-sign-transaction';
-
-const importanceTransfer = (): SubtestNemSignTransaction => {
-    const testPayloads: Array<TestNemSignTransactionPayload> = [
+const importanceTransfer = () => {
+    const testPayloads: NEMSignTransaction[] = [
         {
             method: 'nemSignTransaction',
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 12349215,
                 fee: 9900,
-                type: TX_TYPES.importanceTransfer,
+                type: NEM_IMPORTANCE_TRANSFER,
                 deadline: 99,
                 message: {},
                 importanceTransfer: {
@@ -29,7 +21,7 @@ const importanceTransfer = (): SubtestNemSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 data: '01080000010000981f6fbc0020000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b4062084ac26000000000000630000000100000020000000c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
@@ -45,15 +37,15 @@ const importanceTransfer = (): SubtestNemSignTransaction => {
     };
 };
 
-const provisionNamespace = (): SubtestNemSignTransaction => {
-    const testPayloads: Array<TestNemSignTransactionPayload> = [
+const provisionNamespace = () => {
+    const testPayloads: NEMSignTransaction[] = [
         {
             method: 'nemSignTransaction',
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 74649215,
                 fee: 2000000,
-                type: TX_TYPES.provisionNamespace,
+                type: NEM_PROVISION_NAMESPACE,
                 deadline: 74735615,
                 message: {},
                 newPart: 'ABCDE',
@@ -63,7 +55,7 @@ const provisionNamespace = (): SubtestNemSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 data: '01200000010000987f0e730420000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b406208480841e0000000000ff5f74042800000054414c49434532474d4133344358484437584c4a513533364e4d35554e4b5148544f524e4e54324adc05000000000000050000004142434445ffffffff',
@@ -79,7 +71,7 @@ const provisionNamespace = (): SubtestNemSignTransaction => {
     };
 };
 
-export const nemSignTransactionOthers = (): TestFunction => {
+export const nemSignTransactionOthers = () => {
     const availableSubtests = {
         importanceTransfer,
         provisionNamespace,

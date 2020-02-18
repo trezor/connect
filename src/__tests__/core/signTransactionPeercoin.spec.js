@@ -1,16 +1,9 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestSignTransaction,
-} from 'flowtype/tests';
-import type {
-    TestSignTransactionPayload,
-    ExpectedSignTransactionResponse,
-} from 'flowtype/tests/sign-transaction';
+import type { SignTransaction } from '../../js/types';
 
-const signPPC = (): SubtestSignTransaction => {
+const signPPC = () => {
     // See tx f7e3624c143b6a170cc44f9337d0fa8ea8564a211de9c077c6889d8c78f80909
-    const testPayloads: Array<TestSignTransactionPayload> = [
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Peercoin',
@@ -59,7 +52,7 @@ const signPPC = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 serializedTx: '010000008a44c55d013d7d3531b0881f244d1f353c208fd00cb18bd152a054460aa4eed815d69ab241000000006a473044022025c0ea702390c702c7ae8b5ea469820bea8d942c8c16439f8f0ba2e91e699efc02200db9b0a48fa2861695fa91df4831a4c7306587e5d2dc85419647f462717bc8f001210274cb0ee652d9457fbb0f3872d43155a6bc16f77bd5749d8826b53db443b1b278ffffffff01905f0100000000001976a914ff9a05654150fdc92b1655f49d7f2a8aaf6a3a2a88ac00000000',
@@ -74,9 +67,9 @@ const signPPC = (): SubtestSignTransaction => {
     };
 };
 
-const notEnoughFunds = (): SubtestSignTransaction => {
+const notEnoughFunds = () => {
     // See tx 915340ecc7466d287596f1f5b1fa0c1fa78c5b76ede0dff978fd6a1ca31eee24
-    const testPayloads: Array<TestSignTransactionPayload> = [
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Peercoin',
@@ -126,7 +119,7 @@ const notEnoughFunds = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 code: 'Failure_NotEnoughFunds',
@@ -141,7 +134,7 @@ const notEnoughFunds = (): SubtestSignTransaction => {
     };
 };
 
-export const signTransactionPeercoin = (): TestFunction => {
+export const signTransactionPeercoin = () => {
     return {
         testName: 'SignTransactionPeercoin',
         mnemonic: 'mnemonic_all',

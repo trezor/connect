@@ -1,16 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestTezosSignTransaction,
-} from 'flowtype/tests';
+import type { TezosSignTransaction } from '../../js/types';
 
-import type {
-    TestTezosSignTransactionPayload,
-    ExpectedTezosSignTransactionResponse,
-} from 'flowtype/tests/tezos-sign-transaction';
-
-const transaction = (): SubtestTezosSignTransaction => {
-    const testPayloads: Array<TestTezosSignTransactionPayload> = [
+const transaction = () => {
+    const testPayloads: TezosSignTransaction[] = [
         {
             method: 'tezosSignTransaction',
             path: "m/44'/1729'/10'",
@@ -28,7 +20,7 @@ const transaction = (): SubtestTezosSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedTezosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'edsigu2eT5jqaio9U4CZfcnig5AZSLQDWHJsxt58atyL91gEfVZVQLpWjcVydRTHW4WggePXZXufyCe7N81Knre7AMUTnKHo4d6',
@@ -45,8 +37,8 @@ const transaction = (): SubtestTezosSignTransaction => {
     };
 };
 
-const revealAndTransaction = (): SubtestTezosSignTransaction => {
-    const testPayloads: Array<TestTezosSignTransactionPayload> = [
+const revealAndTransaction = () => {
+    const testPayloads: TezosSignTransaction[] = [
         {
             method: 'tezosSignTransaction',
             path: "m/44'/1729'/1'",
@@ -68,11 +60,11 @@ const revealAndTransaction = (): SubtestTezosSignTransaction => {
                     fee: 10000,
                     gas_limit: 20000,
                     storage_limit: 0,
-                }
+                },
             },
         },
     ];
-    const expectedResponses: Array<ExpectedTezosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'edsigu1CLfKgV7v3bGcUkWuATevw41EuR9ijJpZzirntww64biqtyXEZsb4yuZsi2K6QSV8235HUpJ8LUwgJ5DdbXYdBicHFmpx',
@@ -89,8 +81,8 @@ const revealAndTransaction = (): SubtestTezosSignTransaction => {
     };
 };
 
-const origination = (): SubtestTezosSignTransaction => {
-    const testPayloads: Array<TestTezosSignTransactionPayload> = [
+const origination = () => {
+    const testPayloads: TezosSignTransaction[] = [
         {
             method: 'tezosSignTransaction',
             path: "m/44'/1729'/10'",
@@ -103,12 +95,12 @@ const origination = (): SubtestTezosSignTransaction => {
                     counter: 298,
                     gas_limit: 20000,
                     storage_limit: 10000,
-                    script: "0000001c02000000170500036805010368050202000000080316053d036d03420000000a010000000568656c6c6f",
+                    script: '0000001c02000000170500036805010368050202000000080316053d036d03420000000a010000000568656c6c6f',
                 },
             },
         },
     ];
-    const expectedResponses: Array<ExpectedTezosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'edsigtfSgPbV5EY1ejjxWvHsd8fNwBDqoBmnDQcuxPL21WLMAYtgKM1SmGTfWEPzPzn4eGM5LgXhawf4ittEDTEPbCeK2FdxZ4t',
@@ -125,8 +117,8 @@ const origination = (): SubtestTezosSignTransaction => {
     };
 };
 
-const delegation = (): SubtestTezosSignTransaction => {
-    const testPayloads: Array<TestTezosSignTransactionPayload> = [
+const delegation = () => {
+    const testPayloads: TezosSignTransaction[] = [
         {
             method: 'tezosSignTransaction',
             path: "m/44'/1729'/0'",
@@ -143,7 +135,7 @@ const delegation = (): SubtestTezosSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedTezosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'edsigtvcVmjMrUbe6ZoCGNUP5qDazDpz5GSt8vSvPgmJSdUVJzWAMEPWdx6Q3XvJFwHcGX1hC34yxs2g6WvTVZjMhihg9tDBTUz',
@@ -160,8 +152,8 @@ const delegation = (): SubtestTezosSignTransaction => {
     };
 };
 
-const managerDelegation = (): SubtestTezosSignTransaction => {
-    const testPayloads: Array<TestTezosSignTransactionPayload> = [
+const managerDelegation = () => {
+    const testPayloads: TezosSignTransaction[] = [
         {
             method: 'tezosSignTransaction',
             path: "m/44'/1729'/10'",
@@ -176,13 +168,13 @@ const managerDelegation = (): SubtestTezosSignTransaction => {
                     gas_limit: 36283,
                     storage_limit: 0,
                     parameters_manager: {
-                        set_delegate: "tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo"
-                    }
+                        set_delegate: 'tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo',
+                    },
                 },
             },
         },
     ];
-    const expectedResponses: Array<ExpectedTezosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'edsigu6uVsynCkPqbCPzzMr1goiiRA8QwxXZzrkNoi2FV4qP8hzokUc8LMUF7UdQ5LLwn3kHbktFBM42TBKAGsp1EFLuFPdwZHx',
@@ -199,8 +191,8 @@ const managerDelegation = (): SubtestTezosSignTransaction => {
     };
 };
 
-const managerCancelDelegation = (): SubtestTezosSignTransaction => {
-    const testPayloads: Array<TestTezosSignTransactionPayload> = [
+const managerCancelDelegation = () => {
+    const testPayloads: TezosSignTransaction[] = [
         {
             method: 'tezosSignTransaction',
             path: "m/44'/1729'/10'",
@@ -216,12 +208,12 @@ const managerCancelDelegation = (): SubtestTezosSignTransaction => {
                     storage_limit: 0,
                     parameters_manager: {
                         cancel_delegate: true,
-                    }
+                    },
                 },
             },
         },
     ];
-    const expectedResponses: Array<ExpectedTezosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'edsigtoPT2yADM2vttD7P17KRs7z23x5tuvZTnX8xmZG5yVb5PeeMQeN5mRxWy7Rzdu39CUZHnYcM75GDVg7gViYgab8YxooW5a',
@@ -238,8 +230,8 @@ const managerCancelDelegation = (): SubtestTezosSignTransaction => {
     };
 };
 
-const managerTransferToImplicit = (): SubtestTezosSignTransaction => {
-    const testPayloads: Array<TestTezosSignTransactionPayload> = [
+const managerTransferToImplicit = () => {
+    const testPayloads: TezosSignTransaction[] = [
         {
             method: 'tezosSignTransaction',
             path: "m/44'/1729'/10'",
@@ -256,14 +248,14 @@ const managerTransferToImplicit = (): SubtestTezosSignTransaction => {
                     parameters_manager: {
                         transfer: {
                             amount: 200,
-                            destination: 'tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo'
-                        }
-                    }
+                            destination: 'tz1UKmZhi8dhUX5a5QTfCrsH9pK4dt1dVfJo',
+                        },
+                    },
                 },
             },
         },
     ];
-    const expectedResponses: Array<ExpectedTezosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'edsigtbNN5Upt3yLdKn1P1hTWmfzSDVbybfdPn36j9vGQuxDa925D8pXwN3fBCSiYiacfby71E2y1CQVs9A95twKzLC4ssQsjhB',
@@ -280,8 +272,8 @@ const managerTransferToImplicit = (): SubtestTezosSignTransaction => {
     };
 };
 
-const managerTransferToContract = (): SubtestTezosSignTransaction => {
-    const testPayloads: Array<TestTezosSignTransactionPayload> = [
+const managerTransferToContract = () => {
+    const testPayloads: TezosSignTransaction[] = [
         {
             method: 'tezosSignTransaction',
             path: "m/44'/1729'/10'",
@@ -298,14 +290,14 @@ const managerTransferToContract = (): SubtestTezosSignTransaction => {
                     parameters_manager: {
                         transfer: {
                             amount: 200,
-                            destination: 'KT1MJSg8YrnjSewrWGYL3e8XfqtLAG5WU4Hg'
-                        }
-                    }
+                            destination: 'KT1MJSg8YrnjSewrWGYL3e8XfqtLAG5WU4Hg',
+                        },
+                    },
                 },
             },
         },
     ];
-    const expectedResponses: Array<ExpectedTezosSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signature: 'edsigtchYBQ76wvbvyfdk4DPaiccaHAxrzQFQU8riMcnfu7bjJNKDVayc12N1TpcZ4hHL9SzuqHyurg8mQy7FYffQ6UvA2TcSs5',
@@ -322,7 +314,7 @@ const managerTransferToContract = (): SubtestTezosSignTransaction => {
     };
 };
 
-export const tezosSignTransaction = (): TestFunction => {
+export const tezosSignTransaction = () => {
     const availableSubtests = {
         transaction,
         revealAndTransaction,

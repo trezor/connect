@@ -6,12 +6,12 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/tezosSignTx';
 
-import type { TezosOperation } from '../../types/tezos';
-import type { TezosTransaction, TezosSignedTx } from '../../types/trezor';
+import type { TezosOperation } from '../../types/networks/tezos';
+import type { TezosTransaction, TezosSignedTx } from '../../types/trezor/protobuf';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    transaction: TezosTransaction,
+    transaction: TezosTransaction;
 }
 
 export default class TezosSignTransaction extends AbstractMethod {

@@ -8,13 +8,13 @@ import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathU
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { CardanoPublicKey } from '../../types/trezor';
+import type { CardanoPublicKey } from '../../types/trezor/protobuf';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
-import type { CardanoPublicKey as CardanoPublicKeyResponse } from '../../types/cardano';
+import type { CardanoPublicKey as CardanoPublicKeyResponse } from '../../types/networks/cardano';
 
 type Batch = {
-    path: Array<number>,
-    showOnTrezor: boolean,
+    path: Array<number>;
+    showOnTrezor: boolean;
 }
 
 type Params = Array<Batch>;

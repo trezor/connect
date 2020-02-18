@@ -1,11 +1,5 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
-import type {
-    TestGetAddressPayload,
-    ExpectedGetAddressResponse,
-} from 'flowtype/tests/get-address';
+import type { GetAddress } from '../../js/types';
 
 const multisig = {
     pubkeys: [
@@ -27,7 +21,7 @@ const multisig = {
 };
 
 const showMultisigAddress = () => {
-    const testPayloads: Array<TestGetAddressPayload> = [
+    const testPayloads: GetAddress[] = [
         {
             method: 'getAddress',
             path: [1],
@@ -50,7 +44,7 @@ const showMultisigAddress = () => {
             showOnTrezor: true,
         },
     ];
-    const expectedResponses: Array<ExpectedGetAddressResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 address: '3E7GDtuHqnqPmDgwH59pVC7AvySiSkbibz',
@@ -75,7 +69,7 @@ const showMultisigAddress = () => {
     };
 };
 
-export const getAddressMultisig = (): TestFunction => {
+export const getAddressMultisig = () => {
     return {
         subtests: {
             showMultisigAddress,

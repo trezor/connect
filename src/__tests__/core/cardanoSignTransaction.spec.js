@@ -1,18 +1,9 @@
 /* @flow */
-
-import type {
-    TestFunction,
-    SubtestSignTransaction,
-} from 'flowtype/tests';
-
-import type {
-    TestCardanoSignTransactionPayload,
-    ExpectedCardanoSignTransactionResponse,
-} from 'flowtype/tests/cardano-sign-transaction';
+import type { CardanoSignTransaction } from '../../js/types';
 
 // vectors from https://github.com/trezor/trezor-firmware/tree/master/python/trezorlib/tests/device_tests/test_msg_cardano_sign_transaction.py
 
-const signMainnetNoChange = (): SubtestSignTransaction => {
+const signMainnetNoChange = () => {
     const inputs = [
         {
             prev_hash: '1af8fa0b754ff99253d983894e63a2b09cbb56c833ba18c3384210163f63dcfc',
@@ -31,7 +22,7 @@ const signMainnetNoChange = (): SubtestSignTransaction => {
         '839f8200d818582482582008abb575fac4c39d5bf80683f7f0c37e48f4e3d96e37d1f6611919a7241b456600ff9f8282d818582183581cda4da43db3fca93695e71dab839e72271204d28b9d964d306b8800a8a0001a7a6916a51a00305becffa0',
     ];
 
-    const testPayloads: Array<TestCardanoSignTransactionPayload> = [
+    const testPayloads: CardanoSignTransaction[] = [
         {
             method: 'cardanoSignTransaction',
             inputs,
@@ -41,7 +32,7 @@ const signMainnetNoChange = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedCardanoSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 hash: '799c65e8a2c0b1dc4232611728c09d3f3eb0d811c077f8e9798f84605ef1b23d',
@@ -57,7 +48,7 @@ const signMainnetNoChange = (): SubtestSignTransaction => {
     };
 };
 
-const signMainnetChange = (): SubtestSignTransaction => {
+const signMainnetChange = () => {
     const inputs = [
         {
             prev_hash: '1af8fa0b754ff99253d983894e63a2b09cbb56c833ba18c3384210163f63dcfc',
@@ -80,7 +71,7 @@ const signMainnetChange = (): SubtestSignTransaction => {
         '839f8200d818582482582008abb575fac4c39d5bf80683f7f0c37e48f4e3d96e37d1f6611919a7241b456600ff9f8282d818582183581cda4da43db3fca93695e71dab839e72271204d28b9d964d306b8800a8a0001a7a6916a51a00305becffa0',
     ];
 
-    const testPayloads: Array<TestCardanoSignTransactionPayload> = [
+    const testPayloads: CardanoSignTransaction[] = [
         {
             method: 'cardanoSignTransaction',
             inputs,
@@ -90,7 +81,7 @@ const signMainnetChange = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedCardanoSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 hash: '40bf94518f31aba7779dd99aa71fe867887bcb3e0bac2c6dc33d3f20ec74a6b1',
@@ -106,7 +97,7 @@ const signMainnetChange = (): SubtestSignTransaction => {
     };
 };
 
-const signTestnet = (): SubtestSignTransaction => {
+const signTestnet = () => {
     const inputs = [
         {
             prev_hash: '1af8fa0b754ff99253d983894e63a2b09cbb56c833ba18c3384210163f63dcfc',
@@ -125,7 +116,7 @@ const signTestnet = (): SubtestSignTransaction => {
         '839f8200d818582482582008abb575fac4c39d5bf80683f7f0c37e48f4e3d96e37d1f6611919a7241b456600ff9f8282d818582183581cda4da43db3fca93695e71dab839e72271204d28b9d964d306b8800a8a0001a7a6916a51a00305becffa0',
     ];
 
-    const testPayloads: Array<TestCardanoSignTransactionPayload> = [
+    const testPayloads: CardanoSignTransaction[] = [
         {
             method: 'cardanoSignTransaction',
             inputs,
@@ -135,7 +126,7 @@ const signTestnet = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedCardanoSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 hash: '799c65e8a2c0b1dc4232611728c09d3f3eb0d811c077f8e9798f84605ef1b23d',
@@ -151,7 +142,7 @@ const signTestnet = (): SubtestSignTransaction => {
     };
 };
 
-export const cardanoSignTransaction = (): TestFunction => {
+export const cardanoSignTransaction = () => {
     const availableSubtests = {
         signMainnetNoChange,
         signMainnetChange,

@@ -6,14 +6,14 @@ import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
 import { NO_COIN_INFO } from '../../constants/errors';
 
-import type { Success } from '../../types/trezor';
+import type { Success } from '../../types/trezor/protobuf';
 import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 
 type Params = {
-    address: string,
-    signature: string,
-    message: string,
-    coinInfo: BitcoinNetworkInfo,
+    address: string;
+    signature: string;
+    message: string;
+    coinInfo: BitcoinNetworkInfo;
 }
 
 export default class VerifyMessage extends AbstractMethod {

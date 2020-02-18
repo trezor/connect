@@ -9,14 +9,14 @@ import * as helper from './helpers/binanceSignTx';
 import type { CoreMessage } from '../../types';
 import type {
     BinanceSignedTx,
-} from '../../types/trezor';
+} from '../../types/trezor/protobuf';
 import type {
-    PreparedBinanceTransaction,
-} from '../../types/binance';
+    BinancePreparedTransaction,
+} from '../../types/networks/binance';
 
 type Params = {
-    path: number[],
-    transaction: PreparedBinanceTransaction,
+    path: number[];
+    transaction: BinancePreparedTransaction;
 }
 
 export default class BinanceSignTransaction extends AbstractMethod {

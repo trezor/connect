@@ -10,12 +10,12 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { CoreMessage, UiPromiseResponse, EthereumNetworkInfo } from '../../types';
-import type { HDNodeResponse } from '../../types/trezor';
+import type { HDNodeResponse } from '../../types/trezor/protobuf';
 
 type Batch = {
-    path: Array<number>,
-    network: ?EthereumNetworkInfo,
-    showOnTrezor: boolean,
+    path: Array<number>;
+    network: ?EthereumNetworkInfo;
+    showOnTrezor: boolean;
 }
 
 type Params = Array<Batch>;

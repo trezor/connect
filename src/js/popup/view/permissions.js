@@ -4,7 +4,7 @@ import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
 import DataManager from '../../data/DataManager';
 import { container, showView, postMessage, createTooltip } from './common';
-import type { RequestPermission } from '../../types/uiRequest';
+import type { RequestPermission } from '../../types/events';
 
 const getPermissionText = (permissionType: string, deviceName: string): string => {
     let text: string = '';

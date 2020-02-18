@@ -6,14 +6,14 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/eosSignTx';
 
-import type { EosTxHeader, EosTxActionAck, EosSignedTx } from '../../types/trezor';
+import type { EosTxHeader, EosTxActionAck, EosSignedTx } from '../../types/trezor/protobuf';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    path: Array<number>,
-    chain_id: string,
-    header: ?EosTxHeader,
-    ack: Array<EosTxActionAck>,
+    path: Array<number>;
+    chain_id: string;
+    header: ?EosTxHeader;
+    ack: Array<EosTxActionAck>;
 }
 
 export default class EosSignTransaction extends AbstractMethod {

@@ -6,16 +6,16 @@ import type { MessageResponse, DefaultMessageResponse } from '../../../device/De
 import type {
     BinanceTxRequest,
     BinanceSignedTx,
-} from '../../../types/trezor';
+} from '../../../types/trezor/protobuf';
 import type {
-    BinanceTransaction,
-    PreparedMessage,
-    PreparedBinanceTransaction,
-} from '../../../types/binance';
+    BinanceSDKTransaction,
+    BinancePreparedMessage,
+    BinancePreparedTransaction,
+} from '../../../types/networks/binance';
 
 const processTxRequest = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     response: MessageResponse<BinanceTxRequest>,
-    messages: PreparedMessage[],
+    messages: BinancePreparedMessage[],
     index: number,
 ): Promise<BinanceSignedTx> => {
     const msg = messages[index];
@@ -44,7 +44,7 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
 };
 
 // validate and translate params to protobuf
-export const validate = (tx: BinanceTransaction): PreparedBinanceTransaction => {
+export const validate = (tx: BinanceSDKTransaction): BinancePreparedTransaction => {
     validateParams(tx, [
         { name: 'chain_id', type: 'string', obligatory: true },
         { name: 'account_number', type: 'number' },
@@ -54,7 +54,7 @@ export const validate = (tx: BinanceTransaction): PreparedBinanceTransaction => 
         { name: 'message', type: 'object' },
     ]);
 
-    const preparedTx: PreparedBinanceTransaction = {
+    const preparedTx: BinancePreparedTransaction = {
         chain_id: tx.chain_id,
         account_number: tx.account_number || 0,
         memo: tx.memo,
@@ -112,7 +112,7 @@ export const validate = (tx: BinanceTransaction): PreparedBinanceTransaction => 
 
 export const signTx = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
     address_n: number[],
-    tx: PreparedBinanceTransaction,
+    tx: BinancePreparedTransaction,
 ): Promise<BinanceSignedTx> => {
     const {
         account_number,

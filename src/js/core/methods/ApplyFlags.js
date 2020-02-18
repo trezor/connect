@@ -8,7 +8,7 @@ import { UiMessage } from '../../message/builder';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    flags: number,
+    flags: number;
 }
 
 export default class ApplyFlags extends AbstractMethod {

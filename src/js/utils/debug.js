@@ -15,10 +15,10 @@ const colors: {[k: string]: string} = {
 };
 
 type LogMessage = {
-    level: string,
-    prefix: string,
-    message: Array<any>,
-    timestamp: number,
+    level: string;
+    prefix: string;
+    message: Array<any>;
+    timestamp: number;
 }
 
 export default class Log {

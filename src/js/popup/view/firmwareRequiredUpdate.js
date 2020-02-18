@@ -1,7 +1,7 @@
 /* @flow */
 
 import { showView } from './common';
-import type { UnexpectedDeviceMode } from '../../types/uiRequest';
+import type { UnexpectedDeviceMode } from '../../types/events';
 
 export const firmwareRequiredUpdate = (device: $PropertyType<UnexpectedDeviceMode, 'payload'>): void => {
     const view = showView('firmware-update');

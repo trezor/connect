@@ -7,12 +7,12 @@ import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathU
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
-import type { EosPublicKey } from '../../types/eos';
+import type { EosPublicKey } from '../../types/networks/eos';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 type Batch = {
-    path: Array<number>,
-    showOnTrezor: boolean,
+    path: Array<number>;
+    showOnTrezor: boolean;
 }
 
 type Params = Array<Batch>;

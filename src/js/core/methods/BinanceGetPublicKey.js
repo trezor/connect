@@ -8,13 +8,13 @@ import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathU
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { BinancePublicKey } from '../../types/trezor';
-import type { BinancePublicKey as BinancePublicKeyResponse } from '../../types/binance';
+import type { BinancePublicKey } from '../../types/trezor/protobuf';
+import type { BinancePublicKey as BinancePublicKeyResponse } from '../../types/networks/binance';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 type Batch = {
-    path: Array<number>,
-    showOnTrezor: boolean,
+    path: Array<number>;
+    showOnTrezor: boolean;
 }
 
 type Params = Array<Batch>;

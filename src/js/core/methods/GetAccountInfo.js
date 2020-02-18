@@ -14,11 +14,10 @@ import { UiMessage } from '../../message/builder';
 import { initBlockchain } from '../../backend/BlockchainLink';
 
 import type { CoreMessage, CoinInfo } from '../../types';
-import type { $GetAccountInfo } from '../../types/params';
-import type { AccountInfo } from '../../types/account';
-import type { FirmwareException } from '../../types/uiRequest';
+import type { GetAccountInfo as GetAccountInfoParams, AccountInfo, AccountUtxo } from '../../types/account';
+import type { FirmwareException } from '../../types/events';
 
-type Request = $GetAccountInfo & { address_n: number[], coinInfo: CoinInfo };
+type Request = GetAccountInfoParams & { address_n: number[]; coinInfo: CoinInfo };
 type Params = Request[];
 
 export default class GetAccountInfo extends AbstractMethod {
@@ -114,7 +113,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 },
             }));
         } else {
-            const keys: { [coin: string]: { coinInfo: CoinInfo, values: Array<string | number[]>} } = {};
+            const keys: { [coin: string]: { coinInfo: CoinInfo; values: Array<string | number[]>} } = {};
             this.params.forEach(b => {
                 if (!keys[b.coinInfo.label]) {
                     keys[b.coinInfo.label] = {
@@ -240,6 +239,7 @@ export default class GetAccountInfo extends AbstractMethod {
                     if (accountDescriptor) {
                         descriptor = accountDescriptor.descriptor;
                     }
+                    if (request.coinInfo.shortcut === 'LTC') { throw Error('Some fail...'); }
                 } catch (error) {
                     if (this.hasBundle) {
                         responses.push(null);
@@ -279,7 +279,7 @@ export default class GetAccountInfo extends AbstractMethod {
 
                 if (this.disposed) break;
 
-                let utxo: $ElementType<AccountInfo, 'utxo'>;
+                let utxo: AccountUtxo;
                 if (request.coinInfo.type === 'bitcoin' && typeof request.details === 'string' && request.details !== 'basic') {
                     utxo = await blockchain.getAccountUtxo(descriptor);
                 }
@@ -370,7 +370,7 @@ export default class GetAccountInfo extends AbstractMethod {
             marker: request.marker,
         });
 
-        let utxo: $ElementType<AccountInfo, 'utxo'>;
+        let utxo: AccountUtxo;
         if (request.coinInfo.type === 'bitcoin' && typeof request.details === 'string' && request.details !== 'basic') {
             utxo = await blockchain.getAccountUtxo(account.descriptor);
         }

@@ -1,18 +1,13 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
+import type { Bundle, EosGetPublicKey } from '../../js/types';
 
-import type {
-    TestEosGetPublicKeyPayload,
-    ExpectedEosGetPublicKeyResponse,
-} from 'flowtype/tests/eos-get-public-key';
+type Payload = EosGetPublicKey | Bundle<EosGetPublicKey>;
 
 // test vectors:
 // https://github.com/trezor/trezor-firmware/blob/master/core/tests/test_apps.eos.get_public_key.py
 
-export const eosGetPublicKey = (): TestFunction => {
-    const testPayloads: Array<TestEosGetPublicKeyPayload> = [
+export const eosGetPublicKey = () => {
+    const testPayloads: Payload[] = [
         {
             method: 'eosGetPublicKey',
             path: "m/44'/194'/0'/0/0",
@@ -42,7 +37,7 @@ export const eosGetPublicKey = (): TestFunction => {
             ],
         },
     ];
-    const expectedResponses: Array<ExpectedEosGetPublicKeyResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 wifPublicKey: 'EOS6zpSNY1YoLxNt2VsvJjoDfBueU6xC1M1ERJw1UoekL1NHn8KNA',

@@ -15,19 +15,19 @@ import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
 import type { CoinInfo, BitcoinNetworkInfo, EthereumNetworkInfo } from '../types';
 import type { Transport } from 'trezor-link';
-import * as trezor from '../types/trezor'; // flowtype only
+import * as trezor from '../types/trezor/protobuf'; // flowtype only
 
 export type MessageResponse<T> = {
-    type: string,
-    message: T, // in general, can be anything
+    type: string;
+    message: T; // in general, can be anything
 };
 
 export type DefaultMessageResponse = MessageResponse<Object>;
 
 export type PassphrasePromptResponse = {
-    passphrase?: string,
-    passphraseOnDevice?: boolean,
-    cache?: boolean,
+    passphrase?: string;
+    passphraseOnDevice?: boolean;
+    cache?: boolean;
 };
 
 function assertType(res: DefaultMessageResponse, resType: string) {
@@ -816,7 +816,7 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    async getAccountDescriptor(coinInfo: CoinInfo, indexOrPath: number | Array<number>): Promise<?{ descriptor: string, address_n: number[] }> {
+    async getAccountDescriptor(coinInfo: CoinInfo, indexOrPath: number | Array<number>): Promise<?{ descriptor: string; address_n: number[] }> {
         const address_n = Array.isArray(indexOrPath) ? indexOrPath : getAccountAddressN(coinInfo, indexOrPath);
         if (coinInfo.type === 'bitcoin') {
             const resp = await this.getHDNode(address_n, coinInfo, false);

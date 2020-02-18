@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestSignTransaction,
-} from 'flowtype/tests';
-import type {
-    TestSignTransactionPayload,
-    ExpectedSignTransactionResponse,
-} from 'flowtype/tests/sign-transaction';
+import type { SignTransaction } from '../../js/types';
 
-const change = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const change = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Bcash',
@@ -38,7 +31,7 @@ const change = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: ['3045022100ecaa81efe52d31cb0b9cf49a3a5ef4e4b3c6c6d4379deaa0be7c1d80fa65b44d022035ed7ca3a05d91ec554baab6f0bb2950ca8570887bb2a7252c1cb2e2e523aa10'],
@@ -54,8 +47,8 @@ const change = (): SubtestSignTransaction => {
     };
 };
 
-const noChange = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const noChange = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Bcash',
@@ -85,7 +78,7 @@ const noChange = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 signatures: [
@@ -104,8 +97,8 @@ const noChange = (): SubtestSignTransaction => {
     };
 };
 
-const oldAddr = (): SubtestSignTransaction => {
-    const testPayloads: Array<TestSignTransactionPayload> = [
+const oldAddr = () => {
+    const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',
             coin: 'Bcash',
@@ -136,7 +129,7 @@ const oldAddr = (): SubtestSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedSignTransactionResponse> = [
+    const expectedResponses = [
         { success: false },
     ];
 
@@ -147,7 +140,7 @@ const oldAddr = (): SubtestSignTransaction => {
     };
 };
 
-export const signTransactionBcash = (): TestFunction => {
+export const signTransactionBcash = () => {
     const availableSubtests = {
         change,
         noChange,

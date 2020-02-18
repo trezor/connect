@@ -1,24 +1,25 @@
 /* @flow */
-import { TX_TYPES } from '../../js/core/methods/helpers/nemSignTx.js';
+import type { NEMSignTransaction } from '../../js/types';
+import {
+    NEM_TRANSFER,
+    NEM_AGGREGATE_MODIFICATION,
+    NEM_MULTISIG,
+    NEM_PROVISION_NAMESPACE,
+    NEM_MULTISIG_SIGNATURE,
+    NEM_SUPPLY_CHANGE,
+} from '../../js/core/methods/helpers/nemSignTx.js';
 
-import type {
-    TestFunction,
-    SubtestNemSignTransaction,
-} from 'flowtype/tests';
-import type {
-    TestNemSignTransactionPayload,
-    ExpectedNemSignTransactionResponse,
-} from 'flowtype/tests/nem-sign-transaction';
+// https://github.com/trezor/trezor-firmware/blob/master/tests/device_tests/test_msg_nem_signtx_multisig.py
 
-const aggregateModification = (): SubtestNemSignTransaction => {
-    const testPayloads: Array<TestNemSignTransactionPayload> = [
+const aggregateModification = () => {
+    const testPayloads: NEMSignTransaction[] = [
         {
             method: 'nemSignTransaction',
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 74649215,
                 fee: 2000000,
-                type: TX_TYPES.aggregateModification,
+                type: NEM_AGGREGATE_MODIFICATION,
                 deadline: 74735615,
                 message: {},
                 modifications: [
@@ -35,7 +36,7 @@ const aggregateModification = (): SubtestNemSignTransaction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 data: '01100000020000987f0e730420000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b406208480841e0000000000ff5f740401000000280000000100000020000000c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f878440400000003000000',
@@ -51,22 +52,22 @@ const aggregateModification = (): SubtestNemSignTransaction => {
     };
 };
 
-const multisig = (): SubtestNemSignTransaction => {
-    const testPayloads: Array<TestNemSignTransactionPayload> = [
+const multisig = () => {
+    const testPayloads: NEMSignTransaction[] = [
         {
             method: 'nemSignTransaction',
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 1,
                 fee: 10000,
-                type: TX_TYPES.multisig,
+                type: NEM_MULTISIG,
                 deadline: 74735615,
                 otherTrans: {
                     timeStamp: 2,
                     amount: '2000000',
                     fee: 15000,
                     recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
-                    type: TX_TYPES.transfer,
+                    type: NEM_TRANSFER,
                     deadline: 67890,
                     message: {
                         payload: '746573745f6e656d5f7472616e73616374696f6e5f7472616e73666572',
@@ -84,13 +85,13 @@ const multisig = (): SubtestNemSignTransaction => {
             transaction: {
                 timeStamp: 74649215,
                 fee: 150,
-                type: TX_TYPES.multisig,
+                type: NEM_MULTISIG,
                 deadline: 789,
                 otherTrans: {
                     timeStamp: 123456,
                     fee: 2000,
                     recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
-                    type: TX_TYPES.provisionNamespace,
+                    type: NEM_PROVISION_NAMESPACE,
                     deadline: 100,
                     message: { },
                     newPart: 'ABCDE',
@@ -103,7 +104,7 @@ const multisig = (): SubtestNemSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 data: '04100000010000980100000020000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b40620841027000000000000ff5f74049900000001010000010000980200000020000000c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844983a000000000000320901002800000054414c49434532474d4133344358484437584c4a513533364e4d35554e4b5148544f524e4e54324a80841e000000000025000000010000001d000000746573745f6e656d5f7472616e73616374696f6e5f7472616e73666572',
@@ -125,22 +126,22 @@ const multisig = (): SubtestNemSignTransaction => {
     };
 };
 
-const multisigSigner = (): SubtestNemSignTransaction => {
-    const testPayloads: Array<TestNemSignTransactionPayload> = [
+const multisigSigner = () => {
+    const testPayloads: NEMSignTransaction[] = [
         {
             method: 'nemSignTransaction',
             path: "m/44'/1'/0'/0'/0'",
             transaction: {
                 timeStamp: 333,
                 fee: 200,
-                type: TX_TYPES.multisigSignature,
+                type: NEM_MULTISIG_SIGNATURE,
                 deadline: 444,
                 otherTrans: {
                     timeStamp: 555,
-                    amount: '2000000',
+                    amount: 2000000,
                     fee: 2000000,
                     recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
-                    type: TX_TYPES.transfer,
+                    type: NEM_TRANSFER,
                     deadline: 666,
                     message: {
                         payload: '746573745f6e656d5f7472616e73616374696f6e5f7472616e73666572',
@@ -158,15 +159,15 @@ const multisigSigner = (): SubtestNemSignTransaction => {
             transaction: {
                 timeStamp: 900000,
                 fee: 200000,
-                type: TX_TYPES.multisigSignature,
+                type: NEM_MULTISIG_SIGNATURE,
                 deadline: 100,
                 otherTrans: {
                     timeStamp: 101111,
                     fee: 1000,
                     recipient: 'TALICE2GMA34CXHD7XLJQ536NM5UNKQHTORNNT2J',
-                    type: TX_TYPES.supplyChange,
+                    type: NEM_SUPPLY_CHANGE,
                     deadline: 13123,
-                    message: { },
+                    // message: { },
                     mosaicId: {
                         namespaceId: 'hellom',
                         name: 'Hello mosaic',
@@ -182,7 +183,7 @@ const multisigSigner = (): SubtestNemSignTransaction => {
             },
         },
     ];
-    const expectedResponses: Array<ExpectedNemSignTransactionResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 data: '02100000010000984d01000020000000edfd32f6e760648c032f9acb4b30d514265f6a5b5f8a7154f2618922b4062084c800000000000000bc010000240000002000000087923cd4805f3babe6b5af9cbb2b08be4458e39531618aed73c911f160c8e38528000000544444324354364c514c49595135364b49584933454e544d36454b3344343450354b5a50464d4b32',
@@ -204,7 +205,7 @@ const multisigSigner = (): SubtestNemSignTransaction => {
     };
 };
 
-export const nemSignTransactionMultisig = (): TestFunction => {
+export const nemSignTransactionMultisig = () => {
     const availableSubtests = {
         aggregateModification,
         multisig,

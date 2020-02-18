@@ -1,24 +1,17 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
-
-import type {
-    TestCardanoGetPublicKeyPayload,
-    ExpectedCardanoGetPublicKeyResponse,
-} from 'flowtype/tests/cardano-get-public-key';
+import type { CardanoGetPublicKey } from '../../js/types';
 
 // https://github.com/trezor/trezor-firmware/blob/master/core/tests/test_apps.cardano.get_public_key.py
 
-export const cardanoGetPublicKey = (): TestFunction => {
-    const testPayloads: Array<TestCardanoGetPublicKeyPayload> = [
+export const cardanoGetPublicKey = () => {
+    const testPayloads: CardanoGetPublicKey[] = [
         {
             method: 'cardanoGetPublicKey',
             path: "m/44'/1815'/0'/0/0'",
         },
         {
             method: 'cardanoGetPublicKey',
-            path: "m/44'/1815'",
+            path: [2147483697],
         },
         {
             method: 'cardanoGetPublicKey',
@@ -30,7 +23,7 @@ export const cardanoGetPublicKey = (): TestFunction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedCardanoGetPublicKeyResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 publicKey: 'a938c8554ae04616cfaae7cd0eb557475082c4e910242ce774967e0bd7492408cbf6ab47c8eb1a0477fc40b25dbb6c4a99454edb97d6fe5acedd3e238ef46fe0',
@@ -38,9 +31,6 @@ export const cardanoGetPublicKey = (): TestFunction => {
         },
         {
             success: false, // invalid path
-            // payload: {
-            //     publicKey: '8c47ebce34234d04fd3dfbac33feaba6133e4e3d77c4b5ab18120ec6878ad4ce02ac67c59a8b0264724a635774ca2c242afa10d7ab70e2bf0a8f7d4bb10f1f7a',
-            // },
         },
         {
             payload: {

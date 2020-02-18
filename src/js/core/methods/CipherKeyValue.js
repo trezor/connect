@@ -7,16 +7,16 @@ import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 
 import type { CoreMessage } from '../../types';
-import type { CipheredKeyValue } from '../../types/trezor';
+import type { CipheredKeyValue } from '../../types/trezor/protobuf';
 
 type Batch = {
-    path: Array<number>,
-    key: string,
-    value: string,
-    encrypt: boolean,
-    askOnEncrypt: boolean,
-    askOnDecrypt: boolean,
-    iv: string,
+    path: Array<number>;
+    key: string;
+    value: string;
+    encrypt: boolean;
+    askOnEncrypt: boolean;
+    askOnDecrypt: boolean;
+    iv: string;
 }
 type Params = Array<Batch>;
 

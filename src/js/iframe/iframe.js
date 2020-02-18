@@ -191,7 +191,7 @@ const init = async (payload: any, origin: string) => {
         _popupMessagePort.onmessage = message => handleMessage(message);
     }
 
-    _log.enabled = parsedSettings.debug;
+    _log.enabled = !!parsedSettings.debug;
 
     try {
         // initialize core

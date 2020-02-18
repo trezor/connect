@@ -8,60 +8,60 @@ import { parseBridgeJSON } from './TransportInfo';
 import parseUri from 'parse-uri';
 import { versionCompare } from '../utils/deviceFeaturesUtils';
 
-import type { ConnectSettings } from '../data/ConnectSettings';
+import type { ConnectSettings } from '../types';
 
 type WhiteList = {
-    priority: number,
-    origin: string,
+    priority: number;
+    origin: string;
 }
 type KnownHost = {
-    origin: string,
-    label?: string,
-    icon?: string,
+    origin: string;
+    label?: string;
+    icon?: string;
 }
 
 type SupportedBrowser = {
-    version: number,
-    download: string,
-    update: string,
+    version: number;
+    download: string;
+    update: string;
 }
 type WebUSB = {
-    vendorId: string,
-    productId: string,
+    vendorId: string;
+    productId: string;
 }
 
 type Resources = {
-    bridge: string,
+    bridge: string;
 }
 type Asset = {
-    name: string,
-    type?: string,
-    url: string,
+    name: string;
+    type?: string;
+    url: string;
 }
 type ProtobufMessages = {
-    name: string,
+    name: string;
     range: {
-        min: string[],
-        max?: string[],
-    },
-    json: string,
+        min: string[];
+        max?: string[];
+    };
+    json: string;
 }
 export type Config = {
-    whitelist: WhiteList[],
-    management: WhiteList[],
-    knownHosts: KnownHost[],
-    webusb: WebUSB[],
-    resources: Resources,
-    assets: Asset[],
-    messages: ProtobufMessages[],
-    supportedBrowsers: { [key: string]: SupportedBrowser },
+    whitelist: WhiteList[];
+    management: WhiteList[];
+    knownHosts: KnownHost[];
+    webusb: WebUSB[];
+    resources: Resources;
+    assets: Asset[];
+    messages: ProtobufMessages[];
+    supportedBrowsers: { [key: string]: SupportedBrowser };
     supportedFirmware: Array<{|
-        coinType?: string,
-        coin?: string | string[],
-        excludedMethods?: string[],
-        min?: string[],
-        max?: string[],
-    |}>,
+        coinType?: string;
+        coin?: string | string[];
+        excludedMethods?: string[];
+        min?: string[];
+        max?: string[];
+    |}>;
 }
 
 type AssetCollection = { [key: string]: JSON };

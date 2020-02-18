@@ -13,14 +13,13 @@ import type {
 } from 'hd-wallet';
 
 import type { BitcoinNetworkInfo } from '../../../types';
-import type { DiscoveryAccount, AccountUtxo } from '../../../types/account';
-import type { SelectFeeLevel } from '../../../types/fee';
+import type { DiscoveryAccount, AccountUtxo, SelectFeeLevel } from '../../../types/account';
 
 type Options = {
-    account: DiscoveryAccount,
-    utxo: AccountUtxo[],
-    outputs: BuildTxOutputRequest[],
-    coinInfo: BitcoinNetworkInfo,
+    account: DiscoveryAccount;
+    utxo: AccountUtxo[];
+    outputs: BuildTxOutputRequest[];
+    coinInfo: BitcoinNetworkInfo;
 }
 
 export default class TransactionComposer {

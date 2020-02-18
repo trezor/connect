@@ -1,0 +1,34 @@
+export interface CipherKeyValue {
+    path: string | number[];
+    key?: string;
+    value?: string;
+    askOnEncrypt?: boolean;
+    askOnDecrypt?: boolean;
+    iv?: string;
+}
+
+export interface CipheredValue {
+    value: string;
+}
+
+export interface LoginChallenge {
+    challengeHidden: string;
+    challengeVisual: string;
+}
+
+export interface RequestLoginAsync {
+    callback: () => LoginChallenge;
+}
+
+export interface Login {
+    address: string;
+    publicKey: string;
+    signature: string;
+}
+
+export interface CustomMessage {
+    messages?: JSON | object;
+    message: string;
+    params: JSON | object;
+    callback: (request: any) => Promise<{ message: string; params?: object }>;
+}

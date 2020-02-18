@@ -1,25 +1,17 @@
 /* @flow */
-
-import type {
-    TestFunction,
-} from 'flowtype/tests';
-
-import type {
-    TestCardanoGetAddressPayload,
-    ExpectedCardanoGetAddressResponse,
-} from 'flowtype/tests/cardano-get-address';
+import type { CardanoGetAddress } from '../../js/types';
 
 // vectors from https://github.com/trezor/trezor-firmware/tree/master/python/trezorlib/tests/device_tests/test_msg_cardano_get_address.py
 
-export const cardanoGetAddress = (): TestFunction => {
-    const testPayloads: Array<TestCardanoGetAddressPayload> = [
+export const cardanoGetAddress = () => {
+    const testPayloads: CardanoGetAddress[] = [
         {
             method: 'cardanoGetAddress',
             path: "m/44'/1815'/0'/0/0",
         },
         {
             method: 'cardanoGetAddress',
-            path: "m/44'/1815'",
+            path: [2147483697],
         },
         {
             method: 'cardanoGetAddress',
@@ -31,7 +23,7 @@ export const cardanoGetAddress = (): TestFunction => {
         },
     ];
 
-    const expectedResponses: Array<ExpectedCardanoGetAddressResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 address: 'Ae2tdPwUPEZLCq3sFv4wVYxwqjMH2nUzBVt1HFr4v87snYrtYq3d3bq2PUQ',

@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Transaction as RawTransaction } from '../../../types/lisk';
+import type { LiskTransaction } from '../../../types/networks/lisk';
 
 const FIELDS_TO_RENAME = ['lifetime', 'keysgroup'];
 
@@ -17,7 +17,7 @@ const prepareField = (name: string, value: number | string, obj: any) => {
     obj[newName] = value;
 };
 
-export const prepareTx = (tx: RawTransaction, newTx: any = {}) => {
+export const prepareTx = (tx: LiskTransaction, newTx: any = {}) => {
     for (const field in tx) {
         const value = tx[field];
         if (typeof value === 'object' && !Array.isArray(value)) {

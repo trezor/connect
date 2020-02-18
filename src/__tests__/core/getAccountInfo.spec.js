@@ -1,24 +1,17 @@
 /* @flow */
-import type {
-    TestFunction,
-    SubtestGetAccountInfo,
-} from 'flowtype/tests';
-import type {
-    TestGetAccountInfoPayload,
-    ExpectedGetAccountInfoResponse,
-} from 'flowtype/tests/get-account-info';
+import type { GetAccountInfo } from '../../js/types';
 
 // Path specifies a first account (no address index)
 // Should return a xpub for the first account
-const firstSegwitAccount = (): SubtestGetAccountInfo => {
-    const testPayloads: Array<TestGetAccountInfoPayload> = [
+const firstSegwitAccount = () => {
+    const testPayloads: GetAccountInfo[] = [
         {
             method: 'getAccountInfo',
             coin: 'Bitcoin',
             path: "m/49'/0'/0'",
         },
     ];
-    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 descriptor: 'ypub6Y5EDdQK9nQzpNeMtgXxhBB3SoLk2SyR2MFLQYsBkAusAHpaQNxTTwefgnL9G3oFGrRS9VkVvyY1SaApFAzQPZ99wto5etdReeE3XFkkMZt',
@@ -33,15 +26,15 @@ const firstSegwitAccount = (): SubtestGetAccountInfo => {
     };
 };
 
-const firstLegacyAccount = (): SubtestGetAccountInfo => {
-    const testPayloads: Array<TestGetAccountInfoPayload> = [
+const firstLegacyAccount = () => {
+    const testPayloads: GetAccountInfo[] = [
         {
             method: 'getAccountInfo',
             coin: 'Bitcoin',
             path: "m/44'/0'/0'",
         },
     ];
-    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 descriptor: 'xpub6D1weXBcFAo8CqBbpP4TbH5sxQH8ZkqC5pDEvJ95rNNBZC9zrKmZP2fXMuve7ZRBe18pWQQsGg68jkq24mZchHwYENd8cCiSb71u3KD4AFH',
@@ -58,15 +51,15 @@ const firstLegacyAccount = (): SubtestGetAccountInfo => {
 
 // Path specifies a zero balance address
 // Should return a fresh address
-const emptyAccount = (): SubtestGetAccountInfo => {
-    const testPayloads: Array<TestGetAccountInfoPayload> = [
+const emptyAccount = () => {
+    const testPayloads: GetAccountInfo[] = [
         {
             method: 'getAccountInfo',
             coin: 'Testnet',
             path: "m/49'/1'/256'",
         },
     ];
-    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 balance: '0',
@@ -86,15 +79,15 @@ const emptyAccount = (): SubtestGetAccountInfo => {
 
 // Specifies an xpub instead of a path
 // Should get same response as with the path
-const segwitAccountFromDescriptor = (): SubtestGetAccountInfo => {
-    const testPayloads: Array<TestGetAccountInfoPayload> = [
+const segwitAccountFromDescriptor = () => {
+    const testPayloads: GetAccountInfo[] = [
         {
             method: 'getAccountInfo',
             coin: 'Bitcoin',
             descriptor: 'ypub6Y5EDdQK9nQzpNeMtgXxhBB3SoLk2SyR2MFLQYsBkAusAHpaQNxTTwefgnL9G3oFGrRS9VkVvyY1SaApFAzQPZ99wto5etdReeE3XFkkMZt',
         },
     ];
-    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 empty: false,
@@ -110,15 +103,15 @@ const segwitAccountFromDescriptor = (): SubtestGetAccountInfo => {
     };
 };
 
-const legacyAccountFromDescriptor = (): SubtestGetAccountInfo => {
-    const testPayloads: Array<TestGetAccountInfoPayload> = [
+const legacyAccountFromDescriptor = () => {
+    const testPayloads: GetAccountInfo[] = [
         {
             method: 'getAccountInfo',
             coin: 'Bitcoin',
             descriptor: 'xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G',
         },
     ];
-    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 descriptor: 'xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G',
@@ -133,15 +126,15 @@ const legacyAccountFromDescriptor = (): SubtestGetAccountInfo => {
     };
 };
 
-const ethereumAccount = (): SubtestGetAccountInfo => {
-    const testPayloads: Array<TestGetAccountInfoPayload> = [
+const ethereumAccount = () => {
+    const testPayloads: GetAccountInfo[] = [
         {
             method: 'getAccountInfo',
             coin: 'eth',
             path: "m/44'/60'/0'/0/0",
         },
     ];
-    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 descriptor: '0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8',
@@ -157,15 +150,15 @@ const ethereumAccount = (): SubtestGetAccountInfo => {
     };
 };
 
-const ethereumAccountFromDescriptor = (): SubtestGetAccountInfo => {
-    const testPayloads: Array<TestGetAccountInfoPayload> = [
+const ethereumAccountFromDescriptor = () => {
+    const testPayloads: GetAccountInfo[] = [
         {
             method: 'getAccountInfo',
             coin: 'eth',
             descriptor: '0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8',
         },
     ];
-    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 descriptor: '0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8',
@@ -181,15 +174,15 @@ const ethereumAccountFromDescriptor = (): SubtestGetAccountInfo => {
     };
 };
 
-const rippleAccount = (): SubtestGetAccountInfo => {
-    const testPayloads: Array<TestGetAccountInfoPayload> = [
+const rippleAccount = () => {
+    const testPayloads: GetAccountInfo[] = [
         {
             method: 'getAccountInfo',
             coin: 'xrp',
             path: "m/44'/144'/0'/0/0",
         },
     ];
-    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 descriptor: 'rh5ZnEVySAy7oGd3nebT3wrohGDrsNS83E',
@@ -205,15 +198,15 @@ const rippleAccount = (): SubtestGetAccountInfo => {
     };
 };
 
-const rippleAccountFromDescriptor = (): SubtestGetAccountInfo => {
-    const testPayloads: Array<TestGetAccountInfoPayload> = [
+const rippleAccountFromDescriptor = () => {
+    const testPayloads: GetAccountInfo[] = [
         {
             method: 'getAccountInfo',
             coin: 'xrp',
             descriptor: 'rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj',
         },
     ];
-    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 descriptor: 'rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj',
@@ -231,15 +224,15 @@ const rippleAccountFromDescriptor = (): SubtestGetAccountInfo => {
 
 // Path is invalid
 // Should fail
-const invalidPath = (): SubtestGetAccountInfo => {
-    const testPayloads: Array<TestGetAccountInfoPayload> = [
+const invalidPath = () => {
+    const testPayloads: GetAccountInfo[] = [
         {
             method: 'getAccountInfo',
             coin: 'Bitcoin',
             path: "m/49'/0'",
         },
     ];
-    const expectedResponses: Array<ExpectedGetAccountInfoResponse> = [
+    const expectedResponses = [
         { success: false },
     ];
 
@@ -250,25 +243,21 @@ const invalidPath = (): SubtestGetAccountInfo => {
     };
 };
 
-export const getAccountInfo = (): TestFunction => {
-    const availableSubtests = {
-        firstSegwitAccount,
-        firstLegacyAccount,
-        segwitAccountFromDescriptor,
-        legacyAccountFromDescriptor,
-        emptyAccount,
-        invalidPath,
-        ethereumAccount,
-        ethereumAccountFromDescriptor,
-        rippleAccount,
-        rippleAccountFromDescriptor,
-    };
-    const testName = 'GetAccountInfo';
+export const getAccountInfo = () => {
     return {
-        testName,
+        testName: 'GetAccountInfo',
         mnemonic: 'mnemonic_12',
         subtests: {
-            ...availableSubtests,
+            firstSegwitAccount,
+            firstLegacyAccount,
+            segwitAccountFromDescriptor,
+            legacyAccountFromDescriptor,
+            emptyAccount,
+            invalidPath,
+            ethereumAccount,
+            ethereumAccountFromDescriptor,
+            rippleAccount,
+            rippleAccountFromDescriptor,
         },
     };
 };

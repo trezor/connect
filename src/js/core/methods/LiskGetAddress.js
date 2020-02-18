@@ -9,12 +9,12 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { CoreMessage, UiPromiseResponse } from '../../types';
-import type { LiskAddress } from '../../types/lisk';
+import type { LiskAddress } from '../../types/networks/lisk';
 
 type Batch = {
-    path: Array<number>,
-    address: ?string,
-    showOnTrezor: boolean,
+    path: Array<number>;
+    address: ?string;
+    showOnTrezor: boolean;
 }
 
 type Params = Array<Batch>;

@@ -5,7 +5,7 @@ import * as UI from '../../constants/ui';
 import { validateParams } from './helpers/paramsValidator';
 import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
-import type { FirmwareUpload } from '../../types/trezor'; // flowtype only
+import type { FirmwareUpload } from '../../types/trezor/protobuf'; // flowtype only
 
 import type { CoreMessage } from '../../types';
 

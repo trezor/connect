@@ -16,8 +16,7 @@ import {
     showBackupNotification,
 } from './view/notification';
 
-import type { CoreMessage, PostMessageEvent } from '../types';
-import type { PopupInit, PopupHandshake } from '../types/uiRequest';
+import type { CoreMessage, PostMessageEvent, PopupInit, PopupHandshake } from '../types';
 
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/popup.less';

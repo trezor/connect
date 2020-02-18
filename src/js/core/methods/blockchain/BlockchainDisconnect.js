@@ -9,7 +9,7 @@ import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo } from '../../../types';
 
 type Params = {
-    coinInfo: CoinInfo,
+    coinInfo: CoinInfo;
 }
 
 export default class BlockchainDisconnect extends AbstractMethod {

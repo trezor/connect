@@ -5,13 +5,13 @@ import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 
-import type { LiskMessageSignature } from '../../types/trezor';
+import type { LiskMessageSignature } from '../../types/trezor/protobuf';
 import type { CoreMessage } from '../../types';
-import type { LiskMessageSignature as LiskMessageSignatureResponse } from '../../types/lisk';
+import type { LiskMessageSignature as LiskMessageSignatureResponse } from '../../types/networks/lisk';
 
 type Params = {
-    path: Array<number>,
-    message: string,
+    path: Array<number>;
+    message: string;
 }
 
 export default class LiskSignMessage extends AbstractMethod {

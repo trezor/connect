@@ -6,13 +6,13 @@ import { validatePath } from '../../utils/pathUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
 import { toChecksumAddress, getNetworkLabel, messageToHex } from '../../utils/ethereumUtils';
 
-import type { MessageSignature } from '../../types/trezor';
+import type { MessageSignature } from '../../types/trezor/protobuf';
 import type { CoreMessage, EthereumNetworkInfo } from '../../types';
 
 type Params = {
-    path: Array<number>,
-    network: ?EthereumNetworkInfo,
-    message: string,
+    path: Array<number>;
+    network: ?EthereumNetworkInfo;
+    message: string;
 }
 
 export default class EthereumSignMessage extends AbstractMethod {

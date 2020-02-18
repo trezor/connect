@@ -23,11 +23,11 @@ const _log: Log = initLog('DeviceList');
 
 // TODO: plugins are not typed in 'trezor-link'
 type LowLevelPlugin = {
-    name: 'WebUsbPlugin' | 'ReactNativePlugin',
+    name: 'WebUsbPlugin' | 'ReactNativePlugin';
     unreadableHidDeviceChange: {
-        on: (event: string, fn: any) => void,
-    },
-    unreadableHidDevice: boolean, // not sure
+        on: (event: string, fn: any) => void;
+    };
+    unreadableHidDevice: boolean; // not sure
 }
 
 export default class DeviceList extends EventEmitter {
@@ -46,7 +46,7 @@ export default class DeviceList extends EventEmitter {
         super();
 
         const { debug, env, webusb } = DataManager.settings;
-        _log.enabled = debug;
+        _log.enabled = !!debug;
 
         const transports: Transport[] = [];
 
@@ -374,7 +374,7 @@ class DiffHandler {
     }
 
     _emitEvents() {
-        const events: Array<{d: Array<DeviceDescriptor>, e: string}> = [
+        const events: Array<{d: Array<DeviceDescriptor>; e: string}> = [
             {
                 d: this.diff.changedSessions,
                 e: DEVICE.CHANGED,
@@ -387,7 +387,7 @@ class DiffHandler {
             },
         ];
 
-        events.forEach(({d, e}: {d: Array<DeviceDescriptor>, e: string}) => {
+        events.forEach(({d, e}: {d: Array<DeviceDescriptor>; e: string}) => {
             d.forEach((descriptor: DeviceDescriptor) => {
                 const path: string = descriptor.path.toString();
                 const device: Device = this.list.devices[path];

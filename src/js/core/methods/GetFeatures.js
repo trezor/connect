@@ -15,7 +15,7 @@ export default class GetFeatures extends AbstractMethod {
         this.skipFirmwareCheck = true;
     }
 
-    async run(): Promise<Object> {
-        return { ...this.device.features };
+    async run() {
+        return this.device.features;
     }
 }

@@ -9,16 +9,16 @@ import { NO_COIN_INFO } from '../../constants/errors';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { Address, MultisigRedeemScriptType, InputScriptType } from '../../types/trezor';
+import type { Address, MultisigRedeemScriptType, InputScriptType } from '../../types/trezor/protobuf';
 import type { CoreMessage, UiPromiseResponse, BitcoinNetworkInfo } from '../../types';
 
 type Batch = {
-    path: Array<number>,
-    address: ?string,
-    coinInfo: BitcoinNetworkInfo,
-    showOnTrezor: boolean,
-    multisig?: MultisigRedeemScriptType,
-    scriptType?: InputScriptType,
+    path: Array<number>;
+    address: ?string;
+    coinInfo: BitcoinNetworkInfo;
+    showOnTrezor: boolean;
+    multisig?: MultisigRedeemScriptType;
+    scriptType?: InputScriptType;
 }
 
 type Params = Array<Batch>;

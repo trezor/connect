@@ -1,9 +1,5 @@
 /* @flow */
 
-import type {
-    AvailableTestFunctions,
-} from 'flowtype/tests';
-
 import { cardanoGetAddress } from './cardanoGetAddress.spec.js';
 import { cardanoGetPublicKey } from './cardanoGetPublicKey.spec.js';
 import { cardanoSignTransaction } from './cardanoSignTransaction.spec.js';
@@ -55,8 +51,9 @@ import { binanceSignTransaction } from './binanceSignTransaction.spec';
 import { applySettings } from './applySettings.spec';
 import { applyFlags } from './applyFlags.spec';
 import { stellarSignTransaction } from './stellarSignTransaction.spec';
+import { stellarGetAddress } from './stellarGetAddress.spec';
 
-export const testFunctions: AvailableTestFunctions = {
+export const testFunctions = {
     cardanoGetAddress,
     cardanoGetPublicKey,
     cardanoSignTransaction,
@@ -108,4 +105,5 @@ export const testFunctions: AvailableTestFunctions = {
     applySettings,
     applyFlags,
     stellarSignTransaction,
+    stellarGetAddress,
 };

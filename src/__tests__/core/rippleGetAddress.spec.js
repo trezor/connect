@@ -1,15 +1,8 @@
 /* @flow */
-import type {
-    TestFunction,
-} from 'flowtype/tests';
+import type { RippleGetAddress } from '../../js/types';
 
-import type {
-    TestRippleGetAddressPayload,
-    ExpectedRippleGetAddressResponse,
-} from 'flowtype/tests/ripple-get-address';
-
-export const rippleGetAddress = (): TestFunction => {
-    const testPayloads: Array<TestRippleGetAddressPayload> = [
+export const rippleGetAddress = () => {
+    const testPayloads: RippleGetAddress[] = [
         {
             method: 'rippleGetAddress',
             path: "m/44'/144'/0'/0/0",
@@ -23,7 +16,7 @@ export const rippleGetAddress = (): TestFunction => {
             path: "m/44'/144'/1'/0/0",
         },
     ];
-    const expectedResponses: Array<ExpectedRippleGetAddressResponse> = [
+    const expectedResponses = [
         {
             payload: {
                 address: 'rh5ZnEVySAy7oGd3nebT3wrohGDrsNS83E',

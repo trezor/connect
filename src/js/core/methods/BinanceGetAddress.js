@@ -9,12 +9,12 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { CoreMessage, UiPromiseResponse } from '../../types';
-import type { BinanceAddress } from '../../types/binance';
+import type { BinanceAddress } from '../../types/networks/binance';
 
 type Batch = {
-    path: Array<number>,
-    address: ?string,
-    showOnTrezor: boolean,
+    path: Array<number>;
+    address: ?string;
+    showOnTrezor: boolean;
 }
 
 type Params = Array<Batch>;

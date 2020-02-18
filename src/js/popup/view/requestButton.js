@@ -1,7 +1,7 @@
 /* @flow */
 
 import { container, showView } from './common';
-import type { ButtonRequestMessage } from '../../types/uiRequest';
+import type { ButtonRequestMessage } from '../../types/events';
 
 let toastTimeout;
 

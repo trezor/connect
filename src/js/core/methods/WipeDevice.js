@@ -5,7 +5,7 @@ import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import { getFirmwareRange } from './helpers/paramsValidator';
-import type { Success } from '../../types/trezor';
+import type { Success } from '../../types/trezor/protobuf';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 export default class WipeDevice extends AbstractMethod {

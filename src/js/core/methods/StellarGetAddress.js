@@ -8,13 +8,13 @@ import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathU
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { StellarAddress } from '../../types/stellar';
+import type { StellarAddress } from '../../types/networks/stellar';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
 
 type Batch = {
-    path: Array<number>,
-    address: ?string,
-    showOnTrezor: boolean,
+    path: Array<number>;
+    address: ?string;
+    showOnTrezor: boolean;
 }
 
 type Params = Array<Batch>;
