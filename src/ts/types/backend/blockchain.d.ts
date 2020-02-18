@@ -1,6 +1,6 @@
 import { BLOCKCHAIN } from '../constants';
 import { CoinInfo } from '../networks/coinInfo';
-import { AccountAddresses, FeeLevel } from '../account';
+import { AccountAddresses, AccountTransaction, FeeLevel } from '../account';
 import { BlockbookTransaction, RippleLibTransaction } from './transactions';
 
 export interface BlockchainInfo {
@@ -29,47 +29,12 @@ export interface BlockchainError {
     error: string;
 }
 
-// copy-paste from blockchain-link
-export interface BlockchainLinkInput {
-    addresses: string[];
-    // amount: string,
-    // fee: string,
-    // total: string,
-}
-
-export interface BlockchainLinkOutput {
-    addresses: string[];
-    // amount: string,
-}
-
-export interface BlockchainLinkToken {
-    name: string;
-    shortcut: string;
-    value: string;
-}
-
-export interface BlockchainLinkTransaction {
-    type: 'send' | 'recv';
-    timestamp?: number;
-    blockHeight?: number;
-    blockHash?: string;
-    descriptor: string;
-    inputs: BlockchainLinkInput[];
-    outputs: BlockchainLinkOutput[];
-
-    hash: string;
-    amount: string;
-    fee: string;
-    total: string;
-
-    tokens?: BlockchainLinkToken[];
-    sequence?: number; // eth: nonce || ripple: sequence
-}
-// copy-paste from blockchain-link end
-
 export interface BlockchainNotification {
     coin: CoinInfo;
-    notification: BlockchainLinkTransaction;
+    notification: {
+        descriptor: string;
+        tx: AccountTransaction;
+    };
 }
 
 export interface BlockchainSubscribeAccount {

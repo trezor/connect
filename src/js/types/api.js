@@ -39,6 +39,18 @@ interface Emitter {
     (type: typeof CONSTANTS.TRANSPORT_EVENT, cb: (event: Events.TransportEvent) => void): void;
     (type: typeof CONSTANTS.UI_EVENT, cb: (event: Events.UiEvent) => void): void;
     (type: typeof CONSTANTS.BLOCKCHAIN_EVENT, cb: (event: Blockchain.BlockchainEvent) => void): void;
+
+    (type: $PropertyType<Events.MessageWithoutPayload, 'type'>, cb: () => void): void;
+    (type: $PropertyType<Events.DeviceMessage, 'type'>, cb: (event: $PropertyType<Events.DeviceMessage, 'payload'>) => void): void;
+    (type: $PropertyType<Events.ButtonRequestMessage, 'type'>, cb: (event: $PropertyType<Events.ButtonRequestMessage, 'payload'>) => void): void;
+    (type: $PropertyType<Events.AddressValidationMessage, 'type'>, cb: (event: $PropertyType<Events.AddressValidationMessage, 'payload'>) => void): void;
+    (type: $PropertyType<Events.RequestPermission, 'type'>, cb: (event: $PropertyType<Events.RequestPermission, 'payload'>) => void): void;
+    (type: $PropertyType<Events.RequestConfirmation, 'type'>, cb: (event: $PropertyType<Events.RequestConfirmation, 'payload'>) => void): void;
+    (type: $PropertyType<Events.UnexpectedDeviceMode, 'type'>, cb: (event: $PropertyType<Events.UnexpectedDeviceMode, 'payload'>) => void): void;
+    (type: $PropertyType<Events.FirmwareException, 'type'>, cb: (event: $PropertyType<Events.FirmwareException, 'payload'>) => void): void;
+    <R>(type: typeof CONSTANTS.UI.BUNDLE_PROGRESS, cb: (event: $PropertyType<Events.BundleProgress<R>, 'payload'>) => void): void;
+    (type: $PropertyType<Events.FirmwareProgress, 'type'>, cb: (event: $PropertyType<Events.FirmwareProgress, 'payload'>) => void): void;
+    (type: $PropertyType<Events.CustomMessageRequest, 'type'>, cb: (event: $PropertyType<Events.CustomMessageRequest, 'payload'>) => void): void;
 }
 
 export type API = {
@@ -124,7 +136,7 @@ export type API = {
         Account.ComposeParams,
         Account.PrecomposeParams,
         Bitcoin.SignedTransaction,
-        Account.PrecomposedTransaction>;
+        Account.PrecomposedTransaction[]>;
 
     /**
      * Bitcoin, Bitcoin-like, Ethereum-like, Ripple

@@ -1,25 +1,40 @@
-import { TRANSPORT, TRANSPORT_EVENT, UI, IFRAME, POPUP } from './constants';
+import { TRANSPORT, UI, IFRAME, POPUP } from './constants';
 import { ConnectSettings } from './params';
 import { Device } from './trezor/device';
 import { DiscoveryAccount, SelectFeeLevel } from './account';
 import { CoinInfo, BitcoinNetworkInfo } from './networks/coinInfo';
 
+export interface BridgeInfo {
+    version: number[];
+    directory: string;
+    packages: Array<{
+        name: string;
+        platform: string[];
+        url: string;
+        signature?: string;
+        preferred?: boolean;
+    }>;
+    changelog: string;
+}
+
 export interface TransportInfo {
     type: string;
     version: string;
     outdated: boolean;
+    bridge?: BridgeInfo;
 }
 
 export type TransportEvent =
     | {
-          event: typeof TRANSPORT_EVENT;
           type: typeof TRANSPORT.START;
           payload: TransportInfo;
       }
     | {
-          event: typeof TRANSPORT_EVENT;
           type: typeof TRANSPORT.ERROR;
-          payload: string;
+          payload: {
+              error: string;
+              bridge?: BridgeInfo;
+          };
       };
 
 /*
@@ -182,11 +197,12 @@ export interface UpdateCustomFee {
     };
 }
 
-export interface BundleProgress {
+export interface BundleProgress<R> {
     type: typeof UI.BUNDLE_PROGRESS;
     payload: {
         progress: number;
-        response: object;
+        response: R;
+        error?: string;
     };
 }
 
@@ -212,6 +228,7 @@ export interface CustomMessageRequest {
 export type UiEvent =
     | MessageWithoutPayload
     | DeviceMessage
+    | ButtonRequestMessage
     | PopupHandshake
     | RequestPermission
     | RequestConfirmation
@@ -220,7 +237,8 @@ export type UiEvent =
     | SelectAccount
     | SelectFee
     | UpdateCustomFee
-    | BundleProgress
+    | BundleProgress<any>
+    | FirmwareProgress
     | CustomMessageRequest;
 
 export interface ReceivePermission {

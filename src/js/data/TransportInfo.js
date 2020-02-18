@@ -1,21 +1,11 @@
 /* @flow */
-
-export type BridgeInfo = {
-    version: number[];
-    directory: string;
-    packages: {
-        name: string;
-        platform: string[];
-        url: string;
-        signature?: string;
-        preferred?: boolean;
-    }[];
-}
+import type { BridgeInfo } from '../types';
 
 const info: BridgeInfo = {
     version: [],
     directory: '',
     packages: [],
+    changelog: '',
 };
 
 // Parse JSON loaded from config.assets.bridge

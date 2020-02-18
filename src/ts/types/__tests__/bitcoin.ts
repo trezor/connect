@@ -311,7 +311,7 @@ export const composeTransaction = async () => {
     });
 
     if (precompose.success) {
-        const tx = precompose.payload;
+        const tx = precompose.payload[0];
         if (tx.type === 'error') {
             tx.error;
         }

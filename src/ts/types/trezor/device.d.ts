@@ -1,4 +1,4 @@
-import { DEVICE, DEVICE_EVENT } from '../constants';
+import { DEVICE } from '../constants';
 
 export interface DeviceStateResponse {
     state: string;
@@ -96,7 +96,6 @@ export type Device =
       };
 
 export interface DeviceEvent {
-    event: typeof DEVICE_EVENT;
     type: typeof DEVICE.CONNECT | typeof DEVICE.CONNECT_UNACQUIRED | typeof DEVICE.CHANGED | typeof DEVICE.DISCONNECT;
     payload: Device;
 }

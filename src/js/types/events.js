@@ -1,7 +1,6 @@
 /* @flow */
 import {
     TRANSPORT,
-    TRANSPORT_EVENT,
     UI,
     IFRAME,
     POPUP,
@@ -11,22 +10,36 @@ import type { Device } from './trezor/device';
 import type { DiscoveryAccount, SelectFeeLevel } from './account';
 import type { CoinInfo, BitcoinNetworkInfo } from './networks/coinInfo';
 
+export interface BridgeInfo {
+    version: number[];
+    directory: string;
+    packages: Array<{
+        name: string;
+        platform: string[];
+        url: string;
+        signature?: string;
+        preferred?: boolean;
+    }>;
+    changelog: string;
+}
 export type TransportInfo = {
     type: string;
     version: string;
     outdated: boolean;
+    bridge?: BridgeInfo;
 }
 
 export type TransportEvent =
     | {
-            event: typeof TRANSPORT_EVENT;
             type: typeof TRANSPORT.START;
             payload: TransportInfo;
         }
     | {
-            event: typeof TRANSPORT_EVENT;
             type: typeof TRANSPORT.ERROR;
-            payload: string;
+            payload: {
+                error: string;
+                bridge?: BridgeInfo;
+            };
         };
 
 /*
@@ -181,11 +194,12 @@ export type UpdateCustomFee = {
     };
 }
 
-export type BundleProgress = {
+export type BundleProgress<R> = {
     type: typeof UI.BUNDLE_PROGRESS;
     payload: {
         progress: number;
-        response: Object;
+        response: R;
+        error?: string;
     };
 }
 
@@ -211,6 +225,7 @@ export type CustomMessageRequest = {
 export type UiEvent =
     MessageWithoutPayload
     | DeviceMessage
+    | ButtonRequestMessage
     | PopupHandshake
     | RequestPermission
     | RequestConfirmation
@@ -219,7 +234,8 @@ export type UiEvent =
     | SelectAccount
     | SelectFee
     | UpdateCustomFee
-    | BundleProgress
+    | BundleProgress<any>
+    | FirmwareProgress
     | CustomMessageRequest;
 
 type ReceivePermission = {
@@ -316,7 +332,7 @@ export interface UiMessageBuilder {
     (type: FT<SelectAccount>, payload: FP<SelectAccount>): CoreMessage;
     (type: FT<SelectFee>, payload: FP<SelectFee>): CoreMessage;
     (type: FT<UpdateCustomFee>, payload: FP<UpdateCustomFee>): CoreMessage;
-    (type: FT<BundleProgress>, payload: FP<BundleProgress>): CoreMessage;
+    (type: FT<BundleProgress<any>>, payload: FP<BundleProgress<any>>): CoreMessage;
     (type: FT<FirmwareProgress>, payload: FP<FirmwareProgress>): CoreMessage;
     (type: FT<CustomMessageRequest>, payload: FP<CustomMessageRequest>): CoreMessage;
     // ui response

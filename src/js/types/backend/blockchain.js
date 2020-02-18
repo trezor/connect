@@ -1,7 +1,7 @@
 /* @flow */
 import { BLOCKCHAIN } from '../../constants';
 import type { CoinInfo } from '../networks/coinInfo';
-import type { AccountAddresses, FeeLevel } from '../account';
+import type { AccountAddresses, AccountTransaction, FeeLevel } from '../account';
 import type { BlockbookTransaction, RippleLibTransaction } from './transactions';
 import type { CoreMessage } from '../params';
 
@@ -30,48 +30,12 @@ export type BlockchainError = {
     coin: CoinInfo;
     error: string;
 }
-
-// copy-paste from blockchain-link
-type BlockchainLinkInput = {
-    addresses: Array<string>;
-    // amount: string,
-    // fee: string,
-    // total: string,
-}
-
-type BlockchainLinkOutput = {
-    addresses: Array<string>;
-    // amount: string,
-}
-
-type BlockchainLinkToken = {
-    name: string;
-    shortcut: string;
-    value: string;
-}
-
-export type BlockchainLinkTransaction = {
-    type: 'send' | 'recv';
-    timestamp?: number;
-    blockHeight?: number;
-    blockHash?: string;
-    descriptor: string;
-    inputs: BlockchainLinkInput[];
-    outputs: BlockchainLinkOutput[];
-
-    hash: string;
-    amount: string;
-    fee: string;
-    total: string;
-
-    tokens?: BlockchainLinkToken[];
-    sequence?: number; // eth: nonce || ripple: sequence
-}
-// copy-paste from blockchain-link end
-
 export type BlockchainNotification = {
     coin: CoinInfo;
-    notification: BlockchainLinkTransaction;
+    notification: {
+        descriptor: string;
+        tx: AccountTransaction;
+    };
 }
 
 export type BlockchainSubscribeAccount = {

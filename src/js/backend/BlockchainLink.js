@@ -1,13 +1,13 @@
 /* @flow */
 import { Transaction as BitcoinJsTransaction } from '@trezor/utxo-lib';
-import BlockchainLink, { GetAccountInfo } from '@trezor/blockchain-link';
+import BlockchainLink from '@trezor/blockchain-link';
 import { BlockchainMessage } from '../message/builder';
 import * as BLOCKCHAIN from '../constants/blockchain';
 import type {
     CoreMessage,
     CoinInfo,
+    GetAccountInfo,
     BlockchainBlock,
-    BlockchainLinkTransaction,
     BlockchainSubscribeAccount,
     BlockchainTransactions,
 } from '../types';
@@ -125,7 +125,7 @@ export default class Blockchain {
         return this.link.getInfo();
     }
 
-    async getAccountInfo(request: GetAccountInfo) {
+    async getAccountInfo(request: $Shape<GetAccountInfo>) {
         return this.link.getAccountInfo(request);
     }
 
@@ -167,7 +167,7 @@ export default class Blockchain {
 
         // set notification listener if it wasn't set before
         if (this.link.listenerCount('notification') === 0) {
-            this.link.on('notification', (notification: BlockchainLinkTransaction) => {
+            this.link.on('notification', notification => {
                 this.postMessage(BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
                     coin: this.coinInfo,
                     notification,

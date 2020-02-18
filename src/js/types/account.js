@@ -76,6 +76,7 @@ type TransactionTarget = {
     coinbase?: string;
 }
 
+// Transaction from @trezor/blockchain-link
 export type AccountTransaction = {
     type: 'sent' | 'recv' | 'self' | 'unknown';
 
@@ -100,7 +101,7 @@ export type AccountTransaction = {
     };
 }
 
-// getAccountInfo response
+// getAccountInfo response from @trezor/blockchain-link
 export type AccountInfo = {
     empty: boolean;
     path: string;

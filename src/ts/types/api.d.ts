@@ -48,10 +48,21 @@ export namespace TrezorConnect {
     /**
      * Event listeners
      */
-    function on(type: typeof CONSTANTS.DEVICE_EVENT, cb: (event: Device.DeviceEvent) => void): void;
-    function on(type: typeof CONSTANTS.TRANSPORT_EVENT, cb: (event: Events.TransportEvent) => void): void;
-    function on(type: typeof CONSTANTS.UI_EVENT, cb: (event: Events.UiEvent) => void): void;
-    function on(type: typeof CONSTANTS.BLOCKCHAIN_EVENT, cb: (event: Blockchain.BlockchainEvent) => void): void;
+    function on(type: typeof CONSTANTS.DEVICE_EVENT, cb: (event: Device.DeviceEvent & { event: typeof CONSTANTS.DEVICE_EVENT }) => void): void;
+    function on(type: typeof CONSTANTS.TRANSPORT_EVENT, cb: (event: Events.TransportEvent & { event: typeof CONSTANTS.TRANSPORT_EVENT }) => void): void;
+    function on(type: typeof CONSTANTS.UI_EVENT, cb: (event: Events.UiEvent & { event: typeof CONSTANTS.UI_EVENT }) => void): void;
+    function on(type: typeof CONSTANTS.BLOCKCHAIN_EVENT, cb: (event: Blockchain.BlockchainEvent & { event: typeof CONSTANTS.BLOCKCHAIN_EVENT }) => void): void;
+    function on(type: Events.MessageWithoutPayload['type'], cb: () => void): void;
+    function on(type: Events.DeviceMessage['type'], cb: (event: Events.DeviceMessage['payload']) => void): void;
+    function on(type: Events.ButtonRequestMessage['type'], cb: (event: Events.ButtonRequestMessage['payload']) => void): void;
+    function on(type: Events.AddressValidationMessage['type'], cb: (event: Events.AddressValidationMessage['payload']) => void): void;
+    function on(type: Events.RequestPermission['type'], cb: (event: Events.RequestPermission['payload']) => void): void;
+    function on(type: Events.RequestConfirmation['type'], cb: (event: Events.RequestConfirmation['payload']) => void): void;
+    function on(type: Events.UnexpectedDeviceMode['type'], cb: (event: Events.UnexpectedDeviceMode['payload']) => void): void;
+    function on(type: Events.FirmwareException['type'], cb: (event: Events.FirmwareException['payload']) => void): void;
+    function on<R>(type: typeof CONSTANTS.UI.BUNDLE_PROGRESS, cb: (event: Events.BundleProgress<R>['payload']) => void): void;
+    function on(type: Events.FirmwareProgress['type'], cb: (event: Events.FirmwareProgress['payload']) => void): void;
+    function on(type: Events.CustomMessageRequest['type'], cb: (event: Events.CustomMessageRequest['payload']) => void): void;
     function off(type: string, cb: any): void;
 
     function uiResponse(response: Events.UiResponse): void;
@@ -119,7 +130,7 @@ export namespace TrezorConnect {
     function composeTransaction(params: P.CommonParams & Account.ComposeParams): P.Response<Bitcoin.SignedTransaction>;
     function composeTransaction(
         params: P.CommonParams & Account.PrecomposeParams,
-    ): P.Response<Account.PrecomposedTransaction>;
+    ): P.Response<Account.PrecomposedTransaction[]>;
 
     /**
      * Bitcoin, Bitcoin-like, Ethereum-like, Ripple

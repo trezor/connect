@@ -1,5 +1,5 @@
 /* @flow */
-import { DEVICE, DEVICE_EVENT } from '../../constants';
+import { DEVICE } from '../../constants';
 
 export type DeviceStateResponse = {
     state: string;
@@ -97,7 +97,6 @@ export type Device =
           };
 
 export type DeviceEvent = {
-    event: typeof DEVICE_EVENT;
     type: | typeof DEVICE.CONNECT
         | typeof DEVICE.CONNECT_UNACQUIRED
         | typeof DEVICE.CHANGED
