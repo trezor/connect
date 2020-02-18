@@ -4,7 +4,8 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
-import { stripHexPrefix, getNetworkLabel } from '../../utils/ethereumUtils';
+import { getNetworkLabel } from '../../utils/ethereumUtils';
+import { stripHexPrefix } from '../../utils/formatUtils';
 import * as helper from './helpers/ethereumSignTx';
 
 import type { CoreMessage } from '../../types';
