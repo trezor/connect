@@ -9,7 +9,7 @@ script:
   - npm install -g yarn
   - yarn
   - yarn flow
-  - yarn eslint
+  - yarn lint
   - yarn test:unit
   - make build-connect
 
