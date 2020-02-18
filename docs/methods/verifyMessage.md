@@ -22,6 +22,7 @@ TrezorConnect.verifyMessage(params).then(function(result) {
 * `message` - *obligatory* `string` signed message,
 * `signature` - *obligatory* `string` signature in base64 format,
 * `coin` - *obligatory* `string` Determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
+* `hex` - *optional* `boolean` convert message from hex
 
 ### Example
 ```javascript

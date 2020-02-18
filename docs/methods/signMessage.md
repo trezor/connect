@@ -20,6 +20,7 @@ TrezorConnect.signMessage(params).then(function(result) {
 * `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
 * `message` - *obligatory* `string`
 * `coin` - *optional* `string` Determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used. If `coin` is not set API will try to get network definition from `path`.
+* `hex` - *optional* `boolean` convert message from hex
 
 ### Example
 ```javascript
