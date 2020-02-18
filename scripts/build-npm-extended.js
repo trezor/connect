@@ -42,14 +42,6 @@ fse.copySync(dataSrc, data, {
     },
 });
 
-fse.copySync(dataSrc, data, {
-    filter: function (src, dest) {
-        const ext = src.split('.').pop();
-        const copy = ext === 'json' || ext.indexOf('/') >= 0;
-        return copy;
-    },
-});
-
 // modify package.json
 packageJSON.dependencies = {
     ...packageJSON.dependencies,
