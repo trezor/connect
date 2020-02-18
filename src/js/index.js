@@ -247,7 +247,7 @@ const TrezorConnect: API = {
     },
 
     backupDevice: params => {
-        return call({ method: 'backupDevice' });
+        return call({ method: 'backupDevice', ...params });
     },
 
     changePin: params => {
