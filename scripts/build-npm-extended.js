@@ -16,10 +16,6 @@ const shouldIgnore = (src) => ignored.find(i => src.indexOf(i) >= 0);
 fse.copySync(src, lib, {
     filter: function (src, dest) {
         if (shouldIgnore(src)) return false;
-        // do not copy "*/_old" directory
-        // if (src.indexOf('_old') >= 0) return false;
-        // do not copy "__test__" directory
-        // if (src.indexOf('__tests__') >= 0) return false;
         const ext = src.split('.').pop();
         if (ext === 'js') {
             fse.copySync(src, dest + '.flow');
@@ -32,8 +28,6 @@ fse.copySync(src, lib, {
 fse.copySync(ts, `${lib}/typescript`, {
     filter: function (src, dest) {
         if (shouldIgnore(src)) return false;
-        // do not copy "__test__" directory
-        // if (src.indexOf('__tests__') >= 0) return false;
         if (src.indexOf('.json') >= 0) return false;
         return true;
     },
@@ -43,9 +37,6 @@ fse.copySync(ts, `${lib}/typescript`, {
 fse.copySync(dataSrc, data, {
     filter: function (src, dest) {
         return !shouldIgnore(src);
-        // const ext = src.split('.').pop();
-        // const copy = ext === 'json' || ext.indexOf('/') >= 0;
-        // return copy;
     },
 });
 
