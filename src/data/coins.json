@@ -2402,6 +2402,22 @@
         },
         {
             "blockbook": [],
+            "chain": "ere",
+            "chain_id": 466,
+            "name": "EtherCore",
+            "rskip60": false,
+            "shortcut": "ERE",
+            "slip44": 466,
+            "support": {
+                "connect": true,
+                "trezor1": "1.8.4",
+                "trezor2": "2.2.2",
+                "webwallet": false
+            },
+            "url": "https://ethercore.org"
+        },
+        {
+            "blockbook": [],
             "chain": "clo",
             "chain_id": 820,
             "name": "Callisto",

@@ -1,6 +1,19 @@
 [
 	{
 		"required": false,
+		"version": [2, 2, 0],
+		"min_bridge_version": [2, 0, 7],
+		"min_firmware_version": [2, 0, 8],
+		"min_bootloader_version": [2, 0, 0],
+		"url": "data/firmware/2/trezor-2.2.0.bin",
+		"url_bitcoinonly": "data/firmware/2/trezor-2.2.0-bitcoinonly.bin",
+		"fingerprint": "1df674a59e718199a381cb10885ac4ba4ef580161da4fac3bbd95e989f428b7b",
+		"fingerprint_bitcoinonly": "f48e49cf3ab6369eeb3fbe4ede008b1ca6becc8f99eac3388111f93dccfc4c43",
+		"channel": "beta",
+		"changelog": "* Introduce Wipe code\n* U2F UX improvements\n* Fix continuous display blinking with Android in U2F\n* Rework Recovery persistence internally\n* Add screen for time bounds in Stellar"
+	},
+	{
+		"required": false,
 		"version": [2, 1, 8],
 		"min_bridge_version": [2, 0, 7],
 		"min_firmware_version": [2, 1, 0],
