@@ -103,6 +103,7 @@ describe('utils/deviceFeaturesUtils', () => {
             bnb: 'no-capability',
             cpc: 'no-support',
             eos: 'no-capability',
+            ere: 'update-required',
             ppc: 'update-required',
             tppc: 'update-required',
             txrp: 'no-capability',
@@ -122,7 +123,9 @@ describe('utils/deviceFeaturesUtils', () => {
         feat2.capabilities = parseCapabilities(feat2);
 
         // default Capabilities T2
-        expect(getUnavailableCapabilities(feat2, coins, support)).toEqual({});
+        expect(getUnavailableCapabilities(feat2, coins, support)).toEqual({
+            ere: 'update-required',
+        });
 
         // excluded single method without specified coins
         expect(
@@ -137,6 +140,7 @@ describe('utils/deviceFeaturesUtils', () => {
                 ]
             ),
         ).toEqual({
+            ere: 'update-required',
             getAccountInfo: 'update-required',
         });
 
@@ -154,6 +158,7 @@ describe('utils/deviceFeaturesUtils', () => {
                 ]
             ),
         ).toEqual({
+            ere: 'update-required',
             getAccountInfo: ['xrp', 'txrp'],
         });
 
@@ -175,6 +180,7 @@ describe('utils/deviceFeaturesUtils', () => {
                 ]
             ),
         ).toEqual({
+            ere: 'update-required',
             rippleGetAddress: ['xrp', 'txrp'],
             tezosSignTransaction: 'trezor-connect-outdated',
         });
