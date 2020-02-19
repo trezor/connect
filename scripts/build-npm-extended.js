@@ -14,8 +14,8 @@ fse.copySync(src, lib, {
     filter: function (src, dest) {
         // do not copy "*/_old" directory
         if (src.indexOf('_old') >= 0) return false;
-        // do not copy "types/__test__" directory
-        if (src.indexOf('types/__tests__') >= 0) return false;
+        // do not copy "__test__" directory
+        if (src.indexOf('__tests__') >= 0) return false;
         const ext = src.split('.').pop();
         if (ext === 'js') {
             fse.copySync(src, dest + '.flow');
@@ -27,7 +27,8 @@ fse.copySync(src, lib, {
 // copy typescript
 fse.copySync(ts, `${lib}/typescript`, {
     filter: function (src, dest) {
-        if (src.indexOf('types/__tests__') >= 0) return false;
+        // do not copy "__test__" directory
+        if (src.indexOf('__tests__') >= 0) return false;
         if (src.indexOf('.json') >= 0) return false;
         return true;
     },
