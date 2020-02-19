@@ -1898,15 +1898,6 @@
                 },
                 {
                     "rule": "optional",
-                    "options": {
-                        "deprecated": true
-                    },
-                    "type": "bytes",
-                    "name": "_state",
-                    "id": 2
-                },
-                {
-                    "rule": "optional",
                     "options": {},
                     "type": "bool",
                     "name": "on_device",
@@ -2455,6 +2446,102 @@
             ],
             "enums": [],
             "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "DebugLinkShowText",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "header_text",
+                    "id": 1
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "DebugLinkShowTextItem",
+                    "name": "body_text",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "header_icon",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "icon_color",
+                    "id": 4
+                }
+            ],
+            "enums": [
+                {
+                    "name": "DebugLinkShowTextStyle",
+                    "values": [
+                        {
+                            "name": "NORMAL",
+                            "id": 0
+                        },
+                        {
+                            "name": "BOLD",
+                            "id": 1
+                        },
+                        {
+                            "name": "MONO",
+                            "id": 2
+                        },
+                        {
+                            "name": "MONO_BOLD",
+                            "id": 3
+                        },
+                        {
+                            "name": "BR",
+                            "id": 4
+                        },
+                        {
+                            "name": "BR_HALF",
+                            "id": 5
+                        },
+                        {
+                            "name": "SET_COLOR",
+                            "id": 6
+                        }
+                    ],
+                    "options": {}
+                }
+            ],
+            "messages": [
+                {
+                    "name": "DebugLinkShowTextItem",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "DebugLinkShowTextStyle",
+                            "name": "style",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "content",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
             "options": {},
             "oneofs": {}
         },
@@ -4035,9 +4122,7 @@
                         },
                         {
                             "rule": "optional",
-                            "options": {
-                                "default": 0
-                            },
+                            "options": {},
                             "type": "uint64",
                             "name": "amount",
                             "id": 2
@@ -9458,6 +9543,10 @@
                 {
                     "name": "MessageType_DebugLinkRecordScreen",
                     "id": 9003
+                },
+                {
+                    "name": "MessageType_DebugLinkShowText",
+                    "id": 9004
                 },
                 {
                     "name": "MessageType_EthereumGetPublicKey",
