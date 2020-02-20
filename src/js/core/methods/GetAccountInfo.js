@@ -239,7 +239,6 @@ export default class GetAccountInfo extends AbstractMethod {
                     if (accountDescriptor) {
                         descriptor = accountDescriptor.descriptor;
                     }
-                    if (request.coinInfo.shortcut === 'LTC') { throw Error('Some fail...'); }
                 } catch (error) {
                     if (this.hasBundle) {
                         responses.push(null);
