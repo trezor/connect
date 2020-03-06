@@ -298,7 +298,7 @@ export default class Device extends EventEmitter {
             }
 
             // T1: forget passphrase cached in internal state
-            if (this.isT1() && !this.useLegacyPassphrase()) {
+            if (this.isT1() && this.useLegacyPassphrase()) {
                 this.setInternalState(undefined);
             }
         }
@@ -389,6 +389,10 @@ export default class Device extends EventEmitter {
             this.unavailableCapabilities = getUnavailableCapabilities(feat, getAllNetworks(), DataManager.getConfig().supportedFirmware);
             this.firmwareStatus = checkFirmware(version, feat);
             this.firmwareRelease = getLatestRelease(version);
+        }
+        // GetFeatures doesn't return 'session_id'
+        if (this.features && this.features.session_id && !feat.session_id) {
+            feat.session_id = this.features.session_id;
         }
         this.features = feat;
         this.featuresNeedsReload = false;
@@ -599,6 +603,7 @@ export default class Device extends EventEmitter {
             const label = this.features.label === '' || this.features.label === null ? defaultLabel : this.features.label;
             return {
                 type: 'acquired',
+                id: this.features.device_id,
                 path: this.originalDescriptor.path,
                 label: label,
                 state: this.getExternalState(),
