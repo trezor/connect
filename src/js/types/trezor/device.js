@@ -79,6 +79,7 @@ export type Features = {
 export type Device =
         | {
               type: 'acquired';
+              id: string | null;
               path: string;
               label: string;
               firmware: DeviceFirmwareStatus;
