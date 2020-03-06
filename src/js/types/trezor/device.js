@@ -43,20 +43,20 @@ export type FirmwareRelease = {
 }
 
 export type Features = {
-    bootloader_hash?: string | null;
-    bootloader_mode?: boolean | null;
-    device_id: string | null;
-    firmware_present?: boolean | null;
+    bootloader_hash?: string;
+    bootloader_mode?: boolean;
+    device_id?: string;
+    firmware_present?: boolean;
     flags: number;
-    fw_major?: number | null;
-    fw_minor?: number | null;
-    fw_patch?: number | null;
-    fw_vendor?: string | null;
-    fw_vendor_keys?: string | null;
-    imported?: boolean | null;
+    fw_major?: number;
+    fw_minor?: number;
+    fw_patch?: number;
+    fw_vendor?: string;
+    fw_vendor_keys?: string;
+    imported?: boolean;
     initialized: boolean;
-    label: string | null;
-    language?: string | null;
+    label: string;
+    language?: string;
     major_version: number;
     minor_version: number;
     model: string;
@@ -79,6 +79,7 @@ export type Features = {
 export type Device =
         | {
               type: 'acquired';
+              id?: string;
               path: string;
               label: string;
               firmware: DeviceFirmwareStatus;
