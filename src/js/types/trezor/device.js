@@ -76,26 +76,29 @@ export type Features = {
     capabilities?: string[];
 }
 
-export type Device =
-        | {
-              type: 'acquired';
-              id: string | null;
-              path: string;
-              label: string;
-              firmware: DeviceFirmwareStatus;
-              firmwareRelease: ?FirmwareRelease;
-              status: DeviceStatus;
-              mode: DeviceMode;
-              state: ?string;
-              features: Features;
-              unavailableCapabilities: { [key: string]: UnavailableCapability };
-          }
-        | {
-              type: 'unacquired' | 'unreadable';
-              path: string;
-              label: string;
-              features?: typeof undefined;
-          };
+export type KnownDevice = {
+    type: 'acquired';
+    id: string | null;
+    path: string;
+    label: string;
+    firmware: DeviceFirmwareStatus;
+    firmwareRelease: ?FirmwareRelease;
+    status: DeviceStatus;
+    mode: DeviceMode;
+    state: ?string;
+    features: Features;
+    unavailableCapabilities: { [key: string]: UnavailableCapability };
+};
+
+export type UnknownDevice = {
+    type: 'unacquired' | 'unreadable';
+    id?: null;
+    path: string;
+    label: string;
+    features?: typeof undefined;
+};
+
+export type Device = KnownDevice | UnknownDevice;
 
 export type DeviceEvent = {
     type: | typeof DEVICE.CONNECT
