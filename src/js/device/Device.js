@@ -204,6 +204,7 @@ export default class Device extends EventEmitter {
     interruptionFromUser(error: Error): void {
         _log.debug('+++++interruptionFromUser');
         if (this.commands) {
+            this.commands.cancel();
             this.commands.dispose();
         }
         if (this.runPromise) {
@@ -570,6 +571,9 @@ export default class Device extends EventEmitter {
     onBeforeUnload() {
         if (this.isUsedHere() && this.activitySessionID) {
             try {
+                if (this.commands) {
+                    this.commands.cancel();
+                }
                 this.transport.release(this.activitySessionID, true, false);
             } catch (err) {
                 // empty
@@ -600,7 +604,7 @@ export default class Device extends EventEmitter {
             };
         } else {
             const defaultLabel: string = 'My Trezor';
-            const label = this.features.label === '' || this.features.label === null ? defaultLabel : this.features.label;
+            const label = this.features.label === '' || !this.features.label ? defaultLabel : this.features.label;
             return {
                 type: 'acquired',
                 id: this.features.device_id,

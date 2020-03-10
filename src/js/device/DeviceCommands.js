@@ -840,4 +840,8 @@ export default class DeviceCommands {
 
         return;
     }
+
+    async cancel() {
+        this.transport.post(this.sessionId, 'Cancel', {}, false);
+    }
 }
