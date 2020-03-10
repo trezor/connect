@@ -210,7 +210,7 @@ const init = async (payload: any, origin: string) => {
 };
 
 window.addEventListener('message', handleMessage, false);
-window.addEventListener('beforeunload', () => {
+window.addEventListener('unload', () => {
     if (_core) {
         _core.onBeforeUnload();
     }
