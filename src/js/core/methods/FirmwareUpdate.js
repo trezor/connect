@@ -1,11 +1,12 @@
 /* @flow */
-
+import { getBinary } from '@trezor/rollout';
 import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 import { validateParams } from './helpers/paramsValidator';
 import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
 import type { FirmwareUpload } from '../../types/trezor/protobuf'; // flowtype only
+import DataManager from '../../data/DataManager';
 
 import type { CoreMessage } from '../../types';
 
@@ -24,14 +25,14 @@ export default class FirmwareUpdate extends AbstractMethod {
 
         const payload: Object = message.payload;
 
-        validateParams(payload, [
-            { name: 'payload', type: 'buffer', obligatory: true },
-            // { name: 'hash', type: 'string' },
-        ]);
+        // validateParams(payload, [
+        //     { name: 'payload', type: 'buffer' },
+        //     { name: 'hash', type: 'string' },
+        // ]);
 
         this.params = {
-            payload: payload.payload,
-            length: payload.payload.byteLength,
+            // payload: payload.payload,
+            // length: payload.payload.byteLength,
         };
     }
 
@@ -57,12 +58,22 @@ export default class FirmwareUpdate extends AbstractMethod {
     }
 
     async run(): Promise<Object> {
-        const { device, params } = this;
+        const { device } = this;
+
+        const firmware = await getBinary({
+            features: device.features,
+            releases: DataManager.assets[`firmware-t${device.features.major_version}`],
+            baseUrl: 'https://wallet.trezor.io',
+        });
+
         const response = await uploadFirmware(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.postMessage,
             device,
-            params,
+            {
+                payload: firmware.binary,
+                length: firmware.binary.byteLength,
+            }
         );
 
         return response;

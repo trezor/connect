@@ -24,9 +24,7 @@ export interface ChangePin {
     remove?: boolean;
 }
 
-export interface FirmwareUpdate {
-    payload: ArrayBuffer;
-}
+export interface FirmwareUpdate {}
 
 export interface FirmwareRequest {
     length: number;

@@ -26,9 +26,7 @@ export type ChangePin = {
     remove?: boolean;
 }
 
-export type FirmwareUpdate = {
-    payload: ArrayBuffer;
-}
+export type FirmwareUpdate = {}
 
 export type FirmwareRequest = {
     length: number;

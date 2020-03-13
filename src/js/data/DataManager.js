@@ -128,8 +128,8 @@ export default class DataManager {
         parseCoinsJson(this.assets['coins']);
 
         // parse firmware definitions
-        parseFirmware(this.assets['firmware-t1']);
-        parseFirmware(this.assets['firmware-t2']);
+        parseFirmware(this.assets['firmware-t1'], 1);
+        parseFirmware(this.assets['firmware-t2'], 2);
     }
 
     static getProtobufMessages(version?: number[]): JSON {
