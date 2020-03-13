@@ -3,12 +3,13 @@
 import { getInfo } from '@trezor/rollout';
 import type { DeviceFirmwareStatus, FirmwareRelease, Features } from '../types';
 
+// [] is weird flow hack https://github.com/facebook/flow/issues/380#issuecomment-224380551
 const releases = {
-    1: [],
-    2: [],
+    [1]: [],
+    [2]: [],
 };
 
-export const parseFirmware = (json: JSON, model): void => {
+export const parseFirmware = (json: JSON, model: number): void => {
     const obj: Object = json;
     Object.keys(obj).forEach(key => {
         const release = obj[key];

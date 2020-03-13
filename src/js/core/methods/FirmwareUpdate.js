@@ -2,7 +2,6 @@
 import { getBinary } from '@trezor/rollout';
 import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
-import { validateParams } from './helpers/paramsValidator';
 import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
 import type { FirmwareUpload } from '../../types/trezor/protobuf'; // flowtype only
@@ -22,18 +21,7 @@ export default class FirmwareUpdate extends AbstractMethod {
         this.requireDeviceMode = [UI.BOOTLOADER];
         this.useDeviceState = false;
         this.skipFirmwareCheck = true;
-
-        const payload: Object = message.payload;
-
-        // validateParams(payload, [
-        //     { name: 'payload', type: 'buffer' },
-        //     { name: 'hash', type: 'string' },
-        // ]);
-
-        this.params = {
-            // payload: payload.payload,
-            // length: payload.payload.byteLength,
-        };
+        this.params = {};
     }
 
     async confirmation(): Promise<boolean> {

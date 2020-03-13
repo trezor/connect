@@ -32,9 +32,7 @@ export const management = async () => {
         remove: true,
     });
 
-    TrezorConnect.firmwareUpdate({
-        payload: new ArrayBuffer(0),
-    });
+    TrezorConnect.firmwareUpdate({});
 
     TrezorConnect.recoveryDevice({
         passphrase_protection: true,

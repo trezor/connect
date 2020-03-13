@@ -388,13 +388,8 @@ export default class Device extends EventEmitter {
         // check if FW version did change
         if (versionCompare(version, this.getVersion()) !== 0) {
             this.unavailableCapabilities = getUnavailableCapabilities(feat, getAllNetworks(), DataManager.getConfig().supportedFirmware);
-            try {
-                this.firmwareStatus = checkFirmware(feat);
-                this.firmwareRelease = getLatestRelease(feat);
-            } catch (err) {
-                console.warn(err);
-                throw err;
-            }
+            this.firmwareStatus = checkFirmware(feat);
+            this.firmwareRelease = getLatestRelease(feat);
         }
         // GetFeatures doesn't return 'session_id'
         if (this.features && this.features.session_id && !feat.session_id) {
