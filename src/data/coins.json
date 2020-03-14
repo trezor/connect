@@ -6,11 +6,7 @@
             "bech32_prefix": "bc",
             "bip115": false,
             "blockbook": [
-                "https://btc1.trezor.io",
-                "https://btc2.trezor.io",
-                "https://btc3.trezor.io",
-                "https://btc4.trezor.io",
-                "https://btc5.trezor.io"
+                "https://btc-staging.trezor.io/"
             ],
             "blocktime_seconds": 600,
             "cashaddr_prefix": null,
