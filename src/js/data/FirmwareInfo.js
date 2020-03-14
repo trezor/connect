@@ -22,19 +22,26 @@ export const checkFirmware = (features: Features): DeviceFirmwareStatus => {
     if (features.firmware_present === false) {
         return 'none';
     }
-    // // for t1 in bootloader, what device reports as firmware version is in fact bootloader version, so we can
-    // // not safely tell firmware version
+    // for t1 in bootloader, what device reports as firmware version is in fact bootloader version, so we can
+    // not safely tell firmware version
     if (features.major_version === 1 && features.bootloader_mode) {
         return 'unknown';
     }
     const info = getInfo({features, releases: releases[features.major_version]});
-    // no info means there is nothing that might be installed upon this firmware
-    if (!info) return 'valid';
 
+    // should not happen, possibly if releases list contains inconsistent data or so
+    if (!info) return 'unknown';
+
+    //
     if (info.isRequired) {
         return 'required';
     }
-    return 'outdated';
+
+    if (info.isNewer) {
+        return 'outdated';
+    }
+
+    return 'valid';
 };
 
 export const getLatestRelease = (features: Features): ?FirmwareRelease => {
