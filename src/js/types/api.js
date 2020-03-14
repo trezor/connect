@@ -23,12 +23,12 @@ import * as Blockchain from './backend/blockchain';
 
 interface Bundled<Parm, Resp> {
     (params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<Parm>}>): P.Response<Resp>;
-    (params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<P.Bundle<Parm>>}>): P.BundledResponse<Resp>;
+(params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<P.Bundle<Parm>>}>): P.BundledResponse<Resp>;
 }
 
 interface Mixed<P1, P2, R1, R2> {
     (params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<P1>}>): P.Response<R1>;
-    (params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<P2>}>): P.Response<R2>;
+(params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<P2>}>): P.Response<R2>;
 }
 
 // type Method<T, R> = (params: P.CommonParams & T) => P.Response<R>;
@@ -91,8 +91,13 @@ export type API = {
      */
     blockchainEstimateFee: Method<Blockchain.BlockchainEstimateFee, Blockchain.BlockchainEstimatedFee>;
     blockchainGetTransactions: Method<Blockchain.BlockchainGetTransactions, Blockchain.BlockchainTransactions>;
+    blockchainGetCurrentFiatRates: Method<Blockchain.BlockchainGetCurrentFiatRates, Blockchain.BlockchainCurrentFiatRates>;
+    blockchainGetAccountBalanceHistory: Method<Blockchain.BlockchainGetAccountBalanceHistory, Blockchain.BlockchainAccountBalanceHistory>;
+    blockchainGetFiatRatesForTimestamps: Method<Blockchain.BlockchainGetFiatRatesForTimestamps, Blockchain.BlockchainFiatRatesForTimestamps>;
     blockchainSubscribe: Method<Blockchain.BlockchainSubscribe, Blockchain.BlockchainSubscribed>;
     blockchainUnsubscribe: Method<Blockchain.BlockchainSubscribe, Blockchain.BlockchainSubscribed>;
+    blockchainSubscribeFiatRates: Method<Blockchain.BlockchainSubscribeFiatRates, Blockchain.BlockchainSubscribed>;
+    blockchainUnsubscribeFiatRates: Method<Blockchain.BlockchainSubscribeFiatRates, Blockchain.BlockchainSubscribed>;
     blockchainDisconnect: Method<Blockchain.BlockchainDisconnect, Blockchain.BlockchainDisconnected>;
 
     /**
@@ -132,8 +137,7 @@ export type API = {
      * returned in hexadecimal format. Change output is added automatically, if
      * needed.
      */
-    composeTransaction: Mixed<
-        Account.ComposeParams,
+    composeTransaction: Mixed<Account.ComposeParams,
         Account.PrecomposeParams,
         Bitcoin.SignedTransaction,
         Account.PrecomposedTransaction[]>;

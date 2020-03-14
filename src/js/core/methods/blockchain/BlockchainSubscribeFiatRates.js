@@ -6,14 +6,14 @@ import { NO_COIN_INFO, backendNotSupported } from '../../../constants/errors';
 
 import { initBlockchain } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
-import type { CoreMessage, CoinInfo, BlockchainSubscribeAccount } from '../../../types';
+import type { CoreMessage, CoinInfo } from '../../../types';
 
 type Params = {
-    accounts?: BlockchainSubscribeAccount[];
+    currency?: string;
     coinInfo: CoinInfo;
 }
 
-export default class BlockchainUnsubscribe extends AbstractMethod {
+export default class BlockchainSubscribeFiatRates extends AbstractMethod {
     params: Params;
 
     constructor(message: CoreMessage) {
@@ -25,17 +25,9 @@ export default class BlockchainUnsubscribe extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'accounts', type: 'array' },
+            { name: 'currency', type: 'string', obligatory: false },
             { name: 'coin', type: 'string', obligatory: true },
         ]);
-
-        if (payload.accounts) {
-            payload.accounts.forEach(account => {
-                validateParams(account, [
-                    { name: 'descriptor', type: 'string', obligatory: true },
-                ]);
-            });
-        }
 
         const coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
@@ -46,14 +38,13 @@ export default class BlockchainUnsubscribe extends AbstractMethod {
         }
 
         this.params = {
-            accounts: payload.accounts,
+            currency: payload.currency,
             coinInfo,
         };
     }
 
-    async run(): Promise<any> {
+    async run(): Promise<{ subscribed: boolean }> {
         const backend = await initBlockchain(this.params.coinInfo, this.postMessage);
-        // shouldn't we also unsubscribe from fiat rates?
-        return backend.unsubscribe(this.params.accounts);
+        return backend.subscribeFiatRates(this.params.currency);
     }
 }
