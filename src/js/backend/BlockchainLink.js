@@ -10,7 +10,8 @@ import type {
     BlockchainBlock,
     BlockchainSubscribeAccount,
     BlockchainTransactions,
-    BlockchainCurrentFiatRates,
+    FiatRates,
+    BlockchainTimestampedFiatRates,
     BlockchainAccountBalanceHistory,
     BlockchainGetAccountBalanceHistory,
 } from '../types';
@@ -124,7 +125,7 @@ export default class Blockchain {
         );
     }
 
-    async getCurrentFiatRates(params: { currencies?: ?string[] }): Promise<BlockchainCurrentFiatRates> {
+    async getCurrentFiatRates(params: { currencies?: ?string[] }): Promise<BlockchainTimestampedFiatRates> {
         return this.link.getCurrentFiatRates(params);
     }
 
@@ -198,11 +199,11 @@ export default class Blockchain {
         });
     }
 
-    async subscribeFiatRates(currency?: string[]): Promise<{ subscribed: boolean }> {
+    async subscribeFiatRates(currency?: string): Promise<{ subscribed: boolean }> {
         // set block listener if it wasn't set before
         if (this.link.listenerCount('fiatRates') === 0) {
             this.link.on('fiatRates', (res: {
-                rates: BlockchainCurrentFiatRates;
+                rates: FiatRates;
             }) => {
                 // TODO: is it really a blockchain event?
                 this.postMessage(BlockchainMessage(BLOCKCHAIN.FIAT_RATES_UPDATE, {

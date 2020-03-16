@@ -83,7 +83,7 @@ export type BlockchainGetCurrentFiatRates = {
     currencies?: string[];
 }
 
-export type BlockchainCurrentFiatRates = {
+export type BlockchainTimestampedFiatRates = {
     ts: number;
     rates: FiatRates;
 }
@@ -94,7 +94,7 @@ export type BlockchainGetFiatRatesForTimestamps = {
 }
 
 export type BlockchainFiatRatesForTimestamps = {
-    tickers: BlockchainCurrentFiatRates[];
+    tickers: BlockchainTimestampedFiatRates[];
 }
 
 export type BlockchainGetAccountBalanceHistory = {

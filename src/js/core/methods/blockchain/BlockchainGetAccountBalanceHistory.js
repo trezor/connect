@@ -10,10 +10,12 @@ import type { CoreMessage, CoinInfo } from '../../../types';
 
 type Params = {
     coinInfo: CoinInfo;
-    descriptor: string;
-    from?: number;
-    to?: number;
-    groupBy?: number;
+    request: {
+        descriptor: string;
+        from?: number;
+        to?: number;
+        groupBy?: number;
+    };
 };
 
 export default class BlockchainGetAccountBalanceHistory extends AbstractMethod {
