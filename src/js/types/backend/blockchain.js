@@ -38,13 +38,13 @@ export type BlockchainNotification = {
     };
 }
 
-export type FiatRates = {
+export type BlockchainFiatRates = {
     [string]: ?number;
 }
 
 export type BlockchainFiatRatesUpdate = {
     coin: CoinInfo;
-    rates: FiatRates;
+    rates: BlockchainFiatRates;
 }
 
 export type BlockchainSubscribeAccount = {
@@ -85,7 +85,7 @@ export type BlockchainGetCurrentFiatRates = {
 
 export type BlockchainTimestampedFiatRates = {
     ts: number;
-    rates: FiatRates;
+    rates: BlockchainFiatRates;
 }
 
 export type BlockchainGetFiatRatesForTimestamps = {

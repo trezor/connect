@@ -10,7 +10,7 @@ import type {
     BlockchainBlock,
     BlockchainSubscribeAccount,
     BlockchainTransactions,
-    FiatRates,
+    BlockchainFiatRates,
     BlockchainTimestampedFiatRates,
     BlockchainAccountBalanceHistory,
     BlockchainGetAccountBalanceHistory,
@@ -203,7 +203,7 @@ export default class Blockchain {
         // set block listener if it wasn't set before
         if (this.link.listenerCount('fiatRates') === 0) {
             this.link.on('fiatRates', (res: {
-                rates: FiatRates;
+                rates: BlockchainFiatRates;
             }) => {
                 // TODO: is it really a blockchain event?
                 this.postMessage(BlockchainMessage(BLOCKCHAIN.FIAT_RATES_UPDATE, {
