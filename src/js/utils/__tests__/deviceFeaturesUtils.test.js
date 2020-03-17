@@ -65,6 +65,26 @@ describe('utils/deviceFeaturesUtils', () => {
             'Capability_U2F',
         ]);
 
+        expect(parseCapabilities({
+            major_version: 2,
+            capabilities: [],
+        })).toEqual([
+            'Capability_Bitcoin',
+            'Capability_Bitcoin_like',
+            'Capability_Binance',
+            'Capability_Cardano',
+            'Capability_Crypto',
+            'Capability_EOS',
+            'Capability_Ethereum',
+            'Capability_Lisk',
+            'Capability_Monero',
+            'Capability_NEM',
+            'Capability_Ripple',
+            'Capability_Stellar',
+            'Capability_Tezos',
+            'Capability_U2F',
+        ]);
+
         // bitcoin only
         expect(parseCapabilities({
             major_version: 1,

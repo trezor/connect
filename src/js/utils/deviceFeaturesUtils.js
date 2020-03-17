@@ -47,7 +47,7 @@ export const parseCapabilities = (features?: Features): string[] => {
     // needs to be "any" since Features.capabilities are declared as string[] but in fact it's a number[]
     const filter = (c: any) => CAPABILITIES[c] || 'Capability_Unknown_trezor-connect';
     // fallback for older firmware
-    if (!features.capabilities) return features.major_version === 1 ? DEFAULT_CAPABILITIES_T1.map(filter) : DEFAULT_CAPABILITIES_TT.map(filter);
+    if (!features.capabilities || !features.capabilities.length) return features.major_version === 1 ? DEFAULT_CAPABILITIES_T1.map(filter) : DEFAULT_CAPABILITIES_TT.map(filter);
     // regular capabilities
     return features.capabilities.map(filter);
 };
