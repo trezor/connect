@@ -23,12 +23,12 @@ import * as Blockchain from './backend/blockchain';
 
 interface Bundled<Parm, Resp> {
     (params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<Parm>}>): P.Response<Resp>;
-(params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<P.Bundle<Parm>>}>): P.BundledResponse<Resp>;
+    (params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<P.Bundle<Parm>>}>): P.BundledResponse<Resp>;
 }
 
 interface Mixed<P1, P2, R1, R2> {
     (params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<P1>}>): P.Response<R1>;
-(params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<P2>}>): P.Response<R2>;
+    (params: $Exact<{...$Exact<P.CommonParams>, ...$Exact<P2>}>): P.Response<R2>;
 }
 
 // type Method<T, R> = (params: P.CommonParams & T) => P.Response<R>;
@@ -137,7 +137,8 @@ export type API = {
      * returned in hexadecimal format. Change output is added automatically, if
      * needed.
      */
-    composeTransaction: Mixed<Account.ComposeParams,
+    composeTransaction: Mixed<
+        Account.ComposeParams,
         Account.PrecomposeParams,
         Bitcoin.SignedTransaction,
         Account.PrecomposedTransaction[]>;
