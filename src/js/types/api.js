@@ -92,7 +92,7 @@ export type API = {
     blockchainEstimateFee: Method<Blockchain.BlockchainEstimateFee, Blockchain.BlockchainEstimatedFee>;
     blockchainGetTransactions: Method<Blockchain.BlockchainGetTransactions, Blockchain.BlockchainTransactions>;
     blockchainGetCurrentFiatRates: Method<Blockchain.BlockchainGetCurrentFiatRates, Blockchain.BlockchainTimestampedFiatRates>;
-    blockchainGetAccountBalanceHistory: Method<Blockchain.BlockchainGetAccountBalanceHistory, Blockchain.BlockchainAccountBalanceHistory>;
+    blockchainGetAccountBalanceHistory: Method<Blockchain.BlockchainGetAccountBalanceHistory, Blockchain.BlockchainAccountBalanceHistory[]>;
     blockchainGetFiatRatesForTimestamps: Method<Blockchain.BlockchainGetFiatRatesForTimestamps, Blockchain.BlockchainFiatRatesForTimestamps>;
     blockchainSubscribe: Method<Blockchain.BlockchainSubscribe, Blockchain.BlockchainSubscribed>;
     blockchainUnsubscribe: Method<Blockchain.BlockchainSubscribe, Blockchain.BlockchainSubscribed>;

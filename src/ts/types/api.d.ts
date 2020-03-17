@@ -81,7 +81,7 @@ export namespace TrezorConnect {
     ): P.Response<Blockchain.BlockchainSubscribed>;
 
     function blockchainGetCurrentFiatRates(params: Blockchain.BlockchainGetCurrentFiatRates): P.Response<Blockchain.BlockchainTimestampedFiatRates>;
-    function blockchainGetAccountBalanceHistory(params: Blockchain.BlockchainGetAccountBalanceHistory): P.Response<Blockchain.BlockchainAccountBalanceHistory>;
+    function blockchainGetAccountBalanceHistory(params: Blockchain.BlockchainGetAccountBalanceHistory): P.Response<Blockchain.BlockchainAccountBalanceHistory[]>;
     function blockchainGetFiatRatesForTimestamps(params: Blockchain.BlockchainGetFiatRatesForTimestamps): P.Response<Blockchain.BlockchainFiatRatesForTimestamps>;
 
     function blockchainUnsubscribe(
