@@ -205,7 +205,6 @@ export default class Blockchain {
             this.link.on('fiatRates', (res: {
                 rates: BlockchainFiatRates;
             }) => {
-                // TODO: is it really a blockchain event?
                 this.postMessage(BlockchainMessage(BLOCKCHAIN.FIAT_RATES_UPDATE, {
                     coin: this.coinInfo,
                     rates: res.rates,

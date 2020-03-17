@@ -33,24 +33,16 @@ const TrezorConnect: API = {
 
     // methods
 
-    blockchainGetCurrentFiatRates: params => {
-        return call({ method: 'blockchainGetCurrentFiatRates', ...params });
-    },
-
     blockchainGetAccountBalanceHistory: params => {
         return call({ method: 'blockchainGetAccountBalanceHistory', ...params });
     },
 
+    blockchainGetCurrentFiatRates: params => {
+        return call({ method: 'blockchainGetCurrentFiatRates', ...params });
+    },
+
     blockchainGetFiatRatesForTimestamps: params => {
         return call({ method: 'blockchainGetFiatRatesForTimestamps', ...params });
-    },
-
-    blockchainSubscribeFiatRates: params => {
-        return call({ method: 'blockchainSubscribeFiatRates', ...params });
-    },
-
-    blockchainUnsubscribeFiatRates: params => {
-        return call({ method: 'blockchainUnsubscribeFiatRates', ...params });
     },
 
     blockchainDisconnect: params => {
@@ -69,8 +61,16 @@ const TrezorConnect: API = {
         return call({ method: 'blockchainSubscribe', ...params });
     },
 
+    blockchainSubscribeFiatRates: params => {
+        return call({ method: 'blockchainSubscribeFiatRates', ...params });
+    },
+
     blockchainUnsubscribe: params => {
         return call({ method: 'blockchainUnsubscribe', ...params });
+    },
+
+    blockchainUnsubscribeFiatRates: params => {
+        return call({ method: 'blockchainUnsubscribeFiatRates', ...params });
     },
 
     customMessage: params => {
