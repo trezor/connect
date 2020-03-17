@@ -10,6 +10,7 @@ export namespace BLOCKCHAIN {
     const ERROR = 'blockchain-error';
     const NOTIFICATION = 'blockchain-notification';
     const BLOCK = 'blockchain-block';
+    const FIAT_RATES_UPDATE = 'fiat-rates-update';
 }
 
 export namespace IFRAME {

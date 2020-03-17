@@ -79,12 +79,20 @@ export namespace TrezorConnect {
     function blockchainSubscribe(
         params: P.CommonParams & Blockchain.BlockchainSubscribe,
     ): P.Response<Blockchain.BlockchainSubscribed>;
+
+    function blockchainGetCurrentFiatRates(params: Blockchain.BlockchainGetCurrentFiatRates): P.Response<Blockchain.BlockchainTimestampedFiatRates>;
+    function blockchainGetAccountBalanceHistory(params: Blockchain.BlockchainGetAccountBalanceHistory): P.Response<Blockchain.BlockchainAccountBalanceHistory>;
+    function blockchainGetFiatRatesForTimestamps(params: Blockchain.BlockchainGetFiatRatesForTimestamps): P.Response<Blockchain.BlockchainFiatRatesForTimestamps>;
+
     function blockchainUnsubscribe(
         params: P.CommonParams & Blockchain.BlockchainSubscribe,
     ): P.Response<Blockchain.BlockchainSubscribed>;
     function blockchainDisconnect(
         params: P.CommonParams & Blockchain.BlockchainDisconnect,
     ): P.Response<Blockchain.BlockchainDisconnected>;
+
+    function blockchainSubscribeFiatRates(params: Blockchain.BlockchainSubscribeFiatRates): P.Response<Blockchain.BlockchainSubscribed>;
+    function blockchainUnsubscribeFiatRates(params: Blockchain.BlockchainSubscribeFiatRates): P.Response<Blockchain.BlockchainSubscribed>;
 
     /**
      * Bitcoin and Bitcoin-like
