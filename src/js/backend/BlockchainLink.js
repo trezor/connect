@@ -220,10 +220,12 @@ export default class Blockchain {
     async unsubscribe(accounts?: BlockchainSubscribeAccount[]): Promise<any> {
         if (!accounts) {
             this.link.removeAllListeners('block');
+            this.link.removeAllListeners('fiatRates');
             this.link.removeAllListeners('notification');
 
             // remove all subscriptions
             await this.link.unsubscribe({ type: 'block' });
+            await this.link.unsubscribe({ type: 'fiatRates' });
             return this.link.unsubscribe({ type: 'notification' });
         }
         // unsubscribe only requested accounts

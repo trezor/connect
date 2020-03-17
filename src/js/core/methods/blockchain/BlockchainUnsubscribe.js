@@ -53,7 +53,6 @@ export default class BlockchainUnsubscribe extends AbstractMethod {
 
     async run(): Promise<any> {
         const backend = await initBlockchain(this.params.coinInfo, this.postMessage);
-        await backend.unsubscribeFiatRates();
         return backend.unsubscribe(this.params.accounts);
     }
 }
