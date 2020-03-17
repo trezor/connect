@@ -54,6 +54,7 @@ export type BlockchainSubscribeAccount = {
 
 export type BlockchainSubscribeFiatRates = {
     currency?: string;
+    coin: string;
 }
 
 export type BlockchainSubscribe = {
