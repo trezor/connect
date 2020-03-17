@@ -66,13 +66,13 @@ export interface BlockchainGetTransactions {
 
 export type BlockchainTransactions = Array<
     | {
-          type: 'blockbook';
-          tx: BlockbookTransaction;
-      }
+        type: 'blockbook';
+        tx: BlockbookTransaction;
+    }
     | {
-          type: 'ripple';
-          tx: RippleLibTransaction;
-      }
+        type: 'ripple';
+        tx: RippleLibTransaction;
+    }
 >;
 
 export interface BlockchainEstimateFee {
@@ -97,20 +97,73 @@ export interface BlockchainEstimatedFee {
     levels: FeeLevel[];
 }
 
+export interface BlockchainFiatRates {
+    [k: string]: number | undefined;
+}
+
+export interface BlockchainFiatRatesUpdate {
+    coin: CoinInfo;
+    rates: BlockchainFiatRates;
+}
+
+export interface BlockchainSubscribeFiatRates {
+    currency?: string;
+    coin: string;
+}
+
+export interface BlockchainGetCurrentFiatRates {
+    coin: string;
+    currencies?: string[];
+}
+
+export interface BlockchainTimestampedFiatRates {
+    ts: number;
+    rates: BlockchainFiatRates;
+}
+
+export interface BlockchainGetFiatRatesForTimestamps {
+    coin: string;
+    timestamps: number[];
+}
+
+export interface BlockchainFiatRatesForTimestamps {
+    tickers: BlockchainTimestampedFiatRates[];
+}
+
+export interface BlockchainGetAccountBalanceHistory {
+    coin: string;
+    descriptor: string;
+    from?: number;
+    to?: number;
+    groupBy?: number;
+}
+
+export interface BlockchainAccountBalanceHistory {
+    time: number;
+    txs: number;
+    received: string;
+    sent: string;
+    fiatRate: number;
+}
+
 export type BlockchainEvent =
     | {
-          type: typeof BLOCKCHAIN.CONNECT;
-          payload: BlockchainInfo;
-      }
+        type: typeof BLOCKCHAIN.CONNECT;
+        payload: BlockchainInfo;
+    }
     | {
-          type: typeof BLOCKCHAIN.ERROR;
-          payload: BlockchainError;
-      }
+        type: typeof BLOCKCHAIN.ERROR;
+        payload: BlockchainError;
+    }
     | {
-          type: typeof BLOCKCHAIN.BLOCK;
-          payload: BlockchainBlock;
-      }
+        type: typeof BLOCKCHAIN.BLOCK;
+        payload: BlockchainBlock;
+    }
     | {
-          type: typeof BLOCKCHAIN.NOTIFICATION;
-          payload: BlockchainNotification;
-      };
+        type: typeof BLOCKCHAIN.NOTIFICATION;
+        payload: BlockchainNotification;
+    }
+    | {
+        type: typeof BLOCKCHAIN.FIAT_RATES_UPDATE;
+        payload: BlockchainFiatRatesUpdate;
+    };

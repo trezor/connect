@@ -7,6 +7,11 @@ import AbstractMethod from './AbstractMethod';
 import BlockchainDisconnect from './blockchain/BlockchainDisconnect';
 import BlockchainEstimateFee from './blockchain/BlockchainEstimateFee';
 import BlockchainGetTransactions from './blockchain/BlockchainGetTransactions';
+import BlockchainGetCurrentFiatRates from './blockchain/BlockchainGetCurrentFiatRates';
+import BlockchainGetFiatRatesForTimestamps from './blockchain/BlockchainGetFiatRatesForTimestamps';
+import BlockchainGetAccountBalanceHistory from './blockchain/BlockchainGetAccountBalanceHistory';
+import BlockchainSubscribeFiatRates from './blockchain/BlockchainSubscribeFiatRates';
+import BlockchainUnsubscribeFiatRates from './blockchain/BlockchainUnsubscribeFiatRates';
 import BlockchainSubscribe from './blockchain/BlockchainSubscribe';
 import BlockchainUnsubscribe from './blockchain/BlockchainUnsubscribe';
 import CardanoGetAddress from './CardanoGetAddress';
@@ -62,12 +67,17 @@ import ChangePin from './ChangePin';
 import FirmwareUpdate from './FirmwareUpdate';
 import RecoveryDevice from './RecoveryDevice';
 
-const classes: {[k: string]: any} = {
+const classes: { [k: string]: any } = {
     'blockchainDisconnect': BlockchainDisconnect,
     'blockchainEstimateFee': BlockchainEstimateFee,
+    'blockchainGetAccountBalanceHistory': BlockchainGetAccountBalanceHistory,
+    'blockchainGetCurrentFiatRates': BlockchainGetCurrentFiatRates,
+    'blockchainGetFiatRatesForTimestamps': BlockchainGetFiatRatesForTimestamps,
     'blockchainGetTransactions': BlockchainGetTransactions,
     'blockchainSubscribe': BlockchainSubscribe,
+    'blockchainSubscribeFiatRates': BlockchainSubscribeFiatRates,
     'blockchainUnsubscribe': BlockchainUnsubscribe,
+    'blockchainUnsubscribeFiatRates': BlockchainUnsubscribeFiatRates,
     'cardanoGetAddress': CardanoGetAddress,
     'cardanoGetPublicKey': CardanoGetPublicKey,
     'cardanoSignTransaction': CardanoSignTransaction,

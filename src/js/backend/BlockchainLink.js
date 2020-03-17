@@ -10,6 +10,10 @@ import type {
     BlockchainBlock,
     BlockchainSubscribeAccount,
     BlockchainTransactions,
+    BlockchainFiatRates,
+    BlockchainTimestampedFiatRates,
+    BlockchainAccountBalanceHistory,
+    BlockchainGetAccountBalanceHistory,
 } from '../types';
 
 import {
@@ -121,6 +125,18 @@ export default class Blockchain {
         );
     }
 
+    async getCurrentFiatRates(params: { currencies?: ?string[] }): Promise<BlockchainTimestampedFiatRates> {
+        return this.link.getCurrentFiatRates(params);
+    }
+
+    async getFiatRatesForTimestamps(params: { timestamps?: ?number[] }): Promise<BlockchainTimestampedFiatRates[]> {
+        return this.link.getFiatRatesForTimestamps(params);
+    }
+
+    async getAccountBalanceHistory(params: $Shape<BlockchainGetAccountBalanceHistory>): Promise<BlockchainAccountBalanceHistory[]> {
+        return this.link.getAccountBalanceHistory(params);
+    }
+
     async getNetworkInfo() {
         return this.link.getInfo();
     }
@@ -183,17 +199,42 @@ export default class Blockchain {
         });
     }
 
+    async subscribeFiatRates(currency?: string): Promise<{ subscribed: boolean }> {
+        // set block listener if it wasn't set before
+        if (this.link.listenerCount('fiatRates') === 0) {
+            this.link.on('fiatRates', (res: {
+                rates: BlockchainFiatRates;
+            }) => {
+                this.postMessage(BlockchainMessage(BLOCKCHAIN.FIAT_RATES_UPDATE, {
+                    coin: this.coinInfo,
+                    rates: res.rates,
+                }));
+            });
+        }
+
+        return this.link.subscribe({
+            type: 'fiatRates',
+        });
+    }
+
     async unsubscribe(accounts?: BlockchainSubscribeAccount[]): Promise<any> {
         if (!accounts) {
             this.link.removeAllListeners('block');
+            this.link.removeAllListeners('fiatRates');
             this.link.removeAllListeners('notification');
 
             // remove all subscriptions
             await this.link.unsubscribe({ type: 'block' });
+            await this.link.unsubscribe({ type: 'fiatRates' });
             return this.link.unsubscribe({ type: 'notification' });
         }
         // unsubscribe only requested accounts
         return this.link.unsubscribe({ type: 'accounts', accounts });
+    }
+
+    async unsubscribeFiatRates(): Promise<any> {
+        this.link.removeAllListeners('fiatRates');
+        return this.link.unsubscribe({ type: 'fiatRates' });
     }
 
     async pushTransaction(tx: string): Promise<string> {

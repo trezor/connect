@@ -38,9 +38,23 @@ export type BlockchainNotification = {
     };
 }
 
+export type BlockchainFiatRates = {
+    [string]: ?number;
+}
+
+export type BlockchainFiatRatesUpdate = {
+    coin: CoinInfo;
+    rates: BlockchainFiatRates;
+}
+
 export type BlockchainSubscribeAccount = {
     descriptor: string;
     addresses?: AccountAddresses; // bitcoin addresses
+}
+
+export type BlockchainSubscribeFiatRates = {
+    currency?: string;
+    coin: string;
 }
 
 export type BlockchainSubscribe = {
@@ -64,6 +78,41 @@ export type BlockchainGetTransactions = {
     coin: string;
     txs: string[];
 }
+
+export type BlockchainGetCurrentFiatRates = {
+    coin: string;
+    currencies?: string[];
+}
+
+export type BlockchainTimestampedFiatRates = {
+    ts: number;
+    rates: BlockchainFiatRates;
+}
+
+export type BlockchainGetFiatRatesForTimestamps = {
+    coin: string;
+    timestamps: number[];
+}
+
+export type BlockchainFiatRatesForTimestamps = {
+    tickers: BlockchainTimestampedFiatRates[];
+}
+
+export type BlockchainGetAccountBalanceHistory = {
+    coin: string;
+    descriptor: string;
+    from?: number;
+    to?: number;
+    groupBy?: number;
+};
+
+export type BlockchainAccountBalanceHistory = {
+    time: number;
+    txs: number;
+    received: string;
+    sent: string;
+    fiatRate: number;
+};
 
 export type BlockchainTransactions = Array<{
     type: 'blockbook';
@@ -96,26 +145,31 @@ export type BlockchainEstimatedFee = {
 }
 
 export type BlockchainEvent =
-| {
-    type: typeof BLOCKCHAIN.CONNECT;
-    payload: BlockchainInfo;
-}
-| {
-    type: typeof BLOCKCHAIN.ERROR;
-    payload: BlockchainError;
-}
-| {
-    type: typeof BLOCKCHAIN.BLOCK;
-    payload: BlockchainBlock;
-}
-| {
-    type: typeof BLOCKCHAIN.NOTIFICATION;
-    payload: BlockchainNotification;
-};
+    | {
+        type: typeof BLOCKCHAIN.CONNECT;
+        payload: BlockchainInfo;
+    }
+    | {
+        type: typeof BLOCKCHAIN.ERROR;
+        payload: BlockchainError;
+    }
+    | {
+        type: typeof BLOCKCHAIN.BLOCK;
+        payload: BlockchainBlock;
+    }
+    | {
+        type: typeof BLOCKCHAIN.NOTIFICATION;
+        payload: BlockchainNotification;
+    }
+    | {
+        type: typeof BLOCKCHAIN.FIAT_RATES_UPDATE;
+        payload: BlockchainFiatRatesUpdate;
+    };
 
 export interface BlockchainMessageBuilder {
     (type: typeof BLOCKCHAIN.CONNECT, payload: BlockchainInfo): CoreMessage;
     (type: typeof BLOCKCHAIN.BLOCK, payload: BlockchainBlock): CoreMessage;
     (type: typeof BLOCKCHAIN.NOTIFICATION, payload: BlockchainNotification): CoreMessage;
     (type: typeof BLOCKCHAIN.ERROR, payload: BlockchainError): CoreMessage;
+    (type: typeof BLOCKCHAIN.FIAT_RATES_UPDATE, payload: BlockchainFiatRatesUpdate): CoreMessage;
 }
