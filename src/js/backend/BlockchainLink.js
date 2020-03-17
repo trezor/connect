@@ -233,6 +233,7 @@ export default class Blockchain {
     }
 
     async unsubscribeFiatRates(): Promise<any> {
+        this.link.removeAllListeners('fiatRates');
         return this.link.unsubscribe({ type: 'fiatRates' });
     }
 
