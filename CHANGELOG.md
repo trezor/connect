@@ -3,6 +3,7 @@
 - Support for FW 1.9.0 and 2.3.0 (passphrase redesign)
 - Typescript types
 - `hex` parameter to `signMessage` and `verifyMessage` methods
+- added blockchain-link methods for fiat rates (`blockchainGetAccountBalanceHistory`, `blockchainGetCurrentFiatRates`, `blockchainGetFiatRatesForTimestamps`, `blockchainSubscribeFiatRates`, `blockchainUnsubscribeFiatRates`)
 #### Fixed
 - General cleanup in flowtype declarations
 - disableWebUsb method
