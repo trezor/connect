@@ -116,7 +116,7 @@
     "whatwg-fetch": "^3.0.0"
   },
   "extendedDependencies": {
-    "@trezor/blockchain-link": "^1.0.8",
+    "@trezor/blockchain-link": "^1.0.9",
     "@trezor/utxo-lib": "^0.1.0",
     "bchaddrjs": "0.4.5",
     "bignumber.js": "^9.0.0",
