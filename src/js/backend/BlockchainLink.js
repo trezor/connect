@@ -9,10 +9,7 @@ import type {
     GetAccountInfo,
     BlockchainBlock,
     BlockchainSubscribeAccount,
-    BlockchainTransactions,
     BlockchainFiatRates,
-    BlockchainTimestampedFiatRates,
-    BlockchainAccountBalanceHistory,
     BlockchainGetAccountBalanceHistory,
 } from '../types';
 
@@ -108,32 +105,32 @@ export default class Blockchain {
         }
     }
 
-    async loadTransaction(id: string): Promise<BitcoinJsTransaction> {
+    async loadTransaction(id: string) {
         const transaction = await this.link.getTransaction(id);
         return BitcoinJsTransaction.fromHex(transaction.tx.hex, this.coinInfo.network);
     }
 
-    async getTransactions(txs: string[]): Promise<BlockchainTransactions[]> {
+    async getTransactions(txs: string[]) {
         return Promise.all(
             txs.map(id => this.link.getTransaction(id))
         );
     }
 
-    async getReferencedTransactions(txs: string[]): Promise<BitcoinJsTransaction[]> {
+    async getReferencedTransactions(txs: string[]) {
         return Promise.all(
             txs.map(id => this.loadTransaction(id))
         );
     }
 
-    async getCurrentFiatRates(params: { currencies?: ?string[] }): Promise<BlockchainTimestampedFiatRates> {
+    async getCurrentFiatRates(params: { currencies?: ?string[] }) {
         return this.link.getCurrentFiatRates(params);
     }
 
-    async getFiatRatesForTimestamps(params: { timestamps?: ?number[] }): Promise<BlockchainTimestampedFiatRates[]> {
+    async getFiatRatesForTimestamps(params: { timestamps?: ?number[] }) {
         return this.link.getFiatRatesForTimestamps(params);
     }
 
-    async getAccountBalanceHistory(params: $Shape<BlockchainGetAccountBalanceHistory>): Promise<BlockchainAccountBalanceHistory[]> {
+    async getAccountBalanceHistory(params: $Shape<BlockchainGetAccountBalanceHistory>) {
         return this.link.getAccountBalanceHistory(params);
     }
 
@@ -170,7 +167,7 @@ export default class Blockchain {
         return this.link.estimateFee(request);
     }
 
-    async subscribe(accounts: BlockchainSubscribeAccount[]): Promise<{ subscribed: boolean }> {
+    async subscribe(accounts: BlockchainSubscribeAccount[]) {
         // set block listener if it wasn't set before
         if (this.link.listenerCount('block') === 0) {
             this.link.on('block', (block: BlockchainBlock) => {
@@ -199,7 +196,7 @@ export default class Blockchain {
         });
     }
 
-    async subscribeFiatRates(currency?: string): Promise<{ subscribed: boolean }> {
+    async subscribeFiatRates(currency?: string) {
         // set block listener if it wasn't set before
         if (this.link.listenerCount('fiatRates') === 0) {
             this.link.on('fiatRates', (res: {
@@ -217,7 +214,7 @@ export default class Blockchain {
         });
     }
 
-    async unsubscribe(accounts?: BlockchainSubscribeAccount[]): Promise<any> {
+    async unsubscribe(accounts?: BlockchainSubscribeAccount[]) {
         if (!accounts) {
             this.link.removeAllListeners('block');
             this.link.removeAllListeners('fiatRates');
@@ -232,12 +229,12 @@ export default class Blockchain {
         return this.link.unsubscribe({ type: 'accounts', accounts });
     }
 
-    async unsubscribeFiatRates(): Promise<any> {
+    async unsubscribeFiatRates() {
         this.link.removeAllListeners('fiatRates');
         return this.link.unsubscribe({ type: 'fiatRates' });
     }
 
-    async pushTransaction(tx: string): Promise<string> {
+    async pushTransaction(tx: string) {
         return await this.link.pushTransaction(tx);
     }
 
@@ -249,16 +246,17 @@ export default class Blockchain {
 }
 
 const instances: Blockchain[] = [];
+const customBackends: { [coin: string]: CoinInfo } = {};
 
-const remove = (backend: Blockchain): void => {
-    const index: number = instances.indexOf(backend);
+export const remove = (backend: Blockchain) => {
+    const index = instances.indexOf(backend);
     if (index >= 0) {
         instances.splice(index, 1);
     }
 };
 
-export const find = (name: string): ?Blockchain => {
-    for (let i: number = 0; i < instances.length; i++) {
+export const find = (name: string) => {
+    for (let i = 0; i < instances.length; i++) {
         if (instances[i].coinInfo.name === name) {
             return instances[i];
         }
@@ -266,11 +264,20 @@ export const find = (name: string): ?Blockchain => {
     return null;
 };
 
-export const initBlockchain = async (coinInfo: $ElementType<Options, 'coinInfo'>, postMessage: $ElementType<Options, 'postMessage'>) => {
-    let backend: ?Blockchain = find(coinInfo.name);
+export const setCustomBackend = (coinInfo: CoinInfo, blockchainLink: $ElementType<CoinInfo, 'blockchainLink'>) => {
+    if (!blockchainLink) {
+        delete customBackends[coinInfo.shortcut];
+    } else {
+        customBackends[coinInfo.shortcut] = coinInfo;
+        customBackends[coinInfo.shortcut].blockchainLink = blockchainLink;
+    }
+};
+
+export const initBlockchain = async (coinInfo: CoinInfo, postMessage: $ElementType<Options, 'postMessage'>) => {
+    let backend = find(coinInfo.name);
     if (!backend) {
         backend = new Blockchain({
-            coinInfo,
+            coinInfo: customBackends[coinInfo.shortcut] || coinInfo,
             postMessage,
         });
         try {

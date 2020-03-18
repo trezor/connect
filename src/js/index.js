@@ -20,6 +20,7 @@ const TrezorConnect: API = {
     manifest,
     init: settings => init(settings),
     getSettings,
+    updateSettings: params => call({ method: 'updateSettings', ...params }),
 
     on: (type, fn) => {
         eventEmitter.on(type, fn);
@@ -55,6 +56,10 @@ const TrezorConnect: API = {
 
     blockchainGetTransactions: params => {
         return call({ method: 'blockchainGetTransactions', ...params });
+    },
+
+    blockchainSetCustomBackend: params => {
+        return call({ method: 'blockchainSetCustomBackend', ...params });
     },
 
     blockchainSubscribe: params => {
