@@ -3,11 +3,19 @@
 - Support for FW 1.9.0 and 2.3.0 (passphrase redesign)
 - Typescript types
 - `hex` parameter to `signMessage` and `verifyMessage` methods
-- added blockchain-link methods for fiat rates (`blockchainGetAccountBalanceHistory`, `blockchainGetCurrentFiatRates`, `blockchainGetFiatRatesForTimestamps`, `blockchainSubscribeFiatRates`, `blockchainUnsubscribeFiatRates`)
+- Blockchain methods for fiat rates:
+    - `TrezorConnect.blockchainGetAccountBalanceHistory`
+    - `TrezorConnect.blockchainGetCurrentFiatRates`
+    - `TrezorConnect.blockchainGetFiatRatesForTimestamps`
+    - `TrezorConnect.blockchainSubscribeFiatRates`
+    - `TrezorConnect.blockchainUnsubscribeFiatRates`
+- `TrezorConnect.blockchainSetCustomBackend` method
+- `TrezorConnect.cancel` is now trying to send (post) 'Cancel' message to acquired device (not working with TrezorBridge < 2.0.29)
 #### Fixed
 - General cleanup in flowtype declarations
 - disableWebUsb method
 - trezor-link protobuf messages overrides
+- Fixed race condition in nodejs https://github.com/trezor/connect/issues/504
 
 # 8.0.13
 #### Fixed
