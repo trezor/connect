@@ -37,7 +37,7 @@ export default class BlockchainUnsubscribe extends AbstractMethod {
             });
         }
 
-        const coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
+        const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         }
@@ -51,7 +51,7 @@ export default class BlockchainUnsubscribe extends AbstractMethod {
         };
     }
 
-    async run(): Promise<any> {
+    async run() {
         const backend = await initBlockchain(this.params.coinInfo, this.postMessage);
         return backend.unsubscribe(this.params.accounts);
     }

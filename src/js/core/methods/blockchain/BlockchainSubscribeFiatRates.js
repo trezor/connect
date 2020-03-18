@@ -29,7 +29,7 @@ export default class BlockchainSubscribeFiatRates extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
-        const coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
+        const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         }
@@ -43,7 +43,7 @@ export default class BlockchainSubscribeFiatRates extends AbstractMethod {
         };
     }
 
-    async run(): Promise<{ subscribed: boolean }> {
+    async run() {
         const backend = await initBlockchain(this.params.coinInfo, this.postMessage);
         return backend.subscribeFiatRates(this.params.currency);
     }

@@ -29,11 +29,7 @@ export default class BlockchainDisconnect extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
-        let coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
-        if (!coinInfo) {
-            coinInfo = getCoinInfo(payload.coin);
-        }
-
+        const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         }
@@ -46,14 +42,11 @@ export default class BlockchainDisconnect extends AbstractMethod {
         };
     }
 
-    async run(): Promise<{ disconnected: true }> {
+    async run() {
         const backend = await findBlockchainBackend(this.params.coinInfo.name);
         if (backend) {
             backend.disconnect();
         }
-
-        return {
-            disconnected: true,
-        };
+        return { disconnected: true };
     }
 }

@@ -29,7 +29,7 @@ export default class BlockchainGetCurrentFiatRates extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
-        const coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
+        const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         }
