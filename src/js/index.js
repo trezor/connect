@@ -20,7 +20,6 @@ const TrezorConnect: API = {
     manifest,
     init: settings => init(settings),
     getSettings,
-    updateSettings: params => call({ method: 'updateSettings', ...params }),
 
     on: (type, fn) => {
         eventEmitter.on(type, fn);
