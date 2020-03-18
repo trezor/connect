@@ -149,7 +149,7 @@ export const init = async (settings: $Shape<$T.ConnectSettings> = {}): Promise<v
     _log.enabled = !!_settings.debug;
 
     window.addEventListener('message', handleMessage);
-    window.addEventListener('beforeunload', dispose);
+    window.addEventListener('unload', dispose);
 
     await iframe.init(_settings);
 };
