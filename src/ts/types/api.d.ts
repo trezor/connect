@@ -85,6 +85,9 @@ export namespace TrezorConnect {
     function blockchainGetTransactions(
         params: P.CommonParams & Blockchain.BlockchainGetTransactions,
     ): P.Response<Blockchain.BlockchainTransactions>;
+    function blockchainSetCustomBackend(
+        params: P.CommonParams & Blockchain.BlockchainSetCustomBackend,
+    ): P.Response<boolean>;
     function blockchainSubscribe(
         params: P.CommonParams & Blockchain.BlockchainSubscribe,
     ): P.Response<Blockchain.BlockchainSubscribed>;

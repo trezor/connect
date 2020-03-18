@@ -94,6 +94,7 @@ export type API = {
     blockchainGetCurrentFiatRates: Method<Blockchain.BlockchainGetCurrentFiatRates, Blockchain.BlockchainTimestampedFiatRates>;
     blockchainGetFiatRatesForTimestamps: Method<Blockchain.BlockchainGetFiatRatesForTimestamps, Blockchain.BlockchainFiatRatesForTimestamps>;
     blockchainGetTransactions: Method<Blockchain.BlockchainGetTransactions, Blockchain.BlockchainTransactions>;
+    blockchainSetCustomBackend: Method<Blockchain.BlockchainSetCustomBackend, boolean>;
     blockchainSubscribe: Method<Blockchain.BlockchainSubscribe, Blockchain.BlockchainSubscribed>;
     blockchainSubscribeFiatRates: Method<Blockchain.BlockchainSubscribeFiatRates, Blockchain.BlockchainSubscribed>;
     blockchainUnsubscribe: Method<Blockchain.BlockchainSubscribe, Blockchain.BlockchainSubscribed>;

@@ -102,4 +102,17 @@ export const others = async () => {
     });
 
     TrezorConnect.blockchainDisconnect({ coin: 'btc' });
+
+    TrezorConnect.blockchainSetCustomBackend({
+        coin: 'btc',
+        blockchainLink: undefined,
+    });
+
+    TrezorConnect.blockchainSetCustomBackend({
+        coin: 'btc',
+        blockchainLink: {
+            type: 'blockbook',
+            url: ['https://btc1.trezor.io/'],
+        },
+    });
 };

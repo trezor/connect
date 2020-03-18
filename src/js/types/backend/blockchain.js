@@ -144,6 +144,11 @@ export type BlockchainEstimatedFee = {
     levels: FeeLevel[];
 }
 
+export type BlockchainSetCustomBackend = {
+    coin: string;
+    blockchainLink: $PropertyType<CoinInfo, 'blockchainLink'>;
+}
+
 export type BlockchainEvent =
     | {
         type: typeof BLOCKCHAIN.CONNECT;
