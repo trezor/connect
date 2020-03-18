@@ -165,7 +165,7 @@ const parseBitcoinNetworksJson = (json: JSON) => {
         const isBitcoin = shortcut === 'BTC' || shortcut === 'TEST';
         const hasTimestamp = shortcut === 'CPC' || shortcut === 'PPC' || shortcut === 'tPPC';
 
-        const network: $ElementType<BitcoinNetworkInfo, 'network'> = {
+        const network = {
             messagePrefix: coin.signed_message_header,
             bech32: coin.bech32_prefix,
             bip32: {

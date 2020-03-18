@@ -2,9 +2,9 @@
 
 import AbstractMethod from '../AbstractMethod';
 import { validateParams } from '../helpers/paramsValidator';
-import { NO_COIN_INFO, backendNotSupported } from '../../../constants/errors';
+import { NO_COIN_INFO } from '../../../constants/errors';
 
-import { find as findBlockchainBackend } from '../../../backend/BlockchainLink';
+import { find as findBackend, remove as removeBackend, setCustomBackend, initBlockchain } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo } from '../../../types';
 
@@ -12,7 +12,7 @@ type Params = {
     coinInfo: CoinInfo;
 }
 
-export default class BlockchainDisconnect extends AbstractMethod {
+export default class BlockchainSetCustomBackend extends AbstractMethod {
     params: Params;
 
     constructor(message: CoreMessage) {
@@ -22,20 +22,20 @@ export default class BlockchainDisconnect extends AbstractMethod {
         this.useDevice = false;
         this.useUi = false;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
             { name: 'coin', type: 'string', obligatory: true },
+            { name: 'blockchainLink', type: 'object' },
         ]);
 
         const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         }
-        if (!coinInfo.blockchainLink) {
-            throw backendNotSupported(coinInfo.name);
-        }
+
+        setCustomBackend(coinInfo, payload.blockchainLink);
 
         this.params = {
             coinInfo,
@@ -43,10 +43,14 @@ export default class BlockchainDisconnect extends AbstractMethod {
     }
 
     async run() {
-        const backend = await findBlockchainBackend(this.params.coinInfo.name);
-        if (backend) {
-            backend.disconnect();
+        const current = await findBackend(this.params.coinInfo.name);
+        if (current) {
+            await current.disconnect();
+            removeBackend(current);
+
+            await initBlockchain(this.params.coinInfo, this.postMessage);
         }
-        return { disconnected: true };
+
+        return true;
     }
 }

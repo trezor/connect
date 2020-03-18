@@ -6,14 +6,15 @@ import AbstractMethod from './AbstractMethod';
 
 import BlockchainDisconnect from './blockchain/BlockchainDisconnect';
 import BlockchainEstimateFee from './blockchain/BlockchainEstimateFee';
-import BlockchainGetTransactions from './blockchain/BlockchainGetTransactions';
+import BlockchainGetAccountBalanceHistory from './blockchain/BlockchainGetAccountBalanceHistory';
 import BlockchainGetCurrentFiatRates from './blockchain/BlockchainGetCurrentFiatRates';
 import BlockchainGetFiatRatesForTimestamps from './blockchain/BlockchainGetFiatRatesForTimestamps';
-import BlockchainGetAccountBalanceHistory from './blockchain/BlockchainGetAccountBalanceHistory';
-import BlockchainSubscribeFiatRates from './blockchain/BlockchainSubscribeFiatRates';
-import BlockchainUnsubscribeFiatRates from './blockchain/BlockchainUnsubscribeFiatRates';
+import BlockchainGetTransactions from './blockchain/BlockchainGetTransactions';
+import BlockchainSetCustomBackend from './blockchain/BlockchainSetCustomBackend';
 import BlockchainSubscribe from './blockchain/BlockchainSubscribe';
+import BlockchainSubscribeFiatRates from './blockchain/BlockchainSubscribeFiatRates';
 import BlockchainUnsubscribe from './blockchain/BlockchainUnsubscribe';
+import BlockchainUnsubscribeFiatRates from './blockchain/BlockchainUnsubscribeFiatRates';
 import CardanoGetAddress from './CardanoGetAddress';
 import CardanoGetPublicKey from './CardanoGetPublicKey';
 import CardanoSignTransaction from './CardanoSignTransaction';
@@ -74,6 +75,7 @@ const classes: { [k: string]: any } = {
     'blockchainGetCurrentFiatRates': BlockchainGetCurrentFiatRates,
     'blockchainGetFiatRatesForTimestamps': BlockchainGetFiatRatesForTimestamps,
     'blockchainGetTransactions': BlockchainGetTransactions,
+    'blockchainSetCustomBackend': BlockchainSetCustomBackend,
     'blockchainSubscribe': BlockchainSubscribe,
     'blockchainSubscribeFiatRates': BlockchainSubscribeFiatRates,
     'blockchainUnsubscribe': BlockchainUnsubscribe,

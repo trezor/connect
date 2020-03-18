@@ -37,7 +37,7 @@ export default class BlockchainGetAccountBalanceHistory extends AbstractMethod {
             { name: 'groupBy', type: 'number', obligatory: false },
         ]);
 
-        const coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
+        const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
             throw NO_COIN_INFO;
         }

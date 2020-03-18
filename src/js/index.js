@@ -57,6 +57,10 @@ const TrezorConnect: API = {
         return call({ method: 'blockchainGetTransactions', ...params });
     },
 
+    blockchainSetCustomBackend: params => {
+        return call({ method: 'blockchainSetCustomBackend', ...params });
+    },
+
     blockchainSubscribe: params => {
         return call({ method: 'blockchainSubscribe', ...params });
     },

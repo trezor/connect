@@ -146,6 +146,11 @@ export interface BlockchainAccountBalanceHistory {
     fiatRate: number;
 }
 
+export interface BlockchainSetCustomBackend {
+    coin: string;
+    blockchainLink: CoinInfo['blockchainLink'];
+}
+
 export type BlockchainEvent =
     | {
         type: typeof BLOCKCHAIN.CONNECT;

@@ -54,7 +54,7 @@ export default class BlockchainEstimateFee extends AbstractMethod {
                 ]);
             }
         }
-        const coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
+        const coinInfo = getCoinInfo(payload.coin);
 
         if (!coinInfo) {
             throw NO_COIN_INFO;
