@@ -1328,10 +1328,10 @@
     string-argv "^0.3.1"
     type-detect "^4.0.8"
 
-"@jsdevtools/version-bump-prompt@6.0.2":
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/@jsdevtools/version-bump-prompt/-/version-bump-prompt-6.0.2.tgz#8ba3bdbac5d657a0294975406798fe363454f3ec"
-  integrity sha512-nBXrckBHktLT55dZvlH38hb6v6VgNyi45+7ISQxwilQiuMU0IApTOKT0S9Oy33Asn1TEGMBa4YllNHPilMJJhw==
+"@jsdevtools/version-bump-prompt@6.0.3":
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/@jsdevtools/version-bump-prompt/-/version-bump-prompt-6.0.3.tgz#7b3f8018ac787f8c2a10558e266344717b84e2ae"
+  integrity sha512-75zDqsnFK/KHpl/2rGyo3cJG0OJmVOHeafgbGeINlEV+maiUZ3bwkMIi877TBUa6JJgWjQYT8phdO7MYnwaaag==
   dependencies:
     "@jsdevtools/ez-spawn" "^3.0.0"
     command-line-args "^5.1.1"
@@ -2361,13 +2361,13 @@ batch@0.6.1:
   resolved "https://registry.yarnpkg.com/batch/-/batch-0.6.1.tgz#dc34314f4e679318093fc760272525f94bf25c16"
   integrity sha1-3DQxT05nkxgJP8dgJyUl+UvyXBY=
 
-bchaddrjs@0.4.5:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/bchaddrjs/-/bchaddrjs-0.4.5.tgz#4b8ca28d7b5f2e1d0e5056b40021be0405f701fd"
-  integrity sha512-ZmGjcI7KyleD39YkNqm02YhSEwRH1IPxcQ1eKgQHOQtnaJB1JN5ZymtNrzxFPKE2Cgza2yXBETgq99+0fknq/A==
+bchaddrjs@0.4.7:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/bchaddrjs/-/bchaddrjs-0.4.7.tgz#9d33e25816091e43a0cb4ce474d6210d6f006a37"
+  integrity sha512-+KAWllIzFDZUhaQqkzKEr2Nroh2v+63mdAtib2y7G+J0zoynFhFAV4tFr/HPEwWZPEAtK46LjenvN/o8P+JIiw==
   dependencies:
     bs58check "^2.1.2"
-    cashaddrjs "^0.3.9"
+    cashaddrjs "^0.3.10"
 
 bchaddrjs@^0.3.2:
   version "0.3.2"
@@ -2883,17 +2883,17 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
+cashaddrjs@^0.3.10:
+  version "0.3.10"
+  resolved "https://registry.yarnpkg.com/cashaddrjs/-/cashaddrjs-0.3.10.tgz#8eb281573184e343cc9186c28fb95e65d5695ebc"
+  integrity sha512-x+r0TxRzLR7Z9wy9JBHCCe1d6Yong5BH//vjWB/uldNT/IEb8cMGo8HNY5/QZmCr3KYcsLIToM8u6whXfKFbRw==
+  dependencies:
+    big-integer "1.6.36"
+
 cashaddrjs@^0.3.3:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/cashaddrjs/-/cashaddrjs-0.3.6.tgz#de0b84b98e224de18e6d5ba14a97584e6aa7f823"
   integrity sha512-TEeTEXT8Gft4cNoZKisCdyrAymnSRYpZHtvCRgXJ9OmOwyTKn5vnCWbPQLL3EiUkm1HeMxSrKNK29nMfvaT2Qw==
-  dependencies:
-    big-integer "1.6.36"
-
-cashaddrjs@^0.3.9:
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/cashaddrjs/-/cashaddrjs-0.3.9.tgz#e98078cf61061e0c5c865a95924d06a6b9ced020"
-  integrity sha512-2FyYuNnIICPsEZvuC0NWNQgw+OFCpGdUyVl9Jmj3sunyH8cHfkaZq7EADKngEO/pI2OOwDvVMQN8k62xev7+aw==
   dependencies:
     big-integer "1.6.36"
 
@@ -9921,12 +9921,12 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-version-bump-prompt@6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/version-bump-prompt/-/version-bump-prompt-6.0.2.tgz#27543fffc23ef132aa00193b2808d948e934adb0"
-  integrity sha512-MzPReH0tzqOU+J+vQr9LMb15ORHVgRAwvKKyUuOGD6ePgdwpPAOhpxEH14yx3UYay6Q1u0TNiLBhTqP0RvvyPw==
+version-bump-prompt@6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/version-bump-prompt/-/version-bump-prompt-6.0.3.tgz#b053466991f7868689ceeb84d9a013176d67c237"
+  integrity sha512-MNpE4IHGK8t2e06KRAM7VXDC0iwuwzSRyAL2aJJXGarnZguIHKj5ufTKMg7EaFaCSOG2lXZv1/+lC+Vl3EAseQ==
   dependencies:
-    "@jsdevtools/version-bump-prompt" "6.0.2"
+    "@jsdevtools/version-bump-prompt" "6.0.3"
 
 vm-browserify@^1.0.1:
   version "1.1.0"
