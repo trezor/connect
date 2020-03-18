@@ -53,12 +53,13 @@ export default class DeviceList extends EventEmitter {
         if (env === 'react-native' && typeof ReactNativeUsbPlugin !== 'undefined') {
             transports.push(ReactNativeUsbPlugin());
         } else {
-            // $FlowIssue: `version` is missing in `JSON`
-            const bridgeVersion: string = getBridgeInfo().version.join('.');
+            const bridgeLatestVersion = getBridgeInfo().version.join('.');
+            const bridge = new BridgeV2(null, null);
+            bridge.setBridgeLatestVersion(bridgeLatestVersion);
             if (env === 'node' || env === 'electron') {
                 BridgeV2.setFetch(fetch, true);
             }
-            transports.push(new BridgeV2(null, null, bridgeVersion));
+            transports.push(bridge);
         }
 
         if (webusb && typeof WebUsbPlugin !== 'undefined') {
