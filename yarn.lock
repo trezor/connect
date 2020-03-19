@@ -1378,10 +1378,10 @@
     es6-promise "^4.2.8"
     events "^3.1.0"
 
-"@trezor/rollout@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@trezor/rollout/-/rollout-1.0.2.tgz#5962ec7c2988f12c86977350c7fe71eef9505102"
-  integrity sha512-YTstQE0NJZ7zgl88zgrOg05MiPwz4rng6fN5it3fdafGjAfRsq2NLrqkjAk8Iu1YUGlLCM/eRAd2SUG7zlHcGA==
+"@trezor/rollout@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@trezor/rollout/-/rollout-1.0.3.tgz#d8ca98ad8db4b5f1ed258b4761065ecaacff0690"
+  integrity sha512-EcEMOF34m7KCUO00kx7SodM1BYAmIufDK+co7RH2I8Hf/5sRkN/GPDoX/mzd5vTIS4/353y0BW+TSQ1zlTDe1w==
   dependencies:
     cross-fetch "^3.0.4"
     runtypes "^4.2.0"
