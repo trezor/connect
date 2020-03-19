@@ -4,13 +4,16 @@ import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
-import type { FirmwareUpload } from '../../types/trezor/protobuf'; // flowtype only
 import DataManager from '../../data/DataManager';
+import { validateParams } from './helpers/paramsValidator';
 
 import type { CoreMessage } from '../../types';
 
+type Params = {
+    version: Array<number>;
+}
 export default class FirmwareUpdate extends AbstractMethod {
-    params: FirmwareUpload;
+    params: Params;
     run: () => Promise<any>;
 
     constructor(message: CoreMessage) {
@@ -21,7 +24,16 @@ export default class FirmwareUpdate extends AbstractMethod {
         this.requireDeviceMode = [UI.BOOTLOADER];
         this.useDeviceState = false;
         this.skipFirmwareCheck = true;
-        this.params = {};
+
+        const payload: Object = message.payload;
+
+        validateParams(payload, [
+            { name: 'version', type: 'array' },
+        ]);
+
+        this.params = {
+            version: payload.version,
+        };
     }
 
     async confirmation(): Promise<boolean> {
@@ -49,8 +61,11 @@ export default class FirmwareUpdate extends AbstractMethod {
         const { device } = this;
 
         const firmware = await getBinary({
+            // features and releases are used for sanity checking inside @trezor/rollout
             features: device.features,
             releases: DataManager.assets[`firmware-t${device.features.major_version}`],
+            // version argument is used to find and fetch concrete release from releases list
+            version: this.params.version,
             baseUrl: 'https://wallet.trezor.io',
         });
 
