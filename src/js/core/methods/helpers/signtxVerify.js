@@ -19,11 +19,9 @@ import type {
 
 type GetHDNode = (path: Array<number>, coinInfo: ?BitcoinNetworkInfo, validation?: boolean) => Promise<HDNodeResponse>;
 
-const changePaths: Array<number> = [];
-
 BitcoinJsTransaction.USE_STRING_VALUES = true;
 
-export const derivePubKeyHash = async (address_n: Array<number>, getHDNode: GetHDNode, coinInfo: BitcoinNetworkInfo): Promise<Buffer> => {
+const derivePubKeyHash = async (address_n: Array<number>, getHDNode: GetHDNode, coinInfo: BitcoinNetworkInfo): Promise<Buffer> => {
     // regular bip44 output
     if (address_n.length === 5) {
         const response = await getHDNode(address_n.slice(0, 4), coinInfo);
@@ -110,9 +108,6 @@ export default async (getHDNode: GetHDNode,
     serializedTx: string,
     coinInfo: BitcoinNetworkInfo,
 ): Promise<void> => {
-    // clear cached values
-    changePaths.splice(0, changePaths.length);
-
     // deserialize signed transaction
     const bitcoinTx = BitcoinJsTransaction.fromHex(serializedTx, coinInfo.network);
 
