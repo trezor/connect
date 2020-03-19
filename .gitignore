@@ -21,3 +21,4 @@ package-lock.json
 logs
 *.log
 .yarnclean
+coverage
