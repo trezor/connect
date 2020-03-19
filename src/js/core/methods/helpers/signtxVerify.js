@@ -19,8 +19,6 @@ import type {
 
 type GetHDNode = (path: Array<number>, coinInfo: ?BitcoinNetworkInfo, validation?: boolean) => Promise<HDNodeResponse>;
 
-const changePaths: Array<number> = [];
-
 BitcoinJsTransaction.USE_STRING_VALUES = true;
 
 export const derivePubKeyHash = async (address_n: Array<number>, getHDNode: GetHDNode, coinInfo: BitcoinNetworkInfo): Promise<Buffer> => {
@@ -53,13 +51,19 @@ const deriveWitnessOutput = (pkh: Buffer): Buffer => {
     return scriptPubKey;
 };
 
-const deriveBech32Output = (pkh: Buffer): Buffer => {
+const deriveBech32Output = (program: Buffer): Buffer => {
     // see https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki#Segwit_address_format
     // address derivation + test vectors
-    const scriptSig = Buffer.alloc(pkh.length + 2);
+    // ideally we would also have program version with this, but
+    // currently it's fixed to version 0.
+    if (program.length !== 32 && program.length !== 20) {
+        throw new Error('deriveBech32Output: Unknown size for witness program v0.');
+    }
+
+    const scriptSig = Buffer.alloc(program.length + 2);
     scriptSig[0] = 0;
-    scriptSig[1] = 0x14;
-    pkh.copy(scriptSig, 2);
+    scriptSig[1] = program.length;
+    program.copy(scriptSig, 2);
     return scriptSig;
 };
 
@@ -104,9 +108,6 @@ export default async (getHDNode: GetHDNode,
     serializedTx: string,
     coinInfo: BitcoinNetworkInfo,
 ): Promise<void> => {
-    // clear cached values
-    changePaths.splice(0, changePaths.length);
-
     // deserialize signed transaction
     const bitcoinTx = BitcoinJsTransaction.fromHex(serializedTx, coinInfo.network);
 

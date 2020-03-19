@@ -1,3 +1,7 @@
+# 8.0.14 (server side only)
+#### Fixed
+- `signtxVerify` P2WSH output #541
+
 # 8.0.13
 #### Fixed
 - `getAddress` for multisig addresses #509
