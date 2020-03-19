@@ -53,13 +53,19 @@ const deriveWitnessOutput = (pkh: Buffer): Buffer => {
     return scriptPubKey;
 };
 
-const deriveBech32Output = (pkh: Buffer): Buffer => {
+const deriveBech32Output = (program: Buffer): Buffer => {
     // see https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki#Segwit_address_format
     // address derivation + test vectors
-    const scriptSig = Buffer.alloc(pkh.length + 2);
+    // ideally we would also have program version with this, but
+    // currently it's fixed to version 0.
+    if (program.length !== 32 && program.length !== 20) {
+        throw new Error('deriveBech32Output: Unknown size for witness program v0.');
+    }
+
+    const scriptSig = Buffer.alloc(program.length + 2);
     scriptSig[0] = 0;
-    scriptSig[1] = 0x14;
-    pkh.copy(scriptSig, 2);
+    scriptSig[1] = program.length;
+    program.copy(scriptSig, 2);
     return scriptSig;
 };
 
