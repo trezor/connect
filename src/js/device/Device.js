@@ -12,7 +12,7 @@ import * as ERROR from '../constants/errors';
 import { create as createDeferred } from '../utils/deferred';
 import DataManager from '../data/DataManager';
 import { getAllNetworks } from '../data/CoinInfo';
-import { checkFirmware, getLatestRelease } from '../data/FirmwareInfo';
+import { getFirmwareStatus, getRelease } from '../data/FirmwareInfo';
 import { versionCompare, parseCapabilities, getUnavailableCapabilities } from '../utils/deviceFeaturesUtils';
 import Log, { init as initLog } from '../utils/debug';
 
@@ -388,8 +388,9 @@ export default class Device extends EventEmitter {
         // check if FW version did change
         if (versionCompare(version, this.getVersion()) !== 0) {
             this.unavailableCapabilities = getUnavailableCapabilities(feat, getAllNetworks(), DataManager.getConfig().supportedFirmware);
-            this.firmwareStatus = checkFirmware(feat);
-            this.firmwareRelease = getLatestRelease(feat);
+            this.firmwareStatus = getFirmwareStatus(feat);
+            // maybe not in bootloade?
+            this.firmwareRelease = getRelease(feat);
         }
         // GetFeatures doesn't return 'session_id'
         if (this.features && this.features.session_id && !feat.session_id) {

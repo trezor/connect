@@ -17,7 +17,7 @@ export const parseFirmware = (json: JSON, model: number): void => {
     });
 };
 
-export const checkFirmware = (features: Features): DeviceFirmwareStatus => {
+export const getFirmwareStatus = (features: Features): DeviceFirmwareStatus => {
     // indication that firmware is not installed at all. This information is set to false in bl mode. Otherwise it is null.
     if (features.firmware_present === false) {
         return 'none';
@@ -32,7 +32,6 @@ export const checkFirmware = (features: Features): DeviceFirmwareStatus => {
     // should not happen, possibly if releases list contains inconsistent data or so
     if (!info) return 'unknown';
 
-    //
     if (info.isRequired) {
         return 'required';
     }
@@ -44,6 +43,6 @@ export const checkFirmware = (features: Features): DeviceFirmwareStatus => {
     return 'valid';
 };
 
-export const getLatestRelease = (features: Features): ?FirmwareRelease => {
+export const getRelease = (features: Features): ?FirmwareRelease => {
     return getInfo({features, releases: releases[features.major_version]});
 };
