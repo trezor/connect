@@ -11,6 +11,7 @@ import type { CoreMessage } from '../../types';
 
 type Params = {
     version: Array<number>;
+    btcOnly: Boolean;
 }
 export default class FirmwareUpdate extends AbstractMethod {
     params: Params;
@@ -29,10 +30,12 @@ export default class FirmwareUpdate extends AbstractMethod {
 
         validateParams(payload, [
             { name: 'version', type: 'array' },
+            { name: 'btcOnly', type: 'boolean' },
         ]);
 
         this.params = {
             version: payload.version,
+            btcOnly: payload.btcOnly,
         };
     }
 
@@ -66,6 +69,7 @@ export default class FirmwareUpdate extends AbstractMethod {
             releases: DataManager.assets[`firmware-t${device.features.major_version}`],
             // version argument is used to find and fetch concrete release from releases list
             version: this.params.version,
+            btcOnly: this.params.btcOnly,
             baseUrl: 'https://wallet.trezor.io',
         });
 
