@@ -78,6 +78,7 @@ export default class Device extends EventEmitter {
     internalState: string[] = [];
     externalState: string[] = [];
     unavailableCapabilities: { [key: string]: UnavailableCapability } = {};
+    isBitcoinOnly: boolean = false;
 
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
         super();
@@ -398,6 +399,7 @@ export default class Device extends EventEmitter {
         }
         this.features = feat;
         this.featuresNeedsReload = false;
+        this.isBitcoinOnly = !!(feat.capabilities && feat.capabilities.length > 0 && !feat.capabilities.includes('Capability_Bitcoin_like'));
     }
 
     isUnacquired(): boolean {
@@ -618,6 +620,7 @@ export default class Device extends EventEmitter {
                 firmwareRelease: this.firmwareRelease,
                 features: this.features,
                 unavailableCapabilities: this.unavailableCapabilities,
+                isBitcoinOnly: this.isBitcoinOnly,
             };
         }
     }

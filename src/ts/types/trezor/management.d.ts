@@ -24,7 +24,14 @@ export interface ChangePin {
     remove?: boolean;
 }
 
-export interface FirmwareUpdate {}
+export interface FirmwareUpdate {
+    binary: number[];
+}
+
+export interface FirmwareUpdate {
+    version: number[];
+    btcOnly: boolean;
+}
 
 export interface FirmwareRequest {
     length: number;

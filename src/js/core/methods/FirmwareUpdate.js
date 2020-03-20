@@ -6,15 +6,12 @@ import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
 import DataManager from '../../data/DataManager';
 import { validateParams } from './helpers/paramsValidator';
+import type { FirmwareUpdate as FirmwareUpdateParams } from '../../types/trezor/management'; // flowtype only
 
 import type { CoreMessage } from '../../types';
 
-type Params = {
-    version: Array<number>;
-    btcOnly: Boolean;
-}
 export default class FirmwareUpdate extends AbstractMethod {
-    params: Params;
+    params: FirmwareUpdateParams;
     run: () => Promise<any>;
 
     constructor(message: CoreMessage) {
@@ -26,16 +23,20 @@ export default class FirmwareUpdate extends AbstractMethod {
         this.useDeviceState = false;
         this.skipFirmwareCheck = true;
 
-        const payload: Object = message.payload;
+        const payload: FirmwareUpdateParams = message.payload;
 
         validateParams(payload, [
             { name: 'version', type: 'array' },
             { name: 'btcOnly', type: 'boolean' },
+            { name: 'binary', type: 'buffer' },
         ]);
 
         this.params = {
+            // either receive version and btcOnly
             version: payload.version,
             btcOnly: payload.btcOnly,
+            // or binary
+            binary: payload.binary,
         };
     }
 
@@ -63,26 +64,31 @@ export default class FirmwareUpdate extends AbstractMethod {
     async run(): Promise<Object> {
         const { device } = this;
 
-        const firmware = await getBinary({
-            // features and releases are used for sanity checking inside @trezor/rollout
-            features: device.features,
-            releases: DataManager.assets[`firmware-t${device.features.major_version}`],
-            // version argument is used to find and fetch concrete release from releases list
-            version: this.params.version,
-            btcOnly: this.params.btcOnly,
-            baseUrl: 'https://wallet.trezor.io',
-        });
+        let binary;
 
-        const response = await uploadFirmware(
+        if (this.params.binary) {
+            binary = this.params.binary;
+        } else {
+            const firmware = await getBinary({
+                // features and releases are used for sanity checking inside @trezor/rollout
+                features: device.features,
+                releases: DataManager.assets[`firmware-t${device.features.major_version}`],
+                // version argument is used to find and fetch concrete release from releases list
+                version: this.params.version,
+                btcOnly: this.params.btcOnly,
+                baseUrl: 'https://wallet.trezor.io',
+            });
+            binary = firmware.binary;
+        }
+
+        return uploadFirmware(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.postMessage,
             device,
             {
-                payload: firmware.binary,
-                length: firmware.binary.byteLength,
+                payload: binary,
+                length: binary.byteLength,
             }
         );
-
-        return response;
     }
 }
