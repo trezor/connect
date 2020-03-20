@@ -63,7 +63,6 @@ export interface Features {
     session_id?: string;
     passphrase_always_on_device?: boolean;
     capabilities?: string[];
-    isBitcoinOnly: boolean;
 }
 
 export type KnownDevice = {
@@ -78,6 +77,7 @@ export type KnownDevice = {
     state?: string;
     features: Features;
     unavailableCapabilities: { [key: string]: UnavailableCapability };
+    isBitcoinOnly: boolean;
 };
 
 export type UnknownDevice = {
