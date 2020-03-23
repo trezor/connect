@@ -31,6 +31,7 @@ export interface FirmwareUpdate {
 export interface FirmwareUpdate {
     version: number[];
     btcOnly: boolean;
+    baseUrl?: string;
 }
 
 export interface FirmwareRequest {

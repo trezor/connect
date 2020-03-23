@@ -88,7 +88,6 @@ export type KnownDevice = {
     state: ?string;
     features: Features;
     unavailableCapabilities: { [key: string]: UnavailableCapability };
-    isBitcoinOnly: boolean;
 };
 
 export type UnknownDevice = {

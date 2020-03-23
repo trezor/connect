@@ -28,6 +28,7 @@ export default class FirmwareUpdate extends AbstractMethod {
         validateParams(payload, [
             { name: 'version', type: 'array' },
             { name: 'btcOnly', type: 'boolean' },
+            { name: 'baseUrl', type: 'string' },
             { name: 'binary', type: 'buffer' },
         ]);
 
@@ -35,6 +36,7 @@ export default class FirmwareUpdate extends AbstractMethod {
             // either receive version and btcOnly
             version: payload.version,
             btcOnly: payload.btcOnly,
+            baseUrl: payload.baseUrl || 'https://wallet.trezor.io/',
             // or binary
             binary: payload.binary,
         };
@@ -76,7 +78,8 @@ export default class FirmwareUpdate extends AbstractMethod {
                 // version argument is used to find and fetch concrete release from releases list
                 version: this.params.version,
                 btcOnly: this.params.btcOnly,
-                baseUrl: 'https://wallet.trezor.io',
+                baseUrl: this.params.baseUrl,
+                baseUrlBeta: 'https://beta-wallet.trezor.io/',
             });
             binary = firmware.binary;
         }

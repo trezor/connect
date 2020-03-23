@@ -32,13 +32,9 @@ export const getFirmwareStatus = (features: Features): DeviceFirmwareStatus => {
     // should not happen, possibly if releases list contains inconsistent data or so
     if (!info) return 'unknown';
 
-    if (info.isRequired) {
-        return 'required';
-    }
+    if (info.isRequired) return 'required';
 
-    if (info.isNewer) {
-        return 'outdated';
-    }
+    if (info.isNewer) return 'outdated';
 
     return 'valid';
 };

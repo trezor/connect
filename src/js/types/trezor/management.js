@@ -29,6 +29,7 @@ export type ChangePin = {
 export type FirmwareUpdate = {
     version?: Array<number>;
     btcOnly?: boolean;
+    baseUrl?: string;
     binary?: Buffer;
 }
 
