@@ -118,6 +118,7 @@
   },
   "extendedDependencies": {
     "@trezor/blockchain-link": "^1.0.9",
+    "@trezor/rollout": "^1.0.3",
     "@trezor/utxo-lib": "^0.1.0",
     "bchaddrjs": "0.4.7",
     "bignumber.js": "^9.0.0",
