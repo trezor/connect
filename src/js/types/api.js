@@ -260,7 +260,7 @@ export type API = {
     /**
      * Sends FirmwareErase message followed by FirmwareUpdate message
      */
-    firmwareUpdate: Method<Mgmnt.FirmwareUpdate, P.DefaultMessage>;
+    firmwareUpdate: Mixed<Mgmnt.FirmwareUpdate, Mgmnt.FirmwareUpdateBinary, P.DefaultMessage, P.DefaultMessage>;
 
     /**
      * Asks device to initiate seed backup procedure

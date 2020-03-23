@@ -24,7 +24,7 @@ export interface ChangePin {
     remove?: boolean;
 }
 
-export interface FirmwareUpdate {
+export interface FirmwareUpdateBinary {
     binary: number[];
 }
 
