@@ -6,12 +6,18 @@ import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
 import DataManager from '../../data/DataManager';
 import { validateParams } from './helpers/paramsValidator';
-import type { FirmwareUpdate as FirmwareUpdateParams } from '../../types/trezor/management'; // flowtype only
 
 import type { CoreMessage } from '../../types';
 
+type Params = {
+    binary?: Buffer;
+    version?: Array<number>;
+    btcOnly?: boolean;
+    baseUrl?: string;
+}
+
 export default class FirmwareUpdate extends AbstractMethod {
-    params: FirmwareUpdateParams;
+    params: Params;
     run: () => Promise<any>;
 
     constructor(message: CoreMessage) {
@@ -23,7 +29,7 @@ export default class FirmwareUpdate extends AbstractMethod {
         this.useDeviceState = false;
         this.skipFirmwareCheck = true;
 
-        const payload: FirmwareUpdateParams = message.payload;
+        const payload: Params = message.payload;
 
         validateParams(payload, [
             { name: 'version', type: 'array' },

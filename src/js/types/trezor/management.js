@@ -26,11 +26,13 @@ export type ChangePin = {
     remove?: boolean;
 }
 
+export type FirmwareUpdateBinary = {
+    binary?: Buffer;
+}
 export type FirmwareUpdate = {
     version?: Array<number>;
     btcOnly?: boolean;
     baseUrl?: string;
-    binary?: Buffer;
 }
 
 export type FirmwareRequest = {

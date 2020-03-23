@@ -342,7 +342,9 @@ export namespace TrezorConnect {
     /**
      * Sends FirmwareErase message followed by FirmwareUpdate message
      */
-    function firmwareUpdate(params: P.CommonParams & Mgmnt.FirmwareUpdate): P.Response<P.DefaultMessage>;
+    function firmwareUpdate(
+        params: P.CommonParams & (Mgmnt.FirmwareUpdate | Mgmnt.FirmwareUpdateBinary),
+    ): P.Response<P.DefaultMessage>;
 
     /**
      * Asks device to initiate seed backup procedure
