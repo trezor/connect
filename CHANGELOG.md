@@ -1,6 +1,3 @@
-# 8.1.0-beta.4
-- Implement @trezor/rollout module https://github.com/trezor/connect/issues/295
-
 # 8.1.0
 #### Added
 - Support for FW 1.9.0 and 2.3.0 (passphrase redesign)
@@ -14,7 +11,7 @@
     - `TrezorConnect.blockchainUnsubscribeFiatRates`
 - `TrezorConnect.blockchainSetCustomBackend` method
 - `TrezorConnect.cancel` is now trying to send (post) 'Cancel' message to acquired device (not working with TrezorBridge < 2.0.29)
-
+- Implement @trezor/rollout module https://github.com/trezor/connect/issues/295
 #### Fixed
 - General cleanup in flowtype declarations
 - disableWebUsb method
