@@ -33,7 +33,12 @@ export const management = async () => {
     });
 
     TrezorConnect.firmwareUpdate({
-        payload: new ArrayBuffer(0),
+        binary: new Buffer(123),
+    });
+
+    TrezorConnect.firmwareUpdate({
+        version: [2, 2, 0],
+        btcOnly: false,
     });
 
     TrezorConnect.recoveryDevice({

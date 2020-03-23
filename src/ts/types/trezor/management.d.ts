@@ -25,7 +25,13 @@ export interface ChangePin {
 }
 
 export interface FirmwareUpdate {
-    payload: ArrayBuffer;
+    binary: number[];
+}
+
+export interface FirmwareUpdate {
+    version: number[];
+    btcOnly: boolean;
+    baseUrl?: string;
 }
 
 export interface FirmwareRequest {

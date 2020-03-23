@@ -1,3 +1,4 @@
+import { getInfo } from '@trezor/rollout';
 import { DEVICE } from '../constants';
 
 export interface DeviceStateResponse {
@@ -28,18 +29,7 @@ export interface FirmwareRange {
     };
 }
 
-export interface FirmwareRelease {
-    required: true;
-    version: number[];
-    min_bridge_version: number[];
-    min_firmware_version: number[];
-    bootloader_version: number[];
-    min_bootloader_version: number[];
-    url: string;
-    channel: string;
-    fingerprint: string;
-    changelog: string;
-}
+export type FirmwareRelease = ReturnType<typeof getInfo>;
 
 export interface Features {
     bootloader_hash?: string | null;

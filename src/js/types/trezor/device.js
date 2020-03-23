@@ -29,7 +29,7 @@ export type FirmwareRange = {
     };
 }
 
-export type FirmwareRelease = {
+type Release = {
     required: true;
     version: Array<number>;
     min_bridge_version: Array<number>;
@@ -40,6 +40,15 @@ export type FirmwareRelease = {
     channel: string;
     fingerprint: string;
     changelog: string;
+    channel?: string;
+}
+
+export type FirmwareRelease = {
+    changelog: Release[] | null;
+    release: Release;
+    isLatest: boolean | null;
+    isRequired: boolean | null;
+    isNewer: boolean | null;
 }
 
 export type Features = {
