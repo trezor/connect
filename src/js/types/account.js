@@ -18,6 +18,7 @@ export type GetAccountInfo = {
         ledger: number;
         seq: number;
     };
+    defaultAccountType?: 'normal' | 'segwit' | 'legacy';
 }
 
 export type TokenInfo = {

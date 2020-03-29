@@ -173,6 +173,7 @@ export type SelectAccount = {
         type: 'start' | 'progress' | 'end';
         coinInfo: CoinInfo;
         accountTypes?: Array<'normal' | 'segwit' | 'legacy'>;
+        defaultAccountType?: 'normal' | 'segwit' | 'legacy';
         accounts?: Array<DiscoveryAccount>;
         preventEmpty?: boolean;
     };

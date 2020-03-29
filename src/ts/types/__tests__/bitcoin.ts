@@ -350,6 +350,7 @@ export const getAccountInfo = async () => {
             ledger: 1,
             seq: 1,
         },
+        defaultAccountType: 'normal',
     });
     if (account.success) {
         const { payload } = account;

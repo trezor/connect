@@ -17,6 +17,7 @@ export interface GetAccountInfo {
         ledger: number;
         seq: number;
     };
+    defaultAccountType?: 'normal' | 'segwit' | 'legacy';
 }
 
 export interface TokenInfo {
