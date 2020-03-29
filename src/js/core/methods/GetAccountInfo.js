@@ -62,6 +62,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 { name: 'contractFilter', type: 'string' },
                 { name: 'gap', type: 'number' },
                 { name: 'marker', type: 'object' },
+                { name: 'defaultAccountType', type: 'string' },
             ]);
 
             // validate coin info
@@ -311,7 +312,7 @@ export default class GetAccountInfo extends AbstractMethod {
     }
 
     async discover(request: Request) {
-        const { coinInfo } = request;
+        const { coinInfo, defaultAccountType } = request;
         const blockchain = await initBlockchain(coinInfo, this.postMessage);
         const dfd = this.createUiPromise(UI.RECEIVE_ACCOUNT, this.device);
 
@@ -342,6 +343,7 @@ export default class GetAccountInfo extends AbstractMethod {
         this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
             type: 'start',
             accountTypes: discovery.types.map(t => t.type),
+            defaultAccountType,
             coinInfo,
         }));
 

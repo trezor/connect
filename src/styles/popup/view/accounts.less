@@ -68,6 +68,15 @@
         }
     }
 
+    .bech32-warning {
+        display: block;
+        background-color: @color_warning_secondary;
+        color: @color_warning_primary;
+        padding: 20px;
+        width: 90%;
+        margin: 0 auto 20px auto;
+    }
+
     &.normal {
         .select-account-list.normal {
             display: block;
@@ -85,6 +94,9 @@
         .select-account-list.segwit {
             display: block;
         }
+        .bech32-warning {
+            display: none;
+        }
         .tab-selection.segwit {
             cursor: pointer;
             color: @color_green_primary;
@@ -97,6 +109,9 @@
     &.legacy {
         .select-account-list.legacy {
             display: block;
+        }
+        .bech32-warning {
+            display: none;
         }
         .tab-selection.legacy {
             cursor: pointer;
@@ -231,6 +246,10 @@
         .wrapper {
             width: 500px;
             margin: 0 auto;
+        }
+
+        .bech32-warning {
+            width: 440px;
         }
 
         .title-mobile {

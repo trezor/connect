@@ -20,7 +20,7 @@ const setHeader = (payload: $PropertyType<SelectAccount, 'payload'>) => {
 export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>): void => {
     if (!payload) return;
 
-    const { accountTypes, accounts } = payload;
+    const { accountTypes, defaultAccountType, accounts } = payload;
 
     // first render
     // show "select-account" view
@@ -35,6 +35,12 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>):
             const selectAccountContainer: HTMLElement = container.getElementsByClassName('select-account')[0];
             const buttons: HTMLCollection<HTMLElement> = tabs.getElementsByClassName('tab-selection');
             let button: HTMLElement;
+            const selectedType = defaultAccountType || (accountTypes.includes('segwit') ? 'segwit' : 'normal');
+            selectAccountContainer.className = 'select-account ' + selectedType;
+            if (accountTypes.includes('segwit')) {
+                const bech32warn = container.getElementsByClassName('bech32-warning')[0];
+                bech32warn.removeAttribute('style'); // remove default 'display: none' from element
+            }
             for (button of buttons) {
                 const type: ?string = button.getAttribute('data-tab');
                 if (type && accountTypes.indexOf(type) >= 0) {
