@@ -62,7 +62,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 { name: 'contractFilter', type: 'string' },
                 { name: 'gap', type: 'number' },
                 { name: 'marker', type: 'object' },
-                { name: 'defaultAccountType', type: 'boolean' },
+                { name: 'defaultAccountType', type: 'string' },
             ]);
 
             // validate coin info
