@@ -21,12 +21,24 @@ TrezorConnect.getAccountInfo(params).then(function(result) {
 * `coin` — *obligatory* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 
 #### Using public key
-* `xpub` — *obligatory* `string` public key of account
+* `descriptor` — *obligatory* `string` public key of account
 * `coin` — *obligatory* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 
 #### Using discovery
 BIP-0044 account discovery is performed and user is presented with a list of accounts. Result is returned after account selection.
 - `coin` — *obligatory* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
+
+### Other optional params
+* `details` — `'basic' | 'txs'`
+* `tokens` — `'nonzero' | 'used' | 'derived'`
+* `page` — `number`
+* `pageSize` — `number`
+* `from` — `number`
+* `to` — `number`
+* `contractFilter` — `string`
+* `gap` — `number`
+* `marker` — `{ ledger: number, seq: number }`
+* `defaultAccountType` — `'normal' | 'segwit' | 'legacy'`
 
 ### Example
 Get info about first bitcoin account
@@ -105,7 +117,7 @@ TrezorConnect.getAccountInfo("m/49'/0'/0'", function(result) {
 should be
 ```javascript
 // params are key-value pairs inside Object
-TrezorConnect.composeTransaction({ 
+TrezorConnect.getAccountInfo({ 
     path: "m/49'/0'/0'",
     coin: "btc"
 }).then(function(result) {
