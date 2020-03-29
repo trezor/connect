@@ -1,3 +1,7 @@
+# 8.0.15 (server side only)
+#### Fixed
+- `getAccountInfo` Bech32 accounts shouldn't be default #541
+
 # 8.0.14 (server side only)
 #### Fixed
 - `signtxVerify` P2WSH output #541
