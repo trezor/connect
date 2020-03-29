@@ -1,6 +1,6 @@
 # 8.0.15 (server side only)
 #### Fixed
-- `getAccountInfo` Bech32 accounts shouldn't be default #541
+- `getAccountInfo` Bech32 accounts shouldn't be default #547
 
 # 8.0.14 (server side only)
 #### Fixed
