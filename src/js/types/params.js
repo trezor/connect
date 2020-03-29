@@ -138,6 +138,7 @@ export type $GetAccountInfo = $Common & {
         ledger: number,
         seq: number,
     },
+    defaultAccountType?: 'normal' | 'segwit' | 'legacy',
 }
 
 export type $GetAddress = {|
