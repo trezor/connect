@@ -85,7 +85,7 @@ export type Features = {
     capabilities?: string[];
 }
 
-export type KnownDevice = {
+export type KnownDevice = {|
     type: 'acquired';
     id: string | null;
     path: string;
@@ -97,15 +97,21 @@ export type KnownDevice = {
     state: ?string;
     features: Features;
     unavailableCapabilities: { [key: string]: UnavailableCapability };
-};
+|};
 
-export type UnknownDevice = {
+export type UnknownDevice = {|
     type: 'unacquired' | 'unreadable';
     id?: null;
     path: string;
     label: string;
-    features?: typeof undefined;
-};
+    features?: typeof undefined | null;
+    firmware?: typeof undefined | null;
+    firmwareRelease?: typeof undefined | null;
+    status?: typeof undefined | null;
+    mode?: typeof undefined | null;
+    state?: typeof undefined | null;
+    unavailableCapabilities?: typeof undefined | null;
+|};
 
 export type Device = KnownDevice | UnknownDevice;
 

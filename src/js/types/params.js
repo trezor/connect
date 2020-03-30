@@ -52,8 +52,8 @@ export type ConnectSettings = {
 export type CommonParams = {
     device?: {
         path: string;
-        state?: string;
-        instance?: number;
+        state?: ?string;
+        instance?: ?number;
     };
     useEmptyPassphrase?: boolean;
     allowSeedlessDevice?: boolean;

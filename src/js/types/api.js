@@ -40,6 +40,8 @@ interface Emitter {
     (type: typeof CONSTANTS.UI_EVENT, cb: (event: Events.UiEvent) => void): void;
     (type: typeof CONSTANTS.BLOCKCHAIN_EVENT, cb: (event: Blockchain.BlockchainEvent) => void): void;
 
+    (type: $PropertyType<Device.DeviceEvent, 'type'>, cb: (event: $PropertyType<Device.DeviceEvent, 'payload'>) => void): void;
+
     (type: $PropertyType<Events.MessageWithoutPayload, 'type'>, cb: () => void): void;
     (type: $PropertyType<Events.DeviceMessage, 'type'>, cb: (event: $PropertyType<Events.DeviceMessage, 'payload'>) => void): void;
     (type: $PropertyType<Events.ButtonRequestMessage, 'type'>, cb: (event: $PropertyType<Events.ButtonRequestMessage, 'payload'>) => void): void;
