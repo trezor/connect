@@ -1370,10 +1370,10 @@
   dependencies:
     type-detect "4.0.8"
 
-"@trezor/blockchain-link@^1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@trezor/blockchain-link/-/blockchain-link-1.0.9.tgz#3993085f9a9b45f358f9212ead2476cae70c91eb"
-  integrity sha512-VLEnt5QGWPg7/wA4biVZwlryz/E1zY5vOefn47RqsEygz5YVmZT5XjtDEbZzrn2AEKaMynjfz2mu7wiaLUZYuQ==
+"@trezor/blockchain-link@^1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@trezor/blockchain-link/-/blockchain-link-1.0.10.tgz#3a410612050592c30f7c43988f61155c5cf8ae05"
+  integrity sha512-EfYQewm+mQXfJkmJNnS0LkIkZc2muCEorzm9I8XcmxcvHdPANhDT5o3gtdyVSsKW9cduvZi1VfOTi+plW4nSHQ==
   dependencies:
     es6-promise "^4.2.8"
     events "^3.1.0"
@@ -8524,10 +8524,10 @@ ripple-lib-transactionparser@0.8.2:
     bignumber.js "^9.0.0"
     lodash "^4.17.15"
 
-ripple-lib@1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/ripple-lib/-/ripple-lib-1.6.4.tgz#56458bd08a59b38646c832b9dca3e9c8bb439758"
-  integrity sha512-6PDooo5b23oY89WVQ+IqTDerG8FXYeu4ZuprrIbqe7/A3Iy6zCGatez9AcNMgUnq+bCk3P/oylJXrBYLqpe3bA==
+ripple-lib@1.6.5:
+  version "1.6.5"
+  resolved "https://registry.yarnpkg.com/ripple-lib/-/ripple-lib-1.6.5.tgz#df445fb646c4a140869481675b258090ad155c5d"
+  integrity sha512-151+nWvieqoC3EkN6zT5ehkCedpw70xn1IB6n4HL9qNi3Z9clnWg7bzfqZUuCGlaeusnxv1opbP+W4FTIE+PFA==
   dependencies:
     "@types/lodash" "^4.14.136"
     "@types/ws" "^7.2.0"

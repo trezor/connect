@@ -120,6 +120,7 @@ export interface AccountInfo {
     misc?: {
         // ETH
         nonce?: string;
+        erc20Contract?: TokenInfo;
         // XRP
         sequence?: number;
         reserve?: string;
