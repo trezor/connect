@@ -89,7 +89,12 @@ export const parse = (input: $Shape<ConnectSettings> = {}) => {
     if (typeof input.connectSrc === 'string') {
         settings.connectSrc = input.connectSrc;
     }
-    // For debugging purposes `connectSrc` could be also defined in url query of hosting page. Usage:
+    // For debugging purposes `connectSrc` could be defined in `global.__TREZOR_CONNECT_SRC` variable
+    if (typeof global !== 'undefined' && typeof global.__TREZOR_CONNECT_SRC === 'string') {
+        settings.connectSrc = global.__TREZOR_CONNECT_SRC;
+    }
+
+    // For debugging purposes `connectSrc` could be defined in url query of hosting page. Usage:
     // https://3rdparty-page.com/?trezor-connect-src=https://localhost:8088/
     if (typeof window !== 'undefined' && window.location && typeof window.location.search === 'string') {
         const vars = window.location.search.split('&');
