@@ -12,6 +12,10 @@ describe('data/ConnectSettings', () => {
     it('corsValidator', () => {
         expect(corsValidator('https://connect.trezor.io/8-beta/')).toBeDefined();
         expect(corsValidator('https://az-AZ_123.trezor.io/')).toBeDefined();
+        expect(corsValidator('https://multiple.sub.domain.trezor.io/')).toBeDefined();
+        expect(corsValidator('https://trezor.sldev.io/')).not.toBeDefined();
+        expect(corsValidator('https://testxtrezor.io/')).not.toBeDefined();
+        expect(corsValidator('https://testxtrezorxio/')).not.toBeDefined();
         expect(corsValidator('https://non!alpha*numeric?.trezor.io/')).not.toBeDefined();
         expect(corsValidator('https://connect.trezor.io')).not.toBeDefined(); // missing slash at the end
         expect(corsValidator('http://connect.trezor.io/')).not.toBeDefined(); // missing https
@@ -21,6 +25,10 @@ describe('data/ConnectSettings', () => {
         expect(corsValidator('http://localhost:8088/')).toBeDefined();
         expect(corsValidator('https://connect.sldev.cz/')).toBeDefined();
         expect(corsValidator('https://az-AZ_123.sldev.cz/')).toBeDefined();
+        expect(corsValidator('https://multiple.sub.domain.sldev.cz/')).toBeDefined();
+        expect(corsValidator('https://sldev.trezor.cz/')).not.toBeDefined();
+        expect(corsValidator('https://testxsldev.cz/')).not.toBeDefined();
+        expect(corsValidator('https://testxsldevxcz/')).not.toBeDefined();
         expect(corsValidator('https://non!alpha*numeric?.sldev.cz/')).not.toBeDefined();
         expect(corsValidator('https://connect.sldev.cz')).not.toBeDefined(); // missing slash at the end
         expect(corsValidator('http://connect.sldev.cz/')).not.toBeDefined(); // missing https
