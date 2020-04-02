@@ -41,6 +41,9 @@ describe('data/ConnectSettings', () => {
         window.location = { search: 'trezor-connect-src=https://connect.trezor.io/beta.3/&foo=bar' };
         expect(parse({}).connectSrc).toEqual('https://connect.trezor.io/beta.3/');
 
+        window.location = { search: 'trezor-connect-src=https%3A%2F%2Fconnect.trezor.io%2Fbeta.encoded%2F' }; // encoded
+        expect(parse({}).connectSrc).toEqual('https://connect.trezor.io/beta.encoded/');
+
         window.location = { search: 'trezor-connect-src=https://connect-beta.trezor.oi/beta.3/' }; // invalid domain "io"
         expect(parse({}).connectSrc).toEqual(undefined);
 
