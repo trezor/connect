@@ -39,7 +39,7 @@
     "build:npm-extended": "rm -rf npm-extended && babel-node ./scripts/build-npm-extended.js && babel ./npm-extended/lib --out-dir ./npm-extended/lib",
     "stats": "webpack --config ./webpack/config.prod.babel.js --json > build/stats.json",
     "test:old": "bash ./src/__tests__/run.sh",
-    "test": "jest --config jest.config.js --verbose --detectOpenHandles --forceExit",
+    "test": "./tests/run.sh",
     "test:unit": "jest --verbose -c jest.config.unit.js",
     "test:karma": "babel-node ./node_modules/.bin/karma start",
     "test:karma:watch": "babel-node ./node_modules/.bin/karma start --no-single-run --auto-watch",

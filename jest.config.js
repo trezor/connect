@@ -14,7 +14,7 @@ module.exports = {
     modulePathIgnorePatterns: ['node_modules', '_old', 'src/types', 'src/ui', 'src/utils/ws.ts'],
     // setupFiles: ['.', './tests/jest.setup.js'],
     setupFilesAfterEnv: ['<rootDir>/tests/jest.setup.js', '<rootDir>/tests/common.setup.js'],
-    globalSetup: './tests/jest.globalSetup.js',
+    // globalSetup: './tests/jest.globalSetup.js',
     globalTeardown: './tests/jest.globalTeardown.js',
     transform: {
         '^.+\\.js$': 'babel-jest',

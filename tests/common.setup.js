@@ -1,9 +1,9 @@
-import Controller from './python/websocket-client';
+import Controller from './websocket-client';
 import TrezorConnect, { UI } from '../src/js/index';
 
 // TrezorConnect and Controller should be imported and initialized in one file
 // otherwise karma will put "TrezorConnect" instance into every *.test file
-
+console.log('common setup');
 const MNEMONICS = {
     'mnemonic_all': 'all all all all all all all all all all all all',
     'mnemonic_12': 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
@@ -35,9 +35,8 @@ const setup = async (controller, options) => {
 
     });
     await controller.connect();
-    await controller.send({ type: 'bridge-start', version: '2' }); // TODO: add optional path param
-    // await controller.send({ type: 'emulator-stop' });
-    await controller.send({ type: 'emulator-start', model: 'T' }); // TODO: add model T1/TT
+    await controller.send({ type: 'bridge-start' });
+    await controller.send({ type: 'emulator-start', version: '2.2.0' });
 
     if (options.wipe) {
         await controller.send({ type: 'emulator-wipe' });
@@ -46,14 +45,13 @@ const setup = async (controller, options) => {
 
         await controller.send({
             type: 'emulator-setup',
-            firmware: '2.1.8',
             mnemonic,
             pin: options.pin || '',
             passphrase_protection: false,
             label: options.label || 'TrezorT',
             backup: false,
             options,
-        }); // TODO: add more options (backup, initialized etc.), add optional fw/model param
+        });
     }
 };
 

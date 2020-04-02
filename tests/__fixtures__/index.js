@@ -28,7 +28,7 @@ export default [
     // cardanoGetPublicKey,
 
     // TODO: needs to wipe device beforeEach test
-    resetDevice,
+    // resetDevice,
 
     // TODO: 2.1.4 returns ui-device_firmware_old
     // binanceSignTransaction,
