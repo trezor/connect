@@ -74,6 +74,17 @@ export const getEnv = () => {
     return 'web';
 };
 
+// Cors validation copied from Trezor Bridge
+// see: https://github.com/trezor/trezord-go/blob/05991cea5900d18bcc6ece5ae5e319d138fc5551/server/api/api.go#L229
+// Its pointless to allow `trezor-connect` endpoints { connectSrc } for domains other than listed below
+// `trezord` will block communication anyway
+export const corsValidator = (url?: string) => {
+    if (typeof url !== 'string') return;
+    if (url.match(/^https:\/\/([a-zA-Z0-9-_])*.trezor.io\//)) return url;
+    if (url.match(/^https?:\/\/localhost:[58][0-9]{3}\//)) return url;
+    if (url.match(/^https:\/\/([a-zA-Z0-9-_])*.sldev.cz\//)) return url;
+};
+
 export const parse = (input: $Shape<ConnectSettings> = {}) => {
     const settings: ConnectSettings = { ...currentSettings };
     if (Object.prototype.hasOwnProperty.call(input, 'debug')) {
@@ -91,7 +102,7 @@ export const parse = (input: $Shape<ConnectSettings> = {}) => {
     }
     // For debugging purposes `connectSrc` could be defined in `global.__TREZOR_CONNECT_SRC` variable
     if (typeof global !== 'undefined' && typeof global.__TREZOR_CONNECT_SRC === 'string') {
-        settings.connectSrc = global.__TREZOR_CONNECT_SRC;
+        settings.connectSrc = corsValidator(global.__TREZOR_CONNECT_SRC);
     }
 
     // For debugging purposes `connectSrc` could be defined in url query of hosting page. Usage:
@@ -101,7 +112,7 @@ export const parse = (input: $Shape<ConnectSettings> = {}) => {
         const customUrl = vars.find(v => v.indexOf('trezor-connect-src') >= 0);
         if (customUrl) {
             const [, connectSrc] = customUrl.split('=');
-            settings.connectSrc = decodeURIComponent(connectSrc);
+            settings.connectSrc = corsValidator(decodeURIComponent(connectSrc));
         }
     }
     const src = settings.connectSrc || DEFAULT_DOMAIN;
