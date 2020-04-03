@@ -1,4 +1,3 @@
-xhost +
 
 function cleanup {
   # print out all docker logs on cleanup
@@ -11,10 +10,19 @@ function cleanup {
 
 trap cleanup EXIT
 
-# to disable video device GUI:
-# -e SDL_VIDEODRIVER="dummy" \
+echo $1
 
-docker run --rm -d \
+if [ "$1" = "ci" ]
+then
+ docker run --rm -d \
+    --name connect-tests \
+    -e SDL_VIDEODRIVER="dummy" \
+    --network="host" \
+    mroz22/trezor-env \
+    bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
+else
+  xhost +
+  docker run --rm -d \
     --name connect-tests \
     --ipc host \
     -e DISPLAY=$DISPLAY \
@@ -23,7 +31,7 @@ docker run --rm -d \
     --network="host" \
     mroz22/trezor-env \
     bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
-    # mroz22/trezor-env:latest \
+fi
 
 id=$(docker ps -aqf "name=connect-tests")
 

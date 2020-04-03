@@ -12,7 +12,7 @@ script:
   - yarn lint
   - yarn test:unit
   - make build-connect
-  - ./tests/run.sh
+  - ./tests/run.sh ci
 
 notifications:
   webhooks:

@@ -45,4 +45,4 @@ test integration:
   dependencies: 
     - deploy review
   script: 
-    - ./tests/run.sh
+    - ./tests/run.sh ci
