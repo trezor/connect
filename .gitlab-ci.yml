@@ -3,6 +3,7 @@ image: node:12.14.1
 stages:
   - build
   - deploy
+  - test-integration
 
 build:
   stage: build
@@ -37,3 +38,10 @@ deploy review:
     - branches
   tags:
     - deploy
+
+test integration:
+  stage: test-integration
+  dependencies: 
+    - deploy review
+  script: 
+    - ./tests/run.sh
