@@ -3,7 +3,7 @@
 export default {
     method: 'cardanoSignTransaction',
     setup: {
-        mnemonic: 'mnemonic_12',
+        mnemonic: 'mnemonic_all',
     },
     tests: [
         {

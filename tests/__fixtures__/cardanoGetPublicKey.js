@@ -1,9 +1,7 @@
-// todo: does not really work. debug why;
-
 export default {
     method: 'cardanoGetPublicKey',
     setup: {
-        mnemonic: 'mnemonic_12',
+        mnemonic: 'mnemonic_all',
     },
     tests: [
         {

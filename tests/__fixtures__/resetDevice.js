@@ -3,7 +3,7 @@ export default {
     setup: {
         wipe: true,
     },
-    // todo: cant run multiple resets, will get already initialized. maybe change beforeAll to beforeEach?
+    // todo: can't run multiple resets, will get already initialized. maybe change beforeAll to beforeEach?
     tests: [
         {
             description: 'Reset device',
@@ -14,15 +14,5 @@ export default {
                 message: 'Initialized',
             },
         },
-        // {
-        //     description: 'Reset device no backup',
-        //     params: {
-        //         // skipBackup: true,
-        //         noBackup: true,
-        //     },
-        //     result: {
-        //         message: 'Initialized',
-        //     },
-        // },
     ],
 };

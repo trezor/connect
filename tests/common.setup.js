@@ -4,6 +4,7 @@ import TrezorConnect, { UI } from '../src/js/index';
 const MNEMONICS = {
     'mnemonic_all': 'all all all all all all all all all all all all',
     'mnemonic_12': 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
+    'mnemonic_abandon': 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
 };
 
 function sleep(ms) {
@@ -21,6 +22,7 @@ const setup = async (controller, options) => {
         await controller.send({ type: 'emulator-wipe' });
     } else {
         const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
+        console.log(mnemonic)
         await controller.send({
             type: 'emulator-setup',
             mnemonic,

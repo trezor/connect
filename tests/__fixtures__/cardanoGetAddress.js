@@ -13,13 +13,13 @@ export default {
                 address: 'Ae2tdPwUPEZLCq3sFv4wVYxwqjMH2nUzBVt1HFr4v87snYrtYq3d3bq2PUQ',
             },
         },
-        // {
-        //     description: "m/44'/1815'",
-        //     params: {
-        //         path: "m/44'/1815'",
-        //     },
-        //     result: false,
-        // },
+        {
+            description: "m/44'/1815'",
+            params: {
+                path: "m/44'/1815'",
+            },
+            result: false,
+        },
         {
             description: "m/44'/1815'/0'/0/1",
             params: {
