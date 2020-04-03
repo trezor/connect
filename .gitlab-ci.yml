@@ -1,15 +1,6 @@
 # image: mroz22/trezor-env:latest
 image: registry.gitlab.com/satoshilabs/trezor/trezor-suite/base:54b807728aa0417641c00dfab1aa6c0ea77bcfdb
 
-variables:
-  DOCKER_TLS_CERTDIR: "/certs"
-
-services:
-  - docker:19.03.1-dind
-
-before_script:
-  - docker info
-
 stages:
   - build
   - deploy
@@ -53,5 +44,11 @@ test integration:
   stage: test-integration
   dependencies: 
     - deploy review
+  variables:
+    DOCKER_TLS_CERTDIR: ''
+  services:
+    - docker:dind
+  before_script:
+    - docker info
   script: 
     - ./tests/run.sh ci
