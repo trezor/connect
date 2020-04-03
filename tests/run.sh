@@ -17,7 +17,7 @@ then
   --name connect-tests \
   -e SDL_VIDEODRIVER="dummy" \
   --network="host" \
-  mroz22/trezor-env \
+  mroz22/trezor-user-env \
   bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
 else
   xhost +
@@ -28,7 +28,7 @@ else
     -e QT_X11_NO_MITSHM=1 \
     -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
     --network="host" \
-    mroz22/trezor-env \
+    mroz22/trezor-user-env \
     bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
     # todo: all this bash -c part should be moved to COMMAND or ENTRYPOINT command in docker
 fi
