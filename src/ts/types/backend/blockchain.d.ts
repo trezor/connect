@@ -143,7 +143,7 @@ export interface BlockchainAccountBalanceHistory {
     txs: number;
     received: string;
     sent: string;
-    fiatRate: number;
+    rates: BlockchainFiatRates;
 }
 
 export interface BlockchainSetCustomBackend {
