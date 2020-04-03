@@ -1,7 +1,7 @@
 
 function cleanup {
   # print out all docker logs on cleanup
-  # docker logs $id
+  docker logs $id
 
   # stop trezor-env container
   docker stop $id
@@ -35,4 +35,4 @@ fi
 
 id=$(docker ps -aqf "name=connect-tests")
 
-yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --runInBand
+yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --runInBand --bail

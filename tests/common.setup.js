@@ -12,25 +12,43 @@ function sleep(ms) {
 }
 
 const setup = async (controller, options) => {
-    await controller.connect();
-    await controller.send({ type: 'emulator-start', version: '2.2.0' });
+    try {
+        await controller.connect();
+    } catch (err) {
+        throw new Error('controller.connect: ' + err)
+    }
+    try {
+        await controller.send({ type: 'emulator-start', version: '2.2.0' });
+    } catch (err) {
+        throw new Error('controller.emu-start: ' + err)
+    }
     // todo: find a way how to remove these sleeps
     await sleep(501);
-    await controller.send({ type: 'bridge-start' });
-    await sleep(501);
+    try {
+        await controller.send({ type: 'bridge-start' });
+    } catch (err) {
+        throw new Error('controller.bridge-start: ' + err)
+    }
+    await sleep(1501);
+
     if (options.wipe) {
         await controller.send({ type: 'emulator-wipe' });
     } else {
         const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
-        await controller.send({
-            type: 'emulator-setup',
-            mnemonic,
-            pin: options.pin || '',
-            passphrase_protection: false,
-            label: options.label || 'TrezorT',
-            backup: false,
-            options,
-        });
+        try {
+            await controller.send({
+                type: 'emulator-setup',
+                mnemonic,
+                pin: options.pin || '',
+                passphrase_protection: false,
+                label: options.label || 'TrezorT',
+                backup: false,
+                options,
+            });
+        } catch (err) {
+            throw new Error('controller.emu-setup: ' + err)
+        }
+        
     }
 };
 
