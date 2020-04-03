@@ -49,9 +49,10 @@ until [ $i -eq $retry ]; do
       # todo: all this bash -c part should be moved to COMMAND or ENTRYPOINT command in docker
       yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --runInBand --bail
   fi
-
   RET=$?
   ((i+=1))
   [ $RET -eq 0 ] && exit 0
-  sleep 3
+  cleanup
 done
+
+exit 1

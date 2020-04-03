@@ -14,42 +14,34 @@ function sleep(ms) {
 const setup = async (controller, options) => {
     try {
         await controller.connect();
-    } catch (err) {
-        throw new Error('controller.connect: ' + err)
-    }
-    try {
         await controller.send({ type: 'emulator-start', version: '2.2.0' });
-    } catch (err) {
-        throw new Error('controller.emu-start: ' + err)
-    }
-    // todo: find a way how to remove these sleeps
-    await sleep(501);
-    try {
+        // todo: find a way how to remove these sleeps, but it fails with them as well so we probably don't need
+        // them. the problem seem to be in the python server and some race condition in it causing it to fail
         await controller.send({ type: 'bridge-start' });
-    } catch (err) {
-        throw new Error('controller.bridge-start: ' + err)
-    }
-    await sleep(1501);
-
-    if (options.wipe) {
-        await controller.send({ type: 'emulator-wipe' });
-    } else {
-        const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
-        try {
-            await controller.send({
-                type: 'emulator-setup',
-                mnemonic,
-                pin: options.pin || '',
-                passphrase_protection: false,
-                label: options.label || 'TrezorT',
-                backup: false,
-                options,
-            });
-        } catch (err) {
-            throw new Error('controller.emu-setup: ' + err)
+        await sleep(501);
+        if (options.wipe) {
+            await controller.send({ type: 'emulator-wipe' });
+        } else {
+            const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
+            try {
+                await controller.send({
+                    type: 'emulator-setup',
+                    mnemonic,
+                    pin: options.pin || '',
+                    passphrase_protection: false,
+                    label: options.label || 'TrezorT',
+                    backup: false,
+                    options,
+                });
+            } catch (err) {
+                // just add more error, most of the time it fails here.
+                throw new Error('controller.emu-setup: ' + err)
+            }
         }
-        
-    }
+    } catch (err) {
+        // --bail in jest is not enough 
+        process.exit(1)
+    }   
 };
 
   
