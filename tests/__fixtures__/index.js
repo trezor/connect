@@ -5,8 +5,8 @@ import getPublicKey from './getPublicKey';
 import signTransaction from './signTransaction';
 import rippleGetAddress from './rippleGetAddress';
 import binanceSignTransaction from './binanceSignTransaction';
-import wipeDevice from './wipeDevice';
-import resetDevice from './resetDevice';
+// import wipeDevice from './wipeDevice';
+// import resetDevice from './resetDevice';
 import cardanoGetAddress from './cardanoGetAddress';
 import cardanoGetPublicKey from './cardanoGetPublicKey';
 import cardanoSignTransaction from './cardanoSignTransaction';
@@ -63,6 +63,6 @@ export default [
     // // TezosGetPublicKey.js
     // // TezosSignTransaction.js
     // // VerifyMessage.js
-    wipeDevice,
+    // wipeDevice, // some error, will solve later
     // // resetDevice, // socket hangup, what? fix
 ];
