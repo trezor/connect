@@ -10,24 +10,14 @@ function cleanup {
 
 trap cleanup EXIT
 
-echo $1
+echo "to run in ci use './run.sh ci'"
 
 if [ "$1" = "ci" ]
 then
-  # this was able to run in travis.
-#  docker run --rm -d \
-#     --name connect-tests \
-#     -e SDL_VIDEODRIVER="dummy" \
-#     --network="host" \
-#     mroz22/trezor-env \
-#     bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
-
-# but we dont have docker availbe in github, maybe expose docker.sock? 
  docker run --rm -d \
   --name connect-tests \
   -e SDL_VIDEODRIVER="dummy" \
   --network="host" \
-  -v /var/run/docker.sock:/var/run/docker.sock \
   mroz22/trezor-env \
   bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
 else
