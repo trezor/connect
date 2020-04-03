@@ -38,7 +38,7 @@
     "build:npm": "rm -rf npm && babel-node ./scripts/build-npm.js && babel ./npm/lib --out-dir ./npm/lib",
     "build:npm-extended": "rm -rf npm-extended && babel-node ./scripts/build-npm-extended.js && babel ./npm-extended/lib --out-dir ./npm-extended/lib",
     "stats": "webpack --config ./webpack/config.prod.babel.js --json > build/stats.json",
-    "test:legacy": "bash ./src/__tests__/run.sh",
+    "test": "bash ./src/__tests__/run.sh",
     "test:unit": "jest --verbose -c jest.config.unit.js",
     "test:integration": "./tests/run.sh",
     "flow": "flow check src/js",
