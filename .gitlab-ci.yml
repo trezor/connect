@@ -1,10 +1,9 @@
-# image: mroz22/trezor-env:latest
-image: registry.gitlab.com/satoshilabs/trezor/trezor-suite/base:54b807728aa0417641c00dfab1aa6c0ea77bcfdb
+image: node:12.14.1
 
 stages:
   - build
   - deploy
-  - test-integration
+  # - test-integration
 
 build:
   stage: build
@@ -40,15 +39,19 @@ deploy review:
   tags:
     - deploy
 
-test integration:
-  stage: test-integration
-  dependencies: 
-    - deploy review
-  variables:
-    DOCKER_TLS_CERTDIR: ''
-  services:
-    - docker:dind
-  before_script:
-    - docker info
-  script: 
-    - ./tests/run.sh ci
+# todo: does not work yet. I would like not to use image with docker installed and rather use 
+# docker mounted from parent container https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+# but I'd say it is not configured on the runners at the moment 
+#
+# test integration:
+#   stage: test-integration
+#   dependencies: 
+#     - deploy review
+#   variables:
+#     DOCKER_TLS_CERTDIR: ''
+#   services:
+#     - docker:dind
+#   before_script:
+#     - docker info
+#   script: 
+#     - ./tests/run.sh ci
