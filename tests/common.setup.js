@@ -22,7 +22,6 @@ const setup = async (controller, options) => {
         await controller.send({ type: 'emulator-wipe' });
     } else {
         const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
-        console.log(mnemonic)
         await controller.send({
             type: 'emulator-setup',
             mnemonic,
