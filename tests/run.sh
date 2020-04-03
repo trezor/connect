@@ -2,10 +2,9 @@
 function cleanup {
   # print out all docker logs on cleanup
   # docker logs $id
+
   # stop trezor-env container
   docker stop $id
-  ps aux | grep python3
-  ps aux | grep trezord
 }
 
 trap cleanup EXIT
@@ -31,6 +30,7 @@ else
     --network="host" \
     mroz22/trezor-env \
     bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
+    # todo: all this bash -c part should be moved to COMMAND or ENTRYPOINT command in docker
 fi
 
 id=$(docker ps -aqf "name=connect-tests")

@@ -64,6 +64,7 @@ export namespace TrezorConnect {
     function on(type: Events.FirmwareProgress['type'], cb: (event: Events.FirmwareProgress['payload']) => void): void;
     function on(type: Events.CustomMessageRequest['type'], cb: (event: Events.CustomMessageRequest['payload']) => void): void;
     function off(type: string, cb: any): void;
+    function removeAllListeners(): void;
 
     function uiResponse(response: Events.UiResponse): void;
 

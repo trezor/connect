@@ -51,7 +51,6 @@ const initTrezorConnect = async (controller, options) => {
     TrezorConnect.removeAllListeners();
 
     await TrezorConnect.init({
-        // connectSrc: 'http://localhost:8099/_karma_webpack_/',
         manifest: {
             appUrl: 'a',
             email: 'b',
