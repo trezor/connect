@@ -29,6 +29,10 @@ const TrezorConnect: API = {
         eventEmitter.removeListener(type, fn);
     },
 
+    removeAllListeners: () => {
+        eventEmitter.removeAllListeners();
+    },
+
     uiResponse,
 
     // methods

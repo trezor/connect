@@ -73,6 +73,8 @@ export const events = async () => {
         }
     });
     TrezorConnect.off(DEVICE_EVENT, () => {});
+    TrezorConnect.removeAllListeners();
+
     // @ts-ignore
     TrezorConnect.on('DEVICE-EVENT', () => {});
 

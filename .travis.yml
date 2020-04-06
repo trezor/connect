@@ -12,6 +12,7 @@ script:
   - yarn lint
   - yarn test:unit
   - make build-connect
+  - ./tests/run.sh 3 ci
 
 notifications:
   webhooks:
@@ -20,3 +21,6 @@ notifications:
     on_success: always
     on_failure: always
     on_start: always
+
+services:
+  - docker

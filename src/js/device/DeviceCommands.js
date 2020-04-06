@@ -38,10 +38,10 @@ function assertType(res: DefaultMessageResponse, resType: string) {
 }
 
 function generateEntropy(len: number): Buffer {
-    if (global.crypto || global.msCrypto) {
+    try {
         return randombytes(len);
-    } else {
-        throw new Error('Browser does not support crypto random');
+    } catch (err) {
+        throw new Error('Environment does not support crypto random');
     }
 }
 
