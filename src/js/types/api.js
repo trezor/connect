@@ -85,7 +85,7 @@ export type API = {
      */
     on: Emitter;
     off: Emitter;
-    removeAllListeners: Emitter;
+    removeAllListeners: () => void;
 
     uiResponse: (response: Events.UiResponse) => void;
 
