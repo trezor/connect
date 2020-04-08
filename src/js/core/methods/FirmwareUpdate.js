@@ -42,7 +42,7 @@ export default class FirmwareUpdate extends AbstractMethod {
             // either receive version and btcOnly
             version: payload.version,
             btcOnly: payload.btcOnly,
-            baseUrl: payload.baseUrl || 'https://wallet.trezor.io/',
+            baseUrl: payload.baseUrl || 'https://wallet.trezor.io',
             // or binary
             binary: payload.binary,
         };
@@ -73,21 +73,24 @@ export default class FirmwareUpdate extends AbstractMethod {
         const { device } = this;
 
         let binary;
-
-        if (this.params.binary) {
-            binary = this.params.binary;
-        } else {
-            const firmware = await getBinary({
-                // features and releases are used for sanity checking inside @trezor/rollout
-                features: device.features,
-                releases: DataManager.assets[`firmware-t${device.features.major_version}`],
-                // version argument is used to find and fetch concrete release from releases list
-                version: this.params.version,
-                btcOnly: this.params.btcOnly,
-                baseUrl: this.params.baseUrl,
-                baseUrlBeta: 'https://beta-wallet.trezor.io/',
-            });
-            binary = firmware.binary;
+        try {
+            if (this.params.binary) {
+                binary = this.params.binary;
+            } else {
+                const firmware = await getBinary({
+                    // features and releases are used for sanity checking inside @trezor/rollout
+                    features: device.features,
+                    releases: DataManager.assets[`firmware-t${device.features.major_version}`],
+                    // version argument is used to find and fetch concrete release from releases list
+                    version: this.params.version,
+                    btcOnly: this.params.btcOnly,
+                    baseUrl: this.params.baseUrl,
+                    baseUrlBeta: 'https://beta-wallet.trezor.io',
+                });
+                binary = firmware.binary;
+            }
+        } catch (err) {
+            throw new Error('Failed to download firmware binary');
         }
 
         return uploadFirmware(
