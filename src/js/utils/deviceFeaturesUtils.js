@@ -43,7 +43,7 @@ const DEFAULT_CAPABILITIES_T1 = [1, 2, 5, 7, 8, 10, 12, 14];
 const DEFAULT_CAPABILITIES_TT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
 export const parseCapabilities = (features?: Features): string[] => {
-    if (!features) return []; // no features - no capabilities
+    if (!features || features.firmware_present === false) return []; // no features or no firmware - no capabilities
     // needs to be "any" since Features.capabilities are declared as string[] but in fact it's a number[]
     const filter = (c: any) => CAPABILITIES[c] || 'Capability_Unknown_trezor-connect';
     // fallback for older firmware
