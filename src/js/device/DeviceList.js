@@ -170,8 +170,7 @@ export default class DeviceList extends EventEmitter {
         if (this.transportPlugin && this.transportPlugin.name === 'WebUsbPlugin') {
             const { unreadableHidDeviceChange } = this.transportPlugin;
             unreadableHidDeviceChange.on('change', async () => {
-                const { unreadableHidDevice } = this.transportPlugin;
-                if (unreadableHidDevice) {
+                if (this.transportPlugin && this.transportPlugin.unreadableHidDevice) {
                     const device = await this._createUnacquiredDevice({ path: DEVICE.UNREADABLE, session: null, debugSession: null, debug: false });
                     this.devices[DEVICE.UNREADABLE] = device;
                     this.emit(DEVICE.CONNECT_UNACQUIRED, device.toMessageObject());
