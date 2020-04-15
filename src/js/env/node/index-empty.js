@@ -1,7 +1,7 @@
 /* @flow */
 import EventEmitter from 'events';
 
-const empty = () => {
+const empty = (...args: any) => {
     throw new Error('This version of trezor-connect is not suitable to work without browser');
 };
 
@@ -13,6 +13,7 @@ export const getSettings = empty;
 export const customMessage = empty;
 export const requestLogin = empty;
 export const uiResponse = empty;
+export const disableWebUSB = empty;
 export const renderWebUSBButton = empty;
 export const cancel = empty;
 export const dispose = empty;
