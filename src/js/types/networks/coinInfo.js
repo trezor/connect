@@ -1,7 +1,7 @@
 /* @flow */
-export interface Network {
+type Network = {
     messagePrefix: string;
-    bech32?: string;
+    bech32: ?string;
     bip32: {
         public: number;
         private: number;
@@ -11,7 +11,7 @@ export interface Network {
     wif: number;
     dustThreshold: number;
     coin: string;
-}
+};
 
 type CoinSupport = {
     connect: boolean;
