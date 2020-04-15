@@ -1,4 +1,4 @@
-FROM node:8.10
+FROM node:12
 
 WORKDIR /trezor-connect-app
 
