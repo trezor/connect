@@ -1,3 +1,6 @@
+# 8.1.1 (npm only)
+- flowtype fix
+
 # 8.1.0
 #### Added
 - Support for FW 1.9.0 and 2.3.0 (passphrase redesign)
@@ -17,6 +20,7 @@
 - disableWebUsb method
 - trezor-link protobuf messages overrides
 - Fixed race condition in nodejs https://github.com/trezor/connect/issues/504
+
 # 8.0.15 (server side only)
 #### Fixed
 - `getAccountInfo` Bech32 accounts shouldn't be default #547
