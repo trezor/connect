@@ -84,13 +84,13 @@ export type UnknownDevice = {
     id?: null;
     path: string;
     label: string;
-    features?: typeof undefined | null;
-    firmware?: typeof undefined | null;
-    firmwareRelease?: typeof undefined | null;
-    status?: typeof undefined | null;
-    mode?: typeof undefined | null;
-    state?: typeof undefined | null;
-    unavailableCapabilities?: typeof undefined | null;
+    features?: typeof undefined;
+    firmware?: typeof undefined;
+    firmwareRelease?: typeof undefined;
+    status?: typeof undefined;
+    mode?: typeof undefined;
+    state?: typeof undefined;
+    unavailableCapabilities?: typeof undefined;
 };
 
 export type Device = KnownDevice | UnknownDevice;
