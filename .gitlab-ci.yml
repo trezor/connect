@@ -38,14 +38,13 @@ deploy review:
     - branches
   tags:
     - deploy
-
-# todo: does not work yet. I would like not to use image with docker installed and rather use 
+# todo: does not work yet. I would like not to use image with docker installed and rather use
 # docker mounted from parent container https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
-# but I'd say it is not configured on the runners at the moment 
+# but I'd say it is not configured on the runners at the moment
 #
 # test integration:
 #   stage: test-integration
-#   dependencies: 
+#   dependencies:
 #     - deploy review
 #   variables:
 #     DOCKER_TLS_CERTDIR: ''
@@ -53,5 +52,5 @@ deploy review:
 #     - docker:dind
 #   before_script:
 #     - docker info
-#   script: 
+#   script:
 #     - ./tests/run.sh ci
