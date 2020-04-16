@@ -22,3 +22,6 @@ logs
 *.log
 .yarnclean
 coverage
+
+# Cache
+__pycache__
