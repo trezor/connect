@@ -96,8 +96,16 @@ export const others = async () => {
         coin: 'btc',
     });
 
+    TrezorConnect.blockchainSubscribe({
+        coin: 'btc',
+    });
+
     TrezorConnect.blockchainUnsubscribe({
         accounts,
+        coin: 'btc',
+    });
+
+    TrezorConnect.blockchainUnsubscribe({
         coin: 'btc',
     });
 
@@ -106,6 +114,10 @@ export const others = async () => {
     TrezorConnect.blockchainSetCustomBackend({
         coin: 'btc',
         blockchainLink: undefined,
+    });
+
+    TrezorConnect.blockchainSetCustomBackend({
+        coin: 'btc',
     });
 
     TrezorConnect.blockchainSetCustomBackend({

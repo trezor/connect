@@ -87,6 +87,7 @@ export default class Blockchain {
                 coin: this.coinInfo,
                 ...info,
             }));
+            // TODO: check for 1st block hash (different for btc forks)
         });
 
         this.link.on('disconnected', () => {
@@ -167,7 +168,7 @@ export default class Blockchain {
         return this.link.estimateFee(request);
     }
 
-    async subscribe(accounts: BlockchainSubscribeAccount[]) {
+    async subscribe(accounts?: BlockchainSubscribeAccount[]) {
         // set block listener if it wasn't set before
         if (this.link.listenerCount('block') === 0) {
             this.link.on('block', (block: BlockchainBlock) => {
@@ -188,7 +189,10 @@ export default class Blockchain {
             });
         }
 
-        await this.link.subscribe({ type: 'block' });
+        const blockSubscription = await this.link.subscribe({ type: 'block' });
+        if (!accounts) {
+            return blockSubscription;
+        }
 
         return this.link.subscribe({
             type: 'accounts',
@@ -221,9 +225,8 @@ export default class Blockchain {
             this.link.removeAllListeners('notification');
 
             // remove all subscriptions
-            await this.link.unsubscribe({ type: 'block' });
             await this.link.unsubscribe({ type: 'fiatRates' });
-            return this.link.unsubscribe({ type: 'notification' });
+            return this.link.unsubscribe({ type: 'block' });
         }
         // unsubscribe only requested accounts
         return this.link.unsubscribe({ type: 'accounts', accounts });

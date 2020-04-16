@@ -43,7 +43,7 @@ export interface BlockchainSubscribeAccount {
 }
 
 export interface BlockchainSubscribe {
-    accounts: BlockchainSubscribeAccount[];
+    accounts?: BlockchainSubscribeAccount[];
     coin: string;
 }
 
@@ -148,7 +148,7 @@ export interface BlockchainAccountBalanceHistory {
 
 export interface BlockchainSetCustomBackend {
     coin: string;
-    blockchainLink: CoinInfo['blockchainLink'];
+    blockchainLink?: CoinInfo['blockchainLink'];
 }
 
 export type BlockchainEvent =

@@ -58,7 +58,7 @@ export type BlockchainSubscribeFiatRates = {
 }
 
 export type BlockchainSubscribe = {
-    accounts: BlockchainSubscribeAccount[];
+    accounts?: BlockchainSubscribeAccount[];
     coin: string;
 }
 
@@ -146,7 +146,7 @@ export type BlockchainEstimatedFee = {
 
 export type BlockchainSetCustomBackend = {
     coin: string;
-    blockchainLink: $PropertyType<CoinInfo, 'blockchainLink'>;
+    blockchainLink?: $PropertyType<CoinInfo, 'blockchainLink'>;
 }
 
 export type BlockchainEvent =
