@@ -280,13 +280,14 @@ export const initBlockchain = async (coinInfo: CoinInfo, postMessage: $ElementTy
             coinInfo: customBackends[coinInfo.shortcut] || coinInfo,
             postMessage,
         });
+        instances.push(backend);
+
         try {
             await backend.init();
         } catch (error) {
             remove(backend);
             throw error;
         }
-        instances.push(backend);
     }
     return backend;
 };
