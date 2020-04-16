@@ -635,7 +635,15 @@ export default class DeviceCommands {
         }
 
         const response: DefaultMessageResponse = await this._commonCall(type, msg);
-        assertType(response, resType);
+        try {
+            assertType(response, resType);
+        } catch (error) {
+            // handle possible race condition
+            // Bridge has some unread message in buffer, read them
+            await this.transport.read(this.sessionId, false);
+            // throw error anyway, next call should be resolved properly
+            throw error;
+        }
         return response;
     }
 
