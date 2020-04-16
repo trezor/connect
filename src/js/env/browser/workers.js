@@ -6,7 +6,7 @@ import RippleWorker from 'worker-loader?name=workers/ripple-worker.[hash].js!@tr
 import TrezorLink from 'trezor-link';
 
 const WebUsbPlugin = () => {
-    return new TrezorLink.Lowlevel(new TrezorLink.WebUsb(), () => new SharedConnectionWorker());
+    return new TrezorLink.Lowlevel(new TrezorLink.WebUsb(), typeof SharedWorker !== 'undefined' ? () => new SharedConnectionWorker() : null);
 };
 
 const ReactNativeUsbPlugin = undefined;
