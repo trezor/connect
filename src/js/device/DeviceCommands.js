@@ -639,7 +639,7 @@ export default class DeviceCommands {
             assertType(response, resType);
         } catch (error) {
             // handle possible race condition
-            // Bridge has some unread message in buffer, read them
+            // Bridge may have some unread message in buffer, read it
             await this.transport.read(this.sessionId, false);
             // throw error anyway, next call should be resolved properly
             throw error;
