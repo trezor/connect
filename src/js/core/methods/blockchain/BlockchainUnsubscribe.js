@@ -25,7 +25,7 @@ export default class BlockchainUnsubscribe extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'accounts', type: 'array' },
+            { name: 'accounts', type: 'array', allowEmpty: true },
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
