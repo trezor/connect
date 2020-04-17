@@ -1,3 +1,9 @@
+# 8.1.2
+#### Fixed
+- bech32 xpub format in fw < 1.7.2 & 2.0.10
+- workaround for pending unread message (trezor/trezord-go#154)
+- blockchainSubscribe optional params
+
 # 8.1.1 (npm only)
 - flowtype fix
 
