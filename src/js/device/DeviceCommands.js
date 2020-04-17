@@ -120,11 +120,8 @@ export default class DeviceCommands {
         coinInfo: ?BitcoinNetworkInfo,
         validation?: boolean = true,
     ): Promise<trezor.HDNodeResponse> {
-        if (!this.device.atLeast(['1.7.2', '2.0.10'])) {
-            return await this.getBitcoinHDNode(path, coinInfo, validation);
-        }
-        if (!coinInfo) {
-            return await this.getBitcoinHDNode(path, null, validation);
+        if (!this.device.atLeast(['1.7.2', '2.0.10']) || !coinInfo) {
+            return await this.getBitcoinHDNode(path, coinInfo);
         }
 
         let network: ?bitcoin.Network;
@@ -206,11 +203,14 @@ export default class DeviceCommands {
             depth: publicKey.node.depth,
         };
 
-        // if requested path is a segwit
+        // if requested path is a segwit or bech32
         // convert xpub to new format
         if (coinInfo) {
+            const bech32Network = getBech32Network(coinInfo);
             const segwitNetwork = getSegwitNetwork(coinInfo);
-            if (segwitNetwork && isSegwitPath(path)) {
+            if (bech32Network && isBech32Path(path)) {
+                response.xpubSegwit = hdnodeUtils.convertBitcoinXpub(publicKey.xpub, bech32Network);
+            } else if (segwitNetwork && isSegwitPath(path)) {
                 response.xpubSegwit = hdnodeUtils.convertBitcoinXpub(publicKey.xpub, segwitNetwork);
             }
         }
