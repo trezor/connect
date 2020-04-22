@@ -1,18 +1,14 @@
-/* @flow */
-
-import WebSocket from 'ws';
-import { EventEmitter } from 'events';
+/* eslint-disable @typescript-eslint/no-var-requires */
+const WebSocket = require('ws');
+const { EventEmitter } = require('events');
 
 const NOT_INITIALIZED = new Error('websocket_not_initialized');
 
-export function createDeferred<T>(id: number | string): Deferred<T> {
-    // intentionally ignore below lines in test coverage, they will be overridden in promise creation
-    /* istanbul ignore next */
-    let localResolve: (t: T) => void = () => {};
-    /* istanbul ignore next */
-    let localReject: (e?: Error) => void = () => {};
+const createDeferred = id => {
+    let localResolve = t => () => {};
+    let localReject = e => () => {};
 
-    const promise: Promise<T> = new Promise(async (resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
         localResolve = resolve;
         localReject = reject;
     });
@@ -23,23 +19,17 @@ export function createDeferred<T>(id: number | string): Deferred<T> {
         reject: localReject,
         promise,
     };
-}
+};
 
-const DEFAULT_TIMEOUT = 6000;
-// const DEFAULT_PING_TIMEOUT = 50 * 1000;
+const DEFAULT_TIMEOUT = 20 * 1000;
+const DEFAULT_PING_TIMEOUT = 50 * 1000;
 
-export default class Socket extends EventEmitter {
-    options: any;
-    ws: WebSocket | undefined;
-    messageID: number = 0;
-    messages: Deferred<any>[] = [];
-    subscriptions: Subscription[] = [];
-    pingTimeout: ReturnType<typeof setTimeout> | undefined;
-    connectionTimeout: ReturnType<typeof setTimeout> | undefined;
-    disconnectRequest: Deferred<any> | undefined;
-
-    constructor(options: Options) {
+class Controller extends EventEmitter {
+    constructor(options) {
         super();
+        this.messageID = 0;
+        this.messages = [];
+        this.subscriptions = [];
         this.setMaxListeners(Infinity);
         this.options = options;
     }
@@ -48,7 +38,7 @@ export default class Socket extends EventEmitter {
         this.clearConnectionTimeout();
         this.connectionTimeout = setTimeout(
             this.onTimeout.bind(this),
-            this.options.timeout || DEFAULT_TIMEOUT
+            this.options.timeout || DEFAULT_TIMEOUT,
         );
     }
 
@@ -60,13 +50,13 @@ export default class Socket extends EventEmitter {
     }
 
     setPingTimeout() {
-        // if (this.pingTimeout) {
-        //     clearTimeout(this.pingTimeout);
-        // }
-        // this.pingTimeout = setTimeout(
-        //     this.onPing.bind(this),
-        //     this.options.pingTimeout || DEFAULT_PING_TIMEOUT
-        // );
+        if (this.pingTimeout) {
+            clearTimeout(this.pingTimeout);
+        }
+        this.pingTimeout = setTimeout(
+            this.onPing.bind(this),
+            this.options.pingTimeout || DEFAULT_PING_TIMEOUT,
+        );
     }
 
     onTimeout() {
@@ -80,24 +70,24 @@ export default class Socket extends EventEmitter {
                 // empty
             }
         } else {
-            this.messages.forEach(m => m.reject(new Error('Websocket timeout ' + this.options.name)));
+            this.messages.forEach(m => m.reject(new Error('websocket_timeout')));
             ws.close();
         }
     }
 
     async onPing() {
         // make sure that connection is alive if there are subscriptions
-        // if (this.ws && this.isConnected()) {
-        //     if (this.subscriptions.length > 0 || this.options.keepAlive) {
-        //         await this.getBlockHash(0);
-        //     } else {
-        //         try {
-        //             this.ws.close();
-        //         } catch (error) {
-        //             // empty
-        //         }
-        //     }
-        // }
+        if (this.ws && this.isConnected()) {
+            if (this.subscriptions.length > 0 || this.options.keepAlive) {
+                await this.getBlockHash(0);
+            } else {
+                try {
+                    this.ws.close();
+                } catch (error) {
+                    // empty
+                }
+            }
+        }
     }
 
     onError() {
@@ -132,7 +122,9 @@ export default class Socket extends EventEmitter {
             const dfd = this.messages.find(m => m.id === id);
             if (dfd) {
                 if (!success) {
-                    dfd.reject(new Error(resp.error));
+                    dfd.reject(
+                        new Error(`websocket_error_message: ${resp.error.message || resp.error}`),
+                    );
                 } else {
                     dfd.resolve(resp);
                 }
@@ -173,7 +165,8 @@ export default class Socket extends EventEmitter {
         const ws = new WebSocket(url);
         ws.once('error', error => {
             this.dispose();
-            dfd.reject(error);
+            console.log(error);
+            dfd.reject(new Error('websocket_runtime_error: ', error.message));
         });
         ws.on('open', () => {
             this.init();
@@ -189,7 +182,7 @@ export default class Socket extends EventEmitter {
     init() {
         const { ws } = this;
         if (!ws || !this.isConnected()) {
-            throw Error('Blockbook websocket init cannot be called');
+            throw Error('Websocket init cannot be called');
         }
         // clear timeout from this.connect
         this.clearConnectionTimeout();
@@ -199,9 +192,6 @@ export default class Socket extends EventEmitter {
         ws.on('error', this.onError.bind(this));
         ws.on('message', this.onmessage.bind(this));
         ws.on('close', () => {
-            if (this.disconnectRequest) {
-                this.disconnectRequest.resolve();
-            }
             this.emit('disconnected');
             this.dispose();
         });
@@ -212,8 +202,6 @@ export default class Socket extends EventEmitter {
             this.ws.close();
         }
         // this.dispose();
-        this.disconnectRequest = createDeferred(0);
-        return this.disconnectRequest.promise;
     }
 
     isConnected() {
@@ -238,6 +226,9 @@ export default class Socket extends EventEmitter {
         }
 
         this.removeAllListeners();
-        this.disconnectRequest = undefined;
     }
 }
+
+module.exports = {
+    Controller,
+};

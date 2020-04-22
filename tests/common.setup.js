@@ -1,4 +1,4 @@
-import Controller from './websocket-client';
+import { Controller } from './websocket-client';
 import TrezorConnect, { UI } from '../src/js/index';
 
 const MNEMONICS = {
@@ -7,36 +7,25 @@ const MNEMONICS = {
     'mnemonic_abandon': 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
 };
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 const setup = async (controller, options) => {
     try {
         await controller.connect();
-        await controller.send({ type: 'emulator-start', version: '2.2.0' });
-        // todo: find a way how to remove these sleeps, but it fails with them as well so we probably don't need
-        // them. the problem seem to be in the python server and some race condition in it causing it to fail
         await controller.send({ type: 'bridge-start' });
-        await sleep(501);
+        await controller.send({ type: 'emulator-start', version: '2.2.0' });
+
         if (options.wipe) {
             await controller.send({ type: 'emulator-wipe' });
         } else {
             const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
-            try {
-                await controller.send({
-                    type: 'emulator-setup',
-                    mnemonic,
-                    pin: options.pin || '',
-                    passphrase_protection: false,
-                    label: options.label || 'TrezorT',
-                    backup: false,
-                    options,
-                });
-            } catch (err) {
-                // just add more error, most of the time it fails here.
-                throw new Error('controller.emu-setup: ' + err)
-            }
+            await controller.send({
+                type: 'emulator-setup',
+                mnemonic,
+                pin: options.pin || '',
+                passphrase_protection: false,
+                label: options.label || 'TrezorT',
+                backup: false,
+                options,
+            });
         }
     } catch (err) {
         // --bail in jest is not enough 
