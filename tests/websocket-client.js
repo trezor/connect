@@ -21,7 +21,7 @@ const createDeferred = id => {
     };
 };
 
-const DEFAULT_TIMEOUT = 20 * 1000;
+const DEFAULT_TIMEOUT = 40 * 1000;
 const DEFAULT_PING_TIMEOUT = 50 * 1000;
 
 class Controller extends EventEmitter {

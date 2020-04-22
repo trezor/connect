@@ -28,7 +28,8 @@ const setup = async (controller, options) => {
             });
         }
     } catch (err) {
-        // --bail in jest is not enough 
+        // this means that something in trezor-user-env got wrong.
+        console.log(err);
         process.exit(1)
     }   
 };
