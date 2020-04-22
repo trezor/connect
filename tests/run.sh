@@ -34,6 +34,8 @@ until [ $i -eq $retry ]; do
       --name connect-tests \
       -e SDL_VIDEODRIVER="dummy" \
       -p 9001:9001 \
+      -p 21324:21324 \
+      -p 21325:21325 \
       mroz22/trezor-user-env \
       bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
     
@@ -47,6 +49,8 @@ until [ $i -eq $retry ]; do
       -e QT_X11_NO_MITSHM=1 \
       -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
       -p 9001:9001 \
+      -p 21324:21324 \
+      -p 21325:21325 \
       mroz22/trezor-user-env \
       bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
       # todo: all this bash -c part should be moved to COMMAND or ENTRYPOINT command in docker
