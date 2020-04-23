@@ -10,10 +10,6 @@ export const liskGetAddress = async () => {
         (payload.address: string);
         (payload.path: number[]);
         (payload.serializedPath: string);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.address: string);
-        });
     }
 
     // bundle
@@ -25,8 +21,6 @@ export const liskGetAddress = async () => {
             (item.path: number[]);
             (item.serializedPath: string);
         });
-        // $FlowIssue: payload is Address[]
-        (bundleAddress.payload.address: string);
     } else {
         (bundleAddress.payload.error: string);
     }
@@ -47,14 +41,26 @@ export const liskGetAddress = async () => {
         showOnTrezor: true,
     });
 
+    // $ExpectError: payload is Address
+    const e1 = await TrezorConnect.liskGetAddress({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.address: string);
+        });
+    }
+
+    // $ExpectError: payload is Address[]
+    const e2 = await TrezorConnect.liskGetAddress({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.address;
+
     // with invalid params
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.liskGetAddress();
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.liskGetAddress({ coin: 'btc' });
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.liskGetAddress({ path: 1 });
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.liskGetAddress({ bundle: 1 });
 };
 
@@ -67,10 +73,6 @@ export const liskGetPublicKey = async () => {
         (payload.path: number[]);
         (payload.serializedPath: string);
         (payload.publicKey: string);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.path: string);
-        });
     }
 
     // bundle
@@ -82,11 +84,22 @@ export const liskGetPublicKey = async () => {
             (item.serializedPath: string);
             (item.publicKey: string);
         });
-        // $FlowIssue: payload is Address[]
-        (bundlePK.payload.path: string);
     } else {
         (bundlePK.payload.error: string);
     }
+
+    // errors
+    // $ExpectError: payload is PublicKey
+    const e1 = await TrezorConnect.liskGetPublicKey({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.path: string);
+        });
+    }
+
+    // $ExpectError: payload is PublicKey[]
+    const e2 = await TrezorConnect.liskGetPublicKey({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.path;
 };
 
 export const liskSignTransaction = async () => {

@@ -10,10 +10,6 @@ export const rippleGetAddress = async () => {
         (payload.address: string);
         (payload.path: number[]);
         (payload.serializedPath: string);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.address: string);
-        });
     }
 
     // bundle
@@ -25,8 +21,6 @@ export const rippleGetAddress = async () => {
             (item.path: number[]);
             (item.serializedPath: string);
         });
-        // $FlowIssue: payload is Address[]
-        (bundleAddress.payload.address: string);
     } else {
         (bundleAddress.payload.error: string);
     }
@@ -46,6 +40,18 @@ export const rippleGetAddress = async () => {
         address: 'a',
         showOnTrezor: true,
     });
+
+    // $ExpectError: payload is Address
+    const e1 = await TrezorConnect.rippleGetAddress({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.address: string);
+        });
+    }
+
+    // $ExpectError: payload is Address[]
+    const e2 = await TrezorConnect.rippleGetAddress({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.address;
 
     // with invalid params
     // $FlowIssue

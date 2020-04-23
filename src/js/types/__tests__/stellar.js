@@ -10,10 +10,6 @@ export const stellarGetAddress = async () => {
         (payload.address: string);
         (payload.path: number[]);
         (payload.serializedPath: string);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.address: string);
-        });
     }
 
     // bundle
@@ -25,8 +21,6 @@ export const stellarGetAddress = async () => {
             (item.path: number[]);
             (item.serializedPath: string);
         });
-        // $FlowIssue: payload is Address[]
-        (bundleAddress.payload.address: string);
     } else {
         (bundleAddress.payload.error: string);
     }
@@ -47,14 +41,26 @@ export const stellarGetAddress = async () => {
         showOnTrezor: true,
     });
 
+    // $ExpectError: payload is Address
+    const e1 = await TrezorConnect.stellarGetAddress({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.address: string);
+        });
+    }
+
+    // $ExpectError: payload is Address[]
+    const e2 = await TrezorConnect.stellarGetAddress({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.address;
+
     // with invalid params
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.stellarGetAddress();
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.stellarGetAddress({ coin: 'btc' });
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.stellarGetAddress({ path: 1 });
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.stellarGetAddress({ bundle: 1 });
 };
 

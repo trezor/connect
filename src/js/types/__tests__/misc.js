@@ -21,11 +21,13 @@ export const cipherKeyValue = async () => {
         bundleKV.payload.forEach(item => {
             (item.value: string);
         });
-        // $FlowIssue: payload is Address[]
-        (bundleKV.payload.xpub: string);
     } else {
         (bundleKV.payload.error: string);
     }
+
+    // $ExpectError: payload is Address
+    const e1 = await TrezorConnect.cipherKeyValue({ bundle: [{ path: 'm/44', key: 'key' }] });
+    if (e1.success) e1.payload.xpub;
 };
 
 export const customMessage = async () => {
@@ -68,12 +70,8 @@ export const requestLogin = async () => {
         (a.payload.address: string);
         (a.payload.publicKey: string);
         (a.payload.signature: string);
-        // $FlowIssue: error does not exists
-        (a.payload.error: string);
     } else {
         (a.payload.error: string);
-        // $FlowIssue: address does not exists
-        (a.payload.address: string);
     }
     // sync call
     TrezorConnect.requestLogin({
@@ -81,13 +79,26 @@ export const requestLogin = async () => {
         challengeVisual: 'b',
     });
 
-    // $FlowIssue
+    // $ExpectError
+    const e1 = await TrezorConnect.requestLogin({
+        challengeHidden: 'a',
+        challengeVisual: 'b',
+    });
+    if (e1.success) {
+        // error does not exists
+        (e1.payload.error: string);
+    } else {
+        // address does not exists
+        (e1.payload.address: string);
+    }
+
+    // $ExpectError
     TrezorConnect.requestLogin();
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.requestLogin({ callback: 'string' });
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.requestLogin({ challengeHidden: 'a' });
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.requestLogin({ challengeVisual: 1 });
 };
 
