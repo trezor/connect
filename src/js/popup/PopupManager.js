@@ -178,6 +178,7 @@ export default class PopupManager extends EventEmitter {
 
     handleExtensionMessage(message: MessageEvent): void {
         if (!this.extensionPort) return;
+        const port = this.extensionPort;
         const { data } = message;
         if (!data || typeof data !== 'object') return;
 
@@ -188,7 +189,7 @@ export default class PopupManager extends EventEmitter {
             this.close();
         } else if (data.type === POPUP.LOADED) {
             this.iframeHandshake.promise.then(() => {
-                this.extensionPort.postMessage({
+                port.postMessage({
                     type: POPUP.INIT,
                     payload: {
                         settings: this.settings,
