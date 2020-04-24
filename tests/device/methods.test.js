@@ -7,21 +7,24 @@ fixtures.forEach((testCase, i) => {
     describe(`TrezorConnect.${testCase.method}`, () => {
         beforeAll(async (done) => {
             try {
-                const c = new Controller({ url: 'ws://localhost:9001/', name: testCase.method });
-                await setup(c, testCase.setup);
-                await initTrezorConnect(c);
-                c.on('error', () => {
-                    controller = undefined;
-                    console.log("WS error", error)
-                });
-                c.on('disconnect', () => {
-                    controller = undefined;
-                    console.log("WS disco")
-                });
-                controller = c;
+                if (!controller) {
+                    controller = new Controller({ url: 'ws://localhost:9001/', name: testCase.method });
+                    controller.on('error', (error) => {
+                        controller = undefined;
+                        console.log('Controller WS error', error);
+                    });
+                    controller.on('disconnect', () => {
+                        controller = undefined;
+                        console.log('Controller WS disconnected');
+                    });
+                }
+
+                await setup(controller, testCase.setup);
+                await initTrezorConnect(controller);
+
                 done();
             } catch (error) {
-                console.log("init error", error)
+                console.log('Controller WS init error', error);
                 done(error);
             }
         }, 40000);
@@ -29,10 +32,11 @@ fixtures.forEach((testCase, i) => {
         afterAll(async (done) => {
             TrezorConnect.dispose();
             if (controller) {
-                await controller.send({ type: 'bridge-stop' });
-                await controller.send({ type: 'emulator-stop' });
-                await controller.disconnect();
-                controller = undefined;
+                // there is no need to enable/disable env between tests
+                // await controller.send({ type: 'bridge-stop' });
+                // await controller.send({ type: 'emulator-stop' });
+                // await controller.disconnect();
+                // controller = undefined;
             }
             done();
         });

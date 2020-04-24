@@ -10,10 +10,6 @@ export const tezosGetAddress = async () => {
         (payload.address: string);
         (payload.path: number[]);
         (payload.serializedPath: string);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.address: string);
-        });
     }
 
     // bundle
@@ -25,8 +21,6 @@ export const tezosGetAddress = async () => {
             (item.path: number[]);
             (item.serializedPath: string);
         });
-        // $FlowIssue: payload is Address[]
-        (bundleAddress.payload.address: string);
     } else {
         (bundleAddress.payload.error: string);
     }
@@ -47,14 +41,26 @@ export const tezosGetAddress = async () => {
         showOnTrezor: true,
     });
 
+    // $ExpectError: payload is Address
+    const e1 = await TrezorConnect.tezosGetAddress({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.address: string);
+        });
+    }
+
+    // $ExpectError: payload is Address[]
+    const e2 = await TrezorConnect.tezosGetAddress({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.address;
+
     // with invalid params
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.tezosGetAddress();
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.tezosGetAddress({ coin: 'btc' });
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.tezosGetAddress({ path: 1 });
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.tezosGetAddress({ bundle: 1 });
 };
 
@@ -67,10 +73,6 @@ export const tezosGetPublicKey = async () => {
         (payload.path: number[]);
         (payload.serializedPath: string);
         (payload.publicKey: string);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.path: string);
-        });
     }
 
     // bundle
@@ -82,11 +84,22 @@ export const tezosGetPublicKey = async () => {
             (item.serializedPath: string);
             (item.publicKey: string);
         });
-        // $FlowIssue: payload is Address[]
-        (bundlePK.payload.path: string);
     } else {
         (bundlePK.payload.error: string);
     }
+
+    // errors
+    // $ExpectError: payload is PublicKey
+    const e1 = await TrezorConnect.tezosGetPublicKey({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.path: string);
+        });
+    }
+
+    // $ExpectError: payload is PublicKey[]
+    const e2 = await TrezorConnect.tezosGetPublicKey({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.path;
 };
 
 export const tezosSignTransaction = async () => {

@@ -13,7 +13,7 @@
     <meta name="theme-color" content="#ffffff" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="-1" />
-    <link href="<%= htmlWebpackPlugin.files.chunks.popup.css[0] %>" rel="stylesheet">
+    <link href="<%= htmlWebpackPlugin.files.css[0] %>" rel="stylesheet">
 </head>
 <body>
     <main>
@@ -1719,7 +1719,7 @@
 
         const popupScript = document.createElement('script');
         popupScript.setAttribute('type', 'text/javascript');
-        popupScript.setAttribute('src', '<%= htmlWebpackPlugin.files.chunks.popup.entry %>');
+        popupScript.setAttribute('src', '<%= htmlWebpackPlugin.files.js[0] %>');
         popupScript.setAttribute('async', 'false');
         document.body.appendChild(popupScript);
     </script>

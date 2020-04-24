@@ -11,10 +11,6 @@ export const eosGetPublicKey = async () => {
         (payload.serializedPath: string);
         (payload.wifPublicKey: string);
         (payload.rawPublicKey: string);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.path: string);
-        });
     }
 
     // bundle
@@ -27,11 +23,21 @@ export const eosGetPublicKey = async () => {
             (item.wifPublicKey: string);
             (item.rawPublicKey: string);
         });
-        // $FlowIssue: payload is Address[]
-        (bundlePK.payload.path: string);
     } else {
         (bundlePK.payload.error: string);
     }
+
+    // $ExpectError: payload is Address
+    const e1 = await TrezorConnect.eosGetPublicKey({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.address: string);
+        });
+    }
+
+    // $ExpectError: payload is Address[]
+    const e2 = await TrezorConnect.eosGetPublicKey({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.address;
 };
 
 export const eosSignTransaction = async () => {

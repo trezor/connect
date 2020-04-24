@@ -10,10 +10,6 @@ export const binanceGetAddress = async () => {
         (payload.address: string);
         (payload.path: number[]);
         (payload.serializedPath: string);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.address: string);
-        });
     }
 
     // bundle
@@ -25,8 +21,6 @@ export const binanceGetAddress = async () => {
             (item.path: number[]);
             (item.serializedPath: string);
         });
-        // $FlowIssue: payload is Address[]
-        (bundleAddress.payload.address: string);
     } else {
         (bundleAddress.payload.error: string);
     }
@@ -46,6 +40,18 @@ export const binanceGetAddress = async () => {
         address: 'a',
         showOnTrezor: true,
     });
+
+    // $ExpectError: payload is Address
+    const e1 = await TrezorConnect.binanceGetAddress({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.address: string);
+        });
+    }
+
+    // $ExpectError: payload is Address[]
+    const e2 = await TrezorConnect.binanceGetAddress({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.address;
 
     // with invalid params
     // $FlowIssue
@@ -67,10 +73,6 @@ export const binanceGetPublicKey = async () => {
         (payload.path: number[]);
         (payload.serializedPath: string);
         (payload.publicKey: string);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.path: string);
-        });
     }
 
     // bundle
@@ -82,11 +84,22 @@ export const binanceGetPublicKey = async () => {
             (item.serializedPath: string);
             (item.publicKey: string);
         });
-        // $FlowIssue: payload is Address[]
-        (bundlePK.payload.publicKey: string);
     } else {
         (bundlePK.payload.error: string);
     }
+
+    // errors
+    // $ExpectError: payload is PublicKey
+    const e1 = await TrezorConnect.binanceGetPublicKey({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.path: string);
+        });
+    }
+
+    // $ExpectError: payload is PublicKey[]
+    const e2 = await TrezorConnect.binanceGetPublicKey({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.path;
 };
 
 export const binanceSignTransaction = async () => {

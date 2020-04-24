@@ -10,10 +10,6 @@ export const getAddress = async () => {
         (payload.address: string);
         (payload.path: number[]);
         (payload.serializedPath: string);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.address: string);
-        });
     }
 
     // bundle
@@ -25,8 +21,6 @@ export const getAddress = async () => {
             (item.path: number[]);
             (item.serializedPath: string);
         });
-        // $FlowIssue: payload is Address[]
-        (bundleAddress.payload.address: string);
     } else {
         (bundleAddress.payload.error: string);
     }
@@ -49,14 +43,26 @@ export const getAddress = async () => {
         crossChain: true,
     });
 
+    // $ExpectError: payload is Address
+    const e1 = await TrezorConnect.getAddress({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.address: string);
+        });
+    }
+
+    // $ExpectError: payload is Address[]
+    const e2 = await TrezorConnect.getAddress({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.address;
+
     // with invalid params
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.getAddress();
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.getAddress({ coin: 'btc' });
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.getAddress({ path: 1 });
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.getAddress({ bundle: 1 });
 };
 
@@ -75,10 +81,6 @@ export const getPublicKey = async () => {
         (payload.publicKey: string);
         (payload.fingerprint: number);
         (payload.depth: number);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.path: string);
-        });
     }
 
     // bundle
@@ -96,11 +98,22 @@ export const getPublicKey = async () => {
             (item.fingerprint: number);
             (item.depth: number);
         });
-        // $FlowIssue: payload is Address[]
-        (bundlePK.payload.xpub: string);
     } else {
         (bundlePK.payload.error: string);
     }
+
+    // errors
+    // $ExpectError: payload is PublicKey
+    const e1 = await TrezorConnect.getPublicKey({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.path: string);
+        });
+    }
+
+    // $ExpectError: payload is PublicKey[]
+    const e2 = await TrezorConnect.getPublicKey({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.path;
 };
 
 export const signTransaction = async () => {
@@ -260,16 +273,16 @@ export const signTransaction = async () => {
     }
 
     // with invalid params
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.signTransaction();
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.signTransaction({ coin: 'btc' });
-    // $FlowIssue: invalid script_type
     TrezorConnect.signTransaction({
         inputs: [{
             address_n: [0],
             prev_index: 0,
             prev_hash: 'txhash',
+            // $ExpectError: invalid script_type
             script_type: 'SPENDADDRESS-2',
         }],
         outputs: [],
@@ -284,9 +297,9 @@ export const pushTransaction = async () => {
     }
 
     // with invalid params
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.pushTransaction();
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.pushTransaction({ coin: 'btc' });
 };
 
@@ -315,7 +328,7 @@ export const composeTransaction = async () => {
         feeLevels: [{ feePerUnit: '1' }],
         coin: 'btc',
     });
-    // (precompose.success: boolean);
+
     if (precompose.success) {
         const tx = precompose.payload[0];
         if (tx.type === 'error') {
@@ -329,11 +342,8 @@ export const composeTransaction = async () => {
             (tx.transaction.inputs: any[]);
             (tx.transaction.outputs: any[]);
         }
-        (precompose.payload.error: string);
     } else {
         (precompose.payload.error: string);
-        // $FlowIssue: tx does not exists
-        (precompose.payload.type: 'final');
     }
 };
 
@@ -415,8 +425,6 @@ export const getAccountInfo = async () => {
         bundlePK.payload.forEach(item => {
             (item.empty: boolean);
         });
-        // $FlowIssue: payload is Address[]
-        (bundlePK.payload.xpub: string);
     } else {
         (bundlePK.payload.error: string);
     }

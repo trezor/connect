@@ -10,10 +10,6 @@ export const ethereumGetAddress = async () => {
         (payload.address: string);
         (payload.path: number[]);
         (payload.serializedPath: string);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.address: string);
-        });
     }
 
     // bundle
@@ -25,8 +21,6 @@ export const ethereumGetAddress = async () => {
             (item.path: number[]);
             (item.serializedPath: string);
         });
-        // $FlowIssue: payload is Address[]
-        (bundleAddress.payload.address: string);
     } else {
         (bundleAddress.payload.error: string);
     }
@@ -47,14 +41,26 @@ export const ethereumGetAddress = async () => {
         showOnTrezor: true,
     });
 
+    // $ExpectError: payload is Address
+    const e1 = await TrezorConnect.ethereumGetAddress({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.address: string);
+        });
+    }
+
+    // $ExpectError: payload is Address[]
+    const e2 = await TrezorConnect.ethereumGetAddress({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.address;
+
     // with invalid params
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.ethereumGetAddress();
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.ethereumGetAddress({ coin: 'btc' });
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.ethereumGetAddress({ path: 1 });
-    // $FlowIssue
+    // $ExpectError
     TrezorConnect.ethereumGetAddress({ bundle: 1 });
 };
 
@@ -73,10 +79,6 @@ export const ethereumGetPublicKey = async () => {
         (payload.publicKey: string);
         (payload.fingerprint: number);
         (payload.depth: number);
-        // $FlowIssue: payload is Address
-        payload.forEach(item => {
-            (item.path: string);
-        });
     }
 
     // bundle
@@ -94,11 +96,22 @@ export const ethereumGetPublicKey = async () => {
             (item.fingerprint: number);
             (item.depth: number);
         });
-        // $FlowIssue: payload is Address[]
-        (bundlePK.payload.path: string);
     } else {
         (bundlePK.payload.error: string);
     }
+
+    // errors
+    // $ExpectError: payload is PublicKey
+    const e1 = await TrezorConnect.ethereumGetPublicKey({ path: 'm/44' });
+    if (e1.success) {
+        e1.payload.forEach(item => {
+            (item.path: string);
+        });
+    }
+
+    // $ExpectError: payload is PublicKey[]
+    const e2 = await TrezorConnect.ethereumGetPublicKey({ bundle: [{ path: 'm/44' }] });
+    if (e2.success) e2.payload.path;
 };
 
 export const ethereumSignTransaction = async () => {
