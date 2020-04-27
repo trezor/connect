@@ -1,17 +1,28 @@
 ## Installation
 
+### Browser, webextension, electron
 Install library as npm module:
 ```javascript
 npm install trezor-connect
 ```
-or 
+or
 ```javascript
 yarn add trezor-connect
 ```
-
+or
 Include library as inline script:
 ```javascript
-<script src="https://connect.trezor.io/7/trezor-connect.js"></script>
+<script src="https://connect.trezor.io/8/trezor-connect.js"></script>
+```
+
+### Node, react-native, electron [TRUSTED MODE]
+`You need to handle all UI requests and responses by yourself using`  [Read more about TRUSTED MODE](trusted-mode.md)
+```javascript
+npm install trezor-connect@-extended
+```
+or
+```javascript
+yarn add trezor-connect@-extended
 ```
 
 ## Initialization
@@ -72,7 +83,7 @@ In order to run a branch which isn't published to npm registry and this branch r
 - git checkout `custom-feature-branch`
 - yarn build:npm
 
-Install builded lib in your project:
+There are two ways to install builded lib in your project:
 #### Using `yarn link`
 * cd ./npm && yarn link
 * Inside your project: `yarn install trezor-connect`
