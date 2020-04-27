@@ -67,9 +67,6 @@ export namespace DEVICE {
     const RELEASE = 'device-release';
     const ACQUIRED = 'device-acquired';
     const RELEASED = 'device-released';
-    const USED_ELSEWHERE = 'device-used_elsewhere';
-
-    const LOADING = 'device-loading';
 
     // trezor-link events in protobuf format
     const BUTTON = 'button';
@@ -77,9 +74,6 @@ export namespace DEVICE {
     const PASSPHRASE = 'passphrase';
     const PASSPHRASE_ON_DEVICE = 'passphrase_on_device';
     const WORD = 'word';
-
-    // custom
-    const WAIT_FOR_SELECTION = 'device-wait_for_selection';
 
     // this string has different prefix than other constants and it's used as device path
     const UNREADABLE = 'unreadable-device';
