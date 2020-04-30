@@ -91,6 +91,44 @@
             "min": ["0", "2.0.8"],
             "max": ["0", "2.0.10"],
             "comment": ["Since 1.8.0/2.1.0 there is a new protobuf field 'protocol_magic' in CardanoSignTx"]
+        },
+        {
+            "max": ["1.8.9", "2.2.9"],
+            "excludedMethods": [
+                "requestLogin",
+                "cardanoGetAddress",
+                "cardanoGetPublicKey",
+                "cardanoSignTransaction",
+                "cipherKeyValue",
+                "composeTransaction",
+                "ethereumGetAccountInfo",
+                "ethereumGetAddress",
+                "ethereumGetPublicKey",
+                "ethereumSignMessage",
+                "ethereumSignTransaction",
+                "ethereumVerifyMessage",
+                "getAccountInfo",
+                "getAddress",
+                "getPublicKey",
+                "liskGetAddress",
+                "liskGetPublicKey",
+                "liskSignMessage",
+                "liskSignTransaction",
+                "liskVerifyMessage",
+                "nemGetAddress",
+                "nemSignTransaction",
+                "rippleGetAddress",
+                "rippleSignTransaction",
+                "signMessage",
+                "signTransaction",
+                "stellarGetAddress",
+                "stellarSignTransaction",
+                "tezosGetAddress",
+                "tezosGetPublicKey",
+                "tezosSignTransaction",
+                "verifyMessage"
+            ],
+            "comment": "1.9.0/2.3.0 passphrase workflow changed, new protobuf messages"
         }
     ]
 }
