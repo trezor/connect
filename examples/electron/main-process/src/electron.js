@@ -1,6 +1,7 @@
-const { app, session, BrowserWindow } = require('electron');
+const { app, ipcMain, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
+const { initTrezorConnect, callTrezorConnect } = require('./trezor-connect-ipc');
 
 let mainWindow;
 
@@ -10,28 +11,19 @@ function init() {
         width: 1024,
         height: 775,
         webPreferences: {
-            nodeIntegration: true, // enable nodejs integration, "trezor-connect" will use nodejs implementation
+            preload: path.join(__dirname, 'preload.js'),
         },
     });
+
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
         slashes: true,
     }));
 
-    // filter all requests to trezor-bridge and change origin to make things work
-    const filter = {
-        urls: ['http://127.0.0.1:21325/*'],
-    };
-    session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-        details.requestHeaders['Origin'] = 'https://electron.trezor.io';
-        callback({cancel: false, requestHeaders: details.requestHeaders});
-    });
-
     // emitted when the window is closed.
     mainWindow.on('closed', () => {
         app.quit();
-
         mainWindow = null;
     });
 }
@@ -58,5 +50,14 @@ app.on('activate', () => {
 app.on('browser-window-focus', (event, win) => {
     if (!win.isDevToolsOpened()) {
         win.openDevTools();
+    }
+});
+
+// handle messages from renderer
+ipcMain.on('trezor-connect', async (event, message) => {
+    if (message === 'init') {
+        initTrezorConnect(event.sender);
+    } else {
+        callTrezorConnect(event.sender, message);
     }
 });
