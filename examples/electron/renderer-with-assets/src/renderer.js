@@ -75,8 +75,9 @@ TrezorConnect.init({
     popup: false, // render your own UI
     webusb: false, // webusb is not supported in electron
     debug: false, // see what's going on inside connect
-    // lazyLoad: true, // set to "false" if you want to start communication with bridge on application start (and detect connected device right away)
-    // or set it to true, then trezor-connect not will be initialized unless you call some TrezorConnect.method() (this is useful when you don't know if you are dealing with Trezor user)
+    // lazyLoad: true, // set to "false" (default) if you want to start communication with bridge on application start (and detect connected device right away)
+    // set it to "true", then trezor-connect will not be initialized until you call some TrezorConnect.method()
+    // this is useful when you don't know if you are dealing with Trezor user
     manifest: {
         email: 'email@developer.com',
         appUrl: 'electron-app-boilerplate',
