@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, shell, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
 
@@ -9,12 +9,29 @@ function init() {
     mainWindow = new BrowserWindow({
         width: 1024,
         height: 775,
+        webPreferences: {
+            nativeWindowOpen: true, // <-- important
+        },
     });
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: 'file:',
         slashes: true,
     }));
+
+    // important: allow connect popup to open external links in default browser (wiki, wallet, bridge download...)
+    mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
+        if (url.indexOf('connect.trezor.io') > 0) {
+            event.preventDefault();
+            const connectPopup = new BrowserWindow(options);
+            event.newGuest = connectPopup;
+            // handle external links from trezor-connect popup
+            connectPopup.webContents.on('new-window', (event, url) => {
+                event.preventDefault();
+                shell.openExternal(url);
+            });
+        }
+    });
 
     // emitted when the window is closed.
     mainWindow.on('closed', () => {
