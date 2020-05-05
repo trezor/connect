@@ -2,8 +2,9 @@
 
 `trezor-connect` files are hosted inside application filesystem and rendered inside `iframe` element.
 
-This application could be also developed in browser since it doesn't require any electron specific behavior.
-However publishing as the website will not work since `trezor-bridge` ignores http requests sent from websites origins other than `localhost` or `trezor.io`
+This application can be also developed in browser since it doesn't require any electron specific behavior.
+
+However publishing as website will not work since `trezor-bridge` will ignore HttpRequests sent from websites other than `localhost` or `trezor.io`
 
 ### Install
 
