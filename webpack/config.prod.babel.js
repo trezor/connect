@@ -140,6 +140,7 @@ module.exports = {
         minimizer: [
             new TerserPlugin({
                 parallel: true,
+                extractComments: false,
                 terserOptions: {
                     ecma: 6,
                     mangle: {

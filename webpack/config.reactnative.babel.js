@@ -58,6 +58,7 @@ module.exports = {
 
         // ignore Node.js lib from trezor-link
         new webpack.IgnorePlugin(/\/iconv-loader$/),
+        new webpack.IgnorePlugin(/\/shared-connection-worker$/),
     ],
 
     // @trezor/utxo-lib NOTE:
@@ -68,6 +69,7 @@ module.exports = {
     //     minimizer: [
     //         new TerserPlugin({
     //             parallel: true,
+    //             extractComments: false,
     //             terserOptions: {
     //                 ecma: 6,
     //                 mangle: {
