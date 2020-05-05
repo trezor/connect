@@ -71,6 +71,7 @@ TrezorConnect.on(UI_EVENT, event => {
 
 // Initialize TrezorConnect
 TrezorConnect.init({
+    connectSrc: './assets/trezor-connect/',
     popup: false, // render your own UI
     webusb: false, // webusb is not supported in electron
     debug: false, // see what's going on inside connect
