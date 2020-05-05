@@ -4,22 +4,20 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-const DIST = path.resolve(__dirname, '../build/trezor-connect');
+const DIST = path.resolve(__dirname, '../assets/trezor-connect');
 
 module.exports = {
     mode: 'production',
-    entry: {
-        iframe: './node_modules/trezor-connect/lib/iframe/iframe.js',
-    },
+    entry: './node_modules/trezor-connect/lib/iframe/iframe.js',
     output: {
-        filename: 'js/[name].[hash].js',
+        filename: 'js/iframe.[hash].js',
         path: DIST,
         publicPath: './',
     },
     module: {
         rules: [
             {
-                test: /\.jsx?$/,
+                test: /\.js?$/,
                 exclude: /node_modules/,
                 use: ['babel-loader'],
             },
@@ -28,16 +26,10 @@ module.exports = {
     resolve: {
         modules: ['node_modules'],
     },
-    performance: {
-        hints: false,
-    },
     plugins: [
+        // fix blake2b import
         new webpack.NormalModuleReplacementPlugin(/.blake2b$/, './blake2b.js'),
-        new webpack.NormalModuleReplacementPlugin(/env\/node$/, './env/browser'),
-        new webpack.NormalModuleReplacementPlugin(/env\/node\/workers$/, '../env/browser/workers'),
-        new webpack.NormalModuleReplacementPlugin(/env\/node\/networkUtils$/, '../env/browser/networkUtils'),
         new HtmlWebpackPlugin({
-            chunks: ['iframe'],
             filename: 'iframe.html',
             template: './webpack/iframe.html',
             inject: false,
@@ -45,10 +37,6 @@ module.exports = {
         new CopyWebpackPlugin([
             { from: './node_modules/trezor-connect/data', to: `${DIST}/data` },
         ]),
-
-        // ignore Node.js lib from trezor-link
-        new webpack.IgnorePlugin(/\/iconv-loader$/),
-        new webpack.IgnorePlugin(/\/shared-connection-worker$/),
     ],
 
     // @trezor/utxo-lib NOTE:
@@ -59,6 +47,7 @@ module.exports = {
         minimizer: [
             new TerserPlugin({
                 parallel: true,
+                extractComments: false,
                 terserOptions: {
                     ecma: 6,
                     mangle: {
@@ -70,13 +59,5 @@ module.exports = {
                 },
             }),
         ],
-    },
-
-    // ignoring Node.js import in fastxpub (hd-wallet)
-    node: {
-        fs: 'empty',
-        path: 'empty',
-        net: 'empty',
-        tls: 'empty',
     },
 };

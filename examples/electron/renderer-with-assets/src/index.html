@@ -6,7 +6,12 @@
     <title>TrezorConnect electron app boilerplate</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- fix issue with wrong base for electron -->
-    <script>document.write('<base href="' + (navigator.userAgent.toLowerCase().indexOf('electron') > -1 ? '.' : '') + '/" />');</script>
+    <!-- <script>document.write('<base href="' + (navigator.userAgent.toLowerCase().indexOf('electron') > -1 ? '.' : '') + '/" />');</script> -->
+    <style>
+        body {
+            background-color: white;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,7 +25,6 @@
             <button id="ui-response-button">Send ui response</button>
         </div>
     </main>
-    <script type="text/javascript" src="renderer.js"></script>
 </body>
 
 </html>
