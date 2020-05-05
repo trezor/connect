@@ -4,7 +4,7 @@ const { TRANSPORT_EVENT, UI, UI_EVENT, DEVICE_EVENT, TRANSPORT, DEVICE } = requi
 let inited = false;
 // SETUP trezor-connect
 exports.initTrezorConnect = (sender) => {
-    if (inited) return; // prevent from multiple initialization
+    if (inited) return; // prevent multiple initialization
     inited = true;
 
     // Listen to TRANSPORT_EVENT
@@ -22,12 +22,14 @@ exports.initTrezorConnect = (sender) => {
     // Listen to DEVICE_EVENT
     TrezorConnect.on(DEVICE_EVENT, event => {
         sender.send('trezor-connect', event.type);
+
+        // not obvious event
         if (event.type === DEVICE.CONNECT_UNACQUIRED) {
             // connected device is unknown or busy
-            // but most common reasons is that either device is currently used somewhere else
-            // or app was refreshed during call and trezor-bridge didn't managed to release session
-            // render "Acquire device" button and call
-            // TrezorConnect.getFeatures(); to fetch device features
+            // most common reasons is that either device is currently used somewhere else
+            // or app refreshed during call and trezor-bridge didn't managed to release the session
+            // render "Acquire device" button and after click try to fetch device features using:
+            // TrezorConnect.getFeatures();
         }
     });
 
@@ -54,7 +56,6 @@ exports.initTrezorConnect = (sender) => {
         }
 
         if (event.type === UI.SELECT_DEVICE) {
-            TrezorConnect.uiResponse({ type: UI.RECEIVE_CONFIRMATION, payload: true });
             if (event.payload.devices.length > 0) {
                 // more then one device connected
                 // example how to respond to select device
