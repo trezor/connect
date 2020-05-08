@@ -646,7 +646,7 @@ const onDevicePinHandler = async (device: Device, type: string, callback: (error
     // wait for popup handshake
     await getPopupPromise().promise;
     // request pin view
-    postMessage(UiMessage(UI.REQUEST_PIN, { device: device.toMessageObject() }));
+    postMessage(UiMessage(UI.REQUEST_PIN, { device: device.toMessageObject(), type }));
     // wait for pin
     const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_PIN, device).promise;
     const pin: string = uiResp.payload;
