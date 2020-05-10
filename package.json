@@ -57,7 +57,7 @@
         "@babel/plugin-transform-runtime": "7.9.0",
         "@babel/preset-env": "7.9.5",
         "@babel/preset-flow": "7.9.0",
-        "@trezor/blockchain-link": "^1.0.10",
+        "@trezor/blockchain-link": "^1.0.11",
         "@trezor/rollout": "^1.0.4",
         "@trezor/utxo-lib": "^0.1.0",
         "babel-collect-imports": "https://github.com/szymonlesisz/babel-collect-imports",
@@ -119,7 +119,7 @@
         "whatwg-fetch": "^3.0.0"
     },
     "extendedDependencies": {
-        "@trezor/blockchain-link": "^1.0.10",
+        "@trezor/blockchain-link": "^1.0.11",
         "@trezor/rollout": "^1.0.4",
         "@trezor/utxo-lib": "^0.1.0",
         "bchaddrjs": "0.4.8",

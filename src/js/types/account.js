@@ -75,6 +75,7 @@ type TransactionTarget = {
     isAddress: boolean;
     amount?: string;
     coinbase?: string;
+    isAccountTarget?: boolean;
 }
 
 // Transaction from @trezor/blockchain-link
