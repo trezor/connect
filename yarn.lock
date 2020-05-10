@@ -1485,10 +1485,10 @@
   dependencies:
     type-detect "4.0.8"
 
-"@trezor/blockchain-link@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@trezor/blockchain-link/-/blockchain-link-1.0.10.tgz#3a410612050592c30f7c43988f61155c5cf8ae05"
-  integrity sha512-EfYQewm+mQXfJkmJNnS0LkIkZc2muCEorzm9I8XcmxcvHdPANhDT5o3gtdyVSsKW9cduvZi1VfOTi+plW4nSHQ==
+"@trezor/blockchain-link@^1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@trezor/blockchain-link/-/blockchain-link-1.0.11.tgz#ca794cee291d74fc31186a825df4c32229d3a9fb"
+  integrity sha512-H8pOKjzC2KreUSBcMcUnZQ5nqPTvR2fPU92Rsb3l9QxzxBDMF6IQVvXrq2okgq2/q3clU4PLpn3hGppcVSNPFg==
   dependencies:
     es6-promise "^4.2.8"
     events "^3.1.0"
