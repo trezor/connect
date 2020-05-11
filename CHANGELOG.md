@@ -1,3 +1,8 @@
+# 8.1.3
+#### Fixed
+- `@trezor/blockchain-link` recv transaction targets
+- add missing `type` field to `RequestPin`
+
 # 8.1.2
 #### Fixed
 - bech32 xpub format in fw < 1.7.2 & 2.0.10
