@@ -136,25 +136,26 @@ export default class TransactionComposer {
     }
 
     compose(feeRate: string): BuildTxResult {
-        const account = this.account;
+        const { account, coinInfo } = this;
         const { addresses } = account;
         if (!addresses) return { type: 'error', error: 'ADDRESSES-NOT-SET' };
         const changeId = addresses.change.findIndex(a => a.transfers < 1);
         if (changeId < 0) return { type: 'error', error: 'CHANGE-ADDRESS-NOT-SET' };
         const changeAddress = addresses.change[changeId].address;
+        const inputAmounts = coinInfo.segwit || coinInfo.forkid !== null || coinInfo.consensusBranchId !== null;
 
         return buildTx({
             utxos: this.utxos,
             outputs: this.outputs,
             height: this.blockHeight,
             feeRate,
-            segwit: this.coinInfo.segwit,
-            inputAmounts: (this.coinInfo.segwit || this.coinInfo.forkid !== null),
+            segwit: coinInfo.segwit,
+            inputAmounts,
             basePath: account.address_n,
-            network: this.coinInfo.network,
+            network: coinInfo.network,
             changeId,
             changeAddress,
-            dustThreshold: this.coinInfo.dustLimit,
+            dustThreshold: coinInfo.dustLimit,
         });
     }
 

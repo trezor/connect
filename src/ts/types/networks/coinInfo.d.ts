@@ -54,6 +54,7 @@ export interface BitcoinNetworkInfo extends Common {
     minFeeSatoshiKb: number;
     defaultFees: BitcoinDefaultFees;
     segwit: boolean;
+    consensusBranchId?: {[key: string]: number};
 
     xPubMagic: number;
     xPubMagicSegwitNative?: number;
