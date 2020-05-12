@@ -31,6 +31,9 @@ function switchToPopupTab(event) {
 window.addEventListener('message', function (event) {
     if (event.data === 'usb-permissions-init') {
         const iframe = document.getElementById('trezor-usb-permissions');
+        if (!iframe || !(iframe instanceof HTMLIFrameElement)) {
+            throw new Error('trezor-usb-permissions missing or incorrect dom type');
+        }
         iframe.contentWindow.postMessage({
             type: 'usb-permissions-init',
             extension: chrome.runtime.id,
