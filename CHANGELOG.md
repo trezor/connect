@@ -1,3 +1,8 @@
+# 8.1.4
+#### Fixed
+- `composeTransaction` returns zcash inputs with amount
+- update `trezor-common` (`LTC` minfee_kb, removed `CPC` and `ZEN`)
+
 # 8.1.3
 #### Fixed
 - `@trezor/blockchain-link` recv transaction targets
