@@ -5,20 +5,26 @@ import type { CoinInfo } from '../../../types';
 import type { FeeLevel } from '../../../types/account';
 
 type Blocks = Array<string | typeof undefined>;
+// this is workaround for the lack of information from 'trezor-common'
+// we need to declare what does "high/normal/low" mean in block time (eg: normal BTC = 6 blocks = ~1 hour)
+// coins other than BTC usually got 2 levels maximum (high/low) and we should consider to remove other levels from 'trezor-common'
 const BLOCKS = {
     btc: {
+        // blocktime ~ 600sec.
         high: 1,
         normal: 6,
         economy: 36,
         low: 144,
     },
     bch: {
+        // blocktime ~ 600sec.
         high: 1,
         normal: 5,
         economy: 10,
         low: 10,
     },
     btg: {
+        // blocktime ~ 600sec.
         high: 1,
         normal: 5,
         economy: 10,
@@ -27,9 +33,9 @@ const BLOCKS = {
     dgb: {
         // blocktime ~ 20sec.
         high: 1,
-        normal: 5,
-        economy: 10,
-        low: 10,
+        normal: 15,
+        economy: 30,
+        low: 60,
     },
 };
 
@@ -124,7 +130,7 @@ export default class FeeLevels {
         const keys = Object.keys(coinInfo.defaultFees);
         this.levels = keys.sort((levelA, levelB) => coinInfo.defaultFees[levelB] - coinInfo.defaultFees[levelA])
             .map(level => {
-                const label: any = level.toLowerCase();
+                const label: any = level.toLowerCase(); // string !== 'high' | 'normal'....
                 const blocks = getDefaultBlocks(shortcut, label); // TODO: get this value from trezor-common
                 return {
                     label,
@@ -156,7 +162,7 @@ export default class FeeLevels {
             // multiple levels
             blocks = this.levels
                 .map(l => l.blocks)
-                .reduce((result: any, bl: number) => {
+                .reduce((result: number[], bl: number) => {
                     // return first value
                     if (result.length === 0) return result.concat([bl]);
                     // get previous block request
