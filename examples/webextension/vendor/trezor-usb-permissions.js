@@ -1,6 +1,7 @@
 const VERSION = '8.1.4';
 const versionN = VERSION.split('.').map(s => parseInt(s));
-const DIRECTORY = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
+// const DIRECTORY = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
+const DIRECTORY = `${versionN[0]}/`;
 const url = 'https://connect.trezor.io/' + DIRECTORY;
 
 /* Handling messages from usb permissions iframe */
