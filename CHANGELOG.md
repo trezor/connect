@@ -1,3 +1,10 @@
+# 8.1.5
+#### Fixed
+- `estimateFee` fee levels for `DGB`
+- `unavailableCapabilities` reload condition
+#### Added
+- `webextension` example
+
 # 8.1.4
 #### Fixed
 - `composeTransaction` returns zcash inputs with amount
