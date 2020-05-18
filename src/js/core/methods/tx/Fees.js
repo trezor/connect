@@ -130,7 +130,7 @@ export default class FeeLevels {
         const keys = Object.keys(coinInfo.defaultFees);
         this.levels = keys.sort((levelA, levelB) => coinInfo.defaultFees[levelB] - coinInfo.defaultFees[levelA])
             .map(level => {
-                const label = level.toLowerCase();
+                const label: any = level.toLowerCase(); // string !== 'high' | 'normal'....
                 const blocks = getDefaultBlocks(shortcut, label); // TODO: get this value from trezor-common
                 return {
                     label,
