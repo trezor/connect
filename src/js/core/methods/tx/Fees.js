@@ -162,7 +162,7 @@ export default class FeeLevels {
             // multiple levels
             blocks = this.levels
                 .map(l => l.blocks)
-                .reduce((result: any, bl: number) => {
+                .reduce((result: number[], bl: number) => {
                     // return first value
                     if (result.length === 0) return result.concat([bl]);
                     // get previous block request
@@ -202,8 +202,6 @@ export default class FeeLevels {
         } catch (error) {
             // do not throw
         }
-
-        console.warn('LEVELS', this.levels, this.blocks);
 
         return this.levels;
     }
