@@ -1,6 +1,6 @@
 # Integrate Trezor Connect with a web extension
 
-[Example of a web extension project for both Google Chrome & Firefox](https://github.com/trezor/connect-explorer/tree/webextensions)
+[Example of a web extension project for both Google Chrome & Firefox](https://github.com/trezor/connect/tree/develop/examples/webextension)
 
 Basic implementation is same for both Google Chrome & Firefox. However, few additional steps are needed to make extension work with [WebUSB](https://wicg.github.io/webusb/) in Google Chrome.
 
