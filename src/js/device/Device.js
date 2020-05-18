@@ -387,9 +387,9 @@ export default class Device extends EventEmitter {
         feat.capabilities = capabilities;
         const version = [feat.major_version, feat.minor_version, feat.patch_version];
         // capabilities could change in case where features was fetched with older version of messages.json which doesn't know this field
-        const capabilitiesDidChanged = this.features && this.features.capabilities && this.features.capabilities.join('') !== capabilities.join('');
+        const capabilitiesDidChange = this.features && this.features.capabilities && this.features.capabilities.join('') !== capabilities.join('');
         // check if FW version or capabilities did change
-        if (versionCompare(version, this.getVersion()) !== 0 || capabilitiesDidChanged) {
+        if (versionCompare(version, this.getVersion()) !== 0 || capabilitiesDidChange) {
             this.unavailableCapabilities = getUnavailableCapabilities(feat, getAllNetworks(), DataManager.getConfig().supportedFirmware);
             this.firmwareStatus = getFirmwareStatus(feat);
             this.firmwareRelease = getRelease(feat);
