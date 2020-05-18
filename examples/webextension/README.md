@@ -13,7 +13,7 @@ Tested in Chrome and Firefox
 - Choose `trezor-connect/example/webextension` directory
 
 #### Firefox
-- go to settings > Add-ons
+- go to settings (top right Menu) > Add-ons
 - Manage Your Extensions > Debug Add-ons
 - Load temporary Add-on
 - Choose `trezor-connect/example/webextension/manifest-firefox.json` file
