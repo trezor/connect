@@ -8,7 +8,6 @@ Tested in Chrome and Firefox
 ### Install
 
 #### Chrome
-- rename `manifest-chrome.json` to `manifest.json`
 - go to chrome://extensions
 - Load unpacked
 - Choose `trezor-connect/example/webextension` directory
