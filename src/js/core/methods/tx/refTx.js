@@ -16,11 +16,7 @@ import type { RefTransaction } from '../../../types/trezor/protobuf';
 
 // Get array of unique referenced transactions ids
 export const getReferencedTransactions = (inputs: Array<BuildTxInput>): Array<string> => {
-    const legacyInputs = inputs.filter(utxo => !utxo.segwit);
-    if (legacyInputs.length < 1) {
-        return [];
-    }
-    return legacyInputs.reduce((result: string[], utxo: BuildTxInput) => {
+    return inputs.reduce((result: string[], utxo: BuildTxInput) => {
         const hash = reverseBuffer(utxo.hash).toString('hex');
         if (result.includes(hash)) return result;
         return result.concat(hash);
