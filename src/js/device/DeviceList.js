@@ -273,7 +273,7 @@ export default class DeviceList extends EventEmitter {
     addAuthPenalty(device: Device) {
         if (!device.isInitialized() || device.isBootloader() || !device.features.device_id) return;
         const deviceID = device.features.device_id;
-        const penalty = this.penalizedDevices[deviceID] ? this.penalizedDevices[deviceID] + 1500 : 3000;
+        const penalty = this.penalizedDevices[deviceID] ? this.penalizedDevices[deviceID] + 1000 : 2000;
         this.penalizedDevices[deviceID] = Math.min(penalty, 10000);
     }
 
@@ -285,7 +285,7 @@ export default class DeviceList extends EventEmitter {
 
     removeAuthPenalty(device: Device) {
         if (!device.isInitialized() || device.isBootloader() || !device.features.device_id) return;
-        const deviceID = device.features.device_id || '';
+        const deviceID = device.features.device_id;
         delete this.penalizedDevices[deviceID];
     }
 }
