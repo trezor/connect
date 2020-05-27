@@ -40,6 +40,7 @@ export const INITIALIZATION_FAILED: TrezorError = new TrezorError('Failure_Initi
 
 export const CALL_OVERRIDE: TrezorError = new TrezorError('Failure_ActionOverride', 'override');
 export const INVALID_STATE: TrezorError = new TrezorError('Failure_PassphraseState', 'Passphrase is incorrect');
+export const DEVICE_DISCONNECTED: TrezorError = new TrezorError('Failure_Disconnected', 'Device disconnected');
 
 // a slight hack
 // this error string is hard-coded

@@ -6,9 +6,7 @@ import DeviceCommands from './DeviceCommands';
 import type { Device as DeviceTyped, DeviceFirmwareStatus, Features, Deferred, FirmwareRelease, UnavailableCapability } from '../types';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
-import * as UI from '../constants/ui';
-import * as DEVICE from '../constants/device';
-import * as ERROR from '../constants/errors';
+import { UI, DEVICE, ERRORS } from '../constants';
 import { create as createDeferred } from '../utils/deferred';
 import DataManager from '../data/DataManager';
 import { getAllNetworks } from '../data/CoinInfo';
@@ -181,7 +179,7 @@ export default class Device extends EventEmitter {
     ): Promise<void> {
         if (this.runPromise) {
             _log.debug('Previous call is still running');
-            throw ERROR.DEVICE_CALL_IN_PROGRESS;
+            throw ERRORS.DEVICE_CALL_IN_PROGRESS;
         }
 
         options = parseRunOptions(options);
@@ -220,7 +218,7 @@ export default class Device extends EventEmitter {
             this.commands.dispose();
         }
         if (this.runPromise) {
-            this.runPromise.reject(ERROR.DEVICE_USED_ELSEWHERE);
+            this.runPromise.reject(ERRORS.DEVICE_USED_ELSEWHERE);
             this.runPromise = null;
         }
     }
@@ -245,8 +243,8 @@ export default class Device extends EventEmitter {
                 this.inconsistent = true;
                 await this.deferredActions[ DEVICE.ACQUIRE ].promise;
                 this.runPromise = null;
-                ERROR.INITIALIZATION_FAILED.message = `Initialize failed: ${ error.message }`;
-                return Promise.reject(ERROR.INITIALIZATION_FAILED);
+                ERRORS.INITIALIZATION_FAILED.message = `Initialize failed: ${ error.message }`;
+                return Promise.reject(ERRORS.INITIALIZATION_FAILED);
             }
         }
 
@@ -473,7 +471,7 @@ export default class Device extends EventEmitter {
             delete this.deferredActions[ DEVICE.RELEASE ];
         }
 
-        this.interruptionFromUser(new Error('Device disconnected'));
+        this.interruptionFromUser(ERRORS.DEVICE_DISCONNECTED);
 
         this.runPromise = null;
     }
