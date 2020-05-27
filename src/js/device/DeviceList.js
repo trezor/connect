@@ -34,13 +34,14 @@ export default class DeviceList extends EventEmitter {
     transport: Transport;
     transportPlugin: LowLevelPlugin | typeof undefined;
     stream: DescriptorStream;
-    devices: {[k: string]: Device} = {};
+    devices: {[path: string]: Device} = {};
     creatingDevicesDescriptors: {[k: string]: DeviceDescriptor} = {};
 
     defaultMessages: JSON;
     currentMessages: JSON;
     hasCustomMessages: boolean = false;
     transportStartPending: number = 0;
+    penalizedDevices: {[deviceID: string]: number} = {};
 
     constructor() {
         super();
@@ -268,6 +269,19 @@ export default class DeviceList extends EventEmitter {
             }
         });
     }
+
+    addAuthPenalty(device: Device) {
+        if (!device.isInitialized() || device.isBootloader()) return;
+        const deviceID = device.features.device_id;
+        const penalty = this.penalizedDevices[deviceID] ? this.penalizedDevices[deviceID] + 1500 : 3000;
+        this.penalizedDevices[deviceID] = Math.min(penalty, 10000);
+    }
+
+    removeAuthPenalty(device: Device) {
+        if (!device.isInitialized() || device.isBootloader()) return;
+        const deviceID = device.features.device_id;
+        delete this.penalizedDevices[deviceID];
+    }
 }
 
 /**
@@ -330,6 +344,10 @@ class CreateDeviceHandler {
         const device = await Device.fromDescriptor(this.list.transport, this.descriptor);
         this.list.devices[this.path] = device;
         await device.run();
+        const penalty = device.isInitialized() && !device.isBootloader() ? this.list.penalizedDevices[device.features.device_id] : undefined;
+        if (penalty) {
+            await resolveAfter(penalty, null);
+        }
         this.list.emit(DEVICE.CONNECT, device.toMessageObject());
     }
 

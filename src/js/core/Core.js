@@ -523,7 +523,7 @@ export const onCall = async (message: CoreMessage) => {
                     // clear cached passphrase. it's not valid
                     device.setInternalState(undefined);
                     // interrupt process and go to "final" block
-                    return Promise.reject(error.message);
+                    return Promise.reject(error);
                 }
             }
 
@@ -556,6 +556,13 @@ export const onCall = async (message: CoreMessage) => {
             skipFinalReload: method.skipFinalReload,
         });
     } catch (error) {
+        // corner case: Device was disconnected during authorization
+        // this device_id needs to be stored and penalized with delay on future connection
+        // this solves issue with U2F login (leaves space for requests from services which aren't using trezord)
+        if (_deviceList && error.code === 'Failure_Disconnected') {
+            _deviceList.addAuthPenalty(device);
+        }
+
         if (method) {
             // corner case:
             // thrown while acquiring device
@@ -582,7 +589,12 @@ export const onCall = async (message: CoreMessage) => {
             }
 
             // restore default messages
-            if (_deviceList) { await _deviceList.restoreMessages(); }
+            if (_deviceList) {
+                if (response.success) {
+                    _deviceList.removeAuthPenalty(device);
+                }
+                await _deviceList.restoreMessages();
+            }
             postMessage(response);
         }
     }
