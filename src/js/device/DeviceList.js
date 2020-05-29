@@ -273,14 +273,15 @@ export default class DeviceList extends EventEmitter {
     addAuthPenalty(device: Device) {
         if (!device.isInitialized() || device.isBootloader() || !device.features.device_id) return;
         const deviceID = device.features.device_id;
-        const penalty = this.penalizedDevices[deviceID] ? this.penalizedDevices[deviceID] + 1000 : 2000;
-        this.penalizedDevices[deviceID] = Math.min(penalty, 10000);
+        const penalty = this.penalizedDevices[deviceID] ? this.penalizedDevices[deviceID] + 500 : 2000;
+        this.penalizedDevices[deviceID] = Math.min(penalty, 5000);
     }
 
-    getAuthPenalty(device: Device) {
-        if (!device.isInitialized() || device.isBootloader() || !device.features.device_id) return 0;
-        const deviceID = device.features.device_id;
-        return this.penalizedDevices[deviceID] || 0;
+    getAuthPenalty() {
+        const { penalizedDevices } = this;
+        return Object.keys(penalizedDevices).reduce((penalty, key) => {
+            return Math.max(penalty, penalizedDevices[key]);
+        }, 0);
     }
 
     removeAuthPenalty(device: Device) {
@@ -350,10 +351,6 @@ class CreateDeviceHandler {
         const device = await Device.fromDescriptor(this.list.transport, this.descriptor);
         this.list.devices[this.path] = device;
         await device.run();
-        const penalty = this.list.getAuthPenalty(device);
-        if (penalty) {
-            await resolveAfter(penalty, null);
-        }
         this.list.emit(DEVICE.CONNECT, device.toMessageObject());
     }
 
@@ -429,9 +426,10 @@ class DiffHandler {
         for (const descriptor of this.diff.connected) {
             const path: string = descriptor.path.toString();
             const priority: number = DataManager.getSettings('priority');
-            _log.debug('Connected', priority, descriptor.session, this.list.devices);
-            if (priority) {
-                await resolveAfter(501 + 100 * priority, null);
+            const penalty = this.list.getAuthPenalty();
+            _log.debug('Connected', priority, penalty, descriptor.session, this.list.devices);
+            if (priority || penalty) {
+                await resolveAfter(501 + penalty + 100 * priority, null);
             }
             if (descriptor.session == null) {
                 await this.list._createAndSaveDevice(descriptor);
