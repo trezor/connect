@@ -59,7 +59,7 @@
         "@babel/preset-flow": "7.9.0",
         "@trezor/blockchain-link": "^1.0.11",
         "@trezor/rollout": "^1.0.4",
-        "@trezor/utxo-lib": "^0.1.0",
+        "@trezor/utxo-lib": "^0.1.1",
         "babel-collect-imports": "https://github.com/szymonlesisz/babel-collect-imports",
         "babel-eslint": "^10.1.0",
         "babel-jest": "25.4.0",
@@ -121,7 +121,7 @@
     "extendedDependencies": {
         "@trezor/blockchain-link": "^1.0.11",
         "@trezor/rollout": "^1.0.4",
-        "@trezor/utxo-lib": "^0.1.0",
+        "@trezor/utxo-lib": "^0.1.1",
         "bchaddrjs": "0.4.8",
         "bignumber.js": "^9.0.0",
         "bowser": "^2.9.0",
