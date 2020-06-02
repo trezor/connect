@@ -137,7 +137,7 @@ export default class ComposeTransaction extends AbstractMethod {
             composer.composeCustomFee(level.feePerUnit);
             const tx = composer.composed.custom;
             if (tx.type === 'final') {
-                const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0));
+                const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0xffffffff));
                 const outputs = tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo));
                 return {
                     type: 'final',
@@ -328,7 +328,7 @@ export default class ComposeTransaction extends AbstractMethod {
 
         const timestamp = coinInfo.hasTimestamp ? Math.round(new Date().getTime() / 1000) : undefined;
         // const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, (0xffffffff - 2))); // TODO: RBF
-        const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0));
+        const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0xffffffff));
         const outputs = tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo));
 
         const response = await signTx(
