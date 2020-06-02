@@ -283,8 +283,8 @@ declare module '@trezor/utxo-lib' {
         timestamp?: number,
         ins: Array<Input>,
         outs: Array<Output>,
-        versionGroupId: string,
-        expiry: number,
+        versionGroupId: number,
+        expiryHeight: number,
         type: number,
         extra_payload: number,
 
