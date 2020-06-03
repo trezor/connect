@@ -13,7 +13,11 @@ export const parseFirmware = (json: JSON, model: number): void => {
     const obj: Object = json;
     Object.keys(obj).forEach(key => {
         const release = obj[key];
-        releases[model].push({ ...release });
+        // strip "data" directory from download url (default: data.trezor.io)
+        // it's hard coded in "releases.json" ("mytrezor" dir structure)
+        const url = release.url && release.url.indexOf('data') === 0 ? release.url.substring(5) : release.url;
+        const url_bitcoinonly = release.url_bitcoinonly && release.url_bitcoinonly.indexOf('data') === 0 ? release.url_bitcoinonly.substring(5) : release.url_bitcoinonly;
+        releases[model].push({ ...release, url, url_bitcoinonly });
     });
 };
 
@@ -41,4 +45,8 @@ export const getFirmwareStatus = (features: Features): DeviceFirmwareStatus => {
 
 export const getRelease = (features: Features): ?FirmwareRelease => {
     return getInfo({features, releases: releases[features.major_version]});
+};
+
+export const getReleases = (model: number): FirmwareRelease[] => {
+    return releases[model];
 };

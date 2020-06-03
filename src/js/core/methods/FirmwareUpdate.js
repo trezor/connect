@@ -4,8 +4,8 @@ import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
-import DataManager from '../../data/DataManager';
 import { validateParams } from './helpers/paramsValidator';
+import { getReleases } from '../../data/FirmwareInfo';
 
 import type { CoreMessage } from '../../types';
 
@@ -80,7 +80,7 @@ export default class FirmwareUpdate extends AbstractMethod {
                 const firmware = await getBinary({
                     // features and releases are used for sanity checking inside @trezor/rollout
                     features: device.features,
-                    releases: DataManager.assets[`firmware-t${device.features.major_version}`],
+                    releases: getReleases(device.features.major_version),
                     // version argument is used to find and fetch concrete release from releases list
                     version: this.params.version,
                     btcOnly: this.params.btcOnly,
