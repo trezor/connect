@@ -1501,10 +1501,10 @@
     cross-fetch "^3.0.4"
     runtypes "^4.2.0"
 
-"@trezor/utxo-lib@0.1.0", "@trezor/utxo-lib@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@trezor/utxo-lib/-/utxo-lib-0.1.0.tgz#f7a60d514ab75bef2f2206200cf0317d2d8523b2"
-  integrity sha512-jkqFRKL++xTga3xUgu5pWw1ArzTfraK0unXuj31V9g6wu+MKPbvcXW1+tMOVh+WNZZ3QUSGSQNNflSyh+qD0Vw==
+"@trezor/utxo-lib@0.1.1", "@trezor/utxo-lib@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@trezor/utxo-lib/-/utxo-lib-0.1.1.tgz#63cb4b3accc90352a42a1c866fce8bfbb1c94b26"
+  integrity sha512-Wonj9ldKCeoajCV6lSE6+hJ2hdPxmVaysWRO9GxhnKyiOdRhiOIQcdKOiXYqpcxwkIbbL9eLGDg73tfn3MUa6w==
   dependencies:
     bech32 "0.0.3"
     bigi "^1.4.0"
@@ -5258,12 +5258,12 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-hd-wallet@9.0.0:
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/hd-wallet/-/hd-wallet-9.0.0.tgz#94abbb95eed243a4bbae0cf12959e4dd6fc8b32c"
-  integrity sha512-WzzGwljUhA7Tc3a3U8JuAEXdFSowadYmAu6a+BmER0zQTah5bqPfSiVjhRpA57NloTdjFz+c2mJo3+wUaNII4g==
+hd-wallet@9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/hd-wallet/-/hd-wallet-9.0.1.tgz#1607b023d8f4a8f7f8ccbdb3756a43d4929e6f85"
+  integrity sha512-MXeNdKRo7qOksA3kRWICbsz19n0aW5VD10XydnoxjRpC9MRv2ePl3GvgmvHoSCHnXFppXcmsXYUE6zGTWTVD1Q==
   dependencies:
-    "@trezor/utxo-lib" "0.1.0"
+    "@trezor/utxo-lib" "0.1.1"
     bchaddrjs "^0.3.2"
     bignumber.js "^9.0.0"
     queue "^6.0.1"

@@ -150,6 +150,7 @@ export interface RefTransaction {
     extra_data?: string;
     timestamp?: number;
     version_group_id?: number;
+    expiry?: number;
 }
 
 export interface TransactionOptions {

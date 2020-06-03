@@ -41,9 +41,9 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
             throw new Error('No extra data for transaction ' + reqTx.hash);
         }
 
-        const data: string = reqTx.extra_data;
-        const substring = data.substring(dataOffsetN * 2, (dataOffsetN + dataLenN) * 2);
-        return {extra_data: substring};
+        const data = reqTx.extra_data;
+        const extra_data = data.substring(dataOffsetN * 2, (dataOffsetN + dataLenN) * 2);
+        return { extra_data };
     }
     if (requestType === 'TXMETA') {
         const outputCount = reqTx.bin_outputs.length;
@@ -55,6 +55,7 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
             outputs_cnt: outputCount,
             timestamp: reqTx.timestamp,
             version_group_id: reqTx.version_group_id,
+            expiry: reqTx.expiry,
         };
 
         if (typeof data === 'string' && data.length !== 0) {
