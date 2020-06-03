@@ -42,7 +42,7 @@ export default class FirmwareUpdate extends AbstractMethod {
             // either receive version and btcOnly
             version: payload.version,
             btcOnly: payload.btcOnly,
-            baseUrl: payload.baseUrl || 'https://wallet.trezor.io',
+            baseUrl: payload.baseUrl || 'https://data.trezor.io',
             // or binary
             binary: payload.binary,
         };
