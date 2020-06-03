@@ -1,3 +1,12 @@
+# 8.1.6
+#### Fixed
+- `composeTransaction` sequence flag
+- Zcash `extra_data` field
+#### Added
+- Disconnect device during action timeout penalty (to allow u2f login)
+#### Changed
+- Refactor Bitcoin-like signing
+
 # 8.1.5
 #### Fixed
 - `estimateFee` fee levels for `DGB`
