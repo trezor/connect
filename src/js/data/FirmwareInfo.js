@@ -9,15 +9,23 @@ const releases = {
     [2]: [],
 };
 
+// strip "data" directory from download url (default: data.trezor.io)
+// it's hard coded in "releases.json" ("mytrezor" dir structure)
+const cleanUrl = (url: ?string) => {
+    if (typeof url !== 'string') return;
+    if (url.indexOf('data/') === 0) return url.substring(5);
+    return url;
+};
+
 export const parseFirmware = (json: JSON, model: number): void => {
     const obj: Object = json;
     Object.keys(obj).forEach(key => {
         const release = obj[key];
-        // strip "data" directory from download url (default: data.trezor.io)
-        // it's hard coded in "releases.json" ("mytrezor" dir structure)
-        const url = release.url && release.url.indexOf('data') === 0 ? release.url.substring(5) : release.url;
-        const url_bitcoinonly = release.url_bitcoinonly && release.url_bitcoinonly.indexOf('data') === 0 ? release.url_bitcoinonly.substring(5) : release.url_bitcoinonly;
-        releases[model].push({ ...release, url, url_bitcoinonly });
+        releases[model].push({
+            ...release,
+            url: cleanUrl(release.url),
+            url_bitcoinonly: cleanUrl(release.url_bitcoinonly),
+        });
     });
 };
 
