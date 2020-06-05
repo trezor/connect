@@ -1,7 +1,7 @@
 /* @flow */
 
 import BigNumber from 'bignumber.js';
-import { invalidParameter } from '../../../constants/errors';
+import { ERRORS } from '../../../constants';
 import { fromHardened } from '../../../utils/pathUtils';
 import { versionCompare } from '../../../utils/deviceFeaturesUtils';
 
@@ -14,6 +14,8 @@ type Param = {
     obligatory?: boolean;
     allowEmpty?: boolean;
 }
+
+const invalidParameter = (message: string) => ERRORS.TypedError('Method_InvalidParameter', message);
 
 export const validateParams = (values: Object, fields: Array<Param>): void => {
     fields.forEach(field => {
@@ -34,7 +36,7 @@ export const validateParams = (values: Object, fields: Array<Param>): void => {
                     try {
                         const bn = new BigNumber(value);
                         if (bn.toFixed(0) !== value) {
-                            throw new Error('');
+                            throw new Error(''); // catch this in lower block and return proper message
                         }
                     } catch (error) {
                         throw invalidParameter(`Parameter "${ field.name }" has invalid value "${value}". Integer representation expected.`);

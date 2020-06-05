@@ -1,6 +1,6 @@
 /* @flow */
 
-import { invalidParameter } from '../../../constants/errors';
+import { ERRORS } from '../../../constants';
 import { validateParams } from './paramsValidator';
 import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type {
@@ -104,7 +104,7 @@ export const validate = (tx: BinanceSDKTransaction): BinancePreparedTransaction 
     }
 
     if (preparedTx.messages.length < 1) {
-        throw invalidParameter('Transaction does not have any message');
+        throw ERRORS.TypedError('Method_InvalidParameter', 'Transaction does not have any message');
     }
 
     return preparedTx;

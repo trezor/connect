@@ -7,11 +7,10 @@ import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { resolveAfter } from '../../utils/promiseUtils';
 
-import * as UI from '../../constants/ui';
+import { UI, ERRORS } from '../../constants';
 import { getBitcoinNetwork, fixCoinInfoNetwork } from '../../data/CoinInfo';
 
 import { formatAmount } from '../../utils/formatUtils';
-import { NO_COIN_INFO, backendNotSupported } from '../../constants/errors';
 
 import { initBlockchain } from '../../backend/BlockchainLink';
 
@@ -64,10 +63,10 @@ export default class ComposeTransaction extends AbstractMethod {
 
         const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
         if (!coinInfo) {
-            throw NO_COIN_INFO;
+            throw ERRORS.TypedError('Method_UnknownCoin');
         }
         if (!coinInfo.blockchainLink) {
-            throw backendNotSupported(coinInfo.name);
+            throw ERRORS.TypedError('Backend_NotSupported');
         }
 
         // set required firmware from coinInfo support
@@ -88,13 +87,13 @@ export default class ComposeTransaction extends AbstractMethod {
 
         // there should be only one output when using send-max option
         if (sendMax && outputs.length > 1) {
-            throw new Error('Only one output allowed when using "send-max" option.');
+            throw ERRORS.TypedError('Method_InvalidParameter', 'Only one output allowed when using "send-max" option');
         }
 
         // if outputs contains regular items
         // check if total amount is not lower than dust limit
         // if (outputs.find(o => o.type === 'complete') !== undefined && total.lte(coinInfo.dustLimit)) {
-        //     throw new Error('Total amount is too low. ');
+        //     throw error 'Total amount is too low';
         // }
 
         if (sendMax) {
@@ -168,7 +167,7 @@ export default class ComposeTransaction extends AbstractMethod {
         const response: string | SignedTx = await this.selectFee(account, utxo);
         // check for interruption
         if (!this.discovery) {
-            throw new Error('ComposeTransaction selectFee response received after dispose');
+            throw ERRORS.TypedError('Runtime', 'ComposeTransaction: selectFee response received after dispose');
         }
 
         if (typeof response === 'string') {
@@ -314,7 +313,7 @@ export default class ComposeTransaction extends AbstractMethod {
     }
 
     async _sign(tx: BuildTxResult): Promise<SignedTx> {
-        if (tx.type !== 'final') throw new Error('Trying to sign unfinished tx');
+        if (tx.type !== 'final') throw ERRORS.TypedError('Runtime', 'ComposeTransaction: Trying to sign unfinished tx');
 
         const { coinInfo } = this.params;
 

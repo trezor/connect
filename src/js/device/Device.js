@@ -168,7 +168,7 @@ export default class Device extends EventEmitter {
 
     async cleanup(): Promise<void> {
         this.removeAllListeners();
-        // make sure that DEVICE_CALL_IN_PROGRESS will not be thrown
+        // make sure that Device_CallInProgress will not be thrown
         this.runPromise = null;
         await this.release();
     }
@@ -179,7 +179,7 @@ export default class Device extends EventEmitter {
     ): Promise<void> {
         if (this.runPromise) {
             _log.debug('Previous call is still running');
-            throw ERRORS.DEVICE_CALL_IN_PROGRESS;
+            throw ERRORS.TypedError('Device_CallInProgress');
         }
 
         options = parseRunOptions(options);
@@ -218,7 +218,7 @@ export default class Device extends EventEmitter {
             this.commands.dispose();
         }
         if (this.runPromise) {
-            this.runPromise.reject(ERRORS.DEVICE_USED_ELSEWHERE);
+            this.runPromise.reject(ERRORS.TypedError('Device_UsedElsewhere'));
             this.runPromise = null;
         }
     }
@@ -243,8 +243,7 @@ export default class Device extends EventEmitter {
                 this.inconsistent = true;
                 await this.deferredActions[ DEVICE.ACQUIRE ].promise;
                 this.runPromise = null;
-                ERRORS.INITIALIZATION_FAILED.message = `Initialize failed: ${ error.message }`;
-                return Promise.reject(ERRORS.INITIALIZATION_FAILED);
+                return Promise.reject(ERRORS.TypedError('Device_InitializeFailed', `Initialize failed: ${ error.message }, code: ${ error.code }`));
             }
         }
 
@@ -471,7 +470,7 @@ export default class Device extends EventEmitter {
             delete this.deferredActions[ DEVICE.RELEASE ];
         }
 
-        this.interruptionFromUser(ERRORS.DEVICE_DISCONNECTED);
+        this.interruptionFromUser(ERRORS.TypedError('Device_Disconnected'));
 
         this.runPromise = null;
     }

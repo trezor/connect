@@ -1,7 +1,7 @@
 /* @flow */
 import { getBinary } from '@trezor/rollout';
 import AbstractMethod from './AbstractMethod';
-import * as UI from '../../constants/ui';
+import { UI, ERRORS } from '../../constants';
 import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
 import { validateParams } from './helpers/paramsValidator';
@@ -90,7 +90,7 @@ export default class FirmwareUpdate extends AbstractMethod {
                 binary = firmware.binary;
             }
         } catch (err) {
-            throw new Error('Failed to download firmware binary');
+            throw ERRORS.TypedError('Method_FirmwareUpdate_DownloadFailed', 'Failed to download firmware binary');
         }
 
         return uploadFirmware(

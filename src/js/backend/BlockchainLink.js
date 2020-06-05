@@ -2,7 +2,7 @@
 import { Transaction as BitcoinJsTransaction } from '@trezor/utxo-lib';
 import BlockchainLink from '@trezor/blockchain-link';
 import { BlockchainMessage } from '../message/builder';
-import * as BLOCKCHAIN from '../constants/blockchain';
+import { BLOCKCHAIN, ERRORS } from '../constants';
 import type {
     CoreMessage,
     CoinInfo,
@@ -55,12 +55,12 @@ export default class Blockchain {
 
         const settings = options.coinInfo.blockchainLink;
         if (!settings) {
-            throw new Error('BlockchainLink settings not found in coins.json');
+            throw ERRORS.TypedError('Backend_NotSupported');
         }
 
         const worker = getWorker(settings.type);
         if (!worker) {
-            throw new Error(`BlockchainLink worker not found ${settings.type}`);
+            throw ERRORS.TypedError('Backend_WorkerMissing', `BlockchainLink worker not found ${settings.type}`);
         }
 
         this.link = new BlockchainLink({

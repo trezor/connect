@@ -2,6 +2,7 @@
 
 import { address as BitcoinJSAddress } from '@trezor/utxo-lib';
 import bchaddrjs from 'bchaddrjs';
+import { ERRORS } from '../constants';
 import type { BitcoinNetworkInfo } from '../types';
 
 // Base58
@@ -80,7 +81,7 @@ export const isScriptHash = (address: string, coinInfo: BitcoinNetworkInfo): boo
             return true;
         }
     }
-    throw new Error('Unknown address type.');
+    throw ERRORS.TypedError('Runtime', 'isScriptHash: Unknown address type');
 };
 
 export const getAddressScriptType = (address: string, coinInfo: BitcoinNetworkInfo): 'PAYTOSCRIPTHASH' | 'PAYTOADDRESS' | 'PAYTOWITNESS' => {

@@ -4,7 +4,7 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
-import { NO_COIN_INFO } from '../../constants/errors';
+import { ERRORS } from '../../constants';
 
 import type { Success } from '../../types/trezor/protobuf';
 import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
@@ -39,7 +39,7 @@ export default class VerifyMessage extends AbstractMethod {
 
         const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
         if (!coinInfo) {
-            throw NO_COIN_INFO;
+            throw ERRORS.TypedError('Method_UnknownCoin');
         } else {
             // check required firmware with coinInfo support
             this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);

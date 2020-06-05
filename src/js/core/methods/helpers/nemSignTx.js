@@ -12,6 +12,7 @@ import type {
     NEMMosaicDefinition,
     NEMMosaicSupplyChange,
 } from '../../../types/trezor/protobuf';
+import { ERRORS } from '../../../constants';
 
 import * as $T from '../../../types/networks/nem';
 
@@ -196,7 +197,7 @@ export const createTx = (tx: $T.NEMTransaction, address_n: number[]): NEMSignTxM
             break;
 
         default:
-            throw new Error('Unknown transaction type');
+            throw ERRORS.TypedError('Method_InvalidParameter', 'Unknown transaction type');
     }
 
     return message;

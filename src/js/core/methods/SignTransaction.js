@@ -5,7 +5,7 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
-import { NO_COIN_INFO, backendNotSupported } from '../../constants/errors';
+import { ERRORS } from '../../constants';
 
 import { initBlockchain } from '../../backend/BlockchainLink';
 import signTx from './helpers/signtx';
@@ -70,7 +70,7 @@ export default class SignTransaction extends AbstractMethod {
 
         const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
         if (!coinInfo) {
-            throw NO_COIN_INFO;
+            throw ERRORS.TypedError('Method_UnknownCoin');
         } else {
             // set required firmware from coinInfo support
             this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
@@ -101,7 +101,7 @@ export default class SignTransaction extends AbstractMethod {
                 return bn.plus(typeof output.amount === 'string' ? output.amount : '0');
             }, new BigNumber(0));
             if (total.lte(coinInfo.dustLimit)) {
-                throw new Error('Total amount is below dust limit.');
+                throw ERRORS.TypedError('Method_InvalidParameter', 'Total amount is below dust limit.');
             }
         }
 
@@ -138,7 +138,7 @@ export default class SignTransaction extends AbstractMethod {
             const refTxsIds = getReferencedTransactions(hdInputs);
             if (refTxsIds.length > 0) {
                 if (!params.coinInfo.blockchainLink) {
-                    throw backendNotSupported(params.coinInfo.name);
+                    throw ERRORS.TypedError('Backend_NotSupported');
                 }
                 const blockchain = await initBlockchain(params.coinInfo, this.postMessage);
                 const bjsRefTxs = await blockchain.getReferencedTransactions(refTxsIds);
@@ -167,7 +167,7 @@ export default class SignTransaction extends AbstractMethod {
 
         if (params.push) {
             if (!params.coinInfo.blockchainLink) {
-                throw backendNotSupported(params.coinInfo.name);
+                throw ERRORS.TypedError('Backend_NotSupported');
             }
             const blockchain = await initBlockchain(params.coinInfo, this.postMessage);
             const txid = await blockchain.pushTransaction(response.serializedTx);

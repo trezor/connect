@@ -1,5 +1,6 @@
 /* @flow */
 import { fromHardened, toHardened } from './pathUtils';
+import { ERRORS } from '../constants';
 import type { CoinInfo } from '../types';
 
 type Bip44Options = {
@@ -9,7 +10,7 @@ type Bip44Options = {
 
 export const getAccountAddressN = (coinInfo: CoinInfo, accountIndex: number, bip44?: Bip44Options): number[] => {
     if (!coinInfo) {
-        throw new Error('no coin info');
+        throw ERRORS.TypedError('Method_UnknownCoin');
     }
     const index = typeof accountIndex === 'number' ? accountIndex : 0;
     const options = {

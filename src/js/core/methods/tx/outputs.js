@@ -8,6 +8,7 @@ import { getOutputScriptType } from '../../../utils/pathUtils';
 import { isScriptHash, isValidAddress } from '../../../utils/addressUtils';
 import { fixPath, convertMultisigPubKey } from './index';
 import { validateParams } from '../helpers/paramsValidator';
+import { ERRORS } from '../../../constants';
 
 // npm types
 import type { BuildTxOutput, BuildTxOutputRequest } from 'hd-wallet';
@@ -31,17 +32,17 @@ export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInf
         ]);
 
         if (Object.prototype.hasOwnProperty.call(output, 'address_n') && Object.prototype.hasOwnProperty.call(output, 'address')) {
-            throw new Error('Cannot use address and address_n in one output');
+            throw ERRORS.TypedError('Method_InvalidParameter', 'Cannot use address and address_n in one output');
         }
 
         if (output.address_n) {
             const scriptType = getOutputScriptType(output.address_n);
-            if (output.script_type !== scriptType) throw new Error(`Output change script_type should be set to ${scriptType}`);
+            if (output.script_type !== scriptType) throw ERRORS.TypedError('Method_InvalidParameter', `Output change script_type should be set to ${scriptType}`);
         }
 
         if (typeof output.address === 'string' && !isValidAddress(output.address, coinInfo)) {
             // validate address with coin info
-            throw new Error(`Invalid ${ coinInfo.label } output address ${ output.address }`);
+            throw ERRORS.TypedError('Method_InvalidParameter', `Invalid ${ coinInfo.label } output address ${ output.address }`);
         }
     }
     return trezorOutputs;
@@ -53,7 +54,7 @@ export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInf
 export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: BitcoinNetworkInfo): BuildTxOutputRequest => {
     const validateAddress = (address) => {
         if (!isValidAddress(address, coinInfo)) {
-            throw new Error(`Invalid ${ coinInfo.label } output address format`);
+            throw ERRORS.TypedError('Method_InvalidParameter', `Invalid ${ coinInfo.label } output address format`);
         }
     };
 
@@ -107,7 +108,7 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: Bitcoin
 export const outputToTrezor = (output: BuildTxOutput, coinInfo: BitcoinNetworkInfo): TransactionOutput => {
     if (output.opReturnData) {
         if (Object.prototype.hasOwnProperty.call(output, 'value')) {
-            throw new Error('Wrong type.');
+            throw ERRORS.TypedError('Method_InvalidParameter', 'opReturn output should not contains value');
         }
         const data: Buffer = output.opReturnData;
         return {
@@ -117,7 +118,7 @@ export const outputToTrezor = (output: BuildTxOutput, coinInfo: BitcoinNetworkIn
         };
     }
     if (!output.address && !output.path) {
-        throw new Error('Both address and path of an output cannot be null.');
+        throw ERRORS.TypedError('Method_InvalidParameter', 'Both address and path of an output cannot be null.');
     }
     if (output.path) {
         return {
@@ -129,7 +130,7 @@ export const outputToTrezor = (output: BuildTxOutput, coinInfo: BitcoinNetworkIn
 
     const { address, value } = output;
     if (typeof address !== 'string') {
-        throw new Error('Wrong address type.');
+        throw ERRORS.TypedError('Method_InvalidParameter', 'Wrong output address type, should be string');
     }
 
     const isCashAddress: boolean = !!(coinInfo.cashAddrPrefix);

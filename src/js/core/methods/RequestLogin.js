@@ -3,7 +3,7 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 
-import * as UI from '../../constants/ui';
+import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 import DataManager from '../../data/DataManager';
 
@@ -68,7 +68,7 @@ export default class RequestLogin extends AbstractMethod {
 
             // error handler
             if (typeof payload === 'string') {
-                throw new Error(`TrezorConnect.requestLogin callback error: ${payload}`);
+                throw ERRORS.TypedError('Runtime', `TrezorConnect.requestLogin callback error: ${payload}`);
             }
 
             // validate incoming parameters

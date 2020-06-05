@@ -4,9 +4,8 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getLabel, getSerializedPath } from '../../utils/pathUtils';
 import { getBitcoinNetwork, fixCoinInfoNetwork, getUniqueNetworks } from '../../data/CoinInfo';
-import { NO_COIN_INFO } from '../../constants/errors';
 
-import * as UI from '../../constants/ui';
+import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
 import type { Address, MultisigRedeemScriptType, InputScriptType } from '../../types/trezor/protobuf';
@@ -74,7 +73,7 @@ export default class GetAddress extends AbstractMethod {
             }
 
             if (!coinInfo) {
-                throw NO_COIN_INFO;
+                throw ERRORS.TypedError('Method_UnknownCoin');
             } else if (coinInfo) {
                 // set required firmware from coinInfo support
                 this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
@@ -179,7 +178,7 @@ export default class GetAddress extends AbstractMethod {
                 );
                 if (typeof batch.address === 'string') {
                     if (batch.address !== silent.address) {
-                        throw new Error('Addresses do not match');
+                        throw ERRORS.TypedError('Method_AddressNotMatch');
                     }
                 } else {
                     batch.address = silent.address;

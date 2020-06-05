@@ -1,7 +1,8 @@
 /* @flow */
-
+import { ERRORS } from '../../../constants';
 import type { DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type { BitcoinNetworkInfo } from '../../../types';
+
 import type {
     TxRequest,
     RefTransaction,
@@ -28,17 +29,17 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
     }
     if (requestType === 'TXEXTRADATA') {
         if (dataLen == null) {
-            throw new Error('Missing extra_data_len');
+            throw ERRORS.TypedError('Runtime', 'requestPrevTxInfo: Missing extra_data_len');
         }
         const dataLenN: number = +dataLen;
 
         if (dataOffset == null) {
-            throw new Error('Missing extra_data_offset');
+            throw ERRORS.TypedError('Runtime', 'requestPrevTxInfo: Missing extra_data_offset');
         }
         const dataOffsetN: number = +dataOffset;
 
         if (reqTx.extra_data == null) {
-            throw new Error('No extra data for transaction ' + reqTx.hash);
+            throw ERRORS.TypedError('Runtime', 'requestPrevTxInfo: No extra data for transaction ' + reqTx.hash);
         }
 
         const data = reqTx.extra_data;
@@ -67,7 +68,7 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
 
         return meta;
     }
-    throw new Error(`Unknown request type: ${requestType}`);
+    throw ERRORS.TypedError('Runtime', `requestPrevTxInfo: Unknown request type: ${requestType}`);
 };
 
 const requestSignedTxInfo = (inputs: Array<TransactionInput>,
@@ -83,12 +84,12 @@ const requestSignedTxInfo = (inputs: Array<TransactionInput>,
         return {outputs: [outputs[i]]};
     }
     if (requestType === 'TXMETA') {
-        throw new Error('Cannot read TXMETA from signed transaction');
+        throw ERRORS.TypedError('Runtime', 'requestSignedTxInfo: Cannot read TXMETA from signed transaction');
     }
     if (requestType === 'TXEXTRADATA') {
-        throw new Error('Cannot read TXEXTRADATA from signed transaction');
+        throw ERRORS.TypedError('Runtime', 'requestSignedTxInfo: Cannot read TXEXTRADATA from signed transaction');
     }
-    throw new Error(`Unknown request type: ${requestType}`);
+    throw ERRORS.TypedError('Runtime', `requestSignedTxInfo: Unknown request type: ${requestType}`);
 };
 
 // requests information about a transaction
@@ -103,7 +104,7 @@ const requestTxInfo = (m: TxRequest,
     if (hash) {
         const reqTx = index[hash.toLowerCase()];
         if (!reqTx) {
-            throw new Error(`Requested unknown tx: ${hash}`);
+            throw ERRORS.TypedError('Runtime', `requestTxInfo: Requested unknown tx: ${hash}`);
         }
         return requestPrevTxInfo(
             reqTx,
@@ -130,7 +131,7 @@ const saveTxSignatures = (ms: TxRequestSerialized,
         }
         if (_signatureIndex != null) {
             if (_signature == null) {
-                throw new Error('Unexpected null in trezor:TxRequestSerialized signature.');
+                throw ERRORS.TypedError('Runtime', 'saveTxSignatures: Unexpected null in trezor:TxRequestSerialized signature.');
             }
             signatures[_signatureIndex] = _signature;
         }

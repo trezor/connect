@@ -3,7 +3,7 @@ import EventEmitter from 'events';
 
 import { parse as parseSettings } from '../../data/ConnectSettings';
 import Log, { init as initLog } from '../../utils/debug';
-
+import { errorMessage } from '../../message';
 import { Core, init as initCore, initTransport } from '../../core/Core';
 import { create as createDeferred } from '../../utils/deferred';
 
@@ -100,7 +100,7 @@ const handleMessage = (message: $T.CoreMessage): void => {
 
 const postMessage = (message: any, usePromise: boolean = true) => {
     if (!_core) {
-        throw new Error('postMessage: _core not found');
+        throw ERRORS.TypedError('Runtime', 'postMessage: _core not found');
     }
     if (usePromise) {
         _messageID++;
@@ -125,7 +125,7 @@ export const init = async (settings: $Shape<$T.ConnectSettings> = {}): Promise<v
     _settings.env = 'react-native';
 
     if (!_settings.manifest) {
-        throw ERRORS.MANIFEST_NOT_SET;
+        throw ERRORS.TypedError('Init_ManifestMissing');
     }
 
     if (_settings.lazyLoad) {
@@ -150,7 +150,7 @@ export const call = async (params: Object): Promise<Object> => {
         try {
             await init(_settings);
         } catch (error) {
-            return { success: false, payload: { error } };
+            return errorMessage(error);
         }
     }
 
@@ -159,11 +159,11 @@ export const call = async (params: Object): Promise<Object> => {
         if (response) {
             return response;
         } else {
-            return { success: false, payload: { error: 'No response from iframe' } };
+            return errorMessage(ERRORS.TypedError('Method_NoResponse'));
         }
     } catch (error) {
         _log.error('__call error', error);
-        return error;
+        return errorMessage(error);
     }
 };
 
@@ -186,19 +186,14 @@ export const renderWebUSBButton = (className: ?string): void => {
 
 export const getSettings = async (): $T.Response<$T.ConnectSettings> => {
     if (!_core) {
-        return { success: false, payload: { error: 'Core not initialized yet, you need to call TrezorConnect.init or any other method first.' } };
+        return errorMessage(ERRORS.TypedError('Init_NotInitialized'));
     }
     return await call({ method: 'getSettings' });
 };
 
 export const customMessage: $PropertyType<$T.API, 'customMessage'> = async (params) => {
     if (typeof params.callback !== 'function') {
-        return {
-            success: false,
-            payload: {
-                error: 'Parameter "callback" is not a function',
-            },
-        };
+        return errorMessage(ERRORS.TypedError('Method_CustomMessage_Callback'));
     }
 
     // TODO: set message listener only if iframe is loaded correctly
@@ -265,5 +260,5 @@ export const cancel = (error?: string) => {
 };
 
 export const disableWebUSB = () => {
-    throw new Error('This version of trezor-connect is not suitable to work without browser');
+    throw ERRORS.TypedError('Method_InvalidPackage');
 };

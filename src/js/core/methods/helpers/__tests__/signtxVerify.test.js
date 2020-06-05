@@ -1,5 +1,6 @@
 import { networks } from '@trezor/utxo-lib';
 import verifyTx from '../signtxVerify';
+import { TypedError } from '../../../../constants/errors';
 
 // public keys and signatures generated from "all-all" seed
 
@@ -127,7 +128,7 @@ const fixtures = [
             script_type: 'PAYTOADDRESS',
         }],
         tx: '01000000016d20f69067ad1ffd50ee7c0f377dde2c932ccb03e84b5659732da99c20f1f650010000006a4730440220714c3704cb9aee785a5e03eb77eacf5bd95d29a4fe9cf33e4a868aa4100d2b6902207c5bdef296404d3fedeaaa71579140768b72c0bea882c7a2f16c029963d7c622012102a7a079c1ef9916b289c2ff21a992c808d0de3dfcf8a9f163205c5c9e21f55d5cffffffff0110270000000000002200201863143c14c5166804bd19203356da136c985678cd4d27a1b8c632960490326200000000',
-        error: 'Output 0 scripts differ.',
+        error: 'verifyTx: Output 0 scripts differ',
     },
     {
         description: 'Error, amount differ',
@@ -138,21 +139,21 @@ const fixtures = [
             script_type: 'PAYTOADDRESS',
         }],
         tx: '01000000016d20f69067ad1ffd50ee7c0f377dde2c932ccb03e84b5659732da99c20f1f650010000006b483045022100cdf268cb89433f2cdc990ca3f45bf356befe51bbbbd6b57f1ca08ac69298acad022032beef4e1380bd3819c0cbf1b1a70b434a115199d1cbe5c59de8d94f98086452012102a7a079c1ef9916b289c2ff21a992c808d0de3dfcf8a9f163205c5c9e21f55d5cffffffff011027000000000000160014751e76e8199196d454941c45d1b3a323f1433bd600000000',
-        error: 'Wrong output amount at output 0. Requested: 20000, signed: 10000',
+        error: 'verifyTx: Wrong output amount at output 0. Requested: 20000, signed: 10000',
     },
     {
         description: 'Error, wrong length (inputs)',
         inputs: [],
         outputs: [],
         tx: '01000000016d20f69067ad1ffd50ee7c0f377dde2c932ccb03e84b5659732da99c20f1f650010000006b483045022100cdf268cb89433f2cdc990ca3f45bf356befe51bbbbd6b57f1ca08ac69298acad022032beef4e1380bd3819c0cbf1b1a70b434a115199d1cbe5c59de8d94f98086452012102a7a079c1ef9916b289c2ff21a992c808d0de3dfcf8a9f163205c5c9e21f55d5cffffffff011027000000000000160014751e76e8199196d454941c45d1b3a323f1433bd600000000',
-        error: 'Signed transaction has wrong length.',
+        error: 'verifyTx: Signed transaction inputs invalid length',
     },
     {
         description: 'Error, wrong length (outputs)',
         inputs,
         outputs: [],
         tx: '01000000016d20f69067ad1ffd50ee7c0f377dde2c932ccb03e84b5659732da99c20f1f650010000006b483045022100cdf268cb89433f2cdc990ca3f45bf356befe51bbbbd6b57f1ca08ac69298acad022032beef4e1380bd3819c0cbf1b1a70b434a115199d1cbe5c59de8d94f98086452012102a7a079c1ef9916b289c2ff21a992c808d0de3dfcf8a9f163205c5c9e21f55d5cffffffff011027000000000000160014751e76e8199196d454941c45d1b3a323f1433bd600000000',
-        error: 'Signed transaction has wrong length.',
+        error: 'verifyTx: Signed transaction outputs invalid length',
     },
     {
         description: 'Error, output without address',
@@ -172,7 +173,9 @@ describe('helpers/signtxVerify', () => {
             try {
                 await verifyTx(f.getHDNode || getHDNode, f.inputs, f.outputs, f.tx, coinInfo);
             } catch (error) {
-                expect(error).toEqual(new Error(f.error));
+                const expectedError = TypedError('Runtime', f.error);
+                expect(error.code).toEqual(expectedError.code);
+                expect(error.message).toEqual(expectedError.message);
             }
         });
     });

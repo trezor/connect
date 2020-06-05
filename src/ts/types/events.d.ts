@@ -92,6 +92,7 @@ export interface FrameError {
     type: typeof IFRAME.ERROR;
     payload: {
         error: string;
+        code?: string;
     };
 }
 

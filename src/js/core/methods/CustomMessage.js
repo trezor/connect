@@ -2,7 +2,7 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
-import * as UI from '../../constants/ui';
+import { UI, ERRORS } from '../../constants';
 
 import { UiMessage } from '../../message/builder';
 import type { CoreMessage, UiPromiseResponse } from '../../types';
@@ -34,7 +34,7 @@ export default class CustomMessage extends AbstractMethod {
             try {
                 JSON.parse(JSON.stringify(payload.messages));
             } catch (error) {
-                throw new Error('Parameter "messages" has invalid type. JSON expected.');
+                throw ERRORS.TypedError('Method_InvalidParameter', 'Parameter "messages" has invalid type. JSON expected.');
             }
         }
 
@@ -51,7 +51,7 @@ export default class CustomMessage extends AbstractMethod {
 
     async run(): Promise<Object> {
         if (this.device.features.vendor === 'trezor.io' || this.device.features.vendor === 'bitcointrezor.com') {
-            throw new Error('Cannot use custom message on device with official firmware. Change device "vendor" field.');
+            throw ERRORS.TypedError('Runtime', 'Cannot use custom message on device with official firmware. Change device "vendor" field.');
         }
         // call message
         const response = await this.device.getCommands()._commonCall(this.params.message, this.params.params);

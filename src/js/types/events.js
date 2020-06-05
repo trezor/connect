@@ -95,6 +95,7 @@ export type IFrameError = {
     type: typeof IFRAME.ERROR;
     payload: {
         error: string;
+        code?: string;
     };
 }
 

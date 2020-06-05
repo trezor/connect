@@ -1,6 +1,7 @@
 /* @flow */
 
 import AbstractMethod from '../AbstractMethod';
+import { ERRORS } from '../../../constants';
 import type { CoreMessage } from '../../../types';
 import type { DebugLinkState } from '../../../types/trezor/protobuf';
 
@@ -15,7 +16,7 @@ export default class DebugLinkGetState extends AbstractMethod {
 
     async run(): Promise<DebugLinkState> {
         if (!this.device.hasDebugLink) {
-            throw new Error('Device is not a debug link');
+            throw ERRORS.TypedError('Runtime', 'Device is not a debug link');
         }
 
         const response: DebugLinkState = await this.device.getCommands().debugLinkGetState();

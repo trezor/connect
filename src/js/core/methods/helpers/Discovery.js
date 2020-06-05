@@ -1,5 +1,6 @@
 /* @flow */
 import EventEmitter from 'events';
+import { ERRORS } from '../../../constants';
 import Blockchain from '../../../backend/BlockchainLink';
 import DeviceCommands from '../../../device/DeviceCommands';
 import { getAccountAddressN } from '../../../utils/accountUtils';
@@ -91,7 +92,7 @@ export default class Discovery extends EventEmitter {
             const descriptor = await this.commands.getAccountDescriptor(this.coinInfo, path);
 
             if (!descriptor) {
-                throw new Error('Discovery descriptor not found');
+                throw ERRORS.TypedError('Runtime', 'Discovery: descriptor not found');
             }
             if (this.interrupted) return;
 

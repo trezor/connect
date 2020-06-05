@@ -1,6 +1,7 @@
 /* @flow */
 
 import * as bs58check from 'bs58check';
+import { ERRORS } from '../../../constants';
 import type { TezosOperation } from '../../../types/networks/tezos';
 import type { TezosTransaction } from '../../../types/trezor/protobuf';
 import { validateParams } from './../helpers/paramsValidator';
@@ -51,7 +52,7 @@ const publicKeyHash2buffer = (publicKeyHash: string): { originated: number; hash
                 hash: concatArray(bs58checkDecode(prefix.KT1, publicKeyHash), new Uint8Array([0])),
             };
         default:
-            throw new Error('Wrong Tezos publicKeyHash address');
+            throw ERRORS.TypedError('Method_InvalidParameter', 'Wrong Tezos publicKeyHash address');
     }
 };
 
@@ -65,7 +66,7 @@ const publicKey2buffer = (publicKey: string): Uint8Array => {
         case 'p2pk':
             return concatArray(new Uint8Array([2]), bs58checkDecode(prefix.p2pk, publicKey));
         default:
-            throw new Error('Wrong Tezos publicKey ');
+            throw ERRORS.TypedError('Method_InvalidParameter', 'Wrong Tezos publicKey');
     }
 };
 

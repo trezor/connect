@@ -5,13 +5,7 @@ import DataManager from '../data/DataManager';
 import DeviceList from '../device/DeviceList';
 import Device from '../device/Device';
 
-import { CORE_EVENT, RESPONSE_EVENT } from '../constants';
-import * as TRANSPORT from '../constants/transport';
-import * as DEVICE from '../constants/device';
-import * as POPUP from '../constants/popup';
-import * as UI from '../constants/ui';
-import * as IFRAME from '../constants/iframe';
-import * as ERROR from '../constants/errors';
+import { CORE_EVENT, RESPONSE_EVENT, TRANSPORT, DEVICE, POPUP, UI, IFRAME, ERRORS } from '../constants';
 
 import { UiMessage, DeviceMessage, TransportMessage, ResponseMessage } from '../message/builder';
 
@@ -172,7 +166,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
  */
 const initDevice = async (method: AbstractMethod): Promise<Device> => {
     if (!_deviceList) {
-        throw ERROR.NO_TRANSPORT;
+        throw ERRORS.TypedError('Transport_Missing');
     }
 
     const isWebUsb = _deviceList.transportType() === 'WebUsbPlugin';
@@ -229,7 +223,7 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
     }
 
     if (!device) {
-        throw ERROR.DEVICE_NOT_FOUND;
+        throw ERRORS.TypedError('Device_NotFound');
     }
     return device;
 };
@@ -243,7 +237,7 @@ const initDevice = async (method: AbstractMethod): Promise<Device> => {
  */
 export const onCall = async (message: CoreMessage) => {
     if (!message.id || !message.payload) {
-        throw ERROR.INVALID_PARAMETERS;
+        throw ERRORS.TypedError('Method_InvalidParameter', 'onCall: message.id or message.payload is missing');
     }
 
     const responseID = message.id;
@@ -267,7 +261,7 @@ export const onCall = async (message: CoreMessage) => {
         method.removeUiPromise = removeUiPromise;
     } catch (error) {
         postMessage(UiMessage(POPUP.CANCEL_POPUP_REQUEST));
-        postMessage(ResponseMessage(responseID, false, { error: ERROR.INVALID_PARAMETERS.message + ': ' + error.message }));
+        postMessage(ResponseMessage(responseID, false, { error }));
         return Promise.resolve();
     }
 
@@ -286,7 +280,7 @@ export const onCall = async (message: CoreMessage) => {
             const response = await method.run();
             messageResponse = ResponseMessage(method.responseID, true, response);
         } catch (error) {
-            messageResponse = ResponseMessage(method.responseID, false, { error: error.message });
+            messageResponse = ResponseMessage(method.responseID, false, { error });
         }
         postMessage(messageResponse);
         return Promise.resolve();
@@ -300,7 +294,7 @@ export const onCall = async (message: CoreMessage) => {
 
     if (isUsingPopup && method.requiredPermissions.includes('management') && !DataManager.isManagementAllowed()) {
         postMessage(UiMessage(POPUP.CANCEL_POPUP_REQUEST));
-        postMessage(ResponseMessage(responseID, false, { error: ERROR.MANAGEMENT_NOT_ALLOWED.message }));
+        postMessage(ResponseMessage(responseID, false, { error: ERRORS.TypedError('Method_NotAllowed') }));
         return Promise.resolve();
     }
 
@@ -309,7 +303,7 @@ export const onCall = async (message: CoreMessage) => {
     try {
         device = await initDevice(method);
     } catch (error) {
-        if (error === ERROR.NO_TRANSPORT) {
+        if (error.code === 'Transport_Missing') {
             // wait for popup handshake
             await getPopupPromise().promise;
             // show message about transport
@@ -319,7 +313,7 @@ export const onCall = async (message: CoreMessage) => {
             postMessage(UiMessage(POPUP.CANCEL_POPUP_REQUEST));
         }
         // TODO: this should not be returned here before user agrees on "read" perms...
-        postMessage(ResponseMessage(responseID, false, { error: error.message }));
+        postMessage(ResponseMessage(responseID, false, { error }));
         throw error;
     }
 
@@ -333,7 +327,7 @@ export const onCall = async (message: CoreMessage) => {
             postMessage(messageResponse);
             return Promise.resolve();
         } catch (error) {
-            postMessage(ResponseMessage(method.responseID, false, { error: error.message }));
+            postMessage(ResponseMessage(method.responseID, false, { error }));
             throw error;
         }
     }
@@ -345,12 +339,13 @@ export const onCall = async (message: CoreMessage) => {
         previousCall.forEach(call => { call.overridden = true; });
         // interrupt potential communication with device. this should throw error in try/catch block below
         // this error will apply to the last item of pending methods
-        await device.override(ERROR.CALL_OVERRIDE);
+        const overrideError = ERRORS.TypedError('Method_Override');
+        await device.override(overrideError);
         // if current method was overridden while waiting for device.override result
         // return response with status false
         if (method.overridden) {
-            postMessage(ResponseMessage(method.responseID, false, { error: ERROR.CALL_OVERRIDE.message, code: ERROR.CALL_OVERRIDE.code }));
-            throw ERROR.CALL_OVERRIDE;
+            postMessage(ResponseMessage(method.responseID, false, { error: overrideError }));
+            throw overrideError;
         }
     } else if (device.isRunning()) {
         if (!device.isLoaded()) {
@@ -361,8 +356,8 @@ export const onCall = async (message: CoreMessage) => {
         } else {
             // cancel popup request
             // postMessage(UiMessage(POPUP.CANCEL_POPUP_REQUEST));
-            postMessage(ResponseMessage(responseID, false, { error: ERROR.DEVICE_CALL_IN_PROGRESS.message }));
-            throw ERROR.DEVICE_CALL_IN_PROGRESS;
+            postMessage(ResponseMessage(responseID, false, { error: ERRORS.TypedError('Device_CallInProgress') }));
+            throw ERRORS.TypedError('Device_CallInProgress');
         }
     }
 
@@ -407,10 +402,10 @@ export const onCall = async (message: CoreMessage) => {
                     // wait for device disconnect
                     await createUiPromise(DEVICE.DISCONNECT, device).promise;
                     // interrupt process and go to "final" block
-                    return Promise.reject('Cancelled');
+                    return Promise.reject(ERRORS.TypedError('Method_Cancel'));
                 } else {
                     // return error if not using popup
-                    return Promise.reject(firmwareException);
+                    return Promise.reject(ERRORS.TypedError('Device_FwException', firmwareException));
                 }
             }
 
@@ -427,10 +422,10 @@ export const onCall = async (message: CoreMessage) => {
                     // wait for device disconnect
                     await createUiPromise(DEVICE.DISCONNECT, device).promise;
                     // interrupt process and go to "final" block
-                    return Promise.reject(unexpectedMode);
+                    return Promise.reject(ERRORS.TypedError('Device_ModeException', unexpectedMode));
                 } else {
                     // throw error if not using popup
-                    return Promise.reject(unexpectedMode);
+                    return Promise.reject(ERRORS.TypedError('Device_ModeException', unexpectedMode));
                 }
             }
 
@@ -441,7 +436,7 @@ export const onCall = async (message: CoreMessage) => {
                 const permitted = await method.requestPermissions();
                 if (!permitted) {
                     // interrupt process and go to "final" block
-                    return Promise.reject(ERROR.PERMISSIONS_NOT_GRANTED.message);
+                    return Promise.reject(ERRORS.TypedError('Method_PermissionsNotGranted'));
                 }
             }
 
@@ -450,7 +445,7 @@ export const onCall = async (message: CoreMessage) => {
                 const permitted = await method.noBackupConfirmation();
                 if (!permitted) {
                     // interrupt process and go to "final" block
-                    return Promise.reject({ message: ERROR.PERMISSIONS_NOT_GRANTED.message, code: ERROR.PERMISSIONS_NOT_GRANTED.code });
+                    return Promise.reject(ERRORS.TypedError('Method_PermissionsNotGranted'));
                 }
             }
 
@@ -475,7 +470,7 @@ export const onCall = async (message: CoreMessage) => {
                 const confirmed = await method.confirmation();
                 if (!confirmed) {
                     // interrupt process and go to "final" block
-                    return Promise.reject('Cancelled');
+                    return Promise.reject(ERRORS.TypedError('Method_Cancel'));
                 }
             }
 
@@ -506,18 +501,18 @@ export const onCall = async (message: CoreMessage) => {
                             device.setExternalState(invalidDeviceState);
                         }
                     } else {
-                        throw ERROR.INVALID_STATE;
+                        throw ERRORS.TypedError('Device_State');
                     }
                 }
             } catch (error) {
                 // catch wrong pin error
-                if (error.message === ERROR.INVALID_PIN_ERROR_MESSAGE && PIN_TRIES < MAX_PIN_TRIES) {
+                if (error.message === ERRORS.INVALID_PIN_ERROR_MESSAGE && PIN_TRIES < MAX_PIN_TRIES) {
                     PIN_TRIES++;
                     postMessage(UiMessage(UI.INVALID_PIN, { device: device.toMessageObject() }));
                     return inner();
                 } else {
                     // other error
-                    // postMessage(ResponseMessage(method.responseID, false, { error: error.message }));
+                    // postMessage(ResponseMessage(method.responseID, false, { error }));
                     // eslint-disable-next-line no-use-before-define
                     // closePopup();
                     // clear cached passphrase. it's not valid
@@ -545,7 +540,7 @@ export const onCall = async (message: CoreMessage) => {
                 const response: Object = await method.run();
                 messageResponse = ResponseMessage(method.responseID, true, response);
             } catch (error) {
-                return Promise.reject({ message: error.message, code: error.code });
+                return Promise.reject(error);
             }
         };
 
@@ -559,7 +554,7 @@ export const onCall = async (message: CoreMessage) => {
         // corner case: Device was disconnected during authorization
         // this device_id needs to be stored and penalized with delay on future connection
         // this solves issue with U2F login (leaves space for requests from services which aren't using trezord)
-        if (_deviceList && error.code === 'Failure_Disconnected') {
+        if (_deviceList && error.code === 'Device_Disconnected') {
             _deviceList.addAuthPenalty(device);
         }
 
@@ -568,10 +563,10 @@ export const onCall = async (message: CoreMessage) => {
             // thrown while acquiring device
             // it's a race condition between two tabs
             // workaround is to enumerate transport again and report changes to get a valid session number
-            if (_deviceList && error.message === ERROR.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE) {
+            if (_deviceList && error.message === ERRORS.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE) {
                 _deviceList.enumerate();
             }
-            messageResponse = ResponseMessage(method.responseID, false, { error: error.message || error, code: error.code });
+            messageResponse = ResponseMessage(method.responseID, false, { error });
         }
     } finally {
         // Work done
@@ -721,7 +716,7 @@ const onEmptyPassphraseHandler = async (device: Device, callback: (response: any
  * @memberof Core
  */
 const onPopupClosed = (customErrorMessage: ?string): void => {
-    const error = customErrorMessage ? new Error(customErrorMessage) : ERROR.POPUP_CLOSED;
+    const error = customErrorMessage ? ERRORS.TypedError('Method_Cancel', customErrorMessage) : ERRORS.TypedError('Method_Interrupted');
     // Device was already acquired. Try to interrupt running action which will throw error from onCall try/catch block
     if (_deviceList && _deviceList.asArray().length > 0) {
         _deviceList.allDevices().forEach(d => {
@@ -734,7 +729,7 @@ const onPopupClosed = (customErrorMessage: ?string): void => {
                     uiPromise.resolve({ event: error.message, payload: null });
                 } else {
                     _callMethods.forEach(m => {
-                        postMessage(ResponseMessage(m.responseID, false, { error: error.message }));
+                        postMessage(ResponseMessage(m.responseID, false, { error }));
                     });
                     _callMethods.splice(0, _callMethods.length);
                 }
@@ -848,7 +843,7 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
 
             _deviceList = null;
 
-            postMessage(TransportMessage(TRANSPORT.ERROR, { error: error.message || error }));
+            postMessage(TransportMessage(TRANSPORT.ERROR, { error }));
             // if transport fails during app lifetime, try to reconnect
             if (settings.transportReconnect) {
                 await resolveAfter(1000, null);
@@ -865,7 +860,7 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
     } catch (error) {
         // eslint-disable-next-line require-atomic-updates
         _deviceList = null;
-        postMessage(TransportMessage(TRANSPORT.ERROR, { error: error.message || error }));
+        postMessage(TransportMessage(TRANSPORT.ERROR, { error }));
         if (!settings.transportReconnect) {
             throw error;
         } else {

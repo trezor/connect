@@ -2,7 +2,7 @@
 
 import type { CoreMessage } from '../../types';
 import DataManager from '../../data/DataManager';
-import * as POPUP from '../../constants/popup';
+import { POPUP, ERRORS } from '../../constants';
 
 export const header: HTMLElement = document.getElementsByTagName('header')[0];
 export const container: HTMLElement = (document.getElementById('container'): any);
@@ -86,7 +86,7 @@ export const initMessageChannel = (id: string, handler: any): void => {
         return;
     }
     if (!hasIframe) {
-        throw new Error('unable to establish connection with iframe');
+        throw ERRORS.TypedError('Popup_ConnectionMissing');
     }
     channel.port1.onmessage = handler;
 };
@@ -94,7 +94,7 @@ export const initMessageChannel = (id: string, handler: any): void => {
 // this method can be used from anywhere
 export const postMessage = (message: CoreMessage): void => {
     if (!broadcast && !iframe) {
-        throw new Error('unable to postMessage to iframe');
+        throw ERRORS.TypedError('Popup_ConnectionMissing');
     }
 
     if (broadcast) {
