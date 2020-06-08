@@ -122,11 +122,13 @@ module.exports = {
             inject: true,
         }),
 
-        new CopyWebpackPlugin([
-            { from: `${HTML_SRC}index.html`, to: `${DIST}index.html` },
-            { from: `${HTML_SRC}webusb.html`, to: `${DIST}webusb.html` },
-            { from: DATA_SRC, to: `${DIST}data` },
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: `${HTML_SRC}index.html`, to: `${DIST}index.html` },
+                { from: `${HTML_SRC}webusb.html`, to: `${DIST}webusb.html` },
+                { from: DATA_SRC, to: `${DIST}data` },
+            ],
+        }),
 
         // ignore Node.js lib from trezor-link
         new webpack.IgnorePlugin(/\/iconv-loader$/),

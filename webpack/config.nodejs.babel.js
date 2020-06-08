@@ -56,11 +56,13 @@ module.exports = {
         //     `${__dirname}/js/engine.io-websocket.js`
         // ),
 
-        new CopyWebpackPlugin([
-            { from: DATA_SRC, to: `${DIST}data` },
-            { from: `${NODE_MODULES}tiny-worker/lib/worker.js`, to: `${DIST}js/worker.js` },
-            { from: `${NODE_MODULES}tiny-worker/lib/noop.js`, to: `${DIST}js/noop.js` },
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: DATA_SRC, to: `${DIST}data` },
+                { from: `${NODE_MODULES}tiny-worker/lib/worker.js`, to: `${DIST}js/worker.js` },
+                { from: `${NODE_MODULES}tiny-worker/lib/noop.js`, to: `${DIST}js/noop.js` },
+            ],
+        }),
 
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
