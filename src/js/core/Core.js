@@ -501,7 +501,7 @@ export const onCall = async (message: CoreMessage) => {
                             device.setExternalState(invalidDeviceState);
                         }
                     } else {
-                        throw ERRORS.TypedError('Device_State');
+                        throw ERRORS.TypedError('Device_InvalidState');
                     }
                 }
             } catch (error) {

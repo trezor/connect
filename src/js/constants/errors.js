@@ -37,7 +37,7 @@ export const ERROR_CODES = {
     'Device_ModeException': '', // generic Device.UnexpectedMode type
     'Device_Disconnected': 'Device disconnected', // device disconnected during call
     'Device_UsedElsewhere': 'Device is used in another window', // interruption: current session toked by other application
-    'Device_State': 'Passphrase is incorrect', // authorization error (device state comparison)
+    'Device_InvalidState': 'Passphrase is incorrect', // authorization error (device state comparison)
     'Device_CallInProgress': 'Device call in progress', // thrown when trying to make another call while current is still running
 };
 
