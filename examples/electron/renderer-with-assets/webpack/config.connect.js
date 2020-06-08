@@ -34,9 +34,11 @@ module.exports = {
             template: './webpack/iframe.html',
             inject: false,
         }),
-        new CopyWebpackPlugin([
-            { from: './node_modules/trezor-connect/data', to: `${DIST}/data` },
-        ]),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: './node_modules/trezor-connect/data', to: `${DIST}/data` },
+            ],
+        }),
     ],
 
     // @trezor/utxo-lib NOTE:
