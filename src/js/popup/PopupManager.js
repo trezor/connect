@@ -280,12 +280,12 @@ export default class PopupManager extends EventEmitter {
         if (this._window) {
             if (this.settings.env === 'webextension') {
                 // eslint-disable-next-line no-unused-vars
-                let _e: any;
+                let _e = chrome.runtime.lastError;
                 // $FlowIssue chrome not declared outside
                 chrome.tabs.remove(this._window.id, () => {
+                    // eslint-disable-next-line no-unused-vars
                     _e = chrome.runtime.lastError;
                 });
-                _e = chrome.runtime.lastError;
             } else {
                 this._window.close();
             }
