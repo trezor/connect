@@ -33,7 +33,7 @@ import type {
     BuildTxResult,
 } from 'hd-wallet';
 import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
-import type { SignedTx } from '../../types/trezor/protobuf';
+import type { SignedTx, TransactionOptions } from '../../types/trezor/protobuf';
 import type { DiscoveryAccount, AccountUtxo, PrecomposeParams, PrecomposedTransaction } from '../../types/account';
 
 type Params = {
@@ -326,7 +326,17 @@ export default class ComposeTransaction extends AbstractMethod {
             refTxs = transformReferencedTransactions(bjsRefTxs);
         }
 
-        const timestamp = coinInfo.hasTimestamp ? Math.round(new Date().getTime() / 1000) : undefined;
+        const options: TransactionOptions = {};
+        if (coinInfo.network.consensusBranchId) {
+            // zcash
+            options.overwintered = true;
+            options.version = 4;
+            options.version_group_id = 0x892f2085;
+        }
+        if (coinInfo.hasTimestamp) {
+            // capricoin
+            options.timestamp = Math.round(new Date().getTime() / 1000);
+        }
         // const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, (0xffffffff - 2))); // TODO: RBF
         const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0xffffffff));
         const outputs = tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo));
@@ -336,7 +346,7 @@ export default class ComposeTransaction extends AbstractMethod {
             inputs,
             outputs,
             refTxs,
-            { timestamp },
+            options,
             coinInfo,
         );
 

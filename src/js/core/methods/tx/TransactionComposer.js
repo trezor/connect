@@ -89,7 +89,7 @@ export default class TransactionComposer {
 
                 const tx = this.compose(lastFee.toString());
                 if (tx.type === 'final') {
-                    this.feeLevels.updateCustomFee(tx.feePerByte);
+                    this.feeLevels.updateCustomFee(lastFee.toString());
                     this.composed['custom'] = tx;
                     return true;
                 }
@@ -142,7 +142,7 @@ export default class TransactionComposer {
         const changeId = addresses.change.findIndex(a => a.transfers < 1);
         if (changeId < 0) return { type: 'error', error: 'CHANGE-ADDRESS-NOT-SET' };
         const changeAddress = addresses.change[changeId].address;
-        const inputAmounts = coinInfo.segwit || coinInfo.forkid !== null || coinInfo.consensusBranchId !== null;
+        const inputAmounts = coinInfo.segwit || coinInfo.forkid !== null || coinInfo.network.consensusBranchId !== null;
 
         return buildTx({
             utxos: this.utxos,

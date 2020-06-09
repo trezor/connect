@@ -21,10 +21,9 @@ export const formatAmountOld = (n: number, coinInfo: BitcoinNetworkInfo): string
 };
 
 export const formatTime = (n: number): string => {
+    if (!n || n <= 0) return 'No time estimate';
     const hours = Math.floor(n / 60);
     const minutes = n % 60;
-
-    if (!n) return 'No time estimate';
     let res = '';
     if (hours !== 0) {
         res += hours + ' hour';

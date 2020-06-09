@@ -11,6 +11,7 @@ type Network = {
     wif: number;
     dustThreshold: number;
     coin: string;
+    consensusBranchId?: {[key: string]: number};
 };
 
 type CoinSupport = {
@@ -53,7 +54,6 @@ export type BitcoinNetworkInfo = Common & {
     minFeeSatoshiKb: number;
     defaultFees: BitcoinDefaultFees;
     segwit: boolean;
-    consensusBranchId?: {[key: string]: number};
 
     xPubMagic: number;
     xPubMagicSegwitNative?: number;
