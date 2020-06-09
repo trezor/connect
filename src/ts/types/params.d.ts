@@ -1,6 +1,6 @@
 export interface Unsuccessful {
     success: false;
-    payload: { error: string; code?: string | number };
+    payload: { error: string; code?: string };
 }
 
 export interface Success<T> {

@@ -2,7 +2,7 @@
 
 import AbstractMethod from '../AbstractMethod';
 import { validateParams } from '../helpers/paramsValidator';
-import { NO_COIN_INFO } from '../../../constants/errors';
+import { ERRORS } from '../../../constants';
 
 import { find as findBackend, remove as removeBackend, setCustomBackend, initBlockchain } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
@@ -32,7 +32,7 @@ export default class BlockchainSetCustomBackend extends AbstractMethod {
 
         const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
-            throw NO_COIN_INFO;
+            throw ERRORS.TypedError('Method_UnknownCoin');
         }
 
         setCustomBackend(coinInfo, payload.blockchainLink);

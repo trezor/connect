@@ -103,6 +103,7 @@ export const parse = (input: $Shape<ConnectSettings> = {}) => {
     // For debugging purposes `connectSrc` could be defined in `global.__TREZOR_CONNECT_SRC` variable
     if (typeof global !== 'undefined' && typeof global.__TREZOR_CONNECT_SRC === 'string') {
         settings.connectSrc = corsValidator(global.__TREZOR_CONNECT_SRC);
+        settings.debug = true;
     }
 
     // For debugging purposes `connectSrc` could be defined in url query of hosting page. Usage:
@@ -113,6 +114,7 @@ export const parse = (input: $Shape<ConnectSettings> = {}) => {
         if (customUrl) {
             const [, connectSrc] = customUrl.split('=');
             settings.connectSrc = corsValidator(decodeURIComponent(connectSrc));
+            settings.debug = true;
         }
     }
     const src = settings.connectSrc || DEFAULT_DOMAIN;

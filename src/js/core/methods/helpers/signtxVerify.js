@@ -6,6 +6,7 @@ import {
     script as BitcoinJsScript,
     Transaction as BitcoinJsTransaction,
 } from '@trezor/utxo-lib';
+import { ERRORS } from '../../../constants';
 import { getAddressScriptType, getAddressHash } from '../../../utils/addressUtils';
 import { getOutputScriptType } from '../../../utils/pathUtils';
 
@@ -57,7 +58,7 @@ const deriveBech32Output = (program: Buffer): Buffer => {
     // ideally we would also have program version with this, but
     // currently it's fixed to version 0.
     if (program.length !== 32 && program.length !== 20) {
-        throw new Error('deriveBech32Output: Unknown size for witness program v0.');
+        throw ERRORS.TypedError('Runtime', 'deriveBech32Output: Unknown size for witness program v0');
     }
 
     const scriptSig = Buffer.alloc(program.length + 2);
@@ -72,7 +73,7 @@ const deriveOutputScript = async (getHDNode: GetHDNode, output: TransactionOutpu
         return BitcoinJsScript.nullData.output.encode(Buffer.from(output.op_return_data, 'hex'));
     }
     if (!output.address_n && !output.address) {
-        throw new Error('deriveOutputScript: Neither address or address_n is set');
+        throw ERRORS.TypedError('Runtime', 'deriveOutputScript: Neither address or address_n is set');
     }
 
     const scriptType = output.address_n
@@ -99,7 +100,7 @@ const deriveOutputScript = async (getHDNode: GetHDNode, output: TransactionOutpu
         return deriveBech32Output(pkh);
     }
 
-    throw new Error('Unknown script type ' + scriptType);
+    throw ERRORS.TypedError('Runtime', 'deriveOutputScript: Unknown script type ' + scriptType);
 };
 
 export default async (getHDNode: GetHDNode,
@@ -113,11 +114,11 @@ export default async (getHDNode: GetHDNode,
 
     // check inputs and outputs length
     if (inputs.length !== bitcoinTx.ins.length) {
-        throw new Error('Signed transaction has wrong length.');
+        throw ERRORS.TypedError('Runtime', 'verifyTx: Signed transaction inputs invalid length');
     }
 
     if (outputs.length !== bitcoinTx.outs.length) {
-        throw new Error('Signed transaction has wrong length.');
+        throw ERRORS.TypedError('Runtime', 'verifyTx: Signed transaction outputs invalid length');
     }
 
     // check outputs scripts
@@ -127,13 +128,13 @@ export default async (getHDNode: GetHDNode,
         if (outputs[i].amount) {
             const amount = outputs[i].amount;
             if (amount !== bitcoinTx.outs[i].value) {
-                throw new Error(`Wrong output amount at output ${i}. Requested: ${amount}, signed: ${bitcoinTx.outs[i].value}`);
+                throw ERRORS.TypedError('Runtime', `verifyTx: Wrong output amount at output ${i}. Requested: ${amount}, signed: ${bitcoinTx.outs[i].value}`);
             }
         }
 
         const scriptA = await deriveOutputScript(getHDNode, outputs[i], coinInfo);
         if (scriptA.compare(scriptB) !== 0) {
-            throw new Error(`Output ${i} scripts differ.`);
+            throw ERRORS.TypedError('Runtime', `verifyTx: Output ${i} scripts differ`);
         }
     }
 };

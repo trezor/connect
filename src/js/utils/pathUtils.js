@@ -1,7 +1,7 @@
 /* @flow */
 
 import { getCoinName } from '../data/CoinInfo';
-import { invalidParameter } from '../constants/errors';
+import { ERRORS } from '../constants';
 import type { BitcoinNetworkInfo, CoinInfo } from '../types';
 import type { InputScriptType, OutputScriptType } from '../types/trezor/protobuf';
 
@@ -9,8 +9,8 @@ export const HD_HARDENED: number = 0x80000000;
 export const toHardened = (n: number): number => (n | HD_HARDENED) >>> 0;
 export const fromHardened = (n: number): number => (n & ~HD_HARDENED) >>> 0;
 
-const PATH_NOT_VALID = invalidParameter('Not a valid path.');
-const PATH_NEGATIVE_VALUES = invalidParameter('Path cannot contain negative values.');
+const PATH_NOT_VALID = ERRORS.TypedError('Method_InvalidParameter', 'Not a valid path');
+const PATH_NEGATIVE_VALUES = ERRORS.TypedError('Method_InvalidParameter', 'Path cannot contain negative values');
 
 export const getHDPath = (path: string): Array<number> => {
     const parts: Array<string> = path.toLowerCase().split('/');
@@ -118,7 +118,7 @@ export const getPathFromIndex = (bip44purpose: number, bip44cointype: number, in
 
 export const getIndexFromPath = (path: Array<number>): number => {
     if (path.length < 3) {
-        throw invalidParameter(`getIndexFromPath: invalid path length ${ path.toString() }`);
+        throw ERRORS.TypedError('Method_InvalidParameter', `getIndexFromPath: invalid path length ${ path.toString() }`);
     }
     return fromHardened(path[2]);
 };

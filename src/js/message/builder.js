@@ -1,8 +1,7 @@
 /* @flow */
 
 import { UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT, RESPONSE_EVENT, BLOCKCHAIN_EVENT } from '../constants';
-import type { CoreMessage } from '../types';
-import type { UiMessageBuilder, BlockchainMessageBuilder } from '../types';
+import type { CoreMessage, UiMessageBuilder, BlockchainMessageBuilder } from '../types';
 
 export const UiMessage: UiMessageBuilder = (type, payload) => (
     {
@@ -34,7 +33,8 @@ export const ResponseMessage = (id: number, success: boolean, payload: any = nul
         type: RESPONSE_EVENT,
         id,
         success,
-        payload,
+        // convert Error/TypeError object into payload error type (Error object/class is converted to string while sent via postMessage)
+        payload: success ? payload : { error: payload.error.message, code: payload.error.code },
     }
 );
 

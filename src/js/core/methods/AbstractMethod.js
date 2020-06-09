@@ -2,9 +2,7 @@
 
 import Device from '../../device/Device';
 import DataManager from '../../data/DataManager';
-import * as UI from '../../constants/ui';
-import * as DEVICE from '../../constants/device';
-import * as ERROR from '../../constants/errors';
+import { UI, DEVICE, ERRORS } from '../../constants';
 import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../storage';
 import { versionCompare } from '../../utils/deviceFeaturesUtils';
 
@@ -207,7 +205,7 @@ export default class AbstractMethod implements MethodInterface {
 
                 const uiResp: UiPromiseResponse = await uiPromise.promise;
                 if (!uiResp.payload) {
-                    throw ERROR.PERMISSIONS_NOT_GRANTED;
+                    throw ERRORS.TypedError('Method_PermissionsNotGranted');
                 }
             } else {
                 return UI.FIRMWARE_NOT_COMPATIBLE;

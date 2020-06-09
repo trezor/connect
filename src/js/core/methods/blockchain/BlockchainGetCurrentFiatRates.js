@@ -2,7 +2,7 @@
 
 import AbstractMethod from '../AbstractMethod';
 import { validateParams } from '../helpers/paramsValidator';
-import { NO_COIN_INFO, backendNotSupported } from '../../../constants/errors';
+import { ERRORS } from '../../../constants';
 
 import { initBlockchain } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
@@ -31,10 +31,10 @@ export default class BlockchainGetCurrentFiatRates extends AbstractMethod {
 
         const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
-            throw NO_COIN_INFO;
+            throw ERRORS.TypedError('Method_UnknownCoin');
         }
         if (!coinInfo.blockchainLink) {
-            throw backendNotSupported(coinInfo.name);
+            throw ERRORS.TypedError('Backend_NotSupported');
         }
 
         this.params = {

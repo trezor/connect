@@ -203,9 +203,7 @@ const init = async (payload: any, origin: string) => {
 
         postMessage(UiMessage(IFRAME.LOADED));
     } catch (error) {
-        postMessage(UiMessage(IFRAME.ERROR, {
-            error: error.message,
-        }));
+        postMessage(UiMessage(IFRAME.ERROR, { error }));
     }
 };
 

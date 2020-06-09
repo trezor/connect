@@ -2,7 +2,7 @@
 
 import AbstractMethod from './AbstractMethod';
 
-import * as UI from '../../constants/ui';
+import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 import { validateParams } from './helpers/paramsValidator';
 
@@ -73,7 +73,7 @@ export default class LoadDevice extends AbstractMethod {
         // todo: remove when listed firmwares become mandatory
         if (!this.device.atLeast(['1.8.2', '2.1.2'])) {
             if (!this.params.mnemonics || typeof this.params.mnemonics[0] !== 'string') {
-                throw new Error('invalid mnemonic array. should contain at least one mnemonic string');
+                throw ERRORS.TypedError('Method_InvalidParameter', 'invalid mnemonic array. should contain at least one mnemonic string');
             }
             this.params.mnemonic = this.params.mnemonics[0];
             delete this.params.mnemonics;

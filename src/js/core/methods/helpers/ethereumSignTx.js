@@ -1,5 +1,6 @@
 /* @flow */
 
+import { ERRORS } from '../../../constants';
 import type { EthereumTxRequest, EthereumSignedTx } from '../../../types/trezor/protobuf';
 import type { DefaultMessageResponse } from '../../../device/DeviceCommands';
 
@@ -23,7 +24,7 @@ const processTxRequest = async (
         const r = request.signature_r;
         const s = request.signature_s;
         if (v == null || r == null || s == null) {
-            throw new Error('Unexpected request.');
+            throw ERRORS.TypedError('Runtime', 'processTxRequest: Unexpected request');
         }
 
         // recompute "v" value

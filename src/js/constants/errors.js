@@ -1,5 +1,46 @@
 /* @flow */
 
+export const ERROR_CODES = {
+    'Init_NotInitialized': 'TrezorConnect not yet initialized', // race condition: call on not initialized Core (usually hot-reloading)
+    'Init_AlreadyInitialized': 'TrezorConnect has been already initialized', // thrown by .init called multiple times
+    'Init_IframeBlocked': 'Iframe blocked', // iframe injection blocked (ad-blocker)
+    'Init_IframeTimeout': 'Iframe timeout', // iframe didn't load in specified time
+    'Init_ManifestMissing': 'Manifest not set. Read more at https://github.com/trezor/connect/blob/develop/docs/index.md', // manifest is not set
+
+    'Popup_ConnectionMissing': 'Unable to establish connection with iframe', // thrown by popup
+
+    'Transport_Missing': 'Transport is missing', // no transport available
+    'Transport_InvalidProtobuf': '', // generic error from transport layer (trezor-link)
+
+    'Method_InvalidPackage': 'This version of trezor-connect is not suitable to work without browser. Use trezor-connect@extended package instead', // thrown by node and react-native env while using regular 'web' package
+    'Method_InvalidParameter': '', // replaced by generic text
+    'Method_NotAllowed': 'Method not allowed for this configuration', // example: device management in popup mode
+    'Method_PermissionsNotGranted': 'Permissions not granted', // permission/confirmation not granted in popup
+    'Method_Cancel': 'Cancelled', // permission/confirmation not granted in popup OR .cancel() custom error
+    'Method_Interrupted': 'Popup closed', // interruption: popup closed
+    'Method_UnknownCoin': 'Coin not found', // coin definition not found
+    'Method_AddressNotMatch': 'Addresses do not match', // thrown by all getAddress methods with custom UI validation
+    'Method_FirmwareUpdate_DownloadFailed': 'Failed to download firmware binary', // thrown by FirmwareUpdate method
+    'Method_CustomMessage_Callback': 'Parameter "callback" is not a function', // thrown by CustomMessage method
+    'Method_Discovery_BundleException': '', // thrown by getAccountInfo method
+    'Method_Override': 'override', // inner "error", it's more like a interruption
+    'Method_NoResponse': 'Call resolved without response', // thrown by npm index(es), call to Core resolved without response, should not happen
+
+    'Backend_NotSupported': 'BlockchainLink settings not found in coins.json', // thrown by methods which using backends, blockchainLink not defined for this coin
+    'Backend_WorkerMissing': '', // thrown by BlockchainLink class, worker not specified
+
+    'Runtime': '', // thrown from several places, this shouldn't ever happen tho
+
+    'Device_NotFound': 'Device not found',
+    'Device_InitializeFailed': '', // generic error from firmware while calling "Initialize" message
+    'Device_FwException': '', // generic FirmwareException type
+    'Device_ModeException': '', // generic Device.UnexpectedMode type
+    'Device_Disconnected': 'Device disconnected', // device disconnected during call
+    'Device_UsedElsewhere': 'Device is used in another window', // interruption: current session toked by other application
+    'Device_InvalidState': 'Passphrase is incorrect', // authorization error (device state comparison)
+    'Device_CallInProgress': 'Device call in progress', // thrown when trying to make another call while current is still running
+};
+
 export class TrezorError extends Error {
     code: number | string;
     message: string;
@@ -11,36 +52,9 @@ export class TrezorError extends Error {
     }
 }
 
-export const invalidParameter = (message: string): TrezorError => {
-    return new TrezorError('Connect_InvalidParameter', message);
+export const TypedError = (id: $Keys<typeof ERROR_CODES>, message?: string) => {
+    return new TrezorError(id, message || ERROR_CODES[id]);
 };
-
-// level 100 error during initialization
-export const NO_IFRAME: TrezorError = new TrezorError(100, 'TrezorConnect not yet initialized');
-export const IFRAME_BLOCKED: TrezorError = new TrezorError('iframe_blocked', 'TrezorConnect iframe was blocked');
-export const IFRAME_INITIALIZED: TrezorError = new TrezorError(101, 'TrezorConnect has been already initialized');
-export const IFRAME_TIMEOUT: TrezorError = new TrezorError(102, 'Iframe timeout');
-export const POPUP_TIMEOUT: TrezorError = new TrezorError(103, 'Popup timeout');
-export const BROWSER_NOT_SUPPORTED: TrezorError = new TrezorError(104, 'Browser not supported');
-export const MANIFEST_NOT_SET: TrezorError = new TrezorError(105, 'Manifest not set. Read more at https://github.com/trezor/connect/blob/develop/docs/index.md');
-export const MANAGEMENT_NOT_ALLOWED: TrezorError = new TrezorError(105, 'Management method not allowed for this configuration');
-
-export const NO_TRANSPORT: TrezorError = new TrezorError(500, 'Transport is missing');
-export const WRONG_TRANSPORT_CONFIG: TrezorError = new TrezorError(5002, 'Wrong config response'); // config_signed
-export const DEVICE_NOT_FOUND: TrezorError = new TrezorError(501, 'Device not found');
-// export const DEVICE_CALL_IN_PROGRESS: TrezorError = new TrezorError(502, "Device call in progress.");
-export const DEVICE_CALL_IN_PROGRESS: TrezorError = new TrezorError(503, 'Device call in progress');
-export const INVALID_PARAMETERS: TrezorError = new TrezorError(504, 'Invalid parameters');
-export const POPUP_CLOSED = new Error('Popup closed');
-
-export const PERMISSIONS_NOT_GRANTED: TrezorError = new TrezorError(403, 'Permissions not granted');
-
-export const DEVICE_USED_ELSEWHERE: TrezorError = new TrezorError(700, 'Device is used in another window');
-export const INITIALIZATION_FAILED: TrezorError = new TrezorError('Failure_Initialize', 'Initialization failed');
-
-export const CALL_OVERRIDE: TrezorError = new TrezorError('Failure_ActionOverride', 'override');
-export const INVALID_STATE: TrezorError = new TrezorError('Failure_PassphraseState', 'Passphrase is incorrect');
-export const DEVICE_DISCONNECTED: TrezorError = new TrezorError('Failure_Disconnected', 'Device disconnected');
 
 // a slight hack
 // this error string is hard-coded
@@ -48,12 +62,4 @@ export const DEVICE_DISCONNECTED: TrezorError = new TrezorError('Failure_Disconn
 export const WRONG_PREVIOUS_SESSION_ERROR_MESSAGE: string = 'wrong previous session';
 export const INVALID_PIN_ERROR_MESSAGE: string = 'PIN invalid';
 export const WEBUSB_ERROR_MESSAGE: string = 'NetworkError: Unable to claim interface.';
-
-// BlockBook
-export const backendNotSupported = (coinName: string): TrezorError => {
-    return new TrezorError('backend_error', `BlockchainLink support not found for ${coinName}`);
-};
-export const BACKEND_NO_URL: TrezorError = new TrezorError('Backend_init', 'Url not found');
-
-export const NO_COIN_INFO: TrezorError = invalidParameter('Coin not found.');
 

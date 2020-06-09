@@ -6,9 +6,8 @@ import { validatePath, getSerializedPath } from '../../utils/pathUtils';
 import { getAccountLabel } from '../../utils/accountUtils';
 import { resolveAfter } from '../../utils/promiseUtils';
 import { getCoinInfo } from '../../data/CoinInfo';
-import { NO_COIN_INFO, backendNotSupported, TrezorError } from '../../constants/errors';
 
-import * as UI from '../../constants/ui';
+import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
 import { initBlockchain } from '../../backend/BlockchainLink';
@@ -67,10 +66,10 @@ export default class GetAccountInfo extends AbstractMethod {
             // validate coin info
             const coinInfo: ?CoinInfo = getCoinInfo(batch.coin);
             if (!coinInfo) {
-                throw NO_COIN_INFO;
+                throw ERRORS.TypedError('Method_UnknownCoin');
             }
             if (!coinInfo.blockchainLink) {
-                throw backendNotSupported(coinInfo.name);
+                throw ERRORS.TypedError('Backend_NotSupported');
             }
             // validate path if exists
             if (batch.path) {
@@ -200,7 +199,7 @@ export default class GetAccountInfo extends AbstractMethod {
         }
         // return invalid ranges in custom error
         if (invalid.length > 0) {
-            throw new TrezorError('bundle_fw_exception', JSON.stringify(invalid));
+            throw ERRORS.TypedError('Method_Discovery_BundleException', JSON.stringify(invalid));
         }
         return null;
     }
@@ -255,7 +254,7 @@ export default class GetAccountInfo extends AbstractMethod {
 
             try {
                 if (typeof descriptor !== 'string') {
-                    throw new Error('GetAccountInfo: descriptor not found');
+                    throw ERRORS.TypedError('Runtime', 'GetAccountInfo: descriptor not found');
                 }
 
                 // initialize backend

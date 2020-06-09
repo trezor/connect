@@ -3,7 +3,7 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { getCoinInfo } from '../../data/CoinInfo';
-import { NO_COIN_INFO, backendNotSupported } from '../../constants/errors';
+import { ERRORS } from '../../constants';
 import { initBlockchain } from '../../backend/BlockchainLink';
 
 import type { CoreMessage, CoinInfo } from '../../types';
@@ -32,14 +32,14 @@ export default class PushTransaction extends AbstractMethod {
 
         const coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
-            throw NO_COIN_INFO;
+            throw ERRORS.TypedError('Method_UnknownCoin');
         }
         if (!coinInfo.blockchainLink) {
-            throw backendNotSupported(coinInfo.name);
+            throw ERRORS.TypedError('Backend_NotSupported');
         }
 
         if (coinInfo.type === 'bitcoin' && !/^[0-9A-Fa-f]*$/.test(payload.tx)) {
-            throw new Error('Invalid params: Transaction must be hexadecimal');
+            throw ERRORS.TypedError('Method_InvalidParameter', 'Transaction must be hexadecimal');
         }
 
         this.params = {

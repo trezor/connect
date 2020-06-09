@@ -1,6 +1,7 @@
 /* @flow */
 import * as bs58 from 'bs58';
 
+import { ERRORS } from '../../../constants';
 import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type {
     EosSDKTransaction,
@@ -44,7 +45,7 @@ const binaryToDecimal = (bignum: Uint8Array | Array<number>, minDigits = 1) => {
 // "pushName"
 const serialize = (s?: string) => {
     if (typeof s !== 'string') {
-        throw new Error(`Eos serialization error, "${typeof s}" should be a string`);
+        throw ERRORS.TypedError('Method_InvalidParameter', `Eos serialization error, "${typeof s}" should be a string`);
     }
     function charToSymbol(c: number) {
         if (c >= 'a'.charCodeAt(0) && c <= 'z'.charCodeAt(0)) {
@@ -77,7 +78,7 @@ const serialize = (s?: string) => {
 // "pushAsset"
 const parseQuantity = (s: string): EosAsset => {
     if (typeof s !== 'string') {
-        throw new Error(`Eos serialization error. Expected string containing asset, got: ${typeof s}`);
+        throw ERRORS.TypedError('Method_InvalidParameter', `Eos serialization error. Expected string containing asset, got: ${typeof s}`);
     }
     s = s.trim();
     let pos = 0;
@@ -94,7 +95,7 @@ const parseQuantity = (s: string): EosAsset => {
         ++pos;
     }
     if (!foundDigit) {
-        throw new Error('Eos serialization error. Asset must begin with a number');
+        throw ERRORS.TypedError('Method_InvalidParameter', 'Eos serialization error. Asset must begin with a number');
     }
     if (s[pos] === '.') {
         ++pos;
@@ -158,7 +159,7 @@ const parseAuth = (a: $EosAuthorization): EosAuthorization => {
 // "dateToTimePoint"
 const parseDate = (d: string): number => {
     if (typeof d !== 'string') {
-        throw new Error('Eos serialization error. Header.expiration should be string or number');
+        throw ERRORS.TypedError('Method_InvalidParameter', 'Eos serialization error. Header.expiration should be string or number');
     }
     if (d.substr(d.length - 1, d.length) !== 'Z') {
         d += 'Z';

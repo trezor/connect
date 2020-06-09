@@ -1,8 +1,9 @@
 /* @flow */
 import EventEmitter from 'events';
+import { ERRORS } from '../../constants';
 
 const empty = (...args: any) => {
-    throw new Error('This version of trezor-connect is not suitable to work without browser');
+    throw ERRORS.TypedError('Method_InvalidPackage');
 };
 
 export const eventEmitter = new EventEmitter();

@@ -7,7 +7,7 @@ import { getNetworkLabel } from '../../utils/ethereumUtils';
 import { getEthereumNetwork, getUniqueNetworks } from '../../data/CoinInfo';
 import { stripHexPrefix } from '../../utils/formatUtils';
 
-import * as UI from '../../constants/ui';
+import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
 import type { EthereumAddress } from '../../types/networks/ethereum';
@@ -153,7 +153,7 @@ export default class EthereumGetAddress extends AbstractMethod {
                 );
                 if (typeof batch.address === 'string') {
                     if (stripHexPrefix(batch.address).toLowerCase() !== stripHexPrefix(silent.address).toLowerCase()) {
-                        throw new Error('Addresses do not match');
+                        throw ERRORS.TypedError('Method_AddressNotMatch');
                     }
                 } else {
                     // save address for future verification in "getButtonRequestData"

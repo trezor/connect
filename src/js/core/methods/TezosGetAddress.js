@@ -5,7 +5,7 @@ import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
-import * as UI from '../../constants/ui';
+import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
 import type { TezosAddress } from '../../types/networks/tezos';
@@ -139,7 +139,7 @@ export default class TezosGetAddress extends AbstractMethod {
                 );
                 if (typeof batch.address === 'string') {
                     if (batch.address !== silent.address) {
-                        throw new Error('Addresses do not match');
+                        throw ERRORS.TypedError('Method_AddressNotMatch');
                     }
                 } else {
                     batch.address = silent.address;

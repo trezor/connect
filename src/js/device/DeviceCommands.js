@@ -1,6 +1,6 @@
 /* @flow */
 
-import * as DEVICE from '../constants/device';
+import { DEVICE, ERRORS } from '../constants';
 import randombytes from 'randombytes';
 
 import * as bitcoin from '@trezor/utxo-lib';
@@ -33,7 +33,7 @@ export type PassphrasePromptResponse = {
 function assertType(res: DefaultMessageResponse, resType: string) {
     const splitResTypes = resType.split('|');
     if (!(splitResTypes.includes(res.type))) {
-        throw new TypeError(`Response of unexpected type: ${res.type}. Should be ${resType}`);
+        throw ERRORS.TypedError('Runtime', `assertType: Response of unexpected type: ${res.type}. Should be ${resType}`);
     }
 }
 
@@ -41,7 +41,7 @@ function generateEntropy(len: number): Buffer {
     try {
         return randombytes(len);
     } catch (err) {
-        throw new Error('Environment does not support crypto random');
+        throw ERRORS.TypedError('Runtime', 'generateEntropy: Environment does not support crypto random');
     }
 }
 
@@ -631,7 +631,7 @@ export default class DeviceCommands {
 
     async typedCall(type: string, resType: string, msg: Object = {}): Promise<DefaultMessageResponse> {
         if (this.disposed) {
-            throw new Error('DeviceCommands already disposed');
+            throw ERRORS.TypedError('Runtime', 'typedCall: DeviceCommands already disposed');
         }
 
         const response: DefaultMessageResponse = await this._commonCall(type, msg);
@@ -654,10 +654,9 @@ export default class DeviceCommands {
 
     async _filterCommonTypes(res: DefaultMessageResponse): Promise<DefaultMessageResponse> {
         if (res.type === 'Failure') {
-            const e = new Error(res.message.message);
-            // $FlowIssue extending errors in ES6 "correctly" is a PITA
-            e.code = res.message.code;
-            return Promise.reject(e);
+            const { code, message } = res.message;
+            // pass code and message from firmware error
+            return Promise.reject(new ERRORS.TrezorError(code, message));
         }
 
         if (res.type === 'Features') {
@@ -761,7 +760,7 @@ export default class DeviceCommands {
             } else {
                 // eslint-disable-next-line no-console
                 console.warn('[DeviceCommands] [call] PIN callback not configured, cancelling request');
-                reject(new Error('PIN callback not configured'));
+                reject(ERRORS.TypedError('Runtime', '_promptPin: PIN callback not configured'));
             }
         });
     }
@@ -779,7 +778,7 @@ export default class DeviceCommands {
             } else {
                 // eslint-disable-next-line no-console
                 console.warn('[DeviceCommands] [call] Passphrase callback not configured, cancelling request');
-                reject(new Error('Passphrase callback not configured'));
+                reject(ERRORS.TypedError('Runtime', '_promptPassphrase: Passphrase callback not configured'));
             }
         });
     }

@@ -1,9 +1,7 @@
 /* @flow */
 
 import EventEmitter from 'events';
-import * as TRANSPORT from '../constants/transport';
-import * as DEVICE from '../constants/device';
-import * as ERROR from '../constants/errors';
+import { TRANSPORT, DEVICE, ERRORS } from '../constants';
 import DescriptorStream from './DescriptorStream';
 import type { DeviceDescriptorDiff } from './DescriptorStream';
 import Device from './Device';
@@ -107,7 +105,7 @@ export default class DeviceList extends EventEmitter {
             this.currentMessages = messages;
             this.hasCustomMessages = typeof custom === 'boolean' ? custom : false;
         } catch (error) {
-            throw ERROR.WRONG_TRANSPORT_CONFIG;
+            throw ERRORS.TypedError('Transport_InvalidProtobuf', error.message);
         }
     }
 
@@ -117,7 +115,7 @@ export default class DeviceList extends EventEmitter {
             await this.transport.configure(JSON.stringify(this.defaultMessages));
             this.hasCustomMessages = false;
         } catch (error) {
-            throw ERROR.WRONG_TRANSPORT_CONFIG;
+            throw ERRORS.TypedError('Transport_InvalidProtobuf', error.message);
         }
     }
 
@@ -327,16 +325,16 @@ class CreateDeviceHandler {
         } catch (error) {
             _log.debug('Cannot create device', error);
 
-            if (error.message.toLowerCase() === ERROR.DEVICE_NOT_FOUND.message.toLowerCase()) {
+            if (error.code === 'Device_NotFound') {
                 // do nothing
                 // it's a race condition between "device_changed" and "device_disconnected"
-            } else if (error.message === ERROR.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE || error.toString() === ERROR.WEBUSB_ERROR_MESSAGE) {
+            } else if (error.message === ERRORS.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE || error.toString() === ERRORS.WEBUSB_ERROR_MESSAGE) {
                 this.list.enumerate();
                 await this._handleUsedElsewhere();
-            } else if (error.code === ERROR.INITIALIZATION_FAILED.code) {
+            } else if (error.code === 'Device_InitializeFailed') {
                 // firmware bug - device is in "show address" state which cannot be cancelled
                 await this._handleUsedElsewhere();
-            } else if (error.message === ERROR.DEVICE_USED_ELSEWHERE.message) {
+            } else if (error.code === 'Device_UsedElsewhere') {
                 // most common error - someone else took the device at the same time
                 await this._handleUsedElsewhere();
             } else {

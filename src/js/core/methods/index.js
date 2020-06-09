@@ -1,6 +1,7 @@
 /* @flow */
 
 import type { CoreMessage } from '../../types';
+import { ERRORS } from '../../constants';
 
 import AbstractMethod from './AbstractMethod';
 
@@ -136,18 +137,18 @@ const classes: { [k: string]: any } = {
 
 export const find = (message: CoreMessage): AbstractMethod => {
     if (!message.payload) {
-        throw new Error('Message payload not found');
+        throw ERRORS.TypedError('Method_InvalidParameter', 'Message payload not found');
     }
 
     if (!message.payload.method || typeof message.payload.method !== 'string') {
-        throw new Error('Message method is not set');
+        throw ERRORS.TypedError('Method_InvalidParameter', 'Message method is not set');
     }
 
     if (classes[message.payload.method]) {
         return new classes[message.payload.method](message);
     }
 
-    throw new Error(`Method ${message.payload.method} not found`);
+    throw ERRORS.TypedError('Method_InvalidParameter', `Method ${message.payload.method} not found`);
 };
 
 export default find;

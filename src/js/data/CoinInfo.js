@@ -1,5 +1,6 @@
 /* @flow */
 
+import { ERRORS } from '../constants';
 import { toHardened, fromHardened } from '../utils/pathUtils';
 import type { CoinInfo, BitcoinNetworkInfo, EthereumNetworkInfo, MiscNetworkInfo } from '../types';
 
@@ -116,7 +117,7 @@ export const getCoinInfoByHash = (hash: string, networkInfo: any): BitcoinNetwor
     const networks: BitcoinNetworkInfo[] = cloneCoinInfo(bitcoinNetworks);
     const result: ?BitcoinNetworkInfo = networks.find(info => hash.toLowerCase() === info.hashGenesisBlock.toLowerCase());
     if (!result) {
-        throw new Error('Coin info not found for hash: ' + hash + ' ' + networkInfo.hashGenesisBlock);
+        throw ERRORS.TypedError('Method_UnknownCoin', 'Coin info not found for hash: ' + hash + ' ' + networkInfo.hashGenesisBlock);
     }
 
     if (result.isBitcoin) {
@@ -130,7 +131,7 @@ export const getCoinInfoByHash = (hash: string, networkInfo: any): BitcoinNetwor
         if (fork) {
             return fork;
         } else {
-            throw new Error('Coin info not found for hash: ' + hash + ' ' + networkInfo.hashGenesisBlock + ' BTC version:' + btcVersion);
+            throw ERRORS.TypedError('Method_UnknownCoin', 'Coin info not found for hash: ' + hash + ' ' + networkInfo.hashGenesisBlock + ' BTC version:' + btcVersion);
         }
     }
     return result;

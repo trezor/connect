@@ -1,8 +1,7 @@
 /* @flow */
 
 import { create as createDeferred } from '../utils/deferred';
-import * as IFRAME from '../constants/iframe';
-import { IFRAME_TIMEOUT, IFRAME_BLOCKED } from '../constants/errors';
+import { IFRAME, ERRORS } from '../constants';
 import { getOrigin } from '../env/browser/networkUtils';
 import css from './inline-styles';
 import type { ConnectSettings, Deferred } from '../types';
@@ -11,7 +10,7 @@ export let instance: ?HTMLIFrameElement;
 export let origin: string;
 export let initPromise: Deferred<void> = createDeferred();
 export let timeout: number = 0;
-export let error: ?string;
+export let error: ?ERRORS.TrezorError;
 
 let _messageID: number = 0;
 // every postMessage to iframe has its own promise to resolve
@@ -53,12 +52,12 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
 
     origin = getOrigin(instance.src);
     timeout = window.setTimeout(() => {
-        initPromise.reject(IFRAME_TIMEOUT);
+        initPromise.reject(ERRORS.TypedError('Init_IframeTimeout'));
     }, 10000);
 
     const onLoad = () => {
         if (!instance) {
-            initPromise.reject(IFRAME_BLOCKED);
+            initPromise.reject(ERRORS.TypedError('Init_IframeBlocked'));
             return;
         }
         try {
@@ -124,7 +123,7 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
 
 const injectStyleSheet = (): void => {
     if (!instance) {
-        throw IFRAME_BLOCKED;
+        throw ERRORS.TypedError('Init_IframeBlocked');
     }
     const doc: Document = instance.ownerDocument;
     const head: HTMLElement = doc.head || doc.getElementsByTagName('head')[0];
@@ -146,16 +145,16 @@ const injectStyleSheet = (): void => {
 const handleIframeBlocked = (): void => {
     window.clearTimeout(timeout);
 
-    error = IFRAME_BLOCKED.message;
+    error = ERRORS.TypedError('Init_IframeBlocked');
     // eslint-disable-next-line no-use-before-define
     dispose();
-    initPromise.reject(IFRAME_BLOCKED);
+    initPromise.reject(error);
 };
 
 // post messages to iframe
 export const postMessage = (message: any, usePromise: boolean = true): ?Promise<void> => {
     if (!instance) {
-        throw IFRAME_BLOCKED;
+        throw ERRORS.TypedError('Init_IframeBlocked');
     }
     if (usePromise) {
         _messageID++;

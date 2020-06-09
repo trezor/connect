@@ -6,7 +6,7 @@ import PopupManager from '../../popup/PopupManager';
 import * as iframe from '../../iframe/builder';
 import webUSBButton from '../../webusb/button';
 
-import { parseMessage } from '../../message';
+import { parseMessage, errorMessage } from '../../message';
 import { parse as parseSettings } from '../../data/ConnectSettings';
 import Log, { init as initLog } from '../../utils/debug';
 
@@ -112,7 +112,7 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
                 iframe.initPromise.resolve();
             }
             if (type === IFRAME.ERROR) {
-                iframe.initPromise.reject(new Error(payload.error));
+                iframe.initPromise.reject(payload.error);
             }
 
             // pass UI event up
@@ -126,14 +126,14 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
 };
 
 export const init = async (settings: $Shape<$T.ConnectSettings> = {}): Promise<void> => {
-    if (iframe.instance) { throw ERRORS.IFRAME_INITIALIZED; }
+    if (iframe.instance) { throw ERRORS.TypedError('Init_AlreadyInitialized'); }
 
     if (!_settings) {
         _settings = parseSettings(settings);
     }
 
     if (!_settings.manifest) {
-        throw ERRORS.MANIFEST_NOT_SET;
+        throw ERRORS.TypedError('Init_ManifestMissing');
     }
 
     if (_settings.lazyLoad) {
@@ -160,7 +160,7 @@ export const call = async (params: any): Promise<any> => {
         _settings = parseSettings(_settings);
 
         if (!_settings.manifest) {
-            return { success: false, payload: { error: ERRORS.MANIFEST_NOT_SET.message } };
+            return errorMessage(ERRORS.TypedError('Init_ManifestMissing'));
         }
 
         if (!_popupManager) {
@@ -175,16 +175,16 @@ export const call = async (params: any): Promise<any> => {
             if (_popupManager) {
                 _popupManager.close();
             }
-            return { success: false, payload: { error } };
+            return errorMessage(error);
         }
     }
 
     if (iframe.timeout) {
         // this.init was called, but iframe doesn't return handshake yet
-        return { success: false, payload: { error: ERRORS.NO_IFRAME.message } };
+        return errorMessage(ERRORS.TypedError('Init_ManifestMissing'));
     } else if (iframe.error) {
         // iframe was initialized with error
-        return { success: false, payload: { error: iframe.error } };
+        return errorMessage(iframe.error);
     }
 
     // request popup window it might be used in the future
@@ -194,18 +194,20 @@ export const call = async (params: any): Promise<any> => {
     try {
         const response: ?Object = await iframe.postMessage({ type: IFRAME.CALL, payload: params });
         if (response) {
-            // TODO: unlock popupManager request only if there wasn't error "in progress"
-            if (response.payload.error !== ERRORS.DEVICE_CALL_IN_PROGRESS.message && _popupManager) { _popupManager.unlock(); }
+            if (!response.success && response.payload.error.code !== 'Device_CallInProgress' && _popupManager) { _popupManager.unlock(); }
             return response;
         } else {
             if (_popupManager) {
                 _popupManager.unlock();
             }
-            return { success: false, payload: { error: 'No response from iframe' } };
+            return errorMessage(ERRORS.TypedError('Method_NoResponse'));
         }
     } catch (error) {
         _log.error('__call error', error);
-        return error;
+        if (_popupManager) {
+            _popupManager.close();
+        }
+        return errorMessage(error);
     }
 };
 
@@ -228,19 +230,14 @@ export const renderWebUSBButton = (className: ?string): void => {
 
 export const getSettings = async (): $T.Response<$T.ConnectSettings> => {
     if (!iframe.instance) {
-        return { success: false, payload: { error: 'Iframe not initialized yet, you need to call TrezorConnect.init or any other method first.' } };
+        return errorMessage(ERRORS.TypedError('Init_NotInitialized'));
     }
     return await call({ method: 'getSettings' });
 };
 
 export const customMessage: $PropertyType<$T.API, 'customMessage'> = async (params) => {
     if (typeof params.callback !== 'function') {
-        return {
-            success: false,
-            payload: {
-                error: 'Parameter "callback" is not a function',
-            },
-        };
+        return errorMessage(ERRORS.TypedError('Method_CustomMessage_Callback'));
     }
 
     // TODO: set message listener only if iframe is loaded correctly

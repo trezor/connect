@@ -2,7 +2,7 @@
 
 export type Unsuccessful = {
     success: false;
-    payload: { error: string; code?: string | number };
+    payload: { error: string; code?: string };
 };
 
 export type Success<T> = {

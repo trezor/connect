@@ -1,6 +1,7 @@
 /* @flow */
 import * as bitcoin from '@trezor/utxo-lib';
 import * as ecurve from 'ecurve';
+import { ERRORS } from '../constants';
 import type { PublicKey, HDPubNode } from '../types/trezor/protobuf';
 
 const curve = ecurve.getCurveByName('secp256k1');
@@ -13,7 +14,7 @@ const pubNode2bjsNode = (
     const publicKey = Buffer.from(node.public_key, 'hex');
 
     if (curve == null) {
-        throw new Error('secp256k1 is null');
+        throw ERRORS.TypedError('Runtime', 'pubNode2bjsNode: secp256k1 is null');
     }
     const Q = ecurve.Point.decodeFrom(curve, publicKey);
     const res = new bitcoin.HDNode(new bitcoin.ECPair(null, Q, {network: network}), chainCode);
@@ -58,10 +59,7 @@ const pubKey2bjsNode = (
     const bjsXpub: string = bjsNode.toBase58();
     const keyXpub: string = convertXpub(key.xpub, network);
     if (bjsXpub !== keyXpub) {
-        throw new Error('Invalid public key transmission detected - ' +
-                    'invalid xpub check. ' +
-                    'Key: ' + bjsXpub + ', ' +
-                    'Received: ' + keyXpub);
+        throw ERRORS.TypedError('Runtime', `pubKey2bjsNode: Invalid public key transmission detected. Key: ${bjsXpub}, Received: ${keyXpub}`);
     }
 
     return bjsNode;
@@ -77,10 +75,7 @@ const checkDerivation = (
     const compXpub = childBjsNode.toBase58();
 
     if (derivedXpub !== compXpub) {
-        throw new Error('Invalid public key transmission detected - ' +
-                    'invalid child cross-check. ' +
-                    'Computed derived: ' + derivedXpub + ', ' +
-                    'Computed received: ' + compXpub);
+        throw ERRORS.TypedError('Runtime', `checkDerivation: Invalid child cross-check public key. Derived: ${derivedXpub}, Received: ${compXpub}`);
     }
 };
 
