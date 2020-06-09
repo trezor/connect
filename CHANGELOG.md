@@ -1,3 +1,11 @@
+# 8.1.7
+#### Fixed
+- `composeTransaction` missing zcash specific fields (in popup mode)
+- `firmwareUpdate` default download url (data.trezor.io)
+#### Changed
+- Updated dependencies
+- Typed errors
+
 # 8.1.6
 #### Fixed
 - `composeTransaction` sequence flag
