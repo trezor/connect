@@ -33,7 +33,7 @@ export type PassphrasePromptResponse = {
 function assertType(res: DefaultMessageResponse, resType: string) {
     const splitResTypes = resType.split('|');
     if (!(splitResTypes.includes(res.type))) {
-        throw ERRORS.TypedError('Runtime', `Response of unexpected type: ${res.type}. Should be ${resType}`);
+        throw ERRORS.TypedError('Runtime', `assertType: Response of unexpected type: ${res.type}. Should be ${resType}`);
     }
 }
 
@@ -41,7 +41,7 @@ function generateEntropy(len: number): Buffer {
     try {
         return randombytes(len);
     } catch (err) {
-        throw ERRORS.TypedError('Runtime', 'Environment does not support crypto random');
+        throw ERRORS.TypedError('Runtime', 'generateEntropy: Environment does not support crypto random');
     }
 }
 
@@ -631,7 +631,7 @@ export default class DeviceCommands {
 
     async typedCall(type: string, resType: string, msg: Object = {}): Promise<DefaultMessageResponse> {
         if (this.disposed) {
-            throw ERRORS.TypedError('Runtime', 'DeviceCommands already disposed');
+            throw ERRORS.TypedError('Runtime', 'typedCall: DeviceCommands already disposed');
         }
 
         const response: DefaultMessageResponse = await this._commonCall(type, msg);
@@ -760,7 +760,7 @@ export default class DeviceCommands {
             } else {
                 // eslint-disable-next-line no-console
                 console.warn('[DeviceCommands] [call] PIN callback not configured, cancelling request');
-                reject(ERRORS.TypedError('Runtime', 'PIN callback not configured'));
+                reject(ERRORS.TypedError('Runtime', '_promptPin: PIN callback not configured'));
             }
         });
     }
@@ -778,7 +778,7 @@ export default class DeviceCommands {
             } else {
                 // eslint-disable-next-line no-console
                 console.warn('[DeviceCommands] [call] Passphrase callback not configured, cancelling request');
-                reject(ERRORS.TypedError('Runtime', 'Passphrase callback not configured'));
+                reject(ERRORS.TypedError('Runtime', '_promptPassphrase: Passphrase callback not configured'));
             }
         });
     }
