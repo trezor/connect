@@ -17,6 +17,7 @@ export interface Network {
     wif: number;
     dustThreshold: number;
     coin: string;
+    consensusBranchId?: {[key: string]: number};
 }
 
 export interface BlockchainLink {
@@ -54,7 +55,6 @@ export interface BitcoinNetworkInfo extends Common {
     minFeeSatoshiKb: number;
     defaultFees: BitcoinDefaultFees;
     segwit: boolean;
-    consensusBranchId?: {[key: string]: number};
 
     xPubMagic: number;
     xPubMagicSegwitNative?: number;
