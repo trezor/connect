@@ -111,6 +111,7 @@ export type BlockchainAccountBalanceHistory = {
     txs: number;
     received: string;
     sent: string;
+    sentToSelf?: string;
     rates: BlockchainFiatRates;
 };
 
