@@ -114,7 +114,7 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
             // eslint-disable-next-line require-atomic-updates
             instance = null;
         }
-        throw error.message || error;
+        throw error;
     } finally {
         window.clearTimeout(timeout);
         timeout = 0;
