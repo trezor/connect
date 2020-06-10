@@ -23,7 +23,8 @@ export const TransportMessage = (type: string, payload: any): CoreMessage => (
     {
         event: TRANSPORT_EVENT,
         type,
-        payload,
+        // convert Error/TypeError object into payload error type (Error object/class is converted to string while sent via postMessage)
+        payload: payload.error ? { ...payload, error: payload.error.message, code: payload.error.code } : payload,
     }
 );
 
@@ -42,6 +43,7 @@ export const BlockchainMessage: BlockchainMessageBuilder = (type, payload) => (
     {
         event: BLOCKCHAIN_EVENT,
         type,
-        payload,
+        // convert Error/TypeError object into payload error type (Error object/class is converted to string while sent via postMessage)
+        payload: payload.error ? { ...payload, error: payload.error.message, code: payload.error.code } : payload,
     }
 );
