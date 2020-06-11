@@ -27,6 +27,7 @@ export interface BlockchainBlock {
 export interface BlockchainError {
     coin: CoinInfo;
     error: string;
+    code?: string;
 }
 
 export interface BlockchainNotification {
