@@ -29,6 +29,7 @@ export type BlockchainBlock = {
 export type BlockchainError = {
     coin: CoinInfo;
     error: string;
+    code?: string;
 }
 export type BlockchainNotification = {
     coin: CoinInfo;

@@ -71,11 +71,12 @@ export default class Blockchain {
         });
     }
 
-    onError(error: string) {
+    onError(error: ERRORS.TrezorError) {
         this.link.removeAllListeners();
         this.postMessage(BlockchainMessage(BLOCKCHAIN.ERROR, {
             coin: this.coinInfo,
-            error,
+            error: error.message,
+            code: error.code,
         }));
         remove(this); // eslint-disable-line no-use-before-define
     }
@@ -91,17 +92,17 @@ export default class Blockchain {
         });
 
         this.link.on('disconnected', () => {
-            this.onError('Disconnected');
+            this.onError(ERRORS.TypedError('Backend_Disconnected'));
         });
 
         this.link.on('error', error => {
-            this.onError(error.message);
+            this.onError(ERRORS.TypedError('Backend_Error', error.message));
         });
 
         try {
             await this.link.connect();
         } catch (error) {
-            this.onError(error.message);
+            this.onError(ERRORS.TypedError('Backend_Error', error.message));
             throw error;
         }
     }
@@ -244,7 +245,7 @@ export default class Blockchain {
     async disconnect() {
         this.link.removeAllListeners();
         this.link.disconnect();
-        this.onError('Disconnected');
+        this.onError(ERRORS.TypedError('Backend_Disconnected'));
     }
 }
 

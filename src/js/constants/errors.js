@@ -28,6 +28,8 @@ export const ERROR_CODES = {
 
     'Backend_NotSupported': 'BlockchainLink settings not found in coins.json', // thrown by methods which using backends, blockchainLink not defined for this coin
     'Backend_WorkerMissing': '', // thrown by BlockchainLink class, worker not specified
+    'Backend_Disconnected': 'Backend disconnected', // thrown by BlockchainLink class
+    'Backend_Error': '', // thrown by BlockchainLink class, generic message from 'blockchain-link'
 
     'Runtime': '', // thrown from several places, this shouldn't ever happen tho
 
@@ -42,10 +44,10 @@ export const ERROR_CODES = {
 };
 
 export class TrezorError extends Error {
-    code: number | string;
+    code: string;
     message: string;
 
-    constructor(code: number | string, message: string) {
+    constructor(code: string, message: string) {
         super(message);
         this.code = code;
         this.message = message;
