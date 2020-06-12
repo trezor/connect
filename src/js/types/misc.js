@@ -4,6 +4,7 @@ export type CipherKeyValue = {
     path: string | number[];
     key?: string;
     value?: string;
+    encrypt?: boolean;
     askOnEncrypt?: boolean;
     askOnDecrypt?: boolean;
     iv?: string;
