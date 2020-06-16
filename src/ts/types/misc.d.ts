@@ -1,7 +1,7 @@
 export interface CipherKeyValue {
     path: string | number[];
     key?: string;
-    value?: string;
+    value?: string  | Buffer;
     encrypt?: boolean;
     askOnEncrypt?: boolean;
     askOnDecrypt?: boolean;
