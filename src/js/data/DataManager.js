@@ -129,8 +129,8 @@ export default class DataManager {
 
         // parse firmware definitions
         if (this.settings.popup) {
-            // $FlowIssue: temporary remove 2.3.1 FW update from "popup mode" (issue with invalid derivation path control https://github.com/trezor/trezor-firmware/issues/1044)
-            delete this.assets['firmware-t2'][0];
+            // $FlowIssue: temporary remove 2.3.1 (latest) FW update from "popup mode" (issue with invalid derivation path control https://github.com/trezor/trezor-firmware/issues/1044)
+            this.assets['firmware-t2'] = this.assets['firmware-t2'].slice(1);
         }
         parseFirmware(this.assets['firmware-t1'], 1);
         parseFirmware(this.assets['firmware-t2'], 2);
