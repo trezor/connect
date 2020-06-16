@@ -823,12 +823,13 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    async getAccountDescriptor(coinInfo: CoinInfo, indexOrPath: number | Array<number>): Promise<?{ descriptor: string; address_n: number[] }> {
+    async getAccountDescriptor(coinInfo: CoinInfo, indexOrPath: number | Array<number>): Promise<?{ descriptor: string; legacyXpub?: string; address_n: number[] }> {
         const address_n = Array.isArray(indexOrPath) ? indexOrPath : getAccountAddressN(coinInfo, indexOrPath);
         if (coinInfo.type === 'bitcoin') {
             const resp = await this.getHDNode(address_n, coinInfo, false);
             return {
                 descriptor: resp.xpubSegwit || resp.xpub,
+                legacyXpub: resp.xpub,
                 address_n,
             };
         } else if (coinInfo.type === 'ethereum') {
