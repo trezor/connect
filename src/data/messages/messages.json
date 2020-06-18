@@ -756,13 +756,6 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "bool",
-                    "name": "overwintered",
-                    "id": 7
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
                     "type": "uint32",
                     "name": "version_group_id",
                     "id": 8
@@ -1001,13 +994,6 @@
                         {
                             "rule": "optional",
                             "options": {},
-                            "type": "bool",
-                            "name": "overwintered",
-                            "id": 11
-                        },
-                        {
-                            "rule": "optional",
-                            "options": {},
                             "type": "uint32",
                             "name": "version_group_id",
                             "id": 12
@@ -1098,27 +1084,6 @@
                                     "type": "uint32",
                                     "name": "decred_tree",
                                     "id": 9
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "decred_script_version",
-                                    "id": 10
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "bytes",
-                                    "name": "prev_block_hash_bip115",
-                                    "id": 11
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "prev_block_height_bip115",
-                                    "id": 12
                                 }
                             ],
                             "enums": [],
@@ -1200,27 +1165,6 @@
                                     "type": "bytes",
                                     "name": "op_return_data",
                                     "id": 6
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "decred_script_version",
-                                    "id": 7
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "bytes",
-                                    "name": "block_hash_bip115",
-                                    "id": 8
-                                },
-                                {
-                                    "rule": "optional",
-                                    "options": {},
-                                    "type": "uint32",
-                                    "name": "block_height_bip115",
-                                    "id": 9
                                 }
                             ],
                             "enums": [
@@ -1796,6 +1740,10 @@
                         {
                             "name": "ButtonRequest_PassphraseEntry",
                             "id": 19
+                        },
+                        {
+                            "name": "ButtonRequest_PinEntry",
+                            "id": 20
                         }
                     ],
                     "options": {}
@@ -2819,6 +2767,22 @@
                     "options": {},
                     "type": "bool",
                     "name": "format",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "DebugLinkWatchLayout",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "watch",
                     "id": 1
                 }
             ],
@@ -4801,7 +4765,15 @@
             "oneofs": {}
         },
         {
-            "name": "ClearSession",
+            "name": "LockDevice",
+            "fields": [],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EndSession",
             "fields": [],
             "enums": [],
             "messages": [],
@@ -6567,6 +6539,20 @@
                             "type": "uint64",
                             "name": "internal_output_index",
                             "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "sub_addr_major",
+                            "id": 5
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "sub_addr_minor",
+                            "id": 6
                         }
                     ],
                     "enums": [],
@@ -9175,6 +9161,20 @@
                             "type": "bool",
                             "name": "use_sign_count",
                             "id": 10
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "sint32",
+                            "name": "algorithm",
+                            "id": 11
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "sint32",
+                            "name": "curve",
+                            "id": 12
                         }
                     ],
                     "enums": [],
@@ -9346,7 +9346,7 @@
                     "id": 20
                 },
                 {
-                    "name": "MessageType_ClearSession",
+                    "name": "MessageType_LockDevice",
                     "id": 24
                 },
                 {
@@ -9420,6 +9420,10 @@
                 {
                     "name": "MessageType_ChangeWipeCode",
                     "id": 82
+                },
+                {
+                    "name": "MessageType_EndSession",
+                    "id": 83
                 },
                 {
                     "name": "MessageType_Deprecated_PassphraseStateRequest",
@@ -9580,6 +9584,10 @@
                 {
                     "name": "MessageType_DebugLinkEraseSdCard",
                     "id": 9005
+                },
+                {
+                    "name": "MessageType_DebugLinkWatchLayout",
+                    "id": 9006
                 },
                 {
                     "name": "MessageType_EthereumGetPublicKey",
