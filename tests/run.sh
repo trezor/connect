@@ -1,3 +1,6 @@
+#!/bin/bash
+
+set -e
 
 function cleanup {
   echo "cleanup"
