@@ -36,9 +36,7 @@ until [ $i -eq $retry ]; do
       -p 9001:9001 \
       -p 21324:21324 \
       -p 21325:21325 \
-      mroz22/trezor-user-env \
-      bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
-    
+      mroz22/trezor-user-env:beta
     yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --runInBand --bail
   else
     xhost +
@@ -51,8 +49,7 @@ until [ $i -eq $retry ]; do
       -p 9001:9001 \
       -p 21324:21324 \
       -p 21325:21325 \
-      mroz22/trezor-user-env \
-      bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
+      mroz22/trezor-user-env:beta
       # todo: all this bash -c part should be moved to COMMAND or ENTRYPOINT command in docker
       yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --runInBand --bail
   fi

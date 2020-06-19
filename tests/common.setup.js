@@ -10,30 +10,29 @@ const MNEMONICS = {
 const setup = async (controller, options) => {
     try {
         await controller.connect();
+        // after bridge is stopped, trezor-user-env automatically resolves to use udp transport.
+        // this is actually good as we avoid possible race conditions when setting up emulator for 
+        // the test using the same transport         
+        await controller.send({ type: 'bridge-stop' });
+        await controller.send({ type: 'emulator-start', version: '2.3.0', wipe: true });
+        const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
+        await controller.send({
+            type: 'emulator-setup',
+            mnemonic,
+            pin: options.pin || '',
+            passphrase_protection: false,
+            label: options.label || 'TrezorT',
+            needs_backup: false,
+            options,
+        });
+        // after all is done, start bridge again (connect can't use udp transport)
         await controller.send({ type: 'bridge-start' });
-        await controller.send({ type: 'emulator-start', version: '2.2.0' });
-
-        if (options.wipe) {
-            await controller.send({ type: 'emulator-wipe' });
-        } else {
-            const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
-            await controller.send({
-                type: 'emulator-setup',
-                mnemonic,
-                pin: options.pin || '',
-                passphrase_protection: false,
-                label: options.label || 'TrezorT',
-                backup: false,
-                options,
-            });
-        }
     } catch (err) {
         // this means that something in trezor-user-env got wrong.
         console.log(err);
         process.exit(1)
     }   
 };
-
   
 const initTrezorConnect = async (controller, options) => {
     const onUiRequestConfirmation = () => {
