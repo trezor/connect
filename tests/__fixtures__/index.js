@@ -13,6 +13,9 @@ import cardanoSignTransaction from './cardanoSignTransaction';
 import eosGetPublicKey from './eosGetPublicKey';
 import eosSignTransaction from './eosSignTransaction';
 import ethereumGetAddress from './ethereumGetAddress';
+import ethereumGetPublicKey from './ethereumGetPublicKey';
+import ethereumSignMessage from './ethereumSignMessage';
+import ethereumSignTransaction from './ethereumSignTransaction';
 
 const fixtures = [
     applyFlags,
@@ -31,9 +34,9 @@ const fixtures = [
     eosGetPublicKey,
     eosSignTransaction,
     ethereumGetAddress,
-    // // EthereumGetPublicKey.js
-    // // EthereumSignMessage.js
-    // // EthereumSignTransaction.js
+    ethereumGetPublicKey,
+    ethereumSignMessage,
+    ethereumSignTransaction,
     // // EthereumVerifyMessage.js
     // // FirmwareUpdate.js
     // // GetAccountInfo.js
