@@ -12,24 +12,25 @@ import cardanoGetPublicKey from './cardanoGetPublicKey';
 import cardanoSignTransaction from './cardanoSignTransaction';
 import eosGetPublicKey from './eosGetPublicKey';
 import eosSignTransaction from './eosSignTransaction';
+import ethereumGetAddress from './ethereumGetAddress';
 
 const fixtures = [
     applyFlags,
     applySettings,
-        // // BackupDevice.js
-    // // BinanceGetAddress.js
-    // // BinanceGetPublicKey.js
+    // todo: missing fixtures: BackupDevice.js
+    // todo: missing fixtures: BinanceGetAddress.js
+    // todo: missing fixtures: BinanceGetPublicKey.js
     binanceSignTransaction,
     cardanoGetAddress,
     cardanoGetPublicKey,
     cardanoSignTransaction,
-        // // ChangePin.js
-        // // CipherKeyValue.js
-        // // ComposeTransaction.js
-        // // CustomMessage.js
+    // todo: missing fixtures: ChangePin.js
+    // todo: missing fixtures: CipherKeyValue.js
+    // todo: missing fixtures: ComposeTransaction.js
+    // todo: missing fixtures: CustomMessage.js
     eosGetPublicKey,
     eosSignTransaction,
-    // // EthereumGetAddress.js
+    ethereumGetAddress,
     // // EthereumGetPublicKey.js
     // // EthereumSignMessage.js
     // // EthereumSignTransaction.js
@@ -64,7 +65,7 @@ const fixtures = [
     // // TezosSignTransaction.js
     // // VerifyMessage.js
     // wipeDevice, // some error, will solve later
-    // // resetDevice, // socket hangup, what? fix
+    // // // resetDevice, // socket hangup, what? fix
 ].sort((a,b) => (a.setup.mnemonic > b.setup.mnemonic) ? 1 : ((b.setup.mnemonic > a.setup.mnemonic) ? -1 : 0)); 
 
 export default fixtures;
