@@ -13,7 +13,7 @@ import cardanoSignTransaction from './cardanoSignTransaction';
 import eosGetPublicKey from './eosGetPublicKey';
 import eosSignTransaction from './eosSignTransaction';
 
-export default [
+const fixtures = [
     applyFlags,
     applySettings,
         // // BackupDevice.js
@@ -65,4 +65,6 @@ export default [
     // // VerifyMessage.js
     // wipeDevice, // some error, will solve later
     // // resetDevice, // socket hangup, what? fix
-];
+].sort((a,b) => (a.setup.mnemonic > b.setup.mnemonic) ? 1 : ((b.setup.mnemonic > a.setup.mnemonic) ? -1 : 0)); 
+
+export default fixtures;
