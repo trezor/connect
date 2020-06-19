@@ -1,7 +1,7 @@
 export default {
     method: 'ethereumGetPublicKey',
     setup: {
-        mnemonic: 'mnemonic_all',
+        mnemonic: 'mnemonic_12',
     },
     tests: [
         {
