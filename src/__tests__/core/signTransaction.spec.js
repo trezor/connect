@@ -437,7 +437,7 @@ const spendCoinbase = () => {
 };
 
 const twoChanges = () => {
-    // tx e5040e1bc1ae7667ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd
+    // tx e5040e1bc1ae766v7ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd
     const testPayloads: SignTransaction[] = [
         {
             method: 'signTransaction',

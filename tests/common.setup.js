@@ -5,6 +5,7 @@ const MNEMONICS = {
     'mnemonic_all': 'all all all all all all all all all all all all',
     'mnemonic_12': 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
     'mnemonic_abandon': 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
+    // 'mnemonic_illness': 'illness spike retreat truth genius clock brain pass fit cave bargain toe',
 };
 
 const setup = async (controller, options) => {
@@ -30,7 +31,7 @@ const setup = async (controller, options) => {
     } catch (err) {
         // this means that something in trezor-user-env got wrong.
         console.log(err);
-        process.exit(1)
+        // process.exit(1)
     }   
 };
   

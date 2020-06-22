@@ -28,15 +28,6 @@ export default {
                 path: "m/44'/60'/0'/0/0",
             },
             result: {
-                publicKey: '',
-            },
-        },
-        {
-            description: "m/44'/1815'/0'/0/0",
-            params: {
-                path: "m/44'/1815'/0'/0/0",
-            },
-            result: {
                 xpub: 'xpub6GBpXvAiKQnvjHgC5qSoM3mJs4BGaRHeq8AYUf3bTyEyNx1fwhrDaX17wSwTzyjrbz2N85RLeJZqVsEJtGhsXZNJT7yMZ4mEs5T41jhg8U7',
             },
         },
