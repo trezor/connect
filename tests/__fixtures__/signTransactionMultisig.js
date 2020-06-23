@@ -1,3 +1,13 @@
+const pubkeys = [];
+
+for (let i = 0; i < 15; i++) {
+    pubkeys.push(
+        {
+            node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
+            address_n: [i],
+        },
+    );
+}
 
 export default {
     method: 'signTransaction',
@@ -150,12 +160,7 @@ export default {
                         prev_index: 1,
                         script_type: 'SPENDMULTISIG',
                         multisig: {
-                            pubkeys: [...Array(15)].map((_el, i) => (
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [i],
-                                }
-                            )),
+                            pubkeys,
                             signatures: [
                                 '304502210098e23085ad7282de988bf98afa1e9add9c9830009132f8902a9fa4624d5dc98b0220733216e70ab67791aa64be5c83d2050cb4ed9ff7eda2a1acc35da024d2ab2a67',
                                 '304402201f8c11fb6e90fd616e484986e9451929797eba039882a9abcc203210948060b9022044da031530de7d9747d3c5a8e7cec04b04b7af495c9120b854ce7362af7fa05a',

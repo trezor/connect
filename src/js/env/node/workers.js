@@ -11,13 +11,14 @@ export const ReactNativeUsbPlugin: TransportWrapper | typeof undefined = undefin
 export const BlockbookWorker = () => {
     return new TinyWorker(() => {
         // $FlowIssue
-        require('@trezor/blockchain-link/build/node/blockbook-worker');
+        require('@trezor/blockchain-link/lib/workers/blockbook');
+        // require('@trezor/blockchain-link/build/node/blockbook-worker');
     });
 };
 
 export const RippleWorker = () => {
     return new TinyWorker(() => {
-        // $FlowIssue
-        require('@trezor/blockchain-link/build/node/ripple-worker');
+        // $FlowIssue todo: node build for ripple worker seems to be broken. as a workaround require lib
+        require('@trezor/blockchain-link/lib/workers/ripple');
     });
 };

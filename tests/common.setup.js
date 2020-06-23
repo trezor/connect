@@ -1,11 +1,13 @@
 import { Controller } from './websocket-client';
 import TrezorConnect, { UI } from '../src/js/index';
 
+// todo: maybe we should test build..
+// import TrezorConnect, { UI } from '../npm-extended';
+
 const MNEMONICS = {
     'mnemonic_all': 'all all all all all all all all all all all all',
     'mnemonic_12': 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
     'mnemonic_abandon': 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
-    // 'mnemonic_illness': 'illness spike retreat truth genius clock brain pass fit cave bargain toe',
 };
 
 const setup = async (controller, options) => {

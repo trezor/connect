@@ -76,7 +76,7 @@ const fixtures = [
     ethereumVerifyMessage,
     // todo: probably no way todo: FirmwareUpdate.js
     // todo: ripple worker problem
-    // getAccountInfo,
+    getAccountInfo,
     getAddress,
     getAddressMultisig,
     getAddressSegwit,

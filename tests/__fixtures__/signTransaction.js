@@ -1,3 +1,19 @@
+const outputs = [];
+    const total: number = 255;
+    for (let i = 0; i < total; i++) {
+        const output = {
+            address: '1NwN6UduuVkJi6sw3gSiKZaCY5rHgVXC2h',
+            amount: Math.floor((100000 + 2540000 - 39000) / total).toString(),
+            script_type: 'PAYTOADDRESS',
+        };
+
+        outputs.push(output);
+    }
+
+    let serializedTx = '0100000002fb792f470a58993e14964c9bd46cdf37cb4bbc3f61540cb651580c82ed243ec6010000006b483045022100969da46f94a81f34f3717b014e0c3e1826eda1b0022ec2f9ce39f3d750ab9235022026da269770993211a1503413566a339bbb4389a482fffcf8e1f76713fc3b94f5012103477b9f0f34ae85434ce795f0c5e1e90c9420e5b5fad084d7cce9a487b94a7902ffffffffe56582d2119100cb1d3da8232291e053f71e25fb669c87b32a667749959ea239010000006a473044022052e1419bb237b9db400ab5e3df16db6355619d545fde9030924a360763ae9ad40220704beab04d72ecaeb42eca7d98faca7a0941e65f2e1341f183be2b83e6b09e1c012103477b9f0f34ae85434ce795f0c5e1e90c9420e5b5fad084d7cce9a487b94a7902fffffffffdff00';
+    serializedTx = serializedTx + 'd8270000000000001976a914f0a2b64e56ee2ff57126232f84af6e3a41d4055088ac'.repeat(total);
+    serializedTx = serializedTx + '00000000';
+
 export default {
     method: 'signTransaction',
     setup: {
@@ -180,10 +196,8 @@ export default {
             },
         },
         {
-        // Tests if device implements serialization of len(outputs) correctly
-        // See tx c63e24ed820c5851b60c54613fbc4bcb37df6cd49b4c96143e99580a472f79fb
-        // See tx 39a29e954977662ab3879c66fb251ef753e0912223a83d1dcb009111d28265e5
-            description: 'testnet fee too high',
+          // See tx 6f90f3c7cbec2258b0971056ef3fe34128dbde30daa9c0639a898f9977299d54
+          description: 'testnet fee too high',
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -210,8 +224,10 @@ export default {
                 serializedTx: '0100000001549d2977998f899a63c0a9da30dedb2841e33fef561097b05822eccbc7f3906f010000006b483045022100eadd720201416e059d663fbb05bb9e87e56d11a6ce53f8da1ca8278d5beb07f102202b3d0318812ec2ec40d12bf36bafa5ee24b81208f08690c7ed89e47740e018cb0121023230848585885f63803a0a8aecdd6538792d5c539215c91698e315bf0253b43dffffffff02801a0600000000001976a9140223b1a09138753c9cb0baf95a0a62c82711567a88ac0065cd1d000000001976a9142db345c36563122e2fd0f5485fb7ea9bbf7cb5a288ac00000000',
             },
         },
-        // todo: 
         {
+            // Tests if device implements serialization of len(outputs) correctly
+            // See tx c63e24ed820c5851b60c54613fbc4bcb37df6cd49b4c96143e99580a472f79fb
+            // See tx 39a29e954977662ab3879c66fb251ef753e0912223a83d1dcb009111d28265e5
             description: '2 inputs, 255 outputs',
             customTimeout: 500000,
             params: {
@@ -227,23 +243,16 @@ export default {
                         prev_index: 1,
                     },
                 ],
-                outputs: [...Array(255)].map(_el => {
-                    return {
-                        address: '1NwN6UduuVkJi6sw3gSiKZaCY5rHgVXC2h',
-                        amount: Math.floor((100000 + 2540000 - 39000) / 255).toString(),
-                        script_type: 'PAYTOADDRESS',
-                    }
-                }),
+                outputs,
                 coin: 'btc',
             },
             result: {
-                serializedTx: '0100000002fb792f470a58993e14964c9bd46cdf37cb4bbc3f61540cb651580c82ed243ec6010000006b483045022100969da46f94a81f34f3717b014e0c3e1826eda1b0022ec2f9ce39f3d750ab9235022026da269770993211a1503413566a339bbb4389a482fffcf8e1f76713fc3b94f5012103477b9f0f34ae85434ce795f0c5e1e90c9420e5b5fad084d7cce9a487b94a7902ffffffffe56582d2119100cb1d3da8232291e053f71e25fb669c87b32a667749959ea239010000006a473044022052e1419bb237b9db400ab5e3df16db6355619d545fde9030924a360763ae9ad40220704beab04d72ecaeb42eca7d98faca7a0941e65f2e1341f183be2b83e6b09e1c012103477b9f0f34ae85434ce795f0c5e1e90c9420e5b5fad084d7cce9a487b94a7902fffffffffdff00' + 'd8270000000000001976a914f0a2b64e56ee2ff57126232f84af6e3a41d4055088ac'.repeat(255) + '00000000',
+                serializedTx,
             },
         },
         {
             // See tx 1570416eb4302cf52979afd5e6909e37d8fdd874301f7cc87e547e509cb1caa6
             description: 'fee too high',
-            customTimeout: 500000,
             params: {
                 coin: 'Bitcoin',
                 inputs: [
@@ -315,7 +324,6 @@ export default {
         {
             // tx e5040e1bc1ae766v7ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd
             description: 'two changes',
-            customTimeout: 500000,
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -352,7 +360,6 @@ export default {
         },
         {
             description: 'p2sh',
-            customTimeout: 500000,
             params: {
                 coin: 'Bitcoin',
                 inputs: [
@@ -376,7 +383,6 @@ export default {
         },
         {
             description: 'change on mainchain allowed',
-            customTimeout: 500000,
             params: {
                 coin: 'Testnet',
                 inputs: [

@@ -32,7 +32,6 @@ export default {
             // See https://zec1.trezor.io/tx/e5229ae8c02f74af5e0c2100371710424fa85902c29752498c39921de2246824
             description: "sign 2 inputs v1",
             params: {
-                coin: 'Testnet',
                 coin: 'Zcash',
                 inputs: [
                     {

@@ -95,7 +95,7 @@ export default {
             description: "ripple from descriptor",
             params: {
                 coin: 'xrp',
-                path: "rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj",
+                descriptor: "rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj",
             },
             result: {
                 descriptor: 'rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj',
