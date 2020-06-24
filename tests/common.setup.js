@@ -10,6 +10,8 @@ const MNEMONICS = {
     'mnemonic_abandon': 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
 };
 
+const FIRMWARE = process.env.TESTS_FIRMWARE || '2.3.0';
+console.log(FIRMWARE);
 const setup = async (controller, options) => {
     try {
         await controller.connect();
@@ -17,7 +19,7 @@ const setup = async (controller, options) => {
         // this is actually good as we avoid possible race conditions when setting up emulator for 
         // the test using the same transport         
         await controller.send({ type: 'bridge-stop' });
-        await controller.send({ type: 'emulator-start', version: '2.3.0', wipe: true });
+        await controller.send({ type: 'emulator-start', version: FIRMWARE, wipe: true });
         const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
         await controller.send({
             type: 'emulator-setup',

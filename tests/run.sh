@@ -15,33 +15,71 @@ function cleanup {
 
 trap cleanup EXIT
 
-echo "to run in ci use './run.sh ci'"
+run() {
+  if [ $1 = false ]
+  then
+    docker run --rm -d \
+      --name connect-tests \
+      -e SDL_VIDEODRIVER="dummy" \
+      -p 9001:9001 \
+      -p 21324:21324 \
+      -p 21325:21325 \
+      mroz22/trezor-user-env:beta
+  else
+    xhost +
+    docker run --rm -d \
+      --name connect-tests \
+      --ipc host \
+      -e DISPLAY=$DISPLAY \
+      -e QT_X11_NO_MITSHM=1 \
+      -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+      -p 9001:9001 \
+      -p 21324:21324 \
+      -p 21325:21325 \
+      mroz22/trezor-user-env:beta
+  fi
+  yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --runInBand --bail
+  cleanup
+}
 
-if [ "$1" = "ci" ]
-then
-  docker run --rm -d \
-    --name connect-tests \
-    -e SDL_VIDEODRIVER="dummy" \
-    -p 9001:9001 \
-    -p 21324:21324 \
-    -p 21325:21325 \
-    # docker_trezor-user-env
-    mroz22/trezor-user-env:beta
-else
-  xhost +
-  docker run --rm -d \
-    --name connect-tests \
-    --ipc host \
-    -e DISPLAY=$DISPLAY \
-    -e QT_X11_NO_MITSHM=1 \
-    -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
-    -p 9001:9001 \
-    -p 21324:21324 \
-    -p 21325:21325 \
-    # docker_trezor-user-env
-    mroz22/trezor-user-env:beta
-fi
+show_usage() {
+    echo "Usage: run [OPTIONS] [ARGS]"
+    echo ""
+    echo "Options:"
+    echo "  -t \"<,TEST_NAME/SUBTEST_NAME>\"      Run specified tests/subtest"
+    echo "  -x \"<,TEST_NAME>\"                   Run all but specified tests"
+}
 
-yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --runInBand --bail
+# Show help if no option provided
+if [ $# -eq 0 ]; then
+    show_usage
+fi;
 
-cleanup
+firmware=''
+gui_output=false
+
+OPTIND=1
+while getopts ":f:h:g" opt; do
+    case $opt in
+        g) # GUI output
+            gui_output=true
+        ;;
+        f) # Firmware version
+            echo "f"
+            echo $OPTARG
+            firmware=$OPTARG
+        ;;
+        h) # Script usage
+            show_usage
+        ;;
+        \?)
+            echo "invalid option" $OPTARG
+            exit 1
+        ;;
+    esac
+done
+shift $((OPTIND-1))
+
+export TESTS_FIRMWARE=$firmware
+
+run $gui_output
