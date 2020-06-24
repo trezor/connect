@@ -26,6 +26,7 @@ module.exports = {
     //     "/node_modules/",
     //     "/__tests__/",
     //     "/__fixtures__/",
+    //     "/tiny-worker/"
     // ],
     // collectCoverageFrom: [
     //     "./src/js/**/*.{js}",
