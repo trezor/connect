@@ -25,6 +25,7 @@ then
     -p 9001:9001 \
     -p 21324:21324 \
     -p 21325:21325 \
+    # docker_trezor-user-env
     mroz22/trezor-user-env:beta
 else
   xhost +
@@ -37,6 +38,7 @@ else
     -p 9001:9001 \
     -p 21324:21324 \
     -p 21325:21325 \
+    # docker_trezor-user-env
     mroz22/trezor-user-env:beta
 fi
 
