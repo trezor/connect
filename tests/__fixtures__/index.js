@@ -53,7 +53,7 @@ import verifyMessage from './verifyMessage';
 import verifyMessageSegwit from './verifyMessageSegwit';
 import verifyMessageSegwitNative from './verifyMessageSegwitNative';
 
-const fixtures = [
+let fixtures = [
     applyFlags,
     applySettings,
     // todo: missing fixtures: BackupDevice.js
@@ -124,6 +124,51 @@ const fixtures = [
     verifyMessageSegwitNative
     // todo: wipeDevice,
     // todo: resetDevice,
-].sort((a,b) => (a.setup.mnemonic > b.setup.mnemonic) ? 1 : ((b.setup.mnemonic > a.setup.mnemonic) ? -1 : 0)); 
+];
+
+// if env variable TESTS_FIRMWARE, filter out those tests that do not match it
+const firmware = process.env.TESTS_FIRMWARE;
+if (firmware) {
+    const [actualMajor, actualMinor, actualPatch] = firmware.split('.');
+    fixtures = fixtures.map(f => {
+        f.tests = f.tests.filter(t => {
+            if (!t.setup || !t.setup.firmware) {
+                return true; 
+            }
+            return t.setup.firmware.some(firmware => {
+                const [fromMajor, fromMinor, fromPatch] = firmware[0].split('.');
+                const [toMajor, toMinor, toPatch] = firmware[1].split('.');
+                return (
+                    actualMajor >= fromMajor &&
+                    actualMinor >= fromMinor &&
+                    actualPatch >= fromPatch &&
+                    actualMajor <= toMajor &&
+                    actualMinor <= toMinor &&
+                    actualPatch <= toPatch
+                )
+            })
+        });
+        return f;
+    })
+    
+}
+
+const includedMethods = process.env.TESTS_INCLUDED_METHODS;
+const excludedMethods = process.env.TESTS_EXCLUDED_METHODS;
+if (includedMethods) {
+    const methodsArr = includedMethods.split(',');
+    fixtures = fixtures.filter(f => {
+        return methodsArr.some(includedM => includedM === f.method);
+    });
+    
+} else if (excludedMethods) {
+    const methodsArr = excludedMethods.split(',');
+    fixtures = fixtures.filter(f => {
+        return !methodsArr.includes(f.method);
+    });
+}
+
+// sort by mnemonic to avoid emu re-loading
+fixtures = fixtures.sort((a,b) => (a.setup.mnemonic > b.setup.mnemonic) ? 1 : ((b.setup.mnemonic > a.setup.mnemonic) ? -1 : 0)); 
 
 export default fixtures;

@@ -4,61 +4,69 @@ export default {
         mnemonic: 'mnemonic_all',
     },
     tests: [
-        // // todo: currently disabled, stopped working (expected) with fw 2.3.0
-        // // todo: add firmware ranges filtering into fixtures
-        // {
-        //     // See https://zec1.trezor.io/tx/0f762a2da5252d684fb3510a3104bcfb556fab34583b3b0e1994d0f7409cc075
-        //     description: "sign input v2",
-        //     params: {
-        //         coin: 'Zcash',
-        //         inputs: [
-        //             {
-        //                 address_n: [2147483692, 2147483781, 2147483648, 0, 0],
-        //                 prev_hash: '29d25589db4623d1a33c58745b8f95b131f49841c79dcd171847d0d7e9e2dc3a',
-        //                 prev_index: 0,
-        //             },
-        //         ],
-        //         outputs: [
-        //             {
-        //                 address: 't1N5zTV5PjJqRgSPmszHopk88Nc6mvMBSD7',
-        //                 amount: '72200',
-        //                 script_type: 'PAYTOADDRESS',
-        //             },
-        //         ],
-        //     },
-        //     result: {
-        //         serializedTx: '01000000013adce2e9d7d0471817cd9dc74198f431b1958f5b74583ca3d12346db8955d229000000006b483045022100f36da2fba65831c24bae2264892d914abdf65ee747ba9e8deeaeb13d1c72b03102200b8ecb59698dbe90f8cfe529a6d05c8b7fa2f31a2f5a7a1b993700a20d04d63a0121022f5c53b6d2e1b64c37d85716dbef318bd398ad7d2a03d94960af060402380658ffffffff01081a0100000000001976a9142e383c56fe3df202792e6f4460c8056b6a4d5b3488ac00000000',
-        //     }
-        // },
-        // {
-        //     // See https://zec1.trezor.io/tx/e5229ae8c02f74af5e0c2100371710424fa85902c29752498c39921de2246824
-        //     description: "sign 2 inputs v1",
-        //     params: {
-        //         coin: 'Zcash',
-        //         inputs: [
-        //             {
-        //                 address_n: [2147483692, 2147483781, 2147483648, 0, 2],
-        //                 prev_hash: '84533aa6244bcee68040d851dc4f502838ed3fd9ce838e2e48dbf440e7f4df2a',
-        //                 prev_index: 0,
-        //             },
-        //             {
-        //                 address_n: [2147483692, 2147483781, 2147483648, 1, 0],
-        //                 prev_hash: '84533aa6244bcee68040d851dc4f502838ed3fd9ce838e2e48dbf440e7f4df2a',
-        //                 prev_index: 1,
-        //             },
-        //         ],
-        //         outputs: [
-        //             {
-        //                 address: 't1Xin4H451oBDwrKcQeY1VGgMWivLs2hhuR',
-        //                 amount: '10212',
-        //                 script_type: 'PAYTOADDRESS',
-        //             },
-        //         ],
-        //     },
-        //     result: {
-        //         serializedTx: '01000000022adff4e740f4db482e8e83ced93fed3828504fdc51d84080e6ce4b24a63a5384000000006a473044022066a25c3b0fe18b17327f6080d9e5a26a880cf6ae6c47ff9b7bf9f8a59ab36814022065e4abcdff6f84311ac120b689e5a69db80312446731ab8fe1b3026e29c11ede0121032fd3a554fc321693de4b7cf66649da7726c4d0d3849a7b947774e04d54e38f91ffffffff2adff4e740f4db482e8e83ced93fed3828504fdc51d84080e6ce4b24a63a5384010000006a473044022009fb8f5c4a3ad7960f64a573084b7dec2b73bbe7044328ff05cb6106153014ef022035ab922f75a7c0ff07acd7e99b2469551ce7ff5b830c102d38d175bf3fa8ab74012102a1eb5e72ebdf2a6650593167a4c8391d9a37c2df19e1034fd0e4dc5b525696e9ffffffff01e4270000000000001976a91497e66840d01e615bdcea4a39a1b3afd0a27e6b0188ac00000000',
-        //     },
-        // },
+        {
+            // See https://zec1.trezor.io/tx/0f762a2da5252d684fb3510a3104bcfb556fab34583b3b0e1994d0f7409cc075
+            description: "sign input v2",
+            setup: {
+                firmware: [
+                    ['2.0.0', '2.1.8'],
+                ],
+            },
+            params: {
+                coin: 'Zcash',
+                inputs: [
+                    {
+                        address_n: [2147483692, 2147483781, 2147483648, 0, 0],
+                        prev_hash: '29d25589db4623d1a33c58745b8f95b131f49841c79dcd171847d0d7e9e2dc3a',
+                        prev_index: 0,
+                    },
+                ],
+                outputs: [
+                    {
+                        address: 't1N5zTV5PjJqRgSPmszHopk88Nc6mvMBSD7',
+                        amount: '72200',
+                        script_type: 'PAYTOADDRESS',
+                    },
+                ],
+            },
+            result: {
+                serializedTx: '01000000013adce2e9d7d0471817cd9dc74198f431b1958f5b74583ca3d12346db8955d229000000006b483045022100f36da2fba65831c24bae2264892d914abdf65ee747ba9e8deeaeb13d1c72b03102200b8ecb59698dbe90f8cfe529a6d05c8b7fa2f31a2f5a7a1b993700a20d04d63a0121022f5c53b6d2e1b64c37d85716dbef318bd398ad7d2a03d94960af060402380658ffffffff01081a0100000000001976a9142e383c56fe3df202792e6f4460c8056b6a4d5b3488ac00000000',
+            }
+        },
+        {
+            // See https://zec1.trezor.io/tx/e5229ae8c02f74af5e0c2100371710424fa85902c29752498c39921de2246824
+            description: "sign 2 inputs v1",
+            setup: {
+                firmware: [
+                    ['2.0.0', '2.1.8'],
+                ],
+            },
+            params: {
+                coin: 'Zcash',
+                inputs: [
+                    {
+                        address_n: [2147483692, 2147483781, 2147483648, 0, 2],
+                        prev_hash: '84533aa6244bcee68040d851dc4f502838ed3fd9ce838e2e48dbf440e7f4df2a',
+                        prev_index: 0,
+                    },
+                    {
+                        address_n: [2147483692, 2147483781, 2147483648, 1, 0],
+                        prev_hash: '84533aa6244bcee68040d851dc4f502838ed3fd9ce838e2e48dbf440e7f4df2a',
+                        prev_index: 1,
+                    },
+                ],
+                outputs: [
+                    {
+                        address: 't1Xin4H451oBDwrKcQeY1VGgMWivLs2hhuR',
+                        amount: '10212',
+                        script_type: 'PAYTOADDRESS',
+                    },
+                ],
+            },
+            result: {
+                serializedTx: '01000000022adff4e740f4db482e8e83ced93fed3828504fdc51d84080e6ce4b24a63a5384000000006a473044022066a25c3b0fe18b17327f6080d9e5a26a880cf6ae6c47ff9b7bf9f8a59ab36814022065e4abcdff6f84311ac120b689e5a69db80312446731ab8fe1b3026e29c11ede0121032fd3a554fc321693de4b7cf66649da7726c4d0d3849a7b947774e04d54e38f91ffffffff2adff4e740f4db482e8e83ced93fed3828504fdc51d84080e6ce4b24a63a5384010000006a473044022009fb8f5c4a3ad7960f64a573084b7dec2b73bbe7044328ff05cb6106153014ef022035ab922f75a7c0ff07acd7e99b2469551ce7ff5b830c102d38d175bf3fa8ab74012102a1eb5e72ebdf2a6650593167a4c8391d9a37c2df19e1034fd0e4dc5b525696e9ffffffff01e4270000000000001976a91497e66840d01e615bdcea4a39a1b3afd0a27e6b0188ac00000000',
+            },
+        },
         {
             // NOTE: this is not a valid transaction
             // Inputs from https://zec1.trezor.io/tx/e2802f0118d9f41f68b65f2b9f4a7c2efc876aee4e8c4b48c4a4deef6b7c0c28

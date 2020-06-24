@@ -5,22 +5,20 @@ build: trusty
 node_js:
   - "12.14.1"
 
-script:
-  - npm install -g yarn
-  - yarn
-  - yarn flow
-  - yarn lint
-  - yarn test:unit
-  - make build-connect
-  - travis_wait 30 ./tests/run.sh -f 2.3.0
+env:
+  - TESTS_METHODS=applySettings,applyFlags,getFeatures
+  - TESTS_METHODS=cardanoGetAddress,cardanoGetPublicKey,cardanoSignTransaction
+  - TESTS_METHODS=eosGetPublicKey,eosSignTransaction
+  - TESTS_METHODS=ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage
+  - TESTS_METHODS=getAccountInfo,getAddress,getPublicKey,signMessage,signTransaction,verifyMessage
+  - TESTS_METHODS=liskGetAddress,liskSignMessage,liskSignTransaction,liskVerifyMessage
+  - TESTS_METHODS=nemGetAddress,nemSignTransaction
+  - TESTS_METHODS=rippleGetAddress,rippleSignTransaction
+  - TESTS_METHODS=stellarGetAddress,stellarSignTransaction
+  - TESTS_METHODS=tezosGetAddress,tezosGetPublicKey
+  - TESTS_METHODS=binanceSignTransaction
 
-notifications:
-  webhooks:
-    urls:
-      - http://ci-bot.satoshilabs.com:5000/travis
-    on_success: always
-    on_failure: always
-    on_start: always
+script: travis_wait 30 ./tests/run.sh -f 2.3.0 -i ${TESTS_METHOD}
 
 services:
   - docker

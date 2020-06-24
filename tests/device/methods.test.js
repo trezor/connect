@@ -36,13 +36,6 @@ fixtures.forEach((testCase, i) => {
 
         afterAll(async (done) => {
             TrezorConnect.dispose();
-            if (controller) {
-                // there is no need to enable/disable env between tests
-                // await controller.send({ type: 'bridge-stop' });
-                // await controller.send({ type: 'emulator-stop' });
-                // await controller.disconnect();
-                // controller = undefined;
-            }
             done();
         });
 

@@ -20,16 +20,22 @@ module.exports = {
     transform: {
         '^.+\\.js$': 'babel-jest',
     },
-    // collectCoverage: true,
-    // coverageDirectory: './coverage/',
-    // coveragePathIgnorePatterns: [
-    //     "/node_modules/",
-    //     "/__tests__/",
-    //     "/__fixtures__/",
-    //     "/tiny-worker/"
-    // ],
-    // collectCoverageFrom: [
-    //     "./src/js/**/*.{js}",
-    //     "!**/node_modules/**",
-    // ]
+    collectCoverage: true,
+    coverageDirectory: './coverage/',
+    coveragePathIgnorePatterns: [
+        "/node_modules/",
+        "/__tests__/",
+        "/__fixtures__/",
+        "/src/js/env/",
+        "/src/js/iframe/",
+        "/src/js/popup/",
+        "/src/js/storage/",
+        "/src/js/types/",
+        "/src/js/webusb/",
+        "/src/js/plugins/",
+    ],
+    collectCoverageFrom: [
+        "./src/js/**/*.{js}",
+        "!**/node_modules/**",
+    ]
 };

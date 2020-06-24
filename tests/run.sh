@@ -1,16 +1,17 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 function cleanup {
   echo "cleanup"
   
   # stop trezor-env container
   id=$(docker ps -aqf "name=connect-tests")
-  echo "docker container id:"
+  echo "stopping container..."
   echo $id
   # show logs from container if exit conde !==0
   [ $id ] && docker stop $id
+  [ $id ] && echo "stopped"
 }
 
 trap cleanup EXIT
@@ -24,7 +25,7 @@ run() {
       -p 9001:9001 \
       -p 21324:21324 \
       -p 21325:21325 \
-      mroz22/trezor-user-env:beta
+      mroz22/trezor-user-env:501
   else
     xhost +
     docker run --rm -d \
@@ -36,38 +37,41 @@ run() {
       -p 9001:9001 \
       -p 21324:21324 \
       -p 21325:21325 \
-      mroz22/trezor-user-env:beta
+      mroz22/trezor-user-env:501
   fi
   yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --runInBand --bail
-  cleanup
+  exit 0
 }
 
 show_usage() {
     echo "Usage: run [OPTIONS] [ARGS]"
     echo ""
     echo "Options:"
-    echo "  -t \"<,TEST_NAME/SUBTEST_NAME>\"      Run specified tests/subtest"
-    echo "  -x \"<,TEST_NAME>\"                   Run all but specified tests"
+    echo "  -g       Run tests with emulator graphical output"                                                           
+    echo "  -f       Use specific firmware version, for example: 2.1.4., 2.3.0"
+    echo "  -i       Included methods only, for example: applySettings,signTransaction"
+    echo "  -e       All methods except excluded, for example: applySettings,signTransaction"
 }
 
-# Show help if no option provided
-if [ $# -eq 0 ]; then
-    show_usage
-fi;
-
 firmware=''
+included_methods=''
+excluded_methods=''
 gui_output=false
 
 OPTIND=1
-while getopts ":f:h:g" opt; do
+while getopts ":i:e:f:h:g" opt; do
     case $opt in
         g) # GUI output
             gui_output=true
         ;;
         f) # Firmware version
-            echo "f"
-            echo $OPTARG
             firmware=$OPTARG
+        ;;
+        i) 
+            included_methods=$OPTARG
+        ;;
+        e) 
+            excluded_methods=$OPTARG
         ;;
         h) # Script usage
             show_usage
@@ -81,5 +85,8 @@ done
 shift $((OPTIND-1))
 
 export TESTS_FIRMWARE=$firmware
+export TESTS_INCLUDED_METHODS=$included_methods
+export TESTS_EXCLUDED_METHODS=$excluded_methods
+
 
 run $gui_output
