@@ -24,7 +24,8 @@ script: travis_wait ./tests/run.sh -f 2.3.0 -i ${TEST_METHODS}
 jobs:
   allow_failures:
     - name: "master test"
-      script: travis_wait ./tests/run.sh -f 2.3.2 -i signTransaction
+    - env: TEST_FIRMWARE=2.3.2
+  script: travis_wait ./tests/run.sh -f ${TEST_FIRMWARE} -i signTransaction
 
 services:
   - docker

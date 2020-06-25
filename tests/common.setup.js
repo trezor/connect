@@ -24,7 +24,6 @@ const setup = async (controller, options) => {
         if (firmware) {
             Object.assign(emulatorStartOpts, { version: firmware });
         }
-        console.log('emulatorStartOpts', emulatorStartOpts)
         await controller.send(emulatorStartOpts);
 
         const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
