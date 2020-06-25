@@ -17,12 +17,12 @@ env:
   - TEST_METHODS=tezosGetAddress,tezosGetPublicKey
   - TEST_METHODS=binanceSignTransaction
   - TEST_METHODS=applySettings,applyFlags,getFeatures
-  - TEST_FIRMWARE=2.3.0
 
-script: travis_wait ./tests/run.sh -f ${TEST_FIRMWARE} -i ${TEST_METHODS}
+script: travis_wait ./tests/run.sh -f ${TEST_FIRMWARE} -i 2.3.0
 
+# todo: maybe have here a job that takes fw from master and is allowed to fail? 
 jobs:
-  include:
+  allow_failures:
     - name: "master test"
       script: travis_wait ./tests/run.sh -f 2.3.2 -i signTransaction
 
