@@ -24,3 +24,7 @@ The older version listed below are still working, but new features are not being
 * https://trezor.github.io/connect/connect.js,
 
 With regards to this repo - All updates should go to current version branch, the previous releases are in corresponding branches. The gh-pages is the same older version, that is used at trezor.github.io/connect/connect.js, and it's there for backwards compatibility; please don't touch.
+
+## Tests
+For integration testing against trezord and emulator refer to [this document](./tests/README.md). Please note that tests in 
+`src/__tests__` are considered deprecated.
