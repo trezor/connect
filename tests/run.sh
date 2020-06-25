@@ -24,7 +24,7 @@ run() {
       -p 9001:9001 \
       -p 21324:21324 \
       -p 21325:21325 \
-      mroz22/trezor-user-env:501
+      mroz22/trezor-user-env:beta
   else
     xhost +
     docker run --rm -d \
@@ -36,7 +36,7 @@ run() {
       -p 9001:9001 \
       -p 21324:21324 \
       -p 21325:21325 \
-      mroz22/trezor-user-env:501
+      mroz22/trezor-user-env:beta
   fi
   yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --coverage $2
   exit 0
@@ -54,7 +54,7 @@ show_usage() {
 
 }
 
-firmware=''
+firmware='2.3.0'
 included_methods=''
 excluded_methods=''
 gui_output=false

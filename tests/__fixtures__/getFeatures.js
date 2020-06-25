@@ -1,3 +1,7 @@
+// firmware should be always set. This tests actually tests the fact that 
+// we are indeed testing with the firmware version we believe we do.
+const [major, minor, patch] = process.env.TESTS_FIRMWARE.split('.');
+
 export default {
     method: 'getFeatures',
     setup: {
@@ -10,16 +14,16 @@ export default {
             result: {
                 device_id: expect.any(String),
                 vendor: 'trezor.io',
-                major_version: 2,
-                minor_version: 3,
-                patch_version: 1,
+                major_version: Number(major),
+                minor_version: Number(minor),
+                patch_version: Number(patch),
                 bootloader_mode: null,
                 pin_protection: expect.any(Boolean),
                 passphrase_protection: expect.any(Boolean),
                 language: 'en-US',
                 label: expect.any(String),
                 initialized: true,
-                revision: '33303430663136',
+                revision: expect.any(String),
                 bootloader_hash: null,
                 imported: null,
                 pin_cached: expect.any(Boolean),
