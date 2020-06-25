@@ -6,7 +6,8 @@ node_js:
   - "12.14.1"
 
 env:
-  - TEST_METHODS=getAccountInfo,getAddress,getPublicKey,signMessage,signTransaction,verifyMessage
+  - TEST_METHODS=signTransaction # signTransaction takes long, so has own job
+  - TEST_METHODS=getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage
   - TEST_METHODS=stellarGetAddress,stellarSignTransaction
   - TEST_METHODS=cardanoGetAddress,cardanoGetPublicKey,cardanoSignTransaction
   - TEST_METHODS=eosGetPublicKey,eosSignTransaction
@@ -18,7 +19,7 @@ env:
   - TEST_METHODS=binanceSignTransaction
   - TEST_METHODS=applySettings,applyFlags,getFeatures
 
-script: travis_wait ./tests/run.sh -f 2.3.0 -i ${TEST_METHODS}
+script: travis_wait ./tests/run.sh -f 2.3.1 -i ${TEST_METHODS}
 
 # todo: maybe have here a job that takes fw from master and is allowed to fail?
 # jobs:
