@@ -8,7 +8,6 @@ function cleanup {
   # stop trezor-env container
   id=$(docker ps -aqf "name=connect-tests")
   echo "stopping container..."
-  echo $id
   # show logs from container if exit conde !==0
   [ $id ] && docker stop $id
   [ $id ] && echo "stopped"
