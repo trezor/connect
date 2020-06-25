@@ -24,7 +24,7 @@ script: travis_wait ./tests/run.sh -f ${TEST_FIRMWARE} -i ${TEST_METHODS}
 jobs:
   include:
     - name: "master test"
-      script: script: travis_wait ./tests/run.sh -f 2.3.2 -i signTransaction
+      script: travis_wait ./tests/run.sh -f 2.3.2 -i signTransaction
 
 services:
   - docker
