@@ -50,7 +50,6 @@ fixtures.forEach((testCase, i) => {
                 }
                 controller.options.name = t.description;
                 const result = await TrezorConnect[testCase.method](t.params);
-                console.log(result);
                 const expected = t.result ? { success: true, payload: t.result } : { success: false };
                 expect(result).toMatchObject(expected);
                 if (t.customTimeout) {
