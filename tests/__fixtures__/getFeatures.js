@@ -2,6 +2,9 @@
 // we are indeed testing with the firmware version we believe we do.
 const [major, minor, patch] = process.env.TESTS_FIRMWARE.split('.');
 
+// if custom build is used, we ignore firmware version numbers
+const customFirmwareBuild = process.env.TESTS_CUSTOM_FIRMWARE_BUILD;
+
 export default {
     method: 'getFeatures',
     setup: {
@@ -14,9 +17,9 @@ export default {
             result: {
                 device_id: expect.any(String),
                 vendor: 'trezor.io',
-                major_version: Number(major),
-                minor_version: Number(minor),
-                patch_version: Number(patch),
+                major_version: customFirmwareBuild ? expect.any(Number) : Number(major),
+                minor_version: customFirmwareBuild ? expect.any(Number) : Number(minor),
+                patch_version: customFirmwareBuild ? expect.any(Number) : Number(patch),
                 bootloader_mode: null,
                 pin_protection: expect.any(Boolean),
                 passphrase_protection: expect.any(Boolean),

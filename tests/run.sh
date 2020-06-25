@@ -2,6 +2,9 @@
 
 set -e
 
+curl --version 
+wget --version 
+
 function cleanup {
   echo "cleanup"
   
@@ -38,6 +41,14 @@ run() {
       -p 21325:21325 \
       mroz22/trezor-user-env:beta
   fi
+
+  if test -f "$3"; then
+    echo "using custom firmware build from: ${3}"  
+    docker cp ${3} connect-tests:/controller/bin
+    docker exec connect-tests ls /controller/bin
+    docker exec connect-tests ls /controller
+  fi
+  
   yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --coverage $2
   exit 0
 }
@@ -46,24 +57,27 @@ show_usage() {
     echo "Usage: run [OPTIONS] [ARGS]"
     echo ""
     echo "Options:"
+    echo "  -b       Path to custom firmware build. File must be named trezor-emu-core-v[num].[num].[num] and -f option with [num].[num].[num] must be provided"                                                           
     echo "  -g       Run tests with emulator graphical output"                                                           
     echo "  -f       Use specific firmware version, for example: 2.1.4., 2.3.0"
     echo "  -i       Included methods only, for example: applySettings,signTransaction"
     echo "  -e       All methods except excluded, for example: applySettings,signTransaction"
     echo "  -c       Collect coverage"
-
 }
 
+custom_firmware_build=''
 firmware='2.3.0'
 included_methods=''
 excluded_methods=''
 gui_output=false
 collect_coverage=false
 
-
 OPTIND=1
-while getopts ":i:e:f:hgc" opt; do
+while getopts ":i:e:b:f:hgc" opt; do
     case $opt in
+        b) 
+            custom_firmware_build=$OPTARG
+        ;;
         c) 
             collect_coverage=true
         ;;
@@ -92,8 +106,9 @@ done
 shift $((OPTIND-1))
 
 export TESTS_FIRMWARE=$firmware
+export TESTS_CUSTOM_FIRMWARE_BUILD=$custom_firmware_build
 export TESTS_INCLUDED_METHODS=$included_methods
 export TESTS_EXCLUDED_METHODS=$excluded_methods
 
 
-run $gui_output $collect_coverage
+run $gui_output $collect_coverage $custom_firmware_build
