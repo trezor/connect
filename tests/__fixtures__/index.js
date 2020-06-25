@@ -171,4 +171,7 @@ if (includedMethods) {
 // sort by mnemonic to avoid emu re-loading
 fixtures = fixtures.sort((a,b) => (a.setup.mnemonic > b.setup.mnemonic) ? 1 : ((b.setup.mnemonic > a.setup.mnemonic) ? -1 : 0)); 
 
+console.log('selected fixtures:')
+console.log(fixtures);
+
 export default fixtures;

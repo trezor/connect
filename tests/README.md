@@ -7,3 +7,6 @@
 ## How to add tests
 1. Create or modify file in `./__fixtures__`
 1. Make sure it is imported in `./__fixtures__/index.js`.
+
+## Continuous integration
+Tests are run with each commit on [travis](https://travis-ci.org/github/trezor/connect)

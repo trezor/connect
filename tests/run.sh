@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 function cleanup {
   echo "cleanup"
@@ -39,7 +39,7 @@ run() {
       -p 21325:21325 \
       mroz22/trezor-user-env:501
   fi
-  yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --runInBand --bail
+  yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --coverage $2
   exit 0
 }
 
@@ -51,20 +51,27 @@ show_usage() {
     echo "  -f       Use specific firmware version, for example: 2.1.4., 2.3.0"
     echo "  -i       Included methods only, for example: applySettings,signTransaction"
     echo "  -e       All methods except excluded, for example: applySettings,signTransaction"
+    echo "  -c       Collect coverage"
+
 }
 
 firmware=''
 included_methods=''
 excluded_methods=''
 gui_output=false
+collect_coverage=false
+
 
 OPTIND=1
-while getopts ":i:e:f:h:g" opt; do
+while getopts ":i:e:f:hgc" opt; do
     case $opt in
-        g) # GUI output
+        c) 
+            collect_coverage=true
+        ;;
+        g)
             gui_output=true
         ;;
-        f) # Firmware version
+        f)
             firmware=$OPTARG
         ;;
         i) 
@@ -75,6 +82,7 @@ while getopts ":i:e:f:h:g" opt; do
         ;;
         h) # Script usage
             show_usage
+            exit 0
         ;;
         \?)
             echo "invalid option" $OPTARG
@@ -89,4 +97,4 @@ export TESTS_INCLUDED_METHODS=$included_methods
 export TESTS_EXCLUDED_METHODS=$excluded_methods
 
 
-run $gui_output
+run $gui_output $collect_coverage
