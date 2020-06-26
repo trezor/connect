@@ -12,6 +12,12 @@ const MNEMONICS = {
 
 const firmware = process.env.TESTS_FIRMWARE;
 
+const wait = (ms) => {
+    return new Promise((res) => {
+        setTimeout(() => {res(), ms});
+    })
+}
+
 const setup = async (controller, options) => {
     try {
         await controller.connect();
@@ -38,6 +44,7 @@ const setup = async (controller, options) => {
         });
         // after all is done, start bridge again (connect can't use udp transport)
         await controller.send({ type: 'bridge-start' });
+        await wait(500);
     } catch (err) {
         // this means that something in trezor-user-env got wrong.
         console.log(err);
