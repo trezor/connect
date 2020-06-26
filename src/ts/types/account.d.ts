@@ -75,6 +75,7 @@ export interface TransactionTarget {
     amount?: string;
     coinbase?: string;
     isAccountTarget?: boolean;
+    n: number;
 }
 
 export interface AccountTransaction {
