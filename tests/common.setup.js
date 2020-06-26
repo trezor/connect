@@ -1,9 +1,6 @@
 import { Controller } from './websocket-client';
 import TrezorConnect, { UI } from '../src/js/index';
 
-// todo: maybe we should test build..
-// import TrezorConnect, { UI } from '../npm-extended';
-
 const MNEMONICS = {
     'mnemonic_all': 'all all all all all all all all all all all all',
     'mnemonic_12': 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
@@ -42,9 +39,10 @@ const setup = async (controller, options) => {
             needs_backup: false,
             options,
         });
-        // after all is done, start bridge again (connect can't use udp transport)
+        // after all is done, start bridge again
         await controller.send({ type: 'bridge-start' });
-        await wait(500);
+        // Wait to prevent Transport is missing error from TrezorConnect
+        await wait(1000);
     } catch (err) {
         // this means that something in trezor-user-env got wrong.
         console.log(err);
