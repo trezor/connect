@@ -2,6 +2,7 @@ import fixtures from '../__fixtures__';
 const { setup, initTrezorConnect, Controller, TrezorConnect } = global.Trezor;
 
 let controller;
+let currentMnemonic;
 
 fixtures.forEach((testCase, i) => {
     describe(`TrezorConnect.${testCase.method}`, () => {
@@ -19,7 +20,11 @@ fixtures.forEach((testCase, i) => {
                     });
                 }
 
-                await setup(controller, testCase.setup);
+                if (testCase.setup.mnemonic !== currentMnemonic) {
+                    await setup(controller, testCase.setup);
+                    currentMnemonic = testCase.setup.mnemonic;
+                }
+
                 await initTrezorConnect(controller);
 
                 done();
@@ -31,13 +36,6 @@ fixtures.forEach((testCase, i) => {
 
         afterAll(async (done) => {
             TrezorConnect.dispose();
-            if (controller) {
-                // there is no need to enable/disable env between tests
-                // await controller.send({ type: 'bridge-stop' });
-                // await controller.send({ type: 'emulator-stop' });
-                // await controller.disconnect();
-                // controller = undefined;
-            }
             done();
         });
 

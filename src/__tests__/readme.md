@@ -1,4 +1,4 @@
-Unit tests for connect v5 methods.
+! Tests in `src/__tests__` are deprecated. !
 
 # How to run tests
 Tests may be ran using an emulator (only TT is supported) or a physical Trezor device. The advantage of using an emulator is that all interaction with the device is automated.

@@ -5,22 +5,28 @@ build: trusty
 node_js:
   - "12.14.1"
 
-script:
-  - npm install -g yarn
-  - yarn
-  - yarn flow
-  - yarn lint
-  - yarn test:unit
-  - make build-connect
-  - ./tests/run.sh 3 ci
+env:
+  - TEST_METHODS=signTransaction # signTransaction takes long, so has own job
+  - TEST_METHODS=getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage
+  - TEST_METHODS=stellarGetAddress,stellarSignTransaction
+  - TEST_METHODS=cardanoGetAddress,cardanoGetPublicKey,cardanoSignTransaction
+  - TEST_METHODS=eosGetPublicKey,eosSignTransaction
+  - TEST_METHODS=ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage
+  - TEST_METHODS=liskGetAddress,liskSignMessage,liskSignTransaction,liskVerifyMessage
+  - TEST_METHODS=nemGetAddress,nemSignTransaction
+  - TEST_METHODS=rippleGetAddress,rippleSignTransaction
+  - TEST_METHODS=tezosGetAddress,tezosGetPublicKey
+  - TEST_METHODS=binanceSignTransaction
+  - TEST_METHODS=applySettings,applyFlags,getFeatures
 
-notifications:
-  webhooks:
-    urls:
-      - http://ci-bot.satoshilabs.com:5000/travis
-    on_success: always
-    on_failure: always
-    on_start: always
+script: travis_wait ./tests/run.sh -f 2.3.1 -i ${TEST_METHODS}
+
+# todo: maybe have here a job that takes fw from master and is allowed to fail?
+# jobs:
+#   allow_failures:
+#     - name: "master test"
+#     - env: TEST_FIRMWARE=2.3.2
+#   script: travis_wait ./tests/run.sh -f ${TEST_FIRMWARE} -i signTransaction
 
 services:
   - docker
