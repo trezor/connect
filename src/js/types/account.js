@@ -76,6 +76,7 @@ type TransactionTarget = {
     amount?: string;
     coinbase?: string;
     isAccountTarget?: boolean;
+    n: number;
 }
 
 // Transaction from @trezor/blockchain-link
@@ -108,6 +109,7 @@ export type AccountInfo = {
     empty: boolean;
     path: string;
     descriptor: string; // address or xpub
+    legacyXpub?: string; // bitcoin-like descriptor in legacy format (xpub) used by labeling (metadata)
     balance: string;
     availableBalance: string;
     tokens?: TokenInfo[]; // ethereum tokens
