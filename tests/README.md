@@ -13,6 +13,12 @@
 
 ## How to run tests with custom firmware
 1. Build your custom [emulator](https://docs.trezor.io/trezor-firmware/core/build/emulator.html) with debuglink support
+    * `cd trezor-firmware`
+    * `pipenv sync`
+    * `pipenv shell`
+    * `cd core`
+    * `PYOPT=0 pipenv run make build_unix_frozen`
+    * You will find `micropython` file in `core/build/unix`
 1. Save it as `trezor-emu-core-v2.[num].[num]`. For example `trezor-emu-core-v2.9.9`. Minor and patch numbers don't matter as long 
 as they do not conflict with already existing firmware.
 1. Run tests with `./tests/run.sh -b ~/path-to-emu/trezor-emu-core-v2.9.9 -f 2.9.9`
