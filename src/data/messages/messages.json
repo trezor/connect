@@ -755,6 +755,15 @@
                 },
                 {
                     "rule": "optional",
+                    "options": {
+                        "deprecated": true
+                    },
+                    "type": "bool",
+                    "name": "overwintered",
+                    "id": 7
+                },
+                {
+                    "rule": "optional",
                     "options": {},
                     "type": "uint32",
                     "name": "version_group_id",
@@ -990,6 +999,15 @@
                             "type": "uint32",
                             "name": "expiry",
                             "id": 10
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {
+                                "deprecated": true
+                            },
+                            "type": "bool",
+                            "name": "overwintered",
+                            "id": 11
                         },
                         {
                             "rule": "optional",
@@ -3781,7 +3799,7 @@
                         "deprecated": true
                     },
                     "type": "bytes",
-                    "name": "old_address",
+                    "name": "_old_address",
                     "id": 1
                 },
                 {
@@ -4547,7 +4565,7 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bool",
-                    "name": "pin_cached",
+                    "name": "unlocked",
                     "id": 16
                 },
                 {
