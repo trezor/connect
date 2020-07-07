@@ -21,7 +21,6 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
     dataOffset: ?(string | number),
 ): SignTxInfoToTrezor => {
     const i = +requestIndex;
-    console.warn('requestPrevTxInfo', reqTx);
     if (requestType === 'TXINPUT') {
         return {inputs: [reqTx.inputs[i]]};
     }
@@ -78,7 +77,6 @@ const requestSignedTxInfo = (inputs: Array<TransactionInput>,
     requestType: string,
     requestIndex: string | number
 ): SignTxInfoToTrezor => {
-    console.warn('requestSignedTxInfo')
     const i = +requestIndex;
     if (requestType === 'TXINPUT') {
         return {inputs: [inputs[i]]};
@@ -150,7 +148,6 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
     outputs: Array<TransactionOutput>
 ): Promise<SignedTx> => {
     saveTxSignatures(m.serialized, serializedTx, signatures);
-    console.warn('processTxRequest');
     if (m.request_type === 'TXFINISHED') {
         return Promise.resolve({
             signatures: signatures,

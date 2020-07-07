@@ -152,6 +152,7 @@ export interface RefTransaction {
     timestamp?: number;
     version_group_id?: number;
     expiry?: number;
+    branch_id?: number;
 }
 
 export interface TransactionOptions {
