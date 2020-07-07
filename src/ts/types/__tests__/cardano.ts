@@ -93,7 +93,6 @@ export const cardanoSignTransaction = async () => {
                 prev_hash: '1af..',
                 path: 'm/44',
                 prev_index: 0,
-                type: 0,
             },
         ],
         outputs: [
@@ -102,13 +101,14 @@ export const cardanoSignTransaction = async () => {
                 amount: '3003112',
             },
         ],
-        transactions: ['txid'],
-        protocol_magic: 764824073,
+        fee: '42',
+        ttl: '10',
+        protocolMagic: 0,
     });
 
     if (sign.success) {
         const { payload } = sign;
         payload.hash;
-        payload.body;
+        payload.serializedTx;
     }
 };
