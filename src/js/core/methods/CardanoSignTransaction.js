@@ -4,17 +4,17 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
-import * as helper from './helpers/cardanoSignTx';
 
-import type { CardanoTxInput, CardanoTxOutput, CardanoSignedTx } from '../../types/trezor/protobuf';
+import type { CardanoTxInput, CardanoTxOutput } from '../../types/trezor/protobuf';
 import type { CardanoSignedTx as CardanoSignedTxResponse } from '../../types/networks/cardano';
 import type { CoreMessage } from '../../types';
 
 type Params = {
     inputs: Array<CardanoTxInput>;
     outputs: Array<CardanoTxOutput>;
-    transactions: Array<string>;
-    protocol_magic: number;
+    fee: string;
+    ttl: string;
+    protocolMagic: number;
 }
 
 export default class CardanoSignTransaction extends AbstractMethod {
@@ -31,8 +31,9 @@ export default class CardanoSignTransaction extends AbstractMethod {
         validateParams(payload, [
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
-            { name: 'transactions', type: 'array', obligatory: true },
-            { name: 'protocol_magic', type: 'number', obligatory: true },
+            { name: 'fee', type: 'string', obligatory: true },
+            { name: 'ttl', type: 'string', obligatory: true },
+            { name: 'protocolMagic', type: 'number', obligatory: true },
         ]);
 
         const inputs: Array<CardanoTxInput> = payload.inputs.map(input => {
@@ -40,7 +41,6 @@ export default class CardanoSignTransaction extends AbstractMethod {
                 { name: 'path', obligatory: true },
                 { name: 'prev_hash', type: 'string', obligatory: true },
                 { name: 'prev_index', type: 'number', obligatory: true },
-                { name: 'type', type: 'number', obligatory: true },
             ]);
             return {
                 address_n: validatePath(input.path, 5),
@@ -72,23 +72,24 @@ export default class CardanoSignTransaction extends AbstractMethod {
         this.params = {
             inputs,
             outputs,
-            transactions: payload.transactions,
-            protocol_magic: payload.protocol_magic,
+            fee: payload.fee,
+            ttl: payload.ttl,
+            protocolMagic: payload.protocolMagic,
         };
     }
 
     async run(): Promise<CardanoSignedTxResponse> {
-        const response: CardanoSignedTx = await helper.cardanoSignTx(
-            this.device.getCommands().typedCall.bind(this.device.getCommands()),
+        const response = await this.device.getCommands().cardanoSignTx(
             this.params.inputs,
             this.params.outputs,
-            this.params.transactions,
-            this.params.protocol_magic,
+            this.params.fee,
+            this.params.ttl,
+            this.params.protocolMagic,
         );
 
         return {
             hash: response.tx_hash,
-            body: response.tx_body,
+            serializedTx: response.serialized_tx,
         };
     }
 }

@@ -408,7 +408,22 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    // CardanoSignTx message can be found inside ./core/methods/helpers/cardanoSignTx
+    async cardanoSignTx(
+        inputs: Array<trezor.CardanoTxInput>,
+        outputs: Array<trezor.CardanoTxOutput>,
+        fee: string,
+        ttl: string,
+        protocolMagic: number
+    ): Promise<trezor.CardanoSignedTx> {
+        const response: MessageResponse<trezor.CardanoSignedTx> = await this.typedCall('CardanoSignTx', 'CardanoSignedTx', {
+            inputs,
+            outputs,
+            fee,
+            ttl,
+            protocol_magic: protocolMagic,
+        });
+        return response.message;
+    }
     // Cardano: end
 
     // Lisk: begin
