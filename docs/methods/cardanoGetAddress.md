@@ -18,6 +18,7 @@ TrezorConnect.cardanoGetAddress(params).then(function(result) {
 #### Exporting single address
 * `path` — *obligatory* `string | Array<number>` minimum length is `5`. [read more](path.md)
 * `address` — *optional* `string` address for validation (read `Handle button request` section below)
+* `protocolMagic` - *obligatory* `Integer` 0 for Mainnet, 42 for Testnet
 * `showOnTrezor` — *optional* `boolean` determines if address will be displayed on device. Default is set to `true`
 
 #### Exporting bundle of addresses
@@ -40,16 +41,18 @@ If certain conditions are fulfilled popup will not be used at all:
 Display address of first cardano account:
 ```javascript
 TrezorConnect.cardanoGetAddress({
-    path: "m/44'/1815'/0'/0/0"
+    path: "m/44'/1815'/0'/0/0",
+    protocolMagic: 0,
 });
 ```
 Return a bundle of cardano addresses without displaying them on device:
 ```javascript
 TrezorConnect.cardanoGetAddress({
     bundle: [
-        { path: "m/44'/1815'/0'/0/0", showOnTrezor: false }, // account 1, address 1
-        { path: "m/44'/1815'/1'/0/1", showOnTrezor: false }, // account 2, address 2
-        { path: "m/44'/1815'/2'/0/2", showOnTrezor: false }  // account 3, address 3
+        { path: "m/44'/1815'/0'/0/0", protocolMagic: 0, showOnTrezor: false }, // account 1, address 1
+        { path: "m/44'/1815'/1'/0/1", protocolMagic: 0, showOnTrezor: false }, // account 2, address 2
+        { path: "m/44'/1815'/2'/0/2", protocolMagic: 0, showOnTrezor: false }  // account 3, address 3
+        { path: "m/44'/1815'/0'/0/0", protocolMagic: 42, showOnTrezor: false }  // account 1, address 0, testnet
     ]
 });
 ```
@@ -64,6 +67,7 @@ TrezorConnect.on(UI.ADDRESS_VALIDATION, data => {
 
 const result = await TrezorConnect.cardanoGetAddress({
     path: "m/44'/1815'/0'/0/0",
+    protocolMagic: 0,
     address: "Ae2tdPwUPEZ5YUb8sM3eS8JqKgrRLzhiu71crfuH2MFtqaYr5ACNRdsswsZ",
 });
 // dont forget to hide your custom UI after you get the result!
@@ -77,6 +81,7 @@ Result with only one address
     payload: {
         path: Array<number>, // hardended path
         serializedPath: string,
+        protocolMagic: number,
         address: string,
     }
 }
@@ -86,9 +91,9 @@ Result with bundle of addresses
 {
     success: true,
     payload: [
-        { path: Array<number>, serializedPath: string, address: string }, // account 1, address 1
-        { path: Array<number>, serializedPath: string, address: string }, // account 2, address 2
-        { path: Array<number>, serializedPath: string, address: string }  // account 3, address 3
+        { path: Array<number>, serializedPath: string, protocolMagic: number, address: string }, // account 1, address 1
+        { path: Array<number>, serializedPath: string, protocolMagic: number, address: string }, // account 2, address 2
+        { path: Array<number>, serializedPath: string, protocolMagic: number, address: string }  // account 3, address 3
     ]
 }
 ```
