@@ -21,6 +21,7 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
     dataOffset: ?(string | number),
 ): SignTxInfoToTrezor => {
     const i = +requestIndex;
+    console.warn('requestPrevTxInfo', reqTx);
     if (requestType === 'TXINPUT') {
         return {inputs: [reqTx.inputs[i]]};
     }
@@ -57,6 +58,7 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
             timestamp: reqTx.timestamp,
             version_group_id: reqTx.version_group_id,
             expiry: reqTx.expiry,
+            branch_id: reqTx.branch_id,
         };
 
         if (typeof data === 'string' && data.length !== 0) {
@@ -76,6 +78,7 @@ const requestSignedTxInfo = (inputs: Array<TransactionInput>,
     requestType: string,
     requestIndex: string | number
 ): SignTxInfoToTrezor => {
+    console.warn('requestSignedTxInfo')
     const i = +requestIndex;
     if (requestType === 'TXINPUT') {
         return {inputs: [inputs[i]]};
@@ -93,7 +96,7 @@ const requestSignedTxInfo = (inputs: Array<TransactionInput>,
 };
 
 // requests information about a transaction
-// can be either signed transaction iteslf of prev transaction
+// can be either signed transaction itself of prev transaction
 const requestTxInfo = (m: TxRequest,
     index: {[hash: string]: RefTransaction},
     inputs: Array<TransactionInput>,
@@ -147,7 +150,7 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
     outputs: Array<TransactionOutput>
 ): Promise<SignedTx> => {
     saveTxSignatures(m.serialized, serializedTx, signatures);
-
+    console.warn('processTxRequest');
     if (m.request_type === 'TXFINISHED') {
         return Promise.resolve({
             signatures: signatures,

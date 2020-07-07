@@ -27,7 +27,7 @@ export const getReferencedTransactions = (inputs: Array<BuildTxInput>): Array<st
 export const transformReferencedTransactions = (txs: Array<BitcoinJsTransaction>): Array<RefTransaction> => {
     return txs.map(tx => {
         const extraData = tx.getExtraData();
-        const version_group_id = BitcoinJSCoins.isZcash(tx.network) ? tx.versionGroupId : null;
+        const version_group_id = BitcoinJSCoins.isZcashType(tx.network) ? tx.versionGroupId : null;
         return {
             version: tx.isDashSpecialTransaction() ? tx.version | tx.type << 16 : tx.version,
             hash: tx.getId(),
