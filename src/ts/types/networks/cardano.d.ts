@@ -1,7 +1,7 @@
 // Cardano method parameters types
 import { HDPubNode } from '../trezor/protobuf';
 
-// GetAddress
+// GetPublicKey
 
 export interface CardanoGetPublicKey {
     path: string | number[];
@@ -20,12 +20,14 @@ export interface CardanoPublicKey {
 export interface CardanoGetAddress {
     path: string | number[];
     address?: string;
+    protocolMagic: number;
     showOnTrezor?: boolean;
 }
 
 export interface CardanoAddress {
     path: number[];
     serializedPath: string;
+    protocolMagic: number;
     address: string;
 }
 

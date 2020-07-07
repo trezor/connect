@@ -22,12 +22,14 @@ export type CardanoPublicKey = {
 export type CardanoGetAddress = {
     path: string | number[];
     address?: string;
+    protocolMagic: number;
     showOnTrezor?: boolean;
 }
 
 export type CardanoAddress = {
     path: number[];
     serializedPath: string;
+    protocolMagic: number;
     address: string;
 }
 
