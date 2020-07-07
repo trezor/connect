@@ -14,6 +14,7 @@ import type { CardanoAddress } from '../../types/networks/cardano';
 type Batch = {
     path: Array<number>;
     address: ?string;
+    protocolMagic: number;
     showOnTrezor: boolean;
 }
 
@@ -47,6 +48,7 @@ export default class CardanoGetAddress extends AbstractMethod {
             validateParams(batch, [
                 { name: 'path', obligatory: true },
                 { name: 'address', type: 'string' },
+                { name: 'protocolMagic', type: 'number', obligatory: true },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
@@ -59,6 +61,7 @@ export default class CardanoGetAddress extends AbstractMethod {
             bundle.push({
                 path,
                 address: batch.address,
+                protocolMagic: batch.protocolMagic,
                 showOnTrezor,
             });
         });
@@ -135,6 +138,7 @@ export default class CardanoGetAddress extends AbstractMethod {
             if (batch.showOnTrezor) {
                 const silent = await this.device.getCommands().cardanoGetAddress(
                     batch.path,
+                    batch.protocolMagic,
                     false
                 );
                 if (typeof batch.address === 'string') {
@@ -148,11 +152,13 @@ export default class CardanoGetAddress extends AbstractMethod {
 
             const response = await this.device.getCommands().cardanoGetAddress(
                 batch.path,
+                batch.protocolMagic,
                 batch.showOnTrezor
             );
             responses.push({
                 path: batch.path,
                 serializedPath: getSerializedPath(batch.path),
+                protocolMagic: batch.protocolMagic,
                 address: response.address,
             });
 

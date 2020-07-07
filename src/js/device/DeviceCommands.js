@@ -400,9 +400,10 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    async cardanoGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoAddress> {
+    async cardanoGetAddress(address_n: Array<number>, protocolMagic: number, showOnTrezor: boolean): Promise<trezor.CardanoAddress> {
         const response: MessageResponse<trezor.CardanoAddress> = await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
             address_n,
+            protocol_magic: protocolMagic,
             show_display: !!showOnTrezor,
         });
         return response.message;
