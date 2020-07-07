@@ -37,7 +37,6 @@ export type CardanoInput = {
     path: string | number[];
     prev_hash: string;
     prev_index: number;
-    type: number;
 }
 export type CardanoOutput = {
     path: string | number[];
@@ -50,11 +49,12 @@ export type CardanoOutput = {
 export type CardanoSignTransaction = {
     inputs: CardanoInput[];
     outputs: CardanoOutput[];
-    transactions: string[];
-    protocol_magic: number;
+    fee: string;
+    ttl: string;
+    protocolMagic: number;
 }
 
 export type CardanoSignedTx = {
     hash: string;
-    body: string;
+    serializedTx: string;
 }

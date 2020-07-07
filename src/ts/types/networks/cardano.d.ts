@@ -35,7 +35,6 @@ export interface CardanoInput {
     path: string | number[];
     prev_hash: string;
     prev_index: number;
-    type: number;
 }
 export type CardanoOutput =
     | {
@@ -50,11 +49,12 @@ export type CardanoOutput =
 export interface CardanoSignTransaction {
     inputs: CardanoInput[];
     outputs: CardanoOutput[];
-    transactions: string[];
-    protocol_magic: number;
+    fee: string;
+    ttl: string;
+    protocolMagic: number;
 }
 
 export interface CardanoSignedTx {
     hash: string;
-    body: string;
+    serialized_tx: string;
 }
