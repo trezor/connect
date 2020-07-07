@@ -3,22 +3,24 @@ import TrezorConnect from '../../index';
 
 export const cardanoGetAddress = async () => {
     // regular
-    const singleAddress = await TrezorConnect.cardanoGetAddress({ path: 'm/44' });
+    const singleAddress = await TrezorConnect.cardanoGetAddress({ path: 'm/44', protocolMagic: 0 });
     (singleAddress.success: boolean);
     if (singleAddress.success) {
         const { payload } = singleAddress;
         (payload.address: string);
         (payload.path: number[]);
+        (payload.protocolMagic: number);
         (payload.serializedPath: string);
     }
 
     // bundle
-    const bundleAddress = await TrezorConnect.cardanoGetAddress({ bundle: [{ path: 'm/44' }] });
+    const bundleAddress = await TrezorConnect.cardanoGetAddress({ bundle: [{ path: 'm/44', protocolMagic: 0 }] });
     (bundleAddress.success: boolean);
     if (bundleAddress.success) {
         bundleAddress.payload.forEach(item => {
             (item.address: string);
             (item.path: number[]);
+            (item.protocolMagic: number);
             (item.serializedPath: string);
         });
     } else {
@@ -38,6 +40,7 @@ export const cardanoGetAddress = async () => {
         skipFinalReload: false,
         path: 'm/44',
         address: 'a',
+        protocolMagic: 0,
         showOnTrezor: true,
     });
 
