@@ -2,11 +2,12 @@ import TrezorConnect from '../index';
 
 export const cardanoGetAddress = async () => {
     // regular
-    const singleAddress = await TrezorConnect.cardanoGetAddress({ path: 'm/44' });
+    const singleAddress = await TrezorConnect.cardanoGetAddress({ path: 'm/44', protocolMagic: 0 });
     if (singleAddress.success) {
         const { payload } = singleAddress;
         payload.address;
         payload.path;
+        payload.protocolMagic;
         payload.serializedPath;
         // @ts-ignore
         payload.forEach(item => {
@@ -15,11 +16,12 @@ export const cardanoGetAddress = async () => {
     }
 
     // bundle
-    const bundleAddress = await TrezorConnect.cardanoGetAddress({ bundle: [{ path: 'm/44' }] });
+    const bundleAddress = await TrezorConnect.cardanoGetAddress({ bundle: [{ path: 'm/44', protocolMagic: 0 }] });
     if (bundleAddress.success) {
         bundleAddress.payload.forEach(item => {
             item.address;
             item.path;
+            item.protocolMagic;
             item.serializedPath;
         });
         // @ts-ignore
@@ -41,6 +43,7 @@ export const cardanoGetAddress = async () => {
         skipFinalReload: false,
         path: 'm/44',
         address: 'a',
+        protocolMagic: 0,
         showOnTrezor: true,
     });
 
