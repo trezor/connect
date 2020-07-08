@@ -600,6 +600,63 @@
             "oneofs": {}
         },
         {
+            "name": "GetOwnershipId",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "default": "Bitcoin"
+                    },
+                    "type": "string",
+                    "name": "coin_name",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "MultisigRedeemScriptType",
+                    "name": "multisig",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "default": "SPENDADDRESS"
+                    },
+                    "type": "InputScriptType",
+                    "name": "script_type",
+                    "id": 4
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OwnershipId",
+            "fields": [
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "ownership_id",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "SignMessage",
             "fields": [
                 {
@@ -752,6 +809,15 @@
                     "type": "uint32",
                     "name": "expiry",
                     "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "deprecated": true
+                    },
+                    "type": "bool",
+                    "name": "overwintered",
+                    "id": 7
                 },
                 {
                     "rule": "optional",
@@ -993,6 +1059,15 @@
                         },
                         {
                             "rule": "optional",
+                            "options": {
+                                "deprecated": true
+                            },
+                            "type": "bool",
+                            "name": "overwintered",
+                            "id": 11
+                        },
+                        {
+                            "rule": "optional",
                             "options": {},
                             "type": "uint32",
                             "name": "version_group_id",
@@ -1084,6 +1159,20 @@
                                     "type": "uint32",
                                     "name": "decred_tree",
                                     "id": 9
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "bytes",
+                                    "name": "witness",
+                                    "id": 13
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "bytes",
+                                    "name": "ownership_proof",
+                                    "id": 14
                                 }
                             ],
                             "enums": [],
@@ -1208,6 +1297,91 @@
                     "oneofs": {}
                 }
             ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "GetOwnershipProof",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "default": "Bitcoin"
+                    },
+                    "type": "string",
+                    "name": "coin_name",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "default": "SPENDWITNESS"
+                    },
+                    "type": "InputScriptType",
+                    "name": "script_type",
+                    "id": 3
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "MultisigRedeemScriptType",
+                    "name": "multisig",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "user_confirmation",
+                    "id": 5
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "ownership_ids",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "commitment_data",
+                    "id": 7
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "OwnershipProof",
+            "fields": [
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "ownership_proof",
+                    "id": 1
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
             "options": {},
             "oneofs": {}
         },
@@ -3781,7 +3955,7 @@
                         "deprecated": true
                     },
                     "type": "bytes",
-                    "name": "old_address",
+                    "name": "_old_address",
                     "id": 1
                 },
                 {
@@ -4547,7 +4721,7 @@
                     "rule": "optional",
                     "options": {},
                     "type": "bool",
-                    "name": "pin_cached",
+                    "name": "unlocked",
                     "id": 16
                 },
                 {
@@ -9488,6 +9662,22 @@
                 {
                     "name": "MessageType_MessageSignature",
                     "id": 40
+                },
+                {
+                    "name": "MessageType_GetOwnershipId",
+                    "id": 43
+                },
+                {
+                    "name": "MessageType_OwnershipId",
+                    "id": 44
+                },
+                {
+                    "name": "MessageType_GetOwnershipProof",
+                    "id": 49
+                },
+                {
+                    "name": "MessageType_OwnershipProof",
+                    "id": 50
                 },
                 {
                     "name": "MessageType_CipherKeyValue",
