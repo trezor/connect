@@ -534,11 +534,11 @@ export default class Device extends EventEmitter {
         return this.originalDescriptor.path;
     }
 
-    needAuthentication(): boolean {
+    needAuthentication() {
         if (this.isUnacquired() || this.isUsedElsewhere() || this.featuresNeedsReload) return true;
         if (this.features.bootloader_mode || !this.features.initialized) return true;
-        const pin: boolean = this.features.pin_protection ? this.features.pin_cached : true;
-        const pass: boolean = this.features.passphrase_protection ? this.features.passphrase_cached : true;
+        const pin = this.features.pin_protection ? (this.features.pin_cached || !!this.features.unlocked) : true;
+        const pass = this.features.passphrase_protection ? this.features.passphrase_cached : true;
         return pin && pass;
     }
 

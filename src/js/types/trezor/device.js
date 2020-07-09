@@ -75,6 +75,7 @@ export type Features = {
     passphrase_protection: boolean;
     patch_version: number;
     pin_cached: boolean;
+    unlocked?: boolean; // replacement for "pin_cached" since 2.3.2
     pin_protection: boolean;
     revision: string;
     unfinished_backup: boolean;
