@@ -7,33 +7,48 @@ const MNEMONICS = {
     'mnemonic_abandon': 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
 };
 
+const firmware = process.env.TESTS_FIRMWARE;
+
+const wait = (ms) => {
+    return new Promise((res) => {
+        setTimeout(() => {res(), ms});
+    })
+}
+
 const setup = async (controller, options) => {
     try {
         await controller.connect();
-        await controller.send({ type: 'bridge-start' });
-        await controller.send({ type: 'emulator-start', version: '2.2.0' });
-
-        if (options.wipe) {
-            await controller.send({ type: 'emulator-wipe' });
-        } else {
-            const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
-            await controller.send({
-                type: 'emulator-setup',
-                mnemonic,
-                pin: options.pin || '',
-                passphrase_protection: false,
-                label: options.label || 'TrezorT',
-                backup: false,
-                options,
-            });
+        // after bridge is stopped, trezor-user-env automatically resolves to use udp transport.
+        // this is actually good as we avoid possible race conditions when setting up emulator for 
+        // the test using the same transport         
+        await controller.send({ type: 'bridge-stop' });
+        
+        const emulatorStartOpts = { type: 'emulator-start', wipe: true };
+        if (firmware) {
+            Object.assign(emulatorStartOpts, { version: firmware });
         }
+        await controller.send(emulatorStartOpts);
+
+        const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
+        await controller.send({
+            type: 'emulator-setup',
+            mnemonic,
+            pin: options.pin || '',
+            passphrase_protection: false,
+            label: options.label || 'TrezorT',
+            needs_backup: false,
+            options,
+        });
+        // after all is done, start bridge again
+        await controller.send({ type: 'bridge-start' });
+        // Wait to prevent Transport is missing error from TrezorConnect
+        await wait(1000);
     } catch (err) {
         // this means that something in trezor-user-env got wrong.
         console.log(err);
-        process.exit(1)
+        // process.exit(1)
     }   
 };
-
   
 const initTrezorConnect = async (controller, options) => {
     const onUiRequestConfirmation = () => {

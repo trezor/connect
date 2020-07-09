@@ -10,7 +10,7 @@ export default {
                 label: 'cool label',
                 auto_lock_delay: 300,
                 display_rotation: 90,
-                use_passphrase: true,
+                use_passphrase: false,
             },
             result: {
                 message: 'Settings applied',

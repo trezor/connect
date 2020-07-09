@@ -1,5 +1,5 @@
 /* @flow */
-
+/* istanbul ignore next */
 import TinyWorker from 'tiny-worker';
 import type { Transport } from 'trezor-link';
 

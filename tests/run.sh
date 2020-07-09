@@ -1,34 +1,22 @@
+#!/bin/bash
+
+set -e
 
 function cleanup {
   echo "cleanup"
   
   # stop trezor-env container
   id=$(docker ps -aqf "name=connect-tests")
-  echo "docker container id:"
-  echo $id
-  echo "exit code: "
-  echo $RET
+  echo "stopping container..."
   # show logs from container if exit conde !==0
-  [ $RET -gt 0 ] && docker logs $id
-  
   [ $id ] && docker stop $id
-  echo "ran ${i} times"
+  [ $id ] && echo "stopped"
 }
 
 trap cleanup EXIT
 
-echo "to run in ci use './run.sh ci'"
-
-i=0
-retry="${1-1}"    
-echo "retry times if failed: ${retry}"
-RET=1
-
-until [ $i -eq $retry ]; do
-  echo "run number: ${i}"
-  [ $i -gt 0 ] && echo "status code from previous run: ${RET}"
-
-  if [ "$2" = "ci" ]
+run() {
+  if [ $1 = false ]
   then
     docker run --rm -d \
       --name connect-tests \
@@ -36,10 +24,7 @@ until [ $i -eq $retry ]; do
       -p 9001:9001 \
       -p 21324:21324 \
       -p 21325:21325 \
-      mroz22/trezor-user-env \
-      bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
-    
-    yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --runInBand --bail
+      mroz22/trezor-user-env:beta
   else
     xhost +
     docker run --rm -d \
@@ -51,15 +36,79 @@ until [ $i -eq $retry ]; do
       -p 9001:9001 \
       -p 21324:21324 \
       -p 21325:21325 \
-      mroz22/trezor-user-env \
-      bash -c "rm -rf /var/tmp/trezor.flash && python3 ./main.py"
-      # todo: all this bash -c part should be moved to COMMAND or ENTRYPOINT command in docker
-      yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --runInBand --bail
+      mroz22/trezor-user-env:beta
   fi
-  RET=$?
-  ((i+=1))
-  [ $RET -eq 0 ] && exit 0
-  cleanup
-done
 
-exit 1
+  if [[ $3 == "master" ]]; then
+    # todo: download from master and unzip 
+    curl -o /tmp/trezor-emu-core-v${4} 'https://gitlab.com/satoshilabs/trezor/trezor-firmware/-/jobs/artifacts/master/download?job=core%20unix%20frozen%20debug%20build'
+  elif test -f "$3"; then
+    echo "using custom firmware build from: ${3}"  
+    docker cp ${3} connect-tests:/controller/bin
+    docker exec connect-tests ls /controller/bin
+    docker exec connect-tests ls /controller
+  fi
+
+  yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --coverage $2
+  exit 0
+}
+
+show_usage() {
+    echo "Usage: run [OPTIONS] [ARGS]"
+    echo ""
+    echo "Options:"
+    echo "  -b       Path to custom firmware build. File must be named trezor-emu-core-v2.[num].[num] and -f option with 2.[num].[num] must be provided"                                                           
+    echo "  -g       Run tests with emulator graphical output"                                                           
+    echo "  -f       Use specific firmware version, for example: 2.1.4., 2.3.0"
+    echo "  -i       Included methods only, for example: applySettings,signTransaction"
+    echo "  -e       All methods except excluded, for example: applySettings,signTransaction"
+    echo "  -c       Collect coverage"
+}
+
+custom_firmware_build=''
+firmware='2.3.0'
+included_methods=''
+excluded_methods=''
+gui_output=false
+collect_coverage=false
+
+OPTIND=1
+while getopts ":i:e:b:f:hgc" opt; do
+    case $opt in
+        b) 
+            custom_firmware_build=$OPTARG
+        ;;
+        c) 
+            collect_coverage=true
+        ;;
+        g)
+            gui_output=true
+        ;;
+        f)
+            firmware=$OPTARG
+        ;;
+        i) 
+            included_methods=$OPTARG
+        ;;
+        e) 
+            excluded_methods=$OPTARG
+        ;;
+        h) # Script usage
+            show_usage
+            exit 0
+        ;;
+        \?)
+            echo "invalid option" $OPTARG
+            exit 1
+        ;;
+    esac
+done
+shift $((OPTIND-1))
+
+export TESTS_FIRMWARE=$firmware
+export TESTS_CUSTOM_FIRMWARE_BUILD=$custom_firmware_build
+export TESTS_INCLUDED_METHODS=$included_methods
+export TESTS_EXCLUDED_METHODS=$excluded_methods
+
+
+run $gui_output $collect_coverage $custom_firmware_build $firmware

@@ -29,5 +29,14 @@ export default {
             },
             result: false,
         },
+        {
+            description: "m/44'/144'/0'/0/1",
+            params: {
+                path: "m/44'/144'/0'/0/1",
+            },
+            result: {
+                address: 'rwrZ3agNYYJw4yi6v1r7Ui9AwX9KsWzghr',
+            },
+        },
     ],
 };

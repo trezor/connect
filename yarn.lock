@@ -1549,10 +1549,10 @@
   dependencies:
     "@sinonjs/commons" "^1.7.0"
 
-"@trezor/blockchain-link@^1.0.12":
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/@trezor/blockchain-link/-/blockchain-link-1.0.12.tgz#7485d8c2bc7f84d948a36ac80185ad3cb1565b65"
-  integrity sha512-6C7apZgH69u9obclcykD0Q57I75J1KhlxEMl3wBt1gdqzW/lUOszAvUISckA97M07ro9xqb+UZ6Fr4cMGaz+Ww==
+"@trezor/blockchain-link@^1.0.13":
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/@trezor/blockchain-link/-/blockchain-link-1.0.13.tgz#2c9664327271e7ffc136ad331747cfcc2e0d86d9"
+  integrity sha512-SDcvzWTx3IebDhcrTr3iXFE7velWGR5efZdMXsOAI/YK2AW91BhvWEk+tUwOXpQY5/CJu4JQ6n7MC5DQYZaN6A==
   dependencies:
     es6-promise "^4.2.8"
     events "^3.1.0"

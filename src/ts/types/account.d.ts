@@ -75,6 +75,7 @@ export interface TransactionTarget {
     amount?: string;
     coinbase?: string;
     isAccountTarget?: boolean;
+    n: number;
 }
 
 export interface AccountTransaction {
@@ -106,6 +107,7 @@ export interface AccountInfo {
     empty: boolean;
     path: string;
     descriptor: string; // address or xpub
+    legacyXpub?: string; // bitcoin-like descriptor in legacy format (xpub) used by labeling (metadata)
     balance: string;
     availableBalance: string;
     tokens?: TokenInfo[]; // ethereum tokens

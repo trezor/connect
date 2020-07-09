@@ -226,6 +226,7 @@ export default class GetAccountInfo extends AbstractMethod {
             const request = this.params[i];
             const { address_n } = request;
             let descriptor = request.descriptor;
+            let legacyXpub: ?string;
 
             if (this.disposed) break;
 
@@ -238,6 +239,7 @@ export default class GetAccountInfo extends AbstractMethod {
                     );
                     if (accountDescriptor) {
                         descriptor = accountDescriptor.descriptor;
+                        legacyXpub = accountDescriptor.legacyXpub;
                     }
                 } catch (error) {
                     if (this.hasBundle) {
@@ -290,6 +292,7 @@ export default class GetAccountInfo extends AbstractMethod {
                     path: request.path,
                     ...info,
                     descriptor, // override descriptor (otherwise eth checksum is lost)
+                    legacyXpub,
                     utxo,
                 };
                 responses.push(account);
