@@ -10,7 +10,7 @@ import { getCoinInfo } from '../../data/CoinInfo';
 import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
-import { initBlockchain } from '../../backend/BlockchainLink';
+import { isBackendSupported, initBlockchain } from '../../backend/BlockchainLink';
 
 import type { CoreMessage, CoinInfo } from '../../types';
 import type { GetAccountInfo as GetAccountInfoParams, AccountInfo, AccountUtxo } from '../../types/account';
@@ -68,9 +68,8 @@ export default class GetAccountInfo extends AbstractMethod {
             if (!coinInfo) {
                 throw ERRORS.TypedError('Method_UnknownCoin');
             }
-            if (!coinInfo.blockchainLink) {
-                throw ERRORS.TypedError('Backend_NotSupported');
-            }
+            // validate backend
+            isBackendSupported(coinInfo);
             // validate path if exists
             if (batch.path) {
                 batch.address_n = validatePath(batch.path, 3);
