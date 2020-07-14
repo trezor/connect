@@ -12,7 +12,7 @@ import { getBitcoinNetwork, fixCoinInfoNetwork } from '../../data/CoinInfo';
 
 import { formatAmount } from '../../utils/formatUtils';
 
-import { initBlockchain } from '../../backend/BlockchainLink';
+import { isBackendSupported, initBlockchain } from '../../backend/BlockchainLink';
 
 import TransactionComposer from './tx/TransactionComposer';
 import {
@@ -65,9 +65,8 @@ export default class ComposeTransaction extends AbstractMethod {
         if (!coinInfo) {
             throw ERRORS.TypedError('Method_UnknownCoin');
         }
-        if (!coinInfo.blockchainLink) {
-            throw ERRORS.TypedError('Backend_NotSupported');
-        }
+        // validate backend
+        isBackendSupported(coinInfo);
 
         // set required firmware from coinInfo support
         this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
