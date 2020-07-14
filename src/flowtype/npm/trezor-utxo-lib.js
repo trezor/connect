@@ -142,6 +142,7 @@ declare module '@trezor/utxo-lib' {
         isDash(network: Network): boolean,
         isLitecoin(network: Network): boolean,
         isZcash(network: Network): boolean,
+        isZcashType(network: Network): boolean,
         isKomodo(network: Network): boolean,
         isCapricoin(network: Network): boolean,
     }
