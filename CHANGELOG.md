@@ -1,3 +1,12 @@
+# 8.1.8
+#### Added
+- `ButtonRequest_PinEntry`
+- `legacyXpub` field in response of `getAccountInfo` (BTC-like coins) used in `metadata` (labeling)
+- `n` field of `AccountTransaction:TransactionTarget` (output index) used in `metadata`
+- `branch_id` in signTx `TXMETA` (ZCash)
+#### Changed
+- Improved tests (trezor-user-env)
+
 # 8.1.7
 #### Fixed
 - `composeTransaction` missing zcash specific fields (in popup mode)
