@@ -1,5 +1,5 @@
 const PROTOCOL_MAGICS = {
-    mainnet: 0,
+    mainnet: 764824073,
     testnet: 42,
 };
 
@@ -54,7 +54,7 @@ export default {
                 protocolMagic: PROTOCOL_MAGICS['testnet'],
             },
             result: {
-                address: '2657WMsDfac5UggijVFxgu3hEYKAPBhwQsk2HoPAafMXkgZ6uaPgDmiJeubghAQVe',
+                address: '2657WMsDfac5vydkak9a7BqGrsLqBzB7K3vT55rucZKYDmVnUCf6hXAFkZSTcUx7r',
             },
         },
         {
@@ -64,7 +64,7 @@ export default {
                 protocolMagic: PROTOCOL_MAGICS['testnet'],
             },
             result: {
-                address: '2657WMsDfac63WQoMHafvPofvN3dKV3EpyabFanTRekzpBJo9dcFpYBkjGeFyUQzf',
+                address: '2657WMsDfac61ebUDw53WUX49Dcfya8S8G7iYbhN4nP8JSFuh38T1LuFax1bUnhxA',
             },
         },
         {
@@ -74,7 +74,7 @@ export default {
                 protocolMagic: PROTOCOL_MAGICS['testnet'],
             },
             result: {
-                address: '2657WMsDfac7RgcCQASPeUNUSGkXkaHicG5H7WZTQRSWRdsdC83RcNy24fKWSK3NL',
+                address: '2657WMsDfac5PMpEsxc1md3pgZKUZRZ11MUK8tjkDHBQG9b3TMBsTQc4PmmumVrcn',
             },
         },
     ],

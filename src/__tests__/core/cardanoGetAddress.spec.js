@@ -81,17 +81,17 @@ const getAddressTestnet = () => {
     const expectedResponses = [
         {
             payload: {
-                address: '2657WMsDfac5UggijVFxgu3hEYKAPBhwQsk2HoPAafMXkgZ6uaPgDmiJeubghAQVe',
+                address: '2657WMsDfac5vydkak9a7BqGrsLqBzB7K3vT55rucZKYDmVnUCf6hXAFkZSTcUx7r',
             },
         },
         {
             payload: {
-                address: '2657WMsDfac63WQoMHafvPofvN3dKV3EpyabFanTRekzpBJo9dcFpYBkjGeFyUQzf',
+                address: '2657WMsDfac61ebUDw53WUX49Dcfya8S8G7iYbhN4nP8JSFuh38T1LuFax1bUnhxA',
             },
         },
         {
             payload: {
-                address: '2657WMsDfac7RgcCQASPeUNUSGkXkaHicG5H7WZTQRSWRdsdC83RcNy24fKWSK3NL',
+                address: '2657WMsDfac5PMpEsxc1md3pgZKUZRZ11MUK8tjkDHBQG9b3TMBsTQc4PmmumVrcn',
             },
         },
     ];
