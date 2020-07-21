@@ -15,6 +15,7 @@ import { find as findMethod } from './methods';
 import { create as createDeferred } from '../utils/deferred';
 import { resolveAfter } from '../utils/promiseUtils';
 import Log, { init as initLog } from '../utils/debug';
+import Timeout from '../utils/timeout';
 import type { ConnectSettings, Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse } from '../types';
 
 // Public variables
@@ -25,6 +26,7 @@ let _popupPromise: ?Deferred<void>; // Waiting for popup handshake
 let _uiPromises: Array<Deferred<UiPromiseResponse>> = []; // Waiting for ui response
 const _callMethods: Array<AbstractMethod> = [];
 let _preferredDevice: any; // TODO: type
+let _timeout: Timeout;
 
 // custom log
 const _log: Log = initLog('Core');
@@ -68,6 +70,10 @@ const getPopupPromise = (requestWindow: boolean = true): Deferred<void> => {
 const createUiPromise = (promiseEvent: string, device?: Device): Deferred<UiPromiseResponse> => {
     const uiPromise: Deferred<UiPromiseResponse> = createDeferred(promiseEvent, device);
     _uiPromises.push(uiPromise);
+
+    // Interaction timeout
+    interactionTimeout();
+
     return uiPromise;
 };
 
@@ -85,6 +91,8 @@ const findUiPromise = (callId: number, promiseEvent: string): ?Deferred<UiPromis
 const removeUiPromise = (promise: Deferred<UiPromiseResponse>): void => {
     _uiPromises = _uiPromises.filter(p => p !== promise);
 };
+
+const interactionTimeout = () => _timeout.start(() => onPopupClosed('Interaction timeout'));
 
 /**
  * Handle incoming message.
@@ -604,6 +612,7 @@ const cleanup = (): void => {
     // closePopup(); // this causes problem when action is interrupted (example: bootloader mode)
     _popupPromise = null;
     _uiPromises = []; // TODO: remove only promises with params callId
+    _timeout.stop();
     _log.log('Cleanup...');
 };
 
@@ -633,6 +642,8 @@ const onDeviceButtonHandler = async (device: Device, code: string, method: Abstr
         await getPopupPromise().promise;
     }
     const data = typeof method.getButtonRequestData === 'function' ? method.getButtonRequestData(code) : null;
+    // interaction timeout
+    interactionTimeout();
     // request view
     postMessage(DeviceMessage(DEVICE.BUTTON, { device: device.toMessageObject(), code: code }));
     postMessage(UiMessage(UI.REQUEST_BUTTON, { device: device.toMessageObject(), code: code, data }));
@@ -936,6 +947,9 @@ export const init = async (settings: ConnectSettings) => {
         _log.enabled = !!settings.debug;
         await DataManager.load(settings);
         await initCore();
+
+        _timeout = new Timeout(settings.interactionTimeout);
+
         return _core;
     } catch (error) {
         // TODO: kill app

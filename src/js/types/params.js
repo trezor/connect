@@ -47,6 +47,7 @@ export type ConnectSettings = {
     extension?: string;
     env: 'node' | 'web' | 'webextension' | 'electron' | 'react-native';
     timestamp: number;
+    interactionTimeout?: number;
 };
 
 export type CommonParams = {
