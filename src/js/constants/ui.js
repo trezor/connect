@@ -56,3 +56,5 @@ export const LOGIN_CHALLENGE_RESPONSE: 'ui-login_challenge_response' = 'ui-login
 
 export const BUNDLE_PROGRESS: 'ui-bundle_progress' = 'ui-bundle_progress';
 export const ADDRESS_VALIDATION: 'ui-address_validation' = 'ui-address_validation';
+
+export const IFRAME_FAILURE: 'ui-iframe-failure' = 'ui-iframe-failure';
