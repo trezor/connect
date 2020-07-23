@@ -173,11 +173,13 @@ export const call = async (params: any): Promise<any> => {
         try {
             await init(_settings);
         } catch (error) {
-            // Catch fatal iframe errors (not loading)
-            if (['Init_IframeBlocked', 'Init_IframeTimeout'].indexOf(error.code) === 1) {
-                _popupManager.postMessage(UiMessage(UI.IFRAME_FAILURE));
-            } else if (_popupManager) {
-                _popupManager.close();
+            if (_popupManager) {
+                // Catch fatal iframe errors (not loading)
+                if (['Init_IframeBlocked', 'Init_IframeTimeout'].indexOf(error.code) === 1) {
+                    _popupManager.postMessage(UiMessage(UI.IFRAME_FAILURE));
+                } else {
+                    _popupManager.close();
+                }
             }
             return errorMessage(error);
         }
