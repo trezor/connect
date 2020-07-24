@@ -91,6 +91,10 @@ export type AddressValidationMessage = {
     payload: ?ButtonRequestData;
 }
 
+export type IFrameFailure = {
+    type: typeof UI.IFRAME_FAILURE;
+}
+
 export type IFrameError = {
     type: typeof IFRAME.ERROR;
     payload: {
@@ -337,6 +341,7 @@ export interface UiMessageBuilder {
     (type: FT<BundleProgress<any>>, payload: FP<BundleProgress<any>>): CoreMessage;
     (type: FT<FirmwareProgress>, payload: FP<FirmwareProgress>): CoreMessage;
     (type: FT<CustomMessageRequest>, payload: FP<CustomMessageRequest>): CoreMessage;
+    (type: FT<IFrameFailure>): CoreMessage;
     // ui response
     (type: FT<ReceivePermission>, payload: FP<ReceivePermission>): CoreMessage;
     (type: FT<ReceiveConfirmation>, payload: FP<ReceiveConfirmation>): CoreMessage;
