@@ -1,3 +1,7 @@
+# 8.1.9
+#### Added
+- `interactionTimeout` property to the initial settings. This will timeout users who stay inactive for a specified amount of time (in seconds).
+
 # 8.1.8
 #### Added
 - `ButtonRequest_PinEntry`
