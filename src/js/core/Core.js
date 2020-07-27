@@ -14,8 +14,10 @@ import { find as findMethod } from './methods';
 
 import { create as createDeferred } from '../utils/deferred';
 import { resolveAfter } from '../utils/promiseUtils';
+import { versionCompare } from '../utils/versionUtils';
 import Log, { init as initLog } from '../utils/debug';
 import Timeout from '../utils/timeout';
+
 import type { ConnectSettings, Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse } from '../types';
 
 // Public variables
@@ -61,6 +63,38 @@ const getPopupPromise = (requestWindow: boolean = true): Deferred<void> => {
 };
 
 /**
+ * Start interaction timeout timer
+ */
+const interactionTimeout = () => _timeout.start(async () => {
+    /**
+     * Bridge version =< 2.0.28 has a bug that doesn't permit it to cancel
+     * user interactions in progress, so we have to do it manually.
+     */
+    const { version } = _core.getTransportInfo();
+    if (versionCompare(version, '2.0.28') < 1) {
+        if (_deviceList && _deviceList.asArray().length > 0) {
+            for await (const d of _deviceList.allDevices()) {
+                /**
+                 * Here we want to grab the currently used device, acquire it,
+                 * then run a command (getFeatures) and then release it. This
+                 * will reset any user interaction screen and make the device
+                 * usable for the next session.
+                 */
+                if (d.isUsedHere()) {
+                    await d.acquire();
+                    await d.getFeatures();
+                    await d.release();
+                    break;
+                }
+            }
+        }
+    }
+
+    // eslint-disable-next-line no-use-before-define
+    onPopupClosed('Interaction timeout');
+});
+
+/**
  * Creates an instance of uiPromise.
  * @param {string} promiseEvent
  * @param {Device} device
@@ -91,8 +125,6 @@ const findUiPromise = (callId: number, promiseEvent: string): ?Deferred<UiPromis
 const removeUiPromise = (promise: Deferred<UiPromiseResponse>): void => {
     _uiPromises = _uiPromises.filter(p => p !== promise);
 };
-
-const interactionTimeout = () => _timeout.start(() => onPopupClosed('Interaction timeout'));
 
 /**
  * Handle incoming message.
@@ -948,7 +980,7 @@ export const init = async (settings: ConnectSettings) => {
         await DataManager.load(settings);
         await initCore();
 
-        _timeout = new Timeout(settings.interactionTimeout);
+        _timeout = new Timeout(settings.interactionTimeout || 0);
 
         return _core;
     } catch (error) {
