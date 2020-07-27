@@ -2,9 +2,9 @@
 
 import Log, { init } from './debug';
 
-const _log: Log = init('Timeout', true);
+const _log: Log = init('InteractionTimeout');
 
-export default class Timeout {
+export default class InteractionTimeout {
     timeout: ?TimeoutID = null;
     seconds: number = 0;
 
@@ -27,7 +27,7 @@ export default class Timeout {
      * @param {number} seconds Optional parameter to override the seconds property
      * @returns {void}
      */
-    start(cancelFn: Promise<void>, seconds: ?number): void {
+    start(cancelFn: () => void, seconds: ?number): void {
         const time = seconds || this.seconds;
 
         // Not worth running for less than a second
@@ -41,7 +41,7 @@ export default class Timeout {
         _log.log(`starting interaction timeout for ${time} seconds`);
         this.timeout = setTimeout(async () => {
             _log.log('interaction timed out');
-            await cancelFn();
+            cancelFn();
         }, 1000 * time);
     }
 

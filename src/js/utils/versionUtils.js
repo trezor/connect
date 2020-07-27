@@ -1,3 +1,5 @@
+/* @flow */
+
 const VER_NUMS = 3;
 
 const versionRegex = new RegExp(/^[0-9]{1,3}(\.[0-9]{1,3}){0,2}$/);
@@ -64,12 +66,12 @@ export const normalizeVersionArray = (version: number[]) => {
  * @param {string} version Version string
  * @returns {number[]} Version array
  */
-export const versionSplit = (version: string) => {
+export const versionSplit = (version: string): number[] => {
     if (!isValidVersionString(version)) {
         return [0, 0, 0];
     }
 
-    return version.split('.').map(v => Number(v));
+    return version.split('.').map((v: string) => Number(v));
 };
 
 /**

@@ -621,4 +621,13 @@ export default class Device extends EventEmitter {
             };
         }
     }
+
+    //
+    async legacyForceRelease() {
+        if (this.isUsedHere()) {
+            await this.acquire();
+            await this.getFeatures();
+            await this.release();
+        }
+    }
 }
