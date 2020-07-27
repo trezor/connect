@@ -45,7 +45,7 @@ export const isValidVersionArray = (version: number[]) => {
 /**
  * Fills the missing version numbers with zeros (ie: [1, 2] will become [1, 2, 0])
  * @param {number[]} version Version array
- * @returns {number[]} Version array with all positions filled 
+ * @returns {number[]} Version array with all positions filled
  */
 export const normalizeVersionArray = (version: number[]) => {
     if (version.length === VER_NUMS) {
