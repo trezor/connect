@@ -4,7 +4,7 @@ import Device from '../../device/Device';
 import DataManager from '../../data/DataManager';
 import { UI, DEVICE, ERRORS } from '../../constants';
 import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../storage';
-import { versionCompare } from '../../utils/deviceFeaturesUtils';
+import { versionCompare } from '../../utils/versionUtils';
 
 import { UiMessage, DeviceMessage } from '../../message/builder';
 import type { Deferred, CoreMessage, UiPromiseResponse, FirmwareRange, FirmwareException, ButtonRequestData } from '../../types';

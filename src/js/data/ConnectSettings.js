@@ -36,6 +36,7 @@ const initialSettings: ConnectSettings = {
     env: 'web',
     lazyLoad: false,
     timestamp: new Date().getTime(),
+    interactionTimeout: 120, // 2 minutes
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -160,6 +161,10 @@ export const parse = (input: $Shape<ConnectSettings> = {}) => {
 
     if (typeof input.timestamp === 'number') {
         settings.timestamp = input.timestamp;
+    }
+
+    if (typeof input.interactionTimeout === 'number') {
+        settings.interactionTimeout = input.interactionTimeout;
     }
 
     if (typeof input.manifest === 'object') {

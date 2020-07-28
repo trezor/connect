@@ -11,7 +11,8 @@ import { create as createDeferred } from '../utils/deferred';
 import DataManager from '../data/DataManager';
 import { getAllNetworks } from '../data/CoinInfo';
 import { getFirmwareStatus, getRelease } from '../data/FirmwareInfo';
-import { versionCompare, parseCapabilities, getUnavailableCapabilities } from '../utils/deviceFeaturesUtils';
+import { parseCapabilities, getUnavailableCapabilities } from '../utils/deviceFeaturesUtils';
+import { versionCompare } from '../utils/versionUtils';
 import Log, { init as initLog } from '../utils/debug';
 
 // custom log
@@ -618,6 +619,15 @@ export default class Device extends EventEmitter {
                 features: this.features,
                 unavailableCapabilities: this.unavailableCapabilities,
             };
+        }
+    }
+
+    //
+    async legacyForceRelease() {
+        if (this.isUsedHere()) {
+            await this.acquire();
+            await this.getFeatures();
+            await this.release();
         }
     }
 }

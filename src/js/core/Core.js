@@ -14,8 +14,11 @@ import { find as findMethod } from './methods';
 
 import { create as createDeferred } from '../utils/deferred';
 import { resolveAfter } from '../utils/promiseUtils';
+import { versionCompare } from '../utils/versionUtils';
 import Log, { init as initLog } from '../utils/debug';
-import type { ConnectSettings, Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse } from '../types';
+import InteractionTimeout from '../utils/interactionTimeout';
+
+import type { ConnectSettings, Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse, TransportInfo } from '../types';
 
 // Public variables
 // eslint-disable-next-line no-use-before-define
@@ -25,6 +28,7 @@ let _popupPromise: ?Deferred<void>; // Waiting for popup handshake
 let _uiPromises: Array<Deferred<UiPromiseResponse>> = []; // Waiting for ui response
 const _callMethods: Array<AbstractMethod> = [];
 let _preferredDevice: any; // TODO: type
+let _interactionTimeout: InteractionTimeout;
 
 // custom log
 const _log: Log = initLog('Core');
@@ -59,6 +63,27 @@ const getPopupPromise = (requestWindow: boolean = true): Deferred<void> => {
 };
 
 /**
+ * Start interaction timeout timer
+ */
+const interactionTimeout = () => _interactionTimeout.start(() => {
+    /**
+     * Bridge version =< 2.0.28 has a bug that doesn't permit it to cancel
+     * user interactions in progress, so we have to do it manually.
+     */
+    const { type, version } = _core.getTransportInfo();
+    if (type === 'bridge' && versionCompare(version, '2.0.28') < 1) {
+        if (_deviceList && _deviceList.asArray().length > 0) {
+            _deviceList.allDevices().forEach(d => {
+                d.legacyForceRelease();
+            });
+        }
+    }
+
+    // eslint-disable-next-line no-use-before-define
+    onPopupClosed('Interaction timeout');
+});
+
+/**
  * Creates an instance of uiPromise.
  * @param {string} promiseEvent
  * @param {Device} device
@@ -68,6 +93,10 @@ const getPopupPromise = (requestWindow: boolean = true): Deferred<void> => {
 const createUiPromise = (promiseEvent: string, device?: Device): Deferred<UiPromiseResponse> => {
     const uiPromise: Deferred<UiPromiseResponse> = createDeferred(promiseEvent, device);
     _uiPromises.push(uiPromise);
+
+    // Interaction timeout
+    interactionTimeout();
+
     return uiPromise;
 };
 
@@ -604,6 +633,7 @@ const cleanup = (): void => {
     // closePopup(); // this causes problem when action is interrupted (example: bootloader mode)
     _popupPromise = null;
     _uiPromises = []; // TODO: remove only promises with params callId
+    _interactionTimeout.stop();
     _log.log('Cleanup...');
 };
 
@@ -633,6 +663,8 @@ const onDeviceButtonHandler = async (device: Device, code: string, method: Abstr
         await getPopupPromise().promise;
     }
     const data = typeof method.getButtonRequestData === 'function' ? method.getButtonRequestData(code) : null;
+    // interaction timeout
+    interactionTimeout();
     // request view
     postMessage(DeviceMessage(DEVICE.BUTTON, { device: device.toMessageObject(), code: code }));
     postMessage(UiMessage(UI.REQUEST_BUTTON, { device: device.toMessageObject(), code: code, data }));
@@ -896,10 +928,16 @@ export class Core extends EventEmitter {
         return _callMethods;
     }
 
-    getTransportInfo() {
+    getTransportInfo(): TransportInfo {
         if (_deviceList) {
             return _deviceList.getTransportInfo();
         }
+
+        return {
+            type: '',
+            version: '',
+            outdated: true,
+        };
     }
 }
 
@@ -936,6 +974,9 @@ export const init = async (settings: ConnectSettings) => {
         _log.enabled = !!settings.debug;
         await DataManager.load(settings);
         await initCore();
+
+        _interactionTimeout = new InteractionTimeout(settings.interactionTimeout || 0);
+
         return _core;
     } catch (error) {
         // TODO: kill app
