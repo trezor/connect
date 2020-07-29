@@ -566,6 +566,20 @@ export type TezosSignedTx = {
 };
 
 // Cardano types
+export type CardanoCertificatePointerType = {
+    block_index: number;
+    tx_index: number;
+    certificate_index: number;
+}
+
+export type CardanoAddressParameters = {
+    address_type: number;
+    address_n: number[];
+    address_n_staking: number[];
+    staking_key_hash?: string;
+    certificate_pointer?: CardanoCertificatePointerType;
+};
+
 export type CardanoAddress = {
     address: string;
     address_n?: Array<number>;

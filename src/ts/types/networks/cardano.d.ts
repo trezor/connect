@@ -17,17 +17,42 @@ export interface CardanoPublicKey {
 
 // GetAddress
 
-export interface CardanoGetAddress {
+export enum CardanoAddressType {
+    Base = 0,
+    Pointer = 4,
+    Enterprise = 6,
+    Byron = 8,
+    Reward = 14,
+}
+
+export interface CardanoCertificatePointer {
+    blockIndex: number;
+    txIndex: number;
+    certificateIndex: number;
+}
+
+export interface CardanoAddressParameters {
+    addressType: CardanoAddressType;
     path: string | number[];
-    address?: string;
+    stakingPath?: string | number[];
+    stakingKeyHash?: string;
+    certificatePointer?: CardanoCertificatePointer;
+};
+
+export interface CardanoGetAddress {
+    addressParameters: CardanoAddressParameters;
     protocolMagic: number;
+    networkId: number;
+    address?: string;
     showOnTrezor?: boolean;
 }
 
 export interface CardanoAddress {
-    path: number[];
-    serializedPath: string;
+    addressParameters: CardanoAddressParameters;
     protocolMagic: number;
+    networkId: number;
+    serializedPath: string;
+    serializedStakingPath: string;
     address: string;
 }
 
