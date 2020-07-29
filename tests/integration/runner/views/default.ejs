@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title>Trezor Connect integration test</title>
+    </head>
+    <body>
+        <button id="btn" onclick="button()">Test button</button>
+
+        <script src="/static/<%= scriptName %>"></script>
+        <script>
+            TrezorConnect.init(JSON.parse(atob('<%= params %>')));
+
+            const button = () => {
+                TrezorConnect.getAddress({
+                    path: "m/44'/0'/0'/0/0",
+                    coin: 'BTC',
+                })
+                .then(resp => console.log(resp))
+                .catch(err => console.error(err));
+            };
+        </script>
+    </body>
+</html>

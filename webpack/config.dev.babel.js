@@ -1,14 +1,14 @@
-import {
+const {
     SRC,
     HTML_SRC,
     JS_SRC,
     LIB_NAME,
     PORT,
-} from './constants';
+} = require('./constants');
 
-import webpack from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     watch: true,
