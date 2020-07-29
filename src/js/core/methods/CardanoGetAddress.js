@@ -9,12 +9,15 @@ import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
 import type { CoreMessage, UiPromiseResponse } from '../../types';
-import type { CardanoAddress } from '../../types/networks/cardano';
+import type { CardanoAddress, CardanoAddressParameters } from '../../types/networks/cardano';
+import type { CardanoAddressParameters as CardanoAddressParametersProto } from '../../types/trezor/protobuf';
 
 type Batch = {
-    path: Array<number>;
-    address: ?string;
+    addressParameters: CardanoAddressParameters;
+    addressParametersProto: CardanoAddressParametersProto;
     protocolMagic: number;
+    networkId: number;
+    address?: string;
     showOnTrezor: boolean;
 }
 
@@ -46,22 +49,36 @@ export default class CardanoGetAddress extends AbstractMethod {
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
-                { name: 'path', obligatory: true },
-                { name: 'address', type: 'string' },
-                { name: 'protocolMagic', type: 'number', obligatory: true },
+                { name: 'addressParameters', type: 'object', obligatory: true },
+                { name: 'networkId', type: 'number', obligatory: true },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
-            const path: Array<number> = validatePath(batch.path, 3);
+            validateParams(batch.addressParameters, [
+                { name: 'addressType', type: 'number', obligatory: true },
+                { name: 'path', type: 'string', obligatory: true },
+                { name: 'stakingPath', type: 'string' },
+                { name: 'stakingKeyHash', type: 'string' },
+            ]);
+
+            if (batch.addressParameters.certificatePointer) {
+                validateParams(batch.addressParameters.certificatePointer, [
+                    { name: 'blockIndex', type: 'number', obligatory: true },
+                    { name: 'txIndex', type: 'number', obligatory: true },
+                    { name: 'certificateIndex', type: 'number', obligatory: true },
+                ]);
+            }
+
             let showOnTrezor: boolean = true;
             if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
 
             bundle.push({
-                path,
-                address: batch.address,
+                addressParametersProto: this.addressParametersToProto(batch.addressParameters),
+                addressParameters: batch.addressParameters,
                 protocolMagic: batch.protocolMagic,
+                networkId: batch.networkId,
                 showOnTrezor,
             });
         });
@@ -73,17 +90,43 @@ export default class CardanoGetAddress extends AbstractMethod {
 
         // set info
         if (bundle.length === 1) {
-            this.info = `Export Cardano address for account #${ (fromHardened(this.params[0].path[2]) + 1) }`;
+            this.info = `Export Cardano address for account #${ (fromHardened(this.params[0].addressParametersProto.address_n[2])) }`;
         } else {
             this.info = 'Export multiple Cardano addresses';
         }
+    }
+
+    addressParametersToProto(addressParameters: CardanoAddressParameters): CardanoAddressParametersProto {
+        const path = validatePath(addressParameters.path, 3);
+
+        let stakingPath = [];
+        if (addressParameters.stakingPath) {
+            stakingPath = validatePath(addressParameters.stakingPath, 3);
+        }
+
+        let certificatePointer;
+        if (addressParameters.certificatePointer) {
+            certificatePointer = {
+                block_index: addressParameters.certificatePointer.blockIndex,
+                tx_index: addressParameters.certificatePointer.txIndex,
+                certificate_index: addressParameters.certificatePointer.certificateIndex,
+            };
+        }
+
+        return {
+            address_type: addressParameters.addressType,
+            address_n: path,
+            address_n_staking: stakingPath,
+            staking_key_hash: addressParameters.stakingKeyHash,
+            certificate_pointer: certificatePointer,
+        };
     }
 
     getButtonRequestData(code: string) {
         if (code === 'ButtonRequest_Address') {
             const data = {
                 type: 'address',
-                serializedPath: getSerializedPath(this.params[this.progress].path),
+                serializedPath: getSerializedPath(this.params[this.progress].addressParametersProto.address_n),
                 address: this.params[this.progress].address || 'not-set',
             };
             return data;
@@ -137,8 +180,9 @@ export default class CardanoGetAddress extends AbstractMethod {
             // or display as default inside popup
             if (batch.showOnTrezor) {
                 const silent = await this.device.getCommands().cardanoGetAddress(
-                    batch.path,
+                    batch.addressParametersProto,
                     batch.protocolMagic,
+                    batch.networkId,
                     false
                 );
                 if (typeof batch.address === 'string') {
@@ -151,14 +195,18 @@ export default class CardanoGetAddress extends AbstractMethod {
             }
 
             const response = await this.device.getCommands().cardanoGetAddress(
-                batch.path,
+                batch.addressParametersProto,
                 batch.protocolMagic,
+                batch.networkId,
                 batch.showOnTrezor
             );
+
             responses.push({
-                path: batch.path,
-                serializedPath: getSerializedPath(batch.path),
+                addressParameters: batch.addressParameters,
                 protocolMagic: batch.protocolMagic,
+                networkId: batch.networkId,
+                serializedPath: getSerializedPath(batch.addressParametersProto.address_n),
+                serializedStakingPath: getSerializedPath(batch.addressParametersProto.address_n_staking),
                 address: response.address,
             });
 
