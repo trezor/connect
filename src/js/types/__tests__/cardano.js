@@ -3,25 +3,80 @@ import TrezorConnect from '../../index';
 
 export const cardanoGetAddress = async () => {
     // regular
-    const singleAddress = await TrezorConnect.cardanoGetAddress({ path: 'm/44', protocolMagic: 0 });
+    const singleAddress = await TrezorConnect.cardanoGetAddress({
+        addressParameters: {
+            addressType: 0,
+            path: 'm/44',
+            stakingPath: 'm/44',
+            stakingKeyHash: 'aaff00..',
+            certificatePointer: {
+                blockIndex: 0,
+                txIndex: 1,
+                certificateIndex: 2,
+            },
+        },
+        protocolMagic: 0,
+        networkId: 0,
+    });
     (singleAddress.success: boolean);
     if (singleAddress.success) {
         const { payload } = singleAddress;
         (payload.address: string);
-        (payload.path: number[]);
         (payload.protocolMagic: number);
+        (payload.networkId: number);
         (payload.serializedPath: string);
+        (payload.serializedStakingPath: string);
+        const { addressParameters } = payload;
+        (addressParameters.addressType: number);
+        (addressParameters.path: string | number[]);
+        (addressParameters.stakingPath: ?string | ?number[]);
+        (addressParameters.stakingKeyHash: ?string);
+        const { certificatePointer } = addressParameters;
+        if (certificatePointer) {
+            (certificatePointer.blockIndex: ?number);
+            (certificatePointer.txIndex: ?number);
+            (certificatePointer.certificateIndex: ?number);
+        }
     }
 
     // bundle
-    const bundleAddress = await TrezorConnect.cardanoGetAddress({ bundle: [{ path: 'm/44', protocolMagic: 0 }] });
+    const bundleAddress = await TrezorConnect.cardanoGetAddress({
+        bundle: [
+            {
+                addressParameters: {
+                    addressType: 0,
+                    path: 'm/44',
+                    stakingPath: 'm/44',
+                    stakingKeyHash: 'aaff00..',
+                    certificatePointer: {
+                        blockIndex: 0,
+                        txIndex: 1,
+                        certificateIndex: 2,
+                    },
+                },
+                protocolMagic: 0,
+                networkId: 0,
+            },
+        ],
+    });
     (bundleAddress.success: boolean);
     if (bundleAddress.success) {
         bundleAddress.payload.forEach(item => {
             (item.address: string);
-            (item.path: number[]);
             (item.protocolMagic: number);
+            (item.networkId: number);
             (item.serializedPath: string);
+            (item.serializedStakingPath: string);
+            const { addressParameters } = item;
+            (addressParameters.addressType: number);
+            (addressParameters.path: string | number[]);
+            (addressParameters.stakingPath: ?string | number[]);
+            const { certificatePointer } = addressParameters;
+            if (certificatePointer) {
+                (certificatePointer.blockIndex: ?number);
+                (certificatePointer.txIndex: ?number);
+                (certificatePointer.certificateIndex: ?number);
+            }
         });
     } else {
         (bundleAddress.payload.error: string);
@@ -38,14 +93,31 @@ export const cardanoGetAddress = async () => {
         allowSeedlessDevice: false,
         keepSession: false,
         skipFinalReload: false,
-        path: 'm/44',
+        addressParameters: {
+            addressType: 0,
+            path: 'm/44',
+            stakingPath: 'm/44',
+            stakingKeyHash: 'aaff00..',
+            certificatePointer: {
+                blockIndex: 0,
+                txIndex: 1,
+                certificateIndex: 2,
+            },
+        },
         address: 'a',
         protocolMagic: 0,
+        networkId: 0,
         showOnTrezor: true,
     });
 
     // $ExpectError: payload is Address
-    const e1 = await TrezorConnect.cardanoGetAddress({ path: 'm/44' });
+    const e1 = await TrezorConnect.cardanoGetAddress({
+        addressParameters: {
+            addressType: 0,
+            path: 'm/44',
+            stakingPath: 'm/44',
+        },
+    });
     if (e1.success) {
         e1.payload.forEach(item => {
             (item.address: string);
@@ -53,7 +125,19 @@ export const cardanoGetAddress = async () => {
     }
 
     // $ExpectError: payload is Address[]
-    const e2 = await TrezorConnect.cardanoGetAddress({ bundle: [{ path: 'm/44' }] });
+    const e2 = await TrezorConnect.cardanoGetAddress({
+        bundle: [
+            {
+                addressParameters: {
+                    addressType: 0,
+                    path: 'm/44',
+                    stakingPath: 'm/44',
+                },
+                protocolMagic: 0,
+                networkId: 0,
+            },
+        ],
+    });
     if (e2.success) e2.payload.address;
 
     // with invalid params
@@ -62,7 +146,7 @@ export const cardanoGetAddress = async () => {
     // $ExpectError
     TrezorConnect.cardanoGetAddress({ coin: 'btc' });
     // $ExpectError
-    TrezorConnect.cardanoGetAddress({ path: 1 });
+    TrezorConnect.cardanoGetAddress({ addressParameters: { path: 1 } });
     // $ExpectError
     TrezorConnect.cardanoGetAddress({ bundle: 1 });
 };

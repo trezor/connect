@@ -2,13 +2,39 @@ import TrezorConnect from '../index';
 
 export const cardanoGetAddress = async () => {
     // regular
-    const singleAddress = await TrezorConnect.cardanoGetAddress({ path: 'm/44', protocolMagic: 0 });
+    const singleAddress = await TrezorConnect.cardanoGetAddress({
+        addressParameters: {
+            addressType: 0,
+            path: 'm/44',
+            stakingPath: 'm/44',
+            stakingKeyHash: 'aaff00..',
+            certificatePointer: {
+                blockIndex: 0,
+                txIndex: 1,
+                certificateIndex: 2,
+            },
+        },
+        protocolMagic: 0,
+        networkId: 0,
+    });
     if (singleAddress.success) {
         const { payload } = singleAddress;
         payload.address;
-        payload.path;
         payload.protocolMagic;
+        payload.networkId;
         payload.serializedPath;
+        payload.serializedStakingPath;
+        const { addressParameters } = payload;
+        addressParameters.addressType;
+        addressParameters.path;
+        addressParameters.stakingPath;
+        addressParameters.stakingKeyHash;
+        const { certificatePointer } = addressParameters;
+        if (certificatePointer) {
+            certificatePointer.blockIndex;
+            certificatePointer.txIndex;
+            certificatePointer.certificateIndex;
+        }
         // @ts-ignore
         payload.forEach(item => {
             item.address;
@@ -16,13 +42,43 @@ export const cardanoGetAddress = async () => {
     }
 
     // bundle
-    const bundleAddress = await TrezorConnect.cardanoGetAddress({ bundle: [{ path: 'm/44', protocolMagic: 0 }] });
+    const bundleAddress = await TrezorConnect.cardanoGetAddress({
+        bundle: [
+            {
+                addressParameters: {
+                    addressType: 0,
+                    path: 'm/44',
+                    stakingPath: 'm/44',
+                    stakingKeyHash: 'aaff00..',
+                    certificatePointer: {
+                        blockIndex: 0,
+                        txIndex: 1,
+                        certificateIndex: 2,
+                    },
+                },
+                protocolMagic: 0,
+                networkId: 0,
+            },
+        ],
+    });
     if (bundleAddress.success) {
         bundleAddress.payload.forEach(item => {
             item.address;
-            item.path;
             item.protocolMagic;
+            item.networkId;
             item.serializedPath;
+            item.serializedStakingPath;
+            const { addressParameters } = item;
+            addressParameters.addressType;
+            addressParameters.path;
+            addressParameters.stakingPath;
+            addressParameters.stakingKeyHash;
+            const { certificatePointer } = addressParameters;
+            if (certificatePointer) {
+                certificatePointer.blockIndex;
+                certificatePointer.txIndex;
+                certificatePointer.certificateIndex;
+            }
         });
         // @ts-ignore
         bundleAddress.payload.address;
@@ -41,9 +97,20 @@ export const cardanoGetAddress = async () => {
         allowSeedlessDevice: false,
         keepSession: false,
         skipFinalReload: false,
-        path: 'm/44',
+        addressParameters: {
+            addressType: 0,
+            path: 'm/44',
+            stakingPath: 'm/44',
+            stakingKeyHash: 'aaff00..',
+            certificatePointer: {
+                blockIndex: 0,
+                txIndex: 1,
+                certificateIndex: 2,
+            },
+        },
         address: 'a',
         protocolMagic: 0,
+        networkId: 0,
         showOnTrezor: true,
     });
 
@@ -53,7 +120,7 @@ export const cardanoGetAddress = async () => {
     // @ts-ignore
     TrezorConnect.cardanoGetAddress({ coin: 'btc' });
     // @ts-ignore
-    TrezorConnect.cardanoGetAddress({ path: 1 });
+    TrezorConnect.cardanoGetAddress({ addressParameters: { path: 1 } });
     // @ts-ignore
     TrezorConnect.cardanoGetAddress({ bundle: 1 });
 };
