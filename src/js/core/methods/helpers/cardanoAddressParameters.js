@@ -46,3 +46,22 @@ export const addressParametersToProto = (addressParameters: CardanoAddressParame
         certificate_pointer: certificatePointer,
     };
 };
+
+export const addressParametersFromProto = (addressParameters: CardanoAddressParametersProto): CardanoAddressParameters => {
+    let certificatePointer;
+    if (addressParameters.certificate_pointer) {
+        certificatePointer = {
+            blockIndex: addressParameters.certificate_pointer.block_index,
+            txIndex: addressParameters.certificate_pointer.tx_index,
+            certificateIndex: addressParameters.certificate_pointer.certificate_index,
+        };
+    }
+
+    return {
+        addressType: addressParameters.address_type,
+        path: addressParameters.address_n,
+        stakingPath: addressParameters.address_n_staking,
+        stakingKeyHash: addressParameters.staking_key_hash,
+        certificatePointer: certificatePointer,
+    };
+};

@@ -4,18 +4,21 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { fromHardened, getSerializedPath } from '../../utils/pathUtils';
-import { addressParametersToProto, validateAddressParameters } from './helpers/cardanoAddressParameters';
+import {
+    addressParametersFromProto,
+    addressParametersToProto,
+    validateAddressParameters,
+} from './helpers/cardanoAddressParameters';
 
 import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
 import type { CoreMessage, UiPromiseResponse } from '../../types';
-import type { CardanoAddress, CardanoAddressParameters } from '../../types/networks/cardano';
-import type { CardanoAddressParameters as CardanoAddressParametersProto } from '../../types/trezor/protobuf';
+import type { CardanoAddress } from '../../types/networks/cardano';
+import type { CardanoAddressParameters } from '../../types/trezor/protobuf';
 
 type Batch = {
     addressParameters: CardanoAddressParameters;
-    addressParametersProto: CardanoAddressParametersProto;
     protocolMagic: number;
     networkId: number;
     address?: string;
@@ -63,8 +66,7 @@ export default class CardanoGetAddress extends AbstractMethod {
             }
 
             bundle.push({
-                addressParametersProto: addressParametersToProto(batch.addressParameters),
-                addressParameters: batch.addressParameters,
+                addressParameters: addressParametersToProto(batch.addressParameters),
                 protocolMagic: batch.protocolMagic,
                 networkId: batch.networkId,
                 showOnTrezor,
@@ -78,7 +80,7 @@ export default class CardanoGetAddress extends AbstractMethod {
 
         // set info
         if (bundle.length === 1) {
-            this.info = `Export Cardano address for account #${ (fromHardened(this.params[0].addressParametersProto.address_n[2])) }`;
+            this.info = `Export Cardano address for account #${ (fromHardened(this.params[0].addressParameters.address_n[2])) }`;
         } else {
             this.info = 'Export multiple Cardano addresses';
         }
@@ -88,7 +90,7 @@ export default class CardanoGetAddress extends AbstractMethod {
         if (code === 'ButtonRequest_Address') {
             const data = {
                 type: 'address',
-                serializedPath: getSerializedPath(this.params[this.progress].addressParametersProto.address_n),
+                serializedPath: getSerializedPath(this.params[this.progress].addressParameters.address_n),
                 address: this.params[this.progress].address || 'not-set',
             };
             return data;
@@ -142,7 +144,7 @@ export default class CardanoGetAddress extends AbstractMethod {
             // or display as default inside popup
             if (batch.showOnTrezor) {
                 const silent = await this.device.getCommands().cardanoGetAddress(
-                    batch.addressParametersProto,
+                    batch.addressParameters,
                     batch.protocolMagic,
                     batch.networkId,
                     false
@@ -157,18 +159,18 @@ export default class CardanoGetAddress extends AbstractMethod {
             }
 
             const response = await this.device.getCommands().cardanoGetAddress(
-                batch.addressParametersProto,
+                batch.addressParameters,
                 batch.protocolMagic,
                 batch.networkId,
                 batch.showOnTrezor
             );
 
             responses.push({
-                addressParameters: batch.addressParameters,
+                addressParameters: addressParametersFromProto(batch.addressParameters),
                 protocolMagic: batch.protocolMagic,
                 networkId: batch.networkId,
-                serializedPath: getSerializedPath(batch.addressParametersProto.address_n),
-                serializedStakingPath: getSerializedPath(batch.addressParametersProto.address_n_staking),
+                serializedPath: getSerializedPath(batch.addressParameters.address_n),
+                serializedStakingPath: getSerializedPath(batch.addressParameters.address_n_staking),
                 address: response.address,
             });
 
