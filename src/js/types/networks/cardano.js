@@ -67,7 +67,7 @@ export type CardanoInput = {
     prev_index: number;
 }
 export type CardanoOutput = {
-    path: string | number[];
+    addressParameters: CardanoAddressParameters;
     amount: string;
 } | {
     address: string;
@@ -80,6 +80,7 @@ export type CardanoSignTransaction = {
     fee: string;
     ttl: string;
     protocolMagic: number;
+    networkId: number;
 }
 
 export type CardanoSignedTx = {
