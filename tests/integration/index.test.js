@@ -8,14 +8,21 @@ const { urlParams } = require('./utils/helpers');
 
 jest.setTimeout(60 * 1000);
 
+/**
+ * This part takes care of running the webpack build and executing
+ * the web server that will serve the example page as well as the
+ * generated files (from webpack).
+ */
 beforeAll(async () => {
-    //const stats = await runBuild();
-    //const scriptName = stats.assetsByChunkName['trezor-connect'];
+    const stats = await runBuild();
+    const scriptName = stats.assetsByChunkName['trezor-connect'];
 
-    const scriptName = 'js/trezor-connect.d5698679adcb86af53ec.js';
     await runServer({ scriptName });
 });
 
+/**
+ * After all is done, close the server (otherwise Jest hangs).
+ */
 afterAll(async () => {
     await stopServer();
 });
