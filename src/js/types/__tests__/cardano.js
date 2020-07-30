@@ -205,10 +205,25 @@ export const cardanoSignTransaction = async () => {
                 address: 'Ae2..',
                 amount: '3003112',
             },
+            {
+                addressParameters: {
+                    addressType: 0,
+                    path: 'm/44',
+                    stakingPath: 'm/44',
+                    stakingKeyHash: 'aaff00..',
+                    certificatePointer: {
+                        blockIndex: 0,
+                        txIndex: 0,
+                        certificateIndex: 0,
+                    },
+                },
+                amount: '3003112',
+            },
         ],
         fee: '42',
         ttl: '10',
         protocolMagic: 0,
+        networkId: 0,
     });
 
     if (sign.success) {
