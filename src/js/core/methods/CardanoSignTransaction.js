@@ -4,6 +4,7 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
+import { addressParametersToProto, validateAddressParameters } from './helpers/cardanoAddressParameters';
 
 import type { CardanoTxInput, CardanoTxOutput } from '../../types/trezor/protobuf';
 import type { CardanoSignedTx as CardanoSignedTxResponse } from '../../types/networks/cardano';
@@ -15,6 +16,7 @@ type Params = {
     fee: string;
     ttl: string;
     protocolMagic: number;
+    networkId: number;
 }
 
 export default class CardanoSignTransaction extends AbstractMethod {
@@ -34,6 +36,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             { name: 'fee', type: 'string', obligatory: true },
             { name: 'ttl', type: 'string', obligatory: true },
             { name: 'protocolMagic', type: 'number', obligatory: true },
+            { name: 'networkId', type: 'number', obligatory: true },
         ]);
 
         const inputs: Array<CardanoTxInput> = payload.inputs.map(input => {
@@ -56,9 +59,10 @@ export default class CardanoSignTransaction extends AbstractMethod {
                 { name: 'amount', type: 'amount', obligatory: true },
             ]);
 
-            if (output.path) {
+            if (output.addressParameters) {
+                validateAddressParameters(output.addressParameters);
                 return {
-                    address_n: validatePath(output.path, 5),
+                    address_parameters: addressParametersToProto(output.addressParameters),
                     amount: output.amount,
                 };
             } else {
@@ -75,6 +79,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             fee: payload.fee,
             ttl: payload.ttl,
             protocolMagic: payload.protocolMagic,
+            networkId: payload.networkId,
         };
     }
 
@@ -85,6 +90,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             this.params.fee,
             this.params.ttl,
             this.params.protocolMagic,
+            this.params.networkId,
         );
 
         return {

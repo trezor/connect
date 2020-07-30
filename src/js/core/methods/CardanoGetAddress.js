@@ -3,7 +3,8 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
-import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
+import { fromHardened, getSerializedPath } from '../../utils/pathUtils';
+import { addressParametersToProto, validateAddressParameters } from './helpers/cardanoAddressParameters';
 
 import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
@@ -54,20 +55,7 @@ export default class CardanoGetAddress extends AbstractMethod {
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
-            validateParams(batch.addressParameters, [
-                { name: 'addressType', type: 'number', obligatory: true },
-                { name: 'path', type: 'string', obligatory: true },
-                { name: 'stakingPath', type: 'string' },
-                { name: 'stakingKeyHash', type: 'string' },
-            ]);
-
-            if (batch.addressParameters.certificatePointer) {
-                validateParams(batch.addressParameters.certificatePointer, [
-                    { name: 'blockIndex', type: 'number', obligatory: true },
-                    { name: 'txIndex', type: 'number', obligatory: true },
-                    { name: 'certificateIndex', type: 'number', obligatory: true },
-                ]);
-            }
+            validateAddressParameters(batch.addressParameters);
 
             let showOnTrezor: boolean = true;
             if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
@@ -75,7 +63,7 @@ export default class CardanoGetAddress extends AbstractMethod {
             }
 
             bundle.push({
-                addressParametersProto: this.addressParametersToProto(batch.addressParameters),
+                addressParametersProto: addressParametersToProto(batch.addressParameters),
                 addressParameters: batch.addressParameters,
                 protocolMagic: batch.protocolMagic,
                 networkId: batch.networkId,
@@ -94,32 +82,6 @@ export default class CardanoGetAddress extends AbstractMethod {
         } else {
             this.info = 'Export multiple Cardano addresses';
         }
-    }
-
-    addressParametersToProto(addressParameters: CardanoAddressParameters): CardanoAddressParametersProto {
-        const path = validatePath(addressParameters.path, 3);
-
-        let stakingPath = [];
-        if (addressParameters.stakingPath) {
-            stakingPath = validatePath(addressParameters.stakingPath, 3);
-        }
-
-        let certificatePointer;
-        if (addressParameters.certificatePointer) {
-            certificatePointer = {
-                block_index: addressParameters.certificatePointer.blockIndex,
-                tx_index: addressParameters.certificatePointer.txIndex,
-                certificate_index: addressParameters.certificatePointer.certificateIndex,
-            };
-        }
-
-        return {
-            address_type: addressParameters.addressType,
-            address_n: path,
-            address_n_staking: stakingPath,
-            staking_key_hash: addressParameters.stakingKeyHash,
-            certificate_pointer: certificatePointer,
-        };
     }
 
     getButtonRequestData(code: string) {
