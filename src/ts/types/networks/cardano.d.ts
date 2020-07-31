@@ -91,11 +91,11 @@ export type CardanoWithdrawal = {
 export interface CardanoSignTransaction {
     inputs: CardanoInput[];
     outputs: CardanoOutput[];
+    fee: string;
+    ttl: string;
     certificates?: CardanoCertificate[];
     withdrawals?: CardanoWithdrawal[];
     metadata?: string;
-    fee: string;
-    ttl: string;
     protocolMagic: number;
     networkId: number;
 }

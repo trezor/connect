@@ -18,11 +18,11 @@ import type { CoreMessage } from '../../types';
 type Params = {
     inputs: Array<CardanoTxInput>;
     outputs: Array<CardanoTxOutput>;
+    fee: string;
+    ttl: string;
     certificates: Array<CardanoTxCertificate>;
     withdrawals: Array<CardanoTxWithdrawal>;
     metadata: string;
-    fee: string;
-    ttl: string;
     protocolMagic: number;
     networkId: number;
 }
@@ -41,11 +41,11 @@ export default class CardanoSignTransaction extends AbstractMethod {
         validateParams(payload, [
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
+            { name: 'fee', type: 'string', obligatory: true },
+            { name: 'ttl', type: 'string', obligatory: true },
             { name: 'certificates', type: 'array' },
             { name: 'withdrawals', type: 'array' },
             { name: 'metadata', type: 'string' },
-            { name: 'fee', type: 'string', obligatory: true },
-            { name: 'ttl', type: 'string', obligatory: true },
             { name: 'protocolMagic', type: 'number', obligatory: true },
             { name: 'networkId', type: 'number', obligatory: true },
         ]);
@@ -117,11 +117,11 @@ export default class CardanoSignTransaction extends AbstractMethod {
         this.params = {
             inputs,
             outputs,
+            fee: payload.fee,
+            ttl: payload.ttl,
             certificates,
             withdrawals,
             metadata: payload.metadata,
-            fee: payload.fee,
-            ttl: payload.ttl,
             protocolMagic: payload.protocolMagic,
             networkId: payload.networkId,
         };
@@ -131,11 +131,11 @@ export default class CardanoSignTransaction extends AbstractMethod {
         const response = await this.device.getCommands().cardanoSignTx(
             this.params.inputs,
             this.params.outputs,
+            this.params.fee,
+            this.params.ttl,
             this.params.certificates,
             this.params.withdrawals,
             this.params.metadata,
-            this.params.fee,
-            this.params.ttl,
             this.params.protocolMagic,
             this.params.networkId,
         );

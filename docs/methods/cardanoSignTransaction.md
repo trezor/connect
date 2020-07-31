@@ -20,13 +20,13 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 ###### [flowtype](../../src/js/types/networks/cardano.js#L62-L109)
 * `inputs` — *obligatory* `Array` of [CardanoInput](../../src/js/types/networks/cardano.js#L71)
 * `outputs` - *obligatory* `Array` of [CardanoOutput](../../src/js/types/networks/cardano.js#L76)
-* `certificates` - *optional* `Array` of [CardanoCertificate](../../src/js/types/networks/cardano.js#L83)
-* `withdrawals` - *optional* `Array` of [CardanoWithdrawal](../../src/js/types/networks/cardano.js#L88)
-* `metadata` - *optional* `String`
 * `fee` - *obligatory* `String`
 * `ttl` - *obligatory* `String`
 * `protocolMagic` - *obligatory* `Integer` 764824073 for Mainnet, 42 for Testnet
 * `networkId` - *obligatory* `Integer` 1 for Mainnet, 0 for Testnet
+* `certificates` - *optional* `Array` of [CardanoCertificate](../../src/js/types/networks/cardano.js#L83)
+* `withdrawals` - *optional* `Array` of [CardanoWithdrawal](../../src/js/types/networks/cardano.js#L88)
+* `metadata` - *optional* `String`
 
 ### Example
 ```javascript
@@ -52,6 +52,8 @@ TrezorConnect.cardanoSignTransaction({
             amount: "7120787",
         }
     ],
+    fee: "42",
+    ttl: "10",
     certificates: [
         {
             type: 0,
@@ -74,8 +76,6 @@ TrezorConnect.cardanoSignTransaction({
         }
     ],
     metadata: "a200a11864a118c843aa00ff01a119012c590100aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-    fee: "42",
-    ttl: "10",
     protocolMagic: 764824073,
     networkId: 1,
 });
