@@ -6,13 +6,21 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import { addressParametersToProto, validateAddressParameters } from './helpers/cardanoAddressParameters';
 
-import type { CardanoTxInput, CardanoTxOutput } from '../../types/trezor/protobuf';
+import type {
+    CardanoTxCertificate,
+    CardanoTxInput,
+    CardanoTxOutput,
+    CardanoTxWithdrawal,
+} from '../../types/trezor/protobuf';
 import type { CardanoSignedTx as CardanoSignedTxResponse } from '../../types/networks/cardano';
 import type { CoreMessage } from '../../types';
 
 type Params = {
     inputs: Array<CardanoTxInput>;
     outputs: Array<CardanoTxOutput>;
+    certificates: Array<CardanoTxCertificate>;
+    withdrawals: Array<CardanoTxWithdrawal>;
+    metadata: string;
     fee: string;
     ttl: string;
     protocolMagic: number;
@@ -33,6 +41,9 @@ export default class CardanoSignTransaction extends AbstractMethod {
         validateParams(payload, [
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
+            { name: 'certificates', type: 'array' },
+            { name: 'withdrawals', type: 'array' },
+            { name: 'metadata', type: 'string' },
             { name: 'fee', type: 'string', obligatory: true },
             { name: 'ttl', type: 'string', obligatory: true },
             { name: 'protocolMagic', type: 'number', obligatory: true },
@@ -73,9 +84,42 @@ export default class CardanoSignTransaction extends AbstractMethod {
             }
         });
 
+        let certificates: Array<CardanoTxCertificate> = [];
+        if (payload.certificates) {
+            certificates = payload.certificates.map(certificate => {
+                validateParams(certificate, [
+                    { name: 'type', type: 'number', obligatory: true },
+                    { name: 'path', obligatory: true },
+                    { name: 'pool', type: 'string' },
+                ]);
+                return {
+                    type: certificate.type,
+                    path: validatePath(certificate.path, 5),
+                    pool: certificate.pool,
+                };
+            });
+        }
+
+        let withdrawals: Array<CardanoTxWithdrawal> = [];
+        if (payload.withdrawals) {
+            withdrawals = payload.withdrawals.map(withdrawal => {
+                validateParams(withdrawal, [
+                    { name: 'path', obligatory: true },
+                    { name: 'amount', type: 'amount', obligatory: true },
+                ]);
+                return {
+                    path: validatePath(withdrawal.path, 5),
+                    amount: withdrawal.amount,
+                };
+            });
+        }
+
         this.params = {
             inputs,
             outputs,
+            certificates,
+            withdrawals,
+            metadata: payload.metadata,
             fee: payload.fee,
             ttl: payload.ttl,
             protocolMagic: payload.protocolMagic,
@@ -87,6 +131,9 @@ export default class CardanoSignTransaction extends AbstractMethod {
         const response = await this.device.getCommands().cardanoSignTx(
             this.params.inputs,
             this.params.outputs,
+            this.params.certificates,
+            this.params.withdrawals,
+            this.params.metadata,
             this.params.fee,
             this.params.ttl,
             this.params.protocolMagic,
