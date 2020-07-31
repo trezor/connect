@@ -1,4 +1,6 @@
 # 8.1.9
+#### Fixed
+- `composeTransaction` - remove unnecessary condition when using `send-max` outputs
 #### Added
 - `interactionTimeout` property to the initial settings. This will timeout users who stay inactive for a specified amount of time (in seconds).
 
