@@ -1,4 +1,4 @@
-import { CARDANO_ADDRESS_TYPE } from '../../src/js/types/networks/cardano';
+import { CARDANO_ADDRESS_TYPE, CARDANO_CERTIFICATE_TYPE } from '../../src/js/types/networks/cardano';
 
 // vectors from https://github.com/trezor/trezor-firmware/tree/master/python/trezorlib/tests/device_tests/test_msg_cardano_sign_transaction.py
 
@@ -78,6 +78,27 @@ const SAMPLE_OUTPUTS = {
         address: 'addr_test1vr9s8py7y68e3x66sscs0wkhlg5ssfrfs65084jrlrqcfqqtmut0e',
         amount: '1',
     },
+};
+
+const SAMPLE_CERTIFICATES = {
+    stake_registration: {
+        type: CARDANO_CERTIFICATE_TYPE.StakeRegistration,
+        path: "m/1852'/1815'/0'/2/0",
+    },
+    stake_deregistration: {
+        type: CARDANO_CERTIFICATE_TYPE.StakeDeregistration,
+        path: "m/1852'/1815'/0'/2/0",
+    },
+    stake_delegation: {
+        type: CARDANO_CERTIFICATE_TYPE.StakeDelegation,
+        path: "m/1852'/1815'/0'/2/0",
+        pool: 'f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973',
+    },
+};
+
+const SAMPLE_WITHDRAWAL = {
+    path: "m/1852'/1815'/0'/2/0",
+    amount: '1000',
 };
 
 const FEE = '42';
@@ -207,6 +228,95 @@ export default {
             result: {
                 hash: 'd3570557b197604109481a80aeb66cd2cfabc57f802ad593bacc12eb658e5d72',
                 serializedTx: '83a400818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018282583901eb0baa5e570cffbe2934db29df0b6a3d7c0430ee65d4c3a7ab2fefb91bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff0182581d6180f9e2c88e6c817008f3a812ed889b4a4da8e0bd103f86e7335422aa1a006ca79302182a030aa100818258205d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c15840c5996650c438c4493b2c8a94229621bb9b151b8d61d75fb868c305e917031e9a1654f35023f7dbf5d1839ab9d57b153c7f79c2666af51ecf363780397956e00af6',
+            },
+        },
+
+        {
+            description: 'signStakeRegistration',
+            params: {
+                inputs: [SAMPLE_INPUTS['shelley_input']],
+                outputs: [SAMPLE_OUTPUTS['simple_shelley_output']],
+                certificates: [SAMPLE_CERTIFICATES['stake_registration']],
+                fee: FEE,
+                ttl: TTL,
+                protocolMagic: PROTOCOL_MAGICS['mainnet'],
+                networkId: NETWORK_IDS['mainnet'],
+            },
+            result: {
+                hash: '1a3a295908afd8b2afc368071272d6964be6ee0af062bb765aea65ca454dc0c9',
+                serializedTx: '83a500818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018182583901eb0baa5e570cffbe2934db29df0b6a3d7c0430ee65d4c3a7ab2fefb91bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff0102182a030a048182008200581c122a946b9ad3d2ddf029d3a828f0468aece76895f15c9efbd69b4277a100818258205d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c15840a938b16bd81aea8d3aaf11e4d460dad1f36d34bf34ad066d0f5ce5d4137654145d998c3482aa823ff1acf021c6e2cd2774fff00361cbb9e72b98632307ee4000f6',
+            },
+        },
+
+        {
+            description: 'signStakeRegistrationAndDelegation',
+            params: {
+                inputs: [SAMPLE_INPUTS['shelley_input']],
+                outputs: [SAMPLE_OUTPUTS['simple_shelley_output']],
+                certificates: [
+                    SAMPLE_CERTIFICATES['stake_registration'],
+                    SAMPLE_CERTIFICATES['stake_delegation'],
+                ],
+                fee: FEE,
+                ttl: TTL,
+                protocolMagic: PROTOCOL_MAGICS['mainnet'],
+                networkId: NETWORK_IDS['mainnet'],
+            },
+            result: {
+                hash: '439764b5f7e08839881536a3191faeaf111e75d9f00f83b102c5c1c6fa9fcaf9',
+                serializedTx: '83a500818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018182583901eb0baa5e570cffbe2934db29df0b6a3d7c0430ee65d4c3a7ab2fefb91bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff0102182a030a048282008200581c122a946b9ad3d2ddf029d3a828f0468aece76895f15c9efbd69b427783028200581c122a946b9ad3d2ddf029d3a828f0468aece76895f15c9efbd69b4277581cf61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973a10082825820bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e58400dbdf36f92bc5199526ffb8b83b33a9eeda0ed3e46fb4025a104346801afb9cf45fa1a5482e54c769f4102e67af46205457d7ae05a889fc342acb0cdc23ecd038258205d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c158405ebe8eff752f07e8448f55304fdf3665ac68162099dcacd81886b73affe67fb6df401f8a5fa60ddb6d5fb65b93235e6a234182a40c001e3cf7634f82afd5fe0af6',
+            },
+        },
+
+        {
+            description: 'signStakeDeregistration',
+            params: {
+                inputs: [SAMPLE_INPUTS['shelley_input']],
+                outputs: [SAMPLE_OUTPUTS['simple_shelley_output']],
+                certificates: [SAMPLE_CERTIFICATES['stake_deregistration']],
+                fee: FEE,
+                ttl: TTL,
+                protocolMagic: PROTOCOL_MAGICS['mainnet'],
+                networkId: NETWORK_IDS['mainnet'],
+            },
+            result: {
+                hash: '3aca1784d151dc75bdbb80fae71bda3f4b26af3f5fd71bd5e9e9bbcdd2b64ad1',
+                serializedTx: '83a500818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018182583901eb0baa5e570cffbe2934db29df0b6a3d7c0430ee65d4c3a7ab2fefb91bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff0102182a030a048182018200581c122a946b9ad3d2ddf029d3a828f0468aece76895f15c9efbd69b4277a10082825820bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e584084f321d313da67f80f7fab2e4f3996d3dbe3186659e6f98315e372dbe88c55d56f637ccc7534890c3601ddd31ba885dc86ba0074c230869f20099b7dd5eeaf008258205d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c15840e563a8012e16affd801564e8410ca7b2c96f76f8ecb878e35c098a823c40be7f59dc12cb44a9b678210d4e8f18ab215133eef7ca9ece94b4683d3db0fd37e105f6',
+            },
+        },
+
+        {
+            description: 'signStakeDeregistrationAndWithdrawal',
+            params: {
+                inputs: [SAMPLE_INPUTS['shelley_input']],
+                outputs: [SAMPLE_OUTPUTS['simple_shelley_output']],
+                certificates: [SAMPLE_CERTIFICATES['stake_deregistration']],
+                withdrawals: [SAMPLE_WITHDRAWAL],
+                fee: FEE,
+                ttl: TTL,
+                protocolMagic: PROTOCOL_MAGICS['mainnet'],
+                networkId: NETWORK_IDS['mainnet'],
+            },
+            result: {
+                hash: '22c67f12e6f6aa0f2f09fd27d472b19c7208ccd7c3af4b09604fd5d462c1de2b',
+                serializedTx: '83a600818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018182583901eb0baa5e570cffbe2934db29df0b6a3d7c0430ee65d4c3a7ab2fefb91bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff0102182a030a048182018200581c122a946b9ad3d2ddf029d3a828f0468aece76895f15c9efbd69b427705a1581de1122a946b9ad3d2ddf029d3a828f0468aece76895f15c9efbd69b42771903e8a10082825820bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e58400202826a8b9688cf978000e7d1591582c65b149bb9f55dc883ae1acf85432618ca32be8a06fef37e69df503a294e7093006f63ababf9fcea639390226934020a8258205d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c158407efa634e42fa844cad5f60bf005d645817cc674f30eaab0da398b99034850780b40ab5a1028da033330a0f82b01648ec92cff8ca85a072594efb298016f38d0df6',
+            },
+        },
+
+        {
+            description: 'signMetadata',
+            params: {
+                inputs: [SAMPLE_INPUTS['shelley_input']],
+                outputs: [SAMPLE_OUTPUTS['simple_shelley_output']],
+                metadata: 'a200a11864a118c843aa00ff01a119012c590100aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+                fee: FEE,
+                ttl: TTL,
+                protocolMagic: PROTOCOL_MAGICS['mainnet'],
+                networkId: NETWORK_IDS['mainnet'],
+            },
+            result: {
+                hash: '1875f1d59a53f1cb4c43949867d72bcfd857fa3b64feb88f41b78ddaa1a21cbf',
+                serializedTx: '83a500818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018182583901eb0baa5e570cffbe2934db29df0b6a3d7c0430ee65d4c3a7ab2fefb91bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff0102182a030a075820ea4c91860dd5ec5449f8f985d227946ff39086b17f10b5afb93d12ee87050b6aa100818258205d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c15840b2015772a91043aeb04b98111744a098afdade0db5e30206538d7f2814965a5800d45240137f4d0dc81845a71e67cda38beaf816a520d73c4decbf7cbf0f6d08a200a11864a118c843aa00ff01a119012c590100aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
             },
         },
 
