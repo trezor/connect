@@ -17,9 +17,12 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 
 ### Params 
 [****Optional common params****](commonParams.md)
-###### [flowtype](../../src/js/types/networks/cardano.js#L62-L90)
-* `inputs` — *obligatory* `Array` of [CardanoInput](../../src/js/types/networks/cardano.js#L64)
-* `outputs` - *obligatory* `Array` of [CardanoOutput](../../src/js/types/networks/cardano.js#L69)
+###### [flowtype](../../src/js/types/networks/cardano.js#L62-L109)
+* `inputs` — *obligatory* `Array` of [CardanoInput](../../src/js/types/networks/cardano.js#L71)
+* `outputs` - *obligatory* `Array` of [CardanoOutput](../../src/js/types/networks/cardano.js#L76)
+* `certificates` - *optional* `Array` of [CardanoCertificate](../../src/js/types/networks/cardano.js#L83)
+* `withdrawals` - *optional* `Array` of [CardanoWithdrawal](../../src/js/types/networks/cardano.js#L88)
+* `metadata` - *optional* `String`
 * `fee` - *obligatory* `String`
 * `ttl` - *obligatory* `String`
 * `protocolMagic` - *obligatory* `Integer` 764824073 for Mainnet, 42 for Testnet
@@ -49,6 +52,28 @@ TrezorConnect.cardanoSignTransaction({
             amount: "7120787",
         }
     ],
+    certificates: [
+        {
+            type: 0,
+            path: "m/1852'/1815'/0'/2/0",
+        },
+        {
+            type: 1,
+            path: "m/1852'/1815'/0'/2/0",
+        },
+        {
+            type: 2,
+            path: "m/1852'/1815'/0'/2/0",
+            pool: "f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973",
+        },
+    ],
+    withdrawals: [
+        {
+            path: "m/1852'/1815'/0'/2/0",
+            amount: "1000",
+        }
+    ],
+    metadata: "a200a11864a118c843aa00ff01a119012c590100aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     fee: "42",
     ttl: "10",
     protocolMagic: 764824073,
@@ -57,7 +82,7 @@ TrezorConnect.cardanoSignTransaction({
 ```
 
 ### Result
-###### [flowtype](../../src/js/types/networks/cardano.js#L86-L89)
+###### [flowtype](../../src/js/types/networks/cardano.js#L105-L108)
 ```javascript
 {
     success: true,
