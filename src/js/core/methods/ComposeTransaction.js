@@ -85,9 +85,9 @@ export default class ComposeTransaction extends AbstractMethod {
         const sendMax: boolean = outputs.find(o => o.type === 'send-max') !== undefined;
 
         // there should be only one output when using send-max option
-        if (sendMax && outputs.length > 1) {
-            throw ERRORS.TypedError('Method_InvalidParameter', 'Only one output allowed when using "send-max" option');
-        }
+        // if (sendMax && outputs.length > 1) {
+        //     throw ERRORS.TypedError('Method_InvalidParameter', 'Only one output allowed when using "send-max" option');
+        // }
 
         // if outputs contains regular items
         // check if total amount is not lower than dust limit
