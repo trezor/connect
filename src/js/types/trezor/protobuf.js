@@ -604,6 +604,15 @@ export type CardanoTxOutput = {
     address_parameters?: CardanoAddressParameters;
     amount: string;
 };
+export type CardanoTxCertificate = {
+    type: number;
+    path: Array<number>;
+    pool?: string;
+};
+export type CardanoTxWithdrawal = {
+    path: Array<number>;
+    amount: string;
+};
 
 // Lisk types
 export type LiskAddress = {

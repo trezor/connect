@@ -61,6 +61,13 @@ export type CardanoAddress = {
 
 // Sign transaction
 
+export const CARDANO_CERTIFICATE_TYPE = Object.freeze({
+    StakeRegistration: 0,
+    StakeDeregistration: 1,
+    StakeDelegation: 2,
+});
+export type CardanoCertificateType = $Values<typeof CARDANO_CERTIFICATE_TYPE>;
+
 export type CardanoInput = {
     path: string | number[];
     prev_hash: string;
@@ -73,10 +80,22 @@ export type CardanoOutput = {
     address: string;
     amount: string;
 }
+export type CardanoCertificate = {
+    type: CardanoCertificateType;
+    path: string | number[];
+    pool?: string;
+}
+export type CardanoWithdrawal = {
+    path: string | number[];
+    amount: string;
+}
 
 export type CardanoSignTransaction = {
     inputs: CardanoInput[];
     outputs: CardanoOutput[];
+    certificates?: CardanoCertificate[];
+    withdrawals?: CardanoWithdrawal[];
+    metadata?: string;
     fee: string;
     ttl: string;
     protocolMagic: number;

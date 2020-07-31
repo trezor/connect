@@ -58,6 +58,12 @@ export interface CardanoAddress {
 
 // Sign transaction
 
+export enum CardanoCertificateType {
+    StakeRegistration = 0,
+    StakeDeregistration = 1,
+    StakeDelegation = 2,
+}
+
 export interface CardanoInput {
     path: string | number[];
     prev_hash: string;
@@ -72,10 +78,22 @@ export type CardanoOutput =
           address: string;
           amount: string;
       };
+export type CardanoCertificate = {
+    type: CardanoCertificateType;
+    path: string | number[];
+    pool?: string;
+}
+export type CardanoWithdrawal = {
+    path: string | number[];
+    amount: string;
+}
 
 export interface CardanoSignTransaction {
     inputs: CardanoInput[];
     outputs: CardanoOutput[];
+    certificates?: CardanoCertificate[];
+    withdrawals?: CardanoWithdrawal[];
+    metadata?: string;
     fee: string;
     ttl: string;
     protocolMagic: number;
