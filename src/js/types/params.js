@@ -34,6 +34,7 @@ export type ConnectSettings = {
     webusb?: boolean;
     pendingTransportEvent?: boolean;
     lazyLoad?: boolean;
+    interactionTimeout?: number;
     // internal part, not to be accepted from .init()
     origin?: string;
     configSrc: string;
@@ -47,7 +48,6 @@ export type ConnectSettings = {
     extension?: string;
     env: 'node' | 'web' | 'webextension' | 'electron' | 'react-native';
     timestamp: number;
-    interactionTimeout?: number;
 };
 
 export type CommonParams = {
