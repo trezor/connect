@@ -6,7 +6,7 @@ export default {
     tests: [
         {
             // See https://zec1.trezor.io/tx/0f762a2da5252d684fb3510a3104bcfb556fab34583b3b0e1994d0f7409cc075
-            description: "sign input v2",
+            description: 'sign input v2',
             setup: {
                 firmware: [
                     ['2.0.0', '2.1.8'],
@@ -31,11 +31,11 @@ export default {
             },
             result: {
                 serializedTx: '01000000013adce2e9d7d0471817cd9dc74198f431b1958f5b74583ca3d12346db8955d229000000006b483045022100f36da2fba65831c24bae2264892d914abdf65ee747ba9e8deeaeb13d1c72b03102200b8ecb59698dbe90f8cfe529a6d05c8b7fa2f31a2f5a7a1b993700a20d04d63a0121022f5c53b6d2e1b64c37d85716dbef318bd398ad7d2a03d94960af060402380658ffffffff01081a0100000000001976a9142e383c56fe3df202792e6f4460c8056b6a4d5b3488ac00000000',
-            }
+            },
         },
         {
             // See https://zec1.trezor.io/tx/e5229ae8c02f74af5e0c2100371710424fa85902c29752498c39921de2246824
-            description: "sign 2 inputs v1",
+            description: 'sign 2 inputs v1',
             setup: {
                 firmware: [
                     ['2.0.0', '2.1.8'],
@@ -70,7 +70,7 @@ export default {
         {
             // NOTE: this is not a valid transaction
             // Inputs from https://zec1.trezor.io/tx/e2802f0118d9f41f68b65f2b9f4a7c2efc876aee4e8c4b48c4a4deef6b7c0c28
-            description: "sign 2 inputs with change v3",
+            description: 'sign 2 inputs with change v3',
             params: {
                 coin: 'Zcash',
                 version: 3,
@@ -110,7 +110,7 @@ export default {
         {
             // NOTE: this is not a valid transaction
             // Inputs from https://zec1.trezor.io/tx/234b2cf6cb2a50be29f45efae27fe717e3bb31967a72927d122cac1f50988cab
-            description: "sign 1 input v4",
+            description: 'sign 1 input v4',
             params: {
                 coin: 'Zcash',
                 version: 4,
@@ -138,9 +138,9 @@ export default {
         },
         {
             // https://tzec1.trezor.io/tx/0cef132c1d6d67f11cfa48f7fca3209da29cf872ac782354bedb686e61a17a78
-            description: "testnet v4",
+            // https://explorer.testnet.z.cash/api/tx/0cef132c1d6d67f11cfa48f7fca3209da29cf872ac782354bedb686e61a17a78
+            description: 'testnet v4',
             params: {
-                coin: 'Zcash',
                 coin: 'taz',
                 version: 4,
                 overwintered: true,
@@ -162,16 +162,16 @@ export default {
                 ],
                 refTxs: [
                     {
-                        hash: '4e8e8c5a5524cb8b20d05aefd5b1fd004d6c8c584e3e314876f13edb5ba0eead',
+                        hash: 'e3820602226974b1dd87b7113cc8aea8c63e5ae29293991e7bfa80c126930368',
                         inputs: [
                             {
-                                prev_hash: '7afab9216fee6763ffbd6a412d46d68c480220af093c9becee6f79d41b954b13',
+                                prev_hash: '4e8e8c5a5524cb8b20d05aefd5b1fd004d6c8c584e3e314876f13edb5ba0eead',
                                 prev_index: 0,
                                 script_sig: '473044022064e1e5f957308fcc91f7b174113c8e3cb8060b1404ae823ab3f77f313d5b557b02204b2afcde9ef8b61f5e85192c38fb82307d077ec91d2c8249aa69e19967df8c0c01210201d494a45f36f545443bafd1a9050b02f448dd236bb4ce2602f83978980b98f2',
                                 sequence: 4294967294,
                             },
                             {
-                                prev_hash: '67abe6288fdec766e106a46125727eb7c608266950746fc10d1d1c69645f68af',
+                                prev_hash: '7afab9216fee6763ffbd6a412d46d68c480220af093c9becee6f79d41b954b13',
                                 prev_index: 0,
                                 script_sig: '47304402207f63a484ee75900ce2b0e2a5f0d52f2cfb5d1475588576f645c20ecf5e04659a02205c9b614ca846b0cb9ff4a72ca8482c9aed542282b9ee8eaa70a5f472408f3f04012103e974b89ace172f24bb25f8137d19c4205c5cf6bb6505454230ea172f54152d08',
                                 sequence: 4294967294,
@@ -188,8 +188,9 @@ export default {
                             },
                         ],
                         version: 3,
-                        overwintered: true,
-                        timestamp: 1531122666,
+                        version_group_id: 63210096,
+                        expiry: 261318,
+                        extra_data: '00',
                         lock_time: 261287,
                     },
                 ],
@@ -200,7 +201,7 @@ export default {
         },
         {
             // https://tzec1.trezor.io/tx/737eb78fc69f30ec9eff04359a1551969e026472ae5530e287a838047e237098
-            description: "testnet blossom fork",
+            description: 'testnet blossom fork',
             params: {
                 coin: 'taz',
                 version: 4,
@@ -236,7 +237,7 @@ export default {
                                 prev_hash: '56f4846719dd83a51d170f6f970b1341508d5579163f636547debce2774f2d24',
                                 prev_index: 1,
                                 script_sig: '48304502210084714bd8b6063a74e8eb5116385ea590389400fc79a9ec8df2b0fee833b7f4d002204883986f8853a1aabb6ead9d8fc4d171bcf1fe42702f08c285f00bb3bffbdeae0121020d70ec7da45380b4d521aa887b6cbaac3aa8857ec475dfddc221d21f908b40e7',
-                                sequence: 4294967294,
+                                sequence: 4294967295,
                             },
                         ],
                         bin_outputs: [
@@ -250,9 +251,10 @@ export default {
                             },
                         ],
                         version: 4,
-                        overwintered: true,
-                        timestamp: 1576071557,
+                        version_group_id: 2301567109,
+                        expiry: 0,
                         lock_time: 0,
+                        extra_data: '0000000000000000000000',
                     },
                 ],
             },

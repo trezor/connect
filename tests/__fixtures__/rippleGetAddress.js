@@ -22,13 +22,14 @@ export default {
                 address: 'rEpwmtmvx8gkMhX5NLdU3vutQt7dor4MZm',
             },
         },
-        {
-            description: 'Forbidden key path',
-            params: {
-                path: "m/44'/0'/1'",
-            },
-            result: false,
-        },
+        // since 2.3.2 this test will return success, see common.setup emulator-allow-unsafe-paths
+        // {
+        //     description: 'Forbidden key path',
+        //     params: {
+        //         path: "m/44'/0'/1'",
+        //     },
+        //     result: false,
+        // },
         {
             description: "m/44'/144'/0'/0/1",
             params: {
