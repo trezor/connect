@@ -5,7 +5,7 @@ export default {
     },
     tests: [
         {
-            description: "fee sapling",
+            description: 'fee sapling',
             params: {
                 coin: 'kmd',
                 version: 4,
@@ -48,15 +48,16 @@ export default {
                         version: 4,
                         version_group_id: 2301567109,
                         lock_time: 0,
+                        extra_data: '0000000000000000000000',
                     },
                 ],
             },
             result: {
                 serializedTx: '0400008085202f89011d0f8e0c6ba2dcf8be8e5f9024771dceb4c8e4120fab8c072b8eec26b1c50728000000006a4730440220158c970ca2fc6bcc33026eb5366f0342f63b35d178f7efb334b1df78fe90b67202207bc4ff69f67cf843b08564a5adc77bf5593e28ab4d5104911824ac13fe885d8f012102a87aef7b1a8f676e452d6240767699719cd58b0261c822472c25df146938bca5ffffffff01d0359041000000001976a91400178fa0b6fc253a3a402ee2cadd8a7bfec08f6388acb8302a5d000000000000000000000000000000',
-            }
+            },
         },
         {
-            description: "rewards claim",
+            description: 'rewards claim',
             params: {
                 coin: 'kmd',
                 version: 4,
@@ -97,19 +98,21 @@ export default {
                         ],
                         bin_outputs: [
                             {
-                                amount: '1099980000',
+                                amount: '1099970000',
                                 script_pubkey: '76a91400178fa0b6fc253a3a402ee2cadd8a7bfec08f6388ac',
                             },
                         ],
                         version: 4,
                         version_group_id: 2301567109,
-                        lock_time: 0,
+                        branch_id: 1991772603,
+                        lock_time: 1563046072,
+                        extra_data: '0000000000000000000000',
                     },
-                ]
+                ],
             },
             result: {
                 serializedTx: '0400008085202f8901b134cddb4951fe1acd7744bf9b828a816501570ed8ebd4f076979e1191bd287b000000006a4730440220483a58f5be3a147c773c663008c992a7fcea4d03bdf4c1d4bc0535c0d98ddf0602207b19d69140dd00c7a94f048c712aeaed55dfd27f581c7212d9cc5e476fe1dc9f012102a87aef7b1a8f676e452d6240767699719cd58b0261c822472c25df146938bca5ffffffff02c00e9041000000001976a91400178fa0b6fc253a3a402ee2cadd8a7bfec08f6388acf5360100000000001976a91400178fa0b6fc253a3a402ee2cadd8a7bfec08f6388acf2f12a5d000000000000000000000000000000',
-            }
+            },
         },
     ],
 };
