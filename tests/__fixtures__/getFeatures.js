@@ -29,7 +29,7 @@ export default {
                 revision: expect.any(String),
                 bootloader_hash: null,
                 imported: null,
-                pin_cached: expect.any(Boolean),
+                unlocked: expect.any(Boolean),
                 firmware_present: null,
                 needs_backup: expect.any(Boolean),
                 flags: expect.any(Number),

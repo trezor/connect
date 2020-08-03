@@ -34,6 +34,7 @@ export type ConnectSettings = {
     webusb?: boolean;
     pendingTransportEvent?: boolean;
     lazyLoad?: boolean;
+    interactionTimeout?: number;
     // internal part, not to be accepted from .init()
     origin?: string;
     configSrc: string;

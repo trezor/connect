@@ -24,6 +24,7 @@ export type Features = {
     bootloader_hash: string;
     imported: boolean;
     pin_cached: boolean;
+    unlocked?: boolean; // replacement for "pin_cached" since 2.3.2
     passphrase_cached: boolean;
     firmware_present: boolean;
     needs_backup: boolean;
@@ -148,6 +149,7 @@ export type RefTransaction = {
     timestamp?: ?number;
     version_group_id?: ?number;
     expiry?: ?number;
+    branch_id?: ?number;
 };
 
 export type TransactionOptions = {

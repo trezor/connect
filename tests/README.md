@@ -1,6 +1,7 @@
 # Connect integration tests
 
 ## How to run tests locally
+1. Install docker
 1. To run all tests `./tests/run.sh`
 1. To see some options `./test/run.sh -h`;
 1. To run tests with graphic output from emulator, use `-g` option. Note that macOS needs some [further configuration](https://medium.com/@nihon_rafy/building-a-dockerized-gui-by-sharing-the-host-screen-with-docker-container-b660835fb722).

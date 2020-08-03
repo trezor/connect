@@ -7,7 +7,7 @@ import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
 import { ERRORS } from '../../constants';
 
-import { initBlockchain } from '../../backend/BlockchainLink';
+import { isBackendSupported, initBlockchain } from '../../backend/BlockchainLink';
 import signTx from './helpers/signtx';
 import verifyTx from './helpers/signtxVerify';
 
@@ -137,9 +137,8 @@ export default class SignTransaction extends AbstractMethod {
             const hdInputs: Array<BuildTxInput> = params.inputs.map(inputToHD);
             const refTxsIds = getReferencedTransactions(hdInputs);
             if (refTxsIds.length > 0) {
-                if (!params.coinInfo.blockchainLink) {
-                    throw ERRORS.TypedError('Backend_NotSupported');
-                }
+                // validate backend
+                isBackendSupported(params.coinInfo);
                 const blockchain = await initBlockchain(params.coinInfo, this.postMessage);
                 const bjsRefTxs = await blockchain.getReferencedTransactions(refTxsIds);
                 refTxs = transformReferencedTransactions(bjsRefTxs);
@@ -166,9 +165,8 @@ export default class SignTransaction extends AbstractMethod {
         );
 
         if (params.push) {
-            if (!params.coinInfo.blockchainLink) {
-                throw ERRORS.TypedError('Backend_NotSupported');
-            }
+            // validate backend
+            isBackendSupported(params.coinInfo);
             const blockchain = await initBlockchain(params.coinInfo, this.postMessage);
             const txid = await blockchain.pushTransaction(response.serializedTx);
             return {

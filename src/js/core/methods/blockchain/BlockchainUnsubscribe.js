@@ -4,7 +4,7 @@ import AbstractMethod from '../AbstractMethod';
 import { validateParams } from '../helpers/paramsValidator';
 import { ERRORS } from '../../../constants';
 
-import { initBlockchain } from '../../../backend/BlockchainLink';
+import { isBackendSupported, initBlockchain } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo, BlockchainSubscribeAccount } from '../../../types';
 
@@ -41,9 +41,8 @@ export default class BlockchainUnsubscribe extends AbstractMethod {
         if (!coinInfo) {
             throw ERRORS.TypedError('Method_UnknownCoin');
         }
-        if (!coinInfo.blockchainLink) {
-            throw ERRORS.TypedError('Backend_NotSupported');
-        }
+        // validate backend
+        isBackendSupported(coinInfo);
 
         this.params = {
             accounts: payload.accounts,

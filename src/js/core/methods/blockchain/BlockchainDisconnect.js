@@ -4,7 +4,7 @@ import AbstractMethod from '../AbstractMethod';
 import { validateParams } from '../helpers/paramsValidator';
 import { ERRORS } from '../../../constants';
 
-import { find as findBlockchainBackend } from '../../../backend/BlockchainLink';
+import { isBackendSupported, find as findBlockchainBackend } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo } from '../../../types';
 
@@ -33,9 +33,8 @@ export default class BlockchainDisconnect extends AbstractMethod {
         if (!coinInfo) {
             throw ERRORS.TypedError('Method_UnknownCoin');
         }
-        if (!coinInfo.blockchainLink) {
-            throw ERRORS.TypedError('Backend_NotSupported');
-        }
+        // validate backend
+        isBackendSupported(coinInfo);
 
         this.params = {
             coinInfo,

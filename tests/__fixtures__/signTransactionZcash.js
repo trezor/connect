@@ -202,7 +202,6 @@ export default {
             // https://tzec1.trezor.io/tx/737eb78fc69f30ec9eff04359a1551969e026472ae5530e287a838047e237098
             description: "testnet blossom fork",
             params: {
-                coin: 'Zcash',
                 coin: 'taz',
                 version: 4,
                 overwintered: true,
@@ -261,5 +260,6 @@ export default {
                 serializedTx: '0400008085202f8901dc816d9c6760cd5ecb474e8b9313578bbc065c550c70b42698dd43b026088586010000006a47304402200e512b8da8fc2b76e9cafb3a1dd565ee45cc6f918ad6d47c945d0e07747be5f00220384032b3daec39082b1917438fc82bc9733c69ee9e6c43fbf3505c50508860dd01210313a443e806f25052ac7363adc689fcfa72893f2a51a35ab5e096ed5e6cd8517effffffff01e2e8fa02000000001976a91499af2ecbf5892079e0297c59b91981b067da36a988ac00000000000000000000000000000000000000',
             },
         },
+        // todo: heartwood test
     ],
 };

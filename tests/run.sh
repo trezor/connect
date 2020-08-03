@@ -1,14 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
 function cleanup {
   echo "cleanup"
-  
   # stop trezor-env container
   id=$(docker ps -aqf "name=connect-tests")
   echo "stopping container..."
-  # show logs from container if exit conde !==0
+
+  # uncomment to show logs from container, useful for debugging
+  # docker logs $id
+  
   [ $id ] && docker stop $id
   [ $id ] && echo "stopped"
 }
@@ -50,7 +52,6 @@ run() {
   fi
 
   yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --coverage $2
-  exit 0
 }
 
 show_usage() {
@@ -66,7 +67,7 @@ show_usage() {
 }
 
 custom_firmware_build=''
-firmware='2.3.0'
+firmware='2.3.1'
 included_methods=''
 excluded_methods=''
 gui_output=false
@@ -112,3 +113,4 @@ export TESTS_EXCLUDED_METHODS=$excluded_methods
 
 
 run $gui_output $collect_coverage $custom_firmware_build $firmware
+echo $?

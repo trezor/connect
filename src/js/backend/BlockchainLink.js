@@ -277,6 +277,11 @@ export const setCustomBackend = (coinInfo: CoinInfo, blockchainLink: $ElementTyp
     }
 };
 
+export const isBackendSupported = (coinInfo: CoinInfo) => {
+    const info = customBackends[coinInfo.shortcut] || coinInfo;
+    if (!info.blockchainLink) { throw ERRORS.TypedError('Backend_NotSupported'); }
+};
+
 export const initBlockchain = async (coinInfo: CoinInfo, postMessage: $ElementType<Options, 'postMessage'>) => {
     let backend = find(coinInfo.name);
     if (!backend) {

@@ -10,7 +10,7 @@ import type {
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
-const VERSION = '8.1.7';
+const VERSION = '8.1.9';
 const versionN = VERSION.split('.').map(s => parseInt(s));
 // const DIRECTORY = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
 const DIRECTORY = `${versionN[0]}/`;
@@ -36,6 +36,7 @@ const initialSettings: ConnectSettings = {
     env: 'web',
     lazyLoad: false,
     timestamp: new Date().getTime(),
+    interactionTimeout: 120, // 2 minutes
 };
 
 let currentSettings: ConnectSettings = initialSettings;
@@ -160,6 +161,10 @@ export const parse = (input: $Shape<ConnectSettings> = {}) => {
 
     if (typeof input.timestamp === 'number') {
         settings.timestamp = input.timestamp;
+    }
+
+    if (typeof input.interactionTimeout === 'number') {
+        settings.interactionTimeout = input.interactionTimeout;
     }
 
     if (typeof input.manifest === 'object') {

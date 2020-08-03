@@ -57,6 +57,7 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
             timestamp: reqTx.timestamp,
             version_group_id: reqTx.version_group_id,
             expiry: reqTx.expiry,
+            branch_id: reqTx.branch_id,
         };
 
         if (typeof data === 'string' && data.length !== 0) {
@@ -93,7 +94,7 @@ const requestSignedTxInfo = (inputs: Array<TransactionInput>,
 };
 
 // requests information about a transaction
-// can be either signed transaction iteslf of prev transaction
+// can be either signed transaction itself of prev transaction
 const requestTxInfo = (m: TxRequest,
     index: {[hash: string]: RefTransaction},
     inputs: Array<TransactionInput>,
@@ -147,7 +148,6 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
     outputs: Array<TransactionOutput>
 ): Promise<SignedTx> => {
     saveTxSignatures(m.serialized, serializedTx, signatures);
-
     if (m.request_type === 'TXFINISHED') {
         return Promise.resolve({
             signatures: signatures,
