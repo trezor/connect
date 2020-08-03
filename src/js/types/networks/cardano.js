@@ -1,5 +1,7 @@
 /* @flow */
 
+import { CARDANO_ADDRESS_TYPE, CARDANO_CERTIFICATE_TYPE } from '../../constants/cardano';
+
 // Cardano method parameters types
 import type { HDPubNode } from '../trezor/protobuf';
 
@@ -19,13 +21,6 @@ export type CardanoPublicKey = {
 
 // GetAddress
 
-export const CARDANO_ADDRESS_TYPE = Object.freeze({
-    Base: 0,
-    Pointer: 4,
-    Enterprise: 6,
-    Byron: 8,
-    Reward: 14,
-});
 export type CardanoAddressType = $Values<typeof CARDANO_ADDRESS_TYPE>;
 
 export type CardanoCertificatePointer = {
@@ -61,11 +56,6 @@ export type CardanoAddress = {
 
 // Sign transaction
 
-export const CARDANO_CERTIFICATE_TYPE = Object.freeze({
-    StakeRegistration: 0,
-    StakeDeregistration: 1,
-    StakeDelegation: 2,
-});
 export type CardanoCertificateType = $Values<typeof CARDANO_CERTIFICATE_TYPE>;
 
 export type CardanoInput = {

@@ -1,6 +1,12 @@
 /* @flow */
+import {
+    CARDANO_ADDRESS_TYPE,
+    CARDANO_CERTIFICATE_TYPE,
+    NETWORK_IDS,
+    PROTOCOL_MAGICS,
+} from '../../js/constants/cardano';
+
 import type { CardanoSignTransaction } from '../../js/types';
-import { CARDANO_ADDRESS_TYPE, CARDANO_CERTIFICATE_TYPE } from '../../js/types';
 
 // vectors from https://github.com/trezor/trezor-firmware/tree/master/python/trezorlib/tests/device_tests/test_msg_cardano_sign_transaction.py
 
@@ -105,16 +111,6 @@ const SAMPLE_WITHDRAWAL = {
 
 const FEE = '42';
 const TTL = '10';
-
-const PROTOCOL_MAGICS = {
-    mainnet: 764824073,
-    testnet: 42,
-};
-
-const NETWORK_IDS = {
-    mainnet: 1,
-    testnet: 0,
-};
 
 const signMainnetNoChange = () => {
     const inputs = [

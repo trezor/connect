@@ -1,3 +1,5 @@
+import { CARDANO_ADDRESS_TYPE, CARDANO_CERTIFICATE_TYPE } from '../../constants/cardano';
+
 // Cardano method parameters types
 import { HDPubNode } from '../trezor/protobuf';
 
@@ -18,11 +20,11 @@ export interface CardanoPublicKey {
 // GetAddress
 
 export enum CardanoAddressType {
-    Base = 0,
-    Pointer = 4,
-    Enterprise = 6,
-    Byron = 8,
-    Reward = 14,
+    Base = CARDANO_ADDRESS_TYPE.Base,
+    Pointer = CARDANO_ADDRESS_TYPE.Pointer,
+    Enterprise = CARDANO_ADDRESS_TYPE.Enterprise,
+    Byron = CARDANO_ADDRESS_TYPE.Byron,
+    Reward = CARDANO_ADDRESS_TYPE.Reward,
 }
 
 export interface CardanoCertificatePointer {
@@ -59,9 +61,9 @@ export interface CardanoAddress {
 // Sign transaction
 
 export enum CardanoCertificateType {
-    StakeRegistration = 0,
-    StakeDeregistration = 1,
-    StakeDelegation = 2,
+    StakeRegistration = CARDANO_CERTIFICATE_TYPE.StakeRegistration,
+    StakeDeregistration = CARDANO_CERTIFICATE_TYPE.StakeDeregistration,
+    StakeDelegation = CARDANO_CERTIFICATE_TYPE.StakeDelegation,
 }
 
 export interface CardanoInput {

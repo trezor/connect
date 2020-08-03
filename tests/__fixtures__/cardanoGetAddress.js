@@ -1,14 +1,4 @@
-import { CARDANO_ADDRESS_TYPE } from '../../src/js/types/networks/cardano';
-
-const PROTOCOL_MAGICS = {
-    mainnet: 764824073,
-    testnet: 42,
-};
-
-const NETWORK_IDS = {
-    mainnet: 1,
-    testnet: 0,
-};
+import { CARDANO_ADDRESS_TYPE, NETWORK_IDS, PROTOCOL_MAGICS } from '../../src/js/constants/cardano';
 
 export default {
     method: 'cardanoGetAddress',
