@@ -5,8 +5,6 @@ const configPath = path.join(__dirname, '..', '..', '..', 'webpack', 'config.pro
 const webpackConfig = require(configPath);
 
 const runBuild = () => new Promise((resolve, reject) => {
-    console.log('# Starting build...');
-
     webpack({
         ...webpackConfig,
     }, (err, stats) => {
@@ -29,8 +27,6 @@ const runBuild = () => new Promise((resolve, reject) => {
         if (stats.hasWarnings()) {
             console.warn(info.warnings);
         }
-
-        console.log('# Build done!');
 
         return resolve(info);
     });
