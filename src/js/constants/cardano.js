@@ -8,8 +8,6 @@ export const NETWORK_IDS = {
     testnet: 0,
 };
 
-export const HARDENED = 0x80000000;
-
 export const CARDANO_ADDRESS_TYPE = Object.freeze({
     Base: 0,
     Pointer: 4,

@@ -1,7 +1,6 @@
 /* @flow */
 import {
     CARDANO_ADDRESS_TYPE,
-    HARDENED,
     NETWORK_IDS,
     PROTOCOL_MAGICS,
 } from '../../js/constants/cardano';
@@ -25,7 +24,7 @@ const getByronAddressMainnet = () => {
             method: 'cardanoGetAddress',
             addressParameters: {
                 addressType: CARDANO_ADDRESS_TYPE.Byron,
-                path: [HARDENED + 49],
+                path: [0x80000000 + 49],
             },
             protocolMagic: PROTOCOL_MAGICS['mainnet'],
             networkId: NETWORK_IDS['mainnet'],
