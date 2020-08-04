@@ -115,16 +115,14 @@ describe('utils/deviceFeaturesUtils', () => {
 
         const feat2 = {
             major_version: 2,
-            minor_version: 2,
-            patch_version: 0,
+            minor_version: 3,
+            patch_version: 2,
             capabilities: undefined,
         };
         feat2.capabilities = parseCapabilities(feat2);
 
         // default Capabilities T2
-        expect(getUnavailableCapabilities(feat2, coins, support)).toEqual({
-            ere: 'update-required',
-        });
+        expect(getUnavailableCapabilities(feat2, coins, support)).toEqual({});
 
         // excluded single method without specified coins
         expect(
@@ -133,13 +131,12 @@ describe('utils/deviceFeaturesUtils', () => {
                 coins,
                 [
                     {
-                        min: ['0', '2.3.0'],
+                        min: ['0', '2.3.3'],
                         excludedMethods: ['getAccountInfo'],
                     },
                 ]
             ),
         ).toEqual({
-            ere: 'update-required',
             getAccountInfo: 'update-required',
         });
 
@@ -150,14 +147,13 @@ describe('utils/deviceFeaturesUtils', () => {
                 coins,
                 [
                     {
-                        min: ['0', '2.3.0'],
+                        min: ['0', '2.3.3'],
                         coin: ['xrp', 'txrp'],
                         excludedMethods: ['getAccountInfo'],
                     },
                 ]
             ),
         ).toEqual({
-            ere: 'update-required',
             getAccountInfo: ['xrp', 'txrp'],
         });
 
@@ -179,7 +175,6 @@ describe('utils/deviceFeaturesUtils', () => {
                 ]
             ),
         ).toEqual({
-            ere: 'update-required',
             rippleGetAddress: ['xrp', 'txrp'],
             tezosSignTransaction: 'trezor-connect-outdated',
         });
