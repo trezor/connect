@@ -42,7 +42,7 @@ export const nemGetAddress = async () => {
         showOnTrezor: true,
     });
 
-    // $ExpectError: payload is Address
+    // $FlowExpectedError: payload is Address
     const e1 = await TrezorConnect.nemGetAddress({ path: 'm/44', network: 1 });
     if (e1.success) {
         e1.payload.forEach(item => {
@@ -50,18 +50,18 @@ export const nemGetAddress = async () => {
         });
     }
 
-    // $ExpectError: payload is Address[]
+    // $FlowExpectedError: payload is Address[]
     const e2 = await TrezorConnect.nemGetAddress({ bundle: [{ path: 'm/44', network: 1 }] });
     if (e2.success) e2.payload.address;
 
     // with invalid params
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.nemGetAddress();
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.nemGetAddress({ coin: 'btc' });
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.nemGetAddress({ path: 1 });
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.nemGetAddress({ bundle: 1 });
 };
 

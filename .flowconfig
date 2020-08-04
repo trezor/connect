@@ -21,8 +21,6 @@
 esproposal.class_static_fields=enable
 esproposal.class_instance_fields=enable
 esproposal.export_star_as=enable
-suppress_comment=\\(.\\|\n\\)*\\$FlowIssue
-suppress_comment=\\(.\\|\n\\)*\\$ExpectError
 esproposal.decorators=ignore
 module.name_mapper='.*\(.less\)' -> 'CSSModule'
 module.system=haste
