@@ -575,7 +575,7 @@ export type CardanoCertificatePointerType = {
 }
 
 export type CardanoAddressParameters = {
-    address_type: number;
+    address_type: 0 | 4 | 6 | 8 | 14;
     address_n: number[];
     address_n_staking: number[];
     staking_key_hash?: string;
