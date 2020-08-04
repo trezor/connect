@@ -1,6 +1,6 @@
 /* @flow */
 
-import { CARDANO_ADDRESS_TYPE, CARDANO_CERTIFICATE_TYPE } from '../../constants/cardano';
+import { ADDRESS_TYPE, CERTIFICATE_TYPE } from '../../constants/cardano';
 
 // Cardano method parameters types
 import type { HDPubNode } from '../trezor/protobuf';
@@ -21,7 +21,7 @@ export type CardanoPublicKey = {
 
 // GetAddress
 
-export type CardanoAddressType = $Values<typeof CARDANO_ADDRESS_TYPE>;
+export type CardanoAddressType = $Values<typeof ADDRESS_TYPE>;
 
 export type CardanoCertificatePointer = {
     blockIndex: number;
@@ -56,7 +56,7 @@ export type CardanoAddress = {
 
 // Sign transaction
 
-export type CardanoCertificateType = $Values<typeof CARDANO_CERTIFICATE_TYPE>;
+export type CardanoCertificateType = $Values<typeof CERTIFICATE_TYPE>;
 
 export type CardanoInput = {
     path: string | number[];

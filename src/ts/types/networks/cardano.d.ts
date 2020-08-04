@@ -1,4 +1,4 @@
-import { CARDANO_ADDRESS_TYPE, CARDANO_CERTIFICATE_TYPE } from '../../constants/cardano';
+import { CARDANO } from '../constants';
 
 // Cardano method parameters types
 import { HDPubNode } from '../trezor/protobuf';
@@ -19,14 +19,6 @@ export interface CardanoPublicKey {
 
 // GetAddress
 
-export enum CardanoAddressType {
-    Base = CARDANO_ADDRESS_TYPE.Base,
-    Pointer = CARDANO_ADDRESS_TYPE.Pointer,
-    Enterprise = CARDANO_ADDRESS_TYPE.Enterprise,
-    Byron = CARDANO_ADDRESS_TYPE.Byron,
-    Reward = CARDANO_ADDRESS_TYPE.Reward,
-}
-
 export interface CardanoCertificatePointer {
     blockIndex: number;
     txIndex: number;
@@ -34,12 +26,12 @@ export interface CardanoCertificatePointer {
 }
 
 export interface CardanoAddressParameters {
-    addressType: CardanoAddressType;
+    addressType: CARDANO.ADDRESS_TYPE;
     path: string | number[];
     stakingPath?: string | number[];
     stakingKeyHash?: string;
     certificatePointer?: CardanoCertificatePointer;
-};
+}
 
 export interface CardanoGetAddress {
     addressParameters: CardanoAddressParameters;
@@ -60,11 +52,6 @@ export interface CardanoAddress {
 
 // Sign transaction
 
-export enum CardanoCertificateType {
-    StakeRegistration = CARDANO_CERTIFICATE_TYPE.StakeRegistration,
-    StakeDeregistration = CARDANO_CERTIFICATE_TYPE.StakeDeregistration,
-    StakeDelegation = CARDANO_CERTIFICATE_TYPE.StakeDelegation,
-}
 
 export interface CardanoInput {
     path: string | number[];
@@ -81,7 +68,7 @@ export type CardanoOutput =
           amount: string;
       };
 export type CardanoCertificate = {
-    type: CardanoCertificateType;
+    type: CARDANO.CERTIFICATE_TYPE;
     path: string | number[];
     pool?: string;
 }
@@ -104,5 +91,5 @@ export interface CardanoSignTransaction {
 
 export interface CardanoSignedTx {
     hash: string;
-    serialized_tx: string;
+    serializedTx: string;
 }
