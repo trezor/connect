@@ -1,6 +1,6 @@
 /* @flow */
 import {
-    CARDANO_ADDRESS_TYPE,
+    ADDRESS_TYPE,
     NETWORK_IDS,
     PROTOCOL_MAGICS,
 } from '../../js/constants/cardano';
@@ -14,7 +14,7 @@ const getByronAddressMainnet = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Byron,
+                addressType: ADDRESS_TYPE.Byron,
                 path: "m/44'/1815'/0'/0/0",
             },
             protocolMagic: PROTOCOL_MAGICS['mainnet'],
@@ -23,7 +23,7 @@ const getByronAddressMainnet = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Byron,
+                addressType: ADDRESS_TYPE.Byron,
                 path: [0x80000000 + 49],
             },
             protocolMagic: PROTOCOL_MAGICS['mainnet'],
@@ -32,7 +32,7 @@ const getByronAddressMainnet = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Byron,
+                addressType: ADDRESS_TYPE.Byron,
                 path: "m/44'/1815'/0'/0/1",
             },
             protocolMagic: PROTOCOL_MAGICS['mainnet'],
@@ -41,7 +41,7 @@ const getByronAddressMainnet = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Byron,
+                addressType: ADDRESS_TYPE.Byron,
                 path: "m/44'/1815'/0'/0/2",
             },
             protocolMagic: PROTOCOL_MAGICS['mainnet'],
@@ -81,7 +81,7 @@ const getByronAddressTestnet = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Byron,
+                addressType: ADDRESS_TYPE.Byron,
                 path: "m/44'/1815'/0'/0/0",
             },
             protocolMagic: PROTOCOL_MAGICS['testnet'],
@@ -90,7 +90,7 @@ const getByronAddressTestnet = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Byron,
+                addressType: ADDRESS_TYPE.Byron,
                 path: "m/44'/1815'/0'/0/1",
             },
             protocolMagic: PROTOCOL_MAGICS['testnet'],
@@ -99,7 +99,7 @@ const getByronAddressTestnet = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Byron,
+                addressType: ADDRESS_TYPE.Byron,
                 path: "m/44'/1815'/0'/0/2",
             },
             protocolMagic: PROTOCOL_MAGICS['testnet'],
@@ -138,7 +138,7 @@ const getBaseAddress = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Base,
+                addressType: ADDRESS_TYPE.Base,
                 path: "m/1852'/1815'/4'/0/0",
                 stakingPath: "m/1852'/1815'/4'/2/0",
             },
@@ -148,7 +148,7 @@ const getBaseAddress = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Base,
+                addressType: ADDRESS_TYPE.Base,
                 path: "m/1852'/1815'/4'/0/0",
                 stakingPath: "m/1852'/1815'/4'/2/0",
             },
@@ -158,7 +158,7 @@ const getBaseAddress = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Base,
+                addressType: ADDRESS_TYPE.Base,
                 path: "m/1852'/1815'/4'/0/0",
                 stakingKeyHash: '1bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff',
             },
@@ -168,7 +168,7 @@ const getBaseAddress = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Base,
+                addressType: ADDRESS_TYPE.Base,
                 path: "m/1852'/1815'/4'/0/0",
                 stakingKeyHash: '1bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff',
             },
@@ -213,7 +213,7 @@ const getEnterpriseAddress = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Enterprise,
+                addressType: ADDRESS_TYPE.Enterprise,
                 path: "m/1852'/1815'/0'/0/0",
             },
             protocolMagic: PROTOCOL_MAGICS['mainnet'],
@@ -222,7 +222,7 @@ const getEnterpriseAddress = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Enterprise,
+                addressType: ADDRESS_TYPE.Enterprise,
                 path: "m/1852'/1815'/0'/0/0",
             },
             protocolMagic: PROTOCOL_MAGICS['testnet'],
@@ -256,7 +256,7 @@ const getPointerAddress = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Pointer,
+                addressType: ADDRESS_TYPE.Pointer,
                 path: "m/1852'/1815'/0'/0/0",
                 certificatePointer: {
                     blockIndex: 1,
@@ -270,7 +270,7 @@ const getPointerAddress = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Pointer,
+                addressType: ADDRESS_TYPE.Pointer,
                 path: "m/1852'/1815'/0'/0/0",
                 certificatePointer: {
                     blockIndex: 24157,
@@ -309,7 +309,7 @@ const getRewardAddress = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Reward,
+                addressType: ADDRESS_TYPE.Reward,
                 path: "m/1852'/1815'/0'/2/0",
             },
             protocolMagic: PROTOCOL_MAGICS['mainnet'],
@@ -318,7 +318,7 @@ const getRewardAddress = () => {
         {
             method: 'cardanoGetAddress',
             addressParameters: {
-                addressType: CARDANO_ADDRESS_TYPE.Reward,
+                addressType: ADDRESS_TYPE.Reward,
                 path: "m/1852'/1815'/0'/2/0",
             },
             protocolMagic: PROTOCOL_MAGICS['testnet'],

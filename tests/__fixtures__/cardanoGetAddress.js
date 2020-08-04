@@ -1,4 +1,4 @@
-import { CARDANO_ADDRESS_TYPE, NETWORK_IDS, PROTOCOL_MAGICS } from '../../src/js/constants/cardano';
+import { ADDRESS_TYPE, NETWORK_IDS, PROTOCOL_MAGICS } from '../../src/js/constants/cardano';
 
 export default {
     method: 'cardanoGetAddress',
@@ -10,7 +10,7 @@ export default {
             description: "Mainnet - m/44'/1815'/0'/0/0",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Byron,
+                    addressType: ADDRESS_TYPE.Byron,
                     path: "m/44'/1815'/0'/0/0",
                 },
                 protocolMagic: PROTOCOL_MAGICS['mainnet'],
@@ -24,7 +24,7 @@ export default {
             description: "Byron Mainnet - m/44'/1815'",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Byron,
+                    addressType: ADDRESS_TYPE.Byron,
                     path: "m/44'/1815'",
                 },
                 protocolMagic: PROTOCOL_MAGICS['mainnet'],
@@ -36,7 +36,7 @@ export default {
             description: "Byron Mainnet - m/44'/1815'/0'/0/1",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Byron,
+                    addressType: ADDRESS_TYPE.Byron,
                     path: "m/44'/1815'/0'/0/1",
                 },
                 protocolMagic: PROTOCOL_MAGICS['mainnet'],
@@ -50,7 +50,7 @@ export default {
             description: "Byron Mainnet- m/44'/1815'/0'/0/2",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Byron,
+                    addressType: ADDRESS_TYPE.Byron,
                     path: "m/44'/1815'/0'/0/2",
                 },
                 protocolMagic: PROTOCOL_MAGICS['mainnet'],
@@ -64,7 +64,7 @@ export default {
             description: "Byron Testnet - m/44'/1815'/0'/0/0",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Byron,
+                    addressType: ADDRESS_TYPE.Byron,
                     path: "m/44'/1815'/0'/0/0",
                 },
                 protocolMagic: PROTOCOL_MAGICS['testnet'],
@@ -78,7 +78,7 @@ export default {
             description: "Byron Testnet - m/44'/1815'/0'/0/1",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Byron,
+                    addressType: ADDRESS_TYPE.Byron,
                     path: "m/44'/1815'/0'/0/1",
                 },
                 protocolMagic: PROTOCOL_MAGICS['testnet'],
@@ -92,7 +92,7 @@ export default {
             description: "Byron Testnet - m/44'/1815'/0'/0/2",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Byron,
+                    addressType: ADDRESS_TYPE.Byron,
                     path: "m/44'/1815'/0'/0/2",
                 },
                 protocolMagic: PROTOCOL_MAGICS['testnet'],
@@ -106,7 +106,7 @@ export default {
             description: "Base Mainnet - m/1852'/1815'/4'/0/0",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Base,
+                    addressType: ADDRESS_TYPE.Base,
                     path: "m/1852'/1815'/4'/0/0",
                     stakingPath: "m/1852'/1815'/4'/2/0",
                 },
@@ -121,7 +121,7 @@ export default {
             description: "Base Testnet - m/1852'/1815'/4'/0/0",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Base,
+                    addressType: ADDRESS_TYPE.Base,
                     path: "m/1852'/1815'/4'/0/0",
                     stakingPath: "m/1852'/1815'/4'/2/0",
                 },
@@ -136,7 +136,7 @@ export default {
             description: "Base Hash Mainnet - m/1852'/1815'/4'/0/0",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Base,
+                    addressType: ADDRESS_TYPE.Base,
                     path: "m/1852'/1815'/4'/0/0",
                     stakingKeyHash: '1bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff',
                 },
@@ -151,7 +151,7 @@ export default {
             description: "Base Hash Testnet - m/1852'/1815'/4'/0/0",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Base,
+                    addressType: ADDRESS_TYPE.Base,
                     path: "m/1852'/1815'/4'/0/0",
                     stakingKeyHash: '1bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff',
                 },
@@ -166,7 +166,7 @@ export default {
             description: "Enterprise Mainnet - m/1852'/1815'/0'/0/0",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Enterprise,
+                    addressType: ADDRESS_TYPE.Enterprise,
                     path: "m/1852'/1815'/0'/0/0",
                 },
                 protocolMagic: PROTOCOL_MAGICS['mainnet'],
@@ -180,7 +180,7 @@ export default {
             description: "Enterprise Testnet - m/1852'/1815'/0'/0/0",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Enterprise,
+                    addressType: ADDRESS_TYPE.Enterprise,
                     path: "m/1852'/1815'/0'/0/0",
                 },
                 protocolMagic: PROTOCOL_MAGICS['testnet'],
@@ -194,7 +194,7 @@ export default {
             description: "Pointer Mainnet - m/1852'/1815'/0'/0/0",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Pointer,
+                    addressType: ADDRESS_TYPE.Pointer,
                     path: "m/1852'/1815'/0'/0/0",
                     certificatePointer: {
                         blockIndex: 1,
@@ -213,7 +213,7 @@ export default {
             description: "Pointer Testnet - m/1852'/1815'/0'/0/0",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Pointer,
+                    addressType: ADDRESS_TYPE.Pointer,
                     path: "m/1852'/1815'/0'/0/0",
                     certificatePointer: {
                         blockIndex: 24157,
@@ -232,7 +232,7 @@ export default {
             description: "Reward Mainnet - m/1852'/1815'/0'/2/0",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Reward,
+                    addressType: ADDRESS_TYPE.Reward,
                     path: "m/1852'/1815'/0'/2/0",
                 },
                 protocolMagic: PROTOCOL_MAGICS['mainnet'],
@@ -246,7 +246,7 @@ export default {
             description: "Reward Testnet - m/1852'/1815'/0'/2/0",
             params: {
                 addressParameters: {
-                    addressType: CARDANO_ADDRESS_TYPE.Reward,
+                    addressType: ADDRESS_TYPE.Reward,
                     path: "m/1852'/1815'/0'/2/0",
                 },
                 protocolMagic: PROTOCOL_MAGICS['testnet'],

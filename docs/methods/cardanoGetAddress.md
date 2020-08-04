@@ -27,7 +27,7 @@ TrezorConnect.cardanoGetAddress(params).then(function(result) {
 
 #### Address Parameters
 ###### [flowtype](../../src/js/types/networks/cardano.js#L37-L43)
-* `addressType` - *obligatory* `CardanoAddressType`/`number` - you can use the flow `CARDANO_ADDRESS_TYPE` object or typescript `CardanoAddressType` enum
+* `addressType` - *obligatory* `CardanoAddressType`/`number` - you can use the flow `CARDANO.ADDRESS_TYPE` object or typescript `CardanoAddressType` enum
 * `path` — *obligatory* `string | Array<number>` minimum length is `5`. [read more](path.md)
 * `stakingPath` — *optional* `string | Array<number>` minimum length is `5`. [read more](path.md) Used for base address derivation
 * `stakingKeyHash` - *optional* `string` hex string of staking key hash. Used for base address derivation (as an alternative to `stakingPath`)

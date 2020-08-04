@@ -1,7 +1,7 @@
 /* @flow */
 import {
-    CARDANO_ADDRESS_TYPE,
-    CARDANO_CERTIFICATE_TYPE,
+    ADDRESS_TYPE,
+    CERTIFICATE_TYPE,
     NETWORK_IDS,
     PROTOCOL_MAGICS,
 } from '../../js/constants/cardano';
@@ -30,7 +30,7 @@ const SAMPLE_OUTPUTS = {
     },
     byron_change_output: {
         addressParameters: {
-            addressType: CARDANO_ADDRESS_TYPE.Byron,
+            addressType: ADDRESS_TYPE.Byron,
             path: "m/44'/1815'/0'/0/1",
         },
         amount: '1000000',
@@ -45,7 +45,7 @@ const SAMPLE_OUTPUTS = {
     },
     base_address_change_output: {
         addressParameters: {
-            addressType: CARDANO_ADDRESS_TYPE.Base,
+            addressType: ADDRESS_TYPE.Base,
             path: "m/1852'/1815'/0'/0/0",
             stakingPath: "m/1852'/1815'/0'/2/0",
         },
@@ -53,7 +53,7 @@ const SAMPLE_OUTPUTS = {
     },
     staking_key_hash_output: {
         addressParameters: {
-            addressType: CARDANO_ADDRESS_TYPE.Base,
+            addressType: ADDRESS_TYPE.Base,
             path: "m/1852'/1815'/0'/0/0",
             stakingKeyHash: '32c728d3861e164cab28cb8f006448139c8f1740ffb8e7aa9e5232dc',
         },
@@ -61,7 +61,7 @@ const SAMPLE_OUTPUTS = {
     },
     pointer_address_output: {
         addressParameters: {
-            addressType: CARDANO_ADDRESS_TYPE.Pointer,
+            addressType: ADDRESS_TYPE.Pointer,
             path: "m/1852'/1815'/0'/0/0",
             certificatePointer: {
                 blockIndex: 1,
@@ -73,7 +73,7 @@ const SAMPLE_OUTPUTS = {
     },
     enterprise_address_output: {
         addressParameters: {
-            addressType: CARDANO_ADDRESS_TYPE.Enterprise,
+            addressType: ADDRESS_TYPE.Enterprise,
             path: "m/1852'/1815'/0'/0/0",
         },
         amount: '7120787',
@@ -90,15 +90,15 @@ const SAMPLE_OUTPUTS = {
 
 const SAMPLE_CERTIFICATES = {
     stake_registration: {
-        type: CARDANO_CERTIFICATE_TYPE.StakeRegistration,
+        type: CERTIFICATE_TYPE.StakeRegistration,
         path: "m/1852'/1815'/0'/2/0",
     },
     stake_deregistration: {
-        type: CARDANO_CERTIFICATE_TYPE.StakeDeregistration,
+        type: CERTIFICATE_TYPE.StakeDeregistration,
         path: "m/1852'/1815'/0'/2/0",
     },
     stake_delegation: {
-        type: CARDANO_CERTIFICATE_TYPE.StakeDelegation,
+        type: CERTIFICATE_TYPE.StakeDelegation,
         path: "m/1852'/1815'/0'/2/0",
         pool: 'f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973',
     },
