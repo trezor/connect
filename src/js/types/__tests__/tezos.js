@@ -41,7 +41,7 @@ export const tezosGetAddress = async () => {
         showOnTrezor: true,
     });
 
-    // $ExpectError: payload is Address
+    // $FlowExpectedError: payload is Address
     const e1 = await TrezorConnect.tezosGetAddress({ path: 'm/44' });
     if (e1.success) {
         e1.payload.forEach(item => {
@@ -49,18 +49,18 @@ export const tezosGetAddress = async () => {
         });
     }
 
-    // $ExpectError: payload is Address[]
+    // $FlowExpectedError: payload is Address[]
     const e2 = await TrezorConnect.tezosGetAddress({ bundle: [{ path: 'm/44' }] });
     if (e2.success) e2.payload.address;
 
     // with invalid params
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.tezosGetAddress();
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.tezosGetAddress({ coin: 'btc' });
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.tezosGetAddress({ path: 1 });
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.tezosGetAddress({ bundle: 1 });
 };
 
@@ -89,7 +89,7 @@ export const tezosGetPublicKey = async () => {
     }
 
     // errors
-    // $ExpectError: payload is PublicKey
+    // $FlowExpectedError: payload is PublicKey
     const e1 = await TrezorConnect.tezosGetPublicKey({ path: 'm/44' });
     if (e1.success) {
         e1.payload.forEach(item => {
@@ -97,7 +97,7 @@ export const tezosGetPublicKey = async () => {
         });
     }
 
-    // $ExpectError: payload is PublicKey[]
+    // $FlowExpectedError: payload is PublicKey[]
     const e2 = await TrezorConnect.tezosGetPublicKey({ bundle: [{ path: 'm/44' }] });
     if (e2.success) e2.payload.path;
 };

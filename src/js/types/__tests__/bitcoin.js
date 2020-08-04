@@ -43,7 +43,7 @@ export const getAddress = async () => {
         crossChain: true,
     });
 
-    // $ExpectError: payload is Address
+    // $FlowExpectedError: payload is Address
     const e1 = await TrezorConnect.getAddress({ path: 'm/44' });
     if (e1.success) {
         e1.payload.forEach(item => {
@@ -51,18 +51,18 @@ export const getAddress = async () => {
         });
     }
 
-    // $ExpectError: payload is Address[]
+    // $FlowExpectedError: payload is Address[]
     const e2 = await TrezorConnect.getAddress({ bundle: [{ path: 'm/44' }] });
     if (e2.success) e2.payload.address;
 
     // with invalid params
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.getAddress();
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.getAddress({ coin: 'btc' });
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.getAddress({ path: 1 });
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.getAddress({ bundle: 1 });
 };
 
@@ -103,7 +103,7 @@ export const getPublicKey = async () => {
     }
 
     // errors
-    // $ExpectError: payload is PublicKey
+    // $FlowExpectedError: payload is PublicKey
     const e1 = await TrezorConnect.getPublicKey({ path: 'm/44' });
     if (e1.success) {
         e1.payload.forEach(item => {
@@ -111,7 +111,7 @@ export const getPublicKey = async () => {
         });
     }
 
-    // $ExpectError: payload is PublicKey[]
+    // $FlowExpectedError: payload is PublicKey[]
     const e2 = await TrezorConnect.getPublicKey({ bundle: [{ path: 'm/44' }] });
     if (e2.success) e2.payload.path;
 };
@@ -273,16 +273,16 @@ export const signTransaction = async () => {
     }
 
     // with invalid params
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.signTransaction();
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.signTransaction({ coin: 'btc' });
     TrezorConnect.signTransaction({
         inputs: [{
             address_n: [0],
             prev_index: 0,
             prev_hash: 'txhash',
-            // $ExpectError: invalid script_type
+            // $FlowExpectedError: invalid script_type
             script_type: 'SPENDADDRESS-2',
         }],
         outputs: [],
@@ -297,9 +297,9 @@ export const pushTransaction = async () => {
     }
 
     // with invalid params
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.pushTransaction();
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.pushTransaction({ coin: 'btc' });
 };
 

@@ -41,7 +41,7 @@ export const rippleGetAddress = async () => {
         showOnTrezor: true,
     });
 
-    // $ExpectError: payload is Address
+    // $FlowExpectedError: payload is Address
     const e1 = await TrezorConnect.rippleGetAddress({ path: 'm/44' });
     if (e1.success) {
         e1.payload.forEach(item => {
@@ -49,7 +49,7 @@ export const rippleGetAddress = async () => {
         });
     }
 
-    // $ExpectError: payload is Address[]
+    // $FlowExpectedError: payload is Address[]
     const e2 = await TrezorConnect.rippleGetAddress({ bundle: [{ path: 'm/44' }] });
     if (e2.success) e2.payload.address;
 
