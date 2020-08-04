@@ -25,7 +25,7 @@ export const cipherKeyValue = async () => {
         (bundleKV.payload.error: string);
     }
 
-    // $ExpectError: payload is Address
+    // $FlowExpectedError: payload is Address
     const e1 = await TrezorConnect.cipherKeyValue({ bundle: [{ path: 'm/44', key: 'key' }] });
     if (e1.success) e1.payload.xpub;
 };
@@ -79,7 +79,7 @@ export const requestLogin = async () => {
         challengeVisual: 'b',
     });
 
-    // $ExpectError
+    // $FlowExpectedError
     const e1 = await TrezorConnect.requestLogin({
         challengeHidden: 'a',
         challengeVisual: 'b',
@@ -92,13 +92,13 @@ export const requestLogin = async () => {
         (e1.payload.address: string);
     }
 
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.requestLogin();
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.requestLogin({ callback: 'string' });
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.requestLogin({ challengeHidden: 'a' });
-    // $ExpectError
+    // $FlowExpectedError
     TrezorConnect.requestLogin({ challengeVisual: 1 });
 };
 
