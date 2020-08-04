@@ -51,6 +51,14 @@ const SAMPLE_OUTPUTS = {
         },
         amount: '7120787',
     },
+    base_address_change_output_numbers: {
+        addressParameters: {
+            addressType: CARDANO_ADDRESS_TYPE.Base,
+            path: [0x80000000 + 1852, 0x80000000 + 1815, 0x80000000, 0, 0],
+            stakingPath: [0x80000000 + 1852, 0x80000000 + 1815, 0x80000000, 2, 0],
+        },
+        amount: '7120787',
+    },
     staking_key_hash_output: {
         addressParameters: {
             addressType: CARDANO_ADDRESS_TYPE.Base,
@@ -192,6 +200,43 @@ const signMainnetBaseAddress = () => {
     const outputs = [
         SAMPLE_OUTPUTS['simple_shelley_output'],
         SAMPLE_OUTPUTS['base_address_change_output'],
+    ];
+
+    const testPayloads: CardanoSignTransaction[] = [
+        {
+            method: 'cardanoSignTransaction',
+            inputs,
+            outputs,
+            fee: FEE,
+            ttl: TTL,
+            protocolMagic: PROTOCOL_MAGICS['mainnet'],
+            networkId: NETWORK_IDS['mainnet'],
+        },
+    ];
+
+    const expectedResponses = [
+        {
+            payload: {
+                hash: '16fe72bb198be423677577e6326f1f648ec5fc11263b072006382d8125a6edda',
+                serializedTx: '83a400818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018282583901eb0baa5e570cffbe2934db29df0b6a3d7c0430ee65d4c3a7ab2fefb91bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff018258390180f9e2c88e6c817008f3a812ed889b4a4da8e0bd103f86e7335422aa122a946b9ad3d2ddf029d3a828f0468aece76895f15c9efbd69b42771a006ca79302182a030aa100818258205d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c158406a78f07836dcf4a303448d2b16b217265a9226be3984a69a04dba5d04f4dbb2a47b5e1cbb345f474c0b9634a2f37b921ab26e6a65d5dfd015dacb4455fb8430af6',
+            },
+        },
+    ];
+
+    return {
+        testPayloads,
+        expectedResponses,
+        specName: '/signMainnetTx',
+    };
+};
+
+const signMainnetBaseAddressNumbers = () => {
+    const inputs = [
+        SAMPLE_INPUTS['shelley_input'],
+    ];
+    const outputs = [
+        SAMPLE_OUTPUTS['simple_shelley_output'],
+        SAMPLE_OUTPUTS['base_address_change_output_numbers'],
     ];
 
     const testPayloads: CardanoSignTransaction[] = [
@@ -561,6 +606,7 @@ export const cardanoSignTransaction = () => {
         signMainnetNoChange,
         signMainnetChange,
         signMainnetBaseAddress,
+        signMainnetBaseAddressNumbers,
         signMainnetBaseHashAddress,
         signMainnetPointerAddress,
         signMainnetEnterpriseAddress,
