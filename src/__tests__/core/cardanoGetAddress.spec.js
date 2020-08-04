@@ -149,6 +149,16 @@ const getBaseAddress = () => {
             method: 'cardanoGetAddress',
             addressParameters: {
                 addressType: ADDRESS_TYPE.Base,
+                path: [0x80000000 + 1852, 0x80000000 + 1815, 0x80000000 + 4, 0, 0],
+                stakingPath: [0x80000000 + 1852, 0x80000000 + 1815, 0x80000000 + 4, 2, 0],
+            },
+            protocolMagic: PROTOCOL_MAGICS['mainnet'],
+            networkId: NETWORK_IDS['mainnet'],
+        },
+        {
+            method: 'cardanoGetAddress',
+            addressParameters: {
+                addressType: ADDRESS_TYPE.Base,
                 path: "m/1852'/1815'/4'/0/0",
                 stakingPath: "m/1852'/1815'/4'/2/0",
             },
@@ -178,6 +188,11 @@ const getBaseAddress = () => {
     ];
 
     const expectedResponses = [
+        {
+            payload: {
+                address: 'addr1q8v42wjda8r6mpfj40d36znlgfdcqp7jtj03ah8skh6u8wnrqua2vw243tmjfjt0h5wsru6appuz8c0pfd75ur7myyeqsx9990',
+            },
+        },
         {
             payload: {
                 address: 'addr1q8v42wjda8r6mpfj40d36znlgfdcqp7jtj03ah8skh6u8wnrqua2vw243tmjfjt0h5wsru6appuz8c0pfd75ur7myyeqsx9990',

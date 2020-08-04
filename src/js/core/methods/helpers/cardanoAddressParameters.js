@@ -8,10 +8,15 @@ import type { CardanoAddressParameters } from '../../../types/networks/cardano';
 export const validateAddressParameters = (addressParameters: CardanoAddressParameters) => {
     validateParams(addressParameters, [
         { name: 'addressType', type: 'number', obligatory: true },
-        { name: 'path', type: 'string', obligatory: true },
-        { name: 'stakingPath', type: 'string' },
+        { name: 'path', obligatory: true },
         { name: 'stakingKeyHash', type: 'string' },
     ]);
+
+    validatePath(addressParameters.path);
+    if (addressParameters.stakingPath) {
+        validatePath(addressParameters.stakingPath);
+    }
+
     if (addressParameters.certificatePointer) {
         validateParams(addressParameters.certificatePointer, [
             { name: 'blockIndex', type: 'number', obligatory: true },

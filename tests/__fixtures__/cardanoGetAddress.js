@@ -118,6 +118,21 @@ export default {
             },
         },
         {
+            description: "Base Mainnet Paths as Numbers - m/1852'/1815'/4'/0/0",
+            params: {
+                addressParameters: {
+                    addressType: ADDRESS_TYPE.Base,
+                    path: [0x80000000 + 1852, 0x80000000 + 1815, 0x80000000 + 4, 0, 0],
+                    stakingPath: [0x80000000 + 1852, 0x80000000 + 1815, 0x80000000 + 4, 2, 0],
+                },
+                protocolMagic: PROTOCOL_MAGICS['mainnet'],
+                networkId: NETWORK_IDS['mainnet'],
+            },
+            result: {
+                address: 'addr1q8v42wjda8r6mpfj40d36znlgfdcqp7jtj03ah8skh6u8wnrqua2vw243tmjfjt0h5wsru6appuz8c0pfd75ur7myyeqsx9990',
+            },
+        },
+        {
             description: "Base Testnet - m/1852'/1815'/4'/0/0",
             params: {
                 addressParameters: {
