@@ -6,6 +6,7 @@ import * as IFRAME from './iframe';
 import * as POPUP from './popup';
 import * as TRANSPORT from './transport';
 import * as UI from './ui';
+import * as CARDANO from './cardano';
 
 export const CORE_EVENT: 'CORE_EVENT' = 'CORE_EVENT';
 export const UI_EVENT: 'UI_EVENT' = 'UI_EVENT';
@@ -22,4 +23,5 @@ export {
     POPUP,
     TRANSPORT,
     UI,
+    CARDANO,
 };
