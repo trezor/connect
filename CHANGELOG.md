@@ -1,3 +1,8 @@
+# 8.1.10
+#### Changed
+- Cardano Shelley Update #638 #639
+- Updated dependencies
+
 # 8.1.9
 #### Fixed
 - `composeTransaction` - remove unnecessary condition when using `send-max` outputs
