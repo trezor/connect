@@ -17,11 +17,16 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 
 ### Params 
 [****Optional common params****](commonParams.md)
-###### [flowtype](../../src/js/types/cardano.js#L45-L59)
-* `inputs` — *obligatory* `Array` of [CardanoInput](../../src/js/types/cardano.js#L31)
-* `outputs` - *obligatory* `Array` of [CardanoOutput](../../src/js/types/cardano.js#L37)
-* `transactions` - *obligatory* `Array` of strings
-* `protocol_magic` - *obligatory* `Integer` 764824073 for Mainnet, 1097911063 for Testnet
+###### [flowtype](../../src/js/types/networks/cardano.js#L62-L109)
+* `inputs` — *obligatory* `Array` of [CardanoInput](../../src/js/types/networks/cardano.js#L71)
+* `outputs` - *obligatory* `Array` of [CardanoOutput](../../src/js/types/networks/cardano.js#L76)
+* `fee` - *obligatory* `String`
+* `ttl` - *obligatory* `String`
+* `protocolMagic` - *obligatory* `Integer` 764824073 for Mainnet, 42 for Testnet
+* `networkId` - *obligatory* `Integer` 1 for Mainnet, 0 for Testnet
+* `certificates` - *optional* `Array` of [CardanoCertificate](../../src/js/types/networks/cardano.js#L83)
+* `withdrawals` - *optional* `Array` of [CardanoWithdrawal](../../src/js/types/networks/cardano.js#L88)
+* `metadata` - *optional* `String`
 
 ### Example
 ```javascript
@@ -31,39 +36,59 @@ TrezorConnect.cardanoSignTransaction({
             path: "m/44'/1815'/0'/0/1",
             prev_hash: "1af8fa0b754ff99253d983894e63a2b09cbb56c833ba18c3384210163f63dcfc",
             prev_index: 0,
-            type: 0
         }
     ],
     outputs: [
         {
             address: "Ae2tdPwUPEZCanmBz5g2GEwFqKTKpNJcGYPKfDxoNeKZ8bRHr8366kseiK2",
-            amount: "3003112"
+            amount: "3003112",
         },
         {
-            path: "m/44'/1815'/0'/0/1",
-            amount: "7120787"
+            addressParameters: {
+                addressType: 0,
+                path: "m/1852'/1815'/0'/0/0",
+                stakingPath: "m/1852'/1815'/0'/2/0",
+            },
+            amount: "7120787",
         }
     ],
-    transactions: [
-        "839f8200d818582482582008abb575fac4c39d5bf80683f7f0c37e48f4e3d96e37d1f6611919a7241b456600ff9f8282d818582183581cda4da43db3fca93695e71dab839e72271204d28b9d964d306b8800a8a0001a7a6916a51a00305becffa0",
-        "839f8200d818582482582008abb575fac4c39d5bf80683f7f0c37e48f4e3d96e37d1f6611919a7241b456600ff9f8282d818582183581cda4da43db3fca93695e71dab839e72271204d28b9d964d306b8800a8a0001a7a6916a51a00305becffa0",
-        "839f8200d818582482582008abb575fac4c39d5bf80683f7f0c37e48f4e3d96e37d1f6611919a7241b456600ff9f8282d818582183581cda4da43db3fca93695e71dab839e72271204d28b9d964d306b8800a8a0001a7a6916a51a00305becffa0",
-        "839f8200d818582482582008abb575fac4c39d5bf80683f7f0c37e48f4e3d96e37d1f6611919a7241b456600ff9f8282d818582183581cda4da43db3fca93695e71dab839e72271204d28b9d964d306b8800a8a0001a7a6916a51a00305becffa0",
-        "839f8200d818582482582008abb575fac4c39d5bf80683f7f0c37e48f4e3d96e37d1f6611919a7241b456600ff9f8282d818582183581cda4da43db3fca93695e71dab839e72271204d28b9d964d306b8800a8a0001a7a6916a51a00305becffa0",
-        "839f8200d818582482582008abb575fac4c39d5bf80683f7f0c37e48f4e3d96e37d1f6611919a7241b456600ff9f8282d818582183581cda4da43db3fca93695e71dab839e72271204d28b9d964d306b8800a8a0001a7a6916a51a00305becffa0",
+    fee: "42",
+    ttl: "10",
+    certificates: [
+        {
+            type: 0,
+            path: "m/1852'/1815'/0'/2/0",
+        },
+        {
+            type: 1,
+            path: "m/1852'/1815'/0'/2/0",
+        },
+        {
+            type: 2,
+            path: "m/1852'/1815'/0'/2/0",
+            pool: "f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973",
+        },
     ],
-    protocol_magic: 764824073
+    withdrawals: [
+        {
+            path: "m/1852'/1815'/0'/2/0",
+            amount: "1000",
+        }
+    ],
+    metadata: "a200a11864a118c843aa00ff01a119012c590100aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    protocolMagic: 764824073,
+    networkId: 1,
 });
 ```
 
 ### Result
-###### [flowtype](../../src/js/types/cardano.js#L56-L59)
+###### [flowtype](../../src/js/types/networks/cardano.js#L105-L108)
 ```javascript
 {
     success: true,
     payload: {
         hash: string,
-        body: string,
+        serializedTx: string,
     }
 }
 ```

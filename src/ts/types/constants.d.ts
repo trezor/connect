@@ -143,3 +143,29 @@ export namespace UI {
     const BUNDLE_PROGRESS = 'ui-bundle_progress';
     const ADDRESS_VALIDATION = 'ui-address_validation';
 }
+
+export namespace CARDANO {
+    enum PROTOCOL_MAGICS {
+        mainnet = 764824073,
+        testnet = 42,
+    }
+
+    enum NETWORK_IDS {
+        mainnet = 1,
+        testnet = 0,
+    }
+
+    enum ADDRESS_TYPE {
+        Base = 0,
+        Pointer = 4,
+        Enterprise = 6,
+        Byron = 8,
+        Reward = 14,
+    }
+
+    enum CERTIFICATE_TYPE {
+        StakeRegistration = 0,
+        StakeDeregistration = 1,
+        StakeDelegation = 2,
+    }
+}

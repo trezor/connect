@@ -607,24 +607,17 @@ export interface CardanoPublicKey {
 
 export interface CardanoSignedTx {
     tx_hash: string;
-    tx_body: string;
+    serialized_tx: string;
 }
 export interface CardanoTxInput {
     tx_hash: string;
     address_n: number[];
     output_index: number;
-    type?: number;
 }
 export interface CardanoTxOutput {
     address?: string;
     address_n?: number[];
     amount: string;
-}
-
-export interface CardanoTxRequest {
-    tx_index: number;
-    tx_hash: string;
-    tx_body: string;
 }
 
 // Lisk types

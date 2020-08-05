@@ -400,15 +400,40 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    async cardanoGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoAddress> {
+    async cardanoGetAddress(addressParameters: trezor.CardanoAddressParameters, protocolMagic: number, networkId: number, showOnTrezor: boolean): Promise<trezor.CardanoAddress> {
         const response: MessageResponse<trezor.CardanoAddress> = await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
-            address_n,
+            address_parameters: addressParameters,
+            protocol_magic: protocolMagic,
+            network_id: networkId,
             show_display: !!showOnTrezor,
         });
         return response.message;
     }
 
-    // CardanoSignTx message can be found inside ./core/methods/helpers/cardanoSignTx
+    async cardanoSignTx(
+        inputs: Array<trezor.CardanoTxInput>,
+        outputs: Array<trezor.CardanoTxOutput>,
+        fee: string,
+        ttl: string,
+        certificates: Array<trezor.CardanoTxCertificate>,
+        withdrawals: Array<trezor.CardanoTxWithdrawal>,
+        metadata: string,
+        protocolMagic: number,
+        networkId: number
+    ): Promise<trezor.CardanoSignedTx> {
+        const response: MessageResponse<trezor.CardanoSignedTx> = await this.typedCall('CardanoSignTx', 'CardanoSignedTx', {
+            inputs,
+            outputs,
+            fee,
+            ttl,
+            certificates,
+            withdrawals,
+            metadata,
+            protocol_magic: protocolMagic,
+            network_id: networkId,
+        });
+        return response.message;
+    }
     // Cardano: end
 
     // Lisk: begin

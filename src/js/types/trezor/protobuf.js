@@ -568,6 +568,20 @@ export type TezosSignedTx = {
 };
 
 // Cardano types
+export type CardanoCertificatePointerType = {
+    block_index: number;
+    tx_index: number;
+    certificate_index: number;
+}
+
+export type CardanoAddressParameters = {
+    address_type: 0 | 4 | 6 | 8 | 14;
+    address_n: number[];
+    address_n_staking: number[];
+    staking_key_hash?: string;
+    certificate_pointer?: CardanoCertificatePointerType;
+};
+
 export type CardanoAddress = {
     address: string;
     address_n?: Array<number>;
@@ -580,24 +594,26 @@ export type CardanoPublicKey = {
 
 export type CardanoSignedTx = {
     tx_hash: string;
-    tx_body: string;
+    serialized_tx: string;
 };
 export type CardanoTxInput = {
     tx_hash: string;
     address_n: Array<number>;
     output_index: number;
-    type?: number;
 };
 export type CardanoTxOutput = {
     address?: string;
-    address_n?: Array<number>;
+    address_parameters?: CardanoAddressParameters;
     amount: string;
 };
-
-export type CardanoTxRequest = {
-    tx_index: number;
-    tx_hash: string;
-    tx_body: string;
+export type CardanoTxCertificate = {
+    type: number;
+    path: Array<number>;
+    pool?: string;
+};
+export type CardanoTxWithdrawal = {
+    path: Array<number>;
+    amount: string;
 };
 
 // Lisk types

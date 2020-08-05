@@ -19,7 +19,7 @@ env:
   - TEST_METHODS=binanceSignTransaction
   - TEST_METHODS=applySettings,applyFlags,getFeatures
 
-script: travis_wait ./tests/run.sh -f 2.3.1 -i ${TEST_METHODS}
+script: travis_wait ./tests/run.sh -f 2.3.2 -i ${TEST_METHODS}
 
 # todo: maybe have here a job that takes fw from master and is allowed to fail?
 # jobs:
