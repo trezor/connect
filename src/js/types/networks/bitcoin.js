@@ -70,3 +70,5 @@ export type VerifyMessage = {
     message: string;
     coin: string;
 };
+
+export type { TransactionInput, TransactionOutput } from '../trezor/protobuf';

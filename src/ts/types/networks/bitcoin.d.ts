@@ -69,3 +69,5 @@ export interface VerifyMessage {
     message: string;
     coin: string;
 }
+
+export { TransactionInput, TransactionOutput } from '../trezor/protobuf';

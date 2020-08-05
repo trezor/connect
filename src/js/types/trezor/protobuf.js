@@ -112,15 +112,19 @@ export type OutputScriptType = 'PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS'
 // transaction output, parameter of SignTx message, declared by user
 export type TransactionOutput = {|
     address: string;
+    address_n?: typeof undefined;
     script_type: 'PAYTOADDRESS';
     amount: string;
     multisig?: MultisigRedeemScriptType;
 |} | {|
-    address_n: Array<number>;
+    address?: typeof undefined;
+    address_n: number[];
     script_type: OutputScriptType;
     amount: string;
     multisig?: MultisigRedeemScriptType;
 |} | {|
+    address?: typeof undefined;
+    address_n?: typeof undefined;
     amount: '0';
     op_return_data: string;
     script_type: 'PAYTOOPRETURN';

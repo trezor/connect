@@ -113,17 +113,21 @@ export type OutputScriptType = 'PAYTOADDRESS' | 'PAYTOMULTISIG' | 'PAYTOWITNESS'
 export type TransactionOutput =
     | {
           address: string;
+          address_n?: undefined;
           script_type: 'PAYTOADDRESS';
           amount: string;
           multisig?: MultisigRedeemScriptType;
       }
     | {
+          address?: undefined;
           address_n: number[];
           script_type: OutputScriptType;
           amount: string;
           multisig?: MultisigRedeemScriptType;
       }
     | {
+          address?: undefined;
+          address_n?: undefined;
           amount: '0';
           op_return_data: string;
           script_type: 'PAYTOOPRETURN';
