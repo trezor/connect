@@ -8,6 +8,7 @@ import * as Account from './account';
 import * as Bitcoin from './networks/bitcoin';
 import * as Binance from './networks/binance';
 import * as Cardano from './networks/cardano';
+import * as CoinInfo from './networks/coinInfo';
 import * as EOS from './networks/eos';
 import * as Ethereum from './networks/ethereum';
 import * as Lisk from './networks/lisk';
@@ -356,6 +357,11 @@ export namespace TrezorConnect {
      * Ask device to initiate recovery procedure
      */
     function recoveryDevice(params: P.CommonParams & Mgmnt.RecoveryDevice): P.Response<P.DefaultMessage>;
+
+    /**
+     * Get static coin info
+     */
+    function getCoinInfo(params: CoinInfo.GetCoinInfo): P.Response<CoinInfo.CoinInfo>;
 
     // // Developer mode
     function customMessage(params: P.CommonParams & Misc.CustomMessage): P.Response<any>;
