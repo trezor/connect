@@ -65,8 +65,8 @@ export const getScriptType = (path: ?Array<number>): InputScriptType => {
 export const getOutputScriptType = (path: ?Array<number>): OutputScriptType => {
     if (!Array.isArray(path) || path.length < 1) return 'PAYTOADDRESS';
 
-     // compatibility for Casa - allow an unhardened 49 path to use paytop2shwitness
-     if (path[0] === 49) {
+    // compatibility for Casa - allow an unhardened 49 path to use paytop2shwitness
+    if (path[0] === 49) {
         return 'PAYTOP2SHWITNESS'
     }
 
