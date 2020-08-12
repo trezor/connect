@@ -36,7 +36,7 @@ const initialSettings: ConnectSettings = {
     env: 'web',
     lazyLoad: false,
     timestamp: new Date().getTime(),
-    interactionTimeout: 120, // 2 minutes
+    interactionTimeout: 600, // 5 minutes
 };
 
 let currentSettings: ConnectSettings = initialSettings;
