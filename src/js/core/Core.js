@@ -64,10 +64,14 @@ const getPopupPromise = (requestWindow: boolean = true): Deferred<void> => {
 /**
  * Start interaction timeout timer
  */
-const interactionTimeout = () => _interactionTimeout.start(() => {
-    // eslint-disable-next-line no-use-before-define
-    onPopupClosed('Interaction timeout');
-});
+const interactionTimeout = () => {
+    if ()
+
+    _interactionTimeout.start(() => {
+        // eslint-disable-next-line no-use-before-define
+        onPopupClosed('Interaction timeout');
+    });
+};
 
 /**
  * Creates an instance of uiPromise.
@@ -961,7 +965,8 @@ export const init = async (settings: ConnectSettings) => {
         await DataManager.load(settings);
         await initCore();
 
-        _interactionTimeout = new InteractionTimeout(settings.interactionTimeout || 0);
+        // If we're not in popup mode, set the interaction timeout to 0 (= disabled)
+        _interactionTimeout = new InteractionTimeout(settings.popup ? settings.interactionTimeout : 0);
 
         return _core;
     } catch (error) {
