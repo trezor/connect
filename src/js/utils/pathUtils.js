@@ -67,7 +67,7 @@ export const getOutputScriptType = (path: ?Array<number>): OutputScriptType => {
 
     // compatibility for Casa - allow an unhardened 49 path to use paytop2shwitness
     if (path[0] === 49) {
-        return 'PAYTOP2SHWITNESS'
+        return 'PAYTOP2SHWITNESS';
     }
 
     const p = fromHardened(path[0]);
