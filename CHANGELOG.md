@@ -1,3 +1,7 @@
+# 8.1.11
+#### Changed
+- Default value of `interactionTimeout` has been increased from 2 minutes to 5 minutes.
+
 # 8.1.10
 #### Changed
 - Cardano Shelley Update #638 #639
