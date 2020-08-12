@@ -64,14 +64,10 @@ const getPopupPromise = (requestWindow: boolean = true): Deferred<void> => {
 /**
  * Start interaction timeout timer
  */
-const interactionTimeout = () => {
-    if ()
-
-    _interactionTimeout.start(() => {
-        // eslint-disable-next-line no-use-before-define
-        onPopupClosed('Interaction timeout');
-    });
-};
+const interactionTimeout = () => _interactionTimeout.start(() => {
+    // eslint-disable-next-line no-use-before-define
+    onPopupClosed('Interaction timeout');
+});
 
 /**
  * Creates an instance of uiPromise.
