@@ -68,7 +68,7 @@ const deriveBech32Output = (program: Buffer): Buffer => {
     return scriptSig;
 };
 
-const deriveOutputScript = async (getHDNode: GetHDNode, output: TransactionOutput, coinInfo: BitcoinNetworkInfo): Promise<Buffer> => {
+const deriveOutputScript = async (getHDNode: GetHDNode, output: TransactionOutput, coinInfo: BitcoinNetworkInfo): Promise<Buffer | void> => {
     if (output.op_return_data) {
         return BitcoinJsScript.nullData.output.encode(Buffer.from(output.op_return_data, 'hex'));
     }
@@ -79,6 +79,12 @@ const deriveOutputScript = async (getHDNode: GetHDNode, output: TransactionOutpu
     const scriptType = output.address_n
         ? getOutputScriptType(output.address_n)
         : getAddressScriptType(output.address, coinInfo);
+
+    // skip PAYTOMULTISIG output check
+    // TODO: implement it
+    if (scriptType === 'PAYTOMULTISIG') {
+        return;
+    }
 
     const pkh = output.address_n
         ? await derivePubKeyHash(output.address_n, getHDNode, coinInfo)
@@ -133,7 +139,7 @@ export default async (getHDNode: GetHDNode,
         }
 
         const scriptA = await deriveOutputScript(getHDNode, outputs[i], coinInfo);
-        if (scriptA.compare(scriptB) !== 0) {
+        if (scriptA && scriptA.compare(scriptB) !== 0) {
             throw ERRORS.TypedError('Runtime', `verifyTx: Output ${i} scripts differ`);
         }
     }
