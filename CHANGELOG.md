@@ -1,3 +1,8 @@
+# 8.1.12 [unreleased]
+
+#### Changed
+- Don't try to validate multisig output scripts (not implemented yet)
+
 # 8.1.11
 
 #### Changed

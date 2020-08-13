@@ -49,6 +49,7 @@ export const isBech32Path = (path: ?Array<number>): boolean => {
 
 export const getScriptType = (path: ?Array<number>): InputScriptType => {
     if (!Array.isArray(path) || path.length < 1) return 'SPENDADDRESS';
+
     const p1 = fromHardened(path[0]);
     switch (p1) {
         case 48:
@@ -65,7 +66,7 @@ export const getScriptType = (path: ?Array<number>): InputScriptType => {
 export const getOutputScriptType = (path: ?Array<number>): OutputScriptType => {
     if (!Array.isArray(path) || path.length < 1) return 'PAYTOADDRESS';
 
-    // compatibility for Casa - allow an unhardened 49 path to use paytop2shwitness
+    // compatibility for Casa - allow an unhardened 49 path to use PAYTOP2SHWITNESS
     if (path[0] === 49) {
         return 'PAYTOP2SHWITNESS';
     }

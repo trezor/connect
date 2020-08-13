@@ -68,13 +68,17 @@ const deriveBech32Output = (program: Buffer): Buffer => {
     return scriptSig;
 };
 
-const deriveOutputScript = async (getHDNode: GetHDNode, output: TransactionOutput, coinInfo: BitcoinNetworkInfo): Promise<Buffer> => {
+const deriveOutputScript = async (getHDNode: GetHDNode, output: TransactionOutput, coinInfo: BitcoinNetworkInfo): Promise<Buffer | void> => {
     if (output.op_return_data) {
         return BitcoinJsScript.nullData.output.encode(Buffer.from(output.op_return_data, 'hex'));
     }
     if (!output.address_n && !output.address) {
         throw ERRORS.TypedError('Runtime', 'deriveOutputScript: Neither address or address_n is set');
     }
+
+    // skip multisig output check, not implemented yet
+    // TODO: implement it
+    if (output.multisig) return;
 
     const scriptType = output.address_n
         ? getOutputScriptType(output.address_n)
@@ -133,7 +137,7 @@ export default async (getHDNode: GetHDNode,
         }
 
         const scriptA = await deriveOutputScript(getHDNode, outputs[i], coinInfo);
-        if (scriptA.compare(scriptB) !== 0) {
+        if (scriptA && scriptA.compare(scriptB) !== 0) {
             throw ERRORS.TypedError('Runtime', `verifyTx: Output ${i} scripts differ`);
         }
     }
