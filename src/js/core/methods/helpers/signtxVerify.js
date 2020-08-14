@@ -77,7 +77,7 @@ const deriveOutputScript = async (getHDNode: GetHDNode, output: TransactionOutpu
     }
 
     // compatibility for Casa - If passing in multisig params with p2shw, skip validation
-    if (output.address_n && output.script_type === 'PAYTOP2SHWITNESS') {
+    if (output.multisig && output.script_type === 'PAYTOP2SHWITNESS') {
         return;
     }
 
