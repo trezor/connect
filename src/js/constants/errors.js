@@ -29,6 +29,7 @@ export const ERROR_CODES = {
     'Backend_NotSupported': 'BlockchainLink settings not found in coins.json', // thrown by methods which using backends, blockchainLink not defined for this coin
     'Backend_WorkerMissing': '', // thrown by BlockchainLink class, worker not specified
     'Backend_Disconnected': 'Backend disconnected', // thrown by BlockchainLink class
+    'Backend_Invalid': 'Invalid backend', // thrown by BlockchainLink class, invalid backend (ie: backend for wrong coin set)
     'Backend_Error': '', // thrown by BlockchainLink class, generic message from 'blockchain-link'
 
     'Runtime': '', // thrown from several places, this shouldn't ever happen tho

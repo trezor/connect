@@ -84,11 +84,15 @@ export default class Blockchain {
     async init() {
         this.link.on('connected', async () => {
             const info = await this.link.getInfo();
+            if (info.name !== this.coinInfo.name) {
+                this.onError(ERRORS.TypedError('Backend_Invalid'));
+                return;
+            }
+
             this.postMessage(BlockchainMessage(BLOCKCHAIN.CONNECT, {
                 coin: this.coinInfo,
                 ...info,
             }));
-            // TODO: check for 1st block hash (different for btc forks)
         });
 
         this.link.on('disconnected', () => {
