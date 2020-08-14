@@ -76,6 +76,11 @@ const deriveOutputScript = async (getHDNode: GetHDNode, output: TransactionOutpu
         throw ERRORS.TypedError('Runtime', 'deriveOutputScript: Neither address or address_n is set');
     }
 
+    // compatibility for Casa - If passing in multisig params with p2shw, skip validation
+    if (output.address_n && output.script_type === 'PAYTOP2SHWITNESS') {
+        return;
+    }
+
     const scriptType = output.address_n
         ? getOutputScriptType(output.address_n)
         : getAddressScriptType(output.address, coinInfo);
