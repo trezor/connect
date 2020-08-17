@@ -6,7 +6,8 @@ import * as UI from '../constants/ui';
 import { parseMessage } from '../message';
 import { UiMessage } from '../message/builder';
 import DataManager from '../data/DataManager';
-import { getOrigin } from '../env/browser/networkUtils';
+import { parse as parseSettings } from '../data/ConnectSettings';
+import { escapeHtml } from '../utils/windowsUtils';
 
 import * as view from './view';
 import { showView, setOperation, initMessageChannel, postMessageToParent } from './view/common';
@@ -16,25 +17,25 @@ import {
     showBackupNotification,
 } from './view/notification';
 
-import type { CoreMessage, PostMessageEvent, PopupInit, PopupHandshake } from '../types';
+import type { PostMessageEvent, PopupInit, PopupHandshake } from '../types';
 
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/popup.less';
 
 // handle messages from window.opener and iframe
-const handleMessage = (event: PostMessageEvent): void => {
-    const data: any = event.data;
+const handleMessage = (event: PostMessageEvent) => {
+    const data = event.data;
     if (!data) return;
 
     // This is message from the window.opener
     if (data.type === POPUP.INIT) {
-        init(data.payload); // eslint-disable-line no-use-before-define
+        init(escapeHtml(data.payload)); // eslint-disable-line no-use-before-define
         return;
     }
 
-    // ignore messages from origin other then parent.window or whitelisted
+    // ignore messages from origin other then MessagePort (iframe)
     const isMessagePort = event.target instanceof MessagePort || (typeof BroadcastChannel !== 'undefined' && event.target instanceof BroadcastChannel);
-    if (!isMessagePort && getOrigin(event.origin) !== getOrigin(document.referrer) && !DataManager.isWhitelisted(event.origin)) return;
+    if (!isMessagePort) return;
 
     // catch first message from iframe
     if (data.type === POPUP.HANDSHAKE) {
@@ -42,7 +43,7 @@ const handleMessage = (event: PostMessageEvent): void => {
         return;
     }
 
-    const message: CoreMessage = parseMessage(event.data);
+    const message = parseMessage(data);
 
     switch (message.type) {
         case UI.LOADING :
@@ -131,14 +132,15 @@ const handleMessage = (event: PostMessageEvent): void => {
 };
 
 // handle POPUP.INIT message from window.opener
-const init = async (payload: $PropertyType<PopupInit, 'payload'>) => {
+const init = async (payload?: $PropertyType<PopupInit, 'payload'>) => {
     if (!payload) return;
     const { settings } = payload;
 
     try {
-        // load config only to get supported browsers list.
-        // local settings will be replaced after POPUP.HANDSHAKE event from iframe
-        await DataManager.load(settings, false);
+        // load config only to get supported browsers list
+        // settings received from parent (POPUP.INIT) are not considered as "safe" (they could be injected/modified)
+        // settings will be replaced later on, after POPUP.HANDSHAKE event from iframe
+        await DataManager.load(parseSettings(settings), false);
         // initialize message channel
         const broadcastID = `${settings.env}-${settings.timestamp}`;
         initMessageChannel(broadcastID, handleMessage);
@@ -147,7 +149,7 @@ const init = async (payload: $PropertyType<PopupInit, 'payload'>) => {
         // handshake with iframe
         view.initBrowserView();
     } catch (error) {
-        postMessageToParent(UiMessage(POPUP.ERROR, { error }));
+        postMessageToParent(UiMessage(POPUP.ERROR, { error: error.message }));
     }
 };
 
