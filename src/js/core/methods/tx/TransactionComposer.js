@@ -144,7 +144,7 @@ export default class TransactionComposer {
         const changeAddress = addresses.change[changeId].address;
         const inputAmounts = coinInfo.segwit || coinInfo.forkid !== null || coinInfo.network.consensusBranchId !== null;
 
-        return buildTx({
+        const result = buildTx({
             utxos: this.utxos,
             outputs: this.outputs,
             height: this.blockHeight,
@@ -157,6 +157,11 @@ export default class TransactionComposer {
             changeAddress,
             dustThreshold: coinInfo.dustLimit,
         });
+        // hd-wallet returns `max = -1` when sendMax is not requested
+        // https://github.com/trezor/hd-wallet/blob/master/src/build-tx/coinselect.js#L101
+        // delete this value from the result, it should be either string or undefined
+        if (result.type !== 'error' && result.max === -1) delete result.max;
+        return result;
     }
 
     dispose() {
