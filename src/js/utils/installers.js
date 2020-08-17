@@ -55,7 +55,7 @@ const BRIDGE_INSTALLERS: Array<ProtoInstallerShort> = [{
     platform: ['win32', 'win64'],
 }, {
     shortUrl: '/bridge/%version%/trezor-bridge-%version%.pkg',
-    label: 'Mac OS X',
+    label: 'macOS',
     platform: 'mac',
 }, {
     shortUrl: '/bridge/%version%/trezor-bridge_%version%_amd64.deb',
