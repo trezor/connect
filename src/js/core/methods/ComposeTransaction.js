@@ -133,7 +133,7 @@ export default class ComposeTransaction extends AbstractMethod {
         await composer.init(blockchain);
         return feeLevels.map(level => {
             composer.composeCustomFee(level.feePerUnit);
-            const tx = composer.composed.custom;
+            const tx = { ...composer.composed.custom }; // needs to spread otherwise flow has a problem with BuildTxResult vs PrecomposedTransaction (max could be undefined)
             if (tx.type === 'final') {
                 const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0xffffffff));
                 const outputs = tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo));
@@ -358,7 +358,7 @@ export default class ComposeTransaction extends AbstractMethod {
 
         if (this.params.push) {
             const blockchain = await initBlockchain(coinInfo, this.postMessage);
-            const txid: string = await blockchain.pushTransaction(response.serializedTx);
+            const txid = await blockchain.pushTransaction(response.serializedTx);
             return {
                 ...response,
                 txid,
