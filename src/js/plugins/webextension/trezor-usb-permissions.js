@@ -1,4 +1,4 @@
-const VERSION = '8.1.11';
+const VERSION = '8.1.12';
 const versionN = VERSION.split('.').map(s => parseInt(s));
 // const DIRECTORY = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
 const DIRECTORY = `${versionN[0]}/`;

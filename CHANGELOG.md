@@ -1,5 +1,6 @@
-# 8.1.12 [unreleased]
-
+# 8.1.12
+#### Fixed
+- `interactionTimeout` moved to a lower block in code
 #### Changed
 - Don't try to validate multisig output scripts (not implemented yet)
 
