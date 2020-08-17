@@ -8,8 +8,10 @@ export default class InteractionTimeout {
     timeout: ?TimeoutID = null;
     seconds: number = 0;
 
-    constructor(seconds: number) {
-        this.seconds = seconds;
+    constructor(seconds: ?number) {
+        if (seconds) {
+            this.seconds = seconds;
+        }
     }
 
     get seconds() {

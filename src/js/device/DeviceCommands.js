@@ -9,6 +9,7 @@ import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScrip
 import { getAccountAddressN } from '../utils/accountUtils';
 import { toChecksumAddress } from '../utils/ethereumUtils';
 import { resolveAfter } from '../utils/promiseUtils';
+import { versionCompare } from '../utils/versionUtils';
 import Device from './Device';
 
 import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
@@ -875,6 +876,19 @@ export default class DeviceCommands {
     }
 
     async cancel() {
+        /**
+         * Bridge version =< 2.0.28 has a bug that doesn't permit it to cancel
+         * user interactions in progress, so we have to do it manually.
+         */
+        const { activeName, version } = this.transport;
+        if (
+            activeName &&
+            activeName === 'BridgeTransport' &&
+            versionCompare(version, '2.0.28') < 1
+        ) {
+            await this.device.legacyForceRelease();
+        }
+
         this.transport.post(this.sessionId, 'Cancel', {}, false);
     }
 }
