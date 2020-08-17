@@ -205,7 +205,7 @@ export type PrecomposedTransaction =
       }
     | {
           type: 'nonfinal';
-          max?: string;
+          max: string | typeof undefined;
           totalSpent: string; // all the outputs, no fee, no change
           fee: string;
           feePerByte: string;
@@ -213,7 +213,7 @@ export type PrecomposedTransaction =
       }
     | {
           type: 'final';
-          max?: string;
+          max: string | typeof undefined;
           totalSpent: string; // all the outputs, no fee, no change
           fee: string;
           feePerByte: string;
