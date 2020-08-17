@@ -14,3 +14,15 @@ export const sendMessageToOpener = (message: any, origin: string) => {
         window.postMessage(message, window.location.origin);
     }
 };
+
+// browser built-in functionality to quickly and safely escape the string
+export const escapeHtml = (payload: Object) => {
+    if (!payload) return;
+    try {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(JSON.stringify(payload)));
+        return JSON.parse(div.innerHTML);
+    } catch (error) {
+        // do nothing
+    }
+};
