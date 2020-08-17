@@ -10,7 +10,7 @@ import type {
  * It could be changed by passing values into TrezorConnect.init(...) method
  */
 
-const VERSION = '8.1.10';
+const VERSION = '8.1.12';
 const versionN = VERSION.split('.').map(s => parseInt(s));
 // const DIRECTORY = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
 const DIRECTORY = `${versionN[0]}/`;
@@ -36,7 +36,7 @@ const initialSettings: ConnectSettings = {
     env: 'web',
     lazyLoad: false,
     timestamp: new Date().getTime(),
-    interactionTimeout: 120, // 2 minutes
+    interactionTimeout: 600, // 5 minutes
 };
 
 let currentSettings: ConnectSettings = initialSettings;

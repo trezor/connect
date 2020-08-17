@@ -14,7 +14,6 @@ import { find as findMethod } from './methods';
 
 import { create as createDeferred } from '../utils/deferred';
 import { resolveAfter } from '../utils/promiseUtils';
-import { versionCompare } from '../utils/versionUtils';
 import Log, { init as initLog } from '../utils/debug';
 import InteractionTimeout from '../utils/interactionTimeout';
 
@@ -66,19 +65,6 @@ const getPopupPromise = (requestWindow: boolean = true): Deferred<void> => {
  * Start interaction timeout timer
  */
 const interactionTimeout = () => _interactionTimeout.start(() => {
-    /**
-     * Bridge version =< 2.0.28 has a bug that doesn't permit it to cancel
-     * user interactions in progress, so we have to do it manually.
-     */
-    const { type, version } = _core.getTransportInfo();
-    if (type === 'bridge' && versionCompare(version, '2.0.28') < 1) {
-        if (_deviceList && _deviceList.asArray().length > 0) {
-            _deviceList.allDevices().forEach(d => {
-                d.legacyForceRelease();
-            });
-        }
-    }
-
     // eslint-disable-next-line no-use-before-define
     onPopupClosed('Interaction timeout');
 });
@@ -975,7 +961,8 @@ export const init = async (settings: ConnectSettings) => {
         await DataManager.load(settings);
         await initCore();
 
-        _interactionTimeout = new InteractionTimeout(settings.interactionTimeout || 0);
+        // If we're not in popup mode, set the interaction timeout to 0 (= disabled)
+        _interactionTimeout = new InteractionTimeout(settings.popup ? settings.interactionTimeout : 0);
 
         return _core;
     } catch (error) {
