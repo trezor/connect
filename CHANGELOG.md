@@ -1,6 +1,7 @@
 # 8.1.12
 #### Fixed
 - `interactionTimeout` moved to a lower block in code
+- `composeTransaction` filter `max = -1` field from the result
 #### Changed
 - Don't try to validate multisig output scripts (not implemented yet)
 
