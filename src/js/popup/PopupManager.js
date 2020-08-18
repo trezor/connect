@@ -23,6 +23,7 @@ export default class PopupManager extends EventEmitter {
     openTimeout: number;
     closeInterval: number = 0;
     iframeHandshake: Deferred<void>;
+    popupPromise: Deferred<void> | typeof undefined;
     handleMessage: (event: MessageEvent) => void;
     handleExtensionConnect: () => void;
     handleExtensionMessage: () => void;
@@ -47,7 +48,7 @@ export default class PopupManager extends EventEmitter {
         window.addEventListener('message', this.handleMessage, false);
     }
 
-    request(lazyLoad: boolean = false): void {
+    request(lazyLoad: boolean = false) {
         // popup request
         // TODO: ie - open immediately and hide it but post handshake after timeout
 
@@ -77,21 +78,22 @@ export default class PopupManager extends EventEmitter {
         }
     }
 
-    cancel(): void {
+    cancel() {
         this.close();
     }
 
-    unlock(): void {
+    unlock() {
         this.locked = false;
     }
 
-    open(lazyLoad?: boolean): void {
+    open(lazyLoad?: boolean) {
         const src = this.settings.popupSrc;
         if (!this.settings.supportedBrowser) {
             this.openWrapper(`${src}#unsupported`);
             return;
         }
 
+        this.popupPromise = createDeferred(POPUP.LOADED);
         this.openWrapper(lazyLoad ? `${ src }#loading` : src);
 
         this.closeInterval = window.setInterval(() => {
@@ -117,7 +119,7 @@ export default class PopupManager extends EventEmitter {
         }, POPUP_OPEN_TIMEOUT);
     }
 
-    openWrapper(url: string): void {
+    openWrapper(url: string) {
         if (this.settings.env === 'webextension') {
             // $FlowIssue chrome not declared outside
             chrome.windows.getCurrent(null, currentWindow => {
@@ -161,7 +163,7 @@ export default class PopupManager extends EventEmitter {
         }
     }
 
-    handleExtensionConnect(port: ChromePort): void {
+    handleExtensionConnect(port: ChromePort) {
         if (port.name !== 'trezor-connect') return;
         if (!this._window || (this._window && this._window.id !== port.sender.tab.id)) {
             port.disconnect();
@@ -176,7 +178,7 @@ export default class PopupManager extends EventEmitter {
         this.extensionPort.onMessage.addListener(this.handleExtensionMessage);
     }
 
-    handleExtensionMessage(message: MessageEvent): void {
+    handleExtensionMessage(message: MessageEvent) {
         if (!this.extensionPort) return;
         const port = this.extensionPort;
         const { data } = message;
@@ -188,6 +190,7 @@ export default class PopupManager extends EventEmitter {
             this.emit(POPUP.CLOSED, errorMessage ? `Popup error: ${errorMessage}` : null);
             this.close();
         } else if (data.type === POPUP.LOADED) {
+            if (this.popupPromise) { this.popupPromise.resolve(); }
             this.iframeHandshake.promise.then(() => {
                 port.postMessage({
                     type: POPUP.INIT,
@@ -216,7 +219,7 @@ export default class PopupManager extends EventEmitter {
         }
     }
 
-    handleMessage(message: MessageEvent): void {
+    handleMessage(message: MessageEvent) {
         // ignore messages from domain other then popup origin and without data
         const { data } = message;
         if (getOrigin(message.origin) !== this.origin || !data || typeof data !== 'object') return;
@@ -231,6 +234,7 @@ export default class PopupManager extends EventEmitter {
             this.emit(POPUP.CLOSED, errorMessage ? `Popup error: ${errorMessage}` : null);
             this.close();
         } else if (data.type === POPUP.LOADED) {
+            if (this.popupPromise) { this.popupPromise.resolve(); }
             // popup is successfully loaded
             this.iframeHandshake.promise.then(() => {
                 this._window.postMessage({
@@ -248,8 +252,9 @@ export default class PopupManager extends EventEmitter {
         }
     }
 
-    close(): void {
+    close() {
         this.locked = false;
+        this.popupPromise = undefined;
 
         if (this.requestTimeout) {
             window.clearTimeout(this.requestTimeout);
@@ -293,12 +298,7 @@ export default class PopupManager extends EventEmitter {
         }
     }
 
-    postMessage(message: CoreMessage): void {
-        // post message before popup request finalized
-        if (this.requestTimeout) {
-            return;
-        }
-
+    async postMessage(message: CoreMessage) {
         // device needs interaction but there is no popup/ui
         // maybe popup request wasn't handled
         // ignore "ui_request_window" type
@@ -308,6 +308,10 @@ export default class PopupManager extends EventEmitter {
             return;
         }
 
+        // post message before popup request finalized
+        if (this.popupPromise) {
+            await this.popupPromise.promise;
+        }
         // post message to popup window
         if (this._window) { this._window.postMessage(message, this.origin); }
     }

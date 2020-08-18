@@ -146,12 +146,14 @@ export type AccountInfo = {
 // Compose transaction
 
 export type RegularOutput = {
+    type?: 'external';
     address: string;
     amount: string;
     script_type?: 'PAYTOADDRESS';
 }
 
 export type InternalOutput = {
+    type?: 'internal';
     address_n: number[];
     amount: string;
     script_type?: string;
@@ -203,7 +205,7 @@ export type PrecomposedTransaction =
       }
     | {
           type: 'nonfinal';
-          max: string;
+          max: string | typeof undefined;
           totalSpent: string; // all the outputs, no fee, no change
           fee: string;
           feePerByte: string;
@@ -211,7 +213,7 @@ export type PrecomposedTransaction =
       }
     | {
           type: 'final';
-          max: string;
+          max: string | typeof undefined;
           totalSpent: string; // all the outputs, no fee, no change
           fee: string;
           feePerByte: string;

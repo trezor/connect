@@ -144,12 +144,14 @@ export interface AccountInfo {
 // Compose transaction
 
 export interface RegularOutput {
+    type?: 'external';
     address: string;
     amount: string;
     script_type?: 'PAYTOADDRESS';
 }
 
 export interface InternalOutput {
+    type?: 'internal';
     address_n: number[];
     amount: string;
     script_type?: string;
@@ -201,7 +203,7 @@ export type PrecomposedTransaction =
       }
     | {
           type: 'nonfinal';
-          max: string;
+          max?: string;
           totalSpent: string; // all the outputs, no fee, no change
           fee: string;
           feePerByte: string;
@@ -209,7 +211,7 @@ export type PrecomposedTransaction =
       }
     | {
           type: 'final';
-          max: string;
+          max?: string;
           totalSpent: string; // all the outputs, no fee, no change
           fee: string;
           feePerByte: string;

@@ -65,19 +65,19 @@ export default class TransactionComposer {
     }
 
     // Composing fee levels for SelectFee view in popup
-    composeAllFeeLevels(): boolean {
+    composeAllFeeLevels() {
         const { levels } = this.feeLevels;
         if (this.utxos.length < 1) return false;
 
         this.composed = {};
-        let atLeastOneValid: boolean = false;
+        let atLeastOneValid = false;
         for (const level of levels) {
             if (level.feePerUnit !== '0') {
-                const tx: BuildTxResult = this.compose(level.feePerUnit);
+                const tx = this.compose(level.feePerUnit);
                 if (tx.type === 'final') {
                     atLeastOneValid = true;
                 }
-                this.composed[ level.label ] = tx;
+                this.composed[level.label] = tx;
             }
         }
 
@@ -102,7 +102,7 @@ export default class TransactionComposer {
     }
 
     composeCustomFee(fee: string) {
-        const tx: BuildTxResult = this.compose(fee);
+        const tx = this.compose(fee);
         this.composed['custom'] = tx;
         if (tx.type === 'final') {
             this.feeLevels.updateCustomFee(tx.feePerByte);
@@ -111,8 +111,8 @@ export default class TransactionComposer {
         }
     }
 
-    getFeeLevelList(): Array<SelectFeeLevel> {
-        const list: Array<SelectFeeLevel> = [];
+    getFeeLevelList() {
+        const list: SelectFeeLevel[] = [];
         const { levels } = this.feeLevels;
         levels.forEach(level => {
             const tx = this.composed[level.label];
@@ -135,7 +135,7 @@ export default class TransactionComposer {
         return list;
     }
 
-    compose(feeRate: string): BuildTxResult {
+    compose(feeRate: string) {
         const { account, coinInfo } = this;
         const { addresses } = account;
         if (!addresses) return { type: 'error', error: 'ADDRESSES-NOT-SET' };
@@ -144,7 +144,7 @@ export default class TransactionComposer {
         const changeAddress = addresses.change[changeId].address;
         const inputAmounts = coinInfo.segwit || coinInfo.forkid !== null || coinInfo.network.consensusBranchId !== null;
 
-        return buildTx({
+        const result = buildTx({
             utxos: this.utxos,
             outputs: this.outputs,
             height: this.blockHeight,
@@ -157,6 +157,11 @@ export default class TransactionComposer {
             changeAddress,
             dustThreshold: coinInfo.dustLimit,
         });
+        // hd-wallet returns `max = -1` when sendMax is not requested
+        // https://github.com/trezor/hd-wallet/blob/master/src/build-tx/coinselect.js#L101
+        // delete this value from the result, it should be either string or undefined
+        if (result.type !== 'error' && result.max === -1) delete result.max;
+        return result;
     }
 
     dispose() {
