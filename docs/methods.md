@@ -13,6 +13,7 @@ Every method require an [`Object`](https://developer.mozilla.org/en-US/docs/Web/
 * [TrezorConnect.cipherKeyValue](methods/cipherKeyValue.md)
 * [TrezorConnect.wipeDevice](methods/wipeDevice.md)
 * [TrezorConnect.resetDevice](methods/resetDevice.md)
+* [TrezorConnect.getCoinInfo](methods/getCoinInfo.md)
 
 ### Bitcoin, Bitcoin Cash, Bitcoin Gold, Litecoin, Dash, ZCash, Testnet
 
