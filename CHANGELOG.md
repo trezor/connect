@@ -6,6 +6,7 @@
 #### Fixed
 - `interactionTimeout` moved to a lower block in code.
 - `composeTransaction` filter `max = -1` field from the result.
+- skip device state verification on device management methods.
 #### Changed
 - Using `blockchainSetCustomBackend` method with an empty array of URLs will disable custom backends (reset to default).
 - Blockbook will verify that it is connecting to the right coin backend or it will throw an error.
