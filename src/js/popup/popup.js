@@ -33,6 +33,12 @@ const handleMessage = (event: PostMessageEvent) => {
         return;
     }
 
+    // This is message from the window.opener
+    if (data.type === UI.IFRAME_FAILURE) {
+        showView('iframe-failure');
+        return;
+    }
+
     // ignore messages from origin other then MessagePort (iframe)
     const isMessagePort = event.target instanceof MessagePort || (typeof BroadcastChannel !== 'undefined' && event.target instanceof BroadcastChannel);
     if (!isMessagePort) return;

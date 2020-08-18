@@ -7,6 +7,7 @@ import * as iframe from '../../iframe/builder';
 import webUSBButton from '../../webusb/button';
 
 import { parseMessage, errorMessage } from '../../message';
+import { UiMessage } from '../../message/builder';
 import { parse as parseSettings } from '../../data/ConnectSettings';
 import Log, { init as initLog } from '../../utils/debug';
 
@@ -173,7 +174,12 @@ export const call = async (params: any): Promise<any> => {
             await init(_settings);
         } catch (error) {
             if (_popupManager) {
-                _popupManager.close();
+                // Catch fatal iframe errors (not loading)
+                if (['Init_IframeBlocked', 'Init_IframeTimeout'].includes(error.code)) {
+                    _popupManager.postMessage(UiMessage(UI.IFRAME_FAILURE));
+                } else {
+                    _popupManager.close();
+                }
             }
             return errorMessage(error);
         }
