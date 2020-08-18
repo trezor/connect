@@ -18,7 +18,7 @@ export default class ApplyFlags extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['management'];
-        this.useEmptyPassphrase = true;
+        this.useDeviceState = false;
 
         const payload: Object = message.payload;
 

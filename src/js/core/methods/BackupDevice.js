@@ -10,7 +10,7 @@ export default class BackupDevice extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['management'];
-        this.useEmptyPassphrase = true;
+        this.useDeviceState = false;
     }
 
     async confirmation(): Promise<boolean> {

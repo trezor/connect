@@ -12,7 +12,7 @@ type Params = {
     label?: string;
     use_passphrase?: boolean;
     homescreen?: string;
-    passhprase_source?: number;
+    passphrase_source?: number;
     auto_lock_delay_ms?: number;
 }
 
@@ -22,7 +22,7 @@ export default class ApplySettings extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['management'];
-        this.useEmptyPassphrase = true;
+        this.useDeviceState = false;
         const payload: Object = message.payload;
 
         validateParams(payload, [
@@ -40,7 +40,7 @@ export default class ApplySettings extends AbstractMethod {
             label: payload.label,
             use_passphrase: payload.use_passphrase,
             homescreen: payload.homescreen,
-            passhprase_source: payload.passhprase_source,
+            passphrase_source: payload.passphrase_source,
             auto_lock_delay_ms: payload.auto_lock_delay_ms,
             display_rotation: payload.display_rotation,
         };
