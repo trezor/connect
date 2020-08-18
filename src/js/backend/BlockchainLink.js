@@ -273,7 +273,7 @@ export const find = (name: string) => {
 };
 
 export const setCustomBackend = (coinInfo: CoinInfo, blockchainLink: $ElementType<CoinInfo, 'blockchainLink'>) => {
-    if (!blockchainLink) {
+    if (!blockchainLink || blockchainLink.url.length === 0) {
         delete customBackends[coinInfo.shortcut];
     } else {
         customBackends[coinInfo.shortcut] = coinInfo;
