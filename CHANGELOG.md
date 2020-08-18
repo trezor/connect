@@ -3,6 +3,7 @@
 #### Added
 - Public `getCoinInfo` method.
 - iframe errors (timeout/blocked) displayed in popup.
+
 #### Fixed
 - `interactionTimeout` moved to a lower block in code.
 - `composeTransaction` filter `max = -1` field from the result.
@@ -31,6 +32,7 @@
 
 #### Fixed
 - `composeTransaction` - remove unnecessary condition when using `send-max` outputs
+
 #### Added
 - `interactionTimeout` property to the initial settings. This will timeout users who stay inactive for a specified amount of time (in seconds).
 
@@ -41,6 +43,7 @@
 - `legacyXpub` field in response of `getAccountInfo` (BTC-like coins) used in `metadata` (labeling)
 - `n` field of `AccountTransaction:TransactionTarget` (output index) used in `metadata`
 - `branch_id` in signTx `TXMETA` (ZCash)
+
 #### Changed
 - Improved tests (trezor-user-env)
 
@@ -49,6 +52,7 @@
 #### Fixed
 - `composeTransaction` missing zcash specific fields (in popup mode)
 - `firmwareUpdate` default download url (data.trezor.io)
+
 #### Changed
 - Updated dependencies
 - Typed errors
@@ -58,8 +62,10 @@
 #### Fixed
 - `composeTransaction` sequence flag
 - Zcash `extra_data` field
+
 #### Added
 - Disconnect device during action timeout penalty (to allow u2f login)
+
 #### Changed
 - Refactor Bitcoin-like signing
 
@@ -68,6 +74,7 @@
 #### Fixed
 - `estimateFee` fee levels for `DGB`
 - `unavailableCapabilities` reload condition
+
 #### Added
 - `webextension` example
 
@@ -194,23 +201,21 @@
 - `blockchainGetTransactions` and `blockchainEstimateFee` methods
 - `composeTransaction` returns precomposed transaction for account
 
-#### Fixed
-- Removed unnecessary error wrapper (core.js)
-
 #### Removed
-- removed standalone `firmwareErase` and `firmwareUpload` methods.
+- Unnecessary error wrapper (core.js)
+- Standalone `firmwareErase` and `firmwareUpload` methods.
 
 # 8.0.5 (server side only)
 
 #### Fixed
-- fix `disconnect`-`method response` race condition
+- `disconnect`-`method response` race condition
 - `getAccountInfo` runtime error when using descriptor without path
 - Firmware releases channel (beta-wallet)
 
 # 8.0.4 (server side only)
 
 #### Added
-- Added `Unobtanium` support
+- Unobtanium support
 
 #### Fixed
 - `pendingTransport` race condition using lazyLoading and multiple devices connected
@@ -223,7 +228,7 @@
 # 8.0.3
 
 #### Added
-- Added `Binance Chain (BNB)` support
+- Binance Chain (BNB) support
 
 #### Fixed
 - `TrezorConnect.cancel` race condition between device release and returned response
@@ -235,7 +240,7 @@
 # 8.0.2
 
 #### Added
-- Added `Device.Features.features` field
+- `Device.Features.features` field
 
 #### Changed
 - `CoinInfo.blockchainLink` field generated from `coins.json:blockbook` for BTC-like and ETH-like
@@ -247,9 +252,9 @@
 # 8.0.1
 
 #### Added
-- Added `TrezorConnect.disableWebUSB` method
+- `TrezorConnect.disableWebUSB` method
 
-#### Fixed
+#### Changed
 - renamed EOS actions parameters 'buyram': quantity > quant, 'voteproducer': data.account > data.voter
 
 # 8.0.0
@@ -262,18 +267,18 @@
 - `TrezorConnect.getAccountInfo` parameters
 
 #### Added
-- Added nodejs support
-- Added `lazyLoad` parameter to `TrezorConnect.init`
-- Added bech32 accounts support
+- nodejs support
+- `lazyLoad` parameter to `TrezorConnect.init`
+- bech32 accounts support
 - Webextension usb permissions iframe dynamically included into html
-- Added correct `script_type` to `TransactionInput` and `TransactionOutput` of Bitcoin-like TxRequest protobuf message
-- Added signed transaction validation for Bitcoin `signTransaction` and `composeTransaction` methods
-- Added shamir recovery
+- correct `script_type` to `TransactionInput` and `TransactionOutput` of Bitcoin-like TxRequest protobuf message
+- signed transaction validation for Bitcoin `signTransaction` and `composeTransaction` methods
+- shamir recovery
 
 # 7.0.5
 
 #### Added
-- Added cloudfront cache invalidation
+- Cloudfront cache invalidation
 
 #### Fixed
 - Url encoding in `TrezorConnect.manifest`
@@ -281,10 +286,10 @@
 # 7.0.4
 
 #### Added
-- Added EOS methods `TrezorConnect.eosGetPublicKey` and `TrezorConnect.eosSignTransaction`
-- Added `TrezorConnect.firmwareUpdate` (management method)
-- Added new firmware releases
-- Added new bridge releases
+- EOS methods `TrezorConnect.eosGetPublicKey` and `TrezorConnect.eosSignTransaction`
+- `TrezorConnect.firmwareUpdate` (management method)
+- New firmware releases
+- New bridge releases
 
 #### Fixed
 - Dependencies security vulnerabilities
@@ -293,40 +298,40 @@
 # 7.0.3
 
 #### Added
-- Added management methods `applyFlags`, `applySettings`, `backupDevice`, `changePin`, `firmwareErase`, `firmwareUpload`, `recoveryDevice`
+- Management methods `applyFlags`, `applySettings`, `backupDevice`, `changePin`, `firmwareErase`, `firmwareUpload`, `recoveryDevice`
 
 # 7.0.2
 
 #### Added
-- Added missing params to `TrezorConnect.signTransaction` method [`version`, `expiry`, `overwintered`, `versionGroupId`, `branchId`, `refTxs`]
+- Missing params to `TrezorConnect.signTransaction` method [`version`, `expiry`, `overwintered`, `versionGroupId`, `branchId`, `refTxs`]
 - Possibility to use `TrezorConnect.signTransaction` without build-in backend (using `refTxs` field)
-- Added `TrezorConnect.getSettings` method
+- `TrezorConnect.getSettings` method
 
 #### Fixed
-- Fixed `Dash` and `Zcash` special transactions
+- Dash and Zcash special transactions
 - `EthereumGetAddress` address validation
 - Flowtype for `CardanoInput`
 
 # 7.0.1
 
 #### Added
-- Added `TrezorConnect.manifest` method
-- Added DebugLink (emulator) support: `TrezorConnect.debugLinkDecision` and `TrezorConnect.debugLinkGetState` methods
-- Added `TrezorConnect.ethereumGetPublicKey` method (with fallback for older firmware)
-- Added `TrezorConnect.loadDevice` method
-- Added `Capricoin` support (with required changes in `hd-wallet` and `bitcoinjs-lib-zcash` libs)
-- Added `firmwareRange` to every method (validation if device FW is in range: `min_required_firmware` - `max_compatible_firmware` declared in config.json)
-- Added conditional protobuf messages (fallback for older FW)
-- Added "device not backed up" confirmation
-- Added `blockchain-link` dependency
-- Added `TrezorConnect.rippleGetAccountInfo` method
-- Added `TrezorConnect.blockchainGetFee` method
-- Added `TrezorConnect.blockchainUnsubscribe` method
-- Added `BlockchainEvent` (connect/error/block/notification)
+- `TrezorConnect.manifest` method
+- DebugLink (emulator) support: `TrezorConnect.debugLinkDecision` and `TrezorConnect.debugLinkGetState` methods
+- `TrezorConnect.ethereumGetPublicKey` method (with fallback for older firmware)
+- `TrezorConnect.loadDevice` method
+- `Capricoin` support (with required changes in `hd-wallet` and `bitcoinjs-lib-zcash` libs)
+- `firmwareRange` to every method (validation if device FW is in range: `min_required_firmware` - `max_compatible_firmware` declared in config.json)
+- Conditional protobuf messages (fallback for older FW)
+- "device not backed up" confirmation
+- `blockchain-link` dependency
+- `TrezorConnect.rippleGetAccountInfo` method
+- `TrezorConnect.blockchainGetFee` method
+- `TrezorConnect.blockchainUnsubscribe` method
+- `BlockchainEvent` (connect/error/block/notification)
 
 #### Changed
 - Upgrade npm modules (babel@7)
-- Changed `network` for `protocol_magic` in `TrezorConnect.cardanoSignTransaction` method
+- `network` for `protocol_magic` in `TrezorConnect.cardanoSignTransaction` method
 
 #### Fixed
 - ComposeTransaction: fees/legacy detection
@@ -357,13 +362,13 @@
 # 6.0.3
 
 #### Added
-- Added `TrezorConnect.tezosGetAddress` method
-- Added `TrezorConnect.tezosGetPublicKey` method
-- Added `TrezorConnect.tezosSignTransaction` method
-- Added `TrezorConnect.dispose` method
-- Added `TrezorConnect.cancel` method
-- Added new firmware releases
-- Added new bridge releases
+- `TrezorConnect.tezosGetAddress` method
+- `TrezorConnect.tezosGetPublicKey` method
+- `TrezorConnect.tezosSignTransaction` method
+- `TrezorConnect.dispose` method
+- `TrezorConnect.cancel` method
+- new firmware releases
+- new bridge releases
 
 #### Changed
 - Whitelist `trusted` mode for instances hosted locally
@@ -377,11 +382,11 @@
 # 6.0.2
 
 #### Added
-- Added `TrezorConnect.wipeDevice` method
-- Added `TrezorConnect.resetDevice` method
-- Calling method on device with seedless setup is disabled by default
+- `TrezorConnect.wipeDevice` method
+- `TrezorConnect.resetDevice` method
 
 #### Changed
+- Calling method on device with seedless setup is disabled by default
 - Post message to window.parent instead of window.top
 - Authenticating device using BTC testnet path instead of dummy m/1/0/0
 
@@ -398,13 +403,13 @@
 # 6.0.0
 
 #### Added
-- Added `TrezorConnect.pushTransaction` method with ethereum blockbook support
-- Added `TrezorConnect.ethereumGetAccountInfo` method
-- Added `TrezorConnect.blockchainSubscribe` method
-- Added `TrezorConnect.blockchainDisconnect` method
-- Added `BLOCKCHAIN` events
-- Added `./data/bridge/releases.json`
-- Added bridge release info in TRANSPORT.START and TRANSPORT.ERROR event
+- `TrezorConnect.pushTransaction` method with ethereum blockbook support
+- `TrezorConnect.ethereumGetAccountInfo` method
+- `TrezorConnect.blockchainSubscribe` method
+- `TrezorConnect.blockchainDisconnect` method
+- `BLOCKCHAIN` events
+- `./data/bridge/releases.json`
+- Bridge release info in TRANSPORT.START and TRANSPORT.ERROR event
 
 #### Fixed
 - TRANSPORT.ERROR event when computer goes to sleep
@@ -428,7 +433,7 @@
 # 5.0.32
 
 #### Added
-- Added `TrezorConnect.cardanoGetPublicKey` method
+- `TrezorConnect.cardanoGetPublicKey` method
 - Ability to sign hexed ethereum message
 - `network` parameter to `TrezorConnect.cardanoSignTransaction` method
 
@@ -438,8 +443,8 @@
 - proper FW version for Lisk and Stellar
 
 #### Removed
-- Removed `TrezorConnect.cardanoSignMessage` method
-- Removed `TrezorConnect.cardanoVerifyMessage` method
+- `TrezorConnect.cardanoSignMessage` method
+- `TrezorConnect.cardanoVerifyMessage` method
 
 # 5.0.31
 
@@ -449,11 +454,10 @@
 - Support for Lisk
 - Exception for not supported firmware when value for "trezor1" or "trezor2" inside coins.json is not set
 - Disable customMessage method for devices with official firmware
-- Added new field in `TrezorConnect.signEthereumTransaction` for `Wanchain`
+- New field in `TrezorConnect.signEthereumTransaction` for `Wanchain`
 
 #### Changed
 - Separate "getPublicKey" and "getAddress" methods for all coins
-
 
 #### Fixed
 - Device state verification while using multiple instances with the same passphrase
@@ -463,7 +467,7 @@
 # 5.0.30
 
 #### Added
-- Added 'send-max' and 'opreturn' output types to `TrezorConnect.composeTransaction`
+- 'send-max' and 'opreturn' output types to `TrezorConnect.composeTransaction`
 
 #### Fixed
 - Handle popup close event while waiting for iframe handshake
@@ -476,28 +480,32 @@
 # 5.0.29
 
 #### Fixed
-- Fixed flowtype for TrezorConnect methods (bundled methods return bundled results)
-- Fixed renderWebUSBButton method
-- Removed "babel-polyfill" from npm and export unminified script https://connect.trezor.io/5/trezor-connect.js
-- Added https://connect.trezor.io/5/trezor-connect.min.js to export with bundled "babel-polyfill"
+- flowtype for TrezorConnect methods (bundled methods return bundled results)
+- renderWebUSBButton method
+
+#### Removed
+- "babel-polyfill" from npm and export unminified script https://connect.trezor.io/5/trezor-connect.js
+
+#### Changed
+- https://connect.trezor.io/5/trezor-connect.min.js to export with bundled "babel-polyfill"
 - Web extensions: open popup tab next to currently used tab
 
 # 5.0.28
 
 #### Added
-- Added support for WebExtensions (Chrome/Firefox)
-- Added host icon for whitelisted domains
+- Support for WebExtensions (Chrome/Firefox)
+- Host icon for whitelisted domains
 
 #### Fixed
-- Fixed passphrase input type (revert to password type)
-- Fixed popup and iframe timeout handling
+- Passphrase input type (revert to password type)
+- Popup and iframe timeout handling
 
 # 5.0.27
 
 #### Fixed
-- Fixed handling not initialized iframe
-- Fixed iframe ad-blocker handling
-- Fixed popup views
+- Handling not initialized iframe
+- Iframe ad-blocker handling
+- Popup views
 
 #### Changed
 - Popup as new tab
@@ -505,10 +513,10 @@
 # 5.0.26
 
 #### Added
-- Added support for Dogecoin and Vertcoin
+- Support for Dogecoin and Vertcoin
 
 #### Fixed
-- Fixed handling not initialized device
+- Handling not initialized device
 - SignTransaction: amount as string
 - Handle origin of file://
 
@@ -518,14 +526,14 @@
 # 5.0.25
 
 #### Added
-- Added documentation
+- Documentation
 
 #### Fixed
 - filter UI events for popup and trusted apps
-- Fixed `TrezorConnect.signMessage` and `TrezorConnect.verifyMessage` signature to base64 format
+- `TrezorConnect.signMessage` and `TrezorConnect.verifyMessage` signature to base64 format
 
 #### Changed
-- Changed constants prefix from `__` to `-`
+- constants prefix from `__` to `-`
 
 # 5.0.24
 
@@ -544,20 +552,20 @@
 # 5.0.21
 
 #### Added
-- Added `TrezorConnect.pushTransaction` method
-- Added bundle parameters in `TrezorConnect.cipherKeyValue` method
-- Added bundle parameters in `TrezorConnect.getPublicKey` method
-- Added bundle parameters in `TrezorConnect.getAddress` method
-- Added bundle parameters in `TrezorConnect.ethereumGetAddress` method
-- Added bundle parameters in `TrezorConnect.nemGetAddress` method
-- Added bundle parameters in `TrezorConnect.stellarGetAddress` method
-- Added type conversion from stellar-sdk to protobuf in `TrezorConnect.stellarSignTransaction` method
+- `TrezorConnect.pushTransaction` method
+- bundle parameters in `TrezorConnect.cipherKeyValue` method
+- bundle parameters in `TrezorConnect.getPublicKey` method
+- bundle parameters in `TrezorConnect.getAddress` method
+- bundle parameters in `TrezorConnect.ethereumGetAddress` method
+- bundle parameters in `TrezorConnect.nemGetAddress` method
+- bundle parameters in `TrezorConnect.stellarGetAddress` method
+- type conversion from stellar-sdk to protobuf in `TrezorConnect.stellarSignTransaction` method
 - Popup warning with outdated firmware and outdated bridge
 - Tests with emulator
-- Added '@babel/runtime' to package dependency
+- '@babel/runtime' to package dependency
 
 #### Fixed
-- Fixed device authentication and popup open delay
+- Device authentication and popup open delay
 - Minor fixes in popup view
 - Ethereum methods accepts values with '0x' prefix
 - Ethereum methods returns checksummed addresses (with different checksum typ for RSK network)
@@ -566,19 +574,18 @@
 # 5.0.20
 
 #### Added
-- Added firmware check against CoinInfo.support values
-- Added outdate firmware warning in popup
+- Firmware check against CoinInfo.support values
+- Outdate firmware warning in popup
 
 #### Fixed
-- Fixed `TrezorConnect.requestLogin` parameters
-- Fixed race condition in `UI.REQUEST_CONFIRMATION`
-- Fixed popup.html buttons click
+- `TrezorConnect.requestLogin` parameters
+- Race condition in `UI.REQUEST_CONFIRMATION`
+- `popup.html` buttons click
 
 # 5.0.18
 
 #### Added
-- Added iframe lazy loading
-
+- iframe lazy loading
 
 #### Fixed
 - Build script for npm module
@@ -589,35 +596,35 @@
 # 5.0.17
 
 #### Added
-- Added `TrezorConnect.getAccountInfo` method
-- Added `TrezorConnect.signTransaction` method
-- Added `TrezorConnect.composeTransaction` method
-- Added `TrezorConnect.signMessage` method
-- Added `TrezorConnect.verifyMessage` method
-- Added `TrezorConnect.getAddress` method
-- Added `TrezorConnect.requestLogin` method
-- Added cashaddr support for BCH
-- Added documentation
+- `TrezorConnect.getAccountInfo` method
+- `TrezorConnect.signTransaction` method
+- `TrezorConnect.composeTransaction` method
+- `TrezorConnect.signMessage` method
+- `TrezorConnect.verifyMessage` method
+- `TrezorConnect.getAddress` method
+- `TrezorConnect.requestLogin` method
+- cashaddr support for BCH
+- documentation
 
 #### Fixed
-- Fixed `TrezorConnect.customMessage` logic and security
-- Fixed `TrezorConnect.stellarSignTransaction` parameters compatible with "js-stellar-base"
-- Fixed flowtype declarations for all methods. Params and responses
+- `TrezorConnect.customMessage` logic and security
+- `TrezorConnect.stellarSignTransaction` parameters compatible with "js-stellar-base"
+- flowtype declarations for all methods. Params and responses
 
 #### Removed
-- Removed unnecessary settings from ConnectSettings
-- Removed unused methods from TrezorConnect
+- unnecessary settings from ConnectSettings
+- unused methods from TrezorConnect
 
 # 5.0.16
 
 #### Added
-- Added `TrezorConnect.stellarSignTransaction` method
+- `TrezorConnect.stellarSignTransaction` method
 
 #### Changed
-- Changed `TrezorConnect.ethereumSignTransaction` parameters
+- `TrezorConnect.ethereumSignTransaction` parameters
 
 #### Removed
-- Removed type and event fields from RESPONSE
+- type and event fields from RESPONSE
 
 # 5.0.15
 
@@ -627,23 +634,23 @@
 # 5.0.14
 
 #### Added
-- Added `TrezorConnect.nemGetAddress` method
-- Added `TrezorConnect.nemSignTransaction` method
-- Added `TrezorConnect.stellarGetAddress` method
-- Added `TrezorConnect.customMessage` method
+- `TrezorConnect.nemGetAddress` method
+- `TrezorConnect.nemSignTransaction` method
+- `TrezorConnect.stellarGetAddress` method
+- `TrezorConnect.customMessage` method
 
 #### Fixed
-- Fixed flowtype
+- flowtype
 
 # 5.0.13
 
 #### Added
-- Added messages from json instead of `config_signed.bin`
-- Added popup.html UI/css
+- messages from json instead of `config_signed.bin`
+- popup.html UI/css
 - Karma + Jasmine tests
 
 #### Removed
-- Removed support for Bridge v1 and chrome extension
+- support for Bridge v1 and chrome extension
 
 # 5.0.10
 
