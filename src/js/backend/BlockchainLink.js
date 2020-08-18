@@ -84,11 +84,15 @@ export default class Blockchain {
     async init() {
         this.link.on('connected', async () => {
             const info = await this.link.getInfo();
+            if (info.name !== this.coinInfo.name) {
+                this.onError(ERRORS.TypedError('Backend_Invalid'));
+                return;
+            }
+
             this.postMessage(BlockchainMessage(BLOCKCHAIN.CONNECT, {
                 coin: this.coinInfo,
                 ...info,
             }));
-            // TODO: check for 1st block hash (different for btc forks)
         });
 
         this.link.on('disconnected', () => {
@@ -269,7 +273,7 @@ export const find = (name: string) => {
 };
 
 export const setCustomBackend = (coinInfo: CoinInfo, blockchainLink: $ElementType<CoinInfo, 'blockchainLink'>) => {
-    if (!blockchainLink) {
+    if (!blockchainLink || blockchainLink.url.length === 0) {
         delete customBackends[coinInfo.shortcut];
     } else {
         customBackends[coinInfo.shortcut] = coinInfo;

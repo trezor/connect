@@ -9,6 +9,7 @@ import * as Account from './account';
 import * as Bitcoin from './networks/bitcoin';
 import * as Binance from './networks/binance';
 import * as Cardano from './networks/cardano';
+import * as CoinInfo from './networks/coinInfo';
 import * as EOS from './networks/eos';
 import * as Ethereum from './networks/ethereum';
 import * as Lisk from './networks/lisk';
@@ -274,6 +275,11 @@ export type API = {
      * Ask device to initiate recovery procedure
      */
     recoveryDevice: Method<Mgmnt.RecoveryDevice, P.DefaultMessage>;
+
+    /**
+     * Get static coin info
+     */
+    getCoinInfo: Method<CoinInfo.GetCoinInfo, CoinInfo.CoinInfo>;
 
     // // Developer mode
     customMessage: Method<Misc.CustomMessage, any>;

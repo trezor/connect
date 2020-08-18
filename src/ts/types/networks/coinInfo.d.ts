@@ -89,3 +89,7 @@ export interface MiscNetworkInfo extends Common {
 }
 
 export type CoinInfo = BitcoinNetworkInfo | EthereumNetworkInfo | MiscNetworkInfo;
+
+export type GetCoinInfo = {
+    coin: string;
+}

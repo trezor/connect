@@ -1,9 +1,14 @@
 # 8.1.12
+
+#### Added
+- Public `getCoinInfo` method.
 #### Fixed
-- `interactionTimeout` moved to a lower block in code
-- `composeTransaction` filter `max = -1` field from the result
+- `interactionTimeout` moved to a lower block in code.
+- `composeTransaction` filter `max = -1` field from the result.
 #### Changed
-- Don't try to validate multisig output scripts (not implemented yet)
+- Using `blockchainSetCustomBackend` method with an empty array of URLs will disable custom backends (reset to default).
+- Blockbook will verify that it is connecting to the right coin backend or it will throw an error.
+- Don't try to validate multisig output scripts (not implemented yet).
 
 # 8.1.11
 

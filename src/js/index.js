@@ -290,6 +290,10 @@ const TrezorConnect: API = {
         return call({ method: 'recoveryDevice', ...params });
     },
 
+    getCoinInfo: params => {
+        return call({ method: 'getCoinInfo', ...params });
+    },
+
     dispose: () => {
         dispose();
     },
