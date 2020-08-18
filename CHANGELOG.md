@@ -2,6 +2,7 @@
 
 #### Added
 - Public `getCoinInfo` method.
+- iframe errors (timeout/blocked) displayed in popup.
 #### Fixed
 - `interactionTimeout` moved to a lower block in code.
 - `composeTransaction` filter `max = -1` field from the result.
