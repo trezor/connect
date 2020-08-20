@@ -2,7 +2,7 @@
 
 import Device from '../../device/Device';
 import DataManager from '../../data/DataManager';
-import { UI, DEVICE, ERRORS } from '../../constants';
+import { UI, DEVICE, ERRORS, NETWORK } from '../../constants';
 import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../storage';
 import { versionCompare } from '../../utils/versionUtils';
 
@@ -39,6 +39,7 @@ export default class AbstractMethod implements MethodInterface {
     allowDeviceMode: Array<string>; // used in device management (like ResetDevice allow !UI.INITIALIZED)
     requireDeviceMode: Array<string>;
     debugLink: boolean;
+    network: string;
 
     +confirmation: () => Promise<boolean>;
     +noBackupConfirmation: () => Promise<boolean>;
@@ -74,6 +75,14 @@ export default class AbstractMethod implements MethodInterface {
             this.allowDeviceMode = [ UI.SEEDLESS ];
         }
         this.debugLink = false;
+        // Determine the type based on the method name
+        this.network = 'Bitcoin';
+        Object.keys(NETWORK.TYPES).forEach(t => {
+            if (this.name.startsWith(t)) {
+                this.network = NETWORK.TYPES[t];
+                return;
+            }
+        });
         // default values for all methods
         this.firmwareRange = {
             '1': { min: '1.0.0', max: '0' },

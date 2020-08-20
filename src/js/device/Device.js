@@ -340,10 +340,10 @@ export default class Device extends EventEmitter {
         return this.externalState[this.instance];
     }
 
-    async validateState() {
+    async validateState(networkType: ?string) {
         if (!this.features) return;
         const expectedState = this.getExternalState();
-        const state = await this.commands.getDeviceState();
+        const state = await this.commands.getDeviceState(networkType);
         const uniqueState = `${state}@${this.features.device_id || 'device_id'}:${this.instance}`;
         if (!this.useLegacyPassphrase() && this.features.session_id) {
             this.setInternalState(this.features.session_id);

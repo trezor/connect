@@ -3,6 +3,7 @@ import * as BLOCKCHAIN from './blockchain';
 import * as DEVICE from './device';
 import * as ERRORS from './errors';
 import * as IFRAME from './iframe';
+import * as NETWORK from './network';
 import * as POPUP from './popup';
 import * as TRANSPORT from './transport';
 import * as UI from './ui';
@@ -20,6 +21,7 @@ export {
     DEVICE,
     ERRORS,
     IFRAME,
+    NETWORK,
     POPUP,
     TRANSPORT,
     UI,

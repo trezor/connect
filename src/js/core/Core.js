@@ -5,7 +5,7 @@ import DataManager from '../data/DataManager';
 import DeviceList from '../device/DeviceList';
 import Device from '../device/Device';
 
-import { CORE_EVENT, RESPONSE_EVENT, TRANSPORT, DEVICE, POPUP, UI, IFRAME, ERRORS } from '../constants';
+import { CORE_EVENT, RESPONSE_EVENT, TRANSPORT, DEVICE, POPUP, UI, IFRAME, ERRORS, NETWORK } from '../constants';
 
 import { UiMessage, DeviceMessage, TransportMessage, ResponseMessage } from '../message/builder';
 
@@ -496,7 +496,7 @@ export const onCall = async (message: CoreMessage) => {
 
             // Make sure that device will display pin/passphrase
             try {
-                const invalidDeviceState = method.useDeviceState ? await device.validateState() : undefined;
+                const invalidDeviceState = method.useDeviceState ? await device.validateState(method.network) : undefined;
                 if (invalidDeviceState) {
                     if (isUsingPopup) {
                         // initialize user response promise
