@@ -6,7 +6,7 @@ import DeviceCommands from './DeviceCommands';
 import type { Device as DeviceTyped, DeviceFirmwareStatus, Features, Deferred, FirmwareRelease, UnavailableCapability } from '../types';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
-import { UI, DEVICE, ERRORS } from '../constants';
+import { UI, DEVICE, ERRORS, NETWORK } from '../constants';
 import { create as createDeferred } from '../utils/deferred';
 import DataManager from '../data/DataManager';
 import { getAllNetworks } from '../data/CoinInfo';
@@ -79,7 +79,7 @@ export default class Device extends EventEmitter {
     unavailableCapabilities: { [key: string]: UnavailableCapability } = {};
 
     // Alternative state for Cardano support
-    alternativeState: boolean = false;
+    currentNetworkType: ?string;
 
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
         super();
@@ -345,11 +345,12 @@ export default class Device extends EventEmitter {
 
     async validateState(networkType: ?string) {
         if (!this.features) return;
-        const altStateChanged = this._setAlternativeState(networkType);
-        const expectedState = altStateChanged ? undefined : this.getExternalState();
+        const altMode = this._altModeChange(networkType);
+        console.log('altMode', altMode);
+        const expectedState = altMode ? undefined : this.getExternalState();
         const state = await this.commands.getDeviceState(networkType);
         const uniqueState = `${state}@${this.features.device_id || 'device_id'}:${this.instance}`;
-        if (!this.useLegacyPassphrase() && this.features.session_id && !altStateChanged) {
+        if (!this.useLegacyPassphrase() && this.features.session_id) {
             this.setInternalState(this.features.session_id);
         }
         if (expectedState && expectedState !== uniqueState) {
@@ -633,18 +634,21 @@ export default class Device extends EventEmitter {
         }
     }
 
-    _setAlternativeState(networkType: ?string): boolean {
-        // For now, only Cardano should switch the device to an alternative state
-        const prevAlternativeState = this.alternativeState;
-        const isAltStateNetworkType = ['Cardano'].includes(networkType);
-        if (isAltStateNetworkType && !this.alternativeState) {
-            this.alternativeState = true;
-        } else if (!isAltStateNetworkType && this.alternativeState) {
-            this.alternativeState = false;
-        }
+    _altModeChange(networkType: ?string) {
+        const prevAltMode = this._isAltModeNetworkType(this.currentNetworkType);
+        const nextAltMode = this._isAltModeNetworkType(networkType);
 
-        // True if the state changed
-        return prevAlternativeState !== this.alternativeState;
+        // Update network type
+        this.currentNetworkType = networkType;
+
+        return prevAltMode !== nextAltMode;
+    }
+
+    // Is it a network type that requires the device to operate in an alternative state (ie: Cardano)
+    _isAltModeNetworkType(networkType: ?string) {
+        return [
+            NETWORK.TYPES.cardano,
+        ].includes(networkType);
     }
 
     //
