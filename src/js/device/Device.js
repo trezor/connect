@@ -78,7 +78,6 @@ export default class Device extends EventEmitter {
     externalState: string[] = [];
     unavailableCapabilities: { [key: string]: UnavailableCapability } = {};
 
-    // Alternative state for Cardano support
     currentNetworkType: ?string;
 
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
@@ -346,7 +345,6 @@ export default class Device extends EventEmitter {
     async validateState(networkType: ?string) {
         if (!this.features) return;
         const altMode = this._altModeChange(networkType);
-        console.log('altMode', altMode);
         const expectedState = altMode ? undefined : this.getExternalState();
         const state = await this.commands.getDeviceState(networkType);
         const uniqueState = `${state}@${this.features.device_id || 'device_id'}:${this.instance}`;
