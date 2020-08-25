@@ -125,7 +125,7 @@ export default class DeviceCommands {
         showOnTrezor?: boolean = true,
     ): Promise<trezor.HDNodeResponse> {
         if (!this.device.atLeast(['1.7.2', '2.0.10']) || !coinInfo) {
-            return await this.getBitcoinHDNode(path, coinInfo, validation, showOnTrezor);
+            return await this.getBitcoinHDNode(path, coinInfo);
         }
 
         let network: ?bitcoin.Network;
@@ -182,17 +182,16 @@ export default class DeviceCommands {
     async getBitcoinHDNode(
         path: Array<number>,
         coinInfo?: ?BitcoinNetworkInfo,
-        validation?: boolean = true,
-        showOnTrezor?: boolean = true,
+        validation?: boolean = true
     ): Promise<trezor.HDNodeResponse> {
         let publicKey: trezor.PublicKey;
         if (!validation) {
-            publicKey = await this.getPublicKey(path, 'Bitcoin', undefined, showOnTrezor);
+            publicKey = await this.getPublicKey(path, 'Bitcoin');
         } else {
             const suffix: number = 0;
             const childPath: Array<number> = path.concat([suffix]);
 
-            const resKey: trezor.PublicKey = await this.getPublicKey(path, 'Bitcoin', undefined, showOnTrezor);
+            const resKey: trezor.PublicKey = await this.getPublicKey(path, 'Bitcoin');
             const childKey: trezor.PublicKey = await this.getPublicKey(childPath, 'Bitcoin');
             publicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix);
         }
