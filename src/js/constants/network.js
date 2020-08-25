@@ -2,7 +2,7 @@
 
 export const TYPES = Object.freeze({
     'bitcoin': 'Bitcoin',
-    'etherum': 'Etherum',
+    'ethereum': 'Ethereum',
     'eos': 'Eos',
     'nem': 'NEM',
     'stellar': 'Stellar',
