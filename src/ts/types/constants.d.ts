@@ -170,7 +170,7 @@ export namespace CARDANO {
     }
 }
 
-export namespace NETWORK {
+declare namespace NETWORK {
     enum TYPES {
         'bitcoin' = 'Bitcoin',
         'etherum' = 'Etherum',
