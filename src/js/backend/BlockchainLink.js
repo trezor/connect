@@ -84,7 +84,7 @@ export default class Blockchain {
     async init() {
         this.link.on('connected', async () => {
             const info = await this.link.getInfo();
-            if (info.name !== this.coinInfo.name) {
+            if (this.coinInfo.shortcut !== 'tXRP' && info.shortcut !== this.coinInfo.shortcut) {
                 this.onError(ERRORS.TypedError('Backend_Invalid'));
                 return;
             }
