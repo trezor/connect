@@ -15,6 +15,7 @@ import type { CoreMessage, UiPromiseResponse, BitcoinNetworkInfo } from '../../t
 type Batch = {
     path: Array<number>;
     coinInfo: ?BitcoinNetworkInfo;
+    showOnTrezor: boolean;
 }
 type Params = Array<Batch>;
 
@@ -45,6 +46,7 @@ export default class GetPublicKey extends AbstractMethod {
                 { name: 'path', obligatory: true },
                 { name: 'coin', type: 'string' },
                 { name: 'crossChain', type: 'boolean' },
+                { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
             let coinInfo: ?BitcoinNetworkInfo;
@@ -59,9 +61,16 @@ export default class GetPublicKey extends AbstractMethod {
             } else if (!coinInfo) {
                 coinInfo = getBitcoinNetwork(path);
             }
+
+            let showOnTrezor: boolean = true;
+            if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
+                showOnTrezor = batch.showOnTrezor;
+            }
+
             bundle.push({
                 path,
                 coinInfo,
+                showOnTrezor,
             });
 
             // set required firmware from coinInfo support
@@ -105,7 +114,9 @@ export default class GetPublicKey extends AbstractMethod {
             const batch: Batch = this.params[i];
             const response: HDNodeResponse = await this.device.getCommands().getHDNode(
                 batch.path,
-                batch.coinInfo
+                batch.coinInfo,
+                true,
+                batch.showOnTrezor
             );
             responses.push(response);
 
