@@ -62,7 +62,7 @@ export default class GetPublicKey extends AbstractMethod {
                 coinInfo = getBitcoinNetwork(path);
             }
 
-            let showOnTrezor: boolean = true;
+            let showOnTrezor: boolean = false;
             if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }

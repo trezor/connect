@@ -122,7 +122,7 @@ export default class DeviceCommands {
         path: Array<number>,
         coinInfo: ?BitcoinNetworkInfo,
         validation?: boolean = true,
-        showOnTrezor?: boolean = true,
+        showOnTrezor?: boolean = false,
     ): Promise<trezor.HDNodeResponse> {
         if (!this.device.atLeast(['1.7.2', '2.0.10']) || !coinInfo) {
             return await this.getBitcoinHDNode(path, coinInfo);
