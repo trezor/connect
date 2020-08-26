@@ -51,7 +51,7 @@ export default class EthereumGetPublicKey extends AbstractMethod {
             const network = getEthereumNetwork(path);
             this.firmwareRange = getFirmwareRange(this.name, network, this.firmwareRange);
 
-            let showOnTrezor = false;
+            let showOnTrezor = true;
             if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
