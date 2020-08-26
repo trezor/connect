@@ -77,8 +77,7 @@ export default class Device extends EventEmitter {
     internalState: string[] = [];
     externalState: string[] = [];
     unavailableCapabilities: { [key: string]: UnavailableCapability } = {};
-
-    currentNetworkType: ?string;
+    currentNetworkType: string[] = [];
 
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
         super();
@@ -632,12 +631,24 @@ export default class Device extends EventEmitter {
         }
     }
 
+    _getCurrentNetworkType() {
+        return this.currentNetworkType[this.instance];
+    }
+
+    _setCurrentNetworkType(networkType: ?string) {
+        if (typeof networkType !== 'string') {
+            delete this.currentNetworkType[this.instance];
+        } else {
+            this.currentNetworkType[this.instance] = networkType;
+        }
+    }
+
     _altModeChange(networkType: ?string) {
-        const prevAltMode = this._isAltModeNetworkType(this.currentNetworkType);
+        const prevAltMode = this._isAltModeNetworkType(this._getCurrentNetworkType());
         const nextAltMode = this._isAltModeNetworkType(networkType);
 
         // Update network type
-        this.currentNetworkType = networkType;
+        this._setCurrentNetworkType(networkType);
 
         return prevAltMode !== nextAltMode;
     }
