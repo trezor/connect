@@ -1,11 +1,11 @@
 /* @flow */
 
-import { DEVICE, ERRORS } from '../constants';
+import { DEVICE, ERRORS, NETWORK } from '../constants';
 import randombytes from 'randombytes';
 
 import * as bitcoin from '@trezor/utxo-lib';
 import * as hdnodeUtils from '../utils/hdnode';
-import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType } from '../utils/pathUtils';
+import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType, toHardened } from '../utils/pathUtils';
 import { getAccountAddressN } from '../utils/accountUtils';
 import { toChecksumAddress } from '../utils/ethereumUtils';
 import { resolveAfter } from '../utils/promiseUtils';
@@ -562,12 +562,8 @@ export default class DeviceCommands {
         return await this.typedCall('ClearSession', 'Success', settings);
     }
 
-    async getDeviceState() {
-        const response = await this.typedCall('GetAddress', 'Address', {
-            address_n: [(44 | 0x80000000) >>> 0, (1 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0, 0, 0],
-            coin_name: 'Testnet',
-            script_type: 'SPENDADDRESS',
-        });
+    async getDeviceState(networkType: ?string) {
+        const response = await this._getAddressForNetworkType(networkType);
         // bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
         const state: string = response.message.address;
         return state;
@@ -771,6 +767,26 @@ export default class DeviceCommands {
         }
 
         return Promise.resolve(res);
+    }
+
+    async _getAddressForNetworkType(networkType: ?string) {
+        switch (networkType) {
+            case NETWORK.TYPES.cardano:
+                return await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
+                    address_parameters: {
+                        address_type: 8, // Byron
+                        address_n: [toHardened(44), toHardened(1815), toHardened(0), 0, 0],
+                    },
+                    protocol_magic: 42,
+                    network_id: 0,
+                });
+            default:
+                return await this.typedCall('GetAddress', 'Address', {
+                    address_n: [toHardened(44), toHardened(1), toHardened(0), 0, 0],
+                    coin_name: 'Testnet',
+                    script_type: 'SPENDADDRESS',
+                });
+        }
     }
 
     _promptPin(type: string): Promise<string> {

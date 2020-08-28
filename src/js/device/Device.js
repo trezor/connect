@@ -6,7 +6,7 @@ import DeviceCommands from './DeviceCommands';
 import type { Device as DeviceTyped, DeviceFirmwareStatus, Features, Deferred, FirmwareRelease, UnavailableCapability } from '../types';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 
-import { UI, DEVICE, ERRORS } from '../constants';
+import { UI, DEVICE, ERRORS, NETWORK } from '../constants';
 import { create as createDeferred } from '../utils/deferred';
 import DataManager from '../data/DataManager';
 import { getAllNetworks } from '../data/CoinInfo';
@@ -77,6 +77,7 @@ export default class Device extends EventEmitter {
     internalState: string[] = [];
     externalState: string[] = [];
     unavailableCapabilities: { [key: string]: UnavailableCapability } = {};
+    networkTypeState: string[] = [];
 
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
         super();
@@ -340,10 +341,11 @@ export default class Device extends EventEmitter {
         return this.externalState[this.instance];
     }
 
-    async validateState() {
+    async validateState(networkType: ?string) {
         if (!this.features) return;
-        const expectedState = this.getExternalState();
-        const state = await this.commands.getDeviceState();
+        const altMode = this._altModeChange(networkType);
+        const expectedState = altMode ? undefined : this.getExternalState();
+        const state = await this.commands.getDeviceState(networkType);
         const uniqueState = `${state}@${this.features.device_id || 'device_id'}:${this.instance}`;
         if (!this.useLegacyPassphrase() && this.features.session_id) {
             this.setInternalState(this.features.session_id);
@@ -627,6 +629,35 @@ export default class Device extends EventEmitter {
                 unavailableCapabilities: this.unavailableCapabilities,
             };
         }
+    }
+
+    _getNetworkTypeState() {
+        return this.networkTypeState[this.instance];
+    }
+
+    _setNetworkTypeState(networkType: ?string) {
+        if (typeof networkType !== 'string') {
+            delete this.networkTypeState[this.instance];
+        } else {
+            this.networkTypeState[this.instance] = networkType;
+        }
+    }
+
+    _altModeChange(networkType: ?string) {
+        const prevAltMode = this._isAltModeNetworkType(this._getNetworkTypeState());
+        const nextAltMode = this._isAltModeNetworkType(networkType);
+
+        // Update network type
+        this._setNetworkTypeState(networkType);
+
+        return prevAltMode !== nextAltMode;
+    }
+
+    // Is it a network type that requires the device to operate in an alternative state (ie: Cardano)
+    _isAltModeNetworkType(networkType: ?string) {
+        return [
+            NETWORK.TYPES.cardano,
+        ].includes(networkType);
     }
 
     //
