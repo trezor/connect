@@ -238,7 +238,14 @@ export default class Device extends EventEmitter {
                     await this.initialize(!!options.useEmptyPassphrase);
                 } else {
                     // do not initialize while firstRunPromise otherwise `features.session_id` could be affected
-                    await this.getFeatures();
+                    // Corner-case: T1 + bootloader < 1.4.0 doesn't know the "GetFeatures" message yet and it will send no response to it
+                    // transport response is pending endlessly, calling any other message will end up with "device call in progress"
+                    // set the timeout for this call so whenever it happens "unacquired device" will be created instead
+                    // next time device should be called together with "Initialize" (calling "acquireDevice" from the UI)
+                    await Promise.race([
+                        this.getFeatures(),
+                        new Promise((resolve, reject) => setTimeout(() => reject(new Error('GetFeatures timeout')), 3000)),
+                    ]);
                 }
             } catch (error) {
                 this.inconsistent = true;

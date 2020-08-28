@@ -1,3 +1,9 @@
+# 8.1.13 (not released)
+
+### Fixed
+- exclude `tXRP` from backend verification (There is no rippled setting that defines which network it uses neither mainnet/testnet, see: https://xrpl.org/parallel-networks.html)
+- initial `GetFeatures` message called on bootloader below 1.4.0
+
 # 8.1.12
 
 #### Added
