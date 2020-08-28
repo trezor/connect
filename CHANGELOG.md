@@ -1,3 +1,8 @@
+# 8.1.13 (not released)
+
+### Fixed
+- initial `GetFeatures` message called on bootloader below 1.4.0
+
 # 8.1.12
 
 #### Added
