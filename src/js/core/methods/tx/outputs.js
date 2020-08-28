@@ -68,7 +68,7 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: Bitcoin
 
         case 'send-max' :
             validateParams(output, [ { name: 'address', type: 'string', obligatory: true } ]);
-            validateAddress(output.address);
+            validateAddress(output.address, coinInfo);
             return {
                 type: 'send-max',
                 address: output.address,
@@ -93,7 +93,7 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: Bitcoin
                 { name: 'amount', type: 'string', obligatory: true },
                 { name: 'address', type: 'string', obligatory: true },
             ]);
-            validateAddress(output.address);
+            validateAddress(output.address, coinInfo);
             return {
                 type: 'complete',
                 address: output.address,

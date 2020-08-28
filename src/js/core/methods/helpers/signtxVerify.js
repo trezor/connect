@@ -85,7 +85,7 @@ const deriveOutputScript = async (
 
     const pkh = output.address_n
         ? await derivePubKeyHash(output.address_n, getHDNode, coinInfo)
-        : getAddressHash(output.address);
+        : getAddressHash(output.address, coinInfo);
 
     if (scriptType === 'PAYTOADDRESS') {
         return BitcoinJsScript.pubKeyHash.output.encode(pkh);

@@ -8,7 +8,7 @@ import type { BitcoinNetworkInfo } from '../types';
 // Base58
 const isValidBase58Address = (address: string, network: $ElementType<BitcoinNetworkInfo, 'network'>): boolean => {
     try {
-        const decoded = BitcoinJSAddress.fromBase58Check(address);
+        const decoded = BitcoinJSAddress.fromBase58Check(address, network);
         if (decoded.version !== network.pubKeyHash && decoded.version !== network.scriptHash) {
             return false;
         }
@@ -65,7 +65,7 @@ export const isScriptHash = (address: string, coinInfo: BitcoinNetworkInfo): boo
             address = bchaddrjs.toLegacyAddress(address);
         }
 
-        const decoded = BitcoinJSAddress.fromBase58Check(address);
+        const decoded = BitcoinJSAddress.fromBase58Check(address, coinInfo.network);
         if (decoded.version === coinInfo.network.pubKeyHash) {
             return false;
         }
@@ -89,8 +89,8 @@ export const getAddressScriptType = (address: string, coinInfo: BitcoinNetworkIn
     return isScriptHash(address, coinInfo) ? 'PAYTOSCRIPTHASH' : 'PAYTOADDRESS';
 };
 
-export const getAddressHash = (address: string): Buffer => {
+export const getAddressHash = (address: string, coinInfo?: BitcoinNetworkInfo): Buffer => {
     if (isBech32(address)) return BitcoinJSAddress.fromBech32(address).data;
     if (isValidCashAddress(address)) return BitcoinJSAddress.fromBase58Check(bchaddrjs.toLegacyAddress(address)).hash;
-    return BitcoinJSAddress.fromBase58Check(address).hash;
+    return BitcoinJSAddress.fromBase58Check(address, coinInfo.network).hash;
 };
