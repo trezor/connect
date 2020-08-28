@@ -5,7 +5,7 @@ import randombytes from 'randombytes';
 
 import * as bitcoin from '@trezor/utxo-lib';
 import * as hdnodeUtils from '../utils/hdnode';
-import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType } from '../utils/pathUtils';
+import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType, toHardened } from '../utils/pathUtils';
 import { getAccountAddressN } from '../utils/accountUtils';
 import { toChecksumAddress } from '../utils/ethereumUtils';
 import { resolveAfter } from '../utils/promiseUtils';
@@ -771,19 +771,18 @@ export default class DeviceCommands {
 
     async _getAddressForNetworkType(networkType: ?string) {
         switch (networkType) {
-            case NETWORK.TYPES['cardano']:
+            case NETWORK.TYPES.cardano:
                 return await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
                     address_parameters: {
-                        address_type: 0,
-                        address_n: [(1852 | 0x80000000) >>> 0, (1815 | 0x80000000) >>> 0, (4 | 0x80000000) >>> 0, 0, 0],
-                        address_n_staking: [(1852 | 0x80000000) >>> 0, (1815 | 0x80000000) >>> 0, (4 | 0x80000000) >>> 0, 2, 0],
+                        address_type: 8, // Byron
+                        address_n: [toHardened(44), toHardened(1815), toHardened(0), 0, 0],
                     },
                     protocol_magic: 42,
                     network_id: 0,
                 });
             default:
                 return await this.typedCall('GetAddress', 'Address', {
-                    address_n: [(44 | 0x80000000) >>> 0, (1 | 0x80000000) >>> 0, (0 | 0x80000000) >>> 0, 0, 0],
+                    address_n: [toHardened(44), toHardened(1), toHardened(0), 0, 0],
                     coin_name: 'Testnet',
                     script_type: 'SPENDADDRESS',
                 });

@@ -169,18 +169,3 @@ export namespace CARDANO {
         StakeDelegation = 2,
     }
 }
-
-declare namespace NETWORK {
-    enum TYPES {
-        'bitcoin' = 'Bitcoin',
-        'etherum' = 'Etherum',
-        'eos' = 'Eos',
-        'nem' = 'NEM',
-        'stellar' = 'Stellar',
-        'lisk' = 'Lisk',
-        'cardano' = 'Cardano',
-        'ripple' = 'Ripple',
-        'tezos' = 'Tezors',
-        'binance' = 'Binance',
-    }
-}
