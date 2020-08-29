@@ -84,7 +84,10 @@ export default class Blockchain {
     async init() {
         this.link.on('connected', async () => {
             const info = await this.link.getInfo();
-            if (this.coinInfo.shortcut !== 'tXRP' && info.shortcut !== this.coinInfo.shortcut) {
+            // There is no `rippled` setting that defines which network it uses neither mainnet or testnet
+            // see: https://xrpl.org/parallel-networks.html
+            const shortcut = this.coinInfo.shortcut === 'tXRP' ? 'XRP' : this.coinInfo.shortcut;
+            if (info.shortcut.toLowerCase() !== shortcut.toLowerCase()) {
                 this.onError(ERRORS.TypedError('Backend_Invalid'));
                 return;
             }
