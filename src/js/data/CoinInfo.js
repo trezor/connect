@@ -254,7 +254,7 @@ const parseEthereumNetworksJson = (json: JSON): void => {
         ethereumNetworks.push({
             type: 'ethereum',
             blockchainLink,
-            blocktime: Math.round(network.blocktime_seconds / 60),
+            blocktime: -1, // unknown
             chain: network.chain,
             chainId: network.chain_id,
             // key not used
@@ -284,19 +284,21 @@ const parseMiscNetworksJSON = (json: JSON, type?: 'misc' | 'nem') => {
     const networksObject: Object = json;
     Object.keys(networksObject).forEach(key => {
         const network = networksObject[key];
-        let minFee = 1;
-        let maxFee = 1;
+        let minFee = -1; // unknown
+        let maxFee = -1; // unknown
+        let defaultFees = {'Normal': -1}; // unknown
         const shortcut = network.shortcut.toLowerCase();
         if (shortcut === 'xrp' || shortcut === 'txrp') {
             minFee = 10;
             maxFee = 10000;
+            defaultFees = {'Normal': 12};
         }
         miscNetworks.push({
             type: type || 'misc',
             blockchainLink: network.blockchain_link,
-            blocktime: 0,
+            blocktime: -1,
             curve: network.curve,
-            defaultFees: {'Normal': 1},
+            defaultFees,
             minFee,
             maxFee,
             label: network.name,

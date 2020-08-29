@@ -40,7 +40,7 @@ const BLOCKS = {
 };
 
 const getDefaultBlocks = (shortcut: string, label: string) => {
-    return BLOCKS[shortcut] && BLOCKS[shortcut][label] ? BLOCKS[shortcut][label] : 1;
+    return BLOCKS[shortcut] && BLOCKS[shortcut][label] ? BLOCKS[shortcut][label] : -1; // -1 for unknown
 };
 
 const feePerKB = (fee: string) => {
@@ -116,10 +116,11 @@ export default class FeeLevels {
         const shortcut = coinInfo.shortcut.toLowerCase();
 
         if (coinInfo.type === 'ethereum') {
+            // unlike the others, ethereum got additional value "feeLimit" in coinInfo (Gas limit)
             this.levels = coinInfo.defaultFees.map(level => {
                 return {
                     ...level,
-                    blocks: 1,
+                    blocks: -1, // blocks unknown
                 };
             });
             return;
@@ -140,12 +141,18 @@ export default class FeeLevels {
             });
     }
 
-    async loadMisc(blockchain: BlockchainLink): Promise<FeeLevel[]> {
+    async loadMisc(blockchain: BlockchainLink) {
         try {
-            const response = await blockchain.estimateFee({ blocks: [1] });
+            const [response] = await blockchain.estimateFee({ blocks: [1] });
+            // misc coins should have only one FeeLevel (normal)
             this.levels[0] = {
                 ...this.levels[0],
-                ...response[0],
+                ...response,
+                // validate `feePerUnit` from the backend
+                // should be lower than `coinInfo.maxFee` and higher than `coinInfo.minFee`
+                // xrp sends values from 1 to very high number occasionally
+                // see: https://github.com/trezor/trezor-suite/blob/develop/packages/blockchain-link/src/workers/ripple/index.ts#L316
+                feePerUnit: Math.min(this.coinInfo.maxFee, Math.max(this.coinInfo.minFee, parseInt(response.feePerUnit, 10))).toString(),
             };
         } catch (error) {
             // silent
@@ -153,7 +160,7 @@ export default class FeeLevels {
         return this.levels;
     }
 
-    async load(blockchain: BlockchainLink): Promise<FeeLevel[]> {
+    async load(blockchain: BlockchainLink) {
         if (this.coinInfo.type !== 'bitcoin') return this.loadMisc(blockchain);
         // only for bitcoin-like
 
