@@ -4,7 +4,11 @@
 - Exclude `tXRP` from backend verification (There is no rippled setting that defines which network it uses neither mainnet or testnet, see: https://xrpl.org/parallel-networks.html).
 - Initial `GetFeatures` message called on bootloader below 1.4.0.
 - Cardano double passphrase prompt.
-- validation of `FeeLevel.feePerUnit` loaded from the backend (`blockchainEstimateFee` method).
+- Validation of `FeeLevel.feePerUnit` loaded from the backend (`blockchainEstimateFee` method).
+- `showOnTrezor` parameter for `ethereumGetPublicKey`. 
+
+### Added
+- `showOnTrezor` parameter for `getPublicKey` method.
 
 # 8.1.12
 
@@ -15,7 +19,8 @@
 #### Fixed
 - `interactionTimeout` moved to a lower block in code.
 - `composeTransaction` filter `max = -1` field from the result.
-- skip device state verification on device management methods.
+- Skip device state verification on device management methods.
+
 #### Changed
 - Using `blockchainSetCustomBackend` method with an empty array of URLs will disable custom backends (reset to default).
 - Blockbook will verify that it is connecting to the right coin backend or it will throw an error.

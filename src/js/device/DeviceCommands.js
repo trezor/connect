@@ -146,12 +146,12 @@ export default class DeviceCommands {
         }
 
         let publicKey: trezor.PublicKey;
-        if (!validation) {
+        if (showOnTrezor || !validation) {
             publicKey = await this.getPublicKey(path, coinInfo.name, scriptType, showOnTrezor);
         } else {
             const suffix: number = 0;
             const childPath: Array<number> = path.concat([suffix]);
-            const resKey: trezor.PublicKey = await this.getPublicKey(path, coinInfo.name, scriptType, showOnTrezor);
+            const resKey: trezor.PublicKey = await this.getPublicKey(path, coinInfo.name, scriptType);
             const childKey: trezor.PublicKey = await this.getPublicKey(childPath, coinInfo.name, scriptType);
             publicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix, network, coinInfo.network);
         }
