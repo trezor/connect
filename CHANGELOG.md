@@ -1,9 +1,10 @@
 # 8.1.13 (not released)
 
 ### Fixed
-- Exclude `tXRP` from backend verification (There is no rippled setting that defines which network it uses neither mainnet/testnet, see: https://xrpl.org/parallel-networks.html).
+- Exclude `tXRP` from backend verification (There is no rippled setting that defines which network it uses neither mainnet or testnet, see: https://xrpl.org/parallel-networks.html).
 - Initial `GetFeatures` message called on bootloader below 1.4.0.
 - Cardano double passphrase prompt.
+- validation of `FeeLevel.feePerUnit` loaded from the backend (`blockchainEstimateFee` method).
 
 # 8.1.12
 
