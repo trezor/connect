@@ -1,4 +1,4 @@
-# 8.1.13 (not released)
+# 8.1.13
 
 ### Fixed
 - Exclude `tXRP` from backend verification (There is no rippled setting that defines which network it uses neither mainnet or testnet, see: https://xrpl.org/parallel-networks.html).
