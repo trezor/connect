@@ -110,13 +110,14 @@ describe('utils/deviceFeaturesUtils', () => {
             uno: 'update-required',
             xrp: 'no-capability',
             xtz: 'no-capability',
+            xvg: 'update-required',
             zcr: 'update-required',
         });
 
         const feat2 = {
             major_version: 2,
             minor_version: 3,
-            patch_version: 2,
+            patch_version: 3,
             capabilities: undefined,
         };
         feat2.capabilities = parseCapabilities(feat2);
@@ -131,7 +132,7 @@ describe('utils/deviceFeaturesUtils', () => {
                 coins,
                 [
                     {
-                        min: ['0', '2.3.3'],
+                        min: ['0', '2.99.99'],
                         excludedMethods: ['getAccountInfo'],
                     },
                 ]
@@ -147,7 +148,7 @@ describe('utils/deviceFeaturesUtils', () => {
                 coins,
                 [
                     {
-                        min: ['0', '2.3.3'],
+                        min: ['0', '2.99.99'],
                         coin: ['xrp', 'txrp'],
                         excludedMethods: ['getAccountInfo'],
                     },
