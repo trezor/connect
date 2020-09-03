@@ -1,3 +1,9 @@
+# 8.1.14
+
+### Changed
+- Added 1.9.3/2.3.3 firmware releases.
+- Updated coins.json and protobuf messages.
+
 # 8.1.13
 
 ### Fixed
