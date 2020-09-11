@@ -97,7 +97,7 @@
         "less-plugin-autoprefix": "^2.0.0",
         "less-plugin-clean-css": "^1.5.1",
         "mini-css-extract-plugin": "0.9.0",
-        "node-fetch": "^2.6.0",
+        "node-fetch": "^2.6.1",
         "parse-uri": "^1.0.0",
         "ripple-lib": "1.7.1",
         "sharedworker-loader": "^2.1.1",
