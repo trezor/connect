@@ -39,8 +39,8 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
         const manifestString = settings.manifest
             ? JSON.stringify(settings.manifest)
             : 'undefined'; // note: btoa(undefined) === btoa('undefined') === "dW5kZWZpbmVk"
-        const manifest = `&version=${settings.version}&manifest=${encodeURIComponent(btoa(JSON.stringify(manifestString)))}`;
-        src = `${settings.iframeSrc}?${ Date.now() }${ manifest }`;
+        const manifest = `version=${settings.version}&manifest=${encodeURIComponent(btoa(JSON.stringify(manifestString)))}`;
+        src = `${settings.iframeSrc}?${ manifest }`;
     } else {
         src = settings.iframeSrc;
     }
