@@ -2,6 +2,7 @@
 
 ### Changed
 - Removed timestamp from iframe URL.
+- Updated dependencies.
 
 # 8.1.14
 
