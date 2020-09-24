@@ -16,6 +16,7 @@ const { internal } = collectImportsSync(path.resolve(__dirname, '../src/js/index
 });
 
 const src = path.resolve(__dirname, '../src/js');
+const ts = path.resolve(__dirname, '../src/ts/types');
 const npm = path.resolve(__dirname, '../npm');
 const lib = path.resolve(__dirname, '../npm/lib');
 
@@ -23,6 +24,18 @@ internal.forEach(file => {
     const libFile = file.replace(src, lib);
     fs.copySync(file, libFile);
     fs.copySync(file, libFile + '.flow');
+});
+
+const ignored = ['__tests__', '_old', 'icons', 'udev'];
+const shouldIgnore = (src) => ignored.find(i => src.indexOf(i) >= 0);
+
+// copy typescript
+fs.copySync(ts, `${lib}/typescript`, {
+    filter: function (src, dest) {
+        if (shouldIgnore(src)) return false;
+        if (src.indexOf('.json') >= 0) return false;
+        return true;
+    },
 });
 
 delete packageJSON.devDependencies;
@@ -34,6 +47,8 @@ delete packageJSON.private;
 delete packageJSON.extendedDependencies;
 
 packageJSON.main = 'lib/index.js';
+packageJSON.types = 'lib/typescript/index.d.ts';
+
 fs.writeFileSync(path.resolve(npm, 'package.json'), JSON.stringify(packageJSON, null, '  '), 'utf-8');
 
 fs.copySync(path.resolve(src, 'env/node/index-empty.js'), path.resolve(npm, 'lib/env/node/index.js'));
