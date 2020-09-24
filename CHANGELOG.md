@@ -1,5 +1,8 @@
 # 8.1.15 (unreleased)
 
+### Fixed
+- `TrezorConnect.cancel` method called during Pin/Passphrase/Word requests.
+
 ### Changed
 - Removed timestamp from iframe URL.
 - Updated dependencies.
