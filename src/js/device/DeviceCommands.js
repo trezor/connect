@@ -81,6 +81,8 @@ export default class DeviceCommands {
     debug: boolean;
     disposed: boolean;
     callPromise: ?Promise<DefaultMessageResponse> = undefined;
+    // see DeviceCommands.cancel
+    _cancelableRequest: ?(error: any) => void = undefined;
 
     constructor(
         device: Device,
@@ -96,6 +98,7 @@ export default class DeviceCommands {
 
     dispose(): void {
         this.disposed = true;
+        this._cancelableRequest = undefined;
     }
 
     isDisposed(): boolean {
@@ -719,7 +722,7 @@ export default class DeviceCommands {
             const legacy = this.device.useLegacyPassphrase();
             const legacyT1 = legacy && this.device.isT1();
 
-            // T1 fw lower than x,x,x, passphrase is cached in internal state
+            // T1 fw lower than 1.9.0, passphrase is cached in internal state
             if (legacyT1 && typeof state === 'string') {
                 return this._commonCall('PassphraseAck', { passphrase: state });
             }
@@ -795,7 +798,9 @@ export default class DeviceCommands {
     _promptPin(type: string): Promise<string> {
         return new Promise((resolve, reject) => {
             if (this.device.listenerCount(DEVICE.PIN) > 0) {
+                this._cancelableRequest = reject;
                 this.device.emit(DEVICE.PIN, this.device, type, (err, pin) => {
+                    this._cancelableRequest = undefined;
                     if (err || pin == null) {
                         reject(err);
                     } else {
@@ -813,7 +818,9 @@ export default class DeviceCommands {
     _promptPassphrase(): Promise<PassphrasePromptResponse> {
         return new Promise((resolve, reject) => {
             if (this.device.listenerCount(DEVICE.PASSPHRASE) > 0) {
+                this._cancelableRequest = reject;
                 this.device.emit(DEVICE.PASSPHRASE, this.device, (response: PassphrasePromptResponse, error?: Error) => {
+                    this._cancelableRequest = undefined;
                     if (error) {
                         reject(error);
                     } else {
@@ -830,7 +837,9 @@ export default class DeviceCommands {
 
     _promptWord(type: string): Promise<string> {
         return new Promise((resolve, reject) => {
+            this._cancelableRequest = reject;
             this.device.emit(DEVICE.WORD, this.device, type, (err, word) => {
+                this._cancelableRequest = undefined;
                 if (err || word == null) {
                     reject(err);
                 } else {
@@ -894,7 +903,22 @@ export default class DeviceCommands {
         return;
     }
 
+    // TODO: implement whole "cancel" logic in "trezor-link"
     async cancel() {
+        // TEMP: this patch should be implemented in 'trezor-link' instead
+        // NOTE:
+        // few ButtonRequests can be canceled by design because they are awaiting for user input
+        // those are: Pin, Passphrase, Word
+        // _cancelableRequest holds reference to the UI promise `reject` method
+        // in those cases `this.transport.call` needs to be used
+        // calling `this.transport.post` (below) will result with throttling somewhere in low level
+        // trezor-link or trezord (not sure which one) will reject NEXT incoming call with "Cancelled" error
+        if (this._cancelableRequest) {
+            this._cancelableRequest();
+            this._cancelableRequest = undefined;
+            return;
+        }
+
         /**
          * Bridge version =< 2.0.28 has a bug that doesn't permit it to cancel
          * user interactions in progress, so we have to do it manually.
