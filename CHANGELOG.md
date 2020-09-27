@@ -1,4 +1,4 @@
-# 8.1.15 (unreleased)
+# 8.1.15
 
 ### Fixed
 - `TrezorConnect.cancel` method called during Pin/Passphrase/Word requests.
