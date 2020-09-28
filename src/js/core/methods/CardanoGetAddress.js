@@ -55,6 +55,7 @@ export default class CardanoGetAddress extends AbstractMethod {
             validateParams(batch, [
                 { name: 'addressParameters', type: 'object', obligatory: true },
                 { name: 'networkId', type: 'number', obligatory: true },
+                { name: 'protocolMagic', type: 'number', obligatory: true },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
