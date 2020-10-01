@@ -6,6 +6,7 @@
 ### Changed
 - Removed timestamp from iframe URL.
 - Updated dependencies.
+- Add check for presence of protocol magic in the cardanoGetAddress parameters validation logic.
 
 # 8.1.14
 
