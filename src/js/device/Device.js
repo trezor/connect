@@ -405,6 +405,11 @@ export default class Device extends EventEmitter {
         if (this.features && this.features.session_id && !feat.session_id) {
             feat.session_id = this.features.session_id;
         }
+        // translate legacy field `pin_cached` to `unlocked`
+        if (feat.pin_protection) {
+            feat.unlocked = typeof feat.unlocked === 'boolean' ? feat.unlocked : feat.pin_cached;
+        }
+
         this.features = feat;
         this.featuresNeedsReload = false;
     }
@@ -547,7 +552,7 @@ export default class Device extends EventEmitter {
     needAuthentication() {
         if (this.isUnacquired() || this.isUsedElsewhere() || this.featuresNeedsReload) return true;
         if (this.features.bootloader_mode || !this.features.initialized) return true;
-        const pin = this.features.pin_protection ? (this.features.pin_cached || !!this.features.unlocked) : true;
+        const pin = this.features.pin_protection ? !!this.features.unlocked : true;
         const pass = this.features.passphrase_protection ? this.features.passphrase_cached : true;
         return pin && pass;
     }
