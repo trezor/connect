@@ -2,11 +2,12 @@
 
 ### Fixed
 - `TrezorConnect.cancel` method called during Pin/Passphrase/Word requests.
+- `TrezorConnect.cardanoGetAddress` added missing validation for `protocolMagic` param.
+- Device `Features.unlocked` translated from legacy field `pin_cached`.
 
 ### Changed
 - Removed timestamp from iframe URL.
 - Updated dependencies.
-- Add check for presence of protocol magic in the cardanoGetAddress parameters validation logic.
 
 # 8.1.14
 
