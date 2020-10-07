@@ -59,7 +59,7 @@ export type CardanoAddress = {
 export type CardanoCertificateType = $Values<typeof CERTIFICATE_TYPE>;
 
 export type CardanoInput = {
-    path: string | number[];
+    path?: string | number[];
     prev_hash: string;
     prev_index: number;
 }
@@ -70,11 +70,49 @@ export type CardanoOutput = {
     address: string;
     amount: string;
 }
+
+export type CardanoPoolOwner = {
+    stakingKeyPath?: string | number[];
+    stakingKeyHash?: string;
+}
+
+export type CardanoPoolRelay = {
+    type: number;
+    ipv4Address?: string;
+    ipv6Address?: string;
+    port?: number;
+    hostName?: string;
+}
+
+export type CardanoPoolMetadata = {
+    url: string;
+    hash: string;
+}
+
+export type CardanoPoolMargin = {
+    numerator: string;
+    denominator: string;
+}
+
+export type CardanoPoolParameters = {
+    poolId: string;
+    vrfKeyHash: string;
+    pledge: string;
+    cost: string;
+    margin: CardanoPoolMargin;
+    rewardAccount: string;
+    owners: CardanoPoolOwner[];
+    relays: CardanoPoolRelay[];
+    metadata: CardanoPoolMetadata;
+}
+
 export type CardanoCertificate = {
     type: CardanoCertificateType;
-    path: string | number[];
+    path?: string | number[];
     pool?: string;
+    poolParameters?: CardanoPoolParameters;
 }
+
 export type CardanoWithdrawal = {
     path: string | number[];
     amount: string;

@@ -1821,6 +1821,175 @@
                     "oneofs": {}
                 },
                 {
+                    "name": "CardanoPoolOwnerType",
+                    "fields": [
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "staking_key_path",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "staking_key_hash",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "CardanoPoolRelayParametersType",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "CardanoPoolRelayType",
+                            "name": "type",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "ipv4_address",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "ipv6_address",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "host_name",
+                            "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "port",
+                            "id": 5
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "CardanoPoolMetadataType",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "url",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "hash",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "CardanoPoolParametersType",
+                    "fields": [
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "pool_id",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "vrf_key_hash",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "pledge",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "cost",
+                            "id": 4
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "margin_numerator",
+                            "id": 5
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "margin_denominator",
+                            "id": 6
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "reward_account",
+                            "id": 7
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "CardanoPoolOwnerType",
+                            "name": "owners",
+                            "id": 8
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "CardanoPoolRelayParametersType",
+                            "name": "relays",
+                            "id": 9
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "CardanoPoolMetadataType",
+                            "name": "metadata",
+                            "id": 10
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
                     "name": "CardanoTxCertificateType",
                     "fields": [
                         {
@@ -1843,6 +2012,13 @@
                             "type": "bytes",
                             "name": "pool",
                             "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "CardanoPoolParametersType",
+                            "name": "pool_parameters",
+                            "id": 4
                         }
                     ],
                     "enums": [],
@@ -9725,6 +9901,28 @@
                 },
                 {
                     "name": "STAKE_DELEGATION",
+                    "id": 2
+                },
+                {
+                    "name": "STAKE_POOL_REGISTRATION",
+                    "id": 3
+                }
+            ],
+            "options": {}
+        },
+        {
+            "name": "CardanoPoolRelayType",
+            "values": [
+                {
+                    "name": "SINGLE_HOST_IP",
+                    "id": 0
+                },
+                {
+                    "name": "SINGLE_HOST_NAME",
+                    "id": 1
+                },
+                {
+                    "name": "MULTIPLE_HOST_NAME",
                     "id": 2
                 }
             ],

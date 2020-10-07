@@ -167,5 +167,6 @@ export namespace CARDANO {
         StakeRegistration = 0,
         StakeDeregistration = 1,
         StakeDelegation = 2,
+        StakePoolRegistration = 3
     }
 }

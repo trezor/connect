@@ -22,4 +22,11 @@ export const CERTIFICATE_TYPE = Object.freeze({
     StakeRegistration: 0,
     StakeDeregistration: 1,
     StakeDelegation: 2,
+    StakePoolRegistration: 3,
+});
+
+export const POOL_RELAY_TYPE = Object.freeze({
+    SingleHostIp: 0,
+    SingleHostName: 1,
+    MultipleHostName: 2,
 });
