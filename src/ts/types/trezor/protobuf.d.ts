@@ -573,7 +573,7 @@ export type CardanoPublicKey = {
 };
 
 export type CardanoTxInputType = {
-    address_n: number[];
+    address_n?: number[];
     prev_hash?: string;
     prev_index?: number;
 };
@@ -585,7 +585,7 @@ export type CardanoTxOutputType = {
 };
 
 export type CardanoPoolOwnerType = {
-    staking_key_path: number[];
+    staking_key_path?: number[];
     staking_key_hash?: string;
 };
 
@@ -605,10 +605,10 @@ export type CardanoPoolMetadataType = {
 export type CardanoPoolParametersType = {
     pool_id: string;
     vrf_key_hash: string;
-    pledge: number;
-    cost: number;
-    margin_numerator: number;
-    margin_denominator: number;
+    pledge: string | number;
+    cost: string | number;
+    margin_numerator: string | number;
+    margin_denominator: string | number;
     reward_account: string;
     owners: CardanoPoolOwnerType[];
     relays: CardanoPoolRelayParametersType[];
@@ -617,7 +617,7 @@ export type CardanoPoolParametersType = {
 
 export type CardanoTxCertificateType = {
     type?: CardanoCertificateType;
-    path: number[];
+    path?: number[];
     pool?: string;
     pool_parameters?: CardanoPoolParametersType;
 };
