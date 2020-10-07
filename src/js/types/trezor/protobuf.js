@@ -602,7 +602,7 @@ export type CardanoSignedTx = {
 };
 export type CardanoTxInput = {
     tx_hash: string;
-    address_n: Array<number>;
+    address_n?: Array<number>;
     output_index: number;
 };
 export type CardanoTxOutput = {
@@ -610,11 +610,44 @@ export type CardanoTxOutput = {
     address_parameters?: CardanoAddressParameters;
     amount: string;
 };
+
+export type CardanoPoolOwner = {
+    staking_key_hash?: string;
+    staking_key_path?: Array<number>;
+}
+
+export type CardanoPoolRelay = {
+    type: number;
+    ipv4_address?: string;
+    ipv6_address?: string;
+    host_name?: string;
+    port?: number;
+}
+
+export type CardanoPoolMetadata = {
+    url: string;
+    hash: string;
+}
+
+export type CardanoPoolParameters = {
+    pool_id: string;
+    vrf_key_hash: string;
+    pledge: string;
+    cost: string;
+    margin_numerator: string;
+    margin_denominator: string;
+    reward_account: string;
+    owners: Array<CardanoPoolOwner>;
+    relays: Array<CardanoPoolRelay>;
+    metadata: CardanoPoolMetadata;
+};
 export type CardanoTxCertificate = {
     type: number;
-    path: Array<number>;
+    path?: Array<number>;
     pool?: string;
+    pool_parameters?: CardanoPoolParameters;
 };
+
 export type CardanoTxWithdrawal = {
     path: Array<number>;
     amount: string;

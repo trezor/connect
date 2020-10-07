@@ -18,6 +18,11 @@ const SAMPLE_INPUTS = {
         prev_hash: '3b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b7',
         prev_index: 0,
     },
+    external_input: {
+        path: undefined,
+        prev_hash: '3b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b7',
+        prev_index: 0,
+    },
 };
 
 const SAMPLE_OUTPUTS = {
@@ -105,8 +110,84 @@ const SAMPLE_CERTIFICATES = {
     stake_delegation: {
         type: CERTIFICATE_TYPE.StakeDelegation,
         path: "m/1852'/1815'/0'/2/0",
-        pool: 'f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973',
+        pool: "f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973",
     },
+    stake_pool_registration: {
+        type: CERTIFICATE_TYPE.StakePoolRegistration,
+        poolParameters: {
+            poolId: "f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973",
+            vrfKeyHash: "198890ad6c92e80fbdab554dda02da9fb49d001bbd96181f3e07f7a6ab0d0640",
+            pledge: "500000000",
+            cost: "340000000",
+            margin: {
+                numerator: "1",
+                denominator: "2",
+            },
+            rewardAccount: "stake1uya87zwnmax0v6nnn8ptqkl6ydx4522kpsc3l3wmf3yswygwx45el",
+            owners: [
+                {
+                    stakingKeyPath: "m/1852'/1815'/0'/2/0",
+                    stakingKeyHash: undefined,
+                },
+                {
+                    stakingKeyHash: "3a7f09d3df4cf66a7399c2b05bfa234d5a29560c311fc5db4c490711"
+                }
+            ],
+            relays: [
+                {
+                    type: 0,
+                    ipv4Address: "192.168.0.1",
+                    ipv6Address: "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
+                    port: 1234
+                },
+                {
+                    type: 0,
+                    ipv6Address: "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
+                    ipv4Address: null,
+                    port: 1234
+                },
+                {
+                    type: 0,
+                    ipv4Address: "192.168.0.1",
+                    port: 1234
+                },
+                {
+                    type: 1,
+                    hostName: "www.test.test",
+                    port: 1234
+                },
+                {
+                    type: 2,
+                    hostName: "www.test2.test"
+                }
+            ],
+            metadata: {
+                url: "https://www.test.test",
+                hash: "914c57c1f12bbf4a82b12d977d4f274674856a11ed4b9b95bd70f5d41c5064a6"
+            }
+        }
+    },
+    stake_pool_registration_no_metadata: {
+        type: CERTIFICATE_TYPE.StakePoolRegistration,
+        poolParameters: {
+            poolId: "f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973",
+            vrfKeyHash: "198890ad6c92e80fbdab554dda02da9fb49d001bbd96181f3e07f7a6ab0d0640",
+            pledge: "500000000",
+            cost: "340000000",
+            margin: {
+                numerator: "1",
+                denominator: "2",
+            },
+            rewardAccount: "stake1uya87zwnmax0v6nnn8ptqkl6ydx4522kpsc3l3wmf3yswygwx45el",
+            owners: [
+                {
+                    stakingKeyPath: "m/1852'/1815'/0'/2/0"
+                },
+            ],
+            relays: [],
+            metadata: null,
+        }
+    }
 };
 
 const SAMPLE_WITHDRAWAL = {
@@ -359,6 +440,42 @@ export default {
             result: {
                 hash: '47cf79f20c6c62edb4162b3b232a57afc1bd0b57c7fd8389555276408a004776',
                 serializedTx: '83a400818258201af8fa0b754ff99253d983894e63a2b09cbb56c833ba18c3384210163f63dcfc00018382582f82d818582583581cc817d85b524e3d073795819a25cdbb84cff6aa2bbb3a081980d248cba10242182a001a0fb6fc611a002dd2e882581d60cb03849e268f989b5a843107bad7fa2908246986a8f3d643f8c184800182582f82d818582583581c98c3a558f39d1d993cc8770e8825c70a6d0f5a9eb243501c4526c29da10242182a001aa8566c011a000f424002182a030aa1028184582089053545a6c254b0d9b1464e48d2b5fcf91d4e25c128afb1fcfc61d0843338ea5840cc11adf81cb3c3b75a438325f8577666f5cbb4d5d6b73fa6dbbcf5ab36897df34eecacdb54c3bc3ce7fc594ebb2c7aa4db4700f4290facad9b611a035af8710a582026308151516f3b0e02bb1638142747863c520273ce9bd3e5cd91e1d46fe2a63545a10242182af6',
+            },
+        },
+        {
+            description: 'signStakePoolRegistration',
+            params: {
+                inputs: [SAMPLE_INPUTS['external_input']],
+                outputs: [
+                    SAMPLE_OUTPUTS['simple_shelley_output'],
+                ],
+                fee: FEE,
+                ttl: TTL,
+                protocolMagic: PROTOCOL_MAGICS['mainnet'],
+                networkId: NETWORK_IDS['mainnet'],
+                certificates: [SAMPLE_CERTIFICATES['stake_pool_registration']],
+            },
+            result: {
+                hash: 'e3b9a5657bf62609465a930c8359d774c73944973cfc5a104a0f0ed1e1e8db21',
+                serializedTx: '83a500818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018182583901eb0baa5e570cffbe2934db29df0b6a3d7c0430ee65d4c3a7ab2fefb91bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff0102182a030a04818a03581cf61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb49735820198890ad6c92e80fbdab554dda02da9fb49d001bbd96181f3e07f7a6ab0d06401a1dcd65001a1443fd00d81e820102581de13a7f09d3df4cf66a7399c2b05bfa234d5a29560c311fc5db4c49071182581c122a946b9ad3d2ddf029d3a828f0468aece76895f15c9efbd69b4277581c3a7f09d3df4cf66a7399c2b05bfa234d5a29560c311fc5db4c4907118584001904d244c0a8000150b80d01200000a3852e8a00003473700384001904d2f650b80d01200000a3852e8a00003473700384001904d244c0a80001f683011904d26d7777772e746573742e7465737482026e7777772e74657374322e74657374827568747470733a2f2f7777772e746573742e746573745820914c57c1f12bbf4a82b12d977d4f274674856a11ed4b9b95bd70f5d41c5064a6a10081825820bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e584006305b52f76d2d2da6925c02036a9a28456976009f8c6432513f273110d09ea26db79c696cec322b010e5cbb7d90a6b473b157e65df846a1487062569a5f5a04f6',
+            },
+        },
+        {
+            description: 'signStakePoolRegistrationNoMetadata',
+            params: {
+                inputs: [SAMPLE_INPUTS['external_input']],
+                outputs: [
+                    SAMPLE_OUTPUTS['simple_shelley_output'],
+                ],
+                fee: FEE,
+                ttl: TTL,
+                protocolMagic: PROTOCOL_MAGICS['mainnet'],
+                networkId: NETWORK_IDS['mainnet'],
+                certificates: [SAMPLE_CERTIFICATES['stake_pool_registration_no_metadata']],
+            },
+            result: {
+                hash: '504f9214142996e0b7e315103b25d88a4afa3d01dd5be22376921b52b01483c3',
+                serializedTx: '83a500818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018182583901eb0baa5e570cffbe2934db29df0b6a3d7c0430ee65d4c3a7ab2fefb91bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff0102182a030a04818a03581cf61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb49735820198890ad6c92e80fbdab554dda02da9fb49d001bbd96181f3e07f7a6ab0d06401a1dcd65001a1443fd00d81e820102581de13a7f09d3df4cf66a7399c2b05bfa234d5a29560c311fc5db4c49071181581c122a946b9ad3d2ddf029d3a828f0468aece76895f15c9efbd69b427780f6a10081825820bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e5840aa2099208399fcc27c18d7ef0c7e873f9e22f0935b7e912cddd34b33b8cafd541a878dc01c042ce490e4c9bad3c62c2f59acaa009d336c9ff875c5f153d34900f6',
             },
         },
     ],
