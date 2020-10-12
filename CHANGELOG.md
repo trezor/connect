@@ -1,3 +1,9 @@
+# 8.1.16 (not released yet)
+
+### Added
+- trezor onion address to allowed list.
+- 2.3.4 fw release.
+
 # 8.1.15
 
 ### Fixed
