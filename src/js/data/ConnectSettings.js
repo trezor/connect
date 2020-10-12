@@ -84,6 +84,7 @@ export const corsValidator = (url?: string) => {
     if (url.match(/^https:\/\/([A-Za-z0-9\-_]+\.)*trezor\.io\//)) return url;
     if (url.match(/^https?:\/\/localhost:[58][0-9]{3}\//)) return url;
     if (url.match(/^https:\/\/([A-Za-z0-9\-_]+\.)*sldev\.cz\//)) return url;
+    if (url.match(/^https?:\/\/([A-Za-z0-9\-_]+\.)*trezoriovpjcahpzkrewelclulmszwbqpzmzgub37gbcjlvluxtruqad\.onion\//)) return url;
 };
 
 export const parse = (input: $Shape<ConnectSettings> = {}) => {
