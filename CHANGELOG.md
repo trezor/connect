@@ -1,4 +1,4 @@
-# 8.1.16 (not released yet)
+# 8.1.16
 
 ### Added
 - trezor onion address to allowed list.
