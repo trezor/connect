@@ -1,37 +1,42 @@
-image: node:12.14.1
+image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
 
 stages:
-  - test
   - build
+  - test
   - deploy
 
-flow lint test:
-  stage: test
-  script:
-    - yarn
-    - yarn flow
-    - yarn lint
-    - yarn test:unit
+before_script:
+  - nix-shell --run "yarn"
 
+# Build & Lint
+flow lint:
+  stage: build
+  script:
+    - nix-shell --run "yarn flow"
+    - nix-shell --run "yarn lint"
+    - nix-shell --run "yarn test:unit"
+
+# Build & Lint
 build:
   stage: build
   script:
-    - yarn
-    - make build-connect
+    - nix-shell --run "make build-connect"
   artifacts:
     expire_in: 1 week
     paths:
       - build
 
+# Deploy
 deploy review:
   stage: deploy
   variables:
     GIT_STRATEGY: none
-  dependencies:
-    - build
+  when: manual
+  needs: ["build"]
   environment:
     name: $CI_BUILD_REF_NAME
     url: $BASE_REVIEW_URL/$CI_BUILD_REF_NAME
+  before_script: []
   script:
     - echo "Deploy a review app"
     - '[ -z "${DEPLOY_BASE_DIR}" ] && echo "Deploy base dir cannot be empty" && exit 255'
@@ -43,3 +48,79 @@ deploy review:
     - branches
   tags:
     - deploy
+
+# Test
+.test:
+  stage: test
+  needs: ["build"]
+  variables:
+    SDL_VIDEODRIVER: "dummy"
+    TESTS_FIRMWARE: 2.3.2
+  script:
+    - "echo Firmware version: $TESTS_FIRMWARE"
+    - cd /trezor-user-env
+    - nix-shell controller/shell.nix --run 'python --version'
+    - nix-shell controller/shell.nix --run 'trezorctl --version'
+    - nix-shell controller/shell.nix --run 'python controller/main.py' &  # TODO: would be better to run automatically in docker
+    - cd -
+    - nix-shell --run "yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --coverage true"
+
+test management:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
+
+test btc sign:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "signTransaction"
+
+test btc others:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage"
+
+test stellar:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
+
+test cardano:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetPublicKey,cardanoSignTransaction"
+
+test eos:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
+
+test eth:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage"
+
+test nem:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
+
+test ripple:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
+
+test tezos:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
+
+test binance:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "binanceSignTransaction"
+
+test lisk:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "liskGetAddress,liskSignMessage,liskSignTransaction,liskVerifyMessage"
