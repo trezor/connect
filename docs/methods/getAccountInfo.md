@@ -29,16 +29,28 @@ BIP-0044 account discovery is performed and user is presented with a list of acc
 - `coin` — *obligatory* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 
 ### Other optional params
-* `details` — `'basic' | 'txs'`
-* `tokens` — `'nonzero' | 'used' | 'derived'`
-* `page` — `number`
-* `pageSize` — `number`
-* `from` — `number`
-* `to` — `number`
-* `contractFilter` — `string`
-* `gap` — `number`
-* `marker` — `{ ledger: number, seq: number }`
-* `defaultAccountType` — `'normal' | 'segwit' | 'legacy'`
+params are forwarded to [BlockBook backend](https://github.com/trezor/blockbook/blob/master/docs/api.md#api-v2) using `@trezor/blockchain-link` package
+
+
+* `details` — specifies level of details returned by request
+    - `basic` (default) return only account balances, without any derived addresses or transaction history
+    - `tokens` - response with derived addresses (Bitcoin-like accounts) and ERC20 tokens (Ethereum-like accounts), subject of `tokens` param
+    - `tokenBalances` - same as `tokens` with balances, subject of `tokens` param
+    - `txs` - `tokenBalances` + complete account transaction history
+
+* `tokens` — specifies which tokens (xpub addresses) are returned by the request (default nonzero)
+    - `nonzero` - (Default) return only addresses with nonzero balance
+    - `used` - return addresses with at least one transaction
+    - `derived` - return all derived addresses
+
+* `page` — `number` transaction history page index, subject of `details: txs`
+* `pageSize` — `number` transaction history page size, subject of `details: txs`
+* `from` — `number` transaction history from block filter, subject of `details: txs`
+* `to` — `number` transaction history to block filter, subject of `details: txs`
+* `gap` — `number` address derivation gap size, subject of `details: tokens`
+* `contractFilter` — `string` Ethereum-like accounts only: get ERC20 token info and balance
+* `marker` — `{ ledger: number, seq: number }` XRP accounts only, transaction history page marker
+* `defaultAccountType` — `'normal' | 'segwit' | 'legacy'` Bitcoin-like accounts only: specify which account group is displayed as default in popup, subject of `Using discovery`
 
 ### Example
 Get info about first bitcoin account
@@ -49,7 +61,7 @@ TrezorConnect.getAccountInfo({
 });
 ```
 
-Get info about account using public key
+Get info about account using public key (device is not used)
 ```javascript
 TrezorConnect.getAccountInfo({
     xpub: "xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx",
@@ -70,22 +82,54 @@ TrezorConnect.getAccountInfo({
     success: true,
     payload: {
         id: number,                           // account id
-        path: Array<number>,                  // hardended path
-        serializedPath: string,               // serialized path
-        xpub: string,                         // public key
-        address: string,                      // current address
-        addressIndex: number,                 // current address index
-        addressPath: Array<number>,           // hardended address path
-        addressSerializedPath: Array<number>, // serialized address path
-        balance: number,                      // account balance (including unconfirmed transactions)
-        confirmed: number,                    // account confirmed balance
-        transactions: number,                 // transactions count
-        utxo: Array<Utxo>,                    // unspent outputs [detail](../../src/js/types/response.js#L57)
-        usedAddresses: Array<{ address: string, received: number }>, // used addresses with received amount
-        unusedAddresses: Array<string>,       // unused addresses
-    }
+        path: string,                         // serialized path
+        descriptor: string,                   // account public key
+        legacyXpub?: string,                  // (optional) account public key in legacy format (only for segwit and segwit native accounts)
+        balance: string,                      // account balance (confirmed transactions only)
+        availableBalance: string,             // account balance (including unconfirmed transactions)
+        addresses: {
+            // subject of details:tokens param
+            unused: Array<AccountAddress>, // unused addresses
+            used: Array<AccountAddress>,   // used addresses
+            change: Array<AccountAddress>, // change addresses (internal)
+        }, // list of derived addresses grouped by purpose (Bitcoin-like accounts)
+        history: Array<{
+            total: number,
+            unconfirmed: number,
+            transactions?: Array<AccountTransaction>, // subject of details:txs param
+        }> // account history object
+        utxo?: Array<AccountUtxo>, // account utxos (Bitcoin-like accounts), subject of details:tokens param
+        tokens?: Array<TokenInfo>, // account ERC20 tokens (Ethereum-like accounts), subject of details:tokens param
+        misc?: {
+            // Ethereum-like accounts only
+            nonce: string,
+            erc20Contract?: TokenInfo, // subject of contractFilter param
+            // XRP accounts only
+            sequence?: number,
+            reserve?: string,
+        },
+        page?: {
+            // subject of details:txs param
+            index: number, // current page index
+            size: number,  // current page size
+            total: number, // total pages count
+        },
+        marker?: {
+            // XRP accounts only
+            // subject of details:txs param
+            ledger: number,
+            seq: number,
+        }
+
+    } // 
 }
 ```
+[AccountInfo](../../src/js/types/account.js#L108)
+[AccountAddress](../../src/js/types/account.js#L34)
+[AccountTransaction](../../src/js/types/account.js#L83)
+[AccountUtxo](../../src/js/types/account.js#L49)
+[TokenInfo](../../src/js/types/account.js#L24)
+
 Error
 ```javascript
 {
@@ -98,19 +142,37 @@ Error
 
 ### Migration from older version
 
+v7 and below:
+```javascript
+TrezorConnect.getAccountInfo({
+    path: "m/49'/0'/0'",
+}).then(function (result) {
+    result.id               // removed
+    result.serializedPath   // renamed to "path"
+    result.path             // not changed
+    result.xpub             // renamed to "descriptor"
+    result.address          // renamed to "addresses.unused[0].address"
+    result.addressPath      // renamed to "addresses.unused[0].path"
+    result.addressIndex     // removed
+    result.addressSerializedPath // renamed to "addresses.unused[0].path"
+    result.balance   // returned as string
+    result.confirmed // removed
+});
+```
+
 v4 and below:
 ```javascript
 TrezorConnect.getAccountInfo("m/49'/0'/0'", function(result) {
-    result.id               // not changed
-    result.serializedPath   // not changed
+    result.id               // removed
+    result.serializedPath   // renamed to "path"
     result.path             // not changed
-    result.xpub             // not changed
-    result.freshAddress     // renamed to "address"
-    result.freshAddressPath // renamed to "addressPath"
-    result.freshAddressId   // renamed to "addressIndex"
-    result.serializedFreshAddressPath // renamed to "addressSerializedPath"
-    result.balance   // not changed
-    result.confirmed // not changed
+    result.xpub             // renamed to "descriptor"
+    result.freshAddress     // renamed to "addresses.unused[0].address"
+    result.freshAddressPath // renamed to "addresses.unused[0].path"
+    result.freshAddressId   // removed
+    result.serializedFreshAddressPath // renamed to "addresses.unused[0].path"
+    result.balance   // returned as string
+    result.confirmed // removed
 
 });
 ```
