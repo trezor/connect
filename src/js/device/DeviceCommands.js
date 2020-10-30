@@ -682,7 +682,13 @@ export default class DeviceCommands {
 
     async _filterCommonTypes(res: DefaultMessageResponse): Promise<DefaultMessageResponse> {
         if (res.type === 'Failure') {
-            const { code, message } = res.message;
+            const { code } = res.message;
+            let { message } = res.message;
+            // Model One does not send any message in firmware update
+            // https://github.com/trezor/trezor-firmware/issues/1334
+            if (code === 'Failure_FirmwareError' && !message) {
+                message = 'Firmware install failed';
+            }
             // pass code and message from firmware error
             return Promise.reject(new ERRORS.TrezorError(code, message));
         }
