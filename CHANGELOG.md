@@ -1,3 +1,8 @@
+# 8.1.17
+
+### Fixed
+- workaround for bootloader T1 error message.
+
 # 8.1.16
 
 ### Added
