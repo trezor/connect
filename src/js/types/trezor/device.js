@@ -84,6 +84,7 @@ export type Features = {
     session_id?: string;
     passphrase_always_on_device?: boolean;
     capabilities?: string[];
+    backup_type?: 'Bip39' | 'Slip39_Basic' | 'Slip39_Advanced' | null;
 }
 
 export type KnownDevice = {|
