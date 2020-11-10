@@ -687,7 +687,7 @@ export default class DeviceCommands {
             // Model One does not send any message in firmware update
             // https://github.com/trezor/trezor-firmware/issues/1334
             if (code === 'Failure_FirmwareError' && !message) {
-                message = 'Firmware install failed';
+                message = 'Firmware installation failed';
             }
             // pass code and message from firmware error
             return Promise.reject(new ERRORS.TrezorError(code, message));
