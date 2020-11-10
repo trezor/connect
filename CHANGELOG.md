@@ -1,3 +1,12 @@
+# 8.1.18
+
+### Added
+- Trezor Bridge 2.0.30 optional update.
+
+### Fixed
+- wallet links are now pointing to `suite.trezor.io`.
+- add missing types to `features.backup_type`.
+
 # 8.1.17
 
 ### Fixed
