@@ -113,7 +113,7 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
             const explanation: HTMLDivElement = document.createElement('div');
             explanation.className = 'explain';
 
-            const htmlUnreadable: string = 'Please install <a href="https://wallet.trezor.io" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">Bridge</a> to use Trezor device.';
+            const htmlUnreadable: string = 'Please install <a href="https://suite.trezor.io/web/bridge/" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">Bridge</a> to use Trezor device.';
             const htmlUnacquired: string = 'Click to activate. This device is used by another application.';
 
             if (device.type === 'unreadable') {

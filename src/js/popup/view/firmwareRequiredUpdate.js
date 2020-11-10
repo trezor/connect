@@ -10,7 +10,5 @@ export const firmwareRequiredUpdate = (device: $PropertyType<UnexpectedDeviceMod
     const { release } = device.firmwareRelease;
 
     const button = view.getElementsByClassName('confirm')[0];
-    const url = 'https://wallet.trezor.io/';
-    const version = release.version.join('.');
-    button.setAttribute('href', `${url}?fw=${version}`);
+    button.setAttribute('href', 'https://suite.trezor.io/web/firmware/');
 };
