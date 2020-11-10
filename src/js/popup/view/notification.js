@@ -13,8 +13,6 @@ export const showFirmwareUpdateNotification = (device: $PropertyType<UnexpectedD
     if (!device.features) return;
     if (!device.firmwareRelease) return;
 
-    const { release } = device.firmwareRelease;
-
     const view = views.getElementsByClassName('firmware-update-notification');
     const notification = document.createElement('div');
     notification.className = 'firmware-update-notification notification-item';
