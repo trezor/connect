@@ -85,7 +85,6 @@ export default class FirmwareUpdate extends AbstractMethod {
                     version: this.params.version,
                     btcOnly: this.params.btcOnly,
                     baseUrl: this.params.baseUrl,
-                    baseUrlBeta: 'https://beta-wallet.trezor.io',
                 });
                 binary = firmware.binary;
             }
