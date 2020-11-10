@@ -24,9 +24,7 @@ export const showFirmwareUpdateNotification = (device: $PropertyType<UnexpectedD
     }
 
     const button = notification.getElementsByClassName('notification-button')[0];
-    const url = 'https://wallet.trezor.io/';
-    const version = release.version.join('.');
-    button.setAttribute('href', `${url}?fw=${version}`);
+    button.setAttribute('href', 'https://suite.trezor.io/web/firmware/');
 
     container.appendChild(notification);
 
