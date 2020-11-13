@@ -58,7 +58,7 @@ deploy review:
     TESTS_FIRMWARE: 2.3.2
   script:
     - "echo Firmware version: $TESTS_FIRMWARE"
-    - /trezor-user-env/run.sh
+    - /trezor-user-env/run.sh &
     - nix-shell --run "yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --coverage true"
 
 test management:
