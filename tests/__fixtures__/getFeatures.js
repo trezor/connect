@@ -1,4 +1,4 @@
-// firmware should be always set. This tests actually tests the fact that 
+// firmware should be always set. This tests actually tests the fact that
 // we are indeed testing with the firmware version we believe we do.
 const [major, minor, patch] = process.env.TESTS_FIRMWARE.split('.');
 
@@ -12,7 +12,7 @@ export default {
     },
     tests: [
         {
-            description: "get features",
+            description: 'get features',
             params: {},
             result: {
                 device_id: expect.any(String),
@@ -43,31 +43,31 @@ export default {
                 no_backup: expect.any(Boolean),
                 recovery_mode: false,
                 capabilities: [
-                  'Capability_Bitcoin',
-                  'Capability_Bitcoin_like',
-                  'Capability_Binance',
-                  'Capability_Cardano',
-                  'Capability_Crypto',
-                  'Capability_EOS',
-                  'Capability_Ethereum',
-                  'Capability_Lisk',
-                  'Capability_Monero',
-                  'Capability_NEM',
-                  'Capability_Ripple',
-                  'Capability_Stellar',
-                  'Capability_Tezos',
-                  'Capability_U2F',
-                  'Capability_Shamir',
-                  'Capability_ShamirGroups',
-                  'Capability_PassphraseEntry'
+                    'Capability_Bitcoin',
+                    'Capability_Bitcoin_like',
+                    'Capability_Binance',
+                    'Capability_Cardano',
+                    'Capability_Crypto',
+                    'Capability_EOS',
+                    'Capability_Ethereum',
+                    'Capability_Lisk',
+                    'Capability_Monero',
+                    'Capability_NEM',
+                    'Capability_Ripple',
+                    'Capability_Stellar',
+                    'Capability_Tezos',
+                    'Capability_U2F',
+                    'Capability_Shamir',
+                    'Capability_ShamirGroups',
+                    'Capability_PassphraseEntry',
                 ],
                 backup_type: 'Bip39',
                 sd_card_present: true,
                 sd_protection: false,
                 wipe_code_protection: false,
                 session_id: expect.any(String),
-                passphrase_always_on_device: false
-            }
+                passphrase_always_on_device: false,
+            },
         },
     ],
 };

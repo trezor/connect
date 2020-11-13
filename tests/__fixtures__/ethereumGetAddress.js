@@ -20,7 +20,7 @@ export default {
             },
             result: {
                 address: '0x6682Fa7F3eC58581b1e576268b5463B4b5c93839',
-            }
+            },
         },
         {
             description: "m/44'/60'/0'/9'/0",

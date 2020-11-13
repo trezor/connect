@@ -28,7 +28,7 @@ export default {
             },
             result: {
                 address: '3Pm1J6dXuugmkTgM5PdidR9UssSWwdy5Vh',
-                signature: "JD4v/Hc2xKSTiWls06AcRUN2Om/O96LxpanryPu6XG+aWZKPOmEVeeC5Vt1t86bcOBXIFAL58ufP4c5Tyscah4Y=",
+                signature: 'JD4v/Hc2xKSTiWls06AcRUN2Om/O96LxpanryPu6XG+aWZKPOmEVeeC5Vt1t86bcOBXIFAL58ufP4c5Tyscah4Y=',
             },
         },
     ],

@@ -5,7 +5,7 @@ export default {
     },
     tests: [
         {
-            description: "known erc20 token",
+            description: 'known erc20 token',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -25,7 +25,7 @@ export default {
         },
 
         {
-            description: "unknown erc20 token",
+            description: 'unknown erc20 token',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -45,7 +45,7 @@ export default {
         },
 
         {
-            description: "no data",
+            description: 'no data',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -64,7 +64,7 @@ export default {
         },
 
         {
-            description: "no data",
+            description: 'no data',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -83,7 +83,7 @@ export default {
         },
 
         {
-            description: "data",
+            description: 'data',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -103,7 +103,7 @@ export default {
         },
 
         {
-            description: "data",
+            description: 'data',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -123,7 +123,7 @@ export default {
         },
 
         {
-            description: "message",
+            description: 'message',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -141,9 +141,9 @@ export default {
                 v: '0x1c',
             },
         },
-        
+
         {
-            description: "new contract",
+            description: 'new contract',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -154,11 +154,11 @@ export default {
                     value: '0xab54a98ceb1f0ad2',
                 },
             },
-            result: false
+            result: false,
         },
 
         {
-            description: "new contract",
+            description: 'new contract',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -174,11 +174,11 @@ export default {
                 r: '0x05249f09ef32544c07aba09767f4dbe5248472b5c5250e77911a034e0978041a',
                 s: '0x0239c60830534b34db1c4c3d715253f2ed2786a322c6218c424188ccf0f0f464',
                 v: '0x1b',
-            }
+            },
         },
 
         {
-            description: "gas overflow",
+            description: 'gas overflow',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -193,7 +193,7 @@ export default {
         },
 
         {
-            description: "no gas price",
+            description: 'no gas price',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -207,7 +207,7 @@ export default {
         },
 
         {
-            description: "no gas limit",
+            description: 'no gas limit',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -221,7 +221,7 @@ export default {
         },
 
         {
-            description: "no nonce",
+            description: 'no nonce',
             params: {
                 path: "m/44'/60'/0'",
                 transaction: {
@@ -234,17 +234,17 @@ export default {
         },
 
         {
-            description: "no data eip155",
+            description: 'no data eip155',
             params: {
                 path: "m/44'/1'/0'/0/0",
-            transaction: {
-                nonce: '0x0',
-                gasPrice: '0x4a817c800',
-                gasLimit: '0x5208',
-                to: '0x8ea7a3fccc211ed48b763b4164884ddbcf3b0a98',
-                value: '0x16345785d8a0000',
-                chainId: 3,
-            },
+                transaction: {
+                    nonce: '0x0',
+                    gasPrice: '0x4a817c800',
+                    gasLimit: '0x5208',
+                    to: '0x8ea7a3fccc211ed48b763b4164884ddbcf3b0a98',
+                    value: '0x16345785d8a0000',
+                    chainId: 3,
+                },
             },
             result: {
                 r: '0x39aa7798b8debf2db32945d929d25bd9c514e7f7e6a1f1c72bcbf0600f9f2db3',
@@ -254,7 +254,7 @@ export default {
         },
 
         {
-            description: "no data eip155",
+            description: 'no data eip155',
             params: {
                 path: "m/44'/1'/0'/0/0",
                 transaction: {
@@ -274,7 +274,7 @@ export default {
         },
 
         {
-            description: "data eip155",
+            description: 'data eip155',
             params: {
                 path: "m/44'/1'/0'/0/0",
                 transaction: {
@@ -295,7 +295,7 @@ export default {
         },
 
         {
-            description: "data eip155",
+            description: 'data eip155',
             params: {
                 path: "m/44'/1'/0'/0/0",
                 transaction: {
@@ -316,7 +316,7 @@ export default {
         },
 
         {
-            description: "data eip155",
+            description: 'data eip155',
             params: {
                 path: "m/44'/1'/0'/0/0",
                 transaction: {
@@ -337,7 +337,7 @@ export default {
         },
 
         {
-            description: "data eip155",
+            description: 'data eip155',
             params: {
                 path: "m/44'/1'/0'/0/0",
                 transaction: {
@@ -357,8 +357,5 @@ export default {
             },
         },
 
-        
-
-       
     ],
 };

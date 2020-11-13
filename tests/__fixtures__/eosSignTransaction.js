@@ -5,7 +5,7 @@ export default {
     },
     tests: [
         {
-            description: "transfer",
+            description: 'transfer',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -39,7 +39,7 @@ export default {
             },
         },
         {
-            description: "delegate",
+            description: 'delegate',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -74,7 +74,7 @@ export default {
             },
         },
         {
-            description: "undelegate",
+            description: 'undelegate',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -108,7 +108,7 @@ export default {
             },
         },
         {
-            description: "buyRam",
+            description: 'buyRam',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -141,7 +141,7 @@ export default {
             },
         },
         {
-            description: "buyRamBytes",
+            description: 'buyRamBytes',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -174,7 +174,7 @@ export default {
             },
         },
         {
-            description: "sellRam",
+            description: 'sellRam',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -206,7 +206,7 @@ export default {
             },
         },
         {
-            description: "voteProducer",
+            description: 'voteProducer',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -269,7 +269,7 @@ export default {
             },
         },
         {
-            description: "refund",
+            description: 'refund',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -300,7 +300,7 @@ export default {
             },
         },
         {
-            description: "updateAuth",
+            description: 'updateAuth',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -359,7 +359,7 @@ export default {
             },
         },
         {
-            description: "deleteAuth",
+            description: 'deleteAuth',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -391,7 +391,7 @@ export default {
             },
         },
         {
-            description: "linkAuth",
+            description: 'linkAuth',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -425,7 +425,7 @@ export default {
             },
         },
         {
-            description: "unlinkAuth",
+            description: 'unlinkAuth',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -458,7 +458,7 @@ export default {
             },
         },
         {
-            description: "newAccount",
+            description: 'newAccount',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -540,7 +540,7 @@ export default {
             },
         },
         {
-            description: "setContract",
+            description: 'setContract',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {
@@ -578,7 +578,7 @@ export default {
             },
         },
         {
-            description: "unknown",
+            description: 'unknown',
             params: {
                 path: "m/44'/194'/0'/0/0",
                 transaction: {

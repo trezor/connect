@@ -53,7 +53,7 @@ export default {
             },
             result: {
                 address: '14LmW5k4ssUrtbAB4255zdqv3b4w1TuX9e',
-                signature: "IF/3lcKa73U4+LO9suit0NByKtYwoUC2rv1QSlqJXL2GfLsAmBr8UO3QOYIR6NfDBLuO+kYRgbwK+mfqSnIKie0=",
+                signature: 'IF/3lcKa73U4+LO9suit0NByKtYwoUC2rv1QSlqJXL2GfLsAmBr8UO3QOYIR6NfDBLuO+kYRgbwK+mfqSnIKie0=',
             },
         },
     ],

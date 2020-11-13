@@ -20,7 +20,7 @@ export default {
             },
             result: {
                 address: '1874186517773691964L',
-            }
+            },
         },
         {
             description: "m/44'/134'/0'/0'/1'",
@@ -31,6 +31,6 @@ export default {
                 address: '10017405670757635096L',
             },
         },
-       
+
     ],
 };

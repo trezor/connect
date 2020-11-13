@@ -5,7 +5,7 @@ export default {
     },
     tests: [
         {
-            description: "Test message to sign",
+            description: 'Test message to sign',
             params: {
                 path: "m/44'/134'/0'/1'",
                 message: 'Test message to sign',
@@ -16,7 +16,7 @@ export default {
             },
         },
         {
-            description: "Another Test message to sign",
+            description: 'Another Test message to sign',
             params: {
                 path: "m/44'/134'/0'/0'/1'",
                 message: 'Another Test message to sign',
