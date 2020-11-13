@@ -408,8 +408,9 @@ export default class Device extends EventEmitter {
         // translate legacy field `pin_cached` to `unlocked`
         if (feat.pin_protection) {
             feat.unlocked = typeof feat.unlocked === 'boolean' ? feat.unlocked : feat.pin_cached;
+        } else {
+            feat.unlocked = true;
         }
-
         this.features = feat;
         this.featuresNeedsReload = false;
     }
