@@ -1,45 +1,67 @@
-const pubkeys = [];
+const { ADDRESS_N, TX_CACHE } = global.TestUtils;
 
+// fixtures: https://github.com/trezor/trezor-firmware/blob/master/tests/device_tests/test_multisig.py
+
+const PUBKEYS_15 = [];
 for (let i = 0; i < 15; i++) {
-    pubkeys.push(
+    PUBKEYS_15.push(
         {
-            node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-            address_n: [i],
+            // xpub: m/48'/0'/1'/0' of mnemonic_12
+            // node: 'xpub6EGBV7FFmjU75tH7UUD93QQCuwWFSxxECvX4VwL44xEoRKAz4kD3W9fDziRnvdXko63cjwxCpwpYQZgs123PvCMxVqvzYPqKeczq4r2JYfU',
+            node: {
+                child_num: 2147483648,
+                depth: 4,
+                fingerprint: 1663797262,
+                public_key: '035921d91e1489f6aec437ab4087709fc72c8c52b378099f28191171a68ededea8',
+                chain_code: '8728524e3fc0e2d5c05c71426c34ed7bf7fcdc5f24039afb7382f0ac01608e58',
+            },
+            address_n: [0, i],
         },
     );
 }
 
+const PUBKEYS_2_OF_3 = [
+    {
+        // xpub: m/48'/0'/1'/0' of mnemonic_all
+        node: 'xpub6EexEtC6c2rN5QCpzrL2nUNGDfxizCi3kM1C2Mk5a6PfQs4H3F72C642M3XbnzycvvtD4U6vzn1nYPpH8VUmiREc2YuXP3EFgN1uLTrVEj4',
+        address_n: [0, 0],
+    },
+    {
+        // xpub: m/48'/0'/2'/0' of mnemonic_all
+        node: 'xpub6F6Tq7sVLDrhuV3SpvsVKrKofF6Hx7oKxWLFkN6dbepuMhuYueKUnQo7E972GJyeRHqPKu44V1C9zBL6KW47GXjuprhbNrPQahWAFKoL2rN',
+        address_n: [0, 0],
+    },
+    {
+        // xpub: m/48'/0'/3'/0' of mnemonic_all
+        node: 'xpub6Do6zDQqspotwduAsWgq2xZ1tWcwDjW8Q8JBZjnbQRLfJZ7YrDgtvDTq7pgHqk19uJwFPwwWrT31QvEusmT8NMWsCzPVuZSP3JAeJjWFmwC',
+        address_n: [0, 0],
+    },
+];
+
+const SIGNATURES_2_OF_3 = [
+    '30450221009276eea820aa54a24bd9f1a056cb09a15f50c0816570a7c7878bd1c5ee7248540220677d200aec5e2f25bcf4000bdfab3faa9e1746d7f80c4ae4bfa1f5892eb5dcbf',
+    '3045022100c2a9fbfbff1be87036d8a6a22745512b158154f7f3d8f4cad4ba7ed130b37b83022058f5299b4c26222588dcc669399bd88b6f2bc6e04b48276373683853187a4fd6',
+];
+
 export default {
     method: 'signTransaction',
     setup: {
-        mnemonic: 'mnemonic_12',
+        mnemonic: 'mnemonic_all',
     },
     tests: [
         {
-            description: "2 of 3 (1)",
+            description: 'Multisig: 2 of 3 (sign with 1st key)',
             params: {
                 coin: 'Bitcoin',
                 inputs: [
                     {
-                        address_n: [1],
+                        address_n: ADDRESS_N("m/48'/0'/1'/0'/0/0"),
                         prev_hash: 'c6091adf4c0c23982a35899a6e58ae11e703eacd7954f588ed4b9cdefc4dba52',
                         prev_index: 1,
+                        amount: '100000',
                         script_type: 'SPENDMULTISIG',
                         multisig: {
-                            pubkeys: [
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [1],
-                                },
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [2],
-                                },
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [3],
-                                },
-                            ],
+                            pubkeys: PUBKEYS_2_OF_3,
                             signatures: ['', '', ''],
                             m: 2,
                         },
@@ -52,39 +74,26 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: [TX_CACHE('c6091a')],
             },
             result: {
-                signatures: [
-                    '3045022100985cc1ba316d140eb4b2d4028d8cd1c451f87bff8ff679858732e516ad04cd3402207af6edda99972af0baa7702a3b7448517c8242e7bca669f6861771cdd16ee058',
-                ],
-            }
+                signatures: [SIGNATURES_2_OF_3[0]],
+            },
         },
         {
-            description: "2 of 3 (2)",
+            description: 'Multisig: 2 of 3 (sign with 3rd key)',
             params: {
                 coin: 'Bitcoin',
                 inputs: [
                     {
-                        address_n: [3],
+                        address_n: ADDRESS_N("m/48'/0'/3'/0'/0/0"),
                         prev_hash: 'c6091adf4c0c23982a35899a6e58ae11e703eacd7954f588ed4b9cdefc4dba52',
                         prev_index: 1,
+                        amount: '100000',
                         script_type: 'SPENDMULTISIG',
                         multisig: {
-                            pubkeys: [
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [1],
-                                },
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [2],
-                                },
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [3],
-                                },
-                            ],
-                            signatures: ['3045022100985cc1ba316d140eb4b2d4028d8cd1c451f87bff8ff679858732e516ad04cd3402207af6edda99972af0baa7702a3b7448517c8242e7bca669f6861771cdd16ee058', '', ''],
+                            pubkeys: PUBKEYS_2_OF_3,
+                            signatures: [SIGNATURES_2_OF_3[0], '', ''],
                             m: 2,
                         },
                     },
@@ -96,86 +105,43 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: [TX_CACHE('c6091a')],
             },
             result: {
-                signatures: [
-                    '3045022100f5428fe0531b3095675b40d87cab607ee036fac823b22e8dcec35b65aff6e52b022032129b4577ff923d321a1c70db5a6cec5bcc142cb2c51901af8b989cced23e0d',
-                ],
-                serializedTx: '010000000152ba4dfcde9c4bed88f55479cdea03e711ae586e9a89352a98230c4cdf1a09c601000000fdfe0000483045022100985cc1ba316d140eb4b2d4028d8cd1c451f87bff8ff679858732e516ad04cd3402207af6edda99972af0baa7702a3b7448517c8242e7bca669f6861771cdd16ee05801483045022100f5428fe0531b3095675b40d87cab607ee036fac823b22e8dcec35b65aff6e52b022032129b4577ff923d321a1c70db5a6cec5bcc142cb2c51901af8b989cced23e0d014c6952210338d78612e990f2eea0c426b5e48a8db70b9d7ed66282b3b26511e0b1c75515a621038caebd6f753bbbd2bb1f3346a43cd32140648583673a31d62f2dfb56ad0ab9e32103477b9f0f34ae85434ce795f0c5e1e90c9420e5b5fad084d7cce9a487b94a790253aeffffffff01a0860100000000001976a91412e8391ad256dcdc023365978418d658dfecba1c88ac00000000',
-            }
+                signatures: [SIGNATURES_2_OF_3[1]],
+                serializedTx: '010000000152ba4dfcde9c4bed88f55479cdea03e711ae586e9a89352a98230c4cdf1a09c601000000fdfe00004830450221009276eea820aa54a24bd9f1a056cb09a15f50c0816570a7c7878bd1c5ee7248540220677d200aec5e2f25bcf4000bdfab3faa9e1746d7f80c4ae4bfa1f5892eb5dcbf01483045022100c2a9fbfbff1be87036d8a6a22745512b158154f7f3d8f4cad4ba7ed130b37b83022058f5299b4c26222588dcc669399bd88b6f2bc6e04b48276373683853187a4fd6014c69522103dc0ff15b9c85c0d2c87099758bf47d36229c2514aeefcf8dea123f0f93c679762102bfe426e8671601ad46d54d09ee15aa035610d36d411961c87474908d403fbc122102a5d57129c6c96df663ad29492aa18605dad97231e043be8a92f9406073815c5d53aeffffffff01a0860100000000001976a91412e8391ad256dcdc023365978418d658dfecba1c88ac00000000',
+            },
         },
         {
-            description: "2 of 3 (2)",
+            description: 'Multisig: 15 of 15 (sign with 15th key)',
+            mnemonic: 'mnemonic_12',
             params: {
                 coin: 'Bitcoin',
                 inputs: [
                     {
-                        address_n: [3],
-                        prev_hash: 'c6091adf4c0c23982a35899a6e58ae11e703eacd7954f588ed4b9cdefc4dba52',
-                        prev_index: 1,
-                        script_type: 'SPENDMULTISIG',
-                        multisig: {
-                            pubkeys: [
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [1],
-                                },
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [2],
-                                },
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [3],
-                                },
-                            ],
-                            signatures: ['3045022100985cc1ba316d140eb4b2d4028d8cd1c451f87bff8ff679858732e516ad04cd3402207af6edda99972af0baa7702a3b7448517c8242e7bca669f6861771cdd16ee058', '', ''],
-                            m: 2,
-                        },
-                    },
-                ],
-                outputs: [
-                    {
-                        address: '12iyMbUb4R2K3gre4dHSrbu5azG5KaqVss',
-                        amount: '100000',
-                        script_type: 'PAYTOADDRESS',
-                    },
-                ],
-            },
-            result: {
-                signatures: [
-                    '3045022100f5428fe0531b3095675b40d87cab607ee036fac823b22e8dcec35b65aff6e52b022032129b4577ff923d321a1c70db5a6cec5bcc142cb2c51901af8b989cced23e0d',
-                ],
-                serializedTx: '010000000152ba4dfcde9c4bed88f55479cdea03e711ae586e9a89352a98230c4cdf1a09c601000000fdfe0000483045022100985cc1ba316d140eb4b2d4028d8cd1c451f87bff8ff679858732e516ad04cd3402207af6edda99972af0baa7702a3b7448517c8242e7bca669f6861771cdd16ee05801483045022100f5428fe0531b3095675b40d87cab607ee036fac823b22e8dcec35b65aff6e52b022032129b4577ff923d321a1c70db5a6cec5bcc142cb2c51901af8b989cced23e0d014c6952210338d78612e990f2eea0c426b5e48a8db70b9d7ed66282b3b26511e0b1c75515a621038caebd6f753bbbd2bb1f3346a43cd32140648583673a31d62f2dfb56ad0ab9e32103477b9f0f34ae85434ce795f0c5e1e90c9420e5b5fad084d7cce9a487b94a790253aeffffffff01a0860100000000001976a91412e8391ad256dcdc023365978418d658dfecba1c88ac00000000',
-            }
-        },
-        {
-            description: "15 of 15",
-            params: {
-                coin: 'Bitcoin',
-                inputs: [
-                    {
-                        address_n: [14],
+                        address_n: ADDRESS_N("m/48'/0'/1'/0'/0/14"),
                         prev_hash: '6189e3febb5a21cee8b725aa1ef04ffce7e609448446d3a8d6f483c634ef5315',
                         prev_index: 1,
+                        amount: '20000',
                         script_type: 'SPENDMULTISIG',
+                        sequence: 4294967295,
                         multisig: {
-                            pubkeys,
+                            pubkeys: PUBKEYS_15,
                             signatures: [
-                                '304502210098e23085ad7282de988bf98afa1e9add9c9830009132f8902a9fa4624d5dc98b0220733216e70ab67791aa64be5c83d2050cb4ed9ff7eda2a1acc35da024d2ab2a67',
-                                '304402201f8c11fb6e90fd616e484986e9451929797eba039882a9abcc203210948060b9022044da031530de7d9747d3c5a8e7cec04b04b7af495c9120b854ce7362af7fa05a',
-                                '3045022100ea67c70186acef019bdf1551881bf38e6f88186501b64d3a756a2ce18e4ba18002201c35110325653e21e448b60053a4b5dda46b61096faf701a1faca61fcde91f00',
-                                '30440220315598992f156d2f9d7b4275395fa067aa61ea95829fa17730885c86df4de70d02203eda9ade1656e2198c668603b17e197acb0969ed183ab0841303ea2612056189',
-                                '3044022060fdd6621edde9b8cf6776bc4eef26ace9b57514d725b7214ba11d333520a30e022044c30744f94484aec0f896233c5613a3256878ec0379f566226906b6d1b60614',
-                                '3045022100b1d907e3574f60f7834c7e9f2e367998ce0461dad7d742d84ef8917d713f41f902203b3ac54f7bb2f7fb8685f582d2a94f7213a37cb508acffe29090cc06ae01588b',
-                                '3045022100e3bf90ff3ad6395e42f46002f253f94ca0e8ffaa0620f2ceb4fa21493abdca4d02201d4c28b10b740bb2dc4b3695b4205c18f8c0dad2bb69540eb8a36576463cd528',
-                                '304402202cfaf9fab7dc1c9f0c3c23bd46bd6d5cea0664d914139fc9add80766ce998808022012db2802c07853e4cbe147afdf0b47e60bdcbcd31f9df19e04c177ed9aa66c6d',
-                                '304402207cbc2d83f351eee5ee91df26bb0c7e1cb07fe328cbbcdb0bb9656d37922c497302201b3435d4c71ffd1b34d45892f2a487bd79c8c7f57cc04373287642bb9610cb84',
-                                '304402202dc3eab30ccb06553703e794212f43ee9a659f5e787a8374e9ea0bf6de0def7402201a70e970c21a807783313ed102bf4f0a3406ac7c84f94bc8194c5e209464d723',
-                                '304402206b04530c190c46a879d7771a6ad53acd33547e0d7fd320d5ad0b5b1fdeb5d4c202207b812be81c3419daadc942cca0c55aa32c7759fa7566c6dc35f030ca87a1c5be',
-                                '3045022100ce523dddd6eef73d5ae7c44c870466e1ac5a7a77d43475e8def024af68977a1e022028be0276435bfa2ea887d6cf89fa829f96c1c7a55edc57bb3fd667d523fd3bf6',
-                                '3044022019410b20ebcd8eb3ee7ec1eff6bf0f9cbfaea82116811c61f3cf24af7e4434b1022009e5823f3349f695be09ae40754185300d8442a22715ddb5ffa17c4213140e72',
-                                '3045022100964ef26a9074c3cdafffcfbe4bd445933f8c842ba11fd887922adcf7fabe0c82022023055d94c75ab223c767fbaa825c917e9beecbc7d5758cccf20d886c63d4b72a',
+                                '3045022100b5f6fbf3d6ebef172213e886c80ccba9b450c58bc18bed842ab2fc150c6e274302207c3920d6e8b9466b67bad2729cc7a52485f0a26eba8ea9b6ecb8d3fac0a4b16d',
+                                '3044022030cfc01c8e5e8dcbf96deebac220cfc218fd9ae4c326a7d8e795536cd64cc58f02202dada83d34cf51ddf99dfa4f01a2983418e4d9e3137f88b4198472d0e284096c',
+                                '3045022100e8634f280df5c096299709016b37f1a5dda05d6680f9eeae1e47dda7f5651995022079214053a62a911e1e3d28b934f9a32ce4a8d5ef576432f40584a1ce31274fce',
+                                '304402200345879de1d1ebefa16e62cd7a31168477959c251b4f61a77ed923007ec77b3402207f6e3f8b505adad3b32d83b366048bef50bb4f052b6499b0bb996094e1c4e8eb',
+                                '30440220020e1eb47d7f428a1cd35e04782c27b47913944ce6174c46ba4531cf0842bbd2022030a8198855b96531c9385c9e4dd84a956dd1ef211964c1c1982f3eb40a91d88c',
+                                '3044022005f8d405ee50653c7508251ad66147c71df528db7124310ffaefa57ff9839e760220383a7a6f86c8abcdc94724368e77c7370716fe62b400ff7d42a7d140f636a558',
+                                '30450221009b2d68a358e485c37d9117ec598be547f83d9885f2c58e7e913e6e9ab6955fa202202848802eb093e68053ddcddc4162f00017e0d2ec1d6130ef8fcdc00f65b4fd2c',
+                                '3045022100fe0b2e73e269cbb9cfd8035cee5be8561644cf204fd2cd190d89925e5669468b02203c85d18c74dff26e9d04ae30d0d6943bc932fab8d52838c84ef60f6d2268593e',
+                                '3045022100ff4a2452a0fec838b354d62960d8b1eb1e9af20c56a818b7772da577ea7367360220499ed36546e23276a4a14563df88677072b1fb4b128bc05449d99f10b9098074',
+                                '304402200e4fcdc587380c7b688fd093b5a551109056ee2f36df8e63f20648c81c172a60022079cdc72f7a318e5ff8b487914796cb7343825bdbf758808d119048a75062005f',
+                                '304402203eab30094e923667cb7f18abdbd4bf0c73251cfd7dd4ad5dd37dead23ca41332022046cfacda6f6ee31e612e7444a561e699eb8b414edc205ac9513e3b53b4594774',
+                                '30440220074e3127eff6b87aff74cf1065f842a8f8d51b7c7919479a91c58c1034b1e6b702206a31a48386645c7730abf8b850dd7985952c13e1791040ecd0533961e14021e3',
+                                '3045022100cf9b538587593f51778eb50e11fe578bc13cddbb4ee03452662d415cc2c3ec0002207bd1cc14ca074fb623822740c6f451fc60b62777563e8374808e7c3f4c4d6c6b',
+                                '3044022053d61515f5a29353e4fcbbab360852aeb609a22460c248e9e3dfeb0759269d1f0220698a1fa758eeb55954d64558c8a1f67ee7591261ad95f6c6dd160ef80891454f',
                                 '',
                             ],
                             m: 15,
@@ -189,36 +155,27 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: [TX_CACHE('6189e3')],
             },
             result: {
-                serializedTx: '01000000011553ef34c683f4d6a8d346844409e6e7fc4ff01eaa25b7e8ce215abbfee3896101000000fd43060048304502210098e23085ad7282de988bf98afa1e9add9c9830009132f8902a9fa4624d5dc98b0220733216e70ab67791aa64be5c83d2050cb4ed9ff7eda2a1acc35da024d2ab2a670147304402201f8c11fb6e90fd616e484986e9451929797eba039882a9abcc203210948060b9022044da031530de7d9747d3c5a8e7cec04b04b7af495c9120b854ce7362af7fa05a01483045022100ea67c70186acef019bdf1551881bf38e6f88186501b64d3a756a2ce18e4ba18002201c35110325653e21e448b60053a4b5dda46b61096faf701a1faca61fcde91f00014730440220315598992f156d2f9d7b4275395fa067aa61ea95829fa17730885c86df4de70d02203eda9ade1656e2198c668603b17e197acb0969ed183ab0841303ea261205618901473044022060fdd6621edde9b8cf6776bc4eef26ace9b57514d725b7214ba11d333520a30e022044c30744f94484aec0f896233c5613a3256878ec0379f566226906b6d1b6061401483045022100b1d907e3574f60f7834c7e9f2e367998ce0461dad7d742d84ef8917d713f41f902203b3ac54f7bb2f7fb8685f582d2a94f7213a37cb508acffe29090cc06ae01588b01483045022100e3bf90ff3ad6395e42f46002f253f94ca0e8ffaa0620f2ceb4fa21493abdca4d02201d4c28b10b740bb2dc4b3695b4205c18f8c0dad2bb69540eb8a36576463cd5280147304402202cfaf9fab7dc1c9f0c3c23bd46bd6d5cea0664d914139fc9add80766ce998808022012db2802c07853e4cbe147afdf0b47e60bdcbcd31f9df19e04c177ed9aa66c6d0147304402207cbc2d83f351eee5ee91df26bb0c7e1cb07fe328cbbcdb0bb9656d37922c497302201b3435d4c71ffd1b34d45892f2a487bd79c8c7f57cc04373287642bb9610cb840147304402202dc3eab30ccb06553703e794212f43ee9a659f5e787a8374e9ea0bf6de0def7402201a70e970c21a807783313ed102bf4f0a3406ac7c84f94bc8194c5e209464d7230147304402206b04530c190c46a879d7771a6ad53acd33547e0d7fd320d5ad0b5b1fdeb5d4c202207b812be81c3419daadc942cca0c55aa32c7759fa7566c6dc35f030ca87a1c5be01483045022100ce523dddd6eef73d5ae7c44c870466e1ac5a7a77d43475e8def024af68977a1e022028be0276435bfa2ea887d6cf89fa829f96c1c7a55edc57bb3fd667d523fd3bf601473044022019410b20ebcd8eb3ee7ec1eff6bf0f9cbfaea82116811c61f3cf24af7e4434b1022009e5823f3349f695be09ae40754185300d8442a22715ddb5ffa17c4213140e7201483045022100964ef26a9074c3cdafffcfbe4bd445933f8c842ba11fd887922adcf7fabe0c82022023055d94c75ab223c767fbaa825c917e9beecbc7d5758cccf20d886c63d4b72a0147304402207aa3a98197697d258a8baae681f0b4c0ee682982f4205534e6c95a37dabaddd60220517a7ed5c03da2f242e17ccfdae0d81d6f454d7f9ea931fc62df6c0eab922186014d01025f21023230848585885f63803a0a8aecdd6538792d5c539215c91698e315bf0253b43d210338d78612e990f2eea0c426b5e48a8db70b9d7ed66282b3b26511e0b1c75515a621038caebd6f753bbbd2bb1f3346a43cd32140648583673a31d62f2dfb56ad0ab9e32103477b9f0f34ae85434ce795f0c5e1e90c9420e5b5fad084d7cce9a487b94a79022103fe91eca10602d7dad4c9dab2b2a0858f71e25a219a6940749ce7a48118480dae210234716c01c2dd03fa7ee302705e2b8fbd1311895d94b1dca15e62eedea9b0968f210341fb2ead334952cf60f4481ba435c4693d0be649be01d2cfe9b02018e483e7bd2102dad8b2bce360a705c16e74a50a36459b4f8f4b78f9cd67def29d54ef6f7c7cf9210222dbe3f5f197a34a1d50e2cbe2a1085cac2d605c9e176f9a240e0fd0c669330d2103fb41afab56c9cdb013fda63d777d4938ddc3cb2ad939712da688e3ed333f95982102435f177646bdc717cb3211bf46656ca7e8d642726144778c9ce816b8b8c36ccf2102158d8e20095364031d923c7e9f7f08a14b1be1ddee21fe1a5431168e31345e5521026259794892428ca0818c8fb61d2d459ddfe20e57f50803c7295e6f4e2f5586652102815f910a8689151db627e6e262e0a2075ad5ec2993a6bc1b876a9d420923d681210318f54647f645ff01bd49fedc0219343a6a22d3ea3180a3c3d3097e4b888a8db45faeffffffff0110270000000000001976a9144a087d89f8ad16ca029c675b037c02fd1c5f9aec88ac00000000',
-            }
+                signatures: ['3045022100f2521a4512a2513513a9618a03b8d8ad55bf859474ecfb74d7a1e534d25114c2022027489406604b2c9fc6b5ad1782048b7ddbd8dcf26b8707a9a13b4a493c7b5fe1'],
+                serializedTx: '01000000011553ef34c683f4d6a8d346844409e6e7fc4ff01eaa25b7e8ce215abbfee3896101000000fd440600483045022100b5f6fbf3d6ebef172213e886c80ccba9b450c58bc18bed842ab2fc150c6e274302207c3920d6e8b9466b67bad2729cc7a52485f0a26eba8ea9b6ecb8d3fac0a4b16d01473044022030cfc01c8e5e8dcbf96deebac220cfc218fd9ae4c326a7d8e795536cd64cc58f02202dada83d34cf51ddf99dfa4f01a2983418e4d9e3137f88b4198472d0e284096c01483045022100e8634f280df5c096299709016b37f1a5dda05d6680f9eeae1e47dda7f5651995022079214053a62a911e1e3d28b934f9a32ce4a8d5ef576432f40584a1ce31274fce0147304402200345879de1d1ebefa16e62cd7a31168477959c251b4f61a77ed923007ec77b3402207f6e3f8b505adad3b32d83b366048bef50bb4f052b6499b0bb996094e1c4e8eb014730440220020e1eb47d7f428a1cd35e04782c27b47913944ce6174c46ba4531cf0842bbd2022030a8198855b96531c9385c9e4dd84a956dd1ef211964c1c1982f3eb40a91d88c01473044022005f8d405ee50653c7508251ad66147c71df528db7124310ffaefa57ff9839e760220383a7a6f86c8abcdc94724368e77c7370716fe62b400ff7d42a7d140f636a558014830450221009b2d68a358e485c37d9117ec598be547f83d9885f2c58e7e913e6e9ab6955fa202202848802eb093e68053ddcddc4162f00017e0d2ec1d6130ef8fcdc00f65b4fd2c01483045022100fe0b2e73e269cbb9cfd8035cee5be8561644cf204fd2cd190d89925e5669468b02203c85d18c74dff26e9d04ae30d0d6943bc932fab8d52838c84ef60f6d2268593e01483045022100ff4a2452a0fec838b354d62960d8b1eb1e9af20c56a818b7772da577ea7367360220499ed36546e23276a4a14563df88677072b1fb4b128bc05449d99f10b90980740147304402200e4fcdc587380c7b688fd093b5a551109056ee2f36df8e63f20648c81c172a60022079cdc72f7a318e5ff8b487914796cb7343825bdbf758808d119048a75062005f0147304402203eab30094e923667cb7f18abdbd4bf0c73251cfd7dd4ad5dd37dead23ca41332022046cfacda6f6ee31e612e7444a561e699eb8b414edc205ac9513e3b53b4594774014730440220074e3127eff6b87aff74cf1065f842a8f8d51b7c7919479a91c58c1034b1e6b702206a31a48386645c7730abf8b850dd7985952c13e1791040ecd0533961e14021e301483045022100cf9b538587593f51778eb50e11fe578bc13cddbb4ee03452662d415cc2c3ec0002207bd1cc14ca074fb623822740c6f451fc60b62777563e8374808e7c3f4c4d6c6b01473044022053d61515f5a29353e4fcbbab360852aeb609a22460c248e9e3dfeb0759269d1f0220698a1fa758eeb55954d64558c8a1f67ee7591261ad95f6c6dd160ef80891454f01483045022100f2521a4512a2513513a9618a03b8d8ad55bf859474ecfb74d7a1e534d25114c2022027489406604b2c9fc6b5ad1782048b7ddbd8dcf26b8707a9a13b4a493c7b5fe1014d01025f210281141623c07e77bf20e3335181e3c385e378713bee2071039af74f21e7e1d7a82103069b6d042359181b50c15f38b1029ce0947a5d8b256504d2fb9a91db7890c70a210391e26c2b423e687a7484205b71377285f0eb9366044603ebcfddc2a31abcca7221038103ccf6973890d90440e56ffaaba529be41d39d4a80a2b7228d311aeb0527282102b1a42ea1236877f9c212a91465ddbc60af3e6510c0bc5722cbc7872532aa5dfe21033854e6ea5e4926c2f979c9c939464b6603869ff8afe3f4ee8f190415df0562f4210349b6991fe34eedc0f63d93647259de2573b29342a0b9d8a201afc6d2be4c4bee21031089743da512d3e8b55871e9d0bd8ae18a9808ea98411d43b3b253469b14396021029d592d12f59e3276d7e714b4c6178545ff4427b709e76bd24cd06da8fe2a61292103e8281eee4489f1f6906b325c01317db2889e45fc56b4505fbba087af67d9521b2103e61921f04c232124d2181c8553c6c90b17419d8ed6d869fc2a7c5035caf9f01c21031a8b3ae83fea500e2704bd1c5d79eaec5fb0f3dffd7b9d69808a0c79d8f3a9c721033f1f50153130d91289c23ffe26fbda95711e40cd786a6eebc887e155594c79e42102660cd2cbb150386ff51ed786ca702b48c2d819c2682011f88eda9a1f03f311e621036061119a6c8a7585da55aaa14ec5bf8bbbb5bf8db33bd3ae14de926d7fc502ee5faeffffffff0110270000000000001976a9144a087d89f8ad16ca029c675b037c02fd1c5f9aec88ac00000000',
+            },
         },
         {
-            description: "missing pubkey",
+            description: 'Multisig: missing pubkey (different seed)',
+            mnemonic: 'mnemonic_12',
             params: {
                 coin: 'Bitcoin',
                 inputs: [
                     {
-                        address_n: [10],
+                        address_n: ADDRESS_N("m/48'/0'/1'/0'/0/0"),
                         prev_hash: 'c6091adf4c0c23982a35899a6e58ae11e703eacd7954f588ed4b9cdefc4dba52',
                         prev_index: 1,
+                        amount: '100000',
                         script_type: 'SPENDMULTISIG',
                         multisig: {
-                            pubkeys: [
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [1],
-                                },
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [2],
-                                },
-                                {
-                                    node: 'xpub661MyMwAqRbcF1zGijBb2K6x9YiJPh58xpcCeLvTxMX6spkY3PcpJ4ABcCyWfskq5DDxM3e6Ez5ePCqG5bnPUXR4wL8TZWyoDaUdiWW7bKy',
-                                    address_n: [3],
-                                },
-                            ],
+                            pubkeys: PUBKEYS_2_OF_3,
                             signatures: ['', '', ''],
                             m: 2,
                         },
@@ -231,6 +188,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: [TX_CACHE('c6091a')],
             },
             result: false,
         },

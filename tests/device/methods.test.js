@@ -48,6 +48,17 @@ fixtures.forEach((testCase, i) => {
                     done('Controller not found');
                     return;
                 }
+
+                if (t.mnemonic && t.mnemonic !== currentMnemonic) {
+                    // single test requires different seed, switch it
+                    await setup(controller, { mnemonic: t.mnemonic });
+                    currentMnemonic = t.mnemonic;
+                } else if (!t.mnemonic && testCase.setup.mnemonic !== currentMnemonic) {
+                    // restore testCase.setup
+                    await setup(controller, testCase.setup);
+                    currentMnemonic = testCase.setup.mnemonic;
+                }
+
                 controller.options.name = t.description;
                 const result = await TrezorConnect[testCase.method](t.params);
                 const expected = t.result ? { success: true, payload: t.result } : { success: false };
