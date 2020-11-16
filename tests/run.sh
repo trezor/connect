@@ -19,8 +19,8 @@ trap cleanup EXIT
 
 run() {
   # fetch latest image, can be commented out if you do not need latest master
-  #  echo "Pulling latest trezor-user-env"
-  #  docker pull registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env
+  echo "Pulling latest trezor-user-env"
+  docker pull registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env
 
   if [ $GUI = false ]; then
     id=$(
@@ -76,7 +76,7 @@ show_usage() {
   echo "  -c       Collect coverage"
 }
 
-FIRMWARE='2.3.2'
+FIRMWARE='2.3.4'
 INCLUDED_METHODS=''
 EXCLUDED_METHODS=''
 GUI=false
