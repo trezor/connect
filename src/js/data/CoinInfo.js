@@ -107,6 +107,9 @@ const detectBtcVersion = (data) => {
     if (data.subversion.startsWith('/Bitcoin ABC')) {
         return 'bch';
     }
+    if (data.subversion.startsWith('/Bitcoin Cash')) {
+        return 'bch';
+    }
     if (data.subversion.startsWith('/Bitcoin Gold')) {
         return 'btg';
     }
