@@ -47,5 +47,7 @@ export type RecoveryDevice = {
     type?: 0 | 1;
     dry_run?: boolean;
     word_count?: 12 | 18 | 24;
-    // there are more of them but dont have a valid usecase now
+    u2f_counter?: number;
+    enforce_wordlist?: boolean;
+    language?: string;
 }
