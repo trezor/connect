@@ -48,18 +48,16 @@ run() {
         "/trezor-user-env/run.sh"
     )
 
-    # TODO: try for Mac:
-    # -e DISPLAY=docker.for.mac.host.internal:0 instead of DISPLAY=:0
-    # TODO: I don't think these options are needed:
-    # -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
-    # -e QT_X11_NO_MITSHM=1 \
-
     echo "Running docker container with a GUI support with ID:"
     echo "$id"
   fi
 
   echo "Waiting for the trezor-user-env to load up"
-  sleep 10
+  while ! netstat -tna | grep 'LISTEN\>' | grep -q ':9001\>'; do
+    echo "Waiting"
+    sleep 1
+  done
+  echo "trezor-user-env loaded up"
 
   echo "Running yarn"
   yarn jest --config jest.config.integration.js --verbose --detectOpenHandles --forceExit --coverage $COVERAGE
