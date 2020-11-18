@@ -15,7 +15,7 @@ export default {
             },
         },
         {
-            description: "[2147483692, 2147483842, 2147483648, 0, 1]",
+            description: '[2147483692, 2147483842, 2147483648, 0, 1]',
             params: {
                 path: [2147483692, 2147483842, 2147483648, 0, 1],
             },
@@ -31,10 +31,10 @@ export default {
             },
         },
         {
-            description: "[-1]",
+            description: '[-1]',
             params: {
                 path: [-1],
-            }
+            },
         },
         {
             description: "m/44'/194'/0'/0/0'",

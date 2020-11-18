@@ -5,7 +5,7 @@ export default {
     },
     tests: [
         {
-            description: 'fee sapling',
+            description: 'Komodo: fee sapling',
             params: {
                 coin: 'kmd',
                 version: 4,
@@ -57,7 +57,7 @@ export default {
             },
         },
         {
-            description: 'rewards claim',
+            description: 'Komodo: rewards claim',
             params: {
                 coin: 'kmd',
                 version: 4,

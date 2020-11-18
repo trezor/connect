@@ -24,7 +24,7 @@ export default {
             result: {
                 address: '0xAE2B111b634f8FB3942B13b98c824B0F1060cacB',
                 signature: '076d6dcf1fdcac60748919a781dc39d0ee7beece5fd5604be2f061e32ec6d91817562df343171ab38214fa3e2de46240ab330da34011856e2461378940243ec91c',
-           },
+            },
         },
     ],
 };

@@ -7,7 +7,7 @@ export default {
         {
         // Note: this transaction is not valid
         // it uses some inputs from coin exchange to test big amounts calculation
-            description: 'big amounts',
+            description: 'Doge: big amounts',
             params: {
                 coin: 'Doge',
                 inputs: [

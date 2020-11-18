@@ -5,7 +5,7 @@ export default {
     },
     tests: [
         {
-            description: "first segwit account",
+            description: 'first segwit account',
             params: {
                 coin: 'Bitcoin',
                 path: "m/49'/0'/0'",
@@ -15,7 +15,7 @@ export default {
             },
         },
         {
-            description: "first legacy account",
+            description: 'first legacy account',
             params: {
                 coin: 'Bitcoin',
                 path: "m/44'/0'/0'",
@@ -25,7 +25,7 @@ export default {
             },
         },
         {
-            description: "empty account",
+            description: 'empty account',
             params: {
                 coin: 'Testnet',
                 path: "m/49'/1'/256'",
@@ -38,7 +38,7 @@ export default {
             },
         },
         {
-            description: "segwit account from descriptor",
+            description: 'segwit account from descriptor',
             params: {
                 coin: 'Bitcoin',
                 descriptor: 'ypub6Y5EDdQK9nQzpNeMtgXxhBB3SoLk2SyR2MFLQYsBkAusAHpaQNxTTwefgnL9G3oFGrRS9VkVvyY1SaApFAzQPZ99wto5etdReeE3XFkkMZt',
@@ -49,7 +49,7 @@ export default {
             },
         },
         {
-            description: "legacy account from descriptor",
+            description: 'legacy account from descriptor',
             params: {
                 coin: 'Bitcoin',
                 descriptor: 'xpub6DExuxjQ16sWy5TF4KkLV65YGqCJ5pyv7Ej7d9yJNAXz7C1M9intqszXfaNZG99KsDJdQ29wUKBTZHZFXUaPbKTZ5Z6f4yowNvAQ8fEJw2G',
@@ -59,7 +59,7 @@ export default {
             },
         },
         {
-            description: "ethereum account",
+            description: 'ethereum account',
             params: {
                 coin: 'eth',
                 path: "m/44'/60'/0'/0/0",
@@ -70,7 +70,7 @@ export default {
             },
         },
         {
-            description: "ethereum account from descriptor",
+            description: 'ethereum account from descriptor',
             params: {
                 coin: 'eth',
                 descriptor: '0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8',
@@ -81,7 +81,7 @@ export default {
             },
         },
         {
-            description: "ripple account",
+            description: 'ripple account',
             params: {
                 coin: 'xrp',
                 path: "m/44'/144'/0'/0/0",
@@ -92,10 +92,10 @@ export default {
             },
         },
         {
-            description: "ripple from descriptor",
+            description: 'ripple from descriptor',
             params: {
                 coin: 'xrp',
-                descriptor: "rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj",
+                descriptor: 'rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj',
             },
             result: {
                 descriptor: 'rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj',
@@ -103,7 +103,7 @@ export default {
             },
         },
         {
-            description: "invalid path",
+            description: 'invalid path',
             params: {
                 coin: 'Bitcoin',
                 path: "m/49'/0'",

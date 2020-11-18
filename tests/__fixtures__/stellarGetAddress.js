@@ -32,7 +32,7 @@ export default {
             result: false,
         },
         {
-            description: "[0]",
+            description: '[0]',
             params: {
                 path: [0],
             },

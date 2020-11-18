@@ -14,7 +14,7 @@ export default {
                     timestamp: 57525937,
                     type: 0,
                     fee: '10000000',
-                }
+                },
             },
             result: {
                 signature: 'b62717d581e5713bca60b758b661e6cfa091addc6caedd57534e06cda805943ee80797b9fb9a1e1b2bd584e292d2a7f832a4d1b3f15f00e1ee1b72de7e195a08',

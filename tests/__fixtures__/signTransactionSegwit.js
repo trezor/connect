@@ -5,7 +5,7 @@ export default {
     },
     tests: [
         {
-            description: "sign p2sh",
+            description: 'P2SH: 1 input, 2 outputs, no change',
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -35,10 +35,10 @@ export default {
                     '304402207e8c682de6cdcdcd8883f012c909398b9853c60687dc708f435c519cc9b2c8ae02207b312b94a0d9bf24dcfc565d541f07e2029ee0ec1e7a6c73f3fc250d33f6df7a',
                 ],
                 serializedTx: '0100000000010137c361fb8f2d9056ba8c98c5611930fcb48cacfdd0fe2e0449d83eea982f91200000000017160014831ad96fe5919bbc843626034b7eeef99fc5df7affffffff02e0aebb00000000001976a91414fdede0ddc3be652a0ce1afbc1b509a55b6b94888ac3df39f060000000017a91458b53ea7f832e8f096e896b8713a8c6df0e892ca870247304402207e8c682de6cdcdcd8883f012c909398b9853c60687dc708f435c519cc9b2c8ae02207b312b94a0d9bf24dcfc565d541f07e2029ee0ec1e7a6c73f3fc250d33f6df7a012102e7232ddd135b988b1e4e19370097426fd66a1e6b00d19c44bb4c8b2557b74de400000000',
-            }
+            },
         },
         {
-            description: "sign p2sh change",
+            description: 'P2SH: 1 input, 2 outputs, 1 change',
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -71,7 +71,7 @@ export default {
             },
         },
         {
-            description: "send multisig (1)",
+            description: 'P2SH: send multisig',
             params: {
                 coin: 'Testnet',
                 inputs: [

@@ -22,7 +22,7 @@ export default {
             },
             result: {
                 address: 'TB3JCHVARQNGDS3UVGAJPTFE22UQFGMCQHSBNBMF',
-            }
+            },
         },
     ],
 };
