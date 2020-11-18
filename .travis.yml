@@ -19,14 +19,7 @@ env:
   - TEST_METHODS=binanceSignTransaction
   - TEST_METHODS=applySettings,applyFlags,getFeatures
 
-script: travis_wait ./tests/run-travis.sh -f 2.3.2 -i ${TEST_METHODS}
-
-# todo: maybe have here a job that takes fw from master and is allowed to fail?
-# jobs:
-#   allow_failures:
-#     - name: "master test"
-#     - env: TEST_FIRMWARE=2.3.2
-#   script: travis_wait ./tests/run.sh -f ${TEST_FIRMWARE} -i signTransaction
+script: travis_wait ./tests/run.sh -f 2.3.4 -i ${TEST_METHODS}
 
 services:
   - docker
