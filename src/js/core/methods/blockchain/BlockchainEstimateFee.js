@@ -78,7 +78,8 @@ export default class BlockchainEstimateFee extends AbstractMethod {
         };
         if (request && request.feeLevels) {
             const fees = new Fees(coinInfo);
-            if (request.feeLevels === 'smart') {
+            // smart fees for DOGE are not relevant since their fee policy changed, see hd-wallet/buildTx: baseFee
+            if (request.feeLevels === 'smart' && coinInfo.shortcut !== 'DOGE') {
                 const backend = await initBlockchain(coinInfo, this.postMessage);
                 await fees.load(backend);
             }
