@@ -142,7 +142,16 @@ export default class TransactionComposer {
         const changeId = addresses.change.findIndex(a => a.transfers < 1);
         if (changeId < 0) return { type: 'error', error: 'CHANGE-ADDRESS-NOT-SET' };
         const changeAddress = addresses.change[changeId].address;
-        const inputAmounts = coinInfo.segwit || coinInfo.forkid !== null || coinInfo.network.consensusBranchId !== null;
+        // const inputAmounts = coinInfo.segwit || coinInfo.forkid !== null || coinInfo.network.consensusBranchId !== null;
+
+        const enhancement = {};
+
+        // DOGE changed fee policy and requires:
+        if (coinInfo.shortcut === 'DOGE') {
+            enhancement.baseFee = 100000000; // 1 DOGE base fee
+            enhancement.floorBaseRate = true; // fee rounded down, not to overprice tx (see hd-wallet)
+            enhancement.dustOutputFee = 100000000; // 1 DOGE for every output lower than dust (dust = 1 DOGE)
+        }
 
         const result = buildTx({
             utxos: this.utxos,
@@ -150,12 +159,13 @@ export default class TransactionComposer {
             height: this.blockHeight,
             feeRate,
             segwit: coinInfo.segwit,
-            inputAmounts,
+            inputAmounts: true, // since 2.3.4 every utxo needs to have "amount" field
             basePath: account.address_n,
             network: coinInfo.network,
             changeId,
             changeAddress,
             dustThreshold: coinInfo.dustLimit,
+            ...enhancement,
         });
         // hd-wallet returns `max = -1` when sendMax is not requested
         // https://github.com/trezor/hd-wallet/blob/master/src/build-tx/coinselect.js#L101
