@@ -96,6 +96,7 @@ export interface BlockchainEstimatedFee {
     minFee: number;
     maxFee: number;
     levels: FeeLevel[];
+    dustLimit?: number;
 }
 
 export interface BlockchainFiatRates {

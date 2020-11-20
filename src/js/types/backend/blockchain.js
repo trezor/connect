@@ -144,6 +144,7 @@ export type BlockchainEstimatedFee = {
     minFee: number;
     maxFee: number;
     levels: FeeLevel[];
+    dustLimit?: number;
 }
 
 export type BlockchainSetCustomBackend = {
