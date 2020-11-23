@@ -57,7 +57,7 @@
         "@babel/plugin-transform-runtime": "7.11.5",
         "@babel/preset-env": "7.11.5",
         "@babel/preset-flow": "7.10.4",
-        "@trezor/blockchain-link": "^1.0.14",
+        "@trezor/blockchain-link": "^1.0.15",
         "@trezor/rollout": "^1.0.4",
         "@trezor/utxo-lib": "^0.1.1",
         "babel-collect-imports": "https://github.com/szymonlesisz/babel-collect-imports",
@@ -99,7 +99,6 @@
         "mini-css-extract-plugin": "0.11.2",
         "node-fetch": "^2.6.1",
         "parse-uri": "^1.0.3",
-        "ripple-lib": "1.8.0",
         "sharedworker-loader": "^2.1.1",
         "style-loader": "1.2.1",
         "terser-webpack-plugin": "4.2.2",
@@ -118,7 +117,7 @@
         "whatwg-fetch": "^3.4.1"
     },
     "extendedDependencies": {
-        "@trezor/blockchain-link": "^1.0.14",
+        "@trezor/blockchain-link": "^1.0.15",
         "@trezor/rollout": "^1.0.4",
         "@trezor/utxo-lib": "^0.1.1",
         "bchaddrjs": "0.4.9",
