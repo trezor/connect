@@ -203,6 +203,8 @@ export type PrecomposeParams = {
     feeLevels: {
         feePerUnit: string;
     }[];
+    baseFee?: number;
+    floorBaseFee?: boolean;
     coin: string;
 }
 
