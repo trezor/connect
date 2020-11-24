@@ -1,4 +1,5 @@
 import { TransactionInput, TransactionOutput } from './trezor/protobuf';
+import { VinVout } from './backend/transactions';
 
 // getAccountInfo params
 export interface GetAccountInfo {
@@ -99,6 +100,13 @@ export interface AccountTransaction {
         gasLimit: number;
         gasUsed?: number;
         gasPrice: string;
+    };
+    details: {
+        vin: VinVout[];
+        vout: VinVout[];
+        size: number;
+        totalInput: string;
+        totalOutput: string;
     };
 }
 
