@@ -1,7 +1,7 @@
 import { BLOCKCHAIN } from '../constants';
 import { CoinInfo } from '../networks/coinInfo';
 import { AccountAddresses, AccountTransaction, FeeLevel } from '../account';
-import { BlockbookTransaction, RippleLibTransaction } from './transactions';
+import { TypedRawTransaction } from './transactions';
 
 export interface BlockchainInfo {
     coin: CoinInfo;
@@ -65,16 +65,7 @@ export interface BlockchainGetTransactions {
     txs: string[];
 }
 
-export type BlockchainTransactions = Array<
-    | {
-        type: 'blockbook';
-        tx: BlockbookTransaction;
-    }
-    | {
-        type: 'ripple';
-        tx: RippleLibTransaction;
-    }
->;
+export type BlockchainTransactions = TypedRawTransaction[];
 
 export interface BlockchainEstimateFee {
     coin: string;

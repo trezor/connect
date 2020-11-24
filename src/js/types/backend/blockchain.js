@@ -2,7 +2,7 @@
 import { BLOCKCHAIN } from '../../constants';
 import type { CoinInfo } from '../networks/coinInfo';
 import type { AccountAddresses, AccountTransaction, FeeLevel } from '../account';
-import type { BlockbookTransaction, RippleLibTransaction } from './transactions';
+import type { TypedRawTransaction } from './transactions';
 import type { CoreMessage } from '../params';
 
 export type BlockchainInfo = {
@@ -116,13 +116,7 @@ export type BlockchainAccountBalanceHistory = {
     rates: BlockchainFiatRates;
 };
 
-export type BlockchainTransactions = Array<{
-    type: 'blockbook';
-    tx: BlockbookTransaction;
-} | {
-    type: 'ripple';
-    tx: RippleLibTransaction;
-}>;
+export type BlockchainTransactions = Array<TypedRawTransaction>;
 
 export type BlockchainEstimateFee = {
     coin: string;

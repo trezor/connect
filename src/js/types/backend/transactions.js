@@ -95,3 +95,13 @@ export type RippleLibTransaction = {
     address: string;
     sequence: number;
 }
+
+export type TypedRawTransaction =
+    | {
+        type: 'blockbook';
+        tx: BlockbookTransaction;
+    }
+    | {
+        type: 'ripple';
+        tx: RippleLibTransaction;
+    };

@@ -1,5 +1,6 @@
 /* @flow */
 import type { TransactionInput, TransactionOutput } from './trezor/protobuf';
+import type { VinVout } from './backend/transactions';
 
 // getAccountInfo params
 export type GetAccountInfo = {
@@ -101,6 +102,13 @@ export type AccountTransaction = {
         gasLimit: number;
         gasUsed?: number;
         gasPrice: string;
+    };
+    details: {
+        vin: VinVout[];
+        vout: VinVout[];
+        size: number;
+        totalInput: string;
+        totalOutput: string;
     };
 }
 

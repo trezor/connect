@@ -7,9 +7,7 @@ import type {
     CoreMessage,
     CoinInfo,
     GetAccountInfo,
-    BlockchainBlock,
     BlockchainSubscribeAccount,
-    BlockchainFiatRates,
     BlockchainGetAccountBalanceHistory,
 } from '../types';
 
@@ -179,7 +177,7 @@ export default class Blockchain {
     async subscribe(accounts?: BlockchainSubscribeAccount[]) {
         // set block listener if it wasn't set before
         if (this.link.listenerCount('block') === 0) {
-            this.link.on('block', (block: BlockchainBlock) => {
+            this.link.on('block', block => {
                 this.postMessage(BlockchainMessage(BLOCKCHAIN.BLOCK, {
                     coin: this.coinInfo,
                     ...block,
@@ -211,12 +209,10 @@ export default class Blockchain {
     async subscribeFiatRates(currency?: string) {
         // set block listener if it wasn't set before
         if (this.link.listenerCount('fiatRates') === 0) {
-            this.link.on('fiatRates', (res: {
-                rates: BlockchainFiatRates;
-            }) => {
+            this.link.on('fiatRates', ({ rates }) => {
                 this.postMessage(BlockchainMessage(BLOCKCHAIN.FIAT_RATES_UPDATE, {
                     coin: this.coinInfo,
-                    rates: res.rates,
+                    rates,
                 }));
             });
         }
