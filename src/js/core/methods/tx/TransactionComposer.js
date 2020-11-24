@@ -20,6 +20,7 @@ type Options = {
     utxo: AccountUtxo[];
     outputs: BuildTxOutputRequest[];
     coinInfo: BitcoinNetworkInfo;
+    baseFee?: number;
 }
 
 export default class TransactionComposer {
@@ -28,6 +29,7 @@ export default class TransactionComposer {
     outputs: BuildTxOutputRequest[];
     coinInfo: BitcoinNetworkInfo;
     blockHeight: number = 0;
+    baseFee: number;
     feeLevels: Fees;
     composed: {[key: string]: BuildTxResult} = {};
 
@@ -36,6 +38,7 @@ export default class TransactionComposer {
         this.outputs = options.outputs;
         this.coinInfo = options.coinInfo;
         this.blockHeight = 0;
+        this.baseFee = options.baseFee || 0;
         this.feeLevels = new Fees(options.coinInfo);
 
         // map to hd-wallet/buildTx format
@@ -136,7 +139,7 @@ export default class TransactionComposer {
     }
 
     compose(feeRate: string) {
-        const { account, coinInfo } = this;
+        const { account, coinInfo, baseFee } = this;
         const { addresses } = account;
         if (!addresses) return { type: 'error', error: 'ADDRESSES-NOT-SET' };
         const changeId = addresses.change.findIndex(a => a.transfers < 1);
@@ -144,7 +147,11 @@ export default class TransactionComposer {
         const changeAddress = addresses.change[changeId].address;
         // const inputAmounts = coinInfo.segwit || coinInfo.forkid !== null || coinInfo.network.consensusBranchId !== null;
 
-        const enhancement = {};
+        const enhancement = {
+            baseFee,
+            floorBaseRate: false,
+            dustOutputFee: 0,
+        };
 
         // DOGE changed fee policy and requires:
         if (coinInfo.shortcut === 'DOGE') {

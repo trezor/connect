@@ -41,6 +41,7 @@ type Params = {
     push: boolean;
     account?: $ElementType<PrecomposeParams, 'account'>;
     feeLevels?: $ElementType<PrecomposeParams, 'feeLevels'>;
+    baseFee?: $ElementType<PrecomposeParams, 'baseFee'>;
 }
 
 export default class ComposeTransaction extends AbstractMethod {
@@ -59,6 +60,7 @@ export default class ComposeTransaction extends AbstractMethod {
             { name: 'push', type: 'boolean' },
             { name: 'account', type: 'object' },
             { name: 'feeLevels', type: 'array' },
+            { name: 'baseFee', type: 'number' },
         ]);
 
         const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
@@ -108,12 +110,13 @@ export default class ComposeTransaction extends AbstractMethod {
             coinInfo,
             account: payload.account,
             feeLevels: payload.feeLevels,
+            baseFee: payload.baseFee,
             push: typeof payload.push === 'boolean' ? payload.push : false,
         };
     }
 
     async precompose(account: $ElementType<PrecomposeParams, 'account'>, feeLevels: $ElementType<PrecomposeParams, 'feeLevels'>): Promise<PrecomposedTransaction[]> {
-        const { coinInfo, outputs } = this.params;
+        const { coinInfo, outputs, baseFee } = this.params;
         const composer = new TransactionComposer({
             account: {
                 type: 'normal',
@@ -125,6 +128,7 @@ export default class ComposeTransaction extends AbstractMethod {
             utxo: account.utxo,
             coinInfo,
             outputs,
+            baseFee,
         });
 
         // This is mandatory, hd-wallet expects current block height

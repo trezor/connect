@@ -201,6 +201,8 @@ export interface PrecomposeParams {
     feeLevels: Array<{
         feePerUnit: string;
     }>;
+    baseFee?: number;
+    floorBaseFee?: boolean;
     coin: string;
 }
 
