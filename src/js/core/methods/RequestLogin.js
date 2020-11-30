@@ -7,7 +7,7 @@ import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 import DataManager from '../../data/DataManager';
 
-import type { ConnectSettings, CoreMessage, UiPromiseResponse } from '../../types';
+import type { ConnectSettings, CoreMessage } from '../../types';
 import type { Identity, SignedIdentity } from '../../types/trezor/protobuf';
 import type { Login } from '../../types/misc';
 
@@ -59,11 +59,12 @@ export default class RequestLogin extends AbstractMethod {
 
     async run(): Promise<Login> {
         if (this.params.asyncChallenge) {
+            // create ui promise
+            const uiPromise = this.createUiPromise(UI.LOGIN_CHALLENGE_RESPONSE, this.device);
             // send request to developer
             this.postMessage(UiMessage(UI.LOGIN_CHALLENGE_REQUEST));
-
             // wait for response from developer
-            const uiResp: UiPromiseResponse = await this.createUiPromise(UI.LOGIN_CHALLENGE_RESPONSE, this.device).promise;
+            const uiResp = await uiPromise.promise;
             const payload: Object = uiResp.payload;
 
             // error handler
