@@ -62,7 +62,7 @@ const initTrezorConnect = async (controller, options) => {
     };
 
     const onUiRequestButton = async (event) => {
-        controller.send({ type: 'emulator-decision' });
+        controller.send({ type: 'emulator-press-yes' });
     };
 
     TrezorConnect.removeAllListeners();
