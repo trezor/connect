@@ -63,8 +63,10 @@ const getSuggestedBridgeInstaller = () => {
         }
         case 'macos':
             return 'mac';
-        case 'windows':
-            return 'win';
+        case 'windows': {
+            const arch = agent.match(/(Win64|WOW64)/) ? '64' : '32';
+            return `win${arch}`;
+        }
         default: break;
     }
 };
