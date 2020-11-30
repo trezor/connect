@@ -670,10 +670,12 @@ const onDeviceButtonHandler = async (device: Device, code: string, method: Abstr
 const onDevicePinHandler = async (device: Device, type: string, callback: (error: any, success: any) => void): Promise<void> => {
     // wait for popup handshake
     await getPopupPromise().promise;
+    // create ui promise
+    const uiPromise = createUiPromise(UI.RECEIVE_PIN, device);
     // request pin view
     postMessage(UiMessage(UI.REQUEST_PIN, { device: device.toMessageObject(), type }));
     // wait for pin
-    const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_PIN, device).promise;
+    const uiResp = await uiPromise.promise;
     const pin: string = uiResp.payload;
     // callback.apply(null, [null, pin]);
     callback(null, pin);
@@ -682,9 +684,11 @@ const onDevicePinHandler = async (device: Device, type: string, callback: (error
 const onDeviceWordHandler = async (device: Device, type: string, callback: (error: any, success: any) => void): Promise<void> => {
     // wait for popup handshake
     await getPopupPromise().promise;
+    // create ui promise
+    const uiPromise = createUiPromise(UI.RECEIVE_WORD, device);
     postMessage(UiMessage(UI.REQUEST_WORD, { device: device.toMessageObject(), type }));
     // wait for word
-    const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_WORD, device).promise;
+    const uiResp = await uiPromise.promise;
     const word: string = uiResp.payload;
 
     callback(null, word);
@@ -700,11 +704,12 @@ const onDeviceWordHandler = async (device: Device, type: string, callback: (erro
 const onDevicePassphraseHandler = async (device: Device, callback: (response: any) => void) => {
     // wait for popup handshake
     await getPopupPromise().promise;
+    // create ui promise
+    const uiPromise = createUiPromise(UI.RECEIVE_PASSPHRASE, device);
     // request passphrase view
     postMessage(UiMessage(UI.REQUEST_PASSPHRASE, { device: device.toMessageObject() }));
     // wait for passphrase
-
-    const uiResp: UiPromiseResponse = await createUiPromise(UI.RECEIVE_PASSPHRASE, device).promise;
+    const uiResp = await uiPromise.promise;
     const passphrase: string = uiResp.payload.value;
     const passphraseOnDevice: boolean = uiResp.payload.passphraseOnDevice;
     const cache: boolean = uiResp.payload.save;

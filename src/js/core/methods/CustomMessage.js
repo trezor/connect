@@ -5,7 +5,7 @@ import { validateParams } from './helpers/paramsValidator';
 import { UI, ERRORS } from '../../constants';
 
 import { UiMessage } from '../../message/builder';
-import type { CoreMessage, UiPromiseResponse } from '../../types';
+import type { CoreMessage } from '../../types';
 
 type Params = {
     customMessages: JSON;
@@ -55,12 +55,13 @@ export default class CustomMessage extends AbstractMethod {
         }
         // call message
         const response = await this.device.getCommands()._commonCall(this.params.message, this.params.params);
-
+        // create ui promise
+        const uiPromise = this.createUiPromise(UI.CUSTOM_MESSAGE_RESPONSE, this.device);
         // send result to developer
         this.postMessage(UiMessage(UI.CUSTOM_MESSAGE_REQUEST, response));
 
         // wait for response from developer
-        const uiResp: UiPromiseResponse = await this.createUiPromise(UI.CUSTOM_MESSAGE_RESPONSE, this.device).promise;
+        const uiResp = await uiPromise.promise;
         const payload = uiResp.payload;
 
         // validate incoming response
