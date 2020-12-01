@@ -149,14 +149,14 @@ export default class TransactionComposer {
 
         const enhancement = {
             baseFee,
-            floorBaseRate: false,
+            floorBaseFee: false,
             dustOutputFee: 0,
         };
 
         // DOGE changed fee policy and requires:
         if (coinInfo.shortcut === 'DOGE') {
-            enhancement.baseFee = 100000000; // 1 DOGE base fee
-            enhancement.floorBaseRate = true; // fee rounded down, not to overprice tx (see hd-wallet)
+            enhancement.floorBaseFee = enhancement.baseFee === 0; // fee rounded down not to overprice tx (see hd-wallet) use only if baseFee is not specified
+            enhancement.baseFee = enhancement.baseFee || 100000000; // default 1 DOGE base fee
             enhancement.dustOutputFee = 100000000; // 1 DOGE for every output lower than dust (dust = 1 DOGE)
         }
 
