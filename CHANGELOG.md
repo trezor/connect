@@ -1,3 +1,15 @@
+# 8.1.19
+
+### Added
+- AccountTransaction.details (via blockchain-link).
+- composeTransaction RBF support (baseFee parameter).
+- `dustLimit` field in `blockchainEstimateFee` response.
+
+### Fixed
+- DOGE fees (via hd-wallet).
+- WebUsb reset method (via trezor-link).
+- ui promise race conditions
+
 # 8.1.18
 
 ### Added
