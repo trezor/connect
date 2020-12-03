@@ -41,7 +41,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
         // validate incoming parameters
         validateParams(payload, [
             { name: 'inputs', type: 'array', obligatory: true },
-            { name: 'outputs', type: 'array', obligatory: true },
+            { name: 'outputs', type: 'array', obligatory: true, allowEmpty: true },
             { name: 'fee', type: 'string', obligatory: true },
             { name: 'ttl', type: 'string', obligatory: true },
             { name: 'certificates', type: 'array', allowEmpty: true },
