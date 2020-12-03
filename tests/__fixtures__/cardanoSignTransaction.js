@@ -352,6 +352,23 @@ export default {
         },
 
         {
+            description: 'signStakeRegistrationNoOutputs',
+            params: {
+                inputs: [SAMPLE_INPUTS['shelley_input']],
+                outputs: [],
+                fee: FEE,
+                ttl: TTL,
+                certificates: [SAMPLE_CERTIFICATES['stake_registration']],
+                protocolMagic: PROTOCOL_MAGICS['mainnet'],
+                networkId: NETWORK_IDS['mainnet'],
+            },
+            result: {
+                hash: '03535791d04fc1b4457fada025f1c1f7778b5c2d7fa580bbac8abd53b85d3255',
+                serializedTx: '83a500818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018002182a030a048182008200581c122a946b9ad3d2ddf029d3a828f0468aece76895f15c9efbd69b4277a100818258205d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1584047e6e902e81bbba5596cfabaa4f9a70f36b367e28ee81181771ccd32d38b19c1d8ae9b0afb2a79057b87f8de7862e8d2317d86246909aaa66e54445d47aa990bf6',
+            },
+        },
+
+        {
             description: 'signStakeRegistrationAndDelegation',
             params: {
                 inputs: [SAMPLE_INPUTS['shelley_input']],
