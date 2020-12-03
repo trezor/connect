@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js';
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-import { validatePath } from '../../utils/pathUtils';
+import * as pathUtils from '../../utils/pathUtils';
 import { resolveAfter } from '../../utils/promiseUtils';
 
 import { UI, ERRORS } from '../../constants';
@@ -117,12 +117,14 @@ export default class ComposeTransaction extends AbstractMethod {
 
     async precompose(account: $ElementType<PrecomposeParams, 'account'>, feeLevels: $ElementType<PrecomposeParams, 'feeLevels'>): Promise<PrecomposedTransaction[]> {
         const { coinInfo, outputs, baseFee } = this.params;
+        const address_n = pathUtils.validatePath(account.path);
+        const segwit = pathUtils.isSegwitPath(address_n) || pathUtils.isBech32Path(address_n);
         const composer = new TransactionComposer({
             account: {
-                type: 'normal',
-                label: 'normal',
-                descriptor: 'normal',
-                address_n: validatePath(account.path),
+                type: segwit ? 'normal' : 'legacy',
+                label: 'Account',
+                descriptor: account.path,
+                address_n,
                 addresses: account.addresses,
             },
             utxo: account.utxo,
