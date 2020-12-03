@@ -165,7 +165,7 @@ export default class TransactionComposer {
             outputs: this.outputs,
             height: this.blockHeight,
             feeRate,
-            segwit: coinInfo.segwit,
+            segwit: coinInfo.segwit && account.type !== 'legacy',
             inputAmounts: true, // since 2.3.4 every utxo needs to have "amount" field
             basePath: account.address_n,
             network: coinInfo.network,
