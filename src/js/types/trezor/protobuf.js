@@ -62,19 +62,6 @@ export type PublicKey = {
     xpub: string;
 };
 
-// combined Bitcoin.PublicKey and Bitcoin.HDNode
-export type HDNodeResponse = {
-    path: Array<number>;
-    serializedPath: string;
-    childNum: number;
-    xpub: string;
-    xpubSegwit?: string;
-    chainCode: string;
-    publicKey: string;
-    fingerprint: number;
-    depth: number;
-};
-
 // Bitcoin.getAddress response
 export type Address = {
     address: string;

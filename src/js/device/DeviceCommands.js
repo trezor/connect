@@ -14,7 +14,7 @@ import Device from './Device';
 
 import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
-import type { CoinInfo, BitcoinNetworkInfo, EthereumNetworkInfo } from '../types';
+import type { CoinInfo, BitcoinNetworkInfo, EthereumNetworkInfo, HDNodeResponse } from '../types';
 import type { Transport } from 'trezor-link';
 import * as trezor from '../types/trezor/protobuf'; // flowtype only
 
@@ -126,7 +126,7 @@ export default class DeviceCommands {
         coinInfo: ?BitcoinNetworkInfo,
         validation?: boolean = true,
         showOnTrezor?: boolean = false,
-    ): Promise<trezor.HDNodeResponse> {
+    ): Promise<HDNodeResponse> {
         if (!this.device.atLeast(['1.7.2', '2.0.10']) || !coinInfo) {
             return await this.getBitcoinHDNode(path, coinInfo);
         }
@@ -159,7 +159,7 @@ export default class DeviceCommands {
             publicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix, network, coinInfo.network);
         }
 
-        const response: trezor.HDNodeResponse = {
+        const response: HDNodeResponse = {
             path,
             serializedPath: getSerializedPath(path),
             childNum: publicKey.node.child_num,
@@ -186,7 +186,7 @@ export default class DeviceCommands {
         path: Array<number>,
         coinInfo?: ?BitcoinNetworkInfo,
         validation?: boolean = true
-    ): Promise<trezor.HDNodeResponse> {
+    ): Promise<HDNodeResponse> {
         let publicKey: trezor.PublicKey;
         if (!validation) {
             publicKey = await this.getPublicKey(path, 'Bitcoin');
@@ -199,7 +199,7 @@ export default class DeviceCommands {
             publicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix);
         }
 
-        const response: trezor.HDNodeResponse = {
+        const response: HDNodeResponse = {
             path,
             serializedPath: getSerializedPath(path),
             childNum: publicKey.node.child_num,
@@ -299,7 +299,7 @@ export default class DeviceCommands {
         return response.message;
     }
 
-    async ethereumGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.HDNodeResponse> {
+    async ethereumGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<HDNodeResponse> {
         if (!this.device.atLeast(['1.8.1', '2.1.0'])) {
             return await this.getHDNode(address_n);
         }

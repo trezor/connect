@@ -118,7 +118,7 @@ export type API = {
      * User is presented with a description of the requested key and asked to
      * confirm the export.
      */
-    getPublicKey: Bundled<Bitcoin.GetPublicKey, Protobuf.HDNodeResponse>;
+    getPublicKey: Bundled<Bitcoin.GetPublicKey, Bitcoin.HDNodeResponse>;
 
     /**
      * Bitcoin and Bitcoin-like
@@ -183,7 +183,7 @@ export type API = {
 
     // Ethereum and Ethereum-like
     ethereumGetAddress: Bundled<Ethereum.EthereumGetAddress, Ethereum.EthereumAddress>;
-    ethereumGetPublicKey: Bundled<Ethereum.EthereumGetPublicKey, Protobuf.HDNodeResponse>;
+    ethereumGetPublicKey: Bundled<Ethereum.EthereumGetPublicKey, Bitcoin.HDNodeResponse>;
     ethereumSignTransaction: Bundled<Ethereum.EthereumSignTransaction, Protobuf.EthereumSignedTx>;
     ethereumSignMessage: Method<Ethereum.EthereumSignMessage, Protobuf.MessageSignature>;
     ethereumVerifyMessage: Method<Ethereum.EthereumVerifyMessage, P.DefaultMessage>;

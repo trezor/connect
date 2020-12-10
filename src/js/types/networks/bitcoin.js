@@ -28,6 +28,19 @@ export type GetPublicKey = {
     crossChain?: boolean;
 };
 
+// combined Bitcoin.PublicKey and Bitcoin.HDNode
+export type HDNodeResponse = {
+    path: number[];
+    serializedPath: string;
+    childNum: number;
+    xpub: string;
+    xpubSegwit?: string;
+    chainCode: string;
+    publicKey: string;
+    fingerprint: number;
+    depth: number;
+};
+
 // signTransaction params
 export type SignTransaction = {
     inputs: TransactionInput[];
