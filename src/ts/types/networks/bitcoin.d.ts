@@ -27,6 +27,19 @@ export interface GetPublicKey {
     crossChain?: boolean;
 }
 
+// combined Bitcoin.PublicKey and Bitcoin.HDNode
+export interface HDNodeResponse {
+    path: number[];
+    serializedPath: string;
+    childNum: number;
+    xpub: string;
+    xpubSegwit?: string;
+    chainCode: string;
+    publicKey: string;
+    fingerprint: number;
+    depth: number;
+}
+
 // signTransaction params
 export interface SignTransaction {
     inputs: TransactionInput[];

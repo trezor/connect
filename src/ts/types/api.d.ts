@@ -121,10 +121,10 @@ export namespace TrezorConnect {
      * User is presented with a description of the requested key and asked to
      * confirm the export.
      */
-    function getPublicKey(params: P.CommonParams & Bitcoin.GetPublicKey): P.Response<Protobuf.HDNodeResponse>;
+    function getPublicKey(params: P.CommonParams & Bitcoin.GetPublicKey): P.Response<Bitcoin.HDNodeResponse>;
     function getPublicKey(
         params: P.CommonParams & P.Bundle<Bitcoin.GetPublicKey>,
-    ): P.BundledResponse<Protobuf.HDNodeResponse>;
+    ): P.BundledResponse<Bitcoin.HDNodeResponse>;
 
     /**
      * Bitcoin and Bitcoin-like
@@ -221,10 +221,10 @@ export namespace TrezorConnect {
     ): P.BundledResponse<Ethereum.EthereumAddress>;
     function ethereumGetPublicKey(
         params: P.CommonParams & Ethereum.EthereumGetPublicKey,
-    ): P.Response<Protobuf.HDNodeResponse>;
+    ): P.Response<Bitcoin.HDNodeResponse>;
     function ethereumGetPublicKey(
         params: P.CommonParams & P.Bundle<Ethereum.EthereumGetPublicKey>,
-    ): P.BundledResponse<Protobuf.HDNodeResponse>;
+    ): P.BundledResponse<Bitcoin.HDNodeResponse>;
     function ethereumSignTransaction(
         params: P.CommonParams & Ethereum.EthereumSignTransaction,
     ): P.Response<Protobuf.EthereumSignedTx>;

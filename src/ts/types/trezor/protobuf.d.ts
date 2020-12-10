@@ -62,19 +62,6 @@ export interface PublicKey {
     xpub: string;
 }
 
-// combined Bitcoin.PublicKey and Bitcoin.HDNode
-export interface HDNodeResponse {
-    path: number[];
-    serializedPath: string;
-    childNum: number;
-    xpub: string;
-    xpubSegwit?: string;
-    chainCode: string;
-    publicKey: string;
-    fingerprint: number;
-    depth: number;
-}
-
 // Bitcoin.getAddress response
 export interface Address {
     address: string;

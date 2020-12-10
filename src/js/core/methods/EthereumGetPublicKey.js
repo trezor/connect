@@ -9,8 +9,7 @@ import { getEthereumNetwork, getUniqueNetworks } from '../../data/CoinInfo';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { CoreMessage, UiPromiseResponse, EthereumNetworkInfo } from '../../types';
-import type { HDNodeResponse } from '../../types/trezor/protobuf';
+import type { CoreMessage, UiPromiseResponse, EthereumNetworkInfo, HDNodeResponse } from '../../types';
 
 type Batch = {
     path: Array<number>;

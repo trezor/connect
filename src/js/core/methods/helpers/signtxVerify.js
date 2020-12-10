@@ -10,12 +10,11 @@ import { ERRORS } from '../../../constants';
 import { getAddressScriptType, getAddressHash } from '../../../utils/addressUtils';
 import { getOutputScriptType } from '../../../utils/pathUtils';
 
-import type { BitcoinNetworkInfo } from '../../../types';
+import type { BitcoinNetworkInfo, HDNodeResponse } from '../../../types';
 
 import type {
     TransactionInput,
     TransactionOutput,
-    HDNodeResponse,
 } from '../../../types/trezor/protobuf';
 
 type GetHDNode = (path: Array<number>, coinInfo: ?BitcoinNetworkInfo, validation?: boolean) => Promise<HDNodeResponse>;
