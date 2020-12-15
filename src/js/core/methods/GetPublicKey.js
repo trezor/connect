@@ -9,19 +9,18 @@ import { UiMessage } from '../../message/builder';
 
 import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getPublicKeyLabel } from '../../utils/pathUtils';
-import type { CoreMessage, UiPromiseResponse, BitcoinNetworkInfo, HDNodeResponse } from '../../types';
+import type { CoreMessage, BitcoinNetworkInfo, HDNodeResponse } from '../../types';
+import type { MessageType } from '../../types/trezor/protobuf';
 
-type Batch = {
-    path: Array<number>;
+type Params = {
+    ...$ElementType<MessageType, 'GetPublicKey'>,
     coinInfo: ?BitcoinNetworkInfo;
-    showOnTrezor: boolean;
-}
-type Params = Array<Batch>;
+};
 
 export default class GetPublicKey extends AbstractMethod {
-    params: Params;
+    params: Params[] = [];
     hasBundle: boolean;
-    confirmed: boolean = false;
+    confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -31,14 +30,13 @@ export default class GetPublicKey extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
             { name: 'bundle', type: 'array' },
         ]);
 
-        const bundle = [];
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
@@ -53,7 +51,7 @@ export default class GetPublicKey extends AbstractMethod {
                 coinInfo = getBitcoinNetwork(batch.coin);
             }
 
-            const path: Array<number> = validatePath(batch.path, coinInfo ? 3 : 0);
+            const path = validatePath(batch.path, coinInfo ? 3 : 0);
 
             if (coinInfo && !batch.crossChain) {
                 validateCoinPath(coinInfo, path);
@@ -61,15 +59,15 @@ export default class GetPublicKey extends AbstractMethod {
                 coinInfo = getBitcoinNetwork(path);
             }
 
-            let showOnTrezor: boolean = false;
+            let showOnTrezor = false;
             if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
 
-            bundle.push({
-                path,
+            this.params.push({
+                address_n: path,
                 coinInfo,
-                showOnTrezor,
+                show_display: showOnTrezor,
             });
 
             // set required firmware from coinInfo support
@@ -77,8 +75,6 @@ export default class GetPublicKey extends AbstractMethod {
                 this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
             }
         });
-
-        this.params = bundle;
     }
 
     async confirmation(): Promise<boolean> {
@@ -91,7 +87,7 @@ export default class GetPublicKey extends AbstractMethod {
         if (this.params.length > 1) {
             label = 'Export multiple public keys';
         } else {
-            label = getPublicKeyLabel(this.params[0].path, this.params[0].coinInfo);
+            label = getPublicKeyLabel(this.params[0].address_n, this.params[0].coinInfo);
         }
 
         // request confirmation view
@@ -101,21 +97,22 @@ export default class GetPublicKey extends AbstractMethod {
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        const uiResp = await uiPromise.promise;
 
         this.confirmed = uiResp.payload;
         return this.confirmed;
     }
 
-    async run(): Promise<HDNodeResponse | Array<HDNodeResponse>> {
-        const responses: Array<HDNodeResponse> = [];
+    async run() {
+        const responses: HDNodeResponse[] = [];
+        const cmd = this.device.getCommands();
         for (let i = 0; i < this.params.length; i++) {
-            const batch: Batch = this.params[i];
-            const response: HDNodeResponse = await this.device.getCommands().getHDNode(
-                batch.path,
+            const batch = this.params[i];
+            const response = await cmd.getHDNode(
+                batch.address_n,
                 batch.coinInfo,
                 true,
-                batch.showOnTrezor
+                batch.show_display
             );
             responses.push(response);
 

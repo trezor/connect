@@ -1,13 +1,11 @@
 /* @flow */
 
-import type { DefaultMessageResponse, MessageResponse } from '../../../device/DeviceCommands';
-import type { FirmwareRequest } from '../../../types/trezor/management';
 import { UiMessage } from '../../../message/builder';
 import Device from '../../../device/Device';
 import * as UI from '../../../constants/ui';
 import * as DEVICE from '../../../constants/device';
 
-import type { FirmwareUpload, Success } from '../../../types/trezor/protobuf'; // flowtype only
+import type { TypedCall, MessageResponse, FirmwareUpload } from '../../../types/trezor/protobuf';
 import type { CoreMessage } from '../../../types';
 
 // firmware does not send button message but user still must press button to continue
@@ -27,27 +25,28 @@ const postProgressMessage = (device, progress, postMessage) => {
 };
 
 export const uploadFirmware = async (
-    typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
+    typedCall: TypedCall,
     postMessage: (message: CoreMessage) => void,
     device: Device,
-    params: FirmwareUpload,
-): Success => {
-    const { payload, length } = params;
-    let response: MessageResponse<Success | FirmwareRequest> = {};
+    { payload }: FirmwareUpload,
+) => {
+    let response: MessageResponse<'Success' | 'FirmwareRequest'> = {};
 
     if (device.features.major_version === 1) {
         postConfirmationMessage(device);
         await typedCall('FirmwareErase', 'Success', {});
         postProgressMessage(device, 0, postMessage);
-        response = await typedCall('FirmwareUpload', 'Success', {
-            payload: payload,
+        const { message } = await typedCall('FirmwareUpload', 'Success', {
+            payload,
         });
         postProgressMessage(device, 100, postMessage);
-        return response.message;
+        return message;
     }
 
     if (device.features.major_version === 2) {
         postConfirmationMessage(device);
+        const length = payload.byteLength;
+        // $FlowIssue typedCall problem with unions in response, TODO: accept unions
         response = await typedCall('FirmwareErase', 'FirmwareRequest', { length });
         while (response.type !== 'Success') {
             const start = response.message.offset;
@@ -57,11 +56,13 @@ export const uploadFirmware = async (
             if (start > 0) {
                 postProgressMessage(device, Math.round((start / length) * 100), postMessage);
             }
+            // $FlowIssue typedCall problem with unions in response, TODO: accept unions
             response = await typedCall('FirmwareUpload', 'FirmwareRequest|Success', {
                 payload: chunk,
             });
         }
         postProgressMessage(device, 100, postMessage);
+        // $FlowIssue typedCall problem with unions in response, TODO: accept unions
         return response.message;
     }
 };

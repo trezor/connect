@@ -9,11 +9,10 @@ import { stripHexPrefix } from '../../utils/formatUtils';
 import * as helper from './helpers/ethereumSignTx';
 
 import type { CoreMessage } from '../../types';
-import type { EthereumSignedTx } from '../../types/trezor/protobuf';
 import type { EthereumTransaction } from '../../types/networks/ethereum';
 
 type Params = {
-    path: Array<number>;
+    path: number[];
     transaction: EthereumTransaction;
 }
 
@@ -25,7 +24,7 @@ export default class EthereumSignTx extends AbstractMethod {
 
         this.requiredPermissions = ['read', 'write'];
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -33,7 +32,7 @@ export default class EthereumSignTx extends AbstractMethod {
             { name: 'transaction', obligatory: true },
         ]);
 
-        const path: Array<number> = validatePath(payload.path, 3);
+        const path = validatePath(payload.path, 3);
         const network = getEthereumNetwork(path);
         this.firmwareRange = getFirmwareRange(this.name, network, this.firmwareRange);
 
@@ -72,9 +71,9 @@ export default class EthereumSignTx extends AbstractMethod {
         };
     }
 
-    async run(): Promise<EthereumSignedTx> {
+    async run() {
         const tx = this.params.transaction;
-        return await helper.ethereumSignTx(
+        return helper.ethereumSignTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,
             tx.to,

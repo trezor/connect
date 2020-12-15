@@ -7,12 +7,7 @@ import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/binanceSignTx';
 
 import type { CoreMessage } from '../../types';
-import type {
-    BinanceSignedTx,
-} from '../../types/trezor/protobuf';
-import type {
-    BinancePreparedTransaction,
-} from '../../types/networks/binance';
+import type { BinancePreparedTransaction } from '../../types/networks/binance';
 
 type Params = {
     path: number[];
@@ -28,7 +23,7 @@ export default class BinanceSignTransaction extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('BNB'), this.firmwareRange);
         this.info = 'Sign Binance transaction';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
         // validate incoming parameters
         validateParams(payload, [
             { name: 'path', type: 'string', obligatory: true },
@@ -44,7 +39,7 @@ export default class BinanceSignTransaction extends AbstractMethod {
         };
     }
 
-    async run(): Promise<BinanceSignedTx> {
+    async run() {
         return helper.signTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,

@@ -9,7 +9,7 @@ export default class GetDeviceState extends AbstractMethod {
         this.requiredPermissions = [];
     }
 
-    async run(): Promise<Object> {
+    async run() {
         return {
             state: this.device.getExternalState(),
         };

@@ -1,23 +1,20 @@
 /* @flow */
 
 import AbstractMethod from './AbstractMethod';
-import type { CoreMessage } from '../../types';
 import { validateParams } from './helpers/paramsValidator';
-
-type Params = {
-    remove?: boolean;
-}
+import type { CoreMessage } from '../../types';
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class ChangePin extends AbstractMethod {
-    params: Params;
-    run: () => Promise<any>;
+    params: $ElementType<MessageType, 'ChangePin'>;
 
     constructor(message: CoreMessage) {
         super(message);
+
         this.requiredPermissions = ['management'];
         this.useDeviceState = false;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
         validateParams(payload, [
             { name: 'remove', type: 'boolean' },
         ]);
@@ -27,7 +24,9 @@ export default class ChangePin extends AbstractMethod {
         };
     }
 
-    async run(): Promise<Object> {
-        return await this.device.getCommands().changePin(this.params);
+    async run() {
+        const cmd = this.device.getCommands();
+        const response = await cmd.typedCall('ChangePin', 'Success', this.params);
+        return response.message;
     }
 }

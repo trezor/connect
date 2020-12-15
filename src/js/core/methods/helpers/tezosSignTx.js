@@ -3,7 +3,7 @@
 import * as bs58check from 'bs58check';
 import { ERRORS } from '../../../constants';
 import type { TezosOperation } from '../../../types/networks/tezos';
-import type { TezosTransaction } from '../../../types/trezor/protobuf';
+import type { TezosSignTx } from '../../../types/trezor/protobuf';
 import { validateParams } from './../helpers/paramsValidator';
 
 const prefix = {
@@ -21,7 +21,7 @@ const bs58checkDecode = (prefix: Uint8Array, enc: string): Uint8Array => {
     return bs58check.decode(enc).slice(prefix.length);
 };
 
-const concatArray = (first: Uint8Array, second: Uint8Array): Uint8Array => {
+const concatArray = (first: Uint8Array, second: Uint8Array) => {
     const result = new Uint8Array(first.length + second.length);
     result.set(first);
     result.set(second, first.length);
@@ -57,7 +57,7 @@ const publicKeyHash2buffer = (publicKeyHash: string): { originated: number; hash
 };
 
 // convert publicKeyHash to buffer
-const publicKey2buffer = (publicKey: string): Uint8Array => {
+const publicKey2buffer = (publicKey: string) => {
     switch (publicKey.substr(0, 4)) {
         case 'edpk':
             return concatArray(new Uint8Array([0]), bs58checkDecode(prefix.edpk, publicKey));
@@ -70,7 +70,7 @@ const publicKey2buffer = (publicKey: string): Uint8Array => {
     }
 };
 
-export const createTx = (address_n: Array<number>, branch: string, operation: TezosOperation): TezosTransaction => {
+export const createTx = (address_n: number[], branch: string, operation: TezosOperation): TezosSignTx => {
     let message = {
         address_n,
         branch: bs58checkDecode(prefix.B, branch),

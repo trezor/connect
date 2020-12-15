@@ -1,72 +1,63 @@
 /* @flow */
 
 import { validateParams } from './paramsValidator';
-
-import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type {
     StellarTransaction,
     StellarOperation,
-} from '../../../types/networks/stellar';
-
-import type {
-    StellarSignedTx,
-    StellarSignTxMessage,
     StellarOperationMessage,
-} from '../../../types/trezor/protobuf';
+} from '../../../types/networks/stellar';
+import type { TypedCall, StellarSignTx } from '../../../types/trezor/protobuf';
 
-const processTxRequest = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
-    operations: Array<StellarOperationMessage>,
-    index: number
-): Promise<StellarSignedTx> => {
-    const lastOp: boolean = (index + 1 >= operations.length);
-    const op = operations[index];
-    const type: string = op.type;
+const processTxRequest = async (
+    typedCall: TypedCall,
+    operations: StellarOperationMessage[],
+    index: number,
+) => {
+    const lastOp = (index + 1 >= operations.length);
+    const { type, ...op } = operations[index];
 
     if (lastOp) {
-        const response: MessageResponse<StellarSignedTx> = await typedCall(type, 'StellarSignedTx', {
-            ...op,
-            type: null, // 'type' is not a protobuf field and needs to be removed
-        });
+        // $FlowIssue type and params are unions. TODO: make exact StellarOperationMessage
+        const response = await typedCall(type, 'StellarSignedTx', op);
         return response.message;
     } else {
-        await typedCall(type, 'StellarTxOpRequest', {
-            ...op,
-            type: null, // 'type' is not a protobuf field and needs to be removed
-        });
+        // $FlowIssue type and params are unions. TODO: make exact StellarOperationMessage
+        await typedCall(type, 'StellarTxOpRequest', op);
     }
 
-    return await processTxRequest(
+    return processTxRequest(
         typedCall,
         operations,
         index + 1
     );
 };
 
-export const stellarSignTx = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
-    address_n: Array<number>,
+export const stellarSignTx = async (
+    typedCall: TypedCall,
+    address_n: number[],
     networkPassphrase: string,
     tx: StellarTransaction,
-): Promise<StellarSignedTx> => {
+) => {
     // eslint-disable-next-line no-use-before-define
-    const message: StellarSignTxMessage = transformSignMessage(tx);
+    const message = transformSignMessage(tx);
     message.address_n = address_n;
     message.network_passphrase = networkPassphrase;
 
-    const operations: Array<StellarOperationMessage> = [];
+    const operations: StellarOperationMessage[] = [];
     tx.operations.forEach(op => {
         // eslint-disable-next-line no-use-before-define
-        const transformed: ?StellarOperationMessage = transformOperation(op);
+        const transformed = transformOperation(op);
         if (transformed) { operations.push(transformed); }
     });
 
     await typedCall('StellarSignTx', 'StellarTxOpRequest', message);
 
-    return await processTxRequest(typedCall, operations, 0);
+    return processTxRequest(typedCall, operations, 0);
 };
 
 // transform incoming parameters to protobuf messages format
-const transformSignMessage = (tx: StellarTransaction): StellarSignTxMessage => {
-    const options: $Shape<StellarSignTxMessage> = {};
+const transformSignMessage = (tx: StellarTransaction): StellarSignTx => {
+    const options: StellarSignTx = {};
     // timebounds_start and timebounds_end are the only fields which needs to be converted to number
     if (tx.timebounds) {
         options.timebounds_start = tx.timebounds.minTime;

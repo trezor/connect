@@ -2,27 +2,21 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
-import { validatePath, getLabel } from '../../utils/pathUtils';
+import { validatePath, getLabel, getScriptType } from '../../utils/pathUtils';
 import { getBitcoinNetwork } from '../../data/CoinInfo';
-import type { MessageSignature } from '../../types/trezor/protobuf';
-import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 import { messageToHex } from '../../utils/formatUtils';
-
-type Params = {
-    path: Array<number>;
-    message: string;
-    coinInfo: ?BitcoinNetworkInfo;
-}
+import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class SignMessage extends AbstractMethod {
-    params: Params;
+    params: $ElementType<MessageType, 'SignMessage'>;
 
     constructor(message: CoreMessage) {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -32,7 +26,7 @@ export default class SignMessage extends AbstractMethod {
             { name: 'hex', type: 'boolean' },
         ]);
 
-        const path: Array<number> = validatePath(payload.path);
+        const path = validatePath(payload.path);
         let coinInfo: ?BitcoinNetworkInfo;
         if (payload.coin) {
             coinInfo = getBitcoinNetwork(payload.coin);
@@ -48,24 +42,22 @@ export default class SignMessage extends AbstractMethod {
             this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
         }
 
-        const messageHex: string = payload.hex ? messageToHex(payload.message) : Buffer.from(payload.message, 'utf8').toString('hex');
+        const messageHex = payload.hex ? messageToHex(payload.message) : Buffer.from(payload.message, 'utf8').toString('hex');
+        const scriptType = getScriptType(path);
         this.params = {
-            path,
+            address_n: path,
             message: messageHex,
-            coinInfo,
+            coin_name: coinInfo ? coinInfo.name : undefined,
+            script_type: scriptType && scriptType !== 'SPENDMULTISIG' ? scriptType : 'SPENDADDRESS', // script_type 'SPENDMULTISIG' throws Failure_FirmwareError
         };
     }
 
-    async run(): Promise<MessageSignature> {
-        const response: MessageSignature = await this.device.getCommands().signMessage(
-            this.params.path,
-            this.params.message,
-            this.params.coinInfo ? this.params.coinInfo.name : null
-        );
-
+    async run() {
+        const cmd = this.device.getCommands();
+        const { message } = await cmd.typedCall('SignMessage', 'MessageSignature', this.params);
         // convert signature to base64
-        const signatureBuffer = Buffer.from(response.signature, 'hex');
-        response.signature = signatureBuffer.toString('base64');
-        return response;
+        const signatureBuffer = Buffer.from(message.signature, 'hex');
+        message.signature = signatureBuffer.toString('base64');
+        return message;
     }
 }

@@ -81,9 +81,7 @@ describe('utils/deviceFeaturesUtils', () => {
         expect(parseCapabilities({
             major_version: 1,
             capabilities: [1000],
-        })).toEqual([
-            'Capability_Unknown_trezor-connect',
-        ]);
+        })).toEqual([]);
     });
 
     it('getUnavailableCapabilities', () => {

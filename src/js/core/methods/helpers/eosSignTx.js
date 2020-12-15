@@ -2,7 +2,6 @@
 import * as bs58 from 'bs58';
 
 import { ERRORS } from '../../../constants';
-import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type {
     EosSDKTransaction,
     EosTxAction as $EosTxAction,
@@ -10,10 +9,10 @@ import type {
 } from '../../../types/networks/eos';
 
 import type {
+    TypedCall,
+    MessageResponse,
     EosAsset,
     EosTxActionRequest,
-    EosSignedTx,
-    EosSignTx,
     EosTxActionAck,
     EosTxHeader,
     EosActionCommon,
@@ -23,7 +22,7 @@ import type {
 type Action = $EosTxAction; // | $EosActionCommon & { name: string; data: string };
 
 // copied from: https://github.com/EOSIO/eosjs/blob/master/src/eosjs-numeric.ts
-const binaryToDecimal = (bignum: Uint8Array | Array<number>, minDigits = 1) => {
+const binaryToDecimal = (bignum: Uint8Array | number[], minDigits = 1) => {
     const result = Array(minDigits).fill('0'.charCodeAt(0));
     for (let i = bignum.length - 1; i >= 0; --i) {
         let carry = bignum[i];
@@ -136,21 +135,17 @@ const parseAuth = (a: $EosAuthorization): EosAuthorization => {
     }
     return {
         threshold: a.threshold,
-        keys: a.keys.map(k => {
-            return {
-                weight: k.weight,
-                ...keyToBuffer(k.key),
-            };
-        }),
-        accounts: a.accounts.map(acc => {
-            return {
-                weight: acc.weight,
-                account: {
-                    actor: serialize(acc.permission.actor),
-                    permission: serialize(acc.permission.permission),
-                },
-            };
-        }),
+        keys: a.keys.map(k => ({
+            weight: k.weight,
+            ...keyToBuffer(k.key),
+        })),
+        accounts: a.accounts.map(acc => ({
+            weight: acc.weight,
+            account: {
+                actor: serialize(acc.permission.actor),
+                permission: serialize(acc.permission.permission),
+            },
+        })),
         waits: a.waits,
     };
 };
@@ -310,17 +305,17 @@ const parseAction = (action: any): EosTxActionAck => {
     };
 };
 
-export const validate = (address_n: Array<number>, tx: EosSDKTransaction) => {
-    const header: ?EosTxHeader = tx.header ? {
+export const validate = (address_n: number[], tx: EosSDKTransaction) => {
+    const header = tx.header ? {
         expiration: typeof tx.header.expiration === 'number' ? tx.header.expiration : parseDate(tx.header.expiration),
         ref_block_num: tx.header.refBlockNum,
         ref_block_prefix: tx.header.refBlockPrefix,
         max_net_usage_words: tx.header.maxNetUsageWords,
         max_cpu_usage_ms: tx.header.maxCpuUsageMs,
         delay_sec: tx.header.delaySec,
-    } : null;
+    } : undefined;
 
-    const ack: Array<EosTxActionAck> = [];
+    const ack: EosTxActionAck[] = [];
     tx.actions.forEach(action => {
         ack.push(parseAction(action));
     });
@@ -335,28 +330,28 @@ export const validate = (address_n: Array<number>, tx: EosSDKTransaction) => {
 // sign transaction logic
 
 const CHUNK_SIZE = 2048;
-const getDataChunk = (data: string, offset: number) => {
-    if (offset < 0) return null;
-    if (data.length < offset) return null;
+const getDataChunk = (data: ?string, offset: number) => {
+    if (!data || offset < 0 || data.length < offset) return;
     const o = offset > 0 ? data.length - offset * 2 : 0;
     return data.substring(o, o + CHUNK_SIZE * 2);
 };
 
-const processTxRequest = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
-    response: MessageResponse<EosTxActionRequest>,
-    actions: Array<EosTxActionAck>,
+const processTxRequest = async (
+    typedCall: TypedCall,
+    message: EosTxActionRequest,
+    actions: EosTxActionAck[],
     index: number,
-): Promise<EosSignedTx> => {
+) => {
     const action = actions[index];
     const lastOp = (index + 1 >= actions.length);
-    let ack: MessageResponse<EosTxActionRequest>;
-    const requestedDataSize = response.message.data_size;
+    let ack: MessageResponse<'EosTxActionRequest'>;
+    const requestedDataSize = message.data_size;
 
     if (action.unknown) {
         const unknown = action.unknown;
         const offset = typeof requestedDataSize === 'number' ? requestedDataSize : 0;
         const data_chunk = getDataChunk(unknown.data_chunk, offset);
-        const act = {
+        const params = {
             common: action.common,
             unknown: {
                 data_size: unknown.data_size,
@@ -367,42 +362,43 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
         const lastChunk = sent >= unknown.data_size;
 
         if (lastOp && lastChunk) {
-            const response: MessageResponse<EosSignedTx> = await typedCall('EosTxActionAck', 'EosSignedTx', act);
+            const response = await typedCall('EosTxActionAck', 'EosSignedTx', params);
             return response.message;
         } else {
-            ack = await typedCall('EosTxActionAck', 'EosTxActionRequest', act);
+            ack = await typedCall('EosTxActionAck', 'EosTxActionRequest', params);
             if (lastChunk) {
                 index++;
             }
         }
     } else {
         if (lastOp) {
-            const response: MessageResponse<EosSignedTx> = await typedCall('EosTxActionAck', 'EosSignedTx', action);
+            const response = await typedCall('EosTxActionAck', 'EosSignedTx', action);
             return response.message;
         }
         ack = await typedCall('EosTxActionAck', 'EosTxActionRequest', action);
         index++;
     }
 
-    return await processTxRequest(
+    return processTxRequest(
         typedCall,
-        ack,
+        ack.message,
         actions,
         index
     );
 };
 
-export const signTx = async (typedCall: (type: string, resType: string, msg: EosSignTx) => Promise<DefaultMessageResponse>,
-    address_n: Array<number>,
+export const signTx = async (
+    typedCall: TypedCall,
+    address_n: number[],
     chain_id: string,
-    header: ?EosTxHeader,
-    actions: Array<EosTxActionAck>,
-): Promise<EosSignedTx> => {
+    header?: EosTxHeader,
+    actions: EosTxActionAck[],
+) => {
     const response = await typedCall('EosSignTx', 'EosTxActionRequest', {
         address_n,
         chain_id,
         header,
         num_actions: actions.length,
     });
-    return await processTxRequest(typedCall, response, actions, 0);
+    return processTxRequest(typedCall, response.message, actions, 0);
 };

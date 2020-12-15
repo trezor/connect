@@ -467,7 +467,6 @@ const manageData = () => {
                     {
                         type: 'manageData',
                         name: 'data',
-                        value: null,
                     },
                 ],
             },

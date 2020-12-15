@@ -112,7 +112,4 @@ export interface VerifyMessage {
     coin: string;
 }
 
-export { 
-    TxInputType as TransactionInput,
-    TxOutputType as TransactionOutput
-} from '../trezor/protobuf';
+export { TxInputType, TxOutputType } from '../trezor/protobuf';

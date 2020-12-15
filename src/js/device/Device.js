@@ -380,12 +380,12 @@ export default class Device extends EventEmitter {
             }
         }
 
-        const { message }: { message: Features } = await this.commands.typedCall('Initialize', 'Features', payload);
+        const { message } = await this.commands.typedCall('Initialize', 'Features', payload);
         this._updateFeatures(message);
     }
 
     async getFeatures() {
-        const { message }: { message: Features } = await this.commands.typedCall('GetFeatures', 'Features', {});
+        const { message } = await this.commands.typedCall('GetFeatures', 'Features', {});
         this._updateFeatures(message);
     }
 
@@ -407,6 +407,7 @@ export default class Device extends EventEmitter {
         }
         // translate legacy field `pin_cached` to `unlocked`
         if (feat.pin_protection) {
+            // $FlowIssue protobuf, pin_cached is available only in older messages
             feat.unlocked = typeof feat.unlocked === 'boolean' ? feat.unlocked : feat.pin_cached;
         } else {
             feat.unlocked = true;
@@ -496,11 +497,11 @@ export default class Device extends EventEmitter {
     }
 
     isInitialized(): boolean {
-        return this.features && this.features.initialized;
+        return this.features && !!this.features.initialized;
     }
 
     isSeedless(): boolean {
-        return this.features && this.features.no_backup;
+        return this.features && !!this.features.no_backup;
     }
 
     isInconsistent(): boolean {
@@ -554,6 +555,7 @@ export default class Device extends EventEmitter {
         if (this.isUnacquired() || this.isUsedElsewhere() || this.featuresNeedsReload) return true;
         if (this.features.bootloader_mode || !this.features.initialized) return true;
         const pin = this.features.pin_protection ? !!this.features.unlocked : true;
+        // $FlowIssue protobuf, passphrase_cached available only in older messages
         const pass = this.features.passphrase_protection ? this.features.passphrase_cached : true;
         return pin && pass;
     }
@@ -623,7 +625,7 @@ export default class Device extends EventEmitter {
             const label = this.features.label === '' || !this.features.label ? defaultLabel : this.features.label;
             return {
                 type: 'acquired',
-                id: this.features.device_id,
+                id: this.features.device_id || null,
                 path: this.originalDescriptor.path,
                 label: label,
                 state: this.getExternalState(),

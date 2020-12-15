@@ -5,17 +5,12 @@ import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 
-import type { RippleSignedTx } from '../../types/trezor/protobuf';
-import type { RippleTransaction, RippleSignedTx as RippleSignedTxResponse } from '../../types/networks/ripple';
+import type { RippleTransaction } from '../../types/networks/ripple';
 import type { CoreMessage } from '../../types';
-
-type Params = {
-    path: Array<number>;
-    transaction: RippleTransaction;
-}
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class RippleSignTransaction extends AbstractMethod {
-    params: Params;
+    params: $ElementType<MessageType, 'RippleSignTx'>;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -23,7 +18,7 @@ export default class RippleSignTransaction extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Ripple'), this.firmwareRange);
         this.info = 'Sign Ripple transaction';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
         // validate incoming parameters
         validateParams(payload, [
             { name: 'path', obligatory: true },
@@ -49,29 +44,25 @@ export default class RippleSignTransaction extends AbstractMethod {
         ]);
 
         this.params = {
-            path,
-            transaction,
+            address_n: path,
+            fee: transaction.fee,
+            flags: transaction.flags,
+            sequence: transaction.sequence,
+            last_ledger_sequence: transaction.maxLedgerVersion,
+            payment: {
+                amount: transaction.payment.amount,
+                destination: transaction.payment.destination,
+                destination_tag: transaction.payment.destinationTag,
+            },
         };
     }
 
-    async run(): Promise<RippleSignedTxResponse> {
-        const tx = this.params.transaction;
-        const response: RippleSignedTx = await this.device.getCommands().rippleSignTx({
-            address_n: this.params.path,
-            fee: parseInt(tx.fee),
-            flags: tx.flags,
-            sequence: tx.sequence,
-            last_ledger_sequence: tx.maxLedgerVersion,
-            payment: {
-                amount: tx.payment.amount,
-                destination: tx.payment.destination,
-                destination_tag: tx.payment.destinationTag,
-            },
-        });
-
+    async run() {
+        const cmd = this.device.getCommands();
+        const { message } = await cmd.typedCall('RippleSignTx', 'RippleSignedTx', this.params);
         return {
-            serializedTx: response.serialized_tx,
-            signature: response.signature,
+            serializedTx: message.serialized_tx,
+            signature: message.signature,
         };
     }
 }

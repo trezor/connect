@@ -6,12 +6,11 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/stellarSignTx';
 
-import type { StellarSignedTx } from '../../types/trezor/protobuf';
-import type { StellarTransaction, StellarSignedTx as StellarSignedTxResponse } from '../../types/networks/stellar';
+import type { StellarTransaction } from '../../types/networks/stellar';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    path: Array<number>;
+    path: number[];
     networkPassphrase: string;
     transaction: any;
 }
@@ -25,7 +24,7 @@ export default class StellarSignTransaction extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Stellar'), this.firmwareRange);
         this.info = 'Sign Stellar transaction';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
         // validate incoming parameters
         validateParams(payload, [
             { name: 'path', obligatory: true },
@@ -43,8 +42,8 @@ export default class StellarSignTransaction extends AbstractMethod {
         };
     }
 
-    async run(): Promise<StellarSignedTxResponse> {
-        const response: StellarSignedTx = await helper.stellarSignTx(
+    async run() {
+        const response = await helper.stellarSignTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,
             this.params.networkPassphrase,

@@ -16,14 +16,12 @@ import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
 import type { CoinInfo, BitcoinNetworkInfo, EthereumNetworkInfo, HDNodeResponse } from '../types';
 import type { Transport } from 'trezor-link';
-import * as trezor from '../types/trezor/protobuf'; // flowtype only
+import * as PROTO from '../types/trezor/protobuf';
 
-export type MessageResponse<T> = {
-    type: string;
-    message: T; // in general, can be anything
+export type DefaultMessageResponse = {
+    type: any;
+    message: any; // in general, can be anything
 };
-
-export type DefaultMessageResponse = MessageResponse<Object>;
 
 export type PassphrasePromptResponse = {
     passphrase?: string;
@@ -31,22 +29,22 @@ export type PassphrasePromptResponse = {
     cache?: boolean;
 };
 
-function assertType(res: DefaultMessageResponse, resType: string) {
+const assertType = (res: DefaultMessageResponse, resType: string) => {
     const splitResTypes = resType.split('|');
     if (!(splitResTypes.includes(res.type))) {
         throw ERRORS.TypedError('Runtime', `assertType: Response of unexpected type: ${res.type}. Should be ${resType}`);
     }
-}
+};
 
-function generateEntropy(len: number): Buffer {
+const generateEntropy = (len: number) => {
     try {
         return randombytes(len);
     } catch (err) {
         throw ERRORS.TypedError('Runtime', 'generateEntropy: Environment does not support crypto random');
     }
-}
+};
 
-function filterForLog(type: string, msg: Object): Object {
+const filterForLog = (type: string, msg: Object) => {
     const blacklist = {
         // PassphraseAck: {
         //     passphrase: '(redacted...)',
@@ -72,7 +70,7 @@ function filterForLog(type: string, msg: Object): Object {
     } else {
         return msg;
     }
-}
+};
 
 export default class DeviceCommands {
     device: Device;
@@ -80,9 +78,9 @@ export default class DeviceCommands {
     sessionId: string;
     debug: boolean;
     disposed: boolean;
-    callPromise: ?Promise<DefaultMessageResponse> = undefined;
+    callPromise: ?Promise<DefaultMessageResponse>;
     // see DeviceCommands.cancel
-    _cancelableRequest: ?(error: any) => void = undefined;
+    _cancelableRequest: ?(error: any) => void;
 
     constructor(
         device: Device,
@@ -96,22 +94,22 @@ export default class DeviceCommands {
         this.disposed = false;
     }
 
-    dispose(): void {
+    dispose() {
         this.disposed = true;
         this._cancelableRequest = undefined;
     }
 
-    isDisposed(): boolean {
+    isDisposed() {
         return this.disposed;
     }
 
     async getPublicKey(
-        address_n: Array<number>,
-        coin_name: string,
-        script_type?: ?string,
-        show_display?: ?boolean,
-    ): Promise<trezor.PublicKey> {
-        const response: MessageResponse<trezor.PublicKey> = await this.typedCall('GetPublicKey', 'PublicKey', {
+        address_n: number[],
+        coin_name: string = 'Bitcoin',
+        script_type?: PROTO.InputScriptType,
+        show_display?: boolean,
+    ) {
+        const response = await this.typedCall('GetPublicKey', 'PublicKey', {
             address_n,
             coin_name,
             script_type,
@@ -122,13 +120,13 @@ export default class DeviceCommands {
 
     // Validation of xpub
     async getHDNode(
-        path: Array<number>,
+        path: number[],
         coinInfo: ?BitcoinNetworkInfo,
         validation?: boolean = true,
         showOnTrezor?: boolean = false,
-    ): Promise<HDNodeResponse> {
+    ) {
         if (!this.device.atLeast(['1.7.2', '2.0.10']) || !coinInfo) {
-            return await this.getBitcoinHDNode(path, coinInfo);
+            return this.getBitcoinHDNode(path, coinInfo);
         }
 
         let network: ?bitcoin.Network;
@@ -140,7 +138,7 @@ export default class DeviceCommands {
             network = getBech32Network(coinInfo);
         }
 
-        let scriptType: ?trezor.InputScriptType = getScriptType(path);
+        let scriptType = getScriptType(path);
         if (!network) {
             network = coinInfo.network;
             if (scriptType !== 'SPENDADDRESS') {
@@ -148,14 +146,14 @@ export default class DeviceCommands {
             }
         }
 
-        let publicKey: trezor.PublicKey;
+        let publicKey;
         if (showOnTrezor || !validation) {
             publicKey = await this.getPublicKey(path, coinInfo.name, scriptType, showOnTrezor);
         } else {
-            const suffix: number = 0;
-            const childPath: Array<number> = path.concat([suffix]);
-            const resKey: trezor.PublicKey = await this.getPublicKey(path, coinInfo.name, scriptType);
-            const childKey: trezor.PublicKey = await this.getPublicKey(childPath, coinInfo.name, scriptType);
+            const suffix = 0;
+            const childPath = path.concat([suffix]);
+            const resKey = await this.getPublicKey(path, coinInfo.name, scriptType);
+            const childKey = await this.getPublicKey(childPath, coinInfo.name, scriptType);
             publicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix, network, coinInfo.network);
         }
 
@@ -183,19 +181,19 @@ export default class DeviceCommands {
     // keys are exported in BTC format and converted to proper format in hdnodeUtils
     // old firmware didn't return keys with proper prefix (ypub, Ltub.. and so on)
     async getBitcoinHDNode(
-        path: Array<number>,
+        path: number[],
         coinInfo?: ?BitcoinNetworkInfo,
         validation?: boolean = true
-    ): Promise<HDNodeResponse> {
-        let publicKey: trezor.PublicKey;
+    ) {
+        let publicKey: PROTO.PublicKey;
         if (!validation) {
-            publicKey = await this.getPublicKey(path, 'Bitcoin');
+            publicKey = await this.getPublicKey(path);
         } else {
-            const suffix: number = 0;
-            const childPath: Array<number> = path.concat([suffix]);
+            const suffix = 0;
+            const childPath = path.concat([suffix]);
 
-            const resKey: trezor.PublicKey = await this.getPublicKey(path, 'Bitcoin');
-            const childKey: trezor.PublicKey = await this.getPublicKey(childPath, 'Bitcoin');
+            const resKey = await this.getPublicKey(path);
+            const childKey = await this.getPublicKey(childPath);
             publicKey = hdnodeUtils.xpubDerive(resKey, childKey, suffix);
         }
 
@@ -225,16 +223,18 @@ export default class DeviceCommands {
     }
 
     async getAddress(
-        address_n: Array<number>,
+        {
+            address_n,
+            show_display,
+            multisig,
+            script_type,
+        }: PROTO.GetAddress,
         coinInfo: BitcoinNetworkInfo,
-        showOnTrezor: boolean,
-        multisig?: trezor.MultisigRedeemScriptType,
-        scriptType?: trezor.InputScriptType,
-    ): Promise<trezor.Address> {
-        if (!scriptType) {
-            scriptType = getScriptType(address_n);
-            if (scriptType === 'SPENDMULTISIG' && !multisig) {
-                scriptType = 'SPENDADDRESS';
+    ) {
+        if (!script_type) {
+            script_type = getScriptType(address_n);
+            if (script_type === 'SPENDMULTISIG' && !multisig) {
+                script_type = 'SPENDADDRESS';
             }
         }
         if (multisig && multisig.pubkeys) {
@@ -248,73 +248,55 @@ export default class DeviceCommands {
         const response = await this.typedCall('GetAddress', 'Address', {
             address_n,
             coin_name: coinInfo.name,
-            show_display: !!showOnTrezor,
+            show_display,
             multisig,
-            script_type: scriptType || 'SPENDADDRESS',
+            script_type: script_type || 'SPENDADDRESS',
         });
 
         return {
-            address: response.message.address,
             path: address_n,
             serializedPath: getSerializedPath(address_n),
+            address: response.message.address,
         };
     }
 
-    async signMessage(
-        address_n: Array<number>,
-        message: string,
-        coin: ?string
-    ): Promise<trezor.MessageSignature> {
-        const scriptType: trezor.InputScriptType = getScriptType(address_n);
-        const response: MessageResponse<trezor.MessageSignature> = await this.typedCall('SignMessage', 'MessageSignature', {
+    async ethereumGetAddress(
+        {
             address_n,
-            message,
-            coin_name: coin || 'Bitcoin',
-            script_type: scriptType && scriptType !== 'SPENDMULTISIG' ? scriptType : 'SPENDADDRESS', // script_type 'SPENDMULTISIG' throws Failure_FirmwareError
+            show_display,
+        }: PROTO.EthereumGetAddress,
+        network?: EthereumNetworkInfo,
+    ) {
+        const response = await this.typedCall('EthereumGetAddress', 'EthereumAddress', {
+            address_n,
+            show_display,
         });
-        return response.message;
+        return {
+            path: address_n,
+            serializedPath: getSerializedPath(address_n),
+            address: toChecksumAddress(response.message.address, network),
+        };
     }
 
-    async verifyMessage(
-        address: string,
-        signature: string,
-        message: string,
-        coin: string
-    ): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('VerifyMessage', 'Success', {
-            address,
-            signature,
-            message,
-            coin_name: coin,
-        });
-        return response.message;
-    }
-
-    async ethereumGetAddress(address_n: Array<number>, network: ?EthereumNetworkInfo, showOnTrezor?: boolean = true): Promise<trezor.EthereumAddress> {
-        const response: MessageResponse<trezor.EthereumAddress> = await this.typedCall('EthereumGetAddress', 'EthereumAddress', {
-            address_n: address_n,
-            show_display: !!showOnTrezor,
-        });
-        response.message.address = toChecksumAddress(response.message.address, network);
-        return response.message;
-    }
-
-    async ethereumGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<HDNodeResponse> {
+    async ethereumGetPublicKey({
+        address_n,
+        show_display,
+    }: PROTO.EthereumGetPublicKey): Promise<HDNodeResponse> {
         if (!this.device.atLeast(['1.8.1', '2.1.0'])) {
             return await this.getHDNode(address_n);
         }
 
-        const suffix: number = 0;
-        const childPath: Array<number> = address_n.concat([suffix]);
-        const resKey: MessageResponse<trezor.PublicKey> = await this.typedCall('EthereumGetPublicKey', 'EthereumPublicKey', {
-            address_n: address_n,
-            show_display: showOnTrezor,
+        const suffix = 0;
+        const childPath = address_n.concat([suffix]);
+        const resKey = await this.typedCall('EthereumGetPublicKey', 'EthereumPublicKey', {
+            address_n,
+            show_display,
         });
-        const childKey: MessageResponse<trezor.PublicKey> = await this.typedCall('EthereumGetPublicKey', 'EthereumPublicKey', {
+        const childKey = await this.typedCall('EthereumGetPublicKey', 'EthereumPublicKey', {
             address_n: childPath,
             show_display: false,
         });
-        const publicKey: trezor.PublicKey = hdnodeUtils.xpubDerive(resKey.message, childKey.message, suffix);
+        const publicKey = hdnodeUtils.xpubDerive(resKey.message, childKey.message, suffix);
 
         return {
             path: address_n,
@@ -328,310 +310,14 @@ export default class DeviceCommands {
         };
     }
 
-    async ethereumSignMessage(address_n: Array<number>, message: string): Promise<trezor.MessageSignature> {
-        const response: MessageResponse<trezor.MessageSignature> = await this.typedCall('EthereumSignMessage', 'EthereumMessageSignature', {
-            address_n,
-            message,
-        });
-        return response.message;
-    }
-
-    async ethereumVerifyMessage(address: string, signature: string, message: string): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('EthereumVerifyMessage', 'Success', {
-            address,
-            signature,
-            message,
-        });
-        return response.message;
-    }
-
-    async nemGetAddress(address_n: Array<number>, network: number, showOnTrezor: boolean): Promise<trezor.NEMAddress> {
-        const response: MessageResponse<trezor.NEMAddress> = await this.typedCall('NEMGetAddress', 'NEMAddress', {
-            address_n,
-            network,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    async nemSignTx(transaction: trezor.NEMSignTxMessage): Promise<trezor.NEMSignedTx> {
-        const response: MessageResponse<trezor.NEMSignedTx> = await this.typedCall('NEMSignTx', 'NEMSignedTx', transaction);
-        return response.message;
-    }
-
-    // Ripple: begin
-    async rippleGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.RippleAddress> {
-        const response: MessageResponse<trezor.RippleAddress> = await this.typedCall('RippleGetAddress', 'RippleAddress', {
-            address_n,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    async rippleSignTx(transaction: trezor.RippleTransaction): Promise<trezor.RippleSignedTx> {
-        const response: MessageResponse<trezor.RippleSignedTx> = await this.typedCall('RippleSignTx', 'RippleSignedTx', transaction);
-        return response.message;
-    }
-    // Ripple: end
-
-    // Stellar: begin
-    async stellarGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.StellarAddress> {
-        const response: MessageResponse<trezor.StellarAddress> = await this.typedCall('StellarGetAddress', 'StellarAddress', {
-            address_n,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    // StellarSignTx message can be found inside ./core/methods/helpers/stellarSignTx
-    // Stellar: end
-
-    // EOS: begin
-    async eosGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.EosPublicKey> {
-        const response: MessageResponse<trezor.EosPublicKey> = await this.typedCall('EosGetPublicKey', 'EosPublicKey', {
-            address_n,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    // EosSignTx message can be found inside ./core/methods/helpers/eosSignTx
-    // EOS: end
-
-    // Cardano: begin
-    async cardanoGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.CardanoPublicKey> {
-        const response: MessageResponse<trezor.CardanoPublicKey> = await this.typedCall('CardanoGetPublicKey', 'CardanoPublicKey', {
-            address_n,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    async cardanoGetAddress(addressParameters: trezor.CardanoAddressParameters, protocolMagic: number, networkId: number, showOnTrezor: boolean): Promise<trezor.CardanoAddress> {
-        const response: MessageResponse<trezor.CardanoAddress> = await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
-            address_parameters: addressParameters,
-            protocol_magic: protocolMagic,
-            network_id: networkId,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    async cardanoSignTx(
-        inputs: Array<trezor.CardanoTxInput>,
-        outputs: Array<trezor.CardanoTxOutput>,
-        fee: string,
-        ttl: string,
-        certificates: Array<trezor.CardanoTxCertificate>,
-        withdrawals: Array<trezor.CardanoTxWithdrawal>,
-        metadata: string,
-        protocolMagic: number,
-        networkId: number
-    ): Promise<trezor.CardanoSignedTx> {
-        const response: MessageResponse<trezor.CardanoSignedTx> = await this.typedCall('CardanoSignTx', 'CardanoSignedTx', {
-            inputs,
-            outputs,
-            fee,
-            ttl,
-            certificates,
-            withdrawals,
-            metadata,
-            protocol_magic: protocolMagic,
-            network_id: networkId,
-        });
-        return response.message;
-    }
-    // Cardano: end
-
-    // Lisk: begin
-    async liskGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskAddress> {
-        const response: MessageResponse<trezor.LiskAddress> = await this.typedCall('LiskGetAddress', 'LiskAddress', {
-            address_n,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    async liskGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.LiskPublicKey> {
-        const response: MessageResponse<trezor.LiskPublicKey> = await this.typedCall('LiskGetPublicKey', 'LiskPublicKey', {
-            address_n,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    async liskSignMessage(address_n: Array<number>, message: string): Promise<trezor.LiskMessageSignature> {
-        const response: MessageResponse<trezor.LiskMessageSignature> = await this.typedCall('LiskSignMessage', 'LiskMessageSignature', {
-            address_n,
-            message,
-        });
-        return response.message;
-    }
-
-    async liskVerifyMessage(public_key: string, signature: string, message: string): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('LiskVerifyMessage', 'Success', {
-            public_key,
-            signature,
-            message,
-        });
-        return response.message;
-    }
-
-    async liskSignTx(address_n: Array<number>, transaction: trezor.LiskTransaction): Promise<trezor.LiskSignedTx> {
-        const response: MessageResponse<trezor.LiskSignedTx> = await this.typedCall('LiskSignTx', 'LiskSignedTx', {
-            address_n,
-            transaction,
-        });
-        return response.message;
-    }
-    // Lisk: end
-
-    // Tezos: begin
-    async tezosGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.TezosAddress> {
-        const response: MessageResponse<trezor.TezosAddress> = await this.typedCall('TezosGetAddress', 'TezosAddress', {
-            address_n,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    async tezosGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.TezosPublicKey> {
-        const response: MessageResponse<trezor.TezosPublicKey> = await this.typedCall('TezosGetPublicKey', 'TezosPublicKey', {
-            address_n,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    async tezosSignTransaction(message: trezor.TezosTransaction): Promise<trezor.TezosSignedTx> {
-        const response: MessageResponse<trezor.TezosSignedTx> = await this.typedCall('TezosSignTx', 'TezosSignedTx', message);
-        return response.message;
-    }
-    // Tezos: end
-
-    // Binance: begin
-    async binanceGetAddress(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.BinanceAddress> {
-        const response: MessageResponse<trezor.BinanceAddress> = await this.typedCall('BinanceGetAddress', 'BinanceAddress', {
-            address_n,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-
-    async binanceGetPublicKey(address_n: Array<number>, showOnTrezor: boolean): Promise<trezor.BinancePublicKey> {
-        const response: MessageResponse<trezor.BinancePublicKey> = await this.typedCall('BinanceGetPublicKey', 'BinancePublicKey', {
-            address_n,
-            show_display: !!showOnTrezor,
-        });
-        return response.message;
-    }
-    // Binance: end
-
-    async cipherKeyValue(
-        address_n: Array<number>,
-        key: string,
-        value: string | Buffer,
-        encrypt: boolean,
-        ask_on_encrypt: boolean,
-        ask_on_decrypt: boolean,
-        iv: ?(string | Buffer) // in hexadecimal
-    ): Promise<trezor.CipheredKeyValue> {
-        const valueString: string = value instanceof Buffer ? value.toString('hex') : value;
-        const ivString: ?string = iv instanceof Buffer ? iv.toString('hex') : iv;
-
-        const response: MessageResponse<trezor.CipheredKeyValue> = await this.typedCall('CipherKeyValue', 'CipheredKeyValue', {
-            address_n: address_n,
-            key: key,
-            value: valueString,
-            encrypt: encrypt,
-            ask_on_encrypt: ask_on_encrypt,
-            ask_on_decrypt: ask_on_decrypt,
-            iv: ivString,
-        });
-        return response.message;
-    }
-
-    async signIdentity(
-        identity: trezor.Identity,
-        challenge_hidden: string,
-        challenge_visual: string
-    ): Promise<trezor.SignedIdentity> {
-        const response: MessageResponse<trezor.SignedIdentity> = await this.typedCall('SignIdentity', 'SignedIdentity', {
-            identity,
-            challenge_hidden,
-            challenge_visual,
-        });
-        return response.message;
-    }
-
-    async clearSession(settings: Object): Promise<MessageResponse<trezor.Success>> {
-        return await this.typedCall('ClearSession', 'Success', settings);
-    }
-
     async getDeviceState(networkType: ?string) {
-        const response = await this._getAddressForNetworkType(networkType);
+        return this._getAddressForNetworkType(networkType);
         // bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
-        const state: string = response.message.address;
-        return state;
-    }
-
-    async wipe(): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('WipeDevice', 'Success');
-        return response.message;
-    }
-
-    async reset(flags?: trezor.ResetDeviceFlags): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('ResetDevice', 'Success', flags);
-        return response.message;
-    }
-
-    async load(flags?: trezor.LoadDeviceFlags): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('LoadDevice', 'Success', flags);
-        return response.message;
-    }
-
-    async applyFlags(params: trezor.Flags): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('ApplyFlags', 'Success', params);
-        return response.message;
-    }
-
-    async applySettings(params: trezor.ApplySettings): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('ApplySettings', 'Success', params);
-        return response.message;
-    }
-
-    async backupDevice(): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('BackupDevice', 'Success');
-        return response.message;
-    }
-
-    async changePin(params: trezor.ChangePin): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('ChangePin', 'Success', params);
-        return response.message;
-    }
-
-    async firmwareErase(params: trezor.FirmwareErase): Promise<trezor.Success | 'FirmwareRequest'> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall(
-            'FirmwareErase',
-            this.device.features.major_version === 1 ? 'Success' : 'FirmwareRequest',
-            params,
-        );
-        return response.message;
-    }
-
-    async firmwareUpload(params: trezor.FirmwareUpload): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('FirmwareUpload', 'Success', params);
-        return response.message;
-    }
-
-    async recoveryDevice(params: trezor.RecoverDeviceSettings): Promise<trezor.Success> {
-        const response: MessageResponse<trezor.Success> = await this.typedCall('RecoveryDevice', 'Success', params);
-        return response.message;
     }
 
     // Sends an async message to the opened device.
-    async call(type: string, msg: Object = {}): Promise<DefaultMessageResponse> {
-        const logMessage: Object = filterForLog(type, msg);
+    async call(type: PROTO.MessageKey, msg: Object = {}) {
+        const logMessage = filterForLog(type, msg);
 
         if (this.debug) {
             // eslint-disable-next-line no-console
@@ -640,7 +326,7 @@ export default class DeviceCommands {
 
         try {
             this.callPromise = this.transport.call(this.sessionId, type, msg, false);
-            const res: DefaultMessageResponse = await this.callPromise;
+            const res = await this.callPromise;
             const logMessage = filterForLog(res.type, res.message);
             if (this.debug) {
                 // eslint-disable-next-line no-console
@@ -657,12 +343,16 @@ export default class DeviceCommands {
         }
     }
 
-    async typedCall(type: string, resType: string, msg: Object = {}): Promise<DefaultMessageResponse> {
+    async typedCall<T: PROTO.MessageKey, R: PROTO.MessageKey>(
+        type: T,
+        resType: R,
+        msg?: $ElementType<PROTO.MessageType, T>
+    ): Promise<PROTO.MessageResponse<R>> {
         if (this.disposed) {
             throw ERRORS.TypedError('Runtime', 'typedCall: DeviceCommands already disposed');
         }
 
-        const response: DefaultMessageResponse = await this._commonCall(type, msg);
+        const response = await this._commonCall(type, msg);
         try {
             assertType(response, resType);
         } catch (error) {
@@ -675,7 +365,7 @@ export default class DeviceCommands {
         return response;
     }
 
-    async _commonCall(type: string, msg: Object): Promise<DefaultMessageResponse> {
+    async _commonCall(type: PROTO.MessageKey, msg?: any) {
         const resp = await this.call(type, msg);
         return this._filterCommonTypes(resp);
     }
@@ -764,6 +454,7 @@ export default class DeviceCommands {
         if (res.type === 'PassphraseStateRequest') {
             const state: string = res.message.state;
             this.device.setInternalState(state);
+            // $FlowIssue older protobuf messages
             return this._commonCall('PassphraseStateAck', {});
         }
 
@@ -783,8 +474,9 @@ export default class DeviceCommands {
 
     async _getAddressForNetworkType(networkType: ?string) {
         switch (networkType) {
-            case NETWORK.TYPES.cardano:
-                return await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
+            case NETWORK.TYPES.cardano: {
+                const { message } = await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
+                    // $FlowIssue TEMP proto, address_n_staking missing
                     address_parameters: {
                         address_type: 8, // Byron
                         address_n: [toHardened(44), toHardened(1815), toHardened(0), 0, 0],
@@ -792,12 +484,17 @@ export default class DeviceCommands {
                     protocol_magic: 42,
                     network_id: 0,
                 });
-            default:
-                return await this.typedCall('GetAddress', 'Address', {
+                return message.address;
+            }
+            default: {
+                // eslint-disable-next-line no-case-declarations
+                const { message } = await this.typedCall('GetAddress', 'Address', {
                     address_n: [toHardened(44), toHardened(1), toHardened(0), 0, 0],
                     coin_name: 'Testnet',
                     script_type: 'SPENDADDRESS',
                 });
+                return message.address;
+            }
         }
     }
 
@@ -856,7 +553,7 @@ export default class DeviceCommands {
     }
     // DebugLink messages
 
-    async debugLinkDecision(msg: any): Promise<void> {
+    async debugLinkDecision(msg: PROTO.DebugLinkDecision) {
         const session = await this.transport.acquire({
             path: this.device.originalDescriptor.path,
             previous: this.device.originalDescriptor.debugSession,
@@ -869,21 +566,24 @@ export default class DeviceCommands {
         await resolveAfter(501, null); // wait for propagation from bridge
     }
 
-    async debugLinkGetState(msg: any): Promise<trezor.DebugLinkState> {
+    async debugLinkGetState() {
         const session = await this.transport.acquire({
             path: this.device.originalDescriptor.path,
             previous: this.device.originalDescriptor.debugSession,
         }, true);
         await resolveAfter(501, null); // wait for propagation from bridge
 
-        const response: MessageResponse<trezor.DebugLinkState> = await this.transport.call(session, 'DebugLinkGetState', {}, true);
+        const response = await this.transport.call(session, 'DebugLinkGetState', {}, true);
         assertType(response, 'DebugLinkState');
         await this.transport.release(session, true, true);
         await resolveAfter(501, null); // wait for propagation from bridge
         return response.message;
     }
 
-    async getAccountDescriptor(coinInfo: CoinInfo, indexOrPath: number | Array<number>): Promise<?{ descriptor: string; legacyXpub?: string; address_n: number[] }> {
+    async getAccountDescriptor(
+        coinInfo: CoinInfo,
+        indexOrPath: number | number[],
+    ): Promise<?{ descriptor: string; legacyXpub?: string; address_n: number[] }> {
         const address_n = Array.isArray(indexOrPath) ? indexOrPath : getAccountAddressN(coinInfo, indexOrPath);
         if (coinInfo.type === 'bitcoin') {
             const resp = await this.getHDNode(address_n, coinInfo, false);
@@ -893,15 +593,15 @@ export default class DeviceCommands {
                 address_n,
             };
         } else if (coinInfo.type === 'ethereum') {
-            const resp = await this.ethereumGetAddress(address_n, coinInfo, false);
+            const resp = await this.ethereumGetAddress({ address_n }, coinInfo);
             return {
                 descriptor: resp.address,
                 address_n,
             };
         } else if (coinInfo.shortcut === 'XRP' || coinInfo.shortcut === 'tXRP') {
-            const resp = await this.rippleGetAddress(address_n, false);
+            const { message } = await this.typedCall('RippleGetAddress', 'RippleAddress', { address_n });
             return {
-                descriptor: resp.address,
+                descriptor: message.address,
                 address_n,
             };
         }

@@ -34,7 +34,9 @@ export default class BackupDevice extends AbstractMethod {
         return uiResp.payload;
     }
 
-    async run(): Promise<Object> {
-        return await this.device.getCommands().backupDevice();
+    async run() {
+        const cmd = this.device.getCommands();
+        const response = await cmd.typedCall('BackupDevice', 'Success');
+        return response.message;
     }
 }

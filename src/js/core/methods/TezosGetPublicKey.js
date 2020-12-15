@@ -8,21 +8,14 @@ import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathU
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { TezosPublicKey } from '../../types/trezor/protobuf';
-import type { TezosPublicKey as TezosPublicKeyResponse } from '../../types/networks/tezos';
-import type { CoreMessage, UiPromiseResponse } from '../../types';
-
-type Batch = {
-    path: Array<number>;
-    showOnTrezor: boolean;
-}
-
-type Params = Array<Batch>;
+import type { TezosPublicKey } from '../../types/networks/tezos';
+import type { CoreMessage } from '../../types';
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class TezosGetPublicKey extends AbstractMethod {
-    params: Params;
+    params: $ElementType<MessageType, 'TezosGetPublicKey'>[] = [];
     hasBundle: boolean;
-    confirmed: boolean = false;
+    confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -33,14 +26,13 @@ export default class TezosGetPublicKey extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
             { name: 'bundle', type: 'array' },
         ]);
 
-        const bundle = [];
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
@@ -48,19 +40,17 @@ export default class TezosGetPublicKey extends AbstractMethod {
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
-            const path: Array<number> = validatePath(batch.path, 3);
-            let showOnTrezor: boolean = true;
+            const path = validatePath(batch.path, 3);
+            let showOnTrezor = true;
             if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
 
-            bundle.push({
-                path,
-                showOnTrezor,
+            this.params.push({
+                address_n: path,
+                show_display: showOnTrezor,
             });
         });
-
-        this.params = bundle;
     }
 
     async confirmation(): Promise<boolean> {
@@ -74,7 +64,7 @@ export default class TezosGetPublicKey extends AbstractMethod {
         if (this.params.length > 1) {
             label = 'Export multiple Tezos public keys';
         } else {
-            label = `Export Tezos public key for account #${ (fromHardened(this.params[0].path[2]) + 1) }`;
+            label = `Export Tezos public key for account #${ (fromHardened(this.params[0].address_n[2]) + 1) }`;
         }
 
         // request confirmation view
@@ -84,31 +74,29 @@ export default class TezosGetPublicKey extends AbstractMethod {
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        const uiResp = await uiPromise.promise;
 
         this.confirmed = uiResp.payload;
         return this.confirmed;
     }
 
-    async run(): Promise<TezosPublicKeyResponse | Array<TezosPublicKeyResponse>> {
-        const responses: Array<TezosPublicKeyResponse> = [];
+    async run() {
+        const responses: TezosPublicKey[] = [];
+        const cmd = this.device.getCommands();
         for (let i = 0; i < this.params.length; i++) {
             const batch = this.params[i];
-            const response: TezosPublicKey = await this.device.getCommands().tezosGetPublicKey(
-                batch.path,
-                batch.showOnTrezor
-            );
+            const { message } = await cmd.typedCall('TezosGetPublicKey', 'TezosPublicKey', batch);
             responses.push({
-                path: batch.path,
-                serializedPath: getSerializedPath(batch.path),
-                publicKey: response.public_key,
+                path: batch.address_n,
+                serializedPath: getSerializedPath(batch.address_n),
+                publicKey: message.public_key,
             });
 
             if (this.hasBundle) {
                 // send progress
                 this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
-                    response,
+                    response: message,
                 }));
             }
         }

@@ -8,21 +8,14 @@ import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathU
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { LiskPublicKey } from '../../types/trezor/protobuf';
-import type { CoreMessage, UiPromiseResponse } from '../../types';
+import type { CoreMessage } from '../../types';
 import type { LiskPublicKey as LiskPublicKeyResponse } from '../../types/networks/lisk';
-
-type Batch = {
-    path: Array<number>;
-    showOnTrezor: boolean;
-}
-
-type Params = Array<Batch>;
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class LiskGetPublicKey extends AbstractMethod {
-    params: Params;
+    params: $ElementType<MessageType, 'LiskGetPublicKey'>[] = [];
     hasBundle: boolean;
-    confirmed: boolean = false;
+    confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -33,14 +26,13 @@ export default class LiskGetPublicKey extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
             { name: 'bundle', type: 'array' },
         ]);
 
-        const bundle = [];
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
@@ -48,19 +40,17 @@ export default class LiskGetPublicKey extends AbstractMethod {
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
-            const path: Array<number> = validatePath(batch.path, 3);
-            let showOnTrezor: boolean = false;
+            const path = validatePath(batch.path, 3);
+            let showOnTrezor = false;
             if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
 
-            bundle.push({
-                path,
-                showOnTrezor,
+            this.params.push({
+                address_n: path,
+                show_display: showOnTrezor,
             });
         });
-
-        this.params = bundle;
     }
 
     async confirmation(): Promise<boolean> {
@@ -74,7 +64,7 @@ export default class LiskGetPublicKey extends AbstractMethod {
         if (this.params.length > 1) {
             label = 'Export multiple Lisk public keys';
         } else {
-            label = `Export Lisk public key for account #${ (fromHardened(this.params[0].path[2]) + 1) }`;
+            label = `Export Lisk public key for account #${ (fromHardened(this.params[0].address_n[2]) + 1) }`;
         }
 
         // request confirmation view
@@ -84,31 +74,29 @@ export default class LiskGetPublicKey extends AbstractMethod {
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        const uiResp = await uiPromise.promise;
 
         this.confirmed = uiResp.payload;
         return this.confirmed;
     }
 
-    async run(): Promise<LiskPublicKeyResponse | Array<LiskPublicKeyResponse>> {
-        const responses: Array<LiskPublicKeyResponse> = [];
+    async run() {
+        const responses: LiskPublicKeyResponse[] = [];
+        const cmd = this.device.getCommands();
         for (let i = 0; i < this.params.length; i++) {
-            const batch: Batch = this.params[i];
-            const response: LiskPublicKey = await this.device.getCommands().liskGetPublicKey(
-                batch.path,
-                batch.showOnTrezor
-            );
+            const batch = this.params[i];
+            const { message } = await cmd.typedCall('LiskGetPublicKey', 'LiskPublicKey', batch);
             responses.push({
-                publicKey: response.public_key,
-                path: batch.path,
-                serializedPath: getSerializedPath(batch.path),
+                path: batch.address_n,
+                serializedPath: getSerializedPath(batch.address_n),
+                publicKey: message.public_key,
             });
 
             if (this.hasBundle) {
                 // send progress
                 this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
                     progress: i,
-                    response,
+                    response: message,
                 }));
             }
         }

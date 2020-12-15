@@ -4,20 +4,18 @@ import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 import { validateParams } from './helpers/paramsValidator';
 import { UiMessage } from '../../message/builder';
-
 import type { CoreMessage } from '../../types';
-import type { RecoverDeviceSettings as Params } from '../../types/trezor/protobuf';
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class RecoveryDevice extends AbstractMethod {
-    params: Params;
-    run: () => Promise<any>;
+    params: $ElementType<MessageType, 'RecoveryDevice'>;
 
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['management'];
         this.useEmptyPassphrase = true;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         validateParams(payload, [
             { name: 'word_count', type: 'number' },
@@ -67,7 +65,9 @@ export default class RecoveryDevice extends AbstractMethod {
         return uiResp.payload;
     }
 
-    async run(): Promise<Object> {
-        return await this.device.getCommands().recoveryDevice(this.params);
+    async run() {
+        const cmd = this.device.getCommands();
+        const response = await cmd.typedCall('RecoveryDevice', 'Success', this.params);
+        return response.message;
     }
 }

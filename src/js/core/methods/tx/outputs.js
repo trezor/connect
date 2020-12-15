@@ -15,13 +15,13 @@ import type { BuildTxOutput, BuildTxOutputRequest } from 'hd-wallet';
 
 // local types
 import type { BitcoinNetworkInfo } from '../../../types';
-import type { TransactionOutput } from '../../../types/trezor/protobuf';
+import type { TxOutputType } from '../../../types/trezor/protobuf';
 
 /** *****
  * SignTransaction: validation
  *******/
-export const validateTrezorOutputs = (outputs: Array<TransactionOutput>, coinInfo: BitcoinNetworkInfo): Array<TransactionOutput> => {
-    const trezorOutputs: Array<TransactionOutput> = outputs.map(fixPath).map(convertMultisigPubKey.bind(null, coinInfo.network));
+export const validateTrezorOutputs = (outputs: TxOutputType[], coinInfo: BitcoinNetworkInfo): TxOutputType[] => {
+    const trezorOutputs = outputs.map(fixPath).map(convertMultisigPubKey.bind(null, coinInfo.network));
     for (const output of trezorOutputs) {
         validateParams(output, [
             { name: 'address_n', type: 'array' },
@@ -105,7 +105,7 @@ export const validateHDOutput = (output: BuildTxOutputRequest, coinInfo: Bitcoin
 /** *****
  * Transform from hd-wallet format to Trezor
  *******/
-export const outputToTrezor = (output: BuildTxOutput, coinInfo: BitcoinNetworkInfo): TransactionOutput => {
+export const outputToTrezor = (output: BuildTxOutput, coinInfo: BitcoinNetworkInfo): TxOutputType => {
     if (output.opReturnData) {
         if (Object.prototype.hasOwnProperty.call(output, 'value')) {
             throw ERRORS.TypedError('Method_InvalidParameter', 'opReturn output should not contains value');

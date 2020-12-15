@@ -8,18 +8,11 @@ import { UiMessage } from '../../message/builder';
 import DataManager from '../../data/DataManager';
 
 import type { ConnectSettings, CoreMessage } from '../../types';
-import type { Identity, SignedIdentity } from '../../types/trezor/protobuf';
-import type { Login } from '../../types/misc';
-
-type Params = {
-    asyncChallenge: boolean;
-    identity: Identity;
-    challengeHidden: string;
-    challengeVisual: string;
-}
+import type { MessageType, IdentityType } from '../../types/trezor/protobuf';
 
 export default class RequestLogin extends AbstractMethod {
-    params: Params;
+    params: $ElementType<MessageType, 'SignIdentity'>;
+    asyncChallenge: boolean;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -28,12 +21,12 @@ export default class RequestLogin extends AbstractMethod {
         this.info = 'Login';
         this.useEmptyPassphrase = true;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
-        const identity: Identity = { };
+        const identity: IdentityType = {};
         const settings: ConnectSettings = DataManager.getSettings();
         if (settings.origin) {
-            const uri: Array<string> = settings.origin.split(':');
+            const uri = settings.origin.split(':');
             identity.proto = uri[0];
             identity.host = uri[1].substring(2);
             if (uri[2]) {
@@ -50,22 +43,22 @@ export default class RequestLogin extends AbstractMethod {
         ]);
 
         this.params = {
-            asyncChallenge: payload.asyncChallenge,
             identity,
-            challengeHidden: payload.challengeHidden || '',
-            challengeVisual: payload.challengeVisual || '',
+            challenge_hidden: payload.challengeHidden || '',
+            challenge_visual: payload.challengeVisual || '',
         };
+        this.asyncChallenge = payload.asyncChallenge;
     }
 
-    async run(): Promise<Login> {
-        if (this.params.asyncChallenge) {
+    async run() {
+        if (this.asyncChallenge) {
             // create ui promise
             const uiPromise = this.createUiPromise(UI.LOGIN_CHALLENGE_RESPONSE, this.device);
             // send request to developer
             this.postMessage(UiMessage(UI.LOGIN_CHALLENGE_REQUEST));
             // wait for response from developer
             const uiResp = await uiPromise.promise;
-            const payload: Object = uiResp.payload;
+            const { payload } = uiResp.payload;
 
             // error handler
             if (typeof payload === 'string') {
@@ -78,20 +71,15 @@ export default class RequestLogin extends AbstractMethod {
                 { name: 'challengeVisual', type: 'string', obligatory: true },
             ]);
 
-            this.params.challengeHidden = payload.challengeHidden;
-            this.params.challengeVisual = payload.challengeVisual;
+            this.params.challenge_hidden = payload.challengeHidden;
+            this.params.challenge_visual = payload.challengeVisual;
         }
-
-        const response: SignedIdentity = await this.device.getCommands().signIdentity(
-            this.params.identity,
-            this.params.challengeHidden,
-            this.params.challengeVisual
-        );
-
+        const cmd = this.device.getCommands();
+        const { message } = await cmd.typedCall('SignIdentity', 'SignedIdentity', this.params);
         return {
-            address: response.address,
-            publicKey: response.public_key,
-            signature: response.signature,
+            address: message.address,
+            publicKey: message.public_key,
+            signature: message.signature,
         };
     }
 }

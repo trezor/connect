@@ -19,24 +19,14 @@ import {
     transformReferencedTransactions,
 } from './tx';
 
-import type {
-    TransactionInput,
-    TransactionOutput,
-    TransactionOptions,
-    RefTransaction,
-    SignedTx,
-} from '../../types/trezor/protobuf';
-
-import type {
-    BuildTxInput,
-} from 'hd-wallet';
-
+import type { RefTransaction, TransactionOptions } from '../../types/networks/bitcoin';
+import type { TxInputType, TxOutputType } from '../../types/trezor/protobuf';
 import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 
 type Params = {
-    inputs: Array<TransactionInput>;
-    outputs: Array<TransactionOutput>;
-    refTxs: ?Array<RefTransaction>;
+    inputs: TxInputType[];
+    outputs: TxOutputType[];
+    refTxs?: RefTransaction[];
     options: TransactionOptions;
     coinInfo: BitcoinNetworkInfo;
     push: boolean;
@@ -50,7 +40,7 @@ export default class SignTransaction extends AbstractMethod {
         this.requiredPermissions = ['read', 'write'];
         this.info = 'Sign transaction';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -92,12 +82,12 @@ export default class SignTransaction extends AbstractMethod {
             });
         }
 
-        const inputs: Array<TransactionInput> = validateTrezorInputs(payload.inputs, coinInfo);
-        const outputs: Array<TransactionOutput> = validateTrezorOutputs(payload.outputs, coinInfo);
+        const inputs = validateTrezorInputs(payload.inputs, coinInfo);
+        const outputs = validateTrezorOutputs(payload.outputs, coinInfo);
 
         const outputsWithAmount = outputs.filter(output => typeof output.amount === 'string' && !Object.prototype.hasOwnProperty.call(output, 'op_return_data'));
         if (outputsWithAmount.length > 0) {
-            const total: BigNumber = outputsWithAmount.reduce((bn: BigNumber, output: TransactionOutput) => {
+            const total: BigNumber = outputsWithAmount.reduce((bn, output) => {
                 return bn.plus(typeof output.amount === 'string' ? output.amount : '0');
             }, new BigNumber(0));
             if (total.lte(coinInfo.dustLimit)) {
@@ -128,13 +118,13 @@ export default class SignTransaction extends AbstractMethod {
         }
     }
 
-    async run(): Promise<SignedTx> {
+    async run() {
         const { device, params } = this;
 
-        let refTxs: Array<RefTransaction> = [];
+        let refTxs: RefTransaction[] = [];
         if (!params.refTxs) {
             // initialize backend
-            const hdInputs: Array<BuildTxInput> = params.inputs.map(inputToHD);
+            const hdInputs = params.inputs.map(inputToHD);
             const refTxsIds = getReferencedTransactions(hdInputs);
             if (refTxsIds.length > 0) {
                 // validate backend

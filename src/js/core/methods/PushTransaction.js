@@ -22,7 +22,7 @@ export default class PushTransaction extends AbstractMethod {
         this.useUi = false;
         this.useDevice = false;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -30,7 +30,7 @@ export default class PushTransaction extends AbstractMethod {
             { name: 'coin', type: 'string', obligatory: true },
         ]);
 
-        const coinInfo: ?CoinInfo = getCoinInfo(payload.coin);
+        const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {
             throw ERRORS.TypedError('Method_UnknownCoin');
         }
@@ -47,7 +47,7 @@ export default class PushTransaction extends AbstractMethod {
         };
     }
 
-    async run(): Promise<{ txid: string }> {
+    async run() {
         const backend = await initBlockchain(this.params.coinInfo, this.postMessage);
         const txid: string = await backend.pushTransaction(this.params.tx);
         return {

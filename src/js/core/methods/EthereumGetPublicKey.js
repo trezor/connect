@@ -9,20 +9,18 @@ import { getEthereumNetwork, getUniqueNetworks } from '../../data/CoinInfo';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { CoreMessage, UiPromiseResponse, EthereumNetworkInfo, HDNodeResponse } from '../../types';
+import type { CoreMessage, EthereumNetworkInfo, HDNodeResponse } from '../../types';
+import type { MessageType } from '../../types/trezor/protobuf';
 
-type Batch = {
-    path: Array<number>;
-    network: ?EthereumNetworkInfo;
-    showOnTrezor: boolean;
-}
-
-type Params = Array<Batch>;
+type Params = {
+    ...$ElementType<MessageType, 'EthereumGetPublicKey'>,
+    network?: EthereumNetworkInfo;
+};
 
 export default class EthereumGetPublicKey extends AbstractMethod {
-    confirmed: boolean = false;
-    params: Params;
+    params: Params[] = [];
     hasBundle: boolean;
+    confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -31,14 +29,13 @@ export default class EthereumGetPublicKey extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
             { name: 'bundle', type: 'array' },
         ]);
 
-        const bundle = [];
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
@@ -55,20 +52,18 @@ export default class EthereumGetPublicKey extends AbstractMethod {
                 showOnTrezor = batch.showOnTrezor;
             }
 
-            bundle.push({
-                path,
+            this.params.push({
+                address_n: path,
+                show_display: showOnTrezor,
                 network,
-                showOnTrezor,
             });
         });
 
-        this.params = bundle;
-
         // set info
-        if (bundle.length === 1) {
-            this.info = getNetworkLabel('Export #NETWORK public key', bundle[0].network);
+        if (this.params.length === 1) {
+            this.info = getNetworkLabel('Export #NETWORK public key', this.params[0].network);
         } else {
-            const requestedNetworks = bundle.map(b => b.network);
+            const requestedNetworks = this.params.map(b => b.network);
             const uniqNetworks = getUniqueNetworks(requestedNetworks);
             if (uniqNetworks.length === 1 && uniqNetworks[0]) {
                 this.info = getNetworkLabel('Export multiple #NETWORK public keys', uniqNetworks[0]);
@@ -92,21 +87,21 @@ export default class EthereumGetPublicKey extends AbstractMethod {
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        const uiResp = await uiPromise.promise;
 
         this.confirmed = uiResp.payload;
         return this.confirmed;
     }
 
-    async run(): Promise<HDNodeResponse | Array<HDNodeResponse>> {
-        const responses: Array<HDNodeResponse> = [];
-
+    async run() {
+        const responses: HDNodeResponse[] = [];
+        const cmd = this.device.getCommands();
         for (let i = 0; i < this.params.length; i++) {
-            const batch: Batch = this.params[i];
-            const response = await this.device.getCommands().ethereumGetPublicKey(
-                batch.path,
-                batch.showOnTrezor
-            );
+            const batch = this.params[i];
+            const response = await cmd.ethereumGetPublicKey({
+                address_n: batch.address_n,
+                show_display: batch.show_display,
+            });
             responses.push(response);
 
             if (this.hasBundle) {

@@ -6,14 +6,14 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/eosSignTx';
 
-import type { EosTxHeader, EosTxActionAck, EosSignedTx } from '../../types/trezor/protobuf';
+import type { EosTxHeader, EosTxActionAck } from '../../types/trezor/protobuf';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    path: Array<number>;
+    path: number[];
     chain_id: string;
-    header: ?EosTxHeader;
-    ack: Array<EosTxActionAck>;
+    header?: EosTxHeader;
+    ack: EosTxActionAck[];
 }
 
 export default class EosSignTransaction extends AbstractMethod {
@@ -25,7 +25,7 @@ export default class EosSignTransaction extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('EOS'), this.firmwareRange);
         this.info = 'Sign EOS transaction';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
         // validate incoming parameters
         validateParams(payload, [
             { name: 'path', obligatory: true },
@@ -43,7 +43,7 @@ export default class EosSignTransaction extends AbstractMethod {
         };
     }
 
-    async run(): Promise<EosSignedTx> {
+    async run() {
         const response = await helper.signTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,

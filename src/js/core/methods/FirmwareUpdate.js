@@ -18,7 +18,6 @@ type Params = {
 
 export default class FirmwareUpdate extends AbstractMethod {
     params: Params;
-    run: () => Promise<any>;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -29,7 +28,7 @@ export default class FirmwareUpdate extends AbstractMethod {
         this.useDeviceState = false;
         this.skipFirmwareCheck = true;
 
-        const payload: Params = message.payload;
+        const { payload } = message;
 
         validateParams(payload, [
             { name: 'version', type: 'array' },
@@ -69,7 +68,7 @@ export default class FirmwareUpdate extends AbstractMethod {
         return uiResp.payload;
     }
 
-    async run(): Promise<Object> {
+    async run() {
         const { device } = this;
 
         let binary;
@@ -96,10 +95,7 @@ export default class FirmwareUpdate extends AbstractMethod {
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.postMessage,
             device,
-            {
-                payload: binary,
-                length: binary.byteLength,
-            }
+            { payload: binary }
         );
     }
 }

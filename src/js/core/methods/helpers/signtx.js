@@ -1,25 +1,25 @@
 /* @flow */
 import { ERRORS } from '../../../constants';
-import type { DefaultMessageResponse } from '../../../device/DeviceCommands';
 import type { BitcoinNetworkInfo } from '../../../types';
+import type { RefTransaction, TransactionOptions, SignedTransaction } from '../../../types/networks/bitcoin';
 
 import type {
+    TypedCall,
+    TxAckResponse,
     TxRequest,
-    RefTransaction,
-    TransactionInput,
-    TransactionOutput,
-    TransactionOptions,
-    SignTxInfoToTrezor,
-    TxRequestSerialized,
-    SignedTx,
+    RequestType,
+    TxInputType,
+    TxOutputType,
+    TxRequestSerializedType,
 } from '../../../types/trezor/protobuf';
 
-const requestPrevTxInfo = (reqTx: RefTransaction,
-    requestType: string,
+const requestPrevTxInfo = (
+    reqTx: RefTransaction,
+    requestType: RequestType,
     requestIndex: string | number,
     dataLen: ?(string | number),
     dataOffset: ?(string | number),
-): SignTxInfoToTrezor => {
+): TxAckResponse => {
     const i = +requestIndex;
     if (requestType === 'TXINPUT') {
         return {inputs: [reqTx.inputs[i]]};
@@ -48,8 +48,8 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
     }
     if (requestType === 'TXMETA') {
         const outputCount = reqTx.bin_outputs.length;
-        const data: ?string = reqTx.extra_data;
-        const meta: SignTxInfoToTrezor = {
+        const data = reqTx.extra_data;
+        const meta = {
             version: reqTx.version,
             lock_time: reqTx.lock_time,
             inputs_cnt: reqTx.inputs.length,
@@ -72,11 +72,12 @@ const requestPrevTxInfo = (reqTx: RefTransaction,
     throw ERRORS.TypedError('Runtime', `requestPrevTxInfo: Unknown request type: ${requestType}`);
 };
 
-const requestSignedTxInfo = (inputs: Array<TransactionInput>,
-    outputs: Array<TransactionOutput>,
-    requestType: string,
+const requestSignedTxInfo = (
+    inputs: TxInputType[],
+    outputs: TxOutputType[],
+    requestType: RequestType,
     requestIndex: string | number
-): SignTxInfoToTrezor => {
+): TxAckResponse => {
     const i = +requestIndex;
     if (requestType === 'TXINPUT') {
         return {inputs: [inputs[i]]};
@@ -95,11 +96,12 @@ const requestSignedTxInfo = (inputs: Array<TransactionInput>,
 
 // requests information about a transaction
 // can be either signed transaction itself of prev transaction
-const requestTxInfo = (m: TxRequest,
+const requestTxInfo = (
+    m: TxRequest,
     index: {[hash: string]: RefTransaction},
-    inputs: Array<TransactionInput>,
-    outputs: Array<TransactionOutput>
-): SignTxInfoToTrezor => {
+    inputs: TxInputType[],
+    outputs: TxOutputType[],
+): TxAckResponse => {
     const md = m.details;
     const hash = md.tx_hash;
     if (hash) {
@@ -119,45 +121,46 @@ const requestTxInfo = (m: TxRequest,
     }
 };
 
-const saveTxSignatures = (ms: TxRequestSerialized,
+const saveTxSignatures = (
+    ms?: TxRequestSerializedType,
     serializedTx: {serialized: string},
-    signatures: Array<string>
+    signatures: string[],
 ) => {
-    if (ms) {
-        const _signatureIndex = ms.signature_index;
-        const _signature = ms.signature;
-        const _serializedTx = ms.serialized_tx;
-        if (_serializedTx != null) {
-            serializedTx.serialized += _serializedTx;
+    if (!ms) return;
+    const _signatureIndex = ms.signature_index;
+    const _signature = ms.signature;
+    const _serializedTx = ms.serialized_tx;
+    if (_serializedTx != null) {
+        serializedTx.serialized += _serializedTx;
+    }
+    if (_signatureIndex != null) {
+        if (_signature == null) {
+            throw ERRORS.TypedError('Runtime', 'saveTxSignatures: Unexpected null in trezor:TxRequestSerialized signature.');
         }
-        if (_signatureIndex != null) {
-            if (_signature == null) {
-                throw ERRORS.TypedError('Runtime', 'saveTxSignatures: Unexpected null in trezor:TxRequestSerialized signature.');
-            }
-            signatures[_signatureIndex] = _signature;
-        }
+        signatures[_signatureIndex] = _signature;
     }
 };
 
-const processTxRequest = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
-    m: TxRequest,
+const processTxRequest = async (
+    typedCall: TypedCall,
+    txRequest: TxRequest,
     serializedTx: {serialized: string},
-    signatures: Array<string>,
+    signatures: string[],
     index: {[key: string]: RefTransaction},
-    inputs: Array<TransactionInput>,
-    outputs: Array<TransactionOutput>
-): Promise<SignedTx> => {
-    saveTxSignatures(m.serialized, serializedTx, signatures);
-    if (m.request_type === 'TXFINISHED') {
+    inputs: TxInputType[],
+    outputs: TxOutputType[],
+): Promise<SignedTransaction> => {
+    saveTxSignatures(txRequest.serialized, serializedTx, signatures);
+    if (txRequest.request_type === 'TXFINISHED') {
         return Promise.resolve({
             signatures: signatures,
             serializedTx: serializedTx.serialized,
         });
     }
 
-    const resTx: SignTxInfoToTrezor = requestTxInfo(m, index, inputs, outputs);
+    const resTx = requestTxInfo(txRequest, index, inputs, outputs);
 
-    const response: DefaultMessageResponse = await typedCall('TxAck', 'TxRequest', { tx: resTx });
+    const response = await typedCall('TxAck', 'TxRequest', { tx: resTx });
     return await processTxRequest(
         typedCall,
         response.message,
@@ -169,28 +172,29 @@ const processTxRequest = async (typedCall: (type: string, resType: string, msg: 
     );
 };
 
-export default async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
-    inputs: Array<TransactionInput>,
-    outputs: Array<TransactionOutput>,
-    refTxs: Array<RefTransaction>,
+export default async (
+    typedCall: TypedCall,
+    inputs: TxInputType[],
+    outputs: TxOutputType[],
+    refTxs: RefTransaction[],
     options: TransactionOptions,
     coinInfo: BitcoinNetworkInfo,
-): Promise<SignedTx> => {
+): Promise<SignedTransaction> => {
     const index: {[key: string]: RefTransaction} = {};
     refTxs.forEach((tx: RefTransaction) => {
         index[tx.hash.toLowerCase()] = tx;
     });
-    const signatures: Array<string> = [];
+    const signatures: string[] = [];
     const serializedTx: {serialized: string} = {serialized: ''};
 
-    const response: DefaultMessageResponse = await typedCall('SignTx', 'TxRequest', {
+    const response = await typedCall('SignTx', 'TxRequest', {
         ...options,
         inputs_count: inputs.length,
         outputs_count: outputs.length,
         coin_name: coinInfo.name,
     });
 
-    const signed: SignedTx = await processTxRequest(
+    return processTxRequest(
         typedCall,
         response.message,
         serializedTx,
@@ -199,6 +203,4 @@ export default async (typedCall: (type: string, resType: string, msg: Object) =>
         inputs,
         outputs
     );
-
-    return signed;
 };

@@ -1,10 +1,10 @@
 /* @flow */
 import { versionCompare } from './versionUtils';
 import type { Features, CoinInfo } from '../types';
+import type { Capability } from '../types/trezor/protobuf';
 
 // From protobuf
-const CAPABILITIES = [
-    undefined,
+const CAPABILITIES: Capability[] = [
     'Capability_Bitcoin',
     'Capability_Bitcoin_like',
     'Capability_Binance',
@@ -27,14 +27,14 @@ const CAPABILITIES = [
 const DEFAULT_CAPABILITIES_T1 = [1, 2, 5, 7, 8, 10, 12, 14];
 const DEFAULT_CAPABILITIES_TT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
-export const parseCapabilities = (features?: Features): string[] => {
+export const parseCapabilities = (features?: Features): Capability[] => {
     if (!features || features.firmware_present === false) return []; // no features or no firmware - no capabilities
     // needs to be "any" since Features.capabilities are declared as string[] but in fact it's a number[]
-    const filter = (c: any) => CAPABILITIES[c] || 'Capability_Unknown_trezor-connect';
+    const filter = (c: any) => CAPABILITIES[c - 1] ? [CAPABILITIES[c - 1]] : [];
     // fallback for older firmware
-    if (!features.capabilities || !features.capabilities.length) return features.major_version === 1 ? DEFAULT_CAPABILITIES_T1.map(filter) : DEFAULT_CAPABILITIES_TT.map(filter);
+    if (!features.capabilities || !features.capabilities.length) return features.major_version === 1 ? DEFAULT_CAPABILITIES_T1.flatMap(filter) : DEFAULT_CAPABILITIES_TT.flatMap(filter);
     // regular capabilities
-    return features.capabilities.map(filter);
+    return features.capabilities.flatMap(filter);
 };
 
 // TODO: support type

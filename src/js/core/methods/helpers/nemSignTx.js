@@ -1,12 +1,11 @@
 /* @flow */
 
 import type {
-    NEMSignTxMessage,
+    NEMSignTx,
     NEMTransactionCommon,
     NEMTransfer,
     NEMImportanceTransfer,
     NEMAggregateModification,
-    NEMCosignatoryModification,
     NEMProvisionNamespace,
     NEMMosaicCreation,
     NEMMosaicDefinition,
@@ -68,7 +67,7 @@ const getCommon = (tx: $T.NEMTransaction, address_n?: number[]): NEMTransactionC
 };
 
 const transferMessage = (tx: $T.NEMTransferTransaction): NEMTransfer => {
-    const mosaics = tx.mosaics ? tx.mosaics.map((mosaic: $T.NEMMosaic) => ({
+    const mosaics = tx.mosaics ? tx.mosaics.map(mosaic => ({
         namespace: mosaic.mosaicId.namespaceId,
         mosaic: mosaic.mosaicId.name,
         quantity: mosaic.quantity,
@@ -89,7 +88,7 @@ const importanceTransferMessage = (tx: $T.NEMImportanceTransaction): NEMImportan
 });
 
 const aggregateModificationMessage = (tx: $T.NEMAggregateModificationTransaction): NEMAggregateModification => {
-    const modifications: ?Array<NEMCosignatoryModification> = tx.modifications ? tx.modifications.map(modification => ({
+    const modifications = tx.modifications ? tx.modifications.map(modification => ({
         type: NEM_AGGREGATE_MODIFICATION_TYPES[modification.modificationType],
         public_key: modification.cosignatoryAccount,
     })) : undefined;
@@ -159,10 +158,16 @@ const supplyChangeMessage = (tx: $T.NEMSupplyChangeTransaction): NEMMosaicSupply
     delta: tx.delta,
 });
 
-export const createTx = (tx: $T.NEMTransaction, address_n: number[]): NEMSignTxMessage => {
-    let transaction: $T.NEMTransaction = tx;
-    const message: NEMSignTxMessage = {
+export const createTx = (tx: $T.NEMTransaction, address_n: number[]) => {
+    let transaction = tx;
+    const message: NEMSignTx = {
         transaction: getCommon(tx, address_n),
+        transfer: undefined,
+        importance_transfer: undefined,
+        aggregate_modification: undefined,
+        provision_namespace: undefined,
+        mosaic_creation: undefined,
+        supply_change: undefined,
     };
 
     if (tx.type === NEM_COSIGNING || tx.type === NEM_MULTISIG || tx.type === NEM_MULTISIG_SIGNATURE) {

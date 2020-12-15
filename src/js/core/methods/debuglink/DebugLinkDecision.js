@@ -4,10 +4,10 @@ import AbstractMethod from '../AbstractMethod';
 import { validateParams } from '../helpers/paramsValidator';
 import { ERRORS } from '../../../constants';
 import type { CoreMessage } from '../../../types';
-import type { DebugLinkDecision as $DebugLinkDecision } from '../../../types/trezor/protobuf';
+import type { MessageType } from '../../../types/trezor/protobuf';
 
 export default class DebugLinkDecision extends AbstractMethod {
-    params: $DebugLinkDecision;
+    params: $ElementType<MessageType, 'DebugLinkDecision'>;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -25,12 +25,12 @@ export default class DebugLinkDecision extends AbstractMethod {
 
         this.params = {
             yes_no: payload.yes_no,
-            up_down: payload.up_down,
+            // up_down: payload.up_down,
             input: payload.input,
         };
     }
 
-    async run(): Promise<{ debugLink: true }> {
+    async run() {
         if (!this.device.hasDebugLink) {
             throw ERRORS.TypedError('Runtime', 'Device is not a debug link');
         }
@@ -38,8 +38,8 @@ export default class DebugLinkDecision extends AbstractMethod {
             throw ERRORS.TypedError('Runtime', 'DebugLinkDecision: Device is not acquired!');
         }
 
-        await this.device.getCommands().debugLinkDecision(this.params);
-
+        const cmd = this.device.getCommands();
+        await cmd.typedCall('DebugLinkDecision', 'Success', this.params);
         return {
             debugLink: true,
         };

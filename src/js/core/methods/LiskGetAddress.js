@@ -8,22 +8,20 @@ import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathU
 import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
-import type { CoreMessage, UiPromiseResponse } from '../../types';
+import type { CoreMessage } from '../../types';
 import type { LiskAddress } from '../../types/networks/lisk';
+import type { MessageType } from '../../types/trezor/protobuf';
 
-type Batch = {
-    path: Array<number>;
-    address: ?string;
-    showOnTrezor: boolean;
-}
-
-type Params = Array<Batch>;
+type Params = {
+    ...$ElementType<MessageType, 'LiskGetAddress'>,
+    address?: string;
+};
 
 export default class LiskGetAddress extends AbstractMethod {
-    confirmed: boolean = false;
-    params: Params;
+    params: Params[] = [];
     hasBundle: boolean;
     progress: number = 0;
+    confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -33,7 +31,7 @@ export default class LiskGetAddress extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -41,7 +39,6 @@ export default class LiskGetAddress extends AbstractMethod {
             { name: 'useEventListener', type: 'boolean' },
         ]);
 
-        const bundle = [];
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
@@ -50,27 +47,26 @@ export default class LiskGetAddress extends AbstractMethod {
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
-            const path: Array<number> = validatePath(batch.path, 3);
-            let showOnTrezor: boolean = true;
+            const path = validatePath(batch.path, 3);
+            let showOnTrezor = true;
             if (Object.prototype.hasOwnProperty.call(batch, 'showOnTrezor')) {
                 showOnTrezor = batch.showOnTrezor;
             }
 
-            bundle.push({
-                path,
+            this.params.push({
+                address_n: path,
                 address: batch.address,
-                showOnTrezor,
+                show_display: showOnTrezor,
             });
         });
 
-        const useEventListener = payload.useEventListener && bundle.length === 1 && typeof bundle[0].address === 'string' && bundle[0].showOnTrezor;
+        const useEventListener = payload.useEventListener && this.params.length === 1 && typeof this.params[0].address === 'string' && this.params[0].show_display;
         this.confirmed = useEventListener;
         this.useUi = !useEventListener;
-        this.params = bundle;
 
         // set info
-        if (bundle.length === 1) {
-            this.info = `Export Lisk address for account #${ (fromHardened(this.params[0].path[2]) + 1) }`;
+        if (this.params.length === 1) {
+            this.info = `Export Lisk address for account #${ (fromHardened(this.params[0].address_n[2]) + 1) }`;
         } else {
             this.info = 'Export multiple Lisk addresses';
         }
@@ -80,7 +76,7 @@ export default class LiskGetAddress extends AbstractMethod {
         if (code === 'ButtonRequest_Address') {
             const data = {
                 type: 'address',
-                serializedPath: getSerializedPath(this.params[this.progress].path),
+                serializedPath: getSerializedPath(this.params[this.progress].address_n),
                 address: this.params[this.progress].address || 'not-set',
             };
             return data;
@@ -95,15 +91,14 @@ export default class LiskGetAddress extends AbstractMethod {
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
-        const label: string = this.info;
         // request confirmation view
         this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
             view: 'export-address',
-            label,
+            label: this.info,
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        const uiResp = await uiPromise.promise;
 
         this.confirmed = uiResp.payload;
         return this.confirmed;
@@ -121,22 +116,34 @@ export default class LiskGetAddress extends AbstractMethod {
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        const uiResp = await uiPromise.promise;
         return uiResp.payload;
     }
 
-    async run(): Promise<LiskAddress | Array<LiskAddress>> {
-        const responses: Array<LiskAddress> = [];
+    async _call({
+        address_n,
+        show_display,
+    }: Params) {
+        const cmd = this.device.getCommands();
+        const response = await cmd.typedCall('LiskGetAddress', 'LiskAddress', {
+            address_n,
+            show_display,
+        });
+        return response.message;
+    }
+
+    async run() {
+        const responses: LiskAddress[] = [];
 
         for (let i = 0; i < this.params.length; i++) {
-            const batch: Batch = this.params[i];
+            const batch = this.params[i];
             // silently get address and compare with requested address
             // or display as default inside popup
-            if (batch.showOnTrezor) {
-                const silent = await this.device.getCommands().liskGetAddress(
-                    batch.path,
-                    false
-                );
+            if (batch.show_display) {
+                const silent = await this._call({
+                    ...batch,
+                    show_display: false,
+                });
                 if (typeof batch.address === 'string') {
                     if (batch.address !== silent.address) {
                         throw ERRORS.TypedError('Method_AddressNotMatch');
@@ -146,13 +153,10 @@ export default class LiskGetAddress extends AbstractMethod {
                 }
             }
 
-            const response = await this.device.getCommands().liskGetAddress(
-                batch.path,
-                batch.showOnTrezor
-            );
+            const response = await this._call(batch);
             responses.push({
-                path: batch.path,
-                serializedPath: getSerializedPath(batch.path),
+                path: batch.address_n,
+                serializedPath: getSerializedPath(batch.address_n),
                 address: response.address,
             });
 

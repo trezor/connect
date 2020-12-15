@@ -2,19 +2,12 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-import type { Success } from '../../types/trezor/protobuf';
-import type { CoreMessage } from '../../types';
-
 import { stripHexPrefix, messageToHex } from '../../utils/formatUtils';
-
-type Params = {
-    address: string;
-    signature: string;
-    message: string;
-}
+import type { CoreMessage } from '../../types';
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class EthereumVerifyMessage extends AbstractMethod {
-    params: Params;
+    params: $ElementType<MessageType, 'EthereumVerifyMessage'>;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -23,7 +16,7 @@ export default class EthereumVerifyMessage extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Verify message';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -41,11 +34,9 @@ export default class EthereumVerifyMessage extends AbstractMethod {
         };
     }
 
-    async run(): Promise<Success> {
-        return await this.device.getCommands().ethereumVerifyMessage(
-            this.params.address,
-            this.params.signature,
-            this.params.message,
-        );
+    async run() {
+        const cmd = this.device.getCommands();
+        const response = await cmd.typedCall('EthereumVerifyMessage', 'Success', this.params);
+        return response.message;
     }
 }

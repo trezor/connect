@@ -7,28 +7,16 @@ import { validatePath } from '../../utils/pathUtils';
 import { addressParametersToProto, validateAddressParameters } from './helpers/cardanoAddressParameters';
 
 import type {
-    CardanoTxCertificate,
-    CardanoTxInput,
-    CardanoTxOutput,
-    CardanoTxWithdrawal,
+    MessageType,
+    CardanoTxCertificateType,
+    CardanoTxInputType,
+    CardanoTxOutputType,
+    CardanoTxWithdrawalType,
 } from '../../types/trezor/protobuf';
-import type { CardanoSignedTx as CardanoSignedTxResponse } from '../../types/networks/cardano';
 import type { CoreMessage } from '../../types';
 
-type Params = {
-    inputs: Array<CardanoTxInput>;
-    outputs: Array<CardanoTxOutput>;
-    fee: string;
-    ttl: string;
-    certificates: Array<CardanoTxCertificate>;
-    withdrawals: Array<CardanoTxWithdrawal>;
-    metadata: string;
-    protocolMagic: number;
-    networkId: number;
-}
-
 export default class CardanoSignTransaction extends AbstractMethod {
-    params: Params;
+    params: $ElementType<MessageType, 'CardanoSignTx'>;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -36,7 +24,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Cardano'), this.firmwareRange);
         this.info = 'Sign Cardano transaction';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
         // validate incoming parameters
         validateParams(payload, [
             { name: 'inputs', type: 'array', obligatory: true },
@@ -50,7 +38,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             { name: 'networkId', type: 'number', obligatory: true },
         ]);
 
-        const inputs: Array<CardanoTxInput> = payload.inputs.map(input => {
+        const inputs: CardanoTxInputType[] = payload.inputs.map(input => {
             validateParams(input, [
                 { name: 'path', obligatory: true },
                 { name: 'prev_hash', type: 'string', obligatory: true },
@@ -64,7 +52,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             };
         });
 
-        const outputs: Array<CardanoTxOutput> = payload.outputs.map(output => {
+        const outputs: CardanoTxOutputType[] = payload.outputs.map(output => {
             validateParams(output, [
                 { name: 'address', type: 'string' },
                 { name: 'amount', type: 'amount', obligatory: true },
@@ -84,7 +72,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             }
         });
 
-        let certificates: Array<CardanoTxCertificate> = [];
+        let certificates: CardanoTxCertificateType[] = [];
         if (payload.certificates) {
             certificates = payload.certificates.map(certificate => {
                 validateParams(certificate, [
@@ -100,7 +88,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             });
         }
 
-        let withdrawals: Array<CardanoTxWithdrawal> = [];
+        let withdrawals: CardanoTxWithdrawalType[] = [];
         if (payload.withdrawals) {
             withdrawals = payload.withdrawals.map(withdrawal => {
                 validateParams(withdrawal, [
@@ -122,27 +110,17 @@ export default class CardanoSignTransaction extends AbstractMethod {
             certificates,
             withdrawals,
             metadata: payload.metadata,
-            protocolMagic: payload.protocolMagic,
-            networkId: payload.networkId,
+            protocol_magic: payload.protocolMagic,
+            network_id: payload.networkId,
         };
     }
 
-    async run(): Promise<CardanoSignedTxResponse> {
-        const response = await this.device.getCommands().cardanoSignTx(
-            this.params.inputs,
-            this.params.outputs,
-            this.params.fee,
-            this.params.ttl,
-            this.params.certificates,
-            this.params.withdrawals,
-            this.params.metadata,
-            this.params.protocolMagic,
-            this.params.networkId,
-        );
-
+    async run() {
+        const cmd = this.device.getCommands();
+        const { message } = await cmd.typedCall('CardanoSignTx', 'CardanoSignedTx', this.params);
         return {
-            hash: response.tx_hash,
-            serializedTx: response.serialized_tx,
+            hash: message.tx_hash,
+            serializedTx: message.serialized_tx,
         };
     }
 }
