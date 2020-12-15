@@ -113,7 +113,4 @@ export type VerifyMessage = {
     coin: string;
 };
 
-export type {
-    TxInputType as TransactionInput,
-    TxOutputType as TransactionOutput,
-} from '../trezor/protobuf';
+export type { TxInputType, TxOutputType } from '../trezor/protobuf';

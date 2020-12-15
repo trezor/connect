@@ -5,11 +5,10 @@ import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import { getFirmwareRange } from './helpers/paramsValidator';
-import type { Success } from '../../types/trezor/protobuf';
-import type { CoreMessage, UiPromiseResponse } from '../../types';
+import type { CoreMessage } from '../../types';
 
 export default class WipeDevice extends AbstractMethod {
-    confirmed: boolean = false;
+    confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -39,13 +38,15 @@ export default class WipeDevice extends AbstractMethod {
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        const uiResp = await uiPromise.promise;
 
         this.confirmed = uiResp.payload;
         return this.confirmed;
     }
 
-    async run(): Promise<Success> {
-        return await this.device.getCommands().wipe();
+    async run() {
+        const cmd = this.device.getCommands();
+        const response = await cmd.typedCall('WipeDevice', 'Success');
+        return response.message;
     }
 }

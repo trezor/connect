@@ -6,16 +6,11 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/tezosSignTx';
 
-import type { TezosOperation } from '../../types/networks/tezos';
-import type { TezosTransaction, TezosSignedTx } from '../../types/trezor/protobuf';
 import type { CoreMessage } from '../../types';
-
-type Params = {
-    transaction: TezosTransaction;
-}
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class TezosSignTransaction extends AbstractMethod {
-    params: Params;
+    params: $ElementType<MessageType, 'TezosSignTx'>;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -23,7 +18,7 @@ export default class TezosSignTransaction extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Tezos'), this.firmwareRange);
         this.info = 'Sign Tezos transaction';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -33,18 +28,12 @@ export default class TezosSignTransaction extends AbstractMethod {
         ]);
 
         const path = validatePath(payload.path, 3);
-        const branch: string = payload.branch;
-        const operation: TezosOperation = payload.operation;
-        const transaction = helper.createTx(path, branch, operation);
-
-        this.params = {
-            transaction,
-        };
+        this.params = helper.createTx(path, payload.branch, payload.operation);
     }
 
-    async run(): Promise<TezosSignedTx> {
-        return await this.device.getCommands().tezosSignTransaction(
-            this.params.transaction,
-        );
+    async run() {
+        const cmd = this.device.getCommands();
+        const response = await cmd.typedCall('TezosSignTx', 'TezosSignedTx', this.params);
+        return response.message;
     }
 }

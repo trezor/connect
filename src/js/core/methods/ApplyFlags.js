@@ -6,21 +6,17 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import type { CoreMessage } from '../../types';
-
-type Params = {
-    flags: number;
-}
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class ApplyFlags extends AbstractMethod {
-    params: Params;
-    run: () => Promise<any>;
+    params: $ElementType<MessageType, 'ApplyFlags'>;
 
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['management'];
         this.useDeviceState = false;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         validateParams(payload, [
             { name: 'flags', type: 'number', obligatory: true },
@@ -52,7 +48,9 @@ export default class ApplyFlags extends AbstractMethod {
         return uiResp.payload;
     }
 
-    async run(): Promise<Object> {
-        return await this.device.getCommands().applyFlags(this.params);
+    async run() {
+        const cmd = this.device.getCommands();
+        const response = await cmd.typedCall('ApplyFlags', 'Success', this.params);
+        return response.message;
     }
 }

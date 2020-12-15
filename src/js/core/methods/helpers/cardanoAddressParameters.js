@@ -2,7 +2,7 @@
 import { validateParams } from '../helpers/paramsValidator';
 import { validatePath } from '../../../utils/pathUtils';
 
-import type { CardanoAddressParameters as CardanoAddressParametersProto } from '../../../types/trezor/protobuf';
+import type { CardanoAddressParametersType } from '../../../types/trezor/protobuf';
 import type { CardanoAddressParameters } from '../../../types/networks/cardano';
 
 export const validateAddressParameters = (addressParameters: CardanoAddressParameters) => {
@@ -26,7 +26,7 @@ export const validateAddressParameters = (addressParameters: CardanoAddressParam
     }
 };
 
-export const addressParametersToProto = (addressParameters: CardanoAddressParameters): CardanoAddressParametersProto => {
+export const addressParametersToProto = (addressParameters: CardanoAddressParameters): CardanoAddressParametersType => {
     const path = validatePath(addressParameters.path, 3);
 
     let stakingPath = [];
@@ -52,7 +52,7 @@ export const addressParametersToProto = (addressParameters: CardanoAddressParame
     };
 };
 
-export const addressParametersFromProto = (addressParameters: CardanoAddressParametersProto): CardanoAddressParameters => {
+export const addressParametersFromProto = (addressParameters: CardanoAddressParametersType): CardanoAddressParameters => {
     let certificatePointer;
     if (addressParameters.certificate_pointer) {
         certificatePointer = {

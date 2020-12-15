@@ -1,8 +1,8 @@
 /* @flow */
 
 import { ERRORS } from '../../../constants';
-import type { EthereumTxRequest, EthereumSignedTx } from '../../../types/trezor/protobuf';
-import type { DefaultMessageResponse } from '../../../device/DeviceCommands';
+import type { EthereumSignedTx } from '../../../types/networks/ethereum';
+import type { TypedCall, EthereumTxRequest } from '../../../types/trezor/protobuf';
 
 const splitString = (str: ?string, len: number): [string, string] => {
     if (str == null) {
@@ -14,7 +14,7 @@ const splitString = (str: ?string, len: number): [string, string] => {
 };
 
 const processTxRequest = async (
-    typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
+    typedCall: TypedCall,
     request: EthereumTxRequest,
     data: ?string,
     chain_id: ?number,
@@ -41,9 +41,9 @@ const processTxRequest = async (
     }
 
     const [first, rest] = splitString(data, request.data_length * 2);
-    const response: DefaultMessageResponse = await typedCall('EthereumTxAck', 'EthereumTxRequest', { data_chunk: first });
+    const response = await typedCall('EthereumTxAck', 'EthereumTxRequest', { data_chunk: first });
 
-    return await processTxRequest(
+    return processTxRequest(
         typedCall,
         response.message,
         rest,
@@ -58,8 +58,9 @@ function stripLeadingZeroes(str: string) {
     return str;
 }
 
-export const ethereumSignTx = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
-    address_n: Array<number>,
+export const ethereumSignTx = async (
+    typedCall: TypedCall,
+    address_n: number[],
     to: string,
     value: string,
     gas_limit: string,
@@ -68,7 +69,7 @@ export const ethereumSignTx = async (typedCall: (type: string, resType: string, 
     data?: string,
     chain_id?: number,
     tx_type?: number
-): Promise<EthereumSignedTx> => {
+) => {
     const length = data == null ? 0 : data.length / 2;
 
     const [first, rest] = splitString(data, 1024 * 2);
@@ -104,9 +105,9 @@ export const ethereumSignTx = async (typedCall: (type: string, resType: string, 
         };
     }
 
-    const response: DefaultMessageResponse = await typedCall('EthereumSignTx', 'EthereumTxRequest', message);
+    const response = await typedCall('EthereumSignTx', 'EthereumTxRequest', message);
 
-    return await processTxRequest(
+    return processTxRequest(
         typedCall,
         response.message,
         rest,

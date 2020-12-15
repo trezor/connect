@@ -29,8 +29,8 @@ export const getBitcoinNetwork = (pathOrName: number[] | string): ?BitcoinNetwor
     }
 };
 
-export const getEthereumNetwork = (pathOrName: number[] | string): ?EthereumNetworkInfo => {
-    const networks: EthereumNetworkInfo[] = cloneCoinInfo(ethereumNetworks);
+export const getEthereumNetwork = (pathOrName: number[] | string) => {
+    const networks = cloneCoinInfo(ethereumNetworks);
     if (typeof pathOrName === 'string') {
         const name = pathOrName.toLowerCase();
         return networks.find(n => n.name.toLowerCase() === name || n.shortcut.toLowerCase() === name);

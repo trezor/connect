@@ -7,23 +7,11 @@ import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 
 import type { CoreMessage } from '../../types';
-import type { CipheredKeyValue } from '../../types/trezor/protobuf';
-
-type Batch = {
-    path: Array<number>;
-    key: string;
-    value: string;
-    encrypt: boolean;
-    askOnEncrypt: boolean;
-    askOnDecrypt: boolean;
-    iv: string;
-}
-type Params = Array<Batch>;
+import type { MessageType, CipheredKeyValue } from '../../types/trezor/protobuf';
 
 export default class CipherKeyValue extends AbstractMethod {
-    params: Params;
+    params: $ElementType<MessageType, 'CipherKeyValue'>[] = [];
     hasBundle: boolean;
-    confirmed: boolean = false;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -35,14 +23,13 @@ export default class CipherKeyValue extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
             { name: 'bundle', type: 'array' },
         ]);
 
-        const bundle = [];
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
@@ -55,36 +42,24 @@ export default class CipherKeyValue extends AbstractMethod {
                 { name: 'iv', type: 'string' },
             ]);
 
-            const path: Array<number> = validatePath(batch.path);
-
-            bundle.push({
-                path,
+            this.params.push({
+                address_n: validatePath(batch.path),
                 key: batch.key,
-                value: batch.value,
+                value: batch.value instanceof Buffer ? batch.value.toString('hex') : batch.value,
                 encrypt: batch.encrypt,
-                askOnEncrypt: batch.askOnEncrypt,
-                askOnDecrypt: batch.askOnDecrypt,
-                iv: batch.iv,
+                ask_on_encrypt: batch.askOnEncrypt,
+                ask_on_decrypt: batch.askOnDecrypt,
+                iv: batch.iv instanceof Buffer ? batch.iv.toString('hex') : batch.iv,
             });
         });
-
-        this.params = bundle;
     }
 
-    async run(): Promise<CipheredKeyValue | Array<CipheredKeyValue>> {
-        const responses: Array<CipheredKeyValue> = [];
+    async run() {
+        const responses: CipheredKeyValue[] = [];
+        const cmd = this.device.getCommands();
         for (let i = 0; i < this.params.length; i++) {
-            const batch = this.params[i];
-            const response: CipheredKeyValue = await this.device.getCommands().cipherKeyValue(
-                batch.path,
-                batch.key,
-                batch.value,
-                batch.encrypt,
-                batch.askOnEncrypt,
-                batch.askOnDecrypt,
-                batch.iv
-            );
-            responses.push(response);
+            const response = await cmd.typedCall('CipherKeyValue', 'CipheredKeyValue', this.params[i]);
+            responses.push(response.message);
 
             if (this.hasBundle) {
                 // send progress

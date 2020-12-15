@@ -20,7 +20,7 @@ export default class GetCoinInfo extends AbstractMethod {
         this.useDevice = false;
         this.useUi = false;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         validateParams(payload, [
             { name: 'coin', type: 'string', obligatory: true },

@@ -1,17 +1,15 @@
 /* @flow */
 
 import AbstractMethod from './AbstractMethod';
-
 import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 import { validateParams } from './helpers/paramsValidator';
-
-import type { LoadDeviceFlags, Success } from '../../types/trezor/protobuf';
-import type { CoreMessage, UiPromiseResponse } from '../../types';
+import type { CoreMessage } from '../../types';
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class LoadDevice extends AbstractMethod {
-    confirmed: boolean = false;
-    params: LoadDeviceFlags;
+    params: $ElementType<MessageType, 'LoadDevice'>;
+    confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -20,7 +18,7 @@ export default class LoadDevice extends AbstractMethod {
         this.requiredPermissions = ['management'];
         this.info = 'Load device';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
         // validate bundle type
         validateParams(payload, [
             { name: 'mnemonics', type: 'array' },
@@ -63,22 +61,26 @@ export default class LoadDevice extends AbstractMethod {
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        const uiResp = await uiPromise.promise;
 
         this.confirmed = uiResp.payload;
         return this.confirmed;
     }
 
-    async run(): Promise<Success> {
+    async run() {
         // todo: remove when listed firmwares become mandatory
         if (!this.device.atLeast(['1.8.2', '2.1.2'])) {
             if (!this.params.mnemonics || typeof this.params.mnemonics[0] !== 'string') {
                 throw ERRORS.TypedError('Method_InvalidParameter', 'invalid mnemonic array. should contain at least one mnemonic string');
             }
+            // $FlowIssue older protobuf messages requires mnemonic as string
             this.params.mnemonic = this.params.mnemonics[0];
+            // $FlowIssue older protobuf messages doesn't have mnemonics field
             delete this.params.mnemonics;
         }
 
-        return await this.device.getCommands().load(this.params);
+        const cmd = this.device.getCommands();
+        const response = await cmd.typedCall('LoadDevice', 'Success', this.params);
+        return response.message;
     }
 }

@@ -3,17 +3,11 @@
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
-import type { Success } from '../../types/trezor/protobuf';
 import type { CoreMessage } from '../../types';
-
-type Params = {
-    publicKey: string;
-    signature: string;
-    message: string;
-}
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class LiskVerifyMessage extends AbstractMethod {
-    params: Params;
+    params: $ElementType<MessageType, 'LiskVerifyMessage'>;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -22,7 +16,7 @@ export default class LiskVerifyMessage extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Lisk'), this.firmwareRange);
         this.info = 'Verify Lisk message';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -32,20 +26,18 @@ export default class LiskVerifyMessage extends AbstractMethod {
         ]);
 
         // TODO: check if message is already in hex format
-        const messageHex: string = Buffer.from(payload.message, 'utf8').toString('hex');
+        const messageHex = Buffer.from(payload.message, 'utf8').toString('hex');
 
         this.params = {
-            publicKey: payload.publicKey,
+            public_key: payload.publicKey,
             signature: payload.signature,
             message: messageHex,
         };
     }
 
-    async run(): Promise<Success> {
-        return await this.device.getCommands().liskVerifyMessage(
-            this.params.publicKey,
-            this.params.signature,
-            this.params.message,
-        );
+    async run() {
+        const cmd = this.device.getCommands();
+        const response = await cmd.typedCall('LiskVerifyMessage', 'Success', this.params);
+        return response.message;
     }
 }

@@ -2,12 +2,12 @@
 import * as bitcoin from '@trezor/utxo-lib';
 import * as ecurve from 'ecurve';
 import { ERRORS } from '../constants';
-import type { PublicKey, HDPubNode } from '../types/trezor/protobuf';
+import type { PublicKey, EthereumPublicKey, HDNodeType } from '../types/trezor/protobuf';
 
 const curve = ecurve.getCurveByName('secp256k1');
 
 const pubNode2bjsNode = (
-    node: HDPubNode,
+    node: HDNodeType,
     network: bitcoin.Network
 ): bitcoin.HDNode => {
     const chainCode = Buffer.from(node.chain_code, 'hex');
@@ -51,13 +51,13 @@ export const convertBitcoinXpub = (xpub: string, network: bitcoin.Network): stri
 // converts from internal PublicKey format to bitcoin.js HDNode
 // network info is necessary. throws error on wrong xpub
 const pubKey2bjsNode = (
-    key: PublicKey,
+    key: PublicKey | EthereumPublicKey,
     network: bitcoin.Network
 ): bitcoin.HDNode => {
-    const keyNode: HDPubNode = key.node;
-    const bjsNode: bitcoin.HDNode = pubNode2bjsNode(keyNode, network);
-    const bjsXpub: string = bjsNode.toBase58();
-    const keyXpub: string = convertXpub(key.xpub, network);
+    const keyNode = key.node;
+    const bjsNode = pubNode2bjsNode(keyNode, network);
+    const bjsXpub = bjsNode.toBase58();
+    const keyXpub = convertXpub(key.xpub, network);
     if (bjsXpub !== keyXpub) {
         throw ERRORS.TypedError('Runtime', `pubKey2bjsNode: Invalid public key transmission detected. Key: ${bjsXpub}, Received: ${keyXpub}`);
     }
@@ -79,8 +79,9 @@ const checkDerivation = (
     }
 };
 
-export const xpubDerive = (xpub: PublicKey,
-    childXPub: PublicKey,
+export const xpubDerive = (
+    xpub: PublicKey | EthereumPublicKey,
+    childXPub: PublicKey | EthereumPublicKey,
     suffix: number,
     network?: bitcoin.Network,
     requestedNetwork?: bitcoin.Network
@@ -92,7 +93,7 @@ export const xpubDerive = (xpub: PublicKey,
     return xpub;
 };
 
-export const xpubToHDNodeType = (xpub: string, network: bitcoin.Network): HDPubNode => {
+export const xpubToHDNodeType = (xpub: string, network: bitcoin.Network): HDNodeType => {
     const hd = bitcoin.HDNode.fromBase58(xpub, network);
     return {
         depth: hd.depth,

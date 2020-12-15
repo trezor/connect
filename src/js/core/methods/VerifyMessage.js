@@ -4,21 +4,13 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
-import { ERRORS } from '../../constants';
-
-import type { Success } from '../../types/trezor/protobuf';
-import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 import { messageToHex } from '../../utils/formatUtils';
-
-type Params = {
-    address: string;
-    signature: string;
-    message: string;
-    coinInfo: BitcoinNetworkInfo;
-}
+import { ERRORS } from '../../constants';
+import type { CoreMessage } from '../../types';
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class VerifyMessage extends AbstractMethod {
-    params: Params;
+    params: $ElementType<MessageType, 'VerifyMessage'>;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -26,7 +18,7 @@ export default class VerifyMessage extends AbstractMethod {
         this.requiredPermissions = ['read', 'write'];
         this.info = 'Verify message';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters for each batch
         validateParams(payload, [
@@ -37,7 +29,7 @@ export default class VerifyMessage extends AbstractMethod {
             { name: 'hex', type: 'boolean' },
         ]);
 
-        const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
+        const coinInfo = getBitcoinNetwork(payload.coin);
         if (!coinInfo) {
             throw ERRORS.TypedError('Method_UnknownCoin');
         } else {
@@ -45,23 +37,20 @@ export default class VerifyMessage extends AbstractMethod {
             this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
             this.info = getLabel('Verify #NETWORK message', coinInfo);
         }
-        const messageHex: string = payload.hex ? messageToHex(payload.message) : Buffer.from(payload.message, 'utf8').toString('hex');
-        const signatureHex: string = Buffer.from(payload.signature, 'base64').toString('hex');
+        const messageHex = payload.hex ? messageToHex(payload.message) : Buffer.from(payload.message, 'utf8').toString('hex');
+        const signatureHex = Buffer.from(payload.signature, 'base64').toString('hex');
 
         this.params = {
             address: payload.address,
             signature: signatureHex,
             message: messageHex,
-            coinInfo,
+            coin_name: coinInfo.name,
         };
     }
 
-    async run(): Promise<Success> {
-        return await this.device.getCommands().verifyMessage(
-            this.params.address,
-            this.params.signature,
-            this.params.message,
-            this.params.coinInfo.name
-        );
+    async run() {
+        const cmd = this.device.getCommands();
+        const response = await cmd.typedCall('VerifyMessage', 'Success', this.params);
+        return response.message;
     }
 }

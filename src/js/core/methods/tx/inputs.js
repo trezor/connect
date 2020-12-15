@@ -11,12 +11,12 @@ import type { BuildTxInput } from 'hd-wallet';
 
 // local types
 import type { BitcoinNetworkInfo } from '../../../types';
-import type { TransactionInput } from '../../../types/trezor/protobuf';
+import type { TxInputType } from '../../../types/trezor/protobuf';
 
 /** *****
  * SignTx: validation
  *******/
-export const validateTrezorInputs = (inputs: Array<TransactionInput>, coinInfo: BitcoinNetworkInfo): Array<TransactionInput> => {
+export const validateTrezorInputs = (inputs: TxInputType[], coinInfo: BitcoinNetworkInfo): TxInputType[] => {
     const trezorInputs = inputs.map(fixPath).map(convertMultisigPubKey.bind(null, coinInfo.network));
     for (const input of trezorInputs) {
         validatePath(input.address_n);
@@ -36,12 +36,12 @@ export const validateTrezorInputs = (inputs: Array<TransactionInput>, coinInfo: 
 /** *****
  * Transform from Trezor format to hd-wallet, called from SignTx to get refTxs from bitcore
  *******/
-export const inputToHD = (input: TransactionInput): BuildTxInput => {
+export const inputToHD = (input: TxInputType): BuildTxInput => {
     return {
         hash: reverseBuffer(Buffer.from(input.prev_hash, 'hex')),
         index: input.prev_index,
         path: input.address_n,
-        amount: input.amount,
+        amount: typeof input.amount === 'number' ? input.amount.toString() : input.amount,
         segwit: isSegwitPath(input.address_n),
     };
 };
@@ -49,7 +49,7 @@ export const inputToHD = (input: TransactionInput): BuildTxInput => {
 /** *****
  * Transform from hd-wallet format to Trezor
  *******/
-export const inputToTrezor = (input: BuildTxInput, sequence: number): TransactionInput => {
+export const inputToTrezor = (input: BuildTxInput, sequence: number): TxInputType => {
     const { hash, index, path, amount } = input;
     return {
         address_n: path,

@@ -37,7 +37,7 @@ export default class GetAccountInfo extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload: Object = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -64,7 +64,7 @@ export default class GetAccountInfo extends AbstractMethod {
             ]);
 
             // validate coin info
-            const coinInfo: ?CoinInfo = getCoinInfo(batch.coin);
+            const coinInfo = getCoinInfo(batch.coin);
             if (!coinInfo) {
                 throw ERRORS.TypedError('Method_UnknownCoin');
             }

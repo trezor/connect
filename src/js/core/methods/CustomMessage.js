@@ -15,14 +15,13 @@ type Params = {
 
 export default class CustomMessage extends AbstractMethod {
     params: Params;
-    run: () => Promise<any>;
 
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['custom-message', 'read', 'write'];
         this.info = 'Custom message';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(message.payload, [
@@ -49,11 +48,12 @@ export default class CustomMessage extends AbstractMethod {
         return this.params.customMessages;
     }
 
-    async run(): Promise<Object> {
+    async run() {
         if (this.device.features.vendor === 'trezor.io' || this.device.features.vendor === 'bitcointrezor.com') {
             throw ERRORS.TypedError('Runtime', 'Cannot use custom message on device with official firmware. Change device "vendor" field.');
         }
         // call message
+        // $FlowIssue message could be anything, unknown type
         const response = await this.device.getCommands()._commonCall(this.params.message, this.params.params);
         // create ui promise
         const uiPromise = this.createUiPromise(UI.CUSTOM_MESSAGE_RESPONSE, this.device);

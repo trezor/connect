@@ -2,42 +2,32 @@
 
 import { ERRORS } from '../../../constants';
 import { validateParams } from './paramsValidator';
-import type { MessageResponse, DefaultMessageResponse } from '../../../device/DeviceCommands';
-import type {
-    BinanceTxRequest,
-    BinanceSignedTx,
-} from '../../../types/trezor/protobuf';
 import type {
     BinanceSDKTransaction,
     BinancePreparedMessage,
     BinancePreparedTransaction,
 } from '../../../types/networks/binance';
+import type { TypedCall } from '../../../types/trezor/protobuf';
 
-const processTxRequest = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
-    response: MessageResponse<BinanceTxRequest>,
+const processTxRequest = async (
+    typedCall: TypedCall,
     messages: BinancePreparedMessage[],
     index: number,
-): Promise<BinanceSignedTx> => {
-    const msg = messages[index];
-    const type = msg.type;
+) => {
+    const { type, ...params } = messages[index];
     const lastOp = (index + 1 >= messages.length);
 
     if (lastOp) {
-        const response: MessageResponse<BinanceSignedTx> = await typedCall(type, 'BinanceSignedTx', {
-            ...msg,
-            type: null, // 'type' is not a protobuf field and needs to be removed
-        });
+        // $FlowIssue type and params are unions. TODO: make exact BinancePreparedMessage
+        const response = await typedCall(type, 'BinanceSignedTx', params);
         return response.message;
     }
-    const ack: MessageResponse<BinanceTxRequest> = await typedCall(type, 'BinanceTxRequest', {
-        ...msg,
-        type: null, // 'type' is not a protobuf field and needs to be removed
-    });
+    // $FlowIssue type and params are unions. TODO: make exact BinancePreparedMessage
+    await typedCall(type, 'BinanceTxRequest', params);
     index++;
 
-    return await processTxRequest(
+    return processTxRequest(
         typedCall,
-        ack,
         messages,
         index
     );
@@ -110,10 +100,11 @@ export const validate = (tx: BinanceSDKTransaction): BinancePreparedTransaction 
     return preparedTx;
 };
 
-export const signTx = async (typedCall: (type: string, resType: string, msg: Object) => Promise<DefaultMessageResponse>,
+export const signTx = async (
+    typedCall: TypedCall,
     address_n: number[],
     tx: BinancePreparedTransaction,
-): Promise<BinanceSignedTx> => {
+) => {
     const {
         account_number,
         chain_id,
@@ -124,7 +115,7 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
     } = tx;
     const msg_count = messages.length;
 
-    const response = await typedCall('BinanceSignTx', 'BinanceTxRequest', {
+    await typedCall('BinanceSignTx', 'BinanceTxRequest', {
         address_n,
         msg_count,
         account_number,
@@ -133,5 +124,5 @@ export const signTx = async (typedCall: (type: string, resType: string, msg: Obj
         sequence,
         source,
     });
-    return await processTxRequest(typedCall, response, messages, 0);
+    return processTxRequest(typedCall, messages, 0);
 };

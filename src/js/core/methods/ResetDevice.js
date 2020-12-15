@@ -1,17 +1,15 @@
 /* @flow */
 
 import AbstractMethod from './AbstractMethod';
-
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-
-import type { ResetDeviceFlags, Success } from '../../types/trezor/protobuf';
-import type { CoreMessage, UiPromiseResponse } from '../../types';
+import type { CoreMessage } from '../../types';
+import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class ResetDevice extends AbstractMethod {
-    params: ResetDeviceFlags;
-    confirmed: boolean = false;
+    params: $ElementType<MessageType, 'ResetDevice'>;
+    confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
         super(message);
@@ -22,7 +20,7 @@ export default class ResetDevice extends AbstractMethod {
         this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Setup device';
 
-        const payload: Object = message.payload;
+        const { payload } = message;
         // validate bundle type
         validateParams(payload, [
             { name: 'display_random', type: 'boolean' },
@@ -65,13 +63,15 @@ export default class ResetDevice extends AbstractMethod {
         }));
 
         // wait for user action
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
+        const uiResp = await uiPromise.promise;
 
         this.confirmed = uiResp.payload;
         return this.confirmed;
     }
 
-    async run(): Promise<Success> {
-        return await this.device.getCommands().reset(this.params);
+    async run() {
+        const cmd = this.device.getCommands();
+        const response = await cmd.typedCall('ResetDevice', 'Success', this.params);
+        return response.message;
     }
 }
