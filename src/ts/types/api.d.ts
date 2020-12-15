@@ -227,10 +227,10 @@ export namespace TrezorConnect {
     ): P.BundledResponse<Bitcoin.HDNodeResponse>;
     function ethereumSignTransaction(
         params: P.CommonParams & Ethereum.EthereumSignTransaction,
-    ): P.Response<Protobuf.EthereumSignedTx>;
+    ): P.Response<Ethereum.EthereumSignedTx>;
     function ethereumSignTransaction(
         params: P.CommonParams & P.Bundle<Ethereum.EthereumSignTransaction>,
-    ): P.BundledResponse<Protobuf.EthereumSignedTx>;
+    ): P.BundledResponse<Ethereum.EthereumSignedTx>;
     function ethereumSignMessage(
         params: P.CommonParams & Ethereum.EthereumSignMessage,
     ): P.Response<Protobuf.MessageSignature>;

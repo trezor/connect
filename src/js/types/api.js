@@ -184,8 +184,8 @@ export type API = {
     // Ethereum and Ethereum-like
     ethereumGetAddress: Bundled<Ethereum.EthereumGetAddress, Ethereum.EthereumAddress>;
     ethereumGetPublicKey: Bundled<Ethereum.EthereumGetPublicKey, Bitcoin.HDNodeResponse>;
-    ethereumSignTransaction: Bundled<Ethereum.EthereumSignTransaction, Protobuf.EthereumSignedTx>;
-    ethereumSignMessage: Method<Ethereum.EthereumSignMessage, Protobuf.MessageSignature>;
+    ethereumSignTransaction: Bundled<Ethereum.EthereumSignTransaction, Ethereum.EthereumSignedTx>;
+    ethereumSignMessage: Method<Ethereum.EthereumSignMessage, Protobuf.EthereumMessageSignature>;
     ethereumVerifyMessage: Method<Ethereum.EthereumVerifyMessage, P.DefaultMessage>;
 
     // Lisk

@@ -40,6 +40,12 @@ export interface EthereumSignTransaction {
     transaction: EthereumTransaction;
 }
 
+export interface EthereumSignedTx {
+    v: string;
+    r: string;
+    s: string;
+}
+
 // sign message
 
 export interface EthereumSignMessage {

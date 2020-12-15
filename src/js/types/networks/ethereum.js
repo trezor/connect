@@ -41,6 +41,12 @@ export type EthereumSignTransaction = {
     transaction: EthereumTransaction;
 }
 
+export type EthereumSignedTx = {
+    v: string;
+    r: string;
+    s: string;
+};
+
 // sign message
 
 export type EthereumSignMessage = {
