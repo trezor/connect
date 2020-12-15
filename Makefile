@@ -51,6 +51,8 @@ sync-%:
 protobuf:
 	make -C ./submodules/trezor-common/protob combine
 	./node_modules/.bin/proto2js ./submodules/trezor-common/protob/combined.proto > ./src/data/messages/messagesN.json
+	node ./scripts/protobuf-types.js
+	node ./scripts/protobuf-types.js typescript
 
 # Build coin definitions
 coins:
