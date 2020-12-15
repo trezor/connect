@@ -98,7 +98,7 @@ export type StellarManageDataOperation = {
     type: 'manageData'; // Proto: "StellarManageDataOp"
     source?: string; // Proto: "source_account"
     name: string; // Proto: "key"
-    value?: ?(string | Buffer); // Proto: "value"
+    value?: Buffer | string; // Proto: "value"
 }
 
 // (?) Missing in stellar API but present in Proto messages
@@ -149,6 +149,44 @@ export type StellarSignTransaction = {
     networkPassphrase: string;
     transaction: StellarTransaction;
 }
+
+import type {
+    StellarPaymentOp,
+    StellarCreateAccountOp,
+    StellarPathPaymentOp,
+    StellarManageOfferOp,
+    StellarCreatePassiveOfferOp,
+    StellarSetOptionsOp,
+    StellarChangeTrustOp,
+    StellarAllowTrustOp,
+    StellarAccountMergeOp,
+    StellarManageDataOp,
+    StellarBumpSequenceOp,
+} from '../trezor/protobuf';
+
+export type StellarOperationMessage = ({
+    type: 'StellarCreateAccountOp';
+} & StellarCreateAccountOp) | ({
+    type: 'StellarPaymentOp';
+} & StellarPaymentOp) | ({
+    type: 'StellarPathPaymentOp';
+} & StellarPathPaymentOp) | ({
+    type: 'StellarManageOfferOp';
+} & StellarManageOfferOp) | ({
+    type: 'StellarCreatePassiveOfferOp';
+} & StellarCreatePassiveOfferOp) | ({
+    type: 'StellarSetOptionsOp';
+} & StellarSetOptionsOp) | ({
+    type: 'StellarChangeTrustOp';
+} & StellarChangeTrustOp) | ({
+    type: 'StellarAllowTrustOp';
+} & StellarAllowTrustOp) | ({
+    type: 'StellarAccountMergeOp';
+} & StellarAccountMergeOp) | ({
+    type: 'StellarManageDataOp';
+} & StellarManageDataOp) | ({
+    type: 'StellarBumpSequenceOp';
+} & StellarBumpSequenceOp);
 
 export type StellarSignedTx = {
     publicKey: string;

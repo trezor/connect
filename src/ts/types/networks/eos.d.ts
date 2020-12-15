@@ -7,6 +7,7 @@ import {
     EosActionDeleteAuth,
     EosActionLinkAuth,
     EosActionUnlinkAuth,
+    EosAuthorizationWait,
 } from '../trezor/protobuf';
 
 // get public key
@@ -41,10 +42,7 @@ export interface EosAuthorization {
         permission: EosPermissionLevel;
         weight: number;
     }>;
-    waits: Array<{
-        wait_sec: number;
-        weight: number;
-    }>;
+    waits: EosAuthorizationWait[];
 }
 
 export interface EosTxActionCommon {

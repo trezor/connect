@@ -1,7 +1,10 @@
-import { CARDANO } from '../constants';
 
 // Cardano method parameters types
-import { HDPubNode } from '../trezor/protobuf';
+import { 
+    HDNodeType,
+    CardanoAddressType,
+    CardanoCertificateType,
+} from '../trezor/protobuf';
 
 // GetPublicKey
 
@@ -14,7 +17,7 @@ export interface CardanoPublicKey {
     path: number[];
     serializedPath: string;
     publicKey: string;
-    node: HDPubNode;
+    node: HDNodeType;
 }
 
 // GetAddress
@@ -26,7 +29,7 @@ export interface CardanoCertificatePointer {
 }
 
 export interface CardanoAddressParameters {
-    addressType: CARDANO.ADDRESS_TYPE;
+    addressType: CardanoAddressType;
     path: string | number[];
     stakingPath?: string | number[];
     stakingKeyHash?: string;
@@ -68,7 +71,7 @@ export type CardanoOutput =
           amount: string;
       };
 export type CardanoCertificate = {
-    type: CARDANO.CERTIFICATE_TYPE;
+    type: CardanoCertificateType;
     path: string | number[];
     pool?: string;
 }

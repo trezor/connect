@@ -1,5 +1,8 @@
 /* @flow */
-import type { TransactionInput, TransactionOutput } from './trezor/protobuf';
+import type {
+    TxInputType,
+    TxOutputType,
+} from './trezor/protobuf';
 import type { VinVout } from './backend/transactions';
 
 // getAccountInfo params
@@ -229,8 +232,8 @@ export type PrecomposedTransaction =
           feePerByte: string;
           bytes: number;
           transaction: {
-              inputs: TransactionInput[];
-              outputs: TransactionOutput[];
+              inputs: TxInputType[];
+              outputs: TxOutputType[];
           };
       };
 

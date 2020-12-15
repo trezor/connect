@@ -1,10 +1,10 @@
 /* @flow */
 import type {
-    TransactionInput,
-    TransactionOutput,
-    RefTransaction,
+    RefTxInputType,
+    TxInputType,
+    TxOutputType,
+    TxOutputBinType,
     Address as ProtobufAddress,
-    SignedTx,
 } from '../trezor/protobuf';
 
 // getAddress params
@@ -18,6 +18,7 @@ export type GetAddress = {
 
 // getAddress response
 export type Address = ProtobufAddress & {
+    path: number[];
     serializedPath: string;
 };
 
@@ -41,10 +42,36 @@ export type HDNodeResponse = {
     depth: number;
 };
 
+// based on PROTO.TransactionType, with required fields
+export type RefTransaction = {
+    hash: string;
+    version?: number;
+    inputs: RefTxInputType[];
+    bin_outputs: TxOutputBinType[];
+    lock_time?: number;
+    extra_data?: string;
+    expiry?: number;
+    overwintered?: boolean;
+    version_group_id?: number;
+    timestamp?: number;
+    branch_id?: number;
+};
+
+// based on PROTO.SignTx, only optional fields
+export type TransactionOptions = {|
+    version?: number;
+    lock_time?: number;
+    expiry?: number;
+    overwintered?: boolean;
+    version_group_id?: number;
+    timestamp?: number;
+    branch_id?: number;
+|};
+
 // signTransaction params
 export type SignTransaction = {
-    inputs: TransactionInput[];
-    outputs: TransactionOutput[];
+    inputs: TxInputType[];
+    outputs: TxOutputType[];
     refTxs?: RefTransaction[];
     coin: string;
     locktime?: number;
@@ -56,7 +83,9 @@ export type SignTransaction = {
     branchId?: number;
     push?: boolean;
 };
-export type SignedTransaction = SignedTx & {
+export type SignedTransaction = {
+    signatures: string[];
+    serializedTx: string;
     txid?: string;
 }
 
@@ -84,4 +113,7 @@ export type VerifyMessage = {
     coin: string;
 };
 
-export type { TransactionInput, TransactionOutput } from '../trezor/protobuf';
+export type {
+    TxInputType as TransactionInput,
+    TxOutputType as TransactionOutput,
+} from '../trezor/protobuf';
