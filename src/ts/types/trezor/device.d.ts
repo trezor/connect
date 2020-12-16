@@ -65,6 +65,7 @@ export interface Features {
     passphrase_always_on_device?: boolean;
     capabilities?: string[];
     backup_type?: 'Bip39' | 'Slip39_Basic' | 'Slip39_Advanced' | null;
+    safety_checks?: 'Strict' | 'PromptAlways' | 'PromptTemporarily' | null;
 }
 
 export type KnownDevice = {
