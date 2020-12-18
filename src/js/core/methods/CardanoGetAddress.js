@@ -81,7 +81,7 @@ export default class CardanoGetAddress extends AbstractMethod {
 
         // set info
         if (bundle.length === 1) {
-            this.info = `Export Cardano address for account #${ (fromHardened(this.params[0].addressParameters.address_n[2])) }`;
+            this.info = `Export Cardano address for account #${ (fromHardened(this.params[0].addressParameters.address_n[2]) + 1) }`;
         } else {
             this.info = 'Export multiple Cardano addresses';
         }
