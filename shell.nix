@@ -9,15 +9,15 @@ with import
 stdenv.mkDerivation {
   name = "trezor-connect-dev";
   buildInputs = [
-    flow
-    git
-    ncurses
-    nodejs
+    autoPatchelfHook
     xorg.xhost
-    yarn
+    ncurses
+    nodejs-12_x
+    (yarn.override { nodejs = nodejs-12_x; })
+    git
   ];
   shellHook = ''
-    export CURDIR="$(pwd)"
-    export PATH="$PATH:$CURDIR/node_modules/.bin"
+    export PATH="$PATH:$(pwd)/node_modules/.bin"
+    autoPatchelf $(pwd)/node_modules/flow-bin/
   '';
 }
