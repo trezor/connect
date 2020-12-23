@@ -1,5 +1,4 @@
 /* @flow */
-import { Transaction as BitcoinJsTransaction } from '@trezor/utxo-lib';
 import BlockchainLink from '@trezor/blockchain-link';
 import { BlockchainMessage } from '../message/builder';
 import { BLOCKCHAIN, ERRORS } from '../constants';
@@ -15,8 +14,6 @@ import {
     BlockbookWorker,
     RippleWorker,
 } from '../env/node/workers';
-
-BitcoinJsTransaction.USE_STRING_VALUES = true;
 
 type Options = {
     coinInfo: CoinInfo;
@@ -112,20 +109,9 @@ export default class Blockchain {
         }
     }
 
-    async loadTransaction(id: string) {
-        const transaction = await this.link.getTransaction(id);
-        return BitcoinJsTransaction.fromHex(transaction.tx.hex, this.coinInfo.network);
-    }
-
     async getTransactions(txs: string[]) {
         return Promise.all(
             txs.map(id => this.link.getTransaction(id))
-        );
-    }
-
-    async getReferencedTransactions(txs: string[]) {
-        return Promise.all(
-            txs.map(id => this.loadTransaction(id))
         );
     }
 

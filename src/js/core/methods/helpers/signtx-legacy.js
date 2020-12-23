@@ -5,6 +5,7 @@ import type { RefTransaction, TransactionOptions, SignedTransaction } from '../.
 
 import type {
     TypedCall,
+    TxAckResponse,
     TxRequest,
     TxInputType,
     TxOutputType,
@@ -26,7 +27,7 @@ const requestPrevTxInfo = ({
     typedCall,
     txRequest: { request_type, details },
     refTxs,
-}: Props) => {
+}: Props): TxAckResponse => {
     const { tx_hash } = details;
     if (!tx_hash) {
         throw ERRORS.TypedError('Runtime', 'requestPrevTxInfo: unknown details.tx_hash');
@@ -35,25 +36,14 @@ const requestPrevTxInfo = ({
     if (!tx) {
         throw ERRORS.TypedError('Runtime', `requestPrevTxInfo: Requested unknown tx: ${tx_hash}`);
     }
+    if (!tx.bin_outputs) {
+        throw ERRORS.TypedError('Runtime', `requestPrevTxInfo: bin_outputs not set tx: ${tx_hash}`);
+    }
     if (request_type === 'TXINPUT') {
-        // bin_outputs not present in tx = invalid RefTransaction object
-        if (!tx.bin_outputs) throw ERRORS.TypedError('Runtime', `requestPrevTxInfo: Requested unknown TXINPUT: ${tx_hash}`);
-        return typedCall('TxAckPrevInput', 'TxRequest', { tx: { input: tx.inputs[details.request_index] } });
+        return { inputs: [ tx.inputs[details.request_index] ] };
     }
     if (request_type === 'TXOUTPUT') {
-        // bin_outputs not present in tx = invalid RefTransaction object
-        if (!tx.bin_outputs) throw ERRORS.TypedError('Runtime', `requestPrevTxInfo: Requested unknown TXOUTPUT: ${tx_hash}`);
-        return typedCall('TxAckPrevOutput', 'TxRequest', { tx: { output: tx.bin_outputs[details.request_index] } });
-    }
-    if (request_type === 'TXORIGINPUT') {
-        // outputs not present in tx = invalid RefTransaction object
-        if (!tx.outputs) throw ERRORS.TypedError('Runtime', `requestPrevTxInfo: Requested unknown TXORIGINPUT: ${tx_hash}`);
-        return typedCall('TxAckInput', 'TxRequest', { tx: { input: tx.inputs[details.request_index] } });
-    }
-    if (request_type === 'TXORIGOUTPUT') {
-        // outputs not present in tx = invalid RefTransaction object
-        if (!tx.outputs) throw ERRORS.TypedError('Runtime', `requestPrevTxInfo: Requested unknown TXORIGOUTPUT: ${tx_hash}`);
-        return typedCall('TxAckOutput', 'TxRequest', { tx: { output: tx.outputs[details.request_index] } });
+        return { bin_outputs: [ tx.bin_outputs[details.request_index] ] };
     }
     if (request_type === 'TXEXTRADATA') {
         if (typeof details.extra_data_len !== 'number') {
@@ -68,38 +58,43 @@ const requestPrevTxInfo = ({
         const data = tx.extra_data;
         const dataLen = details.extra_data_len;
         const dataOffset = details.extra_data_offset;
-        const extra_data_chunk = data.substring(dataOffset * 2, (dataOffset + dataLen) * 2);
-        return typedCall('TxAckPrevExtraData', 'TxRequest', { tx: { extra_data_chunk } });
+        const extra_data = data.substring(dataOffset * 2, (dataOffset + dataLen) * 2);
+        return { extra_data };
     }
     if (request_type === 'TXMETA') {
         const data = tx.extra_data;
         const meta = {
             version: tx.version,
             lock_time: tx.lock_time,
-            inputs_count: tx.inputs.length,
-            outputs_count: tx.outputs ? tx.outputs.length : tx.bin_outputs.length,
+            inputs_cnt: tx.inputs.length,
+            outputs_cnt: tx.bin_outputs.length,
             timestamp: tx.timestamp,
             version_group_id: tx.version_group_id,
             expiry: tx.expiry,
             branch_id: tx.branch_id,
-            extra_data_len: data ? data.length / 2 : undefined,
         };
-        return typedCall('TxAckPrevMeta', 'TxRequest', { tx: meta });
+
+        if (typeof data === 'string' && data.length !== 0) {
+            return {
+                ...meta,
+                extra_data_len: data.length / 2,
+            };
+        }
+        return meta;
     }
     throw ERRORS.TypedError('Runtime', `requestPrevTxInfo: Unknown request type: ${request_type}`);
 };
 
 const requestSignedTxInfo = ({
-    typedCall,
     txRequest: { request_type, details },
     inputs,
     outputs,
-}: Props) => {
+}: Props): TxAckResponse => {
     if (request_type === 'TXINPUT') {
-        return typedCall('TxAckInput', 'TxRequest', { tx: { input: inputs[details.request_index] } });
+        return { inputs: [ inputs[details.request_index] ] };
     }
     if (request_type === 'TXOUTPUT') {
-        return typedCall('TxAckOutput', 'TxRequest', { tx: { output: outputs[details.request_index] } });
+        return { outputs: [ outputs[details.request_index] ] };
     }
     if (request_type === 'TXMETA') {
         throw ERRORS.TypedError('Runtime', 'requestSignedTxInfo: Cannot read TXMETA from signed transaction');
@@ -157,7 +152,8 @@ const processTxRequest = async (props: Props) => {
         });
     }
 
-    const { message } = await requestTxAck(props);
+    const txAck = requestTxAck(props);
+    const { message } = await typedCall('TxAck', 'TxRequest', { tx: txAck });
     return processTxRequest({
         typedCall,
         txRequest: message,

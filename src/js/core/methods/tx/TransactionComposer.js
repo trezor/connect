@@ -142,9 +142,9 @@ export default class TransactionComposer {
         const { account, coinInfo, baseFee } = this;
         const { addresses } = account;
         if (!addresses) return { type: 'error', error: 'ADDRESSES-NOT-SET' };
-        const changeId = addresses.change.findIndex(a => a.transfers < 1);
-        if (changeId < 0) return { type: 'error', error: 'CHANGE-ADDRESS-NOT-SET' };
-        const changeAddress = addresses.change[changeId].address;
+        // find not used change address or fallback to the last in the list
+        const changeAddress = addresses.change.find(a => a.transfers < 1) || addresses.change[addresses.change.length - 1];
+        const changeId = getHDPath(changeAddress.path).slice(-1)[0]; // get address id from the path
         // const inputAmounts = coinInfo.segwit || coinInfo.forkid !== null || coinInfo.network.consensusBranchId !== null;
 
         const enhancement = {
@@ -170,7 +170,7 @@ export default class TransactionComposer {
             basePath: account.address_n,
             network: coinInfo.network,
             changeId,
-            changeAddress,
+            changeAddress: changeAddress.address,
             dustThreshold: coinInfo.dustLimit,
             ...enhancement,
         });

@@ -23,6 +23,7 @@ import {
     transformReferencedTransactions,
 } from './tx';
 import signTx from './helpers/signtx';
+import signTxLegacy from './helpers/signtx-legacy';
 import verifyTx from './helpers/signtxVerify';
 
 import { UiMessage } from '../../message/builder';
@@ -319,14 +320,6 @@ export default class ComposeTransaction extends AbstractMethod {
 
         const { coinInfo } = this.params;
 
-        let refTxs = [];
-        const refTxsIds = getReferencedTransactions(tx.transaction.inputs);
-        if (refTxsIds.length > 0) {
-            const blockchain = await initBlockchain(coinInfo, this.postMessage);
-            const bjsRefTxs = await blockchain.getReferencedTransactions(refTxsIds);
-            refTxs = transformReferencedTransactions(bjsRefTxs);
-        }
-
         const options: $Shape<TransactionOptions> = {};
         if (coinInfo.network.consensusBranchId) {
             // zcash
@@ -342,7 +335,16 @@ export default class ComposeTransaction extends AbstractMethod {
         const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0xffffffff));
         const outputs = tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo));
 
-        const response = await signTx(
+        let refTxs = [];
+        const refTxsIds = getReferencedTransactions(inputs);
+        if (refTxsIds.length > 0) {
+            const blockchain = await initBlockchain(coinInfo, this.postMessage);
+            const rawTxs = await blockchain.getTransactions(refTxsIds);
+            refTxs = transformReferencedTransactions(rawTxs, coinInfo);
+        }
+
+        const signTxMethod = !this.device.unavailableCapabilities['replaceTransaction'] ? signTx : signTxLegacy;
+        const response = await signTxMethod(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             inputs,
             outputs,
