@@ -1,5 +1,5 @@
 import fixtures from '../__fixtures__';
-const { setup, initTrezorConnect, Controller, TrezorConnect } = global.Trezor;
+const { setup, skipTest, initTrezorConnect, Controller, TrezorConnect } = global.Trezor;
 
 let controller;
 let currentMnemonic;
@@ -40,7 +40,9 @@ fixtures.forEach((testCase, i) => {
         });
 
         testCase.tests.forEach(t => {
-            it(t.description, async (done) => {
+            // check if test should be skipped on current configuration
+            const testMethod = skipTest(t.skip) ? it.skip : it;
+            testMethod(t.description, async (done) => {
                 if (t.customTimeout) {
                     jest.setTimeout(t.customTimeout);
                 }

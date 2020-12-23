@@ -74,7 +74,7 @@ show_usage() {
   echo "  -c       Collect coverage"
 }
 
-FIRMWARE='2.3.4'
+FIRMWARE='2-master'
 INCLUDED_METHODS=''
 EXCLUDED_METHODS=''
 GUI=false

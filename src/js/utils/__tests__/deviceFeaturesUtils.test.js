@@ -110,6 +110,7 @@ describe('utils/deviceFeaturesUtils', () => {
             xtz: 'no-capability',
             xvg: 'update-required',
             zcr: 'update-required',
+            replaceTransaction: 'update-required',
         });
 
         const feat2 = {
@@ -121,7 +122,9 @@ describe('utils/deviceFeaturesUtils', () => {
         feat2.capabilities = parseCapabilities(feat2);
 
         // default Capabilities T2
-        expect(getUnavailableCapabilities(feat2, coins, support)).toEqual({});
+        expect(getUnavailableCapabilities(feat2, coins, support)).toEqual({
+            replaceTransaction: 'update-required',
+        });
 
         // excluded single method without specified coins
         expect(
