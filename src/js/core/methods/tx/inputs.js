@@ -20,12 +20,11 @@ export const validateTrezorInputs = (inputs: TxInputType[], coinInfo: BitcoinNet
     const trezorInputs = inputs.map(fixPath).map(convertMultisigPubKey.bind(null, coinInfo.network));
     for (const input of trezorInputs) {
         validatePath(input.address_n);
-        const useAmount = isSegwitPath(input.address_n);
         validateParams(input, [
             { name: 'prev_hash', type: 'string', obligatory: true },
             { name: 'prev_index', type: 'number', obligatory: true },
             { name: 'script_type', type: 'string' },
-            { name: 'amount', type: 'string', obligatory: useAmount },
+            { name: 'amount', type: 'string', obligatory: true },
             { name: 'sequence', type: 'number' },
             { name: 'multisig', type: 'object' },
         ]);
@@ -56,6 +55,7 @@ export const inputToTrezor = (input: BuildTxInput, sequence: number): TxInputTyp
         prev_index: index,
         prev_hash: reverseBuffer(hash).toString('hex'),
         script_type: getScriptType(path),
+        // $FlowIssue: amount in BuildTxInput type (hd-wallet) is declared as optional // TODO
         amount,
         sequence,
     };

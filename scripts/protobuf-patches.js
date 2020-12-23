@@ -14,6 +14,7 @@ const RULE_PATCH = {
     'TxRequestDetailsType.request_index': 'required',
     'TxRequest.request_type': 'required',
     'TxRequest.details': 'required',
+    'TxInputType.amount': 'required', // since 1.9.4/2.3.5
     'CardanoBlockchainPointerType.block_index': 'required',
     'CardanoBlockchainPointerType.tx_index': 'required',
     'CardanoBlockchainPointerType.certificate_index': 'required',
@@ -122,6 +123,8 @@ const TYPE_PATCH = {
     'HDNodePathType.node': 'HDNodeType | string',
     'TxInputType.amount': 'number | string',
     'TxOutputBinType.amount': 'number | string',
+    'TxInput.amount': 'string | number',
+    'PrevOutput.amount': 'string | number',
     'FirmwareUpload.payload': 'Buffer',
     'CardanoSignTx.fee': 'string | number',
     'CardanoSignTx.ttl': 'string | number',
@@ -200,35 +203,47 @@ const TYPE_PATCH = {
 
 const DEFINITION_PATCH = {
     TxOutputType:
-`// - replacement
+`// - TxOutputType replacement
+// TxOutputType needs more exact types
+// differences: external output (no address_n), opreturn output (no address_n, no address)
 export type TxOutputType = {|
     address: string;
     address_n?: typeof undefined;
     script_type: 'PAYTOADDRESS';
     amount: string;
     multisig?: MultisigRedeemScriptType;
+    orig_hash?: string;
+    orig_index?: number;
 |} | {|
     address?: typeof undefined;
     address_n: number[];
     script_type: OutputScriptType;
     amount: string;
     multisig?: MultisigRedeemScriptType;
+    orig_hash?: string;
+    orig_index?: number;
 |} | {|
     address?: typeof undefined;
     address_n?: typeof undefined;
     amount: '0';
     op_return_data: string;
     script_type: 'PAYTOOPRETURN';
+    orig_hash?: string;
+    orig_index?: number;
 |};
-// - replacement end
+// - TxOutputType replacement end
 `,
+
     TxAck:
-`// - replacement
+`// - TxAck replacement
+// TxAck needs more exact types
+// differences: RefTxInputType (no address_n) and TxInputType, partial exact responses in TxAckResponse
 export type RefTxInputType = {|
     prev_hash: string;
     prev_index: number;
     script_sig: string;
     sequence: number;
+    decred_tree?: number;
 |};
 
 export type TxAckResponse = {|
@@ -255,7 +270,14 @@ export type TxAckResponse = {|
 export type TxAck = {
     tx: TxAckResponse;
 };
-// - replacement end
+// - TxAck replacement end
+`,
+
+    TxOutput:
+`
+// - TxOutput replacement
+export type TxOutput = TxOutputType;
+// - TxOutput replacement end
 `,
 };
 
