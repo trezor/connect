@@ -31,7 +31,6 @@ import nemSignTransactionMultisig from './nemSignTransactionMultisig';
 import nemSignTransactionOthers from './nemSignTransactionOthers';
 import nemSignTransactionTransfer from './nemSignTransactionTransfer';
 import signMessage from './signMessage';
-import signMessageSegwit from './signMessageSegwit';
 import signTransaction from './signTransaction';
 import signTransactionBcash from './signTransactionBcash';
 import signTransactionBech32 from './signTransactionBech32';
@@ -43,6 +42,7 @@ import signTransactionKomodo from './signTransactionKomodo';
 import signTransactionMultisig from './signTransactionMultisig';
 import signTransactionMultisigChange from './signTransactionMultisigChange';
 import signTransactionPeercoin from './signTransactionPeercoin';
+import signTransactionReplace from './signTransactionReplace';
 import signTransactionSegwit from './signTransactionSegwit';
 import signTransactionZcash from './signTransactionZcash';
 import stellarGetAddress from './stellarGetAddress';
@@ -102,7 +102,6 @@ let fixtures = [
     rippleGetAddress,
     rippleSignTransaction,
     signMessage,
-    signMessageSegwit,
     signTransaction,
     signTransactionBcash,
     signTransactionBech32,
@@ -113,6 +112,7 @@ let fixtures = [
     signTransactionMultisig,
     signTransactionMultisigChange,
     signTransactionPeercoin,
+    signTransactionReplace,
     signTransactionSegwit,
     signTransactionZcash,
     stellarGetAddress,
