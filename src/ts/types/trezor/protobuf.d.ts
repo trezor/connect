@@ -8,6 +8,16 @@ export enum Enum_InputScriptType {
 }
 export type InputScriptType = keyof typeof Enum_InputScriptType;
 
+export enum Enum_OutputScriptType {
+    PAYTOADDRESS = 0,
+    PAYTOSCRIPTHASH = 1,
+    PAYTOMULTISIG = 2,
+    PAYTOOPRETURN = 3,
+    PAYTOWITNESS = 4,
+    PAYTOP2SHWITNESS = 5,
+}
+export type OutputScriptType = keyof typeof Enum_OutputScriptType;
+
 export enum CardanoAddressType {
     BASE = 0,
     BASE_SCRIPT_KEY = 1,
@@ -26,6 +36,13 @@ export enum CardanoCertificateType {
     STAKE_REGISTRATION = 0,
     STAKE_DEREGISTRATION = 1,
     STAKE_DELEGATION = 2,
+    STAKE_POOL_REGISTRATION = 3,
+}
+
+export enum CardanoPoolRelayType {
+    SINGLE_HOST_IP = 0,
+    SINGLE_HOST_NAME = 1,
+    MULTIPLE_HOST_NAME = 2,
 }
 
 export enum Enum_BackupType {
@@ -34,6 +51,12 @@ export enum Enum_BackupType {
     Slip39_Advanced = 2,
 }
 export type BackupType = keyof typeof Enum_BackupType;
+
+export enum SafetyCheckLevel {
+    Strict = 0,
+    PromptAlways = 1,
+    PromptTemporarily = 2,
+}
 
 // BinanceGetAddress
 export type BinanceGetAddress = {
@@ -151,7 +174,7 @@ export type HDNodePathType = {
 export type MultisigRedeemScriptType = {
     pubkeys: HDNodePathType[];
     signatures: string[];
-    m?: number;
+    m: number;
     nodes?: HDNodeType[];
     address_n?: number[];
 };
@@ -214,9 +237,9 @@ export type MessageSignature = {
 
 // VerifyMessage
 export type VerifyMessage = {
-    address?: string;
-    signature?: string;
-    message?: string;
+    address: string;
+    signature: string;
+    message: string;
     coin_name?: string;
 };
 
@@ -240,6 +263,8 @@ export enum Enum_RequestType {
     TXMETA = 2,
     TXFINISHED = 3,
     TXEXTRADATA = 4,
+    TXORIGINPUT = 5,
+    TXORIGOUTPUT = 6,
 }
 export type RequestType = keyof typeof Enum_RequestType;
 
@@ -271,10 +296,13 @@ export type TxInputType = {
     sequence?: number;
     script_type?: InputScriptType;
     multisig?: MultisigRedeemScriptType;
-    amount?: number | string;
+    amount: number | string;
     decred_tree?: number;
     witness?: string;
     ownership_proof?: string;
+    commitment_data?: string;
+    orig_hash?: string;
+    orig_index?: number;
 };
 
 export type TxOutputBinType = {
@@ -283,45 +311,46 @@ export type TxOutputBinType = {
     decred_script_version?: number;
 };
 
-export enum Enum_OutputScriptType {
-    PAYTOADDRESS = 0,
-    PAYTOSCRIPTHASH = 1,
-    PAYTOMULTISIG = 2,
-    PAYTOOPRETURN = 3,
-    PAYTOWITNESS = 4,
-    PAYTOP2SHWITNESS = 5,
-}
-export type OutputScriptType = keyof typeof Enum_OutputScriptType;
-
-// - replacement
+// - TxOutputType replacement
+// TxOutputType needs more exact types
+// differences: external output (no address_n), opreturn output (no address_n, no address)
 export type TxOutputType = {
     address: string;
     address_n?: typeof undefined;
     script_type: 'PAYTOADDRESS';
     amount: string;
     multisig?: MultisigRedeemScriptType;
+    orig_hash?: string;
+    orig_index?: number;
 } | {
     address?: typeof undefined;
     address_n: number[];
     script_type: OutputScriptType;
     amount: string;
     multisig?: MultisigRedeemScriptType;
+    orig_hash?: string;
+    orig_index?: number;
 } | {
     address?: typeof undefined;
     address_n?: typeof undefined;
     amount: '0';
     op_return_data: string;
     script_type: 'PAYTOOPRETURN';
+    orig_hash?: string;
+    orig_index?: number;
 };
-// - replacement end
+// - TxOutputType replacement end
 
 // TxAck
-// - replacement
+// - TxAck replacement
+// TxAck needs more exact types
+// differences: RefTxInputType (no address_n) and TxInputType, partial exact responses in TxAckResponse
 export type RefTxInputType = {
     prev_hash: string;
     prev_index: number;
     script_sig: string;
     sequence: number;
+    decred_tree?: number;
 };
 
 export type TxAckResponse = {
@@ -348,7 +377,110 @@ export type TxAckResponse = {
 export type TxAck = {
     tx: TxAckResponse;
 };
-// - replacement end
+// - TxAck replacement end
+
+// TxInput
+export type TxInput = {
+    address_n: number[];
+    prev_hash: string;
+    prev_index: number;
+    script_sig?: string;
+    sequence?: number;
+    script_type?: InputScriptType;
+    multisig?: MultisigRedeemScriptType;
+    amount: string | number;
+    decred_tree?: number;
+    witness?: string;
+    ownership_proof?: string;
+    commitment_data?: string;
+    orig_hash?: string;
+    orig_index?: number;
+};
+
+// TxOutput
+
+// - TxOutput replacement
+export type TxOutput = TxOutputType;
+// - TxOutput replacement end
+
+// PrevTx
+export type PrevTx = {
+    version: number;
+    lock_time: number;
+    inputs_count: number;
+    outputs_count: number;
+    extra_data_len?: number;
+    expiry?: number;
+    version_group_id?: number;
+    timestamp?: number;
+    branch_id?: number;
+};
+
+// PrevInput
+export type PrevInput = {
+    prev_hash: string;
+    prev_index: number;
+    script_sig: string;
+    sequence: number;
+    decred_tree?: number;
+};
+
+// PrevOutput
+export type PrevOutput = {
+    amount: string | number;
+    script_pubkey: string;
+    decred_script_version?: number;
+};
+
+export type TxAckInputWrapper = {
+    input: TxInput;
+};
+
+// TxAckInput
+export type TxAckInput = {
+    tx: TxAckInputWrapper;
+};
+
+export type TxAckOutputWrapper = {
+    output: TxOutput;
+};
+
+// TxAckOutput
+export type TxAckOutput = {
+    tx: TxAckOutputWrapper;
+};
+
+// TxAckPrevMeta
+export type TxAckPrevMeta = {
+    tx: PrevTx;
+};
+
+export type TxAckPrevInputWrapper = {
+    input: PrevInput;
+};
+
+// TxAckPrevInput
+export type TxAckPrevInput = {
+    tx: TxAckPrevInputWrapper;
+};
+
+export type TxAckPrevOutputWrapper = {
+    output: PrevOutput;
+};
+
+// TxAckPrevOutput
+export type TxAckPrevOutput = {
+    tx: TxAckPrevOutputWrapper;
+};
+
+export type TxAckPrevExtraDataWrapper = {
+    extra_data_chunk: string;
+};
+
+// TxAckPrevExtraData
+export type TxAckPrevExtraData = {
+    tx: TxAckPrevExtraDataWrapper;
+};
 
 // GetOwnershipProof
 export type GetOwnershipProof = {
@@ -452,10 +584,42 @@ export type CardanoTxOutputType = {
     address_parameters?: CardanoAddressParametersType;
 };
 
+export type CardanoPoolOwnerType = {
+    staking_key_path: number[];
+    staking_key_hash?: string;
+};
+
+export type CardanoPoolRelayParametersType = {
+    type: CardanoPoolRelayType;
+    ipv4_address?: string;
+    ipv6_address?: string;
+    host_name?: string;
+    port?: number;
+};
+
+export type CardanoPoolMetadataType = {
+    url: string;
+    hash: string;
+};
+
+export type CardanoPoolParametersType = {
+    pool_id: string;
+    vrf_key_hash: string;
+    pledge: number;
+    cost: number;
+    margin_numerator: number;
+    margin_denominator: number;
+    reward_account: string;
+    owners: CardanoPoolOwnerType[];
+    relays: CardanoPoolRelayParametersType[];
+    metadata?: CardanoPoolMetadataType;
+};
+
 export type CardanoTxCertificateType = {
     type?: CardanoCertificateType;
     path: number[];
     pool?: string;
+    pool_parameters?: CardanoPoolParametersType;
 };
 
 export type CardanoTxWithdrawalType = {
@@ -501,6 +665,7 @@ export enum FailureType {
     Failure_NotInitialized = 11,
     Failure_PinMismatch = 12,
     Failure_WipeCodeMismatch = 13,
+    Failure_InvalidSession = 14,
     Failure_FirmwareError = 99,
 }
 
@@ -1169,6 +1334,10 @@ export type Features = {
     wipe_code_protection?: boolean;
     session_id?: string;
     passphrase_always_on_device?: boolean;
+    safety_checks?: SafetyCheckLevel;
+    auto_lock_delay_ms?: number;
+    display_rotation?: number;
+    experimental_features?: boolean;
 };
 
 // LockDevice
@@ -1176,11 +1345,6 @@ export type LockDevice = {};
 
 // EndSession
 export type EndSession = {};
-
-export enum SafetyCheckLevel {
-    Strict = 0,
-    Prompt = 1,
-}
 
 // ApplySettings
 export type ApplySettings = {
@@ -1192,6 +1356,7 @@ export type ApplySettings = {
     display_rotation?: number;
     passphrase_always_on_device?: boolean;
     safety_checks?: SafetyCheckLevel;
+    experimental_features?: boolean;
 };
 
 // ApplyFlags
