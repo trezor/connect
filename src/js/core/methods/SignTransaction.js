@@ -9,24 +9,27 @@ import { ERRORS } from '../../constants';
 
 import { isBackendSupported, initBlockchain } from '../../backend/BlockchainLink';
 import signTx from './helpers/signtx';
+import signTxLegacy from './helpers/signtx-legacy';
 import verifyTx from './helpers/signtxVerify';
 
 import {
     validateTrezorInputs,
     validateTrezorOutputs,
-    inputToHD,
     getReferencedTransactions,
     transformReferencedTransactions,
+    getOrigTransactions,
+    transformOrigTransactions,
 } from './tx';
 
 import type { RefTransaction, TransactionOptions } from '../../types/networks/bitcoin';
 import type { TxInputType, TxOutputType } from '../../types/trezor/protobuf';
-import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
+import type { CoreMessage, BitcoinNetworkInfo, AccountAddresses } from '../../types';
 
 type Params = {
     inputs: TxInputType[];
     outputs: TxOutputType[];
     refTxs?: RefTransaction[];
+    addresses?: AccountAddresses;
     options: TransactionOptions;
     coinInfo: BitcoinNetworkInfo;
     push: boolean;
@@ -48,6 +51,7 @@ export default class SignTransaction extends AbstractMethod {
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true },
             { name: 'refTxs', type: 'array', allowEmpty: true },
+            { name: 'account', type: 'object' },
             { name: 'locktime', type: 'number' },
             { name: 'timestamp', type: 'number' },
             { name: 'version', type: 'number' },
@@ -72,7 +76,8 @@ export default class SignTransaction extends AbstractMethod {
                 validateParams(tx, [
                     { name: 'hash', type: 'string', obligatory: true },
                     { name: 'inputs', type: 'array', obligatory: true },
-                    { name: 'bin_outputs', type: 'array', obligatory: true },
+                    { name: 'bin_outputs', type: 'array', obligatory: !Array.isArray(tx.outputs) },
+                    { name: 'outputs', type: 'array' },
                     { name: 'version', type: 'number', obligatory: true },
                     { name: 'lock_time', type: 'number', obligatory: true },
                     { name: 'extra_data', type: 'string' },
@@ -99,6 +104,7 @@ export default class SignTransaction extends AbstractMethod {
             inputs,
             outputs: payload.outputs,
             refTxs: payload.refTxs,
+            addresses: payload.account ? payload.account.addresses : undefined,
             options: {
                 lock_time: payload.locktime,
                 timestamp: payload.timestamp,
@@ -122,22 +128,43 @@ export default class SignTransaction extends AbstractMethod {
         const { device, params } = this;
 
         let refTxs: RefTransaction[] = [];
+        const useLegacySignProcess = device.unavailableCapabilities['replaceTransaction'];
         if (!params.refTxs) {
             // initialize backend
-            const hdInputs = params.inputs.map(inputToHD);
-            const refTxsIds = getReferencedTransactions(hdInputs);
+            const refTxsIds = getReferencedTransactions(params.inputs);
             if (refTxsIds.length > 0) {
                 // validate backend
                 isBackendSupported(params.coinInfo);
                 const blockchain = await initBlockchain(params.coinInfo, this.postMessage);
-                const bjsRefTxs = await blockchain.getReferencedTransactions(refTxsIds);
-                refTxs = transformReferencedTransactions(bjsRefTxs);
+                const rawTxs = await blockchain.getTransactions(refTxsIds);
+                refTxs = transformReferencedTransactions(rawTxs, params.coinInfo);
+
+                const origTxsIds = getOrigTransactions(params.inputs, params.outputs);
+                if (!useLegacySignProcess && origTxsIds.length > 0) {
+                    const rawOrigTxs = await blockchain.getTransactions(origTxsIds);
+                    let addresses = params.addresses;
+                    // sender account addresses not provided
+                    // fetch account info from the blockbook
+                    if (!addresses) {
+                        // TODO: validate inputs address_n's === same account
+                        const node = await device.getCommands().getHDNode(params.inputs[0].address_n.slice(0, 3), params.coinInfo);
+                        const account = await blockchain.getAccountInfo({
+                            descriptor: node.xpubSegwit || node.xpub,
+                            coin: params.coinInfo.name,
+                            details: 'tokens',
+                        });
+                        addresses = account.addresses;
+                    }
+                    const origRefTxs = transformOrigTransactions(rawOrigTxs, params.coinInfo, addresses);
+                    refTxs = refTxs.concat(origRefTxs);
+                }
             }
         } else {
             refTxs = params.refTxs;
         }
 
-        const response = await signTx(
+        const signTxMethod = !useLegacySignProcess ? signTx : signTxLegacy;
+        const response = await signTxMethod(
             device.getCommands().typedCall.bind(device.getCommands()),
             params.inputs,
             params.outputs,

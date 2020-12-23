@@ -132,6 +132,7 @@ declare module '@trezor/utxo-lib' {
         hash: Buffer,
         index: number,
         sequence: number,
+        witness?: Buffer[],
     };
 
     declare var coins: {
@@ -313,6 +314,7 @@ declare module '@trezor/utxo-lib' {
         getExtraData(): ?Buffer,
         isDashSpecialTransaction(): boolean,
         isZcashTransaction(): boolean,
+        hasWitnesses(): boolean,
 
         static USE_STRING_VALUES: boolean,
     }
