@@ -187,8 +187,14 @@ const init = async (payload: any, origin: string) => {
 
     if (parsedSettings.popup && typeof BroadcastChannel !== 'undefined') { // && parsedSettings.env !== 'web'
         const broadcastID = `${parsedSettings.env}-${parsedSettings.timestamp}`;
-        _popupMessagePort = new BroadcastChannel(broadcastID);
-        _popupMessagePort.onmessage = message => handleMessage(message);
+        try {
+            // Firefox > Privacy & Security > block cookies from unvisited websites
+            // throws DOMException: The operation is insecure.
+            _popupMessagePort = new BroadcastChannel(broadcastID);
+            _popupMessagePort.onmessage = message => handleMessage(message);
+        } catch (error) {
+            // tell the popup to use MessageChannel fallback communication (thru IFRAME.LOADED > POPUP.INIT)
+        }
     }
 
     _log.enabled = !!parsedSettings.debug;
@@ -200,8 +206,7 @@ const init = async (payload: any, origin: string) => {
 
         // initialize transport and wait for the first transport event (start or error)
         await initTransport(parsedSettings);
-
-        postMessage(UiMessage(IFRAME.LOADED));
+        postMessage(UiMessage(IFRAME.LOADED, { useBroadcastChannel: !!_popupMessagePort }));
     } catch (error) {
         postMessage(UiMessage(IFRAME.ERROR, { error }));
     }

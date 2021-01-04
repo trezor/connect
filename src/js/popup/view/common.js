@@ -78,11 +78,15 @@ export const getIframeElement = (): any => {
 };
 
 // initialize message channel with iframe element
-export const initMessageChannel = (id: string, handler: any): void => {
+export const initMessageChannel = (id: ?string, handler: any): void => {
     const hasIframe = getIframeElement();
-    if (typeof BroadcastChannel !== 'undefined') {
-        broadcast = new BroadcastChannel(id);
-        broadcast.onmessage = handler;
+    if (id && typeof BroadcastChannel !== 'undefined') {
+        try {
+            broadcast = new BroadcastChannel(id);
+            broadcast.onmessage = handler;
+        } catch (error) {
+            // silent error. use MessageChannel as fallback communication
+        }
         return;
     }
     if (!hasIframe) {

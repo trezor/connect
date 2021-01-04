@@ -49,7 +49,6 @@ export type TransportEvent =
 export type MessageWithoutPayload = {
     type: typeof UI.REQUEST_UI_WINDOW |
         typeof POPUP.CANCEL_POPUP_REQUEST |
-        typeof IFRAME.LOADED |
         typeof POPUP.LOADED |
         typeof UI.TRANSPORT |
         typeof UI.CHANGE_ACCOUNT |
@@ -103,10 +102,18 @@ export type IFrameError = {
     };
 }
 
+export type IFrameLoaded = {
+    type: typeof IFRAME.LOADED;
+    payload: {
+        useBroadcastChannel: boolean;
+    };
+}
+
 export type PopupInit = {
     type: typeof POPUP.INIT;
     payload: {
         settings: ConnectSettings; // those are settings from window.opener
+        useBroadcastChannel: boolean;
     };
 }
 
@@ -327,7 +334,9 @@ export interface UiMessageBuilder {
     (type: FT<DeviceMessage>, payload: FP<DeviceMessage>): CoreMessage;
     (type: FT<ButtonRequestMessage>, payload: FP<ButtonRequestMessage>): CoreMessage;
     (type: FT<AddressValidationMessage>, payload: FP<AddressValidationMessage>): CoreMessage;
+    (type: FT<IFrameFailure>): CoreMessage;
     (type: FT<IFrameError>, payload: FP<IFrameError>): CoreMessage;
+    (type: FT<IFrameLoaded>, payload: FP<IFrameLoaded>): CoreMessage;
     (type: FT<PopupError>, payload: FP<PopupError>): CoreMessage;
     (type: FT<PopupHandshake>, payload: FP<PopupHandshake>): CoreMessage;
     (type: FT<RequestPermission>, payload: FP<RequestPermission>): CoreMessage;
@@ -341,7 +350,6 @@ export interface UiMessageBuilder {
     (type: FT<BundleProgress<any>>, payload: FP<BundleProgress<any>>): CoreMessage;
     (type: FT<FirmwareProgress>, payload: FP<FirmwareProgress>): CoreMessage;
     (type: FT<CustomMessageRequest>, payload: FP<CustomMessageRequest>): CoreMessage;
-    (type: FT<IFrameFailure>): CoreMessage;
     // ui response
     (type: FT<ReceivePermission>, payload: FP<ReceivePermission>): CoreMessage;
     (type: FT<ReceiveConfirmation>, payload: FP<ReceiveConfirmation>): CoreMessage;
