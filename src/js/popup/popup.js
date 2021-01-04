@@ -140,7 +140,7 @@ const handleMessage = (event: PostMessageEvent) => {
 // handle POPUP.INIT message from window.opener
 const init = async (payload?: $PropertyType<PopupInit, 'payload'>) => {
     if (!payload) return;
-    const { settings } = payload;
+    const { settings, useBroadcastChannel } = payload;
 
     try {
         // load config only to get supported browsers list
@@ -148,7 +148,7 @@ const init = async (payload?: $PropertyType<PopupInit, 'payload'>) => {
         // settings will be replaced later on, after POPUP.HANDSHAKE event from iframe
         await DataManager.load(parseSettings(settings), false);
         // initialize message channel
-        const broadcastID = `${settings.env}-${settings.timestamp}`;
+        const broadcastID = useBroadcastChannel ? `${settings.env}-${settings.timestamp}` : undefined;
         initMessageChannel(broadcastID, handleMessage);
         // reset loading hash
         window.location.hash = '';

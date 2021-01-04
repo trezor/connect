@@ -45,7 +45,6 @@ export interface MessageWithoutPayload {
     type:
         | typeof UI.REQUEST_UI_WINDOW
         | typeof POPUP.CANCEL_POPUP_REQUEST
-        | typeof IFRAME.LOADED
         | typeof POPUP.LOADED
         | typeof UI.TRANSPORT
         | typeof UI.CHANGE_ACCOUNT
@@ -88,7 +87,7 @@ export interface AddressValidationMessage {
     payload?: ButtonRequestData;
 }
 
-export interface FrameError {
+export interface IFrameError {
     type: typeof IFRAME.ERROR;
     payload: {
         error: string;
@@ -96,10 +95,18 @@ export interface FrameError {
     };
 }
 
+export type IFrameLoaded = {
+    type: typeof IFRAME.LOADED;
+    payload: {
+        useBroadcastChannel: boolean;
+    };
+}
+
 export interface PopupInit {
     type: typeof POPUP.INIT;
     payload: {
         settings: ConnectSettings; // those are settings from window.opener
+        useBroadcastChannel: boolean;
     };
 }
 

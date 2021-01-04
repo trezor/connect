@@ -22,7 +22,7 @@ export default class PopupManager extends EventEmitter {
     requestTimeout: number = 0;
     openTimeout: number;
     closeInterval: number = 0;
-    iframeHandshake: Deferred<void>;
+    iframeHandshake: Deferred<boolean>;
     popupPromise: Deferred<void> | typeof undefined;
     handleMessage: (event: MessageEvent) => void;
     handleExtensionConnect: () => void;
@@ -191,11 +191,12 @@ export default class PopupManager extends EventEmitter {
             this.close();
         } else if (data.type === POPUP.LOADED) {
             if (this.popupPromise) { this.popupPromise.resolve(); }
-            this.iframeHandshake.promise.then(() => {
+            this.iframeHandshake.promise.then(useBroadcastChannel => {
                 port.postMessage({
                     type: POPUP.INIT,
                     payload: {
                         settings: this.settings,
+                        useBroadcastChannel,
                     },
                 });
             });
@@ -221,11 +222,13 @@ export default class PopupManager extends EventEmitter {
 
     handleMessage(message: MessageEvent) {
         // ignore messages from domain other then popup origin and without data
+        // const data: CoreMessage = message.data;
         const { data } = message;
         if (getOrigin(message.origin) !== this.origin || !data || typeof data !== 'object') return;
 
         if (data.type === IFRAME.LOADED) {
-            this.iframeHandshake.resolve();
+            const useBroadcastChannel = data.payload && typeof data.payload.useBroadcastChannel === 'boolean' ? data.payload.useBroadcastChannel : false;
+            this.iframeHandshake.resolve(useBroadcastChannel);
         } else if (data.type === POPUP.BOOTSTRAP) {
             // popup is opened properly, now wait for POPUP.LOADED message
             window.clearTimeout(this.openTimeout);
@@ -236,11 +239,12 @@ export default class PopupManager extends EventEmitter {
         } else if (data.type === POPUP.LOADED) {
             if (this.popupPromise) { this.popupPromise.resolve(); }
             // popup is successfully loaded
-            this.iframeHandshake.promise.then(() => {
+            this.iframeHandshake.promise.then(useBroadcastChannel => {
                 this._window.postMessage({
                     type: POPUP.INIT,
                     payload: {
                         settings: this.settings,
+                        useBroadcastChannel,
                     },
                 }, this.origin);
             });
