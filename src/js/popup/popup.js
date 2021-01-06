@@ -140,7 +140,9 @@ const handleMessage = (event: PostMessageEvent) => {
 // handle POPUP.INIT message from window.opener
 const init = async (payload?: $PropertyType<PopupInit, 'payload'>) => {
     if (!payload) return;
-    const { settings, useBroadcastChannel } = payload;
+    const { settings } = payload;
+    // npm version < 8.1.20 doesn't have it in POPUP.INIT message
+    const useBroadcastChannel = typeof payload.useBroadcastChannel === 'boolean' ? payload.useBroadcastChannel : true;
 
     try {
         // load config only to get supported browsers list
