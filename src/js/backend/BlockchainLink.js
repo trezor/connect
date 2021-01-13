@@ -90,6 +90,9 @@ export default class Blockchain {
                 return;
             }
 
+            // eslint-disable-next-line no-use-before-define
+            setPreferredBacked(this.coinInfo, info.url);
+
             this.postMessage(BlockchainMessage(BLOCKCHAIN.CONNECT, {
                 coin: this.coinInfo,
                 ...info,
@@ -254,6 +257,7 @@ export default class Blockchain {
 
 const instances: Blockchain[] = [];
 const customBackends: { [coin: string]: CoinInfo } = {};
+const preferredBackends: { [coin: string]: CoinInfo } = {};
 
 export const remove = (backend: Blockchain) => {
     const index = instances.indexOf(backend);
@@ -271,7 +275,19 @@ export const find = (name: string) => {
     return null;
 };
 
+// keep backend as a preferred once connection is successfully made
+// switching between urls could lead to side effects (mempool differences, non existing/missing pending transactions)
+const setPreferredBacked = (coinInfo: CoinInfo, url?: string) => {
+    if (!url) {
+        delete preferredBackends[coinInfo.shortcut];
+    } else if (coinInfo.blockchainLink) {
+        coinInfo.blockchainLink.url = [url];
+        preferredBackends[coinInfo.shortcut] = coinInfo;
+    }
+};
+
 export const setCustomBackend = (coinInfo: CoinInfo, blockchainLink: $ElementType<CoinInfo, 'blockchainLink'>) => {
+    setPreferredBacked(coinInfo); // reset preferred backend
     if (!blockchainLink || blockchainLink.url.length === 0) {
         delete customBackends[coinInfo.shortcut];
     } else {
@@ -289,7 +305,7 @@ export const initBlockchain = async (coinInfo: CoinInfo, postMessage: $ElementTy
     let backend = find(coinInfo.name);
     if (!backend) {
         backend = new Blockchain({
-            coinInfo: customBackends[coinInfo.shortcut] || coinInfo,
+            coinInfo: preferredBackends[coinInfo.shortcut] || customBackends[coinInfo.shortcut] || coinInfo,
             postMessage,
         });
         instances.push(backend);
@@ -298,6 +314,7 @@ export const initBlockchain = async (coinInfo: CoinInfo, postMessage: $ElementTy
             await backend.init();
         } catch (error) {
             remove(backend);
+            setPreferredBacked(coinInfo); // reset preferred backend
             throw error;
         }
     }
