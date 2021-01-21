@@ -96,6 +96,34 @@ const SAMPLE_OUTPUTS = {
         address: 'addr_test1vr9s8py7y68e3x66sscs0wkhlg5ssfrfs65084jrlrqcfqqtmut0e',
         amount: '1',
     },
+    token_output: {
+        address: 'addr1q84sh2j72ux0l03fxndjnhctdg7hcppsaejafsa84vh7lwgmcs5wgus8qt4atk45lvt4xfxpjtwfhdmvchdf2m3u3hlsd5tq5r',
+        amount: '2000000',
+        tokenBundle: [
+            {
+                policyId: '95a292ffee938be03e9bae5657982a74e9014eb4960108c9e23a5b39',
+                tokenAmounts: [
+                    {
+                        assetNameBytes: '74652474436f696e',
+                        amount: '7878754',
+                    },
+                ],
+            },
+            {
+                policyId: '96a292ffee938be03e9bae5657982a74e9014eb4960108c9e23a5b39',
+                tokenAmounts: [
+                    {
+                        assetNameBytes: '74652474436f696e',
+                        amount: '7878754',
+                    },
+                    {
+                        assetNameBytes: '75652474436f696e',
+                        amount: '1234',
+                    },
+                ],
+            },
+        ],
+    },
 };
 
 const SAMPLE_CERTIFICATES = {
@@ -197,6 +225,7 @@ const SAMPLE_WITHDRAWAL = {
 
 const FEE = '42';
 const TTL = '10';
+const VALIDITY_INTERVAL_START = '47';
 
 export default {
     method: 'cardanoSignTransaction',
@@ -493,6 +522,39 @@ export default {
             result: {
                 hash: '504f9214142996e0b7e315103b25d88a4afa3d01dd5be22376921b52b01483c3',
                 serializedTx: '83a500818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018182583901eb0baa5e570cffbe2934db29df0b6a3d7c0430ee65d4c3a7ab2fefb91bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff0102182a030a04818a03581cf61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb49735820198890ad6c92e80fbdab554dda02da9fb49d001bbd96181f3e07f7a6ab0d06401a1dcd65001a1443fd00d81e820102581de13a7f09d3df4cf66a7399c2b05bfa234d5a29560c311fc5db4c49071181581c122a946b9ad3d2ddf029d3a828f0468aece76895f15c9efbd69b427780f6a10081825820bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e5840aa2099208399fcc27c18d7ef0c7e873f9e22f0935b7e912cddd34b33b8cafd541a878dc01c042ce490e4c9bad3c62c2f59acaa009d336c9ff875c5f153d34900f6',
+            },
+        },
+        {
+            description: 'signMaryWithValidityIntervalStart',
+            params: {
+                inputs: [SAMPLE_INPUTS['shelley_input']],
+                outputs: [
+                    SAMPLE_OUTPUTS['simple_shelley_output'],
+                ],
+                fee: FEE,
+                validityIntervalStart: VALIDITY_INTERVAL_START,
+                protocolMagic: PROTOCOL_MAGICS['mainnet'],
+                networkId: NETWORK_IDS['mainnet'],
+            },
+            result: {
+                hash: 'ab331c5a1b098763e20cd85aecb65e2364ceb4b35db56e1fb3c36c8d508c9cec',
+                serializedTx: '83a400818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018182583901eb0baa5e570cffbe2934db29df0b6a3d7c0430ee65d4c3a7ab2fefb91bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff0102182a08182fa100818258205d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c15840476b84a2d93c0b1f3f9cc29248ad1e7c11ccd7e2dd69b33e753cb12f52fe57630a1dcc75284a2d863fbbe47df29c0662b62f0498519b77e797b115095095f60ff6',
+            },
+        },
+        {
+            description: 'signMaryTokenSending',
+            params: {
+                inputs: [SAMPLE_INPUTS['shelley_input']],
+                outputs: [
+                    SAMPLE_OUTPUTS['token_output'],
+                ],
+                fee: FEE,
+                protocolMagic: PROTOCOL_MAGICS['mainnet'],
+                networkId: NETWORK_IDS['mainnet'],
+            },
+            result: {
+                hash: 'b6cbcb21d6622b81c37a721e37a704524fa4dc10a0b4afc2288c676e8a6ac288',
+                serializedTx: '83a300818258203b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b700018182583901eb0baa5e570cffbe2934db29df0b6a3d7c0430ee65d4c3a7ab2fefb91bc428e4720702ebd5dab4fb175324c192dc9bb76cc5da956e3c8dff821a001e8480a2581c95a292ffee938be03e9bae5657982a74e9014eb4960108c9e23a5b39a14874652474436f696e1a00783862581c96a292ffee938be03e9bae5657982a74e9014eb4960108c9e23a5b39a24874652474436f696e1a007838624875652474436f696e1904d202182aa100818258205d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c15840613cf030d3edd562ae1d003e615baa03e41f96f4a470cf854d9588c8da3bcbe09228c064e42eaf101fc4c82fcae1d93cedf160e5465d4f1fd47dd6dacc1cf403f6',
             },
         },
     ],

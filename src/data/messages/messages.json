@@ -505,6 +505,13 @@
                     "type": "InputScriptType",
                     "name": "script_type",
                     "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "ignore_xpub_magic",
+                    "id": 6
                 }
             ],
             "enums": [],
@@ -528,6 +535,13 @@
                     "type": "string",
                     "name": "xpub",
                     "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "root_fingerprint",
+                    "id": 3
                 }
             ],
             "enums": [],
@@ -576,6 +590,13 @@
                     "type": "InputScriptType",
                     "name": "script_type",
                     "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "ignore_xpub_magic",
+                    "id": 6
                 }
             ],
             "enums": [],
@@ -839,6 +860,15 @@
                     "type": "uint32",
                     "name": "branch_id",
                     "id": 10
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "default": "BITCOIN"
+                    },
+                    "type": "AmountUnit",
+                    "name": "amount_unit",
+                    "id": 11
                 }
             ],
             "enums": [],
@@ -1972,6 +2002,15 @@
                     "type": "InputScriptType",
                     "name": "script_type",
                     "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "default": "BITCOIN"
+                    },
+                    "type": "AmountUnit",
+                    "name": "amount_unit",
+                    "id": 11
                 }
             ],
             "enums": [],
@@ -2297,6 +2336,13 @@
                     "type": "bytes",
                     "name": "metadata",
                     "id": 11
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "validity_interval_start",
+                    "id": 12
                 }
             ],
             "enums": [],
@@ -2354,6 +2400,59 @@
                             "type": "CardanoAddressParametersType",
                             "name": "address_parameters",
                             "id": 4
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "CardanoAssetGroupType",
+                            "name": "token_bundle",
+                            "id": 5
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "CardanoAssetGroupType",
+                    "fields": [
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "policy_id",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "CardanoTokenType",
+                            "name": "tokens",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "CardanoTokenType",
+                    "fields": [
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "asset_name_bytes",
+                            "id": 1
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "amount",
+                            "id": 2
                         }
                     ],
                     "enums": [],
@@ -10458,6 +10557,28 @@
                 {
                     "name": "PAYTOP2SHWITNESS",
                     "id": 5
+                }
+            ],
+            "options": {}
+        },
+        {
+            "name": "AmountUnit",
+            "values": [
+                {
+                    "name": "BITCOIN",
+                    "id": 0
+                },
+                {
+                    "name": "MILLIBITCOIN",
+                    "id": 1
+                },
+                {
+                    "name": "MICROBITCOIN",
+                    "id": 2
+                },
+                {
+                    "name": "SATOSHI",
+                    "id": 3
                 }
             ],
             "options": {}
