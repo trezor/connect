@@ -1756,6 +1756,13 @@
                     "type": "bytes",
                     "name": "metadata",
                     "id": 11
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "validity_interval_start",
+                    "id": 12
                 }
             ],
             "enums": [],
@@ -1813,6 +1820,59 @@
                             "type": "CardanoAddressParametersType",
                             "name": "address_parameters",
                             "id": 4
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "CardanoAssetGroupType",
+                            "name": "token_bundle",
+                            "id": 5
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "CardanoAssetGroupType",
+                    "fields": [
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "policy_id",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "CardanoTokenType",
+                            "name": "tokens",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "CardanoTokenType",
+                    "fields": [
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "asset_name_bytes",
+                            "id": 1
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "uint64",
+                            "name": "amount",
+                            "id": 2
                         }
                     ],
                     "enums": [],
@@ -9725,6 +9785,28 @@
                 },
                 {
                     "name": "STAKE_DELEGATION",
+                    "id": 2
+                },
+                {
+                    "name": "STAKE_POOL_REGISTRATION",
+                    "id": 3
+                }
+            ],
+            "options": {}
+        },
+        {
+            "name": "CardanoPoolRelayType",
+            "values": [
+                {
+                    "name": "SINGLE_HOST_IP",
+                    "id": 0
+                },
+                {
+                    "name": "SINGLE_HOST_NAME",
+                    "id": 1
+                },
+                {
+                    "name": "MULTIPLE_HOST_NAME",
                     "id": 2
                 }
             ],

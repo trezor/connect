@@ -624,6 +624,16 @@ export interface CardanoTxOutput {
     amount: string;
 }
 
+export interface CardanoToken {
+    asset_name_bytes: string;
+    amount: string;
+};
+
+export interface CardanoAssetGroup {
+    policy_id: string;
+    tokens: CardanoToken[];
+};
+
 // Lisk types
 export interface LiskAddress {
     address: string;

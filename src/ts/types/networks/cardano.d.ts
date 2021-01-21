@@ -81,10 +81,11 @@ export interface CardanoSignTransaction {
     inputs: CardanoInput[];
     outputs: CardanoOutput[];
     fee: string;
-    ttl: string;
+    ttl?: string;
     certificates?: CardanoCertificate[];
     withdrawals?: CardanoWithdrawal[];
     metadata?: string;
+    validityIntervalStart?: string;
     protocolMagic: number;
     networkId: number;
 }

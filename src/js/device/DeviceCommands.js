@@ -421,12 +421,13 @@ export default class DeviceCommands {
         inputs: Array<trezor.CardanoTxInput>,
         outputs: Array<trezor.CardanoTxOutput>,
         fee: string,
-        ttl: string,
+        ttl: ?string,
         certificates: Array<trezor.CardanoTxCertificate>,
         withdrawals: Array<trezor.CardanoTxWithdrawal>,
         metadata: string,
+        validityIntervalStart: ?string,
         protocolMagic: number,
-        networkId: number
+        networkId: number,
     ): Promise<trezor.CardanoSignedTx> {
         const response: MessageResponse<trezor.CardanoSignedTx> = await this.typedCall('CardanoSignTx', 'CardanoSignedTx', {
             inputs,
@@ -436,6 +437,7 @@ export default class DeviceCommands {
             certificates,
             withdrawals,
             metadata,
+            validity_interval_start: validityIntervalStart,
             protocol_magic: protocolMagic,
             network_id: networkId,
         });

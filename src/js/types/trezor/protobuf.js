@@ -605,10 +605,19 @@ export type CardanoTxInput = {
     address_n: Array<number>;
     output_index: number;
 };
+export type CardanoToken = {
+    asset_name_bytes: string;
+    amount: string;
+}
+export type CardanoAssetGroup = {
+    policy_id: string;
+    tokens: CardanoToken[];
+}
 export type CardanoTxOutput = {
     address?: string;
     address_parameters?: CardanoAddressParameters;
     amount: string;
+    token_bundle: CardanoAssetGroup[];
 };
 export type CardanoTxCertificate = {
     type: number;
