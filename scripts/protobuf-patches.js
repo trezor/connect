@@ -135,6 +135,7 @@ const TYPE_PATCH = {
     'CardanoPoolParametersType.margin_denominator': 'string | number',
     'CardanoSignTx.fee': 'string | number',
     'CardanoSignTx.ttl': 'string | number',
+    'CardanoTokenType.amount': 'string | number',
     'EosAsset.amount': 'string',
     'EosAsset.symbol': 'string',
     'EosPermissionLevel.actor': 'string',

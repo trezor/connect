@@ -19,6 +19,14 @@ const Enum_OutputScriptType = Object.freeze({
 });
 export type OutputScriptType = $Keys<typeof Enum_OutputScriptType>;
 
+const Enum_AmountUnit = Object.freeze({
+    BITCOIN: 0,
+    MILLIBITCOIN: 1,
+    MICROBITCOIN: 2,
+    SATOSHI: 3,
+});
+export type AmountUnit = $Values<typeof Enum_AmountUnit>;
+
 const Enum_CardanoAddressType = Object.freeze({
     BASE: 0,
     BASE_SCRIPT_KEY: 1,
@@ -194,12 +202,14 @@ export type GetPublicKey = {
     show_display?: boolean;
     coin_name?: string;
     script_type?: InputScriptType;
+    ignore_xpub_magic?: boolean;
 };
 
 // PublicKey
 export type PublicKey = {
     node: HDNodeType;
     xpub: string;
+    root_fingerprint?: number;
 };
 
 // GetAddress
@@ -209,6 +219,7 @@ export type GetAddress = {
     show_display?: boolean;
     multisig?: MultisigRedeemScriptType;
     script_type?: InputScriptType;
+    ignore_xpub_magic?: boolean;
 };
 
 // Address
@@ -263,6 +274,7 @@ export type SignTx = {
     version_group_id?: number;
     timestamp?: number;
     branch_id?: number;
+    amount_unit?: AmountUnit;
 };
 
 const Enum_RequestType = Object.freeze({
@@ -515,6 +527,7 @@ export type AuthorizeCoinJoin = {
     address_n: number[];
     coin_name?: string;
     script_type?: InputScriptType;
+    amount_unit?: AmountUnit;
 };
 
 // FirmwareErase
@@ -586,10 +599,21 @@ export type CardanoTxInputType = {
     prev_index?: number;
 };
 
+export type CardanoTokenType = {
+    asset_name_bytes: string;
+    amount: string | number;
+};
+
+export type CardanoAssetGroupType = {
+    policy_id: string;
+    tokens: CardanoTokenType[];
+};
+
 export type CardanoTxOutputType = {
     address?: string;
     amount?: number;
     address_parameters?: CardanoAddressParametersType;
+    token_bundle: CardanoAssetGroupType[];
 };
 
 export type CardanoPoolOwnerType = {
@@ -646,6 +670,7 @@ export type CardanoSignTx = {
     certificates: CardanoTxCertificateType[];
     withdrawals: CardanoTxWithdrawalType[];
     metadata?: string;
+    validity_interval_start?: number;
 };
 
 // CardanoSignedTx
@@ -2027,6 +2052,8 @@ export type MessageType = {
     CardanoGetPublicKey: CardanoGetPublicKey;
     CardanoPublicKey: CardanoPublicKey;
     CardanoTxInputType: CardanoTxInputType;
+    CardanoTokenType: $Exact<CardanoTokenType>;
+    CardanoAssetGroupType: $Exact<CardanoAssetGroupType>;
     CardanoTxOutputType: CardanoTxOutputType;
     CardanoPoolOwnerType: CardanoPoolOwnerType;
     CardanoPoolRelayParametersType: $Exact<CardanoPoolRelayParametersType>;

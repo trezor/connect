@@ -148,6 +148,8 @@ json.messages.map(e => parseMessage(e));
 const ORDER = {
     'BinanceCoin': 'BinanceInputOutput',
     'HDNodeType': 'HDNodePathType',
+    'CardanoAssetGroupType': 'CardanoTxOutputType',
+    'CardanoTokenType': 'CardanoAssetGroupType',
 };
 Object.keys(ORDER).forEach(key => {
     // find indexes
