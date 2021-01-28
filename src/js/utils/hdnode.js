@@ -79,19 +79,19 @@ const checkDerivation = (
     }
 };
 
-export const xpubDerive = (
-    xpub: PublicKey | EthereumPublicKey,
-    childXPub: PublicKey | EthereumPublicKey,
+export function xpubDerive<PK: PublicKey | EthereumPublicKey>(
+    xpub: PK,
+    childXPub: PK,
     suffix: number,
     network?: bitcoin.Network,
     requestedNetwork?: bitcoin.Network
-): PublicKey => {
-    const resNode: bitcoin.HDNode = pubKey2bjsNode(xpub, network || bitcoin.networks.bitcoin);
-    const childNode: bitcoin.HDNode = pubKey2bjsNode(childXPub, network || bitcoin.networks.bitcoin);
+): PK {
+    const resNode = pubKey2bjsNode(xpub, network || bitcoin.networks.bitcoin);
+    const childNode = pubKey2bjsNode(childXPub, network || bitcoin.networks.bitcoin);
     checkDerivation(resNode, childNode, suffix);
 
     return xpub;
-};
+}
 
 export const xpubToHDNodeType = (xpub: string, network: bitcoin.Network): HDNodeType => {
     const hd = bitcoin.HDNode.fromBase58(xpub, network);
