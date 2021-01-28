@@ -31,19 +31,20 @@ export default {
                 address: '0x2cffCE5B7DA9584caD519EFc4715425b630CEF3a',
             },
         },
-        {
-            description: "m/44'/160'/0'/0/0",
-            params: {
-                path: "m/44'/160'/0'/0/0",
-            },
-            result: false,
-        },
-        {
-            description: "m/44'/199'/0'/0/9999",
-            params: {
-                path: "m/44'/199'/0'/0/9999",
-            },
-            result: false,
-        },
+        // possible since 2.3.6
+        // {
+        //     description: "m/44'/160'/0'/0/0",
+        //     params: {
+        //         path: "m/44'/160'/0'/0/0",
+        //     },
+        //     result: false,
+        // },
+        // {
+        //     description: "m/44'/199'/0'/0/9999",
+        //     params: {
+        //         path: "m/44'/199'/0'/0/9999",
+        //     },
+        //     result: false,
+        // },
     ],
 };
