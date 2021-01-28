@@ -1,3 +1,16 @@
+# 8.1.20
+
+### Added
+- New protobuf messages with types generated automatically from json file.
+- New bitcoin `SignTx` process.
+- `cardanoSignTransaction`: stake pool registration, tx without outputs, multi asset support.
+- intermediary firmware update.
+
+### Fixed
+- `composeTransaction` using P2PKH fee calculation.
+- BroadcastChannel fallback.
+- preferred backend connection.
+
 # 8.1.19
 
 ### Added
