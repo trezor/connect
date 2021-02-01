@@ -14,6 +14,7 @@ import verifyTx from './helpers/signtxVerify';
 
 import {
     validateTrezorInputs,
+    enhanceTrezorInputs,
     validateTrezorOutputs,
     getReferencedTransactions,
     transformReferencedTransactions,
@@ -137,6 +138,7 @@ export default class SignTransaction extends AbstractMethod {
                 isBackendSupported(params.coinInfo);
                 const blockchain = await initBlockchain(params.coinInfo, this.postMessage);
                 const rawTxs = await blockchain.getTransactions(refTxsIds);
+                enhanceTrezorInputs(this.params.inputs, rawTxs);
                 refTxs = transformReferencedTransactions(rawTxs, params.coinInfo);
 
                 const origTxsIds = getOrigTransactions(params.inputs, params.outputs);

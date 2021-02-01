@@ -8,6 +8,7 @@ import { validateParams } from '../helpers/paramsValidator';
 
 // npm types
 import type { BuildTxInput } from 'hd-wallet';
+import type { TypedRawTransaction } from '@trezor/blockchain-link';
 
 // local types
 import type { BitcoinNetworkInfo } from '../../../types';
@@ -20,16 +21,35 @@ export const validateTrezorInputs = (inputs: TxInputType[], coinInfo: BitcoinNet
     const trezorInputs = inputs.map(fixPath).map(convertMultisigPubKey.bind(null, coinInfo.network));
     for (const input of trezorInputs) {
         validatePath(input.address_n);
+        const useAmount = isSegwitPath(input.address_n);
+        // since 2.3.6 amount is obligatory for all inputs.
+        // this change however is breaking 3rd party implementations
+        // missing amount will be delivered by refTx object
         validateParams(input, [
             { name: 'prev_hash', type: 'string', obligatory: true },
             { name: 'prev_index', type: 'number', obligatory: true },
             { name: 'script_type', type: 'string' },
-            { name: 'amount', type: 'string', obligatory: true },
+            { name: 'amount', type: 'string', obligatory: useAmount },
             { name: 'sequence', type: 'number' },
             { name: 'multisig', type: 'object' },
         ]);
     }
     return trezorInputs;
+};
+
+// this method exist as a workaround for breaking change described in validateTrezorInputs
+// TODO: it could be removed after another major version release.
+export const enhanceTrezorInputs = (inputs: TxInputType[], rawTxs: TypedRawTransaction[]) => {
+    inputs.forEach(input => {
+        if (!input.amount) {
+            // eslint-disable-next-line no-console
+            console.warn('TrezorConnect.singTransaction deprecation: missing input amount.');
+            const refTx = rawTxs.find(t => t.tx.txid === input.prev_hash);
+            if (refTx && refTx.type === 'blockbook') {
+                input.amount = refTx.tx.vout[input.prev_index].value;
+            }
+        }
+    });
 };
 
 /** *****
