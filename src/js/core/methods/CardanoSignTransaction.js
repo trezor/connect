@@ -58,7 +58,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             validateParams(output, [
                 { name: 'address', type: 'string' },
                 { name: 'amount', type: 'amount', obligatory: true },
-                { name: 'token_bundle', type: 'array', allowEmpty: true },
+                { name: 'tokenBundle', type: 'array', allowEmpty: true },
             ]);
 
             const result: CardanoTxOutputType = {
