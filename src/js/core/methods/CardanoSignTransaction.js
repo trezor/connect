@@ -7,6 +7,10 @@ import { validatePath } from '../../utils/pathUtils';
 import { addressParametersToProto, validateAddressParameters } from './helpers/cardanoAddressParameters';
 import { transformCertificate } from './helpers/cardanoCertificate';
 import { validateTokenBundle, tokenBundleToProto } from './helpers/cardanoTokens';
+import { ERRORS } from '../../constants';
+import Device from '../../device/Device';
+import { CERTIFICATE_TYPE } from '../../constants/cardano';
+
 
 import type {
     MessageType,
@@ -16,6 +20,13 @@ import type {
     CardanoTxWithdrawalType,
 } from '../../types/trezor/protobuf';
 import type { CoreMessage } from '../../types';
+
+// todo: remove when listed firmwares become mandatory for cardanoSignTransaction
+const CardanoSignTransactionFeatures = Object.freeze({
+    SignStakePoolRegistrationAsOwner: ['', '2.3.5'],
+    ValidityIntervalStart: ['0', '2.3.5'],
+    MultiassetOutputs: ['0', '2.3.5'],
+})
 
 export default class CardanoSignTransaction extends AbstractMethod {
     params: $ElementType<MessageType, 'CardanoSignTx'>;
@@ -114,7 +125,35 @@ export default class CardanoSignTransaction extends AbstractMethod {
         };
     }
 
+    _ensureFeatureIsSupported(feature: $Keys<typeof CardanoSignTransactionFeatures>) {
+        if (!this.device.atLeast(CardanoSignTransactionFeatures[feature])) {
+            throw ERRORS.TypedError('Method_InvalidParameter', `Feature ${feature} not supported by device firmware`)
+        }
+    }
+
+    _ensureFirmwareSupportsParams() {
+        const params = this.params;
+
+        params.certificates.map((certificate) => {
+            if (certificate.type === CERTIFICATE_TYPE.StakePoolRegistration) {
+                this._ensureFeatureIsSupported('SignStakePoolRegistrationAsOwner');
+            }
+        });
+
+        if (params.validity_interval_start != null) {
+            this._ensureFeatureIsSupported('ValidityIntervalStart');
+        }
+
+        params.outputs.map((output) => { 
+            if (output.token_bundle) {
+                this._ensureFeatureIsSupported('MultiassetOutputs');
+            }
+        });
+    }
+
     async run() {
+        this._ensureFirmwareSupportsParams();
+
         const cmd = this.device.getCommands();
         const { message } = await cmd.typedCall('CardanoSignTx', 'CardanoSignedTx', this.params);
         return {
