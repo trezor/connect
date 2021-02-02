@@ -869,6 +869,15 @@
                     "type": "AmountUnit",
                     "name": "amount_unit",
                     "id": 11
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "default": false
+                    },
+                    "type": "bool",
+                    "name": "decred_staking_ticket",
+                    "id": 12
                 }
             ],
             "enums": [],
@@ -1232,6 +1241,13 @@
                                     "type": "uint32",
                                     "name": "orig_index",
                                     "id": 17
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "DecredStakingSpendType",
+                                    "name": "decred_staking_spend",
+                                    "id": 18
                                 }
                             ],
                             "enums": [],
@@ -1450,6 +1466,13 @@
                     "type": "uint32",
                     "name": "orig_index",
                     "id": 17
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "DecredStakingSpendType",
+                    "name": "decred_staking_spend",
+                    "id": 18
                 }
             ],
             "enums": [],
@@ -11503,6 +11526,20 @@
                 {
                     "name": "MessageType_WebAuthnRemoveResidentCredential",
                     "id": 803
+                }
+            ],
+            "options": {}
+        },
+        {
+            "name": "DecredStakingSpendType",
+            "values": [
+                {
+                    "name": "SSGen",
+                    "id": 0
+                },
+                {
+                    "name": "SSRTX",
+                    "id": 1
                 }
             ],
             "options": {}

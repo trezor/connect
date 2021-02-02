@@ -18,6 +18,11 @@ export enum Enum_OutputScriptType {
 }
 export type OutputScriptType = keyof typeof Enum_OutputScriptType;
 
+export enum DecredStakingSpendType {
+    SSGen = 0,
+    SSRTX = 1,
+}
+
 export enum AmountUnit {
     BITCOIN = 0,
     MILLIBITCOIN = 1,
@@ -266,6 +271,7 @@ export type SignTx = {
     timestamp?: number;
     branch_id?: number;
     amount_unit?: AmountUnit;
+    decred_staking_ticket?: boolean;
 };
 
 export enum Enum_RequestType {
@@ -314,6 +320,7 @@ export type TxInputType = {
     commitment_data?: string;
     orig_hash?: string;
     orig_index?: number;
+    decred_staking_spend?: DecredStakingSpendType;
 };
 
 export type TxOutputBinType = {
@@ -406,6 +413,7 @@ export type TxInput = {
     commitment_data?: string;
     orig_hash?: string;
     orig_index?: number;
+    decred_staking_spend?: DecredStakingSpendType;
 };
 
 // TxOutput

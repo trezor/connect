@@ -10,11 +10,12 @@ import { ERRORS } from '../../constants';
 import { isBackendSupported, initBlockchain } from '../../backend/BlockchainLink';
 import signTx from './helpers/signtx';
 import signTxLegacy from './helpers/signtx-legacy';
-import verifyTx from './helpers/signtxVerify';
+import { verifyTx, verifyTicket } from './helpers/signtxVerify';
 
 import {
     validateTrezorInputs,
     validateTrezorOutputs,
+    validateDecredTicketOutputs,
     getReferencedTransactions,
     transformReferencedTransactions,
     getOrigTransactions,
@@ -60,6 +61,7 @@ export default class SignTransaction extends AbstractMethod {
             { name: 'versionGroupId', type: 'number' },
             { name: 'branchId', type: 'number' },
             { name: 'push', type: 'boolean' },
+            { name: 'decredStakingTicket', type: 'boolean' },
         ]);
 
         const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
@@ -88,7 +90,12 @@ export default class SignTransaction extends AbstractMethod {
         }
 
         const inputs = validateTrezorInputs(payload.inputs, coinInfo);
-        const outputs = validateTrezorOutputs(payload.outputs, coinInfo);
+        let outputs;
+        if (payload.decredStakingTicket) {
+          outputs = validateDecredTicketOutputs(payload.outputs, coinInfo);
+        } else {
+          outputs = validateTrezorOutputs(payload.outputs, coinInfo);
+        }
 
         const outputsWithAmount = outputs.filter(output => typeof output.amount === 'string' && !Object.prototype.hasOwnProperty.call(output, 'op_return_data'));
         if (outputsWithAmount.length > 0) {
@@ -113,6 +120,7 @@ export default class SignTransaction extends AbstractMethod {
                 overwintered: payload.overwintered,
                 version_group_id: payload.versionGroupId,
                 branch_id: payload.branchId,
+                decred_staking_ticket: payload.decredStakingTicket,
             },
             coinInfo,
             push: typeof payload.push === 'boolean' ? payload.push : false,
@@ -173,13 +181,22 @@ export default class SignTransaction extends AbstractMethod {
             params.coinInfo,
         );
 
-        await verifyTx(
-            device.getCommands().getHDNode.bind(device.getCommands()),
-            params.inputs,
-            params.outputs,
-            response.serializedTx,
-            params.coinInfo,
-        );
+        if (params.options.decred_staking_ticket) {
+          await verifyTicket(
+              params.inputs,
+              params.outputs,
+              response.serializedTx,
+              params.coinInfo,
+          );
+        } else {
+          await verifyTx(
+              device.getCommands().getHDNode.bind(device.getCommands()),
+              params.inputs,
+              params.outputs,
+              response.serializedTx,
+              params.coinInfo,
+          );
+        }
 
         if (params.push) {
             // validate backend

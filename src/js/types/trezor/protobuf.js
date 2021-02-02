@@ -27,6 +27,12 @@ const Enum_AmountUnit = Object.freeze({
 });
 export type AmountUnit = $Values<typeof Enum_AmountUnit>;
 
+const Enum_DecredStakingSpendType = Object.freeze({
+    SSGen: 0,
+    SSRTX: 1,
+});
+export type DecredStakingSpendType = $Values<typeof Enum_DecredStakingSpendType>;
+
 const Enum_CardanoAddressType = Object.freeze({
     BASE: 0,
     BASE_SCRIPT_KEY: 1,
@@ -275,6 +281,7 @@ export type SignTx = {
     timestamp?: number;
     branch_id?: number;
     amount_unit?: AmountUnit;
+    decred_staking_ticket?: boolean;
 };
 
 const Enum_RequestType = Object.freeze({
@@ -323,6 +330,7 @@ export type TxInputType = {
     commitment_data?: string;
     orig_hash?: string;
     orig_index?: number;
+    decred_staking_type?: DecredStakingSpendType;
 };
 
 export type TxOutputBinType = {
@@ -415,6 +423,7 @@ export type TxInput = {
     commitment_data?: string;
     orig_hash?: string;
     orig_index?: number;
+    decred_staking_type?: DecredStakingSpendType;
 };
 
 // TxOutput

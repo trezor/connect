@@ -48,6 +48,29 @@ export const validateTrezorOutputs = (outputs: TxOutputType[], coinInfo: Bitcoin
     return trezorOutputs;
 };
 
+export const validateDecredTicketOutputs = (outputs: TxOutputType[], coinInfo: BitcoinNetworkInfo): TxOutputType[] => {
+    const trezorOutputs = outputs.map(fixPath).map(convertMultisigPubKey.bind(null, coinInfo.network));
+    for (const output of trezorOutputs) {
+        validateParams(output, [
+            { name: 'address_n', type: 'array' },
+            { name: 'address', type: 'string' },
+            { name: 'amount', type: 'string' },
+            { name: 'op_return_data', type: 'string' },
+            { name: 'multisig', type: 'object' },
+        ]);
+
+        if (Object.prototype.hasOwnProperty.call(output, 'address_n') && Object.prototype.hasOwnProperty.call(output, 'address')) {
+            throw ERRORS.TypedError('Method_InvalidParameter', 'Cannot use address and address_n in one output');
+        }
+
+        if (typeof output.address === 'string' && !isValidAddress(output.address, coinInfo)) {
+            // validate address with coin info
+            throw ERRORS.TypedError('Method_InvalidParameter', `Invalid ${ coinInfo.label } output address ${ output.address }`);
+        }
+    }
+    return trezorOutputs;
+};
+
 /** *****
  * ComposeTransaction: validation
  *******/
