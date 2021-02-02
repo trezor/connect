@@ -41,11 +41,11 @@ export default class CardanoSignTransaction extends AbstractMethod {
             { name: 'inputs', type: 'array', obligatory: true },
             { name: 'outputs', type: 'array', obligatory: true, allowEmpty: true },
             { name: 'fee', type: 'amount', obligatory: true },
-            { name: 'ttl', type: 'string' },
+            { name: 'ttl', type: 'amount' },
             { name: 'certificates', type: 'array', allowEmpty: true },
             { name: 'withdrawals', type: 'array', allowEmpty: true },
             { name: 'metadata', type: 'string' },
-            { name: 'validityIntervalStart', type: 'string' },
+            { name: 'validityIntervalStart', type: 'amount' },
             { name: 'protocolMagic', type: 'number', obligatory: true },
             { name: 'networkId', type: 'number', obligatory: true },
         ]);
