@@ -8,9 +8,7 @@ import { addressParametersToProto, validateAddressParameters } from './helpers/c
 import { transformCertificate } from './helpers/cardanoCertificate';
 import { validateTokenBundle, tokenBundleToProto } from './helpers/cardanoTokens';
 import { ERRORS } from '../../constants';
-import Device from '../../device/Device';
 import { CERTIFICATE_TYPE } from '../../constants/cardano';
-
 
 import type {
     MessageType,
@@ -23,10 +21,10 @@ import type { CoreMessage } from '../../types';
 
 // todo: remove when listed firmwares become mandatory for cardanoSignTransaction
 const CardanoSignTransactionFeatures = Object.freeze({
-    SignStakePoolRegistrationAsOwner: ['', '2.3.5'],
-    ValidityIntervalStart: ['0', '2.3.5'],
-    MultiassetOutputs: ['0', '2.3.5'],
-})
+    SignStakePoolRegistrationAsOwner: ['0', '2.3.6'],
+    ValidityIntervalStart: ['0', '2.3.6'],
+    MultiassetOutputs: ['0', '2.3.6'],
+});
 
 export default class CardanoSignTransaction extends AbstractMethod {
     params: $ElementType<MessageType, 'CardanoSignTx'>;
@@ -127,7 +125,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
 
     _ensureFeatureIsSupported(feature: $Keys<typeof CardanoSignTransactionFeatures>) {
         if (!this.device.atLeast(CardanoSignTransactionFeatures[feature])) {
-            throw ERRORS.TypedError('Method_InvalidParameter', `Feature ${feature} not supported by device firmware`)
+            throw ERRORS.TypedError('Method_InvalidParameter', `Feature ${feature} not supported by device firmware`);
         }
     }
 
@@ -144,7 +142,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             this._ensureFeatureIsSupported('ValidityIntervalStart');
         }
 
-        params.outputs.map((output) => { 
+        params.outputs.map((output) => {
             if (output.token_bundle) {
                 this._ensureFeatureIsSupported('MultiassetOutputs');
             }
