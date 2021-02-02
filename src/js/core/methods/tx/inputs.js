@@ -22,7 +22,7 @@ export const validateTrezorInputs = (inputs: TxInputType[], coinInfo: BitcoinNet
     for (const input of trezorInputs) {
         validatePath(input.address_n);
         const useAmount = isSegwitPath(input.address_n);
-        // since 2.3.6 amount is obligatory for all inputs.
+        // since 2.3.5 amount is obligatory for all inputs.
         // this change however is breaking 3rd party implementations
         // missing amount will be delivered by refTx object
         validateParams(input, [

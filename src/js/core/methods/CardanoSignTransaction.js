@@ -21,9 +21,9 @@ import type { CoreMessage } from '../../types';
 
 // todo: remove when listed firmwares become mandatory for cardanoSignTransaction
 const CardanoSignTransactionFeatures = Object.freeze({
-    SignStakePoolRegistrationAsOwner: ['0', '2.3.6'],
-    ValidityIntervalStart: ['0', '2.3.6'],
-    MultiassetOutputs: ['0', '2.3.6'],
+    SignStakePoolRegistrationAsOwner: ['0', '2.3.5'],
+    ValidityIntervalStart: ['0', '2.3.5'],
+    MultiassetOutputs: ['0', '2.3.5'],
 });
 
 export default class CardanoSignTransaction extends AbstractMethod {

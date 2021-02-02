@@ -2,7 +2,7 @@
 
 ### Fixed
 - `signTransaction` missing input amount fallback.
-- `cardanoSignTransaction` fallback.
+- `cardanoSignTransaction` parameters validation.
 - `DOGE` big amount serialization (via @trezor/utxo-lib)
 
 # 8.1.20
