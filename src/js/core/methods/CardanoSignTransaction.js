@@ -143,7 +143,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
         }
 
         params.outputs.map((output) => {
-            if (output.token_bundle) {
+            if (output.token_bundle && output.token_bundle.length > 0) {
                 this._ensureFeatureIsSupported('MultiassetOutputs');
             }
         });
