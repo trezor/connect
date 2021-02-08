@@ -80,6 +80,22 @@ export const events = async () => {
             (payload.mode: 'normal' | 'bootloader' | 'initialize' | 'seedless');
             (payload.firmware: 'valid' | 'outdated' | 'required' | 'unknown' | 'none');
             (payload.status: 'available' | 'occupied' | 'used');
+            // features
+            (payload.features.vendor: string | null);
+            (payload.features.device_id: string | null);
+            (payload.features.major_version: number | null);
+            (payload.features.minor_version: number | null);
+            (payload.features.patch_version: number | null);
+            (payload.features.pin_protection: boolean);
+            (payload.features.passphrase_protection: boolean | null);
+            (payload.features.label: string | null);
+            (payload.features.initialized: boolean);
+            (payload.features.revision: string | null);
+            (payload.features.needs_backup: boolean);
+            (payload.features.flags: number);
+            (payload.features.unfinished_backup: boolean);
+            (payload.features.no_backup: boolean);
+            (payload.features.model: string);
         }
     });
     TrezorConnect.off(DEVICE_EVENT, () => {});

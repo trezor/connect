@@ -294,14 +294,39 @@ export const signTransaction = async () => {
                 ],
                 outputs: [
                     {
+                        address: 'a',
+                        amount: '100',
+                        script_type: 'PAYTOADDRESS',
+                    },
+                    {
+                        address_n: [0],
+                        amount: '100',
+                        script_type: 'PAYTOADDRESS',
+                    },
+                    {
+                        address_n: [0],
+                        amount: '100',
+                        script_type: 'PAYTOSCRIPTHASH',
+                    },
+                    {
+                        address_n: [0],
+                        amount: '100',
+                        script_type: 'PAYTOMULTISIG',
+                    },
+                    {
+                        address_n: [0],
+                        amount: '100',
+                        script_type: 'PAYTOWITNESS',
+                    },
+                    {
                         address_n: [0],
                         amount: '100',
                         script_type: 'PAYTOP2SHWITNESS',
                     },
                     {
-                        address: 'a',
-                        amount: '100',
-                        script_type: 'PAYTOADDRESS',
+                        amount: '0',
+                        op_return_data: 'deadbeef',
+                        script_type: 'PAYTOOPRETURN',
                     },
                 ],
                 lock_time: 1,
@@ -357,7 +382,28 @@ export const signTransaction = async () => {
             // $FlowExpectedError: invalid script_type
             script_type: 'SPENDADDRESS-2',
         }],
-        outputs: [],
+        outputs: [
+            {
+                // $FlowExpectedError: unexpected address_n
+                address_n: [0],
+                amount: '0',
+                op_return_data: 'deadbeef',
+                script_type: 'PAYTOOPRETURN',
+            },
+            // $FlowExpectedError: unexpected script_type
+            {
+                address: 'abcd',
+                amount: '100',
+                script_type: 'PAYTOP2SHWITNESS',
+            },
+            // $FlowExpectedError: unexpected address
+            {
+                address: 'abcd',
+                amount: '0',
+                op_return_data: 'deadbeef',
+                script_type: 'PAYTOOPRETURN',
+            },
+        ],
         coin: 'btc',
     });
 };

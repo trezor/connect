@@ -54,9 +54,20 @@ const RULE_PATCH = {
     'LiskSignMessage.message': 'required',
     'LiskMessageSignature.public_key': 'required',
     'LiskMessageSignature.signature': 'required',
+    'Features.vendor': 'required',
+    'Features.device_id': 'required',
     'Features.major_version': 'required',
     'Features.minor_version': 'required',
     'Features.patch_version': 'required',
+    'Features.pin_protection': 'required',
+    'Features.passphrase_protection': 'required',
+    'Features.label': 'required',
+    'Features.initialized': 'required',
+    'Features.revision': 'required',
+    'Features.needs_backup': 'required',
+    'Features.flags': 'required',
+    'Features.unfinished_backup': 'required',
+    'Features.no_backup': 'required',
     'Features.model': 'required',
     'NEMSignedTx.data': 'required',
     'NEMSignedTx.signature': 'required',
@@ -214,6 +225,10 @@ const DEFINITION_PATCH = {
 `// - TxOutputType replacement
 // TxOutputType needs more exact types
 // differences: external output (no address_n), opreturn output (no address_n, no address)
+// eslint-disable-next-line no-unused-vars
+type Exclude<A, B> = $Keys<$Diff<typeof Enum_OutputScriptType, { PAYTOOPRETURN: 3 }>>; // flowtype equivalent of typescript Exclude
+export type ChangeOutputScriptType = Exclude<OutputScriptType, 'PAYTOOPRETURN'>;
+
 export type TxOutputType = {|
     address: string;
     address_n?: typeof undefined;
@@ -225,7 +240,7 @@ export type TxOutputType = {|
 |} | {|
     address?: typeof undefined;
     address_n: number[];
-    script_type: OutputScriptType;
+    script_type: ChangeOutputScriptType;
     amount: string;
     multisig?: MultisigRedeemScriptType;
     orig_hash?: string;
