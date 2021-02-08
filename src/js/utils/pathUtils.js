@@ -3,7 +3,7 @@
 import { getCoinName } from '../data/CoinInfo';
 import { ERRORS } from '../constants';
 import type { BitcoinNetworkInfo, CoinInfo } from '../types';
-import type { InputScriptType, OutputScriptType } from '../types/trezor/protobuf';
+import type { InputScriptType, ChangeOutputScriptType } from '../types/trezor/protobuf';
 
 export const HD_HARDENED: number = 0x80000000;
 export const toHardened = (n: number): number => (n | HD_HARDENED) >>> 0;
@@ -63,7 +63,7 @@ export const getScriptType = (path: ?Array<number>): InputScriptType => {
     }
 };
 
-export const getOutputScriptType = (path: ?Array<number>): OutputScriptType => {
+export const getOutputScriptType = (path?: number[]): ChangeOutputScriptType => {
     if (!Array.isArray(path) || path.length < 1) return 'PAYTOADDRESS';
 
     // compatibility for Casa - allow an unhardened 49 path to use PAYTOP2SHWITNESS

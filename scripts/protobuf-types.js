@@ -103,7 +103,12 @@ const parseMessage = (message, depth = 0) => {
             // replace whole declaration
             if (isTypescript) {
                 // replace flowtype exact declaration {| ...type |} to typescript { ...type }
-                value.push(definition.replace(/{\|/gi, '{').replace(/\|}/gi, '}'));
+                let cleanTS = definition.replace(/{\|/gi, '{').replace(/\|}/gi, '}');
+                // comment out flowtype Exclude type/helper (typescript build-in)
+                if (cleanTS.indexOf('type Exclude') >= 0) {
+                    cleanTS = cleanTS.replace('type Exclude', '// type Exclude');
+                }
+                value.push(cleanTS);
             } else {
                 value.push(definition);
             }

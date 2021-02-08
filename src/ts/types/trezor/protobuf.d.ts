@@ -325,6 +325,10 @@ export type TxOutputBinType = {
 // - TxOutputType replacement
 // TxOutputType needs more exact types
 // differences: external output (no address_n), opreturn output (no address_n, no address)
+// eslint-disable-next-line no-unused-vars
+// type Exclude<A, B> = $Keys<$Diff<typeof Enum_OutputScriptType, { PAYTOOPRETURN: 3 }>>; // flowtype equivalent of typescript Exclude
+export type ChangeOutputScriptType = Exclude<OutputScriptType, 'PAYTOOPRETURN'>;
+
 export type TxOutputType = {
     address: string;
     address_n?: typeof undefined;
@@ -336,7 +340,7 @@ export type TxOutputType = {
 } | {
     address?: typeof undefined;
     address_n: number[];
-    script_type: OutputScriptType;
+    script_type: ChangeOutputScriptType;
     amount: string;
     multisig?: MultisigRedeemScriptType;
     orig_hash?: string;
@@ -1324,32 +1328,32 @@ export type Capability = keyof typeof Enum_Capability;
 
 // Features
 export type Features = {
-    vendor?: string;
+    vendor: string;
     major_version: number;
     minor_version: number;
     patch_version: number;
     bootloader_mode?: boolean | null;
-    device_id?: string | null;
-    pin_protection?: boolean;
-    passphrase_protection?: boolean;
+    device_id: string | null;
+    pin_protection: boolean;
+    passphrase_protection: boolean;
     language?: string;
-    label?: string | null;
-    initialized?: boolean;
-    revision?: string;
+    label: string | null;
+    initialized: boolean;
+    revision: string;
     bootloader_hash?: string | null;
     imported?: boolean;
     unlocked?: boolean;
     firmware_present?: boolean | null;
-    needs_backup?: boolean;
-    flags?: number;
+    needs_backup: boolean;
+    flags: number;
     model: string;
     fw_major?: number | null;
     fw_minor?: number | null;
     fw_patch?: number | null;
     fw_vendor?: string | null;
     fw_vendor_keys?: string;
-    unfinished_backup?: boolean;
-    no_backup?: boolean;
+    unfinished_backup: boolean;
+    no_backup: boolean;
     recovery_mode?: boolean;
     capabilities: Capability[];
     backup_type?: BackupType;

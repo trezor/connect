@@ -70,6 +70,23 @@ export const events = async () => {
             payload.mode;
             payload.firmware;
             payload.status;
+
+            // features
+            payload.features.vendor;
+            payload.features.device_id;
+            payload.features.major_version;
+            payload.features.minor_version;
+            payload.features.patch_version;
+            payload.features.pin_protection;
+            payload.features.passphrase_protection;
+            payload.features.label;
+            payload.features.initialized;
+            payload.features.revision;
+            payload.features.needs_backup;
+            payload.features.flags;
+            payload.features.unfinished_backup;
+            payload.features.no_backup;
+            payload.features.model;
         }
     });
     TrezorConnect.off(DEVICE_EVENT, () => {});
