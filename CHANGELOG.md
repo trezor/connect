@@ -1,3 +1,10 @@
+# 8.1.22
+
+### Added
+- 2.3.5/1.9.4 firmware release.
+### Fixed
+- protobuf types (Features, TxOutput)
+
 # 8.1.21
 
 ### Fixed
