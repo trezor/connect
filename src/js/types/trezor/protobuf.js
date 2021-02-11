@@ -599,8 +599,8 @@ export type CardanoPublicKey = {
 
 export type CardanoTxInputType = {
     address_n?: number[];
-    prev_hash?: string;
-    prev_index?: number;
+    prev_hash: string;
+    prev_index: number;
 };
 
 export type CardanoTokenType = {
@@ -615,7 +615,7 @@ export type CardanoAssetGroupType = {
 
 export type CardanoTxOutputType = {
     address?: string;
-    amount?: number;
+    amount: number;
     address_parameters?: CardanoAddressParametersType;
     token_bundle: CardanoAssetGroupType[];
 };
@@ -652,7 +652,7 @@ export type CardanoPoolParametersType = {
 };
 
 export type CardanoTxCertificateType = {
-    type?: CardanoCertificateType;
+    type: CardanoCertificateType;
     path?: number[];
     pool?: string;
     pool_parameters?: CardanoPoolParametersType;
@@ -660,17 +660,17 @@ export type CardanoTxCertificateType = {
 
 export type CardanoTxWithdrawalType = {
     path: number[];
-    amount?: number;
+    amount: number;
 };
 
 // CardanoSignTx
 export type CardanoSignTx = {
     inputs: CardanoTxInputType[];
     outputs: CardanoTxOutputType[];
-    protocol_magic?: number;
-    fee?: string | number;
+    protocol_magic: number;
+    fee: string | number;
     ttl?: string | number;
-    network_id?: number;
+    network_id: number;
     certificates: CardanoTxCertificateType[];
     withdrawals: CardanoTxWithdrawalType[];
     metadata?: string;
@@ -787,8 +787,8 @@ export type Deprecated_PassphraseStateAck = {};
 // CipherKeyValue
 export type CipherKeyValue = {
     address_n: number[];
-    key?: string;
-    value?: string;
+    key: string;
+    value: string;
     encrypt?: boolean;
     ask_on_encrypt?: boolean;
     ask_on_decrypt?: boolean;
@@ -797,7 +797,7 @@ export type CipherKeyValue = {
 
 // CipheredKeyValue
 export type CipheredKeyValue = {
-    value?: string;
+    value: string;
 };
 
 // IdentityType
@@ -812,7 +812,7 @@ export type IdentityType = {
 
 // SignIdentity
 export type SignIdentity = {
-    identity?: IdentityType;
+    identity: IdentityType;
     challenge_hidden?: string;
     challenge_visual?: string;
     ecdsa_curve_name?: string;
@@ -827,14 +827,14 @@ export type SignedIdentity = {
 
 // GetECDHSessionKey
 export type GetECDHSessionKey = {
-    identity?: IdentityType;
-    peer_public_key?: string;
+    identity: IdentityType;
+    peer_public_key: string;
     ecdsa_curve_name?: string;
 };
 
 // ECDHSessionKey
 export type ECDHSessionKey = {
-    session_key?: string;
+    session_key: string;
 };
 
 const Enum_DebugSwipeDirection = Object.freeze({
@@ -1307,9 +1307,9 @@ export type LiskMessageSignature = {
 
 // LiskVerifyMessage
 export type LiskVerifyMessage = {
-    public_key?: string;
-    signature?: string;
-    message?: string;
+    public_key: string;
+    signature: string;
+    message: string;
 };
 
 // Initialize
@@ -1688,7 +1688,7 @@ export type NEMDecryptMessage = {
 
 // NEMDecryptedMessage
 export type NEMDecryptedMessage = {
-    payload?: string;
+    payload: string;
 };
 
 // RippleGetAddress
@@ -1704,7 +1704,7 @@ export type RippleAddress = {
 
 export type RipplePayment = {
     amount: string | number;
-    destination?: string;
+    destination: string;
     destination_tag?: number;
 };
 
@@ -1995,9 +1995,9 @@ export type TezosSignedTx = {
 // custom connect definitions
 export type MessageType = {
     BinanceGetAddress: BinanceGetAddress;
-    BinanceAddress: BinanceAddress;
+    BinanceAddress: $Exact<BinanceAddress>;
     BinanceGetPublicKey: BinanceGetPublicKey;
-    BinancePublicKey: BinancePublicKey;
+    BinancePublicKey: $Exact<BinancePublicKey>;
     BinanceSignTx: BinanceSignTx;
     BinanceTxRequest: BinanceTxRequest;
     BinanceCoin: BinanceCoin;
@@ -2005,18 +2005,18 @@ export type MessageType = {
     BinanceTransferMsg: BinanceTransferMsg;
     BinanceOrderMsg: BinanceOrderMsg;
     BinanceCancelMsg: BinanceCancelMsg;
-    BinanceSignedTx: BinanceSignedTx;
+    BinanceSignedTx: $Exact<BinanceSignedTx>;
     HDNodeType: $Exact<HDNodeType>;
     HDNodePathType: $Exact<HDNodePathType>;
     MultisigRedeemScriptType: $Exact<MultisigRedeemScriptType>;
     GetPublicKey: GetPublicKey;
-    PublicKey: PublicKey;
+    PublicKey: $Exact<PublicKey>;
     GetAddress: GetAddress;
     Address: $Exact<Address>;
     GetOwnershipId: GetOwnershipId;
     OwnershipId: $Exact<OwnershipId>;
     SignMessage: $Exact<SignMessage>;
-    MessageSignature: MessageSignature;
+    MessageSignature: $Exact<MessageSignature>;
     VerifyMessage: $Exact<VerifyMessage>;
     SignTx: $Exact<SignTx>;
     TxRequestDetailsType: TxRequestDetailsType;
@@ -2049,24 +2049,24 @@ export type MessageType = {
     FirmwareRequest: FirmwareRequest;
     FirmwareUpload: $Exact<FirmwareUpload>;
     SelfTest: SelfTest;
-    CardanoBlockchainPointerType: CardanoBlockchainPointerType;
-    CardanoAddressParametersType: CardanoAddressParametersType;
-    CardanoGetAddress: CardanoGetAddress;
-    CardanoAddress: CardanoAddress;
+    CardanoBlockchainPointerType: $Exact<CardanoBlockchainPointerType>;
+    CardanoAddressParametersType: $Exact<CardanoAddressParametersType>;
+    CardanoGetAddress: $Exact<CardanoGetAddress>;
+    CardanoAddress: $Exact<CardanoAddress>;
     CardanoGetPublicKey: CardanoGetPublicKey;
-    CardanoPublicKey: CardanoPublicKey;
-    CardanoTxInputType: CardanoTxInputType;
+    CardanoPublicKey: $Exact<CardanoPublicKey>;
+    CardanoTxInputType: $Exact<CardanoTxInputType>;
     CardanoTokenType: $Exact<CardanoTokenType>;
     CardanoAssetGroupType: $Exact<CardanoAssetGroupType>;
-    CardanoTxOutputType: CardanoTxOutputType;
+    CardanoTxOutputType: $Exact<CardanoTxOutputType>;
     CardanoPoolOwnerType: CardanoPoolOwnerType;
     CardanoPoolRelayParametersType: $Exact<CardanoPoolRelayParametersType>;
     CardanoPoolMetadataType: $Exact<CardanoPoolMetadataType>;
     CardanoPoolParametersType: $Exact<CardanoPoolParametersType>;
-    CardanoTxCertificateType: CardanoTxCertificateType;
-    CardanoTxWithdrawalType: CardanoTxWithdrawalType;
-    CardanoSignTx: CardanoSignTx;
-    CardanoSignedTx: CardanoSignedTx;
+    CardanoTxCertificateType: $Exact<CardanoTxCertificateType>;
+    CardanoTxWithdrawalType: $Exact<CardanoTxWithdrawalType>;
+    CardanoSignTx: $Exact<CardanoSignTx>;
+    CardanoSignedTx: $Exact<CardanoSignedTx>;
     Success: Success;
     Failure: Failure;
     ButtonRequest: ButtonRequest;
@@ -2077,13 +2077,13 @@ export type MessageType = {
     PassphraseAck: PassphraseAck;
     Deprecated_PassphraseStateRequest: Deprecated_PassphraseStateRequest;
     Deprecated_PassphraseStateAck: Deprecated_PassphraseStateAck;
-    CipherKeyValue: CipherKeyValue;
-    CipheredKeyValue: CipheredKeyValue;
+    CipherKeyValue: $Exact<CipherKeyValue>;
+    CipheredKeyValue: $Exact<CipheredKeyValue>;
     IdentityType: IdentityType;
-    SignIdentity: SignIdentity;
-    SignedIdentity: SignedIdentity;
-    GetECDHSessionKey: GetECDHSessionKey;
-    ECDHSessionKey: ECDHSessionKey;
+    SignIdentity: $Exact<SignIdentity>;
+    SignedIdentity: $Exact<SignedIdentity>;
+    GetECDHSessionKey: $Exact<GetECDHSessionKey>;
+    ECDHSessionKey: $Exact<ECDHSessionKey>;
     DebugLinkDecision: DebugLinkDecision;
     DebugLinkLayout: DebugLinkLayout;
     DebugLinkReseedRandom: DebugLinkReseedRandom;
@@ -2101,13 +2101,13 @@ export type MessageType = {
     DebugLinkEraseSdCard: DebugLinkEraseSdCard;
     DebugLinkWatchLayout: DebugLinkWatchLayout;
     EosGetPublicKey: EosGetPublicKey;
-    EosPublicKey: EosPublicKey;
+    EosPublicKey: $Exact<EosPublicKey>;
     EosTxHeader: $Exact<EosTxHeader>;
     EosSignTx: EosSignTx;
     EosTxActionRequest: EosTxActionRequest;
     EosAsset: EosAsset;
     EosPermissionLevel: EosPermissionLevel;
-    EosAuthorizationKey: EosAuthorizationKey;
+    EosAuthorizationKey: $Exact<EosAuthorizationKey>;
     EosAuthorizationAccount: EosAuthorizationAccount;
     EosAuthorizationWait: EosAuthorizationWait;
     EosAuthorization: EosAuthorization;
@@ -2125,36 +2125,36 @@ export type MessageType = {
     EosActionLinkAuth: EosActionLinkAuth;
     EosActionUnlinkAuth: EosActionUnlinkAuth;
     EosActionNewAccount: EosActionNewAccount;
-    EosActionUnknown: EosActionUnknown;
+    EosActionUnknown: $Exact<EosActionUnknown>;
     EosTxActionAck: EosTxActionAck;
-    EosSignedTx: EosSignedTx;
+    EosSignedTx: $Exact<EosSignedTx>;
     EthereumGetPublicKey: EthereumGetPublicKey;
-    EthereumPublicKey: EthereumPublicKey;
+    EthereumPublicKey: $Exact<EthereumPublicKey>;
     EthereumGetAddress: EthereumGetAddress;
     EthereumAddress: EthereumAddress;
     EthereumSignTx: EthereumSignTx;
     EthereumTxRequest: EthereumTxRequest;
     EthereumTxAck: EthereumTxAck;
     EthereumSignMessage: EthereumSignMessage;
-    EthereumMessageSignature: EthereumMessageSignature;
+    EthereumMessageSignature: $Exact<EthereumMessageSignature>;
     EthereumVerifyMessage: EthereumVerifyMessage;
     LiskGetAddress: LiskGetAddress;
-    LiskAddress: LiskAddress;
+    LiskAddress: $Exact<LiskAddress>;
     LiskGetPublicKey: LiskGetPublicKey;
-    LiskPublicKey: LiskPublicKey;
+    LiskPublicKey: $Exact<LiskPublicKey>;
     LiskSignatureType: LiskSignatureType;
     LiskDelegateType: LiskDelegateType;
     LiskMultisignatureType: LiskMultisignatureType;
     LiskTransactionAsset: LiskTransactionAsset;
     LiskTransactionCommon: LiskTransactionCommon;
-    LiskSignTx: LiskSignTx;
-    LiskSignedTx: LiskSignedTx;
-    LiskSignMessage: LiskSignMessage;
-    LiskMessageSignature: LiskMessageSignature;
-    LiskVerifyMessage: LiskVerifyMessage;
+    LiskSignTx: $Exact<LiskSignTx>;
+    LiskSignedTx: $Exact<LiskSignedTx>;
+    LiskSignMessage: $Exact<LiskSignMessage>;
+    LiskMessageSignature: $Exact<LiskMessageSignature>;
+    LiskVerifyMessage: $Exact<LiskVerifyMessage>;
     Initialize: Initialize;
     GetFeatures: GetFeatures;
-    Features: Features;
+    Features: $Exact<Features>;
     LockDevice: LockDevice;
     EndSession: EndSession;
     ApplySettings: ApplySettings;
@@ -2194,17 +2194,17 @@ export type MessageType = {
     NEMAggregateModification: NEMAggregateModification;
     NEMImportanceTransfer: NEMImportanceTransfer;
     NEMSignTx: NEMSignTx;
-    NEMSignedTx: NEMSignedTx;
+    NEMSignedTx: $Exact<NEMSignedTx>;
     NEMDecryptMessage: NEMDecryptMessage;
-    NEMDecryptedMessage: NEMDecryptedMessage;
+    NEMDecryptedMessage: $Exact<NEMDecryptedMessage>;
     RippleGetAddress: RippleGetAddress;
-    RippleAddress: RippleAddress;
-    RipplePayment: RipplePayment;
+    RippleAddress: $Exact<RippleAddress>;
+    RipplePayment: $Exact<RipplePayment>;
     RippleSignTx: RippleSignTx;
-    RippleSignedTx: RippleSignedTx;
-    StellarAssetType: StellarAssetType;
+    RippleSignedTx: $Exact<RippleSignedTx>;
+    StellarAssetType: $Exact<StellarAssetType>;
     StellarGetAddress: StellarGetAddress;
-    StellarAddress: StellarAddress;
+    StellarAddress: $Exact<StellarAddress>;
     StellarSignTx: StellarSignTx;
     StellarTxOpRequest: StellarTxOpRequest;
     StellarPaymentOp: StellarPaymentOp;
@@ -2218,22 +2218,22 @@ export type MessageType = {
     StellarAccountMergeOp: StellarAccountMergeOp;
     StellarManageDataOp: StellarManageDataOp;
     StellarBumpSequenceOp: StellarBumpSequenceOp;
-    StellarSignedTx: StellarSignedTx;
+    StellarSignedTx: $Exact<StellarSignedTx>;
     TezosGetAddress: TezosGetAddress;
-    TezosAddress: TezosAddress;
+    TezosAddress: $Exact<TezosAddress>;
     TezosGetPublicKey: TezosGetPublicKey;
-    TezosPublicKey: TezosPublicKey;
-    TezosContractID: TezosContractID;
-    TezosRevealOp: TezosRevealOp;
+    TezosPublicKey: $Exact<TezosPublicKey>;
+    TezosContractID: $Exact<TezosContractID>;
+    TezosRevealOp: $Exact<TezosRevealOp>;
     TezosManagerTransfer: TezosManagerTransfer;
     TezosParametersManager: TezosParametersManager;
-    TezosTransactionOp: TezosTransactionOp;
-    TezosOriginationOp: TezosOriginationOp;
-    TezosDelegationOp: TezosDelegationOp;
+    TezosTransactionOp: $Exact<TezosTransactionOp>;
+    TezosOriginationOp: $Exact<TezosOriginationOp>;
+    TezosDelegationOp: $Exact<TezosDelegationOp>;
     TezosProposalOp: TezosProposalOp;
     TezosBallotOp: TezosBallotOp;
-    TezosSignTx: TezosSignTx;
-    TezosSignedTx: TezosSignedTx;
+    TezosSignTx: $Exact<TezosSignTx>;
+    TezosSignedTx: $Exact<TezosSignedTx>;
 };
 
 export type MessageKey = $Keys<MessageType>;
