@@ -590,8 +590,8 @@ export type CardanoPublicKey = {
 
 export type CardanoTxInputType = {
     address_n?: number[];
-    prev_hash?: string;
-    prev_index?: number;
+    prev_hash: string;
+    prev_index: number;
 };
 
 export type CardanoTokenType = {
@@ -606,7 +606,7 @@ export type CardanoAssetGroupType = {
 
 export type CardanoTxOutputType = {
     address?: string;
-    amount?: number;
+    amount: number;
     address_parameters?: CardanoAddressParametersType;
     token_bundle: CardanoAssetGroupType[];
 };
@@ -643,7 +643,7 @@ export type CardanoPoolParametersType = {
 };
 
 export type CardanoTxCertificateType = {
-    type?: CardanoCertificateType;
+    type: CardanoCertificateType;
     path?: number[];
     pool?: string;
     pool_parameters?: CardanoPoolParametersType;
@@ -651,17 +651,17 @@ export type CardanoTxCertificateType = {
 
 export type CardanoTxWithdrawalType = {
     path: number[];
-    amount?: number;
+    amount: number;
 };
 
 // CardanoSignTx
 export type CardanoSignTx = {
     inputs: CardanoTxInputType[];
     outputs: CardanoTxOutputType[];
-    protocol_magic?: number;
-    fee?: string | number;
+    protocol_magic: number;
+    fee: string | number;
     ttl?: string | number;
-    network_id?: number;
+    network_id: number;
     certificates: CardanoTxCertificateType[];
     withdrawals: CardanoTxWithdrawalType[];
     metadata?: string;
@@ -775,8 +775,8 @@ export type Deprecated_PassphraseStateAck = {};
 // CipherKeyValue
 export type CipherKeyValue = {
     address_n: number[];
-    key?: string;
-    value?: string;
+    key: string;
+    value: string;
     encrypt?: boolean;
     ask_on_encrypt?: boolean;
     ask_on_decrypt?: boolean;
@@ -785,7 +785,7 @@ export type CipherKeyValue = {
 
 // CipheredKeyValue
 export type CipheredKeyValue = {
-    value?: string;
+    value: string;
 };
 
 // IdentityType
@@ -800,7 +800,7 @@ export type IdentityType = {
 
 // SignIdentity
 export type SignIdentity = {
-    identity?: IdentityType;
+    identity: IdentityType;
     challenge_hidden?: string;
     challenge_visual?: string;
     ecdsa_curve_name?: string;
@@ -815,14 +815,14 @@ export type SignedIdentity = {
 
 // GetECDHSessionKey
 export type GetECDHSessionKey = {
-    identity?: IdentityType;
-    peer_public_key?: string;
+    identity: IdentityType;
+    peer_public_key: string;
     ecdsa_curve_name?: string;
 };
 
 // ECDHSessionKey
 export type ECDHSessionKey = {
-    session_key?: string;
+    session_key: string;
 };
 
 export enum DebugSwipeDirection {
@@ -1292,9 +1292,9 @@ export type LiskMessageSignature = {
 
 // LiskVerifyMessage
 export type LiskVerifyMessage = {
-    public_key?: string;
-    signature?: string;
-    message?: string;
+    public_key: string;
+    signature: string;
+    message: string;
 };
 
 // Initialize
@@ -1666,7 +1666,7 @@ export type NEMDecryptMessage = {
 
 // NEMDecryptedMessage
 export type NEMDecryptedMessage = {
-    payload?: string;
+    payload: string;
 };
 
 // RippleGetAddress
@@ -1682,7 +1682,7 @@ export type RippleAddress = {
 
 export type RipplePayment = {
     amount: string | number;
-    destination?: string;
+    destination: string;
     destination_tag?: number;
 };
 

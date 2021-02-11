@@ -70,7 +70,7 @@ const publicKey2buffer = (publicKey: string) => {
     }
 };
 
-export const createTx = (address_n: number[], branch: string, operation: TezosOperation): TezosSignTx => {
+export const createTx = (address_n: number[], branch: string, operation: TezosOperation): $Exact<TezosSignTx> => {
     let message = {
         address_n,
         branch: bs58checkDecode(prefix.B, branch),

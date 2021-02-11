@@ -51,6 +51,9 @@ sync-%:
 protobuf:
 	make -C ./submodules/trezor-common/protob combine
 	./node_modules/.bin/proto2js ./submodules/trezor-common/protob/combined.proto > ./src/data/messages/messagesN.json
+	# messages from local trezor-firmware repo
+	# make -C ../trezor-firmware/common/protob combine
+	# ./node_modules/.bin/proto2js ../trezor-firmware/common/protob/combined.proto > ./src/data/messages/messages.json
 	node ./scripts/protobuf-types.js
 	node ./scripts/protobuf-types.js typescript
 
