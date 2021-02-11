@@ -133,7 +133,8 @@ export default class DataManager {
     }
 
     static getProtobufMessages(version?: number[]): JSON {
-        if (!version) return this.messages['default'];
+        // empty array = unacquired device
+        if (!version || !version.length) return this.messages['default'];
         const model = version[0] - 1;
         const messages = this.config.messages.find(m => {
             const min = m.range.min[model];
