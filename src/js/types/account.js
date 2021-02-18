@@ -3,7 +3,7 @@ import type {
     TxInputType,
     TxOutputType,
 } from './trezor/protobuf';
-import type { VinVout } from './backend/transactions';
+import type { VinVout, BlockbookTransaction } from './backend/transactions';
 
 // getAccountInfo params
 export type GetAccountInfo = {
@@ -85,7 +85,7 @@ type TransactionTarget = {
 
 // Transaction from @trezor/blockchain-link
 export type AccountTransaction = {
-    type: 'sent' | 'recv' | 'self' | 'unknown';
+    type: 'sent' | 'recv' | 'self' | 'failed' | 'unknown';
 
     txid: string;
     blockTime?: number;
@@ -99,13 +99,7 @@ export type AccountTransaction = {
     targets: TransactionTarget[];
     tokens: TokenTransfer[];
     rbf?: boolean;
-    ethereumSpecific?: {
-        status: number;
-        nonce: number;
-        gasLimit: number;
-        gasUsed?: number;
-        gasPrice: string;
-    };
+    ethereumSpecific?: $ElementType<BlockbookTransaction, 'ethereumSpecific'>;
     details: {
         vin: VinVout[];
         vout: VinVout[];
