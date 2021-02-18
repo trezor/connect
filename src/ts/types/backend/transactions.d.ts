@@ -27,6 +27,7 @@ export interface BlockbookTransaction {
     ethereumSpecific?: {
         status: number;
         nonce: number;
+        data?: string;
         gasLimit: number;
         gasUsed?: number;
         gasPrice: string;

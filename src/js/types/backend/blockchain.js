@@ -127,6 +127,7 @@ export type BlockchainEstimateFee = {
             data?: string;
             from?: string;
             to?: string;
+            value?: string;
             txsize?: number;
         };
         feeLevels?: 'preloaded' | 'smart';
