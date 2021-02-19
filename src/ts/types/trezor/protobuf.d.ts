@@ -668,10 +668,18 @@ export type CardanoSignTx = {
     validity_interval_start?: number;
 };
 
+// CardanoSignedTxChunk
+export type CardanoSignedTxChunk = {
+    signed_tx_chunk: string;
+};
+
+// CardanoSignedTxChunkAck
+export type CardanoSignedTxChunkAck = {};
+
 // CardanoSignedTx
 export type CardanoSignedTx = {
     tx_hash: string;
-    serialized_tx: string;
+    serialized_tx?: string;
 };
 
 // Success

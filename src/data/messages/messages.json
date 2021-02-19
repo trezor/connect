@@ -2696,6 +2696,30 @@
             "oneofs": {}
         },
         {
+            "name": "CardanoSignedTxChunk",
+            "fields": [
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signed_tx_chunk",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "CardanoSignedTxChunkAck",
+            "fields": [],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "CardanoSignedTx",
             "fields": [
                 {
@@ -2706,7 +2730,7 @@
                     "id": 1
                 },
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
                     "type": "bytes",
                     "name": "serialized_tx",
@@ -11265,6 +11289,14 @@
                 {
                     "name": "MessageType_CardanoSignedTx",
                     "id": 310
+                },
+                {
+                    "name": "MessageType_CardanoSignedTxChunk",
+                    "id": 311
+                },
+                {
+                    "name": "MessageType_CardanoSignedTxChunkAck",
+                    "id": 312
                 },
                 {
                     "name": "MessageType_RippleGetAddress",
