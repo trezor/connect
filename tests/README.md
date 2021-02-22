@@ -10,7 +10,7 @@
 ## How to add tests
 1. Create or modify file in `./__fixtures__`
 1. Make sure it is imported in `./__fixtures__/index.js`.
-1. Make sure the method you are testing is listed in `travis.yml` to make it run in CI 
+1. Make sure the method you are testing is listed in `.github/workflows/tests.yml` and `.gitlab-ci.yml`
 
 ## How to run tests with custom firmware
 1. Build your custom [emulator](https://docs.trezor.io/trezor-firmware/core/build/emulator.html) with debuglink support
@@ -25,4 +25,4 @@ as they do not conflict with already existing firmware.
 1. Run tests with `./tests/run.sh -b ~/path-to-emu/trezor-emu-core-v2.9.9 -f 2.9.9`
 
 ## Continuous integration
-Tests are run with each commit on [travis](https://travis-ci.org/github/trezor/connect)
+Tests are running on [Github CI](https://github.com/trezor/connect/actions/workflows/tests.yml) and [SatoshiLabs Gitlab](https://gitlab.com/satoshilabs/trezor/connect/-/pipelines)
