@@ -8,6 +8,9 @@ _old
 flowtype
 .gitignore
 
+# CI
+.github
+
 # Example directories
 examples
 
