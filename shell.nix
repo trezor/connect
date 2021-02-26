@@ -12,8 +12,8 @@ stdenv.mkDerivation {
     autoPatchelfHook
     xorg.xhost
     ncurses
-    nodejs-12_x
-    (yarn.override { nodejs = nodejs-12_x; })
+    nodejs
+    yarn
     git
   ];
   shellHook = ''
