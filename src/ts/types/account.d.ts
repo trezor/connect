@@ -55,6 +55,7 @@ export interface AccountUtxo {
     path: string;
     confirmations: number;
     coinbase?: boolean;
+    required?: boolean;
 }
 
 // Transaction object
