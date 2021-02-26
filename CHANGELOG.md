@@ -1,3 +1,10 @@
+# 8.1.23
+
+### Added
+- `AccountUtxo.required` optional field used in `composeTransaction` method
+### Fixed
+- AccountTransaction object: `empty`, `lockTime`, `amount`, `totalSpent`, `ethereumSpecific` (via @trezor/blockchain-link 1.0.16 and 1.0.17)
+- invalid protobuf messages used for unacquired devices (missing Features.capabilities)
 # 8.1.22
 
 ### Added
