@@ -23,6 +23,7 @@ export type BlockbookTransaction = {
     blockHash?: string;
     confirmations: number;
     blockTime: number;
+    lockTime?: number;
     value: string;
     valueIn: string;
     fees: string;

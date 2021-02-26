@@ -91,10 +91,11 @@ export type AccountTransaction = {
     blockTime?: number;
     blockHeight?: number;
     blockHash?: string;
+    lockTime?: number;
 
     amount: string;
     fee: string;
-    // total?: string; // amount + total
+    totalSpent: string; // amount + fee
 
     targets: TransactionTarget[];
     tokens: TokenTransfer[];
