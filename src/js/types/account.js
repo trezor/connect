@@ -59,6 +59,7 @@ export type AccountUtxo = {
     path: string;
     confirmations: number;
     coinbase?: boolean;
+    required?: boolean;
 }
 
 // Transaction object
