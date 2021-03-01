@@ -10,14 +10,14 @@ import TrezorLink from 'trezor-link';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 import DataManager from '../data/DataManager';
 import { getBridgeInfo } from '../data/TransportInfo';
-import Log, { init as initLog } from '../utils/debug';
+import { initLog } from '../utils/debug';
 import { resolveAfter } from '../utils/promiseUtils';
 
 import { WebUsbPlugin, ReactNativeUsbPlugin } from '../env/node/workers';
 const { BridgeV2, Fallback } = TrezorLink;
 
 // custom log
-const _log: Log = initLog('DeviceList');
+const _log = initLog('DeviceList');
 
 // TODO: plugins are not typed in 'trezor-link'
 type LowLevelPlugin = {

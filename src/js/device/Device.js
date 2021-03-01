@@ -13,10 +13,10 @@ import { getAllNetworks } from '../data/CoinInfo';
 import { getFirmwareStatus, getRelease } from '../data/FirmwareInfo';
 import { parseCapabilities, getUnavailableCapabilities } from '../utils/deviceFeaturesUtils';
 import { versionCompare } from '../utils/versionUtils';
-import Log, { init as initLog } from '../utils/debug';
+import { initLog } from '../utils/debug';
 
 // custom log
-const _log: Log = initLog('Device');
+const _log = initLog('Device');
 
 export type RunOptions = {
 

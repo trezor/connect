@@ -6,7 +6,7 @@ import EventEmitter from 'events';
 import * as TRANSPORT from '../constants/transport';
 import * as DEVICE from '../constants/device';
 
-import Log, { init as initLog } from '../utils/debug';
+import { initLog } from '../utils/debug';
 import DataManager from '../data/DataManager';
 import { resolveAfter } from '../utils/promiseUtils';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
@@ -22,7 +22,7 @@ export type DeviceDescriptorDiff = {
 };
 
 // custom log
-const logger: Log = initLog('DescriptorStream');
+const logger = initLog('DescriptorStream');
 
 export default class DescriptorStream extends EventEmitter {
     // actual low-level transport, from trezor-link

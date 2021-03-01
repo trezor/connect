@@ -14,7 +14,7 @@ import { UiMessage, ResponseMessage } from '../message/builder';
 
 import type { CoreMessage, PostMessageEvent } from '../types';
 
-import Log, { init as initLog } from '../utils/debug';
+import { initLog } from '../utils/debug';
 import { sendMessage } from '../utils/windowsUtils';
 import { getOrigin } from '../env/browser/networkUtils';
 import { suggestBridgeInstaller } from '../env/browser/browserUtils';
@@ -22,7 +22,7 @@ import { load as loadStorage, PERMISSIONS_KEY } from '../storage';
 let _core: Core;
 
 // custom log
-const _log: Log = initLog('IFrame');
+const _log = initLog('IFrame');
 let _popupMessagePort: ?(MessagePort | BroadcastChannel);
 
 // Wrapper which listen events from Core
