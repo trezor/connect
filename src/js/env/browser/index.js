@@ -9,7 +9,7 @@ import webUSBButton from '../../webusb/button';
 import { parseMessage, errorMessage } from '../../message';
 import { UiMessage } from '../../message/builder';
 import { parse as parseSettings } from '../../data/ConnectSettings';
-import Log, { init as initLog } from '../../utils/debug';
+import { initLog } from '../../utils/debug';
 
 import {
     UI_EVENT,
@@ -27,7 +27,7 @@ import {
 import * as $T from '../../types';
 
 export const eventEmitter = new EventEmitter();
-const _log: Log = initLog('[trezor-connect.js]');
+const _log = initLog('[trezor-connect.js]');
 
 let _settings: $T.ConnectSettings;
 let _popupManager: ?PopupManager;

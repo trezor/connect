@@ -1,9 +1,5 @@
 /* @flow */
 
-// https://stackoverflow.com/questions/7505623/colors-in-javascript-console
-// https://github.com/pimterry/loglevel/blob/master/lib/loglevel.js
-
-// http://www.color-hex.com/color-palette/5016
 const colors: {[k: string]: string} = {
     // green
     'DescriptorStream': 'color: #77ab59',
@@ -17,51 +13,56 @@ const colors: {[k: string]: string} = {
 type LogMessage = {
     level: string;
     prefix: string;
-    message: Array<any>;
+    message: any[];
     timestamp: number;
 }
 
-export default class Log {
+const MAX_ENTRIES = 100;
+
+class Log {
     prefix: string;
     enabled: boolean;
     css: string;
-    messages: Array<LogMessage>;
+    messages: LogMessage[];
 
-    constructor(prefix: string, enabled: boolean = false) {
+    constructor(prefix: string, enabled: boolean) {
         this.prefix = prefix;
         this.enabled = enabled;
         this.messages = [];
         this.css = colors[prefix] || 'color: #000000; background: #FFFFFF;';
     }
 
-    addMessage(level: string, prefix: string, ...args: Array<any>): void {
+    addMessage(level: string, prefix: string, ...args: any[]) {
         this.messages.push({
             level: level,
             prefix: prefix,
             message: args,
             timestamp: new Date().getTime(),
         });
+        if (this.messages.length > MAX_ENTRIES) {
+            this.messages.shift();
+        }
     }
 
-    log(...args: Array<any>): void {
+    log(...args: any[]) {
         this.addMessage('log', this.prefix, ...args);
         // eslint-disable-next-line no-console
         if (this.enabled) { console.log(this.prefix, ...args); }
     }
 
-    error(...args: Array<any>): void {
+    error(...args: any[]) {
         this.addMessage('error', this.prefix, ...args);
         // eslint-disable-next-line no-console
         if (this.enabled) { console.error(this.prefix, ...args); }
     }
 
-    warn(...args: Array<any>): void {
+    warn(...args: any[]) {
         this.addMessage('warn', this.prefix, ...args);
         // eslint-disable-next-line no-console
         if (this.enabled) { console.warn(this.prefix, ...args); }
     }
 
-    debug(...args: Array<any>): void {
+    debug(...args: any[]) {
         this.addMessage('debug', this.prefix, ...args);
         // eslint-disable-next-line no-console
         if (this.enabled) { console.log('%c' + this.prefix, this.css, ...args); }
@@ -70,22 +71,26 @@ export default class Log {
 
 const _logs: {[k: string]: Log} = {};
 
-export const init = (prefix: string, enabled?: boolean): Log => {
-    const enab: boolean = typeof enabled === 'boolean' ? enabled : false;
-    const instance: Log = new Log(prefix, enab);
+export const initLog = (prefix: string, enabled?: boolean) => {
+    const instance = new Log(prefix, !!enabled);
     _logs[prefix] = instance;
     return instance;
 };
 
-export const enable = (enabled: boolean): void => {
+export const enableLog = (enabled: boolean) => {
     for (const l of Object.keys(_logs)) {
         _logs[l].enabled = enabled;
     }
 };
 
-export const getLog = (args: ?Array<string>): Array<LogMessage> => {
-    // if
-    let logs: Array<LogMessage> = [];
+export const enableLogByPrefix = (prefix: string, enabled: boolean) => {
+    if (_logs[prefix]) {
+        _logs[prefix].enabled = enabled;
+    }
+};
+
+export const getLog = () => {
+    let logs: LogMessage[] = [];
     for (const l of Object.keys(_logs)) {
         logs = logs.concat(_logs[l].messages);
     }
@@ -93,40 +98,4 @@ export const getLog = (args: ?Array<string>): Array<LogMessage> => {
         return a.timestamp - b.timestamp;
     });
     return logs;
-};
-
-export const enableByPrefix = (prefix: string, enabled: boolean): void => {
-    if (_logs[prefix]) {
-        _logs[prefix].enabled = enabled;
-    }
-};
-
-// TODO: enable/disable log at runtime
-export const popupConsole = (tag: string, postMessage: Function): void => {
-    const c = global.console;
-    const orig: Object = {
-        error: c.error,
-        // warn: c.warn,
-        info: c.info,
-        debug: c.debug,
-        log: c.log,
-    };
-    const log = [];
-
-    const inject = (method, level) => {
-        return (...args) => {
-            // args.unshift('[popup.js]');
-            const time = new Date().toUTCString();
-            log.push([level, time].concat(args));
-            postMessage.apply(this, [
-                { type: tag, level: level, time: time, args: JSON.stringify(args) },
-                // { type: 'LOG', level: level, time: time, args: JSON.stringify(deepClone(args)) }
-            ]);
-            return method.apply(c, args);
-        };
-    };
-
-    for (const level in orig) {
-        c[level] = inject(orig[level], level);
-    }
 };

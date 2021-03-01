@@ -1,8 +1,8 @@
 /* @flow */
 
-import Log, { init } from './debug';
+import { initLog } from './debug';
 
-const _log: Log = init('InteractionTimeout');
+const _log = initLog('InteractionTimeout');
 
 export default class InteractionTimeout {
     timeout: ?TimeoutID = null;

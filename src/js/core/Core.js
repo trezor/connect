@@ -14,7 +14,7 @@ import { find as findMethod } from './methods';
 
 import { create as createDeferred } from '../utils/deferred';
 import { resolveAfter } from '../utils/promiseUtils';
-import Log, { init as initLog } from '../utils/debug';
+import { initLog } from '../utils/debug';
 import InteractionTimeout from '../utils/interactionTimeout';
 
 import type { ConnectSettings, Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse, TransportInfo } from '../types';
@@ -30,7 +30,7 @@ let _preferredDevice: any; // TODO: type
 let _interactionTimeout: InteractionTimeout;
 
 // custom log
-const _log: Log = initLog('Core');
+const _log = initLog('Core');
 
 /**
  * Emit message to listener (parent).

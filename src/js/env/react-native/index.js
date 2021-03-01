@@ -2,7 +2,7 @@
 import EventEmitter from 'events';
 
 import { parse as parseSettings } from '../../data/ConnectSettings';
-import Log, { init as initLog } from '../../utils/debug';
+import { initLog } from '../../utils/debug';
 import { errorMessage } from '../../message';
 import { Core, init as initCore, initTransport } from '../../core/Core';
 import { create as createDeferred } from '../../utils/deferred';
@@ -23,7 +23,7 @@ import {
 import * as $T from '../../types';
 
 export const eventEmitter = new EventEmitter();
-const _log: Log = initLog('[trezor-connect.js]');
+const _log = initLog('[trezor-connect.js]');
 
 let _settings: $T.ConnectSettings;
 let _core: Core;
