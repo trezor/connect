@@ -2,7 +2,7 @@
 
 import AbstractMethod from './AbstractMethod';
 import DataManager from '../../data/DataManager';
-import type { ConnectSettings, CoreMessage } from '../../types';
+import type { CoreMessage } from '../../types';
 
 export default class GetSettings extends AbstractMethod {
     constructor(message: CoreMessage) {
@@ -12,7 +12,7 @@ export default class GetSettings extends AbstractMethod {
         this.useUi = false;
     }
 
-    async run(): Promise<ConnectSettings> {
-        return DataManager.getSettings();
+    run() {
+        return Promise.resolve(DataManager.getSettings());
     }
 }

@@ -36,7 +36,7 @@ export default class GetCoinInfo extends AbstractMethod {
         };
     }
 
-    async run() {
-        return this.params.coinInfo;
+    run() {
+        return Promise.resolve(this.params.coinInfo);
     }
 }

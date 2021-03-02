@@ -30,23 +30,23 @@ export const cipherKeyValue = async () => {
     if (e1.success) e1.payload.xpub;
 };
 
-export const customMessage = async () => {
+export const customMessage = () => {
     TrezorConnect.customMessage({
         messages: {},
         message: 'MyCustomSignTx',
         params: {
             inputs: { index: 1, hash: '0' },
         },
-        callback: async (request: any) => {
+        callback: (request: any) => {
             if (request.type === 'MyCustomTxReq') {
-                return {
+                return Promise.resolve({
                     message: 'MyCustomTxAck',
                     params: {
                         index: 1,
                     },
-                };
+                });
             }
-            return { message: 'MyCustomSigned' };
+            return Promise.resolve({ message: 'MyCustomSigned' });
         },
     });
 };
@@ -102,7 +102,7 @@ export const requestLogin = async () => {
     TrezorConnect.requestLogin({ challengeVisual: 1 });
 };
 
-export const debugLink = async () => {
+export const debugLink = () => {
     TrezorConnect.debugLinkDecision({ device: { path: '1' } });
     TrezorConnect.debugLinkGetState({ device: { path: '1' } });
 };

@@ -143,7 +143,7 @@ export default class DeviceList extends EventEmitter {
      * @param {Transport} transport
      * @memberof DeviceList
      */
-    async _initStream() {
+    _initStream() {
         const stream = new DescriptorStream(this.transport);
 
         stream.on(TRANSPORT.START_PENDING, (pending: number) => {

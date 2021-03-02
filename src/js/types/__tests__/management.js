@@ -1,7 +1,7 @@
 /* @flow */
 import TrezorConnect from '../../index';
 
-export const management = async () => {
+export const management = () => {
     TrezorConnect.resetDevice({
         strength: 1,
         label: 'My Trezor',

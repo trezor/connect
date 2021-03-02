@@ -71,7 +71,7 @@ export default class EthereumSignTx extends AbstractMethod {
         };
     }
 
-    async run() {
+    run() {
         const tx = this.params.transaction;
         return helper.ethereumSignTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),

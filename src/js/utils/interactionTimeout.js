@@ -41,7 +41,7 @@ export default class InteractionTimeout {
         this.stop();
 
         _log.log(`starting interaction timeout for ${time} seconds`);
-        this.timeout = setTimeout(async () => {
+        this.timeout = setTimeout(() => {
             _log.log('interaction timed out');
             cancelFn();
         }, 1000 * time);

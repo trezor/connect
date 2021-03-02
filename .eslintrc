@@ -162,6 +162,7 @@
         "standard/array-bracket-even-spacing": [2, "either"],
         "standard/computed-property-even-spacing": [2, "even"],
         "promise/param-names": 2,
-        "promise/always-return": 0
+        "promise/always-return": 0,
+        "require-await": ["error"]
     }
 }

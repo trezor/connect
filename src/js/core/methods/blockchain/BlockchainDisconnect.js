@@ -41,11 +41,11 @@ export default class BlockchainDisconnect extends AbstractMethod {
         };
     }
 
-    async run() {
+    run() {
         const backend = findBackend(this.params.coinInfo.name);
         if (backend) {
             backend.disconnect();
         }
-        return { disconnected: true };
+        return Promise.resolve({ disconnected: true });
     }
 }

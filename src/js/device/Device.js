@@ -93,10 +93,10 @@ export default class Device extends EventEmitter {
         this.firstRunPromise = createDeferred();
     }
 
-    static async fromDescriptor(
+    static fromDescriptor(
         transport: Transport,
         originalDescriptor: DeviceDescriptor
-    ): Promise<Device> {
+    ) {
         const descriptor = { ...originalDescriptor, session: null };
         try {
             const device: Device = new Device(transport, descriptor);
@@ -175,10 +175,10 @@ export default class Device extends EventEmitter {
         await this.release();
     }
 
-    async run(
+    run(
         fn?: () => Promise<void>,
         options?: RunOptions
-    ): Promise<void> {
+    ) {
         if (this.runPromise) {
             _log.debug('Previous call is still running');
             throw ERRORS.TypedError('Device_CallInProgress');
