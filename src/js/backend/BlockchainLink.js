@@ -67,7 +67,7 @@ export default class Blockchain {
     }
 
     onError(error: ERRORS.TrezorError) {
-        this.link.removeAllListeners();
+        this.link.dispose();
         this.postMessage(BlockchainMessage(BLOCKCHAIN.ERROR, {
             coin: this.coinInfo,
             error: error.message,
