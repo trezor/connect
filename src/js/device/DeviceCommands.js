@@ -310,7 +310,7 @@ export default class DeviceCommands {
         };
     }
 
-    async getDeviceState(networkType: ?string) {
+    getDeviceState(networkType: ?string) {
         return this._getAddressForNetworkType(networkType);
         // bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
     }
@@ -370,7 +370,7 @@ export default class DeviceCommands {
         return this._filterCommonTypes(resp);
     }
 
-    async _filterCommonTypes(res: DefaultMessageResponse): Promise<DefaultMessageResponse> {
+    _filterCommonTypes(res: DefaultMessageResponse): Promise<DefaultMessageResponse> {
         if (res.type === 'Failure') {
             const { code } = res.message;
             let { message } = res.message;

@@ -132,7 +132,7 @@ export default class EthereumGetAddress extends AbstractMethod {
         return uiResp.payload;
     }
 
-    async _call({
+    _call({
         address_n,
         show_display,
         network,

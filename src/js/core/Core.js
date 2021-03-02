@@ -728,7 +728,7 @@ const onDevicePassphraseHandler = async (device: Device, callback: (response: an
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onEmptyPassphraseHandler = async (device: Device, callback: (response: any) => void) => {
+const onEmptyPassphraseHandler = (device: Device, callback: (response: any) => void) => {
     // send as PassphrasePromptResponse
     callback({ passphrase: '' });
 };

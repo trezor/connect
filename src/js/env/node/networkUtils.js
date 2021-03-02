@@ -8,7 +8,7 @@ if (global && typeof global.fetch !== 'function') {
     global.fetch = nodeFetch;
 }
 
-export const httpRequest = async (url: string, type: string): any => {
+export const httpRequest = (url: string, type: string): any => {
     let fileUrl: string = url.split('?')[0];
     fileUrl = path.resolve(__dirname, '../../../', fileUrl);
     const content = type !== 'binary' ? fs.readFileSync(fileUrl, { encoding: 'utf8' }) : fs.readFileSync(fileUrl);

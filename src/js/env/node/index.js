@@ -181,9 +181,9 @@ export const renderWebUSBButton = (className: ?string): void => {
     // webUSBButton(className, _settings.webusbSrc, iframe.origin);
 };
 
-export const getSettings = async (): $T.Response<$T.ConnectSettings> => {
+export const getSettings = (): $T.Response<$T.ConnectSettings> => {
     if (!_core) {
-        return errorMessage(ERRORS.TypedError('Init_NotInitialized'));
+        return Promise.resolve(errorMessage(ERRORS.TypedError('Init_NotInitialized')));
     }
     return call({ method: 'getSettings' });
 };

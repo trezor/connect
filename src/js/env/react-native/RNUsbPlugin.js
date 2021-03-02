@@ -45,18 +45,19 @@ export default class ReactNativePlugin {
         this.usb = NativeModules.RNBridge;
     }
 
-    async init(debug: ?boolean) {
+    init(debug: ?boolean) {
         this.debug = !!debug;
         if (!this.usb) {
             throw new Error('ReactNative plugin is not available');
         }
+        return Promise.resolve();
     }
 
-    async enumerate(): Promise<TrezorDeviceInfoDebug[]> {
+    enumerate(): Promise<TrezorDeviceInfoDebug[]> {
         return this.usb.enumerate();
     }
 
-    async send(path: string, data: ArrayBuffer, debugLink: boolean) {
+    send(path: string, data: ArrayBuffer, debugLink: boolean) {
         const dataHex = bufferToHex(data);
         return this.usb.write(path, debugLink, dataHex);
     }
@@ -82,7 +83,7 @@ export default class ReactNativePlugin {
         }
     }
 
-    async disconnect(path: string, debugLink: boolean, last: boolean) {
+    disconnect(path: string, debugLink: boolean, last: boolean) {
         return this.usb.release(path, debugLink, last);
     }
 }

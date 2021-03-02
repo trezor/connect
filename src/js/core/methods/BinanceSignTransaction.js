@@ -39,7 +39,7 @@ export default class BinanceSignTransaction extends AbstractMethod {
         };
     }
 
-    async run() {
+    run() {
         return helper.signTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,
