@@ -4,7 +4,7 @@ import AbstractMethod from '../AbstractMethod';
 import { validateParams } from '../helpers/paramsValidator';
 import { ERRORS } from '../../../constants';
 
-import { isBackendSupported, find as findBlockchainBackend } from '../../../backend/BlockchainLink';
+import { isBackendSupported, findBackend } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo } from '../../../types';
 
@@ -42,7 +42,7 @@ export default class BlockchainDisconnect extends AbstractMethod {
     }
 
     async run() {
-        const backend = await findBlockchainBackend(this.params.coinInfo.name);
+        const backend = findBackend(this.params.coinInfo.name);
         if (backend) {
             backend.disconnect();
         }

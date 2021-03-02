@@ -73,7 +73,7 @@ export default class Blockchain {
             error: error.message,
             code: error.code,
         }));
-        remove(this); // eslint-disable-line no-use-before-define
+        removeBackend(this); // eslint-disable-line no-use-before-define
     }
 
     async init() {
@@ -112,33 +112,33 @@ export default class Blockchain {
         }
     }
 
-    async getTransactions(txs: string[]) {
+    getTransactions(txs: string[]) {
         return Promise.all(
             txs.map(id => this.link.getTransaction(id))
         );
     }
 
-    async getCurrentFiatRates(params: { currencies?: ?string[] }) {
+    getCurrentFiatRates(params: { currencies?: ?string[] }) {
         return this.link.getCurrentFiatRates(params);
     }
 
-    async getFiatRatesForTimestamps(params: { timestamps?: ?number[] }) {
+    getFiatRatesForTimestamps(params: { timestamps?: ?number[] }) {
         return this.link.getFiatRatesForTimestamps(params);
     }
 
-    async getAccountBalanceHistory(params: $Shape<BlockchainGetAccountBalanceHistory>) {
+    getAccountBalanceHistory(params: $Shape<BlockchainGetAccountBalanceHistory>) {
         return this.link.getAccountBalanceHistory(params);
     }
 
-    async getNetworkInfo() {
+    getNetworkInfo() {
         return this.link.getInfo();
     }
 
-    async getAccountInfo(request: $Shape<GetAccountInfo>) {
+    getAccountInfo(request: $Shape<GetAccountInfo>) {
         return this.link.getAccountInfo(request);
     }
 
-    async getAccountUtxo(descriptor: string) {
+    getAccountUtxo(descriptor: string) {
         return this.link.getAccountUtxo(descriptor);
     }
 
@@ -195,7 +195,7 @@ export default class Blockchain {
         });
     }
 
-    async subscribeFiatRates(currency?: string) {
+    subscribeFiatRates(currency?: string) {
         // set block listener if it wasn't set before
         if (this.link.listenerCount('fiatRates') === 0) {
             this.link.on('fiatRates', ({ rates }) => {
@@ -225,16 +225,16 @@ export default class Blockchain {
         return this.link.unsubscribe({ type: 'accounts', accounts });
     }
 
-    async unsubscribeFiatRates() {
+    unsubscribeFiatRates() {
         this.link.removeAllListeners('fiatRates');
         return this.link.unsubscribe({ type: 'fiatRates' });
     }
 
-    async pushTransaction(tx: string) {
-        return await this.link.pushTransaction(tx);
+    pushTransaction(tx: string) {
+        return this.link.pushTransaction(tx);
     }
 
-    async disconnect() {
+    disconnect() {
         this.link.removeAllListeners();
         this.link.disconnect();
         this.onError(ERRORS.TypedError('Backend_Disconnected'));
@@ -245,14 +245,14 @@ const instances: Blockchain[] = [];
 const customBackends: { [coin: string]: CoinInfo } = {};
 const preferredBackends: { [coin: string]: CoinInfo } = {};
 
-export const remove = (backend: Blockchain) => {
+const removeBackend = (backend: Blockchain) => {
     const index = instances.indexOf(backend);
     if (index >= 0) {
         instances.splice(index, 1);
     }
 };
 
-export const find = (name: string) => {
+export const findBackend = (name: string) => {
     for (let i = 0; i < instances.length; i++) {
         if (instances[i].coinInfo.name === name) {
             return instances[i];
@@ -288,7 +288,7 @@ export const isBackendSupported = (coinInfo: CoinInfo) => {
 };
 
 export const initBlockchain = async (coinInfo: CoinInfo, postMessage: $ElementType<Options, 'postMessage'>) => {
-    let backend = find(coinInfo.name);
+    let backend = findBackend(coinInfo.name);
     if (!backend) {
         backend = new Blockchain({
             coinInfo: preferredBackends[coinInfo.shortcut] || customBackends[coinInfo.shortcut] || coinInfo,
@@ -299,7 +299,7 @@ export const initBlockchain = async (coinInfo: CoinInfo, postMessage: $ElementTy
         try {
             await backend.init();
         } catch (error) {
-            remove(backend);
+            removeBackend(backend);
             setPreferredBacked(coinInfo); // reset preferred backend
             throw error;
         }

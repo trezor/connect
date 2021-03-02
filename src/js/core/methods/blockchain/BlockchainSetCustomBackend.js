@@ -4,7 +4,7 @@ import AbstractMethod from '../AbstractMethod';
 import { validateParams } from '../helpers/paramsValidator';
 import { ERRORS } from '../../../constants';
 
-import { find as findBackend, remove as removeBackend, setCustomBackend, initBlockchain } from '../../../backend/BlockchainLink';
+import { findBackend, setCustomBackend, initBlockchain } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo } from '../../../types';
 
@@ -43,11 +43,9 @@ export default class BlockchainSetCustomBackend extends AbstractMethod {
     }
 
     async run() {
-        const current = await findBackend(this.params.coinInfo.name);
+        const current = findBackend(this.params.coinInfo.name);
         if (current) {
-            await current.disconnect();
-            removeBackend(current);
-
+            current.disconnect();
             await initBlockchain(this.params.coinInfo, this.postMessage);
         }
 
