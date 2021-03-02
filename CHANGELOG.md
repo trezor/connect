@@ -1,3 +1,7 @@
+# 8.1.24
+
+### Fixed
+- log messages limit
 # 8.1.23
 
 ### Added
