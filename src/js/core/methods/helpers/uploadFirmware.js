@@ -1,16 +1,16 @@
 /* @flow */
 
 import { UiMessage } from '../../../message/builder';
-import Device from '../../../device/Device';
 import * as UI from '../../../constants/ui';
 import * as DEVICE from '../../../constants/device';
 
 import type { TypedCall, MessageResponse, FirmwareUpload } from '../../../types/trezor/protobuf';
 import type { CoreMessage } from '../../../types';
+import type { IDevice } from '../../../device/Device';
 
 // firmware does not send button message but user still must press button to continue
 // with fw update.
-const postConfirmationMessage = (device: Device) => {
+const postConfirmationMessage = (device: IDevice) => {
     // only if firmware is already installed. fresh device does not require button confirmation
     if (device.features.firmware_present) {
         device.emit(DEVICE.BUTTON, device, 'ButtonRequest_FirmwareUpdate');
@@ -27,7 +27,7 @@ const postProgressMessage = (device, progress, postMessage) => {
 export const uploadFirmware = async (
     typedCall: TypedCall,
     postMessage: (message: CoreMessage) => void,
-    device: Device,
+    device: IDevice,
     { payload }: FirmwareUpload,
 ) => {
     let response: MessageResponse<'Success' | 'FirmwareRequest'> = {};

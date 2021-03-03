@@ -2,7 +2,7 @@
 import * as bitcoin from '@trezor/utxo-lib';
 import * as ecurve from 'ecurve';
 import { ERRORS } from '../constants';
-import type { PublicKey, EthereumPublicKey, HDNodeType } from '../types/trezor/protobuf';
+import type { PublicKey, EthereumPublicKey, HDNodeType, TxInputType, TxOutputType } from '../types/trezor/protobuf';
 
 const curve = ecurve.getCurveByName('secp256k1');
 
@@ -102,4 +102,16 @@ export const xpubToHDNodeType = (xpub: string, network: bitcoin.Network): HDNode
         public_key: hd.keyPair.getPublicKeyBuffer().toString('hex'),
         chain_code: hd.chainCode.toString('hex'),
     };
+};
+
+export const convertMultisigPubKey = <T: TxInputType | TxOutputType>(network: bitcoin.Network, utxo: T): T => {
+    if (utxo.multisig && utxo.multisig.pubkeys) {
+        // convert xpubs to HDNodeTypes
+        utxo.multisig.pubkeys.forEach(pk => {
+            if (typeof pk.node === 'string') {
+                pk.node = xpubToHDNodeType(pk.node, network);
+            }
+        });
+    }
+    return utxo;
 };

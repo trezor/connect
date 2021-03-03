@@ -3,7 +3,6 @@
 import EventEmitter from 'events';
 import DataManager from '../data/DataManager';
 import DeviceList from '../device/DeviceList';
-import Device from '../device/Device';
 
 import { CORE_EVENT, RESPONSE_EVENT, TRANSPORT, DEVICE, POPUP, UI, IFRAME, ERRORS } from '../constants';
 
@@ -17,6 +16,7 @@ import { resolveAfter } from '../utils/promiseUtils';
 import { initLog } from '../utils/debug';
 import InteractionTimeout from '../utils/interactionTimeout';
 
+import type { IDevice } from '../device/Device';
 import type { ConnectSettings, Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse, TransportInfo } from '../types';
 
 // Public variables
@@ -72,11 +72,11 @@ const interactionTimeout = () => _interactionTimeout.start(() => {
 /**
  * Creates an instance of uiPromise.
  * @param {string} promiseEvent
- * @param {Device} device
+ * @param {IDevice} device
  * @returns {Promise<UiPromiseResponse>}
  * @memberof Core
  */
-const createUiPromise = (promiseEvent: string, device?: Device): Deferred<UiPromiseResponse> => {
+const createUiPromise = (promiseEvent: string, device?: IDevice): Deferred<UiPromiseResponse> => {
     const uiPromise: Deferred<UiPromiseResponse> = createDeferred(promiseEvent, device);
     _uiPromises.push(uiPromise);
 
@@ -176,17 +176,17 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
 /**
  * Find device by device path. Returned device may be unacquired.
  * @param {AbstractMethod} method
- * @returns {Promise<Device>}
+ * @returns {Promise<IDevice>}
  * @memberof Core
  */
-const initDevice = async (method: AbstractMethod): Promise<Device> => {
+const initDevice = async (method: AbstractMethod) => {
     if (!_deviceList) {
         throw ERRORS.TypedError('Transport_Missing');
     }
 
     const isWebUsb = _deviceList.transportType() === 'WebUsbPlugin';
 
-    let device;
+    let device: IDevice | typeof undefined;
     if (method.devicePath) {
         device = _deviceList.getDevice(method.devicePath);
     } else {
@@ -314,7 +314,7 @@ export const onCall = async (message: CoreMessage) => {
     }
 
     // find device
-    let device: Device;
+    let device: IDevice;
     try {
         device = await initDevice(method);
     } catch (error) {
@@ -425,7 +425,7 @@ export const onCall = async (message: CoreMessage) => {
             }
 
             // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
-            const unexpectedMode: ?(typeof UI.BOOTLOADER | typeof UI.NOT_IN_BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) = device.hasUnexpectedMode(method.allowDeviceMode, method.requireDeviceMode);
+            const unexpectedMode = device.hasUnexpectedMode(method.allowDeviceMode, method.requireDeviceMode);
             if (unexpectedMode) {
                 device.keepSession = false;
                 if (isUsingPopup) {
@@ -637,12 +637,12 @@ const closePopup = (): void => {
 
 /**
  * Handle button request from Device.
- * @param {Device} device
+ * @param {IDevice} device
  * @param {string} code
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onDeviceButtonHandler = async (device: Device, code: string, method: AbstractMethod): Promise<void> => {
+const onDeviceButtonHandler = async (device: IDevice, code: string, method: AbstractMethod): Promise<void> => {
     // wait for popup handshake
     const addressRequest = code === 'ButtonRequest_Address';
     if (!addressRequest || (addressRequest && method.useUi)) {
@@ -661,13 +661,13 @@ const onDeviceButtonHandler = async (device: Device, code: string, method: Abstr
 
 /**
  * Handle pin request from Device.
- * @param {Device} device
+ * @param {IDevice} device
  * @param {string} type
  * @param {Function} callback
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onDevicePinHandler = async (device: Device, type: string, callback: (error: any, success: any) => void): Promise<void> => {
+const onDevicePinHandler = async (device: IDevice, type: string, callback: (error: any, success: any) => void): Promise<void> => {
     // wait for popup handshake
     await getPopupPromise().promise;
     // create ui promise
@@ -681,7 +681,7 @@ const onDevicePinHandler = async (device: Device, type: string, callback: (error
     callback(null, pin);
 };
 
-const onDeviceWordHandler = async (device: Device, type: string, callback: (error: any, success: any) => void): Promise<void> => {
+const onDeviceWordHandler = async (device: IDevice, type: string, callback: (error: any, success: any) => void): Promise<void> => {
     // wait for popup handshake
     await getPopupPromise().promise;
     // create ui promise
@@ -696,12 +696,12 @@ const onDeviceWordHandler = async (device: Device, type: string, callback: (erro
 
 /**
  * Handle passphrase request from Device.
- * @param {Device} device
+ * @param {IDevice} device
  * @param {Function} callback
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onDevicePassphraseHandler = async (device: Device, callback: (response: any) => void) => {
+const onDevicePassphraseHandler = async (device: IDevice, callback: (response: any) => void) => {
     // wait for popup handshake
     await getPopupPromise().promise;
     // create ui promise
@@ -723,12 +723,12 @@ const onDevicePassphraseHandler = async (device: Device, callback: (response: an
 
 /**
  * Handle passphrase request from Device and use empty
- * @param {Device} device
+ * @param {IDevice} device
  * @param {Function} callback
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onEmptyPassphraseHandler = (device: Device, callback: (response: any) => void) => {
+const onEmptyPassphraseHandler = (device: IDevice, callback: (response: any) => void) => {
     // send as PassphrasePromptResponse
     callback({ passphrase: '' });
 };

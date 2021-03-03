@@ -1,22 +1,22 @@
 /* @flow */
 
-import Device from '../../device/Device';
 import DataManager from '../../data/DataManager';
 import { UI, DEVICE, ERRORS, NETWORK } from '../../constants';
 import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../storage';
 import { versionCompare } from '../../utils/versionUtils';
 
 import { UiMessage, DeviceMessage } from '../../message/builder';
+import type { IDevice } from '../../device/Device';
 import type { Deferred, CoreMessage, UiPromiseResponse, FirmwareRange, FirmwareException, ButtonRequestData } from '../../types';
 
 export interface MethodInterface {
     +responseID: number;
-    +device: Device;
+    +device: IDevice;
 }
 
 export default class AbstractMethod implements MethodInterface {
     responseID: number;
-    device: Device;
+    device: IDevice;
     devicePath: ?string;
     deviceInstance: number;
     deviceState: ?string;
@@ -48,7 +48,7 @@ export default class AbstractMethod implements MethodInterface {
     // // callbacks
     postMessage: (message: CoreMessage) => void;
     getPopupPromise: () => Deferred<void>;
-    createUiPromise: (promiseId: string, device?: Device) => Deferred<UiPromiseResponse>;
+    createUiPromise: (promiseId: string, device?: IDevice) => Deferred<UiPromiseResponse>;
     findUiPromise: (callId: number, promiseId: string) => ?Deferred<UiPromiseResponse>;
     removeUiPromise: (promise: Deferred<UiPromiseResponse>) => void;
 
@@ -94,7 +94,7 @@ export default class AbstractMethod implements MethodInterface {
         this.useUi = true;
     }
 
-    setDevice(device: Device) {
+    setDevice(device: IDevice) {
         this.device = device;
         this.devicePath = device.getDevicePath();
     }

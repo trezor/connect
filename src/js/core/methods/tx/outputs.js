@@ -4,9 +4,9 @@
 import bchaddrjs from 'bchaddrjs';
 
 // local modules
-import { getOutputScriptType } from '../../../utils/pathUtils';
+import { getOutputScriptType, fixPath } from '../../../utils/pathUtils';
 import { isScriptHash, isValidAddress } from '../../../utils/addressUtils';
-import { fixPath, convertMultisigPubKey } from './index';
+import { convertMultisigPubKey } from '../../../utils/hdnode';
 import { validateParams } from '../helpers/paramsValidator';
 import { ERRORS } from '../../../constants';
 
