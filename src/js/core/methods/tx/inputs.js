@@ -2,8 +2,8 @@
 
 // local modules
 import { reverseBuffer } from '../../../utils/bufferUtils';
-import { validatePath, isSegwitPath, getScriptType } from '../../../utils/pathUtils';
-import { fixPath, convertMultisigPubKey } from './index';
+import { validatePath, isSegwitPath, getScriptType, fixPath } from '../../../utils/pathUtils';
+import { convertMultisigPubKey } from '../../../utils/hdnode';
 import { validateParams } from '../helpers/paramsValidator';
 
 // npm types

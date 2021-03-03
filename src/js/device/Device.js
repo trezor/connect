@@ -50,7 +50,7 @@ const parseRunOptions = (options?: RunOptions): RunOptions => {
  * @class Device
  * @extends {EventEmitter}
  */
-export default class Device extends EventEmitter {
+class Device extends EventEmitter {
     transport: Transport;
     originalDescriptor: DeviceDescriptor;
     hasDebugLink: boolean;
@@ -564,7 +564,7 @@ export default class Device extends EventEmitter {
         return this.features ? this.features.major_version === 1 : false;
     }
 
-    hasUnexpectedMode(allow: Array<string>, require: Array<string>): ?(typeof UI.BOOTLOADER | typeof UI.NOT_IN_BOOTLOADER | typeof UI.INITIALIZE | typeof UI.SEEDLESS) {
+    hasUnexpectedMode(allow: string[], require: string[]) {
         // both allow and require cases might generate single unexpected mode
         if (this.features) {
             // allow cases
@@ -677,3 +677,6 @@ export default class Device extends EventEmitter {
         }
     }
 }
+
+export type IDevice = typeof Device.prototype;
+export default Device;

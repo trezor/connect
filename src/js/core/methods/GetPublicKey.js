@@ -8,7 +8,7 @@ import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
 import { getBitcoinNetwork } from '../../data/CoinInfo';
-import { getPublicKeyLabel } from '../../utils/pathUtils';
+import { getPublicKeyLabel } from '../../utils/accountUtils';
 import type { CoreMessage, BitcoinNetworkInfo, HDNodeResponse } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 

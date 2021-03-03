@@ -10,10 +10,10 @@ import { getAccountAddressN } from '../utils/accountUtils';
 import { toChecksumAddress } from '../utils/ethereumUtils';
 import { resolveAfter } from '../utils/promiseUtils';
 import { versionCompare } from '../utils/versionUtils';
-import Device from './Device';
 
 import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
+import type { IDevice } from './Device';
 import type { CoinInfo, BitcoinNetworkInfo, EthereumNetworkInfo, HDNodeResponse } from '../types';
 import type { Transport } from 'trezor-link';
 import * as PROTO from '../types/trezor/protobuf';
@@ -73,7 +73,7 @@ const filterForLog = (type: string, msg: Object) => {
 };
 
 export default class DeviceCommands {
-    device: Device;
+    device: IDevice;
     transport: Transport;
     sessionId: string;
     debug: boolean;
@@ -83,7 +83,7 @@ export default class DeviceCommands {
     _cancelableRequest: ?(error: any) => void;
 
     constructor(
-        device: Device,
+        device: IDevice,
         transport: Transport,
         sessionId: string
     ) {

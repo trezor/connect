@@ -1,7 +1,8 @@
 /* @flow */
 import { fromHardened, toHardened } from './pathUtils';
+import { getCoinName } from '../data/CoinInfo';
 import { ERRORS } from '../constants';
-import type { CoinInfo } from '../types';
+import type { CoinInfo, BitcoinNetworkInfo } from '../types';
 
 type Bip44Options = {
     purpose?: number;
@@ -49,5 +50,49 @@ export const getAccountLabel = (path: number[], coinInfo: CoinInfo): string => {
     } else {
         const account: number = fromHardened(path[4]);
         return `account #${(account + 1)}`;
+    }
+};
+
+export const getPublicKeyLabel = (path: number[], coinInfo: ?BitcoinNetworkInfo): string => {
+    let hasSegwit = false;
+    let coinLabel = 'Unknown coin';
+    if (coinInfo) {
+        coinLabel = coinInfo.label;
+        hasSegwit = coinInfo.segwit;
+    } else {
+        coinLabel = getCoinName(path);
+    }
+
+    const p1 = fromHardened(path[0]);
+    let account = path.length >= 3 ? fromHardened(path[2]) : -1;
+    let realAccountId = account + 1;
+    let prefix = 'Export public key';
+    let accountType = '';
+
+    // Copay id
+    if (p1 === 45342) {
+        const p2 = fromHardened(path[1]);
+        account = fromHardened(path[3]);
+        realAccountId = account + 1;
+        prefix = 'Export Copay ID of';
+        if (p2 === 48) {
+            accountType = 'multisig';
+        } else if (p2 === 44) {
+            accountType = 'legacy';
+        }
+    } else if (p1 === 48) {
+        accountType = `${coinLabel} multisig`;
+    } else if (p1 === 44 && hasSegwit) {
+        accountType = `${coinLabel} legacy`;
+    } else if (p1 === 84 && hasSegwit) {
+        accountType = `${coinLabel} native segwit`;
+    } else {
+        accountType = coinLabel;
+    }
+
+    if (realAccountId > 0) {
+        return `${ prefix } of ${ accountType } <span>account #${realAccountId}</span>`;
+    } else {
+        return prefix;
     }
 };

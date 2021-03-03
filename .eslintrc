@@ -9,7 +9,7 @@
     },
     "extends": ["eslint:recommended", "plugin:flowtype/recommended"],
     "parser": "babel-eslint",
-    "plugins": ["standard", "promise", "flowtype", "jest"],
+    "plugins": ["standard", "promise", "import", "flowtype", "jest"],
     "env": {
         "es6": true,
         "node": true,
@@ -163,6 +163,8 @@
         "standard/computed-property-even-spacing": [2, "even"],
         "promise/param-names": 2,
         "promise/always-return": 0,
-        "require-await": ["error"]
+        "require-await": ["error"],
+        "import/no-cycle": ["error"],
+        "import/no-duplicates": ["error"]
     }
 }
