@@ -1,3 +1,9 @@
+# 8.1.25
+
+### Fixed
+- blockchain-link workers memory leak
+- resolve cycled dependencies
+
 # 8.1.24
 
 ### Fixed
