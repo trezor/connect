@@ -15,11 +15,13 @@ function init() {
         },
     });
 
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'index.html'),
-        protocol: 'file:',
-        slashes: true,
-    }));
+    mainWindow.loadURL(
+        url.format({
+            pathname: path.join(__dirname, 'index.html'),
+            protocol: 'file:',
+            slashes: true,
+        }),
+    );
 
     // emitted when the window is closed.
     mainWindow.on('closed', () => {
@@ -54,7 +56,7 @@ app.on('browser-window-focus', (event, win) => {
 });
 
 // handle messages from renderer
-ipcMain.on('trezor-connect', async (event, message) => {
+ipcMain.on('trezor-connect', (event, message) => {
     if (message === 'init') {
         initTrezorConnect(event.sender);
     } else {

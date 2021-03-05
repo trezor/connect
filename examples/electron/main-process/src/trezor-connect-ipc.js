@@ -1,9 +1,16 @@
 const TrezorConnect = require('trezor-connect').default;
-const { TRANSPORT_EVENT, UI, UI_EVENT, DEVICE_EVENT, TRANSPORT, DEVICE } = require('trezor-connect');
+const {
+    TRANSPORT_EVENT,
+    UI,
+    UI_EVENT,
+    DEVICE_EVENT,
+    TRANSPORT,
+    DEVICE,
+} = require('trezor-connect');
 
 let inited = false;
 // SETUP trezor-connect
-exports.initTrezorConnect = (sender) => {
+exports.initTrezorConnect = sender => {
     if (inited) return; // prevent multiple initialization
     inited = true;
 
@@ -48,10 +55,16 @@ exports.initTrezorConnect = (sender) => {
                 // device does support entering passphrase on device
                 // let user choose where to enter
                 // if he choose to do it on device respond with:
-                TrezorConnect.uiResponse({ type: UI.RECEIVE_PASSPHRASE, payload: { passphraseOnDevice: true, value: '' } });
+                TrezorConnect.uiResponse({
+                    type: UI.RECEIVE_PASSPHRASE,
+                    payload: { passphraseOnDevice: true, value: '' },
+                });
             } else {
                 // example how to respond to passphrase request from regular UI input (form)
-                TrezorConnect.uiResponse({ type: UI.RECEIVE_PASSPHRASE, payload: { value: 'type your passphrase here', save: true } });
+                TrezorConnect.uiResponse({
+                    type: UI.RECEIVE_PASSPHRASE,
+                    payload: { value: 'type your passphrase here', save: true },
+                });
             }
         }
 
@@ -59,7 +72,10 @@ exports.initTrezorConnect = (sender) => {
             if (event.payload.devices.length > 0) {
                 // more then one device connected
                 // example how to respond to select device
-                TrezorConnect.uiResponse({ type: UI.RECEIVE_DEVICE, payload: event.payload.devices[0] });
+                TrezorConnect.uiResponse({
+                    type: UI.RECEIVE_DEVICE,
+                    payload: event.payload.devices[0],
+                });
             } else {
                 // no devices connected, waiting for connection
             }
@@ -85,11 +101,13 @@ exports.initTrezorConnect = (sender) => {
             email: 'email@developer.com',
             appUrl: 'electron-app-boilerplate',
         },
-    }).then(() => {
-        sender.send('trezor-connect', 'TrezorConnect is ready!');
-    }).catch(error => {
-        sender.send('trezor-connect', 'TrezorConnect init error:' + error);
-    });
+    })
+        .then(() => {
+            sender.send('trezor-connect', 'TrezorConnect is ready!');
+        })
+        .catch(error => {
+            sender.send('trezor-connect', `TrezorConnect init error:${error}`);
+        });
 };
 
 exports.callTrezorConnect = (sender, message) => {

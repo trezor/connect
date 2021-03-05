@@ -1,7 +1,18 @@
 // TrezorConnect is injected as inline script in html
 // therefore it doesn't need to included into node_modules
 // get reference straight from window object
-const TrezorConnect = window.TrezorConnect;
+const { TrezorConnect } = window;
+
+// print log helper
+const printLog = data => {
+    const log = document.getElementById('log');
+    const current = log.value;
+    if (current.length > 0) {
+        log.value = `${JSON.stringify(data)}\n\n${current}`;
+    } else {
+        log.value = JSON.stringify(data);
+    }
+};
 
 // SETUP trezor-connect
 
@@ -22,11 +33,13 @@ TrezorConnect.init({
         email: 'email@developer.com',
         appUrl: 'electron-app-boilerplate',
     },
-}).then(() => {
-    printLog('TrezorConnect is ready!');
-}).catch(error => {
-    printLog('TrezorConnect init error: ' + error);
-});
+})
+    .then(() => {
+        printLog('TrezorConnect is ready!');
+    })
+    .catch(error => {
+        printLog(`TrezorConnect init error: ${error}`);
+    });
 
 // click to get public key
 const btn = document.getElementById('get-xpub');
@@ -38,14 +51,3 @@ btn.onclick = () => {
         printLog(response);
     });
 };
-
-// print log helper
-function printLog(data) {
-    const log = document.getElementById('log');
-    const current = log.value;
-    if (current.length > 0) {
-        log.value = JSON.stringify(data) + '\n\n' + current;
-    } else {
-        log.value = JSON.stringify(data);
-    }
-}
