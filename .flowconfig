@@ -7,10 +7,7 @@
 .*/node_modules/protobufjs-old-fixed-webpack/src/bower.json
 .*/node_modules/hd-wallet/lib/utils/stream.js.flow
 .*/_old/.*
-.*/npm/.*
-.*/npm-extended/.*
 .*/build/.*
-.*/tests/*
 .*/src/__tests__/.*
 
 [libs]

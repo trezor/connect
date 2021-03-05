@@ -1,0 +1,9 @@
+# general
+build
+coverage
+docs
+node_modules
+npm
+npm-extended
+submodules
+_old
