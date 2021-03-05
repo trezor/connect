@@ -1,10 +1,5 @@
-import {
-    SRC,
-    JS_SRC,
-    DIST,
-    LIB_NAME,
-} from './constants';
 import webpack from 'webpack';
+import { SRC, JS_SRC, DIST, LIB_NAME } from './constants';
 
 module.exports = {
     mode: 'production',
@@ -29,7 +24,7 @@ module.exports = {
         ],
     },
     resolve: {
-        modules: [ SRC, 'node_modules' ],
+        modules: [SRC, 'node_modules'],
     },
     performance: {
         hints: false,
@@ -37,7 +32,10 @@ module.exports = {
     plugins: [
         new webpack.NormalModuleReplacementPlugin(/env\/node$/, './env/browser'),
         new webpack.NormalModuleReplacementPlugin(/env\/node\/workers$/, '../env/browser/workers'),
-        new webpack.NormalModuleReplacementPlugin(/env\/node\/networkUtils$/, '../env/browser/networkUtils'),
+        new webpack.NormalModuleReplacementPlugin(
+            /env\/node\/networkUtils$/,
+            '../env/browser/networkUtils',
+        ),
         new webpack.ProvidePlugin({
             Promise: ['es6-promise', 'Promise'],
         }),

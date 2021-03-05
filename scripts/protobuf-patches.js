@@ -1,4 +1,3 @@
-
 // type rule fixes, ideally it should not be here
 const RULE_PATCH = {
     'MultisigRedeemScriptType.nodes': 'optional', // its valid to be undefined according to implementation/tests
@@ -141,8 +140,7 @@ const TYPE_PATCH = {
 };
 
 const DEFINITION_PATCH = {
-    TxOutputType:
-`// - TxOutputType replacement
+    TxOutputType: `// - TxOutputType replacement
 // TxOutputType needs more exact types
 // differences: external output (no address_n), opreturn output (no address_n, no address)
 // eslint-disable-next-line no-unused-vars
@@ -177,8 +175,7 @@ export type TxOutputType = {|
 // - TxOutputType replacement end
 `,
 
-    TxAck:
-`// - TxAck replacement
+    TxAck: `// - TxAck replacement
 // TxAck needs more exact types
 // differences: RefTxInputType (no address_n) and TxInputType, partial exact responses in TxAckResponse
 export type RefTxInputType = {|
@@ -216,8 +213,7 @@ export type TxAck = {
 // - TxAck replacement end
 `,
 
-    TxOutput:
-`
+    TxOutput: `
 // - TxOutput replacement
 export type TxOutput = TxOutputType;
 // - TxOutput replacement end

@@ -1,14 +1,7 @@
-import {
-    SRC,
-    HTML_SRC,
-    JS_SRC,
-    LIB_NAME,
-    PORT,
-} from './constants';
-
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import { SRC, HTML_SRC, JS_SRC, LIB_NAME, PORT } from './constants';
 
 module.exports = {
     watch: true,
@@ -16,10 +9,10 @@ module.exports = {
     devtool: 'inline-source-map',
     entry: {
         'trezor-connect': `${JS_SRC}index.js`,
-        'iframe': `${JS_SRC}iframe/iframe.js`,
-        'popup': `${JS_SRC}popup/popup.js`,
-        'webusb': `${JS_SRC}webusb/index.js`,
-        'extensionPermissions': `${JS_SRC}webusb/extensionPermissions.js`,
+        iframe: `${JS_SRC}iframe/iframe.js`,
+        popup: `${JS_SRC}popup/popup.js`,
+        webusb: `${JS_SRC}webusb/index.js`,
+        extensionPermissions: `${JS_SRC}webusb/extensionPermissions.js`,
     },
     output: {
         filename: '[name].js',
@@ -85,7 +78,7 @@ module.exports = {
         ],
     },
     resolve: {
-        modules: [ SRC, 'node_modules' ],
+        modules: [SRC, 'node_modules'],
     },
     performance: {
         hints: false,
@@ -94,7 +87,10 @@ module.exports = {
         new webpack.NormalModuleReplacementPlugin(/.blake2b$/, './blake2b.js'),
         new webpack.NormalModuleReplacementPlugin(/env\/node$/, './env/browser'),
         new webpack.NormalModuleReplacementPlugin(/env\/node\/workers$/, '../env/browser/workers'),
-        new webpack.NormalModuleReplacementPlugin(/env\/node\/networkUtils$/, '../env/browser/networkUtils'),
+        new webpack.NormalModuleReplacementPlugin(
+            /env\/node\/networkUtils$/,
+            '../env/browser/networkUtils',
+        ),
 
         new MiniCssExtractPlugin({
             filename: '[name].css',

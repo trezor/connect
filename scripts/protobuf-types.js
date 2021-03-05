@@ -4,45 +4,52 @@
 const fs = require('fs');
 const { RULE_PATCH, TYPE_PATCH, DEFINITION_PATCH, SKIP } = require('./protobuf-patches');
 const json = require('../src/data/messages/messages.json');
+
 const args = process.argv.slice(2);
 
 const isTypescript = args.includes('typescript');
 
 // proto types to javascript types
 const FIELD_TYPES = {
-    'uint32': 'number',
-    'uint64': 'number',
-    'sint32': 'number',
-    'sint64': 'number',
-    'bool': 'boolean',
-    'bytes': 'string',
+    uint32: 'number',
+    uint64: 'number',
+    sint32: 'number',
+    sint64: 'number',
+    bool: 'boolean',
+    bytes: 'string',
     // 'bytes': 'Uint8Array | number[] | Buffer | string', // protobuf will handle conversion
 };
 
 const types = []; // { type: 'enum | message', name: string, value: string[], exact?: boolean };
 
 // enums used as keys (string), used as values (number) by default
-const ENUM_KEYS = ['InputScriptType', 'OutputScriptType', 'RequestType', 'BackupType', 'Capability'];
+const ENUM_KEYS = [
+    'InputScriptType',
+    'OutputScriptType',
+    'RequestType',
+    'BackupType',
+    'Capability',
+];
 
 const parseEnumTypescript = item => {
     const value = [];
     const IS_KEY = ENUM_KEYS.includes(item.name);
     // declare enum
     if (IS_KEY) {
-        value.push('export enum Enum_' + item.name + ' {');
+        value.push(`export enum Enum_${item.name} {`);
     } else {
-        value.push('export enum ' + item.name + ' {');
+        value.push(`export enum ${item.name} {`);
     }
 
     // declare fields
     item.values.forEach(field => {
-        value.push('    ' + field.name + ' = ' + field.id + ',');
+        value.push(`    ${field.name} = ${field.id},`);
     });
     // close enum declaration
     value.push('}');
 
     if (IS_KEY) {
-        value.push('export type ' + item.name + ' = keyof typeof Enum_' + item.name + ';');
+        value.push(`export type ${item.name} = keyof typeof Enum_${item.name};`);
     }
     // empty line
     value.push('');
@@ -58,16 +65,16 @@ const parseEnum = item => {
     if (isTypescript) return parseEnumTypescript(item);
     const value = [];
     // declare enum
-    value.push('const Enum_' + item.name + ' = Object.freeze({');
+    value.push(`const Enum_${item.name} = Object.freeze({`);
     // declare fields
     item.values.forEach(field => {
-        value.push('    ' + field.name + ': ' + field.id + ',');
+        value.push(`    ${field.name}: ${field.id},`);
     });
     // close enum declaration
     value.push('});');
     // declare enum type using Keys or Values
     const KEY = ENUM_KEYS.includes(item.name) ? 'Keys' : 'Values';
-    value.push('export type ' + item.name + ' = $' + KEY + '<typeof Enum_' + item.name + '>;');
+    value.push(`export type ${item.name} = $${KEY}<typeof Enum_${item.name}>;`);
     // empty line
     value.push('');
 
@@ -83,7 +90,7 @@ const parseMessage = (message, depth = 0) => {
 
     const value = [];
     // add comment line
-    if (!depth) value.push('// ' + message.name);
+    if (!depth) value.push(`// ${message.name}`);
     // declare nested enums
     if (message.enums) {
         message.enums.forEach(e => parseEnum(e));
@@ -94,7 +101,7 @@ const parseMessage = (message, depth = 0) => {
     }
     if (!message.fields.length) {
         // few types are just empty objects, make it one line
-        value.push('export type ' + message.name + ' = {};');
+        value.push(`export type ${message.name} = {};`);
         value.push('');
     } else {
         // find patch
@@ -114,9 +121,9 @@ const parseMessage = (message, depth = 0) => {
             }
         } else {
             // declare type
-            value.push('export type ' + message.name + ' = {');
+            value.push(`export type ${message.name} = {`);
             message.fields.forEach(field => {
-                const fieldKey = message.name + '.' + field.name;
+                const fieldKey = `${message.name}.${field.name}`;
                 // find patch for "rule"
                 const fieldRule = RULE_PATCH[fieldKey] || field.rule;
                 const rule = fieldRule === 'optional' ? '?: ' : ': ';
@@ -124,9 +131,9 @@ const parseMessage = (message, depth = 0) => {
                 let type = TYPE_PATCH[fieldKey] || FIELD_TYPES[field.type] || field.type;
                 // array
                 if (field.rule === 'repeated') {
-                    type = type.split('|').length > 1 ? 'Array<' + type + '>' : type + '[]';
+                    type = type.split('|').length > 1 ? `Array<${type}>` : `${type}[]`;
                 }
-                value.push('    ' + field.name + rule + type + ';');
+                value.push(`    ${field.name}${rule}${type};`);
             });
             // close type declaration
             value.push('};');
@@ -151,10 +158,10 @@ json.messages.map(e => parseMessage(e));
 
 // types needs reordering (used before defined)
 const ORDER = {
-    'BinanceCoin': 'BinanceInputOutput',
-    'HDNodeType': 'HDNodePathType',
-    'CardanoAssetGroupType': 'CardanoTxOutputType',
-    'CardanoTokenType': 'CardanoAssetGroupType',
+    BinanceCoin: 'BinanceInputOutput',
+    HDNodeType: 'HDNodePathType',
+    CardanoAssetGroupType: 'CardanoTxOutputType',
+    CardanoTokenType: 'CardanoAssetGroupType',
 };
 Object.keys(ORDER).forEach(key => {
     // find indexes
@@ -173,7 +180,7 @@ SKIP.forEach(key => {
 });
 
 // create content from types
-const content = types.flatMap(t => t ? [t.value] : []).join('\n');
+const content = types.flatMap(t => (t ? [t.value] : [])).join('\n');
 
 const lines = []; // string[]
 if (!isTypescript) lines.push('// @flow');
@@ -184,14 +191,16 @@ lines.push(content);
 if (!isTypescript) {
     lines.push('// custom connect definitions');
     lines.push('export type MessageType = {');
-    types.flatMap(t => t && t.type === 'message' ? [t] : []).forEach(t => {
-        if (t.exact) {
-            lines.push('    ' + t.name + ': $Exact<' + t.name + '>;');
-        } else {
-            lines.push('    ' + t.name + ': ' + t.name + ';');
-        }
-        // lines.push('    ' + t.name + ': $Exact<' + t.name + '>;');
-    });
+    types
+        .flatMap(t => (t && t.type === 'message' ? [t] : []))
+        .forEach(t => {
+            if (t.exact) {
+                lines.push(`    ${t.name}: $Exact<${t.name}>;`);
+            } else {
+                lines.push(`    ${t.name}: ${t.name};`);
+            }
+            // lines.push('    ' + t.name + ': $Exact<' + t.name + '>;');
+        });
     lines.push('};');
 
     // additional types utilities
@@ -212,9 +221,9 @@ export type TypedCall = <T: MessageKey, R: MessageKey>(
 }
 
 // save to file
-const filePath = isTypescript ? 'src/ts/types/trezor/protobuf.d.ts' : 'src/js/types/trezor/protobuf.js';
-fs.writeFile(filePath, lines.join('\n'), function (err) {
-    // eslint-disable-next-line no-console
+const filePath = isTypescript
+    ? 'src/ts/types/trezor/protobuf.d.ts'
+    : 'src/js/types/trezor/protobuf.js';
+fs.writeFile(filePath, lines.join('\n'), err => {
     if (err) return console.log(err);
 });
-
