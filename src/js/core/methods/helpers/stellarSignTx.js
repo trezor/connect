@@ -13,46 +13,18 @@ const processTxRequest = async (
     operations: StellarOperationMessage[],
     index: number,
 ) => {
-    const lastOp = (index + 1 >= operations.length);
+    const lastOp = index + 1 >= operations.length;
     const { type, ...op } = operations[index];
 
     if (lastOp) {
         // $FlowIssue type and params are unions. TODO: make exact StellarOperationMessage
         const response = await typedCall(type, 'StellarSignedTx', op);
         return response.message;
-    } else {
-        // $FlowIssue type and params are unions. TODO: make exact StellarOperationMessage
-        await typedCall(type, 'StellarTxOpRequest', op);
     }
+    // $FlowIssue type and params are unions. TODO: make exact StellarOperationMessage
+    await typedCall(type, 'StellarTxOpRequest', op);
 
-    return processTxRequest(
-        typedCall,
-        operations,
-        index + 1
-    );
-};
-
-export const stellarSignTx = async (
-    typedCall: TypedCall,
-    address_n: number[],
-    networkPassphrase: string,
-    tx: StellarTransaction,
-) => {
-    // eslint-disable-next-line no-use-before-define
-    const message = transformSignMessage(tx);
-    message.address_n = address_n;
-    message.network_passphrase = networkPassphrase;
-
-    const operations: StellarOperationMessage[] = [];
-    tx.operations.forEach(op => {
-        // eslint-disable-next-line no-use-before-define
-        const transformed = transformOperation(op);
-        if (transformed) { operations.push(transformed); }
-    });
-
-    await typedCall('StellarSignTx', 'StellarTxOpRequest', message);
-
-    return processTxRequest(typedCall, operations, 0);
+    return processTxRequest(typedCall, operations, index + 1);
 };
 
 // transform incoming parameters to protobuf messages format
@@ -85,7 +57,7 @@ const transformSignMessage = (tx: StellarTransaction): StellarSignTx => {
 // transform incoming parameters to protobuf messages format
 const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
     switch (op.type) {
-        case 'createAccount' :
+        case 'createAccount':
             validateParams(op, [
                 { name: 'destination', type: 'string', obligatory: true },
                 { name: 'startingBalance', type: 'amount', obligatory: true },
@@ -97,7 +69,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 starting_balance: op.startingBalance,
             };
 
-        case 'payment' :
+        case 'payment':
             validateParams(op, [
                 { name: 'destination', type: 'string', obligatory: true },
                 { name: 'amount', type: 'amount', obligatory: true },
@@ -110,7 +82,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 amount: op.amount,
             };
 
-        case 'pathPayment' :
+        case 'pathPayment':
             validateParams(op, [{ name: 'destAmount', type: 'amount', obligatory: true }]);
             return {
                 type: 'StellarPathPaymentOp',
@@ -123,7 +95,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 paths: op.path,
             };
 
-        case 'createPassiveOffer' :
+        case 'createPassiveOffer':
             validateParams(op, [{ name: 'amount', type: 'amount', obligatory: true }]);
             return {
                 type: 'StellarCreatePassiveOfferOp',
@@ -135,7 +107,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 price_d: op.price.d,
             };
 
-        case 'manageOffer' :
+        case 'manageOffer':
             validateParams(op, [{ name: 'amount', type: 'amount', obligatory: true }]);
             return {
                 type: 'StellarManageOfferOp',
@@ -148,12 +120,14 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 price_d: op.price.d,
             };
 
-        case 'setOptions' : {
-            const signer = op.signer ? {
-                signer_type: op.signer.type,
-                signer_key: op.signer.key,
-                signer_weight: op.signer.weight,
-            } : undefined;
+        case 'setOptions': {
+            const signer = op.signer
+                ? {
+                      signer_type: op.signer.type,
+                      signer_key: op.signer.key,
+                      signer_weight: op.signer.weight,
+                  }
+                : undefined;
             return {
                 type: 'StellarSetOptionsOp',
                 source_account: op.source,
@@ -169,7 +143,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
             };
         }
 
-        case 'changeTrust' :
+        case 'changeTrust':
             validateParams(op, [{ name: 'limit', type: 'amount' }]);
             return {
                 type: 'StellarChangeTrustOp',
@@ -178,7 +152,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 limit: op.limit,
             };
 
-        case 'allowTrust' :
+        case 'allowTrust':
             return {
                 type: 'StellarAllowTrustOp',
                 source_account: op.source,
@@ -188,14 +162,14 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 is_authorized: op.authorize ? 1 : 0,
             };
 
-        case 'accountMerge' :
+        case 'accountMerge':
             return {
                 type: 'StellarAccountMergeOp',
                 source_account: op.source,
                 destination_account: op.destination,
             };
 
-        case 'manageData' :
+        case 'manageData':
             return {
                 type: 'StellarManageDataOp',
                 source_account: op.source,
@@ -203,12 +177,36 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 value: op.value,
             };
 
-        case 'bumpSequence' :
+        case 'bumpSequence':
             return {
                 type: 'StellarBumpSequenceOp',
                 source_account: op.source,
                 bump_to: op.bumpTo,
             };
+
+        // no default
     }
 };
 
+export const stellarSignTx = async (
+    typedCall: TypedCall,
+    address_n: number[],
+    networkPassphrase: string,
+    tx: StellarTransaction,
+) => {
+    const message = transformSignMessage(tx);
+    message.address_n = address_n;
+    message.network_passphrase = networkPassphrase;
+
+    const operations: StellarOperationMessage[] = [];
+    tx.operations.forEach(op => {
+        const transformed = transformOperation(op);
+        if (transformed) {
+            operations.push(transformed);
+        }
+    });
+
+    await typedCall('StellarSignTx', 'StellarTxOpRequest', message);
+
+    return processTxRequest(typedCall, operations, 0);
+};

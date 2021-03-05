@@ -9,8 +9,8 @@ import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo } from '../../../types';
 
 type Params = {
-    coinInfo: CoinInfo;
-}
+    coinInfo: CoinInfo,
+};
 
 export default class BlockchainDisconnect extends AbstractMethod {
     params: Params;
@@ -22,12 +22,10 @@ export default class BlockchainDisconnect extends AbstractMethod {
         this.useDevice = false;
         this.useUi = false;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
-        validateParams(payload, [
-            { name: 'coin', type: 'string', obligatory: true },
-        ]);
+        validateParams(payload, [{ name: 'coin', type: 'string', obligatory: true }]);
 
         const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {

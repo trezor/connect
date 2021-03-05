@@ -6,7 +6,10 @@ import { ERRORS } from '../constants';
 import type { BitcoinNetworkInfo } from '../types';
 
 // Base58
-const isValidBase58Address = (address: string, network: $ElementType<BitcoinNetworkInfo, 'network'>): boolean => {
+const isValidBase58Address = (
+    address: string,
+    network: $ElementType<BitcoinNetworkInfo, 'network'>,
+) => {
     try {
         const decoded = BitcoinJSAddress.fromBase58Check(address);
         if (decoded.version !== network.pubKeyHash && decoded.version !== network.scriptHash) {
@@ -19,7 +22,10 @@ const isValidBase58Address = (address: string, network: $ElementType<BitcoinNetw
 };
 
 // segwit native
-const isValidBech32Address = (address: string, network: $ElementType<BitcoinNetworkInfo, 'network'>): boolean => {
+const isValidBech32Address = (
+    address: string,
+    network: $ElementType<BitcoinNetworkInfo, 'network'>,
+) => {
     try {
         const decoded = BitcoinJSAddress.fromBech32(address);
         if (decoded.version !== 0 || decoded.prefix !== network.bech32) {
@@ -32,7 +38,7 @@ const isValidBech32Address = (address: string, network: $ElementType<BitcoinNetw
 };
 
 // BCH cashaddress
-const isValidCashAddress = (address: string): boolean => {
+const isValidCashAddress = (address: string) => {
     try {
         return bchaddrjs.isCashAddress(address);
     } catch (err) {
@@ -40,15 +46,17 @@ const isValidCashAddress = (address: string): boolean => {
     }
 };
 
-export const isValidAddress = (address: string, coinInfo: BitcoinNetworkInfo): boolean => {
+export const isValidAddress = (address: string, coinInfo: BitcoinNetworkInfo) => {
     if (coinInfo.cashAddrPrefix) {
         return isValidCashAddress(address);
-    } else {
-        return isValidBase58Address(address, coinInfo.network) || isValidBech32Address(address, coinInfo.network);
     }
+    return (
+        isValidBase58Address(address, coinInfo.network) ||
+        isValidBech32Address(address, coinInfo.network)
+    );
 };
 
-const isBech32 = (address: string): boolean => {
+const isBech32 = (address: string) => {
     try {
         BitcoinJSAddress.fromBech32(address);
         return true;
@@ -57,7 +65,7 @@ const isBech32 = (address: string): boolean => {
     }
 };
 
-export const isScriptHash = (address: string, coinInfo: BitcoinNetworkInfo): boolean => {
+export const isScriptHash = (address: string, coinInfo: BitcoinNetworkInfo) => {
     if (!isBech32(address)) {
         // Cashaddr format (with prefix) is neither base58 nor bech32, so it would fail
         // in @trezor/utxo-lib. For this reason, we use legacy format here
@@ -84,13 +92,14 @@ export const isScriptHash = (address: string, coinInfo: BitcoinNetworkInfo): boo
     throw ERRORS.TypedError('Runtime', 'isScriptHash: Unknown address type');
 };
 
-export const getAddressScriptType = (address: string, coinInfo: BitcoinNetworkInfo): 'PAYTOSCRIPTHASH' | 'PAYTOADDRESS' | 'PAYTOWITNESS' => {
+export const getAddressScriptType = (address: string, coinInfo: BitcoinNetworkInfo) => {
     if (isBech32(address)) return 'PAYTOWITNESS';
     return isScriptHash(address, coinInfo) ? 'PAYTOSCRIPTHASH' : 'PAYTOADDRESS';
 };
 
-export const getAddressHash = (address: string): Buffer => {
+export const getAddressHash = (address: string) => {
     if (isBech32(address)) return BitcoinJSAddress.fromBech32(address).data;
-    if (isValidCashAddress(address)) return BitcoinJSAddress.fromBase58Check(bchaddrjs.toLegacyAddress(address)).hash;
+    if (isValidCashAddress(address))
+        return BitcoinJSAddress.fromBase58Check(bchaddrjs.toLegacyAddress(address)).hash;
     return BitcoinJSAddress.fromBase58Check(address).hash;
 };

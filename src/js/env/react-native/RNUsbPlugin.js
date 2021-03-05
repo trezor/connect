@@ -1,11 +1,11 @@
 /* @flow */
 
 // $FlowIssue: 'react-native' is not a dependency
-import { NativeModules } from 'react-native';
+import { NativeModules } from 'react-native'; // eslint-disable-line import/no-unresolved
 
 type TrezorDeviceInfoDebug = {
-    path: string;
-    debug: boolean;
+    path: string,
+    debug: boolean,
 };
 
 interface RNBridge {
@@ -16,9 +16,8 @@ interface RNBridge {
     read(path: string, debugLink: boolean): Promise<{ data: string }>;
 }
 
-const bufferToHex = (buffer: ArrayBuffer): string => {
-    return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
-};
+const bufferToHex = (buffer: ArrayBuffer): string =>
+    Array.prototype.map.call(new Uint8Array(buffer), x => `00${x.toString(16)}`.slice(-2)).join('');
 
 const toArrayBuffer = (buffer: Buffer) => {
     const ab = new ArrayBuffer(buffer.length);
@@ -34,9 +33,13 @@ export default class ReactNativePlugin {
     name = 'ReactNativePlugin';
 
     version = '1.0.0';
+
     debug = false;
+
     allowsWriteAndEnumerate = true;
+
     requestDevice: () => any;
+
     requestNeeded = false;
 
     usb: RNBridge;
@@ -70,7 +73,7 @@ export default class ReactNativePlugin {
     async connect(path: string, debugLink: boolean) {
         for (let i = 0; i < 5; i++) {
             if (i > 0) {
-                await new Promise((resolve) => setTimeout(() => resolve(), i * 200));
+                await new Promise(resolve => setTimeout(resolve, i * 200));
             }
             try {
                 await this.usb.acquire(path, debugLink);

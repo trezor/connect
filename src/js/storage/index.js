@@ -1,14 +1,14 @@
 /* @flow */
 
-export const BROWSER_KEY: string = 'trezorconnect_browser';
-export const PERMISSIONS_KEY: string = 'trezorconnect_permissions';
-export const CONFIRMATION_KEY: string = 'trezorconnect_confirmations';
+export const BROWSER_KEY = 'trezorconnect_browser';
+export const PERMISSIONS_KEY = 'trezorconnect_permissions';
+export const CONFIRMATION_KEY = 'trezorconnect_confirmations';
 
-const _storage: {[k: string]: string} = {};
+const _storage: { [k: string]: string } = {};
 
-export const save = (storageKey: string, value: any, temporary: boolean = false): void => {
+export const save = (storageKey: string, value: any, temporary: boolean = false) => {
     if (temporary) {
-        _storage[ storageKey ] = JSON.stringify(value);
+        _storage[storageKey] = JSON.stringify(value);
         return;
     }
     try {
@@ -20,7 +20,7 @@ export const save = (storageKey: string, value: any, temporary: boolean = false)
 
     // Fallback cookie
     try {
-        window.document.cookie = encodeURIComponent(storageKey) + '=' + JSON.stringify(value) + ';';
+        window.document.cookie = `${encodeURIComponent(storageKey)}=${JSON.stringify(value)};`;
     } catch (ignore) {
         // empty
     }
@@ -30,7 +30,7 @@ export const load = (storageKey: string, temporary: boolean = false): ?JSON => {
     let value: ?string;
 
     if (temporary) {
-        value = _storage[ storageKey ];
+        value = _storage[storageKey];
         return value ? JSON.parse(value) : null;
     }
 
@@ -43,12 +43,12 @@ export const load = (storageKey: string, temporary: boolean = false): ?JSON => {
     // Fallback cookie if local storage gives us nothing
     if (typeof value === 'undefined') {
         try {
-            const cookie: string = window.document.cookie;
-            const location: number = cookie.indexOf(encodeURIComponent(storageKey) + '=');
+            const { cookie } = window.document;
+            const location = cookie.indexOf(`${encodeURIComponent(storageKey)}=`);
             if (location !== -1) {
                 const matches = /^([^;]+)/.exec(cookie.slice(location));
                 if (matches) {
-                    value = matches[1];
+                    [value] = matches;
                 }
             }
         } catch (ignore) {

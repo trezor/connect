@@ -6,7 +6,7 @@ import type { ButtonRequestMessage } from '../../types/events';
 let toastTimeout;
 
 const showToast = () => {
-    const toast: HTMLElement = container.querySelectorAll('.toast')[0];
+    const toast = container.querySelectorAll('.toast')[0];
     if (toastTimeout) {
         clearTimeout(toastTimeout);
     }
@@ -18,8 +18,8 @@ const showToast = () => {
 
 const showAddressValidation = (payload: $PropertyType<ButtonRequestMessage, 'payload'>) => {
     showView('check-address');
-    const data = payload.data;
-    const dataContainer: HTMLElement = container.querySelectorAll('.button-request-data')[0];
+    const { data } = payload;
+    const dataContainer = container.querySelectorAll('.button-request-data')[0];
     if (!data || data.type !== 'address') {
         if (dataContainer.parentNode) {
             dataContainer.parentNode.removeChild(dataContainer);
@@ -27,9 +27,9 @@ const showAddressValidation = (payload: $PropertyType<ButtonRequestMessage, 'pay
         return;
     }
 
-    const path: HTMLElement = container.querySelectorAll('.path-value')[0];
-    const address: HTMLElement = container.querySelectorAll('.address-value')[0];
-    const clipboard: HTMLElement = container.querySelectorAll('.clipboard-button')[0];
+    const path = container.querySelectorAll('.path-value')[0];
+    const address = container.querySelectorAll('.address-value')[0];
+    const clipboard = container.querySelectorAll('.clipboard-button')[0];
 
     path.innerText = data.serializedPath;
     address.innerText = data.address;
@@ -48,7 +48,7 @@ const showAddressValidation = (payload: $PropertyType<ButtonRequestMessage, 'pay
     };
 };
 
-export const requestButton = (payload: $PropertyType<ButtonRequestMessage, 'payload'>): void => {
+export const requestButton = (payload: $PropertyType<ButtonRequestMessage, 'payload'>) => {
     if (payload.code === 'ButtonRequest_Address') {
         showAddressValidation(payload);
     } else if (payload.code === 'ButtonRequest_ConfirmOutput') {

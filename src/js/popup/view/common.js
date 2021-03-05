@@ -8,27 +8,28 @@ export const header: HTMLElement = document.getElementsByTagName('header')[0];
 export const container: HTMLElement = (document.getElementById('container'): any);
 export const views: HTMLElement = (document.getElementById('views'): any);
 
+// eslint-disable-next-line import/no-mutable-exports
 export let iframe: any; // TODO: Window type
 const channel = new MessageChannel(); // used in direct element communication (iframe.postMessage)
 let broadcast: ?BroadcastChannel = null;
 
-export const setOperation = (operation: string): void => {
-    const infoPanel: HTMLElement = document.getElementsByClassName('info-panel')[0];
-    const operationEl: HTMLElement = infoPanel.getElementsByClassName('operation')[0];
-    const originEl: HTMLElement = infoPanel.getElementsByClassName('origin')[0];
+export const setOperation = (operation: string) => {
+    const infoPanel = document.getElementsByClassName('info-panel')[0];
+    const operationEl = infoPanel.getElementsByClassName('operation')[0];
+    const originEl = infoPanel.getElementsByClassName('origin')[0];
     operationEl.innerHTML = operation;
     originEl.innerText = DataManager.getSettings('hostLabel') || DataManager.getSettings('origin');
 
     const icon: ?string = DataManager.getSettings('hostIcon');
     if (icon) {
-        const iconContainers: HTMLCollection<HTMLElement> = document.getElementsByClassName('service-info');
+        const iconContainers = document.getElementsByClassName('service-info');
         for (let i = 0; i < iconContainers.length; i++) {
-            iconContainers[i].innerHTML = `<img src="${ icon }" alt="" />`;
+            iconContainers[i].innerHTML = `<img src="${icon}" alt="" />`;
         }
     }
 };
 
-export const createTooltip = (text: string): HTMLDivElement => {
+export const createTooltip = (text: string) => {
     const tooltip = document.createElement('div');
     tooltip.setAttribute('tooltip', text);
     tooltip.setAttribute('tooltip-position', 'bottom');
@@ -36,21 +37,21 @@ export const createTooltip = (text: string): HTMLDivElement => {
     return tooltip;
 };
 
-export const clearView = (): void => {
+export const clearView = () => {
     container.innerHTML = '';
 };
 
-export const showView = (className: string): HTMLElement => {
+export const showView = (className: string) => {
     clearView();
 
-    const view: HTMLCollection<HTMLElement> = views.getElementsByClassName(className);
+    const view = views.getElementsByClassName(className);
     if (view) {
         const viewItem = view.item(0);
         if (viewItem) {
             container.innerHTML = viewItem.outerHTML;
         }
     } else {
-        const unknown: HTMLCollection<HTMLElement> = views.getElementsByClassName('unknown-view');
+        const unknown = views.getElementsByClassName('unknown-view');
         const unknownItem = unknown.item(0);
         if (unknownItem) {
             container.innerHTML = unknownItem.outerHTML;
@@ -59,10 +60,10 @@ export const showView = (className: string): HTMLElement => {
     return container;
 };
 
-export const getIframeElement = (): any => {
+export const getIframeElement = () => {
     // try find iframe in opener window
     if (!window.opener) return null;
-    const frames: ?HTMLCollection<any> = window.opener.frames;
+    const { frames } = window.opener;
     if (!frames) return null; // electron will return undefined
     for (let i = 0; i < frames.length; i++) {
         try {
@@ -78,7 +79,7 @@ export const getIframeElement = (): any => {
 };
 
 // initialize message channel with iframe element
-export const initMessageChannel = (id: ?string, handler: any): void => {
+export const initMessageChannel = (id: ?string, handler: any) => {
     const hasIframe = getIframeElement();
     if (id && typeof BroadcastChannel !== 'undefined') {
         try {
@@ -96,7 +97,7 @@ export const initMessageChannel = (id: ?string, handler: any): void => {
 };
 
 // this method can be used from anywhere
-export const postMessage = (message: CoreMessage): void => {
+export const postMessage = (message: CoreMessage) => {
     if (!broadcast && !iframe) {
         throw ERRORS.TypedError('Popup_ConnectionMissing');
     }
@@ -114,7 +115,7 @@ export const postMessage = (message: CoreMessage): void => {
     iframe.postMessage(message, window.location.origin);
 };
 
-export const postMessageToParent = (message: CoreMessage): void => {
+export const postMessageToParent = (message: CoreMessage) => {
     if (window.opener) {
         // post message to parent and wait for POPUP.INIT message
         window.opener.postMessage(message, '*');

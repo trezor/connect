@@ -35,10 +35,13 @@ let _popupManager: ?PopupManager;
 const initPopupManager = (): PopupManager => {
     const pm = new PopupManager(_settings);
     pm.on(POPUP.CLOSED, (error?: string) => {
-        iframe.postMessage({
-            type: POPUP.CLOSED,
-            payload: error ? { error } : null,
-        }, false);
+        iframe.postMessage(
+            {
+                type: POPUP.CLOSED,
+                payload: error ? { error } : null,
+            },
+            false,
+        );
     });
     return pm;
 };
@@ -63,7 +66,7 @@ export const cancel = (error?: string) => {
 };
 
 // handle message received from iframe
-const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
+const handleMessage = (messageEvent: $T.PostMessageEvent) => {
     // ignore messages from domain other then iframe origin
     if (messageEvent.origin !== iframe.origin) return;
 
@@ -74,7 +77,7 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
     _log.log('handleMessage', message);
 
     switch (event) {
-        case RESPONSE_EVENT :
+        case RESPONSE_EVENT:
             if (iframe.messagePromises[id]) {
                 // resolve message promise (send result of call method)
                 iframe.messagePromises[id].resolve({
@@ -88,23 +91,23 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
             }
             break;
 
-        case DEVICE_EVENT :
+        case DEVICE_EVENT:
             // pass DEVICE event up to html
             eventEmitter.emit(event, message);
             eventEmitter.emit(type, payload); // DEVICE_EVENT also emit single events (connect/disconnect...)
             break;
 
-        case TRANSPORT_EVENT :
+        case TRANSPORT_EVENT:
             eventEmitter.emit(event, message);
             eventEmitter.emit(type, payload);
             break;
 
-        case BLOCKCHAIN_EVENT :
+        case BLOCKCHAIN_EVENT:
             eventEmitter.emit(event, message);
             eventEmitter.emit(type, payload);
             break;
 
-        case UI_EVENT :
+        case UI_EVENT:
             if (type === IFRAME.BOOTSTRAP) {
                 iframe.clearTimeout();
                 break;
@@ -127,7 +130,9 @@ const handleMessage = (messageEvent: $T.PostMessageEvent): void => {
 };
 
 export const init = async (settings: $Shape<$T.ConnectSettings> = {}): Promise<void> => {
-    if (iframe.instance) { throw ERRORS.TypedError('Init_AlreadyInitialized'); }
+    if (iframe.instance) {
+        throw ERRORS.TypedError('Init_AlreadyInitialized');
+    }
 
     if (!_settings) {
         _settings = parseSettings(settings);
@@ -188,26 +193,34 @@ export const call = async (params: any): Promise<any> => {
     if (iframe.timeout) {
         // this.init was called, but iframe doesn't return handshake yet
         return errorMessage(ERRORS.TypedError('Init_ManifestMissing'));
-    } else if (iframe.error) {
+    }
+    if (iframe.error) {
         // iframe was initialized with error
         return errorMessage(iframe.error);
     }
 
     // request popup window it might be used in the future
-    if (_settings.popup && _popupManager) { _popupManager.request(); }
+    if (_settings.popup && _popupManager) {
+        _popupManager.request();
+    }
 
     // post message to iframe
     try {
         const response: ?Object = await iframe.postMessage({ type: IFRAME.CALL, payload: params });
         if (response) {
-            if (!response.success && response.payload.error.code !== 'Device_CallInProgress' && _popupManager) { _popupManager.unlock(); }
-            return response;
-        } else {
-            if (_popupManager) {
+            if (
+                !response.success &&
+                response.payload.error.code !== 'Device_CallInProgress' &&
+                _popupManager
+            ) {
                 _popupManager.unlock();
             }
-            return errorMessage(ERRORS.TypedError('Method_NoResponse'));
+            return response;
         }
+        if (_popupManager) {
+            _popupManager.unlock();
+        }
+        return errorMessage(ERRORS.TypedError('Method_NoResponse'));
     } catch (error) {
         _log.error('__call error', error);
         if (_popupManager) {
@@ -217,7 +230,7 @@ export const call = async (params: any): Promise<any> => {
     }
 };
 
-const customMessageResponse = (payload: ?{ message: string; params?: Object }): void => {
+const customMessageResponse = (payload: ?{ message: string, params?: any }) => {
     iframe.postMessage({
         event: UI_EVENT,
         type: UI.CUSTOM_MESSAGE_RESPONSE,
@@ -225,31 +238,31 @@ const customMessageResponse = (payload: ?{ message: string; params?: Object }): 
     });
 };
 
-export const uiResponse = (response: $T.UiResponse): void => {
+export const uiResponse = (response: $T.UiResponse) => {
     const { type, payload } = response;
     iframe.postMessage({ event: UI_EVENT, type, payload });
 };
 
-export const renderWebUSBButton = (className: ?string): void => {
+export const renderWebUSBButton = (className: ?string) => {
     webUSBButton(className, _settings.webusbSrc, iframe.origin);
 };
 
-export const getSettings = async (): $T.Response<$T.ConnectSettings> => {
+export const getSettings = (): $T.Response<$T.ConnectSettings> => {
     if (!iframe.instance) {
-        return errorMessage(ERRORS.TypedError('Init_NotInitialized'));
+        return Promise.resolve(errorMessage(ERRORS.TypedError('Init_NotInitialized')));
     }
-    return await call({ method: 'getSettings' });
+    return call({ method: 'getSettings' });
 };
 
-export const customMessage: $PropertyType<$T.API, 'customMessage'> = async (params) => {
+export const customMessage: $PropertyType<$T.API, 'customMessage'> = async params => {
     if (typeof params.callback !== 'function') {
         return errorMessage(ERRORS.TypedError('Method_CustomMessage_Callback'));
     }
 
     // TODO: set message listener only if iframe is loaded correctly
-    const callback = params.callback;
+    const { callback } = params;
     const customMessageListener = async (event: $T.PostMessageEvent) => {
-        const data = event.data;
+        const { data } = event;
         if (data && data.type === UI.CUSTOM_MESSAGE_REQUEST) {
             const payload = await callback(data.payload);
             if (payload) {
@@ -266,14 +279,14 @@ export const customMessage: $PropertyType<$T.API, 'customMessage'> = async (para
     return response;
 };
 
-export const requestLogin: $PropertyType<$T.API, 'requestLogin'> = async (params) => {
+export const requestLogin: $PropertyType<$T.API, 'requestLogin'> = async params => {
     // $FlowIssue: property callback not found
     if (typeof params.callback === 'function') {
-        const callback = params.callback;
+        const { callback } = params;
 
         // TODO: set message listener only if iframe is loaded correctly
         const loginChallengeListener = async (event: $T.PostMessageEvent) => {
-            const data = event.data;
+            const { data } = event;
             if (data && data.type === UI.LOGIN_CHALLENGE_REQUEST) {
                 try {
                     const payload = await callback();
@@ -294,12 +307,16 @@ export const requestLogin: $PropertyType<$T.API, 'requestLogin'> = async (params
 
         window.addEventListener('message', loginChallengeListener, false);
 
-        const response = await call({ method: 'requestLogin', ...params, asyncChallenge: true, callback: null });
+        const response = await call({
+            method: 'requestLogin',
+            ...params,
+            asyncChallenge: true,
+            callback: null,
+        });
         window.removeEventListener('message', loginChallengeListener);
         return response;
-    } else {
-        return await call({ method: 'requestLogin', ...params });
     }
+    return call({ method: 'requestLogin', ...params });
 };
 
 export const disableWebUSB = () => {

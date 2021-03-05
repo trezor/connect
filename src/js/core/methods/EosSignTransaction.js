@@ -10,11 +10,11 @@ import type { EosTxHeader, EosTxActionAck } from '../../types/trezor/protobuf';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    path: number[];
-    chain_id: string;
-    header?: EosTxHeader;
-    ack: EosTxActionAck[];
-}
+    path: number[],
+    chain_id: string,
+    header?: EosTxHeader,
+    ack: EosTxActionAck[],
+};
 
 export default class EosSignTransaction extends AbstractMethod {
     params: Params;

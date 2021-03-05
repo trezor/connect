@@ -6,7 +6,6 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/nemSignTx';
 
-import type { NEMTransaction } from '../../types/networks/nem';
 import type { CoreMessage } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
@@ -28,8 +27,7 @@ export default class NEMSignTransaction extends AbstractMethod {
 
         const path = validatePath(payload.path, 3);
         // incoming data should be in nem-sdk format
-        const transaction: NEMTransaction = payload.transaction;
-        this.params = helper.createTx(transaction, path);
+        this.params = helper.createTx(payload.transaction, path);
     }
 
     async run() {

@@ -28,11 +28,11 @@ const binaryToDecimal = (bignum: Uint8Array | number[], minDigits = 1) => {
         let carry = bignum[i];
         for (let j = 0; j < result.length; ++j) {
             const x = ((result[j] - '0'.charCodeAt(0)) << 8) + carry;
-            result[j] = '0'.charCodeAt(0) + x % 10;
+            result[j] = '0'.charCodeAt(0) + (x % 10);
             carry = (x / 10) | 0;
         }
         while (carry) {
-            result.push('0'.charCodeAt(0) + carry % 10);
+            result.push('0'.charCodeAt(0) + (carry % 10));
             carry = (carry / 10) | 0;
         }
     }
@@ -44,28 +44,31 @@ const binaryToDecimal = (bignum: Uint8Array | number[], minDigits = 1) => {
 // "pushName"
 const serialize = (s?: string) => {
     if (typeof s !== 'string') {
-        throw ERRORS.TypedError('Method_InvalidParameter', `Eos serialization error, "${typeof s}" should be a string`);
+        throw ERRORS.TypedError(
+            'Method_InvalidParameter',
+            `Eos serialization error, "${typeof s}" should be a string`,
+        );
     }
-    function charToSymbol(c: number) {
+    const charToSymbol = (c: number) => {
         if (c >= 'a'.charCodeAt(0) && c <= 'z'.charCodeAt(0)) {
-            return (c - 'a'.charCodeAt(0)) + 6;
+            return c - 'a'.charCodeAt(0) + 6;
         }
         if (c >= '1'.charCodeAt(0) && c <= '5'.charCodeAt(0)) {
-            return (c - '1'.charCodeAt(0)) + 1;
+            return c - '1'.charCodeAt(0) + 1;
         }
         return 0;
-    }
+    };
 
     const a = new Uint8Array(8);
     let bit = 63;
     for (let i = 0; i < s.length; ++i) {
         let c = charToSymbol(s.charCodeAt(i));
         if (bit < 5) {
-            c = c << 1;
+            c <<= 1;
         }
         for (let j = 4; j >= 0; --j) {
             if (bit >= 0) {
-                a[Math.floor(bit / 8)] |= ((c >> j) & 1) << (bit % 8);
+                a[Math.floor(bit / 8)] |= ((c >> j) & 1) << bit % 8;
                 --bit;
             }
         }
@@ -77,7 +80,10 @@ const serialize = (s?: string) => {
 // "pushAsset"
 const parseQuantity = (s: string): EosAsset => {
     if (typeof s !== 'string') {
-        throw ERRORS.TypedError('Method_InvalidParameter', `Eos serialization error. Expected string containing asset, got: ${typeof s}`);
+        throw ERRORS.TypedError(
+            'Method_InvalidParameter',
+            `Eos serialization error. Expected string containing asset, got: ${typeof s}`,
+        );
     }
     s = s.trim();
     let pos = 0;
@@ -88,17 +94,28 @@ const parseQuantity = (s: string): EosAsset => {
         ++pos;
     }
     let foundDigit = false;
-    while (pos < s.length && s.charCodeAt(pos) >= '0'.charCodeAt(0) && s.charCodeAt(pos) <= '9'.charCodeAt(0)) {
+    while (
+        pos < s.length &&
+        s.charCodeAt(pos) >= '0'.charCodeAt(0) &&
+        s.charCodeAt(pos) <= '9'.charCodeAt(0)
+    ) {
         foundDigit = true;
         amount += s[pos];
         ++pos;
     }
     if (!foundDigit) {
-        throw ERRORS.TypedError('Method_InvalidParameter', 'Eos serialization error. Asset must begin with a number');
+        throw ERRORS.TypedError(
+            'Method_InvalidParameter',
+            'Eos serialization error. Asset must begin with a number',
+        );
     }
     if (s[pos] === '.') {
         ++pos;
-        while (pos < s.length && s.charCodeAt(pos) >= '0'.charCodeAt(0) && s.charCodeAt(pos) <= '9'.charCodeAt(0)) {
+        while (
+            pos < s.length &&
+            s.charCodeAt(pos) >= '0'.charCodeAt(0) &&
+            s.charCodeAt(pos) <= '9'.charCodeAt(0)
+        ) {
             amount += s[pos];
             ++precision;
             ++pos;
@@ -123,7 +140,7 @@ const parseQuantity = (s: string): EosAsset => {
 // transform incoming parameters to protobuf messages format
 
 const parseAuth = (a: $EosAuthorization): EosAuthorization => {
-    function keyToBuffer(pk: string) {
+    const keyToBuffer = (pk: string) => {
         const len = pk.indexOf('EOS') === 0 ? 3 : 7;
         const key = bs58.decode(pk.substring(len));
         // key.slice(0, key.length - 4);
@@ -132,7 +149,7 @@ const parseAuth = (a: $EosAuthorization): EosAuthorization => {
             type: 0,
             key: key.slice(0, key.length - 4),
         };
-    }
+    };
     return {
         threshold: a.threshold,
         keys: a.keys.map(k => ({
@@ -152,9 +169,12 @@ const parseAuth = (a: $EosAuthorization): EosAuthorization => {
 
 // from: https://github.com/EOSIO/eosjs/blob/master/src/eosjs-serialize.ts
 // "dateToTimePoint"
-const parseDate = (d: string): number => {
+const parseDate = (d: string) => {
     if (typeof d !== 'string') {
-        throw ERRORS.TypedError('Method_InvalidParameter', 'Eos serialization error. Header.expiration should be string or number');
+        throw ERRORS.TypedError(
+            'Method_InvalidParameter',
+            'Eos serialization error. Header.expiration should be string or number',
+        );
     }
     if (d.substr(d.length - 1, d.length) !== 'Z') {
         d += 'Z';
@@ -166,7 +186,7 @@ const parseAck = (action: Action): EosTxActionAck | null => {
     switch (action.name) {
         case 'transfer':
             return {
-                'transfer': {
+                transfer: {
                     sender: serialize(action.data.from),
                     receiver: serialize(action.data.to),
                     quantity: parseQuantity(action.data.quantity),
@@ -175,7 +195,7 @@ const parseAck = (action: Action): EosTxActionAck | null => {
             };
         case 'delegatebw':
             return {
-                'delegate': {
+                delegate: {
                     sender: serialize(action.data.from),
                     receiver: serialize(action.data.receiver),
                     net_quantity: parseQuantity(action.data.stake_net_quantity),
@@ -185,7 +205,7 @@ const parseAck = (action: Action): EosTxActionAck | null => {
             };
         case 'undelegatebw':
             return {
-                'undelegate': {
+                undelegate: {
                     sender: serialize(action.data.from),
                     receiver: serialize(action.data.receiver),
                     net_quantity: parseQuantity(action.data.unstake_net_quantity),
@@ -194,7 +214,7 @@ const parseAck = (action: Action): EosTxActionAck | null => {
             };
         case 'buyram':
             return {
-                'buy_ram': {
+                buy_ram: {
                     payer: serialize(action.data.payer),
                     receiver: serialize(action.data.receiver),
                     quantity: parseQuantity(action.data.quant),
@@ -202,7 +222,7 @@ const parseAck = (action: Action): EosTxActionAck | null => {
             };
         case 'buyrambytes':
             return {
-                'buy_ram_bytes': {
+                buy_ram_bytes: {
                     payer: serialize(action.data.payer),
                     receiver: serialize(action.data.receiver),
                     bytes: action.data.bytes,
@@ -210,14 +230,14 @@ const parseAck = (action: Action): EosTxActionAck | null => {
             };
         case 'sellram':
             return {
-                'sell_ram': {
+                sell_ram: {
                     account: serialize(action.data.account),
                     bytes: action.data.bytes,
                 },
             };
         case 'voteproducer':
             return {
-                'vote_producer': {
+                vote_producer: {
                     voter: serialize(action.data.voter),
                     proxy: serialize(action.data.proxy),
                     producers: action.data.producers.map(p => serialize(p)),
@@ -225,13 +245,13 @@ const parseAck = (action: Action): EosTxActionAck | null => {
             };
         case 'refund':
             return {
-                'refund': {
+                refund: {
                     owner: serialize(action.data.owner),
                 },
             };
         case 'updateauth':
             return {
-                'update_auth': {
+                update_auth: {
                     account: serialize(action.data.account),
                     permission: serialize(action.data.permission),
                     parent: serialize(action.data.parent),
@@ -240,14 +260,14 @@ const parseAck = (action: Action): EosTxActionAck | null => {
             };
         case 'deleteauth':
             return {
-                'delete_auth': {
+                delete_auth: {
                     account: serialize(action.data.account),
                     permission: serialize(action.data.permission),
                 },
             };
         case 'linkauth':
             return {
-                'link_auth': {
+                link_auth: {
                     account: serialize(action.data.account),
                     code: serialize(action.data.code),
                     type: serialize(action.data.type),
@@ -256,7 +276,7 @@ const parseAck = (action: Action): EosTxActionAck | null => {
             };
         case 'unlinkauth':
             return {
-                'unlink_auth': {
+                unlink_auth: {
                     account: serialize(action.data.account),
                     code: serialize(action.data.code),
                     type: serialize(action.data.type),
@@ -264,7 +284,7 @@ const parseAck = (action: Action): EosTxActionAck | null => {
             };
         case 'newaccount':
             return {
-                'new_account': {
+                new_account: {
                     creator: serialize(action.data.creator),
                     name: serialize(action.data.name),
                     owner: parseAuth(action.data.owner),
@@ -286,16 +306,14 @@ const parseUnknown = (action: Action): EosTxActionAck | null => {
     };
 };
 
-const parseCommon = (action: Action): EosActionCommon => {
-    return {
-        account: serialize(action.account),
-        name: serialize(action.name),
-        authorization: action.authorization.map(a => ({
-            actor: serialize(a.actor),
-            permission: serialize(a.permission),
-        })),
-    };
-};
+const parseCommon = (action: Action): EosActionCommon => ({
+    account: serialize(action.account),
+    name: serialize(action.name),
+    authorization: action.authorization.map(a => ({
+        actor: serialize(a.actor),
+        permission: serialize(a.permission),
+    })),
+});
 
 const parseAction = (action: any): EosTxActionAck => {
     const ack = parseAck(action) || parseUnknown(action);
@@ -306,14 +324,19 @@ const parseAction = (action: any): EosTxActionAck => {
 };
 
 export const validate = (address_n: number[], tx: EosSDKTransaction) => {
-    const header = tx.header ? {
-        expiration: typeof tx.header.expiration === 'number' ? tx.header.expiration : parseDate(tx.header.expiration),
-        ref_block_num: tx.header.refBlockNum,
-        ref_block_prefix: tx.header.refBlockPrefix,
-        max_net_usage_words: tx.header.maxNetUsageWords,
-        max_cpu_usage_ms: tx.header.maxCpuUsageMs,
-        delay_sec: tx.header.delaySec,
-    } : undefined;
+    const header = tx.header
+        ? {
+              expiration:
+                  typeof tx.header.expiration === 'number'
+                      ? tx.header.expiration
+                      : parseDate(tx.header.expiration),
+              ref_block_num: tx.header.refBlockNum,
+              ref_block_prefix: tx.header.refBlockPrefix,
+              max_net_usage_words: tx.header.maxNetUsageWords,
+              max_cpu_usage_ms: tx.header.maxCpuUsageMs,
+              delay_sec: tx.header.delaySec,
+          }
+        : undefined;
 
     const ack: EosTxActionAck[] = [];
     tx.actions.forEach(action => {
@@ -343,12 +366,12 @@ const processTxRequest = async (
     index: number,
 ) => {
     const action = actions[index];
-    const lastOp = (index + 1 >= actions.length);
+    const lastOp = index + 1 >= actions.length;
     let ack: MessageResponse<'EosTxActionRequest'>;
     const requestedDataSize = message.data_size;
 
     if (action.unknown) {
-        const unknown = action.unknown;
+        const { unknown } = action;
         const offset = typeof requestedDataSize === 'number' ? requestedDataSize : 0;
         const data_chunk = getDataChunk(unknown.data_chunk, offset);
         const params = {
@@ -364,11 +387,10 @@ const processTxRequest = async (
         if (lastOp && lastChunk) {
             const response = await typedCall('EosTxActionAck', 'EosSignedTx', params);
             return response.message;
-        } else {
-            ack = await typedCall('EosTxActionAck', 'EosTxActionRequest', params);
-            if (lastChunk) {
-                index++;
-            }
+        }
+        ack = await typedCall('EosTxActionAck', 'EosTxActionRequest', params);
+        if (lastChunk) {
+            index++;
         }
     } else {
         if (lastOp) {
@@ -379,12 +401,7 @@ const processTxRequest = async (
         index++;
     }
 
-    return processTxRequest(
-        typedCall,
-        ack.message,
-        actions,
-        index
-    );
+    return processTxRequest(typedCall, ack.message, actions, index);
 };
 
 export const signTx = async (

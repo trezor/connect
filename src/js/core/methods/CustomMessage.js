@@ -8,10 +8,10 @@ import { UiMessage } from '../../message/builder';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    customMessages: JSON;
-    message: string;
-    params: any;
-}
+    customMessages: JSON,
+    message: string,
+    params: any,
+};
 
 export default class CustomMessage extends AbstractMethod {
     params: Params;
@@ -33,7 +33,10 @@ export default class CustomMessage extends AbstractMethod {
             try {
                 JSON.parse(JSON.stringify(payload.messages));
             } catch (error) {
-                throw ERRORS.TypedError('Method_InvalidParameter', 'Parameter "messages" has invalid type. JSON expected.');
+                throw ERRORS.TypedError(
+                    'Method_InvalidParameter',
+                    'Parameter "messages" has invalid type. JSON expected.',
+                );
             }
         }
 
@@ -44,17 +47,25 @@ export default class CustomMessage extends AbstractMethod {
         };
     }
 
-    getCustomMessages(): ?JSON {
+    getCustomMessages() {
         return this.params.customMessages;
     }
 
     async run() {
-        if (this.device.features.vendor === 'trezor.io' || this.device.features.vendor === 'bitcointrezor.com') {
-            throw ERRORS.TypedError('Runtime', 'Cannot use custom message on device with official firmware. Change device "vendor" field.');
+        if (
+            this.device.features.vendor === 'trezor.io' ||
+            this.device.features.vendor === 'bitcointrezor.com'
+        ) {
+            throw ERRORS.TypedError(
+                'Runtime',
+                'Cannot use custom message on device with official firmware. Change device "vendor" field.',
+            );
         }
         // call message
-        // $FlowIssue message could be anything, unknown type
-        const response = await this.device.getCommands()._commonCall(this.params.message, this.params.params);
+        const response = await this.device
+            .getCommands()
+            // $FlowIssue message could be anything, unknown type
+            ._commonCall(this.params.message, this.params.params);
         // create ui promise
         const uiPromise = this.createUiPromise(UI.CUSTOM_MESSAGE_RESPONSE, this.device);
         // send result to developer
@@ -62,26 +73,21 @@ export default class CustomMessage extends AbstractMethod {
 
         // wait for response from developer
         const uiResp = await uiPromise.promise;
-        const payload = uiResp.payload;
+        const { payload } = uiResp;
 
         // validate incoming response
-        validateParams(payload, [
-            { name: 'message', type: 'string', obligatory: true },
-        ]);
+        validateParams(payload, [{ name: 'message', type: 'string', obligatory: true }]);
 
         if (payload.message.toLowerCase() === 'release') {
             // release device
             return response;
-        } else {
-            // validate incoming parameters
-            validateParams(payload, [
-                { name: 'params', type: 'object', obligatory: true },
-            ]);
-
-            // change local params and make another call to device
-            this.params.message = payload.message;
-            this.params.params = payload.params;
-            return await this.run();
         }
+        // validate incoming parameters
+        validateParams(payload, [{ name: 'params', type: 'object', obligatory: true }]);
+
+        // change local params and make another call to device
+        this.params.message = payload.message;
+        this.params.params = payload.params;
+        return this.run();
     }
 }

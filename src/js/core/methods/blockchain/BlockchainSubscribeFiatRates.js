@@ -9,9 +9,9 @@ import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo } from '../../../types';
 
 type Params = {
-    currency?: string;
-    coinInfo: CoinInfo;
-}
+    currency?: string,
+    coinInfo: CoinInfo,
+};
 
 export default class BlockchainSubscribeFiatRates extends AbstractMethod {
     params: Params;
@@ -21,7 +21,7 @@ export default class BlockchainSubscribeFiatRates extends AbstractMethod {
         this.useDevice = false;
         this.useUi = false;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [

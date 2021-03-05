@@ -15,9 +15,7 @@ export default class ChangePin extends AbstractMethod {
         this.useDeviceState = false;
 
         const { payload } = message;
-        validateParams(payload, [
-            { name: 'remove', type: 'boolean' },
-        ]);
+        validateParams(payload, [{ name: 'remove', type: 'boolean' }]);
 
         this.params = {
             remove: payload.remove,

@@ -13,11 +13,19 @@ import { getOutputScriptType } from '../../../utils/pathUtils';
 import type { BitcoinNetworkInfo, HDNodeResponse } from '../../../types';
 import type { TxInputType, TxOutputType } from '../../../types/trezor/protobuf';
 
-type GetHDNode = (path: number[], coinInfo?: BitcoinNetworkInfo, validation?: boolean) => Promise<HDNodeResponse>;
+type GetHDNode = (
+    path: number[],
+    coinInfo?: BitcoinNetworkInfo,
+    validation?: boolean,
+) => Promise<HDNodeResponse>;
 
 BitcoinJsTransaction.USE_STRING_VALUES = true;
 
-const derivePubKeyHash = async (address_n: number[], getHDNode: GetHDNode, coinInfo: BitcoinNetworkInfo) => {
+const derivePubKeyHash = async (
+    address_n: number[],
+    getHDNode: GetHDNode,
+    coinInfo: BitcoinNetworkInfo,
+) => {
     // regular bip44 output
     if (address_n.length === 5) {
         const response = await getHDNode(address_n.slice(0, 4), coinInfo);
@@ -53,7 +61,10 @@ const deriveBech32Output = (program: Buffer) => {
     // ideally we would also have program version with this, but
     // currently it's fixed to version 0.
     if (program.length !== 32 && program.length !== 20) {
-        throw ERRORS.TypedError('Runtime', 'deriveBech32Output: Unknown size for witness program v0');
+        throw ERRORS.TypedError(
+            'Runtime',
+            'deriveBech32Output: Unknown size for witness program v0',
+        );
     }
 
     const scriptSig = Buffer.alloc(program.length + 2);
@@ -72,7 +83,10 @@ const deriveOutputScript = async (
         return BitcoinJsScript.nullData.output.encode(Buffer.from(output.op_return_data, 'hex'));
     }
     if (!output.address_n && !output.address) {
-        throw ERRORS.TypedError('Runtime', 'deriveOutputScript: Neither address or address_n is set');
+        throw ERRORS.TypedError(
+            'Runtime',
+            'deriveOutputScript: Neither address or address_n is set',
+        );
     }
 
     // skip multisig output check, not implemented yet
@@ -103,7 +117,7 @@ const deriveOutputScript = async (
         return deriveBech32Output(pkh);
     }
 
-    throw ERRORS.TypedError('Runtime', 'deriveOutputScript: Unknown script type ' + scriptType);
+    throw ERRORS.TypedError('Runtime', `deriveOutputScript: Unknown script type ${scriptType}`);
 };
 
 export default async (
@@ -130,9 +144,12 @@ export default async (
         const scriptB = bitcoinTx.outs[i].script;
 
         if (outputs[i].amount) {
-            const amount = outputs[i].amount;
+            const { amount } = outputs[i];
             if (amount !== bitcoinTx.outs[i].value) {
-                throw ERRORS.TypedError('Runtime', `verifyTx: Wrong output amount at output ${i}. Requested: ${amount}, signed: ${bitcoinTx.outs[i].value}`);
+                throw ERRORS.TypedError(
+                    'Runtime',
+                    `verifyTx: Wrong output amount at output ${i}. Requested: ${amount}, signed: ${bitcoinTx.outs[i].value}`,
+                );
             }
         }
 

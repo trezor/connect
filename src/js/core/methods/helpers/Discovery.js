@@ -7,28 +7,40 @@ import { getAccountAddressN } from '../../../utils/accountUtils';
 import { formatAmount } from '../../../utils/formatUtils';
 
 import type { CoinInfo } from '../../../types';
-import type { DiscoveryAccountType, DiscoveryAccount, GetAccountInfo } from '../../../types/account';
+import type {
+    DiscoveryAccountType,
+    DiscoveryAccount,
+    GetAccountInfo,
+} from '../../../types/account';
 
 type DiscoveryType = {
-    type: DiscoveryAccountType;
-    getPath: (index: number) => number[];
-}
+    type: DiscoveryAccountType,
+    getPath: (index: number) => number[],
+};
 
 type DiscoveryOptions = {
-    blockchain: Blockchain;
-    commands: DeviceCommands;
-    limit?: number;
-}
+    blockchain: Blockchain,
+    commands: DeviceCommands,
+    limit?: number,
+};
 
 export default class Discovery extends EventEmitter {
     types: DiscoveryType[] = [];
+
     typeIndex: number;
+
     accounts: DiscoveryAccount[];
+
     coinInfo: CoinInfo;
+
     blockchain: Blockchain;
+
     commands: DeviceCommands;
+
     index: number;
+
     interrupted: boolean;
+
     completed: boolean;
 
     constructor(options: DiscoveryOptions) {
@@ -48,9 +60,8 @@ export default class Discovery extends EventEmitter {
         if (coinInfo.type === 'bitcoin') {
             // Bitcoin-like coins could have multiple discovery types (bech32, segwit, legacy)
             // path utility wrapper. bip44 purpose can be set as well
-            const getDescriptor = (purpose: number, index: number) => {
-                return getAccountAddressN(coinInfo, index, { purpose });
-            };
+            const getDescriptor = (purpose: number, index: number) =>
+                getAccountAddressN(coinInfo, index, { purpose });
             // add bech32 discovery type
             if (coinInfo.xPubMagicSegwitNative) {
                 this.types.push({
@@ -79,12 +90,12 @@ export default class Discovery extends EventEmitter {
         }
     }
 
-    async start(details?: $ElementType<GetAccountInfo, 'details'>): Promise<void> {
+    async start(details?: $ElementType<GetAccountInfo, 'details'>) {
         const limit = 10; // TODO: move to options
         this.interrupted = false;
         while (!this.completed && !this.interrupted) {
             const accountType = this.types[this.typeIndex];
-            const label = `Account #${(this.index + 1)}`;
+            const label = `Account #${this.index + 1}`;
             const overTheLimit = this.index >= limit;
 
             // get descriptor from device
@@ -114,7 +125,10 @@ export default class Discovery extends EventEmitter {
             }
 
             // get account info from backend
-            const info = await this.blockchain.getAccountInfo({ descriptor: account.descriptor, details });
+            const info = await this.blockchain.getAccountInfo({
+                descriptor: account.descriptor,
+                details,
+            });
             if (this.interrupted) return;
 
             // remove previously added incomplete account info
@@ -156,4 +170,3 @@ export default class Discovery extends EventEmitter {
         this.accounts = [];
     }
 }
-

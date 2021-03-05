@@ -5,61 +5,61 @@
 // get address
 
 export type EthereumGetAddress = {
-    path: string | number[];
-    address?: string;
-    showOnTrezor?: boolean;
-}
+    path: string | number[],
+    address?: string,
+    showOnTrezor?: boolean,
+};
 
 export type EthereumAddress = {
-    address: string;
-    path: Array<number>;
-    serializedPath: string;
-}
+    address: string,
+    path: number[],
+    serializedPath: string,
+};
 
 // get public key
 
 export type EthereumGetPublicKey = {
-    path: string | number[];
-    showOnTrezor?: boolean;
-}
+    path: string | number[],
+    showOnTrezor?: boolean,
+};
 
 // sign transaction
 
 export type EthereumTransaction = {
-    to: string;
-    value: string;
-    gasPrice: string;
-    gasLimit: string;
-    nonce: string;
-    data?: string;
-    chainId?: number;
-    txType?: number;
-}
+    to: string,
+    value: string,
+    gasPrice: string,
+    gasLimit: string,
+    nonce: string,
+    data?: string,
+    chainId?: number,
+    txType?: number,
+};
 
 export type EthereumSignTransaction = {
-    path: string | number[];
-    transaction: EthereumTransaction;
-}
+    path: string | number[],
+    transaction: EthereumTransaction,
+};
 
 export type EthereumSignedTx = {
-    v: string;
-    r: string;
-    s: string;
+    v: string,
+    r: string,
+    s: string,
 };
 
 // sign message
 
 export type EthereumSignMessage = {
-    path: string | number[];
-    message: string;
-    hex?: boolean;
+    path: string | number[],
+    message: string,
+    hex?: boolean,
 };
 
 // verify message
 
 export type EthereumVerifyMessage = {
-    address: string;
-    message: string;
-    hex?: boolean;
-    signature: string;
-}
+    address: string,
+    message: string,
+    hex?: boolean,
+    signature: string,
+};

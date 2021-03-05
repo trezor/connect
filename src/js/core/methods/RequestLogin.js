@@ -12,6 +12,7 @@ import type { MessageType, IdentityType } from '../../types/trezor/protobuf';
 
 export default class RequestLogin extends AbstractMethod {
     params: $ElementType<MessageType, 'SignIdentity'>;
+
     asyncChallenge: boolean;
 
     constructor(message: CoreMessage) {
@@ -26,11 +27,11 @@ export default class RequestLogin extends AbstractMethod {
         const identity: IdentityType = {};
         const settings: ConnectSettings = DataManager.getSettings();
         if (settings.origin) {
-            const uri = settings.origin.split(':');
-            identity.proto = uri[0];
-            identity.host = uri[1].substring(2);
-            if (uri[2]) {
-                identity.port = uri[2];
+            const [proto, host, port] = settings.origin.split(':');
+            identity.proto = proto;
+            identity.host = host.substring(2);
+            if (port) {
+                identity.port = port;
             }
             identity.index = 0;
         }
@@ -62,7 +63,10 @@ export default class RequestLogin extends AbstractMethod {
 
             // error handler
             if (typeof payload === 'string') {
-                throw ERRORS.TypedError('Runtime', `TrezorConnect.requestLogin callback error: ${payload}`);
+                throw ERRORS.TypedError(
+                    'Runtime',
+                    `TrezorConnect.requestLogin callback error: ${payload}`,
+                );
             }
 
             // validate incoming parameters

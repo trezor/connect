@@ -5,136 +5,136 @@ import { ERRORS } from '../../constants';
 
 import AbstractMethod from './AbstractMethod';
 
-import BlockchainDisconnect from './blockchain/BlockchainDisconnect';
-import BlockchainEstimateFee from './blockchain/BlockchainEstimateFee';
-import BlockchainGetAccountBalanceHistory from './blockchain/BlockchainGetAccountBalanceHistory';
-import BlockchainGetCurrentFiatRates from './blockchain/BlockchainGetCurrentFiatRates';
-import BlockchainGetFiatRatesForTimestamps from './blockchain/BlockchainGetFiatRatesForTimestamps';
-import BlockchainGetTransactions from './blockchain/BlockchainGetTransactions';
-import BlockchainSetCustomBackend from './blockchain/BlockchainSetCustomBackend';
-import BlockchainSubscribe from './blockchain/BlockchainSubscribe';
-import BlockchainSubscribeFiatRates from './blockchain/BlockchainSubscribeFiatRates';
-import BlockchainUnsubscribe from './blockchain/BlockchainUnsubscribe';
-import BlockchainUnsubscribeFiatRates from './blockchain/BlockchainUnsubscribeFiatRates';
-import CardanoGetAddress from './CardanoGetAddress';
-import CardanoGetPublicKey from './CardanoGetPublicKey';
-import CardanoSignTransaction from './CardanoSignTransaction';
-import CipherKeyValue from './CipherKeyValue';
-import ComposeTransaction from './ComposeTransaction';
-import CustomMessage from './CustomMessage';
-import DebugLinkDecision from './debuglink/DebugLinkDecision';
-import DebugLinkGetState from './debuglink/DebugLinkGetState';
-import EthereumGetAddress from './EthereumGetAddress';
-import EthereumGetPublicKey from './EthereumGetPublicKey';
-import EthereumSignMessage from './EthereumSignMessage';
-import EthereumSignTransaction from './EthereumSignTransaction';
-import EthereumVerifyMessage from './EthereumVerifyMessage';
-import GetAccountInfo from './GetAccountInfo';
-import GetAddress from './GetAddress';
-import GetDeviceState from './GetDeviceState';
-import GetFeatures from './GetFeatures';
-import GetPublicKey from './GetPublicKey';
-import GetSettings from './GetSettings';
-import LiskGetAddress from './LiskGetAddress';
-import LiskGetPublicKey from './LiskGetPublicKey';
-import LiskSignMessage from './LiskSignMessage';
-import LiskVerifyMessage from './LiskVerifyMessage';
-import LiskSignTransaction from './LiskSignTransaction';
-import LoadDevice from './LoadDevice';
-import PushTransaction from './PushTransaction';
-import RequestLogin from './RequestLogin';
-import ResetDevice from './ResetDevice';
-import RippleGetAddress from './RippleGetAddress';
-import RippleSignTransaction from './RippleSignTransaction';
-import NEMGetAddress from './NEMGetAddress';
-import NEMSignTransaction from './NEMSignTransaction';
-import SignMessage from './SignMessage';
-import SignTransaction from './SignTransaction';
-import StellarGetAddress from './StellarGetAddress';
-import StellarSignTransaction from './StellarSignTransaction';
-import TezosGetAddress from './TezosGetAddress';
-import TezosGetPublicKey from './TezosGetPublicKey';
-import TezosSignTransaction from './TezosSignTransaction';
-import EosGetPublicKey from './EosGetPublicKey';
-import EosSignTransaction from './EosSignTransaction';
-import BinanceGetPublicKey from './BinanceGetPublicKey';
-import BinanceGetAddress from './BinanceGetAddress';
-import BinanceSignTransaction from './BinanceSignTransaction';
-import VerifyMessage from './VerifyMessage';
-import WipeDevice from './WipeDevice';
-import ApplyFlags from './ApplyFlags';
-import ApplySettings from './ApplySettings';
-import BackupDevice from './BackupDevice';
-import ChangePin from './ChangePin';
-import FirmwareUpdate from './FirmwareUpdate';
-import RecoveryDevice from './RecoveryDevice';
-import GetCoinInfo from './GetCoinInfo';
+import blockchainDisconnect from './blockchain/BlockchainDisconnect';
+import blockchainEstimateFee from './blockchain/BlockchainEstimateFee';
+import blockchainGetAccountBalanceHistory from './blockchain/BlockchainGetAccountBalanceHistory';
+import blockchainGetCurrentFiatRates from './blockchain/BlockchainGetCurrentFiatRates';
+import blockchainGetFiatRatesForTimestamps from './blockchain/BlockchainGetFiatRatesForTimestamps';
+import blockchainGetTransactions from './blockchain/BlockchainGetTransactions';
+import blockchainSetCustomBackend from './blockchain/BlockchainSetCustomBackend';
+import blockchainSubscribe from './blockchain/BlockchainSubscribe';
+import blockchainSubscribeFiatRates from './blockchain/BlockchainSubscribeFiatRates';
+import blockchainUnsubscribe from './blockchain/BlockchainUnsubscribe';
+import blockchainUnsubscribeFiatRates from './blockchain/BlockchainUnsubscribeFiatRates';
+import cardanoGetAddress from './CardanoGetAddress';
+import cardanoGetPublicKey from './CardanoGetPublicKey';
+import cardanoSignTransaction from './CardanoSignTransaction';
+import cipherKeyValue from './CipherKeyValue';
+import composeTransaction from './ComposeTransaction';
+import customMessage from './CustomMessage';
+import debugLinkDecision from './debuglink/DebugLinkDecision';
+import debugLinkGetState from './debuglink/DebugLinkGetState';
+import ethereumGetAddress from './EthereumGetAddress';
+import ethereumGetPublicKey from './EthereumGetPublicKey';
+import ethereumSignMessage from './EthereumSignMessage';
+import ethereumSignTransaction from './EthereumSignTransaction';
+import ethereumVerifyMessage from './EthereumVerifyMessage';
+import getAccountInfo from './GetAccountInfo';
+import getAddress from './GetAddress';
+import getDeviceState from './GetDeviceState';
+import getFeatures from './GetFeatures';
+import getPublicKey from './GetPublicKey';
+import getSettings from './GetSettings';
+import liskGetAddress from './LiskGetAddress';
+import liskGetPublicKey from './LiskGetPublicKey';
+import liskSignMessage from './LiskSignMessage';
+import liskVerifyMessage from './LiskVerifyMessage';
+import liskSignTransaction from './LiskSignTransaction';
+import loadDevice from './LoadDevice';
+import pushTransaction from './PushTransaction';
+import requestLogin from './RequestLogin';
+import resetDevice from './ResetDevice';
+import rippleGetAddress from './RippleGetAddress';
+import rippleSignTransaction from './RippleSignTransaction';
+import nemGetAddress from './NEMGetAddress';
+import nemSignTransaction from './NEMSignTransaction';
+import signMessage from './SignMessage';
+import signTransaction from './SignTransaction';
+import stellarGetAddress from './StellarGetAddress';
+import stellarSignTransaction from './StellarSignTransaction';
+import tezosGetAddress from './TezosGetAddress';
+import tezosGetPublicKey from './TezosGetPublicKey';
+import tezosSignTransaction from './TezosSignTransaction';
+import eosGetPublicKey from './EosGetPublicKey';
+import eosSignTransaction from './EosSignTransaction';
+import binanceGetPublicKey from './BinanceGetPublicKey';
+import binanceGetAddress from './BinanceGetAddress';
+import binanceSignTransaction from './BinanceSignTransaction';
+import verifyMessage from './VerifyMessage';
+import wipeDevice from './WipeDevice';
+import applyFlags from './ApplyFlags';
+import applySettings from './ApplySettings';
+import backupDevice from './BackupDevice';
+import changePin from './ChangePin';
+import firmwareUpdate from './FirmwareUpdate';
+import recoveryDevice from './RecoveryDevice';
+import getCoinInfo from './GetCoinInfo';
 
-const classes: { [k: string]: any } = {
-    'blockchainDisconnect': BlockchainDisconnect,
-    'blockchainEstimateFee': BlockchainEstimateFee,
-    'blockchainGetAccountBalanceHistory': BlockchainGetAccountBalanceHistory,
-    'blockchainGetCurrentFiatRates': BlockchainGetCurrentFiatRates,
-    'blockchainGetFiatRatesForTimestamps': BlockchainGetFiatRatesForTimestamps,
-    'blockchainGetTransactions': BlockchainGetTransactions,
-    'blockchainSetCustomBackend': BlockchainSetCustomBackend,
-    'blockchainSubscribe': BlockchainSubscribe,
-    'blockchainSubscribeFiatRates': BlockchainSubscribeFiatRates,
-    'blockchainUnsubscribe': BlockchainUnsubscribe,
-    'blockchainUnsubscribeFiatRates': BlockchainUnsubscribeFiatRates,
-    'cardanoGetAddress': CardanoGetAddress,
-    'cardanoGetPublicKey': CardanoGetPublicKey,
-    'cardanoSignTransaction': CardanoSignTransaction,
-    'cipherKeyValue': CipherKeyValue,
-    'composeTransaction': ComposeTransaction,
-    'customMessage': CustomMessage,
-    'debugLinkDecision': DebugLinkDecision,
-    'debugLinkGetState': DebugLinkGetState,
-    'ethereumGetAddress': EthereumGetAddress,
-    'ethereumGetPublicKey': EthereumGetPublicKey,
-    'ethereumSignMessage': EthereumSignMessage,
-    'ethereumSignTransaction': EthereumSignTransaction,
-    'ethereumVerifyMessage': EthereumVerifyMessage,
-    'getAccountInfo': GetAccountInfo,
-    'getAddress': GetAddress,
-    'getDeviceState': GetDeviceState,
-    'getFeatures': GetFeatures,
-    'getPublicKey': GetPublicKey,
-    'getSettings': GetSettings,
-    'liskGetAddress': LiskGetAddress,
-    'liskGetPublicKey': LiskGetPublicKey,
-    'liskSignMessage': LiskSignMessage,
-    'liskSignTransaction': LiskSignTransaction,
-    'liskVerifyMessage': LiskVerifyMessage,
-    'loadDevice': LoadDevice,
-    'pushTransaction': PushTransaction,
-    'requestLogin': RequestLogin,
-    'resetDevice': ResetDevice,
-    'rippleGetAddress': RippleGetAddress,
-    'rippleSignTransaction': RippleSignTransaction,
-    'nemGetAddress': NEMGetAddress,
-    'nemSignTransaction': NEMSignTransaction,
-    'signMessage': SignMessage,
-    'signTransaction': SignTransaction,
-    'stellarGetAddress': StellarGetAddress,
-    'stellarSignTransaction': StellarSignTransaction,
-    'tezosGetAddress': TezosGetAddress,
-    'tezosGetPublicKey': TezosGetPublicKey,
-    'tezosSignTransaction': TezosSignTransaction,
-    'eosGetPublicKey': EosGetPublicKey,
-    'eosSignTransaction': EosSignTransaction,
-    'binanceGetPublicKey': BinanceGetPublicKey,
-    'binanceGetAddress': BinanceGetAddress,
-    'binanceSignTransaction': BinanceSignTransaction,
-    'verifyMessage': VerifyMessage,
-    'wipeDevice': WipeDevice,
-    'applyFlags': ApplyFlags,
-    'applySettings': ApplySettings,
-    'backupDevice': BackupDevice,
-    'changePin': ChangePin,
-    'firmwareUpdate': FirmwareUpdate,
-    'recoveryDevice': RecoveryDevice,
-    'getCoinInfo': GetCoinInfo,
+const METHODS = {
+    blockchainDisconnect,
+    blockchainEstimateFee,
+    blockchainGetAccountBalanceHistory,
+    blockchainGetCurrentFiatRates,
+    blockchainGetFiatRatesForTimestamps,
+    blockchainGetTransactions,
+    blockchainSetCustomBackend,
+    blockchainSubscribe,
+    blockchainSubscribeFiatRates,
+    blockchainUnsubscribe,
+    blockchainUnsubscribeFiatRates,
+    cardanoGetAddress,
+    cardanoGetPublicKey,
+    cardanoSignTransaction,
+    cipherKeyValue,
+    composeTransaction,
+    customMessage,
+    debugLinkDecision,
+    debugLinkGetState,
+    ethereumGetAddress,
+    ethereumGetPublicKey,
+    ethereumSignMessage,
+    ethereumSignTransaction,
+    ethereumVerifyMessage,
+    getAccountInfo,
+    getAddress,
+    getDeviceState,
+    getFeatures,
+    getPublicKey,
+    getSettings,
+    liskGetAddress,
+    liskGetPublicKey,
+    liskSignMessage,
+    liskSignTransaction,
+    liskVerifyMessage,
+    loadDevice,
+    pushTransaction,
+    requestLogin,
+    resetDevice,
+    rippleGetAddress,
+    rippleSignTransaction,
+    nemGetAddress,
+    nemSignTransaction,
+    signMessage,
+    signTransaction,
+    stellarGetAddress,
+    stellarSignTransaction,
+    tezosGetAddress,
+    tezosGetPublicKey,
+    tezosSignTransaction,
+    eosGetPublicKey,
+    eosSignTransaction,
+    binanceGetPublicKey,
+    binanceGetAddress,
+    binanceSignTransaction,
+    verifyMessage,
+    wipeDevice,
+    applyFlags,
+    applySettings,
+    backupDevice,
+    changePin,
+    firmwareUpdate,
+    recoveryDevice,
+    getCoinInfo,
 };
 
 export const find = (message: CoreMessage): AbstractMethod => {
@@ -142,15 +142,14 @@ export const find = (message: CoreMessage): AbstractMethod => {
         throw ERRORS.TypedError('Method_InvalidParameter', 'Message payload not found');
     }
 
-    if (!message.payload.method || typeof message.payload.method !== 'string') {
+    const { method } = message.payload;
+    if (!method || typeof method !== 'string') {
         throw ERRORS.TypedError('Method_InvalidParameter', 'Message method is not set');
     }
 
-    if (classes[message.payload.method]) {
-        return new classes[message.payload.method](message);
+    if (METHODS[method]) {
+        return new METHODS[method](message);
     }
 
-    throw ERRORS.TypedError('Method_InvalidParameter', `Method ${message.payload.method} not found`);
+    throw ERRORS.TypedError('Method_InvalidParameter', `Method ${method} not found`);
 };
-
-export default find;

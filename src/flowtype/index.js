@@ -13,7 +13,7 @@ declare var navigator: Navigator & {
 declare type ChromeTab = {
     id: number,
     index: number,
-}
+};
 
 declare type ChromePort = {
     name: string,
@@ -21,11 +21,16 @@ declare type ChromePort = {
     postMessage: (message: Object) => void,
     sender: any,
     disconnect: () => void,
-}
+};
 
 /* eslint-disable no-redeclare */
 declare function $RuntimeSendMessage(message: any, options: Object, callback: () => void): void;
-declare function $RuntimeSendMessage(id: string, message: any, options: ?Object, callback: () => void): void;
+declare function $RuntimeSendMessage(
+    id: string,
+    message: any,
+    options: ?Object,
+    callback: () => void,
+): void;
 /* eslint-enable no-redeclare */
 
 declare var chrome: {
@@ -39,19 +44,22 @@ declare var chrome: {
         lastError?: string,
     },
     tabs: {
-        create: ({
-            url?: string,
-            index?: number,
-        }, callback?: (tab: ?ChromeTab) => void) => void,
+        create: (
+            {
+                url?: string,
+                index?: number,
+            },
+            callback?: (tab: ?ChromeTab) => void,
+        ) => void,
         get: (id: number, callback: (tab: ?ChromeTab) => void) => void,
         highlight: (options: Object, callback?: () => void) => void,
         update: (id: number, options: Object) => void,
         remove: (id: number, callback?: () => void) => void,
     },
-}
+};
 
 declare interface BroadcastChannel {
-    constructor: (id: string) => void,
-    onmessage: (message: Object) => void,
-    postMessage: (message: Object) => void,
+    constructor: (id: string) => void;
+    onmessage: (message: Object) => void;
+    postMessage: (message: Object) => void;
 }

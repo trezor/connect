@@ -39,17 +39,12 @@ const BLOCKS = {
     },
 };
 
-const getDefaultBlocks = (shortcut: string, label: string) => {
-    return BLOCKS[shortcut] && BLOCKS[shortcut][label] ? BLOCKS[shortcut][label] : -1; // -1 for unknown
-};
-
+const getDefaultBlocks = (shortcut: string, label: string) =>
+    BLOCKS[shortcut] && BLOCKS[shortcut][label] ? BLOCKS[shortcut][label] : -1; // -1 for unknown
 const feePerKB = (fee: string) => {
     const bn = new BigNumber(fee);
     if (bn.isNaN() || bn.lte('0')) return;
-    return bn
-        .div(1000)
-        .integerValue(BigNumber.ROUND_HALF_CEIL)
-        .toString();
+    return bn.div(1000).integerValue(BigNumber.ROUND_HALF_CEIL).toString();
     // return bn.toString();
 };
 
@@ -108,7 +103,9 @@ const findBlocksForFee = (feePerUnit: string, blocks: Blocks) => {
 
 export default class FeeLevels {
     coinInfo: CoinInfo;
+
     levels: FeeLevel[];
+
     blocks: Blocks = [];
 
     constructor(coinInfo: CoinInfo) {
@@ -117,19 +114,18 @@ export default class FeeLevels {
 
         if (coinInfo.type === 'ethereum') {
             // unlike the others, ethereum got additional value "feeLimit" in coinInfo (Gas limit)
-            this.levels = coinInfo.defaultFees.map(level => {
-                return {
-                    ...level,
-                    blocks: -1, // blocks unknown
-                };
-            });
+            this.levels = coinInfo.defaultFees.map(level => ({
+                ...level,
+                blocks: -1, // blocks unknown
+            }));
             return;
         }
 
         // sort fee levels from coinInfo
         // and transform in to FeeLevel object
         const keys = Object.keys(coinInfo.defaultFees);
-        this.levels = keys.sort((levelA, levelB) => coinInfo.defaultFees[levelB] - coinInfo.defaultFees[levelA])
+        this.levels = keys
+            .sort((levelA, levelB) => coinInfo.defaultFees[levelB] - coinInfo.defaultFees[levelA])
             .map(level => {
                 const label: any = level.toLowerCase(); // string !== 'high' | 'normal'....
                 const blocks = getDefaultBlocks(shortcut, label); // TODO: get this value from trezor-common
@@ -152,7 +148,10 @@ export default class FeeLevels {
                 // should be lower than `coinInfo.maxFee` and higher than `coinInfo.minFee`
                 // xrp sends values from 1 to very high number occasionally
                 // see: https://github.com/trezor/trezor-suite/blob/develop/packages/blockchain-link/src/workers/ripple/index.ts#L316
-                feePerUnit: Math.min(this.coinInfo.maxFee, Math.max(this.coinInfo.minFee, parseInt(response.feePerUnit, 10))).toString(),
+                feePerUnit: Math.min(
+                    this.coinInfo.maxFee,
+                    Math.max(this.coinInfo.minFee, parseInt(response.feePerUnit, 10)),
+                ).toString(),
             };
         } catch (error) {
             // silent

@@ -14,7 +14,7 @@ export default class DebugLinkGetState extends AbstractMethod {
         this.requiredPermissions = ['management'];
     }
 
-    async run(): Promise<DebugLinkState> {
+    async run() {
         if (!this.device.hasDebugLink) {
             throw ERRORS.TypedError('Runtime', 'Device is not a debug link');
         }

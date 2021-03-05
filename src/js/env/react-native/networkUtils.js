@@ -1,6 +1,8 @@
-exports.httpRequest = function httpRequest(url, type) {
+/* eslint-disable global-require */
+
+exports.httpRequest = function httpRequest(url, _type) {
     const fileUrl = url.split('?')[0];
-    /* eslint-disable global-require */
+
     switch (fileUrl) {
         case './data/config.json':
             return require('../../../data/config.json');
@@ -21,7 +23,6 @@ exports.httpRequest = function httpRequest(url, type) {
         default:
             return null;
     }
-    /* eslint-enable global-require */
 };
 
 exports.getOrigin = function getOrigin(url) {

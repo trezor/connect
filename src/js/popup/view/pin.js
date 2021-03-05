@@ -6,21 +6,21 @@ import { container, showView, postMessage } from './common';
 import type { DeviceMessage } from '../../types/events';
 
 const isSubmitButtonDisabled = (isDisabled: boolean) => {
-    const submitButton: HTMLElement = container.getElementsByClassName('submit')[0];
+    const submitButton = container.getElementsByClassName('submit')[0];
     if (isDisabled) {
-        submitButton.setAttribute('disabled', 'true');
+        submitButton.setAttribute('disabled', 'disabled');
     } else {
         submitButton.removeAttribute('disabled');
     }
 };
 
-const submit = (): void => {
+const submit = () => {
     const button = container.getElementsByClassName('submit')[0];
     button.click();
 };
 
-const addPin = (val: number): void => {
-    const input: HTMLInputElement = (container.getElementsByClassName('pin-input')[0]: any);
+const addPin = (val: number) => {
+    const input = (container.getElementsByClassName('pin-input')[0]: any);
     const maxInputLength = 9;
 
     if (input.value.length < maxInputLength) {
@@ -32,7 +32,7 @@ const addPin = (val: number): void => {
     }
 };
 
-const backspacePin = (): void => {
+const backspacePin = () => {
     const input: HTMLInputElement = (container.getElementsByClassName('pin-input')[0]: any);
     const pin = input.value;
 
@@ -43,73 +43,74 @@ const backspacePin = (): void => {
     }
 };
 
-const pinKeyboardHandler = (event: KeyboardEvent): void => {
+const pinKeyboardHandler = (event: KeyboardEvent) => {
     event.preventDefault();
     switch (event.keyCode) {
-        case 13 :
+        case 13:
             // enter,
             submit();
             break;
         // backspace
-        case 8 :
+        case 8:
             backspacePin();
             break;
 
         // numeric and numpad
-        case 49 :
-        case 97 :
+        case 49:
+        case 97:
             addPin(1);
             break;
-        case 50 :
-        case 98 :
+        case 50:
+        case 98:
             addPin(2);
             break;
-        case 51 :
-        case 99 :
+        case 51:
+        case 99:
             addPin(3);
             break;
-        case 52 :
-        case 100 :
+        case 52:
+        case 100:
             addPin(4);
             break;
-        case 53 :
-        case 101 :
+        case 53:
+        case 101:
             addPin(5);
             break;
-        case 54 :
-        case 102 :
+        case 54:
+        case 102:
             addPin(6);
             break;
-        case 55 :
-        case 103 :
+        case 55:
+        case 103:
             addPin(7);
             break;
-        case 56 :
-        case 104 :
+        case 56:
+        case 104:
             addPin(8);
             break;
-        case 57 :
-        case 105 :
+        case 57:
+        case 105:
             addPin(9);
             break;
+        // no default
     }
 };
 
-export const initPinView = (payload: $PropertyType<DeviceMessage, 'payload'>): void => {
+export const initPinView = (payload: $PropertyType<DeviceMessage, 'payload'>) => {
     showView('pin');
 
-    const deviceName: HTMLElement = container.getElementsByClassName('device-name')[0];
+    const deviceName = container.getElementsByClassName('device-name')[0];
     const input: HTMLInputElement = (container.getElementsByClassName('pin-input')[0]: any);
-    const enter: HTMLElement = container.getElementsByClassName('submit')[0];
-    const backspace: HTMLElement = container.getElementsByClassName('pin-backspace')[0];
-    const buttons: NodeList<HTMLElement> = container.querySelectorAll('[data-value]');
+    const enter = container.getElementsByClassName('submit')[0];
+    const backspace = container.getElementsByClassName('pin-backspace')[0];
+    const buttons = container.querySelectorAll('[data-value]');
 
     deviceName.innerText = payload.device.label;
 
     for (let i = 0; i < buttons.length; i++) {
         buttons.item(i).addEventListener('click', (event: MouseEvent) => {
             if (event.target instanceof HTMLElement) {
-                const val: ?string = event.target.getAttribute('data-value');
+                const val = event.target.getAttribute('data-value');
                 if (val) {
                     addPin(+val);
                 }
@@ -119,7 +120,7 @@ export const initPinView = (payload: $PropertyType<DeviceMessage, 'payload'>): v
 
     backspace.addEventListener('click', backspacePin);
 
-    enter.addEventListener('click', (event: MouseEvent) => {
+    enter.addEventListener('click', () => {
         if (input.value.length > 0) {
             window.removeEventListener('keydown', pinKeyboardHandler, false);
 

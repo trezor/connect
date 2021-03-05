@@ -1,37 +1,39 @@
 /* @flow */
 import BigNumber from 'bignumber.js';
 import { buildTx } from 'hd-wallet';
+import type { UtxoInfo, BuildTxOutputRequest, BuildTxResult } from 'hd-wallet';
 
 import Fees from './Fees';
 import BlockchainLink from '../../../backend/BlockchainLink';
 import { getHDPath } from '../../../utils/pathUtils';
 
-import type {
-    UtxoInfo,
-    BuildTxOutputRequest,
-    BuildTxResult,
-} from 'hd-wallet';
-
 import type { BitcoinNetworkInfo } from '../../../types';
 import type { DiscoveryAccount, AccountUtxo, SelectFeeLevel } from '../../../types/account';
 
 type Options = {
-    account: DiscoveryAccount;
-    utxo: AccountUtxo[];
-    outputs: BuildTxOutputRequest[];
-    coinInfo: BitcoinNetworkInfo;
-    baseFee?: number;
-}
+    account: DiscoveryAccount,
+    utxo: AccountUtxo[],
+    outputs: BuildTxOutputRequest[],
+    coinInfo: BitcoinNetworkInfo,
+    baseFee?: number,
+};
 
 export default class TransactionComposer {
     account: DiscoveryAccount;
+
     utxos: UtxoInfo[];
+
     outputs: BuildTxOutputRequest[];
+
     coinInfo: BitcoinNetworkInfo;
+
     blockHeight: number = 0;
+
     baseFee: number;
+
     feeLevels: Fees;
-    composed: {[key: string]: BuildTxResult} = {};
+
+    composed: { [key: string]: BuildTxResult } = {};
 
     constructor(options: Options) {
         this.account = options.account;
@@ -43,7 +45,12 @@ export default class TransactionComposer {
 
         // map to hd-wallet/buildTx format
         const { addresses } = options.account;
-        const allAddresses: string[] = !addresses ? [] : addresses.used.concat(addresses.unused).concat(addresses.change).map(a => a.address);
+        const allAddresses: string[] = !addresses
+            ? []
+            : addresses.used
+                  .concat(addresses.unused)
+                  .concat(addresses.change)
+                  .map(a => a.address);
         this.utxos = options.utxo.map(u => {
             const addressPath = getHDPath(u.path);
             return {
@@ -74,7 +81,7 @@ export default class TransactionComposer {
 
         this.composed = {};
         let atLeastOneValid = false;
-        for (const level of levels) {
+        levels.forEach(level => {
             if (level.feePerUnit !== '0') {
                 const tx = this.compose(level.feePerUnit);
                 if (tx.type === 'final') {
@@ -82,18 +89,18 @@ export default class TransactionComposer {
                 }
                 this.composed[level.label] = tx;
             }
-        }
+        });
 
         if (!atLeastOneValid) {
             const lastLevel = levels[levels.length - 1];
             let lastFee = new BigNumber(lastLevel.feePerUnit);
-            while (lastFee.gt(this.coinInfo.minFee) && this.composed['custom'] === undefined) {
+            while (lastFee.gt(this.coinInfo.minFee) && this.composed.custom === undefined) {
                 lastFee = lastFee.minus(1);
 
                 const tx = this.compose(lastFee.toString());
                 if (tx.type === 'final') {
                     this.feeLevels.updateCustomFee(lastFee.toString());
-                    this.composed['custom'] = tx;
+                    this.composed.custom = tx;
                     return true;
                 }
             }
@@ -106,7 +113,7 @@ export default class TransactionComposer {
 
     composeCustomFee(fee: string) {
         const tx = this.compose(fee);
-        this.composed['custom'] = tx;
+        this.composed.custom = tx;
         if (tx.type === 'final') {
             this.feeLevels.updateCustomFee(tx.feePerByte);
         } else {
@@ -143,7 +150,9 @@ export default class TransactionComposer {
         const { addresses } = account;
         if (!addresses) return { type: 'error', error: 'ADDRESSES-NOT-SET' };
         // find not used change address or fallback to the last in the list
-        const changeAddress = addresses.change.find(a => a.transfers < 1) || addresses.change[addresses.change.length - 1];
+        const changeAddress =
+            addresses.change.find(a => a.transfers < 1) ||
+            addresses.change[addresses.change.length - 1];
         const changeId = getHDPath(changeAddress.path).slice(-1)[0]; // get address id from the path
         // const inputAmounts = coinInfo.segwit || coinInfo.forkid !== null || coinInfo.network.consensusBranchId !== null;
 

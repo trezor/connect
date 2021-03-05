@@ -7,9 +7,9 @@ import styles from '../../styles/webusb.less';
 import type { Config } from '../data/DataManager';
 
 // handle message received from connect.js
-const handleMessage = async (event: MessageEvent): Promise<void> => {
+const handleMessage = async (event: MessageEvent) => {
     if (!event.data) return;
-    const data: any = event.data;
+    const { data } = event;
 
     const exists = document.getElementsByTagName('button');
     if (exists && exists.length > 0) {
@@ -17,38 +17,38 @@ const handleMessage = async (event: MessageEvent): Promise<void> => {
     }
 
     const config: Config = await httpRequest('./data/config.json', 'json');
-    const filters = config.webusb.map(desc => {
-        return {
-            vendorId: parseInt(desc.vendorId),
-            productId: parseInt(desc.productId),
-        };
-    });
+    const filters = config.webusb.map(desc => ({
+        vendorId: parseInt(desc.vendorId, 10),
+        productId: parseInt(desc.productId, 10),
+    }));
 
     const button = document.createElement('button');
 
-    if (data.style) {
-        const css: {[k: string]: string} = JSON.parse(data.style);
-        for (const key of Object.keys(css)) {
+    if (typeof data.style === 'string') {
+        const css: { [k: string]: string } = JSON.parse(data.style);
+        Object.keys(css).forEach(key => {
             if (Object.prototype.hasOwnProperty.call(button.style, key)) {
                 button.style.setProperty(key, css[key]);
             }
-        }
+        });
     } else {
         button.className = 'default';
     }
 
     button.onclick = async () => {
-        const usb = navigator.usb;
+        const { usb } = navigator;
         if (usb) {
             try {
-                await usb.requestDevice({filters});
+                await usb.requestDevice({ filters });
             } catch (error) {
                 // empty
             }
         }
     };
 
-    if (document.body) { document.body.append(button); }
+    if (document.body) {
+        document.body.append(button);
+    }
 };
 
 window.addEventListener('message', handleMessage);

@@ -8,7 +8,7 @@ import { getCoinInfo } from '../../data/CoinInfo';
 import type { CoreMessage, CoinInfo } from '../../types';
 
 type Params = {
-    coinInfo: CoinInfo;
+    coinInfo: CoinInfo,
 };
 
 export default class GetCoinInfo extends AbstractMethod {
@@ -22,9 +22,7 @@ export default class GetCoinInfo extends AbstractMethod {
 
         const { payload } = message;
 
-        validateParams(payload, [
-            { name: 'coin', type: 'string', obligatory: true },
-        ]);
+        validateParams(payload, [{ name: 'coin', type: 'string', obligatory: true }]);
 
         const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {

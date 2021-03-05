@@ -4,7 +4,16 @@ import EventEmitter from 'events';
 import DataManager from '../data/DataManager';
 import DeviceList from '../device/DeviceList';
 
-import { CORE_EVENT, RESPONSE_EVENT, TRANSPORT, DEVICE, POPUP, UI, IFRAME, ERRORS } from '../constants';
+import {
+    CORE_EVENT,
+    RESPONSE_EVENT,
+    TRANSPORT,
+    DEVICE,
+    POPUP,
+    UI,
+    IFRAME,
+    ERRORS,
+} from '../constants';
 
 import { UiMessage, DeviceMessage, TransportMessage, ResponseMessage } from '../message/builder';
 
@@ -17,15 +26,22 @@ import { initLog } from '../utils/debug';
 import InteractionTimeout from '../utils/interactionTimeout';
 
 import type { IDevice } from '../device/Device';
-import type { ConnectSettings, Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse, TransportInfo } from '../types';
+import type {
+    ConnectSettings,
+    Device as DeviceTyped,
+    Deferred,
+    CoreMessage,
+    UiPromiseResponse,
+    TransportInfo,
+} from '../types';
 
 // Public variables
 // eslint-disable-next-line no-use-before-define
 let _core: Core; // Class with event emitter
 let _deviceList: ?DeviceList; // Instance of DeviceList
 let _popupPromise: ?Deferred<void>; // Waiting for popup handshake
-let _uiPromises: Array<Deferred<UiPromiseResponse>> = []; // Waiting for ui response
-const _callMethods: Array<AbstractMethod> = [];
+let _uiPromises: Deferred<UiPromiseResponse>[] = []; // Waiting for ui response
+const _callMethods: AbstractMethod[] = [];
 let _preferredDevice: any; // TODO: type
 let _interactionTimeout: InteractionTimeout;
 
@@ -39,10 +55,14 @@ const _log = initLog('Core');
  * @returns {void}
  * @memberof Core
  */
-const postMessage = (message: CoreMessage): void => {
+const postMessage = (message: CoreMessage) => {
     if (message.event === RESPONSE_EVENT) {
-        const index: number = _callMethods.findIndex(call => call && call.responseID === message.id);
-        if (index >= 0) { _callMethods.splice(index, 1); }
+        const index: number = _callMethods.findIndex(
+            call => call && call.responseID === message.id,
+        );
+        if (index >= 0) {
+            _callMethods.splice(index, 1);
+        }
     }
     _core.emit(CORE_EVENT, message);
 };
@@ -51,33 +71,38 @@ const postMessage = (message: CoreMessage): void => {
  * Creates an instance of _popupPromise.
  * If Core is used without popup this promise should be always resolved automatically
  * @param {boolean} requestWindow
- * @returns {Promise<void>}
+ * @returns {Deferred<void>}
  * @memberof Core
  */
-const getPopupPromise = (requestWindow: boolean = true): Deferred<void> => {
+const getPopupPromise = (requestWindow: boolean = true) => {
     // request ui window (used with modal)
-    if (requestWindow) { postMessage(UiMessage(UI.REQUEST_UI_WINDOW)); }
-    if (!_popupPromise) { _popupPromise = createDeferred(); }
+    if (requestWindow) {
+        postMessage(UiMessage(UI.REQUEST_UI_WINDOW));
+    }
+    if (!_popupPromise) {
+        _popupPromise = createDeferred();
+    }
     return _popupPromise;
 };
 
 /**
  * Start interaction timeout timer
  */
-const interactionTimeout = () => _interactionTimeout.start(() => {
-    // eslint-disable-next-line no-use-before-define
-    onPopupClosed('Interaction timeout');
-});
+const interactionTimeout = () =>
+    _interactionTimeout.start(() => {
+        // eslint-disable-next-line no-use-before-define
+        onPopupClosed('Interaction timeout');
+    });
 
 /**
  * Creates an instance of uiPromise.
  * @param {string} promiseEvent
  * @param {IDevice} device
- * @returns {Promise<UiPromiseResponse>}
+ * @returns {Deferred<UiPromiseResponse>}
  * @memberof Core
  */
-const createUiPromise = (promiseEvent: string, device?: IDevice): Deferred<UiPromiseResponse> => {
-    const uiPromise: Deferred<UiPromiseResponse> = createDeferred(promiseEvent, device);
+const createUiPromise = (promiseEvent: string, device?: IDevice) => {
+    const uiPromise = createDeferred<UiPromiseResponse>(promiseEvent, device);
     _uiPromises.push(uiPromise);
 
     // Interaction timeout
@@ -90,14 +115,13 @@ const createUiPromise = (promiseEvent: string, device?: IDevice): Deferred<UiPro
  * Finds an instance of uiPromise.
  * @param {number} callId
  * @param {string} promiseEvent
- * @returns {Promise<UiPromiseResponse>}
+ * @returns {Deferred<UiPromiseResponse> | void}
  * @memberof Core
  */
-const findUiPromise = (callId: number, promiseEvent: string): ?Deferred<UiPromiseResponse> => {
-    return _uiPromises.find(p => p.id === promiseEvent);
-};
+const findUiPromise = (callId: number, promiseEvent: string) =>
+    _uiPromises.find(p => p.id === promiseEvent);
 
-const removeUiPromise = (promise: Deferred<UiPromiseResponse>): void => {
+const removeUiPromise = (promise: Deferred<UiPromiseResponse>) => {
     _uiPromises = _uiPromises.filter(p => p !== promise);
 };
 
@@ -108,10 +132,10 @@ const removeUiPromise = (promise: Deferred<UiPromiseResponse>): void => {
  * @returns {void}
  * @memberof Core
  */
-export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = false): void => {
+export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = false) => {
     _log.log('handle message in core', isTrustedOrigin, message);
 
-    const safeMessages: Array<string> = [
+    const safeMessages = [
         IFRAME.CALL,
         POPUP.CLOSED,
         // UI.CHANGE_SETTINGS,
@@ -125,37 +149,37 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
     }
 
     switch (message.type) {
-        case POPUP.HANDSHAKE :
+        case POPUP.HANDSHAKE:
             getPopupPromise(false).resolve();
             break;
-        case POPUP.CLOSED :
+        case POPUP.CLOSED:
             // eslint-disable-next-line no-use-before-define
             onPopupClosed(message.payload ? message.payload.error : null);
             break;
 
-            // case UI.CHANGE_SETTINGS :
-            //     enableLog(parseSettings(message.payload).debug);
-            //     break;
+        // case UI.CHANGE_SETTINGS :
+        //     enableLog(parseSettings(message.payload).debug);
+        //     break;
 
-        case TRANSPORT.DISABLE_WEBUSB :
+        case TRANSPORT.DISABLE_WEBUSB:
             // eslint-disable-next-line no-use-before-define
             disableWebUSBTransport();
             break;
 
         // messages from UI (popup/modal...)
-        case UI.RECEIVE_DEVICE :
-        case UI.RECEIVE_CONFIRMATION :
-        case UI.RECEIVE_PERMISSION :
-        case UI.RECEIVE_PIN :
-        case UI.RECEIVE_PASSPHRASE :
-        case UI.INVALID_PASSPHRASE_ACTION :
-        case UI.RECEIVE_ACCOUNT :
-        case UI.CHANGE_ACCOUNT :
-        case UI.RECEIVE_FEE :
-        case UI.CUSTOM_MESSAGE_RESPONSE :
+        case UI.RECEIVE_DEVICE:
+        case UI.RECEIVE_CONFIRMATION:
+        case UI.RECEIVE_PERMISSION:
+        case UI.RECEIVE_PIN:
+        case UI.RECEIVE_PASSPHRASE:
+        case UI.INVALID_PASSPHRASE_ACTION:
+        case UI.RECEIVE_ACCOUNT:
+        case UI.CHANGE_ACCOUNT:
+        case UI.RECEIVE_FEE:
+        case UI.CUSTOM_MESSAGE_RESPONSE:
         case UI.RECEIVE_WORD:
-        case UI.LOGIN_CHALLENGE_RESPONSE : {
-            const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, message.type);
+        case UI.LOGIN_CHALLENGE_RESPONSE: {
+            const uiPromise = findUiPromise(0, message.type);
             if (uiPromise) {
                 uiPromise.resolve({ event: message.type, payload: message.payload });
                 removeUiPromise(uiPromise);
@@ -164,12 +188,14 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
         }
 
         // message from index
-        case IFRAME.CALL :
+        case IFRAME.CALL:
             // eslint-disable-next-line no-use-before-define
             onCall(message).catch(error => {
                 _log.debug('onCall error', error);
             });
             break;
+
+        // no default
     }
 };
 
@@ -215,15 +241,17 @@ const initDevice = async (method: AbstractMethod) => {
                 device = _deviceList.getDevice(selectedDevicePath);
             } else {
                 // request select device view
-                postMessage(UiMessage(UI.SELECT_DEVICE, {
-                    webusb: isWebUsb,
-                    devices: _deviceList.asArray(),
-                }));
+                postMessage(
+                    UiMessage(UI.SELECT_DEVICE, {
+                        webusb: isWebUsb,
+                        devices: _deviceList.asArray(),
+                    }),
+                );
 
                 // wait for device selection
-                const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(method.responseID, UI.RECEIVE_DEVICE);
+                const uiPromise = findUiPromise(method.responseID, UI.RECEIVE_DEVICE);
                 if (uiPromise) {
-                    const uiResp: UiPromiseResponse = await uiPromise.promise;
+                    const uiResp = await uiPromise.promise;
                     if (uiResp.payload.remember) {
                         if (!uiResp.payload.device.state) {
                             delete uiResp.payload.device.state;
@@ -252,7 +280,10 @@ const initDevice = async (method: AbstractMethod) => {
  */
 export const onCall = async (message: CoreMessage) => {
     if (!message.id || !message.payload) {
-        throw ERRORS.TypedError('Method_InvalidParameter', 'onCall: message.id or message.payload is missing');
+        throw ERRORS.TypedError(
+            'Method_InvalidParameter',
+            'onCall: message.id or message.payload is missing',
+        );
     }
 
     const responseID = message.id;
@@ -307,9 +338,15 @@ export const onCall = async (message: CoreMessage) => {
         await initTransport(DataManager.getSettings());
     }
 
-    if (isUsingPopup && method.requiredPermissions.includes('management') && !DataManager.isManagementAllowed()) {
+    if (
+        isUsingPopup &&
+        method.requiredPermissions.includes('management') &&
+        !DataManager.isManagementAllowed()
+    ) {
         postMessage(UiMessage(POPUP.CANCEL_POPUP_REQUEST));
-        postMessage(ResponseMessage(responseID, false, { error: ERRORS.TypedError('Method_NotAllowed') }));
+        postMessage(
+            ResponseMessage(responseID, false, { error: ERRORS.TypedError('Method_NotAllowed') }),
+        );
         return Promise.resolve();
     }
 
@@ -348,10 +385,14 @@ export const onCall = async (message: CoreMessage) => {
     }
 
     // find pending calls to this device
-    const previousCall: Array<AbstractMethod> = _callMethods.filter(call => call && call !== method && call.devicePath === method.devicePath);
+    const previousCall = _callMethods.filter(
+        call => call && call !== method && call.devicePath === method.devicePath,
+    );
     if (previousCall.length > 0 && method.overridePreviousCall) {
         // set flag for each pending method
-        previousCall.forEach(call => { call.overridden = true; });
+        previousCall.forEach(call => {
+            call.overridden = true;
+        });
         // interrupt potential communication with device. this should throw error in try/catch block below
         // this error will apply to the last item of pending methods
         const overrideError = ERRORS.TypedError('Method_Override');
@@ -371,7 +412,11 @@ export const onCall = async (message: CoreMessage) => {
         } else {
             // cancel popup request
             // postMessage(UiMessage(POPUP.CANCEL_POPUP_REQUEST));
-            postMessage(ResponseMessage(responseID, false, { error: ERRORS.TypedError('Device_CallInProgress') }));
+            postMessage(
+                ResponseMessage(responseID, false, {
+                    error: ERRORS.TypedError('Device_CallInProgress'),
+                }),
+            );
             throw ERRORS.TypedError('Device_CallInProgress');
         }
     }
@@ -386,14 +431,19 @@ export const onCall = async (message: CoreMessage) => {
     // device is available
     // set public variables, listeners and run method
     /* eslint-disable no-use-before-define */
-    device.on(DEVICE.BUTTON, (device, code) => {
-        onDeviceButtonHandler(device, code, method);
+    device.on(DEVICE.BUTTON, (d, code) => {
+        onDeviceButtonHandler(d, code, method);
     });
     device.on(DEVICE.PIN, onDevicePinHandler);
     device.on(DEVICE.WORD, onDeviceWordHandler);
-    device.on(DEVICE.PASSPHRASE, method.useEmptyPassphrase ? onEmptyPassphraseHandler : onDevicePassphraseHandler);
+    device.on(
+        DEVICE.PASSPHRASE,
+        method.useEmptyPassphrase ? onEmptyPassphraseHandler : onDevicePassphraseHandler,
+    );
     device.on(DEVICE.PASSPHRASE_ON_DEVICE, () => {
-        postMessage(UiMessage(UI.REQUEST_PASSPHRASE_ON_DEVICE, { device: device.toMessageObject() }));
+        postMessage(
+            UiMessage(UI.REQUEST_PASSPHRASE_ON_DEVICE, { device: device.toMessageObject() }),
+        );
     });
     /* eslint-enable no-use-before-define */
 
@@ -403,10 +453,10 @@ export const onCall = async (message: CoreMessage) => {
     }
 
     try {
-        let PIN_TRIES: number = 1;
-        const MAX_PIN_TRIES: number = 3;
+        let PIN_TRIES = 1;
+        const MAX_PIN_TRIES = 3;
         // This function will run inside Device.run() after device will be acquired and initialized
-        const inner = async (): Promise<void> => {
+        const inner = async () => {
             const firmwareException = await method.checkFirmwareRange(isUsingPopup);
             if (firmwareException) {
                 if (isUsingPopup) {
@@ -418,14 +468,16 @@ export const onCall = async (message: CoreMessage) => {
                     await createUiPromise(DEVICE.DISCONNECT, device).promise;
                     // interrupt process and go to "final" block
                     return Promise.reject(ERRORS.TypedError('Method_Cancel'));
-                } else {
-                    // return error if not using popup
-                    return Promise.reject(ERRORS.TypedError('Device_FwException', firmwareException));
                 }
+                // return error if not using popup
+                return Promise.reject(ERRORS.TypedError('Device_FwException', firmwareException));
             }
 
             // check if device is in unexpected mode [bootloader, not-initialized, required firmware]
-            const unexpectedMode = device.hasUnexpectedMode(method.allowDeviceMode, method.requireDeviceMode);
+            const unexpectedMode = device.hasUnexpectedMode(
+                method.allowDeviceMode,
+                method.requireDeviceMode,
+            );
             if (unexpectedMode) {
                 device.keepSession = false;
                 if (isUsingPopup) {
@@ -437,11 +489,12 @@ export const onCall = async (message: CoreMessage) => {
                     // wait for device disconnect
                     await createUiPromise(DEVICE.DISCONNECT, device).promise;
                     // interrupt process and go to "final" block
-                    return Promise.reject(ERRORS.TypedError('Device_ModeException', unexpectedMode));
-                } else {
-                    // throw error if not using popup
-                    return Promise.reject(ERRORS.TypedError('Device_ModeException', unexpectedMode));
+                    return Promise.reject(
+                        ERRORS.TypedError('Device_ModeException', unexpectedMode),
+                    );
                 }
+                // throw error if not using popup
+                return Promise.reject(ERRORS.TypedError('Device_ModeException', unexpectedMode));
             }
 
             // check and request permissions [read, write...]
@@ -496,45 +549,48 @@ export const onCall = async (message: CoreMessage) => {
 
             // Make sure that device will display pin/passphrase
             try {
-                const invalidDeviceState = method.useDeviceState ? await device.validateState(method.network) : undefined;
+                const invalidDeviceState = method.useDeviceState
+                    ? await device.validateState(method.network)
+                    : undefined;
                 if (invalidDeviceState) {
                     if (isUsingPopup) {
                         // initialize user response promise
                         const uiPromise = createUiPromise(UI.INVALID_PASSPHRASE_ACTION, device);
                         // request action view
-                        postMessage(UiMessage(UI.INVALID_PASSPHRASE, { device: device.toMessageObject() }));
+                        postMessage(
+                            UiMessage(UI.INVALID_PASSPHRASE, { device: device.toMessageObject() }),
+                        );
                         // wait for user response
-                        const uiResp: UiPromiseResponse = await uiPromise.promise;
-                        const resp: boolean = uiResp.payload;
-                        if (resp) {
+                        const uiResp = await uiPromise.promise;
+                        if (uiResp.payload) {
                             // reset internal device state and try again
                             device.setInternalState(undefined);
                             await device.initialize(method.useEmptyPassphrase);
                             return inner();
-                        } else {
-                            // set new state as requested
-                            device.setExternalState(invalidDeviceState);
                         }
+                        // set new state as requested
+                        device.setExternalState(invalidDeviceState);
                     } else {
                         throw ERRORS.TypedError('Device_InvalidState');
                     }
                 }
             } catch (error) {
                 // catch wrong pin error
-                if (error.message === ERRORS.INVALID_PIN_ERROR_MESSAGE && PIN_TRIES < MAX_PIN_TRIES) {
+                if (
+                    error.message === ERRORS.INVALID_PIN_ERROR_MESSAGE &&
+                    PIN_TRIES < MAX_PIN_TRIES
+                ) {
                     PIN_TRIES++;
                     postMessage(UiMessage(UI.INVALID_PIN, { device: device.toMessageObject() }));
                     return inner();
-                } else {
-                    // other error
-                    // postMessage(ResponseMessage(method.responseID, false, { error }));
-                    // eslint-disable-next-line no-use-before-define
-                    // closePopup();
-                    // clear cached passphrase. it's not valid
-                    device.setInternalState(undefined);
-                    // interrupt process and go to "final" block
-                    return Promise.reject(error);
                 }
+                // other error
+                // postMessage(ResponseMessage(method.responseID, false, { error }));
+                // closePopup();
+                // clear cached passphrase. it's not valid
+                device.setInternalState(undefined);
+                // interrupt process and go to "final" block
+                return Promise.reject(error);
             }
 
             if (method.useUi) {
@@ -552,7 +608,7 @@ export const onCall = async (message: CoreMessage) => {
                 if (_deviceList && customMessages) {
                     await _deviceList.reconfigure(customMessages, true);
                 }
-                const response: Object = await method.run();
+                const response = await method.run();
                 messageResponse = ResponseMessage(method.responseID, true, response);
             } catch (error) {
                 return Promise.reject(error);
@@ -615,7 +671,7 @@ export const onCall = async (message: CoreMessage) => {
  * @returns {void}
  * @memberof Core
  */
-const cleanup = (): void => {
+const cleanup = () => {
     // closePopup(); // this causes problem when action is interrupted (example: bootloader mode)
     _popupPromise = null;
     _uiPromises = []; // TODO: remove only promises with params callId
@@ -628,7 +684,7 @@ const cleanup = (): void => {
  * @returns {void}
  * @memberof Core
  */
-const closePopup = (): void => {
+const closePopup = () => {
     if (_popupPromise) {
         postMessage(UiMessage(POPUP.CANCEL_POPUP_REQUEST));
     }
@@ -642,18 +698,21 @@ const closePopup = (): void => {
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onDeviceButtonHandler = async (device: IDevice, code: string, method: AbstractMethod): Promise<void> => {
+const onDeviceButtonHandler = async (device: IDevice, code: string, method: AbstractMethod) => {
     // wait for popup handshake
     const addressRequest = code === 'ButtonRequest_Address';
     if (!addressRequest || (addressRequest && method.useUi)) {
         await getPopupPromise().promise;
     }
-    const data = typeof method.getButtonRequestData === 'function' ? method.getButtonRequestData(code) : null;
+    const data =
+        typeof method.getButtonRequestData === 'function'
+            ? method.getButtonRequestData(code)
+            : null;
     // interaction timeout
     interactionTimeout();
     // request view
-    postMessage(DeviceMessage(DEVICE.BUTTON, { device: device.toMessageObject(), code: code }));
-    postMessage(UiMessage(UI.REQUEST_BUTTON, { device: device.toMessageObject(), code: code, data }));
+    postMessage(DeviceMessage(DEVICE.BUTTON, { device: device.toMessageObject(), code }));
+    postMessage(UiMessage(UI.REQUEST_BUTTON, { device: device.toMessageObject(), code, data }));
     if (addressRequest && !method.useUi) {
         postMessage(UiMessage(UI.ADDRESS_VALIDATION, data));
     }
@@ -667,7 +726,11 @@ const onDeviceButtonHandler = async (device: IDevice, code: string, method: Abst
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onDevicePinHandler = async (device: IDevice, type: string, callback: (error: any, success: any) => void): Promise<void> => {
+const onDevicePinHandler = async (
+    device: IDevice,
+    type: string,
+    callback: (error: any, success: any) => void,
+) => {
     // wait for popup handshake
     await getPopupPromise().promise;
     // create ui promise
@@ -676,12 +739,15 @@ const onDevicePinHandler = async (device: IDevice, type: string, callback: (erro
     postMessage(UiMessage(UI.REQUEST_PIN, { device: device.toMessageObject(), type }));
     // wait for pin
     const uiResp = await uiPromise.promise;
-    const pin: string = uiResp.payload;
     // callback.apply(null, [null, pin]);
-    callback(null, pin);
+    callback(null, uiResp.payload);
 };
 
-const onDeviceWordHandler = async (device: IDevice, type: string, callback: (error: any, success: any) => void): Promise<void> => {
+const onDeviceWordHandler = async (
+    device: IDevice,
+    type: string,
+    callback: (error: any, success: any) => void,
+) => {
     // wait for popup handshake
     await getPopupPromise().promise;
     // create ui promise
@@ -689,9 +755,7 @@ const onDeviceWordHandler = async (device: IDevice, type: string, callback: (err
     postMessage(UiMessage(UI.REQUEST_WORD, { device: device.toMessageObject(), type }));
     // wait for word
     const uiResp = await uiPromise.promise;
-    const word: string = uiResp.payload;
-
-    callback(null, word);
+    callback(null, uiResp.payload);
 };
 
 /**
@@ -710,14 +774,12 @@ const onDevicePassphraseHandler = async (device: IDevice, callback: (response: a
     postMessage(UiMessage(UI.REQUEST_PASSPHRASE, { device: device.toMessageObject() }));
     // wait for passphrase
     const uiResp = await uiPromise.promise;
-    const passphrase: string = uiResp.payload.value;
-    const passphraseOnDevice: boolean = uiResp.payload.passphraseOnDevice;
-    const cache: boolean = uiResp.payload.save;
+    const { value, passphraseOnDevice, save } = uiResp.payload;
     // send as PassphrasePromptResponse
     callback({
-        passphrase: passphrase.normalize('NFKD'),
+        passphrase: value.normalize('NFKD'),
         passphraseOnDevice,
-        cache,
+        cache: save,
     });
 };
 
@@ -738,8 +800,10 @@ const onEmptyPassphraseHandler = (device: IDevice, callback: (response: any) => 
  * @returns {void}
  * @memberof Core
  */
-const onPopupClosed = (customErrorMessage: ?string): void => {
-    const error = customErrorMessage ? ERRORS.TypedError('Method_Cancel', customErrorMessage) : ERRORS.TypedError('Method_Interrupted');
+const onPopupClosed = (customErrorMessage: ?string) => {
+    const error = customErrorMessage
+        ? ERRORS.TypedError('Method_Cancel', customErrorMessage)
+        : ERRORS.TypedError('Method_Interrupted');
     // Device was already acquired. Try to interrupt running action which will throw error from onCall try/catch block
     if (_deviceList && _deviceList.asArray().length > 0) {
         _deviceList.allDevices().forEach(d => {
@@ -747,7 +811,7 @@ const onPopupClosed = (customErrorMessage: ?string): void => {
             if (d.isUsedHere()) {
                 d.interruptionFromUser(error);
             } else {
-                const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, DEVICE.DISCONNECT);
+                const uiPromise = findUiPromise(0, DEVICE.DISCONNECT);
                 if (uiPromise) {
                     uiPromise.resolve({ event: error.message, payload: null });
                 } else {
@@ -759,7 +823,7 @@ const onPopupClosed = (customErrorMessage: ?string): void => {
             }
         });
         cleanup();
-    // Waiting for device. Throw error before onCall try/catch block
+        // Waiting for device. Throw error before onCall try/catch block
     } else {
         if (_uiPromises.length > 0) {
             _uiPromises.forEach(p => {
@@ -783,11 +847,11 @@ const onPopupClosed = (customErrorMessage: ?string): void => {
  * @returns {void}
  * @memberof Core
  */
-const handleDeviceSelectionChanges = (interruptDevice: ?DeviceTyped = null): void => {
+const handleDeviceSelectionChanges = (interruptDevice: ?DeviceTyped = null) => {
     // update list of devices in popup
-    const uiPromise: ?Deferred<UiPromiseResponse> = findUiPromise(0, UI.RECEIVE_DEVICE);
+    const uiPromise = findUiPromise(0, UI.RECEIVE_DEVICE);
     if (uiPromise && _deviceList) {
-        const list: Array<Object> = _deviceList.asArray();
+        const list = _deviceList.asArray();
         const isWebUsb = _deviceList.transportType().indexOf('webusb') >= 0;
 
         if (list.length === 1 && !isWebUsb) {
@@ -797,18 +861,20 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceTyped = null): voi
             removeUiPromise(uiPromise);
         } else {
             // update device selection list view
-            postMessage(UiMessage(UI.SELECT_DEVICE, {
-                webusb: isWebUsb,
-                devices: list,
-            }));
+            postMessage(
+                UiMessage(UI.SELECT_DEVICE, {
+                    webusb: isWebUsb,
+                    devices: list,
+                }),
+            );
         }
     }
 
     // device was disconnected, interrupt pending uiPromises for this device
     if (interruptDevice) {
-        const path: string = interruptDevice.path;
-        let shouldClosePopup: boolean = false;
-        _uiPromises.forEach((p: Deferred<UiPromiseResponse>) => {
+        const { path } = interruptDevice;
+        let shouldClosePopup = false;
+        _uiPromises.forEach(p => {
             if (p.device && p.device.getDevicePath() === path) {
                 if (p.id === DEVICE.DISCONNECT) {
                     p.resolve({ event: DEVICE.DISCONNECT, payload: null });
@@ -834,7 +900,7 @@ const handleDeviceSelectionChanges = (interruptDevice: ?DeviceTyped = null): voi
  * @returns {Promise<void>}
  * @memberof Core
  */
-const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
+const initDeviceList = async (settings: ConnectSettings) => {
     try {
         _deviceList = new DeviceList();
 
@@ -857,7 +923,7 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
             postMessage(DeviceMessage(DEVICE.CHANGED, device));
         });
 
-        _deviceList.on(TRANSPORT.ERROR, async (error) => {
+        _deviceList.on(TRANSPORT.ERROR, async error => {
             _log.error('TRANSPORT ERROR', error);
             if (_deviceList) {
                 _deviceList.disconnectDevices();
@@ -874,14 +940,15 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
             }
         });
 
-        _deviceList.on(TRANSPORT.START, transportType => postMessage(TransportMessage(TRANSPORT.START, transportType)));
+        _deviceList.on(TRANSPORT.START, transportType =>
+            postMessage(TransportMessage(TRANSPORT.START, transportType)),
+        );
 
         await _deviceList.init();
         if (_deviceList) {
             await _deviceList.waitForTransportFirstEvent();
         }
     } catch (error) {
-        // eslint-disable-next-line require-atomic-updates
         _deviceList = null;
         postMessage(TransportMessage(TRANSPORT.ERROR, { error }));
         if (!settings.transportReconnect) {
@@ -900,11 +967,7 @@ const initDeviceList = async (settings: ConnectSettings): Promise<void> => {
  * @memberof Core
  */
 export class Core extends EventEmitter {
-    constructor() {
-        super();
-    }
-
-    handleMessage(message: Object, isTrustedOrigin: boolean) {
+    handleMessage(message: any, isTrustedOrigin: boolean) {
         handleMessage(message, isTrustedOrigin);
     }
 
@@ -937,7 +1000,7 @@ export class Core extends EventEmitter {
  * @returns {Core}
  * @memberof Core
  */
-export const initCore = (): Core => {
+export const initCore = () => {
     _core = new Core();
     return _core;
 };
@@ -967,7 +1030,9 @@ export const init = async (settings: ConnectSettings) => {
         await initCore();
 
         // If we're not in popup mode, set the interaction timeout to 0 (= disabled)
-        _interactionTimeout = new InteractionTimeout(settings.popup ? settings.interactionTimeout : 0);
+        _interactionTimeout = new InteractionTimeout(
+            settings.popup ? settings.interactionTimeout : 0,
+        );
 
         return _core;
     } catch (error) {

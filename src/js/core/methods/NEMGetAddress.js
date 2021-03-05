@@ -14,17 +14,20 @@ import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {
     ...$ElementType<MessageType, 'NEMGetAddress'>,
-    address?: string;
+    address?: string,
 };
 
-const MAINNET: number = 0x68; // 104
-const TESTNET: number = 0x98; // 152
-const MIJIN: number = 0x60; // 96
+const MAINNET = 0x68; // 104
+const TESTNET = 0x98; // 152
+const MIJIN = 0x60; // 96
 
 export default class NEMGetAddress extends AbstractMethod {
     params: Params[] = [];
+
     hasBundle: boolean;
+
     progress: number = 0;
+
     confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
@@ -35,7 +38,9 @@ export default class NEMGetAddress extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle
+            ? { ...message.payload, bundle: [message.payload] }
+            : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -66,25 +71,32 @@ export default class NEMGetAddress extends AbstractMethod {
             });
         });
 
-        const useEventListener = payload.useEventListener && this.params.length === 1 && typeof this.params[0].address === 'string' && this.params[0].show_display;
+        const useEventListener =
+            payload.useEventListener &&
+            this.params.length === 1 &&
+            typeof this.params[0].address === 'string' &&
+            this.params[0].show_display;
         this.confirmed = useEventListener;
         this.useUi = !useEventListener;
 
         // set info
         if (this.params.length === 1) {
-            let network: string = 'Unknown';
+            let network = 'Unknown';
             switch (this.params[0].network) {
-                case MAINNET :
+                case MAINNET:
                     network = 'Mainnet';
                     break;
-                case TESTNET :
+                case TESTNET:
                     network = 'Testnet';
                     break;
-                case MIJIN :
+                case MIJIN:
                     network = 'Mijin';
                     break;
+                // no default
             }
-            this.info = `Export NEM address for account #${ (fromHardened(this.params[0].address_n[2]) + 1) } on ${ network } network`;
+            this.info = `Export NEM address for account #${
+                fromHardened(this.params[0].address_n[2]) + 1
+            } on ${network} network`;
         } else {
             this.info = 'Export multiple NEM addresses';
         }
@@ -102,7 +114,7 @@ export default class NEMGetAddress extends AbstractMethod {
         return null;
     }
 
-    async confirmation(): Promise<boolean> {
+    async confirmation() {
         if (this.confirmed) return true;
         // wait for popup window
         await this.getPopupPromise().promise;
@@ -110,10 +122,12 @@ export default class NEMGetAddress extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'export-address',
-            label: this.info,
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'export-address',
+                label: this.info,
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;
@@ -122,27 +136,25 @@ export default class NEMGetAddress extends AbstractMethod {
         return this.confirmed;
     }
 
-    async noBackupConfirmation(): Promise<boolean> {
+    async noBackupConfirmation() {
         // wait for popup window
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'no-backup',
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'no-backup',
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;
         return uiResp.payload;
     }
 
-    async _call({
-        address_n,
-        network,
-        show_display,
-    }: Params) {
+    async _call({ address_n, network, show_display }: Params) {
         const cmd = this.device.getCommands();
         const response = await cmd.typedCall('NEMGetAddress', 'NEMAddress', {
             address_n,
@@ -182,10 +194,12 @@ export default class NEMGetAddress extends AbstractMethod {
 
             if (this.hasBundle) {
                 // send progress
-                this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
-                    progress: i,
-                    response,
-                }));
+                this.postMessage(
+                    UiMessage(UI.BUNDLE_PROGRESS, {
+                        progress: i,
+                        response,
+                    }),
+                );
             }
 
             this.progress++;

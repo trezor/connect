@@ -6,6 +6,7 @@ const _log = initLog('InteractionTimeout');
 
 export default class InteractionTimeout {
     timeout: ?TimeoutID = null;
+
     seconds: number = 0;
 
     constructor(seconds: ?number) {
@@ -29,7 +30,7 @@ export default class InteractionTimeout {
      * @param {number} seconds Optional parameter to override the seconds property
      * @returns {void}
      */
-    start(cancelFn: () => void, seconds: ?number): void {
+    start(cancelFn: () => void, seconds: ?number) {
         const time = seconds || this.seconds;
 
         // Not worth running for less than a second
@@ -51,7 +52,7 @@ export default class InteractionTimeout {
      * Stop the interaction timer
      * @returns {void}
      */
-    stop(): void {
+    stop() {
         if (this.timeout) {
             _log.log('clearing interaction timeout');
             clearTimeout(this.timeout);

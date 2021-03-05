@@ -45,7 +45,7 @@ export const dispose = () => {
 };
 
 // handle message received from iframe
-const handleMessage = (message: $T.CoreMessage): void => {
+const handleMessage = (message: $T.CoreMessage) => {
     const { event, type, payload } = message;
     const id = message.id || 0;
 
@@ -57,7 +57,7 @@ const handleMessage = (message: $T.CoreMessage): void => {
     _log.log('handleMessage', message);
 
     switch (event) {
-        case RESPONSE_EVENT :
+        case RESPONSE_EVENT:
             if (messagePromises[id]) {
                 // resolve message promise (send result of call method)
                 messagePromises[id].resolve({
@@ -71,23 +71,23 @@ const handleMessage = (message: $T.CoreMessage): void => {
             }
             break;
 
-        case DEVICE_EVENT :
+        case DEVICE_EVENT:
             // pass DEVICE event up to html
             eventEmitter.emit(event, message);
             eventEmitter.emit(type, payload); // DEVICE_EVENT also emit single events (connect/disconnect...)
             break;
 
-        case TRANSPORT_EVENT :
+        case TRANSPORT_EVENT:
             eventEmitter.emit(event, message);
             eventEmitter.emit(type, payload);
             break;
 
-        case BLOCKCHAIN_EVENT :
+        case BLOCKCHAIN_EVENT:
             eventEmitter.emit(event, message);
             eventEmitter.emit(type, payload);
             break;
 
-        case UI_EVENT :
+        case UI_EVENT:
             // pass UI event up
             eventEmitter.emit(event, message);
             eventEmitter.emit(type, payload);
@@ -142,7 +142,7 @@ export const init = async (settings: $Shape<$T.ConnectSettings> = {}): Promise<v
     await initTransport(_settings);
 };
 
-export const call = async (params: Object): Promise<Object> => {
+export const call = async (params: any) => {
     if (!_core) {
         _settings = parseSettings({ debug: false, popup: false });
 
@@ -155,51 +155,49 @@ export const call = async (params: Object): Promise<Object> => {
     }
 
     try {
-        const response: ?Object = await postMessage({ type: IFRAME.CALL, payload: params });
+        const response = await postMessage({ type: IFRAME.CALL, payload: params });
         if (response) {
             return response;
-        } else {
-            return errorMessage(ERRORS.TypedError('Method_NoResponse'));
         }
+        return errorMessage(ERRORS.TypedError('Method_NoResponse'));
     } catch (error) {
         _log.error('__call error', error);
         return errorMessage(error);
     }
 };
 
-const customMessageResponse = (payload: ?{ message: string; params?: Object }): void => {
-    _core.handleMessage({
-        event: UI_EVENT,
-        type: UI.CUSTOM_MESSAGE_RESPONSE,
-        payload,
-    }, true);
+const customMessageResponse = (payload: ?{ message: string, params?: any }) => {
+    _core.handleMessage(
+        {
+            event: UI_EVENT,
+            type: UI.CUSTOM_MESSAGE_RESPONSE,
+            payload,
+        },
+        true,
+    );
 };
 
-export const uiResponse = (response: $T.UiResponse): void => {
+export const uiResponse = (response: $T.UiResponse) => {
     const { type, payload } = response;
     _core.handleMessage({ event: UI_EVENT, type, payload }, true);
 };
 
-export const renderWebUSBButton = (className: ?string): void => {
-    // webUSBButton(className, _settings.webusbSrc, iframe.origin);
-};
-
-export const getSettings = async (): $T.Response<$T.ConnectSettings> => {
+export const getSettings = (): $T.Response<$T.ConnectSettings> => {
     if (!_core) {
-        return errorMessage(ERRORS.TypedError('Init_NotInitialized'));
+        return Promise.resolve(errorMessage(ERRORS.TypedError('Init_NotInitialized')));
     }
-    return await call({ method: 'getSettings' });
+    return call({ method: 'getSettings' });
 };
 
-export const customMessage: $PropertyType<$T.API, 'customMessage'> = async (params) => {
+export const customMessage: $PropertyType<$T.API, 'customMessage'> = async params => {
     if (typeof params.callback !== 'function') {
         return errorMessage(ERRORS.TypedError('Method_CustomMessage_Callback'));
     }
 
     // TODO: set message listener only if iframe is loaded correctly
-    const callback = params.callback;
+    const { callback } = params;
     const customMessageListener = async (event: $T.PostMessageEvent) => {
-        const data = event.data;
+        const { data } = event;
         if (data && data.type === UI.CUSTOM_MESSAGE_REQUEST) {
             const payload = await callback(data.payload);
             if (payload) {
@@ -216,47 +214,64 @@ export const customMessage: $PropertyType<$T.API, 'customMessage'> = async (para
     return response;
 };
 
-export const requestLogin: $PropertyType<$T.API, 'requestLogin'> = async (params) => {
+export const requestLogin: $PropertyType<$T.API, 'requestLogin'> = async params => {
     // $FlowIssue: property callback not found
     if (typeof params.callback === 'function') {
-        const callback = params.callback;
+        const { callback } = params;
 
         // TODO: set message listener only if iframe is loaded correctly
         const loginChallengeListener = async (event: $T.PostMessageEvent) => {
-            const data = event.data;
+            const { data } = event;
             if (data && data.type === UI.LOGIN_CHALLENGE_REQUEST) {
                 try {
                     const payload = await callback();
-                    _core.handleMessage({
-                        event: UI_EVENT,
-                        type: UI.LOGIN_CHALLENGE_RESPONSE,
-                        payload,
-                    }, true);
+                    _core.handleMessage(
+                        {
+                            event: UI_EVENT,
+                            type: UI.LOGIN_CHALLENGE_RESPONSE,
+                            payload,
+                        },
+                        true,
+                    );
                 } catch (error) {
-                    _core.handleMessage({
-                        event: UI_EVENT,
-                        type: UI.LOGIN_CHALLENGE_RESPONSE,
-                        payload: error.message,
-                    }, true);
+                    _core.handleMessage(
+                        {
+                            event: UI_EVENT,
+                            type: UI.LOGIN_CHALLENGE_RESPONSE,
+                            payload: error.message,
+                        },
+                        true,
+                    );
                 }
             }
         };
 
         _core.on(CORE_EVENT, loginChallengeListener);
 
-        const response = await call({ method: 'requestLogin', ...params, asyncChallenge: true, callback: null });
+        const response = await call({
+            method: 'requestLogin',
+            ...params,
+            asyncChallenge: true,
+            callback: null,
+        });
         _core.removeListener(CORE_EVENT, loginChallengeListener);
         return response;
-    } else {
-        return await call({ method: 'requestLogin', ...params });
     }
+    return call({ method: 'requestLogin', ...params });
 };
 
 export const cancel = (error?: string) => {
-    postMessage({
-        type: POPUP.CLOSED,
-        payload: error ? { error } : null,
-    }, false);
+    postMessage(
+        {
+            type: POPUP.CLOSED,
+            payload: error ? { error } : null,
+        },
+        false,
+    );
+};
+
+export const renderWebUSBButton = (_className?: string) => {
+    throw ERRORS.TypedError('Method_InvalidPackage');
 };
 
 export const disableWebUSB = () => {

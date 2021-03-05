@@ -18,10 +18,12 @@ const postConfirmationMessage = (device: IDevice) => {
 };
 
 const postProgressMessage = (device, progress, postMessage) => {
-    postMessage(UiMessage(UI.FIRMWARE_PROGRESS, {
-        device: device.toMessageObject(),
-        progress,
-    }));
+    postMessage(
+        UiMessage(UI.FIRMWARE_PROGRESS, {
+            device: device.toMessageObject(),
+            progress,
+        }),
+    );
 };
 
 export const uploadFirmware = async (

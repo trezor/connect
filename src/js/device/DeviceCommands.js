@@ -1,11 +1,19 @@
 /* @flow */
 
-import { DEVICE, ERRORS, NETWORK } from '../constants';
 import randombytes from 'randombytes';
-
 import * as bitcoin from '@trezor/utxo-lib';
+import type { Transport } from 'trezor-link';
+import { DEVICE, ERRORS, NETWORK } from '../constants';
+
 import * as hdnodeUtils from '../utils/hdnode';
-import { isMultisigPath, isSegwitPath, isBech32Path, getSerializedPath, getScriptType, toHardened } from '../utils/pathUtils';
+import {
+    isMultisigPath,
+    isSegwitPath,
+    isBech32Path,
+    getSerializedPath,
+    getScriptType,
+    toHardened,
+} from '../utils/pathUtils';
 import { getAccountAddressN } from '../utils/accountUtils';
 import { toChecksumAddress } from '../utils/ethereumUtils';
 import { resolveAfter } from '../utils/promiseUtils';
@@ -15,24 +23,26 @@ import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
 import type { IDevice } from './Device';
 import type { CoinInfo, BitcoinNetworkInfo, EthereumNetworkInfo, HDNodeResponse } from '../types';
-import type { Transport } from 'trezor-link';
 import * as PROTO from '../types/trezor/protobuf';
 
 export type DefaultMessageResponse = {
-    type: any;
-    message: any; // in general, can be anything
+    type: any,
+    message: any, // in general, can be anything
 };
 
 export type PassphrasePromptResponse = {
-    passphrase?: string;
-    passphraseOnDevice?: boolean;
-    cache?: boolean;
+    passphrase?: string,
+    passphraseOnDevice?: boolean,
+    cache?: boolean,
 };
 
 const assertType = (res: DefaultMessageResponse, resType: string) => {
     const splitResTypes = resType.split('|');
-    if (!(splitResTypes.includes(res.type))) {
-        throw ERRORS.TypedError('Runtime', `assertType: Response of unexpected type: ${res.type}. Should be ${resType}`);
+    if (!splitResTypes.includes(res.type)) {
+        throw ERRORS.TypedError(
+            'Runtime',
+            `assertType: Response of unexpected type: ${res.type}. Should be ${resType}`,
+        );
     }
 };
 
@@ -40,11 +50,14 @@ const generateEntropy = (len: number) => {
     try {
         return randombytes(len);
     } catch (err) {
-        throw ERRORS.TypedError('Runtime', 'generateEntropy: Environment does not support crypto random');
+        throw ERRORS.TypedError(
+            'Runtime',
+            'generateEntropy: Environment does not support crypto random',
+        );
     }
 };
 
-const filterForLog = (type: string, msg: Object) => {
+const filterForLog = (type: string, msg: any) => {
     const blacklist = {
         // PassphraseAck: {
         //     passphrase: '(redacted...)',
@@ -67,26 +80,27 @@ const filterForLog = (type: string, msg: Object) => {
 
     if (type in blacklist) {
         return { ...msg, ...blacklist[type] };
-    } else {
-        return msg;
     }
+    return msg;
 };
 
 export default class DeviceCommands {
     device: IDevice;
+
     transport: Transport;
+
     sessionId: string;
+
     debug: boolean;
+
     disposed: boolean;
+
     callPromise: ?Promise<DefaultMessageResponse>;
+
     // see DeviceCommands.cancel
     _cancelableRequest: ?(error: any) => void;
 
-    constructor(
-        device: IDevice,
-        transport: Transport,
-        sessionId: string
-    ) {
+    constructor(device: IDevice, transport: Transport, sessionId: string) {
         this.device = device;
         this.transport = transport;
         this.sessionId = sessionId;
@@ -146,7 +160,7 @@ export default class DeviceCommands {
             }
         }
 
-        let publicKey;
+        let publicKey: PROTO.PublicKey;
         if (showOnTrezor || !validation) {
             publicKey = await this.getPublicKey(path, coinInfo.name, scriptType, showOnTrezor);
         } else {
@@ -183,7 +197,7 @@ export default class DeviceCommands {
     async getBitcoinHDNode(
         path: number[],
         coinInfo?: ?BitcoinNetworkInfo,
-        validation?: boolean = true
+        validation?: boolean = true,
     ) {
         let publicKey: PROTO.PublicKey;
         if (!validation) {
@@ -201,7 +215,9 @@ export default class DeviceCommands {
             path,
             serializedPath: getSerializedPath(path),
             childNum: publicKey.node.child_num,
-            xpub: coinInfo ? hdnodeUtils.convertBitcoinXpub(publicKey.xpub, coinInfo.network) : publicKey.xpub,
+            xpub: coinInfo
+                ? hdnodeUtils.convertBitcoinXpub(publicKey.xpub, coinInfo.network)
+                : publicKey.xpub,
             chainCode: publicKey.node.chain_code,
             publicKey: publicKey.node.public_key,
             fingerprint: publicKey.node.fingerprint,
@@ -223,12 +239,7 @@ export default class DeviceCommands {
     }
 
     async getAddress(
-        {
-            address_n,
-            show_display,
-            multisig,
-            script_type,
-        }: PROTO.GetAddress,
+        { address_n, show_display, multisig, script_type }: PROTO.GetAddress,
         coinInfo: BitcoinNetworkInfo,
     ) {
         if (!script_type) {
@@ -261,10 +272,7 @@ export default class DeviceCommands {
     }
 
     async ethereumGetAddress(
-        {
-            address_n,
-            show_display,
-        }: PROTO.EthereumGetAddress,
+        { address_n, show_display }: PROTO.EthereumGetAddress,
         network?: EthereumNetworkInfo,
     ) {
         const response = await this.typedCall('EthereumGetAddress', 'EthereumAddress', {
@@ -283,7 +291,7 @@ export default class DeviceCommands {
         show_display,
     }: PROTO.EthereumGetPublicKey): Promise<HDNodeResponse> {
         if (!this.device.atLeast(['1.8.1', '2.1.0'])) {
-            return await this.getHDNode(address_n);
+            return this.getHDNode(address_n);
         }
 
         const suffix = 0;
@@ -316,10 +324,9 @@ export default class DeviceCommands {
     }
 
     // Sends an async message to the opened device.
-    async call(type: PROTO.MessageKey, msg: Object = {}) {
-        const logMessage = filterForLog(type, msg);
-
+    async call(type: PROTO.MessageKey, msg: any = {}) {
         if (this.debug) {
+            const logMessage = filterForLog(type, msg);
             // eslint-disable-next-line no-console
             console.log('[DeviceCommands] [call] Sending', type, logMessage, this.transport);
         }
@@ -346,7 +353,7 @@ export default class DeviceCommands {
     async typedCall<T: PROTO.MessageKey, R: PROTO.MessageKey>(
         type: T,
         resType: R,
-        msg?: $ElementType<PROTO.MessageType, T>
+        msg?: $ElementType<PROTO.MessageType, T>,
     ): Promise<PROTO.MessageResponse<R>> {
         if (this.disposed) {
             throw ERRORS.TypedError('Runtime', 'typedCall: DeviceCommands already disposed');
@@ -370,7 +377,7 @@ export default class DeviceCommands {
         return this._filterCommonTypes(resp);
     }
 
-    _filterCommonTypes(res: DefaultMessageResponse): Promise<DefaultMessageResponse> {
+    _filterCommonTypes(res: DefaultMessageResponse) {
         if (res.type === 'Failure') {
             const { code } = res.message;
             let { message } = res.message;
@@ -404,12 +411,8 @@ export default class DeviceCommands {
 
         if (res.type === 'PinMatrixRequest') {
             return this._promptPin(res.message.type).then(
-                pin => {
-                    return this._commonCall('PinMatrixAck', { pin: pin });
-                },
-                () => {
-                    return this._commonCall('Cancel', {});
-                }
+                pin => this._commonCall('PinMatrixAck', { pin }),
+                () => this._commonCall('Cancel', {}),
             );
         }
 
@@ -435,24 +438,25 @@ export default class DeviceCommands {
                     if (legacyT1) {
                         this.device.setInternalState(cache ? passphrase : undefined);
                         return this._commonCall('PassphraseAck', { passphrase });
-                    } else if (legacy) {
-                        return this._commonCall('PassphraseAck', { passphrase, state });
-                    } else {
-                        return !passphraseOnDevice ? this._commonCall('PassphraseAck', { passphrase }) : this._commonCall('PassphraseAck', { on_device: true });
                     }
+                    if (legacy) {
+                        return this._commonCall('PassphraseAck', { passphrase, state });
+                    }
+                    return !passphraseOnDevice
+                        ? this._commonCall('PassphraseAck', { passphrase })
+                        : this._commonCall('PassphraseAck', { on_device: true });
                 },
-                err => {
-                    return this._commonCall('Cancel', {}).catch(e => {
+                err =>
+                    this._commonCall('Cancel', {}).catch(e => {
                         throw err || e;
-                    });
-                }
+                    }),
             );
         }
 
         // TT fw lower than 2.3.0, device send his current state
         // new passphrase design set this value from `features.session_id`
         if (res.type === 'PassphraseStateRequest') {
-            const state: string = res.message.state;
+            const { state } = res.message;
             this.device.setInternalState(state);
             // $FlowIssue older protobuf messages
             return this._commonCall('PassphraseStateAck', {});
@@ -460,12 +464,8 @@ export default class DeviceCommands {
 
         if (res.type === 'WordRequest') {
             return this._promptWord(res.message.type).then(
-                word => {
-                    return this._commonCall('WordAck', { word: word });
-                },
-                () => {
-                    return this._commonCall('Cancel', {});
-                }
+                word => this._commonCall('WordAck', { word }),
+                () => this._commonCall('Cancel', {}),
             );
         }
 
@@ -487,7 +487,6 @@ export default class DeviceCommands {
                 return message.address;
             }
             default: {
-                // eslint-disable-next-line no-case-declarations
                 const { message } = await this.typedCall('GetAddress', 'Address', {
                     address_n: [toHardened(44), toHardened(1), toHardened(0), 0, 0],
                     coin_name: 'Testnet',
@@ -498,8 +497,8 @@ export default class DeviceCommands {
         }
     }
 
-    _promptPin(type: string): Promise<string> {
-        return new Promise((resolve, reject) => {
+    _promptPin(type: string) {
+        return new Promise<string>((resolve, reject) => {
             if (this.device.listenerCount(DEVICE.PIN) > 0) {
                 this._cancelableRequest = reject;
                 this.device.emit(DEVICE.PIN, this.device, type, (err, pin) => {
@@ -512,34 +511,47 @@ export default class DeviceCommands {
                 });
             } else {
                 // eslint-disable-next-line no-console
-                console.warn('[DeviceCommands] [call] PIN callback not configured, cancelling request');
+                console.warn(
+                    '[DeviceCommands] [call] PIN callback not configured, cancelling request',
+                );
                 reject(ERRORS.TypedError('Runtime', '_promptPin: PIN callback not configured'));
             }
         });
     }
 
-    _promptPassphrase(): Promise<PassphrasePromptResponse> {
-        return new Promise((resolve, reject) => {
+    _promptPassphrase() {
+        return new Promise<PassphrasePromptResponse>((resolve, reject) => {
             if (this.device.listenerCount(DEVICE.PASSPHRASE) > 0) {
                 this._cancelableRequest = reject;
-                this.device.emit(DEVICE.PASSPHRASE, this.device, (response: PassphrasePromptResponse, error?: Error) => {
-                    this._cancelableRequest = undefined;
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve(response);
-                    }
-                });
+                this.device.emit(
+                    DEVICE.PASSPHRASE,
+                    this.device,
+                    (response: PassphrasePromptResponse, error?: Error) => {
+                        this._cancelableRequest = undefined;
+                        if (error) {
+                            reject(error);
+                        } else {
+                            resolve(response);
+                        }
+                    },
+                );
             } else {
                 // eslint-disable-next-line no-console
-                console.warn('[DeviceCommands] [call] Passphrase callback not configured, cancelling request');
-                reject(ERRORS.TypedError('Runtime', '_promptPassphrase: Passphrase callback not configured'));
+                console.warn(
+                    '[DeviceCommands] [call] Passphrase callback not configured, cancelling request',
+                );
+                reject(
+                    ERRORS.TypedError(
+                        'Runtime',
+                        '_promptPassphrase: Passphrase callback not configured',
+                    ),
+                );
             }
         });
     }
 
-    _promptWord(type: string): Promise<string> {
-        return new Promise((resolve, reject) => {
+    _promptWord(type: string) {
+        return new Promise<string>((resolve, reject) => {
             this._cancelableRequest = reject;
             this.device.emit(DEVICE.WORD, this.device, type, (err, word) => {
                 this._cancelableRequest = undefined;
@@ -554,10 +566,13 @@ export default class DeviceCommands {
     // DebugLink messages
 
     async debugLinkDecision(msg: PROTO.DebugLinkDecision) {
-        const session = await this.transport.acquire({
-            path: this.device.originalDescriptor.path,
-            previous: this.device.originalDescriptor.debugSession,
-        }, true);
+        const session = await this.transport.acquire(
+            {
+                path: this.device.originalDescriptor.path,
+                previous: this.device.originalDescriptor.debugSession,
+            },
+            true,
+        );
         await resolveAfter(501, null); // wait for propagation from bridge
 
         await this.transport.post(session, 'DebugLinkDecision', msg, true);
@@ -567,10 +582,13 @@ export default class DeviceCommands {
     }
 
     async debugLinkGetState() {
-        const session = await this.transport.acquire({
-            path: this.device.originalDescriptor.path,
-            previous: this.device.originalDescriptor.debugSession,
-        }, true);
+        const session = await this.transport.acquire(
+            {
+                path: this.device.originalDescriptor.path,
+                previous: this.device.originalDescriptor.debugSession,
+            },
+            true,
+        );
         await resolveAfter(501, null); // wait for propagation from bridge
 
         const response = await this.transport.call(session, 'DebugLinkGetState', {}, true);
@@ -583,8 +601,10 @@ export default class DeviceCommands {
     async getAccountDescriptor(
         coinInfo: CoinInfo,
         indexOrPath: number | number[],
-    ): Promise<?{ descriptor: string; legacyXpub?: string; address_n: number[] }> {
-        const address_n = Array.isArray(indexOrPath) ? indexOrPath : getAccountAddressN(coinInfo, indexOrPath);
+    ): Promise<?{ descriptor: string, legacyXpub?: string, address_n: number[] }> {
+        const address_n = Array.isArray(indexOrPath)
+            ? indexOrPath
+            : getAccountAddressN(coinInfo, indexOrPath);
         if (coinInfo.type === 'bitcoin') {
             const resp = await this.getHDNode(address_n, coinInfo, false);
             return {
@@ -592,21 +612,23 @@ export default class DeviceCommands {
                 legacyXpub: resp.xpub,
                 address_n,
             };
-        } else if (coinInfo.type === 'ethereum') {
+        }
+        if (coinInfo.type === 'ethereum') {
             const resp = await this.ethereumGetAddress({ address_n }, coinInfo);
             return {
                 descriptor: resp.address,
                 address_n,
             };
-        } else if (coinInfo.shortcut === 'XRP' || coinInfo.shortcut === 'tXRP') {
-            const { message } = await this.typedCall('RippleGetAddress', 'RippleAddress', { address_n });
+        }
+        if (coinInfo.shortcut === 'XRP' || coinInfo.shortcut === 'tXRP') {
+            const { message } = await this.typedCall('RippleGetAddress', 'RippleAddress', {
+                address_n,
+            });
             return {
                 descriptor: message.address,
                 address_n,
             };
         }
-
-        return;
     }
 
     // TODO: implement whole "cancel" logic in "trezor-link"

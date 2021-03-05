@@ -24,7 +24,7 @@ import styles from '../../styles/popup.less';
 
 // handle messages from window.opener and iframe
 const handleMessage = (event: PostMessageEvent) => {
-    const data = event.data;
+    const { data } = event;
     if (!data) return;
 
     // This is message from the window.opener
@@ -40,7 +40,9 @@ const handleMessage = (event: PostMessageEvent) => {
     }
 
     // ignore messages from origin other then MessagePort (iframe)
-    const isMessagePort = event.target instanceof MessagePort || (typeof BroadcastChannel !== 'undefined' && event.target instanceof BroadcastChannel);
+    const isMessagePort =
+        event.target instanceof MessagePort ||
+        (typeof BroadcastChannel !== 'undefined' && event.target instanceof BroadcastChannel);
     if (!isMessagePort) return;
 
     // catch first message from iframe
@@ -52,88 +54,91 @@ const handleMessage = (event: PostMessageEvent) => {
     const message = parseMessage(data);
 
     switch (message.type) {
-        case UI.LOADING :
-        // case UI.REQUEST_UI_WINDOW :
+        case UI.LOADING:
+            // case UI.REQUEST_UI_WINDOW :
             showView('loader');
             break;
-        case UI.SET_OPERATION :
-            if (typeof message.payload === 'string') { setOperation(message.payload); }
+        case UI.SET_OPERATION:
+            if (typeof message.payload === 'string') {
+                setOperation(message.payload);
+            }
             break;
-        case UI.TRANSPORT :
+        case UI.TRANSPORT:
             showView('transport');
             break;
-        case UI.SELECT_DEVICE :
+        case UI.SELECT_DEVICE:
             view.selectDevice(message.payload);
             break;
-        case UI.SELECT_ACCOUNT :
+        case UI.SELECT_ACCOUNT:
             view.selectAccount(message.payload);
             break;
-        case UI.SELECT_FEE :
+        case UI.SELECT_FEE:
             view.selectFee(message.payload);
             break;
-        case UI.UPDATE_CUSTOM_FEE :
+        case UI.UPDATE_CUSTOM_FEE:
             view.updateCustomFee(message.payload);
             break;
-        case UI.INSUFFICIENT_FUNDS :
+        case UI.INSUFFICIENT_FUNDS:
             showView('insufficient-funds');
             break;
-        case UI.REQUEST_BUTTON :
+        case UI.REQUEST_BUTTON:
             view.requestButton(message.payload);
             break;
-        case UI.BOOTLOADER :
+        case UI.BOOTLOADER:
             showView('bootloader');
             break;
-        case UI.NOT_IN_BOOTLOADER :
+        case UI.NOT_IN_BOOTLOADER:
             showView('not-in-bootloader');
             break;
-        case UI.INITIALIZE :
+        case UI.INITIALIZE:
             showView('initialize');
             break;
-        case UI.SEEDLESS :
+        case UI.SEEDLESS:
             showView('seedless');
             break;
-        case UI.FIRMWARE_NOT_INSTALLED :
+        case UI.FIRMWARE_NOT_INSTALLED:
             showView('firmware-install');
             break;
-        case UI.FIRMWARE_OLD :
+        case UI.FIRMWARE_OLD:
             view.firmwareRequiredUpdate(message.payload);
             break;
-        case UI.FIRMWARE_NOT_SUPPORTED :
+        case UI.FIRMWARE_NOT_SUPPORTED:
             view.firmwareNotSupported(message.payload);
             break;
-        case UI.FIRMWARE_NOT_COMPATIBLE :
+        case UI.FIRMWARE_NOT_COMPATIBLE:
             view.firmwareNotCompatible(message.payload);
             break;
-        case UI.FIRMWARE_OUTDATED :
+        case UI.FIRMWARE_OUTDATED:
             showFirmwareUpdateNotification(message.payload);
             break;
-        case UI.DEVICE_NEEDS_BACKUP :
+        case UI.DEVICE_NEEDS_BACKUP:
             showBackupNotification(message.payload);
             break;
-        case UI.REQUEST_PERMISSION :
+        case UI.REQUEST_PERMISSION:
             view.initPermissionsView(message.payload);
             break;
-        case UI.REQUEST_CONFIRMATION :
+        case UI.REQUEST_CONFIRMATION:
             view.initConfirmationView(message.payload);
             break;
-        case UI.REQUEST_PIN :
+        case UI.REQUEST_PIN:
             view.initPinView(message.payload);
             break;
-        case UI.REQUEST_WORD :
+        case UI.REQUEST_WORD:
             view.initWordView(message.payload);
             break;
-        case UI.INVALID_PIN :
+        case UI.INVALID_PIN:
             showView('invalid-pin');
             break;
-        case UI.REQUEST_PASSPHRASE :
+        case UI.REQUEST_PASSPHRASE:
             view.initPassphraseView(message.payload);
             break;
-        case UI.REQUEST_PASSPHRASE_ON_DEVICE :
+        case UI.REQUEST_PASSPHRASE_ON_DEVICE:
             view.passphraseOnDeviceView(message.payload);
             break;
-        case UI.INVALID_PASSPHRASE :
+        case UI.INVALID_PASSPHRASE:
             view.initInvalidPassphraseView(message.payload);
             break;
+        // no default
     }
 };
 
@@ -142,7 +147,8 @@ const init = async (payload?: $PropertyType<PopupInit, 'payload'>) => {
     if (!payload) return;
     const { settings } = payload;
     // npm version < 8.1.20 doesn't have it in POPUP.INIT message
-    const useBroadcastChannel = typeof payload.useBroadcastChannel === 'boolean' ? payload.useBroadcastChannel : true;
+    const useBroadcastChannel =
+        typeof payload.useBroadcastChannel === 'boolean' ? payload.useBroadcastChannel : true;
 
     try {
         // load config only to get supported browsers list
@@ -150,7 +156,9 @@ const init = async (payload?: $PropertyType<PopupInit, 'payload'>) => {
         // settings will be replaced later on, after POPUP.HANDSHAKE event from iframe
         await DataManager.load(parseSettings(settings), false);
         // initialize message channel
-        const broadcastID = useBroadcastChannel ? `${settings.env}-${settings.timestamp}` : undefined;
+        const broadcastID = useBroadcastChannel
+            ? `${settings.env}-${settings.timestamp}`
+            : undefined;
         initMessageChannel(broadcastID, handleMessage);
         // reset loading hash
         window.location.hash = '';
@@ -193,4 +201,3 @@ window.closeWindow = () => {
         window.close();
     }, 100);
 };
-

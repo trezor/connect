@@ -26,7 +26,9 @@ export default class EthereumVerifyMessage extends AbstractMethod {
             { name: 'hex', type: 'boolean' },
         ]);
 
-        const messageHex = payload.hex ? messageToHex(payload.message) : Buffer.from(payload.message, 'utf8').toString('hex');
+        const messageHex = payload.hex
+            ? messageToHex(payload.message)
+            : Buffer.from(payload.message, 'utf8').toString('hex');
         this.params = {
             address: stripHexPrefix(payload.address),
             signature: stripHexPrefix(payload.signature),

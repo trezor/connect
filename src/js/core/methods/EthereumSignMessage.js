@@ -11,7 +11,7 @@ import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {
     ...$ElementType<MessageType, 'EthereumSignMessage'>,
-    network?: EthereumNetworkInfo;
+    network?: EthereumNetworkInfo,
 };
 
 export default class EthereumSignMessage extends AbstractMethod {
@@ -37,7 +37,9 @@ export default class EthereumSignMessage extends AbstractMethod {
 
         this.info = getNetworkLabel('Sign #NETWORK message', network);
 
-        const messageHex = payload.hex ? messageToHex(payload.message) : Buffer.from(payload.message, 'utf8').toString('hex');
+        const messageHex = payload.hex
+            ? messageToHex(payload.message)
+            : Buffer.from(payload.message, 'utf8').toString('hex');
         this.params = {
             address_n: path,
             message: messageHex,

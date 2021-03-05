@@ -17,17 +17,12 @@ import type {
 import type {
     CardanoTxCertificateType,
     CardanoPoolParametersType,
-    CardanoPoolOwnerType,
-    CardanoPoolRelayParametersType,
 } from '../../../types/trezor/protobuf';
 
-const ipv4AddressToHex = (ipv4Address: string): string => {
-    return Buffer.from(ipv4Address.split('.').map((ipPart) => parseInt(ipPart))).toString('hex');
-};
+const ipv4AddressToHex = (ipv4Address: string) =>
+    Buffer.from(ipv4Address.split('.').map(ipPart => parseInt(ipPart, 10))).toString('hex');
 
-const ipv6AddressToHex = (ipv6Address: string): string => {
-    return ipv6Address.split(':').join('');
-};
+const ipv6AddressToHex = (ipv6Address: string) => ipv6Address.split(':').join('');
 
 const validatePoolMargin = (margin: CardanoPoolMargin) => {
     validateParams(margin, [
@@ -44,14 +39,10 @@ const validatePoolMetadata = (metadata: CardanoPoolMetadata) => {
 };
 
 const validatePoolRelay = (relay: CardanoPoolRelay) => {
-    validateParams(relay, [
-        { name: 'type', type: 'number', obligatory: true },
-    ]);
+    validateParams(relay, [{ name: 'type', type: 'number', obligatory: true }]);
 
     if (relay.type === POOL_RELAY_TYPE.SingleHostIp) {
-        const paramsToValidate = [
-            { name: 'port', type: 'number', obligatory: true },
-        ];
+        const paramsToValidate = [{ name: 'port', type: 'number', obligatory: true }];
         if (relay.ipv4Address) {
             paramsToValidate.push({ name: 'ipv4Address', type: 'string' });
         }
@@ -62,7 +53,10 @@ const validatePoolRelay = (relay: CardanoPoolRelay) => {
         validateParams(relay, paramsToValidate);
 
         if (!relay.ipv4Address && !relay.ipv6Address) {
-            throw ERRORS.TypedError('Method_InvalidParameter', 'Either ipv4Address or ipv6Address must be supplied');
+            throw ERRORS.TypedError(
+                'Method_InvalidParameter',
+                'Either ipv4Address or ipv6Address must be supplied',
+            );
         }
     } else if (relay.type === POOL_RELAY_TYPE.SingleHostName) {
         validateParams(relay, [
@@ -70,14 +64,12 @@ const validatePoolRelay = (relay: CardanoPoolRelay) => {
             { name: 'port', type: 'number', obligatory: true },
         ]);
     } else if (POOL_RELAY_TYPE.MultipleHostName) {
-        validateParams(relay, [
-            { name: 'hostName', type: 'string', obligatory: true },
-        ]);
+        validateParams(relay, [{ name: 'hostName', type: 'string', obligatory: true }]);
     }
 };
 
-const validatePoolOwners = (owners: Array<CardanoPoolOwner>) => {
-    owners.forEach((owner) => {
+const validatePoolOwners = (owners: CardanoPoolOwner[]) => {
+    owners.forEach(owner => {
         if (owner.stakingKeyHash) {
             validateParams(owner, [
                 { name: 'stakingKeyHash', type: 'string', obligatory: !owner.stakingKeyPath },
@@ -89,13 +81,19 @@ const validatePoolOwners = (owners: Array<CardanoPoolOwner>) => {
         }
 
         if (!owner.stakingKeyHash && !owner.stakingKeyPath) {
-            throw ERRORS.TypedError('Method_InvalidParameter', 'Either stakingKeyHash or stakingKeyPath must be supplied');
+            throw ERRORS.TypedError(
+                'Method_InvalidParameter',
+                'Either stakingKeyHash or stakingKeyPath must be supplied',
+            );
         }
     });
 
     const ownersAsPathCount = owners.filter(owner => !!owner.stakingKeyPath).length;
     if (ownersAsPathCount !== 1) {
-        throw ERRORS.TypedError('Method_InvalidParameter', 'Exactly one pool owner must be given as a path');
+        throw ERRORS.TypedError(
+            'Method_InvalidParameter',
+            'Exactly one pool owner must be given as a path',
+        );
     }
 };
 
@@ -121,7 +119,9 @@ const validatePoolParameters = (poolParameters: CardanoPoolParameters) => {
     }
 };
 
-const transformPoolParameters = (poolParameters: CardanoPoolParameters): CardanoPoolParametersType => {
+const transformPoolParameters = (
+    poolParameters: CardanoPoolParameters,
+): CardanoPoolParametersType => {
     validatePoolParameters(poolParameters);
 
     return {
@@ -132,30 +132,26 @@ const transformPoolParameters = (poolParameters: CardanoPoolParameters): Cardano
         margin_numerator: poolParameters.margin.numerator,
         margin_denominator: poolParameters.margin.denominator,
         reward_account: poolParameters.rewardAccount,
-        owners: poolParameters.owners.map((owner: CardanoPoolOwner): CardanoPoolOwnerType => {
-            return {
-                staking_key_hash: owner.stakingKeyHash,
-                staking_key_path: owner.stakingKeyPath ? validatePath(owner.stakingKeyPath, 5) : undefined,
-            };
-        }),
-        relays: poolParameters.relays.map((relay: CardanoPoolRelay): CardanoPoolRelayParametersType => {
-            return {
-                type: relay.type,
-                ipv4_address: relay.ipv4Address ? ipv4AddressToHex(relay.ipv4Address) : undefined,
-                ipv6_address: relay.ipv6Address ? ipv6AddressToHex(relay.ipv6Address) : undefined,
-                host_name: relay.hostName,
-                port: relay.port,
-            };
-        }),
+        owners: poolParameters.owners.map(owner => ({
+            staking_key_hash: owner.stakingKeyHash,
+            staking_key_path: owner.stakingKeyPath
+                ? validatePath(owner.stakingKeyPath, 5)
+                : undefined,
+        })),
+        relays: poolParameters.relays.map(relay => ({
+            type: relay.type,
+            ipv4_address: relay.ipv4Address ? ipv4AddressToHex(relay.ipv4Address) : undefined,
+            ipv6_address: relay.ipv6Address ? ipv6AddressToHex(relay.ipv6Address) : undefined,
+            host_name: relay.hostName,
+            port: relay.port,
+        })),
         metadata: poolParameters.metadata,
     };
 };
 
 // transform incoming certificate object to protobuf messages format
 export const transformCertificate = (certificate: CardanoCertificate): CardanoTxCertificateType => {
-    const paramsToValidate = [
-        { name: 'type', type: 'number', obligatory: true },
-    ];
+    const paramsToValidate = [{ name: 'type', type: 'number', obligatory: true }];
 
     if (certificate.type !== CERTIFICATE_TYPE.StakePoolRegistration) {
         paramsToValidate.push({ name: 'path', obligatory: true });
@@ -175,6 +171,8 @@ export const transformCertificate = (certificate: CardanoCertificate): CardanoTx
         type: certificate.type,
         path: certificate.path ? validatePath(certificate.path, 5) : undefined,
         pool: certificate.pool,
-        pool_parameters: certificate.poolParameters ? transformPoolParameters(certificate.poolParameters) : undefined,
+        pool_parameters: certificate.poolParameters
+            ? transformPoolParameters(certificate.poolParameters)
+            : undefined,
     };
 };

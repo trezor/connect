@@ -3,99 +3,104 @@
 // https://lisk.io/documentation/lisk-elements/user-guide/transactions
 
 type VoteAsset = {
-    votes: Array<string>;
-}
+    votes: string[],
+};
 
 type SignatureAsset = {
     signature: {
-        publicKey: string;
-    };
-}
+        publicKey: string,
+    },
+};
 
 type DelegateAsset = {
     delegate: {
-        username: string;
-    };
-}
+        username: string,
+    },
+};
 
 type MultisignatureAsset = {
     multisignature: {
-       min: number;
-       lifetime: number;
-       keysgroup: Array<string>;
-    };
-}
+        min: number,
+        lifetime: number,
+        keysgroup: string[],
+    },
+};
 
 type DataAsset = {
-    data: string;
-}
+    data: string,
+};
 
-export type LiskAsset = SignatureAsset | MultisignatureAsset | DelegateAsset | VoteAsset | DataAsset;
+export type LiskAsset =
+    | SignatureAsset
+    | MultisignatureAsset
+    | DelegateAsset
+    | VoteAsset
+    | DataAsset;
 
 export type LiskTransaction = {
-    type: number;
-    fee: string;
-    amount: string;
-    timestamp: number;
-    recipientId?: string;
-    senderPublicKey?: string;
-    requesterPublicKey?: string;
-    signature?: string;
-    asset?: LiskAsset;
-}
+    type: number,
+    fee: string,
+    amount: string,
+    timestamp: number,
+    recipientId?: string,
+    senderPublicKey?: string,
+    requesterPublicKey?: string,
+    signature?: string,
+    asset?: LiskAsset,
+};
 
 // methods parameters
 
 // get address
 
 export type LiskGetAddress = {
-    path: string | number[];
-    address?: string;
-    showOnTrezor?: boolean;
-}
+    path: string | number[],
+    address?: string,
+    showOnTrezor?: boolean,
+};
 
 export type LiskAddress = {
-    path: number[];
-    serializedPath: string;
-    address: string;
-}
+    path: number[],
+    serializedPath: string,
+    address: string,
+};
 
 // get public key
 
 export type LiskGetPublicKey = {
-    path: string | number[];
-    showOnTrezor?: boolean;
-}
+    path: string | number[],
+    showOnTrezor?: boolean,
+};
 
 export type LiskPublicKey = {
-    path: number[];
-    serializedPath: string;
-    publicKey: string;
-}
+    path: number[],
+    serializedPath: string,
+    publicKey: string,
+};
 
 // sign transaction
 
 export type LiskSignTransaction = {
-    path: string | number[];
-    transaction: LiskTransaction;
-}
+    path: string | number[],
+    transaction: LiskTransaction,
+};
 
 // sign message
 
 export type LiskSignMessage = {
-    path: string | number[];
-    message: string;
-}
+    path: string | number[],
+    message: string,
+};
 
 export type LiskMessageSignature = {
-    publicKey: string;
-    signature: string;
-}
+    publicKey: string,
+    signature: string,
+};
 
 // verify message
 
 export type LiskVerifyMessage = {
-    publicKey: string;
-    message: string;
-    signature: string;
-}
+    publicKey: string,
+    message: string,
+    signature: string,
+};

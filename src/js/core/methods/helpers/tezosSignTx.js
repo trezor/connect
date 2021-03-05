@@ -4,9 +4,9 @@ import * as bs58check from 'bs58check';
 import { ERRORS } from '../../../constants';
 import type { TezosOperation } from '../../../types/networks/tezos';
 import type { TezosSignTx } from '../../../types/trezor/protobuf';
-import { validateParams } from './../helpers/paramsValidator';
+import { validateParams } from './paramsValidator';
 
-const prefix = {
+const PREFIX = {
     B: new Uint8Array([1, 52]),
     tz1: new Uint8Array([6, 161, 159]),
     tz2: new Uint8Array([6, 161, 161]),
@@ -17,9 +17,8 @@ const prefix = {
     p2pk: new Uint8Array([3, 178, 139, 127]),
 };
 
-const bs58checkDecode = (prefix: Uint8Array, enc: string): Uint8Array => {
-    return bs58check.decode(enc).slice(prefix.length);
-};
+const bs58checkDecode = (prefix: Uint8Array, enc: string): Uint8Array =>
+    bs58check.decode(enc).slice(prefix.length);
 
 const concatArray = (first: Uint8Array, second: Uint8Array) => {
     const result = new Uint8Array(first.length + second.length);
@@ -29,27 +28,27 @@ const concatArray = (first: Uint8Array, second: Uint8Array) => {
 };
 
 // convert publicKeyHash to buffer
-const publicKeyHash2buffer = (publicKeyHash: string): { originated: number; hash: Uint8Array } => {
+const publicKeyHash2buffer = (publicKeyHash: string) => {
     switch (publicKeyHash.substr(0, 3)) {
         case 'tz1':
             return {
                 originated: 0,
-                hash: concatArray(new Uint8Array([0]), bs58checkDecode(prefix.tz1, publicKeyHash)),
+                hash: concatArray(new Uint8Array([0]), bs58checkDecode(PREFIX.tz1, publicKeyHash)),
             };
         case 'tz2':
             return {
                 originated: 0,
-                hash: concatArray(new Uint8Array([1]), bs58checkDecode(prefix.tz2, publicKeyHash)),
+                hash: concatArray(new Uint8Array([1]), bs58checkDecode(PREFIX.tz2, publicKeyHash)),
             };
         case 'tz3':
             return {
                 originated: 0,
-                hash: concatArray(new Uint8Array([2]), bs58checkDecode(prefix.tz3, publicKeyHash)),
+                hash: concatArray(new Uint8Array([2]), bs58checkDecode(PREFIX.tz3, publicKeyHash)),
             };
         case 'KT1':
             return {
                 originated: 1,
-                hash: concatArray(bs58checkDecode(prefix.KT1, publicKeyHash), new Uint8Array([0])),
+                hash: concatArray(bs58checkDecode(PREFIX.KT1, publicKeyHash), new Uint8Array([0])),
             };
         default:
             throw ERRORS.TypedError('Method_InvalidParameter', 'Wrong Tezos publicKeyHash address');
@@ -60,25 +59,29 @@ const publicKeyHash2buffer = (publicKeyHash: string): { originated: number; hash
 const publicKey2buffer = (publicKey: string) => {
     switch (publicKey.substr(0, 4)) {
         case 'edpk':
-            return concatArray(new Uint8Array([0]), bs58checkDecode(prefix.edpk, publicKey));
+            return concatArray(new Uint8Array([0]), bs58checkDecode(PREFIX.edpk, publicKey));
         case 'sppk':
-            return concatArray(new Uint8Array([1]), bs58checkDecode(prefix.sppk, publicKey));
+            return concatArray(new Uint8Array([1]), bs58checkDecode(PREFIX.sppk, publicKey));
         case 'p2pk':
-            return concatArray(new Uint8Array([2]), bs58checkDecode(prefix.p2pk, publicKey));
+            return concatArray(new Uint8Array([2]), bs58checkDecode(PREFIX.p2pk, publicKey));
         default:
             throw ERRORS.TypedError('Method_InvalidParameter', 'Wrong Tezos publicKey');
     }
 };
 
-export const createTx = (address_n: number[], branch: string, operation: TezosOperation): $Exact<TezosSignTx> => {
+export const createTx = (
+    address_n: number[],
+    branch: string,
+    operation: TezosOperation,
+): $Exact<TezosSignTx> => {
     let message = {
         address_n,
-        branch: bs58checkDecode(prefix.B, branch),
+        branch: bs58checkDecode(PREFIX.B, branch),
     };
 
     // reveal public key
     if (operation.reveal) {
-        const reveal = operation.reveal;
+        const { reveal } = operation;
 
         // validate reveal parameters
         validateParams(reveal, [
@@ -105,7 +108,7 @@ export const createTx = (address_n: number[], branch: string, operation: TezosOp
 
     // transaction
     if (operation.transaction) {
-        const transaction = operation.transaction;
+        const { transaction } = operation;
 
         // validate transaction parameters
         validateParams(transaction, [
@@ -146,7 +149,7 @@ export const createTx = (address_n: number[], branch: string, operation: TezosOp
         }
 
         if (transaction.parameters_manager) {
-            const parameters_manager = transaction.parameters_manager;
+            const { parameters_manager } = transaction;
 
             validateParams(parameters_manager, [
                 { name: 'set_delegate', type: 'string', obligatory: false },
@@ -160,7 +163,8 @@ export const createTx = (address_n: number[], branch: string, operation: TezosOp
                     transaction: {
                         ...message.transaction,
                         parameters_manager: {
-                            set_delegate: publicKeyHash2buffer(parameters_manager.set_delegate).hash,
+                            set_delegate: publicKeyHash2buffer(parameters_manager.set_delegate)
+                                .hash,
                         },
                     },
                 };
@@ -179,7 +183,7 @@ export const createTx = (address_n: number[], branch: string, operation: TezosOp
             }
 
             if (parameters_manager.transfer) {
-                const transfer = parameters_manager.transfer;
+                const { transfer } = parameters_manager;
 
                 validateParams(transfer, [
                     { name: 'amount', type: 'number', obligatory: true },
@@ -207,7 +211,7 @@ export const createTx = (address_n: number[], branch: string, operation: TezosOp
 
     // origination
     if (operation.origination) {
-        const origination = operation.origination;
+        const { origination } = operation;
 
         // validate origination parameters
         validateParams(origination, [
@@ -246,7 +250,7 @@ export const createTx = (address_n: number[], branch: string, operation: TezosOp
 
     // delegation
     if (operation.delegation) {
-        const delegation = operation.delegation;
+        const { delegation } = operation;
 
         // validate delegation parameters
         validateParams(delegation, [

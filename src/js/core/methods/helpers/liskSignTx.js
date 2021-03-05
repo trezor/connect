@@ -4,7 +4,7 @@ import type { LiskTransaction } from '../../../types/networks/lisk';
 
 const FIELDS_TO_RENAME = ['lifetime', 'keysgroup'];
 
-const snakefy = (val: string): string => val.replace(/([A-Z])/g, el => '_' + el.toLowerCase());
+const snakefy = (val: string) => val.replace(/([A-Z])/g, el => `_${el.toLowerCase()}`);
 
 const prepareField = (name: string, value: number | string, obj: any) => {
     // Convert camelCase -> snake_keys
@@ -18,13 +18,13 @@ const prepareField = (name: string, value: number | string, obj: any) => {
 };
 
 export const prepareTx = (tx: LiskTransaction, newTx: any = {}) => {
-    for (const field in tx) {
+    Object.keys(tx).forEach((field: string) => {
         const value = tx[field];
         if (typeof value === 'object' && !Array.isArray(value)) {
             newTx[field] = prepareTx(value);
         } else {
             prepareField(field, value, newTx);
         }
-    }
+    });
     return newTx;
 };

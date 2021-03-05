@@ -16,7 +16,7 @@ export default class DebugLinkDecision extends AbstractMethod {
         this.useUi = false;
         this.requiredPermissions = ['management'];
 
-        const payload: Object = message.payload;
+        const { payload } = message;
         validateParams(payload, [
             { name: 'yes_no', type: 'boolean' },
             { name: 'up_down', type: 'boolean' },

@@ -9,9 +9,9 @@ import { isBackendSupported, initBlockchain } from '../../backend/BlockchainLink
 import type { CoreMessage, CoinInfo } from '../../types';
 
 type Params = {
-    tx: string;
-    coinInfo: CoinInfo;
-}
+    tx: string,
+    coinInfo: CoinInfo,
+};
 
 export default class PushTransaction extends AbstractMethod {
     params: Params;
@@ -49,7 +49,7 @@ export default class PushTransaction extends AbstractMethod {
 
     async run() {
         const backend = await initBlockchain(this.params.coinInfo, this.postMessage);
-        const txid: string = await backend.pushTransaction(this.params.tx);
+        const txid = await backend.pushTransaction(this.params.tx);
         return {
             txid,
         };

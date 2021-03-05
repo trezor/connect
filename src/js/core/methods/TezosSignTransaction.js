@@ -15,7 +15,11 @@ export default class TezosSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Tezos'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(
+            this.name,
+            getMiscNetwork('Tezos'),
+            this.firmwareRange,
+        );
         this.info = 'Sign Tezos transaction';
 
         const { payload } = message;
