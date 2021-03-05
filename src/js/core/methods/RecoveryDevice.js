@@ -38,27 +38,28 @@ export default class RecoveryDevice extends AbstractMethod {
             type: payload.type,
             u2f_counter: payload.u2f_counter,
             dry_run: payload.dry_run,
-
         };
         this.allowDeviceMode = [...this.allowDeviceMode, UI.INITIALIZE];
         this.useDeviceState = false;
     }
 
-    async confirmation(): Promise<boolean> {
+    async confirmation() {
         // wait for popup window
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'device-management',
-            customConfirmButton: {
-                className: 'confirm',
-                label: 'Proceed',
-            },
-            label: 'Do you want to recover device from seed?',
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'device-management',
+                customConfirmButton: {
+                    className: 'confirm',
+                    label: 'Proceed',
+                },
+                label: 'Do you want to recover device from seed?',
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;

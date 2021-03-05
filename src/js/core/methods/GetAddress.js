@@ -14,14 +14,17 @@ import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {
     ...$ElementType<MessageType, 'GetAddress'>,
-    address?: string;
-    coinInfo: BitcoinNetworkInfo;
+    address?: string,
+    coinInfo: BitcoinNetworkInfo,
 };
 
 export default class GetAddress extends AbstractMethod {
     params: Params[] = [];
+
     hasBundle: boolean;
+
     progress: number = 0;
+
     confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
@@ -31,7 +34,9 @@ export default class GetAddress extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle
+            ? { ...message.payload, bundle: [message.payload] }
+            : message.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -87,7 +92,11 @@ export default class GetAddress extends AbstractMethod {
             });
         });
 
-        const useEventListener = payload.useEventListener && this.params.length === 1 && typeof this.params[0].address === 'string' && this.params[0].show_display;
+        const useEventListener =
+            payload.useEventListener &&
+            this.params.length === 1 &&
+            typeof this.params[0].address === 'string' &&
+            this.params[0].show_display;
         this.confirmed = useEventListener;
         this.useUi = !useEventListener;
 
@@ -117,7 +126,7 @@ export default class GetAddress extends AbstractMethod {
         return null;
     }
 
-    async confirmation(): Promise<boolean> {
+    async confirmation() {
         if (this.confirmed) return true;
         // wait for popup window
         await this.getPopupPromise().promise;
@@ -125,10 +134,12 @@ export default class GetAddress extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'export-address',
-            label: this.info,
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'export-address',
+                label: this.info,
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;
@@ -137,36 +148,35 @@ export default class GetAddress extends AbstractMethod {
         return this.confirmed;
     }
 
-    async noBackupConfirmation(): Promise<boolean> {
+    async noBackupConfirmation() {
         // wait for popup window
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'no-backup',
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'no-backup',
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;
         return uiResp.payload;
     }
 
-    _call({
-        address_n,
-        show_display,
-        multisig,
-        script_type,
-        coinInfo,
-    }: Params) {
+    _call({ address_n, show_display, multisig, script_type, coinInfo }: Params) {
         const cmd = this.device.getCommands();
-        return cmd.getAddress({
-            address_n,
-            show_display,
-            multisig,
-            script_type,
-        }, coinInfo);
+        return cmd.getAddress(
+            {
+                address_n,
+                show_display,
+                multisig,
+                script_type,
+            },
+            coinInfo,
+        );
     }
 
     async run() {
@@ -195,10 +205,12 @@ export default class GetAddress extends AbstractMethod {
 
             if (this.hasBundle) {
                 // send progress
-                this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
-                    progress: i,
-                    response,
-                }));
+                this.postMessage(
+                    UiMessage(UI.BUNDLE_PROGRESS, {
+                        progress: i,
+                        response,
+                    }),
+                );
             }
 
             this.progress++;

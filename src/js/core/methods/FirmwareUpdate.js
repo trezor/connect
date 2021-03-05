@@ -10,12 +10,12 @@ import { getReleases } from '../../data/FirmwareInfo';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    binary?: Buffer;
-    version?: Array<number>;
-    btcOnly?: boolean;
-    baseUrl?: string;
-    intermediary?: boolean;
-}
+    binary?: Buffer,
+    version?: number[],
+    btcOnly?: boolean,
+    baseUrl?: string,
+    intermediary?: boolean,
+};
 
 export default class FirmwareUpdate extends AbstractMethod {
     params: Params;
@@ -50,21 +50,23 @@ export default class FirmwareUpdate extends AbstractMethod {
         };
     }
 
-    async confirmation(): Promise<boolean> {
+    async confirmation() {
         // wait for popup window
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'device-management',
-            customConfirmButton: {
-                className: 'wipe',
-                label: 'Proceed',
-            },
-            label: 'Do you want to update firmware? Never do this without your recovery card.',
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'device-management',
+                customConfirmButton: {
+                    className: 'wipe',
+                    label: 'Proceed',
+                },
+                label: 'Do you want to update firmware? Never do this without your recovery card.',
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;
@@ -92,14 +94,17 @@ export default class FirmwareUpdate extends AbstractMethod {
                 binary = firmware.binary;
             }
         } catch (err) {
-            throw ERRORS.TypedError('Method_FirmwareUpdate_DownloadFailed', 'Failed to download firmware binary');
+            throw ERRORS.TypedError(
+                'Method_FirmwareUpdate_DownloadFailed',
+                'Failed to download firmware binary',
+            );
         }
 
         return uploadFirmware(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.postMessage,
             device,
-            { payload: binary }
+            { payload: binary },
         );
     }
 }

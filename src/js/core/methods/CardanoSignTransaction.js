@@ -4,7 +4,10 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
-import { addressParametersToProto, validateAddressParameters } from './helpers/cardanoAddressParameters';
+import {
+    addressParametersToProto,
+    validateAddressParameters,
+} from './helpers/cardanoAddressParameters';
 import { transformCertificate } from './helpers/cardanoCertificate';
 import { validateTokenBundle, tokenBundleToProto } from './helpers/cardanoTokens';
 import { ERRORS } from '../../constants';
@@ -32,7 +35,11 @@ export default class CardanoSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Cardano'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(
+            this.name,
+            getMiscNetwork('Cardano'),
+            this.firmwareRange,
+        );
         this.info = 'Sign Cardano transaction';
 
         const { payload } = message;
@@ -125,14 +132,17 @@ export default class CardanoSignTransaction extends AbstractMethod {
 
     _ensureFeatureIsSupported(feature: $Keys<typeof CardanoSignTransactionFeatures>) {
         if (!this.device.atLeast(CardanoSignTransactionFeatures[feature])) {
-            throw ERRORS.TypedError('Method_InvalidParameter', `Feature ${feature} not supported by device firmware`);
+            throw ERRORS.TypedError(
+                'Method_InvalidParameter',
+                `Feature ${feature} not supported by device firmware`,
+            );
         }
     }
 
     _ensureFirmwareSupportsParams() {
-        const params = this.params;
+        const { params } = this;
 
-        params.certificates.map((certificate) => {
+        params.certificates.forEach(certificate => {
             if (certificate.type === CERTIFICATE_TYPE.StakePoolRegistration) {
                 this._ensureFeatureIsSupported('SignStakePoolRegistrationAsOwner');
             }
@@ -142,7 +152,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             this._ensureFeatureIsSupported('ValidityIntervalStart');
         }
 
-        params.outputs.map((output) => {
+        params.outputs.forEach(output => {
             if (output.token_bundle && output.token_bundle.length > 0) {
                 this._ensureFeatureIsSupported('MultiassetOutputs');
             }

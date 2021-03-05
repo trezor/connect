@@ -5,11 +5,15 @@ import { ERRORS } from '../constants';
 import type { CoinInfo, BitcoinNetworkInfo } from '../types';
 
 type Bip44Options = {
-    purpose?: number;
-    coinType?: number;
-}
+    purpose?: number,
+    coinType?: number,
+};
 
-export const getAccountAddressN = (coinInfo: CoinInfo, accountIndex: number, bip44?: Bip44Options): number[] => {
+export const getAccountAddressN = (
+    coinInfo: CoinInfo,
+    accountIndex: number,
+    bip44?: Bip44Options,
+) => {
     if (!coinInfo) {
         throw ERRORS.TypedError('Method_UnknownCoin');
     }
@@ -22,22 +26,23 @@ export const getAccountAddressN = (coinInfo: CoinInfo, accountIndex: number, bip
 
     if (coinInfo.type === 'bitcoin') {
         return [toHardened(options.purpose), toHardened(options.coinType), toHardened(index)];
-    } else if (coinInfo.type === 'ethereum') {
+    }
+    if (coinInfo.type === 'ethereum') {
         return [toHardened(options.purpose), toHardened(options.coinType), toHardened(0), 0, index];
-    } else if (coinInfo.shortcut === 'tXRP') {
+    }
+    if (coinInfo.shortcut === 'tXRP') {
         // FW bug: https://github.com/trezor/trezor-firmware/issues/321
         return [toHardened(options.purpose), toHardened(144), toHardened(index), 0, 0];
-    } else {
-        // TODO: cover all misc coins or throw error
-        return [toHardened(options.purpose), toHardened(options.coinType), toHardened(index), 0, 0];
     }
+    // TODO: cover all misc coins or throw error
+    return [toHardened(options.purpose), toHardened(options.coinType), toHardened(index), 0, 0];
 };
 
-export const getAccountLabel = (path: number[], coinInfo: CoinInfo): string => {
+export const getAccountLabel = (path: number[], coinInfo: CoinInfo) => {
     if (coinInfo.type === 'bitcoin') {
-        const accountType: number = fromHardened(path[0]);
-        const account: number = fromHardened(path[2]);
-        let prefix: string = '';
+        const accountType = fromHardened(path[0]);
+        const account = fromHardened(path[2]);
+        let prefix = '';
 
         if (accountType === 48) {
             prefix = 'multisig';
@@ -46,14 +51,13 @@ export const getAccountLabel = (path: number[], coinInfo: CoinInfo): string => {
         } else if (accountType === 44 && coinInfo.segwit) {
             prefix = 'legacy';
         }
-        return `${ prefix } <span>account #${(account + 1)}</span>`;
-    } else {
-        const account: number = fromHardened(path[4]);
-        return `account #${(account + 1)}`;
+        return `${prefix} <span>account #${account + 1}</span>`;
     }
+    const account = fromHardened(path[4]);
+    return `account #${account + 1}`;
 };
 
-export const getPublicKeyLabel = (path: number[], coinInfo: ?BitcoinNetworkInfo): string => {
+export const getPublicKeyLabel = (path: number[], coinInfo: ?BitcoinNetworkInfo) => {
     let hasSegwit = false;
     let coinLabel = 'Unknown coin';
     if (coinInfo) {
@@ -91,8 +95,7 @@ export const getPublicKeyLabel = (path: number[], coinInfo: ?BitcoinNetworkInfo)
     }
 
     if (realAccountId > 0) {
-        return `${ prefix } of ${ accountType } <span>account #${realAccountId}</span>`;
-    } else {
-        return prefix;
+        return `${prefix} of ${accountType} <span>account #${realAccountId}</span>`;
     }
+    return prefix;
 };

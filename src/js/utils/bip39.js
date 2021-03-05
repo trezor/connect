@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export default [
     'abandon', 'ability', 'able', 'about', 'above', 'absent',
     'absorb', 'abstract', 'absurd', 'abuse', 'access', 'accident', 'account',

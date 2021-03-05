@@ -3,7 +3,7 @@
 import { showView } from './common';
 import type { UnexpectedDeviceMode } from '../../types/events';
 
-export const firmwareRequiredUpdate = (device: $PropertyType<UnexpectedDeviceMode, 'payload'>): void => {
+export const firmwareRequiredUpdate = (device: $PropertyType<UnexpectedDeviceMode, 'payload'>) => {
     const view = showView('firmware-update');
     if (!device.features) return;
     if (!device.firmwareRelease) return;

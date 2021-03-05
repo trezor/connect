@@ -10,38 +10,40 @@ import type {
     BlockchainGetAccountBalanceHistory,
 } from '../types';
 
-import {
-    BlockbookWorker,
-    RippleWorker,
-} from '../env/node/workers';
+import { BlockbookWorker, RippleWorker } from '../env/node/workers';
 
 type Options = {
-    coinInfo: CoinInfo;
-    postMessage: (message: CoreMessage) => void;
+    coinInfo: CoinInfo,
+    postMessage: (message: CoreMessage) => void,
 };
 
 // duplicate from blockchain-link
 type Fee = {
-    feePerUnit: string;
-    feePerTx?: string;
-    feeLimit?: string;
-}
+    feePerUnit: string,
+    feePerTx?: string,
+    feeLimit?: string,
+};
 
-const getWorker = (type: string): ?(string | () => Worker) => {
+const getWorker = (type: string) => {
     switch (type) {
         case 'blockbook':
             return BlockbookWorker;
         case 'ripple':
             return RippleWorker;
-        default: return null;
+        default:
+            return null;
     }
 };
 
 export default class Blockchain {
     link: BlockchainLink;
+
     coinInfo: $ElementType<Options, 'coinInfo'>;
+
     postMessage: $ElementType<Options, 'postMessage'>;
+
     feeForBlock: Fee[] = [];
+
     feeTimestamp: number = 0;
 
     constructor(options: Options) {
@@ -55,12 +57,15 @@ export default class Blockchain {
 
         const worker = getWorker(settings.type);
         if (!worker) {
-            throw ERRORS.TypedError('Backend_WorkerMissing', `BlockchainLink worker not found ${settings.type}`);
+            throw ERRORS.TypedError(
+                'Backend_WorkerMissing',
+                `BlockchainLink worker not found ${settings.type}`,
+            );
         }
 
         this.link = new BlockchainLink({
             name: this.coinInfo.shortcut,
-            worker: worker,
+            worker,
             server: settings.url,
             debug: false,
         });
@@ -68,11 +73,13 @@ export default class Blockchain {
 
     onError(error: ERRORS.TrezorError) {
         this.link.dispose();
-        this.postMessage(BlockchainMessage(BLOCKCHAIN.ERROR, {
-            coin: this.coinInfo,
-            error: error.message,
-            code: error.code,
-        }));
+        this.postMessage(
+            BlockchainMessage(BLOCKCHAIN.ERROR, {
+                coin: this.coinInfo,
+                error: error.message,
+                code: error.code,
+            }),
+        );
         removeBackend(this); // eslint-disable-line no-use-before-define
     }
 
@@ -90,10 +97,12 @@ export default class Blockchain {
             // eslint-disable-next-line no-use-before-define
             setPreferredBacked(this.coinInfo, info.url);
 
-            this.postMessage(BlockchainMessage(BLOCKCHAIN.CONNECT, {
-                coin: this.coinInfo,
-                ...info,
-            }));
+            this.postMessage(
+                BlockchainMessage(BLOCKCHAIN.CONNECT, {
+                    coin: this.coinInfo,
+                    ...info,
+                }),
+            );
         });
 
         this.link.on('disconnected', () => {
@@ -113,16 +122,14 @@ export default class Blockchain {
     }
 
     getTransactions(txs: string[]) {
-        return Promise.all(
-            txs.map(id => this.link.getTransaction(id))
-        );
+        return Promise.all(txs.map(id => this.link.getTransaction(id)));
     }
 
-    getCurrentFiatRates(params: { currencies?: ?string[] }) {
+    getCurrentFiatRates(params: { currencies?: string[] }) {
         return this.link.getCurrentFiatRates(params);
     }
 
-    getFiatRatesForTimestamps(params: { timestamps?: ?number[] }) {
+    getFiatRatesForTimestamps(params: { timestamps?: number[] }) {
         return this.link.getFiatRatesForTimestamps(params);
     }
 
@@ -147,10 +154,9 @@ export default class Blockchain {
         if (blocks) {
             const now = Date.now();
             const outdated = now - this.feeTimestamp > 20 * 60 * 1000;
-            const unknownBlocks = blocks.filter(b => typeof this.feeForBlock !== 'string');
+            const unknownBlocks = blocks.filter(() => typeof this.feeForBlock !== 'string');
             if (!outdated && unknownBlocks.length < 1) {
                 // return cached
-
             }
             // get new values
             const fees = await this.link.estimateFee(request);
@@ -167,20 +173,24 @@ export default class Blockchain {
         // set block listener if it wasn't set before
         if (this.link.listenerCount('block') === 0) {
             this.link.on('block', block => {
-                this.postMessage(BlockchainMessage(BLOCKCHAIN.BLOCK, {
-                    coin: this.coinInfo,
-                    ...block,
-                }));
+                this.postMessage(
+                    BlockchainMessage(BLOCKCHAIN.BLOCK, {
+                        coin: this.coinInfo,
+                        ...block,
+                    }),
+                );
             });
         }
 
         // set notification listener if it wasn't set before
         if (this.link.listenerCount('notification') === 0) {
             this.link.on('notification', notification => {
-                this.postMessage(BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
-                    coin: this.coinInfo,
-                    notification,
-                }));
+                this.postMessage(
+                    BlockchainMessage(BLOCKCHAIN.NOTIFICATION, {
+                        coin: this.coinInfo,
+                        notification,
+                    }),
+                );
             });
         }
 
@@ -195,14 +205,16 @@ export default class Blockchain {
         });
     }
 
-    subscribeFiatRates(currency?: string) {
+    subscribeFiatRates(_currency?: string) {
         // set block listener if it wasn't set before
         if (this.link.listenerCount('fiatRates') === 0) {
             this.link.on('fiatRates', ({ rates }) => {
-                this.postMessage(BlockchainMessage(BLOCKCHAIN.FIAT_RATES_UPDATE, {
-                    coin: this.coinInfo,
-                    rates,
-                }));
+                this.postMessage(
+                    BlockchainMessage(BLOCKCHAIN.FIAT_RATES_UPDATE, {
+                        coin: this.coinInfo,
+                        rates,
+                    }),
+                );
             });
         }
 
@@ -272,7 +284,10 @@ const setPreferredBacked = (coinInfo: CoinInfo, url?: string) => {
     }
 };
 
-export const setCustomBackend = (coinInfo: CoinInfo, blockchainLink: $ElementType<CoinInfo, 'blockchainLink'>) => {
+export const setCustomBackend = (
+    coinInfo: CoinInfo,
+    blockchainLink: $ElementType<CoinInfo, 'blockchainLink'>,
+) => {
     setPreferredBacked(coinInfo); // reset preferred backend
     if (!blockchainLink || blockchainLink.url.length === 0) {
         delete customBackends[coinInfo.shortcut];
@@ -284,14 +299,22 @@ export const setCustomBackend = (coinInfo: CoinInfo, blockchainLink: $ElementTyp
 
 export const isBackendSupported = (coinInfo: CoinInfo) => {
     const info = customBackends[coinInfo.shortcut] || coinInfo;
-    if (!info.blockchainLink) { throw ERRORS.TypedError('Backend_NotSupported'); }
+    if (!info.blockchainLink) {
+        throw ERRORS.TypedError('Backend_NotSupported');
+    }
 };
 
-export const initBlockchain = async (coinInfo: CoinInfo, postMessage: $ElementType<Options, 'postMessage'>) => {
+export const initBlockchain = async (
+    coinInfo: CoinInfo,
+    postMessage: $ElementType<Options, 'postMessage'>,
+) => {
     let backend = findBackend(coinInfo.name);
     if (!backend) {
         backend = new Blockchain({
-            coinInfo: preferredBackends[coinInfo.shortcut] || customBackends[coinInfo.shortcut] || coinInfo,
+            coinInfo:
+                preferredBackends[coinInfo.shortcut] ||
+                customBackends[coinInfo.shortcut] ||
+                coinInfo,
             postMessage,
         });
         instances.push(backend);

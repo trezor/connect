@@ -9,7 +9,7 @@ import type { SelectFee, UpdateCustomFee } from '../../types/events';
 import type { BitcoinNetworkInfo } from '../../types';
 import type { SelectFeeLevel } from '../../types/account';
 
-const fees: Array<SelectFeeLevel> = [];
+const fees: SelectFeeLevel[] = [];
 // reference to currently selected button
 let selectedFee: ?HTMLElement;
 
@@ -17,8 +17,8 @@ let selectedFee: ?HTMLElement;
  * Update custom fee view.
  */
 export const updateCustomFee = (payload: $PropertyType<UpdateCustomFee, 'payload'>) => {
-    const custom: HTMLElement = container.getElementsByClassName('custom-fee')[0];
-    const opener: HTMLElement = container.getElementsByClassName('opener')[0];
+    const custom = container.getElementsByClassName('custom-fee')[0];
+    const opener = container.getElementsByClassName('opener')[0];
     const customFeeLabel = opener.getElementsByClassName('fee-info')[0];
 
     if (custom.className.indexOf('active') < 0) {
@@ -47,18 +47,18 @@ export const updateCustomFee = (payload: $PropertyType<UpdateCustomFee, 'payload
 };
 
 const validation = (coinInfo: BitcoinNetworkInfo) => {
-    const sendButton: HTMLElement = container.getElementsByClassName('send-button')[0];
+    const sendButton = container.getElementsByClassName('send-button')[0];
     if (!selectedFee) {
         sendButton.setAttribute('disabled', 'disabled');
         sendButton.innerHTML = 'Send';
         return;
     }
-    const selectedName: string = selectedFee.getAttribute('data-fee') || 'custom';
+    const selectedName = selectedFee.getAttribute('data-fee') || 'custom';
     const selectedValue = fees.find(f => f.name === selectedName);
 
     if (selectedValue && selectedValue.fee !== '0') {
         sendButton.removeAttribute('disabled');
-        sendButton.innerHTML = `Send ${ formatAmount(selectedValue.total, coinInfo) }`;
+        sendButton.innerHTML = `Send ${formatAmount(selectedValue.total, coinInfo)}`;
     } else {
         sendButton.setAttribute('disabled', 'disabled');
         sendButton.innerHTML = 'Send';
@@ -68,7 +68,7 @@ const validation = (coinInfo: BitcoinNetworkInfo) => {
 /*
  * Show select fee view.
  */
-export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
+export const selectFee = (data: $PropertyType<SelectFee, 'payload'>) => {
     if (!data || !Array.isArray(data.feeLevels)) return; // TODO: back to accounts?
 
     showView('select-fee');
@@ -80,8 +80,8 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
     fees.push(...data.feeLevels);
 
     // build innerHTML string with fee buttons
-    const feesComponents: Array<string> = [];
-    fees.forEach((level, index) => {
+    const feesComponents: string[] = [];
+    fees.forEach(level => {
         // ignore custom
         if (level.name === 'custom') return;
 
@@ -111,18 +111,18 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         }
     });
 
-    const feeList: HTMLElement = container.getElementsByClassName('select-fee-list')[0];
+    const feeList = container.getElementsByClassName('select-fee-list')[0];
     // append custom fee button
     feesComponents.push(feeList.innerHTML);
     // render all buttons
     feeList.innerHTML = feesComponents.join('');
 
     // references to html elements
-    const sendButton: HTMLElement = container.getElementsByClassName('send-button')[0];
-    const opener: HTMLElement = container.getElementsByClassName('opener')[0];
+    const sendButton = container.getElementsByClassName('send-button')[0];
+    const opener = container.getElementsByClassName('opener')[0];
     const customFeeLabel = opener.getElementsByClassName('fee-info')[0];
 
-    const onFeeSelect = (event: MouseEvent): void => {
+    const onFeeSelect = (event: MouseEvent) => {
         if (event.currentTarget instanceof HTMLElement) {
             if (selectedFee) {
                 selectedFee.classList.remove('active');
@@ -135,13 +135,13 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
     };
 
     // find all buttons which has composed transaction and add click event listener to it
-    const feeButtons: NodeList<HTMLElement> = feeList.querySelectorAll('[data-fee]');
+    const feeButtons = feeList.querySelectorAll('[data-fee]');
     for (let i = 0; i < feeButtons.length; i++) {
         feeButtons.item(i).addEventListener('click', onFeeSelect);
     }
 
     // custom fee button logic
-    let composingTimeout: number = 0;
+    let composingTimeout = 0;
     opener.onclick = () => {
         if (opener.className.indexOf('active') >= 0) return;
 
@@ -150,10 +150,10 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         }
 
         const composedCustomFee = fees.find(f => f.name === 'custom');
-        let customFeeDefaultValue: string = '0';
+        let customFeeDefaultValue = '0';
         if (!composedCustomFee) {
             if (selectedFee) {
-                const selectedName: ?string = selectedFee.getAttribute('data-fee');
+                const selectedName = selectedFee.getAttribute('data-fee');
                 const selectedValue = fees.find(f => f.name === selectedName);
                 if (selectedValue && selectedValue.fee !== '0') {
                     customFeeDefaultValue = selectedValue.feePerByte;
@@ -174,7 +174,7 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
     };
 
     const focusInput = (defaultValue: string) => {
-        const input: HTMLInputElement = container.getElementsByTagName('input')[0];
+        const input = container.getElementsByTagName('input')[0];
         setTimeout(() => {
             // eslint-disable-next-line no-use-before-define
             input.oninput = handleCustomFeeChange;
@@ -188,18 +188,18 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         }, 1);
     };
 
-    const minFee: number = data.coinInfo.minFeeSatoshiKb / 1000;
-    const maxFee: number = data.coinInfo.maxFeeSatoshiKb / 1000;
+    const minFee = data.coinInfo.minFeeSatoshiKb / 1000;
+    const maxFee = data.coinInfo.maxFeeSatoshiKb / 1000;
 
-    const handleCustomFeeChange = (event: Event): void => {
+    const handleCustomFeeChange = (event: Event) => {
         window.clearTimeout(composingTimeout);
 
         sendButton.setAttribute('disabled', 'disabled');
         // $FlowIssue value not found on Event target
-        const value = event.currentTarget.value;
-        const valueNum = parseInt(value);
+        const { value } = event.currentTarget;
+        const valueNum = parseInt(value, 10);
 
-        if (isNaN(valueNum)) {
+        if (Number.isNaN(valueNum)) {
             if (value.length > 0) {
                 customFeeLabel.innerHTML = 'Incorrect fee';
             } else {
@@ -215,31 +215,37 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
             customFeeLabel.innerHTML = 'Composing...';
 
             const composeCustomFeeTimeoutHandler = () => {
-                postMessage(UiMessage(UI.RECEIVE_FEE, {
-                    type: 'compose-custom',
-                    value,
-                }));
+                postMessage(
+                    UiMessage(UI.RECEIVE_FEE, {
+                        type: 'compose-custom',
+                        value,
+                    }),
+                );
             };
 
             composingTimeout = window.setTimeout(composeCustomFeeTimeoutHandler, 800);
         }
     };
 
-    const changeAccountButton: HTMLElement = container.getElementsByClassName('back-button')[0];
+    const changeAccountButton = container.getElementsByClassName('back-button')[0];
     changeAccountButton.onclick = () => {
-        postMessage(UiMessage(UI.RECEIVE_FEE, {
-            type: 'change-account',
-        }));
+        postMessage(
+            UiMessage(UI.RECEIVE_FEE, {
+                type: 'change-account',
+            }),
+        );
         showView('loader');
     };
 
     sendButton.onclick = () => {
         if (!selectedFee) return;
-        const selectedName: ?string = selectedFee.getAttribute('data-fee');
-        postMessage(UiMessage(UI.RECEIVE_FEE, {
-            type: 'send',
-            value: selectedName || 'custom',
-        }));
+        const selectedName = selectedFee.getAttribute('data-fee');
+        postMessage(
+            UiMessage(UI.RECEIVE_FEE, {
+                type: 'send',
+                value: selectedName || 'custom',
+            }),
+        );
         showView('loader');
     };
 
@@ -258,4 +264,3 @@ export const selectFee = (data: $PropertyType<SelectFee, 'payload'>): void => {
         }
     }
 };
-

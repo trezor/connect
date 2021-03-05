@@ -15,7 +15,7 @@ const processTxRequest = async (
     index: number,
 ) => {
     const { type, ...params } = messages[index];
-    const lastOp = (index + 1 >= messages.length);
+    const lastOp = index + 1 >= messages.length;
 
     if (lastOp) {
         // $FlowIssue type and params are unions. TODO: make exact BinancePreparedMessage
@@ -26,15 +26,11 @@ const processTxRequest = async (
     await typedCall(type, 'BinanceTxRequest', params);
     index++;
 
-    return processTxRequest(
-        typedCall,
-        messages,
-        index
-    );
+    return processTxRequest(typedCall, messages, index);
 };
 
 // validate and translate params to protobuf
-export const validate = (tx: BinanceSDKTransaction): BinancePreparedTransaction => {
+export const validate = (tx: BinanceSDKTransaction) => {
     validateParams(tx, [
         { name: 'chain_id', type: 'string', obligatory: true },
         { name: 'account_number', type: 'number' },
@@ -105,14 +101,7 @@ export const signTx = async (
     address_n: number[],
     tx: BinancePreparedTransaction,
 ) => {
-    const {
-        account_number,
-        chain_id,
-        memo,
-        sequence,
-        source,
-        messages,
-    } = tx;
+    const { account_number, chain_id, memo, sequence, source, messages } = tx;
     const msg_count = messages.length;
 
     await typedCall('BinanceSignTx', 'BinanceTxRequest', {

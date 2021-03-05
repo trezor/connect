@@ -30,15 +30,22 @@ const DEFAULT_CAPABILITIES_TT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 export const parseCapabilities = (features?: Features): Capability[] => {
     if (!features || features.firmware_present === false) return []; // no features or no firmware - no capabilities
     // needs to be "any" since Features.capabilities are declared as string[] but in fact it's a number[]
-    const filter = (c: any) => CAPABILITIES[c - 1] ? [CAPABILITIES[c - 1]] : [];
+    const filter = (c: any) => (CAPABILITIES[c - 1] ? [CAPABILITIES[c - 1]] : []);
     // fallback for older firmware
-    if (!features.capabilities || !features.capabilities.length) return features.major_version === 1 ? DEFAULT_CAPABILITIES_T1.flatMap(filter) : DEFAULT_CAPABILITIES_TT.flatMap(filter);
+    if (!features.capabilities || !features.capabilities.length)
+        return features.major_version === 1
+            ? DEFAULT_CAPABILITIES_T1.flatMap(filter)
+            : DEFAULT_CAPABILITIES_TT.flatMap(filter);
     // regular capabilities
     return features.capabilities.flatMap(filter);
 };
 
 // TODO: support type
-export const getUnavailableCapabilities = (features: Features, coins: CoinInfo[], support: any[]) => {
+export const getUnavailableCapabilities = (
+    features: Features,
+    coins: CoinInfo[],
+    support: any[],
+) => {
     const { capabilities } = features;
     const list = {};
     if (!capabilities) return list;
@@ -60,7 +67,8 @@ export const getUnavailableCapabilities = (features: Features, coins: CoinInfo[]
         }
         // misc
         if (info.shortcut === 'BNB') return !capabilities.includes('Capability_Binance');
-        if (info.shortcut === 'XRP' || info.shortcut === 'tXRP') return !capabilities.includes('Capability_Ripple');
+        if (info.shortcut === 'XRP' || info.shortcut === 'tXRP')
+            return !capabilities.includes('Capability_Ripple');
         return !capabilities.includes(`Capability_${info.name}`);
     });
 

@@ -7,12 +7,12 @@ import { container, iframe, showView, postMessage } from './common';
 import DataManager from '../../data/DataManager';
 import type { SelectDevice } from '../../types/events';
 
-const initWebUsbButton = (webusb: boolean, showLoader: boolean): void => {
+const initWebUsbButton = (webusb: boolean, showLoader: boolean) => {
     if (!webusb) return;
 
-    const webusbContainer: HTMLElement = container.getElementsByClassName('webusb')[0];
+    const webusbContainer = container.getElementsByClassName('webusb')[0];
     webusbContainer.style.display = 'flex';
-    const button: HTMLButtonElement = webusbContainer.getElementsByTagName('button')[0];
+    const button = webusbContainer.getElementsByTagName('button')[0];
 
     if (!iframe) {
         button.innerHTML = '<span class="plus"></span><span class="text">Pair devices</span>';
@@ -26,7 +26,9 @@ const initWebUsbButton = (webusb: boolean, showLoader: boolean): void => {
         }
         try {
             await usb.requestDevice({ filters: DataManager.getConfig().webusb });
-            if (showLoader) { showView('loader'); }
+            if (showLoader) {
+                showView('loader');
+            }
         } catch (error) {
             // empty, do nothing
         }
@@ -35,7 +37,7 @@ const initWebUsbButton = (webusb: boolean, showLoader: boolean): void => {
     button.onclick = onClick;
 };
 
-export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): void => {
+export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>) => {
     if (!payload) return;
 
     if (!payload.devices || !Array.isArray(payload.devices) || payload.devices.length === 0) {
@@ -56,34 +58,39 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
     }
 
     // Populate device list
-    const deviceList: HTMLElement = container.getElementsByClassName('select-device-list')[0];
+    const deviceList = container.getElementsByClassName('select-device-list')[0];
     // deviceList.innerHTML = '';
-    const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName('remember-device')[0]: any);
+    const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName(
+        'remember-device',
+    )[0]: any);
 
     // Show readable devices first
     payload.devices.sort((d1, d2) => {
         if (d1.type === 'unreadable' && d2.type !== 'unreadable') {
             return 1;
-        } else if (d1.type !== 'unreadable' && d2.type === 'unreadable') {
+        }
+        if (d1.type !== 'unreadable' && d2.type === 'unreadable') {
             return -1;
         }
         return 0;
     });
 
     payload.devices.forEach(device => {
-        const deviceButton: HTMLButtonElement = document.createElement('button');
+        const deviceButton = document.createElement('button');
         deviceButton.className = 'list';
         if (device.type !== 'unreadable') {
             deviceButton.addEventListener('click', () => {
-                postMessage(UiMessage(UI.RECEIVE_DEVICE, {
-                    remember: (rememberCheckbox && rememberCheckbox.checked),
-                    device,
-                }));
+                postMessage(
+                    UiMessage(UI.RECEIVE_DEVICE, {
+                        remember: rememberCheckbox && rememberCheckbox.checked,
+                        device,
+                    }),
+                );
                 showView('loader');
             });
         }
 
-        const deviceIcon: HTMLSpanElement = document.createElement('span');
+        const deviceIcon = document.createElement('span');
         deviceIcon.className = 'icon';
 
         if (device.features) {
@@ -92,29 +99,25 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>): v
             }
         }
 
-        const deviceName: HTMLSpanElement = document.createElement('span');
+        const deviceName = document.createElement('span');
         deviceName.className = 'device-name';
         deviceName.textContent = device.label;
 
-        const wrapper: HTMLDivElement = document.createElement('div');
+        const wrapper = document.createElement('div');
         wrapper.className = 'wrapper';
         wrapper.appendChild(deviceIcon);
         wrapper.appendChild(deviceName);
         deviceButton.appendChild(wrapper);
 
-        // device {
-        //     status: 'available' | 'occupied' | 'used';
-        //     type: 'acquired' | 'unacquired' | 'unreadable';
-        // }
-        // if (device.status !== 'available') {
         if (device.type !== 'acquired' || device.status === 'occupied') {
             deviceButton.classList.add('device-explain');
 
-            const explanation: HTMLDivElement = document.createElement('div');
+            const explanation = document.createElement('div');
             explanation.className = 'explain';
 
-            const htmlUnreadable: string = 'Please install <a href="https://suite.trezor.io/web/bridge/" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">Bridge</a> to use Trezor device.';
-            const htmlUnacquired: string = 'Click to activate. This device is used by another application.';
+            const htmlUnreadable =
+                'Please install <a href="https://suite.trezor.io/web/bridge/" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">Bridge</a> to use Trezor device.';
+            const htmlUnacquired = 'Click to activate. This device is used by another application.';
 
             if (device.type === 'unreadable') {
                 deviceButton.disabled = true;

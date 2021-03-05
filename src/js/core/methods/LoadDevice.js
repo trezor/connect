@@ -9,11 +9,12 @@ import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class LoadDevice extends AbstractMethod {
     params: $ElementType<MessageType, 'LoadDevice'>;
+
     confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
         super(message);
-        this.allowDeviceMode = [ UI.INITIALIZE, UI.SEEDLESS ];
+        this.allowDeviceMode = [UI.INITIALIZE, UI.SEEDLESS];
         this.useDeviceState = false;
         this.requiredPermissions = ['management'];
         this.info = 'Load device';
@@ -43,7 +44,7 @@ export default class LoadDevice extends AbstractMethod {
         };
     }
 
-    async confirmation(): Promise<boolean> {
+    async confirmation() {
         if (this.confirmed) return true;
         // wait for popup window
         await this.getPopupPromise().promise;
@@ -51,14 +52,16 @@ export default class LoadDevice extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'device-management',
-            customConfirmButton: {
-                className: 'wipe',
-                label: `Load ${this.device.toMessageObject().label}`,
-            },
-            label: 'Are you sure you want to load your device?',
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'device-management',
+                customConfirmButton: {
+                    className: 'wipe',
+                    label: `Load ${this.device.toMessageObject().label}`,
+                },
+                label: 'Are you sure you want to load your device?',
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;
@@ -71,10 +74,13 @@ export default class LoadDevice extends AbstractMethod {
         // todo: remove when listed firmwares become mandatory
         if (!this.device.atLeast(['1.8.2', '2.1.2'])) {
             if (!this.params.mnemonics || typeof this.params.mnemonics[0] !== 'string') {
-                throw ERRORS.TypedError('Method_InvalidParameter', 'invalid mnemonic array. should contain at least one mnemonic string');
+                throw ERRORS.TypedError(
+                    'Method_InvalidParameter',
+                    'invalid mnemonic array. should contain at least one mnemonic string',
+                );
             }
             // $FlowIssue older protobuf messages requires mnemonic as string
-            this.params.mnemonic = this.params.mnemonics[0];
+            this.params.mnemonic = this.params.mnemonics.join('');
             // $FlowIssue older protobuf messages doesn't have mnemonics field
             delete this.params.mnemonics;
         }

@@ -42,7 +42,9 @@ export default class SignMessage extends AbstractMethod {
             this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
         }
 
-        const messageHex = payload.hex ? messageToHex(payload.message) : Buffer.from(payload.message, 'utf8').toString('hex');
+        const messageHex = payload.hex
+            ? messageToHex(payload.message)
+            : Buffer.from(payload.message, 'utf8').toString('hex');
         const scriptType = getScriptType(path);
         this.params = {
             address_n: path,

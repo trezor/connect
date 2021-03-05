@@ -12,10 +12,10 @@ export function clone<T>(obj: T): T {
 
 export function entries<T>(obj: { [string]: T }): Array<[string, T]> {
     const keys: string[] = Object.keys(obj);
-    return keys.map(key => [ key, obj[key] ]);
+    return keys.map(key => [key, obj[key]]);
 }
 
-export function deepClone(obj: any, hash: any = new WeakMap()) {
+export function deepClone(_obj: any, _hash: any = new WeakMap()) {
     // if (Object(obj) !== obj) return obj; // primitives
     // if (hash.has(obj)) return hash.get(obj); // cyclic reference
     // const result = Array.isArray(obj) ? [] : obj.constructor ? new obj.constructor() : Object.create(null);
@@ -26,20 +26,19 @@ export function deepClone(obj: any, hash: any = new WeakMap()) {
 }
 
 export function snapshot(obj: any) {
-    if (obj == null || typeof (obj) !== 'object') {
+    if (obj == null || typeof obj !== 'object') {
         return obj;
     }
 
     const temp = new obj.constructor();
-
-    for (const key in obj) {
+    Object.keys(temp).forEach(key => {
         if (Object.prototype.hasOwnProperty.call(obj, key)) {
             temp[key] = snapshot(obj[key]);
         }
-    }
+    });
     return temp;
 }
 
-export function objectValues<X>(object: {[key: string]: X}): Array<X> {
+export function objectValues<X>(object: { [key: string]: X }): X[] {
     return Object.keys(object).map(key => object[key]);
 }

@@ -6,14 +6,13 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/stellarSignTx';
 
-import type { StellarTransaction } from '../../types/networks/stellar';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    path: number[];
-    networkPassphrase: string;
-    transaction: any;
-}
+    path: number[],
+    networkPassphrase: string,
+    transaction: any,
+};
 
 export default class StellarSignTransaction extends AbstractMethod {
     params: Params;
@@ -21,7 +20,11 @@ export default class StellarSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Stellar'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(
+            this.name,
+            getMiscNetwork('Stellar'),
+            this.firmwareRange,
+        );
         this.info = 'Sign Stellar transaction';
 
         const { payload } = message;
@@ -34,7 +37,7 @@ export default class StellarSignTransaction extends AbstractMethod {
 
         const path = validatePath(payload.path, 3);
         // incoming data should be in stellar-sdk format
-        const transaction: StellarTransaction = payload.transaction;
+        const { transaction } = payload;
         this.params = {
             path,
             networkPassphrase: payload.networkPassphrase,
@@ -47,7 +50,7 @@ export default class StellarSignTransaction extends AbstractMethod {
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,
             this.params.networkPassphrase,
-            this.params.transaction
+            this.params.transaction,
         );
 
         return {

@@ -1,19 +1,21 @@
+/* eslint-disable max-classes-per-file */
 /* @flow */
 
 import EventEmitter from 'events';
+import TrezorLink from 'trezor-link';
+import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 import { TRANSPORT, DEVICE, ERRORS } from '../constants';
 import DescriptorStream from './DescriptorStream';
 import type { DeviceDescriptorDiff } from './DescriptorStream';
 import Device from './Device';
 import type { Device as DeviceTyped } from '../types';
-import TrezorLink from 'trezor-link';
-import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 import DataManager from '../data/DataManager';
 import { getBridgeInfo } from '../data/TransportInfo';
 import { initLog } from '../utils/debug';
 import { resolveAfter } from '../utils/promiseUtils';
 
 import { WebUsbPlugin, ReactNativeUsbPlugin } from '../env/node/workers';
+
 const { BridgeV2, Fallback } = TrezorLink;
 
 // custom log
@@ -21,25 +23,33 @@ const _log = initLog('DeviceList');
 
 // TODO: plugins are not typed in 'trezor-link'
 type LowLevelPlugin = {
-    name: 'WebUsbPlugin' | 'ReactNativePlugin';
+    name: 'WebUsbPlugin' | 'ReactNativePlugin',
     unreadableHidDeviceChange: {
-        on: (event: string, fn: any) => void;
-    };
-    unreadableHidDevice: boolean; // not sure
-}
+        on: (event: string, fn: any) => void,
+    },
+    unreadableHidDevice: boolean, // not sure
+};
 
 export default class DeviceList extends EventEmitter {
     transport: Transport;
+
     transportPlugin: LowLevelPlugin | typeof undefined;
+
     stream: DescriptorStream;
-    devices: {[path: string]: Device} = {};
-    creatingDevicesDescriptors: {[k: string]: DeviceDescriptor} = {};
+
+    devices: { [path: string]: Device } = {};
+
+    creatingDevicesDescriptors: { [k: string]: DeviceDescriptor } = {};
 
     defaultMessages: JSON;
+
     currentMessages: JSON;
+
     hasCustomMessages: boolean = false;
+
     transportStartPending: number = 0;
-    penalizedDevices: {[deviceID: string]: number} = {};
+
+    penalizedDevices: { [deviceID: string]: number } = {};
 
     constructor() {
         super();
@@ -155,6 +165,7 @@ export default class DeviceList extends EventEmitter {
         });
 
         stream.on(TRANSPORT.UPDATE, (diff: DeviceDescriptorDiff) => {
+            // eslint-disable-next-line no-use-before-define
             new DiffHandler(this, diff).handle();
         });
 
@@ -170,7 +181,12 @@ export default class DeviceList extends EventEmitter {
             const { unreadableHidDeviceChange } = this.transportPlugin;
             unreadableHidDeviceChange.on('change', async () => {
                 if (this.transportPlugin && this.transportPlugin.unreadableHidDevice) {
-                    const device = await this._createUnacquiredDevice({ path: DEVICE.UNREADABLE, session: null, debugSession: null, debug: false });
+                    const device = await this._createUnacquiredDevice({
+                        path: DEVICE.UNREADABLE,
+                        session: null,
+                        debugSession: null,
+                        debug: false,
+                    });
                     this.devices[DEVICE.UNREADABLE] = device;
                     this.emit(DEVICE.CONNECT_UNACQUIRED, device.toMessageObject());
                 } else {
@@ -186,11 +202,14 @@ export default class DeviceList extends EventEmitter {
 
     async _createAndSaveDevice(descriptor: DeviceDescriptor) {
         _log.debug('Creating Device', descriptor);
+        // eslint-disable-next-line no-use-before-define
         await new CreateDeviceHandler(descriptor, this).handle();
     }
 
     async _createUnacquiredDevice(descriptor: DeviceDescriptor) {
-        const currentDescriptor = (this.stream.current && this.stream.current.find(d => d.path === descriptor.path)) || descriptor;
+        const currentDescriptor =
+            (this.stream.current && this.stream.current.find(d => d.path === descriptor.path)) ||
+            descriptor;
         _log.debug('Creating Unacquired Device', currentDescriptor);
 
         const device = await Device.createUnacquired(this.transport, currentDescriptor);
@@ -213,7 +232,7 @@ export default class DeviceList extends EventEmitter {
     }
 
     allDevices(): Device[] {
-        return Object.keys(this.devices).map((key: string) => this.devices[key]);
+        return Object.keys(this.devices).map(key => this.devices[key]);
     }
 
     length() {
@@ -259,7 +278,7 @@ export default class DeviceList extends EventEmitter {
         this.stream.enumerate();
         if (!this.stream.current) return;
         // update current values
-        this.stream.current.forEach((descriptor) => {
+        this.stream.current.forEach(descriptor => {
             const path = descriptor.path.toString();
             const device = this.devices[path];
             if (device) {
@@ -271,15 +290,18 @@ export default class DeviceList extends EventEmitter {
     addAuthPenalty(device: Device) {
         if (!device.isInitialized() || device.isBootloader() || !device.features.device_id) return;
         const deviceID = device.features.device_id;
-        const penalty = this.penalizedDevices[deviceID] ? this.penalizedDevices[deviceID] + 500 : 2000;
+        const penalty = this.penalizedDevices[deviceID]
+            ? this.penalizedDevices[deviceID] + 500
+            : 2000;
         this.penalizedDevices[deviceID] = Math.min(penalty, 5000);
     }
 
     getAuthPenalty() {
         const { penalizedDevices } = this;
-        return Object.keys(penalizedDevices).reduce((penalty, key) => {
-            return Math.max(penalty, penalizedDevices[key]);
-        }, 0);
+        return Object.keys(penalizedDevices).reduce(
+            (penalty, key) => Math.max(penalty, penalizedDevices[key]),
+            0,
+        );
     }
 
     removeAuthPenalty(device: Device) {
@@ -303,7 +325,9 @@ export const getDeviceList = async () => {
 // Helper class for creating new device
 class CreateDeviceHandler {
     descriptor: DeviceDescriptor;
+
     list: DeviceList;
+
     path: string;
 
     constructor(descriptor: DeviceDescriptor, list: DeviceList) {
@@ -328,7 +352,10 @@ class CreateDeviceHandler {
             if (error.code === 'Device_NotFound') {
                 // do nothing
                 // it's a race condition between "device_changed" and "device_disconnected"
-            } else if (error.message === ERRORS.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE || error.toString() === ERRORS.WEBUSB_ERROR_MESSAGE) {
+            } else if (
+                error.message === ERRORS.WRONG_PREVIOUS_SESSION_ERROR_MESSAGE ||
+                error.toString() === ERRORS.WEBUSB_ERROR_MESSAGE
+            ) {
                 this.list.enumerate();
                 await this._handleUsedElsewhere();
             } else if (error.code === 'Device_InitializeFailed') {
@@ -345,7 +372,7 @@ class CreateDeviceHandler {
         delete this.list.creatingDevicesDescriptors[this.path];
     }
 
-    async _takeAndCreateDevice(): Promise<void> {
+    async _takeAndCreateDevice() {
         const device = await Device.fromDescriptor(this.list.transport, this.descriptor);
         this.list.devices[this.path] = device;
         await device.run();
@@ -353,7 +380,9 @@ class CreateDeviceHandler {
     }
 
     async _handleUsedElsewhere() {
-        const device = await this.list._createUnacquiredDevice(this.list.creatingDevicesDescriptors[this.path]);
+        const device = await this.list._createUnacquiredDevice(
+            this.list.creatingDevicesDescriptors[this.path],
+        );
         this.list.devices[this.path] = device;
         this.list.emit(DEVICE.CONNECT_UNACQUIRED, device.toMessageObject());
     }
@@ -362,6 +391,7 @@ class CreateDeviceHandler {
 // Helper class for actual logic of handling differences
 class DiffHandler {
     list: DeviceList;
+
     diff: DeviceDescriptorDiff;
 
     constructor(list: DeviceList, diff: DeviceDescriptorDiff) {
@@ -385,8 +415,8 @@ class DiffHandler {
 
     _updateDescriptors() {
         this.diff.descriptors.forEach((descriptor: DeviceDescriptor) => {
-            const path: string = descriptor.path.toString();
-            const device: Device = this.list.devices[path];
+            const path = descriptor.path.toString();
+            const device = this.list.devices[path];
             if (device) {
                 device.updateDescriptor(descriptor);
             }
@@ -394,23 +424,25 @@ class DiffHandler {
     }
 
     _emitEvents() {
-        const events: Array<{d: Array<DeviceDescriptor>; e: string}> = [
+        const events = [
             {
                 d: this.diff.changedSessions,
                 e: DEVICE.CHANGED,
-            }, {
+            },
+            {
                 d: this.diff.acquired,
                 e: DEVICE.ACQUIRED,
-            }, {
+            },
+            {
                 d: this.diff.released,
                 e: DEVICE.RELEASED,
             },
         ];
 
-        events.forEach(({d, e}: {d: Array<DeviceDescriptor>; e: string}) => {
-            d.forEach((descriptor: DeviceDescriptor) => {
-                const path: string = descriptor.path.toString();
-                const device: Device = this.list.devices[path];
+        events.forEach(({ d, e }) => {
+            d.forEach(descriptor => {
+                const path = descriptor.path.toString();
+                const device = this.list.devices[path];
                 _log.debug('Event', e, device);
                 if (device) {
                     this.list.emit(e, device.toMessageObject());
@@ -420,9 +452,9 @@ class DiffHandler {
     }
 
     // tries to read info about connected devices
-    async _createConnectedDevices() {
-        for (const descriptor of this.diff.connected) {
-            const path: string = descriptor.path.toString();
+    _createConnectedDevices() {
+        this.diff.connected.forEach(async descriptor => {
+            const path = descriptor.path.toString();
             const priority: number = DataManager.getSettings('priority');
             const penalty = this.list.getAuthPenalty();
             _log.debug('Connected', priority, penalty, descriptor.session, this.list.devices);
@@ -432,27 +464,27 @@ class DiffHandler {
             if (descriptor.session == null) {
                 await this.list._createAndSaveDevice(descriptor);
             } else {
-                const device: Device = await this.list._createUnacquiredDevice(descriptor);
+                const device = await this.list._createUnacquiredDevice(descriptor);
                 this.list.devices[path] = device;
                 this.list.emit(DEVICE.CONNECT_UNACQUIRED, device.toMessageObject());
             }
-        }
+        });
     }
 
     _signalAcquiredDevices() {
-        for (const descriptor of this.diff.acquired) {
-            const path: string = descriptor.path.toString();
+        this.diff.acquired.forEach(descriptor => {
+            const path = descriptor.path.toString();
             if (this.list.creatingDevicesDescriptors[path]) {
                 this.list.creatingDevicesDescriptors[path] = descriptor;
             }
-        }
+        });
     }
 
     // tries acquire and read info about recently released devices
-    async _createReleasedDevices() {
-        for (const descriptor of this.diff.released) {
-            const path: string = descriptor.path.toString();
-            const device: Device = this.list.devices[path];
+    _createReleasedDevices() {
+        this.diff.released.forEach(async descriptor => {
+            const path = descriptor.path.toString();
+            const device = this.list.devices[path];
             if (device) {
                 if (device.isUnacquired() && !device.isInconsistent()) {
                     // wait for publish changes
@@ -461,18 +493,18 @@ class DiffHandler {
                     await this.list._createAndSaveDevice(descriptor);
                 }
             }
-        }
+        });
     }
 
     _disconnectDevices() {
-        for (const descriptor of this.diff.disconnected) {
-            const path: string = descriptor.path.toString();
-            const device: Device = this.list.devices[path];
+        this.diff.disconnected.forEach(descriptor => {
+            const path = descriptor.path.toString();
+            const device = this.list.devices[path];
             if (device != null) {
                 device.disconnect();
                 delete this.list.devices[path];
                 this.list.emit(DEVICE.DISCONNECT, device.toMessageObject());
             }
-        }
+        });
     }
 }

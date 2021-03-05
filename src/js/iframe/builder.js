@@ -6,17 +6,19 @@ import { getOrigin } from '../env/browser/networkUtils';
 import css from './inline-styles';
 import type { ConnectSettings, Deferred } from '../types';
 
+/* eslint-disable import/no-mutable-exports */
 export let instance: ?HTMLIFrameElement;
 export let origin: string;
 export let initPromise: Deferred<void> = createDeferred();
 export let timeout: number = 0;
 export let error: ?ERRORS.TrezorError;
+/* eslint-enable import/no-mutable-exports */
 
 let _messageID: number = 0;
 // every postMessage to iframe has its own promise to resolve
 export const messagePromises: { [key: number]: Deferred<any> } = {};
 
-export const init = async (settings: ConnectSettings): Promise<void> => {
+export const init = async (settings: ConnectSettings) => {
     initPromise = createDeferred();
     const existedFrame: HTMLIFrameElement = (document.getElementById('trezorconnect'): any);
     if (existedFrame) {
@@ -36,11 +38,11 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
 
     let src: string;
     if (settings.env === 'web') {
-        const manifestString = settings.manifest
-            ? JSON.stringify(settings.manifest)
-            : 'undefined'; // note: btoa(undefined) === btoa('undefined') === "dW5kZWZpbmVk"
-        const manifest = `version=${settings.version}&manifest=${encodeURIComponent(btoa(JSON.stringify(manifestString)))}`;
-        src = `${settings.iframeSrc}?${ manifest }`;
+        const manifestString = settings.manifest ? JSON.stringify(settings.manifest) : 'undefined'; // note: btoa(undefined) === btoa('undefined') === "dW5kZWZpbmVk"
+        const manifest = `version=${settings.version}&manifest=${encodeURIComponent(
+            btoa(JSON.stringify(manifestString)),
+        )}`;
+        src = `${settings.iframeSrc}?${manifest}`;
     } else {
         src = settings.iframeSrc;
     }
@@ -62,7 +64,7 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
         }
         try {
             // if hosting page is able to access cross-origin location it means that the iframe is not loaded
-            const iframeOrigin: ?string = instance.contentWindow.location.origin;
+            const iframeOrigin = instance.contentWindow.location.origin;
             if (!iframeOrigin || iframeOrigin === 'null') {
                 // eslint-disable-next-line no-use-before-define
                 handleIframeBlocked();
@@ -74,18 +76,25 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
 
         let extension: ?string;
         // $FlowIssue chrome is not declared outside
-        if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined') {
-            chrome.runtime.onConnect.addListener(() => { });
+        if (
+            typeof chrome !== 'undefined' &&
+            chrome.runtime &&
+            typeof chrome.runtime.onConnect !== 'undefined'
+        ) {
+            chrome.runtime.onConnect.addListener(() => {});
             extension = chrome.runtime.id;
         }
 
-        instance.contentWindow.postMessage({
-            type: IFRAME.INIT,
-            payload: {
-                settings,
-                extension,
+        instance.contentWindow.postMessage(
+            {
+                type: IFRAME.INIT,
+                payload: {
+                    settings,
+                    extension,
+                },
             },
-        }, origin);
+            origin,
+        );
 
         instance.onload = undefined;
     };
@@ -105,34 +114,34 @@ export const init = async (settings: ConnectSettings): Promise<void> => {
 
     try {
         await initPromise.promise;
-    } catch (error) {
+    } catch (e) {
         // reset state to allow initialization again
         if (instance) {
             if (instance.parentNode) {
                 instance.parentNode.removeChild(instance);
             }
-            // eslint-disable-next-line require-atomic-updates
             instance = null;
         }
-        throw error;
+        throw e;
     } finally {
         window.clearTimeout(timeout);
         timeout = 0;
     }
 };
 
-const injectStyleSheet = (): void => {
+const injectStyleSheet = () => {
     if (!instance) {
         throw ERRORS.TypedError('Init_IframeBlocked');
     }
-    const doc: Document = instance.ownerDocument;
-    const head: HTMLElement = doc.head || doc.getElementsByTagName('head')[0];
-    const style: HTMLStyleElement = document.createElement('style');
+    const doc = instance.ownerDocument;
+    const head = doc.head || doc.getElementsByTagName('head')[0];
+    const style = document.createElement('style');
     style.setAttribute('type', 'text/css');
     style.setAttribute('id', 'TrezorConnectStylesheet');
 
     // $FlowIssue
-    if (style.styleSheet) { // IE
+    if (style.styleSheet) {
+        // IE
         // $FlowIssue
         style.styleSheet.cssText = css;
         head.appendChild(style);
@@ -142,7 +151,7 @@ const injectStyleSheet = (): void => {
     }
 };
 
-const handleIframeBlocked = (): void => {
+const handleIframeBlocked = () => {
     window.clearTimeout(timeout);
 
     error = ERRORS.TypedError('Init_IframeBlocked');
@@ -152,7 +161,7 @@ const handleIframeBlocked = (): void => {
 };
 
 // post messages to iframe
-export const postMessage = (message: any, usePromise: boolean = true): ?Promise<void> => {
+export const postMessage = (message: any, usePromise: boolean = true) => {
     if (!instance) {
         throw ERRORS.TypedError('Init_IframeBlocked');
     }
@@ -173,7 +182,7 @@ export const dispose = () => {
     if (instance && instance.parentNode) {
         try {
             instance.parentNode.removeChild(instance);
-        } catch (error) {
+        } catch (e) {
             // do nothing
         }
     }

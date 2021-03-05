@@ -16,7 +16,11 @@ export default class LiskSignTransaction extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Lisk'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(
+            this.name,
+            getMiscNetwork('Lisk'),
+            this.firmwareRange,
+        );
 
         const { payload } = message;
 

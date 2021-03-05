@@ -1,9 +1,6 @@
 /* @flow */
 
-import type {
-    Manifest,
-    ConnectSettings,
-} from '../types';
+import type { Manifest, ConnectSettings } from '../types';
 
 /*
  * Initial settings for connect.
@@ -11,10 +8,10 @@ import type {
  */
 
 const VERSION = '8.1.25';
-const versionN = VERSION.split('.').map(s => parseInt(s));
+const versionN = VERSION.split('.').map(s => parseInt(s, 10));
 // const DIRECTORY = `${ versionN[0] }${ (versionN[1] > 0 ? `.${versionN[1]}` : '') }/`;
 const DIRECTORY = `${versionN[0]}/`;
-const DEFAULT_DOMAIN = `https://connect.trezor.io/${ DIRECTORY }`;
+const DEFAULT_DOMAIN = `https://connect.trezor.io/${DIRECTORY}`;
 export const DEFAULT_PRIORITY = 2;
 
 const initialSettings: ConnectSettings = {
@@ -24,14 +21,15 @@ const initialSettings: ConnectSettings = {
     priority: DEFAULT_PRIORITY,
     trustedHost: false,
     connectSrc: DEFAULT_DOMAIN,
-    iframeSrc: `${ DEFAULT_DOMAIN }iframe.html`,
+    iframeSrc: `${DEFAULT_DOMAIN}iframe.html`,
     popup: true,
-    popupSrc: `${ DEFAULT_DOMAIN }popup.html`,
-    webusbSrc: `${ DEFAULT_DOMAIN }webusb.html`,
+    popupSrc: `${DEFAULT_DOMAIN}popup.html`,
+    webusbSrc: `${DEFAULT_DOMAIN}webusb.html`,
     transportReconnect: false,
     webusb: true,
     pendingTransportEvent: true,
-    supportedBrowser: typeof navigator !== 'undefined' ? !(/Trident|MSIE|Edge/.test(navigator.userAgent)) : true,
+    supportedBrowser:
+        typeof navigator !== 'undefined' ? !/Trident|MSIE|Edge/.test(navigator.userAgent) : true,
     manifest: null,
     env: 'web',
     lazyLoad: false,
@@ -54,11 +52,18 @@ const parseManifest = (manifest: ?Manifest): ?Manifest => {
 
 export const getEnv = () => {
     // $FlowIssue: chrome is not declared outside the project
-    if (typeof chrome !== 'undefined' && chrome.runtime && typeof chrome.runtime.onConnect !== 'undefined') {
+    if (
+        typeof chrome !== 'undefined' &&
+        chrome.runtime &&
+        typeof chrome.runtime.onConnect !== 'undefined'
+    ) {
         return 'webextension';
     }
     if (typeof navigator !== 'undefined') {
-        if (typeof navigator.product === 'string' && navigator.product.toLowerCase() === 'reactnative') {
+        if (
+            typeof navigator.product === 'string' &&
+            navigator.product.toLowerCase() === 'reactnative'
+        ) {
             return 'react-native';
         }
         const userAgent = navigator.userAgent.toLowerCase();
@@ -84,7 +89,12 @@ export const corsValidator = (url?: string) => {
     if (url.match(/^https:\/\/([A-Za-z0-9\-_]+\.)*trezor\.io\//)) return url;
     if (url.match(/^https?:\/\/localhost:[58][0-9]{3}\//)) return url;
     if (url.match(/^https:\/\/([A-Za-z0-9\-_]+\.)*sldev\.cz\//)) return url;
-    if (url.match(/^https?:\/\/([A-Za-z0-9\-_]+\.)*trezoriovpjcahpzkrewelclulmszwbqpzmzgub37gbcjlvluxtruqad\.onion\//)) return url;
+    if (
+        url.match(
+            /^https?:\/\/([A-Za-z0-9\-_]+\.)*trezoriovpjcahpzkrewelclulmszwbqpzmzgub37gbcjlvluxtruqad\.onion\//,
+        )
+    )
+        return url;
 };
 
 export const parse = (input: $Shape<ConnectSettings> = {}) => {
@@ -92,7 +102,8 @@ export const parse = (input: $Shape<ConnectSettings> = {}) => {
     if (Object.prototype.hasOwnProperty.call(input, 'debug')) {
         if (Array.isArray(input)) {
             // enable log with prefix
-        } if (typeof input.debug === 'boolean') {
+        }
+        if (typeof input.debug === 'boolean') {
             settings.debug = input.debug;
         } else if (typeof input.debug === 'string') {
             settings.debug = input.debug === 'true';
@@ -110,7 +121,11 @@ export const parse = (input: $Shape<ConnectSettings> = {}) => {
 
     // For debugging purposes `connectSrc` could be defined in url query of hosting page. Usage:
     // https://3rdparty-page.com/?trezor-connect-src=https://localhost:8088/
-    if (typeof window !== 'undefined' && window.location && typeof window.location.search === 'string') {
+    if (
+        typeof window !== 'undefined' &&
+        window.location &&
+        typeof window.location.search === 'string'
+    ) {
         const vars = window.location.search.split('&');
         const customUrl = vars.find(v => v.indexOf('trezor-connect-src') >= 0);
         if (customUrl) {

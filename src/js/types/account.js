@@ -1,188 +1,185 @@
 /* @flow */
-import type {
-    TxInputType,
-    TxOutputType,
-} from './trezor/protobuf';
+import type { TxInputType, TxOutputType } from './trezor/protobuf';
 import type { VinVout, BlockbookTransaction } from './backend/transactions';
 
 // getAccountInfo params
 export type GetAccountInfo = {
-    coin: string;
-    path?: string;
-    descriptor?: string;
-    details?: 'basic' | 'tokens' | 'tokenBalances' | 'txids' | 'txs';
-    tokens?: 'nonzero' | 'used' | 'derived';
-    page?: number;
-    pageSize?: number;
-    from?: number;
-    to?: number;
-    contractFilter?: string;
-    gap?: number;
+    coin: string,
+    path?: string,
+    descriptor?: string,
+    details?: 'basic' | 'tokens' | 'tokenBalances' | 'txids' | 'txs',
+    tokens?: 'nonzero' | 'used' | 'derived',
+    page?: number,
+    pageSize?: number,
+    from?: number,
+    to?: number,
+    contractFilter?: string,
+    gap?: number,
     marker?: {
-        ledger: number;
-        seq: number;
-    };
-    defaultAccountType?: 'normal' | 'segwit' | 'legacy';
-}
+        ledger: number,
+        seq: number,
+    },
+    defaultAccountType?: 'normal' | 'segwit' | 'legacy',
+};
 
 export type TokenInfo = {
-    type: string; // token type: ERC20...
-    address: string; // token address
-    balance?: string; // token balance
-    name?: string; // token name
-    symbol?: string; // token symbol
-    decimals: number; // token decimals or 0
+    type: string, // token type: ERC20...
+    address: string, // token address
+    balance?: string, // token balance
+    name?: string, // token name
+    symbol?: string, // token symbol
+    decimals: number, // token decimals or 0
     // transfers: number, // total transactions?
-}
+};
 
 export type AccountAddress = {
-    address: string;
-    path: string;
-    transfers: number;
-    balance?: string;
-    sent?: string;
-    received?: string;
-}
+    address: string,
+    path: string,
+    transfers: number,
+    balance?: string,
+    sent?: string,
+    received?: string,
+};
 
 export type AccountAddresses = {
-    change: AccountAddress[];
-    used: AccountAddress[];
-    unused: AccountAddress[];
-}
+    change: AccountAddress[],
+    used: AccountAddress[],
+    unused: AccountAddress[],
+};
 
 export type AccountUtxo = {
-    txid: string;
-    vout: number;
-    amount: string;
-    blockHeight: number;
-    address: string;
-    path: string;
-    confirmations: number;
-    coinbase?: boolean;
-    required?: boolean;
-}
+    txid: string,
+    vout: number,
+    amount: string,
+    blockHeight: number,
+    address: string,
+    path: string,
+    confirmations: number,
+    coinbase?: boolean,
+    required?: boolean,
+};
 
 // Transaction object
 type TokenTransfer = {
-    type: 'sent' | 'recv' | 'self' | 'unknown';
-    name: string;
-    symbol: string;
-    address: string;
-    decimals: number;
-    amount: string;
-    from?: string;
-    to?: string;
-}
+    type: 'sent' | 'recv' | 'self' | 'unknown',
+    name: string,
+    symbol: string,
+    address: string,
+    decimals: number,
+    amount: string,
+    from?: string,
+    to?: string,
+};
 
 // Transaction object
 type TransactionTarget = {
-    addresses?: string[];
-    isAddress: boolean;
-    amount?: string;
-    coinbase?: string;
-    isAccountTarget?: boolean;
-    n: number;
-}
+    addresses?: string[],
+    isAddress: boolean,
+    amount?: string,
+    coinbase?: string,
+    isAccountTarget?: boolean,
+    n: number,
+};
 
 // Transaction from @trezor/blockchain-link
 export type AccountTransaction = {
-    type: 'sent' | 'recv' | 'self' | 'failed' | 'unknown';
+    type: 'sent' | 'recv' | 'self' | 'failed' | 'unknown',
 
-    txid: string;
-    blockTime?: number;
-    blockHeight?: number;
-    blockHash?: string;
-    lockTime?: number;
+    txid: string,
+    blockTime?: number,
+    blockHeight?: number,
+    blockHash?: string,
+    lockTime?: number,
 
-    amount: string;
-    fee: string;
-    totalSpent: string; // amount + fee
+    amount: string,
+    fee: string,
+    totalSpent: string, // amount + fee
 
-    targets: TransactionTarget[];
-    tokens: TokenTransfer[];
-    rbf?: boolean;
-    ethereumSpecific?: $ElementType<BlockbookTransaction, 'ethereumSpecific'>;
+    targets: TransactionTarget[],
+    tokens: TokenTransfer[],
+    rbf?: boolean,
+    ethereumSpecific?: $ElementType<BlockbookTransaction, 'ethereumSpecific'>,
     details: {
-        vin: VinVout[];
-        vout: VinVout[];
-        size: number;
-        totalInput: string;
-        totalOutput: string;
-    };
-}
+        vin: VinVout[],
+        vout: VinVout[],
+        size: number,
+        totalInput: string,
+        totalOutput: string,
+    },
+};
 
 // getAccountInfo response from @trezor/blockchain-link
 export type AccountInfo = {
-    empty: boolean;
-    path: string;
-    descriptor: string; // address or xpub
-    legacyXpub?: string; // bitcoin-like descriptor in legacy format (xpub) used by labeling (metadata)
-    balance: string;
-    availableBalance: string;
-    tokens?: TokenInfo[]; // ethereum tokens
-    addresses?: AccountAddresses; // bitcoin addresses
-    utxo?: AccountUtxo[]; // bitcoin utxo
+    empty: boolean,
+    path: string,
+    descriptor: string, // address or xpub
+    legacyXpub?: string, // bitcoin-like descriptor in legacy format (xpub) used by labeling (metadata)
+    balance: string,
+    availableBalance: string,
+    tokens?: TokenInfo[], // ethereum tokens
+    addresses?: AccountAddresses, // bitcoin addresses
+    utxo?: AccountUtxo[], // bitcoin utxo
     history: {
-        total: number; // total transactions (unknown in ripple)
-        tokens?: number; // tokens transactions (unknown in ripple)
-        unconfirmed?: number; // unconfirmed transactions (unknown in ripple)
-        transactions?: AccountTransaction[]; // list of transactions
-        txids?: string[]; // not implemented
-    };
+        total: number, // total transactions (unknown in ripple)
+        tokens?: number, // tokens transactions (unknown in ripple)
+        unconfirmed?: number, // unconfirmed transactions (unknown in ripple)
+        transactions?: AccountTransaction[], // list of transactions
+        txids?: string[], // not implemented
+    },
     misc?: {
         // ETH
-        nonce?: string;
-        erc20Contract?: TokenInfo;
+        nonce?: string,
+        erc20Contract?: TokenInfo,
         // XRP
-        sequence?: number;
-        reserve?: string;
-    };
+        sequence?: number,
+        reserve?: string,
+    },
     page?: {
         // blockbook
-        index: number;
-        size: number;
-        total: number;
-    };
+        index: number,
+        size: number,
+        total: number,
+    },
     marker?: {
         // ripple-lib
-        ledger: number;
-        seq: number;
-    };
-}
+        ledger: number,
+        seq: number,
+    },
+};
 
 // Compose transaction
 
 export type RegularOutput = {
-    type?: 'external';
-    address: string;
-    amount: string;
-    script_type?: 'PAYTOADDRESS';
-}
+    type?: 'external',
+    address: string,
+    amount: string,
+    script_type?: 'PAYTOADDRESS',
+};
 
 export type InternalOutput = {
-    type?: 'internal';
-    address_n: number[];
-    amount: string;
-    script_type?: string;
-}
+    type?: 'internal',
+    address_n: number[],
+    amount: string,
+    script_type?: string,
+};
 
 export type SendMaxOutput = {
-    type: 'send-max';
-    address: string;
-}
+    type: 'send-max',
+    address: string,
+};
 
 export type OpReturnOutput = {
-    type: 'opreturn';
-    dataHex: string;
-}
+    type: 'opreturn',
+    dataHex: string,
+};
 export type NoAddressOutput = {
-    type: 'noaddress';
-    amount: string;
-}
+    type: 'noaddress',
+    amount: string,
+};
 
 export type NoAddressSendMaxOutput = {
-    type: 'send-max-noaddress';
-}
+    type: 'send-max-noaddress',
+};
 
 export type ComposeOutput =
     | RegularOutput
@@ -193,82 +190,84 @@ export type ComposeOutput =
     | NoAddressSendMaxOutput;
 
 export type PrecomposeParams = {
-    outputs: ComposeOutput[];
+    outputs: ComposeOutput[],
     account: {
-        path: string;
-        addresses: AccountAddresses;
-        utxo: AccountUtxo[];
-    };
+        path: string,
+        addresses: AccountAddresses,
+        utxo: AccountUtxo[],
+    },
     feeLevels: {
-        feePerUnit: string;
-    }[];
-    baseFee?: number;
-    floorBaseFee?: boolean;
-    coin: string;
-}
+        feePerUnit: string,
+    }[],
+    baseFee?: number,
+    floorBaseFee?: boolean,
+    coin: string,
+};
 
 export type PrecomposedTransaction =
     | {
-          type: 'error';
-          error: string;
+          type: 'error',
+          error: string,
       }
     | {
-          type: 'nonfinal';
-          max: string | typeof undefined;
-          totalSpent: string; // all the outputs, no fee, no change
-          fee: string;
-          feePerByte: string;
-          bytes: number;
+          type: 'nonfinal',
+          max: string | typeof undefined,
+          totalSpent: string, // all the outputs, no fee, no change
+          fee: string,
+          feePerByte: string,
+          bytes: number,
       }
     | {
-          type: 'final';
-          max: string | typeof undefined;
-          totalSpent: string; // all the outputs, no fee, no change
-          fee: string;
-          feePerByte: string;
-          bytes: number;
+          type: 'final',
+          max: string | typeof undefined,
+          totalSpent: string, // all the outputs, no fee, no change
+          fee: string,
+          feePerByte: string,
+          bytes: number,
           transaction: {
-              inputs: TxInputType[];
-              outputs: TxOutputType[];
-          };
+              inputs: TxInputType[],
+              outputs: TxOutputType[],
+          },
       };
 
 export type ComposeParams = {
-    outputs: ComposeOutput[];
-    coin: string;
-    push?: boolean;
-    account?: typeof undefined;
-    feeLevels?: typeof undefined;
-}
+    outputs: ComposeOutput[],
+    coin: string,
+    push?: boolean,
+    account?: typeof undefined,
+    feeLevels?: typeof undefined,
+};
 
 export type DiscoveryAccountType = 'normal' | 'segwit' | 'legacy';
 
 export type DiscoveryAccount = {
-    type: DiscoveryAccountType;
-    label: string;
-    descriptor: string;
-    address_n: number[];
-    empty?: boolean;
-    balance?: string;
-    addresses?: AccountAddresses;
-}
+    type: DiscoveryAccountType,
+    label: string,
+    descriptor: string,
+    address_n: number[],
+    empty?: boolean,
+    balance?: string,
+    addresses?: AccountAddresses,
+};
 
 export type FeeLevel = {
-    label: 'high' | 'normal' | 'economy' | 'low' | 'custom';
-    feePerUnit: string;
-    blocks: number;
-    feeLimit?: string; // eth gas limit
-    feePerTx?: string; // fee for BlockchainEstimateFeeParams.request.specific
-}
+    label: 'high' | 'normal' | 'economy' | 'low' | 'custom',
+    feePerUnit: string,
+    blocks: number,
+    feeLimit?: string, // eth gas limit
+    feePerTx?: string, // fee for BlockchainEstimateFeeParams.request.specific
+};
 
-export type SelectFeeLevel = {
-    name: string;
-    fee: '0';
-    disabled: true;
-} | {
-    name: string;
-    fee: string;
-    feePerByte: string;
-    minutes: number;
-    total: string;
-}
+export type SelectFeeLevel =
+    | {
+          name: string,
+          fee: '0',
+          disabled: true,
+      }
+    | {
+          name: string,
+          fee: string,
+          feePerByte: string,
+          minutes: number,
+          total: string,
+      };

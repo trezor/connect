@@ -10,14 +10,13 @@ import type {
     CoreMessage,
     CoinInfo,
     BlockchainEstimateFee as BlockchainEstimateFeeParams,
-    BlockchainEstimatedFee,
 } from '../../../types';
 
 type Request = $ElementType<BlockchainEstimateFeeParams, 'request'>;
 
 type Params = {
-    coinInfo: CoinInfo;
-    request: Request;
+    coinInfo: CoinInfo,
+    request: Request,
 };
 
 export default class BlockchainEstimateFee extends AbstractMethod {
@@ -28,7 +27,7 @@ export default class BlockchainEstimateFee extends AbstractMethod {
         this.useDevice = false;
         this.useUi = false;
 
-        const payload: BlockchainEstimateFeeParams = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -36,7 +35,7 @@ export default class BlockchainEstimateFee extends AbstractMethod {
             { name: 'request', type: 'object' },
         ]);
 
-        const request: Request = payload.request;
+        const { request } = payload;
 
         if (request) {
             validateParams(request, [
@@ -68,7 +67,7 @@ export default class BlockchainEstimateFee extends AbstractMethod {
         };
     }
 
-    async run(): Promise<BlockchainEstimatedFee> {
+    async run() {
         const { coinInfo, request } = this.params;
         const feeInfo = {
             blockTime: coinInfo.blocktime,

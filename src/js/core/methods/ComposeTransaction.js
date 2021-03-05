@@ -1,6 +1,7 @@
 /* @flow */
 
 import BigNumber from 'bignumber.js';
+import type { BuildTxOutputRequest, BuildTxResult } from 'hd-wallet';
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
@@ -28,22 +29,27 @@ import verifyTx from './helpers/signtxVerify';
 
 import { UiMessage } from '../../message/builder';
 
-import type { BuildTxOutputRequest, BuildTxResult } from 'hd-wallet';
 import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
 import type { SignedTransaction, TransactionOptions } from '../../types/networks/bitcoin';
-import type { DiscoveryAccount, AccountUtxo, PrecomposeParams, PrecomposedTransaction } from '../../types/account';
+import type {
+    DiscoveryAccount,
+    AccountUtxo,
+    PrecomposeParams,
+    PrecomposedTransaction,
+} from '../../types/account';
 
 type Params = {
-    outputs: BuildTxOutputRequest[];
-    coinInfo: BitcoinNetworkInfo;
-    push: boolean;
-    account?: $ElementType<PrecomposeParams, 'account'>;
-    feeLevels?: $ElementType<PrecomposeParams, 'feeLevels'>;
-    baseFee?: $ElementType<PrecomposeParams, 'baseFee'>;
-}
+    outputs: BuildTxOutputRequest[],
+    coinInfo: BitcoinNetworkInfo,
+    push: boolean,
+    account?: $ElementType<PrecomposeParams, 'account'>,
+    feeLevels?: $ElementType<PrecomposeParams, 'feeLevels'>,
+    baseFee?: $ElementType<PrecomposeParams, 'baseFee'>,
+};
 
 export default class ComposeTransaction extends AbstractMethod {
     params: Params;
+
     discovery: Discovery | typeof undefined;
 
     constructor(message: CoreMessage) {
@@ -98,10 +104,11 @@ export default class ComposeTransaction extends AbstractMethod {
         if (sendMax) {
             this.info = 'Send maximum amount';
         } else {
-            this.info = `Send ${ formatAmount(total.toString(), coinInfo) }`;
+            this.info = `Send ${formatAmount(total.toString(), coinInfo)}`;
         }
 
-        this.useDevice = this.useUi = !payload.account && !payload.feeLevels;
+        this.useDevice = !payload.account && !payload.feeLevels;
+        this.useUi = this.useDevice;
 
         this.params = {
             outputs,
@@ -113,7 +120,10 @@ export default class ComposeTransaction extends AbstractMethod {
         };
     }
 
-    async precompose(account: $ElementType<PrecomposeParams, 'account'>, feeLevels: $ElementType<PrecomposeParams, 'feeLevels'>): Promise<PrecomposedTransaction[]> {
+    async precompose(
+        account: $ElementType<PrecomposeParams, 'account'>,
+        feeLevels: $ElementType<PrecomposeParams, 'feeLevels'>,
+    ): Promise<PrecomposedTransaction[]> {
         const { coinInfo, outputs, baseFee } = this.params;
         const address_n = pathUtils.validatePath(account.path);
         const segwit = pathUtils.isSegwitPath(address_n) || pathUtils.isBech32Path(address_n);
@@ -140,7 +150,9 @@ export default class ComposeTransaction extends AbstractMethod {
             const tx = { ...composer.composed.custom }; // needs to spread otherwise flow has a problem with BuildTxResult vs PrecomposedTransaction (max could be undefined)
             if (tx.type === 'final') {
                 const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0xffffffff));
-                const outputs = tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo));
+                const txOutputs = tx.transaction.outputs.sorted.map(out =>
+                    outputToTrezor(out, coinInfo),
+                );
                 return {
                     type: 'final',
                     max: tx.max,
@@ -150,7 +162,7 @@ export default class ComposeTransaction extends AbstractMethod {
                     bytes: tx.bytes,
                     transaction: {
                         inputs,
-                        outputs,
+                        outputs: txOutputs,
                     },
                 };
             }
@@ -170,30 +182,34 @@ export default class ComposeTransaction extends AbstractMethod {
         const response = await this.selectFee(account, utxo);
         // check for interruption
         if (!this.discovery) {
-            throw ERRORS.TypedError('Runtime', 'ComposeTransaction: selectFee response received after dispose');
+            throw ERRORS.TypedError(
+                'Runtime',
+                'ComposeTransaction: selectFee response received after dispose',
+            );
         }
 
         if (typeof response === 'string') {
             // back to account selection
             return this.run();
-        } else {
-            return response;
         }
+        return response;
     }
 
-    async selectAccount(): Promise<{ account: DiscoveryAccount; utxo: AccountUtxo[] }> {
+    async selectAccount() {
         const { coinInfo } = this.params;
         const blockchain = await initBlockchain(coinInfo, this.postMessage);
         const dfd = this.createUiPromise(UI.RECEIVE_ACCOUNT, this.device);
 
         if (this.discovery && this.discovery.completed) {
             const { discovery } = this;
-            this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
-                type: 'end',
-                coinInfo,
-                accountTypes: discovery.types.map(t => t.type),
-                accounts: discovery.accounts,
-            }));
+            this.postMessage(
+                UiMessage(UI.SELECT_ACCOUNT, {
+                    type: 'end',
+                    coinInfo,
+                    accountTypes: discovery.types.map(t => t.type),
+                    accounts: discovery.accounts,
+                }),
+            );
             const uiResp = await dfd.promise;
             const account = discovery.accounts[uiResp.payload];
             const utxo = await blockchain.getAccountUtxo(account.descriptor);
@@ -204,25 +220,31 @@ export default class ComposeTransaction extends AbstractMethod {
         }
         // initialize backend
 
-        const discovery = this.discovery || new Discovery({
-            blockchain,
-            commands: this.device.getCommands(),
-        });
+        const discovery =
+            this.discovery ||
+            new Discovery({
+                blockchain,
+                commands: this.device.getCommands(),
+            });
         this.discovery = discovery;
 
-        discovery.on('progress', (accounts: Array<any>) => {
-            this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
-                type: 'progress',
-                // preventEmpty: true,
-                coinInfo,
-                accounts,
-            }));
+        discovery.on('progress', accounts => {
+            this.postMessage(
+                UiMessage(UI.SELECT_ACCOUNT, {
+                    type: 'progress',
+                    // preventEmpty: true,
+                    coinInfo,
+                    accounts,
+                }),
+            );
         });
         discovery.on('complete', () => {
-            this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
-                type: 'end',
-                coinInfo,
-            }));
+            this.postMessage(
+                UiMessage(UI.SELECT_ACCOUNT, {
+                    type: 'end',
+                    coinInfo,
+                }),
+            );
         });
 
         // get accounts with addresses (tokens)
@@ -233,11 +255,13 @@ export default class ComposeTransaction extends AbstractMethod {
 
         // set select account view
         // this view will be updated from discovery events
-        this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
-            type: 'start',
-            accountTypes: discovery.types.map(t => t.type),
-            coinInfo,
-        }));
+        this.postMessage(
+            UiMessage(UI.SELECT_ACCOUNT, {
+                type: 'start',
+                accountTypes: discovery.types.map(t => t.type),
+                coinInfo,
+            }),
+        );
 
         // wait for user action
         const uiResp = await dfd.promise;
@@ -257,7 +281,7 @@ export default class ComposeTransaction extends AbstractMethod {
         };
     }
 
-    async selectFee(account: DiscoveryAccount, utxo: AccountUtxo[]): Promise<string | SignedTransaction> {
+    async selectFee(account: DiscoveryAccount, utxo: AccountUtxo[]) {
         const { coinInfo, outputs } = this.params;
 
         // get backend instance (it should be initialized before)
@@ -284,39 +308,44 @@ export default class ComposeTransaction extends AbstractMethod {
 
         // set select account view
         // this view will be updated from discovery events
-        this.postMessage(UiMessage(UI.SELECT_FEE, {
-            feeLevels: composer.getFeeLevelList(),
-            coinInfo: this.params.coinInfo,
-        }));
+        this.postMessage(
+            UiMessage(UI.SELECT_FEE, {
+                feeLevels: composer.getFeeLevelList(),
+                coinInfo: this.params.coinInfo,
+            }),
+        );
 
         // wait for user action
-        return await this._selectFeeUiResponse(composer);
+        return this._selectFeeUiResponse(composer);
     }
 
-    async _selectFeeUiResponse(composer: TransactionComposer): Promise<string | SignedTransaction> {
+    async _selectFeeUiResponse(composer: TransactionComposer) {
         const resp = await this.createUiPromise(UI.RECEIVE_FEE, this.device).promise;
         switch (resp.payload.type) {
             case 'compose-custom':
                 // recompose custom fee level with requested value
                 composer.composeCustomFee(resp.payload.value);
-                this.postMessage(UiMessage(UI.UPDATE_CUSTOM_FEE, {
-                    feeLevels: composer.getFeeLevelList(),
-                    coinInfo: this.params.coinInfo,
-                }));
+                this.postMessage(
+                    UiMessage(UI.UPDATE_CUSTOM_FEE, {
+                        feeLevels: composer.getFeeLevelList(),
+                        coinInfo: this.params.coinInfo,
+                    }),
+                );
 
                 // wait for user action
-                return await this._selectFeeUiResponse(composer);
+                return this._selectFeeUiResponse(composer);
 
             case 'send':
-                return await this._sign(composer.composed[resp.payload.value]);
+                return this._sign(composer.composed[resp.payload.value]);
 
             default:
                 return 'change-account';
         }
     }
 
-    async _sign(tx: BuildTxResult): Promise<SignedTransaction> {
-        if (tx.type !== 'final') throw ERRORS.TypedError('Runtime', 'ComposeTransaction: Trying to sign unfinished tx');
+    async _sign(tx: BuildTxResult) {
+        if (tx.type !== 'final')
+            throw ERRORS.TypedError('Runtime', 'ComposeTransaction: Trying to sign unfinished tx');
 
         const { coinInfo } = this.params;
 
@@ -343,7 +372,9 @@ export default class ComposeTransaction extends AbstractMethod {
             refTxs = transformReferencedTransactions(rawTxs, coinInfo);
         }
 
-        const signTxMethod = !this.device.unavailableCapabilities['replaceTransaction'] ? signTx : signTxLegacy;
+        const signTxMethod = !this.device.unavailableCapabilities.replaceTransaction
+            ? signTx
+            : signTxLegacy;
         const response = await signTxMethod(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             inputs,

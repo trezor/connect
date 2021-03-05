@@ -2,15 +2,15 @@
 import type { Deferred } from '../types';
 
 export type AsyncDeferred<T> = {
-    promise: Promise<T>;
-    resolve: (t: T) => void;
-    reject: (e: Error) => void;
-    run: Function;
+    promise: Promise<T>,
+    resolve: (t: T) => void,
+    reject: (e: Error) => void,
+    run: Function,
 };
 
 export function create<T>(arg?: (() => Promise<void>) | string, device?: any): Deferred<T> {
-    let localResolve: (t: T) => void = (t: T) => {};
-    let localReject: (e?: ?Error) => void = (e: ?Error) => {};
+    let localResolve: (t: T) => void = (_t: T) => {};
+    let localReject: (e?: ?Error) => void = (_e: ?Error) => {};
     let id: string;
 
     // eslint-disable-next-line no-async-promise-executor
@@ -28,7 +28,7 @@ export function create<T>(arg?: (() => Promise<void>) | string, device?: any): D
     });
 
     return {
-        id: id,
+        id,
         device,
         resolve: localResolve,
         reject: localReject,
@@ -37,8 +37,8 @@ export function create<T>(arg?: (() => Promise<void>) | string, device?: any): D
 }
 
 export function createAsync<T>(innerFn: Function): AsyncDeferred<T> {
-    let localResolve: (t: T) => void = (t: T) => {};
-    let localReject: (e?: ?Error) => void = (e) => {};
+    let localResolve: (t: T) => void = (_t: T) => {};
+    let localReject: (e?: ?Error) => void = _e => {};
 
     const promise: Promise<T> = new Promise((resolve, reject) => {
         localResolve = resolve;
@@ -61,17 +61,16 @@ export function createAsync<T>(innerFn: Function): AsyncDeferred<T> {
 }
 
 export function resolveTimeoutPromise<T>(delay: number, result: T): Promise<T> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         setTimeout(() => {
             resolve(result);
         }, delay);
     });
 }
 
-export function rejectTimeoutPromise(delay: number, error: Error): Promise<any> {
-    return new Promise((resolve, reject) => {
+export const rejectTimeoutPromise = (delay: number, error: Error) =>
+    new Promise<any>((resolve, reject) => {
         setTimeout(() => {
             reject(error);
         }, delay);
     });
-}

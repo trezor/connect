@@ -1,14 +1,14 @@
 /* @flow */
 
+// npm types
+import type { BuildTxInput } from 'hd-wallet';
+import type { TypedRawTransaction } from '@trezor/blockchain-link';
 // local modules
+
 import { reverseBuffer } from '../../../utils/bufferUtils';
 import { validatePath, isSegwitPath, getScriptType, fixPath } from '../../../utils/pathUtils';
 import { convertMultisigPubKey } from '../../../utils/hdnode';
 import { validateParams } from '../helpers/paramsValidator';
-
-// npm types
-import type { BuildTxInput } from 'hd-wallet';
-import type { TypedRawTransaction } from '@trezor/blockchain-link';
 
 // local types
 import type { BitcoinNetworkInfo } from '../../../types';
@@ -16,10 +16,15 @@ import type { TxInputType } from '../../../types/trezor/protobuf';
 
 /** *****
  * SignTx: validation
- *******/
-export const validateTrezorInputs = (inputs: TxInputType[], coinInfo: BitcoinNetworkInfo): TxInputType[] => {
-    const trezorInputs = inputs.map(fixPath).map(convertMultisigPubKey.bind(null, coinInfo.network));
-    for (const input of trezorInputs) {
+ ****** */
+export const validateTrezorInputs = (
+    inputs: TxInputType[],
+    coinInfo: BitcoinNetworkInfo,
+): TxInputType[] => {
+    const trezorInputs = inputs
+        .map(fixPath)
+        .map(convertMultisigPubKey.bind(null, coinInfo.network));
+    trezorInputs.forEach(input => {
         validatePath(input.address_n);
         const useAmount = isSegwitPath(input.address_n);
         // since 2.3.5 amount is obligatory for all inputs.
@@ -33,7 +38,7 @@ export const validateTrezorInputs = (inputs: TxInputType[], coinInfo: BitcoinNet
             { name: 'sequence', type: 'number' },
             { name: 'multisig', type: 'object' },
         ]);
-    }
+    });
     return trezorInputs;
 };
 
@@ -54,20 +59,18 @@ export const enhanceTrezorInputs = (inputs: TxInputType[], rawTxs: TypedRawTrans
 
 /** *****
  * Transform from Trezor format to hd-wallet, called from SignTx to get refTxs from bitcore
- *******/
-export const inputToHD = (input: TxInputType): BuildTxInput => {
-    return {
-        hash: reverseBuffer(Buffer.from(input.prev_hash, 'hex')),
-        index: input.prev_index,
-        path: input.address_n,
-        amount: typeof input.amount === 'number' ? input.amount.toString() : input.amount,
-        segwit: isSegwitPath(input.address_n),
-    };
-};
+ ****** */
+export const inputToHD = (input: TxInputType): BuildTxInput => ({
+    hash: reverseBuffer(Buffer.from(input.prev_hash, 'hex')),
+    index: input.prev_index,
+    path: input.address_n,
+    amount: typeof input.amount === 'number' ? input.amount.toString() : input.amount,
+    segwit: isSegwitPath(input.address_n),
+});
 
 /** *****
  * Transform from hd-wallet format to Trezor
- *******/
+ ****** */
 export const inputToTrezor = (input: BuildTxInput, sequence: number): TxInputType => {
     const { hash, index, path, amount } = input;
     return {

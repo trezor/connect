@@ -12,13 +12,12 @@ const validateBrowser = () => {
         const permitted = loadStorage(BROWSER_KEY);
         return !permitted ? state : null;
     }
-    return;
 };
 
 export const initBrowserView = (validation: boolean = true) => {
     if (!validation) {
         showView('browser-not-supported');
-        const buttons: HTMLElement = container.getElementsByClassName('buttons')[0];
+        const buttons = container.getElementsByClassName('buttons')[0];
         if (buttons && buttons.parentNode) {
             buttons.parentNode.removeChild(buttons);
         }
@@ -36,9 +35,11 @@ export const initBrowserView = (validation: boolean = true) => {
 
     showView('browser-not-supported');
 
-    const h3: HTMLElement = container.getElementsByTagName('h3')[0];
-    const ackButton: HTMLElement = container.getElementsByClassName('cancel')[0];
-    const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName('remember-permissions')[0]: any);
+    const h3 = container.getElementsByTagName('h3')[0];
+    const ackButton = container.getElementsByClassName('cancel')[0];
+    const rememberCheckbox: HTMLInputElement = (container.getElementsByClassName(
+        'remember-permissions',
+    )[0]: any);
 
     if (state.outdated) {
         h3.innerText = 'Outdated browser';

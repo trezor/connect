@@ -18,7 +18,7 @@ import type { API } from './types';
 
 const TrezorConnect: API = {
     manifest,
-    init: settings => init(settings),
+    init,
     getSettings,
 
     on: (type, fn) => {
@@ -37,276 +37,169 @@ const TrezorConnect: API = {
 
     // methods
 
-    blockchainGetAccountBalanceHistory: params => {
-        return call({ method: 'blockchainGetAccountBalanceHistory', ...params });
-    },
+    blockchainGetAccountBalanceHistory: params =>
+        call({ method: 'blockchainGetAccountBalanceHistory', ...params }),
 
-    blockchainGetCurrentFiatRates: params => {
-        return call({ method: 'blockchainGetCurrentFiatRates', ...params });
-    },
+    blockchainGetCurrentFiatRates: params =>
+        call({ method: 'blockchainGetCurrentFiatRates', ...params }),
 
-    blockchainGetFiatRatesForTimestamps: params => {
-        return call({ method: 'blockchainGetFiatRatesForTimestamps', ...params });
-    },
+    blockchainGetFiatRatesForTimestamps: params =>
+        call({ method: 'blockchainGetFiatRatesForTimestamps', ...params }),
 
-    blockchainDisconnect: params => {
-        return call({ method: 'blockchainDisconnect', ...params });
-    },
+    blockchainDisconnect: params => call({ method: 'blockchainDisconnect', ...params }),
 
-    blockchainEstimateFee: params => {
-        return call({ method: 'blockchainEstimateFee', ...params });
-    },
+    blockchainEstimateFee: params => call({ method: 'blockchainEstimateFee', ...params }),
 
-    blockchainGetTransactions: params => {
-        return call({ method: 'blockchainGetTransactions', ...params });
-    },
+    blockchainGetTransactions: params => call({ method: 'blockchainGetTransactions', ...params }),
 
-    blockchainSetCustomBackend: params => {
-        return call({ method: 'blockchainSetCustomBackend', ...params });
-    },
+    blockchainSetCustomBackend: params => call({ method: 'blockchainSetCustomBackend', ...params }),
 
-    blockchainSubscribe: params => {
-        return call({ method: 'blockchainSubscribe', ...params });
-    },
+    blockchainSubscribe: params => call({ method: 'blockchainSubscribe', ...params }),
 
-    blockchainSubscribeFiatRates: params => {
-        return call({ method: 'blockchainSubscribeFiatRates', ...params });
-    },
+    blockchainSubscribeFiatRates: params =>
+        call({ method: 'blockchainSubscribeFiatRates', ...params }),
 
-    blockchainUnsubscribe: params => {
-        return call({ method: 'blockchainUnsubscribe', ...params });
-    },
+    blockchainUnsubscribe: params => call({ method: 'blockchainUnsubscribe', ...params }),
 
-    blockchainUnsubscribeFiatRates: params => {
-        return call({ method: 'blockchainUnsubscribeFiatRates', ...params });
-    },
+    blockchainUnsubscribeFiatRates: params =>
+        call({ method: 'blockchainUnsubscribeFiatRates', ...params }),
 
-    customMessage: params => {
-        return customMessage(params);
-    },
+    customMessage: params => customMessage(params),
 
-    requestLogin: params => {
-        return requestLogin(params);
-    },
+    requestLogin: params => requestLogin(params),
 
     cardanoGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return call({ method: 'cardanoGetAddress', ...params, useEventListener });
     },
 
-    cardanoGetPublicKey: params => {
-        return call({ method: 'cardanoGetPublicKey', ...params });
-    },
+    cardanoGetPublicKey: params => call({ method: 'cardanoGetPublicKey', ...params }),
 
-    cardanoSignTransaction: params => {
-        return call({ method: 'cardanoSignTransaction', ...params });
-    },
+    cardanoSignTransaction: params => call({ method: 'cardanoSignTransaction', ...params }),
 
-    cipherKeyValue: params => {
-        return call({ method: 'cipherKeyValue', ...params });
-    },
+    cipherKeyValue: params => call({ method: 'cipherKeyValue', ...params }),
 
-    composeTransaction: params => {
-        return call({ method: 'composeTransaction', ...params });
-    },
+    composeTransaction: params => call({ method: 'composeTransaction', ...params }),
 
-    debugLinkDecision: params => {
-        return call({ method: 'debugLinkDecision', ...params });
-    },
+    debugLinkDecision: params => call({ method: 'debugLinkDecision', ...params }),
 
-    debugLinkGetState: params => {
-        return call({ method: 'debugLinkGetState', ...params });
-    },
+    debugLinkGetState: params => call({ method: 'debugLinkGetState', ...params }),
 
     ethereumGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return call({ method: 'ethereumGetAddress', ...params, useEventListener });
     },
 
-    ethereumGetPublicKey: params => {
-        return call({ method: 'ethereumGetPublicKey', ...params });
-    },
+    ethereumGetPublicKey: params => call({ method: 'ethereumGetPublicKey', ...params }),
 
-    ethereumSignMessage: params => {
-        return call({ method: 'ethereumSignMessage', ...params });
-    },
+    ethereumSignMessage: params => call({ method: 'ethereumSignMessage', ...params }),
 
-    ethereumSignTransaction: params => {
-        return call({ method: 'ethereumSignTransaction', ...params });
-    },
+    ethereumSignTransaction: params => call({ method: 'ethereumSignTransaction', ...params }),
 
-    ethereumVerifyMessage: params => {
-        return call({ method: 'ethereumVerifyMessage', ...params });
-    },
+    ethereumVerifyMessage: params => call({ method: 'ethereumVerifyMessage', ...params }),
 
-    getAccountInfo: params => {
-        return call({ method: 'getAccountInfo', ...params });
-    },
+    getAccountInfo: params => call({ method: 'getAccountInfo', ...params }),
 
     getAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return call({ method: 'getAddress', ...params, useEventListener });
     },
 
-    getDeviceState: params => {
-        return call({ method: 'getDeviceState', ...params });
-    },
+    getDeviceState: params => call({ method: 'getDeviceState', ...params }),
 
-    getFeatures: params => {
-        return call({ method: 'getFeatures', ...params });
-    },
+    getFeatures: params => call({ method: 'getFeatures', ...params }),
 
-    getPublicKey: params => {
-        return call({ method: 'getPublicKey', ...params });
-    },
+    getPublicKey: params => call({ method: 'getPublicKey', ...params }),
 
     liskGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return call({ method: 'liskGetAddress', ...params, useEventListener });
     },
 
-    liskGetPublicKey: params => {
-        return call({ method: 'liskGetPublicKey', ...params });
-    },
+    liskGetPublicKey: params => call({ method: 'liskGetPublicKey', ...params }),
 
-    liskSignMessage: params => {
-        return call({ method: 'liskSignMessage', ...params });
-    },
+    liskSignMessage: params => call({ method: 'liskSignMessage', ...params }),
 
-    liskSignTransaction: params => {
-        return call({ method: 'liskSignTransaction', ...params });
-    },
+    liskSignTransaction: params => call({ method: 'liskSignTransaction', ...params }),
 
-    liskVerifyMessage: params => {
-        return call({ method: 'liskVerifyMessage', ...params });
-    },
+    liskVerifyMessage: params => call({ method: 'liskVerifyMessage', ...params }),
 
     nemGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return call({ method: 'nemGetAddress', ...params, useEventListener });
     },
 
-    nemSignTransaction: params => {
-        return call({ method: 'nemSignTransaction', ...params });
-    },
+    nemSignTransaction: params => call({ method: 'nemSignTransaction', ...params }),
 
-    pushTransaction: params => {
-        return call({ method: 'pushTransaction', ...params });
-    },
+    pushTransaction: params => call({ method: 'pushTransaction', ...params }),
 
     rippleGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return call({ method: 'rippleGetAddress', ...params, useEventListener });
     },
 
-    rippleSignTransaction: params => {
-        return call({ method: 'rippleSignTransaction', ...params });
-    },
+    rippleSignTransaction: params => call({ method: 'rippleSignTransaction', ...params }),
 
-    signMessage: params => {
-        return call({ method: 'signMessage', ...params });
-    },
+    signMessage: params => call({ method: 'signMessage', ...params }),
 
-    signTransaction: params => {
-        return call({ method: 'signTransaction', ...params });
-    },
+    signTransaction: params => call({ method: 'signTransaction', ...params }),
 
     stellarGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return call({ method: 'stellarGetAddress', ...params, useEventListener });
     },
 
-    stellarSignTransaction: params => {
-        return call({ method: 'stellarSignTransaction', ...params });
-    },
+    stellarSignTransaction: params => call({ method: 'stellarSignTransaction', ...params }),
 
     tezosGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return call({ method: 'tezosGetAddress', ...params, useEventListener });
     },
 
-    tezosGetPublicKey: params => {
-        return call({ method: 'tezosGetPublicKey', ...params });
-    },
+    tezosGetPublicKey: params => call({ method: 'tezosGetPublicKey', ...params }),
 
-    tezosSignTransaction: params => {
-        return call({ method: 'tezosSignTransaction', ...params });
-    },
+    tezosSignTransaction: params => call({ method: 'tezosSignTransaction', ...params }),
 
-    eosGetPublicKey: params => {
-        return call({ method: 'eosGetPublicKey', ...params });
-    },
+    eosGetPublicKey: params => call({ method: 'eosGetPublicKey', ...params }),
 
-    eosSignTransaction: params => {
-        return call({ method: 'eosSignTransaction', ...params });
-    },
+    eosSignTransaction: params => call({ method: 'eosSignTransaction', ...params }),
 
     binanceGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return call({ method: 'binanceGetAddress', ...params, useEventListener });
     },
 
-    binanceGetPublicKey: params => {
-        return call({ method: 'binanceGetPublicKey', ...params });
-    },
+    binanceGetPublicKey: params => call({ method: 'binanceGetPublicKey', ...params }),
 
-    binanceSignTransaction: params => {
-        return call({ method: 'binanceSignTransaction', ...params });
-    },
+    binanceSignTransaction: params => call({ method: 'binanceSignTransaction', ...params }),
 
-    verifyMessage: params => {
-        return call({ method: 'verifyMessage', ...params });
-    },
+    verifyMessage: params => call({ method: 'verifyMessage', ...params }),
 
-    resetDevice: params => {
-        return call({ method: 'resetDevice', ...params });
-    },
+    resetDevice: params => call({ method: 'resetDevice', ...params }),
 
-    wipeDevice: params => {
-        return call({ method: 'wipeDevice', ...params });
-    },
+    wipeDevice: params => call({ method: 'wipeDevice', ...params }),
 
-    applyFlags: params => {
-        return call({ method: 'applyFlags', ...params });
-    },
+    applyFlags: params => call({ method: 'applyFlags', ...params }),
 
-    applySettings: params => {
-        return call({ method: 'applySettings', ...params });
-    },
+    applySettings: params => call({ method: 'applySettings', ...params }),
 
-    backupDevice: params => {
-        return call({ method: 'backupDevice', ...params });
-    },
+    backupDevice: params => call({ method: 'backupDevice', ...params }),
 
-    changePin: params => {
-        return call({ method: 'changePin', ...params });
-    },
+    changePin: params => call({ method: 'changePin', ...params }),
 
-    firmwareUpdate: params => {
-        return call({ method: 'firmwareUpdate', ...params });
-    },
+    firmwareUpdate: params => call({ method: 'firmwareUpdate', ...params }),
 
-    recoveryDevice: params => {
-        return call({ method: 'recoveryDevice', ...params });
-    },
+    recoveryDevice: params => call({ method: 'recoveryDevice', ...params }),
 
-    getCoinInfo: params => {
-        return call({ method: 'getCoinInfo', ...params });
-    },
+    getCoinInfo: params => call({ method: 'getCoinInfo', ...params }),
 
-    dispose: () => {
-        dispose();
-    },
+    dispose,
 
     cancel,
 
-    renderWebUSBButton: (className: ?string) => {
-        renderWebUSBButton(className);
-    },
+    renderWebUSBButton,
 
-    disableWebUSB: () => {
-        disableWebUSB();
-    },
+    disableWebUSB,
 };
 
 export default TrezorConnect;

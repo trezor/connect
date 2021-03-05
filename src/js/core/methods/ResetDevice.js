@@ -9,12 +9,13 @@ import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class ResetDevice extends AbstractMethod {
     params: $ElementType<MessageType, 'ResetDevice'>;
+
     confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
         super(message);
 
-        this.allowDeviceMode = [ UI.INITIALIZE, UI.SEEDLESS ];
+        this.allowDeviceMode = [UI.INITIALIZE, UI.SEEDLESS];
         this.useDeviceState = false;
         this.requiredPermissions = ['management'];
         this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
@@ -49,7 +50,7 @@ export default class ResetDevice extends AbstractMethod {
         };
     }
 
-    async confirmation(): Promise<boolean> {
+    async confirmation() {
         if (this.confirmed) return true;
         // wait for popup window
         await this.getPopupPromise().promise;
@@ -57,10 +58,12 @@ export default class ResetDevice extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'device-management',
-            label: 'Do you really you want to create a new wallet?',
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'device-management',
+                label: 'Do you really you want to create a new wallet?',
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;

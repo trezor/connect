@@ -12,9 +12,9 @@ import type { CoreMessage } from '../../types';
 import type { EthereumTransaction } from '../../types/networks/ethereum';
 
 type Params = {
-    path: number[];
-    transaction: EthereumTransaction;
-}
+    path: number[],
+    transaction: EthereumTransaction,
+};
 
 export default class EthereumSignTx extends AbstractMethod {
     params: Params;
@@ -55,11 +55,13 @@ export default class EthereumSignTx extends AbstractMethod {
         // TODO: check if tx data is a valid hex
 
         // strip '0x' from values
-        Object.keys(tx).map(key => {
+        Object.keys(tx).forEach(key => {
             if (typeof tx[key] === 'string') {
-                let value: string = stripHexPrefix(tx[key]);
+                let value = stripHexPrefix(tx[key]);
                 // pad left even
-                if (value.length % 2 !== 0) { value = '0' + value; }
+                if (value.length % 2 !== 0) {
+                    value = `0${value}`;
+                }
                 // $FlowIssue
                 tx[key] = value;
             }
@@ -83,7 +85,7 @@ export default class EthereumSignTx extends AbstractMethod {
             tx.nonce,
             tx.data,
             tx.chainId,
-            tx.txType
+            tx.txType,
         );
     }
 }

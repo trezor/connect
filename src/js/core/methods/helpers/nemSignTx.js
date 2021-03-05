@@ -20,9 +20,9 @@ export const NEM_TESTNET = 0x98;
 export const NEM_MIJIN = 0x60;
 
 export const NETWORKS = {
-    'mainnet': NEM_MAINNET,
-    'testnet': NEM_TESTNET,
-    'mijin': NEM_MIJIN,
+    mainnet: NEM_MAINNET,
+    testnet: NEM_TESTNET,
+    mijin: NEM_MIJIN,
 };
 
 export const NEM_TRANSFER: 0x0101 = 0x0101;
@@ -55,23 +55,23 @@ const NEM_IMPORTANCE_TRANSFER_MODES = {
     '2': 'ImportanceTransfer_Deactivate',
 };
 
-const getCommon = (tx: $T.NEMTransaction, address_n?: number[]): NEMTransactionCommon => {
-    return {
-        address_n,
-        network: (tx.version >> 24) & 0xFF,
-        timestamp: tx.timeStamp,
-        fee: tx.fee,
-        deadline: tx.deadline,
-        signer: address_n ? undefined : tx.signer,
-    };
-};
+const getCommon = (tx: $T.NEMTransaction, address_n?: number[]): NEMTransactionCommon => ({
+    address_n,
+    network: (tx.version >> 24) & 0xff,
+    timestamp: tx.timeStamp,
+    fee: tx.fee,
+    deadline: tx.deadline,
+    signer: address_n ? undefined : tx.signer,
+});
 
 const transferMessage = (tx: $T.NEMTransferTransaction): NEMTransfer => {
-    const mosaics = tx.mosaics ? tx.mosaics.map(mosaic => ({
-        namespace: mosaic.mosaicId.namespaceId,
-        mosaic: mosaic.mosaicId.name,
-        quantity: mosaic.quantity,
-    })) : undefined;
+    const mosaics = tx.mosaics
+        ? tx.mosaics.map(mosaic => ({
+              namespace: mosaic.mosaicId.namespaceId,
+              mosaic: mosaic.mosaicId.name,
+              quantity: mosaic.quantity,
+          }))
+        : undefined;
 
     return {
         recipient: tx.recipient,
@@ -87,11 +87,15 @@ const importanceTransferMessage = (tx: $T.NEMImportanceTransaction): NEMImportan
     public_key: tx.importanceTransfer.publicKey,
 });
 
-const aggregateModificationMessage = (tx: $T.NEMAggregateModificationTransaction): NEMAggregateModification => {
-    const modifications = tx.modifications ? tx.modifications.map(modification => ({
-        type: NEM_AGGREGATE_MODIFICATION_TYPES[modification.modificationType],
-        public_key: modification.cosignatoryAccount,
-    })) : undefined;
+const aggregateModificationMessage = (
+    tx: $T.NEMAggregateModificationTransaction,
+): NEMAggregateModification => {
+    const modifications = tx.modifications
+        ? tx.modifications.map(modification => ({
+              type: NEM_AGGREGATE_MODIFICATION_TYPES[modification.modificationType],
+              public_key: modification.cosignatoryAccount,
+          }))
+        : undefined;
 
     return {
         modifications,
@@ -99,7 +103,9 @@ const aggregateModificationMessage = (tx: $T.NEMAggregateModificationTransaction
     };
 };
 
-const provisionNamespaceMessage = (tx: $T.NEMProvisionNamespaceTransaction): NEMProvisionNamespace => ({
+const provisionNamespaceMessage = (
+    tx: $T.NEMProvisionNamespaceTransaction,
+): NEMProvisionNamespace => ({
     namespace: tx.newPart,
     parent: tx.parent || undefined,
     sink: tx.rentalFeeSink,
@@ -120,26 +126,28 @@ const mosaicCreationMessage = (tx: $T.NEMMosaicCreationTransaction): NEMMosaicCr
         description: tx.mosaicDefinition.description,
     };
 
-    const properties = tx.mosaicDefinition.properties;
+    const { properties } = tx.mosaicDefinition;
     if (Array.isArray(properties)) {
         properties.forEach(property => {
             const { name, value } = property;
             switch (name) {
                 case 'divisibility':
-                    definition.divisibility = parseInt(value);
+                    definition.divisibility = parseInt(value, 10);
                     break;
 
                 case 'initialSupply':
-                    definition.supply = parseInt(value);
+                    definition.supply = parseInt(value, 10);
                     break;
 
                 case 'supplyMutable':
-                    definition.mutable_supply = (value === 'true');
+                    definition.mutable_supply = value === 'true';
                     break;
 
                 case 'transferable':
-                    definition.transferable = (value === 'true');
+                    definition.transferable = value === 'true';
                     break;
+
+                // no default
             }
         });
     }
@@ -170,8 +178,12 @@ export const createTx = (tx: $T.NEMTransaction, address_n: number[]) => {
         supply_change: undefined,
     };
 
-    if (tx.type === NEM_COSIGNING || tx.type === NEM_MULTISIG || tx.type === NEM_MULTISIG_SIGNATURE) {
-        message.cosigning = (tx.type === NEM_COSIGNING || tx.type === NEM_MULTISIG_SIGNATURE);
+    if (
+        tx.type === NEM_COSIGNING ||
+        tx.type === NEM_MULTISIG ||
+        tx.type === NEM_MULTISIG_SIGNATURE
+    ) {
+        message.cosigning = tx.type === NEM_COSIGNING || tx.type === NEM_MULTISIG_SIGNATURE;
         transaction = tx.otherTrans;
         message.multisig = getCommon(transaction);
     }

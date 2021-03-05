@@ -1,68 +1,68 @@
 /* @flow */
 
+import parseUri from 'parse-uri';
 import { httpRequest } from '../env/node/networkUtils';
-import { DEFAULT_PRIORITY } from '../data/ConnectSettings';
+import { DEFAULT_PRIORITY } from './ConnectSettings';
 import { parseCoinsJson } from './CoinInfo';
 import { parseFirmware } from './FirmwareInfo';
 import { parseBridgeJSON } from './TransportInfo';
-import parseUri from 'parse-uri';
 import { versionCompare } from '../utils/versionUtils';
 
 import type { ConnectSettings } from '../types';
 
 type WhiteList = {
-    priority: number;
-    origin: string;
-}
+    priority: number,
+    origin: string,
+};
 type KnownHost = {
-    origin: string;
-    label?: string;
-    icon?: string;
-}
+    origin: string,
+    label?: string,
+    icon?: string,
+};
 
 type SupportedBrowser = {
-    version: number;
-    download: string;
-    update: string;
-}
+    version: number,
+    download: string,
+    update: string,
+};
 type WebUSB = {
-    vendorId: string;
-    productId: string;
-}
+    vendorId: string,
+    productId: string,
+};
 
 type Resources = {
-    bridge: string;
-}
+    bridge: string,
+};
 type Asset = {
-    name: string;
-    type?: string;
-    url: string;
-}
+    name: string,
+    type?: string,
+    url: string,
+};
 type ProtobufMessages = {
-    name: string;
+    name: string,
     range: {
-        min: string[];
-        max?: string[];
-    };
-    json: string;
-}
+        min: string[],
+        max?: string[],
+    },
+    json: string,
+};
 export type Config = {
-    whitelist: WhiteList[];
-    management: WhiteList[];
-    knownHosts: KnownHost[];
-    webusb: WebUSB[];
-    resources: Resources;
-    assets: Asset[];
-    messages: ProtobufMessages[];
-    supportedBrowsers: { [key: string]: SupportedBrowser };
+    whitelist: WhiteList[],
+    management: WhiteList[],
+    knownHosts: KnownHost[],
+    webusb: WebUSB[],
+    resources: Resources,
+    assets: Asset[],
+    messages: ProtobufMessages[],
+    supportedBrowsers: { [key: string]: SupportedBrowser },
     supportedFirmware: Array<{|
-        coinType?: string;
-        coin?: string | string[];
-        excludedMethods?: string[];
-        min?: string[];
-        max?: string[];
-    |}>;
-}
+        coinType?: string,
+        coin?: string | string[],
+        excludedMethods?: string[],
+        min?: string[],
+        max?: string[],
+    |}>,
+};
 
 type AssetCollection = { [key: string]: JSON };
 
@@ -74,8 +74,11 @@ const parseConfig = (json: any): Config => {
 
 export default class DataManager {
     static config: Config;
+
     static assets: AssetCollection = {};
+
     static settings: ConnectSettings;
+
     static messages: { [key: string]: JSON } = {};
 
     static async load(settings: ConnectSettings, withAssets: boolean = true) {
@@ -85,7 +88,10 @@ export default class DataManager {
         this.config = parseConfig(config);
 
         // check if origin is localhost or trusted
-        const isLocalhost = typeof window !== 'undefined' && window.location ? window.location.hostname === 'localhost' : true;
+        const isLocalhost =
+            typeof window !== 'undefined' && window.location
+                ? window.location.hostname === 'localhost'
+                : true;
         const whitelist = DataManager.isWhitelisted(this.settings.origin || '');
         this.settings.trustedHost = (isLocalhost || !!whitelist) && !this.settings.popup;
         // ensure that popup will be used
@@ -98,7 +104,9 @@ export default class DataManager {
         }
         this.settings.priority = DataManager.getPriority(whitelist);
 
-        const knownHost: ?KnownHost = DataManager.getHostLabel(this.settings.extension || this.settings.origin || '');
+        const knownHost = DataManager.getHostLabel(
+            this.settings.extension || this.settings.origin || '',
+        );
         if (knownHost) {
             this.settings.hostLabel = knownHost.label;
             this.settings.hostIcon = knownHost.icon;
@@ -111,49 +119,53 @@ export default class DataManager {
 
         if (!withAssets) return;
 
-        for (const asset of this.config.assets) {
-            const json: JSON = await httpRequest(`${asset.url}${ts}`, asset.type || 'json');
-            this.assets[ asset.name ] = json;
-        }
+        const assetPromises = this.config.assets.map(async asset => {
+            const json = await httpRequest(`${asset.url}${ts}`, asset.type || 'json');
+            this.assets[asset.name] = json;
+        });
+        await Promise.all(assetPromises);
 
-        for (const protobuf of this.config.messages) {
-            const json: JSON = await httpRequest(`${protobuf.json}${ts}`, 'json');
-            this.messages[ protobuf.name ] = json;
-        }
+        const protobufPromises = this.config.messages.map(async protobuf => {
+            const json = await httpRequest(`${protobuf.json}${ts}`, 'json');
+            this.messages[protobuf.name] = json;
+        });
+        await Promise.all(protobufPromises);
 
         // parse bridge JSON
-        parseBridgeJSON(this.assets['bridge']);
+        parseBridgeJSON(this.assets.bridge);
 
         // parse coins definitions
-        parseCoinsJson(this.assets['coins']);
+        parseCoinsJson(this.assets.coins);
 
         // parse firmware definitions
         parseFirmware(this.assets['firmware-t1'], 1);
         parseFirmware(this.assets['firmware-t2'], 2);
     }
 
-    static getProtobufMessages(version?: number[]): JSON {
+    static getProtobufMessages(version?: number[]) {
         // empty array = unacquired device
-        if (!version || !version.length) return this.messages['default'];
+        if (!version || !version.length) return this.messages.default;
         const model = version[0] - 1;
         const messages = this.config.messages.find(m => {
             const min = m.range.min[model];
             const max = m.range.max ? m.range.max[model] : version;
-            return (versionCompare(version, min) >= 0 && versionCompare(version, max) <= 0);
+            return versionCompare(version, min) >= 0 && versionCompare(version, max) <= 0;
         });
         return this.messages[messages ? messages.name : 'default'];
     }
 
-    static isWhitelisted(origin: string): ?WhiteList {
+    static isWhitelisted(origin: string) {
         if (!this.config) return null;
         const uri = parseUri(origin);
         if (uri && typeof uri.host === 'string') {
-            const parts: Array<string> = uri.host.split('.');
+            const parts = uri.host.split('.');
             if (parts.length > 2) {
                 // subdomain
                 uri.host = parts.slice(parts.length - 2, parts.length).join('.');
             }
-            return this.config.whitelist.find(item => (item.origin === origin || item.origin === uri.host));
+            return this.config.whitelist.find(
+                item => item.origin === origin || item.origin === uri.host,
+            );
         }
     }
 
@@ -161,12 +173,14 @@ export default class DataManager {
         if (!this.config) return;
         const uri = parseUri(this.settings.origin);
         if (uri && typeof uri.host === 'string') {
-            const parts: Array<string> = uri.host.split('.');
+            const parts = uri.host.split('.');
             if (parts.length > 2) {
                 // subdomain
                 uri.host = parts.slice(parts.length - 2, parts.length).join('.');
             }
-            return this.config.management.find(item => (item.origin === this.settings.origin || item.origin === uri.host));
+            return this.config.management.find(
+                item => item.origin === this.settings.origin || item.origin === uri.host,
+            );
         }
     }
 
@@ -189,7 +203,7 @@ export default class DataManager {
         return this.settings;
     }
 
-    static getDebugSettings(type: string) {
+    static getDebugSettings() {
         return false;
     }
 

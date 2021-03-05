@@ -1,10 +1,9 @@
 /* @flow */
 
 import { ERRORS } from '../../../constants';
-import type { EthereumSignedTx } from '../../../types/networks/ethereum';
 import type { TypedCall, EthereumTxRequest } from '../../../types/trezor/protobuf';
 
-const splitString = (str: ?string, len: number): [string, string] => {
+const splitString = (str: ?string, len: number) => {
     if (str == null) {
         return ['', ''];
     }
@@ -18,9 +17,9 @@ const processTxRequest = async (
     request: EthereumTxRequest,
     data: ?string,
     chain_id: ?number,
-): Promise<EthereumSignedTx> => {
+) => {
     if (!request.data_length) {
-        let v: ?number = request.signature_v;
+        let v = request.signature_v;
         const r = request.signature_r;
         const s = request.signature_s;
         if (v == null || r == null || s == null) {
@@ -34,29 +33,24 @@ const processTxRequest = async (
         }
 
         return Promise.resolve({
-            v: '0x' + v.toString(16),
-            r: '0x' + r,
-            s: '0x' + s,
+            v: `0x${v.toString(16)}`,
+            r: `0x${r}`,
+            s: `0x${s}`,
         });
     }
 
     const [first, rest] = splitString(data, request.data_length * 2);
     const response = await typedCall('EthereumTxAck', 'EthereumTxRequest', { data_chunk: first });
 
-    return processTxRequest(
-        typedCall,
-        response.message,
-        rest,
-        chain_id,
-    );
+    return processTxRequest(typedCall, response.message, rest, chain_id);
 };
 
-function stripLeadingZeroes(str: string) {
+const stripLeadingZeroes = (str: string) => {
     while (/^00/.test(str)) {
         str = str.slice(2);
     }
     return str;
-}
+};
 
 export const ethereumSignTx = async (
     typedCall: TypedCall,
@@ -68,7 +62,7 @@ export const ethereumSignTx = async (
     nonce: string,
     data?: string,
     chain_id?: number,
-    tx_type?: number
+    tx_type?: number,
 ) => {
     const length = data == null ? 0 : data.length / 2;
 
@@ -107,10 +101,5 @@ export const ethereumSignTx = async (
 
     const response = await typedCall('EthereumSignTx', 'EthereumTxRequest', message);
 
-    return processTxRequest(
-        typedCall,
-        response.message,
-        rest,
-        chain_id
-    );
+    return processTxRequest(typedCall, response.message, rest, chain_id);
 };

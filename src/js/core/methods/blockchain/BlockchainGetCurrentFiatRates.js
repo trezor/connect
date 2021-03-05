@@ -9,8 +9,8 @@ import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo } from '../../../types';
 
 type Params = {
-    coinInfo: CoinInfo;
-    currencies?: string[];
+    coinInfo: CoinInfo,
+    currencies?: string[],
 };
 
 export default class BlockchainGetCurrentFiatRates extends AbstractMethod {
@@ -21,7 +21,7 @@ export default class BlockchainGetCurrentFiatRates extends AbstractMethod {
         this.useDevice = false;
         this.useUi = false;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -38,15 +38,12 @@ export default class BlockchainGetCurrentFiatRates extends AbstractMethod {
 
         this.params = {
             currencies: payload.currencies,
-            coinInfo: coinInfo,
+            coinInfo,
         };
     }
 
     async run() {
-        const backend = await initBlockchain(
-            this.params.coinInfo,
-            this.postMessage
-        );
+        const backend = await initBlockchain(this.params.coinInfo, this.postMessage);
         return backend.getCurrentFiatRates({ currencies: this.params.currencies });
     }
 }

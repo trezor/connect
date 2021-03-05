@@ -9,13 +9,13 @@ import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo } from '../../../types';
 
 type Params = {
-    coinInfo: CoinInfo;
+    coinInfo: CoinInfo,
     request: {
-        descriptor: string;
-        from?: number;
-        to?: number;
-        groupBy?: number;
-    };
+        descriptor: string,
+        from?: number,
+        to?: number,
+        groupBy?: number,
+    },
 };
 
 export default class BlockchainGetAccountBalanceHistory extends AbstractMethod {
@@ -26,7 +26,7 @@ export default class BlockchainGetAccountBalanceHistory extends AbstractMethod {
         this.useDevice = false;
         this.useUi = false;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -45,7 +45,7 @@ export default class BlockchainGetAccountBalanceHistory extends AbstractMethod {
         isBackendSupported(coinInfo);
 
         this.params = {
-            coinInfo: coinInfo,
+            coinInfo,
             request: {
                 descriptor: payload.descriptor,
                 from: payload.from,
@@ -56,10 +56,7 @@ export default class BlockchainGetAccountBalanceHistory extends AbstractMethod {
     }
 
     async run() {
-        const backend = await initBlockchain(
-            this.params.coinInfo,
-            this.postMessage
-        );
+        const backend = await initBlockchain(this.params.coinInfo, this.postMessage);
         return backend.getAccountBalanceHistory(this.params.request);
     }
 }

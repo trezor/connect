@@ -1,7 +1,6 @@
 /* @flow */
 
-export async function resolveAfter(msec: number, value: any) {
-    return await new Promise((resolve) => {
+export const resolveAfter = (msec: number, value: any) =>
+    new Promise<any>(resolve => {
         setTimeout(resolve, msec, value);
     });
-}

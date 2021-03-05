@@ -11,6 +11,7 @@ import type { MessageType, CipheredKeyValue } from '../../types/trezor/protobuf'
 
 export default class CipherKeyValue extends AbstractMethod {
     params: $ElementType<MessageType, 'CipherKeyValue'>[] = [];
+
     hasBundle: boolean;
 
     constructor(message: CoreMessage) {
@@ -23,12 +24,12 @@ export default class CipherKeyValue extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle
+            ? { ...message.payload, bundle: [message.payload] }
+            : message.payload;
 
         // validate bundle type
-        validateParams(payload, [
-            { name: 'bundle', type: 'array' },
-        ]);
+        validateParams(payload, [{ name: 'bundle', type: 'array' }]);
 
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
@@ -58,15 +59,21 @@ export default class CipherKeyValue extends AbstractMethod {
         const responses: CipheredKeyValue[] = [];
         const cmd = this.device.getCommands();
         for (let i = 0; i < this.params.length; i++) {
-            const response = await cmd.typedCall('CipherKeyValue', 'CipheredKeyValue', this.params[i]);
+            const response = await cmd.typedCall(
+                'CipherKeyValue',
+                'CipheredKeyValue',
+                this.params[i],
+            );
             responses.push(response.message);
 
             if (this.hasBundle) {
                 // send progress
-                this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
-                    progress: i,
-                    response,
-                }));
+                this.postMessage(
+                    UiMessage(UI.BUNDLE_PROGRESS, {
+                        progress: i,
+                        response,
+                    }),
+                );
             }
         }
         return this.hasBundle ? responses : responses[0];

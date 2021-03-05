@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 const StellarSdk = require('stellar-sdk');
 const BigNumber = require('bignumber.js');
 
@@ -6,10 +7,10 @@ const BigNumber = require('bignumber.js');
  * @param {StellarSdk.Signer} signer
  * @returns { type: 1 | 2 | 3, key: string, weight: number }
  */
-const transformSigner = (signer) => {
+const transformSigner = signer => {
     let type = 0;
     let key;
-    const weight = signer.weight;
+    const { weight } = signer;
     if (typeof signer.ed25519PublicKey === 'string') {
         const keyPair = StellarSdk.Keypair.fromPublicKey(signer.ed25519PublicKey);
         key = keyPair.rawPublicKey().toString('hex');
@@ -34,7 +35,7 @@ const transformSigner = (signer) => {
  * @param {StellarSdk.Asset} asset
  * @returns { type: 0 | 1 | 2, code: string, issuer?: string }
  */
-const transformAsset = (asset) => {
+const transformAsset = asset => {
     if (asset.isNative()) {
         return {
             type: 0,
@@ -53,26 +54,24 @@ const transformAsset = (asset) => {
  * @param {string} amount
  * @returns {string}
  */
-const transformAmount = (amount) => {
-    return new BigNumber(amount).times(10000000).toString();
-};
+const transformAmount = amount => new BigNumber(amount).times(10000000).toString();
 
 /**
  * Transforms StellarSdk.Operation.type to TrezorConnect.StellarTransaction.Operation.type
  * @param {string} type
  * @returns {string}
  */
-const transformType = (type) => {
+const transformType = type => {
     switch (type) {
         case 'pathPaymentStrictReceive':
-        // case 'pathPaymentStrictSend':
+            // case 'pathPaymentStrictSend':
             return 'pathPayment';
 
         case 'createPassiveSellOffer':
             return 'createPassiveOffer';
 
         case 'manageSellOffer':
-        // case 'manageBuyOffer':
+            // case 'manageBuyOffer':
             return 'manageOffer';
         default:
             return type;
@@ -84,7 +83,7 @@ const transformType = (type) => {
  * @param {string} type
  * @returns {string}
  */
-const transformMemo = (memo) => {
+const transformMemo = memo => {
     switch (memo.type) {
         case StellarSdk.MemoText:
             return { type: 1, text: memo.value };
@@ -107,7 +106,7 @@ const transformMemo = (memo) => {
  * @param {StellarSdk.Transaction.timeBounds} timebounds
  * @returns {minTime: number, maxTime: number}
  */
-const transformTimebounds = (timebounds) => {
+const transformTimebounds = timebounds => {
     if (!timebounds) return undefined;
     // those values are defined in Trezor firmware messages as numbers
     return {
@@ -127,7 +126,7 @@ const transformTransaction = (path, transaction) => {
     const assets = ['asset', 'sendAsset', 'destAsset', 'selling', 'buying', 'line'];
 
     const operations = transaction.operations.map((o, i) => {
-        const operation = Object.assign({}, o);
+        const operation = { ...o };
 
         // transform StellarSdk.Signer
         if (operation.signer) {
@@ -193,5 +192,5 @@ const transformTransaction = (path, transaction) => {
     };
 };
 
-exports['default'] = transformTransaction;
+exports.default = transformTransaction;
 module.exports = exports.default;

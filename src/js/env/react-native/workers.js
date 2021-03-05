@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 /* @flow */
 
 // $FlowIssue
@@ -9,14 +10,8 @@ import RNUsbPlugin from './RNUsbPlugin';
 
 export const WebUsbPlugin = undefined;
 
-export const ReactNativeUsbPlugin = () => {
-    return new TrezorLink.Lowlevel(new RNUsbPlugin());
-};
+export const ReactNativeUsbPlugin = () => new TrezorLink.Lowlevel(new RNUsbPlugin());
 
-export const BlockbookWorker = () => {
-    return new BlockbookWorkerWrapper();
-};
+export const BlockbookWorker = () => new BlockbookWorkerWrapper();
 
-export const RippleWorker = () => {
-    return new RippleWorkerWrapper();
-};
+export const RippleWorker = () => new RippleWorkerWrapper();

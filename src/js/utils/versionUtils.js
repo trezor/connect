@@ -71,7 +71,7 @@ export const versionSplit = (version: string): number[] => {
         return [0, 0, 0];
     }
 
-    return version.split('.').map((v: string) => Number(v));
+    return version.split('.').map(v => Number(v));
 };
 
 /**
@@ -94,11 +94,16 @@ export const versionCompare = (a: string | number[], b: string | number[]) => {
     const vpa = isValidVersionArray(pa);
     const vpb = isValidVersionArray(pb);
 
-    if (!vpa && !vpb) { // Both arrays are invalid
+    if (!vpa && !vpb) {
+        // Both arrays are invalid
         return 0;
-    } else if (!vpa && vpb) { // First array is Invalid
+    }
+    if (!vpa && vpb) {
+        // First array is Invalid
         return -1;
-    } else if (vpa && !vpb) { // Second array is invalid
+    }
+    if (vpa && !vpb) {
+        // Second array is invalid
         return 1;
     }
 

@@ -14,24 +14,30 @@ import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class TezosGetPublicKey extends AbstractMethod {
     params: $ElementType<MessageType, 'TezosGetPublicKey'>[] = [];
+
     hasBundle: boolean;
+
     confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
         super(message);
 
         this.requiredPermissions = ['read'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Tezos'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(
+            this.name,
+            getMiscNetwork('Tezos'),
+            this.firmwareRange,
+        );
         this.info = 'Export Tezos public key';
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle
+            ? { ...message.payload, bundle: [message.payload] }
+            : message.payload;
 
         // validate bundle type
-        validateParams(payload, [
-            { name: 'bundle', type: 'array' },
-        ]);
+        validateParams(payload, [{ name: 'bundle', type: 'array' }]);
 
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
@@ -53,7 +59,7 @@ export default class TezosGetPublicKey extends AbstractMethod {
         });
     }
 
-    async confirmation(): Promise<boolean> {
+    async confirmation() {
         if (this.confirmed) return true;
         // wait for popup window
         await this.getPopupPromise().promise;
@@ -64,14 +70,18 @@ export default class TezosGetPublicKey extends AbstractMethod {
         if (this.params.length > 1) {
             label = 'Export multiple Tezos public keys';
         } else {
-            label = `Export Tezos public key for account #${ (fromHardened(this.params[0].address_n[2]) + 1) }`;
+            label = `Export Tezos public key for account #${
+                fromHardened(this.params[0].address_n[2]) + 1
+            }`;
         }
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'export-address',
-            label,
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'export-address',
+                label,
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;
@@ -94,10 +104,12 @@ export default class TezosGetPublicKey extends AbstractMethod {
 
             if (this.hasBundle) {
                 // send progress
-                this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
-                    progress: i,
-                    response: message,
-                }));
+                this.postMessage(
+                    UiMessage(UI.BUNDLE_PROGRESS, {
+                        progress: i,
+                        response: message,
+                    }),
+                );
             }
         }
         return this.hasBundle ? responses : responses[0];

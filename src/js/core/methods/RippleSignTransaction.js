@@ -5,7 +5,6 @@ import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 
-import type { RippleTransaction } from '../../types/networks/ripple';
 import type { CoreMessage } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
@@ -15,7 +14,11 @@ export default class RippleSignTransaction extends AbstractMethod {
     constructor(message: CoreMessage) {
         super(message);
         this.requiredPermissions = ['read', 'write'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Ripple'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(
+            this.name,
+            getMiscNetwork('Ripple'),
+            this.firmwareRange,
+        );
         this.info = 'Sign Ripple transaction';
 
         const { payload } = message;
@@ -27,7 +30,7 @@ export default class RippleSignTransaction extends AbstractMethod {
 
         const path = validatePath(payload.path, 5);
         // incoming data should be in ripple-sdk format
-        const transaction: RippleTransaction = payload.transaction;
+        const { transaction } = payload;
 
         validateParams(transaction, [
             { name: 'fee', type: 'string' },

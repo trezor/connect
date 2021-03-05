@@ -27,14 +27,14 @@ import type { TxInputType, TxOutputType } from '../../types/trezor/protobuf';
 import type { CoreMessage, BitcoinNetworkInfo, AccountAddresses } from '../../types';
 
 type Params = {
-    inputs: TxInputType[];
-    outputs: TxOutputType[];
-    refTxs?: RefTransaction[];
-    addresses?: AccountAddresses;
-    options: TransactionOptions;
-    coinInfo: BitcoinNetworkInfo;
-    push: boolean;
-}
+    inputs: TxInputType[],
+    outputs: TxOutputType[],
+    refTxs?: RefTransaction[],
+    addresses?: AccountAddresses,
+    options: TransactionOptions,
+    coinInfo: BitcoinNetworkInfo,
+    push: boolean,
+};
 
 export default class SignTransaction extends AbstractMethod {
     params: Params;
@@ -91,13 +91,21 @@ export default class SignTransaction extends AbstractMethod {
         const inputs = validateTrezorInputs(payload.inputs, coinInfo);
         const outputs = validateTrezorOutputs(payload.outputs, coinInfo);
 
-        const outputsWithAmount = outputs.filter(output => typeof output.amount === 'string' && !Object.prototype.hasOwnProperty.call(output, 'op_return_data'));
+        const outputsWithAmount = outputs.filter(
+            output =>
+                typeof output.amount === 'string' &&
+                !Object.prototype.hasOwnProperty.call(output, 'op_return_data'),
+        );
         if (outputsWithAmount.length > 0) {
-            const total: BigNumber = outputsWithAmount.reduce((bn, output) => {
-                return bn.plus(typeof output.amount === 'string' ? output.amount : '0');
-            }, new BigNumber(0));
+            const total: BigNumber = outputsWithAmount.reduce(
+                (bn, output) => bn.plus(typeof output.amount === 'string' ? output.amount : '0'),
+                new BigNumber(0),
+            );
             if (total.lte(coinInfo.dustLimit)) {
-                throw ERRORS.TypedError('Method_InvalidParameter', 'Total amount is below dust limit.');
+                throw ERRORS.TypedError(
+                    'Method_InvalidParameter',
+                    'Total amount is below dust limit.',
+                );
             }
         }
 
@@ -129,7 +137,7 @@ export default class SignTransaction extends AbstractMethod {
         const { device, params } = this;
 
         let refTxs: RefTransaction[] = [];
-        const useLegacySignProcess = device.unavailableCapabilities['replaceTransaction'];
+        const useLegacySignProcess = device.unavailableCapabilities.replaceTransaction;
         if (!params.refTxs) {
             // initialize backend
             const refTxsIds = getReferencedTransactions(params.inputs);
@@ -144,12 +152,14 @@ export default class SignTransaction extends AbstractMethod {
                 const origTxsIds = getOrigTransactions(params.inputs, params.outputs);
                 if (!useLegacySignProcess && origTxsIds.length > 0) {
                     const rawOrigTxs = await blockchain.getTransactions(origTxsIds);
-                    let addresses = params.addresses;
+                    let { addresses } = params;
                     // sender account addresses not provided
                     // fetch account info from the blockbook
                     if (!addresses) {
                         // TODO: validate inputs address_n's === same account
-                        const node = await device.getCommands().getHDNode(params.inputs[0].address_n.slice(0, 3), params.coinInfo);
+                        const node = await device
+                            .getCommands()
+                            .getHDNode(params.inputs[0].address_n.slice(0, 3), params.coinInfo);
                         const account = await blockchain.getAccountInfo({
                             descriptor: node.xpubSegwit || node.xpub,
                             coin: params.coinInfo.name,
@@ -157,7 +167,11 @@ export default class SignTransaction extends AbstractMethod {
                         });
                         addresses = account.addresses;
                     }
-                    const origRefTxs = transformOrigTransactions(rawOrigTxs, params.coinInfo, addresses);
+                    const origRefTxs = transformOrigTransactions(
+                        rawOrigTxs,
+                        params.coinInfo,
+                        addresses,
+                    );
                     refTxs = refTxs.concat(origRefTxs);
                 }
             }

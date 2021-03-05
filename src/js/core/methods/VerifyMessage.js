@@ -37,7 +37,9 @@ export default class VerifyMessage extends AbstractMethod {
             this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
             this.info = getLabel('Verify #NETWORK message', coinInfo);
         }
-        const messageHex = payload.hex ? messageToHex(payload.message) : Buffer.from(payload.message, 'utf8').toString('hex');
+        const messageHex = payload.hex
+            ? messageToHex(payload.message)
+            : Buffer.from(payload.message, 'utf8').toString('hex');
         const signatureHex = Buffer.from(payload.signature, 'base64').toString('hex');
 
         this.params = {

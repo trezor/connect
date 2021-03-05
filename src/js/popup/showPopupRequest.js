@@ -1,9 +1,8 @@
 /* @flow */
 
-const layerID: string = 'TrezorConnectInteractionLayer';
-
-const layerInnerHtml: string = `
-    <div class="trezorconnect-container" id="${layerID}">
+const LAYER_ID = 'TrezorConnectInteractionLayer';
+const HTML = `
+    <div class="trezorconnect-container" id="${LAYER_ID}">
         <div class="trezorconnect-window">
             <div class="trezorconnect-head">
                 <svg class="trezorconnect-logo" x="0px" y="0px" viewBox="0 0 163.7 41.9" width="78px" height="20px" preserveAspectRatio="xMinYMin meet">
@@ -31,28 +30,32 @@ const layerInnerHtml: string = `
 `;
 
 export const showPopupRequest = (open: () => void, cancel: () => void) => {
-    if (document.getElementById(layerID)) {
+    if (document.getElementById(LAYER_ID)) {
         return;
     }
 
-    const div: HTMLDivElement = document.createElement('div');
-    div.id = layerID;
+    const div = document.createElement('div');
+    div.id = LAYER_ID;
     div.className = 'trezorconnect-container';
-    div.innerHTML = layerInnerHtml;
+    div.innerHTML = HTML;
 
     if (document.body) {
         document.body.appendChild(div);
     }
 
-    const button: HTMLElement = div.getElementsByClassName('trezorconnect-open')[0];
+    const button = div.getElementsByClassName('trezorconnect-open')[0];
     button.onclick = () => {
         open();
-        if (document.body) { document.body.removeChild(div); }
+        if (document.body) {
+            document.body.removeChild(div);
+        }
     };
 
-    const close: HTMLElement = div.getElementsByClassName('trezorconnect-close')[0];
+    const close = div.getElementsByClassName('trezorconnect-close')[0];
     close.onclick = () => {
         cancel();
-        if (document.body) { document.body.removeChild(div); }
+        if (document.body) {
+            document.body.removeChild(div);
+        }
     };
 };

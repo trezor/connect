@@ -9,9 +9,9 @@ import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo, BlockchainSubscribeAccount } from '../../../types';
 
 type Params = {
-    accounts?: BlockchainSubscribeAccount[];
-    coinInfo: CoinInfo;
-}
+    accounts?: BlockchainSubscribeAccount[],
+    coinInfo: CoinInfo,
+};
 
 export default class BlockchainSubscribe extends AbstractMethod {
     params: Params;
@@ -21,7 +21,7 @@ export default class BlockchainSubscribe extends AbstractMethod {
         this.useDevice = false;
         this.useUi = false;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -31,9 +31,7 @@ export default class BlockchainSubscribe extends AbstractMethod {
 
         if (payload.accounts) {
             payload.accounts.forEach(account => {
-                validateParams(account, [
-                    { name: 'descriptor', type: 'string', obligatory: true },
-                ]);
+                validateParams(account, [{ name: 'descriptor', type: 'string', obligatory: true }]);
             });
         }
 

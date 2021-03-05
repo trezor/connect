@@ -18,44 +18,52 @@ export function cloneCoinInfo<T>(info: T): T {
     return JSON.parse(jsonString);
 }
 
-export const getBitcoinNetwork = (pathOrName: number[] | string): ?BitcoinNetworkInfo => {
-    const networks: BitcoinNetworkInfo[] = cloneCoinInfo(bitcoinNetworks);
+export const getBitcoinNetwork = (pathOrName: number[] | string) => {
+    const networks = cloneCoinInfo(bitcoinNetworks);
     if (typeof pathOrName === 'string') {
         const name = pathOrName.toLowerCase();
-        return networks.find(n => n.name.toLowerCase() === name || n.shortcut.toLowerCase() === name || n.label.toLowerCase() === name);
-    } else {
-        const slip44 = fromHardened(pathOrName[1]);
-        return networks.find(n => n.slip44 === slip44);
+        return networks.find(
+            n =>
+                n.name.toLowerCase() === name ||
+                n.shortcut.toLowerCase() === name ||
+                n.label.toLowerCase() === name,
+        );
     }
+    const slip44 = fromHardened(pathOrName[1]);
+    return networks.find(n => n.slip44 === slip44);
 };
 
 export const getEthereumNetwork = (pathOrName: number[] | string) => {
     const networks = cloneCoinInfo(ethereumNetworks);
     if (typeof pathOrName === 'string') {
         const name = pathOrName.toLowerCase();
-        return networks.find(n => n.name.toLowerCase() === name || n.shortcut.toLowerCase() === name);
-    } else {
-        const slip44 = fromHardened(pathOrName[1]);
-        return networks.find(n => n.slip44 === slip44);
+        return networks.find(
+            n => n.name.toLowerCase() === name || n.shortcut.toLowerCase() === name,
+        );
     }
+    const slip44 = fromHardened(pathOrName[1]);
+    return networks.find(n => n.slip44 === slip44);
 };
 
-export const getMiscNetwork = (pathOrName: number[] | string): ?MiscNetworkInfo => {
-    const networks: MiscNetworkInfo[] = cloneCoinInfo(miscNetworks);
+export const getMiscNetwork = (pathOrName: number[] | string) => {
+    const networks = cloneCoinInfo(miscNetworks);
     if (typeof pathOrName === 'string') {
         const name = pathOrName.toLowerCase();
-        return networks.find(n => n.name.toLowerCase() === name || n.shortcut.toLowerCase() === name);
-    } else {
-        const slip44 = fromHardened(pathOrName[1]);
-        return networks.find(n => n.slip44 === slip44);
+        return networks.find(
+            n => n.name.toLowerCase() === name || n.shortcut.toLowerCase() === name,
+        );
     }
+    const slip44 = fromHardened(pathOrName[1]);
+    return networks.find(n => n.slip44 === slip44);
 };
 
 /*
-* Bitcoin networks
-*/
+ * Bitcoin networks
+ */
 
-export const getSegwitNetwork = (coin: BitcoinNetworkInfo): ?$ElementType<BitcoinNetworkInfo, 'network'> => {
+export const getSegwitNetwork = (
+    coin: BitcoinNetworkInfo,
+): ?$ElementType<BitcoinNetworkInfo, 'network'> => {
     if (coin.segwit && typeof coin.xPubMagicSegwit === 'number') {
         return {
             ...coin.network,
@@ -68,7 +76,9 @@ export const getSegwitNetwork = (coin: BitcoinNetworkInfo): ?$ElementType<Bitcoi
     return null;
 };
 
-export const getBech32Network = (coin: BitcoinNetworkInfo): ?$ElementType<BitcoinNetworkInfo, 'network'> => {
+export const getBech32Network = (
+    coin: BitcoinNetworkInfo,
+): ?$ElementType<BitcoinNetworkInfo, 'network'> => {
     if (coin.segwit && typeof coin.xPubMagicSegwitNative === 'number') {
         return {
             ...coin.network,
@@ -82,7 +92,7 @@ export const getBech32Network = (coin: BitcoinNetworkInfo): ?$ElementType<Bitcoi
 };
 
 // fix coinInfo network values from path (segwit/legacy)
-export const fixCoinInfoNetwork = (ci: BitcoinNetworkInfo, path: Array<number>): BitcoinNetworkInfo => {
+export const fixCoinInfoNetwork = (ci: BitcoinNetworkInfo, path: number[]) => {
     const coinInfo = cloneCoinInfo(ci);
     if (path[0] === toHardened(84)) {
         const bech32Network = getBech32Network(coinInfo);
@@ -100,7 +110,7 @@ export const fixCoinInfoNetwork = (ci: BitcoinNetworkInfo, path: Array<number>):
     return coinInfo;
 };
 
-const detectBtcVersion = (data) => {
+const detectBtcVersion = data => {
     if (data.subversion == null) {
         return 'btc';
     }
@@ -116,11 +126,16 @@ const detectBtcVersion = (data) => {
     return 'btc';
 };
 
-export const getCoinInfoByHash = (hash: string, networkInfo: any): BitcoinNetworkInfo => {
-    const networks: BitcoinNetworkInfo[] = cloneCoinInfo(bitcoinNetworks);
-    const result: ?BitcoinNetworkInfo = networks.find(info => hash.toLowerCase() === info.hashGenesisBlock.toLowerCase());
+export const getCoinInfoByHash = (hash: string, networkInfo: any) => {
+    const networks = cloneCoinInfo(bitcoinNetworks);
+    const result = networks.find(
+        info => hash.toLowerCase() === info.hashGenesisBlock.toLowerCase(),
+    );
     if (!result) {
-        throw ERRORS.TypedError('Method_UnknownCoin', 'Coin info not found for hash: ' + hash + ' ' + networkInfo.hashGenesisBlock);
+        throw ERRORS.TypedError(
+            'Method_UnknownCoin',
+            `Coin info not found for hash: ${hash} ${networkInfo.hashGenesisBlock}`,
+        );
     }
 
     if (result.isBitcoin) {
@@ -133,38 +148,27 @@ export const getCoinInfoByHash = (hash: string, networkInfo: any): BitcoinNetwor
         }
         if (fork) {
             return fork;
-        } else {
-            throw ERRORS.TypedError('Method_UnknownCoin', 'Coin info not found for hash: ' + hash + ' ' + networkInfo.hashGenesisBlock + ' BTC version:' + btcVersion);
         }
+        throw ERRORS.TypedError(
+            'Method_UnknownCoin',
+            `Coin info not found for hash: ${hash} ${networkInfo.hashGenesisBlock} BTC version:${btcVersion}`,
+        );
     }
     return result;
 };
 
-export const getCoinInfo = (currency: string): ?CoinInfo => {
-    let coinInfo: ?CoinInfo = getBitcoinNetwork(currency);
-    if (!coinInfo) {
-        coinInfo = getEthereumNetwork(currency);
-    }
-    if (!coinInfo) {
-        coinInfo = getMiscNetwork(currency);
-    }
-    return coinInfo;
+export const getCoinInfo = (currency: string): ?CoinInfo =>
+    getBitcoinNetwork(currency) || getEthereumNetwork(currency) || getMiscNetwork(currency);
+
+export const getCoinName = (path: number[]) => {
+    const slip44 = fromHardened(path[1]);
+    const network = ethereumNetworks.find(n => n.slip44 === slip44);
+    return network ? network.name : 'Unknown coin';
 };
 
-export const getCoinName = (path: Array<number>) => {
-    const slip44: number = fromHardened(path[1]);
-    for (const network of ethereumNetworks) {
-        if (network.slip44 === slip44) {
-            return network.name;
-        }
-    }
-    return 'Unknown coin';
-};
-
-const parseBitcoinNetworksJson = (json: JSON) => {
-    const coinsObject: Object = json;
-    Object.keys(coinsObject).forEach(key => {
-        const coin = coinsObject[key];
+const parseBitcoinNetworksJson = (json: any) => {
+    Object.keys(json).forEach(key => {
+        const coin = json[key];
         const shortcut = coin.coin_shortcut;
         const isBitcoin = shortcut === 'BTC' || shortcut === 'TEST';
         const hasTimestamp = shortcut === 'CPC' || shortcut === 'PPC' || shortcut === 'tPPC';
@@ -184,10 +188,13 @@ const parseBitcoinNetworksJson = (json: JSON) => {
             consensusBranchId: coin.consensus_branch_id, // zcash, komodo
         };
 
-        const blockchainLink = Array.isArray(coin.blockbook) && coin.blockbook.length > 0 ? {
-            type: 'blockbook',
-            url: coin.blockbook,
-        } : undefined;
+        const blockchainLink =
+            Array.isArray(coin.blockbook) && coin.blockbook.length > 0
+                ? {
+                      type: 'blockbook',
+                      url: coin.blockbook,
+                  }
+                : undefined;
 
         bitcoinNetworks.push({
             type: 'bitcoin',
@@ -246,14 +253,16 @@ const parseBitcoinNetworksJson = (json: JSON) => {
     });
 };
 
-const parseEthereumNetworksJson = (json: JSON): void => {
-    const networksObject: Object = json;
-    Object.keys(networksObject).forEach(key => {
-        const network = networksObject[key];
-        const blockchainLink = Array.isArray(network.blockbook) && network.blockbook.length > 0 ? {
-            type: 'blockbook',
-            url: network.blockbook,
-        } : undefined;
+const parseEthereumNetworksJson = (json: any) => {
+    Object.keys(json).forEach(key => {
+        const network = json[key];
+        const blockchainLink =
+            Array.isArray(network.blockbook) && network.blockbook.length > 0
+                ? {
+                      type: 'blockbook',
+                      url: network.blockbook,
+                  }
+                : undefined;
         ethereumNetworks.push({
             type: 'ethereum',
             blockchainLink,
@@ -283,18 +292,17 @@ const parseEthereumNetworksJson = (json: JSON): void => {
     });
 };
 
-const parseMiscNetworksJSON = (json: JSON, type?: 'misc' | 'nem') => {
-    const networksObject: Object = json;
-    Object.keys(networksObject).forEach(key => {
-        const network = networksObject[key];
+const parseMiscNetworksJSON = (json: any, type?: 'misc' | 'nem') => {
+    Object.keys(json).forEach(key => {
+        const network = json[key];
         let minFee = -1; // unknown
         let maxFee = -1; // unknown
-        let defaultFees = {'Normal': -1}; // unknown
+        let defaultFees = { Normal: -1 }; // unknown
         const shortcut = network.shortcut.toLowerCase();
         if (shortcut === 'xrp' || shortcut === 'txrp') {
             minFee = 10;
             maxFee = 10000;
-            defaultFees = {'Normal': 12};
+            defaultFees = { Normal: 12 };
         }
         miscNetworks.push({
             type: type || 'misc',
@@ -315,49 +323,53 @@ const parseMiscNetworksJSON = (json: JSON, type?: 'misc' | 'nem') => {
     });
 };
 
-export const parseCoinsJson = (json: JSON) => {
-    const coinsObject: Object = json;
-    Object.keys(coinsObject).forEach(key => {
+export const parseCoinsJson = (json: any) => {
+    Object.keys(json).forEach(key => {
         switch (key) {
-            case 'bitcoin' :
-                return parseBitcoinNetworksJson(coinsObject[key]);
-            case 'eth' :
-                return parseEthereumNetworksJson(coinsObject[key]);
-            case 'misc' :
-                return parseMiscNetworksJSON(coinsObject[key]);
-            case 'nem' :
-                return parseMiscNetworksJSON(coinsObject[key], 'nem');
+            case 'bitcoin':
+                return parseBitcoinNetworksJson(json[key]);
+            case 'eth':
+                return parseEthereumNetworksJson(json[key]);
+            case 'misc':
+                return parseMiscNetworksJSON(json[key]);
+            case 'nem':
+                return parseMiscNetworksJSON(json[key], 'nem');
+            // no default
         }
     });
 };
 
-export const getUniqueNetworks = (networks: Array<?CoinInfo>): CoinInfo[] => {
-    return networks.reduce((result: CoinInfo[], info: ?CoinInfo) => {
+export const getUniqueNetworks = (networks: Array<?CoinInfo>): CoinInfo[] =>
+    networks.reduce((result: CoinInfo[], info: ?CoinInfo) => {
         if (!info || result.find(i => i.shortcut === info.shortcut)) return result;
         return result.concat(info);
     }, []);
-};
 
-export const getAllNetworks = (): CoinInfo[] => [].concat(bitcoinNetworks).concat(ethereumNetworks).concat(miscNetworks);
+export const getAllNetworks = (): CoinInfo[] =>
+    [].concat(bitcoinNetworks).concat(ethereumNetworks).concat(miscNetworks);
 
 export const getCoinInfoByCapability = (capabilities: string[]): CoinInfo[] => {
-    const networks: Array<?CoinInfo> = capabilities.reduce((result: Array<?CoinInfo>, c: string) => {
+    const networks = capabilities.reduce((result: Array<?CoinInfo>, c: string) => {
         if (c === 'Capability_Bitcoin') {
             return result.concat(getCoinInfo('Bitcoin')).concat(getCoinInfo('Testnet'));
-        } else if (c === 'Capability_Bitcoin_like') {
-            return result.concat(bitcoinNetworks);
-        } else if (c === 'Capability_Binance') {
-            return result.concat(getCoinInfo('BNB'));
-        } else if (c === 'Capability_Ethereum') {
-            return result.concat(ethereumNetworks);
-        } else if (c === 'Capability_Ripple') {
-            return result.concat(getCoinInfo('xrp')).concat(getCoinInfo('txrp'));
-        } else {
-            const [, networkName] = c.split('_');
-            if (typeof networkName === 'string') {
-                return result.concat(getCoinInfo(networkName));
-            }
         }
+        if (c === 'Capability_Bitcoin_like') {
+            return result.concat(bitcoinNetworks);
+        }
+        if (c === 'Capability_Binance') {
+            return result.concat(getCoinInfo('BNB'));
+        }
+        if (c === 'Capability_Ethereum') {
+            return result.concat(ethereumNetworks);
+        }
+        if (c === 'Capability_Ripple') {
+            return result.concat(getCoinInfo('xrp')).concat(getCoinInfo('txrp'));
+        }
+        const [, networkName] = c.split('_');
+        if (typeof networkName === 'string') {
+            return result.concat(getCoinInfo(networkName));
+        }
+
         return result;
     }, []);
     return getUniqueNetworks(networks);

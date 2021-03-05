@@ -9,8 +9,8 @@ import { getCoinInfo } from '../../../data/CoinInfo';
 import type { CoreMessage, CoinInfo } from '../../../types';
 
 type Params = {
-    coinInfo: CoinInfo;
-    timestamps?: number[];
+    coinInfo: CoinInfo,
+    timestamps?: number[],
 };
 
 export default class BlockchainGetFiatRatesForTimestamps extends AbstractMethod {
@@ -21,7 +21,7 @@ export default class BlockchainGetFiatRatesForTimestamps extends AbstractMethod 
         this.useDevice = false;
         this.useUi = false;
 
-        const payload: Object = message.payload;
+        const { payload } = message;
 
         // validate incoming parameters
         validateParams(payload, [
@@ -38,15 +38,12 @@ export default class BlockchainGetFiatRatesForTimestamps extends AbstractMethod 
 
         this.params = {
             timestamps: payload.timestamps,
-            coinInfo: coinInfo,
+            coinInfo,
         };
     }
 
     async run() {
-        const backend = await initBlockchain(
-            this.params.coinInfo,
-            this.postMessage
-        );
+        const backend = await initBlockchain(this.params.coinInfo, this.postMessage);
         return backend.getFiatRatesForTimestamps({ timestamps: this.params.timestamps });
     }
 }

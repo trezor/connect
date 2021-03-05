@@ -2,15 +2,19 @@
 
 export const TRANSPORT: 'ui-no_transport' = 'ui-no_transport';
 export const BOOTLOADER: 'ui-device_bootloader_mode' = 'ui-device_bootloader_mode';
-export const NOT_IN_BOOTLOADER: 'ui-device_not_in_bootloader_mode' = 'ui-device_not_in_bootloader_mode';
+export const NOT_IN_BOOTLOADER: 'ui-device_not_in_bootloader_mode' =
+    'ui-device_not_in_bootloader_mode';
 export const REQUIRE_MODE: 'ui-device_require_mode' = 'ui-device_require_mode';
 export const INITIALIZE: 'ui-device_not_initialized' = 'ui-device_not_initialized';
 export const SEEDLESS: 'ui-device_seedless' = 'ui-device_seedless';
 export const FIRMWARE_OLD: 'ui-device_firmware_old' = 'ui-device_firmware_old';
 export const FIRMWARE_OUTDATED: 'ui-device_firmware_outdated' = 'ui-device_firmware_outdated';
-export const FIRMWARE_NOT_SUPPORTED: 'ui-device_firmware_unsupported' = 'ui-device_firmware_unsupported';
-export const FIRMWARE_NOT_COMPATIBLE: 'ui-device_firmware_not_compatible' = 'ui-device_firmware_not_compatible';
-export const FIRMWARE_NOT_INSTALLED: 'ui-device_firmware_not_installed' = 'ui-device_firmware_not_installed';
+export const FIRMWARE_NOT_SUPPORTED: 'ui-device_firmware_unsupported' =
+    'ui-device_firmware_unsupported';
+export const FIRMWARE_NOT_COMPATIBLE: 'ui-device_firmware_not_compatible' =
+    'ui-device_firmware_not_compatible';
+export const FIRMWARE_NOT_INSTALLED: 'ui-device_firmware_not_installed' =
+    'ui-device_firmware_not_installed';
 export const FIRMWARE_PROGRESS: 'ui-firmware-progress' = 'ui-firmware-progress';
 export const DEVICE_NEEDS_BACKUP: 'ui-device_needs_backup' = 'ui-device_needs_backup';
 
@@ -22,9 +26,11 @@ export const REQUEST_CONFIRMATION: 'ui-request_confirmation' = 'ui-request_confi
 export const REQUEST_PIN: 'ui-request_pin' = 'ui-request_pin';
 export const INVALID_PIN: 'ui-invalid_pin' = 'ui-invalid_pin';
 export const REQUEST_PASSPHRASE: 'ui-request_passphrase' = 'ui-request_passphrase';
-export const REQUEST_PASSPHRASE_ON_DEVICE: 'ui-request_passphrase_on_device' = 'ui-request_passphrase_on_device';
+export const REQUEST_PASSPHRASE_ON_DEVICE: 'ui-request_passphrase_on_device' =
+    'ui-request_passphrase_on_device';
 export const INVALID_PASSPHRASE: 'ui-invalid_passphrase' = 'ui-invalid_passphrase';
-export const INVALID_PASSPHRASE_ACTION: 'ui-invalid_passphrase_action' = 'ui-invalid_passphrase_action';
+export const INVALID_PASSPHRASE_ACTION: 'ui-invalid_passphrase_action' =
+    'ui-invalid_passphrase_action';
 export const CONNECT: 'ui-connect' = 'ui-connect';
 export const LOADING: 'ui-loading' = 'ui-loading';
 export const SET_OPERATION: 'ui-set_operation' = 'ui-set_operation';
@@ -52,7 +58,8 @@ export const CUSTOM_MESSAGE_REQUEST: 'ui-custom_request' = 'ui-custom_request';
 export const CUSTOM_MESSAGE_RESPONSE: 'ui-custom_response' = 'ui-custom_response';
 
 export const LOGIN_CHALLENGE_REQUEST: 'ui-login_challenge_request' = 'ui-login_challenge_request';
-export const LOGIN_CHALLENGE_RESPONSE: 'ui-login_challenge_response' = 'ui-login_challenge_response';
+export const LOGIN_CHALLENGE_RESPONSE: 'ui-login_challenge_response' =
+    'ui-login_challenge_response';
 
 export const BUNDLE_PROGRESS: 'ui-bundle_progress' = 'ui-bundle_progress';
 export const ADDRESS_VALIDATION: 'ui-address_validation' = 'ui-address_validation';

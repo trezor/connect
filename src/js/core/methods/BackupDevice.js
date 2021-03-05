@@ -13,21 +13,23 @@ export default class BackupDevice extends AbstractMethod {
         this.useDeviceState = false;
     }
 
-    async confirmation(): Promise<boolean> {
+    async confirmation() {
         // wait for popup window
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'device-management',
-            customConfirmButton: {
-                className: 'confirm',
-                label: 'Proceed',
-            },
-            label: 'Do you want to initiate backup procedure?',
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'device-management',
+                customConfirmButton: {
+                    className: 'confirm',
+                    label: 'Proceed',
+                },
+                label: 'Do you want to initiate backup procedure?',
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;

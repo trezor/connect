@@ -13,16 +13,22 @@ import { UiMessage } from '../../message/builder';
 import { isBackendSupported, initBlockchain } from '../../backend/BlockchainLink';
 
 import type { CoreMessage, CoinInfo } from '../../types';
-import type { GetAccountInfo as GetAccountInfoParams, AccountInfo, AccountUtxo } from '../../types/account';
-import type { FirmwareException } from '../../types/events';
+import type {
+    GetAccountInfo as GetAccountInfoParams,
+    AccountInfo,
+    AccountUtxo,
+} from '../../types/account';
 
-type Request = GetAccountInfoParams & { address_n: number[]; coinInfo: CoinInfo };
+type Request = GetAccountInfoParams & { address_n: number[], coinInfo: CoinInfo };
 type Params = Request[];
 
 export default class GetAccountInfo extends AbstractMethod {
     params: Params;
+
     disposed: boolean = false;
+
     hasBundle: boolean;
+
     discovery: Discovery | typeof undefined = undefined;
 
     constructor(message: CoreMessage) {
@@ -37,12 +43,12 @@ export default class GetAccountInfo extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle
+            ? { ...message.payload, bundle: [message.payload] }
+            : message.payload;
 
         // validate bundle type
-        validateParams(payload, [
-            { name: 'bundle', type: 'array' },
-        ]);
+        validateParams(payload, [{ name: 'bundle', type: 'array' }]);
 
         payload.bundle.forEach(batch => {
             // validate incoming parameters
@@ -95,7 +101,7 @@ export default class GetAccountInfo extends AbstractMethod {
         this.useUi = willUseDevice;
     }
 
-    async confirmation(): Promise<boolean> {
+    async confirmation() {
         // wait for popup window
         await this.getPopupPromise().promise;
         // initialize user response promise
@@ -103,16 +109,20 @@ export default class GetAccountInfo extends AbstractMethod {
 
         if (this.params.length === 1 && !this.params[0].path && !this.params[0].descriptor) {
             // request confirmation view
-            this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-                view: 'export-account-info',
-                label: `Export info for ${ this.params[0].coinInfo.label } account of your selection`,
-                customConfirmButton: {
-                    label: 'Proceed to account selection',
-                    className: 'not-empty-css',
-                },
-            }));
+            this.postMessage(
+                UiMessage(UI.REQUEST_CONFIRMATION, {
+                    view: 'export-account-info',
+                    label: `Export info for ${this.params[0].coinInfo.label} account of your selection`,
+                    customConfirmButton: {
+                        label: 'Proceed to account selection',
+                        className: 'not-empty-css',
+                    },
+                }),
+            );
         } else {
-            const keys: { [coin: string]: { coinInfo: CoinInfo; values: Array<string | number[]>} } = {};
+            const keys: {
+                [coin: string]: { coinInfo: CoinInfo, values: Array<string | number[]> },
+            } = {};
             this.params.forEach(b => {
                 if (!keys[b.coinInfo.label]) {
                     keys[b.coinInfo.label] = {
@@ -125,9 +135,9 @@ export default class GetAccountInfo extends AbstractMethod {
 
             // prepare html for popup
             const str: string[] = [];
-            Object.keys(keys).forEach((k, i, a) => {
+            Object.keys(keys).forEach((k, _i, _a) => {
                 const details = keys[k];
-                details.values.forEach((acc, i) => {
+                details.values.forEach(acc => {
                     // if (i === 0) str += this.params.length > 1 ? ': ' : ' ';
                     // if (i > 0) str += ', ';
                     str.push('<span>');
@@ -142,10 +152,12 @@ export default class GetAccountInfo extends AbstractMethod {
                 });
             });
 
-            this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-                view: 'export-account-info',
-                label: `Export info for: ${str.join('')}`,
-            }));
+            this.postMessage(
+                UiMessage(UI.REQUEST_CONFIRMATION, {
+                    view: 'export-account-info',
+                    label: `Export info for: ${str.join('')}`,
+                }),
+            );
         }
 
         // wait for user action
@@ -153,16 +165,18 @@ export default class GetAccountInfo extends AbstractMethod {
         return uiResp.payload;
     }
 
-    async noBackupConfirmation(): Promise<boolean> {
+    async noBackupConfirmation() {
         // wait for popup window
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'no-backup',
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'no-backup',
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;
@@ -172,7 +186,7 @@ export default class GetAccountInfo extends AbstractMethod {
     // override AbstractMethod function
     // this is a special case where we want to check firmwareRange in bundle
     // and return error with bundle indexes
-    async checkFirmwareRange(isUsingPopup: boolean): Promise<?$PropertyType<FirmwareException, 'type'>> {
+    async checkFirmwareRange(isUsingPopup: boolean) {
         // for popup mode use it like it was before
         if (isUsingPopup || this.params.length === 1) {
             return super.checkFirmwareRange(isUsingPopup);
@@ -200,7 +214,6 @@ export default class GetAccountInfo extends AbstractMethod {
         if (invalid.length > 0) {
             throw ERRORS.TypedError('Method_Discovery_BundleException', JSON.stringify(invalid));
         }
-        return null;
     }
 
     async run(): Promise<AccountInfo | Array<AccountInfo | null> | null> {
@@ -214,17 +227,19 @@ export default class GetAccountInfo extends AbstractMethod {
         const sendProgress = (progress: number, response: AccountInfo | null, error?: string) => {
             if (!this.hasBundle || (this.device && this.device.getCommands().disposed)) return;
             // send progress to UI
-            this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
-                progress,
-                response,
-                error,
-            }));
+            this.postMessage(
+                UiMessage(UI.BUNDLE_PROGRESS, {
+                    progress,
+                    response,
+                    error,
+                }),
+            );
         };
 
         for (let i = 0; i < this.params.length; i++) {
             const request = this.params[i];
             const { address_n } = request;
-            let descriptor = request.descriptor;
+            let { descriptor } = request;
             let legacyXpub: ?string;
 
             if (this.disposed) break;
@@ -232,10 +247,9 @@ export default class GetAccountInfo extends AbstractMethod {
             // get descriptor from device
             if (address_n && typeof descriptor !== 'string') {
                 try {
-                    const accountDescriptor = await this.device.getCommands().getAccountDescriptor(
-                        request.coinInfo,
-                        address_n,
-                    );
+                    const accountDescriptor = await this.device
+                        .getCommands()
+                        .getAccountDescriptor(request.coinInfo, address_n);
                     if (accountDescriptor) {
                         descriptor = accountDescriptor.descriptor;
                         legacyXpub = accountDescriptor.legacyXpub;
@@ -244,6 +258,7 @@ export default class GetAccountInfo extends AbstractMethod {
                     if (this.hasBundle) {
                         responses.push(null);
                         sendProgress(i, null, error.message);
+                        // eslint-disable-next-line no-continue
                         continue;
                     } else {
                         throw error;
@@ -280,7 +295,11 @@ export default class GetAccountInfo extends AbstractMethod {
                 if (this.disposed) break;
 
                 let utxo: AccountUtxo;
-                if (request.coinInfo.type === 'bitcoin' && typeof request.details === 'string' && request.details !== 'basic') {
+                if (
+                    request.coinInfo.type === 'bitcoin' &&
+                    typeof request.details === 'string' &&
+                    request.details !== 'basic'
+                ) {
                     utxo = await blockchain.getAccountUtxo(descriptor);
                 }
 
@@ -301,6 +320,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 if (this.hasBundle) {
                     responses.push(null);
                     sendProgress(i, null, error.message);
+                    // eslint-disable-next-line no-continue
                     continue;
                 } else {
                     throw error;
@@ -320,18 +340,22 @@ export default class GetAccountInfo extends AbstractMethod {
             blockchain,
             commands: this.device.getCommands(),
         });
-        discovery.on('progress', (accounts: Array<any>) => {
-            this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
-                type: 'progress',
-                coinInfo,
-                accounts,
-            }));
+        discovery.on('progress', accounts => {
+            this.postMessage(
+                UiMessage(UI.SELECT_ACCOUNT, {
+                    type: 'progress',
+                    coinInfo,
+                    accounts,
+                }),
+            );
         });
         discovery.on('complete', () => {
-            this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
-                type: 'end',
-                coinInfo,
-            }));
+            this.postMessage(
+                UiMessage(UI.SELECT_ACCOUNT, {
+                    type: 'end',
+                    coinInfo,
+                }),
+            );
         });
         // catch error from discovery process
         discovery.start().catch(error => {
@@ -340,19 +364,20 @@ export default class GetAccountInfo extends AbstractMethod {
 
         // set select account view
         // this view will be updated from discovery events
-        this.postMessage(UiMessage(UI.SELECT_ACCOUNT, {
-            type: 'start',
-            accountTypes: discovery.types.map(t => t.type),
-            defaultAccountType,
-            coinInfo,
-        }));
+        this.postMessage(
+            UiMessage(UI.SELECT_ACCOUNT, {
+                type: 'start',
+                accountTypes: discovery.types.map(t => t.type),
+                defaultAccountType,
+                coinInfo,
+            }),
+        );
 
         // wait for user action
         const uiResp = await dfd.promise;
         discovery.stop();
 
-        const resp: number = uiResp.payload;
-        const account = discovery.accounts[resp];
+        const account = discovery.accounts[uiResp.payload];
 
         if (!discovery.completed) {
             await resolveAfter(501); // temporary solution, TODO: immediately resolve will cause "device call in progress"
@@ -373,7 +398,11 @@ export default class GetAccountInfo extends AbstractMethod {
         });
 
         let utxo: AccountUtxo;
-        if (request.coinInfo.type === 'bitcoin' && typeof request.details === 'string' && request.details !== 'basic') {
+        if (
+            request.coinInfo.type === 'bitcoin' &&
+            typeof request.details === 'string' &&
+            request.details !== 'basic'
+        ) {
             utxo = await blockchain.getAccountUtxo(account.descriptor);
         }
 

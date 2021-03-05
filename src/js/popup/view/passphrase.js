@@ -5,21 +5,24 @@ import * as UI from '../../constants/ui';
 import { container, showView, postMessage } from './common';
 import type { DeviceMessage } from '../../types/events';
 
-export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payload'>): void => {
+export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payload'>) => {
     showView('passphrase');
 
-    const view: HTMLElement = container.getElementsByClassName('passphrase')[0];
-    const deviceNameSpan: HTMLElement = container.getElementsByClassName('device-name')[0];
+    const view = container.getElementsByClassName('passphrase')[0];
+    const deviceNameSpan = container.getElementsByClassName('device-name')[0];
     const input1: HTMLInputElement = (container.getElementsByClassName('pass')[0]: any);
     const input2: HTMLInputElement = (container.getElementsByClassName('pass-check')[0]: any);
     const toggle: HTMLInputElement = (container.getElementsByClassName('show-passphrase')[0]: any);
     const enter: HTMLButtonElement = (container.getElementsByClassName('submit')[0]: any);
 
-    let inputType: string = 'password';
+    let inputType = 'password';
 
     const { label, features } = payload.device;
     deviceNameSpan.innerText = label;
-    const passphraseOnDevice = features && features.capabilities && features.capabilities.includes('Capability_PassphraseEntry');
+    const passphraseOnDevice =
+        features &&
+        features.capabilities &&
+        features.capabilities.includes('Capability_PassphraseEntry');
 
     /* Functions */
     const validation = () => {
@@ -69,20 +72,26 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
         window.removeEventListener('keydown', handleWindowKeydown);
 
         showView('loader');
-        postMessage(UiMessage(UI.RECEIVE_PASSPHRASE, {
-            value: input1.value,
-            save: true,
-        }));
+        postMessage(
+            UiMessage(UI.RECEIVE_PASSPHRASE, {
+                value: input1.value,
+                save: true,
+            }),
+        );
     };
 
     /* Functions: END */
-    input1.addEventListener('input', () => {
-        validation();
-        if (inputType === 'text') {
-            input2.value = input1.value;
+    input1.addEventListener(
+        'input',
+        () => {
             validation();
-        }
-    }, false);
+            if (inputType === 'text') {
+                input2.value = input1.value;
+                validation();
+            }
+        },
+        false,
+    );
     input2.addEventListener('input', validation, false);
 
     toggle.addEventListener('click', handleToggleClick);
@@ -90,16 +99,18 @@ export const initPassphraseView = (payload: $PropertyType<DeviceMessage, 'payloa
     window.addEventListener('keydown', handleWindowKeydown, false);
 
     if (passphraseOnDevice) {
-        const onDevice: HTMLButtonElement = (container.getElementsByClassName('passphraseOnDevice')[0]: any);
+        const onDevice = container.getElementsByClassName('passphraseOnDevice')[0];
         onDevice.style.display = 'block';
         onDevice.addEventListener('click', () => {
             window.removeEventListener('keydown', handleWindowKeydown);
             showView('loader');
-            postMessage(UiMessage(UI.RECEIVE_PASSPHRASE, {
-                value: '',
-                passphraseOnDevice: true,
-                save: true,
-            }));
+            postMessage(
+                UiMessage(UI.RECEIVE_PASSPHRASE, {
+                    value: '',
+                    passphraseOnDevice: true,
+                    save: true,
+                }),
+            );
         });
     }
 

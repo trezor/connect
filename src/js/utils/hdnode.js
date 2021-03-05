@@ -2,14 +2,17 @@
 import * as bitcoin from '@trezor/utxo-lib';
 import * as ecurve from 'ecurve';
 import { ERRORS } from '../constants';
-import type { PublicKey, EthereumPublicKey, HDNodeType, TxInputType, TxOutputType } from '../types/trezor/protobuf';
+import type {
+    PublicKey,
+    EthereumPublicKey,
+    HDNodeType,
+    TxInputType,
+    TxOutputType,
+} from '../types/trezor/protobuf';
 
 const curve = ecurve.getCurveByName('secp256k1');
 
-const pubNode2bjsNode = (
-    node: HDNodeType,
-    network: bitcoin.Network
-): bitcoin.HDNode => {
+const pubNode2bjsNode = (node: HDNodeType, network: bitcoin.Network) => {
     const chainCode = Buffer.from(node.chain_code, 'hex');
     const publicKey = Buffer.from(node.public_key, 'hex');
 
@@ -17,7 +20,7 @@ const pubNode2bjsNode = (
         throw ERRORS.TypedError('Runtime', 'pubNode2bjsNode: secp256k1 is null');
     }
     const Q = ecurve.Point.decodeFrom(curve, publicKey);
-    const res = new bitcoin.HDNode(new bitcoin.ECPair(null, Q, {network: network}), chainCode);
+    const res = new bitcoin.HDNode(new bitcoin.ECPair(null, Q, { network }), chainCode);
 
     res.depth = +node.depth;
     res.index = +node.child_num;
@@ -26,7 +29,11 @@ const pubNode2bjsNode = (
     return res;
 };
 
-export const convertXpub = (xpub: string, originalNetwork: bitcoin.Network, requestedNetwork?: bitcoin.Network): string => {
+export const convertXpub = (
+    xpub: string,
+    originalNetwork: bitcoin.Network,
+    requestedNetwork?: bitcoin.Network,
+) => {
     const node = bitcoin.HDNode.fromBase58(xpub, originalNetwork);
     if (requestedNetwork) {
         node.keyPair.network = requestedNetwork;
@@ -35,31 +42,30 @@ export const convertXpub = (xpub: string, originalNetwork: bitcoin.Network, requ
 };
 
 // stupid hack, because older (1.7.1, 2.0.8) trezor FW serializes all xpubs with bitcoin magic
-export const convertBitcoinXpub = (xpub: string, network: bitcoin.Network): string => {
+export const convertBitcoinXpub = (xpub: string, network: bitcoin.Network) => {
     if (network.bip32.public === 0x0488b21e) {
         // it's bitcoin-like => return xpub
         return xpub;
-    } else {
-        const node = bitcoin.HDNode.fromBase58(xpub); // use bitcoin magic
-
-        // "hard-fix" the new network into the HDNode keypair
-        node.keyPair.network = network;
-        return node.toBase58();
     }
+    const node = bitcoin.HDNode.fromBase58(xpub); // use bitcoin magic
+
+    // "hard-fix" the new network into the HDNode keypair
+    node.keyPair.network = network;
+    return node.toBase58();
 };
 
 // converts from internal PublicKey format to bitcoin.js HDNode
 // network info is necessary. throws error on wrong xpub
-const pubKey2bjsNode = (
-    key: PublicKey | EthereumPublicKey,
-    network: bitcoin.Network
-): bitcoin.HDNode => {
+const pubKey2bjsNode = (key: PublicKey | EthereumPublicKey, network: bitcoin.Network) => {
     const keyNode = key.node;
     const bjsNode = pubNode2bjsNode(keyNode, network);
     const bjsXpub = bjsNode.toBase58();
     const keyXpub = convertXpub(key.xpub, network);
     if (bjsXpub !== keyXpub) {
-        throw ERRORS.TypedError('Runtime', `pubKey2bjsNode: Invalid public key transmission detected. Key: ${bjsXpub}, Received: ${keyXpub}`);
+        throw ERRORS.TypedError(
+            'Runtime',
+            `pubKey2bjsNode: Invalid public key transmission detected. Key: ${bjsXpub}, Received: ${keyXpub}`,
+        );
     }
 
     return bjsNode;
@@ -68,14 +74,17 @@ const pubKey2bjsNode = (
 const checkDerivation = (
     parBjsNode: bitcoin.HDNode,
     childBjsNode: bitcoin.HDNode,
-    suffix: number
+    suffix: number,
 ) => {
     const derivedChildBjsNode = parBjsNode.derive(suffix);
     const derivedXpub = derivedChildBjsNode.toBase58();
     const compXpub = childBjsNode.toBase58();
 
     if (derivedXpub !== compXpub) {
-        throw ERRORS.TypedError('Runtime', `checkDerivation: Invalid child cross-check public key. Derived: ${derivedXpub}, Received: ${compXpub}`);
+        throw ERRORS.TypedError(
+            'Runtime',
+            `checkDerivation: Invalid child cross-check public key. Derived: ${derivedXpub}, Received: ${compXpub}`,
+        );
     }
 };
 
@@ -84,7 +93,7 @@ export function xpubDerive<PK: PublicKey | EthereumPublicKey>(
     childXPub: PK,
     suffix: number,
     network?: bitcoin.Network,
-    requestedNetwork?: bitcoin.Network
+    _requestedNetwork?: bitcoin.Network,
 ): PK {
     const resNode = pubKey2bjsNode(xpub, network || bitcoin.networks.bitcoin);
     const childNode = pubKey2bjsNode(childXPub, network || bitcoin.networks.bitcoin);
@@ -104,7 +113,10 @@ export const xpubToHDNodeType = (xpub: string, network: bitcoin.Network): HDNode
     };
 };
 
-export const convertMultisigPubKey = <T: TxInputType | TxOutputType>(network: bitcoin.Network, utxo: T): T => {
+export const convertMultisigPubKey = <T: TxInputType | TxOutputType>(
+    network: bitcoin.Network,
+    utxo: T,
+): T => {
     if (utxo.multisig && utxo.multisig.pubkeys) {
         // convert xpubs to HDNodeTypes
         utxo.multisig.pubkeys.forEach(pk => {

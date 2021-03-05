@@ -14,7 +14,7 @@ export const parseBridgeJSON = (json: JSON) => {
     const latest = json[0];
     const version = latest.version.join('.');
     const data: BridgeInfo = JSON.parse(JSON.stringify(latest).replace(/{version}/g, version));
-    const directory = data.directory;
+    const { directory } = data;
     const packages = data.packages.map(p => ({
         name: p.name,
         platform: p.platform,
@@ -28,6 +28,4 @@ export const parseBridgeJSON = (json: JSON) => {
     return info;
 };
 
-export const getBridgeInfo = (): BridgeInfo => {
-    return info;
-};
+export const getBridgeInfo = (): BridgeInfo => info;

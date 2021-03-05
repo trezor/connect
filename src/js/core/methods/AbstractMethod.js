@@ -7,7 +7,14 @@ import { versionCompare } from '../../utils/versionUtils';
 
 import { UiMessage, DeviceMessage } from '../../message/builder';
 import type { IDevice } from '../../device/Device';
-import type { Deferred, CoreMessage, UiPromiseResponse, FirmwareRange, FirmwareException, ButtonRequestData } from '../../types';
+import type {
+    Deferred,
+    CoreMessage,
+    UiPromiseResponse,
+    FirmwareRange,
+    FirmwareException,
+    ButtonRequestData,
+} from '../../types';
 
 export interface MethodInterface {
     +responseID: number;
@@ -16,44 +23,72 @@ export interface MethodInterface {
 
 export default class AbstractMethod implements MethodInterface {
     responseID: number;
+
     device: IDevice;
+
     devicePath: ?string;
+
     deviceInstance: number;
+
     deviceState: ?string;
+
     hasExpectedDeviceState: boolean;
+
     keepSession: boolean;
+
     skipFinalReload: boolean;
+
     skipFirmwareCheck: boolean;
+
     overridePreviousCall: boolean;
+
     overridden: boolean;
+
     name: string; // method name
+
     info: string; // method info, displayed in popup info-panel
+
     useUi: boolean; // should use popup?
+
     useDevice: boolean; // use device
+
     useDeviceState: boolean; // should validate device state?
+
     useEmptyPassphrase: boolean;
+
     allowSeedlessDevice: boolean;
 
     firmwareRange: FirmwareRange;
-    requiredPermissions: Array<string>;
-    allowDeviceMode: Array<string>; // used in device management (like ResetDevice allow !UI.INITIALIZED)
-    requireDeviceMode: Array<string>;
+
+    requiredPermissions: string[];
+
+    allowDeviceMode: string[]; // used in device management (like ResetDevice allow !UI.INITIALIZED)
+
+    requireDeviceMode: string[];
+
     debugLink: boolean;
+
     network: string;
 
     +confirmation: () => Promise<boolean>;
+
     +noBackupConfirmation: () => Promise<boolean>;
+
     +getButtonRequestData: (code: string) => ?ButtonRequestData;
 
-    // // callbacks
+    // callbacks
     postMessage: (message: CoreMessage) => void;
+
     getPopupPromise: () => Deferred<void>;
+
     createUiPromise: (promiseId: string, device?: IDevice) => Deferred<UiPromiseResponse>;
+
     findUiPromise: (callId: number, promiseId: string) => ?Deferred<UiPromiseResponse>;
+
     removeUiPromise: (promise: Deferred<UiPromiseResponse>) => void;
 
     constructor(message: CoreMessage) {
-        const payload: Object = message.payload;
+        const { payload } = message;
         this.name = payload.method;
         this.responseID = message.id || 0;
         this.devicePath = payload.device ? payload.device.path : null;
@@ -61,18 +96,24 @@ export default class AbstractMethod implements MethodInterface {
         // expected state from method parameter.
         // it could be null
         this.deviceState = payload.device ? payload.device.state : null;
-        this.hasExpectedDeviceState = payload.device ? Object.prototype.hasOwnProperty.call(payload.device, 'state') : false;
+        this.hasExpectedDeviceState = payload.device
+            ? Object.prototype.hasOwnProperty.call(payload.device, 'state')
+            : false;
         this.keepSession = typeof payload.keepSession === 'boolean' ? payload.keepSession : false;
-        this.skipFinalReload = typeof payload.skipFinalReload === 'boolean' ? payload.skipFinalReload : false;
+        this.skipFinalReload =
+            typeof payload.skipFinalReload === 'boolean' ? payload.skipFinalReload : false;
         this.skipFirmwareCheck = false;
-        this.overridePreviousCall = typeof payload.override === 'boolean' ? payload.override : false;
+        this.overridePreviousCall =
+            typeof payload.override === 'boolean' ? payload.override : false;
         this.overridden = false;
-        this.useEmptyPassphrase = typeof payload.useEmptyPassphrase === 'boolean' ? payload.useEmptyPassphrase : false;
-        this.allowSeedlessDevice = typeof payload.allowSeedlessDevice === 'boolean' ? payload.allowSeedlessDevice : false;
+        this.useEmptyPassphrase =
+            typeof payload.useEmptyPassphrase === 'boolean' ? payload.useEmptyPassphrase : false;
+        this.allowSeedlessDevice =
+            typeof payload.allowSeedlessDevice === 'boolean' ? payload.allowSeedlessDevice : false;
         this.allowDeviceMode = [];
         this.requireDeviceMode = [];
         if (this.allowSeedlessDevice) {
-            this.allowDeviceMode = [ UI.SEEDLESS ];
+            this.allowDeviceMode = [UI.SEEDLESS];
         }
         this.debugLink = false;
         // Determine the type based on the method name
@@ -80,7 +121,6 @@ export default class AbstractMethod implements MethodInterface {
         Object.keys(NETWORK.TYPES).forEach(t => {
             if (this.name.startsWith(t)) {
                 this.network = NETWORK.TYPES[t];
-                return;
             }
         });
         // default values for all methods
@@ -99,42 +139,41 @@ export default class AbstractMethod implements MethodInterface {
         this.devicePath = device.getDevicePath();
     }
 
-    run(): Promise<Object | Array<Object>> {
-        // to override
-        return new Promise(resolve => resolve({}));
-    }
-
-    async requestPermissions(): Promise<boolean> {
+    async requestPermissions() {
         // wait for popup window
         await this.getPopupPromise().promise;
         // initialize user response promise
         const uiPromise = this.createUiPromise(UI.RECEIVE_PERMISSION, this.device);
-        this.postMessage(UiMessage(UI.REQUEST_PERMISSION, {
-            permissions: this.requiredPermissions,
-            device: this.device.toMessageObject(),
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_PERMISSION, {
+                permissions: this.requiredPermissions,
+                device: this.device.toMessageObject(),
+            }),
+        );
         // wait for response
-        const uiResp: UiPromiseResponse = await uiPromise.promise;
-
-        const permissionsResponse: any = uiResp.payload;
-
-        if (permissionsResponse.granted) {
-            this.savePermissions(!(permissionsResponse.remember));
+        const uiResp = await uiPromise.promise;
+        const { granted, remember } = uiResp.payload;
+        if (granted) {
+            this.savePermissions(!remember);
             return true;
         }
         return false;
     }
 
-    checkPermissions(): void {
-        const savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY);
-        let notPermitted: Array<string> = [ ...this.requiredPermissions ];
+    checkPermissions() {
+        const savedPermissions = loadStorage(PERMISSIONS_KEY);
+        let notPermitted = [...this.requiredPermissions];
         if (savedPermissions && Array.isArray(savedPermissions)) {
             // find permissions for this origin
-            const originPermissions: Array<Object> = savedPermissions.filter(p => p.origin === DataManager.getSettings('origin'));
+            const originPermissions = savedPermissions.filter(
+                p => p.origin === DataManager.getSettings('origin'),
+            );
             if (originPermissions.length > 0) {
                 // check if permission was granted
                 notPermitted = notPermitted.filter(np => {
-                    const granted = originPermissions.find(p => p.type === np && p.device === this.device.features.device_id);
+                    const granted = originPermissions.find(
+                        p => p.type === np && p.device === this.device.features.device_id,
+                    );
                     return !granted;
                 });
             }
@@ -143,34 +182,41 @@ export default class AbstractMethod implements MethodInterface {
     }
 
     savePermissions(temporary: boolean = false) {
-        let savedPermissions: ?JSON = loadStorage(PERMISSIONS_KEY, temporary);
+        let savedPermissions = loadStorage(PERMISSIONS_KEY, temporary);
         if (!savedPermissions || !Array.isArray(savedPermissions)) {
             savedPermissions = JSON.parse('[]');
         }
 
-        let permissionsToSave: Array<Object> = this.requiredPermissions.map(p => {
-            return {
-                origin: DataManager.getSettings('origin'),
-                type: p,
-                device: this.device.features.device_id,
-            };
-        });
+        let permissionsToSave = this.requiredPermissions.map(p => ({
+            origin: DataManager.getSettings('origin'),
+            type: p,
+            device: this.device.features.device_id,
+        }));
 
         // check if this will be first time granted permission to read this device
         // if so, emit "device_connect" event because this wasn't send before
-        let emitEvent: boolean = false;
+        let emitEvent = false;
         if (this.requiredPermissions.indexOf('read') >= 0) {
-            const wasAlreadyGranted = savedPermissions.filter(p => p.origin === DataManager.getSettings('origin') && p.type === 'read' && p.device === this.device.features.device_id);
+            const wasAlreadyGranted = savedPermissions.filter(
+                p =>
+                    p.origin === DataManager.getSettings('origin') &&
+                    p.type === 'read' &&
+                    p.device === this.device.features.device_id,
+            );
             if (wasAlreadyGranted.length < 1) {
                 emitEvent = true;
             }
         }
 
         // find permissions for this origin
-        const originPermissions: Array<Object> = savedPermissions.filter(p => p.origin === DataManager.getSettings('origin'));
+        const originPermissions = savedPermissions.filter(
+            p => p.origin === DataManager.getSettings('origin'),
+        );
         if (originPermissions.length > 0) {
             permissionsToSave = permissionsToSave.filter(p2s => {
-                const granted = originPermissions.find(p => p.type === p2s.type && p.device === p2s.device);
+                const granted = originPermissions.find(
+                    p => p.type === p2s.type && p.device === p2s.device,
+                );
                 return !granted;
             });
         }
@@ -182,12 +228,14 @@ export default class AbstractMethod implements MethodInterface {
         }
     }
 
-    async checkFirmwareRange(isUsingPopup: boolean): Promise<?$PropertyType<FirmwareException, 'type'>> {
+    async checkFirmwareRange(
+        isUsingPopup: boolean,
+    ): Promise<?$PropertyType<FirmwareException, 'type'>> {
         if (this.skipFirmwareCheck) {
-            return null;
+            return;
         }
-        const device = this.device;
-        if (!device.features) return null;
+        const { device } = this;
+        if (!device.features) return;
         const version = device.getVersion();
         const model = version[0];
         const range = this.firmwareRange[model];
@@ -212,7 +260,7 @@ export default class AbstractMethod implements MethodInterface {
                 // show unexpected state information and wait for confirmation
                 this.postMessage(UiMessage(UI.FIRMWARE_NOT_COMPATIBLE, device.toMessageObject()));
 
-                const uiResp: UiPromiseResponse = await uiPromise.promise;
+                const uiResp = await uiPromise.promise;
                 if (!uiResp.payload) {
                     throw ERRORS.TypedError('Method_PermissionsNotGranted');
                 }
@@ -220,10 +268,14 @@ export default class AbstractMethod implements MethodInterface {
                 return UI.FIRMWARE_NOT_COMPATIBLE;
             }
         }
-        return null;
     }
 
-    getCustomMessages(): ?JSON {
+    run(): Promise<any> {
+        // to override
+        return Promise.resolve();
+    }
+
+    getCustomMessages(): any {
         return null;
     }
 

@@ -2,49 +2,56 @@
 
 import { ERRORS } from '../constants';
 import type { CoinInfo } from '../types';
-import type { InputScriptType, ChangeOutputScriptType, TxInputType, TxOutputType } from '../types/trezor/protobuf';
+import type {
+    InputScriptType,
+    ChangeOutputScriptType,
+    TxInputType,
+    TxOutputType,
+} from '../types/trezor/protobuf';
 
-export const HD_HARDENED: number = 0x80000000;
-export const toHardened = (n: number): number => (n | HD_HARDENED) >>> 0;
-export const fromHardened = (n: number): number => (n & ~HD_HARDENED) >>> 0;
+export const HD_HARDENED = 0x80000000;
+export const toHardened = (n: number) => (n | HD_HARDENED) >>> 0;
+export const fromHardened = (n: number) => (n & ~HD_HARDENED) >>> 0;
 
 const PATH_NOT_VALID = ERRORS.TypedError('Method_InvalidParameter', 'Not a valid path');
-const PATH_NEGATIVE_VALUES = ERRORS.TypedError('Method_InvalidParameter', 'Path cannot contain negative values');
+const PATH_NEGATIVE_VALUES = ERRORS.TypedError(
+    'Method_InvalidParameter',
+    'Path cannot contain negative values',
+);
 
-export const getHDPath = (path: string): Array<number> => {
-    const parts: Array<string> = path.toLowerCase().split('/');
+export const getHDPath = (path: string): number[] => {
+    const parts = path.toLowerCase().split('/');
     if (parts[0] !== 'm') throw PATH_NOT_VALID;
-    return parts.filter((p: string) => p !== 'm' && p !== '')
-        .map((p: string) => {
-            let hardened: boolean = false;
+    return parts
+        .filter(p => p !== 'm' && p !== '')
+        .map(p => {
+            let hardened = false;
             if (p.substr(p.length - 1) === "'") {
                 hardened = true;
                 p = p.substr(0, p.length - 1);
             }
-            let n: number = parseInt(p);
-            if (isNaN(n)) {
+            let n = parseInt(p, 10);
+            if (Number.isNaN(n)) {
                 throw PATH_NOT_VALID;
             } else if (n < 0) {
                 throw PATH_NEGATIVE_VALUES;
             }
-            if (hardened) { // hardened index
+            if (hardened) {
+                // hardened index
                 n = toHardened(n);
             }
             return n;
         });
 };
 
-export const isMultisigPath = (path: ?Array<number>): boolean => {
-    return Array.isArray(path) && path[0] === toHardened(48);
-};
+export const isMultisigPath = (path: ?Array<number>) =>
+    Array.isArray(path) && path[0] === toHardened(48);
 
-export const isSegwitPath = (path: ?Array<number>): boolean => {
-    return Array.isArray(path) && path[0] === toHardened(49);
-};
+export const isSegwitPath = (path: ?Array<number>) =>
+    Array.isArray(path) && path[0] === toHardened(49);
 
-export const isBech32Path = (path: ?Array<number>): boolean => {
-    return Array.isArray(path) && path[0] === toHardened(84);
-};
+export const isBech32Path = (path: ?Array<number>) =>
+    Array.isArray(path) && path[0] === toHardened(84);
 
 export const getScriptType = (path: ?Array<number>): InputScriptType => {
     if (!Array.isArray(path) || path.length < 1) return 'SPENDADDRESS';
@@ -83,14 +90,18 @@ export const getOutputScriptType = (path?: number[]): ChangeOutputScriptType => 
     }
 };
 
-export const validatePath = (path: string | Array<number>, length: number = 0, base: boolean = false): Array<number> => {
+export const validatePath = (
+    path: string | number[],
+    length: number = 0,
+    base: boolean = false,
+): number[] => {
     let valid: ?Array<number>;
     if (typeof path === 'string') {
         valid = getHDPath(path);
     } else if (Array.isArray(path)) {
         valid = path.map((p: any) => {
-            const n: number = parseInt(p);
-            if (isNaN(n)) {
+            const n = parseInt(p, 10);
+            if (Number.isNaN(n)) {
                 throw PATH_NOT_VALID;
             } else if (n < 0) {
                 throw PATH_NEGATIVE_VALUES;
@@ -103,28 +114,29 @@ export const validatePath = (path: string | Array<number>, length: number = 0, b
     return base ? valid.splice(0, 3) : valid;
 };
 
-export const getSerializedPath = (path: Array<number>): string => {
-    return 'm/' + path.map((i) => {
-        const s = (i & ~HD_HARDENED).toString();
-        if (i & HD_HARDENED) {
-            return s + "'";
-        } else {
+export const getSerializedPath = (path: number[]) =>
+    `m/${path
+        .map(i => {
+            const s = (i & ~HD_HARDENED).toString();
+            if (i & HD_HARDENED) {
+                return `${s}'`;
+            }
             return s;
-        }
-    }).join('/');
-};
+        })
+        .join('/')}`;
 
-export const getPathFromIndex = (bip44purpose: number, bip44cointype: number, index: number): Array<number> => {
-    return [
-        toHardened(bip44purpose),
-        toHardened(bip44cointype),
-        toHardened(index),
-    ];
-};
+export const getPathFromIndex = (bip44purpose: number, bip44cointype: number, index: number) => [
+    toHardened(bip44purpose),
+    toHardened(bip44cointype),
+    toHardened(index),
+];
 
-export const getIndexFromPath = (path: Array<number>): number => {
+export const getIndexFromPath = (path: number[]) => {
     if (path.length < 3) {
-        throw ERRORS.TypedError('Method_InvalidParameter', `getIndexFromPath: invalid path length ${ path.toString() }`);
+        throw ERRORS.TypedError(
+            'Method_InvalidParameter',
+            `getIndexFromPath: invalid path length ${path.toString()}`,
+        );
     }
     return fromHardened(path[2]);
 };
@@ -132,12 +144,12 @@ export const getIndexFromPath = (path: Array<number>): number => {
 export const fixPath = <T: TxInputType | TxOutputType>(utxo: T): T => {
     // make sure bip32 indices are unsigned
     if (utxo.address_n && Array.isArray(utxo.address_n)) {
-        utxo.address_n = utxo.address_n.map((i) => i >>> 0);
+        utxo.address_n = utxo.address_n.map(i => i >>> 0);
     }
     return utxo;
 };
 
-export const getLabel = (label: string, coinInfo: ?CoinInfo): string => {
+export const getLabel = (label: string, coinInfo: ?CoinInfo) => {
     if (coinInfo) {
         return label.replace('#NETWORK', coinInfo.label);
     }

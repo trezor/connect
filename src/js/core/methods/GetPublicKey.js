@@ -14,12 +14,14 @@ import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {
     ...$ElementType<MessageType, 'GetPublicKey'>,
-    coinInfo: ?BitcoinNetworkInfo;
+    coinInfo: ?BitcoinNetworkInfo,
 };
 
 export default class GetPublicKey extends AbstractMethod {
     params: Params[] = [];
+
     hasBundle: boolean;
+
     confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
@@ -30,12 +32,12 @@ export default class GetPublicKey extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle
+            ? { ...message.payload, bundle: [message.payload] }
+            : message.payload;
 
         // validate bundle type
-        validateParams(payload, [
-            { name: 'bundle', type: 'array' },
-        ]);
+        validateParams(payload, [{ name: 'bundle', type: 'array' }]);
 
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
@@ -77,7 +79,7 @@ export default class GetPublicKey extends AbstractMethod {
         });
     }
 
-    async confirmation(): Promise<boolean> {
+    async confirmation() {
         if (this.confirmed) return true;
         // wait for popup window
         await this.getPopupPromise().promise;
@@ -91,10 +93,12 @@ export default class GetPublicKey extends AbstractMethod {
         }
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'export-xpub',
-            label,
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'export-xpub',
+                label,
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;
@@ -112,16 +116,18 @@ export default class GetPublicKey extends AbstractMethod {
                 batch.address_n,
                 batch.coinInfo,
                 true,
-                batch.show_display
+                batch.show_display,
             );
             responses.push(response);
 
             if (this.hasBundle) {
                 // send progress
-                this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
-                    progress: i,
-                    response,
-                }));
+                this.postMessage(
+                    UiMessage(UI.BUNDLE_PROGRESS, {
+                        progress: i,
+                        response,
+                    }),
+                );
             }
         }
         return this.hasBundle ? responses : responses[0];

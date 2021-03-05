@@ -9,26 +9,39 @@ import type { ConnectSettings, CoreMessage, Deferred } from '../types';
 import { getOrigin } from '../env/browser/networkUtils';
 import { create as createDeferred } from '../utils/deferred';
 
-// const POPUP_REQUEST_TIMEOUT: number = 602;
-const POPUP_REQUEST_TIMEOUT: number = 850;
-const POPUP_CLOSE_INTERVAL: number = 500;
-const POPUP_OPEN_TIMEOUT: number = 3000;
+// const POPUP_REQUEST_TIMEOUT = 602;
+const POPUP_REQUEST_TIMEOUT = 850;
+const POPUP_CLOSE_INTERVAL = 500;
+const POPUP_OPEN_TIMEOUT = 3000;
 
 export default class PopupManager extends EventEmitter {
     _window: any; // Window
+
     settings: ConnectSettings;
+
     origin: string;
+
     locked: boolean;
+
     requestTimeout: number = 0;
+
     openTimeout: number;
+
     closeInterval: number = 0;
+
     iframeHandshake: Deferred<boolean>;
+
     popupPromise: Deferred<void> | typeof undefined;
+
     handleMessage: (event: MessageEvent) => void;
+
     handleExtensionConnect: () => void;
+
     handleExtensionMessage: () => void;
+
     // $FlowIssue chrome not declared outside
     extensionPort: ?ChromePort;
+
     extensionTabId: number = 0;
 
     constructor(settings: ConnectSettings) {
@@ -70,7 +83,8 @@ export default class PopupManager extends EventEmitter {
         if (!this.settings.supportedBrowser) {
             openFn();
         } else {
-            const timeout = lazyLoad || this.settings.env === 'webextension' ? 1 : POPUP_REQUEST_TIMEOUT;
+            const timeout =
+                lazyLoad || this.settings.env === 'webextension' ? 1 : POPUP_REQUEST_TIMEOUT;
             this.requestTimeout = window.setTimeout(() => {
                 this.requestTimeout = 0;
                 openFn(lazyLoad);
@@ -94,7 +108,7 @@ export default class PopupManager extends EventEmitter {
         }
 
         this.popupPromise = createDeferred(POPUP.LOADED);
-        this.openWrapper(lazyLoad ? `${ src }#loading` : src);
+        this.openWrapper(lazyLoad ? `${src}#loading` : src);
 
         this.closeInterval = window.setInterval(() => {
             if (!this._window) return;
@@ -115,7 +129,9 @@ export default class PopupManager extends EventEmitter {
         // open timeout will be cancelled by POPUP.BOOTSTRAP message
         this.openTimeout = window.setTimeout(() => {
             this.close();
-            showPopupRequest(this.open.bind(this), () => { this.emit(POPUP.CLOSED); });
+            showPopupRequest(this.open.bind(this), () => {
+                this.emit(POPUP.CLOSED);
+            });
         }, POPUP_OPEN_TIMEOUT);
     }
 
@@ -129,28 +145,38 @@ export default class PopupManager extends EventEmitter {
                     // $FlowIssue chrome not declared outside
                     chrome.windows.create({ url }, newWindow => {
                         // $FlowIssue chrome not declared outside
-                        chrome.tabs.query({
-                            windowId: newWindow.id,
-                            active: true,
-                        }, tabs => {
-                            this._window = tabs[0];
-                        });
+                        chrome.tabs.query(
+                            {
+                                windowId: newWindow.id,
+                                active: true,
+                            },
+                            tabs => {
+                                // eslint-disable-next-line prefer-destructuring
+                                this._window = tabs[0];
+                            },
+                        );
                     });
                 } else {
                     // $FlowIssue chrome not declared outside
-                    chrome.tabs.query({
-                        currentWindow: true,
-                        active: true,
-                    }, (tabs) => {
-                        this.extensionTabId = tabs[0].id;
-                        // $FlowIssue chrome not declared outside
-                        chrome.tabs.create({
-                            url,
-                            index: tabs[0].index + 1,
-                        }, tab => {
-                            this._window = tab;
-                        });
-                    });
+                    chrome.tabs.query(
+                        {
+                            currentWindow: true,
+                            active: true,
+                        },
+                        tabs => {
+                            this.extensionTabId = tabs[0].id;
+                            // $FlowIssue chrome not declared outside
+                            chrome.tabs.create(
+                                {
+                                    url,
+                                    index: tabs[0].index + 1,
+                                },
+                                tab => {
+                                    this._window = tab;
+                                },
+                            );
+                        },
+                    );
                 }
             });
         } else if (this.settings.env === 'electron') {
@@ -186,11 +212,14 @@ export default class PopupManager extends EventEmitter {
 
         if (data.type === POPUP.ERROR) {
             // handle popup error
-            const errorMessage = (data.payload && typeof data.payload.error === 'string') ? data.payload.error : null;
+            const errorMessage =
+                data.payload && typeof data.payload.error === 'string' ? data.payload.error : null;
             this.emit(POPUP.CLOSED, errorMessage ? `Popup error: ${errorMessage}` : null);
             this.close();
         } else if (data.type === POPUP.LOADED) {
-            if (this.popupPromise) { this.popupPromise.resolve(); }
+            if (this.popupPromise) {
+                this.popupPromise.resolve();
+            }
             this.iframeHandshake.promise.then(useBroadcastChannel => {
                 port.postMessage({
                     type: POPUP.INIT,
@@ -202,18 +231,24 @@ export default class PopupManager extends EventEmitter {
             });
         } else if (data.type === POPUP.EXTENSION_USB_PERMISSIONS) {
             // $FlowIssue chrome not declared outside
-            chrome.tabs.query({
-                currentWindow: true,
-                active: true,
-            }, (tabs) => {
-                // $FlowIssue chrome not declared outside
-                chrome.tabs.create({
-                    url: 'trezor-usb-permissions.html',
-                    index: tabs[0].index + 1,
-                }, tab => {
-                    // do nothing
-                });
-            });
+            chrome.tabs.query(
+                {
+                    currentWindow: true,
+                    active: true,
+                },
+                tabs => {
+                    // $FlowIssue chrome not declared outside
+                    chrome.tabs.create(
+                        {
+                            url: 'trezor-usb-permissions.html',
+                            index: tabs[0].index + 1,
+                        },
+                        _tab => {
+                            // do nothing
+                        },
+                    );
+                },
+            );
         } else if (data.type === POPUP.CLOSE_WINDOW) {
             this.emit(POPUP.CLOSED);
             this.close();
@@ -227,26 +262,35 @@ export default class PopupManager extends EventEmitter {
         if (getOrigin(message.origin) !== this.origin || !data || typeof data !== 'object') return;
 
         if (data.type === IFRAME.LOADED) {
-            const useBroadcastChannel = data.payload && typeof data.payload.useBroadcastChannel === 'boolean' ? data.payload.useBroadcastChannel : false;
+            const useBroadcastChannel =
+                data.payload && typeof data.payload.useBroadcastChannel === 'boolean'
+                    ? data.payload.useBroadcastChannel
+                    : false;
             this.iframeHandshake.resolve(useBroadcastChannel);
         } else if (data.type === POPUP.BOOTSTRAP) {
             // popup is opened properly, now wait for POPUP.LOADED message
             window.clearTimeout(this.openTimeout);
         } else if (data.type === POPUP.ERROR && this._window) {
-            const errorMessage = (data.payload && typeof data.payload.error === 'string') ? data.payload.error : null;
+            const errorMessage =
+                data.payload && typeof data.payload.error === 'string' ? data.payload.error : null;
             this.emit(POPUP.CLOSED, errorMessage ? `Popup error: ${errorMessage}` : null);
             this.close();
         } else if (data.type === POPUP.LOADED) {
-            if (this.popupPromise) { this.popupPromise.resolve(); }
+            if (this.popupPromise) {
+                this.popupPromise.resolve();
+            }
             // popup is successfully loaded
             this.iframeHandshake.promise.then(useBroadcastChannel => {
-                this._window.postMessage({
-                    type: POPUP.INIT,
-                    payload: {
-                        settings: this.settings,
-                        useBroadcastChannel,
+                this._window.postMessage(
+                    {
+                        type: POPUP.INIT,
+                        payload: {
+                            settings: this.settings,
+                            useBroadcastChannel,
+                        },
                     },
-                }, this.origin);
+                    this.origin,
+                );
             });
             // send ConnectSettings to popup
             // note this settings and iframe.ConnectSettings could be different (especially: origin, popup, webusb, debug)
@@ -308,7 +352,9 @@ export default class PopupManager extends EventEmitter {
         // ignore "ui_request_window" type
         if (!this._window && message.type !== UI.REQUEST_UI_WINDOW && this.openTimeout) {
             this.close();
-            showPopupRequest(this.open.bind(this), () => { this.emit(POPUP.CLOSED); });
+            showPopupRequest(this.open.bind(this), () => {
+                this.emit(POPUP.CLOSED);
+            });
             return;
         }
 
@@ -317,7 +363,9 @@ export default class PopupManager extends EventEmitter {
             await this.popupPromise.promise;
         }
         // post message to popup window
-        if (this._window) { this._window.postMessage(message, this.origin); }
+        if (this._window) {
+            this._window.postMessage(message, this.origin);
+        }
     }
 
     onBeforeUnload() {

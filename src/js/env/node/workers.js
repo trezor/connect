@@ -8,16 +8,14 @@ type TransportWrapper = () => Transport;
 export const WebUsbPlugin: TransportWrapper | typeof undefined = undefined;
 export const ReactNativeUsbPlugin: TransportWrapper | typeof undefined = undefined;
 
-export const BlockbookWorker = () => {
-    return new TinyWorker(() => {
+export const BlockbookWorker = () =>
+    new TinyWorker(() => {
         // $FlowIssue
-        require('@trezor/blockchain-link/build/node/blockbook-worker');
+        require('@trezor/blockchain-link/build/node/blockbook-worker'); // eslint-disable-line global-require
     });
-};
 
-export const RippleWorker = () => {
-    return new TinyWorker(() => {
+export const RippleWorker = () =>
+    new TinyWorker(() => {
         // $FlowIssue
-        require('@trezor/blockchain-link/build/node/ripple-worker');
+        require('@trezor/blockchain-link/build/node/ripple-worker'); // eslint-disable-line global-require
     });
-};

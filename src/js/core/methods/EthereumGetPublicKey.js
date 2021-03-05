@@ -14,12 +14,14 @@ import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {
     ...$ElementType<MessageType, 'EthereumGetPublicKey'>,
-    network?: EthereumNetworkInfo;
+    network?: EthereumNetworkInfo,
 };
 
 export default class EthereumGetPublicKey extends AbstractMethod {
     params: Params[] = [];
+
     hasBundle: boolean;
+
     confirmed: ?boolean;
 
     constructor(message: CoreMessage) {
@@ -29,12 +31,12 @@ export default class EthereumGetPublicKey extends AbstractMethod {
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle ? { ...message.payload, bundle: [ message.payload ] } : message.payload;
+        const payload = !this.hasBundle
+            ? { ...message.payload, bundle: [message.payload] }
+            : message.payload;
 
         // validate bundle type
-        validateParams(payload, [
-            { name: 'bundle', type: 'array' },
-        ]);
+        validateParams(payload, [{ name: 'bundle', type: 'array' }]);
 
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
@@ -66,14 +68,17 @@ export default class EthereumGetPublicKey extends AbstractMethod {
             const requestedNetworks = this.params.map(b => b.network);
             const uniqNetworks = getUniqueNetworks(requestedNetworks);
             if (uniqNetworks.length === 1 && uniqNetworks[0]) {
-                this.info = getNetworkLabel('Export multiple #NETWORK public keys', uniqNetworks[0]);
+                this.info = getNetworkLabel(
+                    'Export multiple #NETWORK public keys',
+                    uniqNetworks[0],
+                );
             } else {
                 this.info = 'Export multiple public keys';
             }
         }
     }
 
-    async confirmation(): Promise<boolean> {
+    async confirmation() {
         if (this.confirmed) return true;
         // wait for popup window
         await this.getPopupPromise().promise;
@@ -81,10 +86,12 @@ export default class EthereumGetPublicKey extends AbstractMethod {
         const uiPromise = this.createUiPromise(UI.RECEIVE_CONFIRMATION, this.device);
 
         // request confirmation view
-        this.postMessage(UiMessage(UI.REQUEST_CONFIRMATION, {
-            view: 'export-xpub',
-            label: this.info,
-        }));
+        this.postMessage(
+            UiMessage(UI.REQUEST_CONFIRMATION, {
+                view: 'export-xpub',
+                label: this.info,
+            }),
+        );
 
         // wait for user action
         const uiResp = await uiPromise.promise;
@@ -106,10 +113,12 @@ export default class EthereumGetPublicKey extends AbstractMethod {
 
             if (this.hasBundle) {
                 // send progress
-                this.postMessage(UiMessage(UI.BUNDLE_PROGRESS, {
-                    progress: i,
-                    response,
-                }));
+                this.postMessage(
+                    UiMessage(UI.BUNDLE_PROGRESS, {
+                        progress: i,
+                        response,
+                    }),
+                );
             }
         }
         return this.hasBundle ? responses : responses[0];

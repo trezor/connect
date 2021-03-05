@@ -3,12 +3,12 @@ import Bowser from 'bowser';
 import { getBridgeInfo } from '../../data/TransportInfo';
 
 export type BrowserState = {
-    name: string;
-    osname: string;
-    supported: boolean;
-    outdated: boolean;
-    mobile: boolean;
-}
+    name: string,
+    osname: string,
+    supported: boolean,
+    outdated: boolean,
+    mobile: boolean,
+};
 
 export const state: BrowserState = {
     name: 'unknown',
@@ -19,12 +19,14 @@ export const state: BrowserState = {
 };
 
 type SupportedBrowser = {
-    version: number;
-    download: string;
-    update: string;
+    version: number,
+    download: string,
+    update: string,
 };
 
-export const getBrowserState = (supportedBrowsers: { [key: string]: SupportedBrowser }): BrowserState => {
+export const getBrowserState = (supportedBrowsers: {
+    [key: string]: SupportedBrowser,
+}): BrowserState => {
     if (typeof window === 'undefined') return state;
     const { browser, os, platform } = Bowser.parse(window.navigator.userAgent);
     const mobile = platform.type !== 'desktop';
@@ -57,7 +59,9 @@ const getSuggestedBridgeInstaller = () => {
     const name = browser.getOS().name.toLowerCase();
     switch (name) {
         case 'linux': {
-            const isRpm = agent.match(/CentOS|Fedora|Mandriva|Mageia|Red Hat|Scientific|SUSE/) ? 'rpm' : 'deb';
+            const isRpm = agent.match(/CentOS|Fedora|Mandriva|Mageia|Red Hat|Scientific|SUSE/)
+                ? 'rpm'
+                : 'deb';
             const is64x = agent.match(/Linux i[3456]86/) ? '32' : '64';
             return `${isRpm}${is64x}`;
         }
@@ -67,7 +71,8 @@ const getSuggestedBridgeInstaller = () => {
             const arch = agent.match(/(Win64|WOW64)/) ? '64' : '32';
             return `win${arch}`;
         }
-        default: break;
+        default:
+            break;
     }
 };
 

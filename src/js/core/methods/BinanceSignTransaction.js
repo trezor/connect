@@ -10,9 +10,9 @@ import type { CoreMessage } from '../../types';
 import type { BinancePreparedTransaction } from '../../types/networks/binance';
 
 type Params = {
-    path: number[];
-    transaction: BinancePreparedTransaction;
-}
+    path: number[],
+    transaction: BinancePreparedTransaction,
+};
 
 export default class BinanceSignTransaction extends AbstractMethod {
     params: Params;

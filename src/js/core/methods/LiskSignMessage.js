@@ -6,7 +6,6 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 
 import type { CoreMessage } from '../../types';
-import type { LiskMessageSignature } from '../../types/networks/lisk';
 import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class LiskSignMessage extends AbstractMethod {
@@ -16,7 +15,11 @@ export default class LiskSignMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Lisk'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(
+            this.name,
+            getMiscNetwork('Lisk'),
+            this.firmwareRange,
+        );
 
         const { payload } = message;
 
@@ -37,9 +40,13 @@ export default class LiskSignMessage extends AbstractMethod {
         };
     }
 
-    async run(): Promise<LiskMessageSignature> {
+    async run() {
         const cmd = this.device.getCommands();
-        const { message } = await cmd.typedCall('LiskSignMessage', 'LiskMessageSignature', this.params);
+        const { message } = await cmd.typedCall(
+            'LiskSignMessage',
+            'LiskMessageSignature',
+            this.params,
+        );
         return {
             publicKey: message.public_key,
             signature: message.signature,

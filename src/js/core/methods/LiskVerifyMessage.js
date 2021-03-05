@@ -13,7 +13,11 @@ export default class LiskVerifyMessage extends AbstractMethod {
         super(message);
 
         this.requiredPermissions = ['read', 'write'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('Lisk'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(
+            this.name,
+            getMiscNetwork('Lisk'),
+            this.firmwareRange,
+        );
         this.info = 'Verify Lisk message';
 
         const { payload } = message;

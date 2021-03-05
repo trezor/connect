@@ -1,10 +1,17 @@
 /* @flow */
 
 import EventEmitter from 'events';
+import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 import DeviceCommands from './DeviceCommands';
 
-import type { Device as DeviceTyped, DeviceFirmwareStatus, Features, Deferred, FirmwareRelease, UnavailableCapability } from '../types';
-import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
+import type {
+    Device as DeviceTyped,
+    DeviceFirmwareStatus,
+    Features,
+    Deferred,
+    FirmwareRelease,
+    UnavailableCapability,
+} from '../types';
 
 import { UI, DEVICE, ERRORS, NETWORK } from '../constants';
 import { create as createDeferred } from '../utils/deferred';
@@ -19,24 +26,23 @@ import { initLog } from '../utils/debug';
 const _log = initLog('Device');
 
 export type RunOptions = {
-
     // skipFinalReload - normally, after action, features are reloaded again
     //                   because some actions modify the features
     //                   but sometimes, you don't need that and can skip that
-    skipFinalReload?: boolean;
+    skipFinalReload?: boolean,
     // waiting - if waiting and someone else holds the session, it waits until it's free
     //          and if it fails on acquire (because of more tabs acquiring simultaneously),
     //          it tries repeatedly
-    waiting?: boolean;
-    onlyOneActivity?: boolean;
+    waiting?: boolean,
+    onlyOneActivity?: boolean,
 
     // cancel popup request when we are sure that there is no need to authenticate
     // Method gets called after run() fetch new Features but before trezor-link dispatch "acquire" event
-    cancelPopupRequest?: Function;
+    cancelPopupRequest?: Function,
 
-    keepSession?: boolean;
-    useEmptyPassphrase?: boolean;
-}
+    keepSession?: boolean,
+    useEmptyPassphrase?: boolean,
+};
 
 const parseRunOptions = (options?: RunOptions): RunOptions => {
     if (!options) options = {};
@@ -52,19 +58,27 @@ const parseRunOptions = (options?: RunOptions): RunOptions => {
  */
 class Device extends EventEmitter {
     transport: Transport;
+
     originalDescriptor: DeviceDescriptor;
+
     hasDebugLink: boolean;
 
     firmwareStatus: DeviceFirmwareStatus;
+
     firmwareRelease: ?FirmwareRelease;
+
     features: Features;
+
     featuresNeedsReload: boolean = false;
 
     deferredActions: { [key: string]: Deferred<void> } = {};
+
     runPromise: ?Deferred<void>;
 
     loaded: boolean = false;
+
     inconsistent: boolean = false;
+
     firstRunPromise: Deferred<boolean>;
 
     activitySessionID: ?string;
@@ -74,9 +88,13 @@ class Device extends EventEmitter {
     keepSession: boolean = false;
 
     instance: number = 0;
+
     internalState: string[] = [];
+
     externalState: string[] = [];
+
     unavailableCapabilities: { [key: string]: UnavailableCapability } = {};
+
     networkTypeState: string[] = [];
 
     constructor(transport: Transport, descriptor: DeviceDescriptor) {
@@ -93,10 +111,7 @@ class Device extends EventEmitter {
         this.firstRunPromise = createDeferred();
     }
 
-    static fromDescriptor(
-        transport: Transport,
-        originalDescriptor: DeviceDescriptor
-    ) {
+    static fromDescriptor(transport: Transport, originalDescriptor: DeviceDescriptor) {
         const descriptor = { ...originalDescriptor, session: null };
         try {
             const device: Device = new Device(transport, descriptor);
@@ -107,26 +122,26 @@ class Device extends EventEmitter {
         }
     }
 
-    static createUnacquired(
-        transport: Transport,
-        descriptor: DeviceDescriptor
-    ): Device {
+    static createUnacquired(transport: Transport, descriptor: DeviceDescriptor) {
         return new Device(transport, descriptor);
     }
 
-    async acquire(): Promise<void> {
+    async acquire() {
         // will be resolved after trezor-link acquire event
-        this.deferredActions[ DEVICE.ACQUIRE ] = createDeferred();
-        this.deferredActions[ DEVICE.ACQUIRED ] = createDeferred();
+        this.deferredActions[DEVICE.ACQUIRE] = createDeferred();
+        this.deferredActions[DEVICE.ACQUIRED] = createDeferred();
         try {
-            const sessionID: string = await this.transport.acquire({
-                path: this.originalDescriptor.path,
-                previous: this.originalDescriptor.session,
-            }, false);
+            const sessionID = await this.transport.acquire(
+                {
+                    path: this.originalDescriptor.path,
+                    previous: this.originalDescriptor.session,
+                },
+                false,
+            );
             _log.warn('Expected session id:', sessionID);
             this.activitySessionID = sessionID;
-            this.deferredActions[ DEVICE.ACQUIRED ].resolve();
-            delete this.deferredActions[ DEVICE.ACQUIRED ];
+            this.deferredActions[DEVICE.ACQUIRED].resolve();
+            delete this.deferredActions[DEVICE.ACQUIRED];
 
             if (this.commands) {
                 this.commands.dispose();
@@ -134,10 +149,10 @@ class Device extends EventEmitter {
             this.commands = new DeviceCommands(this, this.transport, sessionID);
 
             // future defer for trezor-link release event
-            this.deferredActions[ DEVICE.RELEASE ] = createDeferred();
+            this.deferredActions[DEVICE.RELEASE] = createDeferred();
         } catch (error) {
-            this.deferredActions[ DEVICE.ACQUIRED ].resolve();
-            delete this.deferredActions[ DEVICE.ACQUIRED ];
+            this.deferredActions[DEVICE.ACQUIRED].resolve();
+            delete this.deferredActions[DEVICE.ACQUIRED];
             if (this.runPromise) {
                 this.runPromise.reject(error);
             } else {
@@ -147,7 +162,7 @@ class Device extends EventEmitter {
         }
     }
 
-    async release(): Promise<void> {
+    async release() {
         if (this.isUsedHere() && !this.keepSession && this.activitySessionID) {
             if (this.commands) {
                 this.commands.dispose();
@@ -161,24 +176,22 @@ class Device extends EventEmitter {
             }
             try {
                 await this.transport.release(this.activitySessionID, false, false);
-                if (this.deferredActions[ DEVICE.RELEASE ]) await this.deferredActions[ DEVICE.RELEASE ].promise;
+                if (this.deferredActions[DEVICE.RELEASE])
+                    await this.deferredActions[DEVICE.RELEASE].promise;
             } catch (err) {
                 // empty
             }
         }
     }
 
-    async cleanup(): Promise<void> {
+    async cleanup() {
         this.removeAllListeners();
         // make sure that Device_CallInProgress will not be thrown
         this.runPromise = null;
         await this.release();
     }
 
-    run(
-        fn?: () => Promise<void>,
-        options?: RunOptions
-    ) {
+    run(fn?: () => Promise<void>, options?: RunOptions) {
         if (this.runPromise) {
             _log.debug('Previous call is still running');
             throw ERRORS.TypedError('Device_CallInProgress');
@@ -190,18 +203,22 @@ class Device extends EventEmitter {
         return this.runPromise.promise;
     }
 
-    async override(error: Error): Promise<void> {
-        if (this.deferredActions[ DEVICE.ACQUIRE ]) { await this.deferredActions[ DEVICE.ACQUIRE ].promise; }
+    async override(error: Error) {
+        if (this.deferredActions[DEVICE.ACQUIRE]) {
+            await this.deferredActions[DEVICE.ACQUIRE].promise;
+        }
 
         if (this.runPromise) {
             this.runPromise.reject(error);
             this.runPromise = null;
         }
 
-        if (!this.keepSession && this.deferredActions[ DEVICE.RELEASE ]) { await this.deferredActions[ DEVICE.RELEASE ].promise; }
+        if (!this.keepSession && this.deferredActions[DEVICE.RELEASE]) {
+            await this.deferredActions[DEVICE.RELEASE].promise;
+        }
     }
 
-    interruptionFromUser(error: Error): void {
+    interruptionFromUser(error: Error) {
         _log.debug('+++++interruptionFromUser');
         if (this.commands) {
             this.commands.cancel();
@@ -214,7 +231,7 @@ class Device extends EventEmitter {
         }
     }
 
-    interruptionFromOutside(): void {
+    interruptionFromOutside() {
         _log.debug('+++++interruptionFromOutside');
         if (this.commands) {
             this.commands.dispose();
@@ -225,10 +242,7 @@ class Device extends EventEmitter {
         }
     }
 
-    async _runInner<X>(
-        fn?: () => Promise<X>,
-        options: RunOptions
-    ): Promise<any> {
+    async _runInner<X>(fn?: () => Promise<X>, options: RunOptions) {
         if (!this.isUsedHere() || this.commands.disposed || !this.getExternalState()) {
             // acquire session
             await this.acquire();
@@ -245,14 +259,21 @@ class Device extends EventEmitter {
                     // next time device should be called together with "Initialize" (calling "acquireDevice" from the UI)
                     await Promise.race([
                         this.getFeatures(),
-                        new Promise((resolve, reject) => setTimeout(() => reject(new Error('GetFeatures timeout')), 3000)),
+                        new Promise((resolve, reject) =>
+                            setTimeout(() => reject(new Error('GetFeatures timeout')), 3000),
+                        ),
                     ]);
                 }
             } catch (error) {
                 this.inconsistent = true;
-                await this.deferredActions[ DEVICE.ACQUIRE ].promise;
+                await this.deferredActions[DEVICE.ACQUIRE].promise;
                 this.runPromise = null;
-                return Promise.reject(ERRORS.TypedError('Device_InitializeFailed', `Initialize failed: ${ error.message }, code: ${ error.code }`));
+                return Promise.reject(
+                    ERRORS.TypedError(
+                        'Device_InitializeFailed',
+                        `Initialize failed: ${error.message}, code: ${error.code}`,
+                    ),
+                );
             }
         }
 
@@ -263,7 +284,7 @@ class Device extends EventEmitter {
         }
 
         // wait for event from trezor-link
-        await this.deferredActions[ DEVICE.ACQUIRE ].promise;
+        await this.deferredActions[DEVICE.ACQUIRE].promise;
 
         // call inner function
         if (fn) {
@@ -276,12 +297,17 @@ class Device extends EventEmitter {
         }
 
         // await resolveAfter(2000, null);
-        if ((!this.keepSession && typeof options.keepSession !== 'boolean') || options.keepSession === false) {
+        if (
+            (!this.keepSession && typeof options.keepSession !== 'boolean') ||
+            options.keepSession === false
+        ) {
             this.keepSession = false;
             await this.release();
         }
 
-        if (this.runPromise) { this.runPromise.resolve(); }
+        if (this.runPromise) {
+            this.runPromise.resolve();
+        }
         this.runPromise = null;
 
         if (!this.loaded) {
@@ -290,11 +316,11 @@ class Device extends EventEmitter {
         }
     }
 
-    getCommands(): DeviceCommands {
+    getCommands() {
         return this.commands;
     }
 
-    setInstance(instance: number): void {
+    setInstance(instance: number) {
         if (this.instance !== instance) {
             // if requested instance is different than current
             // and device wasn't released in previous call (example: interrupted discovery which set "keepSession" to true but never released)
@@ -312,11 +338,11 @@ class Device extends EventEmitter {
         this.instance = instance;
     }
 
-    getInstance(): number {
+    getInstance() {
         return this.instance;
     }
 
-    setInternalState(state: ?string) {
+    setInternalState(state?: string) {
         if (typeof state !== 'string') {
             delete this.internalState[this.instance];
         } else {
@@ -324,11 +350,11 @@ class Device extends EventEmitter {
         }
     }
 
-    getInternalState(): ?string {
+    getInternalState() {
         return this.internalState[this.instance];
     }
 
-    setExternalState(state: ?string) {
+    setExternalState(state?: ?string) {
         if (typeof state !== 'string') {
             delete this.internalState[this.instance];
             delete this.externalState[this.instance];
@@ -337,11 +363,11 @@ class Device extends EventEmitter {
         }
     }
 
-    getExternalState(): ?string {
+    getExternalState() {
         return this.externalState[this.instance];
     }
 
-    async validateState(networkType: ?string) {
+    async validateState(networkType?: string) {
         if (!this.features) return;
         const altMode = this._altModeChange(networkType);
         const expectedState = altMode ? undefined : this.getExternalState();
@@ -394,10 +420,17 @@ class Device extends EventEmitter {
         feat.capabilities = capabilities;
         const version = [feat.major_version, feat.minor_version, feat.patch_version];
         // capabilities could change in case where features was fetched with older version of messages.json which doesn't know this field
-        const capabilitiesDidChange = this.features && this.features.capabilities && this.features.capabilities.join('') !== capabilities.join('');
+        const capabilitiesDidChange =
+            this.features &&
+            this.features.capabilities &&
+            this.features.capabilities.join('') !== capabilities.join('');
         // check if FW version or capabilities did change
         if (versionCompare(version, this.getVersion()) !== 0 || capabilitiesDidChange) {
-            this.unavailableCapabilities = getUnavailableCapabilities(feat, getAllNetworks(), DataManager.getConfig().supportedFirmware);
+            this.unavailableCapabilities = getUnavailableCapabilities(
+                feat,
+                getAllNetworks(),
+                DataManager.getConfig().supportedFirmware,
+            );
             this.firmwareStatus = getFirmwareStatus(feat);
             this.firmwareRelease = getRelease(feat);
         }
@@ -416,22 +449,32 @@ class Device extends EventEmitter {
         this.featuresNeedsReload = false;
     }
 
-    isUnacquired(): boolean {
+    isUnacquired() {
         return this.features === undefined;
     }
 
-    async updateDescriptor(upcomingDescriptor: DeviceDescriptor): Promise<void> {
+    async updateDescriptor(upcomingDescriptor: DeviceDescriptor) {
         const originalSession = this.originalDescriptor.session;
         const upcomingSession = upcomingDescriptor.session;
 
-        _log.debug('updateDescriptor', 'currentSession', originalSession, 'upcoming', upcomingSession, 'lastUsedID', this.activitySessionID);
+        _log.debug(
+            'updateDescriptor',
+            'currentSession',
+            originalSession,
+            'upcoming',
+            upcomingSession,
+            'lastUsedID',
+            this.activitySessionID,
+        );
 
         if (!originalSession && !upcomingSession && !this.activitySessionID) {
             // no change
             return;
         }
 
-        if (this.deferredActions[ DEVICE.ACQUIRED ]) { await this.deferredActions[ DEVICE.ACQUIRED ].promise; }
+        if (this.deferredActions[DEVICE.ACQUIRED]) {
+            await this.deferredActions[DEVICE.ACQUIRED].promise;
+        }
 
         if (!upcomingSession) {
             // corner-case: if device was unacquired but some call to this device was made
@@ -448,9 +491,9 @@ class Device extends EventEmitter {
             if (originalSession === this.activitySessionID) {
                 // by myself
                 _log.debug('RELEASED BY MYSELF');
-                if (this.deferredActions[ DEVICE.RELEASE ]) {
-                    this.deferredActions[ DEVICE.RELEASE ].resolve();
-                    delete this.deferredActions[ DEVICE.RELEASE ];
+                if (this.deferredActions[DEVICE.RELEASE]) {
+                    this.deferredActions[DEVICE.RELEASE].resolve();
+                    delete this.deferredActions[DEVICE.RELEASE];
                 }
                 this.activitySessionID = null;
             } else {
@@ -459,32 +502,32 @@ class Device extends EventEmitter {
                 this.featuresNeedsReload = true;
             }
             this.keepSession = false;
-        } else {
+        } else if (upcomingSession === this.activitySessionID) {
             // acquired
             // TODO: Case where listen event will dispatch before this.transport.acquire (this.acquire) return ID
-            if (upcomingSession === this.activitySessionID) {
-                // by myself
-                _log.debug('ACQUIRED BY MYSELF');
-                if (this.deferredActions[ DEVICE.ACQUIRE ]) {
-                    this.deferredActions[ DEVICE.ACQUIRE ].resolve();
-                    // delete this.deferred[ DEVICE.ACQUIRE ];
-                }
-            } else {
-                // by other application
-                _log.debug('ACQUIRED BY OTHER');
-                this.interruptionFromOutside();
+
+            // by myself
+            _log.debug('ACQUIRED BY MYSELF');
+            if (this.deferredActions[DEVICE.ACQUIRE]) {
+                this.deferredActions[DEVICE.ACQUIRE].resolve();
+                // delete this.deferred[ DEVICE.ACQUIRE ];
             }
+        } else {
+            // by other application
+            _log.debug('ACQUIRED BY OTHER');
+            this.interruptionFromOutside();
         }
+
         this.originalDescriptor = upcomingDescriptor;
     }
 
-    disconnect(): void {
+    disconnect() {
         // TODO: cleanup everything
         _log.debug('DISCONNECT CLEANUP!');
         // don't try to release
         if (this.deferredActions[DEVICE.RELEASE]) {
             this.deferredActions[DEVICE.RELEASE].resolve();
-            delete this.deferredActions[ DEVICE.RELEASE ];
+            delete this.deferredActions[DEVICE.RELEASE];
         }
 
         this.interruptionFromUser(ERRORS.TypedError('Device_Disconnected'));
@@ -492,23 +535,23 @@ class Device extends EventEmitter {
         this.runPromise = null;
     }
 
-    isBootloader(): boolean {
+    isBootloader() {
         return this.features && !!this.features.bootloader_mode;
     }
 
-    isInitialized(): boolean {
+    isInitialized() {
         return this.features && !!this.features.initialized;
     }
 
-    isSeedless(): boolean {
+    isSeedless() {
         return this.features && !!this.features.no_backup;
     }
 
-    isInconsistent(): boolean {
+    isInconsistent() {
         return this.inconsistent;
     }
 
-    getVersion(): number[] {
+    getVersion() {
         if (!this.features) return [];
         return [
             this.features.major_version,
@@ -519,35 +562,36 @@ class Device extends EventEmitter {
 
     atLeast(versions: string[] | string) {
         if (!this.features) return false;
-        const modelVersion = typeof versions === 'string' ? versions : versions[this.features.major_version - 1];
+        const modelVersion =
+            typeof versions === 'string' ? versions : versions[this.features.major_version - 1];
         return versionCompare(this.getVersion(), modelVersion) >= 0;
     }
 
-    isUsed(): boolean {
+    isUsed() {
         return typeof this.originalDescriptor.session === 'string';
     }
 
-    isUsedHere(): boolean {
+    isUsedHere() {
         return this.isUsed() && this.originalDescriptor.session === this.activitySessionID;
     }
 
-    isUsedElsewhere(): boolean {
-        return this.isUsed() && !(this.isUsedHere());
+    isUsedElsewhere() {
+        return this.isUsed() && !this.isUsedHere();
     }
 
-    isRunning(): boolean {
+    isRunning() {
         return !!this.runPromise;
     }
 
-    isLoaded(): boolean {
+    isLoaded() {
         return this.loaded;
     }
 
-    waitForFirstRun(): Promise<boolean> {
+    waitForFirstRun() {
         return this.firstRunPromise.promise;
     }
 
-    getDevicePath(): string {
+    getDevicePath() {
         return this.originalDescriptor.path;
     }
 
@@ -560,7 +604,7 @@ class Device extends EventEmitter {
         return pin && pass;
     }
 
-    isT1(): boolean {
+    isT1() {
         return this.features ? this.features.major_version === 1 : false;
     }
 
@@ -614,29 +658,32 @@ class Device extends EventEmitter {
                 path: this.originalDescriptor.path,
                 label: 'Unreadable device',
             };
-        } else if (this.isUnacquired()) {
+        }
+        if (this.isUnacquired()) {
             return {
                 type: 'unacquired',
                 path: this.originalDescriptor.path,
                 label: 'Unacquired device',
             };
-        } else {
-            const defaultLabel: string = 'My Trezor';
-            const label = this.features.label === '' || !this.features.label ? defaultLabel : this.features.label;
-            return {
-                type: 'acquired',
-                id: this.features.device_id || null,
-                path: this.originalDescriptor.path,
-                label: label,
-                state: this.getExternalState(),
-                status: this.isUsedElsewhere() ? 'occupied' : this.featuresNeedsReload ? 'used' : 'available',
-                mode: this.getMode(),
-                firmware: this.firmwareStatus,
-                firmwareRelease: this.firmwareRelease,
-                features: this.features,
-                unavailableCapabilities: this.unavailableCapabilities,
-            };
         }
+        const defaultLabel = 'My Trezor';
+        const label =
+            this.features.label === '' || !this.features.label ? defaultLabel : this.features.label;
+        let status = this.isUsedElsewhere() ? 'occupied' : 'available';
+        if (this.featuresNeedsReload) status = 'used';
+        return {
+            type: 'acquired',
+            id: this.features.device_id || null,
+            path: this.originalDescriptor.path,
+            label,
+            state: this.getExternalState(),
+            status,
+            mode: this.getMode(),
+            firmware: this.firmwareStatus,
+            firmwareRelease: this.firmwareRelease,
+            features: this.features,
+            unavailableCapabilities: this.unavailableCapabilities,
+        };
     }
 
     _getNetworkTypeState() {
@@ -651,7 +698,7 @@ class Device extends EventEmitter {
         }
     }
 
-    _altModeChange(networkType: ?string) {
+    _altModeChange(networkType?: string) {
         const prevAltMode = this._isAltModeNetworkType(this._getNetworkTypeState());
         const nextAltMode = this._isAltModeNetworkType(networkType);
 
@@ -662,10 +709,8 @@ class Device extends EventEmitter {
     }
 
     // Is it a network type that requires the device to operate in an alternative state (ie: Cardano)
-    _isAltModeNetworkType(networkType: ?string) {
-        return [
-            NETWORK.TYPES.cardano,
-        ].includes(networkType);
+    _isAltModeNetworkType(networkType?: string) {
+        return [NETWORK.TYPES.cardano].includes(networkType);
     }
 
     //

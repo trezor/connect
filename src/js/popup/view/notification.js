@@ -3,9 +3,11 @@
 import { views } from './common';
 import type { UnexpectedDeviceMode } from '../../types/events';
 
-export const showFirmwareUpdateNotification = (device: $PropertyType<UnexpectedDeviceMode, 'payload'>): void => {
-    const container: HTMLElement = document.getElementsByClassName('notification')[0];
-    const warning: ?HTMLElement = container.querySelector('.firmware-update-notification');
+export const showFirmwareUpdateNotification = (
+    device: $PropertyType<UnexpectedDeviceMode, 'payload'>,
+) => {
+    const container = document.getElementsByClassName('notification')[0];
+    const warning = container.querySelector('.firmware-update-notification');
     if (warning) {
         // already exists
         return;
@@ -34,9 +36,9 @@ export const showFirmwareUpdateNotification = (device: $PropertyType<UnexpectedD
     }
 };
 
-export const showBridgeUpdateNotification = (): void => {
-    const container: HTMLElement = document.getElementsByClassName('notification')[0];
-    const warning: ?HTMLElement = container.querySelector('.bridge-update-notification');
+export const showBridgeUpdateNotification = () => {
+    const container = document.getElementsByClassName('notification')[0];
+    const warning = container.querySelector('.bridge-update-notification');
     if (warning) {
         // already exists
         return;
@@ -60,9 +62,9 @@ export const showBridgeUpdateNotification = (): void => {
     }
 };
 
-export const showBackupNotification = (device: $PropertyType<UnexpectedDeviceMode, 'payload'>): void => {
-    const container: HTMLElement = document.getElementsByClassName('notification')[0];
-    const warning: ?HTMLElement = container.querySelector('.backup-notification');
+export const showBackupNotification = (_device: $PropertyType<UnexpectedDeviceMode, 'payload'>) => {
+    const container = document.getElementsByClassName('notification')[0];
+    const warning = container.querySelector('.backup-notification');
     if (warning) {
         // already exists
         return;
