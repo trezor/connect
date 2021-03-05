@@ -2,6 +2,7 @@ const { app, session, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
 const isDev = require('electron-is-dev');
+
 let mainWindow;
 
 function init() {
@@ -11,11 +12,13 @@ function init() {
         height: 775,
     });
 
-    const rendererSrc = isDev ? 'http://localhost:8080' : url.format({
-        pathname: path.join(__dirname, '../build/index.html'),
-        protocol: 'file',
-        slashes: true,
-    });
+    const rendererSrc = isDev
+        ? 'http://localhost:8080'
+        : url.format({
+              pathname: path.join(__dirname, '../build/index.html'),
+              protocol: 'file',
+              slashes: true,
+          });
 
     mainWindow.loadURL(rendererSrc);
 

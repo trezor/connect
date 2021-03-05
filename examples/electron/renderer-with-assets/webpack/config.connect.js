@@ -35,9 +35,7 @@ module.exports = {
             inject: false,
         }),
         new CopyWebpackPlugin({
-            patterns: [
-                { from: './node_modules/trezor-connect/data', to: `${DIST}/data` },
-            ],
+            patterns: [{ from: './node_modules/trezor-connect/data', to: `${DIST}/data` }],
         }),
     ],
 
@@ -54,8 +52,15 @@ module.exports = {
                     ecma: 6,
                     mangle: {
                         reserved: [
-                            'Array', 'BigInteger', 'Boolean', 'Buffer',
-                            'ECPair', 'Function', 'Number', 'Point', 'Script',
+                            'Array',
+                            'BigInteger',
+                            'Boolean',
+                            'Buffer',
+                            'ECPair',
+                            'Function',
+                            'Number',
+                            'Point',
+                            'Script',
                         ],
                     },
                 },

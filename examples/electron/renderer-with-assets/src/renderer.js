@@ -1,4 +1,22 @@
-import TrezorConnect, { TRANSPORT_EVENT, UI, UI_EVENT, DEVICE_EVENT, TRANSPORT, DEVICE } from 'trezor-connect';
+import TrezorConnect, {
+    TRANSPORT_EVENT,
+    UI,
+    UI_EVENT,
+    DEVICE_EVENT,
+    TRANSPORT,
+    DEVICE,
+} from 'trezor-connect';
+
+// print log helper
+const printLog = data => {
+    const log = document.getElementById('log');
+    const current = log.value;
+    if (current.length > 0) {
+        log.value = `${JSON.stringify(data)}\n\n${current}`;
+    } else {
+        log.value = JSON.stringify(data);
+    }
+};
 
 // SETUP trezor-connect
 
@@ -43,10 +61,16 @@ TrezorConnect.on(UI_EVENT, event => {
             // device does support entering passphrase on device
             // let user choose where to enter
             // if he choose to do it on device respond with:
-            TrezorConnect.uiResponse({ type: UI.RECEIVE_PASSPHRASE, payload: { passphraseOnDevice: true, value: '' } });
+            TrezorConnect.uiResponse({
+                type: UI.RECEIVE_PASSPHRASE,
+                payload: { passphraseOnDevice: true, value: '' },
+            });
         } else {
             // example how to respond to passphrase request from regular UI input (form)
-            TrezorConnect.uiResponse({ type: UI.RECEIVE_PASSPHRASE, payload: { value: 'type your passphrase here', save: true } });
+            TrezorConnect.uiResponse({
+                type: UI.RECEIVE_PASSPHRASE,
+                payload: { value: 'type your passphrase here', save: true },
+            });
         }
     }
 
@@ -54,7 +78,10 @@ TrezorConnect.on(UI_EVENT, event => {
         if (event.payload.devices.length > 0) {
             // more then one device connected
             // example how to respond to select device
-            TrezorConnect.uiResponse({ type: UI.RECEIVE_DEVICE, payload: event.payload.devices[0] });
+            TrezorConnect.uiResponse({
+                type: UI.RECEIVE_DEVICE,
+                payload: event.payload.devices[0],
+            });
         } else {
             // no devices connected, waiting for connection
         }
@@ -82,11 +109,13 @@ TrezorConnect.init({
         email: 'email@developer.com',
         appUrl: 'electron-app-boilerplate',
     },
-}).then(() => {
-    printLog('TrezorConnect is ready!');
-}).catch(error => {
-    printLog('TrezorConnect init error', 'TrezorConnect init error:' + error);
-});
+})
+    .then(() => {
+        printLog('TrezorConnect is ready!');
+    })
+    .catch(error => {
+        printLog('TrezorConnect init error', `TrezorConnect init error:${error}`);
+    });
 
 // click to get public key
 const btn = document.getElementById('get-xpub');
@@ -98,14 +127,3 @@ btn.onclick = () => {
         printLog(response);
     });
 };
-
-// print log helper
-function printLog(data) {
-    const log = document.getElementById('log');
-    const current = log.value;
-    if (current.length > 0) {
-        log.value = JSON.stringify(data) + '\n\n' + current;
-    } else {
-        log.value = JSON.stringify(data);
-    }
-}
