@@ -1,14 +1,6 @@
-import {
-    SRC,
-    JS_SRC,
-    DATA_SRC,
-    DIST,
-    LIB_NAME,
-    NODE_MODULES,
-} from './constants';
-
 import webpack from 'webpack';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
+import { SRC, JS_SRC, DATA_SRC, DIST, LIB_NAME, NODE_MODULES } from './constants';
 // import TerserPlugin from 'terser-webpack-plugin';
 
 module.exports = {
@@ -18,7 +10,7 @@ module.exports = {
         __dirname: false,
         __filename: false,
         // ws deps
-        'bufferutil': 'empty',
+        bufferutil: 'empty',
         'utf-8-validate': 'empty',
     },
     entry: {
@@ -42,7 +34,7 @@ module.exports = {
         ],
     },
     resolve: {
-        modules: [ SRC, 'node_modules' ],
+        modules: [SRC, 'node_modules'],
     },
     performance: {
         hints: false,

@@ -1,9 +1,9 @@
 // https://raw.githubusercontent.com/zyml/es6-karma-jasmine-webpack-boilerplate/master/karma.config.js
 
-import path from 'path';
+// import path from 'path';
 import webpackConfig from './webpack/config.karma.babel';
 
-module.exports = function (config) {
+module.exports = config => {
     config.set({
         browserNoActivityTimeout: 1000000,
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -28,10 +28,10 @@ module.exports = function (config) {
                 presets: ['env'],
                 sourceMap: 'inline',
             },
-            filename: function (file) {
+            filename(file) {
                 return file.originalPath.replace(/\.js$/, '.es5.js');
             },
-            sourceFileName: function (file) {
+            sourceFileName(file) {
                 return file.originalPath;
             },
         },
@@ -43,11 +43,36 @@ module.exports = function (config) {
             'src/__tests__/core/core.test.js',
             { pattern: 'src/__tests__/config.json', included: false, served: true, nocache: true },
             { pattern: 'src/data/coins.json', included: false, served: true, nocache: true },
-            { pattern: 'src/data/bridge/releases.json', included: false, served: true, nocache: true },
-            { pattern: 'src/data/firmware/1/releases.json', included: false, served: true, nocache: true },
-            { pattern: 'src/data/firmware/2/releases.json', included: false, served: true, nocache: true },
-            { pattern: 'src/data/messages/messages.json', included: false, served: true, nocache: true },
-            { pattern: 'src/data/messages/messages-v6.json', included: false, served: true, nocache: true },
+            {
+                pattern: 'src/data/bridge/releases.json',
+                included: false,
+                served: true,
+                nocache: true,
+            },
+            {
+                pattern: 'src/data/firmware/1/releases.json',
+                included: false,
+                served: true,
+                nocache: true,
+            },
+            {
+                pattern: 'src/data/firmware/2/releases.json',
+                included: false,
+                served: true,
+                nocache: true,
+            },
+            {
+                pattern: 'src/data/messages/messages.json',
+                included: false,
+                served: true,
+                nocache: true,
+            },
+            {
+                pattern: 'src/data/messages/messages-v6.json',
+                included: false,
+                served: true,
+                nocache: true,
+            },
             { pattern: 'src/data/bridge/latest.txt', included: false, served: true, nocache: true },
         ],
 

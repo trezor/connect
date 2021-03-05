@@ -1,11 +1,6 @@
-import {
-    SRC,
-    JS_SRC,
-    DIST,
-    LIB_NAME,
-} from './constants';
-
 import webpack from 'webpack';
+import { SRC, JS_SRC, DIST, LIB_NAME } from './constants';
+
 // import TerserPlugin from 'terser-webpack-plugin';
 
 module.exports = {
@@ -35,10 +30,10 @@ module.exports = {
         ],
     },
     resolve: {
-        modules: [ SRC, 'node_modules' ],
+        modules: [SRC, 'node_modules'],
     },
     resolveLoader: {
-        modules: [ 'node_modules' ],
+        modules: ['node_modules'],
         alias: {
             'react-native-worker': `${__dirname}/js/react-native-worker.js`,
         },
@@ -49,8 +44,14 @@ module.exports = {
     plugins: [
         new webpack.NormalModuleReplacementPlugin(/.blake2b$/, './blake2b.js'),
         new webpack.NormalModuleReplacementPlugin(/env\/browser$/, './env/react-native'),
-        new webpack.NormalModuleReplacementPlugin(/env\/browser\/workers$/, '../env/react-native/workers'),
-        new webpack.NormalModuleReplacementPlugin(/env\/node\/networkUtils$/, '../env/react-native/networkUtils'),
+        new webpack.NormalModuleReplacementPlugin(
+            /env\/browser\/workers$/,
+            '../env/react-native/workers',
+        ),
+        new webpack.NormalModuleReplacementPlugin(
+            /env\/node\/networkUtils$/,
+            '../env/react-native/networkUtils',
+        ),
 
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),

@@ -1,26 +1,18 @@
-import {
-    SRC,
-    HTML_SRC,
-    DATA_SRC,
-    JS_SRC,
-    DIST,
-    LIB_NAME,
-} from './constants';
-
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
+import { SRC, HTML_SRC, DATA_SRC, JS_SRC, DIST, LIB_NAME } from './constants';
 
 module.exports = {
     mode: 'production',
     entry: {
         'trezor-connect': `${JS_SRC}index.js`,
-        'iframe': `${JS_SRC}iframe/iframe.js`,
-        'popup': `${JS_SRC}popup/popup.js`,
-        'webusb': `${JS_SRC}webusb/index.js`,
-        'extensionPermissions': `${JS_SRC}webusb/extensionPermissions.js`,
+        iframe: `${JS_SRC}iframe/iframe.js`,
+        popup: `${JS_SRC}popup/popup.js`,
+        webusb: `${JS_SRC}webusb/index.js`,
+        extensionPermissions: `${JS_SRC}webusb/extensionPermissions.js`,
     },
     output: {
         filename: 'js/[name].[hash].js',
@@ -78,7 +70,7 @@ module.exports = {
         ],
     },
     resolve: {
-        modules: [ SRC, 'node_modules' ],
+        modules: [SRC, 'node_modules'],
     },
     performance: {
         hints: false,
@@ -87,7 +79,10 @@ module.exports = {
         new webpack.NormalModuleReplacementPlugin(/.blake2b$/, './blake2b.js'),
         new webpack.NormalModuleReplacementPlugin(/env\/node$/, './env/browser'),
         new webpack.NormalModuleReplacementPlugin(/env\/node\/workers$/, '../env/browser/workers'),
-        new webpack.NormalModuleReplacementPlugin(/env\/node\/networkUtils$/, '../env/browser/networkUtils'),
+        new webpack.NormalModuleReplacementPlugin(
+            /env\/node\/networkUtils$/,
+            '../env/browser/networkUtils',
+        ),
         new webpack.ProvidePlugin({
             Promise: ['es6-promise', 'Promise'],
         }),
@@ -147,8 +142,15 @@ module.exports = {
                     ecma: 6,
                     mangle: {
                         reserved: [
-                            'Array', 'BigInteger', 'Boolean', 'Buffer',
-                            'ECPair', 'Function', 'Number', 'Point', 'Script',
+                            'Array',
+                            'BigInteger',
+                            'Boolean',
+                            'Buffer',
+                            'ECPair',
+                            'Function',
+                            'Number',
+                            'Point',
+                            'Script',
                         ],
                     },
                 },
