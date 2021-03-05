@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const CACHE = {};
-const cacheFiles = (dir) => {
+const cacheFiles = dir => {
     const dirFiles = fs.readdirSync(dir);
     dirFiles.forEach(file => {
         const filePath = path.resolve(dir, file);
@@ -20,7 +20,7 @@ const cacheFiles = (dir) => {
     });
 };
 
-export const TX_CACHE = (hash) => {
+export const TX_CACHE = hash => {
     if (Object.keys(CACHE) < 1) {
         cacheFiles(path.resolve(__dirname));
     }

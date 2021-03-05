@@ -137,13 +137,22 @@ export const ethereumSignTransaction = async () => {
 };
 
 export const signMessage = async () => {
-    const sign = await TrezorConnect.ethereumSignMessage({ path: 'm/44', message: 'foo', hex: false });
+    const sign = await TrezorConnect.ethereumSignMessage({
+        path: 'm/44',
+        message: 'foo',
+        hex: false,
+    });
     if (sign.success) {
         const { payload } = sign;
         (payload.address: string);
         (payload.signature: string);
     }
-    const verify = await TrezorConnect.ethereumVerifyMessage({ address: 'a', signature: 'a', message: 'foo', hex: false });
+    const verify = await TrezorConnect.ethereumVerifyMessage({
+        address: 'a',
+        signature: 'a',
+        message: 'foo',
+        hex: false,
+    });
     if (verify.success) {
         const { payload } = verify;
         (payload.message: string);

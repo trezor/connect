@@ -73,7 +73,11 @@ export const init = async () => {
 export const events = () => {
     TrezorConnect.on(DEVICE_EVENT, event => {
         const { payload } = event;
-        (event.type: 'device-connect' | 'device-connect_unacquired' | 'device-changed' | 'device-disconnect');
+        (event.type:
+            | 'device-connect'
+            | 'device-connect_unacquired'
+            | 'device-changed'
+            | 'device-disconnect');
         (payload.path: string);
         (payload.type: 'acquired' | 'unacquired' | 'unreadable');
         if (payload.type === 'acquired') {

@@ -48,15 +48,18 @@ export default {
             result: [
                 {
                     wifPublicKey: 'EOS6zpSNY1YoLxNt2VsvJjoDfBueU6xC1M1ERJw1UoekL1NHn8KNA',
-                    rawPublicKey: '0315c358024ce46767102578947584c4342a6982b922d454f63588effa34597197',
+                    rawPublicKey:
+                        '0315c358024ce46767102578947584c4342a6982b922d454f63588effa34597197',
                 },
                 {
                     wifPublicKey: 'EOS62cPUiWnLqbUjiBMxbEU4pm4Hp5X3RGk4KMTadvZNygjX72yHW',
-                    rawPublicKey: '029622eff7248c4d298fe28f2df19ee0d5f7674f678844e05c31d1a5632412869e',
+                    rawPublicKey:
+                        '029622eff7248c4d298fe28f2df19ee0d5f7674f678844e05c31d1a5632412869e',
                 },
                 {
                     wifPublicKey: 'EOS7n7TXwR4Y3DtPt2ji6akhQi5uw4SruuPArvoNJso84vhwPQt1G',
-                    rawPublicKey: '037c9b7d24d42589941cca3f4debc75b37c0e7b881e6eb00d2e674958debe3bbc3',
+                    rawPublicKey:
+                        '037c9b7d24d42589941cca3f4debc75b37c0e7b881e6eb00d2e674958debe3bbc3',
                 },
             ],
         },

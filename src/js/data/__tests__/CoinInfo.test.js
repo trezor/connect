@@ -20,10 +20,7 @@ describe('data/CoinInfo', () => {
             getCoinInfo('ltc'),
             getCoinInfo('ltc'),
         ];
-        const result = [
-            getCoinInfo('btc'),
-            getCoinInfo('ltc'),
-        ];
+        const result = [getCoinInfo('btc'), getCoinInfo('ltc')];
         expect(getUniqueNetworks(inputs)).toEqual(result);
     });
 
@@ -34,25 +31,17 @@ describe('data/CoinInfo', () => {
         ]);
 
         expect(
-            getCoinInfoByCapability(['Capability_Bitcoin', 'Capability_Bitcoin_like']).length
+            getCoinInfoByCapability(['Capability_Bitcoin', 'Capability_Bitcoin_like']).length,
         ).toEqual(coinsJSON.bitcoin.length);
 
-        expect(
-            getCoinInfoByCapability(['Capability_Ethereum']).length
-        ).toEqual(coinsJSON.eth.length);
+        expect(getCoinInfoByCapability(['Capability_Ethereum']).length).toEqual(
+            coinsJSON.eth.length,
+        );
 
-        const other = [
-            'EOS',
-            'Lisk',
-            'NEM',
-            'Stellar',
-            'Tezos',
-        ];
+        const other = ['EOS', 'Lisk', 'NEM', 'Stellar', 'Tezos'];
 
         other.forEach(c => {
-            expect(getCoinInfoByCapability([`Capability_${c}`])).toMatchObject([
-                { name: c },
-            ]);
+            expect(getCoinInfoByCapability([`Capability_${c}`])).toMatchObject([{ name: c }]);
         });
 
         expect(getCoinInfoByCapability(['Capability_Binance'])).toMatchObject([
@@ -67,8 +56,16 @@ describe('data/CoinInfo', () => {
         expect(getCoinInfoByCapability(['Capability_U2F'])).toEqual([]);
         expect(getCoinInfoByCapability(['Capability_Monero'])).toEqual([]);
 
-        const all = ['Capability_Bitcoin', 'Capability_Bitcoin_like', 'Capability_Binance', 'Capability_Ethereum', 'Capability_Ripple'].concat(other.map(c => `Capability_${c}`));
+        const all = [
+            'Capability_Bitcoin',
+            'Capability_Bitcoin_like',
+            'Capability_Binance',
+            'Capability_Ethereum',
+            'Capability_Ripple',
+        ].concat(other.map(c => `Capability_${c}`));
 
-        expect(getCoinInfoByCapability(all).length).toEqual(coinsJSON.bitcoin.length + coinsJSON.eth.length + coinsJSON.misc.length);
+        expect(getCoinInfoByCapability(all).length).toEqual(
+            coinsJSON.bitcoin.length + coinsJSON.eth.length + coinsJSON.misc.length,
+        );
     });
 });

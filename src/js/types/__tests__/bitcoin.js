@@ -188,9 +188,7 @@ export const signTransaction = async () => {
                 amount: '100',
                 script_type: 'PAYTOADDRESS',
                 multisig: {
-                    pubkeys: [
-                        { node: 'HDNodeAsString', address_n: [0] },
-                    ],
+                    pubkeys: [{ node: 'HDNodeAsString', address_n: [0] }],
                     signatures: ['signature'],
                     m: 0,
                 },
@@ -216,9 +214,7 @@ export const signTransaction = async () => {
                 amount: '100',
                 script_type: 'PAYTOMULTISIG',
                 multisig: {
-                    pubkeys: [
-                        { node: 'HDNodeAsString', address_n: [0] },
-                    ],
+                    pubkeys: [{ node: 'HDNodeAsString', address_n: [0] }],
                     signatures: ['signature'],
                     m: 0,
                 },
@@ -374,14 +370,16 @@ export const signTransaction = async () => {
     // $FlowExpectedError
     TrezorConnect.signTransaction({ coin: 'btc' });
     TrezorConnect.signTransaction({
-        inputs: [{
-            address_n: [0],
-            prev_index: 0,
-            prev_hash: 'txhash',
-            amount: '1',
-            // $FlowExpectedError: invalid script_type
-            script_type: 'SPENDADDRESS-2',
-        }],
+        inputs: [
+            {
+                address_n: [0],
+                prev_index: 0,
+                prev_hash: 'txhash',
+                amount: '1',
+                // $FlowExpectedError: invalid script_type
+                script_type: 'SPENDADDRESS-2',
+            },
+        ],
         outputs: [
             {
                 // $FlowExpectedError: unexpected address_n
@@ -537,7 +535,9 @@ export const getAccountInfo = async () => {
     }
 
     // bundle
-    const bundlePK = await TrezorConnect.getAccountInfo({ bundle: [{ path: 'm/44', coin: 'btc' }] });
+    const bundlePK = await TrezorConnect.getAccountInfo({
+        bundle: [{ path: 'm/44', coin: 'btc' }],
+    });
     (bundlePK.success: boolean);
     if (bundlePK.success) {
         bundlePK.payload.forEach(item => {
@@ -555,7 +555,12 @@ export const signMessage = async () => {
         (payload.address: string);
         (payload.signature: string);
     }
-    const verify = await TrezorConnect.verifyMessage({ address: 'a', signature: 'a', message: 'foo', coin: 'btc' });
+    const verify = await TrezorConnect.verifyMessage({
+        address: 'a',
+        signature: 'a',
+        message: 'foo',
+        coin: 'btc',
+    });
     if (verify.success) {
         const { payload } = verify;
         (payload.message: string);

@@ -1,16 +1,20 @@
 import fixtures from '../__fixtures__';
+
 const { setup, skipTest, initTrezorConnect, Controller, TrezorConnect } = global.Trezor;
 
 let controller;
 let currentMnemonic;
 
-fixtures.forEach((testCase, i) => {
+fixtures.forEach(testCase => {
     describe(`TrezorConnect.${testCase.method}`, () => {
-        beforeAll(async (done) => {
+        beforeAll(async done => {
             try {
                 if (!controller) {
-                    controller = new Controller({ url: 'ws://localhost:9001/', name: testCase.method });
-                    controller.on('error', (error) => {
+                    controller = new Controller({
+                        url: 'ws://localhost:9001/',
+                        name: testCase.method,
+                    });
+                    controller.on('error', error => {
                         controller = undefined;
                         console.log('Controller WS error', error);
                     });
@@ -34,7 +38,7 @@ fixtures.forEach((testCase, i) => {
             }
         }, 40000);
 
-        afterAll(async (done) => {
+        afterAll(done => {
             TrezorConnect.dispose();
             done();
         });
@@ -42,7 +46,7 @@ fixtures.forEach((testCase, i) => {
         testCase.tests.forEach(t => {
             // check if test should be skipped on current configuration
             const testMethod = skipTest(t.skip) ? it.skip : it;
-            testMethod(t.description, async (done) => {
+            testMethod(t.description, async done => {
                 if (t.customTimeout) {
                     jest.setTimeout(t.customTimeout);
                 }
@@ -63,7 +67,9 @@ fixtures.forEach((testCase, i) => {
 
                 controller.options.name = t.description;
                 const result = await TrezorConnect[testCase.method](t.params);
-                const expected = t.result ? { success: true, payload: t.result } : { success: false };
+                const expected = t.result
+                    ? { success: true, payload: t.result }
+                    : { success: false };
                 expect(result).toMatchObject(expected);
                 if (t.customTimeout) {
                     jest.setTimeout(20000);

@@ -33,7 +33,7 @@ export const management = () => {
     });
 
     TrezorConnect.firmwareUpdate({
-        binary: new Buffer(123),
+        binary: Buffer.from('abcd'),
     });
 
     TrezorConnect.firmwareUpdate({

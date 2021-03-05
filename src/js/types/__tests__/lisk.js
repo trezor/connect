@@ -187,7 +187,11 @@ export const signMessage = async () => {
         (payload.publicKey: string);
         (payload.signature: string);
     }
-    const verify = await TrezorConnect.liskVerifyMessage({ publicKey: 'a', signature: 'a', message: 'foo' });
+    const verify = await TrezorConnect.liskVerifyMessage({
+        publicKey: 'a',
+        signature: 'a',
+        message: 'foo',
+    });
     if (verify.success) {
         const { payload } = verify;
         (payload.message: string);

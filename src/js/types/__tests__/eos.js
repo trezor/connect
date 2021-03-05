@@ -43,10 +43,12 @@ export const eosGetPublicKey = async () => {
 export const eosSignTransaction = async () => {
     const common = {
         account: 'eosio.token',
-        authorization: [{
-            actor: 'miniminimini',
-            permission: 'active',
-        }],
+        authorization: [
+            {
+                actor: 'miniminimini',
+                permission: 'active',
+            },
+        ],
     };
 
     const sign = await TrezorConnect.eosSignTransaction({
@@ -154,13 +156,15 @@ export const eosSignTransaction = async () => {
                                     key: 'EOS8Dkj827FpinZBGmhTM28B85H9eXiFH5XzvLoeukCJV5sKfLc6K',
                                 },
                             ],
-                            accounts: [{
-                                permission: {
-                                    actor: 'miniminimini',
-                                    permission: 'active',
+                            accounts: [
+                                {
+                                    permission: {
+                                        actor: 'miniminimini',
+                                        permission: 'active',
+                                    },
+                                    weight: 3,
                                 },
-                                weight: 3,
-                            }],
+                            ],
                             waits: [
                                 {
                                     wait_sec: 55,
