@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const WebSocket = require('ws');
 const { EventEmitter } = require('events');
 
 const NOT_INITIALIZED = new Error('websocket_not_initialized');
 
 const createDeferred = id => {
-    let localResolve = t => () => {};
-    let localReject = e => () => {};
+    let localResolve = () => {};
+    let localReject = () => {};
 
     const promise = new Promise((resolve, reject) => {
         localResolve = resolve;

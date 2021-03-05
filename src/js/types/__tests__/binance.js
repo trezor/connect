@@ -115,17 +115,13 @@ export const binanceSignTransaction = async () => {
                 inputs: [
                     {
                         address: 'tbnb1hgm0p7khfk85zpz5v0j8wnej3a90w709zzlffd',
-                        coins: [
-                            { amount: 1000000000, denom: 'BNB' },
-                        ],
+                        coins: [{ amount: 1000000000, denom: 'BNB' }],
                     },
                 ],
                 outputs: [
                     {
                         address: 'tbnb1ss57e8sa7xnwq030k2ctr775uac9gjzglqhvpy',
-                        coins: [
-                            { amount: 1000000000, denom: 'BNB' },
-                        ],
+                        coins: [{ amount: 1000000000, denom: 'BNB' }],
                     },
                 ],
             },

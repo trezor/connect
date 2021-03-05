@@ -13,7 +13,9 @@ export const nemGetAddress = async () => {
     }
 
     // bundle
-    const bundleAddress = await TrezorConnect.nemGetAddress({ bundle: [{ path: 'm/44', network: 1 }] });
+    const bundleAddress = await TrezorConnect.nemGetAddress({
+        bundle: [{ path: 'm/44', network: 1 }],
+    });
     (bundleAddress.success: boolean);
     if (bundleAddress.success) {
         bundleAddress.payload.forEach(item => {
@@ -101,7 +103,8 @@ export const nemSignTransaction = async () => {
             modifications: [
                 {
                     modificationType: 1,
-                    cosignatoryAccount: 'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
+                    cosignatoryAccount:
+                        'c5f54ba980fcbb657dbaaa42700539b207873e134d2375efeab5f1ab52f87844',
                 },
             ],
             minCosignatories: {

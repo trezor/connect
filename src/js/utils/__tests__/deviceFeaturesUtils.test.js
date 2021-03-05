@@ -46,10 +46,12 @@ describe('utils/deviceFeaturesUtils', () => {
             'Capability_U2F',
         ]);
 
-        expect(parseCapabilities({
-            major_version: 2,
-            capabilities: [],
-        })).toEqual([
+        expect(
+            parseCapabilities({
+                major_version: 2,
+                capabilities: [],
+            }),
+        ).toEqual([
             'Capability_Bitcoin',
             'Capability_Bitcoin_like',
             'Capability_Binance',
@@ -67,21 +69,23 @@ describe('utils/deviceFeaturesUtils', () => {
         ]);
 
         // bitcoin only
-        expect(parseCapabilities({
-            major_version: 1,
-            capabilities: [1],
-        })).toEqual([
-            'Capability_Bitcoin',
-        ]);
+        expect(
+            parseCapabilities({
+                major_version: 1,
+                capabilities: [1],
+            }),
+        ).toEqual(['Capability_Bitcoin']);
 
         // no features
         expect(parseCapabilities(null)).toEqual([]);
 
         // unknown
-        expect(parseCapabilities({
-            major_version: 1,
-            capabilities: [1000],
-        })).toEqual([]);
+        expect(
+            parseCapabilities({
+                major_version: 1,
+                capabilities: [1000],
+            }),
+        ).toEqual([]);
     });
 
     it('getUnavailableCapabilities', () => {
@@ -128,54 +132,42 @@ describe('utils/deviceFeaturesUtils', () => {
 
         // excluded single method without specified coins
         expect(
-            getUnavailableCapabilities(
-                feat2,
-                coins,
-                [
-                    {
-                        min: ['0', '2.99.99'],
-                        excludedMethods: ['getAccountInfo'],
-                    },
-                ]
-            ),
+            getUnavailableCapabilities(feat2, coins, [
+                {
+                    min: ['0', '2.99.99'],
+                    excludedMethods: ['getAccountInfo'],
+                },
+            ]),
         ).toEqual({
             getAccountInfo: 'update-required',
         });
 
         // excluded single method with specified coins
         expect(
-            getUnavailableCapabilities(
-                feat2,
-                coins,
-                [
-                    {
-                        min: ['0', '2.99.99'],
-                        coin: ['xrp', 'txrp'],
-                        excludedMethods: ['getAccountInfo'],
-                    },
-                ]
-            ),
+            getUnavailableCapabilities(feat2, coins, [
+                {
+                    min: ['0', '2.99.99'],
+                    coin: ['xrp', 'txrp'],
+                    excludedMethods: ['getAccountInfo'],
+                },
+            ]),
         ).toEqual({
             getAccountInfo: ['xrp', 'txrp'],
         });
 
         // disable multiple methods for outdated trezor-connect
         expect(
-            getUnavailableCapabilities(
-                feat2,
-                coins,
-                [
-                    {
-                        max: ['0', '2.1.0'],
-                        coin: ['xrp', 'txrp'],
-                        excludedMethods: ['rippleGetAddress'],
-                    },
-                    {
-                        max: ['0', '2.1.0'],
-                        excludedMethods: ['tezosSignTransaction'],
-                    },
-                ]
-            ),
+            getUnavailableCapabilities(feat2, coins, [
+                {
+                    max: ['0', '2.1.0'],
+                    coin: ['xrp', 'txrp'],
+                    excludedMethods: ['rippleGetAddress'],
+                },
+                {
+                    max: ['0', '2.1.0'],
+                    excludedMethods: ['tezosSignTransaction'],
+                },
+            ]),
         ).toEqual({
             rippleGetAddress: ['xrp', 'txrp'],
             tezosSignTransaction: 'trezor-connect-outdated',

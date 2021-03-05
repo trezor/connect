@@ -3,7 +3,8 @@
 const [major, minor, patch] = process.env.TESTS_FIRMWARE.split('.');
 
 // if custom build is used, we ignore firmware version numbers
-const customFirmwareBuild = process.env.TESTS_CUSTOM_FIRMWARE_BUILD || process.env.TESTS_FIRMWARE.indexOf('master') > 0;
+const customFirmwareBuild =
+    process.env.TESTS_CUSTOM_FIRMWARE_BUILD || process.env.TESTS_FIRMWARE.indexOf('master') > 0;
 
 export default {
     method: 'getFeatures',

@@ -3,18 +3,18 @@ import TrezorConnect, { UI } from '../src/js/index';
 import { versionCompare } from '../src/js/utils/versionUtils';
 
 const MNEMONICS = {
-    'mnemonic_all': 'all all all all all all all all all all all all',
-    'mnemonic_12': 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
-    'mnemonic_abandon': 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
+    mnemonic_all: 'all all all all all all all all all all all all',
+    mnemonic_12: 'alcohol woman abuse must during monitor noble actual mixed trade anger aisle',
+    mnemonic_abandon:
+        'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
 };
 
 const firmware = process.env.TESTS_FIRMWARE;
 
-const wait = (ms) => {
-    return new Promise((resolve) => {
+const wait = ms =>
+    new Promise(resolve => {
         setTimeout(resolve, ms);
     });
-};
 
 const setup = async (controller, options) => {
     try {
@@ -30,7 +30,10 @@ const setup = async (controller, options) => {
         }
         await controller.send(emulatorStartOpts);
 
-        const mnemonic = typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0 ? options.mnemonic : MNEMONICS[options.mnemonic];
+        const mnemonic =
+            typeof options.mnemonic === 'string' && options.mnemonic.indexOf(' ') > 0
+                ? options.mnemonic
+                : MNEMONICS[options.mnemonic];
         await controller.send({
             type: 'emulator-setup',
             mnemonic,
@@ -62,7 +65,7 @@ const initTrezorConnect = async (controller, options) => {
         });
     };
 
-    const onUiRequestButton = async (event) => {
+    const onUiRequestButton = _event => {
         controller.send({ type: 'emulator-press-yes' });
     };
 
@@ -89,7 +92,7 @@ const initTrezorConnect = async (controller, options) => {
 // ">1.9.3" - skip for FW greater than 1.9.3
 // "<1.9.3" - skip for FW lower than 1.9.3
 // "1.9.3" - skip for FW exact with 1.9.3
-const skipTest = (rules) => {
+const skipTest = rules => {
     if (!rules || !Array.isArray(rules)) return;
     const fwModel = firmware.substr(0, 1);
     const fwMaster = firmware.search('-') > 0;
@@ -99,13 +102,16 @@ const skipTest = (rules) => {
             if (!skip.search('.') && skip === fwModel) {
                 // global model
                 return true;
-            } else if (!fwMaster && skip.startsWith('<') && versionCompare(firmware, skip.substr(1)) < 0) {
+            }
+            if (!fwMaster && skip.startsWith('<') && versionCompare(firmware, skip.substr(1)) < 0) {
                 // lower
                 return true;
-            } else if (!fwMaster && skip.startsWith('>') && versionCompare(firmware, skip.substr(1)) > 0) {
+            }
+            if (!fwMaster && skip.startsWith('>') && versionCompare(firmware, skip.substr(1)) > 0) {
                 // greater
                 return true;
-            } else if (!fwMaster && versionCompare(firmware, skip) === 0) {
+            }
+            if (!fwMaster && versionCompare(firmware, skip) === 0) {
                 // exact
                 return true;
             }

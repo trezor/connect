@@ -29,7 +29,7 @@ export const cardanoGetAddress = async () => {
         const { addressParameters } = payload;
         (addressParameters.addressType: number);
         (addressParameters.path: string | number[]);
-        (addressParameters.stakingPath: ?string | ?number[]);
+        (addressParameters.stakingPath: ?string | ?(number[]));
         (addressParameters.stakingKeyHash: ?string);
         const { certificatePointer } = addressParameters;
         if (certificatePointer) {

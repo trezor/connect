@@ -13,7 +13,8 @@ export default {
                 inputs: [
                     {
                         address_n: [2147483692, 2147483654, 2147483648, 0, 0],
-                        prev_hash: '41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d',
+                        prev_hash:
+                            '41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d',
                         prev_index: 0,
                         amount: '100000',
                     },
@@ -31,9 +32,11 @@ export default {
                         hash: '41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d',
                         inputs: [
                             {
-                                prev_hash: '67abe6288fdec766e106a46125727eb7c608266950746fc10d1d1c69645f68af',
+                                prev_hash:
+                                    '67abe6288fdec766e106a46125727eb7c608266950746fc10d1d1c69645f68af',
                                 prev_index: 0,
-                                script_sig: '473044022052748f479c41b432352772ef7aa4b090e4f8df8d589aaea5cfc3dbef237a3935022012f53265e223c3cce6348306d7085b0538b68a52dbd99b0035a01b5bb2a8e50a0121038fa1b058febedda1a414ccb39f55ac09dd832e5c2e5af9b14ff49ea9d520b9fe',
+                                script_sig:
+                                    '473044022052748f479c41b432352772ef7aa4b090e4f8df8d589aaea5cfc3dbef237a3935022012f53265e223c3cce6348306d7085b0538b68a52dbd99b0035a01b5bb2a8e50a0121038fa1b058febedda1a414ccb39f55ac09dd832e5c2e5af9b14ff49ea9d520b9fe',
                                 sequence: 4294967295,
                             },
                         ],
@@ -54,7 +57,8 @@ export default {
                 ],
             },
             result: {
-                serializedTx: '010000008a44c55d013d7d3531b0881f244d1f353c208fd00cb18bd152a054460aa4eed815d69ab241000000006a473044022025c0ea702390c702c7ae8b5ea469820bea8d942c8c16439f8f0ba2e91e699efc02200db9b0a48fa2861695fa91df4831a4c7306587e5d2dc85419647f462717bc8f001210274cb0ee652d9457fbb0f3872d43155a6bc16f77bd5749d8826b53db443b1b278ffffffff01905f0100000000001976a914ff9a05654150fdc92b1655f49d7f2a8aaf6a3a2a88ac00000000',
+                serializedTx:
+                    '010000008a44c55d013d7d3531b0881f244d1f353c208fd00cb18bd152a054460aa4eed815d69ab241000000006a473044022025c0ea702390c702c7ae8b5ea469820bea8d942c8c16439f8f0ba2e91e699efc02200db9b0a48fa2861695fa91df4831a4c7306587e5d2dc85419647f462717bc8f001210274cb0ee652d9457fbb0f3872d43155a6bc16f77bd5749d8826b53db443b1b278ffffffff01905f0100000000001976a914ff9a05654150fdc92b1655f49d7f2a8aaf6a3a2a88ac00000000',
             },
         },
         {
@@ -66,7 +70,8 @@ export default {
                 inputs: [
                     {
                         address_n: [2147483692, 2147483654, 2147483648, 0, 0],
-                        prev_hash: '41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d',
+                        prev_hash:
+                            '41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d',
                         prev_index: 0,
                         amount: '100000',
                     },
@@ -85,9 +90,11 @@ export default {
                         hash: '41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d',
                         inputs: [
                             {
-                                prev_hash: '67abe6288fdec766e106a46125727eb7c608266950746fc10d1d1c69645f68af',
+                                prev_hash:
+                                    '67abe6288fdec766e106a46125727eb7c608266950746fc10d1d1c69645f68af',
                                 prev_index: 0,
-                                script_sig: '473044022052748f479c41b432352772ef7aa4b090e4f8df8d589aaea5cfc3dbef237a3935022012f53265e223c3cce6348306d7085b0538b68a52dbd99b0035a01b5bb2a8e50a0121038fa1b058febedda1a414ccb39f55ac09dd832e5c2e5af9b14ff49ea9d520b9fe',
+                                script_sig:
+                                    '473044022052748f479c41b432352772ef7aa4b090e4f8df8d589aaea5cfc3dbef237a3935022012f53265e223c3cce6348306d7085b0538b68a52dbd99b0035a01b5bb2a8e50a0121038fa1b058febedda1a414ccb39f55ac09dd832e5c2e5af9b14ff49ea9d520b9fe',
                                 sequence: 4294967295,
                             },
                         ],
