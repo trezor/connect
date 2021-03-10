@@ -1,13 +1,16 @@
 import webpack from 'webpack';
 import { SRC, JS_SRC, DIST, LIB_NAME } from './constants';
 
+// Generate inline script hosted on https://connect.trezor.io/X/trezor-connect.js
+// This is compiled and polyfilled npm package without Core logic
+
 module.exports = {
+    target: 'web',
     mode: 'production',
     entry: {
         'trezor-connect': `${JS_SRC}index.js`,
     },
     output: {
-        filename: '[name].js',
         path: DIST,
         publicPath: './',
         library: LIB_NAME,
@@ -30,26 +33,23 @@ module.exports = {
         hints: false,
     },
     plugins: [
+        // provide fallback for global objects.
+        // resolve.fallback will not work since those objects are not imported as modules.
+        new webpack.ProvidePlugin({
+            Promise: ['es6-promise', 'Promise'],
+        }),
+        // resolve trezor-connect modules as "browser"
         new webpack.NormalModuleReplacementPlugin(/env\/node$/, './env/browser'),
         new webpack.NormalModuleReplacementPlugin(/env\/node\/workers$/, '../env/browser/workers'),
         new webpack.NormalModuleReplacementPlugin(
             /env\/node\/networkUtils$/,
             '../env/browser/networkUtils',
         ),
-        new webpack.ProvidePlugin({
-            Promise: ['es6-promise', 'Promise'],
-        }),
     ],
 
     optimization: {
+        emitOnErrors: true,
+        moduleIds: 'named',
         minimize: false,
-    },
-
-    // ignoring Node.js imports
-    node: {
-        fs: 'empty',
-        path: 'empty',
-        net: 'empty',
-        tls: 'empty',
     },
 };
