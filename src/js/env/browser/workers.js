@@ -1,7 +1,6 @@
-/* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax */
-import SharedConnectionWorker from 'sharedworker-loader?name=workers/shared-connection-worker.[hash].js!trezor-link/lib/lowlevel/sharedConnectionWorker';
-import BlockbookWorker from 'worker-loader?filename=workers/blockbook-worker.[hash].js!@trezor/blockchain-link/lib/workers/blockbook/index.js';
-import RippleWorker from 'worker-loader?filename=workers/ripple-worker.[hash].js!@trezor/blockchain-link/lib/workers/ripple/index.js';
+import SharedConnectionWorker from 'trezor-link/lib/lowlevel/sharedConnectionWorker';
+import BlockbookWorker from '@trezor/blockchain-link/lib/workers/blockbook';
+import RippleWorker from '@trezor/blockchain-link/lib/workers/ripple';
 
 import TrezorLink from 'trezor-link';
 
