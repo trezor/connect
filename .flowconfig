@@ -4,6 +4,7 @@
 .*/node_modules/bchaddrjs/
 
 [ignore]
+.*/node_modules/webpack-cli/lib/utils/__tests__/.*
 .*/node_modules/protobufjs-old-fixed-webpack/src/bower.json
 .*/node_modules/hd-wallet/lib/utils/stream.js.flow
 .*/_old/.*

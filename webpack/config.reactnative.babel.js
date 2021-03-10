@@ -1,7 +1,8 @@
 import webpack from 'webpack';
 import { SRC, JS_SRC, DIST, LIB_NAME } from './constants';
 
-// import TerserPlugin from 'terser-webpack-plugin';
+// not used
+// it was related to POC with running connect as a nodejs process in react-native-thread
 
 module.exports = {
     mode: 'production',
@@ -17,6 +18,7 @@ module.exports = {
         libraryExport: 'default',
     },
     externals: {
+        'react-native': 'commonjs react-native',
         'react-native-threads': 'commonjs react-native-threads',
         'whatwg-fetch': 'commonjs whatwg-fetch',
     },
@@ -31,6 +33,14 @@ module.exports = {
     },
     resolve: {
         modules: [SRC, 'node_modules'],
+        fallback: {
+            fs: false, // ignore "fs" import in fastxpub (hd-wallet)
+            path: false,
+            net: false, // ignore "net" and "tls" imports in "ripple-lib"
+            tls: false,
+            crypto: false, // no polyfill
+            stream: require.resolve('stream-browserify'), // polyfill
+        },
     },
     resolveLoader: {
         modules: ['node_modules'],
@@ -42,10 +52,10 @@ module.exports = {
         hints: false,
     },
     plugins: [
-        new webpack.NormalModuleReplacementPlugin(/.blake2b$/, './blake2b.js'),
-        new webpack.NormalModuleReplacementPlugin(/env\/browser$/, './env/react-native'),
+        // resolve trezor-connect modules as "react-native"
+        new webpack.NormalModuleReplacementPlugin(/env\/node$/, './env/react-native'),
         new webpack.NormalModuleReplacementPlugin(
-            /env\/browser\/workers$/,
+            /env\/node\/workers$/,
             '../env/react-native/workers',
         ),
         new webpack.NormalModuleReplacementPlugin(
@@ -53,47 +63,12 @@ module.exports = {
             '../env/react-native/networkUtils',
         ),
 
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.NamedModulesPlugin(),
-
-        // ignore Node.js lib from trezor-link
-        new webpack.IgnorePlugin(/\/iconv-loader$/),
         new webpack.IgnorePlugin(/\/shared-connection-worker$/),
     ],
 
-    // @trezor/utxo-lib NOTE:
-    // When uglifying the javascript, you must exclude the following variable names from being mangled:
-    // Array, BigInteger, Boolean, Buffer, ECPair, Function, Number, Point and Script.
-    // This is because of the function-name-duck-typing used in typeforce.
-    // optimization: {
-    //     minimizer: [
-    //         new TerserPlugin({
-    //             parallel: true,
-    //             extractComments: false,
-    //             terserOptions: {
-    //                 ecma: 6,
-    //                 mangle: {
-    //                     reserved: [
-    //                         'Array', 'BigInteger', 'Boolean', 'Buffer',
-    //                         'ECPair', 'Function', 'Number', 'Point', 'Script',
-    //                     ],
-    //                 },
-    //             },
-    //         }),
-    //     ],
-    // },
-
     optimization: {
+        emitOnErrors: true,
+        moduleIds: 'named',
         minimize: false,
-    },
-
-    // ignoring Node.js import in fastxpub (hd-wallet)
-    node: {
-        __dirname: false,
-        fs: 'empty',
-        path: 'empty',
-        net: 'empty',
-        tls: 'empty',
     },
 };
