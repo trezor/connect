@@ -36,10 +36,14 @@ export const manifest = (m: $T.Manifest) => {
 };
 
 export const dispose = () => {
-    // iframe.dispose();
-    // if (_popupManager) {
-    //     _popupManager.close();
-    // }
+    eventEmitter.removeAllListeners();
+    if (_core) {
+        _core.onBeforeUnload();
+    }
+    // $FlowIssue
+    _settings = null;
+    // $FlowIssue
+    _core = null;
 };
 
 // handle message received from iframe
@@ -120,6 +124,7 @@ export const init = async (settings: $Shape<$T.ConnectSettings> = {}) => {
     _settings.origin = 'http://node.trezor.io/';
     _settings.popup = false;
     _settings.env = 'node';
+    _log.enabled = !!_settings.debug;
 
     if (!_settings.manifest) {
         throw ERRORS.TypedError('Init_ManifestMissing');
@@ -130,8 +135,6 @@ export const init = async (settings: $Shape<$T.ConnectSettings> = {}) => {
         _settings.lazyLoad = false;
         return;
     }
-
-    _log.enabled = !!_settings.debug;
 
     _core = await initCore(_settings);
     _core.on(CORE_EVENT, handleMessage);
