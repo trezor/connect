@@ -23,7 +23,7 @@ const createDeferred = id => {
 const DEFAULT_TIMEOUT = 40 * 1000;
 const DEFAULT_PING_TIMEOUT = 50 * 1000;
 
-class Controller extends EventEmitter {
+export class Controller extends EventEmitter {
     constructor(options) {
         super();
         this.messageID = 0;
@@ -227,7 +227,3 @@ class Controller extends EventEmitter {
         this.removeAllListeners();
     }
 }
-
-module.exports = {
-    Controller,
-};

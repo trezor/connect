@@ -1,5 +1,6 @@
 import { Controller } from './websocket-client';
-import TrezorConnect, { UI } from '../src/js/index';
+import TrezorConnect from '../src/js/index';
+import * as UI from '../src/js/constants/ui';
 import { versionCompare } from '../src/js/utils/versionUtils';
 
 const MNEMONICS = {
@@ -69,20 +70,21 @@ const initTrezorConnect = async (controller, options) => {
         });
     };
 
-    const onUiRequestButton = _event => {
-        controller.send({ type: 'emulator-press-yes' });
+    const onUiRequestButton = () => {
+        setTimeout(() => controller.send({ type: 'emulator-press-yes' }), 1);
     };
 
     TrezorConnect.removeAllListeners();
 
     await TrezorConnect.init({
         manifest: {
-            appUrl: 'a',
-            email: 'b',
+            appUrl: 'tests.connect.trezor.io',
+            email: 'tests@connect.trezor.io',
         },
         webusb: false,
         debug: false,
         popup: false,
+        connectSrc: process.env.TREZOR_CONNECT_SRC, // custom source for karma tests
         ...options,
     });
 
@@ -130,4 +132,38 @@ global.Trezor = {
     initTrezorConnect,
     TrezorConnect,
     Controller,
+};
+
+// picked from utils/pathUtils
+const HD_HARDENED = 0x80000000;
+const toHardened = n => (n | HD_HARDENED) >>> 0;
+
+const ADDRESS_N = path => {
+    const parts = path.toLowerCase().split('/');
+    if (parts[0] !== 'm') throw new Error(`PATH_NOT_VALID: ${path}`);
+    return parts
+        .filter(p => p !== 'm' && p !== '')
+        .map(p => {
+            let hardened = false;
+            if (p.endsWith("'")) {
+                hardened = true;
+                p = p.substr(0, p.length - 1);
+            }
+            let n = parseInt(p, 10);
+            if (Number.isNaN(n)) {
+                throw new Error(`PATH_NOT_VALID: ${path}`);
+            } else if (n < 0) {
+                throw new Error(`PATH_NEGATIVE_VALUES: ${path}`);
+            }
+            if (hardened) {
+                // hardened index
+                n = toHardened(n);
+            }
+            return n;
+        });
+};
+
+global.TestUtils = {
+    ...global.TestUtils,
+    ADDRESS_N,
 };

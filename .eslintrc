@@ -19,7 +19,8 @@
         "node": true,
         "browser": true,
         "webextensions": true,
-        "jest": true
+        "jest": true,
+        "jasmine": true
     },
     "globals": {},
     "rules": {

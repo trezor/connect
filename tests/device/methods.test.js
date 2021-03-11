@@ -47,50 +47,52 @@ fixtures.forEach(testCase => {
         testCase.tests.forEach(t => {
             // check if test should be skipped on current configuration
             const testMethod = skipTest(t.skip) ? it.skip : it;
-            testMethod(t.description, async done => {
-                if (t.customTimeout) {
-                    jest.setTimeout(t.customTimeout);
-                }
-                if (!controller) {
-                    done('Controller not found');
-                    return;
-                }
+            testMethod(
+                t.description,
+                async done => {
+                    if (!controller) {
+                        done('Controller not found');
+                        return;
+                    }
 
-                // print current test case, `jest` default reporter doesn't log this. see https://github.com/facebook/jest/issues/4471
-                const log = chalk.black.bgYellow.bold(` ${testCase.method}: `);
-                process.stderr.write(`\n${log} ${chalk.bold(t.description)}\n`);
+                    // print current test case, `jest` default reporter doesn't log this. see https://github.com/facebook/jest/issues/4471
+                    if (typeof jest !== 'undefined' && process.stderr) {
+                        const log = chalk.black.bgYellow.bold(` ${testCase.method}: `);
+                        process.stderr.write(`\n${log} ${chalk.bold(t.description)}\n`);
+                    }
 
-                if (t.mnemonic && t.mnemonic !== currentMnemonic) {
-                    // single test requires different seed, switch it
-                    await setup(controller, { mnemonic: t.mnemonic });
-                    currentMnemonic = t.mnemonic;
-                } else if (!t.mnemonic && testCase.setup.mnemonic !== currentMnemonic) {
-                    // restore testCase.setup
-                    await setup(controller, testCase.setup);
-                    currentMnemonic = testCase.setup.mnemonic;
-                }
+                    if (t.mnemonic && t.mnemonic !== currentMnemonic) {
+                        // single test requires different seed, switch it
+                        await setup(controller, { mnemonic: t.mnemonic });
+                        currentMnemonic = t.mnemonic;
+                    } else if (!t.mnemonic && testCase.setup.mnemonic !== currentMnemonic) {
+                        // restore testCase.setup
+                        await setup(controller, testCase.setup);
+                        currentMnemonic = testCase.setup.mnemonic;
+                    }
 
-                controller.options.name = t.description;
-                const result = await TrezorConnect[testCase.method](t.params);
-                let expected = t.result ? { success: true, payload: t.result } : { success: false };
+                    controller.options.name = t.description;
+                    const result = await TrezorConnect[testCase.method](t.params);
+                    let expected = t.result
+                        ? { success: true, payload: t.result }
+                        : { success: false };
 
-                // find legacy result
-                if (t.legacyResults) {
-                    t.legacyResults.forEach(r => {
-                        if (skipTest(r.rules)) {
-                            expected = r.payload
-                                ? { success: true, payload: r.payload }
-                                : { success: false };
-                        }
-                    });
-                }
+                    // find legacy result
+                    if (t.legacyResults) {
+                        t.legacyResults.forEach(r => {
+                            if (skipTest(r.rules)) {
+                                expected = r.payload
+                                    ? { success: true, payload: r.payload }
+                                    : { success: false };
+                            }
+                        });
+                    }
 
-                expect(result).toMatchObject(expected);
-                if (t.customTimeout) {
-                    jest.setTimeout(20000);
-                }
-                done();
-            });
+                    expect(result).toMatchObject(expected);
+                    done();
+                },
+                t.customTimeout || 20000,
+            );
         });
     });
 });
