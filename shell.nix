@@ -18,6 +18,11 @@ stdenv.mkDerivation {
   ];
   shellHook = ''
     export PATH="$PATH:$(pwd)/node_modules/.bin"
+    export TESTS_FIRMWARE="2-master"
+    export TESTS_INCLUDED_METHODS=""
+    export TESTS_EXCLUDED_METHODS=""
+    export CHROME_BIN=/run/current-system/sw/bin/chromium
+    export FIREFOX_BIN=/run/current-system/sw/bin/firefox
     autoPatchelf $(pwd)/node_modules/flow-bin/
   '';
 }
