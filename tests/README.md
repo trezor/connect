@@ -73,4 +73,10 @@ Missing tx json? use [this tool](./__txcache__/gen-reftx.js) to generate it.
 ## Websocket cache
 Similar to transaction cache. `@trezor/blockchain-link` module is conditionally mocked returning cached results from `tests/__wscache__`.
 
-[See jest.mock](./jest.setup.js)
+[See mock](./__wscache__/worker.js)
+
+## Karma production tests
+Testing `./build` directory in browser environment.
+
+Run: `./tests/run.sh -s "yarn test:karma:production" -i getAddress`
+

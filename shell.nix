@@ -17,6 +17,8 @@ stdenv.mkDerivation {
     git
   ];
   shellHook = ''
+    export CHROME_BIN=/run/current-system/sw/bin/chromium
+    export FIREFOX_BIN=/run/current-system/sw/bin/firefox
     export PATH="$PATH:$(pwd)/node_modules/.bin"
     autoPatchelf $(pwd)/node_modules/flow-bin/
   '';
