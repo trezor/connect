@@ -1,12 +1,13 @@
 export const fixtures = {
     applySettings: [
         {
+            description: 'language param invalid type',
+            params: { language: 1 },
+            error: 'Parameter "language" has invalid type. "string" expected.',
+        },
+        {
             description: 'success',
             params: { language: 'en' },
-            typedCall: () => ({
-                message: 'Success',
-            }),
-            response: 'Success',
         },
     ],
     applyFlags: [
