@@ -64,11 +64,12 @@ export enum Enum_BackupType {
 }
 export type BackupType = keyof typeof Enum_BackupType;
 
-export enum SafetyCheckLevel {
+export enum Enum_SafetyCheckLevel {
     Strict = 0,
     PromptAlways = 1,
     PromptTemporarily = 2,
 }
+export type SafetyCheckLevel = keyof typeof Enum_SafetyCheckLevel;
 
 // BinanceGetAddress
 export type BinanceGetAddress = {
@@ -1358,7 +1359,7 @@ export type Features = {
     wipe_code_protection?: boolean;
     session_id?: string;
     passphrase_always_on_device?: boolean;
-    safety_checks?: SafetyCheckLevel;
+    safety_checks?: SafetyCheckLevel | null;
     auto_lock_delay_ms?: number;
     display_rotation?: number;
     experimental_features?: boolean;

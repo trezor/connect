@@ -53,6 +53,7 @@ const TYPE_PATCH = {
     'Features.fw_minor': 'number | null',
     'Features.fw_patch': 'number | null',
     'Features.fw_vendor': 'string | null',
+    'Features.safety_checks': 'SafetyCheckLevel | null',
     'HDNodePathType.node': 'HDNodeType | string',
     'TxInputType.amount': 'number | string',
     'TxOutputBinType.amount': 'number | string',

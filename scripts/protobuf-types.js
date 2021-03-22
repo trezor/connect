@@ -29,6 +29,7 @@ const ENUM_KEYS = [
     'RequestType',
     'BackupType',
     'Capability',
+    'SafetyCheckLevel',
 ];
 
 const parseEnumTypescript = item => {
