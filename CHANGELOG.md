@@ -1,6 +1,7 @@
 # Not Yet Released
 
 ### Fixed
+- Incorrect type of the `safety_checks` Trezor feature.
 - Incorrect typescript type of the `binary` field of the `firmwareUpdate`'s params'.
 
 # 8.1.25

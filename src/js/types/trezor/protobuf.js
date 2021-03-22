@@ -75,7 +75,7 @@ const Enum_SafetyCheckLevel = Object.freeze({
     PromptAlways: 1,
     PromptTemporarily: 2,
 });
-export type SafetyCheckLevel = $Values<typeof Enum_SafetyCheckLevel>;
+export type SafetyCheckLevel = $Keys<typeof Enum_SafetyCheckLevel>;
 
 // BinanceGetAddress
 export type BinanceGetAddress = {
@@ -1381,7 +1381,7 @@ export type Features = {
     wipe_code_protection?: boolean,
     session_id?: string,
     passphrase_always_on_device?: boolean,
-    safety_checks?: SafetyCheckLevel,
+    safety_checks?: SafetyCheckLevel | null,
     auto_lock_delay_ms?: number,
     display_rotation?: number,
     experimental_features?: boolean,
