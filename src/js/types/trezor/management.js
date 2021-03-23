@@ -1,5 +1,7 @@
 /* @flow */
 
+import type { SafetyCheckLevel } from './protobuf';
+
 export type ResetDevice = {
     strength?: number,
     label?: string,
@@ -17,6 +19,7 @@ export type ApplySettings = {
     use_passphrase?: boolean,
     label?: string,
     auto_lock_delay_ms?: number,
+    safety_checks?: SafetyCheckLevel,
 };
 
 export type ApplyFlags = {

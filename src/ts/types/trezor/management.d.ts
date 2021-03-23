@@ -1,3 +1,5 @@
+import type { SafetyCheckLevel } from './protobuf';
+
 export interface ResetDevice {
     strength?: number;
     label?: string;
@@ -15,6 +17,7 @@ export interface ApplySettings {
     use_passphrase?: boolean;
     label?: string;
     auto_lock_delay_ms?: number;
+    safety_checks?: SafetyCheckLevel;
 }
 
 export interface ApplyFlags {
