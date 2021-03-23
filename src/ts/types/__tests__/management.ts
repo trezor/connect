@@ -23,6 +23,7 @@ export const management = async () => {
         display_rotation: 180,
         use_passphrase: true,
         label: 'My Trezor',
+        safety_checks: 'Strict',
     });
 
     TrezorConnect.backupDevice({});

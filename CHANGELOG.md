@@ -1,5 +1,8 @@
 # Not Yet Released
 
+### Added
+- `safety_checks` field to the `ApplySettings` interface which lets you set the `safety_checks` Trezor feature.
+
 ### Fixed
 - Incorrect type of the `safety_checks` Trezor feature.
 - Incorrect typescript type of the `binary` field of the `firmwareUpdate`'s params'.

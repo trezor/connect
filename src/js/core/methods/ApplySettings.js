@@ -26,7 +26,7 @@ export default class ApplySettings extends AbstractMethod {
             { name: 'passphrase_always_on_device', type: 'boolean' },
             { name: 'auto_lock_delay_ms', type: 'number' },
             { name: 'display_rotation', type: 'number' },
-            { name: 'safety_checks', type: 'number' },
+            { name: 'safety_checks', type: 'string' },
         ]);
 
         this.params = {
