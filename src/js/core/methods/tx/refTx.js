@@ -1,6 +1,10 @@
 /* @flow */
 
-import { coins as BitcoinJSCoins, Transaction as BitcoinJsTransaction } from '@trezor/utxo-lib';
+import {
+    coins as BitcoinJSCoins,
+    script as BitcoinJSScript,
+    Transaction as BitcoinJsTransaction,
+} from '@trezor/utxo-lib';
 import type { TypedRawTransaction } from '@trezor/blockchain-link';
 import type { Input as BitcoinJsInput, Output as BitcoinJsOutput } from '@trezor/utxo-lib';
 // local modules
@@ -102,6 +106,15 @@ export const transformOrigTransactions = (
 
         // outputs, required by TXORIGOUTPUT (TxAckOutput) request from Trezor
         const outputsMap = (output: BitcoinJsOutput, i: number) => {
+            if (!vout[i].isAddress) {
+                return {
+                    script_type: 'PAYTOOPRETURN',
+                    amount: '0',
+                    op_return_data: BitcoinJSScript.nullData.output
+                        .decode(output.script)
+                        .toString('hex'),
+                };
+            }
             // TODO: is vout[i] a correct way? order in Bitcoinjs
             const address = vout[i].addresses.join(''); // controversial: is there a possibility to have more than 1 address in this tx? multisig?
             const changeAddress = addresses.change.find(addr => addr.address === address);

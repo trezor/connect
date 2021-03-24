@@ -210,11 +210,55 @@ export default {
                         script_type: 'PAYTOP2SHWITNESS',
                     },
                 ],
-                // refTxs2: [TX_CACHE('5e7667'), TX_CACHE('efaa41'), TX_CACHE('334cd7'), TX_CACHE('6673b7'), TX_CACHE('ed89ac'), TX_CACHE('927784')],
+                // refTxs: [TX_CACHE('5e7667'), TX_CACHE('efaa41'), TX_CACHE('334cd7'), TX_CACHE('6673b7'), TX_CACHE('ed89ac'), TX_CACHE('927784')],
             },
             result: {
                 serializedTx:
                     '01000000000104d64ae26dceee1e309bed0821f39275b5f6e65d0072f8e23747ae76006967765e0100000017160014039ba06270e6c6c1ad4e6940515aa5cdbad33f9effffffff57b4cb6156c63a8d6b834e236a21edf9d0f11fdd2fd0f9b28248328e24b773660000000017160014adbbadefe594e9e4bfccb9c699ae5d4f18716772ffffffff35ac1adc9e0cf408013090c52527d3cf9468d51e1a6c8408f5ed673eff41aaef0000000017160014209297fb46272a0b7e05139440dbd39daea3e25affffffff0b03833dd525dae7f7ed1455f386fc7899737a1cc3f538c7c4efbc7be08477920000000017160014681ea49259abb892460bf3373e8a0b43d877fa18ffffffff0300e1f505000000001976a914548cb80e45b1d36312fe0cb075e5e337e3c54cef88ac40420f000000000017a9142369da13fee80c9d7fd8043bf1275c04deb360e687590d5d2c0000000017a91458b53ea7f832e8f096e896b8713a8c6df0e892ca870247304402205b4b304cb5a23cd3b73aa586c983cbadefc3fcbcb8fb33684037b17a818726c002202a3f529183eebf2f06d041b18d379579c22d908be31060752179f01d125ff020012103bb0e339d7495b1f355c49d385b79343e52e68d99de2fe1f7f476c465c9ccd167024730440220666ebf2c146d4a369971ec1d5b69fce2f3b8e2c0ba689e6077ebed513f91dd760220200e203355156e23abf5b536ac174df4109985feddf86ab065c12f0da8339d6a012102a52d8cf5a89c284bacff90a3d7c30a0166e0074ca3fc385f3efce638c50493b30247304402207d6331026626fc133813ea672147c95feac29a3d7deefb49ef1d0194e061d53802207e4c3a3b8f3c2e11845684d74a5f1d8395da0a8e65e18c7f72155aac82be648e012103c2c2e65556ca4b7371549324b99390725493c8a6792e093a0bdcbb3e2d7df4ab02473044022047f95a95ea8cac78f057e15e37ac5cebd6abcf50d87e5509d30c730cb0f7e89f02201d861acb267c0bc100cac99cad42b067a39614602eef5f9f791c1875f24dd0de0121028cbc37e1816a23086fa738c8415def477e813e20f484dbbd6f5a33a37c32225100000000',
+            },
+        },
+        {
+            description: 'Replace tx: OP_RETURN tx',
+            params: {
+                coin: 'Testnet',
+                inputs: [
+                    {
+                        address_n: ADDRESS_N("m/84'/1'/1'/0/14"),
+                        amount: '1000000',
+                        script_type: 'SPENDWITNESS',
+                        prev_hash:
+                            '4083973799f05c52f556b603ab0f93d9c4c50be50da03c770a492d0990ca7809',
+                        prev_index: 1,
+                        orig_hash:
+                            'ba917a2b563966e324ab37ed7de5f5cd7503b970b0f0bb9a5208f5835557e99c',
+                        orig_index: 0,
+                        sequence: 4294967293,
+                    },
+                ],
+                outputs: [
+                    {
+                        amount: '0',
+                        script_type: 'PAYTOOPRETURN',
+                        op_return_data: '64656164',
+                        orig_hash:
+                            'ba917a2b563966e324ab37ed7de5f5cd7503b970b0f0bb9a5208f5835557e99c',
+                        orig_index: 0,
+                    },
+                    {
+                        address_n: ADDRESS_N("m/84'/1'/1'/1/10"),
+                        // 1000000 - 150 - 150
+                        amount: '999700',
+                        script_type: 'PAYTOWITNESS',
+                        orig_hash:
+                            'ba917a2b563966e324ab37ed7de5f5cd7503b970b0f0bb9a5208f5835557e99c',
+                        orig_index: 1,
+                    },
+                ],
+                // refTxs: [TX_CACHE('408397'), TX_CACHE('ba917a')],
+            },
+            result: {
+                serializedTx:
+                    '010000000001010978ca90092d490a773ca00de50bc5c4d9930fab03b656f5525cf099379783400100000000fdffffff020000000000000000066a046465616414410f00000000001600141c02e2397a8a02ff71d3f26937d14a656469dd1f02483045022100f534412752c14064470d4a1f738fa01bc83598b07caaba4cd207b43b1b9702a4022071a4f0873006c07ccfeb1f82e86f3047eab208f38cfa41d7b566d6ca50dbca0f012102a269d4b8faf008074b974b6d64fa1776e17fdf65381a76d1338e9bba88983a8700000000',
             },
         },
     ],
