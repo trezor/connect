@@ -19,6 +19,12 @@ const Enum_OutputScriptType = Object.freeze({
 });
 export type OutputScriptType = $Keys<typeof Enum_OutputScriptType>;
 
+const Enum_DecredStakingSpendType = Object.freeze({
+    SSGen: 0,
+    SSRTX: 1,
+});
+export type DecredStakingSpendType = $Values<typeof Enum_DecredStakingSpendType>;
+
 const Enum_AmountUnit = Object.freeze({
     BITCOIN: 0,
     MILLIBITCOIN: 1,
@@ -275,6 +281,7 @@ export type SignTx = {
     timestamp?: number,
     branch_id?: number,
     amount_unit?: AmountUnit,
+    decred_staking_ticket?: boolean,
 };
 
 const Enum_RequestType = Object.freeze({
@@ -323,6 +330,7 @@ export type TxInputType = {
     commitment_data?: string,
     orig_hash?: string,
     orig_index?: number,
+    decred_staking_spend?: DecredStakingSpendType,
 };
 
 export type TxOutputBinType = {
@@ -427,6 +435,7 @@ export type TxInput = {
     commitment_data?: string,
     orig_hash?: string,
     orig_index?: number,
+    decred_staking_spend?: DecredStakingSpendType,
 };
 
 // TxOutput
@@ -685,10 +694,18 @@ export type CardanoSignTx = {
     validity_interval_start?: number,
 };
 
+// CardanoSignedTxChunk
+export type CardanoSignedTxChunk = {
+    signed_tx_chunk: string,
+};
+
+// CardanoSignedTxChunkAck
+export type CardanoSignedTxChunkAck = {};
+
 // CardanoSignedTx
 export type CardanoSignedTx = {
     tx_hash: string,
-    serialized_tx: string,
+    serialized_tx?: string,
 };
 
 // Success
@@ -843,6 +860,7 @@ export type GetECDHSessionKey = {
 // ECDHSessionKey
 export type ECDHSessionKey = {
     session_key: string,
+    public_key?: string,
 };
 
 const Enum_DebugSwipeDirection = Object.freeze({
@@ -861,6 +879,7 @@ export type DebugLinkDecision = {
     x?: number,
     y?: number,
     wait?: boolean,
+    hold_ms?: number,
 };
 
 // DebugLinkLayout
@@ -876,29 +895,6 @@ export type DebugLinkReseedRandom = {
 // DebugLinkRecordScreen
 export type DebugLinkRecordScreen = {
     target_directory?: string,
-};
-
-const Enum_DebugLinkShowTextStyle = Object.freeze({
-    NORMAL: 0,
-    BOLD: 1,
-    MONO: 2,
-    BR: 4,
-    BR_HALF: 5,
-    SET_COLOR: 6,
-});
-export type DebugLinkShowTextStyle = $Values<typeof Enum_DebugLinkShowTextStyle>;
-
-export type DebugLinkShowTextItem = {
-    style?: DebugLinkShowTextStyle,
-    content?: string,
-};
-
-// DebugLinkShowText
-export type DebugLinkShowText = {
-    header_text?: string,
-    body_text: DebugLinkShowTextItem[],
-    header_icon?: string,
-    icon_color?: string,
 };
 
 // DebugLinkGetState
@@ -1555,6 +1551,9 @@ export type PreauthorizedRequest = {};
 // CancelAuthorization
 export type CancelAuthorization = {};
 
+// RebootToBootloader
+export type RebootToBootloader = {};
+
 // NEMGetAddress
 export type NEMGetAddress = {
     address_n: number[],
@@ -2074,6 +2073,8 @@ export type MessageType = {
     CardanoTxCertificateType: $Exact<CardanoTxCertificateType>,
     CardanoTxWithdrawalType: $Exact<CardanoTxWithdrawalType>,
     CardanoSignTx: $Exact<CardanoSignTx>,
+    CardanoSignedTxChunk: $Exact<CardanoSignedTxChunk>,
+    CardanoSignedTxChunkAck: CardanoSignedTxChunkAck,
     CardanoSignedTx: $Exact<CardanoSignedTx>,
     Success: Success,
     Failure: Failure,
@@ -2096,8 +2097,6 @@ export type MessageType = {
     DebugLinkLayout: DebugLinkLayout,
     DebugLinkReseedRandom: DebugLinkReseedRandom,
     DebugLinkRecordScreen: DebugLinkRecordScreen,
-    DebugLinkShowTextItem: DebugLinkShowTextItem,
-    DebugLinkShowText: DebugLinkShowText,
     DebugLinkGetState: DebugLinkGetState,
     DebugLinkState: DebugLinkState,
     DebugLinkStop: DebugLinkStop,
@@ -2189,6 +2188,7 @@ export type MessageType = {
     DoPreauthorized: DoPreauthorized,
     PreauthorizedRequest: PreauthorizedRequest,
     CancelAuthorization: CancelAuthorization,
+    RebootToBootloader: RebootToBootloader,
     NEMGetAddress: NEMGetAddress,
     NEMAddress: $Exact<NEMAddress>,
     NEMTransactionCommon: NEMTransactionCommon,
