@@ -14,6 +14,7 @@ export interface ApplySettings {
     display_rotation?: 0 | 90 | 180 | 270;
     use_passphrase?: boolean;
     label?: string;
+    auto_lock_delay_ms?: number;
 }
 
 export interface ApplyFlags {
