@@ -67,9 +67,17 @@ fixtures.forEach(testCase => {
 
                 controller.options.name = t.description;
                 const result = await TrezorConnect[testCase.method](t.params);
-                const expected = t.result
-                    ? { success: true, payload: t.result }
-                    : { success: false };
+                let expected = t.result ? { success: true, payload: t.result } : { success: false };
+
+                // find legacy result
+                if (t.legacyResults) {
+                    t.legacyResults.forEach(r => {
+                        if (skipTest(r.rules)) {
+                            expected = { success: true, payload: r.payload };
+                        }
+                    });
+                }
+
                 expect(result).toMatchObject(expected);
                 if (t.customTimeout) {
                     jest.setTimeout(20000);
