@@ -16,6 +16,20 @@ const BLOCKS = {
         economy: 36,
         low: 144,
     },
+    ltc: {
+        // blocktime ~ 150sec.
+        high: 1,
+        normal: 24,
+        economy: 144,
+        low: 576,
+    },
+    tltc: {
+        // blocktime ~ 150sec.
+        high: 1,
+        normal: 24,
+        economy: 144,
+        low: 576,
+    },
     bch: {
         // blocktime ~ 600sec.
         high: 1,
