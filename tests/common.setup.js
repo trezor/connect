@@ -28,6 +28,10 @@ const setup = async (controller, options) => {
         if (firmware) {
             Object.assign(emulatorStartOpts, { version: firmware });
         }
+        if (options.firmware) {
+            Object.assign(emulatorStartOpts, { version: options.firmware });
+        }
+
         await controller.send(emulatorStartOpts);
 
         const mnemonic =
