@@ -1,7 +1,7 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { SRC, HTML_SRC, JS_SRC, LIB_NAME, PORT } from './constants';
+import { ABSOLUTE_BASE, SRC, HTML_SRC, JS_SRC, LIB_NAME, PORT } from './constants';
 
 module.exports = {
     watch: true,
@@ -25,7 +25,11 @@ module.exports = {
     devServer: {
         contentBase: SRC,
         hot: false,
-        https: true,
+        https: {
+            // https://webpack.js.org/configuration/dev-server/#devserverhttps
+            key: `${ABSOLUTE_BASE}/webpack/connect_dev.key`,
+            cert: `${ABSOLUTE_BASE}/webpack/connect_dev.crt`,
+        },
         port: PORT,
         // stats: 'minimal',
         inline: true,

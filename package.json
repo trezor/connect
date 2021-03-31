@@ -30,6 +30,7 @@
         "./lib/env/node/networkUtils": "./lib/env/react-native/networkUtils"
     },
     "scripts": {
+        "predev": "node webpack/generate_dev_cert.js",
         "dev": "webpack-dev-server --config ./webpack/config.dev.babel.js --mode development",
         "build": "rm -rf build && webpack --config ./webpack/config.prod.babel.js --progress",
         "build:node": "rm -rf build && webpack --config ./webpack/config.nodejs.babel.js --progress",

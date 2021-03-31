@@ -25,3 +25,7 @@ coverage
 
 # Cache
 __pycache__
+
+# dev
+webpack/connect_dev.crt
+webpack/connect_dev.key
