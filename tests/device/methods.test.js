@@ -78,7 +78,9 @@ fixtures.forEach(testCase => {
                 if (t.legacyResults) {
                     t.legacyResults.forEach(r => {
                         if (skipTest(r.rules)) {
-                            expected = { success: true, payload: r.payload };
+                            expected = r.payload
+                                ? { success: true, payload: r.payload }
+                                : { success: false };
                         }
                     });
                 }
