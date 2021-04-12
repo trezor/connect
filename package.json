@@ -43,6 +43,7 @@
         "test:unit": "jest --verbose -c jest.config.unit.js",
         "test:integration": "./tests/run.sh",
         "flow": "flow check .",
+        "typescript": "tsc --project src/ts/types/tsconfig.json",
         "lint": "eslint .",
         "lint:fix": "eslint --fix ."
     },
@@ -105,6 +106,7 @@
         "terser-webpack-plugin": "4.2.2",
         "tiny-worker": "^2.3.0",
         "trezor-link": "1.7.3",
+        "typescript": "^4.2.4",
         "uglify-es": "3.3.9",
         "version-bump-prompt": "6.1.0",
         "webpack": "4.44.2",

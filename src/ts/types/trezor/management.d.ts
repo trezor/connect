@@ -26,7 +26,7 @@ export interface ChangePin {
 }
 
 export interface FirmwareUpdateBinary {
-    binary: number[];
+    binary: Buffer;
 }
 
 export interface FirmwareUpdate {

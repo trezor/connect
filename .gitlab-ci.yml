@@ -8,15 +8,14 @@ stages:
 before_script:
   - nix-shell --run "yarn"
 
-# Build & Lint
-flow lint:
+verify:
   stage: build
   script:
     - nix-shell --run "yarn flow"
+    - nix-shell --run "yarn typescript"
     - nix-shell --run "yarn lint"
     - nix-shell --run "yarn test:unit"
 
-# Build & Lint
 build:
   stage: build
   script:

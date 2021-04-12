@@ -39,6 +39,7 @@ jobs:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
     - run: yarn flow
+    - run: yarn typescript
     - run: yarn lint
     - run: yarn test:unit
 

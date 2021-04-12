@@ -32,7 +32,7 @@ export const management = async () => {
     });
 
     TrezorConnect.firmwareUpdate({
-        payload: new ArrayBuffer(0),
+        binary: Buffer.from('abcd'),
     });
 
     TrezorConnect.recoveryDevice({
