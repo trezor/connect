@@ -1,3 +1,8 @@
+# Not Yet Released
+
+### Fixed
+- Incorrect typescript type of the `binary` field of the `firmwareUpdate`'s params'.
+
 # 8.1.25
 
 ### Fixed
