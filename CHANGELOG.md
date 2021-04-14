@@ -1,9 +1,13 @@
-# Not Yet Released
+# 8.1.26
 
 ### Added
+- 2.3.6 firmware release.
+- Cardano: support for chunked transaction serialization. (available since FW 2.3.7+)
+- `auto_lock_delay_ms` param to the `ApplySettings` method.
 - `safety_checks` field to the `ApplySettings` interface which lets you set the `safety_checks` Trezor feature.
 
 ### Fixed
+- `signTransaction` parsing original transaction (RBF) with OP_RETURN output.
 - Incorrect type of the `safety_checks` Trezor feature.
 - Incorrect typescript type of the `binary` field of the `firmwareUpdate`'s params'.
 
