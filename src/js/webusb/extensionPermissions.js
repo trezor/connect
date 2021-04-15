@@ -23,8 +23,8 @@ const init = (label: string) => {
 
     usbButton.onclick = async () => {
         const filters = config.webusb.map(desc => ({
-            vendorId: parseInt(desc.vendorId, 10),
-            productId: parseInt(desc.productId, 10),
+            vendorId: parseInt(desc.vendorId, 16),
+            productId: parseInt(desc.productId, 16),
         }));
 
         const { usb } = navigator;
