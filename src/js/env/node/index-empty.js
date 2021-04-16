@@ -2,7 +2,7 @@
 import EventEmitter from 'events';
 import { ERRORS } from '../../constants';
 
-const empty = () => {
+const empty = (_params: any) => {
     throw ERRORS.TypedError('Method_InvalidPackage');
 };
 
