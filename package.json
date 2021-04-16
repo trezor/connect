@@ -41,7 +41,7 @@
         "stats": "webpack --config ./webpack/config.prod.babel.js --json > build/stats.json",
         "test": "bash ./src/__tests__/run.sh",
         "test:unit": "jest --verbose -c jest.config.unit.js",
-        "test:integration": "./tests/run.sh",
+        "test:integration": "jest --verbose -c jest.config.integration.js --detectOpenHandles --forceExit",
         "flow": "flow check .",
         "typescript": "tsc --project src/ts/types/tsconfig.json",
         "lint": "eslint .",
