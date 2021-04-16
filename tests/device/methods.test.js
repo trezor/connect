@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import fixtures from '../__fixtures__';
 
 const { setup, skipTest, initTrezorConnect, Controller, TrezorConnect } = global.Trezor;
@@ -54,6 +55,10 @@ fixtures.forEach(testCase => {
                     done('Controller not found');
                     return;
                 }
+
+                // print current test case, `jest` default reporter doesn't log this. see https://github.com/facebook/jest/issues/4471
+                const log = chalk.black.bgYellow.bold(` ${testCase.method}: `);
+                process.stderr.write(`\n${log} ${chalk.bold(t.description)}\n`);
 
                 if (t.mnemonic && t.mnemonic !== currentMnemonic) {
                     // single test requires different seed, switch it

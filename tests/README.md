@@ -1,28 +1,51 @@
-# Connect integration tests
+# trezor-connect tests
+## Continuous Integration
 
-## How to run tests locally
-1. Install docker
-1. To run all tests `./tests/run.sh`
-1. To see some options `./test/run.sh -h`;
-1. To run tests with graphic output from emulator, use `-g` option. Note that macOS needs some [further configuration](https://medium.com/@nihon_rafy/building-a-dockerized-gui-by-sharing-the-host-screen-with-docker-container-b660835fb722).
-1. To limit tests to subset of methods use `-i getPublicKey,getAddress`
+Tests are powered by [trezor-user-env](https://github.com/trezor/trezor-user-env) which is [daily built](https://gitlab.com/satoshilabs/trezor/trezor-user-env/-/pipelines) into a **docker image** providing all the necessary instrumentation required to run tests (bridge and emulators).
+
+Tests are running in two environments:
+
+[SatoshiLabs GitLab CI](https://gitlab.com/satoshilabs/trezor/connect/-/pipelines) NixOS runner
+
+_Test are running **directly** in `trezor-user-env` **docker image**. All required variables are declared in [gitlab-ci.yml](../.gitlab-ci.yml) config file._
+
+[Github Actions CI](https://github.com/trezor/connect/actions) Ubuntu runner
+
+_Test are using [run.sh](./run.sh) script to spin up `trezor-user-env` **docker image** and set all required variables._
+
+
+## Run it locally
+_Note: All paths below are relative to the root of trezor-connect repository._
+
+_Note: Running tests with custom firmware [is not currently possible](https://github.com/trezor/trezor-user-env/issues/49)._ 
+
+### On Linux
+#### Prerequisites
+- [Docker](https://docs.docker.com/engine/install/)
+
+### On MacOS
+_Note: As of now M1 Macs aren't supported. See [this issue](https://github.com/trezor/trezor-suite/issues/3616) for detailed information._
+
+_Note: Running all test at once using Docker for Mac v20 may end up with `unexpected EOF` [error](https://github.com/docker/for-mac/issues/5145)._
+
+_Note: Running test with graphical output from emulator may end up with `device disconnected during action` error._
+
+#### Prerequisites
+- [Docker](https://docs.docker.com/docker-for-mac/install/)
+
+
+### Steps
+_Note: Make sure that your default/local `trezord` is disabled and all physical Trezor devices are disconnected._
+
+_Note: Running all test at once may take a while. It is recommended to narrow the subset using `-i methodName` option._
+
+_Note: If you are running `trezor-user-env` docker image as [standalone process](./run.sh#L19-L25) in terminal use `-d` option._
+
+1. See available options `tests/run.sh -h`
+1. Limit tests to subset of methods use `tests/run.sh -i getPublicKey,getAddress`
+1. Run all tests `tests/run.sh` (may take some time)
 
 ## How to add tests
-1. Create or modify file in `./__fixtures__`
-1. Make sure it is imported in `./__fixtures__/index.js`.
-1. Make sure the method you are testing is listed in `.github/workflows/tests.yml` and `.gitlab-ci.yml`
-
-## How to run tests with custom firmware
-1. Build your custom [emulator](https://docs.trezor.io/trezor-firmware/core/build/emulator.html) with debuglink support
-    * `cd trezor-firmware`
-    * `pipenv sync`
-    * `pipenv shell`
-    * `cd core`
-    * `PYOPT=0 pipenv run make build_unix_frozen`
-    * You will find `micropython` file in `core/build/unix`
-1. Save it as `trezor-emu-core-v2.[num].[num]`. For example `trezor-emu-core-v2.9.9`. Minor and patch numbers don't matter as long 
-as they do not conflict with already existing firmware.
-1. Run tests with `./tests/run.sh -b ~/path-to-emu/trezor-emu-core-v2.9.9 -f 2.9.9`
-
-## Continuous integration
-Tests are running on [Github CI](https://github.com/trezor/connect/actions/workflows/tests.yml) and [SatoshiLabs Gitlab](https://gitlab.com/satoshilabs/trezor/connect/-/pipelines)
+1. Create or modify file in `tests/__fixtures__`
+1. Make sure it is imported in `tests/__fixtures__/index.js`
+1. Make sure the method you are testing is listed in `.github/workflows/*.yml` and `.gitlab-ci.yml`
