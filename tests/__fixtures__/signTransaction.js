@@ -1,4 +1,4 @@
-const { ADDRESS_N } = global.TestUtils;
+const { ADDRESS_N, TX_CACHE } = global.TestUtils;
 
 // vectors from https://github.com/trezor/trezor-firmware/blob/master/tests/device_tests/test_msg_signtx.py
 
@@ -28,8 +28,7 @@ export default {
     },
     tests: [
         {
-            // tx: d5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882
-            description: '1 input, 1 output, no change',
+            description: 'Bitcoin (P2PKH): 1 input, 1 output, no change',
             params: {
                 inputs: [
                     {
@@ -47,6 +46,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['d5f65e']),
                 coin: 'btc',
             },
             result: {
@@ -55,7 +55,7 @@ export default {
             },
         },
         {
-            description: 'testnet: 1 input, 1 output, 1 change',
+            description: 'Testnet (P2PKH): 1 input, 1 output, 1 change',
             params: {
                 inputs: [
                     {
@@ -78,6 +78,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['e5040e']),
                 coin: 'Testnet',
             },
             result: {
@@ -86,7 +87,7 @@ export default {
             },
         },
         {
-            description: 'testnet: fee to high warning',
+            description: 'Testnet (P2PKH): fee to high warning',
             params: {
                 inputs: [
                     {
@@ -109,6 +110,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['6f90f3']),
                 coin: 'Testnet',
             },
             result: {
@@ -117,7 +119,7 @@ export default {
             },
         },
         {
-            description: '1 input, 1 output, 1 change',
+            description: 'Bitcoin (P2PKH): 1 input, 1 output, 1 change',
             params: {
                 inputs: [
                     {
@@ -140,6 +142,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['50f6f1']),
                 coin: 'btc',
             },
             result: {
@@ -148,7 +151,7 @@ export default {
             },
         },
         {
-            description: '1 input, 3 outputs',
+            description: 'Bitcoin (P2PKH): 1 input, 3 outputs',
             params: {
                 inputs: [
                     {
@@ -176,6 +179,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['d5f65e']),
                 coin: 'btc',
             },
             result: {
@@ -184,7 +188,7 @@ export default {
             },
         },
         {
-            description: '2 inputs, 1 output, 1 change',
+            description: 'Bitcoin (P2PKH): 2 inputs, 1 output, 1 change',
             params: {
                 inputs: [
                     {
@@ -214,6 +218,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['c6be22', '58497a']),
                 coin: 'btc',
             },
             result: {
@@ -225,7 +230,7 @@ export default {
             // Tests if device implements serialization of len(outputs) correctly
             // See tx c63e24ed820c5851b60c54613fbc4bcb37df6cd49b4c96143e99580a472f79fb
             // See tx 39a29e954977662ab3879c66fb251ef753e0912223a83d1dcb009111d28265e5
-            description: '2 inputs, 255 outputs',
+            description: 'Bitcoin (P2PKH): 2 inputs, 255 outputs',
             customTimeout: 1000000,
             params: {
                 inputs: [
@@ -245,6 +250,7 @@ export default {
                     },
                 ],
                 outputs,
+                refTxs: TX_CACHE(['c63e24', '39a29e']),
                 coin: 'btc',
             },
             result: {
@@ -255,7 +261,7 @@ export default {
         // TODO: lots of change,
         {
             // See tx 1570416eb4302cf52979afd5e6909e37d8fdd874301f7cc87e547e509cb1caa6
-            description: 'fee too high',
+            description: 'Bitcoin (P2PKH): fee too high',
             params: {
                 coin: 'Bitcoin',
                 inputs: [
@@ -274,6 +280,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['157041']),
             },
             result: {
                 serializedTx:
@@ -283,7 +290,7 @@ export default {
         // TODO hardfail, skip T1
         {
             // See tx d5f65ee80147b4bcc70b75e4bbf2d7382021b871bd8867ef8fa525ef50864882
-            description: 'not enough funds',
+            description: 'Bitcoin (P2PKH): not enough funds',
             params: {
                 coin: 'Bitcoin',
                 inputs: [
@@ -302,13 +309,14 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['d5f65e']),
             },
             result: false,
         },
         {
             // 25 TEST generated to m/1 (mfiGQVPcRcaEvQPYDErR34DcCovtxYvUUV)
             // See tx d6da21677d7cca5f42fbc7631d062c9ae918a0254f7c6c22de8e8cb7fd5b8236
-            description: 'spend coinbase',
+            description: 'Testnet (P2PKH): spend coinbase',
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -327,6 +335,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['d6da21']),
             },
             result: {
                 serializedTx:
@@ -335,7 +344,7 @@ export default {
         },
         {
             // tx e5040e1bc1ae766v7ffb9e5248e90b2fb93cd9150234151ce90e14ab2f5933bcd
-            description: 'two changes',
+            description: 'Testnet (P2PKH): two changes',
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -366,6 +375,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['e5040e']),
             },
             result: {
                 serializedTx:
@@ -373,7 +383,7 @@ export default {
             },
         },
         {
-            description: 'p2sh',
+            description: 'Bitcoin (P2PKH): p2pkh input, p2sh output',
             params: {
                 coin: 'Bitcoin',
                 inputs: [
@@ -392,6 +402,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['54aa56']),
             },
             result: {
                 serializedTx:
@@ -399,7 +410,7 @@ export default {
             },
         },
         {
-            description: 'testnet: big amount',
+            description: 'Testnet (P2PKH): big amount',
             params: {
                 coin: 'testnet',
                 inputs: [
@@ -418,6 +429,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['2bac7a']),
             },
             result: {
                 serializedTx:
@@ -425,7 +437,7 @@ export default {
             },
         },
         {
-            description: 'change on mainchain allowed',
+            description: 'Testnet (P2PKH): change on mainchain allowed',
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -450,6 +462,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['e5040e']),
             },
             result: {
                 serializedTx:

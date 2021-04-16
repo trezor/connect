@@ -1,3 +1,5 @@
+const { ADDRESS_N, TX_CACHE } = global.TestUtils;
+
 export default {
     method: 'signTransaction',
     setup: {
@@ -5,12 +7,12 @@ export default {
     },
     tests: [
         {
-            description: 'P2SH: 1 input, 2 outputs, no change',
+            description: 'Testnet (P2SH): 1 input, 2 outputs, no change',
             params: {
                 coin: 'Testnet',
                 inputs: [
                     {
-                        address_n: [49 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/49'/1'/0'/1/0"),
                         amount: '123456789',
                         prev_hash:
                             '20912f98ea3ed849042efed0fdac8cb4fc301961c5988cba56902d8ffb61c337',
@@ -30,6 +32,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['20912f']),
             },
             result: {
                 signatures: [
@@ -40,12 +43,12 @@ export default {
             },
         },
         {
-            description: 'P2SH: 1 input, 2 outputs, 1 change',
+            description: 'Testnet (P2SH): 1 input, 2 outputs, 1 change',
             params: {
                 coin: 'Testnet',
                 inputs: [
                     {
-                        address_n: [49 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/49'/1'/0'/1/0"),
                         amount: '123456789',
                         prev_hash:
                             '20912f98ea3ed849042efed0fdac8cb4fc301961c5988cba56902d8ffb61c337',
@@ -60,11 +63,12 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                     {
-                        address_n: [49 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/49'/1'/0'/1/0"),
                         amount: '111145789',
                         script_type: 'PAYTOP2SHWITNESS',
                     },
                 ],
+                refTxs: TX_CACHE(['20912f']),
             },
             result: {
                 signatures: [
@@ -75,12 +79,12 @@ export default {
             },
         },
         {
-            description: 'P2SH: send multisig',
+            description: 'Testnet (P2SH): send multisig',
             params: {
                 coin: 'Testnet',
                 inputs: [
                     {
-                        address_n: [999 | 0x80000000, 1 | 0x80000000, 0x80000003, 2, 0],
+                        address_n: ADDRESS_N("m/999'/1'/2147483651/2/0"),
                         amount: '1610436',
                         prev_hash:
                             '9c31922be756c06d02167656465c8dc83bb553bf386a3f478ae65b5c021002be',
@@ -120,6 +124,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['9c3192']),
             },
             result: {
                 signatures: [

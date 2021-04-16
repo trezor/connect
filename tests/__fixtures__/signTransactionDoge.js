@@ -1,3 +1,5 @@
+const { ADDRESS_N, TX_CACHE } = global.TestUtils;
+
 export default {
     method: 'signTransaction',
     setup: {
@@ -12,7 +14,7 @@ export default {
                 coin: 'Doge',
                 inputs: [
                     {
-                        address_n: [44 | 0x80000000, 3 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/44'/3'/0'/1/0"),
                         amount: '11351855244633976',
                         prev_hash:
                             '0a4cb7d5c27455333701f0e53812e4be56a0272ad7f168279acfed7b065ee118',
@@ -26,17 +28,12 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                     {
-                        address_n: [
-                            (44 | 0x80000000) >>> 0,
-                            (3 | 0x80000000) >>> 0,
-                            (0 | 0x80000000) >>> 0,
-                            1,
-                            0,
-                        ],
+                        address_n: ADDRESS_N("m/44'/3'/0'/1/0"),
                         amount: '10000000000000000',
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['0a4cb7']),
             },
             result: {
                 signatures: [

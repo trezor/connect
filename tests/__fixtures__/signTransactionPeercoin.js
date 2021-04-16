@@ -1,3 +1,5 @@
+const { ADDRESS_N, TX_CACHE } = global.TestUtils;
+
 export default {
     method: 'signTransaction',
     setup: {
@@ -6,13 +8,13 @@ export default {
     tests: [
         {
             // See tx f7e3624c143b6a170cc44f9337d0fa8ea8564a211de9c077c6889d8c78f80909
-            description: 'Peercoin: sign',
+            description: 'Peercoin: 1 input, 1 output, no change',
             params: {
                 coin: 'Peercoin',
                 timestamp: 1573209226,
                 inputs: [
                     {
-                        address_n: [2147483692, 2147483654, 2147483648, 0, 0],
+                        address_n: ADDRESS_N("m/44'/6'/0'/0/0"),
                         prev_hash:
                             '41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d',
                         prev_index: 0,
@@ -26,35 +28,8 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
-                // since Peercoin doesn't have blockbook v2 implemented
-                refTxs: [
-                    {
-                        hash: '41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d',
-                        inputs: [
-                            {
-                                prev_hash:
-                                    '67abe6288fdec766e106a46125727eb7c608266950746fc10d1d1c69645f68af',
-                                prev_index: 0,
-                                script_sig:
-                                    '473044022052748f479c41b432352772ef7aa4b090e4f8df8d589aaea5cfc3dbef237a3935022012f53265e223c3cce6348306d7085b0538b68a52dbd99b0035a01b5bb2a8e50a0121038fa1b058febedda1a414ccb39f55ac09dd832e5c2e5af9b14ff49ea9d520b9fe',
-                                sequence: 4294967295,
-                            },
-                        ],
-                        bin_outputs: [
-                            {
-                                amount: '100000',
-                                script_pubkey: '76a914d68a96304b1fb73aadfea0f44c17061f5e353e1b88ac',
-                            },
-                            {
-                                amount: '695400',
-                                script_pubkey: '76a91460223495a70ca30abcee5b93687d5fa88fa5d4ec88ac',
-                            },
-                        ],
-                        version: 1,
-                        timestamp: 1573209046,
-                        lock_time: 0,
-                    },
-                ],
+                // https://blockbook.peercoin.net/tx/41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d
+                refTxs: TX_CACHE(['41b29a'], true),
             },
             result: {
                 serializedTx:
@@ -69,7 +44,7 @@ export default {
                 timestamp: 1573218223,
                 inputs: [
                     {
-                        address_n: [2147483692, 2147483654, 2147483648, 0, 0],
+                        address_n: ADDRESS_N("m/44'/6'/0'/0/0"),
                         prev_hash:
                             '41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d',
                         prev_index: 0,
@@ -78,41 +53,13 @@ export default {
                 ],
                 outputs: [
                     {
-                        address_n: [2147483692, 2147483654, 2147483648, 0, 1],
+                        address_n: ADDRESS_N("m/44'/6'/0'/0/1"),
                         amount: '900000',
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
-                // since Peercoin doesn't have blockbook v2 implemented
                 // https://blockbook.peercoin.net/tx/41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d
-                refTxs: [
-                    {
-                        hash: '41b29ad615d8eea40a4654a052d18bb10cd08f203c351f4d241f88b031357d3d',
-                        inputs: [
-                            {
-                                prev_hash:
-                                    '67abe6288fdec766e106a46125727eb7c608266950746fc10d1d1c69645f68af',
-                                prev_index: 0,
-                                script_sig:
-                                    '473044022052748f479c41b432352772ef7aa4b090e4f8df8d589aaea5cfc3dbef237a3935022012f53265e223c3cce6348306d7085b0538b68a52dbd99b0035a01b5bb2a8e50a0121038fa1b058febedda1a414ccb39f55ac09dd832e5c2e5af9b14ff49ea9d520b9fe',
-                                sequence: 4294967295,
-                            },
-                        ],
-                        bin_outputs: [
-                            {
-                                amount: '100000',
-                                script_pubkey: '76a914d68a96304b1fb73aadfea0f44c17061f5e353e1b88ac',
-                            },
-                            {
-                                amount: '695400',
-                                script_pubkey: '76a91460223495a70ca30abcee5b93687d5fa88fa5d4ec88ac',
-                            },
-                        ],
-                        version: 1,
-                        timestamp: 1573209046,
-                        lock_time: 0,
-                    },
-                ],
+                refTxs: TX_CACHE(['41b29a'], true),
             },
             result: false,
         },

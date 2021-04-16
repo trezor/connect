@@ -1,3 +1,5 @@
+const { ADDRESS_N, TX_CACHE } = global.TestUtils;
+
 export default {
     method: 'signTransaction',
     setup: {
@@ -5,12 +7,12 @@ export default {
     },
     tests: [
         {
-            description: 'bech32: 3 outputs',
+            description: 'Testnet (Bech32/P2WPKH): 1 input, 3 outputs',
             params: {
                 coin: 'Testnet',
                 inputs: [
                     {
-                        address_n: [84 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 0],
+                        address_n: ADDRESS_N("m/84'/1'/0'/0/0"),
                         amount: '129999867',
                         prev_hash:
                             'e294c4c172c3d87991b0369e45d6af8584be92914d01e3060fad1ed31d12ff00',
@@ -31,12 +33,13 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                     {
-                        address_n: [84 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/84'/1'/0'/1/0"),
                         amount: '99999694',
                         script_type: 'PAYTOWITNESS',
                     },
                 ],
                 locktime: 1287124,
+                refTxs: TX_CACHE(['e294c4']),
             },
             result: {
                 signatures: [
@@ -47,12 +50,12 @@ export default {
             },
         },
         {
-            description: 'bech32: 3 inputs',
+            description: 'Testnet (Bech32/P2WPKH): 3 inputs, no change',
             params: {
                 coin: 'Testnet',
                 inputs: [
                     {
-                        address_n: [84 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 0],
+                        address_n: ADDRESS_N("m/84'/1'/0'/0/0"),
                         amount: '100000',
                         prev_hash:
                             '70f9871eb03a38405cfd7a01e0e1448678132d815e2c9f552ad83ae23969509e',
@@ -61,7 +64,7 @@ export default {
                         sequence: 4294967293,
                     },
                     {
-                        address_n: [84 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 1],
+                        address_n: ADDRESS_N("m/84'/1'/0'/1/1"),
                         amount: '19899859',
                         prev_hash:
                             '70f9871eb03a38405cfd7a01e0e1448678132d815e2c9f552ad83ae23969509e',
@@ -70,7 +73,7 @@ export default {
                         sequence: 4294967293,
                     },
                     {
-                        address_n: [84 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 1],
+                        address_n: ADDRESS_N("m/84'/1'/0'/0/1"),
                         amount: '99999474',
                         prev_hash:
                             'f405b50dff7053f3697f485f95fe1c0f6a4f5e52446281b4ef470c2762a15dae',
@@ -87,6 +90,7 @@ export default {
                     },
                 ],
                 locktime: 1446137,
+                refTxs: TX_CACHE(['70f987', 'f405b5']),
             },
             result: {
                 signatures: [
@@ -99,12 +103,12 @@ export default {
             },
         },
         {
-            description: 'bech32: OP_RETURN',
+            description: 'Testnet (Bech32/P2WPKH): 1 input, OP_RETURN output + change',
             params: {
                 coin: 'Testnet',
                 inputs: [
                     {
-                        address_n: [84 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 4],
+                        address_n: ADDRESS_N("m/84'/1'/0'/1/4"),
                         amount: '7802513',
                         prev_hash:
                             'ae0949b1b050ac6f92c7d9c1570f2f06c21a997eef8be9ef5edc2a38cb92a879',
@@ -120,11 +124,12 @@ export default {
                         script_type: 'PAYTOOPRETURN',
                     },
                     {
-                        address_n: [84 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 1, 5],
+                        address_n: ADDRESS_N("m/84'/1'/0'/1/5"),
                         amount: '7802363',
                         script_type: 'PAYTOWITNESS',
                     },
                 ],
+                refTxs: TX_CACHE(['ae0949']),
             },
             result: {
                 signatures: [

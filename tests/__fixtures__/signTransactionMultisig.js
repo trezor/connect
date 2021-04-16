@@ -51,7 +51,7 @@ export default {
     },
     tests: [
         {
-            description: 'Multisig: 2 of 3 (sign with 1st key)',
+            description: 'Bitcoin (multisig): 2 of 3 (sign with 1st key)',
             params: {
                 coin: 'Bitcoin',
                 inputs: [
@@ -76,14 +76,14 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
-                refTxs: [TX_CACHE('c6091a')],
+                refTxs: TX_CACHE(['c6091a']),
             },
             result: {
                 signatures: [SIGNATURES_2_OF_3[0]],
             },
         },
         {
-            description: 'Multisig: 2 of 3 (sign with 3rd key)',
+            description: 'Bitcoin (multisig): 2 of 3 (sign with 3rd key)',
             params: {
                 coin: 'Bitcoin',
                 inputs: [
@@ -108,7 +108,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
-                refTxs: [TX_CACHE('c6091a')],
+                refTxs: TX_CACHE(['c6091a']),
             },
             result: {
                 signatures: [SIGNATURES_2_OF_3[1]],
@@ -117,7 +117,7 @@ export default {
             },
         },
         {
-            description: 'Multisig: 15 of 15 (sign with 15th key)',
+            description: 'Bitcoin (multisig): 15 of 15 (sign with 15th key)',
             mnemonic: 'mnemonic_12',
             params: {
                 coin: 'Bitcoin',
@@ -160,7 +160,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
-                refTxs: [TX_CACHE('6189e3')],
+                refTxs: TX_CACHE(['6189e3']),
             },
             result: {
                 signatures: [
@@ -171,7 +171,7 @@ export default {
             },
         },
         {
-            description: 'Multisig: missing pubkey (different seed)',
+            description: 'Bitcoin (multisig): missing pubkey (different seed)',
             mnemonic: 'mnemonic_12',
             params: {
                 coin: 'Bitcoin',
@@ -197,7 +197,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
-                refTxs: [TX_CACHE('c6091a')],
+                refTxs: TX_CACHE(['c6091a']),
             },
             result: false,
         },

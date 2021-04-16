@@ -1,3 +1,5 @@
+const { ADDRESS_N, TX_CACHE } = global.TestUtils;
+
 export default {
     method: 'signTransaction',
     setup: {
@@ -14,7 +16,7 @@ export default {
                 coin: 'Zcash',
                 inputs: [
                     {
-                        address_n: [2147483692, 2147483781, 2147483648, 0, 0],
+                        address_n: ADDRESS_N("m/44'/133'/0'/0/0"),
                         prev_hash:
                             '29d25589db4623d1a33c58745b8f95b131f49841c79dcd171847d0d7e9e2dc3a',
                         prev_index: 0,
@@ -27,6 +29,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['29d255']),
             },
             result: {
                 serializedTx:
@@ -43,13 +46,13 @@ export default {
                 coin: 'Zcash',
                 inputs: [
                     {
-                        address_n: [2147483692, 2147483781, 2147483648, 0, 2],
+                        address_n: ADDRESS_N("m/44'/133'/0'/0/2"),
                         prev_hash:
                             '84533aa6244bcee68040d851dc4f502838ed3fd9ce838e2e48dbf440e7f4df2a',
                         prev_index: 0,
                     },
                     {
-                        address_n: [2147483692, 2147483781, 2147483648, 1, 0],
+                        address_n: ADDRESS_N("m/44'/133'/0'/1/0"),
                         prev_hash:
                             '84533aa6244bcee68040d851dc4f502838ed3fd9ce838e2e48dbf440e7f4df2a',
                         prev_index: 1,
@@ -62,6 +65,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['84533a']),
             },
             result: {
                 serializedTx:
@@ -80,14 +84,14 @@ export default {
                 branchId: 0x5ba81b19,
                 inputs: [
                     {
-                        address_n: [2147483692, 2147483781, 2147483648, 0, 2],
+                        address_n: ADDRESS_N("m/44'/133'/0'/0/2"),
                         prev_hash:
                             '6df53ccdc6fa17e1cd248f7ec57e86178d6f96f2736bdf978602992b5850ac79',
                         prev_index: 1,
                         amount: '5748208',
                     },
                     {
-                        address_n: [2147483692, 2147483781, 2147483648, 1, 0],
+                        address_n: ADDRESS_N("m/44'/133'/0'/1/0"),
                         prev_hash:
                             'e7e1d11992e8fcb88e051e59c2917d78dd9fcd857ee042e0263e995590f02ee3',
                         prev_index: 0,
@@ -96,7 +100,7 @@ export default {
                 ],
                 outputs: [
                     {
-                        address_n: [2147483692, 2147483781, 2147483648, 2, 0],
+                        address_n: ADDRESS_N("m/44'/133'/0'/2/0"),
                         amount: '9800000',
                         script_type: 'PAYTOADDRESS',
                     },
@@ -106,6 +110,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['6df53c', 'e7e1d1']),
             },
             result: false, // since 2.3.3 Failure_DataError Unsupported transaction version.
             // result: {
@@ -124,7 +129,7 @@ export default {
                 branchId: 0x76b809bb,
                 inputs: [
                     {
-                        address_n: [2147483692, 2147483781, 2147483648, 0, 2],
+                        address_n: ADDRESS_N("m/44'/133'/0'/0/2"),
                         prev_hash:
                             '4264f5f339c9fd498976dabb6d7b8819e112d25a0c1770a0f3ee81de525de8f8',
                         prev_index: 0,
@@ -138,6 +143,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['4264f5']),
             },
             result: {
                 serializedTx:
@@ -156,7 +162,7 @@ export default {
                 branchId: 0x76b809bb,
                 inputs: [
                     {
-                        address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 0],
+                        address_n: ADDRESS_N("m/44'/1'/0'/0/0"),
                         prev_hash:
                             'e3820602226974b1dd87b7113cc8aea8c63e5ae29293991e7bfa80c126930368',
                         prev_index: 0,
@@ -170,44 +176,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
-                refTxs: [
-                    {
-                        hash: 'e3820602226974b1dd87b7113cc8aea8c63e5ae29293991e7bfa80c126930368',
-                        inputs: [
-                            {
-                                prev_hash:
-                                    '4e8e8c5a5524cb8b20d05aefd5b1fd004d6c8c584e3e314876f13edb5ba0eead',
-                                prev_index: 0,
-                                script_sig:
-                                    '473044022064e1e5f957308fcc91f7b174113c8e3cb8060b1404ae823ab3f77f313d5b557b02204b2afcde9ef8b61f5e85192c38fb82307d077ec91d2c8249aa69e19967df8c0c01210201d494a45f36f545443bafd1a9050b02f448dd236bb4ce2602f83978980b98f2',
-                                sequence: 4294967294,
-                            },
-                            {
-                                prev_hash:
-                                    '7afab9216fee6763ffbd6a412d46d68c480220af093c9becee6f79d41b954b13',
-                                prev_index: 0,
-                                script_sig:
-                                    '47304402207f63a484ee75900ce2b0e2a5f0d52f2cfb5d1475588576f645c20ecf5e04659a02205c9b614ca846b0cb9ff4a72ca8482c9aed542282b9ee8eaa70a5f472408f3f04012103e974b89ace172f24bb25f8137d19c4205c5cf6bb6505454230ea172f54152d08',
-                                sequence: 4294967294,
-                            },
-                        ],
-                        bin_outputs: [
-                            {
-                                amount: '300000000',
-                                script_pubkey: '76a914a579388225827d9f2fe9014add644487808c695d88ac',
-                            },
-                            {
-                                amount: '1251648',
-                                script_pubkey: '76a91474374446b18916decd3292384ea73006ebd268ba88ac',
-                            },
-                        ],
-                        version: 3,
-                        version_group_id: 63210096,
-                        expiry: 261318,
-                        extra_data: '00',
-                        lock_time: 261287,
-                    },
-                ],
+                refTxs: TX_CACHE(['e38206'], true),
             },
             result: {
                 serializedTx:
@@ -225,7 +194,7 @@ export default {
                 branchId: 0x2bb40e60,
                 inputs: [
                     {
-                        address_n: [44 | 0x80000000, 1 | 0x80000000, 0 | 0x80000000, 0, 4],
+                        address_n: ADDRESS_N("m/44'/1'/0'/0/4"),
                         prev_hash:
                             '86850826b043dd9826b4700c555c06bc8b5713938b4e47cb5ecd60679c6d81dc',
                         prev_index: 1,
@@ -239,45 +208,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
-                refTxs: [
-                    {
-                        hash: '86850826b043dd9826b4700c555c06bc8b5713938b4e47cb5ecd60679c6d81dc',
-                        inputs: [
-                            {
-                                prev_hash:
-                                    '11c140a0228e7b0acc6a64b05fccc45e35baacd95987b5a2bd22224abc6be1f6',
-                                prev_index: 1,
-                                script_sig:
-                                    '4730440220376326ae123d6ebec7f3c9e2b5ae209f44bebc66f9d17abde9eed4b7f529ccd20220151d679a1ea5de66442639472c92c0b7c838549404744b62b1eca3ffaa3c2ef20121022f16499c44a27f263c33741368222828c730fd1062215ba8481b15331f428fe3',
-                                sequence: 4294967295,
-                            },
-                            {
-                                prev_hash:
-                                    '56f4846719dd83a51d170f6f970b1341508d5579163f636547debce2774f2d24',
-                                prev_index: 1,
-                                script_sig:
-                                    '48304502210084714bd8b6063a74e8eb5116385ea590389400fc79a9ec8df2b0fee833b7f4d002204883986f8853a1aabb6ead9d8fc4d171bcf1fe42702f08c285f00bb3bffbdeae0121020d70ec7da45380b4d521aa887b6cbaac3aa8857ec475dfddc221d21f908b40e7',
-                                sequence: 4294967295,
-                            },
-                        ],
-                        bin_outputs: [
-                            {
-                                amount: '49996210',
-                                script_pubkey: '76a9145887384835b98c089f51e1f6bcaf228ffa486fd788ac',
-                            },
-                            {
-                                amount: '50000000',
-                                script_pubkey: '76a914548cb80e45b1d36312fe0cb075e5e337e3c54cef88ac',
-                            },
-                        ],
-                        version: 4,
-                        version_group_id: 2301567109,
-                        branch_id: 0,
-                        expiry: 0,
-                        lock_time: 0,
-                        extra_data: '0000000000000000000000',
-                    },
-                ],
+                refTxs: TX_CACHE(['868508'], true),
             },
             result: {
                 serializedTx:

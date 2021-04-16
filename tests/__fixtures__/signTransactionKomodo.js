@@ -1,3 +1,5 @@
+const { ADDRESS_N, TX_CACHE } = global.TestUtils;
+
 export default {
     method: 'signTransaction',
     setup: {
@@ -15,7 +17,7 @@ export default {
                 locktime: 1563046072,
                 inputs: [
                     {
-                        address_n: [2147483692, 2147483789, 2147483648, 0, 0],
+                        address_n: ADDRESS_N("m/44'/141'/0'/0/0"),
                         prev_hash:
                             '2807c5b126ec8e2b078cab0f12e4c8b4ce1d7724905f8ebef8dca26b0c8e0f1d',
                         prev_index: 0,
@@ -29,31 +31,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
-                refTxs: [
-                    {
-                        hash: '2807c5b126ec8e2b078cab0f12e4c8b4ce1d7724905f8ebef8dca26b0c8e0f1d',
-                        inputs: [
-                            {
-                                prev_hash:
-                                    '340d478f0c5750057d5f5028db8c10993578849e63f5cf8500e33ddefcd5334f',
-                                prev_index: 0,
-                                script_sig:
-                                    '483045022100d29433faed373d23883ace59acda117a67d6e8e3e99bc767b96a183a840b4aec0220258baef0d63360324f2a455299b2695ae2fa727a5969a25a604c22086e36c6e9012102a87aef7b1a8f676e452d6240767699719cd58b0261c822472c25df146938bca5',
-                                sequence: 4294967295,
-                            },
-                        ],
-                        bin_outputs: [
-                            {
-                                amount: '1099980000',
-                                script_pubkey: '76a91400178fa0b6fc253a3a402ee2cadd8a7bfec08f6388ac',
-                            },
-                        ],
-                        version: 4,
-                        version_group_id: 2301567109,
-                        lock_time: 0,
-                        extra_data: '0000000000000000000000',
-                    },
-                ],
+                refTxs: TX_CACHE(['2807c5'], true),
             },
             result: {
                 serializedTx:
@@ -71,7 +49,7 @@ export default {
                 locktime: 0x5d2af1f2,
                 inputs: [
                     {
-                        address_n: [2147483692, 2147483789, 2147483648, 0, 0],
+                        address_n: ADDRESS_N("m/44'/141'/0'/0/0"),
                         prev_hash:
                             '7b28bd91119e9776f0d4ebd80e570165818a829bbf4477cd1afe5149dbcd34b1',
                         prev_index: 0,
@@ -90,32 +68,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
-                refTxs: [
-                    {
-                        hash: '7b28bd91119e9776f0d4ebd80e570165818a829bbf4477cd1afe5149dbcd34b1',
-                        inputs: [
-                            {
-                                prev_hash:
-                                    '2807c5b126ec8e2b078cab0f12e4c8b4ce1d7724905f8ebef8dca26b0c8e0f1d',
-                                prev_index: 0,
-                                script_sig:
-                                    '4730440220158c970ca2fc6bcc33026eb5366f0342f63b35d178f7efb334b1df78fe90b67202207bc4ff69f67cf843b08564a5adc77bf5593e28ab4d5104911824ac13fe885d8f012102a87aef7b1a8f676e452d6240767699719cd58b0261c822472c25df146938bca5',
-                                sequence: 4294967295,
-                            },
-                        ],
-                        bin_outputs: [
-                            {
-                                amount: '1099970000',
-                                script_pubkey: '76a91400178fa0b6fc253a3a402ee2cadd8a7bfec08f6388ac',
-                            },
-                        ],
-                        version: 4,
-                        version_group_id: 2301567109,
-                        branch_id: 1991772603,
-                        lock_time: 1563046072,
-                        extra_data: '0000000000000000000000',
-                    },
-                ],
+                refTxs: TX_CACHE(['7b28bd'], true),
             },
             result: {
                 serializedTx:
