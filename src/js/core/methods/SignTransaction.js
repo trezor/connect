@@ -17,6 +17,7 @@ import {
     enhanceTrezorInputs,
     validateTrezorOutputs,
     getReferencedTransactions,
+    validateReferencedTransactions,
     transformReferencedTransactions,
     getOrigTransactions,
     transformOrigTransactions,
@@ -63,33 +64,17 @@ export default class SignTransaction extends AbstractMethod {
             { name: 'push', type: 'boolean' },
         ]);
 
-        const coinInfo: ?BitcoinNetworkInfo = getBitcoinNetwork(payload.coin);
+        const coinInfo = getBitcoinNetwork(payload.coin);
         if (!coinInfo) {
             throw ERRORS.TypedError('Method_UnknownCoin');
-        } else {
-            // set required firmware from coinInfo support
-            this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
-            this.info = getLabel('Sign #NETWORK transaction', coinInfo);
         }
-
-        if (Object.prototype.hasOwnProperty.call(payload, 'refTxs')) {
-            payload.refTxs.forEach(tx => {
-                validateParams(tx, [
-                    { name: 'hash', type: 'string', obligatory: true },
-                    { name: 'inputs', type: 'array', obligatory: true },
-                    { name: 'bin_outputs', type: 'array', obligatory: !Array.isArray(tx.outputs) },
-                    { name: 'outputs', type: 'array' },
-                    { name: 'version', type: 'number', obligatory: true },
-                    { name: 'lock_time', type: 'number', obligatory: true },
-                    { name: 'extra_data', type: 'string' },
-                    { name: 'timestamp', type: 'number' },
-                    { name: 'version_group_id', type: 'number' },
-                ]);
-            });
-        }
+        // set required firmware from coinInfo support
+        this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
+        this.info = getLabel('Sign #NETWORK transaction', coinInfo);
 
         const inputs = validateTrezorInputs(payload.inputs, coinInfo);
         const outputs = validateTrezorOutputs(payload.outputs, coinInfo);
+        const refTxs = validateReferencedTransactions(payload.refTxs, inputs, outputs);
 
         const outputsWithAmount = outputs.filter(
             output =>
@@ -112,7 +97,7 @@ export default class SignTransaction extends AbstractMethod {
         this.params = {
             inputs,
             outputs: payload.outputs,
-            refTxs: payload.refTxs,
+            refTxs,
             addresses: payload.account ? payload.account.addresses : undefined,
             options: {
                 lock_time: payload.locktime,

@@ -10,6 +10,8 @@ import type { Input as BitcoinJsInput, Output as BitcoinJsOutput } from '@trezor
 // local modules
 import { reverseBuffer } from '../../../utils/bufferUtils';
 import { getHDPath, getScriptType, getOutputScriptType } from '../../../utils/pathUtils';
+import { validateParams } from '../helpers/paramsValidator';
+import { TypedError } from '../../../constants/errors';
 // local types
 import type { CoinInfo, RefTransaction, AccountAddresses } from '../../../types';
 import type { TxInputType, TxOutputType } from '../../../types/trezor/protobuf';
@@ -202,3 +204,88 @@ export const transformReferencedTransactions = (
             },
         ];
     });
+
+// Validate referenced transactions provided by the user.
+// Data sent as response to TxAck needs to be strict.
+// They should not contain any fields unknown/unexpected by protobuf.
+export const validateReferencedTransactions = (
+    txs: RefTransaction[] | typeof undefined,
+    inputs: TxInputType[],
+    outputs: TxOutputType[],
+) => {
+    if (!Array.isArray(txs) || txs.length === 0) return; // allow empty, they will be downloaded later...
+    // collect sets of transactions defined by inputs/outputs
+    const refTxs = getReferencedTransactions(inputs);
+    const origTxs = getOrigTransactions(inputs, outputs); // NOTE: origTxs are used in RBF
+    const transformedTxs: RefTransaction[] = txs.map(tx => {
+        // validate common fields
+        // TODO: detailed params validation will be addressed in https://github.com/trezor/connect/pull/782
+        // currently it's 1:1 with previous validation in SignTransaction.js method
+        validateParams(tx, [
+            { name: 'hash', type: 'string', obligatory: true },
+            { name: 'inputs', type: 'array', obligatory: true },
+            { name: 'version', type: 'number', obligatory: true },
+            { name: 'lock_time', type: 'number', obligatory: true },
+            { name: 'extra_data', type: 'string' },
+            { name: 'timestamp', type: 'number' },
+            { name: 'version_group_id', type: 'number' },
+        ]);
+
+        // check if referenced transaction is in expected format (RBF)
+        if (origTxs.includes(tx.hash)) {
+            // validate specific fields of origTx
+            // protobuf.TxInput
+            validateParams(tx, [{ name: 'outputs', type: 'array', obligatory: true }]);
+            // TODO: detailed validation will be addressed in #782
+            return tx;
+        }
+
+        // validate specific fields of refTx
+        validateParams(tx, [{ name: 'bin_outputs', type: 'array', obligatory: true }]);
+        tx.inputs.forEach(input => {
+            validateParams(input, [
+                { name: 'prev_hash', type: 'string', obligatory: true },
+                { name: 'prev_index', type: 'number', obligatory: true },
+                { name: 'script_sig', type: 'string', obligatory: true },
+                { name: 'sequence', type: 'number', obligatory: true },
+                { name: 'decred_tree', type: 'number' },
+            ]);
+        });
+
+        return {
+            hash: tx.hash,
+            version: tx.version,
+            extra_data: tx.extra_data,
+            lock_time: tx.lock_time,
+            timestamp: tx.timestamp,
+            version_group_id: tx.version_group_id,
+            expiry: tx.expiry,
+            // make exact protobuf.PrevInput
+            inputs: tx.inputs.map(input => ({
+                prev_hash: input.prev_hash,
+                prev_index: input.prev_index,
+                // $FlowIssue: PrevInput/TxInput union, validated above, TODO: will be addressed in #782
+                script_sig: input.script_sig,
+                // $FlowIssue: PrevInput/TxInput union, validated above, TODO: will be addressed #782
+                sequence: input.sequence,
+                decred_tree: input.decred_tree,
+            })),
+            // make exact protobuf.TxOutputBinType
+            // $FlowIssue, bin_inputs presence validated above, TODO: will be addressed in #782
+            bin_outputs: tx.bin_outputs.map(output => ({
+                amount: output.amount,
+                script_pubkey: output.script_pubkey,
+                decred_script_version: output.decred_script_version,
+            })),
+        };
+    });
+
+    // check if all required transactions defined by inputs/outputs were provided
+    refTxs.concat(origTxs).forEach(hash => {
+        if (!transformedTxs.find(tx => tx.hash === hash)) {
+            throw TypedError('Method_InvalidParameter', `refTx: ${hash} not provided`);
+        }
+    });
+
+    return transformedTxs;
+};
