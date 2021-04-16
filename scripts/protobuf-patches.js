@@ -178,17 +178,11 @@ export type TxOutputType = {|
 
     TxAck: `// - TxAck replacement
 // TxAck needs more exact types
-// differences: RefTxInputType (no address_n) and TxInputType, partial exact responses in TxAckResponse
-export type RefTxInputType = {|
-    prev_hash: string;
-    prev_index: number;
-    script_sig: string;
-    sequence: number;
-    decred_tree?: number;
-|};
+// PrevInput and TxInputType requires exact responses in TxAckResponse
+// main difference: PrevInput should not contain address_n (unexpected field by protobuf)
 
 export type TxAckResponse = {|
-    inputs: Array<TxInputType | RefTxInputType>;
+    inputs: Array<TxInputType | PrevInput>;
 |} | {|
     bin_outputs: TxOutputBinType[];
 |} | {|

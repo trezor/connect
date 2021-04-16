@@ -163,6 +163,7 @@ const ORDER = {
     HDNodeType: 'HDNodePathType',
     CardanoAssetGroupType: 'CardanoTxOutputType',
     CardanoTokenType: 'CardanoAssetGroupType',
+    TxAck: 'TxAckInputWrapper',
 };
 Object.keys(ORDER).forEach(key => {
     // find indexes
