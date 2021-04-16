@@ -364,44 +364,6 @@ export type TxOutputType = {
 };
 // - TxOutputType replacement end
 
-// TxAck
-// - TxAck replacement
-// TxAck needs more exact types
-// differences: RefTxInputType (no address_n) and TxInputType, partial exact responses in TxAckResponse
-export type RefTxInputType = {
-    prev_hash: string;
-    prev_index: number;
-    script_sig: string;
-    sequence: number;
-    decred_tree?: number;
-};
-
-export type TxAckResponse = {
-    inputs: Array<TxInputType | RefTxInputType>;
-} | {
-    bin_outputs: TxOutputBinType[];
-} | {
-    outputs: TxOutputType[];
-} | {
-    extra_data: string;
-} | {
-    version?: number;
-    lock_time?: number;
-    inputs_cnt: number;
-    outputs_cnt: number;
-    extra_data?: string;
-    extra_data_len?: number;
-    timestamp?: number;
-    version_group_id?: number;
-    expiry?: number;
-    branch_id?: number;
-};
-
-export type TxAck = {
-    tx: TxAckResponse;
-};
-// - TxAck replacement end
-
 // TxInput
 export type TxInput = {
     address_n: number[];
@@ -455,6 +417,38 @@ export type PrevOutput = {
     script_pubkey: string;
     decred_script_version?: number;
 };
+
+// TxAck
+// - TxAck replacement
+// TxAck needs more exact types
+// PrevInput and TxInputType requires exact responses in TxAckResponse
+// main difference: PrevInput should not contain address_n (unexpected field by protobuf)
+
+export type TxAckResponse = {
+    inputs: Array<TxInputType | PrevInput>;
+} | {
+    bin_outputs: TxOutputBinType[];
+} | {
+    outputs: TxOutputType[];
+} | {
+    extra_data: string;
+} | {
+    version?: number;
+    lock_time?: number;
+    inputs_cnt: number;
+    outputs_cnt: number;
+    extra_data?: string;
+    extra_data_len?: number;
+    timestamp?: number;
+    version_group_id?: number;
+    expiry?: number;
+    branch_id?: number;
+};
+
+export type TxAck = {
+    tx: TxAckResponse;
+};
+// - TxAck replacement end
 
 export type TxAckInputWrapper = {
     input: TxInput;

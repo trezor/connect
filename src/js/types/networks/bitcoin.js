@@ -1,6 +1,6 @@
 /* @flow */
 import type {
-    RefTxInputType,
+    PrevInput,
     TxInput as OrigTxInputType,
     TxInputType,
     TxOutputType,
@@ -48,7 +48,7 @@ export type RefTransaction =
     | {
           hash: string,
           version: number,
-          inputs: RefTxInputType[],
+          inputs: PrevInput[],
           bin_outputs: TxOutputBinType[],
           outputs?: typeof undefined,
           lock_time: number,

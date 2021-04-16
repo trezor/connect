@@ -1,5 +1,5 @@
 import {
-    RefTxInputType,
+    PrevInput,
     TxInput as OrigTxInputType,
     TxInputType,
     TxOutputType,
@@ -46,7 +46,7 @@ export interface HDNodeResponse {
 export type RefTransaction = {
     hash: string;
     version: number;
-    inputs: RefTxInputType[];
+    inputs: PrevInput[];
     bin_outputs: TxOutputBinType[];
     outputs?: undefined;
     lock_time: number;
