@@ -1,3 +1,5 @@
+const { ADDRESS_N, TX_CACHE } = global.TestUtils;
+
 const xpubExt1 =
     'tpubDADHV9u9Y6gkggintTdMjJE3be58zKNLhpxBQyuEM6Pwx3sN9JVLmMCMN4DNVwL9AKec27z5TaWcWuHzMXiGAtcra5DjwWbvppGX4gaEGVN';
 const xpubExt2 =
@@ -66,7 +68,7 @@ export default {
     },
     tests: [
         {
-            description: 'MultisigChange: external external',
+            description: 'Testnet (multisig): external external',
             params: {
                 coin: 'Testnet',
                 inputs: [input1, input2],
@@ -82,6 +84,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['16c6c8', 'd80c34']),
             },
             result: {
                 serializedTx:
@@ -89,7 +92,7 @@ export default {
             },
         },
         {
-            description: 'MultisigChange: external internal',
+            description: 'Testnet (multisig): external internal',
             params: {
                 coin: 'Testnet',
                 inputs: [input1, input2],
@@ -100,11 +103,12 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                     {
-                        address_n: [45 | 0x80000000, 0, 1, 1],
+                        address_n: ADDRESS_N("m/45'/0/1/1"),
                         amount: '44000000',
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['16c6c8', 'd80c34']),
             },
             result: {
                 serializedTx:
@@ -112,22 +116,23 @@ export default {
             },
         },
         {
-            description: 'MultisigChange: internal external',
+            description: 'Testnet (multisig): internal internal',
             params: {
                 coin: 'Testnet',
                 inputs: [input1, input2],
                 outputs: [
                     {
-                        address_n: [45 | 0x80000000, 0, 1, 0],
+                        address_n: ADDRESS_N("m/45'/0/1/0"),
                         amount: '40000000',
                         script_type: 'PAYTOADDRESS',
                     },
                     {
-                        address_n: [45 | 0x80000000, 0, 1, 1],
+                        address_n: ADDRESS_N("m/45'/0/1/1"),
                         amount: '44000000',
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['16c6c8', 'd80c34']),
             },
             result: {
                 serializedTx:
@@ -135,7 +140,7 @@ export default {
             },
         },
         {
-            description: 'MultisigChange: multisig external external',
+            description: 'Testnet (multisig): external external',
             params: {
                 coin: 'Testnet',
                 inputs: [input1, input2],
@@ -151,6 +156,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['16c6c8', 'd80c34']),
             },
             result: {
                 serializedTx:

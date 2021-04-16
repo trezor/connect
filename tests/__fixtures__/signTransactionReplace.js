@@ -1,5 +1,4 @@
-const { ADDRESS_N } = global.TestUtils;
-// const { ADDRESS_N, TX_CACHE } = global.TestUtils;
+const { ADDRESS_N, TX_CACHE } = global.TestUtils;
 
 export default {
     method: 'signTransaction',
@@ -8,7 +7,7 @@ export default {
     },
     tests: [
         {
-            description: 'Replace tx P2PKH: bump fee',
+            description: 'Bitcoin (RBF): P2PKH bump fee',
             params: {
                 coin: 'Bitcoin',
                 inputs: [
@@ -41,7 +40,7 @@ export default {
                         orig_index: 1,
                     },
                 ],
-                // refTxs: [TX_CACHE('beafc7'), TX_CACHE('50f6f1')],
+                refTxs: TX_CACHE(['beafc7', '50f6f1']),
             },
             result: {
                 serializedTx:
@@ -49,7 +48,7 @@ export default {
             },
         },
         {
-            description: 'Replace tx P2PKH in P2SH, remove change',
+            description: 'Testnet (RBF): P2PKH in P2SH, remove change',
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -86,7 +85,7 @@ export default {
                         orig_index: 0,
                     },
                 ],
-                // refTxs: [TX_CACHE('5e7667'), TX_CACHE('efaa41'), TX_CACHE('334cd7')],
+                refTxs: TX_CACHE(['5e7667', 'efaa41', '334cd7']),
             },
             result: {
                 serializedTx:
@@ -94,7 +93,7 @@ export default {
             },
         },
         {
-            description: 'Replace tx P2WPKH finalize',
+            description: 'Testnet (RBF): Bech32/P2WPKH finalize',
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -130,7 +129,7 @@ export default {
                     },
                 ],
                 locktime: 1348713,
-                // refTxs: [TX_CACHE('43d273'), TX_CACHE('70f987')],
+                refTxs: TX_CACHE(['43d273', '70f987']),
             },
             result: {
                 serializedTx:
@@ -139,7 +138,7 @@ export default {
         },
         {
             skip: ['1'], // disable this for T1. Failure_DataError: messages.c:224:missing required field
-            description: 'Replace tx: Meld transactions',
+            description: 'Testnet (RBF): Meld transactions',
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -210,7 +209,7 @@ export default {
                         script_type: 'PAYTOP2SHWITNESS',
                     },
                 ],
-                // refTxs: [TX_CACHE('5e7667'), TX_CACHE('efaa41'), TX_CACHE('334cd7'), TX_CACHE('6673b7'), TX_CACHE('ed89ac'), TX_CACHE('927784')],
+                refTxs: TX_CACHE(['5e7667', 'efaa41', '334cd7', '6673b7', 'ed89ac', '927784']),
             },
             result: {
                 serializedTx:
@@ -218,7 +217,7 @@ export default {
             },
         },
         {
-            description: 'Replace tx: OP_RETURN tx',
+            description: 'Testnet (RBF): with OP_RETURN output',
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -254,7 +253,7 @@ export default {
                         orig_index: 1,
                     },
                 ],
-                // refTxs: [TX_CACHE('408397'), TX_CACHE('ba917a')],
+                refTxs: TX_CACHE(['408397', 'ba917a']),
             },
             result: {
                 serializedTx:

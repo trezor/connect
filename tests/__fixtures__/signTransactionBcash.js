@@ -1,3 +1,5 @@
+const { ADDRESS_N, TX_CACHE } = global.TestUtils;
+
 export default {
     method: 'signTransaction',
     setup: {
@@ -5,12 +7,12 @@ export default {
     },
     tests: [
         {
-            description: 'Bcash: change',
+            description: 'Bcash: 1 input, 1 output, 1 change',
             params: {
                 coin: 'Bcash',
                 inputs: [
                     {
-                        address_n: [44 | 0x80000000, 145 | 0x80000000, 0 | 0x80000000, 0, 0],
+                        address_n: ADDRESS_N("m/44'/145'/0'/0/0"),
                         amount: '1995344',
                         prev_hash:
                             'bc37c28dfb467d2ecb50261387bf752a3977d7e5337915071bb4151e6b711a78',
@@ -18,10 +20,9 @@ export default {
                         script_type: 'SPENDADDRESS',
                     },
                 ],
-
                 outputs: [
                     {
-                        address_n: [44 | 0x80000000, 145 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/44'/145'/0'/1/0"),
                         amount: '1896050',
                         script_type: 'PAYTOADDRESS',
                     },
@@ -31,6 +32,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['bc37c2']),
             },
             result: {
                 signatures: [
@@ -41,12 +43,12 @@ export default {
             },
         },
         {
-            description: 'Bcash: no change',
+            description: 'Bcash: 2 inputs, 1 output, no change',
             params: {
                 coin: 'Bcash',
                 inputs: [
                     {
-                        address_n: [44 | 0x80000000, 145 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/44'/145'/0'/1/0"),
                         amount: '1896050',
                         prev_hash:
                             '502e8577b237b0152843a416f8f1ab0c63321b1be7a8cad7bf5c5c216fcf062c',
@@ -54,7 +56,7 @@ export default {
                         script_type: 'SPENDADDRESS',
                     },
                     {
-                        address_n: [44 | 0x80000000, 145 | 0x80000000, 0 | 0x80000000, 0, 1],
+                        address_n: ADDRESS_N("m/44'/145'/0'/0/1"),
                         amount: '73452',
                         prev_hash:
                             '502e8577b237b0152843a416f8f1ab0c63321b1be7a8cad7bf5c5c216fcf062c',
@@ -69,6 +71,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['502e85']),
             },
             result: {
                 signatures: [
@@ -85,7 +88,7 @@ export default {
                 coin: 'Bcash',
                 inputs: [
                     {
-                        address_n: [44 | 0x80000000, 145 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/44'/145'/0'/1/0"),
                         amount: '1896050',
                         prev_hash:
                             '502e8577b237b0152843a416f8f1ab0c63321b1be7a8cad7bf5c5c216fcf062c',
@@ -93,7 +96,7 @@ export default {
                         script_type: 'SPENDADDRESS',
                     },
                     {
-                        address_n: [44 | 0x80000000, 145 | 0x80000000, 0 | 0x80000000, 0, 1],
+                        address_n: ADDRESS_N("m/44'/145'/0'/0/1"),
                         amount: '73452',
                         prev_hash:
                             '502e8577b237b0152843a416f8f1ab0c63321b1be7a8cad7bf5c5c216fcf062c',
@@ -101,7 +104,6 @@ export default {
                         script_type: 'SPENDADDRESS',
                     },
                 ],
-
                 outputs: [
                     {
                         address: '15pnEDZJo3ycPUamqP3tEDnEju1oW5fBCz',
@@ -109,6 +111,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['502e85']),
             },
             result: false,
             // possible since 2.3.5?

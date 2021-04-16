@@ -1,3 +1,5 @@
+const { ADDRESS_N, TX_CACHE } = global.TestUtils;
+
 export default {
     method: 'signTransaction',
     setup: {
@@ -5,12 +7,12 @@ export default {
     },
     tests: [
         {
-            description: 'Bgold: change',
+            description: 'Bgold: 1 input, 1output, 1 change',
             params: {
                 coin: 'Bgold',
                 inputs: [
                     {
-                        address_n: [44 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 0, 0],
+                        address_n: ADDRESS_N("m/44'/156'/0'/0/0"),
                         amount: '1252382934',
                         prev_hash:
                             '25526bf06c76ad3082bba930cf627cdd5f1b3cd0b9907dd7ff1a07e14addc985',
@@ -20,7 +22,7 @@ export default {
                 ],
                 outputs: [
                     {
-                        address_n: [44 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/44'/156'/0'/1/0"),
                         amount: '1896050',
                         script_type: 'PAYTOADDRESS',
                     },
@@ -30,6 +32,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['25526b']),
             },
             result: {
                 serializedTx:
@@ -37,12 +40,12 @@ export default {
             },
         },
         {
-            description: 'Bgold: no change',
+            description: 'Bgold: 2 inputs, 1 output, no change',
             params: {
                 coin: 'Bgold',
                 inputs: [
                     {
-                        address_n: [44 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/44'/156'/0'/1/0"),
                         amount: '1252382934',
                         prev_hash:
                             '25526bf06c76ad3082bba930cf627cdd5f1b3cd0b9907dd7ff1a07e14addc985',
@@ -50,7 +53,7 @@ export default {
                         script_type: 'SPENDADDRESS',
                     },
                     {
-                        address_n: [44 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 1, 1],
+                        address_n: ADDRESS_N("m/44'/156'/0'/1/1"),
                         amount: '38448607',
                         prev_hash:
                             'db77c2461b840e6edbe7f9280043184a98e020d9795c1b65cb7cef2551a8fb18',
@@ -58,7 +61,6 @@ export default {
                         script_type: 'SPENDADDRESS',
                     },
                 ],
-
                 outputs: [
                     {
                         address: 'GfDB1tvjfm3bukeoBTtfNqrJVFohS2kCTe',
@@ -66,6 +68,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['25526b', 'db77c2']),
             },
             result: {
                 serializedTx:
@@ -73,12 +76,12 @@ export default {
             },
         },
         {
-            description: 'Bgold: p2sh',
+            description: 'Bgold (P2SH): 1 input, 2 outputs, no change',
             params: {
                 coin: 'Bgold',
                 inputs: [
                     {
-                        address_n: [49 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/49'/156'/0'/1/0"),
                         amount: '1252382934',
                         prev_hash:
                             '25526bf06c76ad3082bba930cf627cdd5f1b3cd0b9907dd7ff1a07e14addc985',
@@ -86,7 +89,6 @@ export default {
                         script_type: 'SPENDP2SHWITNESS',
                     },
                 ],
-
                 outputs: [
                     {
                         address: 'GfDB1tvjfm3bukeoBTtfNqrJVFohS2kCTe',
@@ -99,6 +101,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['25526b']),
             },
             result: {
                 serializedTx:
@@ -106,12 +109,12 @@ export default {
             },
         },
         {
-            description: 'Bgold: p2sh witness change',
+            description: 'Bgold (P2SH): 1 input, 1output, 1 change',
             params: {
                 coin: 'Bgold',
                 inputs: [
                     {
-                        address_n: [49 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/49'/156'/0'/1/0"),
                         amount: '1252382934',
                         prev_hash:
                             '25526bf06c76ad3082bba930cf627cdd5f1b3cd0b9907dd7ff1a07e14addc985',
@@ -126,11 +129,12 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                     {
-                        address_n: [49 | 0x80000000, 156 | 0x80000000, 0 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/49'/156'/0'/1/0"),
                         amount: '1240071934',
                         script_type: 'PAYTOP2SHWITNESS',
                     },
                 ],
+                refTxs: TX_CACHE(['25526b']),
             },
             result: {
                 serializedTx:
@@ -138,12 +142,12 @@ export default {
             },
         },
         {
-            description: 'Bgold: multisig 1',
+            description: 'Bgold (P2SH): spend multisig input',
             params: {
                 coin: 'Bgold',
                 inputs: [
                     {
-                        address_n: [49 | 0x80000000, 156 | 0x80000000, 1 | 0x80000000, 1, 0],
+                        address_n: ADDRESS_N("m/49'/156'/1'/1/0"),
                         prev_hash:
                             '25526bf06c76ad3082bba930cf627cdd5f1b3cd0b9907dd7ff1a07e14addc985',
                         prev_index: 0,
@@ -179,6 +183,7 @@ export default {
                         script_type: 'PAYTOADDRESS',
                     },
                 ],
+                refTxs: TX_CACHE(['25526b']),
             },
             result: {
                 signatures: [

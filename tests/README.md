@@ -49,3 +49,23 @@ _Note: If you are running `trezor-user-env` docker image as [standalone process]
 1. Create or modify file in `tests/__fixtures__`
 1. Make sure it is imported in `tests/__fixtures__/index.js`
 1. Make sure the method you are testing is listed in `.github/workflows/*.yml` and `.gitlab-ci.yml`
+
+## Transactions cache
+Bitcoin-like coins `signTransaction` method require additional data about transactions referenced from used inputs.
+
+Those data are automatically downloaded from backend defined in `coins.json` by default if `refTxs` param is not specified.
+
+_Note: Backends hosted on `*.trezor.io` are limiting requests per min._
+_Too many requests from not whitelisted origins may be penalized with temporary ban. ("All backends are down" error)_
+
+Backend connection will be omitted in case of providing `refTxs` so even coins without officially supported backends (like zcash testnet) may sign a transaction in *"offline mode"*. [see docs](../docs/method/signTransaction.md)
+
+To reduce network traffic `Github Actions CI` is using **cached** (offline) mode and whitelisted `GitLab CI` is using **default** (online) mode.
+
+Caching is enabled by default. To disable it use `tests/run.sh -c` option.
+
+Cached transactions are stored in `tests/__txcache__` directory in the same structure as in [trezor-firmware](https://github.com/trezor/trezor-firmware/tree/master/tests/txcache) repository.
+
+Cached transactions are provided to test fixtures via [TX_CACHE](./__txcache__/index.js) utility.
+
+Missing tx json? use [this tool](./__txcache__/gen-reftx.js) to generate it.

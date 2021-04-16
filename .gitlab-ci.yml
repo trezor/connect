@@ -55,6 +55,7 @@ deploy review:
   variables:
     SDL_VIDEODRIVER: "dummy"
     TESTS_FIRMWARE: "2-master"
+    TESTS_USE_TX_CACHE: "false"
   script:
     - "echo Firmware version: $TESTS_FIRMWARE"
     - /trezor-user-env/run.sh &
