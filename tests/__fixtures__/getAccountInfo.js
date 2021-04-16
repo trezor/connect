@@ -5,7 +5,7 @@ export default {
     },
     tests: [
         {
-            description: 'first segwit account',
+            description: 'Bitcoin (P2SH): first account using path',
             params: {
                 coin: 'Bitcoin',
                 path: "m/49'/0'/0'",
@@ -16,7 +16,7 @@ export default {
             },
         },
         {
-            description: 'first legacy account',
+            description: 'Bitcoin (P2PKH): first account using path',
             params: {
                 coin: 'Bitcoin',
                 path: "m/44'/0'/0'",
@@ -27,7 +27,7 @@ export default {
             },
         },
         {
-            description: 'empty account',
+            description: 'Testnet (P2SH): empty account using path',
             params: {
                 coin: 'Testnet',
                 path: "m/49'/1'/256'",
@@ -41,7 +41,7 @@ export default {
             },
         },
         {
-            description: 'segwit account from descriptor',
+            description: 'Bitcoin (P2SH): account from descriptor',
             params: {
                 coin: 'Bitcoin',
                 descriptor:
@@ -54,7 +54,7 @@ export default {
             },
         },
         {
-            description: 'legacy account from descriptor',
+            description: 'Bitcoin (P2PKH): account from descriptor',
             params: {
                 coin: 'Bitcoin',
                 descriptor:
@@ -66,7 +66,7 @@ export default {
             },
         },
         {
-            description: 'ethereum account',
+            description: 'Ethereum: first account',
             params: {
                 coin: 'eth',
                 path: "m/44'/60'/0'/0/0",
@@ -77,7 +77,7 @@ export default {
             },
         },
         {
-            description: 'ethereum account from descriptor',
+            description: 'Ethereum: account from descriptor',
             params: {
                 coin: 'eth',
                 descriptor: '0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8',
@@ -88,7 +88,7 @@ export default {
             },
         },
         {
-            description: 'ripple account',
+            description: 'Ripple: first account',
             params: {
                 coin: 'xrp',
                 path: "m/44'/144'/0'/0/0",
@@ -99,7 +99,7 @@ export default {
             },
         },
         {
-            description: 'ripple from descriptor',
+            description: 'Ripple: account from descriptor',
             params: {
                 coin: 'xrp',
                 descriptor: 'rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj',

@@ -88,6 +88,7 @@ EXCLUDED_METHODS=""
 DOCKER=true
 TEST_SCRIPT="yarn test:integration"
 USE_TX_CACHE=true
+USE_WS_CACHE=true
 
 # user options
 OPTIND=1
@@ -98,6 +99,7 @@ while getopts ":i:e:f:s:hdc" opt; do
     ;;
   c)
     USE_TX_CACHE=false
+    USE_WS_CACHE=false
     ;;
   s)
     TEST_SCRIPT=$OPTARG
@@ -128,6 +130,7 @@ export TESTS_FIRMWARE=$FIRMWARE
 export TESTS_INCLUDED_METHODS=$INCLUDED_METHODS
 export TESTS_EXCLUDED_METHODS=$EXCLUDED_METHODS
 export TESTS_USE_TX_CACHE=$USE_TX_CACHE
+export TESTS_USE_WS_CACHE=$USE_WS_CACHE
 
 run() {
   if [ $DOCKER = true ]; then
@@ -141,6 +144,7 @@ run() {
   echo "  Included methods: ${INCLUDED_METHODS}"
   echo "  Excluded methods: ${EXCLUDED_METHODS}"
   echo "  TxCache: ${USE_TX_CACHE}"
+  echo "  WsCache: ${USE_WS_CACHE}"
 
   # run actual test script
   ${TEST_SCRIPT}

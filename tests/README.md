@@ -69,3 +69,8 @@ Cached transactions are stored in `tests/__txcache__` directory in the same stru
 Cached transactions are provided to test fixtures via [TX_CACHE](./__txcache__/index.js) utility.
 
 Missing tx json? use [this tool](./__txcache__/gen-reftx.js) to generate it.
+
+## Websocket cache
+Similar to transaction cache. `@trezor/blockchain-link` module is conditionally mocked returning cached results from `tests/__wscache__`.
+
+[See jest.mock](./jest.setup.js)

@@ -1,0 +1,14 @@
+{
+  "descriptor": "rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj",
+  "balance": "20000000",
+  "availableBalance": "0",
+  "empty": false,
+  "history": {
+    "total": -1,
+    "unconfirmed": 0
+  },
+  "misc": {
+    "sequence": 2,
+    "reserve": "20000000"
+  }
+}

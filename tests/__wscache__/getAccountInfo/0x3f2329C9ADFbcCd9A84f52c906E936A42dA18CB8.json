@@ -1,0 +1,14 @@
+{
+  "descriptor": "0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8",
+  "balance": "21000",
+  "availableBalance": "21000",
+  "empty": false,
+  "history": {
+    "total": 17,
+    "tokens": 0,
+    "unconfirmed": 0
+  },
+  "misc": {
+    "nonce": "9"
+  }
+}
