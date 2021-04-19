@@ -8,7 +8,5 @@ npm-extended
 submodules
 _old
 
-# depraceted tests to be removed:
-src/__tests__
 # examples large files
 examples/webextension/vendor/trezor-connect.js
