@@ -1,6 +1,6 @@
 // @flow
 // This file is auto generated from data/messages/message.json
-const Enum_InputScriptType = Object.freeze({
+export const Enum_InputScriptType = Object.freeze({
     SPENDADDRESS: 0,
     SPENDMULTISIG: 1,
     EXTERNAL: 2,
@@ -9,7 +9,7 @@ const Enum_InputScriptType = Object.freeze({
 });
 export type InputScriptType = $Keys<typeof Enum_InputScriptType>;
 
-const Enum_OutputScriptType = Object.freeze({
+export const Enum_OutputScriptType = Object.freeze({
     PAYTOADDRESS: 0,
     PAYTOSCRIPTHASH: 1,
     PAYTOMULTISIG: 2,
@@ -19,13 +19,13 @@ const Enum_OutputScriptType = Object.freeze({
 });
 export type OutputScriptType = $Keys<typeof Enum_OutputScriptType>;
 
-const Enum_DecredStakingSpendType = Object.freeze({
+export const Enum_DecredStakingSpendType = Object.freeze({
     SSGen: 0,
     SSRTX: 1,
 });
 export type DecredStakingSpendType = $Values<typeof Enum_DecredStakingSpendType>;
 
-const Enum_AmountUnit = Object.freeze({
+export const Enum_AmountUnit = Object.freeze({
     BITCOIN: 0,
     MILLIBITCOIN: 1,
     MICROBITCOIN: 2,
@@ -33,7 +33,7 @@ const Enum_AmountUnit = Object.freeze({
 });
 export type AmountUnit = $Values<typeof Enum_AmountUnit>;
 
-const Enum_CardanoAddressType = Object.freeze({
+export const Enum_CardanoAddressType = Object.freeze({
     BASE: 0,
     BASE_SCRIPT_KEY: 1,
     BASE_KEY_SCRIPT: 2,
@@ -48,7 +48,7 @@ const Enum_CardanoAddressType = Object.freeze({
 });
 export type CardanoAddressType = $Values<typeof Enum_CardanoAddressType>;
 
-const Enum_CardanoCertificateType = Object.freeze({
+export const Enum_CardanoCertificateType = Object.freeze({
     STAKE_REGISTRATION: 0,
     STAKE_DEREGISTRATION: 1,
     STAKE_DELEGATION: 2,
@@ -56,21 +56,21 @@ const Enum_CardanoCertificateType = Object.freeze({
 });
 export type CardanoCertificateType = $Values<typeof Enum_CardanoCertificateType>;
 
-const Enum_CardanoPoolRelayType = Object.freeze({
+export const Enum_CardanoPoolRelayType = Object.freeze({
     SINGLE_HOST_IP: 0,
     SINGLE_HOST_NAME: 1,
     MULTIPLE_HOST_NAME: 2,
 });
 export type CardanoPoolRelayType = $Values<typeof Enum_CardanoPoolRelayType>;
 
-const Enum_BackupType = Object.freeze({
+export const Enum_BackupType = Object.freeze({
     Bip39: 0,
     Slip39_Basic: 1,
     Slip39_Advanced: 2,
 });
 export type BackupType = $Keys<typeof Enum_BackupType>;
 
-const Enum_SafetyCheckLevel = Object.freeze({
+export const Enum_SafetyCheckLevel = Object.freeze({
     Strict: 0,
     PromptAlways: 1,
     PromptTemporarily: 2,
@@ -129,7 +129,7 @@ export type BinanceTransferMsg = {
     outputs: BinanceInputOutput[],
 };
 
-const Enum_BinanceOrderType = Object.freeze({
+export const Enum_BinanceOrderType = Object.freeze({
     OT_UNKNOWN: 0,
     MARKET: 1,
     LIMIT: 2,
@@ -137,14 +137,14 @@ const Enum_BinanceOrderType = Object.freeze({
 });
 export type BinanceOrderType = $Values<typeof Enum_BinanceOrderType>;
 
-const Enum_BinanceOrderSide = Object.freeze({
+export const Enum_BinanceOrderSide = Object.freeze({
     SIDE_UNKNOWN: 0,
     BUY: 1,
     SELL: 2,
 });
 export type BinanceOrderSide = $Values<typeof Enum_BinanceOrderSide>;
 
-const Enum_BinanceTimeInForce = Object.freeze({
+export const Enum_BinanceTimeInForce = Object.freeze({
     TIF_UNKNOWN: 0,
     GTE: 1,
     TIF_RESERVED: 2,
@@ -284,7 +284,7 @@ export type SignTx = {
     decred_staking_ticket?: boolean,
 };
 
-const Enum_RequestType = Object.freeze({
+export const Enum_RequestType = Object.freeze({
     TXINPUT: 0,
     TXOUTPUT: 1,
     TXMETA: 2,
@@ -707,7 +707,7 @@ export type Success = {
     message: string,
 };
 
-const Enum_FailureType = Object.freeze({
+export const Enum_FailureType = Object.freeze({
     Failure_UnexpectedMessage: 1,
     Failure_ButtonExpected: 2,
     Failure_DataError: 3,
@@ -732,7 +732,7 @@ export type Failure = {
     message?: string,
 };
 
-const Enum_ButtonRequestType = Object.freeze({
+export const Enum_ButtonRequestType = Object.freeze({
     ButtonRequest_Other: 1,
     ButtonRequest_FeeOverThreshold: 2,
     ButtonRequest_ConfirmOutput: 3,
@@ -764,7 +764,7 @@ export type ButtonRequest = {
 // ButtonAck
 export type ButtonAck = {};
 
-const Enum_PinMatrixRequestType = Object.freeze({
+export const Enum_PinMatrixRequestType = Object.freeze({
     PinMatrixRequestType_Current: 1,
     PinMatrixRequestType_NewFirst: 2,
     PinMatrixRequestType_NewSecond: 3,
@@ -857,7 +857,7 @@ export type ECDHSessionKey = {
     public_key?: string,
 };
 
-const Enum_DebugSwipeDirection = Object.freeze({
+export const Enum_DebugSwipeDirection = Object.freeze({
     UP: 0,
     DOWN: 1,
     LEFT: 2,
@@ -1234,7 +1234,7 @@ export type LiskPublicKey = {
     public_key: string,
 };
 
-const Enum_LiskTransactionType = Object.freeze({
+export const Enum_LiskTransactionType = Object.freeze({
     Transfer: 0,
     RegisterSecondPassphrase: 1,
     RegisterDelegate: 2,
@@ -1318,7 +1318,7 @@ export type Initialize = {
 // GetFeatures
 export type GetFeatures = {};
 
-const Enum_Capability = Object.freeze({
+export const Enum_Capability = Object.freeze({
     Capability_Bitcoin: 1,
     Capability_Bitcoin_like: 2,
     Capability_Binance: 3,
@@ -1415,7 +1415,7 @@ export type ChangeWipeCode = {
     remove?: boolean,
 };
 
-const Enum_SdProtectOperationType = Object.freeze({
+export const Enum_SdProtectOperationType = Object.freeze({
     DISABLE: 0,
     ENABLE: 1,
     REFRESH: 2,
@@ -1487,7 +1487,7 @@ export type EntropyAck = {
     entropy?: string,
 };
 
-const Enum_RecoveryDeviceType = Object.freeze({
+export const Enum_RecoveryDeviceType = Object.freeze({
     RecoveryDeviceType_ScrambledWords: 0,
     RecoveryDeviceType_Matrix: 1,
 });
@@ -1506,7 +1506,7 @@ export type RecoveryDevice = {
     dry_run?: boolean,
 };
 
-const Enum_WordRequestType = Object.freeze({
+export const Enum_WordRequestType = Object.freeze({
     WordRequestType_Plain: 0,
     WordRequestType_Matrix9: 1,
     WordRequestType_Matrix6: 2,
@@ -1590,7 +1590,7 @@ export type NEMProvisionNamespace = {
     fee?: number,
 };
 
-const Enum_NEMMosaicLevy = Object.freeze({
+export const Enum_NEMMosaicLevy = Object.freeze({
     MosaicLevy_Absolute: 1,
     MosaicLevy_Percentile: 2,
 });
@@ -1620,7 +1620,7 @@ export type NEMMosaicCreation = {
     fee?: number,
 };
 
-const Enum_NEMSupplyChangeType = Object.freeze({
+export const Enum_NEMSupplyChangeType = Object.freeze({
     SupplyChange_Increase: 1,
     SupplyChange_Decrease: 2,
 });
@@ -1633,7 +1633,7 @@ export type NEMMosaicSupplyChange = {
     delta?: number,
 };
 
-const Enum_NEMModificationType = Object.freeze({
+export const Enum_NEMModificationType = Object.freeze({
     CosignatoryModification_Add: 1,
     CosignatoryModification_Delete: 2,
 });
@@ -1649,7 +1649,7 @@ export type NEMAggregateModification = {
     relative_change?: number,
 };
 
-const Enum_NEMImportanceTransferMode = Object.freeze({
+export const Enum_NEMImportanceTransferMode = Object.freeze({
     ImportanceTransfer_Activate: 1,
     ImportanceTransfer_Deactivate: 2,
 });
@@ -1888,7 +1888,7 @@ export type TezosPublicKey = {
     public_key: string,
 };
 
-const Enum_TezosContractType = Object.freeze({
+export const Enum_TezosContractType = Object.freeze({
     Implicit: 0,
     Originated: 1,
 });
@@ -1960,7 +1960,7 @@ export type TezosProposalOp = {
     proposals: string[],
 };
 
-const Enum_TezosBallotType = Object.freeze({
+export const Enum_TezosBallotType = Object.freeze({
     Yay: 0,
     Nay: 1,
     Pass: 2,
