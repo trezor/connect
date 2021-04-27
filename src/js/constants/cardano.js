@@ -10,6 +10,9 @@ export const NETWORK_IDS = Object.freeze({
     testnet: 0,
 });
 
+// constants below are deprecated
+// use `CardanoAddressType`, `CardanoCertificateType` and `CardanoPoolRelayType` from protobuf instead
+
 export const ADDRESS_TYPE = Object.freeze({
     Base: 0,
     Pointer: 4,

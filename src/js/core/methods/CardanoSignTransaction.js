@@ -11,8 +11,7 @@ import {
 import { transformCertificate } from './helpers/cardanoCertificate';
 import { validateTokenBundle, tokenBundleToProto } from './helpers/cardanoTokens';
 import { ERRORS } from '../../constants';
-import { CERTIFICATE_TYPE } from '../../constants/cardano';
-
+import { Enum_CardanoCertificateType as CardanoCertificateType } from '../../types/trezor/protobuf';
 import type {
     MessageType,
     CardanoTxCertificateType,
@@ -143,7 +142,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
         const { params } = this;
 
         params.certificates.forEach(certificate => {
-            if (certificate.type === CERTIFICATE_TYPE.StakePoolRegistration) {
+            if (certificate.type === CardanoCertificateType.STAKE_POOL_REGISTRATION) {
                 this._ensureFeatureIsSupported('SignStakePoolRegistrationAsOwner');
             }
         });

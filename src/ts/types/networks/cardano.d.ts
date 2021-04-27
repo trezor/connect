@@ -97,3 +97,9 @@ export interface CardanoSignedTx {
     hash: string;
     serializedTx: string;
 }
+
+export {
+    CardanoAddressType,
+    CardanoCertificateType,
+    CardanoPoolRelayType,
+} from '../trezor/protobuf';

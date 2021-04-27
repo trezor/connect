@@ -1,9 +1,8 @@
+import { NETWORK_IDS, PROTOCOL_MAGICS } from '../../src/js/constants/cardano';
 import {
-    ADDRESS_TYPE,
-    CERTIFICATE_TYPE,
-    NETWORK_IDS,
-    PROTOCOL_MAGICS,
-} from '../../src/js/constants/cardano';
+    Enum_CardanoAddressType as CardanoAddressType,
+    Enum_CardanoCertificateType as CardanoCertificateType,
+} from '../../src/js/types/trezor/protobuf';
 
 // vectors from https://github.com/trezor/trezor-firmware/tree/master/python/trezorlib/tests/device_tests/test_msg_cardano_sign_transaction.py
 
@@ -32,7 +31,7 @@ const SAMPLE_OUTPUTS = {
     },
     byron_change_output: {
         addressParameters: {
-            addressType: ADDRESS_TYPE.Byron,
+            addressType: CardanoAddressType.BYRON,
             path: "m/44'/1815'/0'/0/1",
         },
         amount: '1000000',
@@ -49,7 +48,7 @@ const SAMPLE_OUTPUTS = {
     },
     base_address_change_output: {
         addressParameters: {
-            addressType: ADDRESS_TYPE.Base,
+            addressType: CardanoAddressType.BASE,
             path: "m/1852'/1815'/0'/0/0",
             stakingPath: "m/1852'/1815'/0'/2/0",
         },
@@ -57,7 +56,7 @@ const SAMPLE_OUTPUTS = {
     },
     base_address_change_output_numbers: {
         addressParameters: {
-            addressType: ADDRESS_TYPE.Base,
+            addressType: CardanoAddressType.BASE,
             path: [0x80000000 + 1852, 0x80000000 + 1815, 0x80000000, 0, 0],
             stakingPath: [0x80000000 + 1852, 0x80000000 + 1815, 0x80000000, 2, 0],
         },
@@ -65,7 +64,7 @@ const SAMPLE_OUTPUTS = {
     },
     staking_key_hash_output: {
         addressParameters: {
-            addressType: ADDRESS_TYPE.Base,
+            addressType: CardanoAddressType.BASE,
             path: "m/1852'/1815'/0'/0/0",
             stakingKeyHash: '32c728d3861e164cab28cb8f006448139c8f1740ffb8e7aa9e5232dc',
         },
@@ -73,7 +72,7 @@ const SAMPLE_OUTPUTS = {
     },
     pointer_address_output: {
         addressParameters: {
-            addressType: ADDRESS_TYPE.Pointer,
+            addressType: CardanoAddressType.POINTER,
             path: "m/1852'/1815'/0'/0/0",
             certificatePointer: {
                 blockIndex: 1,
@@ -85,7 +84,7 @@ const SAMPLE_OUTPUTS = {
     },
     enterprise_address_output: {
         addressParameters: {
-            addressType: ADDRESS_TYPE.Enterprise,
+            addressType: CardanoAddressType.ENTERPRISE,
             path: "m/1852'/1815'/0'/0/0",
         },
         amount: '7120787',
@@ -131,20 +130,20 @@ const SAMPLE_OUTPUTS = {
 
 const SAMPLE_CERTIFICATES = {
     stake_registration: {
-        type: CERTIFICATE_TYPE.StakeRegistration,
+        type: CardanoCertificateType.STAKE_REGISTRATION,
         path: "m/1852'/1815'/0'/2/0",
     },
     stake_deregistration: {
-        type: CERTIFICATE_TYPE.StakeDeregistration,
+        type: CardanoCertificateType.STAKE_DEREGISTRATION,
         path: "m/1852'/1815'/0'/2/0",
     },
     stake_delegation: {
-        type: CERTIFICATE_TYPE.StakeDelegation,
+        type: CardanoCertificateType.STAKE_DELEGATION,
         path: "m/1852'/1815'/0'/2/0",
         pool: 'f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973',
     },
     stake_pool_registration: {
-        type: CERTIFICATE_TYPE.StakePoolRegistration,
+        type: CardanoCertificateType.STAKE_POOL_REGISTRATION,
         poolParameters: {
             poolId: 'f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973',
             vrfKeyHash: '198890ad6c92e80fbdab554dda02da9fb49d001bbd96181f3e07f7a6ab0d0640',
@@ -199,7 +198,7 @@ const SAMPLE_CERTIFICATES = {
         },
     },
     stake_pool_registration_no_metadata: {
-        type: CERTIFICATE_TYPE.StakePoolRegistration,
+        type: CardanoCertificateType.STAKE_POOL_REGISTRATION,
         poolParameters: {
             poolId: 'f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973',
             vrfKeyHash: '198890ad6c92e80fbdab554dda02da9fb49d001bbd96181f3e07f7a6ab0d0640',

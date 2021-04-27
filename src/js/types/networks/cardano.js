@@ -147,3 +147,9 @@ export type CardanoSignedTx = {
     hash: string,
     serializedTx: string,
 };
+
+export {
+    Enum_CardanoAddressType as CardanoAddressType,
+    Enum_CardanoCertificateType as CardanoCertificateType,
+    Enum_CardanoPoolRelayType as CardanoPoolRelayType,
+} from '../trezor/protobuf';
