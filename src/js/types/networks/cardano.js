@@ -130,6 +130,18 @@ export type CardanoWithdrawal = {
     amount: string,
 };
 
+export type CardanoCatalystRegistrationParameters = {
+    votingPublicKey: string,
+    stakingPath: string | number[],
+    rewardAddressParameters: CardanoAddressParameters,
+    nonce: string,
+};
+
+export type CardanoAuxiliaryData = {
+    blob?: string,
+    catalystRegistrationParameters?: CardanoCatalystRegistrationParameters,
+};
+
 export type CardanoSignTransaction = {
     inputs: CardanoInput[],
     outputs: CardanoOutput[],
@@ -137,10 +149,10 @@ export type CardanoSignTransaction = {
     ttl?: string,
     certificates?: CardanoCertificate[],
     withdrawals?: CardanoWithdrawal[],
-    metadata?: string,
     validityIntervalStart?: string,
     protocolMagic: number,
     networkId: number,
+    auxiliaryData?: CardanoAuxiliaryData,
 };
 
 export type CardanoSignedTx = {
