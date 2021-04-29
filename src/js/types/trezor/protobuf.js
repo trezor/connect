@@ -674,6 +674,18 @@ export type CardanoTxWithdrawalType = {
     amount: number,
 };
 
+export type CardanoCatalystRegistrationParametersType = {
+    voting_public_key: string,
+    staking_path: number[],
+    reward_address_parameters: CardanoAddressParametersType,
+    nonce: string | number,
+};
+
+export type CardanoTxAuxiliaryDataType = {
+    blob?: string,
+    catalyst_registration_parameters?: CardanoCatalystRegistrationParametersType,
+};
+
 // CardanoSignTx
 export type CardanoSignTx = {
     inputs: CardanoTxInputType[],
@@ -684,8 +696,8 @@ export type CardanoSignTx = {
     network_id: number,
     certificates: CardanoTxCertificateType[],
     withdrawals: CardanoTxWithdrawalType[],
-    metadata?: string,
-    validity_interval_start?: number,
+    validity_interval_start?: string | number,
+    auxiliary_data?: CardanoTxAuxiliaryDataType,
 };
 
 // CardanoSignedTxChunk
@@ -2066,6 +2078,8 @@ export type MessageType = {
     CardanoPoolParametersType: $Exact<CardanoPoolParametersType>,
     CardanoTxCertificateType: $Exact<CardanoTxCertificateType>,
     CardanoTxWithdrawalType: $Exact<CardanoTxWithdrawalType>,
+    CardanoCatalystRegistrationParametersType: $Exact<CardanoCatalystRegistrationParametersType>,
+    CardanoTxAuxiliaryDataType: CardanoTxAuxiliaryDataType,
     CardanoSignTx: $Exact<CardanoSignTx>,
     CardanoSignedTxChunk: $Exact<CardanoSignedTxChunk>,
     CardanoSignedTxChunkAck: CardanoSignedTxChunkAck,
