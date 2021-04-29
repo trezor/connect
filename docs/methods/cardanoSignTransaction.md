@@ -15,14 +15,9 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 });
 ```
 
-### Notes
-**Unfortunately we are aware of the fact that currently at most ~14 inputs are supported per transaction. This should be resolved when the cardano app is updated to support transaction streaming. Meanwhile, a workaround is to send multiple smaller transactions containing less inputs.**
-
-**Also, each serialized transaction output size is currently limited to 512 bytes at Trezor firmware level. This limitation is a mitigation measure to prevent sending large (especially change) outputs containing many tokens that Trezor would not be able to spend given that currently the full Cardano transaction is held in-memory. Once Cardano-transaction signing is refactored to be streamed, this limit can be lifted.**
-
 ### Params 
 [****Optional common params****](commonParams.md)
-###### [flowtype](../../src/js/types/networks/cardano.js#L62-L109)
+###### [flowtype](../../src/js/types/networks/cardano.js#L61-L171)
 * `inputs` — *obligatory* `Array` of [CardanoInput](../../src/js/types/networks/cardano.js#L61)
 * `outputs` - *obligatory* `Array` of [CardanoOutput](../../src/js/types/networks/cardano.js#L76)
 * `fee` - *obligatory* `String`
@@ -30,9 +25,10 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 * `networkId` - *obligatory* `Integer` 1 for Mainnet, 0 for Testnet
 * `ttl` - *optional* `String`
 * `validityIntervalStart` - *optional* `String`
-* `certificates` - *optional* `Array` of [CardanoCertificate](../../src/js/types/networks/cardano.js#L85)
-* `withdrawals` - *optional* `Array` of [CardanoWithdrawal](../../src/js/types/networks/cardano.js#L90)
-* `metadata` - *optional* `String`
+* `certificates` - *optional* `Array` of [CardanoCertificate](../../src/js/types/networks/cardano.js#L123)
+* `withdrawals` - *optional* `Array` of [CardanoWithdrawal](../../src/js/types/networks/cardano.js#L130)
+* `auixiliaryData` - *optional* [CardanoAuxiliaryData](../../src/js/types/networks/cardano.js#140)
+* `metadata` - *removed* - use `auxiliaryData` instead
 
 ### Stake pool registration certificate specifics
 
@@ -63,7 +59,7 @@ TrezorConnect.cardanoSignTransaction({
         },
         {
             addressParameters: {
-                addressType: 0,
+                addressType: 0, // base address type
                 path: "m/1852'/1815'/0'/0/0",
                 stakingPath: "m/1852'/1815'/0'/2/0",
             },
@@ -90,15 +86,15 @@ TrezorConnect.cardanoSignTransaction({
     validityIntervalStart: "20",
     certificates: [
         {
-            type: 0,
+            type: 0, // stake registration certificate type
             path: "m/1852'/1815'/0'/2/0",
         },
         {
-            type: 1,
+            type: 1, // stake deregistration certificate type
             path: "m/1852'/1815'/0'/2/0",
         },
         {
-            type: 2,
+            type: 2, // stake delegation certificate type
             path: "m/1852'/1815'/0'/2/0",
             pool: "f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973",
         },
@@ -109,7 +105,9 @@ TrezorConnect.cardanoSignTransaction({
             amount: "1000",
         }
     ],
-    metadata: "a200a11864a118c843aa00ff01a119012c590100aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    auxiliaryData: {
+        blob: "a200a11864a118c843aa00ff01a119012c590100aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
     protocolMagic: 764824073,
     networkId: 1,
 });
@@ -191,8 +189,44 @@ TrezorConnect.cardanoSignTransaction({
 });
 ```
 
+#### Catalyst voting key registration
+```javascript
+TrezorConnect.cardanoSignTransaction({
+    inputs: [
+        {
+            path: "m/1852'/1815'/0'/0/0",
+            prev_hash: "3b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b7",
+            prev_index: 0,
+        }
+    ],
+    outputs: [
+        {
+            address: "addr1q84sh2j72ux0l03fxndjnhctdg7hcppsaejafsa84vh7lwgmcs5wgus8qt4atk45lvt4xfxpjtwfhdmvchdf2m3u3hlsd5tq5r",
+            amount: "3003112",
+        }
+    ],
+    fee: "42",
+    ttl: "10",
+    auxiliaryData: {
+        catalystRegistrationParameters: {
+            votingPublicKey:
+                "1af8fa0b754ff99253d983894e63a2b09cbb56c833ba18c3384210163f63dcfc",
+            stakingPath: "m/1852'/1815'/0'/2/0",
+            rewardAddressParameters: {
+                addressType: 0, // base address type
+                path: "m/1852'/1815'/0'/0/0",
+                stakingPath: "m/1852'/1815'/0'/2/0",
+            },
+            nonce: "22634813",
+        },
+    },
+    protocolMagic: 764824073,
+    networkId: 1,
+});
+```
+
 ### Result
-###### [flowtype](../../src/js/types/networks/cardano.js#L107-L110)
+###### [flowtype](../../src/js/types/networks/cardano.js#L158-L162)
 ```javascript
 {
     success: true,

@@ -204,6 +204,12 @@ export const cardanoSignTransaction = async () => {
             {
                 address: 'Ae2..',
                 amount: '3003112',
+                tokenBundle: [
+                    {
+                        policyId: 'aaff00..',
+                        tokenAmounts: [{ assetNameBytes: 'aaff00..', amount: '3003112' }],
+                    },
+                ],
             },
             {
                 addressParameters: {
@@ -218,11 +224,74 @@ export const cardanoSignTransaction = async () => {
                     },
                 },
                 amount: '3003112',
+                tokenBundle: [
+                    {
+                        policyId: 'aaff00..',
+                        tokenAmounts: [{ assetNameBytes: 'aaff00..', amount: '3003112' }],
+                    },
+                ],
             },
         ],
-        certificates: [{ type: 0, path: 'm/44', pool: 'aaff00..' }],
+        certificates: [
+            {
+                type: 0,
+                path: 'm/44',
+                pool: 'aaff00..',
+                poolParameters: {
+                    poolId: 'aaff00..',
+                    vrfKeyHash: 'aaff00..',
+                    pledge: '500000000',
+                    cost: '340000000',
+                    margin: {
+                        numerator: '1',
+                        denominator: '2',
+                    },
+                    rewardAccount: 'stake1uya87zwnmax0v6nnn8ptqkl6ydx4522kpsc3l3wmf3yswygwx45el',
+                    owners: [
+                        {
+                            stakingKeyPath: "m/1852'",
+                            stakingKeyHash: 'aaff00..',
+                        },
+                        {
+                            stakingKeyHash: 'aaff00..',
+                        },
+                    ],
+                    relays: [
+                        {
+                            type: 0,
+                            ipv4Address: '192.168.0.1',
+                            ipv6Address: '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
+                            port: 1234,
+                            hostName: 'www.test2.test',
+                        },
+                    ],
+                    metadata: {
+                        url: 'https://www.test.test',
+                        hash: 'aaff00..',
+                    },
+                },
+            },
+        ],
         withdrawals: [{ path: 'm/44', amount: '3003112' }],
-        metadata: 'aaff00..',
+        auxiliaryData: {
+            blob: 'aaff00..',
+            catalystRegistrationParameters: {
+                votingPublicKey: 'aaff00..',
+                stakingPath: 'm/44',
+                rewardAddressParameters: {
+                    addressType: 0,
+                    path: 'm/44',
+                    stakingPath: 'm/44',
+                    stakingKeyHash: 'aaff00..',
+                    certificatePointer: {
+                        blockIndex: 0,
+                        txIndex: 0,
+                        certificateIndex: 0,
+                    },
+                },
+                nonce: '0',
+            },
+        },
         fee: '42',
         ttl: '10',
         protocolMagic: 0,
