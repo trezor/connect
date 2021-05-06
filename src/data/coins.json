@@ -1166,7 +1166,7 @@
             "address_type_p2sh": 5,
             "bech32_prefix": "sys",
             "blockbook": [
-                "https://sys-42.lode.one/"
+                "https://blockbook.elint.services"
             ],
             "blocktime_seconds": 60,
             "cashaddr_prefix": null,
@@ -1214,7 +1214,7 @@
             "address_type_p2sh": 5,
             "bech32_prefix": "tsys",
             "blockbook": [
-                "https://blockbook.elint.services/"
+                "https://blockbook-dev.elint.services"
             ],
             "blocktime_seconds": 60,
             "cashaddr_prefix": null,
