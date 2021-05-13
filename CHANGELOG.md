@@ -1,3 +1,13 @@
+# 8.1.27
+
+### Added
+- 1.10.0 firmware release.
+- Cardano: support for catalyst voting registration.
+
+### Changed
+- Cardano: `cardanoSignTransaction.metadata` param renamed to `auxiliaryData`.
+- Cardano: expose protobuf enums as `CardanoAddressType`, `CardanoCertificateType` and `CardanoPoolRelayType`, deprecate `constants/cardano` export.
+
 # 8.1.26
 
 ### Added
