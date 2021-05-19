@@ -260,5 +260,101 @@ export default {
                     '010000000001010978ca90092d490a773ca00de50bc5c4d9930fab03b656f5525cf099379783400100000000fdffffff020000000000000000066a046465616414410f00000000001600141c02e2397a8a02ff71d3f26937d14a656469dd1f02483045022100f534412752c14064470d4a1f738fa01bc83598b07caaba4cd207b43b1b9702a4022071a4f0873006c07ccfeb1f82e86f3047eab208f38cfa41d7b566d6ca50dbca0f012102a269d4b8faf008074b974b6d64fa1776e17fdf65381a76d1338e9bba88983a8700000000',
             },
         },
+        {
+            description: 'Testnet (RBF): add new utxo and change output',
+            params: {
+                coin: 'Testnet',
+                inputs: [
+                    {
+                        address_n: ADDRESS_N("m/84'/1'/0'/0/65"),
+                        amount: '10000',
+                        script_type: 'SPENDWITNESS',
+                        prev_hash:
+                            '2d5dfc5068b81e25185a655d2dcd10833b2f4e6a3d029c0d40b2fd3b63f09b48',
+                        prev_index: 0,
+                        orig_hash:
+                            '5bf10db6244c703d7f831043e6b6b0d6f3974bb5cf9fd216397e7620dc2e1015',
+                        orig_index: 0,
+                        sequence: 4294967293,
+                    },
+                    {
+                        address_n: ADDRESS_N("m/84'/1'/0'/0/66"),
+                        amount: '100000',
+                        script_type: 'SPENDWITNESS',
+                        prev_hash:
+                            '56ebd82cdc91548617a1756f8e271dedda94e7c4d267d3c6d4f65d2654e5f3e2',
+                        prev_index: 1,
+                        sequence: 4294967293,
+                    },
+                ],
+                outputs: [
+                    {
+                        address: 'tb1qj79vy45wcvfctwejz05qgyltql3qgyz6fwhn5m',
+                        amount: '9890',
+                        script_type: 'PAYTOADDRESS',
+                        orig_hash:
+                            '5bf10db6244c703d7f831043e6b6b0d6f3974bb5cf9fd216397e7620dc2e1015',
+                        orig_index: 0,
+                    },
+                    {
+                        address_n: ADDRESS_N("m/84'/1'/0'/1/0"),
+                        // (10000 + 100000) - 9890 - 400 (new fee)
+                        amount: '99710',
+                        script_type: 'PAYTOWITNESS',
+                    },
+                ],
+                locktime: 1904477,
+                refTxs: TX_CACHE(['2d5dfc', '5bf10d', '56ebd8']),
+            },
+            result: {
+                serializedTx:
+                    '01000000000102489bf0633bfdb2400d9c023d6a4e2f3b8310cd2d5d655a18251eb86850fc5d2d0000000000fdffffffe2f3e554265df6d4c6d367d2c4e794daed1d278e6f75a117865491dc2cd8eb560100000000fdffffff02a226000000000000160014978ac2568ec31385bb3213e80413eb07e204105a7e85010000000000160014cc8067093f6f843d6d3e22004a4290cd0c0f336b024830450221008f7332cfb426a2cb30c0c038f6c1154f14d89f8e4987a62d19e51bd25fc37cc102206137b052492beb93cea11ce94d34fd593a58543f0b9c0bc723f6e0db36b64642012102377521551fc6c84312a60519bc50b3a761836d184e02b5908289362ff3fd193a0247304402201be3759adbadfa920f765cf50c847edee6b9e067c8281e73a7fd26c71a14b1e402202ba787e543acc23b0e971818b49227718ef388acb767d217042f4a0aed943d7a012103c40376f2a410b616d75bab29849e3d8744a8c3739d52add73b45afa1346c7c2e5d0f1d00',
+            },
+        },
+        {
+            description: 'Testnet (RBF): decrease output',
+            params: {
+                coin: 'Testnet',
+                inputs: [
+                    {
+                        address_n: ADDRESS_N("m/49'/1'/0'/0/4"),
+                        amount: '100000',
+                        script_type: 'SPENDP2SHWITNESS',
+                        prev_hash:
+                            '5e7667690076ae4737e2f872005de6f6b57592f32108ed9b301eeece6de24ad6',
+                        prev_index: 1,
+                        orig_hash:
+                            '334cd7ad982b3b15d07dd1c84e939e95efb0803071648048a7f289492e7b4c8a',
+                        orig_index: 0,
+                    },
+                    {
+                        address_n: ADDRESS_N("m/49'/1'/0'/0/3"),
+                        amount: '998060',
+                        script_type: 'SPENDP2SHWITNESS',
+                        prev_hash:
+                            'efaa41ff3e67edf508846c1a1ed56894cfd32725c590300108f40c9edc1aac35',
+                        prev_index: 0,
+                        orig_hash:
+                            '334cd7ad982b3b15d07dd1c84e939e95efb0803071648048a7f289492e7b4c8a',
+                        orig_index: 1,
+                    },
+                ],
+                outputs: [
+                    {
+                        address: '2MvUUSiQZDSqyeSdofKX9KrSCio1nANPDTe',
+                        amount: '990000',
+                        script_type: 'PAYTOADDRESS',
+                        orig_hash:
+                            '334cd7ad982b3b15d07dd1c84e939e95efb0803071648048a7f289492e7b4c8a',
+                        orig_index: 0,
+                    },
+                ],
+                refTxs: TX_CACHE(['5e7667', 'efaa41', '334cd7']),
+            },
+            result: {
+                serializedTx:
+                    '01000000000102d64ae26dceee1e309bed0821f39275b5f6e65d0072f8e23747ae76006967765e0100000017160014039ba06270e6c6c1ad4e6940515aa5cdbad33f9effffffff35ac1adc9e0cf408013090c52527d3cf9468d51e1a6c8408f5ed673eff41aaef0000000017160014209297fb46272a0b7e05139440dbd39daea3e25affffffff01301b0f000000000017a9142369da13fee80c9d7fd8043bf1275c04deb360e68702483045022100bd303aa0d923e73300e37971d43b9cd134230f8287e0e3b702aacd19ba8ef97b02202b4368b3e9d7478b8529ea2aeea23f6612ec05854510794958d6ce58c19082ad012103bb0e339d7495b1f355c49d385b79343e52e68d99de2fe1f7f476c465c9ccd1670247304402204869b27aa926d98bfd36912f71e335c1d6afb2c1a28102407066db5257e1b8810220197bcac3c85a721547974bd7309a6ea2b809810a595cbdca2da9599af4038ba2012103c2c2e65556ca4b7371549324b99390725493c8a6792e093a0bdcbb3e2d7df4ab00000000',
+            },
+        },
     ],
 };
