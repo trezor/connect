@@ -199,6 +199,8 @@ export interface PrecomposeParams {
     }>;
     baseFee?: number;
     floorBaseFee?: boolean;
+    sequence?: number;
+    skipPermutation?: boolean;
     coin: string;
 }
 
@@ -225,6 +227,7 @@ export type PrecomposedTransaction =
           transaction: {
               inputs: TxInputType[];
               outputs: TxOutputType[];
+              outputsPermutation: number[];
           };
       };
 
@@ -232,6 +235,7 @@ export interface ComposeParams {
     outputs: ComposeOutput[];
     coin: string;
     push?: boolean;
+    sequence?: number;
 }
 
 export type DiscoveryAccountType = 'normal' | 'segwit' | 'legacy';
