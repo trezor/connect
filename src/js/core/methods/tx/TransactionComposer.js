@@ -16,6 +16,7 @@ type Options = {
     outputs: BuildTxOutputRequest[],
     coinInfo: BitcoinNetworkInfo,
     baseFee?: number,
+    skipPermutation?: boolean,
 };
 
 export default class TransactionComposer {
@@ -31,6 +32,8 @@ export default class TransactionComposer {
 
     baseFee: number;
 
+    skipPermutation: boolean;
+
     feeLevels: Fees;
 
     composed: { [key: string]: BuildTxResult } = {};
@@ -41,6 +44,7 @@ export default class TransactionComposer {
         this.coinInfo = options.coinInfo;
         this.blockHeight = 0;
         this.baseFee = options.baseFee || 0;
+        this.skipPermutation = options.skipPermutation || false;
         this.feeLevels = new Fees(options.coinInfo);
 
         // map to hd-wallet/buildTx format
@@ -51,8 +55,11 @@ export default class TransactionComposer {
                   .concat(addresses.unused)
                   .concat(addresses.change)
                   .map(a => a.address);
-        this.utxos = options.utxo.map(u => {
+        this.utxos = options.utxo.flatMap(u => {
+            // exclude amounts lower than dust limit if they are NOT required
+            if (!u.required && new BigNumber(u.amount).lte(this.coinInfo.dustLimit)) return [];
             const addressPath = getHDPath(u.path);
+
             return {
                 index: u.vout,
                 transactionHash: u.txid,
@@ -63,6 +70,7 @@ export default class TransactionComposer {
                 vsize: 0, // doesn't matter
                 coinbase: typeof u.coinbase === 'boolean' ? u.coinbase : false, // decide it it can be spent immediately (false) or after 100 conf (true)
                 own: allAddresses.indexOf(u.address) >= 0, // decide if it can be spent immediately (own) or after 6 conf (not own)
+                required: u.required,
             };
         });
     }
@@ -176,6 +184,7 @@ export default class TransactionComposer {
             feeRate,
             segwit: coinInfo.segwit && account.type !== 'legacy',
             inputAmounts: true, // since 2.3.4 every utxo needs to have "amount" field
+            skipPermutation: this.skipPermutation,
             basePath: account.address_n,
             network: coinInfo.network,
             changeId,

@@ -119,6 +119,7 @@ describe('utils/deviceFeaturesUtils', () => {
             xvg: 'update-required',
             zcr: 'update-required',
             replaceTransaction: 'update-required',
+            decreaseOutput: 'update-required',
         });
 
         const feat2 = {
@@ -132,6 +133,7 @@ describe('utils/deviceFeaturesUtils', () => {
         // default Capabilities T2
         expect(getUnavailableCapabilities(feat2, coins, support)).toEqual({
             replaceTransaction: 'update-required',
+            decreaseOutput: 'update-required',
         });
 
         // excluded single method without specified coins

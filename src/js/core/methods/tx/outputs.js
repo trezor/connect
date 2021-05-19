@@ -138,10 +138,9 @@ export const outputToTrezor = (
                 'opReturn output should not contains value',
             );
         }
-        const data: Buffer = output.opReturnData;
         return {
             amount: '0',
-            op_return_data: data.toString('hex'),
+            op_return_data: output.opReturnData.toString('hex'),
             script_type: 'PAYTOOPRETURN',
         };
     }
@@ -167,13 +166,11 @@ export const outputToTrezor = (
         );
     }
 
-    const isCashAddress: boolean = !!coinInfo.cashAddrPrefix;
-
     isScriptHash(address, coinInfo);
 
     // make sure that cashaddr has prefix
     return {
-        address: isCashAddress ? bchaddrjs.toCashAddress(address) : address,
+        address: coinInfo.cashAddrPrefix ? bchaddrjs.toCashAddress(address) : address,
         amount: value,
         script_type: 'PAYTOADDRESS',
     };

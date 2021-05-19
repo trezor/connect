@@ -45,6 +45,9 @@ type Params = {
     account?: $ElementType<PrecomposeParams, 'account'>,
     feeLevels?: $ElementType<PrecomposeParams, 'feeLevels'>,
     baseFee?: $ElementType<PrecomposeParams, 'baseFee'>,
+    floorBaseFee?: $ElementType<PrecomposeParams, 'floorBaseFee'>,
+    sequence?: $ElementType<PrecomposeParams, 'sequence'>,
+    skipPermutation?: $ElementType<PrecomposeParams, 'skipPermutation'>,
 };
 
 export default class ComposeTransaction extends AbstractMethod {
@@ -59,12 +62,15 @@ export default class ComposeTransaction extends AbstractMethod {
         const { payload } = message;
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'outputs', type: 'array', obligatory: true, allowEmpty: true },
+            { name: 'outputs', type: 'array', obligatory: true },
             { name: 'coin', type: 'string', obligatory: true },
             { name: 'push', type: 'boolean' },
             { name: 'account', type: 'object' },
             { name: 'feeLevels', type: 'array' },
             { name: 'baseFee', type: 'number' },
+            { name: 'floorBaseFee', type: 'boolean' },
+            { name: 'sequence', type: 'number' },
+            { name: 'skipPermutation', type: 'boolean' },
         ]);
 
         const coinInfo = getBitcoinNetwork(payload.coin);
@@ -116,6 +122,9 @@ export default class ComposeTransaction extends AbstractMethod {
             account: payload.account,
             feeLevels: payload.feeLevels,
             baseFee: payload.baseFee,
+            floorBaseFee: payload.floorBaseFee,
+            sequence: payload.sequence,
+            skipPermutation: payload.skipPermutation,
             push: typeof payload.push === 'boolean' ? payload.push : false,
         };
     }
@@ -124,7 +133,7 @@ export default class ComposeTransaction extends AbstractMethod {
         account: $ElementType<PrecomposeParams, 'account'>,
         feeLevels: $ElementType<PrecomposeParams, 'feeLevels'>,
     ): Promise<PrecomposedTransaction[]> {
-        const { coinInfo, outputs, baseFee } = this.params;
+        const { coinInfo, outputs, baseFee, skipPermutation } = this.params;
         const address_n = pathUtils.validatePath(account.path);
         const segwit = pathUtils.isSegwitPath(address_n) || pathUtils.isBech32Path(address_n);
         const composer = new TransactionComposer({
@@ -139,6 +148,7 @@ export default class ComposeTransaction extends AbstractMethod {
             coinInfo,
             outputs,
             baseFee,
+            skipPermutation,
         });
 
         // This is mandatory, hd-wallet expects current block height
@@ -149,10 +159,12 @@ export default class ComposeTransaction extends AbstractMethod {
             composer.composeCustomFee(level.feePerUnit);
             const tx = { ...composer.composed.custom }; // needs to spread otherwise flow has a problem with BuildTxResult vs PrecomposedTransaction (max could be undefined)
             if (tx.type === 'final') {
-                const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0xffffffff));
-                const txOutputs = tx.transaction.outputs.sorted.map(out =>
-                    outputToTrezor(out, coinInfo),
+                const inputs = tx.transaction.inputs.map(inp =>
+                    inputToTrezor(inp, this.params.sequence || 0xffffffff),
                 );
+                const { sorted, _permutation } = tx.transaction.outputs;
+                const txOutputs = sorted.map(out => outputToTrezor(out, coinInfo));
+
                 return {
                     type: 'final',
                     max: tx.max,
@@ -163,6 +175,7 @@ export default class ComposeTransaction extends AbstractMethod {
                     transaction: {
                         inputs,
                         outputs: txOutputs,
+                        outputsPermutation: _permutation,
                     },
                 };
             }
@@ -351,17 +364,19 @@ export default class ComposeTransaction extends AbstractMethod {
 
         const options: $Shape<TransactionOptions> = {};
         if (coinInfo.network.consensusBranchId) {
-            // zcash
+            // zcash, TODO: get constants from blockbook: https://github.com/trezor/trezor-suite/issues/3749
             options.overwintered = true;
             options.version = 4;
             options.version_group_id = 0x892f2085;
+            options.branch_id = 0xe9ff75a6;
         }
         if (coinInfo.hasTimestamp) {
-            // capricoin
+            // peercoin, capricoin
             options.timestamp = Math.round(new Date().getTime() / 1000);
         }
-        // const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, (0xffffffff - 2))); // TODO: RBF
-        const inputs = tx.transaction.inputs.map(inp => inputToTrezor(inp, 0xffffffff));
+        const inputs = tx.transaction.inputs.map(inp =>
+            inputToTrezor(inp, this.params.sequence || 0xffffffff),
+        );
         const outputs = tx.transaction.outputs.sorted.map(out => outputToTrezor(out, coinInfo));
 
         let refTxs = [];
