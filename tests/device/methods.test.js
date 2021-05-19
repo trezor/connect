@@ -9,6 +9,7 @@ let currentMnemonic;
 fixtures.forEach(testCase => {
     describe(`TrezorConnect.${testCase.method}`, () => {
         beforeAll(async done => {
+            if (!testCase.setup.mnemonic) done();
             try {
                 if (!controller) {
                     controller = new Controller({
