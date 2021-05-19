@@ -12,6 +12,7 @@ import binanceSignTransaction from './binanceSignTransaction';
 import cardanoGetAddress from './cardanoGetAddress';
 import cardanoGetPublicKey from './cardanoGetPublicKey';
 import cardanoSignTransaction from './cardanoSignTransaction';
+import composeTransaction from './composeTransaction';
 import eosGetPublicKey from './eosGetPublicKey';
 import eosSignTransaction from './eosSignTransaction';
 import ethereumGetAddress from './ethereumGetAddress';
@@ -65,7 +66,7 @@ let fixtures = [
     cardanoSignTransaction,
     // todo: missing fixtures: ChangePin.js
     // todo: missing fixtures: CipherKeyValue.js
-    // todo: missing fixtures: ComposeTransaction.js
+    composeTransaction,
     // todo: missing fixtures: CustomMessage.js
     eosGetPublicKey,
     eosSignTransaction,

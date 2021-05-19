@@ -42,11 +42,27 @@ if (process.env.TESTS_USE_WS_CACHE !== 'false') {
                 fixtures = f;
             },
             default: class BlockchainLink {
+                constructor(args) {
+                    this.name = args.name;
+                }
+
                 on() {}
 
                 connect() {}
 
                 dispose() {}
+
+                getInfo() {
+                    return {
+                        url: 'jest-mocked-module',
+                        name: this.name,
+                        shortcut: this.name,
+                        version: '0.0.0',
+                        decimals: 0,
+                        blockHeight: 10000000,
+                        blockHash: 'abcd',
+                    };
+                }
 
                 getAccountInfo(params) {
                     if (!fixtures.getAccountInfo || !fixtures.getAccountInfo[params.descriptor])
