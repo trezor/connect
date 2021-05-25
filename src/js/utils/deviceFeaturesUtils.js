@@ -106,3 +106,30 @@ export const getUnavailableCapabilities = (
     });
     return list;
 };
+
+/**
+ * There is an inconsistency in representation of device feature revision attribute.
+ * - T1 uses UTF-8 representation. (df0963ec48f01f3d07ffca556e21ff0070cab099)
+ * - T2 uses hex raw bytes representation. (6466303936336563)
+ * To avoid being model specific, in case the inconsistency is fixed, it is required to reliably detect what encoding is used.
+ * @param {Features} features
+ * @returns revision - UTF-8 string with only hex symbols or null
+ */
+export const parseRevision = (features: Features) => {
+    const { revision } = features;
+
+    // if device is in bootloader mode, revision is null
+    if (!revision) return null;
+
+    // if revision contains at least one a-f character and the rest are numbers, it is in UTF-8 (no encoding needed)
+    if (/^(?=.*[a-f])([a-f0-9]*)$/gi.test(revision)) return revision;
+
+    // otherwise it is probably in hex raw bytes representation so we encode it into UTF-8
+    const revisionUtf8 = Buffer.from(revision, 'hex').toString('utf-8');
+
+    /**
+     * We have to make sure, that revision was not UTF-8 before encoding, that means it consisted only from numbers (chance close to zero).
+     * However, if yes, it contains characters different from a-f and numbers.
+     */
+    return /^([a-f0-9])*$/gi.test(revisionUtf8) ? revisionUtf8 : revision;
+};
