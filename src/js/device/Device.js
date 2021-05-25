@@ -18,7 +18,11 @@ import { create as createDeferred } from '../utils/deferred';
 import DataManager from '../data/DataManager';
 import { getAllNetworks } from '../data/CoinInfo';
 import { getFirmwareStatus, getRelease } from '../data/FirmwareInfo';
-import { parseCapabilities, getUnavailableCapabilities } from '../utils/deviceFeaturesUtils';
+import {
+    parseCapabilities,
+    getUnavailableCapabilities,
+    parseRevision,
+} from '../utils/deviceFeaturesUtils';
 import { versionCompare } from '../utils/versionUtils';
 import { initLog } from '../utils/debug';
 
@@ -445,6 +449,10 @@ class Device extends EventEmitter {
         } else {
             feat.unlocked = true;
         }
+        // fix inconsistency of revision attribute between T1 and T2
+        const revision = parseRevision(feat);
+        feat.revision = revision;
+
         this.features = feat;
         this.featuresNeedsReload = false;
     }
