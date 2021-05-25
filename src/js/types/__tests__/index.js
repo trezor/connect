@@ -90,15 +90,15 @@ export const events = () => {
             (payload.features.major_version: number | null);
             (payload.features.minor_version: number | null);
             (payload.features.patch_version: number | null);
-            (payload.features.pin_protection: boolean);
+            (payload.features.pin_protection: boolean | null);
             (payload.features.passphrase_protection: boolean | null);
             (payload.features.label: string | null);
-            (payload.features.initialized: boolean);
+            (payload.features.initialized: boolean | null);
             (payload.features.revision: string | null);
-            (payload.features.needs_backup: boolean);
-            (payload.features.flags: number);
-            (payload.features.unfinished_backup: boolean);
-            (payload.features.no_backup: boolean);
+            (payload.features.needs_backup: boolean | null);
+            (payload.features.flags: number | null);
+            (payload.features.unfinished_backup: boolean | null);
+            (payload.features.no_backup: boolean | null);
             (payload.features.model: string);
         }
     });
