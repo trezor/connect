@@ -106,3 +106,31 @@ export const getUnavailableCapabilities = (
     });
     return list;
 };
+
+/**
+ * Fixes an inconsistency in representation of device feature revision attribute (git commit of specific release).
+ * - T1 uses standard hexadecimal notation. (df0963ec48f01f3d07ffca556e21ff0070cab099)
+ * - T2 uses hexadecimal raw bytes notation. (6466303936336563)
+ * To avoid being model specific, in case the inconsistency is fixed, it is required to reliably detect what encoding is used.
+ * @param {Features} features
+ * @returns revision - standard hexadecimal notation or null
+ */
+export const parseRevision = (features: Features) => {
+    const { revision } = features;
+
+    // if device is in bootloader mode, revision is null
+    if (!revision) return null;
+
+    // if revision contains at least one a-f character and the rest are numbers, it is already in standard hexadecimal notation
+    if (/^(?=.*[a-f])([a-f0-9]*)$/gi.test(revision)) return revision;
+
+    // otherwise it is probably in hexadecimal raw bytes representation so we encode it into standard hexadecimal notation
+    const revisionUtf8 = Buffer.from(revision, 'hex').toString('utf-8');
+
+    /**
+     * We have to make sure, that revision was not in standard hexadecimal notation before encoding,
+     * that means it consisted only from decimal numbers (chance close to zero).
+     * So, if it contains characters different from a-f and numbers, it was in hexadecimal notation before encoding.
+     */
+    return /^([a-f0-9])*$/gi.test(revisionUtf8) ? revisionUtf8 : revision;
+};

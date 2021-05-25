@@ -2,7 +2,11 @@ import coinsJSON from '../../../data/coins.json';
 import configJSON from '../../../data/config.json';
 import { parseCoinsJson, getAllNetworks } from '../../data/CoinInfo';
 
-import { parseCapabilities, getUnavailableCapabilities } from '../deviceFeaturesUtils';
+import {
+    parseCapabilities,
+    getUnavailableCapabilities,
+    parseRevision,
+} from '../deviceFeaturesUtils';
 
 describe('utils/deviceFeaturesUtils', () => {
     beforeAll(() => {
@@ -175,5 +179,27 @@ describe('utils/deviceFeaturesUtils', () => {
 
         // without capabilities
         expect(getUnavailableCapabilities({}, coins, support)).toEqual({});
+    });
+
+    describe('parseRevision', () => {
+        it('parses hexadecimal raw bytes to the standard hexadecimal notation', () => {
+            expect(parseRevision({ revision: '6466303936336563' })).toEqual('df0963ec');
+        });
+
+        it('does nothing when standard hexadecimal notation is parsed', () => {
+            expect(parseRevision({ revision: 'f4424ece1ccb7fc0d6cad00ff840fac287a34f07' })).toEqual(
+                'f4424ece1ccb7fc0d6cad00ff840fac287a34f07',
+            );
+        });
+
+        it('does nothing when standard hexadecimal notation with only 0-9 symbols is parsed', () => {
+            expect(parseRevision({ revision: '2442434213337100161230033840333287234307' })).toEqual(
+                '2442434213337100161230033840333287234307',
+            );
+        });
+
+        it('passes null, caused by bootloader mode, through', () => {
+            expect(parseRevision({ revision: null })).toEqual(null);
+        });
     });
 });
