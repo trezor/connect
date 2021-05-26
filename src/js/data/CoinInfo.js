@@ -188,14 +188,6 @@ const parseBitcoinNetworksJson = (json: any) => {
             consensusBranchId: coin.consensus_branch_id, // zcash, komodo
         };
 
-        const blockchainLink =
-            Array.isArray(coin.blockbook) && coin.blockbook.length > 0
-                ? {
-                      type: 'blockbook',
-                      url: coin.blockbook,
-                  }
-                : undefined;
-
         bitcoinNetworks.push({
             type: 'bitcoin',
             // address_type in Network
@@ -205,7 +197,7 @@ const parseBitcoinNetworksJson = (json: any) => {
             // bip115: not used
             // bitcore: not used,
             // blockbook: not used,
-            blockchainLink,
+            blockchainLink: coin.blockchain_link,
             blocktime: Math.round(coin.blocktime_seconds / 60),
             cashAddrPrefix: coin.cashaddr_prefix,
             label: coin.coin_label,
@@ -256,16 +248,9 @@ const parseBitcoinNetworksJson = (json: any) => {
 const parseEthereumNetworksJson = (json: any) => {
     Object.keys(json).forEach(key => {
         const network = json[key];
-        const blockchainLink =
-            Array.isArray(network.blockbook) && network.blockbook.length > 0
-                ? {
-                      type: 'blockbook',
-                      url: network.blockbook,
-                  }
-                : undefined;
         ethereumNetworks.push({
             type: 'ethereum',
-            blockchainLink,
+            blockchainLink: network.blockchain_link,
             blocktime: -1, // unknown
             chain: network.chain,
             chainId: network.chain_id,
