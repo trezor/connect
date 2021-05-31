@@ -76,6 +76,7 @@ const TYPE_PATCH = {
     'Features.revision': 'string | null',
     'Features.bootloader_hash': 'string | null',
     'Features.imported': 'boolean | null',
+    'Features.unlocked': 'boolean | null',
     'Features.firmware_present': 'boolean | null',
     'Features.needs_backup': 'boolean | null',
     'Features.flags': 'number | null',

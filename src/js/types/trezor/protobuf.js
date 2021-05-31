@@ -1367,7 +1367,7 @@ export type Features = {
     revision: string | null,
     bootloader_hash: string | null,
     imported: boolean | null,
-    unlocked: boolean,
+    unlocked: boolean | null,
     firmware_present: boolean | null,
     needs_backup: boolean | null,
     flags: number | null,
