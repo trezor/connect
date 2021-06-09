@@ -1,3 +1,15 @@
+# 8.1.28
+
+### Added
+- 1.10.1/2.4.0 firmware release.
+- support for intermediary firmware via `@trezor/rollout` dependency.
+- support for decreasing output in RBF signTransaction (since 1.10.0/2.4.0 FW).
+- support for Syscoin (SYS).
+
+### Changed
+- remove coin support via trezor-firmware/common submodule: PIVX, Gincoin (GIN), Pesetacoin (PTC), Zcoin (XZC), Ethereum Social (ETSC), Ethereum Classic Testnet (TETC), EtherCore (ERE), Atheios (ATH), EOS Classic (EOSC), REOSC Ecosystem (REOSC), Trust ETH reOrigin (TEO).
+- fix optional types of protobuf `Features`.
+
 # 8.1.27
 
 ### Added
