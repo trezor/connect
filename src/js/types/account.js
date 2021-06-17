@@ -1,6 +1,7 @@
 /* @flow */
-import type { TxInputType, TxOutputType } from './trezor/protobuf';
+import type { TxInputType, TxOutputType, CardanoDerivationType } from './trezor/protobuf';
 import type { VinVout, BlockbookTransaction } from './backend/transactions';
+import type { CardanoInput, CardanoOutput } from './networks/cardano';
 
 export type DiscoveryAccountType = 'p2pkh' | 'p2sh' | 'p2tr' | 'p2wpkh';
 
@@ -22,6 +23,7 @@ export type GetAccountInfo = {
         seq: number,
     },
     defaultAccountType?: DiscoveryAccountType,
+    derivationType?: CardanoDerivationType,
 };
 
 export type TokenInfo = {
@@ -59,6 +61,9 @@ export type AccountUtxo = {
     confirmations: number,
     coinbase?: boolean,
     required?: boolean,
+    cardanoSpecific?: {
+        unit: string,
+    },
 };
 
 // Transaction object
@@ -101,6 +106,14 @@ export type AccountTransaction = {
     tokens: TokenTransfer[],
     rbf?: boolean,
     ethereumSpecific?: $ElementType<BlockbookTransaction, 'ethereumSpecific'>,
+    cardanoSpecific?: {
+        subtype:
+            | 'withdrawal'
+            | 'stake_delegation'
+            | 'stake_registration'
+            | 'stake_deregistration'
+            | null,
+    },
     details: {
         vin: VinVout[],
         vout: VinVout[],
@@ -135,6 +148,13 @@ export type AccountInfo = {
         // XRP
         sequence?: number,
         reserve?: string,
+        // ADA
+        staking: {
+            address: string,
+            isActive: boolean,
+            rewards: string,
+            poolId: string | null,
+        },
     },
     page?: {
         // blockbook
@@ -231,6 +251,33 @@ export type PrecomposedTransaction =
           transaction: {
               inputs: TxInputType[],
               outputs: TxOutputType[],
+              outputsPermutation: number[],
+          },
+      };
+
+export type PrecomposedTransactionCardano =
+    | {
+          type: 'error',
+          error: string,
+      }
+    | {
+          type: 'nonfinal',
+          max: string | typeof undefined,
+          totalSpent: string, // all the outputs, no fee, no change
+          fee: string,
+          feePerByte: string,
+          bytes: number,
+      }
+    | {
+          type: 'final',
+          max: string | typeof undefined,
+          totalSpent: string, // all the outputs, no fee, no change
+          fee: string,
+          feePerByte: string,
+          bytes: number,
+          transaction: {
+              inputs: CardanoInput[],
+              outputs: CardanoOutput[],
               outputsPermutation: number[],
           },
       };

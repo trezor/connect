@@ -19,3 +19,9 @@ export const RippleWorker = () =>
         // $FlowIssue
         require('@trezor/blockchain-link/build/node/ripple-worker'); // eslint-disable-line global-require
     });
+
+export const BlockfrostWorker = () =>
+    new TinyWorker(() => {
+        // $FlowIssue
+        require('@trezor/blockchain-link/build/node/blockfrost-worker'); // eslint-disable-line global-require
+    });

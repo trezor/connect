@@ -5,6 +5,7 @@ import Blockchain from '../../../backend/BlockchainLink';
 import DeviceCommands from '../../../device/DeviceCommands';
 import { getAccountAddressN } from '../../../utils/accountUtils';
 import { formatAmount } from '../../../utils/formatUtils';
+import type { CardanoDerivationType } from '../../../types/trezor/protobuf';
 
 import type { CoinInfo } from '../../../types';
 import type {
@@ -22,6 +23,7 @@ type DiscoveryOptions = {
     blockchain: Blockchain,
     commands: DeviceCommands,
     limit?: number,
+    derivationType?: ?CardanoDerivationType,
 };
 
 export default class Discovery extends EventEmitter {
@@ -43,6 +45,8 @@ export default class Discovery extends EventEmitter {
 
     completed: boolean;
 
+    derivationType: ?CardanoDerivationType;
+
     constructor(options: DiscoveryOptions) {
         super();
 
@@ -54,6 +58,7 @@ export default class Discovery extends EventEmitter {
         this.blockchain = options.blockchain;
         this.commands = options.commands;
         this.coinInfo = options.blockchain.coinInfo;
+        this.derivationType = options.derivationType;
         const { coinInfo } = this;
 
         // set discovery types
@@ -107,7 +112,11 @@ export default class Discovery extends EventEmitter {
 
             // get descriptor from device
             const path = accountType.getPath(this.index);
-            const descriptor = await this.commands.getAccountDescriptor(this.coinInfo, path);
+            const descriptor = await this.commands.getAccountDescriptor(
+                this.coinInfo,
+                path,
+                this.derivationType,
+            );
 
             if (!descriptor) {
                 throw ERRORS.TypedError('Runtime', 'Discovery: descriptor not found');

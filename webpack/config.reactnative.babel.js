@@ -17,6 +17,7 @@ module.exports = {
         libraryTarget: 'umd',
         libraryExport: 'default',
     },
+    stats: { children: true },
     externals: {
         'react-native': 'commonjs react-native',
         'react-native-threads': 'commonjs react-native-threads',
@@ -38,6 +39,8 @@ module.exports = {
             path: false,
             net: false, // ignore "net" and "tls" imports in "ripple-lib"
             tls: false,
+            http: false, // ignore "http" imports in "ripple-lib"
+            https: false, // ignore "http" imports in "ripple-lib"
             crypto: false, // no polyfill
             stream: require.resolve('stream-browserify'), // polyfill
         },
