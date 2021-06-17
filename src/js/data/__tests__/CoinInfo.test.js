@@ -62,6 +62,7 @@ describe('data/CoinInfo', () => {
             'Capability_Binance',
             'Capability_Ethereum',
             'Capability_Ripple',
+            'Capability_Cardano',
         ].concat(other.map(c => `Capability_${c}`));
 
         expect(getCoinInfoByCapability(all).length).toEqual(

@@ -2718,7 +2718,7 @@
     "misc": [
         {
             "blockchain_link": {
-                "type": "cardano",
+                "type": "blockfrost",
                 "url": [
                     "wss://trezor-cardano-mainnet.blockfrost.io"
                 ]
@@ -2727,6 +2727,25 @@
             "decimals": 6,
             "name": "Cardano",
             "shortcut": "ADA",
+            "slip44": 1815,
+            "support": {
+                "connect": true,
+                "suite": false,
+                "trezor1": false,
+                "trezor2": "2.0.8"
+            }
+        },
+        {
+            "blockchain_link": {
+                "type": "blockfrost",
+                "url": [
+                    "wss://trezor-cardano-testnet.blockfrost.io"
+                ]
+            },
+            "curve": "ed25519",
+            "decimals": 6,
+            "name": "Cardano Testnet",
+            "shortcut": "tADA",
             "slip44": 1815,
             "support": {
                 "connect": true,
