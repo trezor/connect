@@ -17,7 +17,7 @@ import type { CoreMessage, PostMessageEvent } from '../types';
 import { initLog } from '../utils/debug';
 import { sendMessage } from '../utils/windowsUtils';
 import { getOrigin } from '../env/browser/networkUtils';
-import { suggestBridgeInstaller } from '../env/browser/browserUtils';
+import { suggestBridgeInstaller, suggestUdevInstaller } from '../env/browser/browserUtils';
 import { load as loadStorage, PERMISSIONS_KEY } from '../storage';
 
 let _core: Core;
@@ -145,6 +145,7 @@ const postMessage = (message: CoreMessage) => {
     if (message.event === TRANSPORT_EVENT) {
         // add preferred bridge installer
         message.payload.bridge = suggestBridgeInstaller();
+        message.payload.udev = suggestUdevInstaller();
     }
 
     // eslint-disable-next-line no-use-before-define
