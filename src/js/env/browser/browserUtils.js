@@ -1,6 +1,7 @@
 /* @flow */
 import Bowser from 'bowser';
 import { getBridgeInfo } from '../../data/TransportInfo';
+import { getUdevInfo } from '../../data/UdevInfo';
 
 export type BrowserState = {
     name: string,
@@ -51,7 +52,7 @@ export const getBrowserState = (supportedBrowsers: {
     };
 };
 
-const getSuggestedBridgeInstaller = () => {
+const getSuggestedPlatform = () => {
     if (!navigator || !navigator.userAgent) return;
     // Find preferred platform using bowser and userAgent
     const agent = navigator.userAgent;
@@ -80,12 +81,28 @@ export const suggestBridgeInstaller = () => {
     const info = getBridgeInfo();
     // check if preferred field was already added
     if (!info.packages.find(p => p.preferred)) {
-        const preferred = getSuggestedBridgeInstaller();
-        if (preferred) {
+        const platform = getSuggestedPlatform();
+        if (platform) {
             // override BridgeInfo packages, add preferred field
             info.packages = info.packages.map(p => ({
                 ...p,
-                preferred: p.platform.indexOf(preferred) >= 0,
+                preferred: p.platform.indexOf(platform) >= 0,
+            }));
+        }
+    }
+    return info;
+};
+
+export const suggestUdevInstaller = () => {
+    const info = getUdevInfo();
+    // check if preferred field was already added
+    if (!info.packages.find(p => p.preferred)) {
+        const platform = getSuggestedPlatform();
+        if (platform) {
+            // override UdevInfo packages, add preferred field
+            info.packages = info.packages.map(p => ({
+                ...p,
+                preferred: p.platform.indexOf(platform) >= 0,
             }));
         }
     }

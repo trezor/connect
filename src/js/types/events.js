@@ -17,11 +17,22 @@ export interface BridgeInfo {
     }>;
     changelog: string;
 }
+export interface UdevInfo {
+    directory: string;
+    packages: Array<{
+        name: string,
+        platform: string[],
+        url: string,
+        signature?: string,
+        preferred?: boolean,
+    }>;
+}
 export type TransportInfo = {
     type: string,
     version: string,
     outdated: boolean,
     bridge?: BridgeInfo,
+    udev?: UdevInfo,
 };
 
 export type TransportEvent =
@@ -34,6 +45,7 @@ export type TransportEvent =
           payload: {
               error: string,
               bridge?: BridgeInfo,
+              udev?: UdevInfo,
           },
       };
 
