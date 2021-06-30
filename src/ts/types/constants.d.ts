@@ -80,9 +80,6 @@ export namespace DEVICE {
 
     // custom
     const WAIT_FOR_SELECTION = 'device-wait_for_selection';
-
-    // this string has different prefix than other constants and it's used as device path
-    const UNREADABLE = 'unreadable-device';
 }
 
 export namespace UI {

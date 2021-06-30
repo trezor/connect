@@ -67,6 +67,8 @@ class Device extends EventEmitter {
 
     hasDebugLink: boolean;
 
+    unreadableError: ?string; // unreadable error like: HID device, LIBUSB_ERROR
+
     firmwareStatus: DeviceFirmwareStatus;
 
     firmwareRelease: ?FirmwareRelease;
@@ -126,8 +128,14 @@ class Device extends EventEmitter {
         }
     }
 
-    static createUnacquired(transport: Transport, descriptor: DeviceDescriptor) {
-        return new Device(transport, descriptor);
+    static createUnacquired(
+        transport: Transport,
+        descriptor: DeviceDescriptor,
+        unreadableError?: string,
+    ) {
+        const device = new Device(transport, descriptor);
+        device.unreadableError = unreadableError;
+        return device;
     }
 
     async acquire() {
@@ -660,10 +668,11 @@ class Device extends EventEmitter {
 
     // simplified object to pass via postMessage
     toMessageObject(): DeviceTyped {
-        if (this.originalDescriptor.path === DEVICE.UNREADABLE) {
+        if (this.unreadableError) {
             return {
                 type: 'unreadable',
                 path: this.originalDescriptor.path,
+                error: this.unreadableError, // provide error details
                 label: 'Unreadable device',
             };
         }

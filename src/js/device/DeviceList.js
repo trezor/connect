@@ -179,19 +179,24 @@ export default class DeviceList extends EventEmitter {
 
         if (this.transportPlugin && this.transportPlugin.name === 'WebUsbPlugin') {
             const { unreadableHidDeviceChange } = this.transportPlugin;
-            unreadableHidDeviceChange.on('change', async () => {
+            // TODO: https://github.com/trezor/trezor-link/issues/40
+            const UNREADABLE_PATH = 'unreadable'; // unreadable device doesn't return incremental path.
+            unreadableHidDeviceChange.on('change', () => {
                 if (this.transportPlugin && this.transportPlugin.unreadableHidDevice) {
-                    const device = await this._createUnacquiredDevice({
-                        path: DEVICE.UNREADABLE,
-                        session: null,
-                        debugSession: null,
-                        debug: false,
-                    });
-                    this.devices[DEVICE.UNREADABLE] = device;
+                    const device = this._createUnreadableDevice(
+                        {
+                            path: UNREADABLE_PATH,
+                            session: null,
+                            debugSession: null,
+                            debug: false,
+                        },
+                        'HID_DEVICE',
+                    );
+                    this.devices[UNREADABLE_PATH] = device;
                     this.emit(DEVICE.CONNECT_UNACQUIRED, device.toMessageObject());
                 } else {
-                    const device = this.devices[DEVICE.UNREADABLE];
-                    delete this.devices[DEVICE.UNREADABLE];
+                    const device = this.devices[UNREADABLE_PATH];
+                    delete this.devices[UNREADABLE_PATH];
                     this.emit(DEVICE.DISCONNECT, device.toMessageObject());
                 }
             });
@@ -206,17 +211,19 @@ export default class DeviceList extends EventEmitter {
         await new CreateDeviceHandler(descriptor, this).handle();
     }
 
-    async _createUnacquiredDevice(descriptor: DeviceDescriptor) {
-        const currentDescriptor =
-            (this.stream.current && this.stream.current.find(d => d.path === descriptor.path)) ||
-            descriptor;
-        _log.debug('Creating Unacquired Device', currentDescriptor);
-
-        const device = await Device.createUnacquired(this.transport, currentDescriptor);
+    _createUnacquiredDevice(descriptor: DeviceDescriptor) {
+        _log.debug('Creating Unacquired Device', descriptor);
+        const device = Device.createUnacquired(this.transport, descriptor);
         device.once(DEVICE.ACQUIRED, () => {
+            // emit connect event once device becomes acquired
             this.emit(DEVICE.CONNECT, device.toMessageObject());
         });
         return device;
+    }
+
+    _createUnreadableDevice(descriptor: DeviceDescriptor, unreadableError: string) {
+        _log.debug('Creating Unreadable Device', descriptor, unreadableError);
+        return Device.createUnacquired(this.transport, descriptor, unreadableError);
     }
 
     getDevice(path: string) {
@@ -357,13 +364,21 @@ class CreateDeviceHandler {
                 error.toString() === ERRORS.WEBUSB_ERROR_MESSAGE
             ) {
                 this.list.enumerate();
-                await this._handleUsedElsewhere();
+                this._handleUsedElsewhere();
+            } else if (error.message.indexOf(ERRORS.LIBUSB_ERROR_MESSAGE) >= 0) {
+                // catch one of trezord LIBUSB_ERRORs
+                const device = this.list._createUnreadableDevice(
+                    this.list.creatingDevicesDescriptors[this.path],
+                    error.message,
+                );
+                this.list.devices[this.path] = device;
+                this.list.emit(DEVICE.CONNECT_UNACQUIRED, device.toMessageObject());
             } else if (error.code === 'Device_InitializeFailed') {
                 // firmware bug - device is in "show address" state which cannot be cancelled
-                await this._handleUsedElsewhere();
+                this._handleUsedElsewhere();
             } else if (error.code === 'Device_UsedElsewhere') {
                 // most common error - someone else took the device at the same time
-                await this._handleUsedElsewhere();
+                this._handleUsedElsewhere();
             } else {
                 await resolveAfter(501, null);
                 await this.handle();
@@ -373,14 +388,14 @@ class CreateDeviceHandler {
     }
 
     async _takeAndCreateDevice() {
-        const device = await Device.fromDescriptor(this.list.transport, this.descriptor);
+        const device = Device.fromDescriptor(this.list.transport, this.descriptor);
         this.list.devices[this.path] = device;
         await device.run();
         this.list.emit(DEVICE.CONNECT, device.toMessageObject());
     }
 
-    async _handleUsedElsewhere() {
-        const device = await this.list._createUnacquiredDevice(
+    _handleUsedElsewhere() {
+        const device = this.list._createUnacquiredDevice(
             this.list.creatingDevicesDescriptors[this.path],
         );
         this.list.devices[this.path] = device;

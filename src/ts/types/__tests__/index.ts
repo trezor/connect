@@ -87,6 +87,13 @@ export const events = async () => {
             payload.features.unfinished_backup;
             payload.features.no_backup;
             payload.features.model;
+            // @ts-expect-error: error does not exist
+            payload.error.toLowerCase();
+        }
+
+        if (payload.type === 'unreadable') {
+            // error field is accessible only in unreadable device
+            payload.error.toLowerCase();
         }
     });
     TrezorConnect.off(DEVICE_EVENT, () => {});

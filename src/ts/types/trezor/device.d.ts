@@ -37,6 +37,7 @@ export type KnownDevice = {
     id: string | null;
     path: string;
     label: string;
+    error?: typeof undefined;
     firmware: DeviceFirmwareStatus;
     firmwareRelease?: FirmwareRelease;
     status: DeviceStatus;
@@ -47,10 +48,11 @@ export type KnownDevice = {
 };
 
 export type UnknownDevice = {
-    type: 'unacquired' | 'unreadable';
+    type: 'unacquired';
     id?: null;
     path: string;
     label: string;
+    error?: typeof undefined;
     features?: typeof undefined;
     firmware?: typeof undefined;
     firmwareRelease?: typeof undefined;
@@ -60,10 +62,29 @@ export type UnknownDevice = {
     unavailableCapabilities?: typeof undefined;
 };
 
-export type Device = KnownDevice | UnknownDevice;
+export type UnreadableDevice = {
+    type: 'unreadable';
+    id?: null;
+    path: string;
+    label: string;
+    error: string;
+    features?: typeof undefined;
+    firmware?: typeof undefined;
+    firmwareRelease?: typeof undefined;
+    status?: typeof undefined;
+    mode?: typeof undefined;
+    state?: typeof undefined;
+    unavailableCapabilities?: typeof undefined;
+};
+
+export type Device = KnownDevice | UnknownDevice | UnreadableDevice;
 
 export interface DeviceEvent {
-    type: typeof DEVICE.CONNECT | typeof DEVICE.CONNECT_UNACQUIRED | typeof DEVICE.CHANGED | typeof DEVICE.DISCONNECT;
+    type:
+        | typeof DEVICE.CONNECT
+        | typeof DEVICE.CONNECT_UNACQUIRED
+        | typeof DEVICE.CHANGED
+        | typeof DEVICE.DISCONNECT;
     payload: Device;
 }
 
