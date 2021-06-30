@@ -11,7 +11,7 @@ export type BrowserState = {
     mobile: boolean,
 };
 
-export const state: BrowserState = {
+const DEFAULT_STATE: BrowserState = {
     name: 'unknown',
     osname: 'unknown',
     supported: false,
@@ -28,42 +28,43 @@ type SupportedBrowser = {
 export const getBrowserState = (supportedBrowsers: {
     [key: string]: SupportedBrowser,
 }): BrowserState => {
-    if (typeof window === 'undefined') return state;
-    const { browser, os, platform } = Bowser.parse(window.navigator.userAgent);
-    const mobile = platform.type !== 'desktop';
-    let supported = !!supportedBrowsers[browser.name.toLowerCase()];
+    if (typeof window === 'undefined' || !navigator || !navigator.userAgent) return DEFAULT_STATE;
+    const { browser, os, platform } = Bowser.parse(navigator.userAgent);
+    const mobile = platform.type === 'mobile';
+    let supported = browser.name ? supportedBrowsers[browser.name.toLowerCase()] : null;
     let outdated = false;
 
     if (mobile && typeof navigator.usb === 'undefined') {
-        supported = false;
+        supported = null;
     }
     if (supported) {
-        const { version } = supportedBrowsers[browser.name.toLowerCase()];
-        outdated = version > parseInt(browser.version, 10);
-        supported = !outdated;
+        outdated = supported.version > parseInt(browser.version, 10);
+        if (outdated) {
+            supported = null;
+        }
     }
 
     return {
         name: `${browser.name}: ${browser.version}; ${os.name}: ${os.version};`,
         osname: os.name,
         mobile,
-        supported,
+        supported: !!supported,
         outdated,
     };
 };
 
 export const getOS = () => {
-    if (!navigator || !navigator.userAgent) return 'unknown';
-    const browser = Bowser.getParser(navigator.userAgent);
-    return browser.getOS().name.toLowerCase();
+    if (typeof window === 'undefined' || !navigator || !navigator.userAgent) return 'unknown';
+    const { os } = Bowser.parse(navigator.userAgent);
+    return os.name ? os.name.toLowerCase() : 'unknown';
 };
 
-const getSuggestedPlatform = () => {
-    if (!navigator || !navigator.userAgent) return;
+export const getSuggestedPlatform = () => {
+    if (typeof window === 'undefined' || !navigator || !navigator.userAgent) return;
     // Find preferred platform using bowser and userAgent
     const agent = navigator.userAgent;
-    const browser = Bowser.getParser(agent);
-    const name = browser.getOS().name.toLowerCase();
+    const { os } = Bowser.parse(agent);
+    const name = os.name ? os.name.toLowerCase() : null;
     switch (name) {
         case 'linux': {
             const isRpm = agent.match(/CentOS|Fedora|Mandriva|Mageia|Red Hat|Scientific|SUSE/)
