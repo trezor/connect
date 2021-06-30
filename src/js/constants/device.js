@@ -22,6 +22,3 @@ export const WORD: 'word' = 'word';
 
 // custom
 export const WAIT_FOR_SELECTION: 'device-wait_for_selection' = 'device-wait_for_selection';
-
-// this string has different prefix than other constants and it's used as device path
-export const UNREADABLE: 'unreadable-device' = 'unreadable-device';

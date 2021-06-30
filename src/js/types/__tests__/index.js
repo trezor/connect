@@ -100,6 +100,13 @@ export const events = () => {
             (payload.features.unfinished_backup: boolean | null);
             (payload.features.no_backup: boolean | null);
             (payload.features.model: string);
+            // error does not exist
+            (payload.error: typeof undefined);
+        }
+
+        if (payload.type === 'unreadable') {
+            // error field is accessible only in unreadable device
+            payload.error.toLowerCase();
         }
     });
     TrezorConnect.off(DEVICE_EVENT, () => {});

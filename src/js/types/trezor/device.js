@@ -57,6 +57,7 @@ export type KnownDevice = {|
     id: string | null,
     path: string,
     label: string,
+    error?: typeof undefined,
     firmware: DeviceFirmwareStatus,
     firmwareRelease: ?FirmwareRelease,
     status: DeviceStatus,
@@ -67,20 +68,36 @@ export type KnownDevice = {|
 |};
 
 export type UnknownDevice = {|
-    type: 'unacquired' | 'unreadable',
+    type: 'unacquired',
     id?: null,
     path: string,
     label: string,
-    features?: typeof undefined | null,
-    firmware?: typeof undefined | null,
-    firmwareRelease?: typeof undefined | null,
-    status?: typeof undefined | null,
-    mode?: typeof undefined | null,
-    state?: typeof undefined | null,
-    unavailableCapabilities?: typeof undefined | null,
+    error?: typeof undefined,
+    features?: typeof undefined,
+    firmware?: typeof undefined,
+    firmwareRelease?: typeof undefined,
+    status?: typeof undefined,
+    mode?: typeof undefined,
+    state?: typeof undefined,
+    unavailableCapabilities?: typeof undefined,
 |};
 
-export type Device = KnownDevice | UnknownDevice;
+export type UnreadableDevice = {|
+    type: 'unreadable',
+    id?: null,
+    path: string,
+    label: string,
+    error: string,
+    features?: typeof undefined,
+    firmware?: typeof undefined,
+    firmwareRelease?: typeof undefined,
+    status?: typeof undefined,
+    mode?: typeof undefined,
+    state?: typeof undefined,
+    unavailableCapabilities?: typeof undefined,
+|};
+
+export type Device = KnownDevice | UnknownDevice | UnreadableDevice;
 
 export type DeviceEvent = {
     type:
