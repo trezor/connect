@@ -211,56 +211,57 @@ const initDevice = async (method: AbstractMethod) => {
     }
 
     const isWebUsb = _deviceList.transportType() === 'WebUsbPlugin';
-
     let device: IDevice | typeof undefined;
+    let showDeviceSelection = isWebUsb;
     if (method.devicePath) {
         device = _deviceList.getDevice(method.devicePath);
+        showDeviceSelection = !!device.unreadableError;
     } else {
-        let devicesCount = _deviceList.length();
-        let selectedDevicePath: string;
-        if (devicesCount === 1 && !isWebUsb) {
+        const devices = _deviceList.asArray();
+        if (devices.length === 1 && !isWebUsb) {
             // there is only one device available. use it
-            selectedDevicePath = _deviceList.getFirstDevicePath();
-            device = _deviceList.getDevice(selectedDevicePath);
+            device = _deviceList.getDevice(devices[0].path);
+            showDeviceSelection = !!device.unreadableError;
         } else {
-            // no devices available
+            showDeviceSelection = true;
+        }
+    }
 
-            // initialize uiPromise instance which will catch changes in _deviceList (see: handleDeviceSelectionChanges function)
-            // but do not wait for resolve yet
-            createUiPromise(UI.RECEIVE_DEVICE);
+    // show device selection when:
+    // - there are no devices
+    // - using webusb and method.devicePath is not set
+    // - device is in unreadable state
+    if (showDeviceSelection) {
+        // initialize uiPromise instance which will catch changes in _deviceList (see: handleDeviceSelectionChanges function)
+        // but do not wait for resolve yet
+        createUiPromise(UI.RECEIVE_DEVICE);
 
-            // wait for popup handshake
-            await getPopupPromise().promise;
+        // wait for popup handshake
+        await getPopupPromise().promise;
 
-            // check again for available devices
-            // there is a possible race condition before popup open
-            devicesCount = _deviceList.length();
-            if (devicesCount === 1 && !isWebUsb) {
-                // there is one device available. use it
-                selectedDevicePath = _deviceList.getFirstDevicePath();
-                device = _deviceList.getDevice(selectedDevicePath);
-            } else {
-                // request select device view
-                postMessage(
-                    UiMessage(UI.SELECT_DEVICE, {
-                        webusb: isWebUsb,
-                        devices: _deviceList.asArray(),
-                    }),
-                );
+        // check again for available devices
+        // there is a possible race condition before popup open
+        const devices = _deviceList.asArray();
+        if (devices.length === 1 && devices[0].type !== 'unreadable' && !isWebUsb) {
+            // there is one device available. use it
+            device = _deviceList.getDevice(devices[0].path);
+        } else {
+            // request select device view
+            postMessage(
+                UiMessage(UI.SELECT_DEVICE, {
+                    webusb: isWebUsb,
+                    devices: _deviceList.asArray(),
+                }),
+            );
 
-                // wait for device selection
-                const uiPromise = findUiPromise(method.responseID, UI.RECEIVE_DEVICE);
-                if (uiPromise) {
-                    const uiResp = await uiPromise.promise;
-                    if (uiResp.payload.remember) {
-                        if (!uiResp.payload.device.state) {
-                            delete uiResp.payload.device.state;
-                        }
-                        _preferredDevice = uiResp.payload.device;
-                    }
-                    selectedDevicePath = uiResp.payload.device.path;
-                    device = _deviceList.getDevice(selectedDevicePath);
+            // wait for device selection
+            const uiPromise = findUiPromise(method.responseID, UI.RECEIVE_DEVICE);
+            if (uiPromise) {
+                const { payload } = await uiPromise.promise;
+                if (payload.remember) {
+                    _preferredDevice = payload.device;
                 }
+                device = _deviceList.getDevice(payload.device.path);
             }
         }
     }

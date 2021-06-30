@@ -52,6 +52,12 @@ export const getBrowserState = (supportedBrowsers: {
     };
 };
 
+export const getOS = () => {
+    if (!navigator || !navigator.userAgent) return 'unknown';
+    const browser = Bowser.getParser(navigator.userAgent);
+    return browser.getOS().name.toLowerCase();
+};
+
 const getSuggestedPlatform = () => {
     if (!navigator || !navigator.userAgent) return;
     // Find preferred platform using bowser and userAgent
