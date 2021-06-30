@@ -3,8 +3,10 @@
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
 import * as POPUP from '../../constants/popup';
+import { LIBUSB_ERROR_MESSAGE } from '../../constants/errors';
 import { container, iframe, showView, postMessage } from './common';
 import DataManager from '../../data/DataManager';
+import { getOS } from '../../env/browser/browserUtils';
 import type { SelectDevice } from '../../types/events';
 
 const initWebUsbButton = (webusb: boolean, showLoader: boolean) => {
@@ -115,22 +117,34 @@ export const selectDevice = (payload: $PropertyType<SelectDevice, 'payload'>) =>
             const explanation = document.createElement('div');
             explanation.className = 'explain';
 
-            const htmlUnreadable =
-                'Please install <a href="https://suite.trezor.io/web/bridge/" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">Bridge</a> to use Trezor device.';
-            const htmlUnacquired = 'Click to activate. This device is used by another application.';
-
+            // handle unreadable device
             if (device.type === 'unreadable') {
+                const os = getOS();
+                // default explanation: contact support
+                let explanationContent =
+                    'Please <a href="https://trezor.io/support/" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">contact support.</a>';
+                // linux + LIBUSB_ERROR handling
+                if (os === 'linux' && device.error.indexOf(LIBUSB_ERROR_MESSAGE) >= 0) {
+                    explanationContent =
+                        'Please install <a href="https://suite.trezor.io/web/udev/" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">Udev rules</a> to use Trezor device.';
+                }
+                // webusb error handling (top priority)
+                if (payload.webusb) {
+                    explanationContent =
+                        'Please install <a href="https://suite.trezor.io/web/bridge/" target="_blank" rel="noreferrer noopener" onclick="window.closeWindow();">Bridge</a> to use Trezor device.';
+                }
                 deviceButton.disabled = true;
                 deviceIcon.classList.add('unknown');
                 deviceName.textContent = 'Unrecognized device';
-                explanation.innerHTML = htmlUnreadable;
+                explanation.innerHTML = `${device.error}<br />${explanationContent}`;
             }
 
             if (device.type === 'unacquired' || device.status === 'occupied') {
                 deviceName.textContent = 'Inactive device';
                 deviceButton.classList.add('unacquired');
                 explanation.classList.add('unacquired');
-                explanation.innerHTML = htmlUnacquired;
+                explanation.innerHTML =
+                    'Click to activate. This device is used by another application.';
 
                 if (device.type === 'acquired') {
                     deviceName.textContent = device.label;
