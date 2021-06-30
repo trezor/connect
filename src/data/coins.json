@@ -2197,7 +2197,13 @@
             "url": "https://expanse.tech"
         },
         {
-            "blockchain_link": null,
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "https://ropsten1.trezor.io",
+                    "https://ropsten2.trezor.io"
+                ]
+            },
             "chain": "rop",
             "chain_id": 3,
             "name": "Ethereum Testnet Ropsten",
@@ -2206,7 +2212,7 @@
             "slip44": 1,
             "support": {
                 "connect": true,
-                "suite": false,
+                "suite": true,
                 "trezor1": "1.6.2",
                 "trezor2": "2.0.7"
             },
@@ -2546,7 +2552,7 @@
             "slip44": 1,
             "support": {
                 "connect": true,
-                "suite": false,
+                "suite": true,
                 "trezor1": false,
                 "trezor2": "2.0.8"
             }
@@ -2581,7 +2587,7 @@
             "slip44": 144,
             "support": {
                 "connect": true,
-                "suite": false,
+                "suite": true,
                 "trezor1": false,
                 "trezor2": "2.0.8"
             }
