@@ -81,7 +81,7 @@ export const transformOrigTransactions = (
         if (coinInfo.type !== 'bitcoin' || raw.type !== 'blockbook' || !addresses) return [];
         const { hex, vin, vout } = raw.tx;
         const tx = BitcoinJsTransaction.fromHex(hex, coinInfo.network);
-        const inputAddresses = addresses.used.concat(addresses.change);
+        const inputAddresses = addresses.used.concat(addresses.change).concat(addresses.unused);
 
         // inputs, required by TXORIGINPUT (TxAckInput) request from Trezor
         const inputsMap = (input: BitcoinJsInput, i: number) => {
