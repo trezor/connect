@@ -11,6 +11,7 @@ before_script:
 verify:
   stage: build
   script:
+    - nix-shell --run "yarn test:health"
     - nix-shell --run "yarn flow"
     - nix-shell --run "yarn typescript"
     - nix-shell --run "yarn lint"
