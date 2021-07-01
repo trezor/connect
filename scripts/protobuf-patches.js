@@ -7,7 +7,9 @@ const RULE_PATCH = {
     'TxRequest.details': 'required',
     'TxInputType.amount': 'required', // since 1.9.4/2.3.5
     'CardanoPoolOwnerType.staking_key_path': 'optional',
+    'CardanoPoolOwner.staking_key_path': 'optional',
     'CardanoTxCertificateType.path': 'optional',
+    'CardanoTxCertificate.path': 'optional',
     'CardanoTxInputType.address_n': 'optional',
     'Success.message': 'required', // didn't find use case where it's not sent
     'SignedIdentity.address': 'required',
@@ -112,7 +114,13 @@ const TYPE_PATCH = {
     'CardanoSignTx.fee': 'string | number',
     'CardanoSignTx.ttl': 'string | number',
     'CardanoSignTx.validity_interval_start': 'string | number',
+    'CardanoSignTxInit.fee': 'string | number',
+    'CardanoSignTxInit.ttl': 'string | number',
+    'CardanoSignTxInit.validity_interval_start': 'string | number',
     'CardanoTokenType.amount': 'string | number',
+    'CardanoToken.amount': 'string | number',
+    'CardanoTxOutputType.amount': 'string | number',
+    'CardanoTxOutput.amount': 'string | number',
     'EosAsset.amount': 'string',
     'EosAsset.symbol': 'string',
     'EosPermissionLevel.actor': 'string',

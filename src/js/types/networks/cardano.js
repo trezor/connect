@@ -4,8 +4,11 @@
 import type {
     HDNodeType,
     CardanoAddressType,
+    CardanoTxAuxiliaryDataSupplementType,
     CardanoCertificateType,
     CardanoPoolRelayType,
+    CardanoTxSigningMode,
+    CardanoTxWitnessType,
 } from '../trezor/protobuf';
 
 // GetPublicKey
@@ -138,7 +141,7 @@ export type CardanoCatalystRegistrationParameters = {
 };
 
 export type CardanoAuxiliaryData = {
-    blob?: string,
+    hash?: string,
     catalystRegistrationParameters?: CardanoCatalystRegistrationParameters,
 };
 
@@ -153,15 +156,32 @@ export type CardanoSignTransaction = {
     protocolMagic: number,
     networkId: number,
     auxiliaryData?: CardanoAuxiliaryData,
+    signingMode: CardanoTxSigningMode,
 };
 
-export type CardanoSignedTx = {
+export type CardanoSignedTxWitness = {
+    type: CardanoTxWitnessType,
+    pubKey: string,
+    signature: string,
+    chainCode?: string,
+};
+
+export type CardanoAuxiliaryDataSupplement = {
+    type: CardanoTxAuxiliaryDataSupplementType,
+    auxiliaryDataHash: string,
+    catalystSignature?: string,
+};
+
+export type CardanoSignedTxData = {
     hash: string,
-    serializedTx: string,
+    witnesses: CardanoSignedTxWitness[],
+    auxiliaryDataSupplement?: CardanoAuxiliaryDataSupplement,
 };
 
 export {
     Enum_CardanoAddressType as CardanoAddressType,
     Enum_CardanoCertificateType as CardanoCertificateType,
     Enum_CardanoPoolRelayType as CardanoPoolRelayType,
+    Enum_CardanoTxSigningMode as CardanoTxSigningMode,
+    Enum_CardanoTxWitnessType as CardanoTxWitnessType,
 } from '../trezor/protobuf';

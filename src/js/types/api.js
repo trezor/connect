@@ -239,7 +239,7 @@ export type API = {
     // Cardano (ADA)
     cardanoGetAddress: Bundled<Cardano.CardanoGetAddress, Cardano.CardanoAddress>,
     cardanoGetPublicKey: Bundled<Cardano.CardanoGetPublicKey, Cardano.CardanoPublicKey>,
-    cardanoSignTransaction: Method<Cardano.CardanoSignTransaction, Cardano.CardanoSignedTx>,
+    cardanoSignTransaction: Method<Cardano.CardanoSignTransaction, Cardano.CardanoSignedTxData>,
 
     // EOS
     eosGetPublicKey: Bundled<EOS.EosGetPublicKey, EOS.EosPublicKey>,

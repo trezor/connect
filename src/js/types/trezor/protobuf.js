@@ -63,6 +63,26 @@ export const Enum_CardanoPoolRelayType = Object.freeze({
 });
 export type CardanoPoolRelayType = $Values<typeof Enum_CardanoPoolRelayType>;
 
+export const Enum_CardanoTxAuxiliaryDataSupplementType = Object.freeze({
+    NONE: 0,
+    CATALYST_REGISTRATION_SIGNATURE: 1,
+});
+export type CardanoTxAuxiliaryDataSupplementType = $Values<
+    typeof Enum_CardanoTxAuxiliaryDataSupplementType,
+>;
+
+export const Enum_CardanoTxSigningMode = Object.freeze({
+    ORDINARY_TRANSACTION: 0,
+    POOL_REGISTRATION_AS_OWNER: 1,
+});
+export type CardanoTxSigningMode = $Values<typeof Enum_CardanoTxSigningMode>;
+
+export const Enum_CardanoTxWitnessType = Object.freeze({
+    BYRON_WITNESS: 0,
+    SHELLEY_WITNESS: 1,
+});
+export type CardanoTxWitnessType = $Values<typeof Enum_CardanoTxWitnessType>;
+
 export const Enum_BackupType = Object.freeze({
     Bip39: 0,
     Slip39_Basic: 1,
@@ -608,6 +628,147 @@ export type CardanoPublicKey = {
     node: HDNodeType,
 };
 
+// CardanoSignTxInit
+export type CardanoSignTxInit = {
+    signing_mode: CardanoTxSigningMode,
+    protocol_magic: number,
+    network_id: number,
+    inputs_count: number,
+    outputs_count: number,
+    fee: string | number,
+    ttl?: string | number,
+    certificates_count: number,
+    withdrawals_count: number,
+    has_auxiliary_data: boolean,
+    validity_interval_start?: string | number,
+    witness_requests_count: number,
+};
+
+// CardanoTxInput
+export type CardanoTxInput = {
+    prev_hash: string,
+    prev_index: number,
+};
+
+// CardanoTxOutput
+export type CardanoTxOutput = {
+    address?: string,
+    address_parameters?: CardanoAddressParametersType,
+    amount: string | number,
+    asset_groups_count: number,
+};
+
+// CardanoAssetGroup
+export type CardanoAssetGroup = {
+    policy_id: string,
+    tokens_count: number,
+};
+
+// CardanoToken
+export type CardanoToken = {
+    asset_name_bytes: string,
+    amount: string | number,
+};
+
+// CardanoPoolOwner
+export type CardanoPoolOwner = {
+    staking_key_path?: number[],
+    staking_key_hash?: string,
+};
+
+// CardanoPoolRelayParameters
+export type CardanoPoolRelayParameters = {
+    type: CardanoPoolRelayType,
+    ipv4_address?: string,
+    ipv6_address?: string,
+    host_name?: string,
+    port?: number,
+};
+
+// CardanoPoolMetadataType
+export type CardanoPoolMetadataType = {
+    url: string,
+    hash: string,
+};
+
+// CardanoPoolParametersType
+export type CardanoPoolParametersType = {
+    pool_id: string,
+    vrf_key_hash: string,
+    pledge: string | number,
+    cost: string | number,
+    margin_numerator: string | number,
+    margin_denominator: string | number,
+    reward_account: string,
+    owners: CardanoPoolOwner[],
+    relays: CardanoPoolRelayParameters[],
+    metadata?: CardanoPoolMetadataType,
+    owners_count: number,
+    relays_count: number,
+};
+
+// CardanoTxCertificate
+export type CardanoTxCertificate = {
+    type: CardanoCertificateType,
+    path?: number[],
+    pool?: string,
+    pool_parameters?: CardanoPoolParametersType,
+};
+
+// CardanoTxWithdrawal
+export type CardanoTxWithdrawal = {
+    path: number[],
+    amount: number,
+};
+
+// CardanoCatalystRegistrationParametersType
+export type CardanoCatalystRegistrationParametersType = {
+    voting_public_key: string,
+    staking_path: number[],
+    reward_address_parameters: CardanoAddressParametersType,
+    nonce: string | number,
+};
+
+// CardanoTxAuxiliaryData
+export type CardanoTxAuxiliaryData = {
+    catalyst_registration_parameters?: CardanoCatalystRegistrationParametersType,
+    hash?: string,
+};
+
+// CardanoTxItemAck
+export type CardanoTxItemAck = {};
+
+// CardanoTxAuxiliaryDataSupplement
+export type CardanoTxAuxiliaryDataSupplement = {
+    type: CardanoTxAuxiliaryDataSupplementType,
+    auxiliary_data_hash?: string,
+    catalyst_signature?: string,
+};
+
+// CardanoTxWitnessRequest
+export type CardanoTxWitnessRequest = {
+    path: number[],
+};
+
+// CardanoTxWitnessResponse
+export type CardanoTxWitnessResponse = {
+    type: CardanoTxWitnessType,
+    pub_key: string,
+    signature: string,
+    chain_code?: string,
+};
+
+// CardanoTxHostAck
+export type CardanoTxHostAck = {};
+
+// CardanoTxBodyHash
+export type CardanoTxBodyHash = {
+    tx_hash: string,
+};
+
+// CardanoSignTxFinished
+export type CardanoSignTxFinished = {};
+
 export type CardanoTxInputType = {
     address_n?: number[],
     prev_hash: string,
@@ -626,7 +787,7 @@ export type CardanoAssetGroupType = {
 
 export type CardanoTxOutputType = {
     address?: string,
-    amount: number,
+    amount: string | number,
     address_parameters?: CardanoAddressParametersType,
     token_bundle: CardanoAssetGroupType[],
 };
@@ -644,24 +805,6 @@ export type CardanoPoolRelayParametersType = {
     port?: number,
 };
 
-export type CardanoPoolMetadataType = {
-    url: string,
-    hash: string,
-};
-
-export type CardanoPoolParametersType = {
-    pool_id: string,
-    vrf_key_hash: string,
-    pledge: string | number,
-    cost: string | number,
-    margin_numerator: string | number,
-    margin_denominator: string | number,
-    reward_account: string,
-    owners: CardanoPoolOwnerType[],
-    relays: CardanoPoolRelayParametersType[],
-    metadata?: CardanoPoolMetadataType,
-};
-
 export type CardanoTxCertificateType = {
     type: CardanoCertificateType,
     path?: number[],
@@ -672,13 +815,6 @@ export type CardanoTxCertificateType = {
 export type CardanoTxWithdrawalType = {
     path: number[],
     amount: number,
-};
-
-export type CardanoCatalystRegistrationParametersType = {
-    voting_public_key: string,
-    staking_path: number[],
-    reward_address_parameters: CardanoAddressParametersType,
-    nonce: string | number,
 };
 
 export type CardanoTxAuxiliaryDataType = {
@@ -1991,17 +2127,34 @@ export type MessageType = {
     CardanoAddress: $Exact<CardanoAddress>,
     CardanoGetPublicKey: CardanoGetPublicKey,
     CardanoPublicKey: $Exact<CardanoPublicKey>,
+    CardanoSignTxInit: $Exact<CardanoSignTxInit>,
+    CardanoTxInput: $Exact<CardanoTxInput>,
+    CardanoTxOutput: $Exact<CardanoTxOutput>,
+    CardanoAssetGroup: $Exact<CardanoAssetGroup>,
+    CardanoToken: $Exact<CardanoToken>,
+    CardanoPoolOwner: CardanoPoolOwner,
+    CardanoPoolRelayParameters: $Exact<CardanoPoolRelayParameters>,
+    CardanoPoolMetadataType: $Exact<CardanoPoolMetadataType>,
+    CardanoPoolParametersType: $Exact<CardanoPoolParametersType>,
+    CardanoTxCertificate: $Exact<CardanoTxCertificate>,
+    CardanoTxWithdrawal: $Exact<CardanoTxWithdrawal>,
+    CardanoCatalystRegistrationParametersType: $Exact<CardanoCatalystRegistrationParametersType>,
+    CardanoTxAuxiliaryData: CardanoTxAuxiliaryData,
+    CardanoTxItemAck: CardanoTxItemAck,
+    CardanoTxAuxiliaryDataSupplement: $Exact<CardanoTxAuxiliaryDataSupplement>,
+    CardanoTxWitnessRequest: CardanoTxWitnessRequest,
+    CardanoTxWitnessResponse: $Exact<CardanoTxWitnessResponse>,
+    CardanoTxHostAck: CardanoTxHostAck,
+    CardanoTxBodyHash: $Exact<CardanoTxBodyHash>,
+    CardanoSignTxFinished: CardanoSignTxFinished,
     CardanoTxInputType: $Exact<CardanoTxInputType>,
     CardanoTokenType: $Exact<CardanoTokenType>,
     CardanoAssetGroupType: $Exact<CardanoAssetGroupType>,
     CardanoTxOutputType: $Exact<CardanoTxOutputType>,
     CardanoPoolOwnerType: CardanoPoolOwnerType,
     CardanoPoolRelayParametersType: $Exact<CardanoPoolRelayParametersType>,
-    CardanoPoolMetadataType: $Exact<CardanoPoolMetadataType>,
-    CardanoPoolParametersType: $Exact<CardanoPoolParametersType>,
     CardanoTxCertificateType: $Exact<CardanoTxCertificateType>,
     CardanoTxWithdrawalType: $Exact<CardanoTxWithdrawalType>,
-    CardanoCatalystRegistrationParametersType: $Exact<CardanoCatalystRegistrationParametersType>,
     CardanoTxAuxiliaryDataType: CardanoTxAuxiliaryDataType,
     CardanoSignTx: $Exact<CardanoSignTx>,
     CardanoSignedTxChunk: $Exact<CardanoSignedTxChunk>,

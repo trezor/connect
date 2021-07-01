@@ -202,7 +202,7 @@ export namespace TrezorConnect {
     ): P.BundledResponse<Cardano.CardanoPublicKey>;
     function cardanoSignTransaction(
         params: P.CommonParams & Cardano.CardanoSignTransaction,
-    ): P.Response<Cardano.CardanoSignedTx>;
+    ): P.Response<Cardano.CardanoSignedTxData>;
 
     // EOS
     function eosGetPublicKey(params: P.CommonParams & EOS.EosGetPublicKey): P.Response<EOS.EosPublicKey>;

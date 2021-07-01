@@ -1,3 +1,4 @@
+import { CardanoTxSigningMode } from 'types/trezor/protobuf';
 import TrezorConnect from '../index';
 
 export const cardanoGetAddress = async () => {
@@ -239,7 +240,7 @@ export const cardanoSignTransaction = async () => {
         ],
         withdrawals: [{ path: 'm/44', amount: '3003112' }],
         auxiliaryData: {
-            blob: 'aaff00..',
+            hash: 'aaff00..',
             catalystRegistrationParameters: {
                 votingPublicKey: 'aaff00..',
                 stakingPath: 'm/44',
@@ -259,13 +260,24 @@ export const cardanoSignTransaction = async () => {
         },
         fee: '42',
         ttl: '10',
+        validityIntervalStart: '20',
         protocolMagic: 0,
         networkId: 0,
+        signingMode: 0,
     });
 
     if (sign.success) {
         const { payload } = sign;
         payload.hash;
-        payload.serializedTx;
+        payload.witnesses.forEach(witness => {
+            witness.type;
+            witness.pubKey;
+            witness.signature;
+            witness.chainCode;
+        });
+        const { auxiliaryDataSupplement } = payload;
+        if (auxiliaryDataSupplement) {
+            const { type, auxiliaryDataHash, catalystSignature } = auxiliaryDataSupplement;
+        }
     }
 };
