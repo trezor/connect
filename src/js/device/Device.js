@@ -277,6 +277,12 @@ class Device extends EventEmitter {
                     ]);
                 }
             } catch (error) {
+                if (!this.inconsistent && error.message === 'GetFeatures timeout') {
+                    // handling corner-case T1 + bootloader < 1.4.0 (above)
+                    // if GetFeatures fails try again
+                    // this time add empty "fn" param to force Initialize message
+                    return this._runInner(() => Promise.resolve({}), options);
+                }
                 this.inconsistent = true;
                 await this.deferredActions[DEVICE.ACQUIRE].promise;
                 this.runPromise = null;
