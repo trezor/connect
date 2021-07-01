@@ -1,4 +1,15 @@
-# 8.1.28
+# 8.1.29
+
+### Fixed
+- restore Ropsten blockchain_link
+- add unreadable Device error details 
+-  bootloader T1 getFeatures timeout handling
+
+### Changed
+- expose udev installers via TRASNPORT_EVENT
+- update rollout@1.1.0
+
+# 8.1.28 (never released)
 
 ### Added
 - 1.10.1/2.4.0 firmware release.
