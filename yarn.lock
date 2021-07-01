@@ -1799,10 +1799,10 @@
     tiny-worker "^2.3.0"
     ws "^7.4.0"
 
-"@trezor/rollout@1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@trezor/rollout/-/rollout-1.0.8.tgz#9e4440a4c907c1280899f4fdf9657ef39f72cdf3"
-  integrity sha512-nEXzvGOHfXRI89rbvfeAHLRj5mN0EcF/I7HcZaZiQ2xWEjXhjUEyhTyw5PU8oruPUtyRnVVYwpKvzk0xB5I0Mw==
+"@trezor/rollout@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@trezor/rollout/-/rollout-1.1.0.tgz#861bd034b2c869593f7b85ad0db925f10258ac2c"
+  integrity sha512-KecQrCSrWiO5HX2gVQLvtZEpk46JvtwXq7qi40g3q+YfHhRGNrlojcHumIOjhCl55+J7F3XRjXz3aXwWfSEyaQ==
   dependencies:
     cross-fetch "^3.0.6"
     runtypes "^5.0.1"
@@ -3995,9 +3995,9 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.3, create-hmac@^1.1.4:
     sha.js "^2.4.8"
 
 cross-fetch@^3.0.6:
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.0.6.tgz#3a4040bc8941e653e0e9cf17f29ebcd177d3365c"
-  integrity sha512-KBPUbqgFjzWlVcURG+Svp9TlhA5uliYtiNx/0r8nv0pdypeQCRJ9IaSIc3q/x3q8t3F75cHuwxVql1HFGHCNJQ==
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
+  integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
   dependencies:
     node-fetch "2.6.1"
 
@@ -9458,9 +9458,9 @@ run-queue@^1.0.0, run-queue@^1.0.3:
     aproba "^1.1.1"
 
 runtypes@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/runtypes/-/runtypes-5.0.1.tgz#406d140410266f6ece17c3501a37234f91faa346"
-  integrity sha512-+TWVlCmFsgrG4Nd2u+ambpNFO8Yp4heAflGQi9oNj6GRkxZo8aSDBxO1Y0vlKIQCWKKFxato+8Hn67XeAqKhRA==
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/runtypes/-/runtypes-5.2.0.tgz#1751a17860807873f0fddb4b15a5cd80fe574947"
+  integrity sha512-ArcmkYvNWkHrwg4Ic7St365oUGAkiIcs6vNmoRNzADv7nBhrTQC8C562TYnIV9nxxMxdmAAHsehD78xuWeYPJA==
 
 rxjs@^6.6.0:
   version "6.6.2"
