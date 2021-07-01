@@ -281,6 +281,7 @@ class Device extends EventEmitter {
                     // handling corner-case T1 + bootloader < 1.4.0 (above)
                     // if GetFeatures fails try again
                     // this time add empty "fn" param to force Initialize message
+                    this.inconsistent = true;
                     return this._runInner(() => Promise.resolve({}), options);
                 }
                 this.inconsistent = true;
