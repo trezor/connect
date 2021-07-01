@@ -40,7 +40,8 @@
                 "argsIgnorePattern": "^_" // allow underscored args
             }
         ],
-        "no-param-reassign": "off" // TODO: needs refactor
+        "no-param-reassign": "off", // TODO: needs refactor
+        "no-restricted-syntax": ["error", "LabeledStatement", "WithStatement"] // airbnb-base: allow ForInStatement and ForOfStatement
         // "flowtype/object-type-delimiter": ["error", "semicolon"], // enforce flowtype semicolons, doesnt work with prettier
     },
     "overrides": [
