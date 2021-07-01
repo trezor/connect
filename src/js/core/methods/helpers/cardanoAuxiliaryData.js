@@ -4,7 +4,7 @@ import { validateParams } from './paramsValidator';
 import { validatePath } from '../../../utils/pathUtils';
 
 import type {
-    CardanoTxAuxiliaryDataType,
+    CardanoTxAuxiliaryData,
     CardanoCatalystRegistrationParametersType,
 } from '../../../types/trezor/protobuf';
 import type {
@@ -34,10 +34,10 @@ const transformCatalystRegistrationParameters = (
 
 export const transformAuxiliaryData = (
     auxiliaryData: CardanoAuxiliaryData,
-): CardanoTxAuxiliaryDataType => {
+): CardanoTxAuxiliaryData => {
     validateParams(auxiliaryData, [
         {
-            name: 'blob',
+            name: 'hash',
             type: 'string',
         },
     ]);
@@ -50,7 +50,7 @@ export const transformAuxiliaryData = (
     }
 
     return {
-        blob: auxiliaryData.blob,
+        hash: auxiliaryData.hash,
         catalyst_registration_parameters: catalystRegistrationParameters,
     };
 };

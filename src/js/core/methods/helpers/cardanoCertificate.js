@@ -20,6 +20,8 @@ import type {
 import type {
     CardanoTxCertificateType,
     CardanoPoolParametersType,
+    CardanoPoolOwner as CardanoPoolOwnerProto,
+    CardanoPoolRelayParameters as CardanoPoolRelayProto,
 } from '../../../types/trezor/protobuf';
 
 const ipv4AddressToHex = (ipv4Address: string) =>
@@ -122,38 +124,62 @@ const validatePoolParameters = (poolParameters: CardanoPoolParameters) => {
     }
 };
 
+export type CertificateWithPoolOwnersAndRelays = {
+    certificate: CardanoTxCertificateType,
+    poolOwners: CardanoPoolOwnerProto[],
+    poolRelays: CardanoPoolRelayProto[],
+};
+
+export type PoolParametersWithOwnersAndRelays = {
+    poolParameters?: CardanoPoolParametersType,
+    poolOwners: CardanoPoolOwnerProto[],
+    poolRelays: CardanoPoolRelayProto[],
+};
+
 const transformPoolParameters = (
-    poolParameters: CardanoPoolParameters,
-): CardanoPoolParametersType => {
+    poolParameters?: CardanoPoolParameters,
+): PoolParametersWithOwnersAndRelays => {
+    if (!poolParameters) {
+        return { poolParameters: undefined, poolOwners: [], poolRelays: [] };
+    }
+
     validatePoolParameters(poolParameters);
 
     return {
-        pool_id: poolParameters.poolId,
-        vrf_key_hash: poolParameters.vrfKeyHash,
-        pledge: poolParameters.pledge,
-        cost: poolParameters.cost,
-        margin_numerator: poolParameters.margin.numerator,
-        margin_denominator: poolParameters.margin.denominator,
-        reward_account: poolParameters.rewardAccount,
-        owners: poolParameters.owners.map(owner => ({
+        poolParameters: {
+            pool_id: poolParameters.poolId,
+            vrf_key_hash: poolParameters.vrfKeyHash,
+            pledge: poolParameters.pledge,
+            cost: poolParameters.cost,
+            margin_numerator: poolParameters.margin.numerator,
+            margin_denominator: poolParameters.margin.denominator,
+            reward_account: poolParameters.rewardAccount,
+            owners: [], // required for wire compatibility with legacy FW
+            relays: [], // required for wire compatibility with legacy FW
+            metadata: poolParameters.metadata,
+            owners_count: poolParameters.owners.length,
+            relays_count: poolParameters.relays.length,
+        },
+        poolOwners: poolParameters.owners.map(owner => ({
             staking_key_hash: owner.stakingKeyHash,
             staking_key_path: owner.stakingKeyPath
                 ? validatePath(owner.stakingKeyPath, 5)
                 : undefined,
         })),
-        relays: poolParameters.relays.map(relay => ({
+        poolRelays: poolParameters.relays.map(relay => ({
             type: relay.type,
             ipv4_address: relay.ipv4Address ? ipv4AddressToHex(relay.ipv4Address) : undefined,
             ipv6_address: relay.ipv6Address ? ipv6AddressToHex(relay.ipv6Address) : undefined,
             host_name: relay.hostName,
             port: relay.port,
         })),
-        metadata: poolParameters.metadata,
     };
 };
 
 // transform incoming certificate object to protobuf messages format
-export const transformCertificate = (certificate: CardanoCertificate): CardanoTxCertificateType => {
+export const transformCertificate = (
+    certificate: CardanoCertificate,
+): CertificateWithPoolOwnersAndRelays => {
     const paramsToValidate = [{ name: 'type', type: 'number', obligatory: true }];
 
     if (certificate.type !== CardanoCertificateType.STAKE_POOL_REGISTRATION) {
@@ -170,12 +196,18 @@ export const transformCertificate = (certificate: CardanoCertificate): CardanoTx
 
     validateParams(certificate, paramsToValidate);
 
+    const { poolParameters, poolOwners, poolRelays } = transformPoolParameters(
+        certificate.poolParameters,
+    );
+
     return {
-        type: certificate.type,
-        path: certificate.path ? validatePath(certificate.path, 5) : undefined,
-        pool: certificate.pool,
-        pool_parameters: certificate.poolParameters
-            ? transformPoolParameters(certificate.poolParameters)
-            : undefined,
+        certificate: {
+            type: certificate.type,
+            path: certificate.path ? validatePath(certificate.path, 5) : undefined,
+            pool: certificate.pool,
+            pool_parameters: poolParameters,
+        },
+        poolOwners,
+        poolRelays,
     };
 };
