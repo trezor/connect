@@ -13,7 +13,7 @@ import type { IDevice } from '../../../device/Device';
 const postConfirmationMessage = (device: IDevice) => {
     // only if firmware is already installed. fresh device does not require button confirmation
     if (device.features.firmware_present) {
-        device.emit(DEVICE.BUTTON, device, 'ButtonRequest_FirmwareUpdate');
+        device.emit(DEVICE.BUTTON, device, { code: 'ButtonRequest_FirmwareUpdate' });
     }
 };
 
