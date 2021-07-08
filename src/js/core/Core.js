@@ -34,6 +34,11 @@ import type {
     UiPromiseResponse,
     TransportInfo,
 } from '../types';
+import type {
+    ButtonRequest,
+    PinMatrixRequestType,
+    WordRequestType,
+} from '../types/trezor/protobuf';
 
 // Public variables
 // eslint-disable-next-line no-use-before-define
@@ -695,25 +700,35 @@ const closePopup = () => {
 /**
  * Handle button request from Device.
  * @param {IDevice} device
- * @param {string} code
+ * @param {string} protobuf.ButtonRequest
  * @returns {Promise<void>}
  * @memberof Core
  */
-const onDeviceButtonHandler = async (device: IDevice, code: string, method: AbstractMethod) => {
+const onDeviceButtonHandler = async (
+    device: IDevice,
+    request: ButtonRequest,
+    method: AbstractMethod,
+) => {
     // wait for popup handshake
-    const addressRequest = code === 'ButtonRequest_Address';
+    const addressRequest = request.code === 'ButtonRequest_Address';
     if (!addressRequest || (addressRequest && method.useUi)) {
         await getPopupPromise().promise;
     }
     const data =
-        typeof method.getButtonRequestData === 'function'
-            ? method.getButtonRequestData(code)
+        typeof method.getButtonRequestData === 'function' && request.code
+            ? method.getButtonRequestData(request.code)
             : null;
     // interaction timeout
     interactionTimeout();
     // request view
-    postMessage(DeviceMessage(DEVICE.BUTTON, { device: device.toMessageObject(), code }));
-    postMessage(UiMessage(UI.REQUEST_BUTTON, { device: device.toMessageObject(), code, data }));
+    postMessage(DeviceMessage(DEVICE.BUTTON, { ...request, device: device.toMessageObject() }));
+    postMessage(
+        UiMessage(UI.REQUEST_BUTTON, {
+            ...request,
+            device: device.toMessageObject(),
+            data,
+        }),
+    );
     if (addressRequest && !method.useUi) {
         postMessage(UiMessage(UI.ADDRESS_VALIDATION, data));
     }
@@ -722,14 +737,14 @@ const onDeviceButtonHandler = async (device: IDevice, code: string, method: Abst
 /**
  * Handle pin request from Device.
  * @param {IDevice} device
- * @param {string} type
+ * @param {string} protobuf.PinMatrixRequestType
  * @param {Function} callback
  * @returns {Promise<void>}
  * @memberof Core
  */
 const onDevicePinHandler = async (
     device: IDevice,
-    type: string,
+    type: PinMatrixRequestType,
     callback: (error: any, success: any) => void,
 ) => {
     // wait for popup handshake
@@ -746,7 +761,7 @@ const onDevicePinHandler = async (
 
 const onDeviceWordHandler = async (
     device: IDevice,
-    type: string,
+    type: WordRequestType,
     callback: (error: any, success: any) => void,
 ) => {
     // wait for popup handshake

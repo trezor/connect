@@ -136,6 +136,18 @@ export const events = () => {
             event.payload.data;
             event.payload.device;
         }
+        if (event.type === UI.REQUEST_PIN) {
+            event.payload.type;
+            event.payload.device;
+        }
+        if (event.type === UI.INVALID_PIN) {
+            (event.payload.type: void);
+            event.payload.device;
+        }
+        if (event.type === UI.REQUEST_WORD) {
+            event.payload.type;
+            event.payload.device;
+        }
     });
     TrezorConnect.off(UI_EVENT, () => {});
 

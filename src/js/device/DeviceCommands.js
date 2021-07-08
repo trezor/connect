@@ -398,7 +398,7 @@ export default class DeviceCommands {
             if (res.message.code === 'ButtonRequest_PassphraseEntry') {
                 this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE, this.device);
             } else {
-                this.device.emit(DEVICE.BUTTON, this.device, res.message.code);
+                this.device.emit(DEVICE.BUTTON, this.device, res.message);
             }
             return this._commonCall('ButtonAck', {});
         }

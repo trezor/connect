@@ -2,6 +2,7 @@
 import { TRANSPORT, UI, IFRAME, POPUP } from '../constants';
 import type { ConnectSettings, CoreMessage } from './params';
 import type { Device } from './trezor/device';
+import type { ButtonRequest, PinMatrixRequestType, WordRequestType } from './trezor/protobuf';
 import type { DiscoveryAccount, SelectFeeLevel } from './account';
 import type { CoinInfo, BitcoinNetworkInfo } from './networks/coinInfo';
 
@@ -65,19 +66,32 @@ export type MessageWithoutPayload = {
         | typeof UI.LOGIN_CHALLENGE_REQUEST,
 };
 
-export type DeviceMessage = {
-    type:
-        | typeof UI.REQUEST_PIN
-        | typeof UI.INVALID_PIN
-        | typeof UI.REQUEST_PASSPHRASE_ON_DEVICE
-        | typeof UI.REQUEST_PASSPHRASE
-        | typeof UI.INVALID_PASSPHRASE
-        | typeof UI.REQUEST_WORD,
-    payload: {
-        device: Device,
-        type?: string, // todo: better flow enum
-    },
-};
+export type DeviceMessage =
+    | {
+          type: typeof UI.REQUEST_PIN,
+          payload: {
+              device: Device,
+              type: PinMatrixRequestType,
+          },
+      }
+    | {
+          type: typeof UI.REQUEST_WORD,
+          payload: {
+              device: Device,
+              type: WordRequestType,
+          },
+      }
+    | {
+          type:
+              | typeof UI.INVALID_PIN
+              | typeof UI.REQUEST_PASSPHRASE_ON_DEVICE
+              | typeof UI.REQUEST_PASSPHRASE
+              | typeof UI.INVALID_PASSPHRASE,
+          payload: {
+              device: Device,
+              type?: typeof undefined,
+          },
+      };
 
 export type ButtonRequestData = {
     type: 'address',
@@ -85,14 +99,16 @@ export type ButtonRequestData = {
     address: string,
 };
 
-export type ButtonRequestMessage = {
-    type: typeof UI.REQUEST_BUTTON,
-    payload: {
+// ButtonRequest_FirmwareUpdate is a artificial button request thrown by "uploadFirmware" method
+// at the beginning of the uploading process
+export interface ButtonRequestMessage {
+    type: typeof UI.REQUEST_BUTTON;
+    payload: ButtonRequest & {
+        code?: $PropertyType<ButtonRequest, 'code'> | 'ButtonRequest_FirmwareUpdate',
         device: Device,
-        code: string,
         data: ?ButtonRequestData,
-    },
-};
+    };
+}
 
 export type AddressValidationMessage = {
     type: typeof UI.ADDRESS_VALIDATION,
