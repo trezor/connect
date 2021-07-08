@@ -766,11 +766,13 @@ export const Enum_ButtonRequestType = Object.freeze({
     ButtonRequest_PassphraseEntry: 19,
     ButtonRequest_PinEntry: 20,
 });
-export type ButtonRequestType = $Values<typeof Enum_ButtonRequestType>;
+export type ButtonRequestType = $Keys<typeof Enum_ButtonRequestType>;
 
 // ButtonRequest
 export type ButtonRequest = {
     code?: ButtonRequestType,
+    pages?: number,
+    page_number?: number,
 };
 
 // ButtonAck
@@ -783,7 +785,7 @@ export const Enum_PinMatrixRequestType = Object.freeze({
     PinMatrixRequestType_WipeCodeFirst: 4,
     PinMatrixRequestType_WipeCodeSecond: 5,
 });
-export type PinMatrixRequestType = $Values<typeof Enum_PinMatrixRequestType>;
+export type PinMatrixRequestType = $Keys<typeof Enum_PinMatrixRequestType>;
 
 // PinMatrixRequest
 export type PinMatrixRequest = {
@@ -923,7 +925,7 @@ export type DebugLinkState = {
     recovery_fake_word?: string,
     recovery_word_pos?: number,
     reset_word_pos?: number,
-    mnemonic_type?: number,
+    mnemonic_type?: BackupType,
     layout_lines: string[],
 };
 
@@ -1523,7 +1525,7 @@ export const Enum_WordRequestType = Object.freeze({
     WordRequestType_Matrix9: 1,
     WordRequestType_Matrix6: 2,
 });
-export type WordRequestType = $Values<typeof Enum_WordRequestType>;
+export type WordRequestType = $Keys<typeof Enum_WordRequestType>;
 
 // WordRequest
 export type WordRequest = {

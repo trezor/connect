@@ -30,6 +30,9 @@ const ENUM_KEYS = [
     'BackupType',
     'Capability',
     'SafetyCheckLevel',
+    'ButtonRequestType',
+    'PinMatrixRequestType',
+    'WordRequestType',
 ];
 
 const parseEnumTypescript = item => {

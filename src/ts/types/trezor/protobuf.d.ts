@@ -726,7 +726,7 @@ export type Failure = {
     message?: string;
 };
 
-export enum ButtonRequestType {
+export enum Enum_ButtonRequestType {
     ButtonRequest_Other = 1,
     ButtonRequest_FeeOverThreshold = 2,
     ButtonRequest_ConfirmOutput = 3,
@@ -748,22 +748,26 @@ export enum ButtonRequestType {
     ButtonRequest_PassphraseEntry = 19,
     ButtonRequest_PinEntry = 20,
 }
+export type ButtonRequestType = keyof typeof Enum_ButtonRequestType;
 
 // ButtonRequest
 export type ButtonRequest = {
     code?: ButtonRequestType;
+    pages?: number;
+    page_number?: number;
 };
 
 // ButtonAck
 export type ButtonAck = {};
 
-export enum PinMatrixRequestType {
+export enum Enum_PinMatrixRequestType {
     PinMatrixRequestType_Current = 1,
     PinMatrixRequestType_NewFirst = 2,
     PinMatrixRequestType_NewSecond = 3,
     PinMatrixRequestType_WipeCodeFirst = 4,
     PinMatrixRequestType_WipeCodeSecond = 5,
 }
+export type PinMatrixRequestType = keyof typeof Enum_PinMatrixRequestType;
 
 // PinMatrixRequest
 export type PinMatrixRequest = {
@@ -902,7 +906,7 @@ export type DebugLinkState = {
     recovery_fake_word?: string;
     recovery_word_pos?: number;
     reset_word_pos?: number;
-    mnemonic_type?: number;
+    mnemonic_type?: BackupType;
     layout_lines: string[];
 };
 
@@ -1494,11 +1498,12 @@ export type RecoveryDevice = {
     dry_run?: boolean;
 };
 
-export enum WordRequestType {
+export enum Enum_WordRequestType {
     WordRequestType_Plain = 0,
     WordRequestType_Matrix9 = 1,
     WordRequestType_Matrix6 = 2,
 }
+export type WordRequestType = keyof typeof Enum_WordRequestType;
 
 // WordRequest
 export type WordRequest = {
