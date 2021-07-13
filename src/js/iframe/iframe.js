@@ -231,6 +231,6 @@ const init = async (payload: any, origin: string) => {
 window.addEventListener('message', handleMessage, false);
 window.addEventListener('unload', () => {
     if (_core) {
-        _core.onBeforeUnload();
+        _core.dispose();
     }
 });

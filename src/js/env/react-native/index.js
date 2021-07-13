@@ -40,7 +40,7 @@ export const manifest = (data: $T.Manifest) => {
 export const dispose = () => {
     eventEmitter.removeAllListeners();
     if (_core) {
-        _core.onBeforeUnload();
+        _core.dispose();
     }
     // TODO: fix top level values during refactor
     // $FlowIssue

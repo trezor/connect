@@ -280,7 +280,7 @@ export default class DeviceList extends EventEmitter {
         };
     }
 
-    onBeforeUnload() {
+    dispose() {
         this.removeAllListeners();
 
         if (this.stream) {
@@ -294,7 +294,7 @@ export default class DeviceList extends EventEmitter {
             this.fetchController = null;
         }
 
-        this.allDevices().forEach(device => device.onBeforeUnload());
+        this.allDevices().forEach(device => device.dispose());
     }
 
     disconnectDevices() {

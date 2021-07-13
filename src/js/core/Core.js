@@ -944,7 +944,7 @@ const initDeviceList = async (settings: ConnectSettings) => {
             _log.error('TRANSPORT ERROR', error);
             if (_deviceList) {
                 _deviceList.disconnectDevices();
-                _deviceList.onBeforeUnload();
+                _deviceList.dispose();
             }
 
             _deviceList = null;
@@ -988,9 +988,9 @@ export class Core extends EventEmitter {
         handleMessage(message, isTrustedOrigin);
     }
 
-    onBeforeUnload() {
+    dispose() {
         if (_deviceList) {
-            _deviceList.onBeforeUnload();
+            _deviceList.dispose();
         }
         disposeBackend();
         this.removeAllListeners();
@@ -1084,7 +1084,7 @@ const disableWebUSBTransport = async () => {
 
     try {
         // disconnect previous device list
-        _deviceList.onBeforeUnload();
+        _deviceList.dispose();
         // and init with new settings, without webusb
         await initDeviceList(settings);
     } catch (error) {
