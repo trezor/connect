@@ -38,10 +38,15 @@ export const manifest = (data: $T.Manifest) => {
 };
 
 export const dispose = () => {
-    // iframe.dispose();
-    // if (_popupManager) {
-    //     _popupManager.close();
-    // }
+    eventEmitter.removeAllListeners();
+    if (_core) {
+        _core.onBeforeUnload();
+    }
+    // TODO: fix top level values during refactor
+    // $FlowIssue
+    _settings = null;
+    // $FlowIssue
+    _core = null;
 };
 
 // handle message received from iframe

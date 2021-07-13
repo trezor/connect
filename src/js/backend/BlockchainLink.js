@@ -329,3 +329,9 @@ export const initBlockchain = async (
     }
     return backend;
 };
+
+export const dispose = () => {
+    while (instances.length > 0) {
+        instances[0].disconnect();
+    }
+};

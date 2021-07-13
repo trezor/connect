@@ -23,6 +23,7 @@ import { find as findMethod } from './methods';
 import { create as createDeferred } from '../utils/deferred';
 import { resolveAfter } from '../utils/promiseUtils';
 import { initLog } from '../utils/debug';
+import { dispose as disposeBackend } from '../backend/BlockchainLink';
 import InteractionTimeout from '../utils/interactionTimeout';
 
 import type { IDevice } from '../device/Device';
@@ -943,7 +944,7 @@ const initDeviceList = async (settings: ConnectSettings) => {
             _log.error('TRANSPORT ERROR', error);
             if (_deviceList) {
                 _deviceList.disconnectDevices();
-                _deviceList.removeAllListeners();
+                _deviceList.onBeforeUnload();
             }
 
             _deviceList = null;
@@ -991,6 +992,7 @@ export class Core extends EventEmitter {
         if (_deviceList) {
             _deviceList.onBeforeUnload();
         }
+        disposeBackend();
         this.removeAllListeners();
     }
 

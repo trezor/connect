@@ -140,6 +140,7 @@ class Controller extends EventEmitter {
     }
 
     connect() {
+        if (this.isConnected()) return Promise.resolve();
         // url validation
         let { url } = this.options;
         if (typeof url !== 'string') {

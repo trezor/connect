@@ -51,6 +51,8 @@ export default class DeviceList extends EventEmitter {
 
     penalizedDevices: { [deviceID: string]: number } = {};
 
+    fetchController: ?AbortController;
+
     constructor() {
         super();
 
@@ -65,9 +67,21 @@ export default class DeviceList extends EventEmitter {
             const bridgeLatestVersion = getBridgeInfo().version.join('.');
             const bridge = new BridgeV2(null, null);
             bridge.setBridgeLatestVersion(bridgeLatestVersion);
-            if (env === 'node' || env === 'electron') {
-                BridgeV2.setFetch(fetch, true);
+
+            if (typeof fetch !== 'undefined' && typeof AbortController !== 'undefined') {
+                try {
+                    this.fetchController = new AbortController();
+                } catch (error) {
+                    // silent error. fetchController is not available.
+                }
+                if (this.fetchController) {
+                    const { signal } = this.fetchController;
+                    const fetchWithSignal = (args, options = {}) =>
+                        fetch(args, { ...options, signal });
+                    BridgeV2.setFetch(fetchWithSignal, true);
+                }
             }
+
             transports.push(bridge);
         }
 
@@ -267,8 +281,17 @@ export default class DeviceList extends EventEmitter {
     }
 
     onBeforeUnload() {
+        this.removeAllListeners();
+
         if (this.stream) {
             this.stream.stop();
+        }
+        if (this.transport) {
+            this.transport.stop();
+        }
+        if (this.fetchController) {
+            this.fetchController.abort();
+            this.fetchController = null;
         }
 
         this.allDevices().forEach(device => device.onBeforeUnload());
