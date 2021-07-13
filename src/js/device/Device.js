@@ -653,7 +653,7 @@ class Device extends EventEmitter {
         return null;
     }
 
-    onBeforeUnload() {
+    dispose() {
         this.removeAllListeners();
         if (this.isUsedHere() && this.activitySessionID) {
             try {

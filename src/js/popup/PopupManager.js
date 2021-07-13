@@ -367,8 +367,4 @@ export default class PopupManager extends EventEmitter {
             this._window.postMessage(message, this.origin);
         }
     }
-
-    onBeforeUnload() {
-        this.close();
-    }
 }
