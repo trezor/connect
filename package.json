@@ -40,7 +40,7 @@
         "build:npm-extended": "rm -rf npm-extended && babel-node ./scripts/build-npm-extended.js && babel ./npm-extended/lib --out-dir ./npm-extended/lib",
         "stats": "webpack --config ./webpack/config.prod.babel.js --json > build/stats.json",
         "test:unit": "jest --verbose -c jest.config.unit.js",
-        "test:integration": "jest --verbose -c jest.config.integration.js --detectOpenHandles --forceExit",
+        "test:integration": "jest --verbose -c jest.config.integration.js",
         "test:health": "babel-node ./scripts/check-extended-dependencies.js",
         "flow": "flow check .",
         "typescript": "tsc --project src/ts/types/tsconfig.json",

@@ -156,6 +156,7 @@ export default class DescriptorStream extends EventEmitter {
 
     stop() {
         this.listening = false;
+        this.removeAllListeners();
     }
 
     _reportChanges() {
