@@ -49,6 +49,38 @@ deploy review:
   tags:
     - deploy
 
+# Publish release to npm registry
+
+publish release to npm:
+  image: node:14
+  stage: deploy
+  only:
+    refs:
+      - v8
+  when: manual
+  before_script:
+    - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}'>.npmrc
+  script:
+    - yarn build:npm && cd ./npm
+    - npm publish
+    - cd ../
+    - yarn build:npm-extended && cd ./npm-extended
+    - npm publish --tag extended
+
+# Publish beta release to npm registry
+
+publish beta release to npm:
+  image: node:14
+  stage: deploy
+  except:
+    - v8
+  when: manual
+  before_script:
+    - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}'>.npmrc
+  script:
+    - yarn build:npm-extended && cd ./npm-extended
+    - npm publish --tag beta
+
 # Test
 .test:
   stage: test
