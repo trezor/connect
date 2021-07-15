@@ -10,7 +10,7 @@ import type { CoinInfo, FirmwareRange } from '../../../types';
 
 type Param = {
     name: string,
-    type?: 'string' | 'number' | 'array' | 'buffer' | 'boolean' | 'amount' | 'object',
+    type?: 'string' | 'number' | 'array' | 'array-buffer' | 'boolean' | 'amount' | 'object',
     obligatory?: boolean,
     allowEmpty?: boolean,
 };
@@ -47,14 +47,10 @@ export const validateParams = (values: any, fields: Param[]) => {
                             `Parameter "${field.name}" has invalid value "${value}". Integer representation expected.`,
                         );
                     }
-                } else if (field.type === 'buffer') {
-                    if (
-                        typeof value === 'undefined' ||
-                        (typeof value.constructor.isBuffer === 'function' &&
-                            value.constructor.isBuffer(value))
-                    ) {
+                } else if (field.type === 'array-buffer') {
+                    if (!(value instanceof ArrayBuffer)) {
                         throw invalidParameter(
-                            `Parameter "${field.name}" has invalid type. "buffer" expected.`,
+                            `Parameter "${field.name}" has invalid type. "ArrayBuffer" expected.`,
                         );
                     }
                     // eslint-disable-next-line valid-typeof

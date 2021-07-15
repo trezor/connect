@@ -31,17 +31,13 @@ export type ChangePin = {
 };
 
 export type FirmwareUpdateBinary = {
-    binary?: Buffer,
+    binary: ArrayBuffer,
 };
 export type FirmwareUpdate = {
-    version?: number[],
+    version: number[],
     btcOnly?: boolean,
     baseUrl?: string,
-};
-
-export type FirmwareRequest = {
-    length: number,
-    offset: number,
+    intermediary?: boolean,
 };
 
 export type RecoveryDevice = {

@@ -29,18 +29,14 @@ export interface ChangePin {
 }
 
 export interface FirmwareUpdateBinary {
-    binary: Buffer;
+    binary: ArrayBuffer;
 }
 
 export interface FirmwareUpdate {
     version: number[];
-    btcOnly: boolean;
+    btcOnly?: boolean;
     baseUrl?: string;
-}
-
-export interface FirmwareRequest {
-    length: number;
-    offset: number;
+    intermediary?: boolean;
 }
 
 export interface RecoveryDevice {
