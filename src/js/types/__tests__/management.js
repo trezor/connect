@@ -33,12 +33,18 @@ export const management = () => {
     });
 
     TrezorConnect.firmwareUpdate({
-        binary: Buffer.from('abcd'),
+        binary: new ArrayBuffer(0),
     });
 
     TrezorConnect.firmwareUpdate({
         version: [2, 2, 0],
         btcOnly: false,
+    });
+
+    // $FlowExpectedError: cannot use both
+    TrezorConnect.firmwareUpdate({
+        binary: new ArrayBuffer(0),
+        version: [2, 2, 0],
     });
 
     TrezorConnect.recoveryDevice({

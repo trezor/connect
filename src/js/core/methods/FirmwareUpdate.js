@@ -10,7 +10,7 @@ import { getReleases } from '../../data/FirmwareInfo';
 import type { CoreMessage } from '../../types';
 
 type Params = {
-    binary?: Buffer,
+    binary?: ArrayBuffer,
     version?: number[],
     btcOnly?: boolean,
     baseUrl?: string,
@@ -35,7 +35,7 @@ export default class FirmwareUpdate extends AbstractMethod {
             { name: 'version', type: 'array' },
             { name: 'btcOnly', type: 'boolean' },
             { name: 'baseUrl', type: 'string' },
-            { name: 'binary', type: 'buffer' },
+            { name: 'binary', type: 'array-buffer' },
             { name: 'intermediary', type: 'boolean' },
         ]);
 
@@ -76,7 +76,7 @@ export default class FirmwareUpdate extends AbstractMethod {
     async run() {
         const { device } = this;
 
-        let binary;
+        let binary: ArrayBuffer;
         try {
             if (this.params.binary) {
                 binary = modifyFirmware({
