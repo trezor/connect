@@ -1,5 +1,5 @@
 /* @flow */
-import { getBinary } from '@trezor/rollout';
+import { getBinary, modifyFirmware } from '@trezor/rollout';
 import AbstractMethod from './AbstractMethod';
 import { UI, ERRORS } from '../../constants';
 import { uploadFirmware } from './helpers/uploadFirmware';
@@ -79,7 +79,10 @@ export default class FirmwareUpdate extends AbstractMethod {
         let binary;
         try {
             if (this.params.binary) {
-                binary = this.params.binary;
+                binary = modifyFirmware({
+                    fw: this.params.binary,
+                    features: device.features,
+                });
             } else {
                 const firmware = await getBinary({
                     // features and releases are used for sanity checking inside @trezor/rollout
