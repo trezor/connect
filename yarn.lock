@@ -1799,10 +1799,10 @@
     tiny-worker "^2.3.0"
     ws "^7.4.0"
 
-"@trezor/rollout@1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@trezor/rollout/-/rollout-1.1.0.tgz#861bd034b2c869593f7b85ad0db925f10258ac2c"
-  integrity sha512-KecQrCSrWiO5HX2gVQLvtZEpk46JvtwXq7qi40g3q+YfHhRGNrlojcHumIOjhCl55+J7F3XRjXz3aXwWfSEyaQ==
+"@trezor/rollout@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@trezor/rollout/-/rollout-1.2.0.tgz#827316debc5cf2e8af2210900eb49540ea2753d1"
+  integrity sha512-R8/M8PsGQUndHlyETZ5+mPOveaJSTlEgmAovY7Ifm3quvk8nV5ByWL1LUJ8IYUgir209EWDWSKWfa5RWoon8IA==
   dependencies:
     cross-fetch "^3.0.6"
     runtypes "^5.0.1"
