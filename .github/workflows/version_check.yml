@@ -1,0 +1,27 @@
+name: "connect version check"
+on:
+  pull_request:
+    branches:
+      - v8
+jobs:
+    version_commit_check:
+      name: Check connect version commit message
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - run: |
+            LAST_COMMIT=$(git log -1 --pretty=%B)
+            VERSION=$(jq -r .version package.json)
+            [[ "$LAST_COMMIT" == "version $VERSION" ]]; if [ $? -eq 0 ]; then echo "Last commit message contains version";   exit 0; else echo "Last commit message DOES NOT contain version" >&2;   exit 1; fi
+
+    version_bump_check:
+      name: Check connect version bump
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-node@v2
+        - run: |
+            yarn install
+            REMOTE_VERSION=$(npm show trezor-connect version)
+            LOCAL_VERSION=$(jq -r .version package.json)
+            node scripts/ci-compare-version.js $LOCAL_VERSION $REMOTE_VERSION

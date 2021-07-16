@@ -59,7 +59,7 @@ publish release to npm:
       - v8
   when: manual
   before_script:
-    - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}'>.npmrc
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}">.npmrc
   script:
     - yarn build:npm && cd ./npm
     - npm publish
@@ -76,7 +76,7 @@ publish beta release to npm:
     - v8
   when: manual
   before_script:
-    - echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}'>.npmrc
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}">.npmrc
   script:
     - yarn build:npm-extended && cd ./npm-extended
     - npm publish --tag beta
