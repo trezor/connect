@@ -4,7 +4,7 @@ When the button's clicked:
 - show a notification with response (if succeed)
 */
 
-const { TrezorConnect } = global;
+const { TrezorConnect } = window;
 
 TrezorConnect.manifest({
     email: 'email@developer.com',
