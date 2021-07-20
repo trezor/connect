@@ -351,6 +351,11 @@ export type API = {
      */
     getCoinInfo: Method<CoinInfo.GetCoinInfo, CoinInfo.CoinInfo>,
 
+    /**
+     * Reboots device (currently only T1 with fw >= 1.10.0) in bootloader mode
+     */
+    rebootToBootloader: Method<{}, P.DefaultMessage>,
+
     // // Developer mode
     customMessage: Method<Misc.CustomMessage, any>,
     debugLinkDecision: Method<{}, { debugLink: true }>,
