@@ -69,6 +69,7 @@ import changePin from './ChangePin';
 import firmwareUpdate from './FirmwareUpdate';
 import recoveryDevice from './RecoveryDevice';
 import getCoinInfo from './GetCoinInfo';
+import rebootToBootloader from './RebootToBootloader';
 
 const METHODS = {
     blockchainDisconnect,
@@ -135,6 +136,7 @@ const METHODS = {
     firmwareUpdate,
     recoveryDevice,
     getCoinInfo,
+    rebootToBootloader,
 };
 
 export const find = (message: CoreMessage): AbstractMethod => {

@@ -362,6 +362,11 @@ export namespace TrezorConnect {
      */
     function getCoinInfo(params: CoinInfo.GetCoinInfo): P.Response<CoinInfo.CoinInfo>;
 
+    /**
+     * Reboots device (currently only T1 with fw >= 1.10.0) in bootloader mode
+     */
+    function rebootToBootloader(params?: P.CommonParams): P.Response<P.DefaultMessage>;
+
     // // Developer mode
     function customMessage(params: P.CommonParams & Misc.CustomMessage): P.Response<any>;
     function debugLinkDecision(params?: P.CommonParams): P.Response<{ debugLink: true }>;

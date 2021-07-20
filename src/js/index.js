@@ -193,6 +193,8 @@ const TrezorConnect: API = {
 
     getCoinInfo: params => call({ method: 'getCoinInfo', ...params }),
 
+    rebootToBootloader: params => call({ method: 'rebootToBootloader', ...params }),
+
     dispose,
 
     cancel,
