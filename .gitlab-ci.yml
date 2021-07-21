@@ -26,8 +26,8 @@ build:
     paths:
       - build
 
-# Deploy
-deploy review:
+# Deploy to testing environment
+deploy test:
   stage: deploy
   variables:
     GIT_STRATEGY: none
@@ -46,6 +46,22 @@ deploy review:
     - rsync --delete -va build/ "${DEPLOY_BASE_DIR}/${CI_BUILD_REF_NAME}/"
   only:
     - branches
+  tags:
+    - deploy
+
+# Deploy release to connect.trezor.io
+deploy production:
+  stage: deploy
+  only:
+    refs:
+      - v8
+  when: manual
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - nix-shell --run "make clean"
+    - nix-shell --run "make build"
+    - nix-shell --run "make sync-8"
   tags:
     - deploy
 
