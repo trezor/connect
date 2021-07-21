@@ -1,13 +1,22 @@
 # 8.1.29
 
+### Added
+- expose whole ButtonRequest object in UI.REQUEST_BUTTON event
+- 1.10.2 and 2.4.1 FW releases
+- TrezorConnect.dispose method
+
 ### Fixed
 - restore Ropsten blockchain_link
 - add unreadable Device error details 
--  bootloader T1 getFeatures timeout handling
+- bootloader T1 getFeatures timeout handling
+- uploaded binary modified in the same way as when downloaded by version in FirmwareUpdate
+- TrezorConnect.firmwareUpdate binary type
 
 ### Changed
 - expose udev installers via TRASNPORT_EVENT
+- rename onBeforeUnload to dispose
 - update rollout@1.1.0
+- update protobuf messages
 
 # 8.1.28 (never released)
 
