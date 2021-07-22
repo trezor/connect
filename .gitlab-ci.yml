@@ -79,8 +79,8 @@ publish release to npm:
   before_script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}">.npmrc
   script:
-    - nix-shell --run "yarn build:npm && cd ./npm && npm publish"
-    - nix-shell --run "yarn build:npm-extended && cd ./npm-extended && npm publish --tag extended"
+    - nix-shell --run "yarn && yarn build:npm && cd ./npm && npm publish"
+    - nix-shell --run "yarn && yarn build:npm-extended && cd ./npm-extended && npm publish --tag extended"
 
 # Publish beta release to npm registry
 
@@ -93,7 +93,7 @@ publish beta release to npm:
   before_script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}">.npmrc
   script:
-    - nix-shell --run "yarn build:npm-extended && cd ./npm-extended && npm publish --tag beta"
+    - nix-shell --run "yarn && yarn build:npm-extended && cd ./npm-extended && npm publish --tag beta"
 
 # Test
 .test:
