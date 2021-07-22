@@ -92,8 +92,6 @@ publish release to npm:
 
 publish beta release to npm:
   stage: deploy
-  except:
-    - v8
   when: manual
   needs: ["verify"]
   before_script:
