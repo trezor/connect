@@ -88,8 +88,6 @@ publish release to npm:
 publish beta release to npm:
   image: node:14
   stage: deploy
-  except:
-    - v8
   when: manual
   before_script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}">.npmrc
