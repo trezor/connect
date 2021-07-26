@@ -15,7 +15,8 @@ import { UiMessage } from '../../message/builder';
 
 import type { CoreMessage } from '../../types';
 import type { CardanoAddress } from '../../types/networks/cardano';
-import type { MessageType } from '../../types/trezor/protobuf';
+import { CardanoAddressType } from '../../types/networks/cardano';
+import type { CardanoAddressParametersType, MessageType } from '../../types/trezor/protobuf';
 
 type Params = {
     ...$ElementType<MessageType, 'CardanoGetAddress'>,
@@ -162,11 +163,71 @@ export default class CardanoGetAddress extends AbstractMethod {
         return response.message;
     }
 
+    _ensureFirmwareSupportsBatch(batch: Params) {
+        const SCRIPT_ADDRESSES_TYPES = [
+            CardanoAddressType.BASE_SCRIPT_KEY,
+            CardanoAddressType.BASE_KEY_SCRIPT,
+            CardanoAddressType.BASE_SCRIPT_SCRIPT,
+            CardanoAddressType.POINTER_SCRIPT,
+            CardanoAddressType.ENTERPRISE_SCRIPT,
+            CardanoAddressType.REWARD_SCRIPT,
+        ];
+
+        if (SCRIPT_ADDRESSES_TYPES.includes(batch.address_parameters.address_type)) {
+            if (!this.device.atLeast(['0', '2.4.3'])) {
+                throw ERRORS.TypedError(
+                    'Method_InvalidParameter',
+                    `Address type not supported by device firmware`,
+                );
+            }
+        }
+    }
+
+    _modifyForBackwardsCompatibility(
+        address_parameters: CardanoAddressParametersType,
+    ): CardanoAddressParametersType {
+        if (address_parameters.address_type === CardanoAddressType.REWARD) {
+            // older firmware expects reward address path in path parameter
+            let { address_n, address_n_staking } = address_parameters;
+
+            if (address_n.length > 0 && address_n_staking.length > 0) {
+                throw ERRORS.TypedError(
+                    'Method_InvalidParameter',
+                    `Only stakingPath is allowed for CardanoAddressType.REWARD`,
+                );
+            }
+
+            if (this.device.atLeast(['0', '2.4.3'])) {
+                if (address_n.length > 0) {
+                    address_n_staking = address_n;
+                    address_n = [];
+                }
+            } else if (address_n_staking.length > 0) {
+                address_n = address_n_staking;
+                address_n_staking = [];
+            }
+
+            return {
+                ...address_parameters,
+                address_n,
+                address_n_staking,
+            };
+        }
+
+        return address_parameters;
+    }
+
     async run() {
         const responses: CardanoAddress[] = [];
 
         for (let i = 0; i < this.params.length; i++) {
             const batch = this.params[i];
+
+            this._ensureFirmwareSupportsBatch(batch);
+            batch.address_parameters = this._modifyForBackwardsCompatibility(
+                batch.address_parameters,
+            );
+
             // silently get address and compare with requested address
             // or display as default inside popup
             if (batch.show_display) {
