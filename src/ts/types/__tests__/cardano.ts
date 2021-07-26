@@ -14,6 +14,8 @@ export const cardanoGetAddress = async () => {
                 txIndex: 1,
                 certificateIndex: 2,
             },
+            paymentScriptHash: 'aaff00..',
+            stakingScriptHash: 'aaff00..',
         },
         protocolMagic: 0,
         networkId: 0,
@@ -36,6 +38,8 @@ export const cardanoGetAddress = async () => {
             certificatePointer.txIndex;
             certificatePointer.certificateIndex;
         }
+        addressParameters.paymentScriptHash;
+        addressParameters.stakingScriptHash;
         // @ts-ignore
         payload.forEach(item => {
             item.address;
@@ -56,6 +60,8 @@ export const cardanoGetAddress = async () => {
                         txIndex: 1,
                         certificateIndex: 2,
                     },
+                    paymentScriptHash: 'aaff00..',
+                    stakingScriptHash: 'aaff00..',
                 },
                 protocolMagic: 0,
                 networkId: 0,
@@ -80,6 +86,8 @@ export const cardanoGetAddress = async () => {
                 certificatePointer.txIndex;
                 certificatePointer.certificateIndex;
             }
+            addressParameters.paymentScriptHash;
+            addressParameters.stakingScriptHash;
         });
         // @ts-ignore
         bundleAddress.payload.address;
@@ -108,6 +116,8 @@ export const cardanoGetAddress = async () => {
                 txIndex: 1,
                 certificateIndex: 2,
             },
+            paymentScriptHash: 'aaff00..',
+            stakingScriptHash: 'aaff00..',
         },
         address: 'a',
         protocolMagic: 0,

@@ -14,6 +14,8 @@ export const cardanoGetAddress = async () => {
                 txIndex: 1,
                 certificateIndex: 2,
             },
+            paymentScriptHash: 'aaff00..',
+            stakingScriptHash: 'aaff00..',
         },
         protocolMagic: 0,
         networkId: 0,
@@ -28,7 +30,7 @@ export const cardanoGetAddress = async () => {
         (payload.serializedStakingPath: string);
         const { addressParameters } = payload;
         (addressParameters.addressType: number);
-        (addressParameters.path: string | number[]);
+        (addressParameters.path: ?string | ?(number[]));
         (addressParameters.stakingPath: ?string | ?(number[]));
         (addressParameters.stakingKeyHash: ?string);
         const { certificatePointer } = addressParameters;
@@ -37,6 +39,8 @@ export const cardanoGetAddress = async () => {
             (certificatePointer.txIndex: ?number);
             (certificatePointer.certificateIndex: ?number);
         }
+        (addressParameters.paymentScriptHash: ?string);
+        (addressParameters.stakingScriptHash: ?string);
     }
 
     // bundle
@@ -53,6 +57,8 @@ export const cardanoGetAddress = async () => {
                         txIndex: 1,
                         certificateIndex: 2,
                     },
+                    paymentScriptHash: 'aaff00..',
+                    stakingScriptHash: 'aaff00..',
                 },
                 protocolMagic: 0,
                 networkId: 0,
@@ -69,14 +75,16 @@ export const cardanoGetAddress = async () => {
             (item.serializedStakingPath: string);
             const { addressParameters } = item;
             (addressParameters.addressType: number);
-            (addressParameters.path: string | number[]);
-            (addressParameters.stakingPath: ?string | number[]);
+            (addressParameters.path: ?string | ?(number[]));
+            (addressParameters.stakingPath: ?string | ?(number[]));
             const { certificatePointer } = addressParameters;
             if (certificatePointer) {
                 (certificatePointer.blockIndex: ?number);
                 (certificatePointer.txIndex: ?number);
                 (certificatePointer.certificateIndex: ?number);
             }
+            (addressParameters.paymentScriptHash: ?string);
+            (addressParameters.stakingScriptHash: ?string);
         });
     } else {
         (bundleAddress.payload.error: string);
@@ -103,6 +111,8 @@ export const cardanoGetAddress = async () => {
                 txIndex: 1,
                 certificateIndex: 2,
             },
+            paymentScriptHash: 'aaff00..',
+            stakingScriptHash: 'aaff00..',
         },
         address: 'a',
         protocolMagic: 0,
