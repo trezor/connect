@@ -48,6 +48,16 @@ export const Enum_CardanoAddressType = Object.freeze({
 });
 export type CardanoAddressType = $Values<typeof Enum_CardanoAddressType>;
 
+export const Enum_CardanoNativeScriptType = Object.freeze({
+    PUB_KEY: 0,
+    ALL: 1,
+    ANY: 2,
+    N_OF_K: 3,
+    INVALID_BEFORE: 4,
+    INVALID_HEREAFTER: 5,
+});
+export type CardanoNativeScriptType = $Values<typeof Enum_CardanoNativeScriptType>;
+
 export const Enum_CardanoCertificateType = Object.freeze({
     STAKE_REGISTRATION: 0,
     STAKE_DEREGISTRATION: 1,
@@ -74,6 +84,7 @@ export type CardanoTxAuxiliaryDataSupplementType = $Values<
 export const Enum_CardanoTxSigningMode = Object.freeze({
     ORDINARY_TRANSACTION: 0,
     POOL_REGISTRATION_AS_OWNER: 1,
+    SCRIPT_TRANSACTION: 2,
 });
 export type CardanoTxSigningMode = $Values<typeof Enum_CardanoTxSigningMode>;
 
@@ -601,6 +612,28 @@ export type CardanoBlockchainPointerType = {
     certificate_index: number,
 };
 
+// CardanoNativeScript
+export type CardanoNativeScript = {
+    type: CardanoNativeScriptType,
+    scripts: CardanoNativeScript[],
+    key_hash?: string,
+    key_path?: number[],
+    required_signatures_count?: number,
+    invalid_before?: number,
+    invalid_hereafter?: number,
+};
+
+// CardanoGetNativeScriptHash
+export type CardanoGetNativeScriptHash = {
+    script: CardanoNativeScript,
+    show_display?: boolean,
+};
+
+// CardanoNativeScriptHash
+export type CardanoNativeScriptHash = {
+    script_hash: string,
+};
+
 // CardanoAddressParametersType
 export type CardanoAddressParametersType = {
     address_type: CardanoAddressType,
@@ -608,6 +641,8 @@ export type CardanoAddressParametersType = {
     address_n_staking: number[],
     staking_key_hash?: string,
     certificate_pointer?: CardanoBlockchainPointerType,
+    script_payment_hash?: string,
+    script_staking_hash?: string,
 };
 
 // CardanoGetAddress
@@ -649,6 +684,7 @@ export type CardanoSignTxInit = {
     has_auxiliary_data: boolean,
     validity_interval_start?: string | number,
     witness_requests_count: number,
+    minting_asset_groups_count: number,
 };
 
 // CardanoTxInput
@@ -674,7 +710,8 @@ export type CardanoAssetGroup = {
 // CardanoToken
 export type CardanoToken = {
     asset_name_bytes: string,
-    amount: string | number,
+    amount?: string | number,
+    mint_amount?: string | number,
 };
 
 // CardanoPoolOwner
@@ -720,12 +757,14 @@ export type CardanoTxCertificate = {
     path?: number[],
     pool?: string,
     pool_parameters?: CardanoPoolParametersType,
+    script_hash?: string,
 };
 
 // CardanoTxWithdrawal
 export type CardanoTxWithdrawal = {
     path: number[],
     amount: number,
+    script_hash?: string,
 };
 
 // CardanoCatalystRegistrationParametersType
@@ -740,6 +779,11 @@ export type CardanoCatalystRegistrationParametersType = {
 export type CardanoTxAuxiliaryData = {
     catalyst_registration_parameters?: CardanoCatalystRegistrationParametersType,
     hash?: string,
+};
+
+// CardanoTxMint
+export type CardanoTxMint = {
+    asset_groups_count: number,
 };
 
 // CardanoTxItemAck
@@ -2145,6 +2189,9 @@ export type MessageType = {
     FirmwareUpload: $Exact<FirmwareUpload>,
     SelfTest: SelfTest,
     CardanoBlockchainPointerType: $Exact<CardanoBlockchainPointerType>,
+    CardanoNativeScript: $Exact<CardanoNativeScript>,
+    CardanoGetNativeScriptHash: $Exact<CardanoGetNativeScriptHash>,
+    CardanoNativeScriptHash: $Exact<CardanoNativeScriptHash>,
     CardanoAddressParametersType: $Exact<CardanoAddressParametersType>,
     CardanoGetAddress: $Exact<CardanoGetAddress>,
     CardanoAddress: $Exact<CardanoAddress>,
@@ -2163,6 +2210,7 @@ export type MessageType = {
     CardanoTxWithdrawal: $Exact<CardanoTxWithdrawal>,
     CardanoCatalystRegistrationParametersType: $Exact<CardanoCatalystRegistrationParametersType>,
     CardanoTxAuxiliaryData: CardanoTxAuxiliaryData,
+    CardanoTxMint: $Exact<CardanoTxMint>,
     CardanoTxItemAck: CardanoTxItemAck,
     CardanoTxAuxiliaryDataSupplement: $Exact<CardanoTxAuxiliaryDataSupplement>,
     CardanoTxWitnessRequest: CardanoTxWitnessRequest,
