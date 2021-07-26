@@ -11,6 +11,8 @@ const RULE_PATCH = {
     'CardanoTxCertificateType.path': 'optional',
     'CardanoTxCertificate.path': 'optional',
     'CardanoTxInputType.address_n': 'optional',
+    'CardanoTxWithdrawal.path': 'optional',
+    'CardanoNativeScript.key_path': 'optional',
     'Success.message': 'required', // didn't find use case where it's not sent
     'SignedIdentity.address': 'required',
     'EosAuthorizationKey.key': 'required', // its valid to be undefined according to implementation/tests
@@ -119,6 +121,7 @@ const TYPE_PATCH = {
     'CardanoSignTxInit.validity_interval_start': 'string | number',
     'CardanoTokenType.amount': 'string | number',
     'CardanoToken.amount': 'string | number',
+    'CardanoToken.mint_amount': 'string | number',
     'CardanoTxOutputType.amount': 'string | number',
     'CardanoTxOutput.amount': 'string | number',
     'EosAsset.amount': 'string',
