@@ -34,10 +34,12 @@ export type CardanoCertificatePointer = {
 
 export type CardanoAddressParameters = {
     addressType: CardanoAddressType,
-    path: string | number[],
+    path?: string | number[],
     stakingPath?: string | number[],
     stakingKeyHash?: string,
     certificatePointer?: CardanoCertificatePointer,
+    paymentScriptHash?: string,
+    stakingScriptHash?: string,
 };
 
 export type CardanoGetAddress = {

@@ -8,11 +8,14 @@ import type { CardanoAddressParameters } from '../../../types/networks/cardano';
 export const validateAddressParameters = (addressParameters: CardanoAddressParameters) => {
     validateParams(addressParameters, [
         { name: 'addressType', type: 'number', obligatory: true },
-        { name: 'path', obligatory: true },
         { name: 'stakingKeyHash', type: 'string' },
+        { name: 'paymentScriptHash', type: 'string' },
+        { name: 'stakingScriptHash', type: 'string' },
     ]);
 
-    validatePath(addressParameters.path);
+    if (addressParameters.path) {
+        validatePath(addressParameters.path);
+    }
     if (addressParameters.stakingPath) {
         validatePath(addressParameters.stakingPath);
     }
@@ -29,7 +32,10 @@ export const validateAddressParameters = (addressParameters: CardanoAddressParam
 export const addressParametersToProto = (
     addressParameters: CardanoAddressParameters,
 ): CardanoAddressParametersType => {
-    const path = validatePath(addressParameters.path, 3);
+    let path = [];
+    if (addressParameters.path) {
+        path = validatePath(addressParameters.path, 3);
+    }
 
     let stakingPath = [];
     if (addressParameters.stakingPath) {
@@ -51,6 +57,8 @@ export const addressParametersToProto = (
         address_n_staking: stakingPath,
         staking_key_hash: addressParameters.stakingKeyHash,
         certificate_pointer: certificatePointer,
+        script_payment_hash: addressParameters.paymentScriptHash,
+        script_staking_hash: addressParameters.stakingScriptHash,
     };
 };
 
