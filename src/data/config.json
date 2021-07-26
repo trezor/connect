@@ -129,6 +129,13 @@
         },
         {
             "methods": [
+                "cardanoGetNativeScriptHash"
+            ],
+            "min": ["0", "2.4.3"],
+            "comment": ["Cardano GetNativeScriptHash call added in 2.4.3"]
+        },
+        {
+            "methods": [
                 "tezosSignTransaction"
             ],
             "min": ["0", "2.1.8"],

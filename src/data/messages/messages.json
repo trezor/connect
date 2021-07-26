@@ -2228,12 +2228,10 @@
                     "id": 1
                 },
                 {
-                    "rule": "optional",
-                    "options": {
-                        "default": false
-                    },
-                    "type": "bool",
-                    "name": "show_display",
+                    "rule": "required",
+                    "options": {},
+                    "type": "CardanoNativeScriptHashDisplayFormat",
+                    "name": "display_format",
                     "id": 2
                 }
             ],
@@ -11175,6 +11173,24 @@
                 {
                     "name": "INVALID_HEREAFTER",
                     "id": 5
+                }
+            ],
+            "options": {}
+        },
+        {
+            "name": "CardanoNativeScriptHashDisplayFormat",
+            "values": [
+                {
+                    "name": "HIDE",
+                    "id": 0
+                },
+                {
+                    "name": "BECH32",
+                    "id": 1
+                },
+                {
+                    "name": "POLICY_ID",
+                    "id": 2
                 }
             ],
             "options": {}

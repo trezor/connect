@@ -1,13 +1,14 @@
-
 // Cardano method parameters types
-import { 
+import {
     HDNodeType,
     CardanoAddressType,
-    CardanoTxAuxiliaryDataSupplementType,
     CardanoCertificateType,
+    CardanoNativeScriptType,
+    CardanoNativeScriptHashDisplayFormat,
     CardanoPoolRelayType,
+    CardanoTxAuxiliaryDataSupplementType,
+    CardanoTxSigningMode,
     CardanoTxWitnessType,
-    CardanoTxSigningMode
 } from '../trezor/protobuf';
 
 // GetPublicKey
@@ -57,6 +58,27 @@ export interface CardanoAddress {
     serializedPath: string;
     serializedStakingPath: string;
     address: string;
+}
+
+// GetNativeScriptHash
+
+export interface CardanoNativeScript {
+    type: CardanoNativeScriptType;
+    scripts?: CardanoNativeScript[];
+    keyHash?: string;
+    keyPath?: string | number[];
+    requiredSignaturesCount?: number;
+    invalidBefore?: string;
+    invalidHereafter?: string;
+}
+
+export interface CardanoGetNativeScriptHash {
+    script: CardanoNativeScript;
+    displayFormat: CardanoNativeScriptHashDisplayFormat;
+}
+
+export interface CardanoNativeScriptHash {
+    scriptHash: string;
 }
 
 // Sign transaction
@@ -184,6 +206,8 @@ export interface CardanoSignedTxData {
 export {
     CardanoAddressType,
     CardanoCertificateType,
+    CardanoNativeScriptType,
+    CardanoNativeScriptHashDisplayFormat,
     CardanoPoolRelayType,
     CardanoTxSigningMode,
     CardanoTxWitnessType,

@@ -12,6 +12,7 @@ const RULE_PATCH = {
     'CardanoTxCertificate.path': 'optional',
     'CardanoTxInputType.address_n': 'optional',
     'CardanoTxWithdrawal.path': 'optional',
+    'CardanoNativeScript.scripts': 'optional',
     'CardanoNativeScript.key_path': 'optional',
     'Success.message': 'required', // didn't find use case where it's not sent
     'SignedIdentity.address': 'required',
@@ -124,6 +125,8 @@ const TYPE_PATCH = {
     'CardanoToken.mint_amount': 'string | number',
     'CardanoTxOutputType.amount': 'string | number',
     'CardanoTxOutput.amount': 'string | number',
+    'CardanoNativeScript.invalid_before': 'string | number',
+    'CardanoNativeScript.invalid_hereafter': 'string | number',
     'EosAsset.amount': 'string',
     'EosAsset.symbol': 'string',
     'EosPermissionLevel.actor': 'string',

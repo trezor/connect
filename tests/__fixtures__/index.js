@@ -11,6 +11,7 @@ import binanceSignTransaction from './binanceSignTransaction';
 // import resetDevice from './resetDevice';
 import cardanoGetAddress from './cardanoGetAddress';
 import cardanoGetPublicKey from './cardanoGetPublicKey';
+import cardanoGetNativeScriptHash from './cardanoGetNativeScriptHash';
 import cardanoSignTransaction from './cardanoSignTransaction';
 import composeTransaction from './composeTransaction';
 import eosGetPublicKey from './eosGetPublicKey';
@@ -60,6 +61,7 @@ let fixtures = [
     // todo: missing fixtures: BinanceGetPublicKey.js
     binanceSignTransaction,
     cardanoGetAddress,
+    cardanoGetNativeScriptHash,
     cardanoGetPublicKey,
     cardanoSignTransaction,
     // todo: missing fixtures: ChangePin.js

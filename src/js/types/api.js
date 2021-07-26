@@ -238,6 +238,10 @@ export type API = {
 
     // Cardano (ADA)
     cardanoGetAddress: Bundled<Cardano.CardanoGetAddress, Cardano.CardanoAddress>,
+    cardanoGetNativeScriptHash: Method<
+        Cardano.CardanoGetNativeScriptHash,
+        Cardano.CardanoNativeScriptHash,
+    >,
     cardanoGetPublicKey: Bundled<Cardano.CardanoGetPublicKey, Cardano.CardanoPublicKey>,
     cardanoSignTransaction: Method<Cardano.CardanoSignTransaction, Cardano.CardanoSignedTxData>,
 

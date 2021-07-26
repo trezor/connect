@@ -161,6 +161,38 @@ export const cardanoGetAddress = async () => {
     TrezorConnect.cardanoGetAddress({ bundle: 1 });
 };
 
+export const cardanoGetNativeScriptHash = async () => {
+    const result = await TrezorConnect.cardanoGetNativeScriptHash({
+        script: {
+            type: 0,
+            scripts: [
+                {
+                    type: 0,
+                    scripts: [],
+                    keyHash: '00aaff...',
+                    keyPath: 'm/44',
+                    requiredSignaturesCount: 0,
+                    invalidBefore: '0',
+                    invalidHereafter: '0',
+                },
+            ],
+            keyHash: '00aaff...',
+            keyPath: 'm/44',
+            requiredSignaturesCount: 0,
+            invalidBefore: '0',
+            invalidHereafter: '0',
+        },
+        displayFormat: 0,
+    });
+
+    (result.success: boolean);
+    if (result.success) {
+        (result.payload.scriptHash: string);
+    } else {
+        (result.payload.error: string);
+    }
+};
+
 export const cardanoGetPublicKey = async () => {
     // regular
     const singlePK = await TrezorConnect.cardanoGetPublicKey({ path: 'm/44' });
