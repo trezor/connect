@@ -2160,6 +2160,105 @@
             "oneofs": {}
         },
         {
+            "name": "CardanoNativeScript",
+            "fields": [
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "CardanoNativeScriptType",
+                    "name": "type",
+                    "id": 1
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "CardanoNativeScript",
+                    "name": "scripts",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "key_hash",
+                    "id": 3
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "key_path",
+                    "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "required_signatures_count",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "invalid_before",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "invalid_hereafter",
+                    "id": 7
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "CardanoGetNativeScriptHash",
+            "fields": [
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "CardanoNativeScript",
+                    "name": "script",
+                    "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "default": false
+                    },
+                    "type": "bool",
+                    "name": "show_display",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "CardanoNativeScriptHash",
+            "fields": [
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "script_hash",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "CardanoAddressParametersType",
             "fields": [
                 {
@@ -2196,6 +2295,20 @@
                     "type": "CardanoBlockchainPointerType",
                     "name": "certificate_pointer",
                     "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "script_payment_hash",
+                    "id": 6
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "script_staking_hash",
+                    "id": 7
                 }
             ],
             "enums": [],
@@ -2390,6 +2503,13 @@
                     "type": "uint32",
                     "name": "witness_requests_count",
                     "id": 12
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "minting_asset_groups_count",
+                    "id": 13
                 }
             ],
             "enums": [],
@@ -2491,11 +2611,18 @@
                     "id": 1
                 },
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
                     "type": "uint64",
                     "name": "amount",
                     "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "mint_amount",
+                    "id": 3
                 }
             ],
             "enums": [],
@@ -2720,6 +2847,13 @@
                     "type": "CardanoPoolParametersType",
                     "name": "pool_parameters",
                     "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "script_hash",
+                    "id": 5
                 }
             ],
             "enums": [],
@@ -2743,6 +2877,13 @@
                     "type": "uint64",
                     "name": "amount",
                     "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "script_hash",
+                    "id": 3
                 }
             ],
             "enums": [],
@@ -2803,6 +2944,22 @@
                     "type": "bytes",
                     "name": "hash",
                     "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "CardanoTxMint",
+            "fields": [
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "asset_groups_count",
+                    "id": 1
                 }
             ],
             "enums": [],
@@ -10993,6 +11150,36 @@
             "options": {}
         },
         {
+            "name": "CardanoNativeScriptType",
+            "values": [
+                {
+                    "name": "PUB_KEY",
+                    "id": 0
+                },
+                {
+                    "name": "ALL",
+                    "id": 1
+                },
+                {
+                    "name": "ANY",
+                    "id": 2
+                },
+                {
+                    "name": "N_OF_K",
+                    "id": 3
+                },
+                {
+                    "name": "INVALID_BEFORE",
+                    "id": 4
+                },
+                {
+                    "name": "INVALID_HEREAFTER",
+                    "id": 5
+                }
+            ],
+            "options": {}
+        },
+        {
             "name": "CardanoCertificateType",
             "values": [
                 {
@@ -11056,6 +11243,10 @@
                 {
                     "name": "POOL_REGISTRATION_AS_OWNER",
                     "id": 1
+                },
+                {
+                    "name": "SCRIPT_TRANSACTION",
+                    "id": 2
                 }
             ],
             "options": {}
@@ -11700,6 +11891,18 @@
                 {
                     "name": "MessageType_CardanoPoolRelayParameters",
                     "id": 329
+                },
+                {
+                    "name": "MessageType_CardanoGetNativeScriptHash",
+                    "id": 330
+                },
+                {
+                    "name": "MessageType_CardanoNativeScriptHash",
+                    "id": 331
+                },
+                {
+                    "name": "MessageType_CardanoTxMint",
+                    "id": 332
                 },
                 {
                     "name": "MessageType_RippleGetAddress",
