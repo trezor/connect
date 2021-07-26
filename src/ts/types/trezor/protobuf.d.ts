@@ -53,6 +53,12 @@ export enum CardanoNativeScriptType {
     INVALID_HEREAFTER = 5,
 }
 
+export enum CardanoNativeScriptHashDisplayFormat {
+    HIDE = 0,
+    BECH32 = 1,
+    POLICY_ID = 2,
+}
+
 export enum CardanoCertificateType {
     STAKE_REGISTRATION = 0,
     STAKE_DEREGISTRATION = 1,
@@ -591,18 +597,18 @@ export type CardanoBlockchainPointerType = {
 // CardanoNativeScript
 export type CardanoNativeScript = {
     type: CardanoNativeScriptType;
-    scripts: CardanoNativeScript[];
+    scripts?: CardanoNativeScript[];
     key_hash?: string;
     key_path?: number[];
     required_signatures_count?: number;
-    invalid_before?: number;
-    invalid_hereafter?: number;
+    invalid_before?: string | number;
+    invalid_hereafter?: string | number;
 };
 
 // CardanoGetNativeScriptHash
 export type CardanoGetNativeScriptHash = {
     script: CardanoNativeScript;
-    show_display?: boolean;
+    display_format: CardanoNativeScriptHashDisplayFormat;
 };
 
 // CardanoNativeScriptHash

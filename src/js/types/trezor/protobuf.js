@@ -58,6 +58,15 @@ export const Enum_CardanoNativeScriptType = Object.freeze({
 });
 export type CardanoNativeScriptType = $Values<typeof Enum_CardanoNativeScriptType>;
 
+export const Enum_CardanoNativeScriptHashDisplayFormat = Object.freeze({
+    HIDE: 0,
+    BECH32: 1,
+    POLICY_ID: 2,
+});
+export type CardanoNativeScriptHashDisplayFormat = $Values<
+    typeof Enum_CardanoNativeScriptHashDisplayFormat,
+>;
+
 export const Enum_CardanoCertificateType = Object.freeze({
     STAKE_REGISTRATION: 0,
     STAKE_DEREGISTRATION: 1,
@@ -615,18 +624,18 @@ export type CardanoBlockchainPointerType = {
 // CardanoNativeScript
 export type CardanoNativeScript = {
     type: CardanoNativeScriptType,
-    scripts: CardanoNativeScript[],
+    scripts?: CardanoNativeScript[],
     key_hash?: string,
     key_path?: number[],
     required_signatures_count?: number,
-    invalid_before?: number,
-    invalid_hereafter?: number,
+    invalid_before?: string | number,
+    invalid_hereafter?: string | number,
 };
 
 // CardanoGetNativeScriptHash
 export type CardanoGetNativeScriptHash = {
     script: CardanoNativeScript,
-    show_display?: boolean,
+    display_format: CardanoNativeScriptHashDisplayFormat,
 };
 
 // CardanoNativeScriptHash

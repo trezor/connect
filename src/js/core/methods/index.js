@@ -17,6 +17,7 @@ import blockchainSubscribeFiatRates from './blockchain/BlockchainSubscribeFiatRa
 import blockchainUnsubscribe from './blockchain/BlockchainUnsubscribe';
 import blockchainUnsubscribeFiatRates from './blockchain/BlockchainUnsubscribeFiatRates';
 import cardanoGetAddress from './CardanoGetAddress';
+import cardanoGetNativeScriptHash from './CardanoGetNativeScriptHash';
 import cardanoGetPublicKey from './CardanoGetPublicKey';
 import cardanoSignTransaction from './CardanoSignTransaction';
 import cipherKeyValue from './CipherKeyValue';
@@ -80,6 +81,7 @@ const METHODS = {
     blockchainUnsubscribe,
     blockchainUnsubscribeFiatRates,
     cardanoGetAddress,
+    cardanoGetNativeScriptHash,
     cardanoGetPublicKey,
     cardanoSignTransaction,
     cipherKeyValue,

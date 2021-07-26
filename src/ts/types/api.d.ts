@@ -194,6 +194,9 @@ export namespace TrezorConnect {
     function cardanoGetAddress(
         params: P.CommonParams & P.Bundle<Cardano.CardanoGetAddress>,
     ): P.BundledResponse<Cardano.CardanoAddress>;
+    function cardanoGetNativeScriptHash(
+        params: P.CommonParams & Cardano.CardanoGetNativeScriptHash,
+    ): P.Response<Cardano.CardanoNativeScriptHash>;
     function cardanoGetPublicKey(
         params: P.CommonParams & Cardano.CardanoGetPublicKey,
     ): P.Response<Cardano.CardanoPublicKey>;

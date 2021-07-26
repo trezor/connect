@@ -109,7 +109,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i cardanoGetAddress,cardanoGetPublicKey,cardanoSignTransaction
+    - run: ./tests/run.sh -i cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction
 
   eos:
     needs: check

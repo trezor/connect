@@ -191,7 +191,7 @@ test stellar:
 test cardano:
   extends: .test
   variables:
-    TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetPublicKey,cardanoSignTransaction"
+    TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction"
 
 test eos:
   extends: .test
