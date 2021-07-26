@@ -73,6 +73,8 @@ const TrezorConnect: API = {
         return call({ method: 'cardanoGetAddress', ...params, useEventListener });
     },
 
+    cardanoGetNativeScriptHash: params => call({ method: 'cardanoGetNativeScriptHash', ...params }),
+
     cardanoGetPublicKey: params => call({ method: 'cardanoGetPublicKey', ...params }),
 
     cardanoSignTransaction: params => call({ method: 'cardanoSignTransaction', ...params }),

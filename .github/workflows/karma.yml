@@ -150,7 +150,7 @@ jobs:
         path: build
     # xvfb is required to run karma 
     - run: sudo apt-get install xvfb
-    - run: xvfb-run --auto-servernum ./tests/run.sh -s 'yarn test:karma:production' -i cardanoGetAddress,cardanoGetPublicKey,cardanoSignTransaction
+    - run: xvfb-run --auto-servernum ./tests/run.sh -s 'yarn test:karma:production' -i cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction
 
   eos:
     needs: check
