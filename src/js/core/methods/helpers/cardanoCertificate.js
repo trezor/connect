@@ -183,7 +183,7 @@ export const transformCertificate = (
     const paramsToValidate = [{ name: 'type', type: 'number', obligatory: true }];
 
     if (certificate.type !== CardanoCertificateType.STAKE_POOL_REGISTRATION) {
-        paramsToValidate.push({ name: 'path', obligatory: true });
+        paramsToValidate.push({ name: 'scriptHash', type: 'string' });
     }
 
     if (certificate.type === CardanoCertificateType.STAKE_DELEGATION) {
@@ -204,6 +204,7 @@ export const transformCertificate = (
         certificate: {
             type: certificate.type,
             path: certificate.path ? validatePath(certificate.path, 5) : undefined,
+            script_hash: certificate.scriptHash,
             pool: certificate.pool,
             pool_parameters: poolParameters,
         },

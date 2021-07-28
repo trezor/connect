@@ -80,7 +80,7 @@ export enum CardanoTxAuxiliaryDataSupplementType {
 export enum CardanoTxSigningMode {
     ORDINARY_TRANSACTION = 0,
     POOL_REGISTRATION_AS_OWNER = 1,
-    SCRIPT_TRANSACTION = 2,
+    MULTISIG_TRANSACTION = 2,
 }
 
 export enum CardanoTxWitnessType {
@@ -744,7 +744,7 @@ export type CardanoTxCertificate = {
 
 // CardanoTxWithdrawal
 export type CardanoTxWithdrawal = {
-    path: number[];
+    path?: number[];
     amount: number;
     script_hash?: string;
 };
@@ -810,7 +810,7 @@ export type CardanoTxInputType = {
 
 export type CardanoTokenType = {
     asset_name_bytes: string;
-    amount?: string | number;
+    amount: string | number;
 };
 
 export type CardanoAssetGroupType = {

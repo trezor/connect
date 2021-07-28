@@ -1,5 +1,6 @@
 /* @flow */
 import * as cbor from 'cbor-web';
+import { ERRORS } from '../../../constants';
 import type {
     CardanoCatalystRegistrationParametersType,
     CardanoTxWithdrawalType,
@@ -76,7 +77,18 @@ export const toLegacyParams = (
         token_bundle: tokenBundle
             ? tokenBundle.map(assetGroup => ({
                   policy_id: assetGroup.policyId,
-                  tokens: assetGroup.tokens,
+                  tokens: assetGroup.tokens.map(token => {
+                      if (!token.amount) {
+                          throw ERRORS.TypedError(
+                              'Method_InvalidParameter',
+                              `Tokens must contain an amount for legacy firmware`,
+                          );
+                      }
+                      return {
+                          asset_name_bytes: token.asset_name_bytes,
+                          amount: token.amount,
+                      };
+                  }),
               }))
             : [],
         asset_groups_count: undefined,
@@ -91,7 +103,15 @@ export const toLegacyParams = (
                 : undefined,
         }),
     ),
-    withdrawals: params.withdrawals,
+    withdrawals: params.withdrawals.map(withdrawal => {
+        if (!withdrawal.path) {
+            throw ERRORS.TypedError(
+                'Method_InvalidParameter',
+                `Withdrawal must contain a path for legacy firmware`,
+            );
+        }
+        return { path: withdrawal.path, amount: withdrawal.amount };
+    }),
     auxiliary_data: params.auxiliaryData
         ? {
               catalyst_registration_parameters: params.auxiliaryData

@@ -11261,7 +11261,7 @@
                     "id": 1
                 },
                 {
-                    "name": "SCRIPT_TRANSACTION",
+                    "name": "MULTISIG_TRANSACTION",
                     "id": 2
                 }
             ],

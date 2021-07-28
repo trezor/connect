@@ -312,9 +312,16 @@ export const cardanoSignTransaction = async () => {
                         hash: 'aaff00..',
                     },
                 },
+                scriptHash: 'aaff00..',
             },
         ],
-        withdrawals: [{ path: 'm/44', amount: '3003112' }],
+        withdrawals: [{ path: 'm/44', amount: '3003112', scriptHash: 'aaff00..' }],
+        mint: [
+            {
+                policyId: 'aaff00..',
+                tokenAmounts: [{ assetNameBytes: 'aaff00..', mintAmount: '-3003112' }],
+            },
+        ],
         auxiliaryData: {
             hash: 'aaff00..',
             catalystRegistrationParameters: {
@@ -334,6 +341,7 @@ export const cardanoSignTransaction = async () => {
                 nonce: '0',
             },
         },
+        additionalWitnessRequests: ['m/44'],
         fee: '42',
         ttl: '10',
         validityIntervalStart: '20',
