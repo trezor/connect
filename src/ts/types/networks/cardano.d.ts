@@ -91,7 +91,8 @@ export interface CardanoInput {
 
 export type CardanoToken = {
     assetNameBytes: string;
-    amount: string;
+    amount?: string;
+    mintAmount?: string;
 }
 
 export type CardanoAssetGroup = {
@@ -148,15 +149,19 @@ export type CardanoPoolParameters = {
 
 export type CardanoCertificate = {
     type: CardanoCertificateType;
-    path: string | number[];
+    path?: string | number[];
     pool?: string;
     poolParameters?: CardanoPoolParameters;
+    scriptHash?: string;
 }
 
 export type CardanoWithdrawal = {
-    path: string | number[];
+    path?: string | number[];
     amount: string;
+    scriptHash?: string;
 }
+
+export type CardanoMint = CardanoAssetGroup[]
 
 export type CardanoCatalystRegistrationParameters = {
     votingPublicKey: string;
@@ -178,9 +183,11 @@ export interface CardanoSignTransaction {
     certificates?: CardanoCertificate[];
     withdrawals?: CardanoWithdrawal[];
     validityIntervalStart?: string;
+    auxiliaryData?: CardanoAuxiliaryData;
+    mint?: CardanoMint;
+    additionalWitnessRequests?: (string | number[])[];
     protocolMagic: number;
     networkId: number;
-    auxiliaryData?: CardanoAuxiliaryData;
     signingMode: CardanoTxSigningMode;
 }
 
