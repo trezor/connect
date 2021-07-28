@@ -93,7 +93,7 @@ export type CardanoTxAuxiliaryDataSupplementType = $Values<
 export const Enum_CardanoTxSigningMode = Object.freeze({
     ORDINARY_TRANSACTION: 0,
     POOL_REGISTRATION_AS_OWNER: 1,
-    SCRIPT_TRANSACTION: 2,
+    MULTISIG_TRANSACTION: 2,
 });
 export type CardanoTxSigningMode = $Values<typeof Enum_CardanoTxSigningMode>;
 
@@ -771,7 +771,7 @@ export type CardanoTxCertificate = {
 
 // CardanoTxWithdrawal
 export type CardanoTxWithdrawal = {
-    path: number[],
+    path?: number[],
     amount: number,
     script_hash?: string,
 };

@@ -13,6 +13,7 @@ import { ERRORS } from '../../constants';
 import {
     Enum_CardanoCertificateType as CardanoCertificateType,
     Enum_CardanoTxAuxiliaryDataSupplementType as CardanoTxAuxiliaryDataSupplementType,
+    Enum_CardanoTxSigningMode as CardanoTxSigningModeEnum,
     Enum_CardanoTxWitnessType as CardanoTxWitnessType,
 } from '../../types/trezor/protobuf';
 import type {
@@ -28,6 +29,8 @@ import type {
     CardanoSignedTxWitness,
 } from '../../types/networks/cardano';
 import { gatherWitnessPaths } from './helpers/cardanoWitnesses';
+import type { AssetGroupWithTokens } from './helpers/cardanoTokenBundle';
+import { tokenBundleToProto, validateTokenBundle } from './helpers/cardanoTokenBundle';
 
 // todo: remove when listed firmwares become mandatory for cardanoSignTransaction
 const CardanoSignTransactionFeatures = Object.freeze({
@@ -39,6 +42,8 @@ const CardanoSignTransactionFeatures = Object.freeze({
     ZeroValidityIntervalStart: ['0', '2.4.2'],
     TransactionStreaming: ['0', '2.4.2'],
     AuxiliaryDataHash: ['0', '2.4.2'],
+    TokenMinting: ['0', '2.4.3'],
+    Multisig: ['0', '2.4.3'],
 });
 
 export type Path = number[];
@@ -56,11 +61,13 @@ export type CardanoSignTransactionParams = {
     ttl: number,
     certificatesWithPoolOwnersAndRelays: CertificateWithPoolOwnersAndRelays[],
     withdrawals: CardanoTxWithdrawal[],
+    mint: AssetGroupWithTokens[],
     auxiliaryData?: CardanoTxAuxiliaryData,
     validityIntervalStart: number,
     protocolMagic: number,
     networkId: number,
     witnessPaths: Path[],
+    additionalWitnessRequests: Path[],
 };
 
 export default class CardanoSignTransaction extends AbstractMethod {
@@ -101,9 +108,11 @@ export default class CardanoSignTransaction extends AbstractMethod {
             { name: 'ttl', type: 'amount' },
             { name: 'certificates', type: 'array', allowEmpty: true },
             { name: 'withdrawals', type: 'array', allowEmpty: true },
+            { name: 'mint', type: 'array', allowEmpty: true },
             { name: 'validityIntervalStart', type: 'amount' },
             { name: 'protocolMagic', type: 'number', obligatory: true },
             { name: 'networkId', type: 'number', obligatory: true },
+            { name: 'additionalWitnessRequests', type: 'array', allowEmpty: true },
         ]);
 
         const inputsWithPath: InputWithPath[] = payload.inputs.map(input => {
@@ -132,19 +141,33 @@ export default class CardanoSignTransaction extends AbstractMethod {
         if (payload.withdrawals) {
             withdrawals = payload.withdrawals.map(withdrawal => {
                 validateParams(withdrawal, [
-                    { name: 'path', obligatory: true },
                     { name: 'amount', type: 'amount', obligatory: true },
+                    { name: 'scriptHash', type: 'string' },
                 ]);
                 return {
-                    path: validatePath(withdrawal.path, 5),
+                    path: withdrawal.path ? validatePath(withdrawal.path, 5) : undefined,
                     amount: withdrawal.amount,
+                    script_hash: withdrawal.scriptHash,
                 };
             });
+        }
+
+        let mint: AssetGroupWithTokens[] = [];
+        if (payload.mint) {
+            validateTokenBundle(payload.mint);
+            mint = tokenBundleToProto(payload.mint);
         }
 
         let auxiliaryData;
         if (payload.auxiliaryData) {
             auxiliaryData = transformAuxiliaryData(payload.auxiliaryData);
+        }
+
+        let additionalWitnessRequests: Path[] = [];
+        if (payload.additionalWitnessRequests) {
+            additionalWitnessRequests = payload.additionalWitnessRequests.map(witnessRequest =>
+                validatePath(witnessRequest, 3),
+            );
         }
 
         this.params = {
@@ -155,6 +178,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             ttl: payload.ttl,
             certificatesWithPoolOwnersAndRelays,
             withdrawals,
+            mint,
             auxiliaryData,
             validityIntervalStart: payload.validityIntervalStart,
             protocolMagic: payload.protocolMagic,
@@ -163,7 +187,10 @@ export default class CardanoSignTransaction extends AbstractMethod {
                 inputsWithPath,
                 certificatesWithPoolOwnersAndRelays,
                 withdrawals,
+                additionalWitnessRequests,
+                payload.signingMode,
             ),
+            additionalWitnessRequests,
         };
     }
 
@@ -214,6 +241,17 @@ export default class CardanoSignTransaction extends AbstractMethod {
         if (params.auxiliaryData && params.auxiliaryData.hash) {
             this._ensureFeatureIsSupported('AuxiliaryDataHash');
         }
+
+        if (params.mint.length > 0) {
+            this._ensureFeatureIsSupported('TokenMinting');
+        }
+
+        if (
+            params.additionalWitnessRequests.length > 0 ||
+            params.signingMode === CardanoTxSigningModeEnum.MULTISIG_TRANSACTION
+        ) {
+            this._ensureFeatureIsSupported('Multisig');
+        }
     }
 
     async _sign_tx(): Promise<CardanoSignedTxData> {
@@ -234,6 +272,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             has_auxiliary_data: hasAuxiliaryData,
             validity_interval_start: this.params.validityIntervalStart,
             witness_requests_count: this.params.witnessPaths.length,
+            minting_asset_groups_count: this.params.mint.length,
         };
 
         // init
@@ -289,6 +328,21 @@ export default class CardanoSignTransaction extends AbstractMethod {
                 };
             }
             await typedCall('CardanoTxHostAck', 'CardanoTxItemAck');
+        }
+        // mint
+        if (this.params.mint.length > 0) {
+            await typedCall('CardanoTxMint', 'CardanoTxItemAck', {
+                asset_groups_count: this.params.mint.length,
+            });
+            for (const assetGroup of this.params.mint) {
+                await typedCall('CardanoAssetGroup', 'CardanoTxItemAck', {
+                    policy_id: assetGroup.policyId,
+                    tokens_count: assetGroup.tokens.length,
+                });
+                for (const token of assetGroup.tokens) {
+                    await typedCall('CardanoToken', 'CardanoTxItemAck', token);
+                }
+            }
         }
         // witnesses
         const witnesses: CardanoSignedTxWitness[] = [];
