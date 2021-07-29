@@ -1,11 +1,11 @@
-import { CardanoTxSigningMode } from 'types/trezor/protobuf';
+import { CardanoAddressType, CardanoCertificateType, CardanoNativeScriptHashDisplayFormat, CardanoNativeScriptType, CardanoPoolRelayType, CardanoTxSigningMode } from 'types/trezor/protobuf';
 import TrezorConnect from '../index';
 
 export const cardanoGetAddress = async () => {
     // regular
     const singleAddress = await TrezorConnect.cardanoGetAddress({
         addressParameters: {
-            addressType: 0,
+            addressType: CardanoAddressType.BASE,
             path: 'm/44',
             stakingPath: 'm/44',
             stakingKeyHash: 'aaff00..',
@@ -51,7 +51,7 @@ export const cardanoGetAddress = async () => {
         bundle: [
             {
                 addressParameters: {
-                    addressType: 0,
+                    addressType: CardanoAddressType.BASE,
                     path: 'm/44',
                     stakingPath: 'm/44',
                     stakingKeyHash: 'aaff00..',
@@ -107,7 +107,7 @@ export const cardanoGetAddress = async () => {
         keepSession: false,
         skipFinalReload: false,
         addressParameters: {
-            addressType: 0,
+            addressType: CardanoAddressType.BASE,
             path: 'm/44',
             stakingPath: 'm/44',
             stakingKeyHash: 'aaff00..',
@@ -139,10 +139,10 @@ export const cardanoGetAddress = async () => {
 export const cardanoGetNativeScriptHash = async () => {
     const result = await TrezorConnect.cardanoGetNativeScriptHash({
         script: {
-            type: 0,
+            type: CardanoNativeScriptType.PUB_KEY,
             scripts: [
                 {
-                    type: 0,
+                    type: CardanoNativeScriptType.PUB_KEY,
                     scripts: [],
                     keyHash: '00aaff...',
                     keyPath: 'm/44',
@@ -157,7 +157,7 @@ export const cardanoGetNativeScriptHash = async () => {
             invalidBefore: '0',
             invalidHereafter: '0',
         },
-        displayFormat: 0,
+        displayFormat: CardanoNativeScriptHashDisplayFormat.HIDE,
     });
 
     if (result.success) {
@@ -220,7 +220,7 @@ export const cardanoSignTransaction = async () => {
             },
             {
                 addressParameters: {
-                    addressType: 0,
+                    addressType: CardanoAddressType.BASE,
                     path: 'm/44',
                     stakingPath: 'm/44',
                     stakingKeyHash: 'aaff00..',
@@ -241,7 +241,7 @@ export const cardanoSignTransaction = async () => {
         ],
         certificates: [
             {
-                type: 0,
+                type: CardanoCertificateType.STAKE_REGISTRATION,
                 path: 'm/44',
                 pool: 'aaff00..',
                 poolParameters: {
@@ -265,7 +265,7 @@ export const cardanoSignTransaction = async () => {
                     ],
                     relays: [
                         {
-                            type: 0,
+                            type: CardanoPoolRelayType.SINGLE_HOST_IP,
                             ipv4Address: '192.168.0.1',
                             ipv6Address: '2001:0db8:85a3:0000:0000:8a2e:0370:7334',
                             port: 1234,
@@ -293,7 +293,7 @@ export const cardanoSignTransaction = async () => {
                 votingPublicKey: 'aaff00..',
                 stakingPath: 'm/44',
                 rewardAddressParameters: {
-                    addressType: 0,
+                    addressType: CardanoAddressType.REWARD,
                     path: 'm/44',
                     stakingPath: 'm/44',
                     stakingKeyHash: 'aaff00..',
@@ -312,7 +312,7 @@ export const cardanoSignTransaction = async () => {
         validityIntervalStart: '20',
         protocolMagic: 0,
         networkId: 0,
-        signingMode: 0,
+        signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,
     });
 
     if (sign.success) {
