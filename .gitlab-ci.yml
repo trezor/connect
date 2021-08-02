@@ -22,7 +22,7 @@ build:
   before_script:
     - nix-shell --run "yarn"
   script:
-    - nix-shell --run "make build-connect"
+    - nix-shell --run "yarn build:connect"
   artifacts:
     expire_in: 1 week
     paths:

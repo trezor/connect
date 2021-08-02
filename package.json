@@ -36,6 +36,7 @@
         "build:node": "rm -rf build && webpack --config ./webpack/config.nodejs.babel.js --progress",
         "build:react-native": "rm -rf build && webpack --config ./webpack/config.reactnative.babel.js --progress",
         "build:inline": "webpack --config ./webpack/config.inline.babel.js --progress",
+        "build:connect": "yarn build && yarn build:inline && cp ./build/js/trezor-connect.*.js ./build/trezor-connect.min.js && cp robots.txt build/robots.txt",
         "build:npm": "rm -rf npm && babel-node ./scripts/build-npm.js && babel ./npm/lib --out-dir ./npm/lib",
         "build:npm-extended": "rm -rf npm-extended && babel-node ./scripts/build-npm-extended.js && babel ./npm-extended/lib --out-dir ./npm-extended/lib",
         "version:beta": "yarn bump prerelease ./package.json ./README.md ./src/js/data/ConnectSettings.js ./src/js/plugins/webextension/trezor-usb-permissions.js",

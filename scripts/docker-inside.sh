@@ -7,5 +7,6 @@ if [ "$1" == "npm" ]
         yarn install
         yarn run build:npm
     else
-        make build-connect
+        yarn install
+        yarn run build:connect
 fi

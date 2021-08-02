@@ -1,4 +1,4 @@
-.PHONY: clean submodules build build-connect coins protobuf eth-tokens
+.PHONY: clean submodules build coins protobuf eth-tokens
 
 clean:
 	rm -rf build/
@@ -10,14 +10,6 @@ submodules:
 # docker build for connect.trezor.io
 build:
 	./scripts/docker-build.sh
-
-# local file system build
-build-connect:
-	yarn install
-	yarn run build
-	yarn run build:inline
-	cp build/js/trezor-connect.*.js build/trezor-connect.min.js
-	cp robots.txt build/robots.txt
 
 # Sync build
 sync-%:
