@@ -73,7 +73,7 @@ export default {
             },
             result: {
                 descriptor: '0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8',
-                balance: '21000',
+                empty: false,
             },
         },
         {
@@ -84,7 +84,7 @@ export default {
             },
             result: {
                 descriptor: '0x3f2329C9ADFbcCd9A84f52c906E936A42dA18CB8',
-                balance: '21000',
+                empty: false,
             },
         },
         {
