@@ -1,4 +1,4 @@
-.PHONY: clean submodules build build-npm publish-npm build-connect build-test version-patch version-minor version-major coins protobuf eth-tokens
+.PHONY: clean submodules build build-connect coins protobuf eth-tokens
 
 clean:
 	rm -rf build/
@@ -11,13 +11,6 @@ submodules:
 build:
 	./scripts/docker-build.sh
 
-# docker build for npm
-build-npm:
-	./scripts/docker-build.sh npm
-
-publish-npm:
-	cd ./npm && npm publish
-
 # local file system build
 build-connect:
 	yarn install
@@ -25,20 +18,6 @@ build-connect:
 	yarn run build:inline
 	cp build/js/trezor-connect.*.js build/trezor-connect.min.js
 	cp robots.txt build/robots.txt
-
-# Build test
-build-test:
-	make build-connect
-	sed -i '' -e 's/connect.trezor.io/sisyfos.trezor.io\/connect/g' ./build/js/iframe.*.js
-	rsync -avz --delete -e ssh ./build/* admin@dev.sldev.cz:~/sisyfos/www/connect
-
-# Version bump
-version-patch:
-	yarn bump patch ./package.json ./README.md ./src/js/data/ConnectSettings.js ./src/js/plugins/webextension/trezor-usb-permissions.js
-version-minor:
-	yarn bump minor ./package.json ./README.md ./src/js/data/ConnectSettings.js ./src/js/plugins/webextension/trezor-usb-permissions.js
-version-major:
-	yarn bump major ./package.json ./README.md ./src/js/data/ConnectSettings.js ./src/js/plugins/webextension/trezor-usb-permissions.js
 
 # Sync build
 sync-%:
@@ -75,9 +54,3 @@ default:
 	@echo "Sync:"
 	@echo "s3 sync version build to server (connect.trezor.io)"
 	@echo "    make sync-[X]"
-	@echo " "
-	@echo " "
-	@echo "NPM:"
-	@echo "    make build-npm"
-	@echo "Publish NPM:"
-	@echo "    make publish-npm"
