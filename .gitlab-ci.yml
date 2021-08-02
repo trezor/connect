@@ -95,9 +95,11 @@ publish beta release to npm:
   except:
     - v8
   when: manual
-  needs: []
+  needs: ["verify"]
   before_script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+    - VERSION=$(jq -r .version package.json)
+    - '[[ "$VERSION" =~ "beta" ]]; if [ $? -eq 1 ]; then echo "Version DOES NOT contain beta"; fi'
   script:
     - nix-shell --run "yarn && yarn build:npm-extended && cd ./npm-extended && npm publish --tag beta"
   after_script:

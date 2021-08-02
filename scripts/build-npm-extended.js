@@ -48,7 +48,9 @@ delete packageJSON.extendedDependencies;
 delete packageJSON.scripts;
 delete packageJSON.bin;
 delete packageJSON.private;
-packageJSON.version += '-extended';
+if (!packageJSON.version.indexOf('-') > 0) {
+    packageJSON.version += '-extended';
+}
 packageJSON.main = 'lib/index.js';
 packageJSON.types = 'lib/typescript/index.d.ts';
 
