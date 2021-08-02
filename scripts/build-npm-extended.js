@@ -48,7 +48,7 @@ delete packageJSON.extendedDependencies;
 delete packageJSON.scripts;
 delete packageJSON.bin;
 delete packageJSON.private;
-if (!packageJSON.version.indexOf('-') > 0) {
+if (packageJSON.version.indexOf('-') < 0) {
     packageJSON.version += '-extended';
 }
 packageJSON.main = 'lib/index.js';
