@@ -58,13 +58,11 @@ deploy production:
     refs:
       - v8
   when: manual
-  needs: []
+  needs: ["build"]
   variables:
     GIT_STRATEGY: none
   before_script: []
   script:
-    - nix-shell --run "make clean"
-    - nix-shell --run "make build"
     - nix-shell --run "make sync-8"
   tags:
     - deploy
