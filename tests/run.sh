@@ -50,13 +50,8 @@ waitForEnv() {
   max_attempts=60
 
   # there is no official support for websockets in curl
-  # trezor-user-env websocket server will recognize request with "close" header and close the connection
-  # otherwise curl will hang in streaming state
-  until (
-    curl -i -s -f \
-      -H "Connection: close" \
-      http://localhost:9001
-  ); do
+  # trezor-user-env websocket server will return HTTP/1.1 426 Upgrade Required error with "Upgrade: websocket" header
+  until (curl -i -s -I http://localhost:9001 | grep 'websocket'); do
     if [ ${counter} -eq ${max_attempts} ]; then
       echo "trezor-user-env is not running. exiting"
       exit 1
