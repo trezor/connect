@@ -1,15 +1,14 @@
-image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
-
 stages:
   - build
   - test
   - deploy
 
-before_script:
-  - nix-shell --run "yarn"
 
 verify:
+  image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
   stage: build
+  before_script:
+    - nix-shell --run "yarn"
   script:
     - nix-shell --run "yarn test:health"
     - nix-shell --run "yarn flow"
@@ -18,7 +17,10 @@ verify:
     - nix-shell --run "yarn test:unit"
 
 build:
+  image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
   stage: build
+  before_script:
+    - nix-shell --run "yarn"
   script:
     - nix-shell --run "make build-connect"
   artifacts:
@@ -77,10 +79,14 @@ publish release to npm:
   when: manual
   needs: []
   before_script:
-    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}">.npmrc
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
   script:
     - nix-shell --run "yarn && yarn build:npm && cd ./npm && npm publish"
     - nix-shell --run "yarn && yarn build:npm-extended && cd ./npm-extended && npm publish --tag extended"
+  after_script:
+    - rm ~/.npmrc
+  tags:
+    - deploy
 
 # Publish beta release to npm registry
 
@@ -91,12 +97,17 @@ publish beta release to npm:
   when: manual
   needs: []
   before_script:
-    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}">.npmrc
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
   script:
     - nix-shell --run "yarn && yarn build:npm-extended && cd ./npm-extended && npm publish --tag beta"
+  after_script:
+    - rm ~/.npmrc
+  tags:
+    - deploy
 
 # Test
 .test:
+  image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
   stage: test
   needs: ["build"]
   variables:
@@ -104,6 +115,8 @@ publish beta release to npm:
     TESTS_FIRMWARE: "2-master"
     TESTS_USE_TX_CACHE: "false"
     TESTS_USE_WS_CACHE: "false"
+  before_script:
+    - nix-shell --run "yarn"
   script:
     - "echo Firmware version: $TESTS_FIRMWARE"
     - /trezor-user-env/run.sh &
