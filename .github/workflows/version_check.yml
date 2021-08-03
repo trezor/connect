@@ -1,8 +1,9 @@
 name: "connect version check"
+
 on:
   pull_request:
-    branches:
-      - v8
+    branches: [v8]
+
 jobs:
     version_commit_check:
       name: Check connect version commit message
@@ -23,5 +24,4 @@ jobs:
         - run: |
             yarn install
             REMOTE_VERSION=$(npm show trezor-connect version)
-            LOCAL_VERSION=$(jq -r .version package.json)
-            node scripts/ci-compare-version.js $LOCAL_VERSION $REMOTE_VERSION
+            node scripts/ci-check-version.js $REMOTE_VERSION v8
