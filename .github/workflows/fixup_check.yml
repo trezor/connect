@@ -2,7 +2,7 @@ name: Fixup check
 
 on:
   pull_request:
-    branches: [v8]
+    branches: [develop]
 
 jobs:
   block-fixup:
