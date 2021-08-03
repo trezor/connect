@@ -5,7 +5,6 @@ stages:
 
 
 verify:
-  image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
   stage: build
   before_script:
     - nix-shell --run "yarn"
@@ -15,9 +14,10 @@ verify:
     - nix-shell --run "yarn typescript"
     - nix-shell --run "yarn lint"
     - nix-shell --run "yarn test:unit"
+  tags:
+    - deploy
 
 build:
-  image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
   stage: build
   before_script:
     - nix-shell --run "yarn"
@@ -27,6 +27,8 @@ build:
     expire_in: 1 week
     paths:
       - build
+  tags:
+    - deploy
 
 # Deploy to testing environment
 deploy test:
