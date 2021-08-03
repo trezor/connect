@@ -27,22 +27,10 @@ some step by eg. generating the messages.json file not from the Common submodule
 git clone git@github.com:trezor/connect.git
 cd connect
 # Fetch all git submodules.
-make submodules
+git submodule update --init --recursive
 # Install the node modules - including the `proto2js` package required in the next step.
 yarn
 # Transform the .proto definitions to JSON.
-# JSON goes to `src/data/messages/messagesN.json`.
-# Note: This make target also immediately runs the flow/TS type generation,
-# but because it implicitly reads from the old JSON it's basically a noop.
-# The flow/TS generation must be run again once the JSON is moved to the expected location.
-make protobuf
-# Observe the diff.
-git diff --no-index -- src/data/messages/messages.json src/data/messages/messagesN.json
-# Replace the old JSON with the new one.
-# In case of breaking changes this workflow is more complicated as it must account for versioning.
-# See the Versions section in ../README.md.
-mv src/data/messages/messagesN.json  src/data/messages/messages.json
-# Generate Flow and TypeScript definitions. (Implicitly reads from `src/data/messages/messages.json`)
-node scripts/protobuf-types.js
-node scripts/protobuf-types.js typescript
+# Generate Flow and TypeScript definitions.
+./scripts/protobuf-build.sh
 ```

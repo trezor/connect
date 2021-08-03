@@ -3,6 +3,7 @@ _old
 build
 /npm
 npm-extended
+messages.proto
 
 # Dependency directory
 node_modules
