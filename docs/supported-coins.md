@@ -16,9 +16,9 @@ _Make sure that desired `[coin].json` definition is present in `trezor-firmware`
 
 1. Update `trezor-common` submodule:
 ```
-make submodule
+git submodule update --init --recursive
 ```
 2. Build `src/data/coins.json` file using `trezor-common/cointool`:
 ```
-make coins
+./scripts/coins-build.sh
 ```
