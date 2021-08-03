@@ -1,4 +1,4 @@
-.PHONY: clean submodules build coins protobuf eth-tokens
+.PHONY: clean submodules build coins eth-tokens
 
 clean:
 	rm -rf build/
@@ -17,18 +17,6 @@ sync-%:
 	# Configure access credentials (aws configure), region is "eu-central-1"
 	aws s3 sync --delete --cache-control 'public, max-age=3600' build/ s3://connect.trezor.io/$*/
 	aws cloudfront create-invalidation --distribution-id E3LVNAOGT94E37 --paths '/*'
-
-# Build messages.json from protobuf
-protobuf:
-	make -C ./submodules/trezor-common/protob combine
-	./node_modules/.bin/proto2js ./submodules/trezor-common/protob/combined.proto > ./src/data/messages/messagesN.json
-	# messages from local trezor-firmware repo
-	# make -C ../trezor-firmware/common/protob combine
-	# ./node_modules/.bin/proto2js ../trezor-firmware/common/protob/combined.proto > ./src/data/messages/messages.json
-	node ./scripts/protobuf-types.js
-	# eslint fix is required since prettier uses comma as delimiter (default is semicolon)
-	eslint ./src/js/types/trezor/protobuf.js --fix
-	node ./scripts/protobuf-types.js typescript
 
 # Build coin definitions
 coins:
