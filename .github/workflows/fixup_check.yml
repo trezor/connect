@@ -1,6 +1,8 @@
 name: Fixup check
 
-on: [pull_request]
+on:
+  pull_request:
+    branches: [v8]
 
 jobs:
   block-fixup:
