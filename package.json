@@ -71,7 +71,6 @@
         "bchaddrjs": "^0.5.2",
         "bignumber.js": "^9.0.1",
         "bowser": "^2.11.0",
-        "compare-versions": "^3.6.0",
         "copy-webpack-plugin": "^6.3.2",
         "css-loader": "4.3.0",
         "es6-promise": "^4.2.2",
