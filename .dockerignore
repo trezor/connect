@@ -3,9 +3,15 @@ _old
 .vscode
 .editorconfig
 .git
+*.log
+Dockerfile
 
 build
+coverage
 docs
+examples
 node_modules
 npm
+npm-extended
 submodules
+tests

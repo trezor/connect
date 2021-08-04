@@ -1,16 +1,18 @@
-FROM node:12
+ARG target='build'
 
-WORKDIR /trezor-connect-app
+FROM node:12 AS base
 
-# add inner script and set as executable
-ADD scripts/docker-inside.sh /trezor-connect-app/docker-inside.sh
-RUN chmod +x /trezor-connect-app/docker-inside.sh
-# copy sources
-COPY . /trezor-connect-app
+FROM base AS img-build
+ENV SCRIPT='yarn build:connect'
 
-# run inner script
-ENTRYPOINT ["/bin/bash", "-c", "/trezor-connect-app/docker-inside.sh ${*}", "--"]
+FROM base AS img-npm
+ENV SCRIPT='yarn build:npm'
 
-# expose ports for copying files to local file system
-EXPOSE 8080
-CMD [ "yarn", "run", "prod-server" ]
+FROM base AS img-npm-extended
+ENV SCRIPT='yarn build:npm-extended'
+
+FROM img-${target} AS final
+COPY . /trezor-connect
+WORKDIR /trezor-connect
+RUN yarn
+RUN ${SCRIPT}
