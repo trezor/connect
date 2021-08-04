@@ -65,7 +65,7 @@ deploy production:
     GIT_STRATEGY: none
   before_script: []
   script:
-    - nix-shell --run "make sync-8"
+    - nix-shell --run "./scripts/s3sync.sh 8"
   tags:
     - deploy
 
