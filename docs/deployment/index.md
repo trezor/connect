@@ -48,3 +48,25 @@ If you want to publish to npm as `beta` (from any branch, production release is 
 [2] Versioning in npm is sensitive and cannot be reverted. Once you publish a version, it is "gone" forever.
 For example, if the current version is `8.1.27` and you publish `8.1.28` by mistake with a custom `beta` tag, the next official version will have to be `8.1.29`
 This is why the suffix `8.1.27-beta.[number]` in published package.json is essential. You can do another release with `-beta.2` `-beta.3` etc., instead of bumping the actual version patch number.
+
+### Local build (legacy way)
+
+It is still possible to deploy trezor-connect using local machine. Of course you need to have access to `aws` and `npm-registry`.
+
+### manual build for connect.trezor.io
+```bash
+# build in docker
+./scripts/docker-build.sh
+# publish to connect.trezor.io/8/
+make sync-8
+```
+
+### manual build for npm
+```bash
+# build npm libs in docker
+./scripts/docker-build.sh npm
+./scripts/docker-build.sh npm-extended
+
+cd ./npm && npm publish
+cd ./npm-extended && npm-publish --tag extended
+```

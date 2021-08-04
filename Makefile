@@ -1,4 +1,4 @@
-.PHONY: clean submodules build eth-tokens
+.PHONY: clean submodules eth-tokens
 
 clean:
 	rm -rf build/
@@ -6,10 +6,6 @@ clean:
 # manually: goto ./submodules/trezor-common; git checkout master; git pull
 submodules:
 	cd ./submodules/trezor-common; git checkout master; git pull; git submodule update --recursive
-
-# docker build for connect.trezor.io
-build:
-	./scripts/docker-build.sh
 
 # Sync build
 sync-%:
@@ -23,9 +19,6 @@ eth-tokens:
 
 .DEFAULT_GOAL:= default
 default:
-	@echo "Build:"
-	@echo "git checkout to version branch v[X]"
-	@echo "    make build"
 	@echo "Sync:"
 	@echo "s3 sync version build to server (connect.trezor.io)"
 	@echo "    make sync-[X]"
