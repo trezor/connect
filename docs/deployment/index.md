@@ -58,7 +58,7 @@ It is still possible to deploy trezor-connect using local machine. Of course you
 # build in docker
 ./scripts/docker-build.sh
 # publish to connect.trezor.io/8/
-make sync-8
+./scripts/s3sync.sh 8
 ```
 
 ### manual build for npm
