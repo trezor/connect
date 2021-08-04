@@ -386,6 +386,11 @@ export default class DeviceCommands {
             if (code === 'Failure_FirmwareError' && !message) {
                 message = 'Firmware installation failed';
             }
+            // Failure_ActionCancelled message could be also missing
+            // https://github.com/trezor/connect/issues/865
+            if (code === 'Failure_ActionCancelled' && !message) {
+                message = 'Action cancelled by user';
+            }
             // pass code and message from firmware error
             return Promise.reject(new ERRORS.TrezorError(code, message));
         }

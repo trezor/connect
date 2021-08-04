@@ -211,7 +211,7 @@ export const call = async (params: any): Promise<any> => {
         if (response) {
             if (
                 !response.success &&
-                response.payload.error.code !== 'Device_CallInProgress' &&
+                response.payload.code !== 'Device_CallInProgress' &&
                 _popupManager
             ) {
                 _popupManager.unlock();
