@@ -19,6 +19,7 @@ import ethereumGetAddress from './ethereumGetAddress';
 import ethereumGetPublicKey from './ethereumGetPublicKey';
 import ethereumSignMessage from './ethereumSignMessage';
 import ethereumSignTransaction from './ethereumSignTransaction';
+import ethereumSignTransactionEip1559 from './ethereumSignTransactionEip1559';
 import ethereumVerifyMessage from './ethereumVerifyMessage';
 import getAccountInfo from './getAccountInfo';
 import getFeatures from './getFeatures';
@@ -74,6 +75,7 @@ let fixtures = [
     ethereumGetPublicKey,
     ethereumSignMessage,
     ethereumSignTransaction,
+    ethereumSignTransactionEip1559,
     ethereumVerifyMessage,
     // todo: probably no way todo: FirmwareUpdate.js
     // todo: ripple worker problem

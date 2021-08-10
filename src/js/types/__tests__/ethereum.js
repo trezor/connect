@@ -134,6 +134,39 @@ export const ethereumSignTransaction = async () => {
         (payload.s: string);
         (payload.v: string);
     }
+
+    // eip1559 transaction
+    TrezorConnect.ethereumSignTransaction({
+        path: 'm/44',
+        transaction: {
+            nonce: '0x0',
+            maxFeePerGas: '0x14',
+            maxPriorityFeePerGas: '0x0',
+            gasLimit: '0x14',
+            to: '0xd0d6d6c5fe4a677d343cc433536bb717bae167dd',
+            chainId: 1,
+            value: '0x0',
+            data: '0xa',
+            accessList: [{ address: '0', storageKeys: [] }],
+        },
+    });
+
+    // $FlowExpectedError: combined gasPrice + maxFeePerGas
+    TrezorConnect.ethereumSignTransaction({
+        path: 'm/44',
+        transaction: {
+            nonce: '0x0',
+            maxFeePerGas: '0x14',
+            maxPriorityFeePerGas: '0x0',
+            gasPrice: '0x0',
+            gasLimit: '0x14',
+            to: '0xd0d6d6c5fe4a677d343cc433536bb717bae167dd',
+            chainId: 1,
+            value: '0x0',
+            data: '0xa',
+            accessList: [{ address: '0', storageKeys: [] }],
+        },
+    });
 };
 
 export const signMessage = async () => {

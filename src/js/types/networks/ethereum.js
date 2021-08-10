@@ -30,15 +30,35 @@ export type EthereumTransaction = {
     value: string,
     gasPrice: string,
     gasLimit: string,
+    maxFeePerGas?: typeof undefined,
+    maxPriorityFeePerGas?: typeof undefined,
     nonce: string,
     data?: string,
     chainId?: number,
     txType?: number,
 };
 
+export type EthereumAccessList = {
+    address: string,
+    storageKeys: string[],
+};
+
+export type EthereumTransactionEIP1559 = {
+    to: string,
+    value: string,
+    gasPrice?: typeof undefined,
+    gasLimit: string,
+    maxFeePerGas: string,
+    maxPriorityFeePerGas: string,
+    nonce: string,
+    data?: string,
+    chainId: number,
+    accessList?: EthereumAccessList[],
+};
+
 export type EthereumSignTransaction = {
     path: string | number[],
-    transaction: EthereumTransaction,
+    transaction: EthereumTransaction | EthereumTransactionEIP1559,
 };
 
 export type EthereumSignedTx = {
