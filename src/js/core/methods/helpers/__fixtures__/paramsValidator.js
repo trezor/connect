@@ -226,4 +226,13 @@ export const getFirmwareRange = [
         params: ['getAccountInfo', null, DEFAULT_RANGE],
         result: DEFAULT_RANGE,
     },
+    {
+        description: 'eip1559: coinInfo range is replaced by config.json range',
+        params: [
+            'eip1559',
+            { support: { trezor1: '1.6.2', trezor2: '2.1.0' }, shortcut: 'eth', type: 'ethereum' },
+            DEFAULT_RANGE,
+        ],
+        result: { '1': { min: '0', max: '0' }, '2': { min: '2.4.2', max: '0' } },
+    },
 ];

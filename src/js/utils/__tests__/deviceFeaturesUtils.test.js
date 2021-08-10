@@ -120,6 +120,7 @@ describe('utils/deviceFeaturesUtils', () => {
             zcr: 'update-required',
             replaceTransaction: 'update-required',
             decreaseOutput: 'update-required',
+            eip1559: 'no-support',
         });
 
         const feat2 = {
@@ -134,6 +135,7 @@ describe('utils/deviceFeaturesUtils', () => {
         expect(getUnavailableCapabilities(feat2, coins, support)).toEqual({
             replaceTransaction: 'update-required',
             decreaseOutput: 'update-required',
+            eip1559: 'update-required',
         });
 
         // added new capability
