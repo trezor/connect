@@ -36,16 +36,6 @@ export type EthereumTransaction = {
     txType?: number,
 };
 
-export type EthereumSignTransaction = {
-    path: string | number[],
-    transaction: EthereumTransaction,
-};
-
-export type EthereumSignTransactionEIP1559 = {
-    path: string | number[],
-    transaction: EthereumTransactionEIP1559,
-};
-
 export type EthereumTransactionEIP1559 = {
     to: string,
     value: string,
@@ -55,6 +45,11 @@ export type EthereumTransactionEIP1559 = {
     chainId: number,
     maxFeePerGas: string,
     maxPriorityFeePerGas: string,
+};
+
+export type EthereumSignTransaction = {
+    path: string | number[],
+    transaction: EthereumTransaction | EthereumTransactionEIP1559,
 };
 
 export type EthereumSignedTx = {

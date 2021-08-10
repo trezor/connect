@@ -40,17 +40,33 @@ export default class EthereumSignTx extends AbstractMethod {
 
         // incoming transaction should be in EthereumTx format
         // https://github.com/ethereumjs/ethereumjs-tx
-        const tx: EthereumTransaction = payload.transaction;
-        validateParams(tx, [
-            { name: 'to', type: 'string', obligatory: true },
-            { name: 'value', type: 'string', obligatory: true },
-            { name: 'gasLimit', type: 'string', obligatory: true },
-            { name: 'gasPrice', type: 'string', obligatory: true },
-            { name: 'nonce', type: 'string', obligatory: true },
-            { name: 'data', type: 'string' },
-            { name: 'chainId', type: 'number' },
-            { name: 'txType', type: 'number' },
-        ]);
+        const tx: EthereumTransaction | EthereumTransactionEIP1559 = payload.transaction;
+
+        const isEIP1559 = tx.maxFeePerGas !== undefined && tx.maxPriorityFeePerGas !== undefined;
+
+        if (!isEIP1559) {
+            validateParams(tx, [
+                { name: 'to', type: 'string', obligatory: true },
+                { name: 'value', type: 'string', obligatory: true },
+                { name: 'gasLimit', type: 'string', obligatory: true },
+                { name: 'gasPrice', type: 'string', obligatory: true },
+                { name: 'nonce', type: 'string', obligatory: true },
+                { name: 'data', type: 'string' },
+                { name: 'chainId', type: 'number' },
+                { name: 'txType', type: 'number' },
+            ]);
+        } else {
+            validateParams(tx, [
+                { name: 'to', type: 'string', obligatory: true },
+                { name: 'value', type: 'string', obligatory: true },
+                { name: 'gasLimit', type: 'string', obligatory: true },
+                { name: 'maxFeePerGas', type: 'string', obligatory: true },
+                { name: 'maxPriorityFeePerGas', type: 'string', obligatory: true },
+                { name: 'nonce', type: 'string', obligatory: true },
+                { name: 'data', type: 'string' },
+                { name: 'chainId', type: 'number', obligatory: true },
+            ]);
+        }
 
         // TODO: check if tx data is a valid hex
 
@@ -75,17 +91,31 @@ export default class EthereumSignTx extends AbstractMethod {
 
     run() {
         const tx = this.params.transaction;
-        return helper.ethereumSignTx(
-            this.device.getCommands().typedCall.bind(this.device.getCommands()),
-            this.params.path,
-            tx.to,
-            tx.value,
-            tx.gasLimit,
-            tx.gasPrice,
-            tx.nonce,
-            tx.data,
-            tx.chainId,
-            tx.txType,
-        );
+        const isEIP1559 = tx.maxFeePerGas !== undefined && tx.maxPriorityFeePerGas !== undefined;
+        return isEIP1559
+            ? helper.ethereumSignTxEIP1559(
+                  this.device.getCommands().typedCall.bind(this.device.getCommands()),
+                  this.params.path,
+                  tx.to,
+                  tx.value,
+                  tx.gasLimit,
+                  tx.maxFeePerGas,
+                  tx.maxPriorityFeePerGas,
+                  tx.nonce,
+                  tx.chainId,
+                  tx.data,
+              )
+            : helper.ethereumSignTx(
+                  this.device.getCommands().typedCall.bind(this.device.getCommands()),
+                  this.params.path,
+                  tx.to,
+                  tx.value,
+                  tx.gasLimit,
+                  tx.gasPrice,
+                  tx.nonce,
+                  tx.data,
+                  tx.chainId,
+                  tx.txType,
+              );
     }
 }

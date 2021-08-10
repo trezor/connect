@@ -96,8 +96,6 @@ const TrezorConnect: API = {
 
     ethereumSignTransaction: params => call({ method: 'ethereumSignTransaction', ...params }),
 
-    ethereumSignTransactionEIP1559: params => call({ method: 'ethereumSignTransactionEIP1559', ...params }),
-
     ethereumVerifyMessage: params => call({ method: 'ethereumVerifyMessage', ...params }),
 
     getAccountInfo: params => call({ method: 'getAccountInfo', ...params }),
