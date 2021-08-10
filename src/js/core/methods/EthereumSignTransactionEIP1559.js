@@ -81,11 +81,11 @@ export default class EthereumSignTx extends AbstractMethod {
             tx.to,
             tx.value,
             tx.gasLimit,
-            tx.gasPrice,
+            tx.maxFeePerGas,
+            tx.maxPriorityFeePerGas,
             tx.nonce,
-            tx.data,
             tx.chainId,
-            tx.txType,
+            tx.data,
         );
     }
 }
