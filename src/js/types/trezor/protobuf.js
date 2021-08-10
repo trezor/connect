@@ -772,7 +772,6 @@ export type ButtonRequestType = $Keys<typeof Enum_ButtonRequestType>;
 export type ButtonRequest = {
     code?: ButtonRequestType,
     pages?: number,
-    page_number?: number,
 };
 
 // ButtonAck
@@ -1194,6 +1193,26 @@ export type EthereumSignTx = {
     tx_type?: number,
 };
 
+export type EthereumAccessList = {
+    address: string,
+    storage_keys: string[],
+};
+
+// EthereumSignTxEIP1559
+export type EthereumSignTxEIP1559 = {
+    address_n: number[],
+    nonce: string,
+    max_gas_fee: string,
+    max_priority_fee: string,
+    gas_limit: string,
+    to?: string,
+    value: string,
+    data_initial_chunk?: string,
+    data_length: number,
+    chain_id: number,
+    access_list: EthereumAccessList[],
+};
+
 // EthereumTxRequest
 export type EthereumTxRequest = {
     data_length?: number,
@@ -1416,7 +1435,7 @@ export type ApplySettings = {
 
 // ApplyFlags
 export type ApplyFlags = {
-    flags?: number,
+    flags: number,
 };
 
 // ChangePin
@@ -1438,7 +1457,7 @@ export type SdProtectOperationType = $Values<typeof Enum_SdProtectOperationType>
 
 // SdProtect
 export type SdProtect = {
-    operation?: SdProtectOperationType,
+    operation: SdProtectOperationType,
 };
 
 // Ping
@@ -1498,7 +1517,7 @@ export type EntropyRequest = {};
 
 // EntropyAck
 export type EntropyAck = {
-    entropy?: string,
+    entropy: string,
 };
 
 export const Enum_RecoveryDeviceType = Object.freeze({
@@ -1529,7 +1548,7 @@ export type WordRequestType = $Keys<typeof Enum_WordRequestType>;
 
 // WordRequest
 export type WordRequest = {
-    type?: WordRequestType,
+    type: WordRequestType,
 };
 
 // WordAck
@@ -1539,7 +1558,7 @@ export type WordAck = {
 
 // SetU2FCounter
 export type SetU2FCounter = {
-    u2f_counter?: number,
+    u2f_counter: number,
 };
 
 // GetNextU2FCounter
@@ -1547,7 +1566,7 @@ export type GetNextU2FCounter = {};
 
 // NextU2FCounter
 export type NextU2FCounter = {
-    u2f_counter?: number,
+    u2f_counter: number,
 };
 
 // DoPreauthorized
@@ -2150,6 +2169,8 @@ export type MessageType = {
     EthereumGetAddress: EthereumGetAddress,
     EthereumAddress: EthereumAddress,
     EthereumSignTx: EthereumSignTx,
+    EthereumAccessList: $Exact<EthereumAccessList>,
+    EthereumSignTxEIP1559: $Exact<EthereumSignTxEIP1559>,
     EthereumTxRequest: EthereumTxRequest,
     EthereumTxAck: EthereumTxAck,
     EthereumSignMessage: EthereumSignMessage,
@@ -2175,10 +2196,10 @@ export type MessageType = {
     LockDevice: LockDevice,
     EndSession: EndSession,
     ApplySettings: ApplySettings,
-    ApplyFlags: ApplyFlags,
+    ApplyFlags: $Exact<ApplyFlags>,
     ChangePin: ChangePin,
     ChangeWipeCode: ChangeWipeCode,
-    SdProtect: SdProtect,
+    SdProtect: $Exact<SdProtect>,
     Ping: Ping,
     Cancel: Cancel,
     GetEntropy: $Exact<GetEntropy>,
@@ -2188,13 +2209,13 @@ export type MessageType = {
     ResetDevice: ResetDevice,
     BackupDevice: BackupDevice,
     EntropyRequest: EntropyRequest,
-    EntropyAck: EntropyAck,
+    EntropyAck: $Exact<EntropyAck>,
     RecoveryDevice: RecoveryDevice,
-    WordRequest: WordRequest,
+    WordRequest: $Exact<WordRequest>,
     WordAck: $Exact<WordAck>,
-    SetU2FCounter: SetU2FCounter,
+    SetU2FCounter: $Exact<SetU2FCounter>,
     GetNextU2FCounter: GetNextU2FCounter,
-    NextU2FCounter: NextU2FCounter,
+    NextU2FCounter: $Exact<NextU2FCounter>,
     DoPreauthorized: DoPreauthorized,
     PreauthorizedRequest: PreauthorizedRequest,
     CancelAuthorization: CancelAuthorization,

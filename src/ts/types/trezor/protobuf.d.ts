@@ -754,7 +754,6 @@ export type ButtonRequestType = keyof typeof Enum_ButtonRequestType;
 export type ButtonRequest = {
     code?: ButtonRequestType;
     pages?: number;
-    page_number?: number;
 };
 
 // ButtonAck
@@ -1175,6 +1174,26 @@ export type EthereumSignTx = {
     tx_type?: number;
 };
 
+export type EthereumAccessList = {
+    address: string;
+    storage_keys: string[];
+};
+
+// EthereumSignTxEIP1559
+export type EthereumSignTxEIP1559 = {
+    address_n: number[];
+    nonce: string;
+    max_gas_fee: string;
+    max_priority_fee: string;
+    gas_limit: string;
+    to?: string;
+    value: string;
+    data_initial_chunk?: string;
+    data_length: number;
+    chain_id: number;
+    access_list: EthereumAccessList[];
+};
+
 // EthereumTxRequest
 export type EthereumTxRequest = {
     data_length?: number;
@@ -1396,7 +1415,7 @@ export type ApplySettings = {
 
 // ApplyFlags
 export type ApplyFlags = {
-    flags?: number;
+    flags: number;
 };
 
 // ChangePin
@@ -1417,7 +1436,7 @@ export enum SdProtectOperationType {
 
 // SdProtect
 export type SdProtect = {
-    operation?: SdProtectOperationType;
+    operation: SdProtectOperationType;
 };
 
 // Ping
@@ -1477,7 +1496,7 @@ export type EntropyRequest = {};
 
 // EntropyAck
 export type EntropyAck = {
-    entropy?: string;
+    entropy: string;
 };
 
 export enum RecoveryDeviceType {
@@ -1507,7 +1526,7 @@ export type WordRequestType = keyof typeof Enum_WordRequestType;
 
 // WordRequest
 export type WordRequest = {
-    type?: WordRequestType;
+    type: WordRequestType;
 };
 
 // WordAck
@@ -1517,7 +1536,7 @@ export type WordAck = {
 
 // SetU2FCounter
 export type SetU2FCounter = {
-    u2f_counter?: number;
+    u2f_counter: number;
 };
 
 // GetNextU2FCounter
@@ -1525,7 +1544,7 @@ export type GetNextU2FCounter = {};
 
 // NextU2FCounter
 export type NextU2FCounter = {
-    u2f_counter?: number;
+    u2f_counter: number;
 };
 
 // DoPreauthorized
