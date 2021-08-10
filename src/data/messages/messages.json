@@ -2957,13 +2957,6 @@
                     "type": "uint32",
                     "name": "pages",
                     "id": 2
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "page_number",
-                    "id": 3
                 }
             ],
             "enums": [
@@ -5104,6 +5097,120 @@
             "oneofs": {}
         },
         {
+            "name": "EthereumSignTxEIP1559",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "nonce",
+                    "id": 2
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "max_gas_fee",
+                    "id": 3
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "max_priority_fee",
+                    "id": 4
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "gas_limit",
+                    "id": 5
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "default": ""
+                    },
+                    "type": "string",
+                    "name": "to",
+                    "id": 6
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "value",
+                    "id": 7
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "default": ""
+                    },
+                    "type": "bytes",
+                    "name": "data_initial_chunk",
+                    "id": 8
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "data_length",
+                    "id": 9
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "chain_id",
+                    "id": 10
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "EthereumAccessList",
+                    "name": "access_list",
+                    "id": 11
+                }
+            ],
+            "enums": [],
+            "messages": [
+                {
+                    "name": "EthereumAccessList",
+                    "fields": [
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "string",
+                            "name": "address",
+                            "id": 1
+                        },
+                        {
+                            "rule": "repeated",
+                            "options": {},
+                            "type": "bytes",
+                            "name": "storage_keys",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "EthereumTxRequest",
             "fields": [
                 {
@@ -6113,7 +6220,7 @@
             "name": "ApplyFlags",
             "fields": [
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint32",
                     "name": "flags",
@@ -6161,7 +6268,7 @@
             "name": "SdProtect",
             "fields": [
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "SdProtectOperationType",
                     "name": "operation",
@@ -6444,7 +6551,7 @@
             "name": "EntropyAck",
             "fields": [
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "bytes",
                     "name": "entropy",
@@ -6547,7 +6654,7 @@
             "name": "WordRequest",
             "fields": [
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "WordRequestType",
                     "name": "type",
@@ -6598,7 +6705,7 @@
             "name": "SetU2FCounter",
             "fields": [
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint32",
                     "name": "u2f_counter",
@@ -6622,7 +6729,7 @@
             "name": "NextU2FCounter",
             "fields": [
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint32",
                     "name": "u2f_counter",
@@ -11174,6 +11281,10 @@
                 {
                     "name": "MessageType_EthereumSignTx",
                     "id": 58
+                },
+                {
+                    "name": "MessageType_EthereumSignTxEIP1559",
+                    "id": 452
                 },
                 {
                     "name": "MessageType_EthereumTxRequest",
