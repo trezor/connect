@@ -28,6 +28,7 @@ import ethereumGetAddress from './EthereumGetAddress';
 import ethereumGetPublicKey from './EthereumGetPublicKey';
 import ethereumSignMessage from './EthereumSignMessage';
 import ethereumSignTransaction from './EthereumSignTransaction';
+import ethereumSignTransactionEIP1559 from './EthereumSignTransactionEIP1559';
 import ethereumVerifyMessage from './EthereumVerifyMessage';
 import getAccountInfo from './GetAccountInfo';
 import getAddress from './GetAddress';
@@ -95,6 +96,7 @@ const METHODS = {
     ethereumGetPublicKey,
     ethereumSignMessage,
     ethereumSignTransaction,
+    ethereumSignTransactionEIP1559,
     ethereumVerifyMessage,
     getAccountInfo,
     getAddress,

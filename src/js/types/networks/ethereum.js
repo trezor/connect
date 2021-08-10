@@ -41,6 +41,22 @@ export type EthereumSignTransaction = {
     transaction: EthereumTransaction,
 };
 
+export type EthereumSignTransactionEIP1559 = {
+    path: string | number[],
+    transaction: EthereumTransactionEIP1559,
+};
+
+export type EthereumTransactionEIP1559 = {
+    to: string,
+    value: string,
+    gasLimit: string,
+    nonce: string,
+    data?: string,
+    chainId: number,
+    maxFeePerGas: string,
+    maxPriorityFeePerGas: string,
+};
+
 export type EthereumSignedTx = {
     v: string,
     r: string,

@@ -103,3 +103,38 @@ export const ethereumSignTx = async (
 
     return processTxRequest(typedCall, response.message, rest, chain_id);
 };
+
+
+export const ethereumSignTxEIP1559 = async (
+    typedCall: TypedCall,
+    address_n: number[],
+    to: string,
+    value: string,
+    gas_limit: string,
+    max_gas_fee: string,
+    max_priority_fee: string,
+    nonce: string,
+    chain_id: number,
+    data?: string,
+) => {
+    const length = data == null ? 0 : data.length / 2;
+
+    const [first, rest] = splitString(data, 1024 * 2);
+
+    const message = {
+        address_n,
+        nonce: stripLeadingZeroes(nonce),
+        max_gas_fee: stripLeadingZeroes(max_gas_fee),
+        max_priority_fee: stripLeadingZeroes(max_priority_fee),
+        gas_limit: stripLeadingZeroes(gas_limit),
+        to,
+        value: stripLeadingZeroes(value),
+        data_length: length,
+        data_initial_chunk: first,
+        chain_id,
+    };
+
+    const response = await typedCall('EthereumSignTxEIP1559', 'EthereumTxRequest', message);
+
+    return processTxRequest(typedCall, response.message, rest, chain_id);
+};
