@@ -9,7 +9,10 @@ import { stripHexPrefix } from '../../utils/formatUtils';
 import * as helper from './helpers/ethereumSignTx';
 
 import type { CoreMessage } from '../../types';
-import type { EthereumTransaction } from '../../types/networks/ethereum';
+import type {
+    EthereumTransaction,
+    EthereumTransactionEIP1559,
+} from '../../types/networks/ethereum';
 
 type Params = {
     path: number[],
@@ -44,29 +47,29 @@ export default class EthereumSignTx extends AbstractMethod {
 
         const isEIP1559 = tx.maxFeePerGas !== undefined && tx.maxPriorityFeePerGas !== undefined;
 
-        if (!isEIP1559) {
-            validateParams(tx, [
-                { name: 'to', type: 'string', obligatory: true },
-                { name: 'value', type: 'string', obligatory: true },
-                { name: 'gasLimit', type: 'string', obligatory: true },
-                { name: 'gasPrice', type: 'string', obligatory: true },
-                { name: 'nonce', type: 'string', obligatory: true },
-                { name: 'data', type: 'string' },
-                { name: 'chainId', type: 'number' },
-                { name: 'txType', type: 'number' },
-            ]);
-        } else {
-            validateParams(tx, [
-                { name: 'to', type: 'string', obligatory: true },
-                { name: 'value', type: 'string', obligatory: true },
-                { name: 'gasLimit', type: 'string', obligatory: true },
-                { name: 'maxFeePerGas', type: 'string', obligatory: true },
-                { name: 'maxPriorityFeePerGas', type: 'string', obligatory: true },
-                { name: 'nonce', type: 'string', obligatory: true },
-                { name: 'data', type: 'string' },
-                { name: 'chainId', type: 'number', obligatory: true },
-            ]);
-        }
+        const schema = isEIP1559
+            ? [
+                  { name: 'to', type: 'string', obligatory: true },
+                  { name: 'value', type: 'string', obligatory: true },
+                  { name: 'gasLimit', type: 'string', obligatory: true },
+                  { name: 'maxFeePerGas', type: 'string', obligatory: true },
+                  { name: 'maxPriorityFeePerGas', type: 'string', obligatory: true },
+                  { name: 'nonce', type: 'string', obligatory: true },
+                  { name: 'data', type: 'string' },
+                  { name: 'chainId', type: 'number', obligatory: true },
+              ]
+            : [
+                  { name: 'to', type: 'string', obligatory: true },
+                  { name: 'value', type: 'string', obligatory: true },
+                  { name: 'gasLimit', type: 'string', obligatory: true },
+                  { name: 'gasPrice', type: 'string', obligatory: true },
+                  { name: 'nonce', type: 'string', obligatory: true },
+                  { name: 'data', type: 'string' },
+                  { name: 'chainId', type: 'number' },
+                  { name: 'txType', type: 'number' },
+              ];
+
+        validateParams(tx, schema);
 
         // TODO: check if tx data is a valid hex
 
