@@ -7,35 +7,17 @@ git fetch origin develop
 # list all commits between HEAD and develop
 for commit in $(git rev-list origin/develop..)
 do
-    message=$(git log -n1 --format=%B $commit)
+    COMMIT_ID=$(git log --pretty=format:'%H' -n 1 $commit)
     echo "Checking $commit"
-    version=$(jq -r .version package.json)
-    echo "Checking connect version"
 
-    # The commit message must contain either
+    # 1. Checking if the commit is in develop"
 
-    # 1. Version substring
-    if [[ $message == "version $version" ]]; then
-      continue
-    fi
-
-    # 2. "cherry-picked from [some commit in develop]"
-    if [[ $message =~ "(cherry picked from commit" ]]; then
-      # remove last ")" and extract commit hash
-      develop_commit=$(echo ${message:0:-1} | tr ' ' '\n' | tail -1)
-      # check if develop really contains this commit hash
-      if [[ $(git branch -a --contains $develop_commit | grep --only-matching "remotes/origin/develop") == "remotes/origin/develop" ]]; then
-        continue
-      fi
-    fi
-
-    # 3. [RELEASE ONLY] substring
-    if [[ $message =~ "[RELEASE ONLY]" ]]; then
+    if [[ $(git merge-base --is-ancestor $COMMIT_ID HEAD | grep --only-matching "remotes/origin/develop") == "remotes/origin/develop" ]]; then
       continue
     fi
 
     fail=1
-    echo "FAILURE! Neither 'version x.x.x' nor 'cherry picked from..'  nor '[RELEASE ONLY]' substring found in this commit message."
+    echo "Last commit is not in develop!"
 done
 
 echo "ALL OK"
