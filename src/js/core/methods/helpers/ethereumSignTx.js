@@ -136,5 +136,5 @@ export const ethereumSignTxEIP1559 = async (
 
     const response = await typedCall('EthereumSignTxEIP1559', 'EthereumTxRequest', message);
 
-    return processTxRequest(typedCall, response.message, rest, chain_id);
+    return processTxRequest(typedCall, response.message, rest);
 };
