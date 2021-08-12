@@ -117,7 +117,7 @@ export const ethereumSignTxEIP1559 = async (
     nonce: string,
     chain_id: number,
     data?: string,
-    access_list: EthereumAccessList
+    access_list?: EthereumAccessList
 ) => {
     const length = data == null ? 0 : data.length / 2;
 
@@ -134,7 +134,7 @@ export const ethereumSignTxEIP1559 = async (
         data_length: length,
         data_initial_chunk: first,
         chain_id,
-        access_list
+        access_list: access_list?.map(a => ({ ...a, storage_keys: a.storageKeys })) ?? []
     };
 
     const response = await typedCall('EthereumSignTxEIP1559', 'EthereumTxRequest', message);

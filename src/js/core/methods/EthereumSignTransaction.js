@@ -110,6 +110,7 @@ export default class EthereumSignTx extends AbstractMethod {
                   tx.nonce,
                   tx.chainId,
                   tx.data,
+                  tx.accessList
               )
             : helper.ethereumSignTx(
                   this.device.getCommands().typedCall.bind(this.device.getCommands()),
