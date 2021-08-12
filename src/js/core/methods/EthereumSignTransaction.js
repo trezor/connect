@@ -19,6 +19,24 @@ type Params = {
     transaction: EthereumTransaction,
 };
 
+const strip = (value) => {
+    if (typeof value === 'string') {
+      let stripped = stripHexPrefix(value);
+      // pad left even
+      if (stripped.length % 2 !== 0) {
+        stripped = `0${stripped}`;
+      }
+      return stripped;
+    } else if (Array.isArray(value)) {
+      return value.map(strip); 
+    } else if (typeof value === 'object') {
+      return Object.entries(value).reduce((acc, [k, v]) => {
+        return { ...acc, [k]: strip(v)}
+      }, {});
+    }
+    return value;
+  };
+
 export default class EthereumSignTx extends AbstractMethod {
     params: Params;
 
@@ -73,22 +91,10 @@ export default class EthereumSignTx extends AbstractMethod {
 
         // TODO: check if tx data is a valid hex
 
-        // strip '0x' from values
-        Object.keys(tx).forEach(key => {
-            if (typeof tx[key] === 'string') {
-                let value = stripHexPrefix(tx[key]);
-                // pad left even
-                if (value.length % 2 !== 0) {
-                    value = `0${value}`;
-                }
-                // $FlowIssue
-                tx[key] = value;
-            }
-        });
-
         this.params = {
             path,
-            transaction: tx,
+            // strip '0x' from values
+            transaction: strip(tx),
         };
     }
 
@@ -110,7 +116,7 @@ export default class EthereumSignTx extends AbstractMethod {
                   tx.nonce,
                   tx.chainId,
                   tx.data,
-                  tx.accessList
+                  tx.accessList,
               )
             : helper.ethereumSignTx(
                   this.device.getCommands().typedCall.bind(this.device.getCommands()),
