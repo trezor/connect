@@ -381,6 +381,27 @@ export default {
         },
 
         {
+            description: 'data eip1559',
+            params: {
+                path: "m/44'/60'/0'/0/0",
+                transaction: {
+                    nonce: '0x3',
+                    maxFeePerGas: '0x14',
+                    maxPriorityFeePerGas: '0x1',
+                    gasLimit: '0x492d4',
+                    to: '0x8ea7a3fccc211ed48b763b4164884ddbcf3b0a98',
+                    value: '0x16345785d8a0000',
+                    data: `0x${'4142434445464748494a4b4c4d4e4f50'.repeat(256)}212121`,
+                    chainId: 1,
+                },
+            },
+            result: {
+                r: '0xd451c4f27910390a6bfbdd42abc9b5b307262c9a1e43887288bb63768554fd2e',
+                s: '0x54b78871800cb8aba67a6b33cb0c78ff93a7ce3a5ad0d9367a528c120ed1c235',
+                v: '0x1',
+            },
+        },
+        {
             description: 'eip 1559 access list',
             params: {
                 path: "m/44'/60'/0'/0/0",
