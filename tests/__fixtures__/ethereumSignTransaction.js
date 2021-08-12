@@ -424,7 +424,7 @@ export default {
             },
             result: {
                 r: '0x2e4f4c0e7c4e51270b891480060712e9d3bcab01e8ad0fadf2dfddd71504ca94',
-                s: '0x2e4f4c0e7c4e51270b891480060712e9d3bcab01e8ad0fadf2dfddd71504ca94',
+                s: '0x2599beb32757a144dedc82b79153c21269c9939a9245342bcf35764115b62bc1',
                 v: '0x0',
             },
         },
