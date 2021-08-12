@@ -45,12 +45,20 @@ export type EthereumTransactionEIP1559 = {
     chainId: number,
     maxFeePerGas: string,
     maxPriorityFeePerGas: string,
+    accessList?: EthereumAccessList[];
+};
+
+export type EthereumAccessList = {
+    address: string;
+    storageKeys: string[];
 };
 
 export type EthereumSignTransaction = {
     path: string | number[],
     transaction: EthereumTransaction | EthereumTransactionEIP1559,
 };
+
+
 
 export type EthereumSignedTx = {
     v: string,

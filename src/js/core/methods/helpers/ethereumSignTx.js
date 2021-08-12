@@ -2,6 +2,7 @@
 
 import { ERRORS } from '../../../constants';
 import type { TypedCall, EthereumTxRequest } from '../../../types/trezor/protobuf';
+import type { EthereumAccessList } from '../../../types'
 
 const splitString = (str: ?string, len: number) => {
     if (str == null) {
@@ -116,6 +117,7 @@ export const ethereumSignTxEIP1559 = async (
     nonce: string,
     chain_id: number,
     data?: string,
+    access_list: EthereumAccessList
 ) => {
     const length = data == null ? 0 : data.length / 2;
 
@@ -132,6 +134,7 @@ export const ethereumSignTxEIP1559 = async (
         data_length: length,
         data_initial_chunk: first,
         chain_id,
+        access_list
     };
 
     const response = await typedCall('EthereumSignTxEIP1559', 'EthereumTxRequest', message);
