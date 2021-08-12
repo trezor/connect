@@ -362,7 +362,7 @@ export default {
         {
             description: 'no data eip 1559',
             params: {
-                path: "m/44'/60'/0'",
+                path: "m/44'/60'/0'/0/0",
                 transaction: {
                     nonce: '0x0',
                     maxFeePerGas: '0x14',
@@ -374,8 +374,8 @@ export default {
                 },
             },
             result: {
-                r: '0x2ceeaabc994fbce2fbd66551f9d48fc711c8db2a12e93779eeddede11e41f636',
-                s: '0x2db4a9ecc73da91206f84397ae9287a399076fdc01ed7f3c6554b1c57c39bf8c',
+                r: '0x7a206f4d4540545f5a64f47553acfa71fbefceace5559b5bfef8b7dbc0431bdc',
+                s: '0x7cbc37b2ae1739a04b973387d7da4f0b489f05b947d678df8be2531276948fdc',
                 v: '0x1',
             },
         },
