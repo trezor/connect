@@ -94,7 +94,10 @@ export default class EthereumSignTx extends AbstractMethod {
 
     run() {
         const tx = this.params.transaction;
-        const isEIP1559 = tx.maxFeePerGas !== undefined && tx.maxPriorityFeePerGas !== undefined;
+        const isEIP1559 =
+            !this.device.unavailableCapabilities.eip1559 &&
+            tx.maxFeePerGas !== undefined &&
+            tx.maxPriorityFeePerGas !== undefined;
         return isEIP1559
             ? helper.ethereumSignTxEIP1559(
                   this.device.getCommands().typedCall.bind(this.device.getCommands()),
