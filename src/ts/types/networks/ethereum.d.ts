@@ -35,9 +35,26 @@ export interface EthereumTransaction {
     txType?: number;
 }
 
+export type EthereumTransactionEIP1559 = {
+    to: string,
+    value: string,
+    gasLimit: string,
+    nonce: string,
+    data?: string,
+    chainId: number,
+    maxFeePerGas: string,
+    maxPriorityFeePerGas: string,
+    accessList?: EthereumAccessList[];
+};
+
+export type EthereumAccessList = {
+    address: string;
+    storageKeys: string[];
+};
+
 export interface EthereumSignTransaction {
     path: string | number[];
-    transaction: EthereumTransaction;
+    transaction: EthereumTransaction | EthereumTransactionEIP1559;
 }
 
 export interface EthereumSignedTx {
