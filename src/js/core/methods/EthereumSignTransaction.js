@@ -19,23 +19,23 @@ type Params = {
     transaction: EthereumTransaction,
 };
 
-const strip = (value) => {
+const strip = value => {
     if (typeof value === 'string') {
-      let stripped = stripHexPrefix(value);
-      // pad left even
-      if (stripped.length % 2 !== 0) {
-        stripped = `0${stripped}`;
-      }
-      return stripped;
-    } else if (Array.isArray(value)) {
-      return value.map(strip); 
-    } else if (typeof value === 'object') {
-      return Object.entries(value).reduce((acc, [k, v]) => {
-        return { ...acc, [k]: strip(v)}
-      }, {});
+        let stripped = stripHexPrefix(value);
+        // pad left even
+        if (stripped.length % 2 !== 0) {
+            stripped = `0${stripped}`;
+        }
+        return stripped;
+    }
+    if (Array.isArray(value)) {
+        return value.map(strip);
+    }
+    if (typeof value === 'object') {
+        return Object.entries(value).reduce((acc, [k, v]) => ({ ...acc, [k]: strip(v) }), {});
     }
     return value;
-  };
+};
 
 export default class EthereumSignTx extends AbstractMethod {
     params: Params;
