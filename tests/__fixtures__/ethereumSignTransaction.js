@@ -392,13 +392,13 @@ export default {
                     to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
                     value: '0xa',
                     chainId: 1,
-                    accessList: {
+                    accessList: [{
                         address: '0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae',
                         storageKeys: [
                           '0x0000000000000000000000000000000000000000000000000000000000000003',
                           '0x0000000000000000000000000000000000000000000000000000000000000007'
                         ]
-                      }
+                      }]
                 },
             },
             result: {

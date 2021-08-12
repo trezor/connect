@@ -117,7 +117,7 @@ export const ethereumSignTxEIP1559 = async (
     nonce: string,
     chain_id: number,
     data?: string,
-    access_list?: EthereumAccessList
+    access_list?: EthereumAccessList[]
 ) => {
     const length = data == null ? 0 : data.length / 2;
 
