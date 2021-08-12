@@ -6220,7 +6220,7 @@
             "name": "ApplyFlags",
             "fields": [
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
                     "type": "uint32",
                     "name": "flags",
@@ -6268,7 +6268,7 @@
             "name": "SdProtect",
             "fields": [
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
                     "type": "SdProtectOperationType",
                     "name": "operation",
@@ -6551,7 +6551,7 @@
             "name": "EntropyAck",
             "fields": [
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
                     "type": "bytes",
                     "name": "entropy",
@@ -6654,7 +6654,7 @@
             "name": "WordRequest",
             "fields": [
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
                     "type": "WordRequestType",
                     "name": "type",
@@ -6705,7 +6705,7 @@
             "name": "SetU2FCounter",
             "fields": [
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
                     "type": "uint32",
                     "name": "u2f_counter",
@@ -6729,7 +6729,7 @@
             "name": "NextU2FCounter",
             "fields": [
                 {
-                    "rule": "required",
+                    "rule": "optional",
                     "options": {},
                     "type": "uint32",
                     "name": "u2f_counter",

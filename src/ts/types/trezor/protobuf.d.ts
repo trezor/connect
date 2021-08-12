@@ -1415,7 +1415,7 @@ export type ApplySettings = {
 
 // ApplyFlags
 export type ApplyFlags = {
-    flags: number;
+    flags?: number;
 };
 
 // ChangePin
@@ -1436,7 +1436,7 @@ export enum SdProtectOperationType {
 
 // SdProtect
 export type SdProtect = {
-    operation: SdProtectOperationType;
+    operation?: SdProtectOperationType;
 };
 
 // Ping
@@ -1496,7 +1496,7 @@ export type EntropyRequest = {};
 
 // EntropyAck
 export type EntropyAck = {
-    entropy: string;
+    entropy?: string;
 };
 
 export enum RecoveryDeviceType {
@@ -1526,7 +1526,7 @@ export type WordRequestType = keyof typeof Enum_WordRequestType;
 
 // WordRequest
 export type WordRequest = {
-    type: WordRequestType;
+    type?: WordRequestType;
 };
 
 // WordAck
@@ -1536,7 +1536,7 @@ export type WordAck = {
 
 // SetU2FCounter
 export type SetU2FCounter = {
-    u2f_counter: number;
+    u2f_counter?: number;
 };
 
 // GetNextU2FCounter
@@ -1544,7 +1544,7 @@ export type GetNextU2FCounter = {};
 
 // NextU2FCounter
 export type NextU2FCounter = {
-    u2f_counter: number;
+    u2f_counter?: number;
 };
 
 // DoPreauthorized

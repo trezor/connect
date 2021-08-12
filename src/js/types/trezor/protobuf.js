@@ -1435,7 +1435,7 @@ export type ApplySettings = {
 
 // ApplyFlags
 export type ApplyFlags = {
-    flags: number,
+    flags?: number,
 };
 
 // ChangePin
@@ -1457,7 +1457,7 @@ export type SdProtectOperationType = $Values<typeof Enum_SdProtectOperationType>
 
 // SdProtect
 export type SdProtect = {
-    operation: SdProtectOperationType,
+    operation?: SdProtectOperationType,
 };
 
 // Ping
@@ -1517,7 +1517,7 @@ export type EntropyRequest = {};
 
 // EntropyAck
 export type EntropyAck = {
-    entropy: string,
+    entropy?: string,
 };
 
 export const Enum_RecoveryDeviceType = Object.freeze({
@@ -1548,7 +1548,7 @@ export type WordRequestType = $Keys<typeof Enum_WordRequestType>;
 
 // WordRequest
 export type WordRequest = {
-    type: WordRequestType,
+    type?: WordRequestType,
 };
 
 // WordAck
@@ -1558,7 +1558,7 @@ export type WordAck = {
 
 // SetU2FCounter
 export type SetU2FCounter = {
-    u2f_counter: number,
+    u2f_counter?: number,
 };
 
 // GetNextU2FCounter
@@ -1566,7 +1566,7 @@ export type GetNextU2FCounter = {};
 
 // NextU2FCounter
 export type NextU2FCounter = {
-    u2f_counter: number,
+    u2f_counter?: number,
 };
 
 // DoPreauthorized
@@ -2196,10 +2196,10 @@ export type MessageType = {
     LockDevice: LockDevice,
     EndSession: EndSession,
     ApplySettings: ApplySettings,
-    ApplyFlags: $Exact<ApplyFlags>,
+    ApplyFlags: ApplyFlags,
     ChangePin: ChangePin,
     ChangeWipeCode: ChangeWipeCode,
-    SdProtect: $Exact<SdProtect>,
+    SdProtect: SdProtect,
     Ping: Ping,
     Cancel: Cancel,
     GetEntropy: $Exact<GetEntropy>,
@@ -2209,13 +2209,13 @@ export type MessageType = {
     ResetDevice: ResetDevice,
     BackupDevice: BackupDevice,
     EntropyRequest: EntropyRequest,
-    EntropyAck: $Exact<EntropyAck>,
+    EntropyAck: EntropyAck,
     RecoveryDevice: RecoveryDevice,
-    WordRequest: $Exact<WordRequest>,
+    WordRequest: WordRequest,
     WordAck: $Exact<WordAck>,
-    SetU2FCounter: $Exact<SetU2FCounter>,
+    SetU2FCounter: SetU2FCounter,
     GetNextU2FCounter: GetNextU2FCounter,
-    NextU2FCounter: $Exact<NextU2FCounter>,
+    NextU2FCounter: NextU2FCounter,
     DoPreauthorized: DoPreauthorized,
     PreauthorizedRequest: PreauthorizedRequest,
     CancelAuthorization: CancelAuthorization,
