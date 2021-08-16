@@ -5,20 +5,20 @@ fail=0
 git fetch origin develop
 
 # list all commits between HEAD and develop
-for commit in $(git rev-list origin/develop..)
-do
-    COMMIT_ID=$(git log --pretty=format:'%H' -n 1 $commit)
-    echo "Checking $commit"
+commit=$(git rev-list origin/develop..)
 
-    # 1. Checking if the commit is in develop"
+commit_id=$(git log --pretty=format:'%H' -n 1 $commit)
+echo "Checking $commit"
 
-    if [[ $(git merge-base --is-ancestor $COMMIT_ID HEAD | grep --only-matching "remotes/origin/develop") == "remotes/origin/develop" ]]; then
-      continue
-    fi
+# 1. Checking if the commit is in develop"
 
-    fail=1
-    echo "Last commit is not in develop!"
-done
+if [[ $(git merge-base --is-ancestor $commit_id HEAD | grep --only-matching "remotes/origin/develop") == "remotes/origin/develop" ]]; then
+  continue
+fi
+
+fail=1
+echo "Last commit is not in develop!"
+
 
 echo "ALL OK"
 exit $fail
