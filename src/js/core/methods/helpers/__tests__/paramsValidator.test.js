@@ -1,57 +1,36 @@
-import { validateParams } from '../paramsValidator';
+import DataManager from '../../../../data/DataManager';
+import configJSON from '../../../../../data/config.json';
+import { validateParams, getFirmwareRange } from '../paramsValidator';
+import * as fixtures from '../__fixtures__/paramsValidator';
 
-const fixtures = [
-    {
-        description: 'array',
-        type: 'array',
-        value: [],
-        success: true,
-        allowEmpty: true,
-    },
-    {
-        description: 'array invalid (empty)',
-        type: 'array',
-        value: [],
-    },
-    {
-        description: 'array-buffer',
-        type: 'array-buffer',
-        value: new ArrayBuffer(0),
-        success: true,
-    },
-    {
-        description: 'array-buffer invalid',
-        type: 'array-buffer',
-        value: Buffer.from('foo'),
-    },
-    {
-        description: 'array-buffer invalid',
-        type: 'array-buffer',
-        value: [],
-    },
-    {
-        description: 'array-buffer invalid',
-        type: 'array-buffer',
-        value: 'foo',
-    },
-    {
-        description: 'array-buffer invalid',
-        type: 'array-buffer',
-        value: 0,
-    },
-];
 describe('helpers/paramsValidator', () => {
-    fixtures.forEach(f => {
-        it(f.description, () => {
-            if (!f.success) {
-                expect(() =>
-                    validateParams({ param: f.value }, [{ name: 'param', ...f }]),
-                ).toThrow();
-            } else {
-                expect(() =>
-                    validateParams({ param: f.value }, [{ name: 'param', ...f }]),
-                ).not.toThrow();
-            }
+    describe('validateParams', () => {
+        fixtures.validateParams.forEach(f => {
+            it(f.description, () => {
+                if (!f.success) {
+                    expect(() =>
+                        validateParams({ param: f.value }, [{ name: 'param', ...f }]),
+                    ).toThrow();
+                } else {
+                    expect(() =>
+                        validateParams({ param: f.value }, [{ name: 'param', ...f }]),
+                    ).not.toThrow();
+                }
+            });
+        });
+    });
+
+    describe('getFirmwareRange', () => {
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+        fixtures.getFirmwareRange.forEach(f => {
+            it(f.description, () => {
+                jest.spyOn(DataManager, 'getConfig').mockImplementation(
+                    () => f.config || configJSON,
+                );
+                expect(getFirmwareRange(...f.params)).toEqual(f.result);
+            });
         });
     });
 });
