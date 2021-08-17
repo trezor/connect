@@ -141,7 +141,7 @@ describe('utils/deviceFeaturesUtils', () => {
             getUnavailableCapabilities(feat2, coins, [
                 {
                     min: ['0', '2.99.99'],
-                    excludedMethods: ['getAccountInfo'],
+                    methods: ['getAccountInfo'],
                 },
             ]),
         ).toEqual({
@@ -154,7 +154,7 @@ describe('utils/deviceFeaturesUtils', () => {
                 {
                     min: ['0', '2.99.99'],
                     coin: ['xrp', 'txrp'],
-                    excludedMethods: ['getAccountInfo'],
+                    methods: ['getAccountInfo'],
                 },
             ]),
         ).toEqual({
@@ -167,11 +167,11 @@ describe('utils/deviceFeaturesUtils', () => {
                 {
                     max: ['0', '2.1.0'],
                     coin: ['xrp', 'txrp'],
-                    excludedMethods: ['rippleGetAddress'],
+                    methods: ['rippleGetAddress'],
                 },
                 {
                     max: ['0', '2.1.0'],
-                    excludedMethods: ['tezosSignTransaction'],
+                    methods: ['tezosSignTransaction'],
                 },
             ]),
         ).toEqual({

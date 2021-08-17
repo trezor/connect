@@ -102,10 +102,10 @@ export const getFirmwareRange = (
     const range = supportedFirmware
         .filter(rule => {
             // check if rule applies to requested method
-            if (rule.excludedMethods) {
-                return rule.excludedMethods.includes(method);
+            if (rule.methods) {
+                return rule.methods.includes(method);
             }
-            // rule doesn't have specified excludedMethods
+            // rule doesn't have specified methods
             // it may be a global rule for coin or coinType
             return true;
         })
@@ -119,7 +119,7 @@ export const getFirmwareRange = (
                 return (typeof c.coin === 'string' ? [c.coin] : c.coin).includes(shortcut);
             }
             // rule for method
-            return c.excludedMethods;
+            return c.methods;
         });
 
     if (range) {
