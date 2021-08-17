@@ -136,47 +136,27 @@ describe('utils/deviceFeaturesUtils', () => {
             decreaseOutput: 'update-required',
         });
 
-        // excluded single method without specified coins
+        // added new capability
         expect(
             getUnavailableCapabilities(feat2, coins, [
                 {
                     min: ['0', '2.99.99'],
-                    methods: ['getAccountInfo'],
+                    capabilities: ['newCapabilityOrFeature'],
                 },
             ]),
         ).toEqual({
-            getAccountInfo: 'update-required',
+            newCapabilityOrFeature: 'update-required',
         });
 
-        // excluded single method with specified coins
         expect(
             getUnavailableCapabilities(feat2, coins, [
                 {
-                    min: ['0', '2.99.99'],
-                    coin: ['xrp', 'txrp'],
-                    methods: ['getAccountInfo'],
+                    min: ['0', '0'],
+                    capabilities: ['newCapabilityOrFeature'],
                 },
             ]),
         ).toEqual({
-            getAccountInfo: ['xrp', 'txrp'],
-        });
-
-        // disable multiple methods for outdated trezor-connect
-        expect(
-            getUnavailableCapabilities(feat2, coins, [
-                {
-                    max: ['0', '2.1.0'],
-                    coin: ['xrp', 'txrp'],
-                    methods: ['rippleGetAddress'],
-                },
-                {
-                    max: ['0', '2.1.0'],
-                    methods: ['tezosSignTransaction'],
-                },
-            ]),
-        ).toEqual({
-            rippleGetAddress: ['xrp', 'txrp'],
-            tezosSignTransaction: 'trezor-connect-outdated',
+            newCapabilityOrFeature: 'no-support',
         });
 
         // without capabilities

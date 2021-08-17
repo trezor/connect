@@ -1,6 +1,6 @@
 /* @flow */
 import { versionCompare } from './versionUtils';
-import type { Features, CoinInfo } from '../types';
+import type { Features, CoinInfo, UnavailableCapabilities } from '../types';
 import type { Capability } from '../types/trezor/protobuf';
 
 // From protobuf
@@ -47,7 +47,7 @@ export const getUnavailableCapabilities = (
     support: any[],
 ) => {
     const { capabilities } = features;
-    const list = {};
+    const list: UnavailableCapabilities = {};
     if (!capabilities) return list;
     const fw = [features.major_version, features.minor_version, features.patch_version];
     const key = `trezor${features.major_version}`;
@@ -97,16 +97,20 @@ export const getUnavailableCapabilities = (
             }
         });
 
-    // 4. check if firmware version is in range of excluded methods in "config.supportedFirmware"
+    // 4. check if firmware version is in range of capabilities in "config.supportedFirmware"
     support.forEach(s => {
-        if (s.min && s.methods && versionCompare(s.min[fw[0] - 1], fw) > 0) {
-            s.methods.forEach(m => {
-                list[m] = s.coin || 'update-required';
+        if (!s.capabilities) return;
+        const min = s.min ? s.min[fw[0] - 1] : null;
+        const max = s.max ? s.max[fw[0] - 1] : null;
+        if (min && (min === '0' || versionCompare(min, fw) > 0)) {
+            const value = min === '0' ? 'no-support' : 'update-required';
+            s.capabilities.forEach(m => {
+                list[m] = value;
             });
         }
-        if (s.max && s.methods && versionCompare(s.max[fw[0] - 1], fw) < 0) {
-            s.methods.forEach(m => {
-                list[m] = s.coin || 'trezor-connect-outdated';
+        if (max && versionCompare(max, fw) < 0) {
+            s.capabilities.forEach(m => {
+                list[m] = 'trezor-connect-outdated';
             });
         }
     });

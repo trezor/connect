@@ -10,7 +10,7 @@ import type {
     Features,
     Deferred,
     FirmwareRelease,
-    UnavailableCapability,
+    UnavailableCapabilities,
 } from '../types';
 
 import { UI, DEVICE, ERRORS, NETWORK } from '../constants';
@@ -99,7 +99,7 @@ class Device extends EventEmitter {
 
     externalState: string[] = [];
 
-    unavailableCapabilities: { [key: string]: UnavailableCapability } = {};
+    unavailableCapabilities: UnavailableCapabilities = {};
 
     networkTypeState: string[] = [];
 
