@@ -106,12 +106,12 @@
     "supportedFirmware": [
         {
             "coin": ["xrp", "txrp"],
-            "excludedMethods": ["getAccountInfo"],
+            "methods": ["getAccountInfo"],
             "min": ["0", "2.1.0"],
             "comment": ["Since firmware 2.1.0 there is a new protobuf field 'destination_tag' in RippleSignTx"]
         },
         {
-            "excludedMethods": [
+            "methods": [
                 "rippleGetAddress",
                 "rippleSignTransaction"
             ],
@@ -119,7 +119,7 @@
             "comment": ["Since firmware 2.1.0 there is a new protobuf field 'destination_tag' in RippleSignTx"]
         },
         {
-            "excludedMethods": [
+            "methods": [
                 "cardanoGetAddress",
                 "cardanoGetPublicKey",
                 "cardanoSignTransaction"
@@ -128,19 +128,19 @@
             "comment": ["Shelley fork support since firmware 2.3.2"]
         },
         {
-            "excludedMethods": [
+            "methods": [
                 "tezosSignTransaction"
             ],
             "min": ["0", "2.1.8"],
             "comment": ["Since 2.1.8 there are new protobuf fields in tezos transaction (Babylon fork)"]
         },
         {
-            "excludedMethods": ["replaceTransaction"],
+            "methods": ["replaceTransaction"],
             "min": ["1.9.4", "2.3.5"],
             "comment": ["new sign tx process since 1.9.4/2.3.5"]
         },
         {
-            "excludedMethods": ["decreaseOutput"],
+            "methods": ["decreaseOutput"],
             "min": ["1.10.0", "2.4.0"],
             "comment": ["allow reduce output in RBF transaction since /2.4.0"]
         }

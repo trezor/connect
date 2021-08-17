@@ -108,7 +108,7 @@ export const getFirmwareRange = [
         config: {
             supportedFirmware: [
                 // this one is ignored, different excludedMethod
-                { coinType: 'bitcoin', excludedMethods: ['showAddress'], min: ['1.11.0', '2.5.0'] },
+                { coinType: 'bitcoin', methods: ['showAddress'], min: ['1.11.0', '2.5.0'] },
                 { coinType: 'bitcoin', min: ['1.10.0', '2.4.0'] },
                 { coin: 'btc', min: ['1.11.0', '2.5.0'] },
             ],
@@ -121,7 +121,7 @@ export const getFirmwareRange = [
         config: {
             supportedFirmware: [
                 // this one is ignored, different excludedMethod
-                { coin: 'btc', excludedMethods: ['showAddress'], min: ['1.11.0', '2.5.0'] },
+                { coin: 'btc', methods: ['showAddress'], min: ['1.11.0', '2.5.0'] },
                 { coin: 'btc', min: ['1.10.0', '2.4.0'] },
             ],
         },
@@ -133,7 +133,7 @@ export const getFirmwareRange = [
         config: {
             supportedFirmware: [
                 // this one is ignored, different excludedMethod
-                { coin: ['btc'], excludedMethods: ['showAddress'], min: ['1.11.0', '2.5.0'] },
+                { coin: ['btc'], methods: ['showAddress'], min: ['1.11.0', '2.5.0'] },
                 { coin: ['btc'], min: ['1.10.0', '2.4.0'] },
             ],
         },
@@ -141,18 +141,18 @@ export const getFirmwareRange = [
         result: { '1': { min: '1.10.0', max: '0' }, '2': { min: '2.4.0', max: '0' } },
     },
     {
-        description: 'range from config.json (by excludedMethods)',
+        description: 'range from config.json (by methods)',
         config: {
             supportedFirmware: [
                 // this one is ignored, no data
                 { min: ['1.11.0', '2.5.0'] },
                 // this one is ignored, different excludedMethod
-                { coin: ['btc'], excludedMethods: ['showAddress'], min: ['1.11.0', '2.5.0'] },
+                { coin: ['btc'], methods: ['showAddress'], min: ['1.11.0', '2.5.0'] },
                 // this one is ignored because of coin (not btc)
-                { coin: ['ltc'], excludedMethods: ['signTransaction'], min: ['1.11.0', '2.5.0'] },
+                { coin: ['ltc'], methods: ['signTransaction'], min: ['1.11.0', '2.5.0'] },
                 // this one is ignored, different excludedMethod
-                { coinType: 'bitcoin', excludedMethods: ['showAddress'], min: ['1.11.0', '2.5.0'] },
-                { excludedMethods: ['signTransaction'], min: ['1.10.0', '2.4.0'] },
+                { coinType: 'bitcoin', methods: ['showAddress'], min: ['1.11.0', '2.5.0'] },
+                { methods: ['signTransaction'], min: ['1.10.0', '2.4.0'] },
             ],
         },
         params: ['signTransaction', DEFAULT_COIN_INFO, DEFAULT_RANGE],
@@ -161,7 +161,7 @@ export const getFirmwareRange = [
     {
         description: 'range from config.json is lower than coinInfo',
         config: {
-            supportedFirmware: [{ excludedMethods: ['signTransaction'], min: ['1.6.2', '2.1.0'] }],
+            supportedFirmware: [{ methods: ['signTransaction'], min: ['1.6.2', '2.1.0'] }],
         },
         params: [
             'signTransaction',
@@ -173,7 +173,7 @@ export const getFirmwareRange = [
     {
         description: 'range from config.json using max',
         config: {
-            supportedFirmware: [{ excludedMethods: ['signTransaction'], max: ['1.10.0', '2.4.0'] }],
+            supportedFirmware: [{ methods: ['signTransaction'], max: ['1.10.0', '2.4.0'] }],
         },
         params: ['signTransaction', DEFAULT_COIN_INFO, DEFAULT_RANGE],
         result: { '1': { min: '1.6.2', max: '1.10.0' }, '2': { min: '2.1.0', max: '2.4.0' } },
@@ -181,7 +181,7 @@ export const getFirmwareRange = [
     {
         description: 'range from config.json using max (values lower than default)',
         config: {
-            supportedFirmware: [{ excludedMethods: ['signTransaction'], max: ['1.0.1', '2.0.1'] }],
+            supportedFirmware: [{ methods: ['signTransaction'], max: ['1.0.1', '2.0.1'] }],
         },
         params: [
             'signTransaction',

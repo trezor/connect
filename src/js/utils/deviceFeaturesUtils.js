@@ -99,13 +99,13 @@ export const getUnavailableCapabilities = (
 
     // 4. check if firmware version is in range of excluded methods in "config.supportedFirmware"
     support.forEach(s => {
-        if (s.min && s.excludedMethods && versionCompare(s.min[fw[0] - 1], fw) > 0) {
-            s.excludedMethods.forEach(m => {
+        if (s.min && s.methods && versionCompare(s.min[fw[0] - 1], fw) > 0) {
+            s.methods.forEach(m => {
                 list[m] = s.coin || 'update-required';
             });
         }
-        if (s.max && s.excludedMethods && versionCompare(s.max[fw[0] - 1], fw) < 0) {
-            s.excludedMethods.forEach(m => {
+        if (s.max && s.methods && versionCompare(s.max[fw[0] - 1], fw) < 0) {
+            s.methods.forEach(m => {
                 list[m] = s.coin || 'trezor-connect-outdated';
             });
         }
