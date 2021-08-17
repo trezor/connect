@@ -106,16 +106,16 @@ describe('utils/deviceFeaturesUtils', () => {
 
         // default Capabilities T1
         expect(getUnavailableCapabilities(feat1, coins, support)).toEqual({
-            ada: 'no-capability',
-            bnb: 'no-capability',
-            eos: 'no-capability',
+            ada: 'no-support',
+            bnb: 'no-support',
+            eos: 'no-support',
             ppc: 'update-required',
             sys: 'update-required',
             tppc: 'update-required',
-            txrp: 'no-capability',
+            txrp: 'no-support',
             uno: 'update-required',
-            xrp: 'no-capability',
-            xtz: 'no-capability',
+            xrp: 'no-support',
+            xtz: 'no-support',
             xvg: 'update-required',
             zcr: 'update-required',
             replaceTransaction: 'update-required',

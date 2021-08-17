@@ -50,9 +50,19 @@ export const getUnavailableCapabilities = (
     const list = {};
     if (!capabilities) return list;
     const fw = [features.major_version, features.minor_version, features.patch_version];
+    const key = `trezor${features.major_version}`;
 
-    // 1. check if Trezor has enabled capabilities
-    const unavailable = coins.filter(info => {
+    // 1. check if firmware version is supported by CoinInfo.support
+    const supported = coins.filter(info => {
+        if (!info.support || typeof info.support[key] !== 'string') {
+            list[info.shortcut.toLowerCase()] = 'no-support';
+            return false;
+        }
+        return true;
+    });
+
+    // 2. check if current firmware have enabled capabilities
+    const unavailable = supported.filter(info => {
         if (info.type === 'bitcoin') {
             if (info.name === 'Bitcoin' || info.name === 'Testnet') {
                 return !capabilities.includes('Capability_Bitcoin');
@@ -77,28 +87,24 @@ export const getUnavailableCapabilities = (
         list[info.shortcut.toLowerCase()] = 'no-capability';
     });
 
-    // 2. check if firmware version is in range of CoinInfo.support
-    const available = coins.filter(info => !unavailable.includes(info));
-    const key = `trezor${features.major_version}`;
-    available.forEach(info => {
-        if (!info.support || typeof info.support[key] !== 'string') {
-            list[info.shortcut.toLowerCase()] = 'no-support';
-            unavailable.push(info);
-        }
-        if (versionCompare(info.support[key], fw) > 0) {
-            list[info.shortcut.toLowerCase()] = 'update-required';
-            unavailable.push(info);
-        }
-    });
+    // 3. check if firmware version is in range of CoinInfo.support
+    supported
+        .filter(info => !unavailable.includes(info))
+        .forEach(info => {
+            if (versionCompare(info.support[key], fw) > 0) {
+                list[info.shortcut.toLowerCase()] = 'update-required';
+                unavailable.push(info);
+            }
+        });
 
-    // 3. check if firmware version is in range of excluded methods in "config.supportedFirmware"
+    // 4. check if firmware version is in range of excluded methods in "config.supportedFirmware"
     support.forEach(s => {
-        if (s.min && versionCompare(s.min[fw[0] - 1], fw) > 0) {
+        if (s.min && s.excludedMethods && versionCompare(s.min[fw[0] - 1], fw) > 0) {
             s.excludedMethods.forEach(m => {
                 list[m] = s.coin || 'update-required';
             });
         }
-        if (s.max && versionCompare(s.max[fw[0] - 1], fw) < 0) {
+        if (s.max && s.excludedMethods && versionCompare(s.max[fw[0] - 1], fw) < 0) {
             s.excludedMethods.forEach(m => {
                 list[m] = s.coin || 'trezor-connect-outdated';
             });
