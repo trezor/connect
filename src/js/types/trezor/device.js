@@ -16,8 +16,12 @@ export type UnavailableCapability =
     | 'no-capability'
     | 'no-support'
     | 'update-required'
-    | 'trezor-connect-outdated'
-    | string[];
+    | 'trezor-connect-outdated';
+
+// NOTE: unavailableCapabilities is an object with information what is NOT supported by this device.
+// in ideal/expected setup this object should be empty but given setup might have exceptions.
+// key = coin shortcut lowercase (ex: btc, eth, xrp) OR field declared in coins.json "supportedFirmware.capability"
+export type UnavailableCapabilities = { [key: string]: UnavailableCapability };
 
 export type FirmwareRange = {
     '1': {
@@ -64,7 +68,7 @@ export type KnownDevice = {|
     mode: DeviceMode,
     state: ?string,
     features: Features,
-    unavailableCapabilities: { [key: string]: UnavailableCapability },
+    unavailableCapabilities: UnavailableCapabilities,
 |};
 
 export type UnknownDevice = {|

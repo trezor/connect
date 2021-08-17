@@ -135,12 +135,12 @@
             "comment": ["Since 2.1.8 there are new protobuf fields in tezos transaction (Babylon fork)"]
         },
         {
-            "methods": ["replaceTransaction"],
+            "capabilities": ["replaceTransaction"],
             "min": ["1.9.4", "2.3.5"],
             "comment": ["new sign tx process since 1.9.4/2.3.5"]
         },
         {
-            "methods": ["decreaseOutput"],
+            "capabilities": ["decreaseOutput"],
             "min": ["1.10.0", "2.4.0"],
             "comment": ["allow reduce output in RBF transaction since /2.4.0"]
         }

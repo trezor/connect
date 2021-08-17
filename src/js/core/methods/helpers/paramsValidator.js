@@ -105,6 +105,10 @@ export const getFirmwareRange = (
             if (rule.methods) {
                 return rule.methods.includes(method);
             }
+            // check if rule applies to capability
+            if (rule.capabilities) {
+                return rule.capabilities.includes(method);
+            }
             // rule doesn't have specified methods
             // it may be a global rule for coin or coinType
             return true;
@@ -119,7 +123,7 @@ export const getFirmwareRange = (
                 return (typeof c.coin === 'string' ? [c.coin] : c.coin).includes(shortcut);
             }
             // rule for method
-            return c.methods;
+            return c.methods || c.capabilities;
         });
 
     if (range) {

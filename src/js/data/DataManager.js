@@ -59,6 +59,7 @@ export type Config = {
         coinType?: string,
         coin?: string | string[],
         methods?: string[],
+        capabilities?: string[],
         min?: string[],
         max?: string[],
     |}>,
