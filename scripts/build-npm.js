@@ -31,7 +31,7 @@ internal.forEach(file => {
     fs.copySync(file, `${libFile}.flow`);
 });
 
-const ignored = ['__tests__', '_old', 'icons', 'udev'];
+const ignored = ['__tests__', '__fixtures__', '_old', 'icons', 'udev'];
 const shouldIgnore = src => ignored.find(i => src.indexOf(i) >= 0);
 
 // copy typescript

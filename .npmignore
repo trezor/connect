@@ -2,6 +2,8 @@
 webpack
 src
 build
+__tests__
+__fixtures__
 _old
 .babelrc
 .flowconfig
