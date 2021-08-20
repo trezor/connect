@@ -19,9 +19,33 @@ TrezorConnect.ethereumSignTransaction(params).then(function(result) {
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L69-L72)
 * `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
-* `transaction` - *obligatory* `Object` type of [EthereumTransaction](../../src/js/types/ethereum.js#L5) "0x" prefix for each field is optional
+* `transaction` - *obligatory* `Object` type of [`EthereumTransactionEIP1559`](../../src/js/types/networks/ethereum.js#L46)` | `[`EthereumSignTransaction`](../../src/js/types/networks/ethereum.js#L59) "0x" prefix for each field is optional
 
-### Example
+### Examples
+
+#### EIP1559 ([after The London Upgrade](https://ethereum.org/en/developers/docs/gas/#post-london))
+> :warning: **Supported only by Trezor T with Firmware 2.4.2 or higher!** 
+
+If both parameters `maxFeePerGas` and `maxPriorityFeePerGas` are defined, transaction will be signed as the new type introduced in [EIP1559](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1559.md).
+```javascript
+TrezorConnect.ethereumSignTransaction({
+    path: "m/44'/60'/0'",
+    transaction: {
+        to: '0xd0d6d6c5fe4a677d343cc433536bb717bae167dd',
+        value: '0xf4240',
+        data: '0xa',
+        chainId: 1,
+        nonce: '0x0',
+        maxFeePerGas: '0x14',
+        maxPriorityFeePerGas: '0x0',
+        gasLimit: '0x14',
+    }
+});
+```
+
+#### Legacy
+
+For Trezor One and Trezor T with firmware older than 2.4.2 (but supported newer firmware versions too).
 ```javascript
 TrezorConnect.ethereumSignTransaction({
     path: "m/44'/60'/0'",
@@ -38,7 +62,7 @@ TrezorConnect.ethereumSignTransaction({
 ```
 
 ### Result
-###### [flowtype](../../src/js/types/response.js#L57-L60)
+###### [flowtype](../../src/js/types/api.js#L252)
 ```javascript
 {
     success: true,
