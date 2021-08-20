@@ -1,3 +1,10 @@
+# 8.1.30
+
+### Changed
+- Cardano: since transaction streaming has been introduced, it isn't possible to return the whole serialized transaction from the `cardanoSignTransaction` call anymore. Instead the transaction hash, transaction witnesses and auxiliary data supplement are returned and the serialized transaction needs to be assembled by the client.
+- Cardano: an obligatory `signingMode` parameter has been added to the `cardanoSignTransaction` call
+- Cardano: providing auxiliary data as a blob to the `cardanoSignTransaction` call is not supported anymore. Provide only the auxiliary data hash instead.
+
 # 8.1.29
 
 ### Added

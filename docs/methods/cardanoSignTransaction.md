@@ -17,18 +17,42 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 
 ### Params 
 [****Optional common params****](commonParams.md)
-###### [flowtype](../../src/js/types/networks/cardano.js#L61-L171)
-* `inputs` — *obligatory* `Array` of [CardanoInput](../../src/js/types/networks/cardano.js#L61)
-* `outputs` - *obligatory* `Array` of [CardanoOutput](../../src/js/types/networks/cardano.js#L76)
+###### [flowtype](../../src/js/types/networks/cardano.js#L60-L179)
+* `signingMode` - *obligatory* [CardanoTxSigningMode](#CardanoTxSigningMode)
+* `inputs` - *obligatory* `Array` of [CardanoInput](../../src/js/types/networks/cardano.js#L62)
+* `outputs` - *obligatory* `Array` of [CardanoOutput](../../src/js/types/networks/cardano.js#L77)
 * `fee` - *obligatory* `String`
 * `protocolMagic` - *obligatory* `Integer` 764824073 for Mainnet, 42 for Testnet
 * `networkId` - *obligatory* `Integer` 1 for Mainnet, 0 for Testnet
 * `ttl` - *optional* `String`
 * `validityIntervalStart` - *optional* `String`
-* `certificates` - *optional* `Array` of [CardanoCertificate](../../src/js/types/networks/cardano.js#L123)
-* `withdrawals` - *optional* `Array` of [CardanoWithdrawal](../../src/js/types/networks/cardano.js#L130)
-* `auixiliaryData` - *optional* [CardanoAuxiliaryData](../../src/js/types/networks/cardano.js#140)
+* `certificates` - *optional* `Array` of [CardanoCertificate](../../src/js/types/networks/cardano.js#L124)
+* `withdrawals` - *optional* `Array` of [CardanoWithdrawal](../../src/js/types/networks/cardano.js#L131)
+* `auixiliaryData` - *optional* [CardanoAuxiliaryData](../../src/js/types/networks/cardano.js#143)
 * `metadata` - *removed* - use `auxiliaryData` instead
+
+### CardanoTxSigningMode
+
+[Type definition](../../src/js/types/trezor/protobuf.js#L78)
+
+#### `ORDINARY_TRANSACTION`
+
+Represents an ordinary user transaction transferring funds.
+
+The transaction
+- *should* have valid `path` property on all `inputs`
+- *must not* contain a pool registration certificate
+
+#### `POOL_REGISTRATION_AS_OWNER`
+Represents pool registration from the perspective of pool owner.
+
+The transaction
+- *must* have `path` undefined on all `inputs` (i.e., we are not witnessing any UTxO)
+- *must* have single Pool registration certificate
+- *must* have single owner given by path on that certificate
+- *must not* have withdrawals
+
+These restrictions are in place due to a possibility of maliciously signing *another* part of the transaction with the pool owner path as we are not displaying device-owned paths on the device screen.
 
 ### Stake pool registration certificate specifics
 
@@ -45,6 +69,7 @@ Trezor supports signing of stake pool registration certificates as a pool owner.
 #### Ordinary transaction
 ```javascript
 TrezorConnect.cardanoSignTransaction({
+    signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,
     inputs: [
         {
             path: "m/44'/1815'/0'/0/1",
@@ -59,7 +84,7 @@ TrezorConnect.cardanoSignTransaction({
         },
         {
             addressParameters: {
-                addressType: 0, // base address type
+                addressType: CardanoAddressType.BASE,
                 path: "m/1852'/1815'/0'/0/0",
                 stakingPath: "m/1852'/1815'/0'/2/0",
             },
@@ -86,15 +111,15 @@ TrezorConnect.cardanoSignTransaction({
     validityIntervalStart: "20",
     certificates: [
         {
-            type: 0, // stake registration certificate type
+            type: CardanoCertificateType.STAKE_REGISTRATION,
             path: "m/1852'/1815'/0'/2/0",
         },
         {
-            type: 1, // stake deregistration certificate type
+            type: CardanoCertificateType.STAKE_DEREGISTRATION,
             path: "m/1852'/1815'/0'/2/0",
         },
         {
-            type: 2, // stake delegation certificate type
+            type: CardanoCertificateType.STAKE_DELEGATION,
             path: "m/1852'/1815'/0'/2/0",
             pool: "f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973",
         },
@@ -106,7 +131,7 @@ TrezorConnect.cardanoSignTransaction({
         }
     ],
     auxiliaryData: {
-        blob: "a200a11864a118c843aa00ff01a119012c590100aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        hash: "ea4c91860dd5ec5449f8f985d227946ff39086b17f10b5afb93d12ee87050b6a"
     },
     protocolMagic: 764824073,
     networkId: 1,
@@ -116,6 +141,7 @@ TrezorConnect.cardanoSignTransaction({
 #### Stake pool registration
 ```javascript
 TrezorConnect.cardanoSignTransaction({
+    signingMode: CardanoTxSigningMode.POOL_REGISTRATION_AS_OWNER,
     inputs: [
         {
             // notice no path is provided here
@@ -133,7 +159,7 @@ TrezorConnect.cardanoSignTransaction({
     networkId: 1,
     certificates: [
         {
-            type: 3, // stake pool registration certificate type
+            type: CardanoCertificateType.STAKE_POOL_REGISTRATION,
             poolParameters: {
                 poolId: "f61c42cbf7c8c53af3f520508212ad3e72f674f957fe23ff0acb4973",
                 vrfKeyHash: "198890ad6c92e80fbdab554dda02da9fb49d001bbd96181f3e07f7a6ab0d0640",
@@ -154,28 +180,28 @@ TrezorConnect.cardanoSignTransaction({
                 ],
                 relays: [
                     {
-                        type: 0, // single host ip address
+                        type: CardanoPoolRelayType.SINGLE_HOST_IP,
                         ipv4Address: "192.168.0.1",
                         ipv6Address: "2001:0db8:85a3:0000:0000:8a2e:0370:7334", // ipv6 address in full form
                         port: 1234
                     },
                     {
-                        type: 0,
+                        type: CardanoPoolRelayType.SINGLE_HOST_IP,
                         ipv6Address: "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
                         port: 1234
                     },
                     {
-                        type: 0,
+                        type: CardanoPoolRelayType.SINGLE_HOST_IP,
                         ipv4Address: "192.168.0.1",
                         port: 1234
                     },
                     {
-                        type: 1, // single hostname
+                        type: CardanoPoolRelayType.SINGLE_HOST_NAME,
                         hostName: "www.test.test",
                         port: 1234
                     },
                     {
-                        type: 2, // multiple host names
+                        type: CardanoPoolRelayType.MULTIPLE_HOST_NAME,
                         hostName: "www.test2.test" // max 64 characters long
                     }
                 ],
@@ -192,6 +218,7 @@ TrezorConnect.cardanoSignTransaction({
 #### Catalyst voting key registration
 ```javascript
 TrezorConnect.cardanoSignTransaction({
+    signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,
     inputs: [
         {
             path: "m/1852'/1815'/0'/0/0",
@@ -213,7 +240,7 @@ TrezorConnect.cardanoSignTransaction({
                 "1af8fa0b754ff99253d983894e63a2b09cbb56c833ba18c3384210163f63dcfc",
             stakingPath: "m/1852'/1815'/0'/2/0",
             rewardAddressParameters: {
-                addressType: 0, // base address type
+                addressType: CardanoAddressType.BASE,
                 path: "m/1852'/1815'/0'/0/0",
                 stakingPath: "m/1852'/1815'/0'/2/0",
             },
@@ -226,13 +253,50 @@ TrezorConnect.cardanoSignTransaction({
 ```
 
 ### Result
-###### [flowtype](../../src/js/types/networks/cardano.js#L158-L162)
+
+Since transaction streaming has been introduced to the Cardano implementation on Trezor because of memory constraints, Trezor no longer returns the whole serialized transaction as a result of the `CardanoSignTransaction` call. Instead the transaction hash, transaction witnesses and auxiliary data supplement are returned and the serialized transaction needs to be assembled by the client.
+
+###### [flowtype](../../src/js/types/networks/cardano.js#L175-L179)
 ```javascript
 {
     success: true,
     payload: {
         hash: string,
-        serializedTx: string,
+        witnesses: CardanoSignedTxWitness[],
+        auxiliaryDataSupplement?: CardanoAuxiliaryDataSupplement,
+    }
+}
+```
+Example:
+```javascript
+{
+    success: true,
+    payload: {
+        hash: "73e09bdebf98a9e0f17f86a2d11e0f14f4f8dae77cdf26ff1678e821f20c8db6",
+        witnesses: [
+            {
+                type: CardanoTxWitnessType.BYRON_WITNESS,
+                pubKey: '89053545a6c254b0d9b1464e48d2b5fcf91d4e25c128afb1fcfc61d0843338ea',
+                signature:
+                    'da07ac5246e3f20ebd1276476a4ae34a019dd4b264ffc22eea3c28cb0f1a6bb1c7764adeecf56bcb0bc6196fd1dbe080f3a7ef5b49f56980fe5b2881a4fdfa00',
+                chainCode:
+                    '26308151516f3b0e02bb1638142747863c520273ce9bd3e5cd91e1d46fe2a635',
+            },
+            {
+                type: CardanoTxWitnessType.SHELLEY_WITNESS,
+                pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                signature:
+                    '622f22d03bc9651ddc5eb2f5dc709ac4240a64d2b78c70355dd62106543c407d56e8134c4df7884ba67c8a1b5c706fc021df5c4d0ff37385c30572e73c727d00',
+                chainCode: null,
+            },
+        ],
+        auxiliaryDataSupplement: {
+            type: 1,
+            auxiliaryDataHash:
+                'a943e9166f1bb6d767b175384d3bd7d23645170df36fc1861fbf344135d8e120',
+            catalystSignature:
+                '74f27d877bbb4a5fc4f7c56869905c11f70bad0af3de24b23afaa1d024e750930f434ecc4b73e5d1723c2cb8548e8bf6098ac876487b3a6ed0891cb76994d409',
+        },
     }
 }
 ```
