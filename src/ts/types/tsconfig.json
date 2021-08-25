@@ -25,7 +25,6 @@
         "./__tests__/eos.ts",
         "./__tests__/ethereum.ts",
         "./__tests__/index.ts",
-        "./__tests__/lisk.ts",
         "./__tests__/management.ts",
         "./__tests__/misc.ts",
         "./__tests__/nem.ts",

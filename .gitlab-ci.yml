@@ -176,8 +176,3 @@ test binance:
   extends: .test
   variables:
     TESTS_INCLUDED_METHODS: "binanceSignTransaction"
-
-test lisk:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "liskGetAddress,liskSignMessage,liskSignTransaction,liskVerifyMessage"
