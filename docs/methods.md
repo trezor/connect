@@ -43,12 +43,6 @@ Every method require an [`Object`](https://developer.mozilla.org/en-US/docs/Web/
 * [TrezorConnect.stellarGetAddress](methods/stellarGetAddress.md)
 * [TrezorConnect.stellarSignTransaction](methods/stellarSignTransaction.md)
 
-### Lisk
-* [TrezorConnect.liskGetAddress](methods/liskGetAddress.md)
-* [TrezorConnect.liskSignMessage](methods/liskSignMessage.md)
-* [TrezorConnect.liskVerifyMessage](methods/liskVerifyMessage.md)
-* [TrezorConnect.liskSignTransaction](methods/liskSignTransaction.md)
-
 ### Cardano
 * [TrezorConnect.cardanoGetPublicKey](methods/cardanoGetPublicKey.md)
 * [TrezorConnect.cardanoGetAddress](methods/cardanoGetAddress.md)

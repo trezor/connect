@@ -23,10 +23,6 @@ import ethereumSignTransactionEip1559 from './ethereumSignTransactionEip1559';
 import ethereumVerifyMessage from './ethereumVerifyMessage';
 import getAccountInfo from './getAccountInfo';
 import getFeatures from './getFeatures';
-import liskGetAddress from './liskGetAddress';
-import liskSignMessage from './liskSignMessage';
-import liskSignTransaction from './liskSignTransaction';
-import liskVerifyMessage from './liskVerifyMessage';
 import nemGetAddress from './nemGetAddress';
 import nemSignTransactionMosaic from './nemSignTransactionMosaic';
 import nemSignTransactionMultisig from './nemSignTransactionMultisig';
@@ -87,11 +83,6 @@ let fixtures = [
     getFeatures,
     getPublicKey,
     // todo: missing fixtures: GetSettings.js
-    liskGetAddress,
-    // todo: missing fixtures: LiskGetPublicKey.js
-    liskSignMessage,
-    liskSignTransaction,
-    liskVerifyMessage,
     // todo: missing fixtures: LoadDevice.js
     nemGetAddress,
     nemSignTransactionMosaic,

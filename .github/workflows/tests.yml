@@ -164,14 +164,3 @@ jobs:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
     - run: ./tests/run.sh -f 2-master -i binanceSignTransaction
-
-  lisk:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -f 2-master -i liskGetAddress,liskSignMessage,liskSignTransaction,liskVerifyMessage
