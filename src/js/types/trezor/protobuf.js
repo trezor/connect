@@ -1245,104 +1245,6 @@ export type EthereumVerifyMessage = {
     address?: string,
 };
 
-// LiskGetAddress
-export type LiskGetAddress = {
-    address_n: number[],
-    show_display?: boolean,
-};
-
-// LiskAddress
-export type LiskAddress = {
-    address: string,
-};
-
-// LiskGetPublicKey
-export type LiskGetPublicKey = {
-    address_n: number[],
-    show_display?: boolean,
-};
-
-// LiskPublicKey
-export type LiskPublicKey = {
-    public_key: string,
-};
-
-export const Enum_LiskTransactionType = Object.freeze({
-    Transfer: 0,
-    RegisterSecondPassphrase: 1,
-    RegisterDelegate: 2,
-    CastVotes: 3,
-    RegisterMultisignatureAccount: 4,
-    CreateDapp: 5,
-    TransferIntoDapp: 6,
-    TransferOutOfDapp: 7,
-});
-export type LiskTransactionType = $Values<typeof Enum_LiskTransactionType>;
-
-export type LiskSignatureType = {
-    public_key?: string,
-};
-
-export type LiskDelegateType = {
-    username?: string,
-};
-
-export type LiskMultisignatureType = {
-    min?: number,
-    life_time?: number,
-    keys_group: string[],
-};
-
-export type LiskTransactionAsset = {
-    signature?: LiskSignatureType,
-    delegate?: LiskDelegateType,
-    votes: string[],
-    multisignature?: LiskMultisignatureType,
-    data?: string,
-};
-
-export type LiskTransactionCommon = {
-    type?: LiskTransactionType,
-    amount?: number,
-    fee?: number,
-    recipient_id?: string,
-    sender_public_key?: string,
-    requester_public_key?: string,
-    signature?: string,
-    timestamp?: number,
-    asset?: LiskTransactionAsset,
-};
-
-// LiskSignTx
-export type LiskSignTx = {
-    address_n: number[],
-    transaction: LiskTransactionCommon,
-};
-
-// LiskSignedTx
-export type LiskSignedTx = {
-    signature: string,
-};
-
-// LiskSignMessage
-export type LiskSignMessage = {
-    address_n: number[],
-    message: string,
-};
-
-// LiskMessageSignature
-export type LiskMessageSignature = {
-    public_key: string,
-    signature: string,
-};
-
-// LiskVerifyMessage
-export type LiskVerifyMessage = {
-    public_key: string,
-    signature: string,
-    message: string,
-};
-
 // Initialize
 export type Initialize = {
     session_id?: string,
@@ -2176,20 +2078,6 @@ export type MessageType = {
     EthereumSignMessage: EthereumSignMessage,
     EthereumMessageSignature: $Exact<EthereumMessageSignature>,
     EthereumVerifyMessage: EthereumVerifyMessage,
-    LiskGetAddress: LiskGetAddress,
-    LiskAddress: $Exact<LiskAddress>,
-    LiskGetPublicKey: LiskGetPublicKey,
-    LiskPublicKey: $Exact<LiskPublicKey>,
-    LiskSignatureType: LiskSignatureType,
-    LiskDelegateType: LiskDelegateType,
-    LiskMultisignatureType: LiskMultisignatureType,
-    LiskTransactionAsset: LiskTransactionAsset,
-    LiskTransactionCommon: LiskTransactionCommon,
-    LiskSignTx: $Exact<LiskSignTx>,
-    LiskSignedTx: $Exact<LiskSignedTx>,
-    LiskSignMessage: $Exact<LiskSignMessage>,
-    LiskMessageSignature: $Exact<LiskMessageSignature>,
-    LiskVerifyMessage: $Exact<LiskVerifyMessage>,
     Initialize: Initialize,
     GetFeatures: GetFeatures,
     Features: $Exact<Features>,
