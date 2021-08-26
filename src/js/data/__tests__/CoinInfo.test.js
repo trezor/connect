@@ -38,7 +38,7 @@ describe('data/CoinInfo', () => {
             coinsJSON.eth.length,
         );
 
-        const other = ['EOS', 'Lisk', 'NEM', 'Stellar', 'Tezos'];
+        const other = ['EOS', 'NEM', 'Stellar', 'Tezos'];
 
         other.forEach(c => {
             expect(getCoinInfoByCapability([`Capability_${c}`])).toMatchObject([{ name: c }]);

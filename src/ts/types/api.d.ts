@@ -11,7 +11,6 @@ import * as Cardano from './networks/cardano';
 import * as CoinInfo from './networks/coinInfo';
 import * as EOS from './networks/eos';
 import * as Ethereum from './networks/ethereum';
-import * as Lisk from './networks/lisk';
 import * as NEM from './networks/nem';
 import * as Ripple from './networks/ripple';
 import * as Stellar from './networks/stellar';
@@ -237,19 +236,6 @@ export namespace TrezorConnect {
     function ethereumVerifyMessage(
         params: P.CommonParams & Ethereum.EthereumVerifyMessage,
     ): P.Response<P.DefaultMessage>;
-
-    // Lisk
-    function liskGetAddress(params: P.CommonParams & Lisk.LiskGetAddress): P.Response<Lisk.LiskAddress>;
-    function liskGetAddress(
-        params: P.CommonParams & P.Bundle<Lisk.LiskGetAddress>,
-    ): P.BundledResponse<Lisk.LiskAddress>;
-    function liskGetPublicKey(params: P.CommonParams & Lisk.LiskGetPublicKey): P.Response<Lisk.LiskPublicKey>;
-    function liskGetPublicKey(
-        params: P.CommonParams & P.Bundle<Lisk.LiskGetPublicKey>,
-    ): P.BundledResponse<Lisk.LiskPublicKey>;
-    function liskSignTransaction(params: P.CommonParams & Lisk.LiskSignTransaction): P.Response<Protobuf.LiskSignedTx>;
-    function liskSignMessage(params: P.CommonParams & Lisk.LiskSignMessage): P.Response<Lisk.LiskMessageSignature>;
-    function liskVerifyMessage(params: P.CommonParams & Lisk.LiskVerifyMessage): P.Response<P.DefaultMessage>;
 
     // NEM
     function nemGetAddress(params: P.CommonParams & NEM.NEMGetAddress): P.Response<NEM.NEMAddress>;

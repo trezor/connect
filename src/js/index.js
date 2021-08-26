@@ -111,18 +111,15 @@ const TrezorConnect: API = {
 
     getPublicKey: params => call({ method: 'getPublicKey', ...params }),
 
-    liskGetAddress: params => {
-        const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
-        return call({ method: 'liskGetAddress', ...params, useEventListener });
-    },
+    liskGetAddress: () => call({ method: 'liskDeprecated' }),
 
-    liskGetPublicKey: params => call({ method: 'liskGetPublicKey', ...params }),
+    liskGetPublicKey: () => call({ method: 'liskDeprecated' }),
 
-    liskSignMessage: params => call({ method: 'liskSignMessage', ...params }),
+    liskSignMessage: () => call({ method: 'liskDeprecated' }),
 
-    liskSignTransaction: params => call({ method: 'liskSignTransaction', ...params }),
+    liskSignTransaction: () => call({ method: 'liskDeprecated' }),
 
-    liskVerifyMessage: params => call({ method: 'liskVerifyMessage', ...params }),
+    liskVerifyMessage: () => call({ method: 'liskDeprecated' }),
 
     nemGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
