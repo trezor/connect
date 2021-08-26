@@ -6,7 +6,6 @@ export const TYPES = Object.freeze({
     eos: 'Eos',
     nem: 'NEM',
     stellar: 'Stellar',
-    lisk: 'Lisk',
     cardano: 'Cardano',
     ripple: 'Ripple',
     tezos: 'Tezors',

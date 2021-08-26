@@ -12,7 +12,6 @@ import * as Cardano from './networks/cardano';
 import * as CoinInfo from './networks/coinInfo';
 import * as EOS from './networks/eos';
 import * as Ethereum from './networks/ethereum';
-import * as Lisk from './networks/lisk';
 import * as NEM from './networks/nem';
 import * as Ripple from './networks/ripple';
 import * as Stellar from './networks/stellar';
@@ -252,13 +251,6 @@ export type API = {
     ethereumSignTransaction: Bundled<Ethereum.EthereumSignTransaction, Ethereum.EthereumSignedTx>,
     ethereumSignMessage: Method<Ethereum.EthereumSignMessage, Protobuf.EthereumMessageSignature>,
     ethereumVerifyMessage: Method<Ethereum.EthereumVerifyMessage, P.DefaultMessage>,
-
-    // Lisk
-    liskGetAddress: Bundled<Lisk.LiskGetAddress, Lisk.LiskAddress>,
-    liskGetPublicKey: Bundled<Lisk.LiskGetPublicKey, Lisk.LiskPublicKey>,
-    liskSignTransaction: Bundled<Lisk.LiskSignTransaction, Protobuf.LiskSignedTx>,
-    liskSignMessage: Method<Lisk.LiskSignMessage, Lisk.LiskMessageSignature>,
-    liskVerifyMessage: Method<Lisk.LiskVerifyMessage, P.DefaultMessage>,
 
     // NEM
     nemGetAddress: Bundled<NEM.NEMGetAddress, NEM.NEMAddress>,
