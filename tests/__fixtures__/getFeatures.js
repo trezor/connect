@@ -51,7 +51,6 @@ export default {
                     'Capability_Crypto',
                     'Capability_EOS',
                     'Capability_Ethereum',
-                    'Capability_Lisk',
                     'Capability_Monero',
                     'Capability_NEM',
                     'Capability_Ripple',

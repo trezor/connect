@@ -12,7 +12,7 @@ const CAPABILITIES: Capability[] = [
     'Capability_Crypto',
     'Capability_EOS',
     'Capability_Ethereum',
-    'Capability_Lisk',
+    'Capability_Lisk', // 8, for historical reasons
     'Capability_Monero',
     'Capability_NEM',
     'Capability_Ripple',
@@ -24,8 +24,8 @@ const CAPABILITIES: Capability[] = [
     'Capability_PassphraseEntry',
 ];
 
-const DEFAULT_CAPABILITIES_T1 = [1, 2, 5, 7, 8, 10, 12, 14];
-const DEFAULT_CAPABILITIES_TT = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
+const DEFAULT_CAPABILITIES_T1 = [1, 2, 5, 7, 10, 12, 14];
+const DEFAULT_CAPABILITIES_TT = [1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14];
 
 export const parseCapabilities = (features?: Features): Capability[] => {
     if (!features || features.firmware_present === false) return []; // no features or no firmware - no capabilities
