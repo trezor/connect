@@ -9,7 +9,7 @@ import type { BuildTxOutput, BuildTxOutputRequest } from 'hd-wallet';
 
 import { getOutputScriptType, fixPath } from '../../../utils/pathUtils';
 import { isScriptHash, isValidAddress } from '../../../utils/addressUtils';
-import { convertMultisigPubKey } from '../../../utils/hdnode';
+import { convertMultisigPubKey } from '../../../utils/hdnodeUtils';
 import { validateParams } from '../helpers/paramsValidator';
 import { ERRORS } from '../../../constants';
 

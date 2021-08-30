@@ -7,7 +7,7 @@ import type { TypedRawTransaction } from '@trezor/blockchain-link';
 
 import { reverseBuffer } from '../../../utils/bufferUtils';
 import { validatePath, isSegwitPath, getScriptType, fixPath } from '../../../utils/pathUtils';
-import { convertMultisigPubKey } from '../../../utils/hdnode';
+import { convertMultisigPubKey } from '../../../utils/hdnodeUtils';
 import { validateParams } from '../helpers/paramsValidator';
 
 // local types
