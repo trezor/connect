@@ -5,7 +5,7 @@ import * as bitcoin from '@trezor/utxo-lib';
 import type { Transport } from 'trezor-link';
 import { DEVICE, ERRORS, NETWORK } from '../constants';
 
-import * as hdnodeUtils from '../utils/hdnode';
+import * as hdnodeUtils from '../utils/hdnodeUtils';
 import {
     isMultisigPath,
     isSegwitPath,
