@@ -1,5 +1,11 @@
 # 8.1.30
 
+### Added
+- `ethereumSignTransaction` eip1559 support (Trezor T only)
+
+### Fixed
+- `device.unavailableCapabilities` "no-support" condition
+
 ### Changed
 - Cardano: since transaction streaming has been introduced, it isn't possible to return the whole serialized transaction from the `cardanoSignTransaction` call anymore. Instead the transaction hash, transaction witnesses and auxiliary data supplement are returned and the serialized transaction needs to be assembled by the client.
 - Cardano: an obligatory `signingMode` parameter has been added to the `cardanoSignTransaction` call
