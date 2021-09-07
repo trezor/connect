@@ -1,7 +1,16 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { ABSOLUTE_BASE, SRC, HTML_SRC, JS_SRC, LIB_NAME, PORT } from './constants';
+import {
+    ABSOLUTE_BASE,
+    CONNECT_COMMON_DATA_SRC,
+    HTML_SRC,
+    JS_SRC,
+    LIB_NAME,
+    PORT,
+    SRC,
+} from './constants';
 
 module.exports = {
     watch: true,
@@ -132,6 +141,9 @@ module.exports = {
 
         // ignore Node.js lib from trezor-link
         new webpack.IgnorePlugin(/\/iconv-loader$/),
+        new CopyWebpackPlugin({
+            patterns: [{ from: CONNECT_COMMON_DATA_SRC, to: '/data' }],
+        }),
     ],
 
     // ignore "fs" import in fastxpub (hd-wallet)
