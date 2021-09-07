@@ -62,6 +62,7 @@
         "@babel/preset-env": "^7.12.10",
         "@babel/preset-flow": "^7.12.1",
         "@trezor/blockchain-link": "^1.0.17",
+        "@trezor/connect-common": "^0.0.2",
         "@trezor/rollout": "^1.2.0",
         "@trezor/utxo-lib": "^0.1.2",
         "babel-collect-imports": "https://github.com/szymonlesisz/babel-collect-imports",
@@ -118,6 +119,7 @@
     },
     "extendedDependencies": {
         "@trezor/blockchain-link": "^1.0.17",
+        "@trezor/connect-common": "^0.0.2",
         "@trezor/rollout": "^1.2.0",
         "@trezor/utxo-lib": "^0.1.2",
         "bchaddrjs": "^0.5.2",

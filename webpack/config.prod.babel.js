@@ -3,7 +3,15 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import TerserPlugin from 'terser-webpack-plugin';
-import { SRC, HTML_SRC, DATA_SRC, JS_SRC, DIST, LIB_NAME } from './constants';
+import {
+    SRC,
+    HTML_SRC,
+    DATA_SRC,
+    JS_SRC,
+    DIST,
+    LIB_NAME,
+    CONNECT_COMMON_DATA_SRC,
+} from './constants';
 
 module.exports = {
     mode: 'production',
@@ -122,6 +130,7 @@ module.exports = {
                 { from: `${HTML_SRC}index.html`, to: `${DIST}index.html` },
                 { from: `${HTML_SRC}webusb.html`, to: `${DIST}webusb.html` },
                 { from: DATA_SRC, to: `${DIST}data` },
+                { from: CONNECT_COMMON_DATA_SRC, to: `${DIST}data` },
             ],
         }),
 
