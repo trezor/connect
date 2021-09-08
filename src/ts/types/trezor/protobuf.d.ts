@@ -86,6 +86,12 @@ export enum Enum_SafetyCheckLevel {
 }
 export type SafetyCheckLevel = keyof typeof Enum_SafetyCheckLevel;
 
+export enum StellarAssetType {
+    NATIVE = 0,
+    ALPHANUM4 = 1,
+    ALPHANUM12 = 2,
+}
+
 // BinanceGetAddress
 export type BinanceGetAddress = {
     address_n: number[];
@@ -1766,10 +1772,10 @@ export type RippleSignedTx = {
     serialized_tx: string;
 };
 
-// StellarAssetType
-export type StellarAssetType = {
-    type: 0 | 1 | 2;
-    code: string;
+// StellarAsset
+export type StellarAsset = {
+    type: StellarAssetType;
+    code?: string;
     issuer?: string;
 };
 
@@ -1784,20 +1790,28 @@ export type StellarAddress = {
     address: string;
 };
 
+export enum StellarMemoType {
+    NONE = 0,
+    TEXT = 1,
+    ID = 2,
+    HASH = 3,
+    RETURN = 4,
+}
+
 // StellarSignTx
 export type StellarSignTx = {
     address_n: number[];
-    network_passphrase?: string;
-    source_account?: string;
-    fee?: number;
-    sequence_number?: string | number;
-    timebounds_start?: number;
-    timebounds_end?: number;
-    memo_type?: number;
+    network_passphrase: string;
+    source_account: string;
+    fee: number;
+    sequence_number: string | number;
+    timebounds_start: number;
+    timebounds_end: number;
+    memo_type: StellarMemoType;
     memo_text?: string;
     memo_id?: string;
     memo_hash?: Buffer | string;
-    num_operations?: number;
+    num_operations: number;
 };
 
 // StellarTxOpRequest
@@ -1806,49 +1820,55 @@ export type StellarTxOpRequest = {};
 // StellarPaymentOp
 export type StellarPaymentOp = {
     source_account?: string;
-    destination_account?: string;
-    asset?: StellarAssetType;
-    amount?: string | number;
+    destination_account: string;
+    asset: StellarAsset;
+    amount: string | number;
 };
 
 // StellarCreateAccountOp
 export type StellarCreateAccountOp = {
     source_account?: string;
-    new_account?: string;
-    starting_balance?: string | number;
+    new_account: string;
+    starting_balance: string | number;
 };
 
 // StellarPathPaymentOp
 export type StellarPathPaymentOp = {
     source_account?: string;
-    send_asset?: StellarAssetType;
-    send_max?: string | number;
-    destination_account?: string;
-    destination_asset?: StellarAssetType;
-    destination_amount?: string | number;
-    paths?: StellarAssetType[];
+    send_asset: StellarAsset;
+    send_max: string | number;
+    destination_account: string;
+    destination_asset: StellarAsset;
+    destination_amount: string | number;
+    paths?: StellarAsset[];
 };
 
 // StellarManageOfferOp
 export type StellarManageOfferOp = {
     source_account?: string;
-    selling_asset?: StellarAssetType;
-    buying_asset?: StellarAssetType;
-    amount?: string | number;
-    price_n?: number;
-    price_d?: number;
-    offer_id?: string | number;
+    selling_asset: StellarAsset;
+    buying_asset: StellarAsset;
+    amount: string | number;
+    price_n: number;
+    price_d: number;
+    offer_id: string | number;
 };
 
 // StellarCreatePassiveOfferOp
 export type StellarCreatePassiveOfferOp = {
     source_account?: string;
-    selling_asset?: StellarAssetType;
-    buying_asset?: StellarAssetType;
-    amount?: string | number;
-    price_n?: number;
-    price_d?: number;
+    selling_asset: StellarAsset;
+    buying_asset: StellarAsset;
+    amount: string | number;
+    price_n: number;
+    price_d: number;
 };
+
+export enum StellarSignerType {
+    ACCOUNT = 0,
+    PRE_AUTH = 1,
+    HASH = 2,
+}
 
 // StellarSetOptionsOp
 export type StellarSetOptionsOp = {
@@ -1861,7 +1881,7 @@ export type StellarSetOptionsOp = {
     medium_threshold?: string | number;
     high_threshold?: string | number;
     home_domain?: string;
-    signer_type?: number;
+    signer_type?: StellarSignerType;
     signer_key?: Buffer | string;
     signer_weight?: number;
 };
@@ -1869,36 +1889,36 @@ export type StellarSetOptionsOp = {
 // StellarChangeTrustOp
 export type StellarChangeTrustOp = {
     source_account?: string;
-    asset?: StellarAssetType;
-    limit?: string | number;
+    asset: StellarAsset;
+    limit: string | number;
 };
 
 // StellarAllowTrustOp
 export type StellarAllowTrustOp = {
     source_account?: string;
-    trusted_account?: string;
-    asset_type?: number;
+    trusted_account: string;
+    asset_type: StellarAssetType;
     asset_code?: string;
-    is_authorized?: number;
+    is_authorized: boolean;
 };
 
 // StellarAccountMergeOp
 export type StellarAccountMergeOp = {
     source_account?: string;
-    destination_account?: string;
+    destination_account: string;
 };
 
 // StellarManageDataOp
 export type StellarManageDataOp = {
     source_account?: string;
-    key?: string;
+    key: string;
     value?: Buffer | string;
 };
 
 // StellarBumpSequenceOp
 export type StellarBumpSequenceOp = {
     source_account?: string;
-    bump_to?: string | number;
+    bump_to: string | number;
 };
 
 // StellarSignedTx

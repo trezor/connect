@@ -1,9 +1,11 @@
 // Stellar types from stellar-sdk
 // https://github.com/stellar/js-stellar-base
 
+import type { StellarAssetType, StellarSignerType, StellarMemoType } from '../trezor/protobuf';
+
 export interface StellarAsset {
-    type: 0 | 1 | 2; // 0: native, 1: credit_alphanum4, 2: credit_alphanum12
-    code: string;
+    type: StellarAssetType;
+    code?: string;
     issuer?: string;
 }
 
@@ -18,7 +20,7 @@ export interface StellarPaymentOperation {
     type: 'payment'; // Proto: "StellarPaymentOp"
     source?: string; // Proto: "source_account"
     destination: string; // Proto: "destination_account"
-    asset?: StellarAsset | typeof undefined; // Proto: ok
+    asset: StellarAsset; // Proto: ok
     amount: string; // Proto: ok
 }
 
@@ -56,7 +58,7 @@ export interface StellarSetOptionsOperation {
     type: 'setOptions'; // Proto: "StellarSetOptionsOp"
     source?: string; // Proto: "source_account"
     signer?: {
-        type: 0 | 1 | 2;
+        type: StellarSignerType;
         key: string | Buffer;
         weight?: number;
     };
@@ -74,7 +76,7 @@ export interface StellarChangeTrustOperation {
     type: 'changeTrust'; // Proto: "StellarChangeTrustOp"
     source?: string; // Proto: "source_account"
     line: StellarAsset; // Proto: ok
-    limit?: string; // Proto: ok
+    limit: string; // Proto: ok
 }
 
 export interface StellarAllowTrustOperation {
@@ -82,7 +84,7 @@ export interface StellarAllowTrustOperation {
     source?: string; // Proto: "source_account"
     trustor: string; // Proto: "trusted_account"
     assetCode: string; // Proto: "asset_code"
-    assetType: number; // Proto: "asset_type" // TODO not found in stellar-sdk
+    assetType: StellarAssetType; // Proto: "asset_type"
     authorize?: boolean | typeof undefined; // Proto: "is_authorized" > parse to number
 }
 
@@ -135,7 +137,7 @@ export interface StellarTransaction {
         maxTime: number; // Proto: "timebounds_end"
     };
     memo?: {
-        type: 0 | 1 | 2 | 3 | 4; // Proto: "memo_type"
+        type: StellarMemoType; // Proto: "memo_type"
         id?: string; // Proto: "memo_id"
         text?: string; // Proto: "memo_text"
         hash?: string | Buffer; // Proto: "memo_hash"
