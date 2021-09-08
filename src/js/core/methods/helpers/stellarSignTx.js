@@ -115,7 +115,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 buying_asset: op.buying,
                 selling_asset: op.selling,
                 amount: op.amount,
-                offer_id: op.offerId,
+                offer_id: op.offerId || 0,
                 price_n: op.price.n,
                 price_d: op.price.d,
             };
@@ -159,7 +159,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 trusted_account: op.trustor,
                 asset_type: op.assetType,
                 asset_code: op.assetCode,
-                is_authorized: op.authorize ? 1 : 0,
+                is_authorized: !!op.authorize,
             };
 
         case 'accountMerge':
