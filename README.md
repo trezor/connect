@@ -1,4 +1,4 @@
-# Trezor Connect API version 8.1.30-beta.4
+# Trezor Connect API version 8.1.30-beta.5
 [![Build Status](https://github.com/trezor/connect/actions/workflows/tests.yml/badge.svg)](https://github.com/trezor/connect/actions/workflows/tests.yml)
 [![NPM](https://img.shields.io/npm/v/trezor-connect.svg)](https://www.npmjs.org/package/trezor-connect)
 [![Known Vulnerabilities](https://snyk.io/test/github/trezor/connect/badge.svg?targetFile=package.json)](https://snyk.io/test/github/trezor/connect?targetFile=package.json)
