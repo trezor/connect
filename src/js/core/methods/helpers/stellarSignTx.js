@@ -1,5 +1,5 @@
 /* @flow */
-
+import { ERRORS } from '../../../constants';
 import { validateParams } from './paramsValidator';
 import type {
     StellarTransaction,
@@ -31,10 +31,15 @@ const processTxRequest = async (
 const transformSignMessage = (tx: StellarTransaction): StellarSignTx => {
     const options: StellarSignTx = {};
     // timebounds_start and timebounds_end are the only fields which needs to be converted to number
-    if (tx.timebounds) {
-        options.timebounds_start = tx.timebounds.minTime;
-        options.timebounds_end = tx.timebounds.maxTime;
+    if (!tx.timebounds) {
+        throw ERRORS.TypedError(
+            'Runtime',
+            'transformSignMessage: Unspecified timebounds are not supported',
+        );
     }
+
+    options.timebounds_start = tx.timebounds.minTime;
+    options.timebounds_end = tx.timebounds.maxTime;
 
     if (tx.memo) {
         options.memo_type = tx.memo.type;
