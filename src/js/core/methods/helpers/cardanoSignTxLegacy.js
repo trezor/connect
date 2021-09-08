@@ -1,5 +1,5 @@
 /* @flow */
-import cbor from 'cbor-web';
+import * as cbor from 'cbor-web';
 import type {
     CardanoCatalystRegistrationParametersType,
     CardanoTxWithdrawalType,
