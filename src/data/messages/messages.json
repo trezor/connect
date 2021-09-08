@@ -9370,12 +9370,12 @@
             "oneofs": {}
         },
         {
-            "name": "StellarAssetType",
+            "name": "StellarAsset",
             "fields": [
                 {
                     "rule": "required",
                     "options": {},
-                    "type": "uint32",
+                    "type": "StellarAssetType",
                     "name": "type",
                     "id": 1
                 },
@@ -9449,51 +9449,51 @@
                     "id": 2
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "string",
                     "name": "network_passphrase",
                     "id": 3
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "string",
                     "name": "source_account",
                     "id": 4
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint32",
                     "name": "fee",
                     "id": 5
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint64",
                     "name": "sequence_number",
                     "id": 6
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint32",
                     "name": "timebounds_start",
                     "id": 8
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint32",
                     "name": "timebounds_end",
                     "id": 9
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
-                    "type": "uint32",
+                    "type": "StellarMemoType",
                     "name": "memo_type",
                     "id": 10
                 },
@@ -9519,14 +9519,41 @@
                     "id": 13
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint32",
                     "name": "num_operations",
                     "id": 14
                 }
             ],
-            "enums": [],
+            "enums": [
+                {
+                    "name": "StellarMemoType",
+                    "values": [
+                        {
+                            "name": "NONE",
+                            "id": 0
+                        },
+                        {
+                            "name": "TEXT",
+                            "id": 1
+                        },
+                        {
+                            "name": "ID",
+                            "id": 2
+                        },
+                        {
+                            "name": "HASH",
+                            "id": 3
+                        },
+                        {
+                            "name": "RETURN",
+                            "id": 4
+                        }
+                    ],
+                    "options": {}
+                }
+            ],
             "messages": [],
             "options": {},
             "oneofs": {}
@@ -9550,21 +9577,21 @@
                     "id": 1
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "string",
                     "name": "destination_account",
                     "id": 2
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
-                    "type": "StellarAssetType",
+                    "type": "StellarAsset",
                     "name": "asset",
                     "id": 3
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "sint64",
                     "name": "amount",
@@ -9587,14 +9614,14 @@
                     "id": 1
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "string",
                     "name": "new_account",
                     "id": 2
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "sint64",
                     "name": "starting_balance",
@@ -9617,35 +9644,35 @@
                     "id": 1
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
-                    "type": "StellarAssetType",
+                    "type": "StellarAsset",
                     "name": "send_asset",
                     "id": 2
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "sint64",
                     "name": "send_max",
                     "id": 3
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "string",
                     "name": "destination_account",
                     "id": 4
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
-                    "type": "StellarAssetType",
+                    "type": "StellarAsset",
                     "name": "destination_asset",
                     "id": 5
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "sint64",
                     "name": "destination_amount",
@@ -9654,7 +9681,7 @@
                 {
                     "rule": "repeated",
                     "options": {},
-                    "type": "StellarAssetType",
+                    "type": "StellarAsset",
                     "name": "paths",
                     "id": 7
                 }
@@ -9675,42 +9702,42 @@
                     "id": 1
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
-                    "type": "StellarAssetType",
+                    "type": "StellarAsset",
                     "name": "selling_asset",
                     "id": 2
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
-                    "type": "StellarAssetType",
+                    "type": "StellarAsset",
                     "name": "buying_asset",
                     "id": 3
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "sint64",
                     "name": "amount",
                     "id": 4
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint32",
                     "name": "price_n",
                     "id": 5
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint32",
                     "name": "price_d",
                     "id": 6
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint64",
                     "name": "offer_id",
@@ -9733,35 +9760,35 @@
                     "id": 1
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
-                    "type": "StellarAssetType",
+                    "type": "StellarAsset",
                     "name": "selling_asset",
                     "id": 2
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
-                    "type": "StellarAssetType",
+                    "type": "StellarAsset",
                     "name": "buying_asset",
                     "id": 3
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "sint64",
                     "name": "amount",
                     "id": 4
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint32",
                     "name": "price_n",
                     "id": 5
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint32",
                     "name": "price_d",
@@ -9842,7 +9869,7 @@
                 {
                     "rule": "optional",
                     "options": {},
-                    "type": "uint32",
+                    "type": "StellarSignerType",
                     "name": "signer_type",
                     "id": 10
                 },
@@ -9861,7 +9888,26 @@
                     "id": 12
                 }
             ],
-            "enums": [],
+            "enums": [
+                {
+                    "name": "StellarSignerType",
+                    "values": [
+                        {
+                            "name": "ACCOUNT",
+                            "id": 0
+                        },
+                        {
+                            "name": "PRE_AUTH",
+                            "id": 1
+                        },
+                        {
+                            "name": "HASH",
+                            "id": 2
+                        }
+                    ],
+                    "options": {}
+                }
+            ],
             "messages": [],
             "options": {},
             "oneofs": {}
@@ -9877,14 +9923,14 @@
                     "id": 1
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
-                    "type": "StellarAssetType",
+                    "type": "StellarAsset",
                     "name": "asset",
                     "id": 2
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint64",
                     "name": "limit",
@@ -9907,16 +9953,16 @@
                     "id": 1
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "string",
                     "name": "trusted_account",
                     "id": 2
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
-                    "type": "uint32",
+                    "type": "StellarAssetType",
                     "name": "asset_type",
                     "id": 3
                 },
@@ -9928,9 +9974,9 @@
                     "id": 4
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
-                    "type": "uint32",
+                    "type": "bool",
                     "name": "is_authorized",
                     "id": 5
                 }
@@ -9951,7 +9997,7 @@
                     "id": 1
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "string",
                     "name": "destination_account",
@@ -9974,7 +10020,7 @@
                     "id": 1
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "string",
                     "name": "key",
@@ -10004,7 +10050,7 @@
                     "id": 1
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "uint64",
                     "name": "bump_to",
@@ -11907,6 +11953,24 @@
             "options": {
                 "(has_bitcoin_only_values)": true
             }
+        },
+        {
+            "name": "StellarAssetType",
+            "values": [
+                {
+                    "name": "NATIVE",
+                    "id": 0
+                },
+                {
+                    "name": "ALPHANUM4",
+                    "id": 1
+                },
+                {
+                    "name": "ALPHANUM12",
+                    "id": 2
+                }
+            ],
+            "options": {}
         }
     ],
     "imports": [],
