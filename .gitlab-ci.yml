@@ -53,6 +53,22 @@ deploy test:
   tags:
     - deploy
 
+# Create rollback copy of connect.trezo.io
+rollback production copy:
+  stage: deploy
+  only:
+    refs:
+      - v8
+  when: manual
+  needs: ["build"]
+  variables:
+    GIT_STRATEGY: none
+  before_script: []
+  script:
+    - aws s3 sync s3://connect.trezor.io s3://rollback-connect.trezor.io
+  tags:
+    - deploy
+
 # Deploy release to connect.trezor.io
 deploy production:
   stage: deploy
@@ -65,7 +81,7 @@ deploy production:
     GIT_STRATEGY: none
   before_script: []
   script:
-    - nix-shell --run "./scripts/s3sync.sh 8"
+    - ./scripts/s3sync.sh 8
   tags:
     - deploy
 
