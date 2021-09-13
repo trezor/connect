@@ -61,8 +61,8 @@ export const ethereumSignTx = async (
     gas_limit: string,
     gas_price: string,
     nonce: string,
+    chain_id: number,
     data?: string,
-    chain_id?: number,
     tx_type?: number,
 ) => {
     const length = data == null ? 0 : data.length / 2;
@@ -71,6 +71,7 @@ export const ethereumSignTx = async (
 
     let message = {
         address_n,
+        chain_id,
         nonce: stripLeadingZeroes(nonce),
         gas_price: stripLeadingZeroes(gas_price),
         gas_limit: stripLeadingZeroes(gas_limit),
@@ -83,13 +84,6 @@ export const ethereumSignTx = async (
             ...message,
             data_length: length,
             data_initial_chunk: first,
-        };
-    }
-
-    if (chain_id) {
-        message = {
-            ...message,
-            chain_id,
         };
     }
 

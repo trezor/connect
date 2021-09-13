@@ -33,7 +33,7 @@ export interface EthereumTransaction {
     maxPriorityFeePerGas?: typeof undefined,
     nonce: string;
     data?: string;
-    chainId?: number;
+    chainId: number;
     txType?: number;
 }
 
