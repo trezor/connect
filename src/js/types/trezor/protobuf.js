@@ -1319,13 +1319,13 @@ export type EthereumAddress = {
 export type EthereumSignTx = {
     address_n: number[],
     nonce?: string,
-    gas_price?: string,
-    gas_limit?: string,
+    gas_price: string,
+    gas_limit: string,
     to?: string,
     value?: string,
     data_initial_chunk?: string,
     data_length?: number,
-    chain_id?: number,
+    chain_id: number,
     tx_type?: number,
 };
 
@@ -1359,13 +1359,13 @@ export type EthereumTxRequest = {
 
 // EthereumTxAck
 export type EthereumTxAck = {
-    data_chunk?: string,
+    data_chunk: string,
 };
 
 // EthereumSignMessage
 export type EthereumSignMessage = {
     address_n: number[],
-    message?: string,
+    message: string,
 };
 
 // EthereumMessageSignature
@@ -1376,9 +1376,9 @@ export type EthereumMessageSignature = {
 
 // EthereumVerifyMessage
 export type EthereumVerifyMessage = {
-    signature?: string,
-    message?: string,
-    address?: string,
+    signature: string,
+    message: string,
+    address: string,
 };
 
 // Initialize
@@ -2223,14 +2223,14 @@ export type MessageType = {
     EthereumPublicKey: $Exact<EthereumPublicKey>,
     EthereumGetAddress: EthereumGetAddress,
     EthereumAddress: EthereumAddress,
-    EthereumSignTx: EthereumSignTx,
+    EthereumSignTx: $Exact<EthereumSignTx>,
     EthereumAccessList: $Exact<EthereumAccessList>,
     EthereumSignTxEIP1559: $Exact<EthereumSignTxEIP1559>,
     EthereumTxRequest: EthereumTxRequest,
-    EthereumTxAck: EthereumTxAck,
-    EthereumSignMessage: EthereumSignMessage,
+    EthereumTxAck: $Exact<EthereumTxAck>,
+    EthereumSignMessage: $Exact<EthereumSignMessage>,
     EthereumMessageSignature: $Exact<EthereumMessageSignature>,
-    EthereumVerifyMessage: EthereumVerifyMessage,
+    EthereumVerifyMessage: $Exact<EthereumVerifyMessage>,
     Initialize: Initialize,
     GetFeatures: GetFeatures,
     Features: $Exact<Features>,

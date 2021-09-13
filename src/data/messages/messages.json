@@ -5527,20 +5527,22 @@
                 },
                 {
                     "rule": "optional",
-                    "options": {},
+                    "options": {
+                        "default": ""
+                    },
                     "type": "bytes",
                     "name": "nonce",
                     "id": 2
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "bytes",
                     "name": "gas_price",
                     "id": 3
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "bytes",
                     "name": "gas_limit",
@@ -5548,36 +5550,44 @@
                 },
                 {
                     "rule": "optional",
-                    "options": {},
+                    "options": {
+                        "default": ""
+                    },
                     "type": "string",
                     "name": "to",
                     "id": 11
                 },
                 {
                     "rule": "optional",
-                    "options": {},
+                    "options": {
+                        "default": ""
+                    },
                     "type": "bytes",
                     "name": "value",
                     "id": 6
                 },
                 {
                     "rule": "optional",
-                    "options": {},
+                    "options": {
+                        "default": ""
+                    },
                     "type": "bytes",
                     "name": "data_initial_chunk",
                     "id": 7
                 },
                 {
                     "rule": "optional",
-                    "options": {},
+                    "options": {
+                        "default": 0
+                    },
                     "type": "uint32",
                     "name": "data_length",
                     "id": 8
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
-                    "type": "uint32",
+                    "type": "uint64",
                     "name": "chain_id",
                     "id": 9
                 },
@@ -5667,7 +5677,7 @@
                 {
                     "rule": "required",
                     "options": {},
-                    "type": "uint32",
+                    "type": "uint64",
                     "name": "chain_id",
                     "id": 10
                 },
@@ -5749,7 +5759,7 @@
             "name": "EthereumTxAck",
             "fields": [
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "bytes",
                     "name": "data_chunk",
@@ -5772,7 +5782,7 @@
                     "id": 1
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "bytes",
                     "name": "message",
@@ -5811,21 +5821,21 @@
             "name": "EthereumVerifyMessage",
             "fields": [
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "bytes",
                     "name": "signature",
                     "id": 2
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "bytes",
                     "name": "message",
                     "id": 3
                 },
                 {
-                    "rule": "optional",
+                    "rule": "required",
                     "options": {},
                     "type": "string",
                     "name": "address",
@@ -9105,6 +9115,117 @@
             "oneofs": {}
         },
         {
+            "ref": "google.protobuf.EnumValueOptions",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wire_in",
+                    "id": 50002
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wire_out",
+                    "id": 50003
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wire_debug_in",
+                    "id": 50004
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wire_debug_out",
+                    "id": 50005
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wire_tiny",
+                    "id": 50006
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wire_bootloader",
+                    "id": 50007
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "wire_no_fsm",
+                    "id": 50008
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "bitcoin_only",
+                    "id": 60000
+                }
+            ]
+        },
+        {
+            "ref": "google.protobuf.EnumOptions",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "has_bitcoin_only_values",
+                    "id": 51001
+                }
+            ]
+        },
+        {
+            "ref": "google.protobuf.MessageOptions",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "unstable",
+                    "id": 52001
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "wire_type",
+                    "id": 52002
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "include_in_bitcoin_only",
+                    "id": 60000
+                }
+            ]
+        },
+        {
+            "ref": "google.protobuf.FieldOptions",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "experimental",
+                    "id": 53001
+                }
+            ]
+        },
+        {
             "name": "RippleGetAddress",
             "fields": [
                 {
@@ -10680,117 +10801,6 @@
             ],
             "options": {},
             "oneofs": {}
-        },
-        {
-            "ref": "google.protobuf.EnumValueOptions",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "wire_in",
-                    "id": 50002
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "wire_out",
-                    "id": 50003
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "wire_debug_in",
-                    "id": 50004
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "wire_debug_out",
-                    "id": 50005
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "wire_tiny",
-                    "id": 50006
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "wire_bootloader",
-                    "id": 50007
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "wire_no_fsm",
-                    "id": 50008
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "bitcoin_only",
-                    "id": 60000
-                }
-            ]
-        },
-        {
-            "ref": "google.protobuf.EnumOptions",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "has_bitcoin_only_values",
-                    "id": 51001
-                }
-            ]
-        },
-        {
-            "ref": "google.protobuf.MessageOptions",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "unstable",
-                    "id": 52001
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "uint32",
-                    "name": "wire_type",
-                    "id": 52002
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "include_in_bitcoin_only",
-                    "id": 60000
-                }
-            ]
-        },
-        {
-            "ref": "google.protobuf.FieldOptions",
-            "fields": [
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "experimental",
-                    "id": 53001
-                }
-            ]
         }
     ],
     "enums": [

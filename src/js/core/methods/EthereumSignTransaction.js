@@ -98,6 +98,14 @@ export default class EthereumSignTx extends AbstractMethod {
 
         validateParams(tx, schema);
 
+        // Since FW 2.4.3+ chainId will be required
+        // TODO: this should be removed after next major/minor version (or after few months)
+        // TODO: add "obligatory: true" to chainId validation
+        if (typeof tx.chainId !== 'number') {
+            // eslint-disable-next-line no-console
+            console.warn('TrezorConnect.ethereumSignTransaction: Missing chainId parameter!');
+        }
+
         this.params = {
             path,
             tx: {
@@ -131,8 +139,8 @@ export default class EthereumSignTx extends AbstractMethod {
                   tx.gasLimit,
                   tx.gasPrice,
                   tx.nonce,
-                  tx.data,
                   tx.chainId,
+                  tx.data,
                   tx.txType,
               );
     }
