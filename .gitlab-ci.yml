@@ -7,6 +7,7 @@ stages:
 verify:
   stage: build
   before_script:
+    - git submodule update --init --recursive
     - nix-shell --run "yarn"
   script:
     - nix-shell --run "yarn test:health"
@@ -20,6 +21,7 @@ verify:
 build:
   stage: build
   before_script:
+    - git submodule update --init --recursive
     - nix-shell --run "yarn"
   script:
     - nix-shell --run "yarn build:connect"
@@ -27,6 +29,7 @@ build:
     expire_in: 1 week
     paths:
       - build
+      - submodules
   tags:
     - deploy
 
