@@ -1,0 +1,62 @@
+{
+  "name": "trezor-link",
+  "version": "1.7.3",
+  "description": "Trezor Link for browser",
+  "main": "lib/index.js",
+  "scripts": {
+    "type-check": "flow check src",
+    "lint": "eslint src",
+    "build:lib": "./scripts/build-lib.sh",
+    "publish:lib": "./scripts/publish-lib.sh",
+    "test:unit": "jest",
+    "test:unit:basic": "jest --testPathPattern basic.test --coverage false",
+    "test:unit:old": "jest --testPathPattern old.test --coverage false",
+    "test:unit:new": "jest --testPathPattern new.test --coverage false",
+    "test:unit:new:debug": "node --inspect-brk node_modules/.bin/ts-jest --runInBand --testPathPattern new.test --coverage false",
+    "test:integration:old": "jest --verbose -c jest.config.integration.js --testPathPattern bridge-old.integration",
+    "test:integration:new": "jest --verbose -c jest.config.integration.js --testPathPattern bridge-new.integration",
+    "build:new": "yarn tsc",
+    "build:new:connect": "rm -rf ./lib && yarn build:new &&  rm -rf ../connect/trezor-link && mkdir ../connect/trezor-link && cp -rf ./lib ../connect/trezor-link/lib && cp ./yarn.lock package.json ../connect/trezor-link && cd ../connect/trezor-link && yarn"
+
+  },
+  "repository": "https://github.com/trezor/trezor-link.git",
+  "author": "Karel Bílek <kb@karelbilek.com>",
+  "license": "LGPL-3.0+",
+  "bugs": {
+    "url": "https://github.com/trezor/trezor-link/issues"
+  },
+  "homepage": "https://github.com/trezor/trezor-link",
+  "devDependencies": {
+    "@types/jest": "^27.0.1",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "babel-jest": "^27.1.1",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.25.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "jest": "^27.1.1",
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.5",
+    "typescript": "^4.4.2"
+  },
+  "dependencies": {
+    "bigi": "^1.4.1",
+    "bytebuffer": "^5.0.1",
+    "ecurve": "^1.0.3",
+    "json-stable-stringify": "^1.0.1",
+    "long": "^4.0.0",
+    "node-fetch": "^2.6.1",
+    "object.values": "^1.1.2",
+    "protobufjs": "^6.11.2",
+    "protobufjs-old-fixed-webpack": "3.8.5",
+    "semver-compare": "^1.0.0",
+    "whatwg-fetch": "^3.5.0"
+  }
+}

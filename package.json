@@ -32,7 +32,7 @@
     "scripts": {
         "predev": "node webpack/generate_dev_cert.js",
         "dev": "webpack-dev-server --config ./webpack/config.dev.babel.js --mode development",
-        "build": "rm -rf build && webpack --config ./webpack/config.prod.babel.js --progress",
+        "build": "cd trezor-link && yarn && cd ../ && rm -rf build && webpack --config ./webpack/config.prod.babel.js --progress",
         "build:node": "rm -rf build && webpack --config ./webpack/config.nodejs.babel.js --progress",
         "build:react-native": "rm -rf build && webpack --config ./webpack/config.reactnative.babel.js --progress",
         "build:inline": "webpack --config ./webpack/config.inline.babel.js --progress",
@@ -103,7 +103,7 @@
         "style-loader": "1.2.1",
         "terser-webpack-plugin": "4.2.2",
         "tiny-worker": "^2.3.0",
-        "trezor-link": "1.7.3",
+        "trezor-link": "./trezor-link",
         "typescript": "^4.2.4",
         "uglify-es": "3.3.9",
         "version-bump-prompt": "6.1.0",
@@ -131,6 +131,6 @@
         "node-fetch": "^2.6.1",
         "parse-uri": "^1.0.3",
         "tiny-worker": "^2.3.0",
-        "trezor-link": "1.7.3"
+        "trezor-link": "./trezor-link"
     }
 }
