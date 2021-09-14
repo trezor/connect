@@ -146,7 +146,7 @@ publish beta release to npm:
 test btc sign:
   extends: .test
   variables:
-    TESTS_INCLUDED_METHODS: "signTransaction"
+    TESTS_INCLUDED_METHODS: "signTransaction-foo"
 
 # test btc others:
 #   extends: .test

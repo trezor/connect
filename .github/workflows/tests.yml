@@ -1,166 +1,166 @@
-name: CI
+# name: CI
 
-on:
-  push:
-    branches: [develop]
-  pull_request:
-    branches: [develop]
+# on:
+#   push:
+#     branches: [develop]
+#   pull_request:
+#     branches: [develop]
 
-jobs:
-  setup:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [12.x]
+# jobs:
+#   setup:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         node-version: [12.x]
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-    - uses: actions/cache@v2
-      id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
-    - run: yarn install
+#     steps:
+#     - uses: actions/checkout@v2
+#     - name: Use Node.js ${{ matrix.node-version }}
+#       uses: actions/setup-node@v2
+#       with:
+#         node-version: ${{ matrix.node-version }}
+#     - uses: actions/cache@v2
+#       id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#         restore-keys: |
+#           ${{ runner.os }}-yarn-
+#     - run: yarn install
 
 
-  check:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: yarn test:health
-    - run: yarn flow
-    - run: yarn typescript
-    - run: yarn lint
-    - run: yarn test:unit
+#   check:
+#     needs: setup
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/cache@v2
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#     - run: yarn test:health
+#     - run: yarn flow
+#     - run: yarn typescript
+#     - run: yarn lint
+#     - run: yarn test:unit
 
-  management:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -f 2-master -i applySettings,applyFlags,getFeatures
+#   management:
+#     needs: check
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/cache@v2
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#     - run: ./tests/run.sh -f 2-master -i applySettings,applyFlags,getFeatures
 
-  btc-sign:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -f 2-master -i signTransaction
+#   btc-sign:
+#     needs: check
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/cache@v2
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#     - run: ./tests/run.sh -f 2-master -i signTransaction
 
-  btc-others:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -f 2-master -i getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage
+#   btc-others:
+#     needs: check
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/cache@v2
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#     - run: ./tests/run.sh -f 2-master -i getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage
 
-  stellar:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -f 2-master -i stellarGetAddress,stellarSignTransaction
+#   stellar:
+#     needs: check
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/cache@v2
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#     - run: ./tests/run.sh -f 2-master -i stellarGetAddress,stellarSignTransaction
 
-  cardano:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -f 2-master -i cardanoGetAddress,cardanoGetPublicKey,cardanoSignTransaction
+#   cardano:
+#     needs: check
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/cache@v2
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#     - run: ./tests/run.sh -f 2-master -i cardanoGetAddress,cardanoGetPublicKey,cardanoSignTransaction
 
-  eos:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -f 2-master -i eosGetPublicKey,eosSignTransaction
+#   eos:
+#     needs: check
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/cache@v2
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#     - run: ./tests/run.sh -f 2-master -i eosGetPublicKey,eosSignTransaction
 
-  eth:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -f 2-master -i ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage
+#   eth:
+#     needs: check
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/cache@v2
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#     - run: ./tests/run.sh -f 2-master -i ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage
 
-  nem:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -f 2-master -i nemGetAddress,nemSignTransaction
+#   nem:
+#     needs: check
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/cache@v2
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#     - run: ./tests/run.sh -f 2-master -i nemGetAddress,nemSignTransaction
 
-  ripple:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -f 2-master -i rippleGetAddress,rippleSignTransaction
+#   ripple:
+#     needs: check
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/cache@v2
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#     - run: ./tests/run.sh -f 2-master -i rippleGetAddress,rippleSignTransaction
 
-  tezos:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -f 2-master -i tezosGetAddress,tezosGetPublicKey
+#   tezos:
+#     needs: check
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/cache@v2
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#     - run: ./tests/run.sh -f 2-master -i tezosGetAddress,tezosGetPublicKey
 
-  binance:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -f 2-master -i binanceSignTransaction
+#   binance:
+#     needs: check
+#     runs-on: ubuntu-latest
+#     steps:
+#     - uses: actions/checkout@v2
+#     - uses: actions/cache@v2
+#       with:
+#         path: node_modules
+#         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+#     - run: ./tests/run.sh -f 2-master -i binanceSignTransaction
