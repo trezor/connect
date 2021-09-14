@@ -2,8 +2,8 @@
 /* @flow */
 
 import EventEmitter from 'events';
-import TrezorLink from 'trezor-link';
-import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
+import TrezorLink from '../../../trezor-link/lib';
+import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from '../../../trezor-link/lib';
 import { TRANSPORT, DEVICE, ERRORS } from '../constants';
 import DescriptorStream from './DescriptorStream';
 import type { DeviceDescriptorDiff } from './DescriptorStream';
@@ -116,7 +116,7 @@ export default class DeviceList extends EventEmitter {
             this.on(DEVICE.CONNECT, this.resolveTransportEvent.bind(this));
             this.on(DEVICE.CONNECT_UNACQUIRED, this.resolveTransportEvent.bind(this));
         } catch (error) {
-            console.log('error init');
+            console.log('error')
             console.log(error);
             this.emit(TRANSPORT.ERROR, error);
         }

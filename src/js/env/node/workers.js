@@ -1,7 +1,7 @@
 /* @flow */
 /* istanbul ignore next */
 import TinyWorker from 'tiny-worker';
-import type { Transport } from 'trezor-link';
+import type { Transport } from '../../../../trezor-link/lib';
 
 type TransportWrapper = () => Transport;
 

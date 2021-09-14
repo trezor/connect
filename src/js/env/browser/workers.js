@@ -3,7 +3,7 @@ import SharedConnectionWorker from 'sharedworker-loader?name=workers/shared-conn
 import BlockbookWorker from 'worker-loader?filename=workers/blockbook-worker.[hash].js!@trezor/blockchain-link/lib/workers/blockbook/index.js';
 import RippleWorker from 'worker-loader?filename=workers/ripple-worker.[hash].js!@trezor/blockchain-link/lib/workers/ripple/index.js';
 
-import TrezorLink from 'trezor-link';
+import TrezorLink from '../../../../trezor-link/lib';
 
 const WebUsbPlugin = () =>
     new TrezorLink.Lowlevel(

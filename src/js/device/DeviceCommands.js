@@ -2,7 +2,7 @@
 
 import randombytes from 'randombytes';
 import * as bitcoin from '@trezor/utxo-lib';
-import type { Transport } from 'trezor-link';
+import type { Transport } from '../../../trezor-link/lib';
 import { DEVICE, ERRORS, NETWORK } from '../constants';
 
 import * as hdnodeUtils from '../utils/hdnode';
