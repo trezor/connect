@@ -9,10 +9,10 @@ verify:
   before_script:
     - nix-shell --run "yarn"
   script:
-    - nix-shell --run "yarn test:health"
-    - nix-shell --run "yarn flow"
-    - nix-shell --run "yarn typescript"
-    - nix-shell --run "yarn lint"
+    # - nix-shell --run "yarn test:health"
+    # - nix-shell --run "yarn flow"
+    # - nix-shell --run "yarn typescript"
+    # - nix-shell --run "yarn lint"
     - nix-shell --run "yarn test:unit"
   tags:
     - deploy
