@@ -1,7 +1,7 @@
 /* @flow */
 
 import EventEmitter from 'events';
-import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from '../../../trezor-link/lib';
+import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 import DeviceCommands from './DeviceCommands';
 
 import type {
@@ -309,6 +309,7 @@ class Device extends EventEmitter {
         if (fn) {
             await fn();
         }
+
 
         // reload features
         if (this.loaded && this.features && !options.skipFinalReload) {

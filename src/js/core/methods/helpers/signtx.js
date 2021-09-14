@@ -27,6 +27,7 @@ type Props = {
 };
 
 const requestPrevTxInfo = ({ typedCall, txRequest: { request_type, details }, refTxs }: Props) => {
+    console.log('---cccc, ,, requestPrevTxInfo');
     const { tx_hash } = details;
     if (!tx_hash) {
         throw ERRORS.TypedError('Runtime', 'requestPrevTxInfo: unknown details.tx_hash');
@@ -122,6 +123,7 @@ const requestSignedTxInfo = ({
     inputs,
     outputs,
 }: Props) => {
+    console.log('--ccccc, requestSignedTxInfo');
     if (request_type === 'TXINPUT') {
         return typedCall('TxAckInput', 'TxRequest', {
             tx: { input: inputs[details.request_index] },
@@ -153,6 +155,7 @@ const requestSignedTxInfo = ({
 // requests information about a transaction
 // can be either signed transaction itself of prev transaction
 const requestTxAck = (props: Props) => {
+    console.log('---cccc - requestTxAck')
     const { tx_hash } = props.txRequest.details;
     if (tx_hash) {
         return requestPrevTxInfo(props);
@@ -166,6 +169,8 @@ const saveTxSignatures = (
     signatures: string[],
 ) => {
     if (!txRequest) return;
+    console.log('--------c----------- txRequest', txRequest);
+
     const { signature_index, signature, serialized_tx } = txRequest;
     if (serialized_tx) {
         serializedTx.push(serialized_tx);
@@ -192,6 +197,8 @@ const processTxRequest = async (props: Props) => {
     }
 
     const { message } = await requestTxAck(props);
+
+    console.log('--------ccc pre processTxRequest');
     return processTxRequest({
         typedCall,
         txRequest: message,

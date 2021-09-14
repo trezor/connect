@@ -103,6 +103,7 @@
         "style-loader": "1.2.1",
         "terser-webpack-plugin": "4.2.2",
         "tiny-worker": "^2.3.0",
+        "trezor-link": "./trezor-link",
         "typescript": "^4.2.4",
         "uglify-es": "3.3.9",
         "version-bump-prompt": "6.1.0",
@@ -112,6 +113,7 @@
         "worker-loader": "^3.0.5"
     },
     "dependencies": {
+        "trezor-link": "./trezor-link",
         "@babel/runtime": "^7.12.5",
         "events": "^3.2.0",
         "whatwg-fetch": "^3.5.0"
@@ -130,5 +132,6 @@
         "node-fetch": "^2.6.1",
         "parse-uri": "^1.0.3",
         "tiny-worker": "^2.3.0",
+        "trezor-link": "./trezor-link"
     }
 }

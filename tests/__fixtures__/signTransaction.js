@@ -22,7 +22,7 @@ for (let i = 0; i < total; i++) {
 // serializedTx += '00000000';
 
 export default {
-    method: 'signTransaction-foo',
+    method: 'signTransaction',
     setup: {
         mnemonic: 'mnemonic_all',
     },

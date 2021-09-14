@@ -2,7 +2,7 @@
 
 import randombytes from 'randombytes';
 import * as bitcoin from '@trezor/utxo-lib';
-import type { Transport } from '../../../trezor-link/lib';
+import type { Transport } from 'trezor-link';
 import { DEVICE, ERRORS, NETWORK } from '../constants';
 
 import * as hdnodeUtils from '../utils/hdnode';
@@ -378,6 +378,7 @@ export default class DeviceCommands {
     }
 
     _filterCommonTypes(res: DefaultMessageResponse) {
+        console.log('xxx _filterCommonTypes', res);
         if (res.type === 'Failure') {
             const { code } = res.message;
             let { message } = res.message;

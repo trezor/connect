@@ -12,6 +12,7 @@ var HEADER_SIZE = 1 + 1 + 4 + 2;
 // Resolves if everything gets sent
 function buildOne(messages, name, data) {
     var accessor = "hw.trezor.messages." + name;
+    console.log('messages', messages);
     var messageType = 
     // @ts-ignore
     messages.nested.hw.nested.trezor.nested.messages.nested.MessageType.values["MessageType_" + name];

@@ -50,7 +50,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var semver_compare_1 = require("semver-compare");
+// import semvercmp from "semver-compare";
 var http_1 = require("./http");
 var check = require("../highlevel-checks");
 var send_new_1 = require("../lowlevel/send-new");
@@ -125,7 +125,6 @@ var BridgeTransport = /** @class */ (function () {
                         _d.label = 4;
                     case 4:
                         newVersion = _a;
-                        this.isOutdated = (0, semver_compare_1.default)(this.version, newVersion) < 0;
                         return [2 /*return*/];
                 }
             });

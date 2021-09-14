@@ -81,7 +81,7 @@ const initTrezorConnect = async (controller, options) => {
             email: 'b',
         },
         webusb: false,
-        debug: false,
+        debug: true,
         popup: false,
         ...options,
     });

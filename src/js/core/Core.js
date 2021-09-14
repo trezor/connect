@@ -286,6 +286,7 @@ const initDevice = async (method: AbstractMethod) => {
  * @memberof Core
  */
 export const onCall = async (message: CoreMessage) => {
+    console.log('cccccccccc onCall', message);
     if (!message.id || !message.payload) {
         throw ERRORS.TypedError(
             'Method_InvalidParameter',
@@ -572,6 +573,7 @@ export const onCall = async (message: CoreMessage) => {
                         if (uiResp.payload) {
                             // reset internal device state and try again
                             device.setInternalState(undefined);
+                            console.log('--cccccccccccccc initialize');
                             await device.initialize(method.useEmptyPassphrase);
                             return inner();
                         }

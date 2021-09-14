@@ -119,6 +119,7 @@ export default class SignTransaction extends AbstractMethod {
     }
 
     async run() {
+        console.log('CC SIGNTX RUN')
         const { device, params } = this;
 
         let refTxs: RefTransaction[] = [];
@@ -165,6 +166,8 @@ export default class SignTransaction extends AbstractMethod {
         }
 
         const signTxMethod = !useLegacySignProcess ? signTx : signTxLegacy;
+        console.log('CC SIGNTX PRE SIGNTXMETHOD')
+
         const response = await signTxMethod(
             device.getCommands().typedCall.bind(device.getCommands()),
             params.inputs,
@@ -173,6 +176,7 @@ export default class SignTransaction extends AbstractMethod {
             params.options,
             params.coinInfo,
         );
+        console.log('CC SIGNTX AFTER SIGNTXMETHOD')
 
         await verifyTx(
             device.getCommands().getHDNode.bind(device.getCommands()),

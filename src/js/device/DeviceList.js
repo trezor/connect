@@ -2,8 +2,8 @@
 /* @flow */
 
 import EventEmitter from 'events';
-import TrezorLink from '../../../trezor-link/lib';
-import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from '../../../trezor-link/lib';
+import TrezorLink from 'trezor-link';
+import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
 import { TRANSPORT, DEVICE, ERRORS } from '../constants';
 import DescriptorStream from './DescriptorStream';
 import type { DeviceDescriptorDiff } from './DescriptorStream';
@@ -16,7 +16,7 @@ import { resolveAfter } from '../utils/promiseUtils';
 
 import { WebUsbPlugin, ReactNativeUsbPlugin } from '../env/node/workers';
 
-const { BridgeV2, Fallback } = TrezorLink;
+const { BridgeV2, BridgeV2New, Fallback } = TrezorLink;
 
 // custom log
 const _log = initLog('DeviceList');
@@ -65,7 +65,7 @@ export default class DeviceList extends EventEmitter {
             transports.push(ReactNativeUsbPlugin());
         } else {
             const bridgeLatestVersion = getBridgeInfo().version.join('.');
-            const bridge = new BridgeV2(null, null);
+            const bridge = new BridgeV2New(null, null);
             bridge.setBridgeLatestVersion(bridgeLatestVersion);
 
             if (typeof fetch !== 'undefined' && typeof AbortController !== 'undefined') {
@@ -78,7 +78,7 @@ export default class DeviceList extends EventEmitter {
                     const { signal } = this.fetchController;
                     const fetchWithSignal = (args, options = {}) =>
                         fetch(args, { ...options, signal });
-                    BridgeV2.setFetch(fetchWithSignal, true);
+                    BridgeV2New.setFetch(fetchWithSignal, true);
                 }
             }
 
@@ -95,13 +95,13 @@ export default class DeviceList extends EventEmitter {
     }
 
     async init() {
-        console.log('xxxxxxxxxxxxxxxxxxxxx');
+        console.log('xxxxxxxxxxxxxxxxxxxxx', this.defaultMessages);
         const { transport } = this;
         try {
             _log.debug('Initializing transports');
             await transport.init(true);
             _log.debug('Configuring transports');
-            await transport.configure(JSON.stringify(this.defaultMessages));
+            await transport.configure(this.defaultMessages);
             _log.debug('Configuring transports done');
 
             const { activeName } = transport;
@@ -123,27 +123,27 @@ export default class DeviceList extends EventEmitter {
     }
 
     async reconfigure(messages: JSON | number[], custom?: boolean) {
-        if (Array.isArray(messages)) {
-            messages = DataManager.getProtobufMessages(messages);
-        }
-        if (this.currentMessages === messages) return;
-        try {
-            await this.transport.configure(JSON.stringify(messages));
-            this.currentMessages = messages;
-            this.hasCustomMessages = typeof custom === 'boolean' ? custom : false;
-        } catch (error) {
-            throw ERRORS.TypedError('Transport_InvalidProtobuf', error.message);
-        }
+        // if (Array.isArray(messages)) {
+        //     messages = DataManager.getProtobufMessages(messages);
+        // }
+        // if (this.currentMessages === messages) return;
+        // try {
+        //     await this.transport.configure(JSON.stringify(messages));
+        //     this.currentMessages = messages;
+        //     this.hasCustomMessages = typeof custom === 'boolean' ? custom : false;
+        // } catch (error) {
+        //     throw ERRORS.TypedError('Transport_InvalidProtobuf', error.message);
+        // }
     }
 
     async restoreMessages() {
-        if (!this.hasCustomMessages) return;
-        try {
-            await this.transport.configure(JSON.stringify(this.defaultMessages));
-            this.hasCustomMessages = false;
-        } catch (error) {
-            throw ERRORS.TypedError('Transport_InvalidProtobuf', error.message);
-        }
+        // if (!this.hasCustomMessages) return;
+        // try {
+        //     await this.transport.configure(JSON.stringify(this.defaultMessages));
+        //     this.hasCustomMessages = false;
+        // } catch (error) {
+        //     throw ERRORS.TypedError('Transport_InvalidProtobuf', error.message);
+        // }
     }
 
     resolveTransportEvent() {

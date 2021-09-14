@@ -136,6 +136,7 @@ const saveTxSignatures = (
     signatures: string[],
 ) => {
     if (!txRequest) return;
+    console.log('--------c-----------legacy  txRequest', txRequest);
     const { signature_index, signature, serialized_tx } = txRequest;
     if (serialized_tx) {
         serializedTx.push(serialized_tx);
