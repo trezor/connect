@@ -1,15 +1,19 @@
-# 8.1.30
+# 8.2.0
 
 ### Added
 - `ethereumSignTransaction` eip1559 support (Trezor T only)
+- Warning about missing `chainId` param in `ethereumSignTransaction`. Will be required in the future.
+- Firmware releases from `@trezor/connect-common` dependency.
 
 ### Fixed
-- `device.unavailableCapabilities` "no-support" condition
+- `device.unavailableCapabilities` "no-support" condition.
+- `rebootToBootloader` refresh device Features after success.
 
 ### Changed
 - Cardano: since transaction streaming has been introduced, it isn't possible to return the whole serialized transaction from the `cardanoSignTransaction` call anymore. Instead the transaction hash, transaction witnesses and auxiliary data supplement are returned and the serialized transaction needs to be assembled by the client.
 - Cardano: an obligatory `signingMode` parameter has been added to the `cardanoSignTransaction` call
 - Cardano: providing auxiliary data as a blob to the `cardanoSignTransaction` call is not supported anymore. Provide only the auxiliary data hash instead.
+- Removed support for `Lisk`.
 
 # 8.1.29
 
