@@ -98,7 +98,7 @@ export default class DeviceList extends EventEmitter {
         const { transport } = this;
         try {
             _log.debug('Initializing transports');
-            await transport.init(_log.enabled);
+            await transport.init(true);
             _log.debug('Configuring transports');
             await transport.configure(JSON.stringify(this.defaultMessages));
             _log.debug('Configuring transports done');

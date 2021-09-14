@@ -136,59 +136,59 @@ publish beta release to npm:
   script:
     - "echo Firmware version: $TESTS_FIRMWARE"
     - /trezor-user-env/run.sh &
-    - nix-shell --run "yarn test:integration --coverage true"
+    - nix-shell --run "yarn test:integration --coverage false"
 
-test management:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
+# test management:
+#   extends: .test
+#   variables:
+#     TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
 
 test btc sign:
   extends: .test
   variables:
     TESTS_INCLUDED_METHODS: "signTransaction"
 
-test btc others:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage"
+# test btc others:
+#   extends: .test
+#   variables:
+#     TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage"
 
-test stellar:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
+# test stellar:
+#   extends: .test
+#   variables:
+#     TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
 
-test cardano:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetPublicKey,cardanoSignTransaction"
+# test cardano:
+#   extends: .test
+#   variables:
+#     TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetPublicKey,cardanoSignTransaction"
 
-test eos:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
+# test eos:
+#   extends: .test
+#   variables:
+#     TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
 
-test eth:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage"
+# test eth:
+#   extends: .test
+#   variables:
+#     TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage"
 
-test nem:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
+# test nem:
+#   extends: .test
+#   variables:
+#     TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
 
-test ripple:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
+# test ripple:
+#   extends: .test
+#   variables:
+#     TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
 
-test tezos:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
+# test tezos:
+#   extends: .test
+#   variables:
+#     TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
 
-test binance:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "binanceSignTransaction"
+# test binance:
+#   extends: .test
+#   variables:
+#     TESTS_INCLUDED_METHODS: "binanceSignTransaction"
