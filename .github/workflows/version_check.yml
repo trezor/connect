@@ -5,15 +5,13 @@ on:
     branches: [v8]
 
 jobs:
-    version_commit_check:
-      name: Check connect version commit message
+    version_beta_check:
+      name: Check if connect version is beta
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v2
         - run: |
-            LAST_COMMIT=$(git log -1 --pretty=%B)
-            VERSION=$(jq -r .version package.json)
-            [[ "$LAST_COMMIT" == "version $VERSION" ]]; if [ $? -eq 0 ]; then echo "Last commit message contains version";   exit 0; else echo "Last commit message DOES NOT contain version" >&2;   exit 1; fi
+            bash ./scripts/ci-check-beta-version.sh
 
     version_bump_check:
       name: Check connect version bump
