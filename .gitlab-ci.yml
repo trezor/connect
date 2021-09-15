@@ -36,6 +36,8 @@ build:
 # Deploy to testing environment
 deploy test:
   stage: deploy
+  except:
+    - v8
   variables:
     GIT_STRATEGY: none
   when: manual
@@ -63,7 +65,7 @@ rollback production copy:
     refs:
       - v8
   when: manual
-  needs: ["build"]
+  needs: ["verify"]
   variables:
     GIT_STRATEGY: none
   before_script: []
@@ -96,7 +98,7 @@ publish release to npm:
     refs:
       - v8
   when: manual
-  needs: []
+  needs: ["verify"]
   before_script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
   script:
@@ -111,6 +113,8 @@ publish release to npm:
 
 publish beta release to npm:
   stage: deploy
+  except:
+    - v8
   when: manual
   needs: ["verify"]
   before_script:
