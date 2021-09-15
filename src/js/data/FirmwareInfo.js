@@ -16,8 +16,8 @@ const cleanUrl = (url?: string) => {
 };
 
 export const parseFirmware = (json: any, model: number) => {
-    Object.keys(json).forEach(key => {
-        const release = json[key];
+    // Temporary remove latest release (1.10.3/2.4.2), enable it in next version!
+    json.slice(1).forEach(release => {
         releases[model].push({
             ...release,
             url: cleanUrl(release.url),
