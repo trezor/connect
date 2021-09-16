@@ -1,0 +1,1 @@
+curl -s https://connect.trezor.io/8/trezor-connect.js | grep VERSION
