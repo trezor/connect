@@ -1,3 +1,8 @@
+# 8.2.1
+
+### Added
+- 1.10.3 and 2.4.2 FW releases
+
 # 8.2.0
 
 ### Added
