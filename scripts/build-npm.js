@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import { collectImportsSync } from 'babel-collect-imports';
+import { collectImportsSync } from './babel-collect-imports';
 import packageJSON from '../package.json';
 
 const { internal } = collectImportsSync(
