@@ -504,16 +504,14 @@ export default {
                         witnesses: [
                             {
                                 type: 1,
-                                pubKey:
-                                    'bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e',
+                                pubKey: 'bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e',
                                 signature:
                                     '0dbdf36f92bc5199526ffb8b83b33a9eeda0ed3e46fb4025a104346801afb9cf45fa1a5482e54c769f4102e67af46205457d7ae05a889fc342acb0cdc23ecd03',
                                 chainCode: null,
                             },
                             {
                                 type: 1,
-                                pubKey:
-                                    '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                                pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
                                 signature:
                                     '5ebe8eff752f07e8448f55304fdf3665ac68162099dcacd81886b73affe67fb6df401f8a5fa60ddb6d5fb65b93235e6a234182a40c001e3cf7634f82afd5fe0a',
                                 chainCode: null,
@@ -566,16 +564,14 @@ export default {
                         witnesses: [
                             {
                                 type: 1,
-                                pubKey:
-                                    'bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e',
+                                pubKey: 'bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e',
                                 signature:
                                     '84f321d313da67f80f7fab2e4f3996d3dbe3186659e6f98315e372dbe88c55d56f637ccc7534890c3601ddd31ba885dc86ba0074c230869f20099b7dd5eeaf00',
                                 chainCode: null,
                             },
                             {
                                 type: 1,
-                                pubKey:
-                                    '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                                pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
                                 signature:
                                     'e563a8012e16affd801564e8410ca7b2c96f76f8ecb878e35c098a823c40be7f59dc12cb44a9b678210d4e8f18ab215133eef7ca9ece94b4683d3db0fd37e105',
                                 chainCode: null,
@@ -629,16 +625,14 @@ export default {
                         witnesses: [
                             {
                                 type: 1,
-                                pubKey:
-                                    'bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e',
+                                pubKey: 'bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e',
                                 signature:
                                     '0202826a8b9688cf978000e7d1591582c65b149bb9f55dc883ae1acf85432618ca32be8a06fef37e69df503a294e7093006f63ababf9fcea639390226934020a',
                                 chainCode: null,
                             },
                             {
                                 type: 1,
-                                pubKey:
-                                    '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                                pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
                                 signature:
                                     '7efa634e42fa844cad5f60bf005d645817cc674f30eaab0da398b99034850780b40ab5a1028da033330a0f82b01648ec92cff8ca85a072594efb298016f38d0d',
                                 chainCode: null,
@@ -677,8 +671,7 @@ export default {
                 fee: FEE,
                 ttl: TTL,
                 auxiliaryData: {
-                    blob:
-                        'a200a11864a118c843aa00ff01a119012c590100aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+                    blob: 'a200a11864a118c843aa00ff01a119012c590100aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
                 },
                 protocolMagic: PROTOCOL_MAGICS.mainnet,
                 networkId: NETWORK_IDS.mainnet,
@@ -1157,32 +1150,28 @@ export default {
                         witnesses: [
                             {
                                 type: 1,
-                                pubKey:
-                                    '36a8ef21d5b98fdf23a27325cf643deaac35e912c835e35037f23d1061ae5b16',
+                                pubKey: '36a8ef21d5b98fdf23a27325cf643deaac35e912c835e35037f23d1061ae5b16',
                                 signature:
                                     'df62ec013a32d137c86931cec726d104cbc3193776026ec36d10450d9cbd289abc4c2d44311878b3aba035a8aec2c076522183027f9da046b586b5de5c460504',
                                 chainCode: null,
                             },
                             {
                                 type: 1,
-                                pubKey:
-                                    '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                                pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
                                 signature:
                                     '7d17407e4e8f8b89f8794c022408a84e6f7ef163957d9d7e8ebee4cf9b5c87750c7c559f3a2663441535eec88ebce8540e7d7ea30897de984b1053b818374007',
                                 chainCode: null,
                             },
                             {
                                 type: 1,
-                                pubKey:
-                                    'bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e',
+                                pubKey: 'bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e',
                                 signature:
                                     '0dfd139ce3e255664a77de7d199ce5e4f1a1238ec17a6acec4aaae79be2ccd9b1d21127164c059c8aea2c4b91292aaf352c824550db7594b59e4eca6455d3f03',
                                 chainCode: null,
                             },
                             {
                                 type: 1,
-                                pubKey:
-                                    'e90d7b0a6cf831b0042d37961dd528842860e77914e715bcece676c75353b812',
+                                pubKey: 'e90d7b0a6cf831b0042d37961dd528842860e77914e715bcece676c75353b812',
                                 signature:
                                     'e249396d227f1d0540e58b64610bdb990eb1f1db9b3bae4a3d4a8088679af4a3bab464a5c912f7041a5fabc37e3009b3e1f4d76e2406429a0ebed85b880ecd0c',
                                 chainCode: null,

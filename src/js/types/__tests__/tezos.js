@@ -139,8 +139,7 @@ export const tezosSignTransaction = async () => {
                 counter: 298,
                 gas_limit: 20000,
                 storage_limit: 10000,
-                script:
-                    '0000001c02000000170500036805010368050202000000080316053d036d03420000000a010000000568656c6c6f',
+                script: '0000001c02000000170500036805010368050202000000080316053d036d03420000000a010000000568656c6c6f',
             },
             delegation: {
                 source: 'tz1Kef7BSg6fo75jk37WkKRYSnJDs69KVqt9',

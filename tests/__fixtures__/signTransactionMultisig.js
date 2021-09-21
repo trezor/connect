@@ -21,20 +21,17 @@ for (let i = 0; i < 15; i++) {
 const PUBKEYS_2_OF_3 = [
     {
         // xpub: m/48'/0'/1'/0' of mnemonic_all
-        node:
-            'xpub6EexEtC6c2rN5QCpzrL2nUNGDfxizCi3kM1C2Mk5a6PfQs4H3F72C642M3XbnzycvvtD4U6vzn1nYPpH8VUmiREc2YuXP3EFgN1uLTrVEj4',
+        node: 'xpub6EexEtC6c2rN5QCpzrL2nUNGDfxizCi3kM1C2Mk5a6PfQs4H3F72C642M3XbnzycvvtD4U6vzn1nYPpH8VUmiREc2YuXP3EFgN1uLTrVEj4',
         address_n: [0, 0],
     },
     {
         // xpub: m/48'/0'/2'/0' of mnemonic_all
-        node:
-            'xpub6F6Tq7sVLDrhuV3SpvsVKrKofF6Hx7oKxWLFkN6dbepuMhuYueKUnQo7E972GJyeRHqPKu44V1C9zBL6KW47GXjuprhbNrPQahWAFKoL2rN',
+        node: 'xpub6F6Tq7sVLDrhuV3SpvsVKrKofF6Hx7oKxWLFkN6dbepuMhuYueKUnQo7E972GJyeRHqPKu44V1C9zBL6KW47GXjuprhbNrPQahWAFKoL2rN',
         address_n: [0, 0],
     },
     {
         // xpub: m/48'/0'/3'/0' of mnemonic_all
-        node:
-            'xpub6Do6zDQqspotwduAsWgq2xZ1tWcwDjW8Q8JBZjnbQRLfJZ7YrDgtvDTq7pgHqk19uJwFPwwWrT31QvEusmT8NMWsCzPVuZSP3JAeJjWFmwC',
+        node: 'xpub6Do6zDQqspotwduAsWgq2xZ1tWcwDjW8Q8JBZjnbQRLfJZ7YrDgtvDTq7pgHqk19uJwFPwwWrT31QvEusmT8NMWsCzPVuZSP3JAeJjWFmwC',
         address_n: [0, 0],
     },
 ];
