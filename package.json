@@ -54,14 +54,14 @@
         "lint:fix": "eslint --fix ."
     },
     "devDependencies": {
-        "@babel/cli": "^7.12.10",
-        "@babel/core": "^7.12.10",
+        "@babel/cli": "^7.15.7",
+        "@babel/core": "^7.15.5",
         "@babel/node": "^7.12.10",
-        "@babel/plugin-proposal-class-properties": "^7.12.1",
-        "@babel/plugin-proposal-object-rest-spread": "^7.12.1",
-        "@babel/plugin-transform-runtime": "^7.12.10",
-        "@babel/preset-env": "^7.12.10",
-        "@babel/preset-flow": "^7.12.1",
+        "@babel/plugin-proposal-class-properties": "^7.14.5",
+        "@babel/plugin-proposal-object-rest-spread": "^7.15.6",
+        "@babel/plugin-transform-runtime": "^7.15.0",
+        "@babel/preset-env": "^7.15.6",
+        "@babel/preset-flow": "^7.14.5",
         "@trezor/blockchain-link": "^1.0.17",
         "@trezor/connect-common": "^0.0.2",
         "@trezor/rollout": "^1.2.0",
@@ -124,7 +124,7 @@
         "worker-loader": "^3.0.8"
     },
     "dependencies": {
-        "@babel/runtime": "^7.12.5",
+        "@babel/runtime": "^7.15.4",
         "events": "^3.3.0",
         "whatwg-fetch": "^3.6.2"
     },
