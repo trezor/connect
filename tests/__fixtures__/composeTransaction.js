@@ -138,8 +138,7 @@ export default {
                     ...BECH32_ACCOUNT,
                     utxo: [
                         {
-                            txid:
-                                '86a6e02943dcd057cfbe349f2c2274478a3a1be908eb788606a6950e727a0d36',
+                            txid: '86a6e02943dcd057cfbe349f2c2274478a3a1be908eb788606a6950e727a0d36',
                             vout: 0,
                             amount: '9426',
                             blockHeight: 590093,
@@ -149,8 +148,7 @@ export default {
                             required: true, // NOTE: this utxo is used only because of this param
                         },
                         {
-                            txid:
-                                '86a6e02943dcd057cfbe349f2c2274478a3a1be908eb788606a6950e727a0d36',
+                            txid: '86a6e02943dcd057cfbe349f2c2274478a3a1be908eb788606a6950e727a0d36',
                             vout: 1, // NOTE: this utxo doesn't belong to this account
                             amount: '309896',
                             blockHeight: 590093,
@@ -192,8 +190,7 @@ export default {
                     ...BECH32_ACCOUNT,
                     utxo: [
                         {
-                            txid:
-                                '86a6e02943dcd057cfbe349f2c2274478a3a1be908eb788606a6950e727a0d36',
+                            txid: '86a6e02943dcd057cfbe349f2c2274478a3a1be908eb788606a6950e727a0d36',
                             vout: 0,
                             amount: '9426',
                             blockHeight: 590093,
@@ -203,8 +200,7 @@ export default {
                             required: true,
                         },
                         {
-                            txid:
-                                '86a6e02943dcd057cfbe349f2c2274478a3a1be908eb788606a6950e727a0d36',
+                            txid: '86a6e02943dcd057cfbe349f2c2274478a3a1be908eb788606a6950e727a0d36',
                             vout: 1, // NOTE: this utxo doesn't belong to this account
                             amount: '309896',
                             blockHeight: 590093,
@@ -213,8 +209,7 @@ export default {
                             confirmations: 100,
                         },
                         {
-                            txid:
-                                '5dfd1b037633adc7f84a17b2df31c9994fe50b3ab3e246c44c4ceff3d326f62e',
+                            txid: '5dfd1b037633adc7f84a17b2df31c9994fe50b3ab3e246c44c4ceff3d326f62e',
                             vout: 0,
                             amount: '7086',
                             blockHeight: 626426,

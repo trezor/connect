@@ -156,18 +156,15 @@ export default {
                         multisig: {
                             pubkeys: [
                                 {
-                                    node:
-                                        'xpub6BiJ9mt9dwmdCmLgwJBZgkBTacEkXiRE1LqiCLQZ98bp4nYsascxnmqKaXZZngo8cS9xxi4HJ4JQ9a6bHqaD3dA8BJ4afh4Ser75abaip3x',
+                                    node: 'xpub6BiJ9mt9dwmdCmLgwJBZgkBTacEkXiRE1LqiCLQZ98bp4nYsascxnmqKaXZZngo8cS9xxi4HJ4JQ9a6bHqaD3dA8BJ4afh4Ser75abaip3x',
                                     address_n: [1, 0],
                                 },
                                 {
-                                    node:
-                                        'xpub6BiJ9mt9dwmdEeh7XMzJrgNGrxopkeaqAYeeohsAstAxowpNRPcRsL4G4bxMoU7v7u8XySLDMc7bugTja9aMQv7MkqmnAyvRi8VCcUDq9yt',
+                                    node: 'xpub6BiJ9mt9dwmdEeh7XMzJrgNGrxopkeaqAYeeohsAstAxowpNRPcRsL4G4bxMoU7v7u8XySLDMc7bugTja9aMQv7MkqmnAyvRi8VCcUDq9yt',
                                     address_n: [1, 0],
                                 },
                                 {
-                                    node:
-                                        'xpub6BiJ9mt9dwmdHaW7EvKzmmgVogWw3FaEaMqVXPmSqNSxkCeJXsbt9vMcxv6KFme9nXkSo9fTmqHMHNKGJUbgG7csXcWtoQr9yHmbFqxF9qQ',
+                                    node: 'xpub6BiJ9mt9dwmdHaW7EvKzmmgVogWw3FaEaMqVXPmSqNSxkCeJXsbt9vMcxv6KFme9nXkSo9fTmqHMHNKGJUbgG7csXcWtoQr9yHmbFqxF9qQ',
                                     address_n: [1, 0],
                                 },
                             ],

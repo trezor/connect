@@ -93,18 +93,15 @@ export default {
                         multisig: {
                             pubkeys: [
                                 {
-                                    node:
-                                        'tpubDCKNmygUHqKJZjbtPqaKyFms6BjMvNHrwe3ePSdEruYfLb1EQDXRN63t7cDEhc79xjqYTpbnvp6XHR9cXb5iF4jTqJaHfwm5Dv2CRwyyAwq',
+                                    node: 'tpubDCKNmygUHqKJZjbtPqaKyFms6BjMvNHrwe3ePSdEruYfLb1EQDXRN63t7cDEhc79xjqYTpbnvp6XHR9cXb5iF4jTqJaHfwm5Dv2CRwyyAwq',
                                     address_n: [2, 0],
                                 },
                                 {
-                                    node:
-                                        'tpubDCKNmygUHqKJbHoeVPzzjkAjgHfmqoWaG4dBp4kyE5rCmhujjWLC7SkcQw9g6q6ZDp4QgN24REZmoHJTik1a6sqqCH5txzrCdhsTnZh9bSA',
+                                    node: 'tpubDCKNmygUHqKJbHoeVPzzjkAjgHfmqoWaG4dBp4kyE5rCmhujjWLC7SkcQw9g6q6ZDp4QgN24REZmoHJTik1a6sqqCH5txzrCdhsTnZh9bSA',
                                     address_n: [2, 0],
                                 },
                                 {
-                                    node:
-                                        'tpubDCKNmygUHqKJft96NiaH9vQF78U71ShySniMobimCi3ZHF6fwsG2SFDRLzoWZQZwJvvMMKABCvu6BTPzxgZAFWfere6aRZ6ZeC6dfvoNuHr',
+                                    node: 'tpubDCKNmygUHqKJft96NiaH9vQF78U71ShySniMobimCi3ZHF6fwsG2SFDRLzoWZQZwJvvMMKABCvu6BTPzxgZAFWfere6aRZ6ZeC6dfvoNuHr',
                                     address_n: [2, 0],
                                 },
                             ],
