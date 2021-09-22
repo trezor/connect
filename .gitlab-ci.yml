@@ -1,14 +1,25 @@
 stages:
+  - setup
   - build
   - test
   - deploy
 
+setup environment:
+  stage: setup
+  script:
+    - git submodule update --init --recursive
+    - nix-shell --run "yarn"
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - submodules
+      - node_modules
+  tags:
+    - deploy
 
 verify:
   stage: build
-  before_script:
-    - git submodule update --init --recursive
-    - nix-shell --run "yarn"
+  needs: ["setup environment"]
   script:
     - nix-shell --run "yarn test:health"
     - nix-shell --run "yarn flow"
@@ -20,16 +31,13 @@ verify:
 
 build:
   stage: build
-  before_script:
-    - git submodule update --init --recursive
-    - nix-shell --run "yarn"
+  needs: ["setup environment"]
   script:
     - nix-shell --run "yarn build:connect"
   artifacts:
     expire_in: 1 week
     paths:
       - build
-      - submodules
   tags:
     - deploy
 
