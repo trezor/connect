@@ -12,13 +12,11 @@ const dependencies = [
         destination: `${DATA_SRC}config_signed.bin`,
     },
     {
-        url:
-            'https://raw.githubusercontent.com/trezor/webwallet-data/master/firmware/1/releases.json',
+        url: 'https://raw.githubusercontent.com/trezor/webwallet-data/master/firmware/1/releases.json',
         destination: `${DATA_SRC}releases-1.json`,
     },
     {
-        url:
-            'https://raw.githubusercontent.com/trezor/webwallet-data/master/firmware/2/releases.json',
+        url: 'https://raw.githubusercontent.com/trezor/webwallet-data/master/firmware/2/releases.json',
         destination: `${DATA_SRC}releases-2.json`,
     },
     // {

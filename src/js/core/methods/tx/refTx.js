@@ -56,9 +56,10 @@ const getWitness = (witness?: Buffer[]) => {
         buf.writeUInt8(n);
         return buf;
     };
-    const chunks = witness.reduce((arr, chunk) => arr.concat([getChunkSize(chunk.length), chunk]), [
-        getChunkSize(witness.length),
-    ]);
+    const chunks = witness.reduce(
+        (arr, chunk) => arr.concat([getChunkSize(chunk.length), chunk]),
+        [getChunkSize(witness.length)],
+    );
 
     return Buffer.concat(chunks).toString('hex');
 };

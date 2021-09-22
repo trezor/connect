@@ -206,8 +206,7 @@ export default {
                             type: 'setOptions',
                             signer: {
                                 type: 0,
-                                key:
-                                    '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
+                                key: '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
                                 weight: 2,
                             },
                         },
@@ -231,8 +230,7 @@ export default {
                             type: 'setOptions',
                             signer: {
                                 type: 2,
-                                key:
-                                    '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
+                                key: '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
                                 weight: 2,
                             },
                         },
@@ -255,8 +253,7 @@ export default {
                             type: 'setOptions',
                             signer: {
                                 type: 1,
-                                key:
-                                    '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
+                                key: '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
                                 weight: 2,
                             },
                         },
@@ -359,8 +356,7 @@ export default {
                             type: 'setOptions',
                             signer: {
                                 type: 0,
-                                key:
-                                    '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
+                                key: '72187adb879c414346d77c71af8cce7b6eaa57b528e999fd91feae6b6418628e',
                                 weight: 0,
                             },
                         },
@@ -606,14 +602,12 @@ export default {
                                 {
                                     type: 1,
                                     code: 'X',
-                                    issuer:
-                                        'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                                    issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
                                 },
                                 {
                                     type: 2,
                                     code: 'ABCDEFGHIJKL',
-                                    issuer:
-                                        'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                                    issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
                                 },
                             ],
                         },
