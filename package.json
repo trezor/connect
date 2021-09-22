@@ -67,7 +67,6 @@
         "@trezor/rollout": "^1.2.0",
         "@trezor/utxo-lib": "^0.1.2",
         "assert": "^2.0.0",
-        "babel-collect-imports": "https://github.com/szymonlesisz/babel-collect-imports",
         "babel-eslint": "^10.1.0",
         "babel-jest": "^26.6.3",
         "babel-loader": "^8.2.2",
