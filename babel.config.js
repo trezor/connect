@@ -4,7 +4,7 @@ module.exports = api => {
         [
             '@babel/preset-env',
             {
-                useBuiltIns: false,
+                useBuiltIns: 'usage',
                 loose: true,
                 corejs: 3,
                 debug: true,
