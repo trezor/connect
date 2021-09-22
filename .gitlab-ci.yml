@@ -21,6 +21,9 @@ verify:
   stage: build
   needs: ["setup environment"]
   script:
+    - nix-shell --run "node -v"
+    - nix-shell --run "ls -a ./node_modules/core-js/modules"
+    - nix-shell --run "cat ./node_modules/core-js/package.json"
     - nix-shell --run "yarn test:health"
     - nix-shell --run "yarn flow"
     - nix-shell --run "yarn typescript"

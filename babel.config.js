@@ -6,6 +6,8 @@ module.exports = api => {
             {
                 useBuiltIns: false,
                 loose: true,
+                corejs: 3,
+                debug: true,
             },
         ],
         '@babel/preset-flow',
