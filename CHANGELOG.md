@@ -1,3 +1,9 @@
+# 8.2.2 (not released)
+
+### Changed
+- Updated dependencies.
+- Fixed missing `hex` field in SignMessage and VerifyMessage types.
+
 # 8.2.1
 
 ### Added
