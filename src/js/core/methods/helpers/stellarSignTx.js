@@ -1,6 +1,7 @@
 /* @flow */
 import { ERRORS } from '../../../constants';
 import { validateParams } from './paramsValidator';
+import { Enum_StellarMemoType } from '../../../types/trezor/protobuf';
 import type {
     StellarTransaction,
     StellarOperation,
@@ -28,9 +29,7 @@ const processTxRequest = async (
 };
 
 // transform incoming parameters to protobuf messages format
-const transformSignMessage = (tx: StellarTransaction): StellarSignTx => {
-    const options: StellarSignTx = {};
-    // timebounds_start and timebounds_end are the only fields which needs to be converted to number
+const transformSignMessage = (tx: StellarTransaction): $Exact<StellarSignTx> => {
     if (!tx.timebounds) {
         throw ERRORS.TypedError(
             'Runtime',
@@ -38,25 +37,26 @@ const transformSignMessage = (tx: StellarTransaction): StellarSignTx => {
         );
     }
 
-    options.timebounds_start = tx.timebounds.minTime;
-    options.timebounds_end = tx.timebounds.maxTime;
-
-    if (tx.memo) {
-        options.memo_type = tx.memo.type;
-        options.memo_text = tx.memo.text;
-        options.memo_id = tx.memo.id;
-        options.memo_hash = tx.memo.hash;
-    }
-
-    return {
+    const msg: $Exact<StellarSignTx> = {
         address_n: [], // will be overridden
         network_passphrase: '', // will be overridden
         source_account: tx.source,
         fee: tx.fee,
         sequence_number: tx.sequence,
+        timebounds_start: tx.timebounds.minTime,
+        timebounds_end: tx.timebounds.maxTime,
+        memo_type: Enum_StellarMemoType.NONE,
         num_operations: tx.operations.length,
-        ...options,
     };
+
+    if (tx.memo) {
+        msg.memo_type = tx.memo.type;
+        msg.memo_text = tx.memo.text;
+        msg.memo_id = tx.memo.id;
+        msg.memo_hash = tx.memo.hash;
+    }
+
+    return msg;
 };
 
 // transform incoming parameters to protobuf messages format
