@@ -20,6 +20,8 @@ setup environment:
 verify:
   stage: build
   needs: ["setup environment"]
+  dependencies:
+    - "setup environment"
   script:
     - nix-shell --run "yarn test:health"
     - nix-shell --run "yarn flow"
@@ -32,6 +34,8 @@ verify:
 build:
   stage: build
   needs: ["setup environment"]
+  dependencies:
+    - "setup environment"
   script:
     - nix-shell --run "yarn build:connect"
   artifacts:
@@ -50,6 +54,8 @@ deploy test:
     GIT_STRATEGY: none
   when: manual
   needs: ["build"]
+  dependencies:
+    - build
   environment:
     name: $CI_BUILD_REF_NAME
     url: $BASE_REVIEW_URL/$CI_BUILD_REF_NAME
@@ -90,6 +96,8 @@ deploy production:
       - v8
   when: manual
   needs: ["build"]
+  dependencies:
+    - build
   variables:
     GIT_STRATEGY: none
   before_script: []
@@ -106,12 +114,15 @@ publish release to npm:
     refs:
       - v8
   when: manual
-  needs: ["verify"]
+  needs: ["setup environment", "verify"]
+  dependencies:
+    - "setup environment"
   before_script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+    - nix-shell --run "yarn"
   script:
-    - nix-shell --run "yarn && yarn build:npm && cd ./npm && npm publish"
-    - nix-shell --run "yarn && yarn build:npm-extended && cd ./npm-extended && npm publish --tag extended"
+    - nix-shell --run "yarn build:npm && cd ./npm && npm publish"
+    - nix-shell --run "yarn build:npm-extended && cd ./npm-extended && npm publish --tag extended"
   after_script:
     - rm ~/.npmrc
   tags:
@@ -124,7 +135,9 @@ publish beta release to npm:
   except:
     - v8
   when: manual
-  needs: ["verify"]
+  needs: ["setup environment", "verify"]
+  dependencies:
+    - "setup environment"
   before_script:
     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
     - nix-shell --run "yarn"
@@ -140,7 +153,9 @@ publish beta release to npm:
 .test:
   image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
   stage: test
-  needs: ["build"]
+  needs: ["setup environment", "verify"]
+  dependencies:
+    - "setup environment"
   variables:
     SDL_VIDEODRIVER: "dummy"
     TESTS_FIRMWARE: "2-master"
