@@ -129,6 +129,7 @@ export type SignMessage = {
     path: string | number[],
     coin: string,
     message: string,
+    hex?: boolean,
 };
 
 export type VerifyMessage = {
@@ -136,6 +137,7 @@ export type VerifyMessage = {
     signature: string,
     message: string,
     coin: string,
+    hex?: boolean,
 };
 
 export type { TxInputType, TxOutputType } from '../trezor/protobuf';
