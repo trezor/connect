@@ -10,14 +10,14 @@ export default {
             const fixture = {
                 description: `${name} ${parameters.comment ?? ''}`,
                 params: {
-                    path: `m/${parameters.path}`,
+                    path: parameters.path,
                     transaction: {
                         to: parameters.to_address,
                         chainId: parameters.chain_id,
-                        value: parameters.value.toString(16),
-                        nonce: parameters.nonce.toString(16),
-                        gasLimit: parameters.gas_limit.toString(16),
-                        gasPrice: parameters.gas_price.toString(16),
+                        value: parameters.value,
+                        nonce: parameters.nonce,
+                        gasLimit: parameters.gas_limit,
+                        gasPrice: parameters.gas_price,
                     },
                 },
                 result: {
@@ -33,10 +33,6 @@ export default {
 
             if (parameters.tx_type) {
                 fixture.params.transaction.txType = parameters.tx_type;
-            }
-
-            if (parameters.value >= Number.MAX_SAFE_INTEGER) {
-                fixture.params.transaction.value = '0xab54a98ceb1f0ad2'; // 12345678901234567890
             }
 
             return fixture;

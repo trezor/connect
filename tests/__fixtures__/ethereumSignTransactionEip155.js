@@ -9,14 +9,14 @@ export default {
         const fixture = {
             description: `Eip155 ${name} ${parameters.comment ?? ''}`,
             params: {
-                path: `m/${parameters.path}`,
+                path: parameters.path,
                 transaction: {
                     to: parameters.to_address,
                     chainId: parameters.chain_id,
-                    value: parameters.value.toString(16),
-                    nonce: parameters.nonce.toString(16),
-                    gasLimit: parameters.gas_limit.toString(16),
-                    gasPrice: parameters.gas_price.toString(16),
+                    value: parameters.value,
+                    nonce: parameters.nonce,
+                    gasLimit: parameters.gas_limit,
+                    gasPrice: parameters.gas_price,
                 },
             },
             result: {
