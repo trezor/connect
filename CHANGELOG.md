@@ -1,5 +1,12 @@
 # 8.2.2 (not released)
 
+### Added
+- Cardano: `getNativeScriptHash` call
+- Cardano: support for 1854 and 1855 key paths
+- Cardano: support for script addresses
+- Cardano: support for token minting and burning
+- Cardano: support for multi-sig transactions using native scripts
+
 ### Changed
 - Updated dependencies.
 - Fixed missing `hex` field in SignMessage and VerifyMessage types.
