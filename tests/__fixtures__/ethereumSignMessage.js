@@ -8,7 +8,7 @@ export default {
     tests: commonFixtures.tests.flatMap(({ parameters, result }) => ({
         description: `${parameters.path} ${parameters.msg.substring(0, 30)}...`,
         params: {
-            path: `m/${parameters.path}`,
+            path: parameters.path,
             message: parameters.msg,
         },
         result: {
