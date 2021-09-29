@@ -26,12 +26,14 @@ TrezorConnect.cardanoGetAddress(params).then(function(result) {
 * `bundle` - `Array` of Objects with single address fields
 
 #### Address Parameters
-###### [flowtype](../../src/js/types/networks/cardano.js#L37-L43)
-* `addressType` - *obligatory* `CardanoAddressType`/`number` - you can use the flow `CARDANO.ADDRESS_TYPE` object or typescript `CardanoAddressType` enum. Supports Base, Pointer, Enterprise, Byron and Reward address types.
+###### [flowtype](../../src/js/types/networks/cardano.js#L37-L45)
+* `addressType` - *obligatory* `CardanoAddressType`/`number` - you can use the flow `CARDANO.ADDRESS_TYPE` object or typescript `CardanoAddressType` enum. Supports all address types.
 * `path` — *obligatory* `string | Array<number>` minimum length is `5`. [read more](path.md)
-* `stakingPath` — *optional* `string | Array<number>` minimum length is `5`. [read more](path.md) Used for base address derivation
+* `stakingPath` — *optional* `string | Array<number>` minimum length is `5`. [read more](path.md) Used for base and reward address derivation
 * `stakingKeyHash` - *optional* `string` hex string of staking key hash. Used for base address derivation (as an alternative to `stakingPath`)
 * `certificatePointer` - *optional* `CardanoCertificatePointer` object. Must contain `number`s `blockIndex`, `txIndex` and `certificateIndex`. ([flowtype](../../src/js/types/networks/cardano.js#L31-L35)) Used for pointer address derivation. [read more about pointer address](https://hydra.iohk.io/build/2006688/download/1/delegation_design_spec.pdf#subsubsection.3.2.2)
+* `paymentScriptHash` - *optional* `string` hex string of payment script hash.
+* `stakingScriptHash` - *optional* `string` hex string of staking script hash.
 
 
 #### Handle button request
@@ -52,7 +54,7 @@ Display byron address of first cardano account:
 ```javascript
 TrezorConnect.cardanoGetAddress({
     addressParameters: {
-        addressType: 8,
+        addressType: CardanoAddressType.BYRON,
         path: "m/44'/1815'/0'/0/0",
     },
     protocolMagic: 764824073,
@@ -63,9 +65,45 @@ Display base address of first cardano account:
 ```javascript
 TrezorConnect.cardanoGetAddress({
     addressParameters: {
-        addressType: 0,
+        addressType: CardanoAddressType.BASE,
         path: "m/1852'/1815'/0'/0/0",
         stakingPath: "m/1852'/1815'/0'/2/0",
+    },
+    protocolMagic: 764824073,
+    networkId: 1,
+});
+```
+Display base address with script payment part:
+```javascript
+TrezorConnect.cardanoGetAddress({
+    addressParameters: {
+        addressType: CardanoAddressType.BASE_SCRIPT_KEY,
+        paymentScriptHash: '0d5acbf6a1dfb0c8724e60df314987315ccbf78bb6c0f9b6f3d568fe',
+        stakingPath: "m/1852'/1815'/0'/2/0",
+    },
+    protocolMagic: 764824073,
+    networkId: 1,
+});
+```
+Display base address with script staking part:
+```javascript
+TrezorConnect.cardanoGetAddress({
+    addressParameters: {
+        addressType: CardanoAddressType.BASE_KEY_SCRIPT,
+        path: "m/1852'/1815'/0'/0/0",
+        stakingScriptHash: '8d7bebc7a58f1c7b5fb7c9391071ecd3b51b032695522f8c555343a9',
+    },
+    protocolMagic: 764824073,
+    networkId: 1,
+});
+```
+Display base address with both payment and staking part being a script:
+```javascript
+TrezorConnect.cardanoGetAddress({
+    addressParameters: {
+        addressType: CardanoAddressType.BASE_SCRIPT_SCRIPT,
+        paymentScriptHash: '0d5acbf6a1dfb0c8724e60df314987315ccbf78bb6c0f9b6f3d568fe',
+        stakingScriptHash: '8d7bebc7a58f1c7b5fb7c9391071ecd3b51b032695522f8c555343a9',
     },
     protocolMagic: 764824073,
     networkId: 1,
@@ -75,8 +113,24 @@ Display pointer address of first cardano account:
 ```javascript
 TrezorConnect.cardanoGetAddress({
     addressParameters: {
-        addressType: 4,
+        addressType: CardanoAddressType.POINTER,
         path: "m/1852'/1815'/0'/0/0",
+        certificatePointer: {
+            blockIndex: 1,
+            txIndex: 2,
+            certificateIndex: 3,
+        },
+    },
+    protocolMagic: 764824073,
+    networkId: 1,
+});
+```
+Display pointer script address:
+```javascript
+TrezorConnect.cardanoGetAddress({
+    addressParameters: {
+        addressType: CardanoAddressType.POINTER_SCRIPT,
+        paymentScriptHash: '0d5acbf6a1dfb0c8724e60df314987315ccbf78bb6c0f9b6f3d568fe',
         certificatePointer: {
             blockIndex: 1,
             txIndex: 2,
@@ -91,8 +145,19 @@ Display enterprise address of first cardano account:
 ```javascript
 TrezorConnect.cardanoGetAddress({
     addressParameters: {
-        addressType: 6,
+        addressType: CardanoAddressType.ENTERPRISE,
         path: "m/1852'/1815'/0'/0/0",
+    },
+    protocolMagic: 764824073,
+    networkId: 1,
+});
+```
+Display enterprise script address:
+```javascript
+TrezorConnect.cardanoGetAddress({
+    addressParameters: {
+        addressType: CardanoAddressType.ENTERPRISE_SCRIPT,
+        paymentScriptHash: '0d5acbf6a1dfb0c8724e60df314987315ccbf78bb6c0f9b6f3d568fe',
     },
     protocolMagic: 764824073,
     networkId: 1,
@@ -102,8 +167,19 @@ Display reward address of first cardano account:
 ```javascript
 TrezorConnect.cardanoGetAddress({
     addressParameters: {
-        addressType: 14,
-        path: "m/1852'/1815'/0'/0/0",
+        addressType: CardanoAddressType.REWARD,
+        stakingPath: "m/1852'/1815'/0'/0/0",
+    },
+    protocolMagic: 764824073,
+    networkId: 1,
+});
+```
+Display reward script address:
+```javascript
+TrezorConnect.cardanoGetAddress({
+    addressParameters: {
+        addressType: CardanoAddressType.REWARD_SCRIPT,
+        stakingScriptHash: '8d7bebc7a58f1c7b5fb7c9391071ecd3b51b032695522f8c555343a9',
     },
     protocolMagic: 764824073,
     networkId: 1,
@@ -183,9 +259,11 @@ Result with only one address
                 blockIndex: number,
                 txIndex: number,
                 certificatePointer: number,
-            }
+            },
+            paymentScriptHash?: string,
+            stakingScriptHash?: string,
         }
-        serializedPath: string,
+        serializedPath?: string,
         serializedStakingPath?: string,
         protocolMagic: number,
         networkId: number,
@@ -208,9 +286,11 @@ Result with bundle of addresses
                     blockIndex: number,
                     txIndex: number,
                     certificatePointer: number,
-                }
+                },
+                paymentScriptHash?: string,
+                stakingScriptHash?: string,
             }
-            serializedPath: string,
+            serializedPath?: string,
             serializedStakingPath?: string,
             protocolMagic: number,
             networkId: number,
@@ -226,9 +306,11 @@ Result with bundle of addresses
                     blockIndex: number,
                     txIndex: number,
                     certificatePointer: number,
-                }
+                },
+                paymentScriptHash?: string,
+                stakingScriptHash?: string,
             }
-            serializedPath: string,
+            serializedPath?: string,
             serializedStakingPath?: string,
             protocolMagic: number,
             networkId: number,
@@ -244,9 +326,11 @@ Result with bundle of addresses
                     blockIndex: number,
                     txIndex: number,
                     certificatePointer: number,
-                }
+                },
+                paymentScriptHash?: string,
+                stakingScriptHash?: string,
             }
-            serializedPath: string,
+            serializedPath?: string,
             serializedStakingPath?: string,
             protocolMagic: number,
             networkId: number,
