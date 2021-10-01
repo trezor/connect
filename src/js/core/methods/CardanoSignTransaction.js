@@ -296,7 +296,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             const { message } = await typedCall(
                 'CardanoTxWitnessRequest',
                 'CardanoTxWitnessResponse',
-                path,
+                { path },
             );
             witnesses.push({
                 type: CardanoTxWitnessType[message.type],
