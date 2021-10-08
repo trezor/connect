@@ -93,7 +93,7 @@ written in various languages:
 - [**PHP**](server/server.php)
 - [**Python**](server/server.py)
 - [**Ruby**](server/server.rb)
-
+- [**Go**](server/server.go)
 
 
 ### Migration from older version
