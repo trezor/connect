@@ -67,6 +67,7 @@ module.exports = {
             {
                 test: /sharedConnectionWorker/i,
                 loader: 'worker-loader',
+                issuer: /browser\/workers/i, // replace import ONLY in src/env/browser/workers
                 options: {
                     worker: 'SharedWorker',
                     filename: './workers/shared-connection-worker.[contenthash].js',
