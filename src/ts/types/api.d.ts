@@ -156,10 +156,10 @@ export namespace TrezorConnect {
      * Bitcoin, Bitcoin-like, Ethereum-like, Ripple
      * Gets an info of specified account.
      */
-    function getAccountInfo(params: P.CommonParams & Account.GetAccountInfo): P.Response<Account.AccountInfo>;
+    function getAccountInfo(params: P.CommonParams & Account.GetAccountInfo): P.Response<Account.AccountInfo | null>;
     function getAccountInfo(
         params: P.CommonParams & P.Bundle<Account.GetAccountInfo>,
-    ): P.BundledResponse<Account.AccountInfo>;
+    ): P.BundledResponse<Account.AccountInfo | null>;
 
     /**
      * Bitcoin and Bitcoin-like

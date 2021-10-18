@@ -485,7 +485,7 @@ export const getAccountInfo = async () => {
         },
         defaultAccountType: 'normal',
     });
-    if (account.success) {
+    if (account.success && account.payload) {
         const { payload } = account;
         (payload.empty: boolean);
         (payload.path: string);
@@ -541,7 +541,9 @@ export const getAccountInfo = async () => {
     (bundlePK.success: boolean);
     if (bundlePK.success) {
         bundlePK.payload.forEach(item => {
-            (item.empty: boolean);
+            if (item !== null) {
+                (item.empty: boolean);
+            }
         });
     } else {
         (bundlePK.payload.error: string);

@@ -216,7 +216,7 @@ export default class GetAccountInfo extends AbstractMethod {
         }
     }
 
-    async run(): Promise<AccountInfo | Array<AccountInfo | null> | null> {
+    async run(): Promise<AccountInfo | null | Array<AccountInfo | null>> {
         // address_n and descriptor are not set. use discovery
         if (this.params.length === 1 && !this.params[0].address_n && !this.params[0].descriptor) {
             return this.discover(this.params[0]);

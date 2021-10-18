@@ -472,6 +472,7 @@ export const getAccountInfo = async () => {
     });
     if (account.success) {
         const { payload } = account;
+        if (payload === null) return;
         payload.empty;
         payload.path;
         payload.descriptor;

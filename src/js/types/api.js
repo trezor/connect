@@ -216,7 +216,7 @@ export type API = {
      * Bitcoin, Bitcoin-like, Ethereum-like, Ripple
      * Gets an info of specified account.
      */
-    getAccountInfo: Bundled<Account.GetAccountInfo, Account.AccountInfo>,
+    getAccountInfo: Bundled<Account.GetAccountInfo, Account.AccountInfo | null>,
 
     /**
      * Bitcoin and Bitcoin-like
