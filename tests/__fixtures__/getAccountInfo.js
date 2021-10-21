@@ -106,7 +106,7 @@ export default {
             },
             result: {
                 descriptor: 'rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj',
-                balance: '20000000',
+                empty: false,
             },
         },
         {
