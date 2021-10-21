@@ -1,16 +1,11 @@
 /* @flow */
 
-// npm types
-import type { BuildTxInput } from 'hd-wallet';
+import type { ComposedTxInput } from '@trezor/utxo-lib';
 import type { TypedRawTransaction } from '@trezor/blockchain-link';
-// local modules
-
 import { reverseBuffer } from '../../../utils/bufferUtils';
 import { validatePath, isSegwitPath, getScriptType, fixPath } from '../../../utils/pathUtils';
 import { convertMultisigPubKey } from '../../../utils/hdnodeUtils';
 import { validateParams } from '../helpers/paramsValidator';
-
-// local types
 import type { BitcoinNetworkInfo } from '../../../types';
 import type { TxInputType } from '../../../types/trezor/protobuf';
 
@@ -58,9 +53,9 @@ export const enhanceTrezorInputs = (inputs: TxInputType[], rawTxs: TypedRawTrans
 };
 
 /** *****
- * Transform from Trezor format to hd-wallet, called from SignTx to get refTxs from bitcore
+ * Transform from Trezor format to @trezor/utxo-lib/compose, called from SignTx to get refTxs from bitcore
  ****** */
-export const inputToHD = (input: TxInputType): BuildTxInput => ({
+export const inputToHD = (input: TxInputType): ComposedTxInput => ({
     hash: reverseBuffer(Buffer.from(input.prev_hash, 'hex')),
     index: input.prev_index,
     path: input.address_n,
@@ -69,16 +64,16 @@ export const inputToHD = (input: TxInputType): BuildTxInput => ({
 });
 
 /** *****
- * Transform from hd-wallet format to Trezor
+ * Transform from @trezor/utxo-lib/compose format to Trezor
  ****** */
-export const inputToTrezor = (input: BuildTxInput, sequence: number): TxInputType => {
+export const inputToTrezor = (input: ComposedTxInput, sequence: number): TxInputType => {
     const { hash, index, path, amount } = input;
     return {
         address_n: path,
         prev_index: index,
         prev_hash: reverseBuffer(hash).toString('hex'),
         script_type: getScriptType(path),
-        // $FlowIssue: amount in BuildTxInput type (hd-wallet) is declared as optional // TODO
+        // $FlowIssue: amount in ComposedTxInput type (@trezor/utxo-lib/compose) is declared as optional // TODO
         amount,
         sequence,
     };

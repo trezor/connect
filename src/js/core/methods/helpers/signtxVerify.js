@@ -1,13 +1,12 @@
 /* @flow */
 
 import {
-    HDNode,
-    crypto as BitcoinJsCrypto,
-    script as BitcoinJsScript,
+    bip32,
+    address as BitcoinJsAddress,
+    payments as BitcoinJsPayments,
     Transaction as BitcoinJsTransaction,
 } from '@trezor/utxo-lib';
 import { ERRORS } from '../../../constants';
-import { getAddressScriptType, getAddressHash } from '../../../utils/addressUtils';
 import { getOutputScriptType } from '../../../utils/pathUtils';
 
 import type { BitcoinNetworkInfo, HDNodeResponse } from '../../../types';
@@ -19,8 +18,6 @@ type GetHDNode = (
     validation?: boolean,
 ) => Promise<HDNodeResponse>;
 
-BitcoinJsTransaction.USE_STRING_VALUES = true;
-
 const derivePubKeyHash = async (
     address_n: number[],
     getHDNode: GetHDNode,
@@ -29,49 +26,14 @@ const derivePubKeyHash = async (
     // regular bip44 output
     if (address_n.length === 5) {
         const response = await getHDNode(address_n.slice(0, 4), coinInfo);
-        const node = HDNode.fromBase58(response.xpub, coinInfo.network, true);
+        const node = bip32.fromBase58(response.xpub, coinInfo.network);
         const addr = node.derive(address_n[address_n.length - 1]);
-        return addr.getIdentifier();
+        return addr.identifier;
     }
     // custom address_n
     const response = await getHDNode(address_n, coinInfo);
-    const node = HDNode.fromBase58(response.xpub, coinInfo.network, true);
-    return node.getIdentifier();
-};
-
-const deriveWitnessOutput = (pkh: Buffer) => {
-    // see https://github.com/bitcoin/bips/blob/master/bip-0049.mediawiki
-    // address derivation + test vectors
-    const scriptSig = Buffer.alloc(pkh.length + 2);
-    scriptSig[0] = 0;
-    scriptSig[1] = 0x14;
-    pkh.copy(scriptSig, 2);
-    const addressBytes = BitcoinJsCrypto.hash160(scriptSig);
-    const scriptPubKey = Buffer.alloc(23);
-    scriptPubKey[0] = 0xa9;
-    scriptPubKey[1] = 0x14;
-    scriptPubKey[22] = 0x87;
-    addressBytes.copy(scriptPubKey, 2);
-    return scriptPubKey;
-};
-
-const deriveBech32Output = (program: Buffer) => {
-    // see https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki#Segwit_address_format
-    // address derivation + test vectors
-    // ideally we would also have program version with this, but
-    // currently it's fixed to version 0.
-    if (program.length !== 32 && program.length !== 20) {
-        throw ERRORS.TypedError(
-            'Runtime',
-            'deriveBech32Output: Unknown size for witness program v0',
-        );
-    }
-
-    const scriptSig = Buffer.alloc(program.length + 2);
-    scriptSig[0] = 0;
-    scriptSig[1] = program.length;
-    program.copy(scriptSig, 2);
-    return scriptSig;
+    const node = bip32.fromBase58(response.xpub, coinInfo.network);
+    return node.identifier;
 };
 
 const deriveOutputScript = async (
@@ -79,42 +41,46 @@ const deriveOutputScript = async (
     output: TxOutputType,
     coinInfo: BitcoinNetworkInfo,
 ) => {
+    // skip multisig output check, not implemented yet
+    // TODO: implement it
+    if (output.multisig) return;
+
     if (output.op_return_data) {
-        return BitcoinJsScript.nullData.output.encode(Buffer.from(output.op_return_data, 'hex'));
+        return BitcoinJsPayments.embed({ data: [Buffer.from(output.op_return_data, 'hex')] })
+            .output;
     }
-    if (!output.address_n && !output.address) {
+
+    if (output.address) {
+        return BitcoinJsAddress.toOutputScript(output.address, coinInfo.network);
+    }
+
+    if (!output.address_n) {
         throw ERRORS.TypedError(
             'Runtime',
             'deriveOutputScript: Neither address or address_n is set',
         );
     }
 
-    // skip multisig output check, not implemented yet
-    // TODO: implement it
-    if (output.multisig) return;
-
-    const scriptType = output.address_n
-        ? getOutputScriptType(output.address_n)
-        : getAddressScriptType(output.address, coinInfo);
-
-    const pkh = output.address_n
-        ? await derivePubKeyHash(output.address_n, getHDNode, coinInfo)
-        : getAddressHash(output.address);
+    const scriptType = getOutputScriptType(output.address_n);
+    const pkh = await derivePubKeyHash(output.address_n, getHDNode, coinInfo);
+    const payment = { hash: pkh, network: coinInfo.network };
 
     if (scriptType === 'PAYTOADDRESS') {
-        return BitcoinJsScript.pubKeyHash.output.encode(pkh);
+        return BitcoinJsPayments.p2pkh(payment).output;
     }
 
     if (scriptType === 'PAYTOSCRIPTHASH') {
-        return BitcoinJsScript.scriptHash.output.encode(pkh);
+        return BitcoinJsPayments.p2sh(payment).output;
     }
 
     if (scriptType === 'PAYTOP2SHWITNESS') {
-        return deriveWitnessOutput(pkh);
+        return BitcoinJsPayments.p2sh({
+            redeem: BitcoinJsPayments.p2wpkh(payment),
+        }).output;
     }
 
     if (scriptType === 'PAYTOWITNESS') {
-        return deriveBech32Output(pkh);
+        return BitcoinJsPayments.p2wpkh(payment).output;
     }
 
     throw ERRORS.TypedError('Runtime', `deriveOutputScript: Unknown script type ${scriptType}`);
@@ -128,7 +94,7 @@ export default async (
     coinInfo: BitcoinNetworkInfo,
 ) => {
     // deserialize signed transaction
-    const bitcoinTx = BitcoinJsTransaction.fromHex(serializedTx, coinInfo.network);
+    const bitcoinTx = BitcoinJsTransaction.fromHex(serializedTx, { network: coinInfo.network });
 
     // check inputs and outputs length
     if (inputs.length !== bitcoinTx.ins.length) {
@@ -154,7 +120,7 @@ export default async (
         }
 
         const scriptA = await deriveOutputScript(getHDNode, outputs[i], coinInfo);
-        if (scriptA && scriptA.compare(scriptB) !== 0) {
+        if (!scriptA || scriptA.compare(scriptB) !== 0) {
             throw ERRORS.TypedError('Runtime', `verifyTx: Output ${i} scripts differ`);
         }
     }

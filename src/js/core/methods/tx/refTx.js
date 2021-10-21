@@ -1,12 +1,11 @@
 /* @flow */
 
 import {
-    coins as BitcoinJSCoins,
-    script as BitcoinJSScript,
+    payments as BitcoinJsPayments,
     Transaction as BitcoinJsTransaction,
 } from '@trezor/utxo-lib';
 import type { TypedRawTransaction } from '@trezor/blockchain-link';
-import type { Input as BitcoinJsInput, Output as BitcoinJsOutput } from '@trezor/utxo-lib';
+import type { TxInput as BitcoinJsInput, TxOutput as BitcoinJsOutput } from '@trezor/utxo-lib';
 // local modules
 import { reverseBuffer } from '../../../utils/bufferUtils';
 import { getHDPath, getScriptType, getOutputScriptType } from '../../../utils/pathUtils';
@@ -15,8 +14,6 @@ import { TypedError } from '../../../constants/errors';
 // local types
 import type { CoinInfo, RefTransaction, AccountAddresses } from '../../../types';
 import type { TxInputType, TxOutputType } from '../../../types/trezor/protobuf';
-
-BitcoinJsTransaction.USE_STRING_VALUES = true;
 
 // Get array of unique referenced transactions ids
 export const getReferencedTransactions = (inputs: TxInputType[]) => {
@@ -64,6 +61,24 @@ const getWitness = (witness?: Buffer[]) => {
     return Buffer.concat(chunks).toString('hex');
 };
 
+// extend refTx object with optional data
+const enhanceTransaction = (refTx: RefTransaction, srcTx: BitcoinJsTransaction) => {
+    const extraData = srcTx.getExtraData();
+    if (extraData) {
+        refTx.extra_data = extraData.toString('hex');
+    }
+    const specific = srcTx.getSpecificData();
+    if (specific) {
+        if (specific.type === 'zcash' && specific.versionGroupId && refTx.version >= 3) {
+            refTx.version_group_id = specific.versionGroupId;
+        }
+        if (specific.type === 'dash' && srcTx.type && srcTx.version >= 3) {
+            refTx.version |= srcTx.type << 16;
+        }
+    }
+    return refTx;
+};
+
 // Find inputs used for current sign tx process related to referenced transaction
 // related inputs and outputs needs more info (address_n, amount, script_type, witness)
 // const findAddressN = (vinVout?: TxInputType[] | TxOutputType[], txid: string, index: number) => {
@@ -81,7 +96,7 @@ export const transformOrigTransactions = (
     txs.flatMap(raw => {
         if (coinInfo.type !== 'bitcoin' || raw.type !== 'blockbook' || !addresses) return [];
         const { hex, vin, vout } = raw.tx;
-        const tx = BitcoinJsTransaction.fromHex(hex, coinInfo.network);
+        const tx = BitcoinJsTransaction.fromHex(hex, { network: coinInfo.network });
         const inputAddresses = addresses.used.concat(addresses.change).concat(addresses.unused);
 
         // inputs, required by TXORIGINPUT (TxAckInput) request from Trezor
@@ -110,12 +125,11 @@ export const transformOrigTransactions = (
         // outputs, required by TXORIGOUTPUT (TxAckOutput) request from Trezor
         const outputsMap = (output: BitcoinJsOutput, i: number) => {
             if (!vout[i].isAddress) {
+                const { data } = BitcoinJsPayments.embed({ output: output.script });
                 return {
                     script_type: 'PAYTOOPRETURN',
                     amount: '0',
-                    op_return_data: BitcoinJSScript.nullData.output
-                        .decode(output.script)
-                        .toString('hex'),
+                    op_return_data: data ? data.shift().toString('hex') : '', // shift OP code
                 };
             }
             // TODO: is vout[i] a correct way? order in Bitcoinjs
@@ -138,26 +152,17 @@ export const transformOrigTransactions = (
                   };
         };
 
-        const extraData = tx.getExtraData();
-        const version_group_id =
-            BitcoinJSCoins.isZcashType(tx.network) &&
-            typeof tx.versionGroupId === 'number' &&
-            tx.version >= 3
-                ? tx.versionGroupId
-                : undefined;
-        return [
-            {
-                version: tx.isDashSpecialTransaction() ? tx.version | (tx.type << 16) : tx.version,
-                hash: tx.getId(),
-                inputs: tx.ins.map(inputsMap),
-                outputs: tx.outs.map(outputsMap),
-                extra_data: extraData ? extraData.toString('hex') : undefined,
-                lock_time: tx.locktime,
-                timestamp: tx.timestamp,
-                version_group_id,
-                expiry: tx.expiryHeight,
-            },
-        ];
+        const refTx: RefTransaction = {
+            version: tx.version,
+            hash: tx.getId(),
+            inputs: tx.ins.map(inputsMap),
+            outputs: tx.outs.map(outputsMap),
+            lock_time: tx.locktime,
+            timestamp: tx.timestamp,
+            expiry: tx.expiry,
+        };
+
+        return enhanceTransaction(refTx, tx);
     });
 
 // Transform referenced transactions from Blockbook (blockchain-link) to Trezor format
@@ -168,7 +173,7 @@ export const transformReferencedTransactions = (
     txs.flatMap(raw => {
         if (coinInfo.type !== 'bitcoin' || raw.type !== 'blockbook') return [];
         const { hex } = raw.tx;
-        const tx = BitcoinJsTransaction.fromHex(hex, coinInfo.network);
+        const tx = BitcoinJsTransaction.fromHex(hex, { network: coinInfo.network });
 
         // inputs, required by TXINPUT (TxAckPrevInput) request from Trezor
         const inputsMap = (input: BitcoinJsInput) => ({
@@ -184,26 +189,17 @@ export const transformReferencedTransactions = (
             script_pubkey: output.script.toString('hex'),
         });
 
-        const extraData = tx.getExtraData();
-        const version_group_id =
-            BitcoinJSCoins.isZcashType(tx.network) &&
-            typeof tx.versionGroupId === 'number' &&
-            tx.version >= 3
-                ? tx.versionGroupId
-                : undefined;
-        return [
-            {
-                version: tx.isDashSpecialTransaction() ? tx.version | (tx.type << 16) : tx.version,
-                hash: tx.getId(),
-                inputs: tx.ins.map(inputsMap),
-                bin_outputs: tx.outs.map(binOutputsMap),
-                extra_data: extraData ? extraData.toString('hex') : undefined,
-                lock_time: tx.locktime,
-                timestamp: tx.timestamp,
-                version_group_id,
-                expiry: tx.expiryHeight,
-            },
-        ];
+        const refTx: RefTransaction = {
+            version: tx.version,
+            hash: tx.getId(),
+            inputs: tx.ins.map(inputsMap),
+            bin_outputs: tx.outs.map(binOutputsMap),
+            lock_time: tx.locktime,
+            timestamp: tx.timestamp,
+            expiry: tx.expiry,
+        };
+
+        return enhanceTransaction(refTx, tx);
     });
 
 // Validate referenced transactions provided by the user.

@@ -1,7 +1,7 @@
 /* @flow */
 
 import BigNumber from 'bignumber.js';
-import type { BuildTxOutputRequest, BuildTxResult } from 'hd-wallet';
+import type { ComposeOutput, ComposeResult } from '@trezor/utxo-lib';
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
@@ -39,7 +39,7 @@ import type {
 } from '../../types/account';
 
 type Params = {
-    outputs: BuildTxOutputRequest[],
+    outputs: ComposeOutput[],
     coinInfo: BitcoinNetworkInfo,
     push: boolean,
     account?: $ElementType<PrecomposeParams, 'account'>,
@@ -83,8 +83,8 @@ export default class ComposeTransaction extends AbstractMethod {
         // set required firmware from coinInfo support
         this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
 
-        // validate each output and transform into hd-wallet format
-        const outputs: BuildTxOutputRequest[] = [];
+        // validate each output and transform into @trezor/utxo-lib/compose format
+        const outputs: ComposeOutput[] = [];
         let total = new BigNumber(0);
         payload.outputs.forEach(out => {
             const output = validateHDOutput(out, coinInfo);
@@ -151,18 +151,18 @@ export default class ComposeTransaction extends AbstractMethod {
             skipPermutation,
         });
 
-        // This is mandatory, hd-wallet expects current block height
+        // This is mandatory, @trezor/utxo-lib/compose expects current block height
         // TODO: make it possible without it (offline composing)
         const blockchain = await initBlockchain(this.params.coinInfo, this.postMessage);
         await composer.init(blockchain);
         return feeLevels.map(level => {
             composer.composeCustomFee(level.feePerUnit);
-            const tx = { ...composer.composed.custom }; // needs to spread otherwise flow has a problem with BuildTxResult vs PrecomposedTransaction (max could be undefined)
+            const tx = { ...composer.composed.custom }; // needs to spread otherwise flow has a problem with ComposeResult vs PrecomposedTransaction (max could be undefined)
             if (tx.type === 'final') {
                 const inputs = tx.transaction.inputs.map(inp =>
                     inputToTrezor(inp, this.params.sequence || 0xffffffff),
                 );
-                const { sorted, _permutation } = tx.transaction.outputs;
+                const { sorted, permutation } = tx.transaction.outputs;
                 const txOutputs = sorted.map(out => outputToTrezor(out, coinInfo));
 
                 return {
@@ -175,7 +175,7 @@ export default class ComposeTransaction extends AbstractMethod {
                     transaction: {
                         inputs,
                         outputs: txOutputs,
-                        outputsPermutation: _permutation,
+                        outputsPermutation: permutation,
                     },
                 };
             }
@@ -356,7 +356,7 @@ export default class ComposeTransaction extends AbstractMethod {
         }
     }
 
-    async _sign(tx: BuildTxResult) {
+    async _sign(tx: ComposeResult) {
         if (tx.type !== 'final')
             throw ERRORS.TypedError('Runtime', 'ComposeTransaction: Trying to sign unfinished tx');
 

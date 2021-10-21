@@ -20,46 +20,36 @@ export const convertXpub = [
     {
         description: 'No requested network == no change',
         network: networks.bitcoin,
-        xpub:
-            'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
-        result:
-            'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
+        xpub: 'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
+        result: 'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
     },
     {
         description: 'P2PKH > P2SH',
         network: networks.bitcoin,
         requestedNetwork: NETWORK_P2SH,
-        xpub:
-            'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
-        result:
-            'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6',
+        xpub: 'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
+        result: 'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6',
     },
     {
         description: 'P2SH > P2PKH',
         network: NETWORK_P2SH,
         requestedNetwork: networks.bitcoin,
-        xpub:
-            'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6',
-        result:
-            'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
+        xpub: 'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6',
+        result: 'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
     },
     {
         description: 'P2PKH > Bech32/P2WPKH',
         network: networks.bitcoin,
         requestedNetwork: NETWORK_P2WPKH,
-        xpub:
-            'xpub6DDUPHpUo4pcy43iJeZjbSVWGav1SMMmuWdMHiGtkK8rhKmfbomtkwW6GKs1GGAKehT6QRocrmda3WWxXawpjmwaUHfFRXuKrXSapdckEYF',
-        result:
-            'zpub6rszzdAK6RuafeRwyN8z1cgWcXCuKbLmjjfnrW4fWKtcoXQ8787214pNJjnBG5UATyghuNzjn6Lfp5k5xymrLFJnCy46bMYJPyZsbpFGagT',
+        xpub: 'xpub6DDUPHpUo4pcy43iJeZjbSVWGav1SMMmuWdMHiGtkK8rhKmfbomtkwW6GKs1GGAKehT6QRocrmda3WWxXawpjmwaUHfFRXuKrXSapdckEYF',
+        result: 'zpub6rszzdAK6RuafeRwyN8z1cgWcXCuKbLmjjfnrW4fWKtcoXQ8787214pNJjnBG5UATyghuNzjn6Lfp5k5xymrLFJnCy46bMYJPyZsbpFGagT',
     },
     {
         description: 'Bech32/P2WPKH > P2PKH',
         network: NETWORK_P2WPKH,
         requestedNetwork: networks.bitcoin,
-        xpub:
-            'zpub6rszzdAK6RuafeRwyN8z1cgWcXCuKbLmjjfnrW4fWKtcoXQ8787214pNJjnBG5UATyghuNzjn6Lfp5k5xymrLFJnCy46bMYJPyZsbpFGagT',
-        result:
-            'xpub6DDUPHpUo4pcy43iJeZjbSVWGav1SMMmuWdMHiGtkK8rhKmfbomtkwW6GKs1GGAKehT6QRocrmda3WWxXawpjmwaUHfFRXuKrXSapdckEYF',
+        xpub: 'zpub6rszzdAK6RuafeRwyN8z1cgWcXCuKbLmjjfnrW4fWKtcoXQ8787214pNJjnBG5UATyghuNzjn6Lfp5k5xymrLFJnCy46bMYJPyZsbpFGagT',
+        result: 'xpub6DDUPHpUo4pcy43iJeZjbSVWGav1SMMmuWdMHiGtkK8rhKmfbomtkwW6GKs1GGAKehT6QRocrmda3WWxXawpjmwaUHfFRXuKrXSapdckEYF',
     },
 ];
 
@@ -67,26 +57,20 @@ export const convertBitcoinXpub = [
     {
         description: 'No requested network == no change',
         network: networks.bitcoin,
-        xpub:
-            'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
-        result:
-            'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
+        xpub: 'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
+        result: 'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
     },
     {
         description: 'Requested network P2SH',
         network: NETWORK_P2SH,
-        xpub:
-            'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
-        result:
-            'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6',
+        xpub: 'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
+        result: 'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6',
     },
     {
         description: 'Requested network Bech32/P2WPKH',
         network: NETWORK_P2WPKH,
-        xpub:
-            'xpub6DDUPHpUo4pcy43iJeZjbSVWGav1SMMmuWdMHiGtkK8rhKmfbomtkwW6GKs1GGAKehT6QRocrmda3WWxXawpjmwaUHfFRXuKrXSapdckEYF',
-        result:
-            'zpub6rszzdAK6RuafeRwyN8z1cgWcXCuKbLmjjfnrW4fWKtcoXQ8787214pNJjnBG5UATyghuNzjn6Lfp5k5xymrLFJnCy46bMYJPyZsbpFGagT',
+        xpub: 'xpub6DDUPHpUo4pcy43iJeZjbSVWGav1SMMmuWdMHiGtkK8rhKmfbomtkwW6GKs1GGAKehT6QRocrmda3WWxXawpjmwaUHfFRXuKrXSapdckEYF',
+        result: 'zpub6rszzdAK6RuafeRwyN8z1cgWcXCuKbLmjjfnrW4fWKtcoXQ8787214pNJjnBG5UATyghuNzjn6Lfp5k5xymrLFJnCy46bMYJPyZsbpFGagT',
     },
 ];
 
@@ -125,8 +109,7 @@ export const convertMultisigPubKey = [
             multisig: {
                 pubkeys: [
                     {
-                        node:
-                            'xpub6EexEtC6c2rN5QCpzrL2nUNGDfxizCi3kM1C2Mk5a6PfQs4H3F72C642M3XbnzycvvtD4U6vzn1nYPpH8VUmiREc2YuXP3EFgN1uLTrVEj4',
+                        node: 'xpub6EexEtC6c2rN5QCpzrL2nUNGDfxizCi3kM1C2Mk5a6PfQs4H3F72C642M3XbnzycvvtD4U6vzn1nYPpH8VUmiREc2YuXP3EFgN1uLTrVEj4',
                     },
                 ],
             },
@@ -153,8 +136,7 @@ export const convertMultisigPubKey = [
 
 // m/49'/0'/0'
 const DEFAULT_NODE = {
-    xpub:
-        'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
+    xpub: 'xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx',
     node: {
         child_num: 2147483648,
         chain_code: '072d8252ea73b130c7f6139daf220842bf0d42ffe43fd274c9c158504f4c50bf',
@@ -166,8 +148,7 @@ const DEFAULT_NODE = {
 
 // m/49'/0'/0'/0
 const DEFAULT_NODE_CHILD = {
-    xpub:
-        'xpub6EnV9K1LzPtRDXqqcDkBk99uCFneHiHR3DBQxXcbuWzQoUGLfJiHeF3uDW1JZH3ZG7mr4TuNtPbgLYwEibEkcDcnQkQksZi7jm3eY8PqKFv',
+    xpub: 'xpub6EnV9K1LzPtRDXqqcDkBk99uCFneHiHR3DBQxXcbuWzQoUGLfJiHeF3uDW1JZH3ZG7mr4TuNtPbgLYwEibEkcDcnQkQksZi7jm3eY8PqKFv',
     node: {
         child_num: 0,
         chain_code: '2589d77d82c575ed697ef8122f8c44c235377d2969c7a674fe73a7347066c4b6',
@@ -189,13 +170,11 @@ export const xpubDerive = [
         suffix: 0,
         xpub: {
             ...DEFAULT_NODE,
-            xpub:
-                'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6',
+            xpub: 'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6',
         },
         childXPub: {
             ...DEFAULT_NODE_CHILD,
-            xpub:
-                'ypub6ZckSygG95Ru4q2xSaXoxEFQNDw6ELGuxKhdjvWVHXNHra5ZuxsrGJi3EhxtZBhUfkteowVwM3xEDqYoSHemQTJPH67BTUXc1V7Hvneqgzd',
+            xpub: 'ypub6ZckSygG95Ru4q2xSaXoxEFQNDw6ELGuxKhdjvWVHXNHra5ZuxsrGJi3EhxtZBhUfkteowVwM3xEDqYoSHemQTJPH67BTUXc1V7Hvneqgzd',
         },
         network: NETWORK_P2SH,
     },
@@ -204,13 +183,11 @@ export const xpubDerive = [
         suffix: 0,
         xpub: {
             ...DEFAULT_NODE,
-            xpub:
-                'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6',
+            xpub: 'ypub6XKbB5DSkq8Royg8isNtGktj6bmEfGJXDs83Ad5CZ5tpDV8QofwSWQFTWP2Pv24vNdrPhquehL7vRMvSTj2GpKv6UaTQCBKZALm6RJAmxG6',
         },
         childXPub: {
             ...DEFAULT_NODE_CHILD,
-            xpub:
-                'ypub6ZckSygG95Ru4q2xSaXoxEFQNDw6ELGuxKhdjvWVHXNHra5ZuxsrGJi3EhxtZBhUfkteowVwM3xEDqYoSHemQTJPH67BTUXc1V7Hvneqgzd',
+            xpub: 'ypub6ZckSygG95Ru4q2xSaXoxEFQNDw6ELGuxKhdjvWVHXNHra5ZuxsrGJi3EhxtZBhUfkteowVwM3xEDqYoSHemQTJPH67BTUXc1V7Hvneqgzd',
         },
         error: 'Invalid network version',
     },

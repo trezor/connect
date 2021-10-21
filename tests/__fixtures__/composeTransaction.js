@@ -90,7 +90,7 @@ export default {
                             { amount: '2762', script_type: 'PAYTOWITNESS' },
                             { amount: '6497', script_type: 'PAYTOADDRESS' },
                         ],
-                        outputsPermutation: [1, 0], // default permutation from hd-wallet
+                        outputsPermutation: [1, 0], // default permutation from @trezor/utxo-lib/compose
                     },
                 },
             ],

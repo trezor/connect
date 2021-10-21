@@ -209,4 +209,4 @@ For more examples see
 
 ### Additional notes
 * [1] `UI.SELECT_ACCOUNT` and `UI.SELECT_FEE` events are emitted when using `trusted mode`
-* [2] Account utxo selection, fee and change calculation is performed by [hd-wallet](https://github.com/trezor/hd-wallet/blob/master/src/build-tx/index.js) dependency
+* [2] Account utxo selection, fee and change calculation is performed by [@trezor/utxo-lib](https://github.com/trezor/trezor-suite/tree/develop/packages/utxo-lib/src/compose) module
