@@ -1,19 +1,11 @@
 /* @flow */
 
-// npm packages
-import bchaddrjs from 'bchaddrjs';
-// npm types
-import type { BuildTxOutput, BuildTxOutputRequest } from 'hd-wallet';
-
-// local modules
-
+import type { ComposeOutput, ComposedTxOutput } from '@trezor/utxo-lib';
 import { getOutputScriptType, fixPath } from '../../../utils/pathUtils';
-import { isScriptHash, isValidAddress } from '../../../utils/addressUtils';
+import { isValidAddress } from '../../../utils/addressUtils';
 import { convertMultisigPubKey } from '../../../utils/hdnodeUtils';
 import { validateParams } from '../helpers/paramsValidator';
 import { ERRORS } from '../../../constants';
-
-// local types
 import type { BitcoinNetworkInfo } from '../../../types';
 import type { TxOutputType } from '../../../types/trezor/protobuf';
 
@@ -70,9 +62,9 @@ export const validateTrezorOutputs = (
  * ComposeTransaction: validation
  ****** */
 export const validateHDOutput = (
-    output: BuildTxOutputRequest,
+    output: ComposeOutput,
     coinInfo: BitcoinNetworkInfo,
-): BuildTxOutputRequest => {
+): ComposeOutput => {
     const validateAddress = address => {
         if (!isValidAddress(address, coinInfo)) {
             throw ERRORS.TypedError(
@@ -125,14 +117,14 @@ export const validateHDOutput = (
 };
 
 /** *****
- * Transform from hd-wallet format to Trezor
+ * Transform from @trezor/utxo-lib format to Trezor
  ****** */
 export const outputToTrezor = (
-    output: BuildTxOutput,
-    coinInfo: BitcoinNetworkInfo,
+    output: ComposedTxOutput,
+    _coinInfo: BitcoinNetworkInfo,
 ): TxOutputType => {
     if (output.opReturnData) {
-        if (Object.prototype.hasOwnProperty.call(output, 'value')) {
+        if (output.value) {
             throw ERRORS.TypedError(
                 'Method_InvalidParameter',
                 'opReturn output should not contains value',
@@ -166,11 +158,8 @@ export const outputToTrezor = (
         );
     }
 
-    isScriptHash(address, coinInfo);
-
-    // make sure that cashaddr has prefix
     return {
-        address: coinInfo.cashAddrPrefix ? bchaddrjs.toCashAddress(address) : address,
+        address,
         amount: value,
         script_type: 'PAYTOADDRESS',
     };

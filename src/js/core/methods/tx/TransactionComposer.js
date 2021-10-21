@@ -1,7 +1,7 @@
 /* @flow */
 import BigNumber from 'bignumber.js';
-import { buildTx } from 'hd-wallet';
-import type { UtxoInfo, BuildTxOutputRequest, BuildTxResult } from 'hd-wallet';
+import { composeTx } from '@trezor/utxo-lib';
+import type { ComposeInput, ComposeOutput, ComposeResult } from '@trezor/utxo-lib';
 
 import Fees from './Fees';
 import BlockchainLink from '../../../backend/BlockchainLink';
@@ -13,7 +13,7 @@ import type { DiscoveryAccount, AccountUtxo, SelectFeeLevel } from '../../../typ
 type Options = {
     account: DiscoveryAccount,
     utxo: AccountUtxo[],
-    outputs: BuildTxOutputRequest[],
+    outputs: ComposeOutput[],
     coinInfo: BitcoinNetworkInfo,
     baseFee?: number,
     skipPermutation?: boolean,
@@ -22,9 +22,9 @@ type Options = {
 export default class TransactionComposer {
     account: DiscoveryAccount;
 
-    utxos: UtxoInfo[];
+    utxos: ComposeInput[];
 
-    outputs: BuildTxOutputRequest[];
+    outputs: ComposeOutput[];
 
     coinInfo: BitcoinNetworkInfo;
 
@@ -36,7 +36,7 @@ export default class TransactionComposer {
 
     feeLevels: Fees;
 
-    composed: { [key: string]: BuildTxResult } = {};
+    composed: { [key: string]: ComposeResult } = {};
 
     constructor(options: Options) {
         this.account = options.account;
@@ -47,7 +47,7 @@ export default class TransactionComposer {
         this.skipPermutation = options.skipPermutation || false;
         this.feeLevels = new Fees(options.coinInfo);
 
-        // map to hd-wallet/buildTx format
+        // map to @trezor/utxo-lib/compose format
         const { addresses } = options.account;
         const allAddresses: string[] = !addresses
             ? []
@@ -172,12 +172,12 @@ export default class TransactionComposer {
 
         // DOGE changed fee policy and requires:
         if (coinInfo.shortcut === 'DOGE') {
-            enhancement.floorBaseFee = enhancement.baseFee === 0; // fee rounded down not to overprice tx (see hd-wallet) use only if baseFee is not specified
+            enhancement.floorBaseFee = enhancement.baseFee === 0; // fee rounded down not to overprice tx (see @trezor/utxo-lib/compose) use only if baseFee is not specified
             enhancement.baseFee = enhancement.baseFee || 100000000; // default 1 DOGE base fee
             enhancement.dustOutputFee = 100000000; // 1 DOGE for every output lower than dust (dust = 1 DOGE)
         }
 
-        const result = buildTx({
+        return composeTx({
             utxos: this.utxos,
             outputs: this.outputs,
             height: this.blockHeight,
@@ -192,11 +192,6 @@ export default class TransactionComposer {
             dustThreshold: coinInfo.dustLimit,
             ...enhancement,
         });
-        // hd-wallet returns `max = -1` when sendMax is not requested
-        // https://github.com/trezor/hd-wallet/blob/master/src/build-tx/coinselect.js#L101
-        // delete this value from the result, it should be either string or undefined
-        if (result.type !== 'error' && result.max === -1) delete result.max;
-        return result;
     }
 
     dispose() {

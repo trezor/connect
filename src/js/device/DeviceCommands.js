@@ -1,7 +1,6 @@
 /* @flow */
 
 import randombytes from 'randombytes';
-import * as bitcoin from '@trezor/utxo-lib';
 import type { Transport } from 'trezor-link';
 import { DEVICE, ERRORS, NETWORK } from '../constants';
 
@@ -22,7 +21,13 @@ import { versionCompare } from '../utils/versionUtils';
 import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
 import type { IDevice } from './Device';
-import type { CoinInfo, BitcoinNetworkInfo, EthereumNetworkInfo, HDNodeResponse } from '../types';
+import type {
+    CoinInfo,
+    BitcoinNetworkInfo,
+    EthereumNetworkInfo,
+    Network,
+    HDNodeResponse,
+} from '../types';
 import * as PROTO from '../types/trezor/protobuf';
 
 export type DefaultMessageResponse = {
@@ -143,7 +148,7 @@ export default class DeviceCommands {
             return this.getBitcoinHDNode(path, coinInfo);
         }
 
-        let network: ?bitcoin.Network;
+        let network: ?Network;
         if (isMultisigPath(path)) {
             network = coinInfo.network;
         } else if (isSegwitPath(path)) {

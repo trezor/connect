@@ -22,32 +22,4 @@ describe('utils/addressUtils', () => {
             });
         });
     });
-
-    describe('getAddressScriptType', () => {
-        fixtures.validAddresses.forEach(f => {
-            it(`${f.description} ${f.address}`, () => {
-                expect(utils.getAddressScriptType(f.address, getBitcoinNetwork(f.coin))).toEqual(
-                    f.scriptType,
-                );
-            });
-        });
-    });
-
-    describe('getAddressHash', () => {
-        fixtures.validAddresses.forEach(f => {
-            it(`${f.description} ${f.address}`, () => {
-                expect(utils.getAddressHash(f.address).toString('hex')).toEqual(f.addressHash);
-            });
-        });
-    });
-
-    describe('isScriptHash', () => {
-        fixtures.validAddresses.forEach(f => {
-            it(`${f.description} ${f.address}`, () => {
-                expect(utils.isScriptHash(f.address, getBitcoinNetwork(f.coin))).toEqual(
-                    f.isScriptHash,
-                );
-            });
-        });
-    });
 });

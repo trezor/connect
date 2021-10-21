@@ -10,9 +10,7 @@ const hex = '';
 if (!hex) throw new Error('tx hex not provided');
 
 // Step 2. set network
-// optionally for DOGE, enable support of string values (big amounts)
-BitcoinJs.Transaction.USE_STRING_VALUES = false;
-const tx = BitcoinJs.Transaction.fromHex(hex, BitcoinJs.networks.testnet);
+const tx = BitcoinJs.Transaction.fromHex(hex, { network: BitcoinJs.networks.testnet });
 
 const reverseBuffer = buf => {
     const copy = Buffer.alloc(buf.length);
@@ -33,24 +31,34 @@ const binOutputsMap = output => ({
     script_pubkey: output.script.toString('hex'),
 });
 
-const extraData = tx.getExtraData();
-const version_group_id =
-    BitcoinJs.coins.isZcashType(tx.network) &&
-    typeof tx.versionGroupId === 'number' &&
-    tx.version >= 3
-        ? tx.versionGroupId
-        : undefined;
-
-const refTx = {
-    version: tx.isDashSpecialTransaction() ? tx.version | (tx.type << 16) : tx.version,
-    inputs: tx.ins.map(inputsMap),
-    bin_outputs: tx.outs.map(binOutputsMap),
-    extra_data: extraData ? extraData.toString('hex') : undefined,
-    lock_time: tx.locktime,
-    timestamp: tx.timestamp,
-    version_group_id,
-    expiry: tx.expiryHeight,
+const enhanceTransaction = (refTx, srcTx) => {
+    const extraData = srcTx.getExtraData();
+    if (extraData) {
+        refTx.extra_data = extraData.toString('hex');
+    }
+    const specific = srcTx.getSpecificData();
+    if (specific) {
+        if (specific.type === 'zcash' && specific.versionGroupId && refTx.version >= 3) {
+            refTx.version_group_id = specific.versionGroupId;
+        }
+        if (specific.type === 'dash' && srcTx.type && srcTx.version >= 3) {
+            refTx.version |= srcTx.type << 16;
+        }
+    }
+    return refTx;
 };
+
+const refTx = enhanceTransaction(
+    {
+        version: tx.version,
+        inputs: tx.ins.map(inputsMap),
+        bin_outputs: tx.outs.map(binOutputsMap),
+        lock_time: tx.locktime,
+        timestamp: tx.timestamp,
+        expiry: tx.expiry,
+    },
+    tx,
+);
 
 // Step 3. run script
 // node tests/__txcache__/gen-reftx.js > tests/__txcache__/[network]/[input.prev_hash].json

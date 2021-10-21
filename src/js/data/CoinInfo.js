@@ -182,10 +182,9 @@ const parseBitcoinNetworksJson = (json: any) => {
             },
             pubKeyHash: coin.address_type,
             scriptHash: coin.address_type_p2sh,
-            wif: 0x80, // doesn't matter, for type correctness
-            dustThreshold: 0, // doesn't matter, for type correctness,
-            coin: shortcut.toLowerCase(),
+            forkId: coin.fork_id,
             consensusBranchId: coin.consensus_branch_id, // zcash, komodo
+            wif: 0, // doesn't matter, for type correctness
         };
 
         bitcoinNetworks.push({
@@ -209,7 +208,7 @@ const parseBitcoinNetworksJson = (json: any) => {
             defaultFees: coin.default_fee_b,
             dustLimit: coin.dust_limit,
             forceBip143: coin.force_bip143,
-            forkid: coin.fork_id,
+            // forkid in Network
             // github not used
             hashGenesisBlock: coin.hash_genesis_block,
             // key not used
