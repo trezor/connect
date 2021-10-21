@@ -83,7 +83,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage
+    - run: ./tests/run.sh -i getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction
 
   stellar:
     needs: check

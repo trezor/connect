@@ -19,7 +19,6 @@ describe(`TrezorConnect methods`, () => {
     fixtures.forEach(testCase => {
         describe(`TrezorConnect.${testCase.method}`, () => {
             beforeAll(async done => {
-                if (!testCase.setup.mnemonic) done();
                 try {
                     if (!controller) {
                         controller = new Controller({
@@ -36,7 +35,7 @@ describe(`TrezorConnect methods`, () => {
                         });
                     }
 
-                    if (testCase.setup.mnemonic !== currentMnemonic) {
+                    if (testCase.setup.mnemonic && testCase.setup.mnemonic !== currentMnemonic) {
                         await setup(controller, testCase.setup);
                         currentMnemonic = testCase.setup.mnemonic;
                     }
