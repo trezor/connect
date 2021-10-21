@@ -126,7 +126,7 @@ export default {
                             { amount: '6497', script_type: 'PAYTOADDRESS' },
                             { amount: '2595', script_type: 'PAYTOWITNESS' }, // skipped permutation
                         ],
-                        outputsPermutation: undefined,
+                        outputsPermutation: [0, 1],
                     },
                 },
             ],

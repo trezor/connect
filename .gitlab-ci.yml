@@ -181,7 +181,7 @@ test btc sign:
 test btc others:
   extends: .test
   variables:
-    TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage"
+    TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction"
 
 test stellar:
   extends: .test

@@ -165,6 +165,7 @@ export default class Blockchain {
                 this.feeForBlock[block] = fees[index];
             });
             this.feeTimestamp = now;
+            return fees;
         }
         return this.link.estimateFee(request);
     }
