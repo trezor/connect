@@ -20,6 +20,7 @@ grep -hv -e '^import ' -e '^syntax' -e '^package' -e 'option java_' $SRC/message
 | sed 's/ hw\.trezor\.messages\.common\./ /' \
 | sed 's/ common\./ /' \
 | sed 's/ management\./ /' \
+| sed 's/^option /\/\/ option /' \
 | grep -v '    reserved '>> $DIST/messages.proto
 
 # BUILD messages.json from message.proto
