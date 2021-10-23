@@ -45,6 +45,16 @@ build:
   tags:
     - deploy
 
+alerts:
+  stage: build
+  before_script:
+    - nix-shell --run "yarn"
+  allow_failure: true
+  script:
+    - nix-shell --run "./scripts/protobuf-is-synced.sh"
+  tags:
+    - deploy
+
 # Deploy to testing environment
 deploy test:
   stage: deploy
