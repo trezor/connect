@@ -37,6 +37,7 @@ import signTransactionBech32 from './signTransactionBech32';
 import signTransactionBgold from './signTransactionBgold';
 // deprecated: import signTransactionCapricoin from './signTransactionCapricoin';
 import signTransactionDash from './signTransactionDash';
+import signTransactionDecred from './signTransactionDecred';
 import signTransactionDoge from './signTransactionDoge';
 import signTransactionKomodo from './signTransactionKomodo';
 import signTransactionMultisig from './signTransactionMultisig';
@@ -105,6 +106,7 @@ let fixtures = [
     signTransactionBech32,
     signTransactionBgold,
     signTransactionDash,
+    signTransactionDecred,
     signTransactionDoge,
     signTransactionKomodo,
     signTransactionMultisig,
