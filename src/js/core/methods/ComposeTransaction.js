@@ -25,7 +25,7 @@ import {
 } from './tx';
 import signTx from './helpers/signtx';
 import signTxLegacy from './helpers/signtx-legacy';
-import verifyTx from './helpers/signtxVerify';
+import { verifyTx } from './helpers/signtxVerify';
 
 import { UiMessage } from '../../message/builder';
 

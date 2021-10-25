@@ -10,7 +10,7 @@ import { ERRORS } from '../../constants';
 import { isBackendSupported, initBlockchain } from '../../backend/BlockchainLink';
 import signTx from './helpers/signtx';
 import signTxLegacy from './helpers/signtx-legacy';
-import verifyTx from './helpers/signtxVerify';
+import { verifyTx, verifyTicketTx } from './helpers/signtxVerify';
 
 import {
     validateTrezorInputs,
@@ -61,6 +61,7 @@ export default class SignTransaction extends AbstractMethod {
             { name: 'overwintered', type: 'boolean' },
             { name: 'versionGroupId', type: 'number' },
             { name: 'branchId', type: 'number' },
+            { name: 'decredStakingTicket', type: 'boolean' },
             { name: 'push', type: 'boolean' },
         ]);
 
@@ -107,6 +108,7 @@ export default class SignTransaction extends AbstractMethod {
                 overwintered: payload.overwintered,
                 version_group_id: payload.versionGroupId,
                 branch_id: payload.branchId,
+                decred_staking_ticket: payload.decredStakingTicket,
             },
             coinInfo,
             push: typeof payload.push === 'boolean' ? payload.push : false,
@@ -174,13 +176,23 @@ export default class SignTransaction extends AbstractMethod {
             params.coinInfo,
         );
 
-        await verifyTx(
-            device.getCommands().getHDNode.bind(device.getCommands()),
-            params.inputs,
-            params.outputs,
-            response.serializedTx,
-            params.coinInfo,
-        );
+        if (params.options.decred_staking_ticket) {
+            await verifyTicketTx(
+                device.getCommands().getHDNode.bind(device.getCommands()),
+                params.inputs,
+                params.outputs,
+                response.serializedTx,
+                params.coinInfo,
+            );
+        } else {
+            await verifyTx(
+                device.getCommands().getHDNode.bind(device.getCommands()),
+                params.inputs,
+                params.outputs,
+                response.serializedTx,
+                params.coinInfo,
+            );
+        }
 
         if (params.push) {
             // validate backend

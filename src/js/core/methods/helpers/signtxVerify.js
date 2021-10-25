@@ -86,7 +86,7 @@ const deriveOutputScript = async (
     throw ERRORS.TypedError('Runtime', `deriveOutputScript: Unknown script type ${scriptType}`);
 };
 
-export default async (
+export const verifyTx = async (
     getHDNode: GetHDNode,
     inputs: TxInputType[],
     outputs: TxOutputType[],
@@ -120,7 +120,90 @@ export default async (
         }
 
         const scriptA = await deriveOutputScript(getHDNode, outputs[i], coinInfo);
-        if (!scriptA || scriptA.compare(scriptB) !== 0) {
+        if (scriptA && scriptA.compare(scriptB) !== 0) {
+            throw ERRORS.TypedError('Runtime', `verifyTx: Output ${i} scripts differ`);
+        }
+    }
+};
+
+export const verifyTicketTx = async (
+    getHDNode: GetHDNode,
+    inputs: TxInputType[],
+    outputs: TxOutputType[],
+    serializedTx: string,
+    coinInfo: BitcoinNetworkInfo,
+) => {
+    // deserialize signed transaction
+    const bitcoinTx = BitcoinJsTransaction.fromHex(serializedTx, { network: coinInfo.network });
+
+    // check inputs and outputs length
+    if (inputs.length !== bitcoinTx.ins.length) {
+        throw ERRORS.TypedError(
+            'Runtime',
+            'verifyTicketTx: Signed transaction inputs invalid length',
+        );
+    }
+
+    if (outputs.length !== bitcoinTx.outs.length || outputs.length !== 3) {
+        throw ERRORS.TypedError(
+            'Runtime',
+            'verifyTicketTx: Signed transaction outputs invalid length',
+        );
+    }
+
+    // check outputs scripts
+    for (let i = 0; i < outputs.length; i++) {
+        const scriptB = bitcoinTx.outs[i].script;
+        const output = outputs[i];
+        let scriptA;
+        if (i === 0) {
+            const { amount } = output;
+            if (amount !== bitcoinTx.outs[i].value) {
+                throw ERRORS.TypedError(
+                    'Runtime',
+                    `verifyTicketTx: Wrong output amount at output ${i}. Requested: ${amount}, signed: ${bitcoinTx.outs[i].value}`,
+                );
+            }
+            scriptA = BitcoinJsPayments.sstxpkh({
+                address: output.address,
+                network: coinInfo.network,
+            }).output;
+        } else if (i === 1) {
+            // Should be no script.
+            if (output.address) {
+                throw ERRORS.TypedError(
+                    'Runtime',
+                    `verifyTicketTx: Output 1 should not have address.`,
+                );
+            }
+            if (!output.address_n) {
+                throw ERRORS.TypedError(
+                    'Runtime',
+                    `verifyTicketTx: Output 1 should have address_n.`,
+                );
+            }
+
+            const hash = await derivePubKeyHash(output.address_n, getHDNode, coinInfo);
+            scriptA = BitcoinJsPayments.sstxcommitment({
+                hash,
+                amount: output.amount,
+                network: coinInfo.network,
+            }).output;
+        } else {
+            const { amount } = output;
+            if (amount !== bitcoinTx.outs[i].value) {
+                throw ERRORS.TypedError(
+                    'Runtime',
+                    `verifyTicketTx: Wrong output amount at output ${i}. Requested: ${amount}, signed: ${bitcoinTx.outs[i].value}`,
+                );
+            }
+            scriptA = BitcoinJsPayments.sstxchange({
+                address: output.address,
+                network: coinInfo.network,
+            }).output;
+        }
+
+        if (scriptA && scriptA.compare(scriptB) !== 0) {
             throw ERRORS.TypedError('Runtime', `verifyTx: Output ${i} scripts differ`);
         }
     }
