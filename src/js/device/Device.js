@@ -464,13 +464,7 @@ class Device extends EventEmitter {
         if (this.features && this.features.session_id && !feat.session_id) {
             feat.session_id = this.features.session_id;
         }
-        // translate legacy field `pin_cached` to `unlocked`
-        if (feat.pin_protection) {
-            // $FlowIssue protobuf, pin_cached is available only in older messages
-            feat.unlocked = typeof feat.unlocked === 'boolean' ? feat.unlocked : feat.pin_cached;
-        } else {
-            feat.unlocked = true;
-        }
+        feat.unlocked = feat.unlocked || true;
         // fix inconsistency of revision attribute between T1 and T2
         const revision = parseRevision(feat);
         feat.revision = revision;
