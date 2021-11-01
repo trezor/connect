@@ -474,7 +474,7 @@ export default class DeviceCommands {
 
         // TT fw lower than 2.3.0, device send his current state
         // new passphrase design set this value from `features.session_id`
-        if (res.type === 'PassphraseStateRequest') {
+        if (res.type === 'Deprecated_PassphraseStateRequest') {
             const { state } = res.message;
             this.device.setInternalState(state);
             // $FlowIssue older protobuf messages
