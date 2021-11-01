@@ -446,7 +446,7 @@ export default class DeviceCommands {
             }
 
             // TT fw lower than 2.3.0, entering passphrase on device
-            if (legacy && res.message.on_device) {
+            if (legacy && res.message._on_device) {
                 this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE, this.device);
                 return this._commonCall('PassphraseAck', { state });
             }
