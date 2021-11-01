@@ -477,8 +477,7 @@ export default class DeviceCommands {
         if (res.type === 'Deprecated_PassphraseStateRequest') {
             const { state } = res.message;
             this.device.setInternalState(state);
-            // $FlowIssue older protobuf messages
-            return this._commonCall('PassphraseStateAck', {});
+            return this._commonCall('Deprecated_PassphraseStateAck', {});
         }
 
         if (res.type === 'WordRequest') {
