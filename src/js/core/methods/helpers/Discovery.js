@@ -58,33 +58,40 @@ export default class Discovery extends EventEmitter {
 
         // set discovery types
         if (coinInfo.type === 'bitcoin') {
-            // Bitcoin-like coins could have multiple discovery types (bech32, segwit, legacy)
+            // Bitcoin-like coins could have multiple discovery types (bech32/p2wpkh, taproot/p2tr, segwit/p2sh, legacy/p2pkh)
             // path utility wrapper. bip44 purpose can be set as well
             const getDescriptor = (purpose: number, index: number) =>
                 getAccountAddressN(coinInfo, index, { purpose });
-            // add bech32 discovery type
+            // add bech32/p2wpkh discovery type
             if (coinInfo.xPubMagicSegwitNative) {
                 this.types.push({
-                    type: 'normal',
+                    type: 'p2wpkh',
                     getPath: getDescriptor.bind(this, 84),
                 });
             }
-            // add segwit discovery type (normal if bech32 is not supported)
+            // if (coinInfo.taproot) {
+            // TODO: enable taproot/p2tr discovery type in popup
+            // this.types.push({
+            //     type: 'p2tr',
+            //     getPath: getDescriptor.bind(this, 86),
+            // });
+            // }
+            // add segwit/p2sh discovery type (normal if bech32 is not supported)
             if (coinInfo.xPubMagicSegwit) {
                 this.types.push({
-                    type: this.types.length > 0 ? 'segwit' : 'normal',
+                    type: 'p2sh',
                     getPath: getDescriptor.bind(this, 49),
                 });
             }
-            // add legacy discovery type (normal if bech32 and segwit are not supported)
+            // add legacy/p2pkh discovery type (normal if bech32 and segwit are not supported)
             this.types.push({
-                type: this.types.length > 0 ? 'legacy' : 'normal',
+                type: 'p2pkh',
                 getPath: getDescriptor.bind(this, 44),
             });
         } else {
-            // other coins has only normal discovery type
+            // other coins has only legacy/p2pkh discovery type
             this.types.push({
-                type: 'normal',
+                type: 'p2pkh',
                 getPath: getAccountAddressN.bind(this, coinInfo),
             });
         }

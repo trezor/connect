@@ -34,10 +34,11 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>) 
             tabs.style.display = 'flex';
             const selectAccountContainer = container.getElementsByClassName('select-account')[0];
             const buttons = tabs.getElementsByClassName('tab-selection');
+            const firstGroupHeader = tabs.children[0].innerHTML; // store default label (Accounts)
             const selectedType =
-                defaultAccountType || (accountTypes.includes('segwit') ? 'segwit' : 'normal');
+                defaultAccountType || (accountTypes.includes('p2sh') ? 'p2sh' : 'p2wpkh');
             selectAccountContainer.className = `select-account ${selectedType}`;
-            if (accountTypes.includes('segwit')) {
+            if (accountTypes.includes('p2sh')) {
                 const bech32warn = container.getElementsByClassName('bech32-warning')[0];
                 bech32warn.removeAttribute('style'); // remove default 'display: none' from element
             }
@@ -50,8 +51,10 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>) 
                     };
                 } else {
                     tabs.removeChild(button);
+                    i--;
                 }
             }
+            tabs.children[0].innerHTML = firstGroupHeader; // switch first label to default
         }
     }
 
@@ -60,9 +63,10 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>) 
     if (!accounts) return;
 
     const buttons = {
-        normal: container.querySelectorAll('.select-account-list.normal')[0],
-        segwit: container.querySelectorAll('.select-account-list.segwit')[0],
-        legacy: container.querySelectorAll('.select-account-list.legacy')[0],
+        p2wpkh: container.querySelectorAll('.select-account-list.p2wpkh')[0],
+        p2tr: container.querySelectorAll('.select-account-list.p2tr')[0],
+        p2sh: container.querySelectorAll('.select-account-list.p2sh')[0],
+        p2pkh: container.querySelectorAll('.select-account-list.p2pkh')[0],
     };
 
     const handleClick = (event: MouseEvent) => {
