@@ -117,7 +117,7 @@ describe('utils/deviceFeaturesUtils', () => {
             zcr: 'update-required',
             replaceTransaction: 'update-required',
             decreaseOutput: 'update-required',
-            eip1559: 'no-support',
+            eip1559: 'update-required',
         });
 
         const feat2 = {
