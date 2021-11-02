@@ -142,6 +142,13 @@
             "comment": ["Since 2.1.8 there are new protobuf fields in tezos transaction (Babylon fork)"]
         },
         {
+            "methods": [
+                "stellarSignTransaction"
+            ],
+            "min": ["1.9.0", "2.3.0"],
+            "comment": ["There were protobuf backwards incompatible changes with introduction of 1.9.0/2.3.0 firmwares"]
+        },
+        {
             "capabilities": ["replaceTransaction"],
             "min": ["1.9.4", "2.3.5"],
             "comment": ["new sign tx process since 1.9.4/2.3.5"]
