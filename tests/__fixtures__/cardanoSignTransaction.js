@@ -310,6 +310,14 @@ const FEE = '42';
 const TTL = '10';
 const VALIDITY_INTERVAL_START = '47';
 
+const legacyResults = [
+    {
+        // cardanoSignTransaction not supported below this version
+        rules: ['<2.3.2'],
+        success: false,
+    },
+];
+
 export default {
     method: 'cardanoSignTransaction',
     setup: {
@@ -341,6 +349,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
 
         {
@@ -368,6 +377,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
 
         {
@@ -397,6 +407,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
 
         {
@@ -426,6 +437,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
 
         {
@@ -455,6 +467,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
 
         {
@@ -484,6 +497,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
 
         {
@@ -511,6 +525,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
 
         {
@@ -538,6 +553,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
 
         {
@@ -576,9 +592,10 @@ export default {
                 auxiliaryDataSupplement: undefined,
             },
             legacyResults: [
+                ...legacyResults,
                 {
                     // witness are ordered differently
-                    rules: ['<2.3.7'],
+                    rules: ['2.3.3-2.3.8'],
                     payload: {
                         hash: '439764b5f7e08839881536a3191faeaf111e75d9f00f83b102c5c1c6fa9fcaf9',
                         witnesses: [
@@ -636,9 +653,10 @@ export default {
                 auxiliaryDataSupplement: undefined,
             },
             legacyResults: [
+                ...legacyResults,
                 {
                     // witness are ordered differently
-                    rules: ['<2.3.7'],
+                    rules: ['2.3.3-2.3.8'],
                     payload: {
                         hash: '3aca1784d151dc75bdbb80fae71bda3f4b26af3f5fd71bd5e9e9bbcdd2b64ad1',
                         witnesses: [
@@ -697,9 +715,10 @@ export default {
                 auxiliaryDataSupplement: undefined,
             },
             legacyResults: [
+                ...legacyResults,
                 {
                     // witness are ordered differently
-                    rules: ['<2.3.7'],
+                    rules: ['2.3.3-2.3.8'],
                     payload: {
                         hash: '22c67f12e6f6aa0f2f09fd27d472b19c7208ccd7c3af4b09604fd5d462c1de2b',
                         witnesses: [
@@ -877,6 +896,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
         {
             description: 'signStakePoolRegistration',
@@ -903,6 +923,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
         {
             description: 'signStakePoolRegistrationNoMetadata',
@@ -929,6 +950,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
         {
             description: 'signMaryWithValidityIntervalStart',
@@ -954,6 +976,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
         {
             description: 'signMaryTokenSending',
@@ -978,6 +1001,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
+            legacyResults,
         },
         {
             description: 'ordinaryTransactionWithTokenMinting',
@@ -1523,9 +1547,10 @@ export default {
                 },
             },
             legacyResults: [
+                ...legacyResults,
                 {
                     // witnesses are ordered differently since they are parsed from the tx body
-                    rules: ['<2.4.2'],
+                    rules: ['2.2.1-2.4.1'],
                     payload: {
                         hash: 'ee0dfef8b97857ebe7aa8935af50e9f8f608ff4054c0c034600750d722d90631',
                         witnesses: [

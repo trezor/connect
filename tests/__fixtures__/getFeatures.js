@@ -13,6 +13,9 @@ export default {
     },
     tests: [
         {
+            setup: {
+                firmware: [['2.3.0', '2-master']],
+            },
             description: 'get features',
             params: {},
             result: {

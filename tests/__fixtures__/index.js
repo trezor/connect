@@ -125,7 +125,7 @@ let fixtures = [
 ];
 
 // if env variable TESTS_FIRMWARE, filter out those tests that do not match it
-const firmware = process.env.TESTS_FIRMWARE;
+const firmware = process.env.TESTS_FIRMWARE || '2-master';
 if (firmware) {
     const [actualMajor, actualMinor, actualPatch] = firmware.split('.');
     fixtures = fixtures.map(f => {
@@ -134,6 +134,8 @@ if (firmware) {
                 return true;
             }
             return t.setup.firmware.some(fw => {
+                if (firmware === '2-master' && fw[1] === '2-master') return true;
+
                 const [fromMajor, fromMinor, fromPatch] = fw[0].split('.');
                 const [toMajor, toMinor, toPatch] = fw[1].split('.');
                 return (

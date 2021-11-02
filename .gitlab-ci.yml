@@ -222,3 +222,71 @@ test binance:
   extends: .test
   variables:
     TESTS_INCLUDED_METHODS: "binanceSignTransaction"
+
+# testing backwards compatibility for oldest supported firmware 
+# 2.2.0 released in January 2020
+test legacy management:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
+    TESTS_FIRMWARE: "2.2.0"
+
+test legacy btc sign:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "signTransaction"
+    TESTS_FIRMWARE: "2.2.0"
+
+test legacy btc others:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage"
+    TESTS_FIRMWARE: "2.2.0"
+
+test legacy stellar:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
+    TESTS_FIRMWARE: "2.2.0"
+
+test legacy cardano:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction"
+    TESTS_FIRMWARE: "2.2.0"
+
+test legacy eos:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
+    TESTS_FIRMWARE: "2.2.0"
+
+test legacy eth:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage"
+    TESTS_FIRMWARE: "2.2.0"
+
+test legacy nem:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
+    TESTS_FIRMWARE: "2.2.0"
+
+test legacy ripple:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
+    TESTS_FIRMWARE: "2.2.0"
+
+test legacy tezos:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
+    TESTS_FIRMWARE: "2.2.0"
+
+test legacy binance:
+  extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "binanceSignTransaction"
+    TESTS_FIRMWARE: "2.2.0"

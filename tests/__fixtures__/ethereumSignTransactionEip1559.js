@@ -1,5 +1,13 @@
 import commonFixtures from '../../submodules/trezor-common/tests/fixtures/ethereum/sign_tx_eip1559.json';
 
+const legacyResults = [
+    {
+        // ethereumSignTranslactionEip1559 not supported below this version
+        rules: ['<2.4.2', '<1.10.4'],
+        success: false,
+    },
+];
+
 export default {
     method: 'ethereumSignTransaction',
     setup: {
@@ -25,6 +33,7 @@ export default {
                 s: `0x${result.sig_s}`,
                 v: `0x${result.sig_v.toString(16)}`,
             },
+            legacyResults,
         };
 
         if (parameters.data) {
