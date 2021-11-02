@@ -14,6 +14,9 @@ export default {
     tests: [
         {
             description: 'get features',
+            setup: {
+                firmware: [['2.3.0', '2-master']],
+            },
             params: {},
             result: {
                 device_id: expect.any(String),
@@ -67,6 +70,38 @@ export default {
                 wipe_code_protection: false,
                 session_id: expect.any(String),
                 passphrase_always_on_device: false,
+            },
+        },
+        {
+            description: 'get features',
+            setup: {
+                firmware: [['2.0.0', '2.3.0']],
+            },
+            params: {},
+            result: {
+                major_version: customFirmwareBuild ? expect.any(Number) : Number(major),
+                minor_version: customFirmwareBuild ? expect.any(Number) : Number(minor),
+                patch_version: customFirmwareBuild ? expect.any(Number) : Number(patch),
+                capabilities: [
+                    'Capability_Bitcoin',
+                    'Capability_Bitcoin_like',
+                    'Capability_Binance',
+                    'Capability_Cardano',
+                    'Capability_Crypto',
+                    'Capability_EOS',
+                    'Capability_Ethereum',
+                    'Capability_Lisk',
+                    'Capability_Monero',
+                    'Capability_NEM',
+                    'Capability_Ripple',
+                    'Capability_Stellar',
+                    'Capability_Tezos',
+                    'Capability_U2F',
+                    'Capability_Shamir',
+                    'Capability_ShamirGroups',
+                ],
+                session_id: null,
+                passphrase_always_on_device: null,
             },
         },
     ],

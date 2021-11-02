@@ -2,6 +2,7 @@ stages:
   - setup
   - build
   - test
+  - test-compatibility
   - deploy
 
 variables:
@@ -224,5 +225,69 @@ test tezos:
 
 test binance:
   extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "binanceSignTransaction"
+
+# testing backwards compatibility for the oldest supported firmware 
+
+.test-compatibility:
+  extends: .test
+  stage: test-compatibility
+  variables:
+    # 2.2.0 released in January 2020
+    TESTS_FIRMWARE: "2.2.0"
+
+test legacy management:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
+
+test legacy btc sign:
+  extends: .test-compatibility
+  variables:
+     TESTS_INCLUDED_METHODS: "signTransaction"
+
+test legacy btc others:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage"
+
+test legacy stellar:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
+
+test legacy cardano:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction"
+
+test legacy eos:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
+
+test legacy eth:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage"
+
+test legacy nem:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
+
+test legacy ripple:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
+
+test legacy tezos:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
+
+test legacy binance:
+  extends: .test-compatibility
   variables:
     TESTS_INCLUDED_METHODS: "binanceSignTransaction"

@@ -1,3 +1,4 @@
+import semver from 'semver';
 import { Controller } from './websocket-client';
 import TrezorConnect from '../src/js/index';
 import * as UI from '../src/js/constants/ui';
@@ -48,13 +49,15 @@ const setup = async (controller, options) => {
             needs_backup: false,
             options,
         });
-        // todo: temporary from 2.3.2 until sync fixtures with trezor-firmware
-        await controller.send({ type: 'emulator-allow-unsafe-paths' });
-
+        // lower firmware does not have this interface
+        if (firmware === '2-master' || semver.gte(firmware, '2.3.2')) {
+            // todo: temporary from 2.3.2 until sync fixtures with trezor-firmware
+            await controller.send({ type: 'emulator-allow-unsafe-paths' });
+        }
         // after all is done, start bridge again
         await controller.send({ type: 'bridge-start' });
         // Wait to prevent Transport is missing error from TrezorConnect
-        await wait(1000);
+        await wait(2000);
     } catch (err) {
         // this means that something in trezor-user-env got wrong.
         console.log(err);
@@ -98,6 +101,7 @@ const initTrezorConnect = async (controller, options) => {
 // ">1.9.3" - skip for FW greater than 1.9.3
 // "<1.9.3" - skip for FW lower than 1.9.3
 // "1.9.3" - skip for FW exact with 1.9.3
+// "1.9.3-1.9.6" - skip for FW gte 1.9.3 && lte 1.9.6
 const skipTest = rules => {
     if (!rules || !Array.isArray(rules)) return;
     const fwModel = firmware.substr(0, 1);
@@ -109,6 +113,19 @@ const skipTest = rules => {
                 // global model
                 return true;
             }
+
+            // is within range
+            const [from, to] = skip.split('-');
+            if (
+                !fwMaster &&
+                from &&
+                to &&
+                versionCompare(firmware, from) >= 0 &&
+                versionCompare(firmware, to) <= 0
+            ) {
+                return true;
+            }
+
             if (!fwMaster && skip.startsWith('<') && versionCompare(firmware, skip.substr(1)) < 0) {
                 // lower
                 return true;
