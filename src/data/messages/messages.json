@@ -9789,7 +9789,7 @@
             "oneofs": {}
         },
         {
-            "name": "StellarPathPaymentOp",
+            "name": "StellarPathPaymentStrictReceiveOp",
             "fields": [
                 {
                     "rule": "optional",
@@ -9847,7 +9847,65 @@
             "oneofs": {}
         },
         {
-            "name": "StellarManageOfferOp",
+            "name": "StellarPathPaymentStrictSendOp",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "source_account",
+                    "id": 1
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "StellarAsset",
+                    "name": "send_asset",
+                    "id": 2
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "send_amount",
+                    "id": 3
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "string",
+                    "name": "destination_account",
+                    "id": 4
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "StellarAsset",
+                    "name": "destination_asset",
+                    "id": 5
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "destination_min",
+                    "id": 6
+                },
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "StellarAsset",
+                    "name": "paths",
+                    "id": 7
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "StellarManageSellOfferOp",
             "fields": [
                 {
                     "rule": "optional",
@@ -9905,7 +9963,65 @@
             "oneofs": {}
         },
         {
-            "name": "StellarCreatePassiveOfferOp",
+            "name": "StellarManageBuyOfferOp",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "string",
+                    "name": "source_account",
+                    "id": 1
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "StellarAsset",
+                    "name": "selling_asset",
+                    "id": 2
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "StellarAsset",
+                    "name": "buying_asset",
+                    "id": 3
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "sint64",
+                    "name": "amount",
+                    "id": 4
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "price_n",
+                    "id": 5
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "price_d",
+                    "id": 6
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "uint64",
+                    "name": "offer_id",
+                    "id": 7
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "StellarCreatePassiveSellOfferOp",
             "fields": [
                 {
                     "rule": "optional",
@@ -11769,15 +11885,15 @@
                     "id": 211
                 },
                 {
-                    "name": "MessageType_StellarPathPaymentOp",
+                    "name": "MessageType_StellarPathPaymentStrictReceiveOp",
                     "id": 212
                 },
                 {
-                    "name": "MessageType_StellarManageOfferOp",
+                    "name": "MessageType_StellarManageSellOfferOp",
                     "id": 213
                 },
                 {
-                    "name": "MessageType_StellarCreatePassiveOfferOp",
+                    "name": "MessageType_StellarCreatePassiveSellOfferOp",
                     "id": 214
                 },
                 {
@@ -11803,6 +11919,14 @@
                 {
                     "name": "MessageType_StellarBumpSequenceOp",
                     "id": 221
+                },
+                {
+                    "name": "MessageType_StellarManageBuyOfferOp",
+                    "id": 222
+                },
+                {
+                    "name": "MessageType_StellarPathPaymentStrictSendOp",
+                    "id": 223
                 },
                 {
                     "name": "MessageType_StellarSignedTx",

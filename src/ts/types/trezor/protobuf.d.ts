@@ -1881,19 +1881,30 @@ export type StellarCreateAccountOp = {
     starting_balance: string | number;
 };
 
-// StellarPathPaymentOp
-export type StellarPathPaymentOp = {
+// StellarPathPaymentStrictReceiveOp
+export type StellarPathPaymentStrictReceiveOp = {
     source_account?: string;
     send_asset: StellarAsset;
     send_max: string | number;
     destination_account: string;
     destination_asset: StellarAsset;
     destination_amount: string | number;
-    paths?: StellarAsset[];
+    paths: StellarAsset[];
 };
 
-// StellarManageOfferOp
-export type StellarManageOfferOp = {
+// StellarPathPaymentStrictSendOp
+export type StellarPathPaymentStrictSendOp = {
+    source_account?: string;
+    send_asset: StellarAsset;
+    send_amount: string | number;
+    destination_account: string;
+    destination_asset: StellarAsset;
+    destination_min: string | number;
+    paths: StellarAsset[];
+};
+
+// StellarManageSellOfferOp
+export type StellarManageSellOfferOp = {
     source_account?: string;
     selling_asset: StellarAsset;
     buying_asset: StellarAsset;
@@ -1903,8 +1914,19 @@ export type StellarManageOfferOp = {
     offer_id: string | number;
 };
 
-// StellarCreatePassiveOfferOp
-export type StellarCreatePassiveOfferOp = {
+// StellarManageBuyOfferOp
+export type StellarManageBuyOfferOp = {
+    source_account?: string;
+    selling_asset: StellarAsset;
+    buying_asset: StellarAsset;
+    amount: string | number;
+    price_n: number;
+    price_d: number;
+    offer_id: string | number;
+};
+
+// StellarCreatePassiveSellOfferOp
+export type StellarCreatePassiveSellOfferOp = {
     source_account?: string;
     selling_asset: StellarAsset;
     buying_asset: StellarAsset;
