@@ -87,10 +87,10 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 amount: op.amount,
             };
 
-        case 'pathPayment':
+        case 'pathPaymentStrictReceive':
             validateParams(op, [{ name: 'destAmount', type: 'amount', obligatory: true }]);
             return {
-                type: 'StellarPathPaymentOp',
+                type: 'StellarPathPaymentStrictReceiveOp',
                 source_account: op.source,
                 send_asset: op.sendAsset,
                 send_max: op.sendMax,
@@ -100,10 +100,23 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 paths: op.path,
             };
 
-        case 'createPassiveOffer':
+        case 'pathPaymentStrictSend':
+            validateParams(op, [{ name: 'destMin', type: 'amount', obligatory: true }]);
+            return {
+                type: 'StellarPathPaymentStrictSendOp',
+                source_account: op.source,
+                send_asset: op.sendAsset,
+                send_amount: op.sendAmount,
+                destination_account: op.destination,
+                destination_asset: op.destAsset,
+                destination_min: op.destMin,
+                paths: op.path,
+            };
+
+        case 'createPassiveSellOffer':
             validateParams(op, [{ name: 'amount', type: 'amount', obligatory: true }]);
             return {
-                type: 'StellarCreatePassiveOfferOp',
+                type: 'StellarCreatePassiveSellOfferOp',
                 source_account: op.source,
                 buying_asset: op.buying,
                 selling_asset: op.selling,
@@ -112,10 +125,23 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
                 price_d: op.price.d,
             };
 
-        case 'manageOffer':
+        case 'manageSellOffer':
             validateParams(op, [{ name: 'amount', type: 'amount', obligatory: true }]);
             return {
-                type: 'StellarManageOfferOp',
+                type: 'StellarManageSellOfferOp',
+                source_account: op.source,
+                buying_asset: op.buying,
+                selling_asset: op.selling,
+                amount: op.amount,
+                offer_id: op.offerId || 0,
+                price_n: op.price.n,
+                price_d: op.price.d,
+            };
+
+        case 'manageBuyOffer':
+            validateParams(op, [{ name: 'amount', type: 'amount', obligatory: true }]);
+            return {
+                type: 'StellarManageBuyOfferOp',
                 source_account: op.source,
                 buying_asset: op.buying,
                 selling_asset: op.selling,

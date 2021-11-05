@@ -57,28 +57,6 @@ const transformAsset = asset => {
 const transformAmount = amount => new BigNumber(amount).times(10000000).toString();
 
 /**
- * Transforms StellarSdk.Operation.type to TrezorConnect.StellarTransaction.Operation.type
- * @param {string} type
- * @returns {string}
- */
-const transformType = type => {
-    switch (type) {
-        case 'pathPaymentStrictReceive':
-            // case 'pathPaymentStrictSend':
-            return 'pathPayment';
-
-        case 'createPassiveSellOffer':
-            return 'createPassiveOffer';
-
-        case 'manageSellOffer':
-            // case 'manageBuyOffer':
-            return 'manageOffer';
-        default:
-            return type;
-    }
-};
-
-/**
  * Transforms StellarSdk.Memo to TrezorConnect.StellarTransaction.Memo
  * @param {string} type
  * @returns {string}
@@ -172,8 +150,7 @@ const transformTransaction = (path, transaction) => {
             operation.value = operation.value.toString('hex');
         }
 
-        // transform type
-        operation.type = transformType(o.type);
+        operation.type = o.type;
 
         return operation;
     });

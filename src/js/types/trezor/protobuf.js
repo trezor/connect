@@ -1925,7 +1925,7 @@ export type StellarPathPaymentStrictReceiveOp = {
     destination_account: string,
     destination_asset: StellarAsset,
     destination_amount: string | number,
-    paths: StellarAsset[],
+    paths?: StellarAsset[],
 };
 
 // StellarPathPaymentStrictSendOp
@@ -1936,7 +1936,7 @@ export type StellarPathPaymentStrictSendOp = {
     destination_account: string,
     destination_asset: StellarAsset,
     destination_min: string | number,
-    paths: StellarAsset[],
+    paths?: StellarAsset[],
 };
 
 // StellarManageSellOfferOp

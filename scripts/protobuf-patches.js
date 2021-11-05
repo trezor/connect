@@ -64,7 +64,8 @@ const RULE_PATCH = {
     'NEMMosaicDefinition.networks': 'optional', // never used according to implementation/tests
     'NEMAggregateModification.modifications': 'optional', // its valid to be undefined according to implementation/tests
     'StellarAssetType.code': 'required',
-    'StellarPathPaymentOp.paths': 'optional', // its valid to be undefined according to implementation/tests
+    'StellarPathPaymentStrictReceiveOp.paths': 'optional', // its valid to be undefined according to implementation/tests
+    'StellarPathPaymentStrictSendOp.paths': 'optional', // its valid to be undefined according to implementation/tests
 };
 
 // custom types IN to trezor
