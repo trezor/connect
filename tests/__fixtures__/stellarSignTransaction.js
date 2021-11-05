@@ -53,18 +53,18 @@ const transformOperation = op => {
                 line: transformAsset(op.asset),
                 limit: op.limit.toString(),
             };
-        case 'StellarCreatePassiveOfferOp':
+        case 'StellarCreatePassiveSellOfferOp':
             return {
-                type: 'createPassiveOffer',
+                type: 'createPassiveSellOffer',
                 source: op.source_account,
                 buying: transformAsset(op.buying_asset),
                 selling: transformAsset(op.selling_asset),
                 amount: op.amount.toString(),
                 price: { n: op.price_n, d: op.price_d },
             };
-        case 'StellarManageOfferOp':
+        case 'StellarManageSellOfferOp':
             return {
-                type: 'manageOffer',
+                type: 'manageSellOffer',
                 source: op.source_account,
                 buying: transformAsset(op.buying_asset),
                 selling: transformAsset(op.selling_asset),
@@ -72,15 +72,36 @@ const transformOperation = op => {
                 offerId: op.offer_id,
                 price: { n: op.price_n, d: op.price_d },
             };
-        case 'StellarPathPaymentOp':
+        case 'StellarManageBuyOfferOp':
             return {
-                type: 'pathPayment',
+                type: 'manageBuyOffer',
+                source: op.source_account,
+                buying: transformAsset(op.buying_asset),
+                selling: transformAsset(op.selling_asset),
+                amount: op.amount.toString(),
+                offerId: op.offer_id,
+                price: { n: op.price_n, d: op.price_d },
+            };
+        case 'StellarPathPaymentStrictReceiveOp':
+            return {
+                type: 'pathPaymentStrictReceive',
                 source: op.source_account,
                 sendAsset: transformAsset(op.send_asset),
                 sendMax: op.send_max,
                 destination: op.destination_account,
                 destAsset: transformAsset(op.destination_asset),
                 destAmount: op.destination_amount.toString(),
+                path: op.paths,
+            };
+        case 'StellarPathPaymentStrictSendOp':
+            return {
+                type: 'pathPaymentStrictSend',
+                source: op.source_account,
+                sendAsset: transformAsset(op.send_asset),
+                sendAmount: op.send_amount,
+                destination: op.destination_account,
+                destAsset: transformAsset(op.destination_asset),
+                destMin: op.destination_min.toString(),
                 path: op.paths,
             };
         case 'StellarManageDataOp':

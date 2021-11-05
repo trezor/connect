@@ -164,7 +164,7 @@ export const stellarSignTransaction = async () => {
                     value: undefined,
                 },
                 {
-                    type: 'pathPayment',
+                    type: 'pathPaymentStrictReceive',
                     sendAsset: {
                         type: 1,
                         code: 'X',
@@ -180,7 +180,7 @@ export const stellarSignTransaction = async () => {
                     destAmount: '500111000',
                 },
                 {
-                    type: 'pathPayment',
+                    type: 'pathPaymentStrictReceive',
                     sendAsset: {
                         type: 2,
                         code: 'ABCDEFGHIJKL',
@@ -208,7 +208,51 @@ export const stellarSignTransaction = async () => {
                     ],
                 },
                 {
-                    type: 'createPassiveOffer',
+                    type: 'pathPaymentStrictSend',
+                    sendAsset: {
+                        type: 1,
+                        code: 'X',
+                        issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                    },
+                    sendAmount: '500111000',
+                    destination: 'GBOVKZBEM2YYLOCDCUXJ4IMRKHN4LCJAE7WEAEA2KF562XFAGDBOB64V',
+                    destAsset: {
+                        type: 1,
+                        code: 'X',
+                        issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                    },
+                    destMin: '500111000',
+                },
+                {
+                    type: 'pathPaymentStrictSend',
+                    sendAsset: {
+                        type: 2,
+                        code: 'ABCDEFGHIJKL',
+                        issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                    },
+                    sendAmount: '500111000',
+                    destination: 'GBOVKZBEM2YYLOCDCUXJ4IMRKHN4LCJAE7WEAEA2KF562XFAGDBOB64V',
+                    destAsset: {
+                        type: 2,
+                        code: 'ABCDEFGHIJKL',
+                        issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                    },
+                    destMin: '500111000',
+                    path: [
+                        {
+                            type: 1,
+                            code: 'X',
+                            issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                        },
+                        {
+                            type: 2,
+                            code: 'ABCDEFGHIJKL',
+                            issuer: 'GAUYJFQCYIHFQNS7CI6BFWD2DSSFKDIQZUQ3BLQODDKE4PSW7VVBKENC',
+                        },
+                    ],
+                },
+                {
+                    type: 'createPassiveSellOffer',
                     selling: {
                         type: 0,
                         code: 'XLM',
@@ -224,7 +268,7 @@ export const stellarSignTransaction = async () => {
                     },
                 },
                 {
-                    type: 'createPassiveOffer',
+                    type: 'createPassiveSellOffer',
                     selling: {
                         type: 1,
                         code: 'X',
@@ -242,7 +286,24 @@ export const stellarSignTransaction = async () => {
                     },
                 },
                 {
-                    type: 'manageOffer',
+                    type: 'manageSellOffer',
+                    selling: {
+                        type: 0,
+                        code: 'XLM',
+                    },
+                    buying: {
+                        type: 0,
+                        code: 'XLM',
+                    },
+                    amount: '500111000',
+                    price: {
+                        n: 500111,
+                        d: 10000,
+                    },
+                    offerId: '101',
+                },
+                {
+                    type: 'manageBuyOffer',
                     selling: {
                         type: 0,
                         code: 'XLM',
