@@ -1,4 +1,4 @@
-# 8.2.2 (not released)
+# 8.2.2
 
 ### Added
 - Cardano: `getNativeScriptHash` call
@@ -7,9 +7,14 @@
 - Cardano: support for token minting and burning
 - Cardano: support for multi-sig transactions using native scripts
 
+### Fixed:
+- Ethereum:ethereumSignTransaction eip1559 support for T1
+
 ### Changed
 - Updated dependencies.
 - Fixed missing `hex` field in SignMessage and VerifyMessage types.
+- Stellar: ensure type correctness; stricter types.
+- Deps: general update of dependencies
 
 # 8.2.1
 
