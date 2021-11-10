@@ -50,33 +50,9 @@
     ],
     "messages": [
         {
-            "name": "v6",
-            "range": {
-                "min": ["1.0.0", "2.0.0"],
-                "max": ["1.7.3", "2.0.10"]
-            },
-            "json": "./data/messages/messages-v6.json"
-        },
-        {
-            "name": "v7",
-            "range": {
-                "min": ["1.7.4", "2.1.0"],
-                "max": ["1.8.1", "2.1.1"]
-            },
-            "json": "./data/messages/messages-v7.json"
-        },
-        {
-            "name": "v8",
-            "range": {
-                "min": ["1.8.2", "2.1.2"],
-                "max": ["1.8.9", "2.2.9"]
-            },
-            "json": "./data/messages/messages-v8.json"
-        },
-        {
             "name": "default",
             "range": {
-                "min": ["1.9.0", "2.3.0"]
+                "min": ["1.0.0", "2.0.0"]
             },
             "json": "./data/messages/messages.json"
         }
