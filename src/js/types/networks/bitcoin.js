@@ -7,6 +7,7 @@ import type {
     TxOutputBinType,
     Address as ProtobufAddress,
     OwnershipId as ProtobufOwnershipId,
+    OwnershipProof as ProtobufOwnershipProof,
     InternalInputScriptType,
     MultisigRedeemScriptType,
 } from '../trezor/protobuf';
@@ -127,6 +128,21 @@ export type GetOwnershipId = {
 };
 
 export type OwnershipId = ProtobufOwnershipId & {
+    path: number[],
+    serializedPath: string,
+};
+
+export type GetOwnershipProof = {
+    path: string | number[],
+    coin?: string,
+    multisig?: MultisigRedeemScriptType,
+    scriptType?: InternalInputScriptType,
+    userConfirmation?: boolean,
+    ownershipIds?: string[],
+    commitmentData?: string,
+};
+
+export type OwnershipProof = ProtobufOwnershipProof & {
     path: number[],
     serializedPath: string,
 };

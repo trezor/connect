@@ -515,7 +515,7 @@ export type GetOwnershipProof = {
     script_type?: InputScriptType;
     multisig?: MultisigRedeemScriptType;
     user_confirmation?: boolean;
-    ownership_ids: string[];
+    ownership_ids?: string[];
     commitment_data?: string;
 };
 

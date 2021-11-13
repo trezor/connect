@@ -299,6 +299,8 @@ export type API = {
 
     getOwnershipId: Bundled<Bitcoin.GetOwnershipId, Bitcoin.OwnershipId>,
 
+    getOwnershipProof: Bundled<Bitcoin.GetOwnershipProof, Protobuf.OwnershipProof>,
+
     /**
      * Retrieves device state associated with passphrase.
      */

@@ -397,6 +397,13 @@ export namespace TrezorConnect {
         params: P.CommonParams & P.Bundle<Bitcoin.GetOwnershipId>,
     ): P.BundledResponse<Bitcoin.OwnershipId>;
 
+    function getOwnershipProof(
+        params: P.CommonParams & Bitcoin.GetOwnershipProof,
+    ): P.Response<Protobuf.OwnershipProof>;
+    function getOwnershipProof(
+        params: P.CommonParams & P.Bundle<Bitcoin.GetOwnershipProof>,
+    ): P.BundledResponse<Protobuf.OwnershipProof>;
+
     /**
      * Retrieves device state associated with passphrase.
      */
