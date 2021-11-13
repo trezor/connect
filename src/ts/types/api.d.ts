@@ -404,6 +404,10 @@ export namespace TrezorConnect {
         params: P.CommonParams & P.Bundle<Bitcoin.GetOwnershipProof>,
     ): P.BundledResponse<Protobuf.OwnershipProof>;
 
+    function authorizeCoinJoin(
+        params: P.CommonParams & Bitcoin.AuthorizeCoinJoin,
+    ): P.Response<Protobuf.Success>;
+
     /**
      * Retrieves device state associated with passphrase.
      */

@@ -37,6 +37,8 @@ const TrezorConnect: API = {
 
     // methods
 
+    authorizeCoinJoin: params => call({ method: 'authorizeCoinJoin', ...params }),
+
     blockchainGetAccountBalanceHistory: params =>
         call({ method: 'blockchainGetAccountBalanceHistory', ...params }),
 

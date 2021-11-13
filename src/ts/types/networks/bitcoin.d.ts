@@ -1,4 +1,5 @@
 import type {
+    AmountUnit,
     PrevInput,
     TxInput as OrigTxInputType,
     TxInputType,
@@ -114,6 +115,7 @@ export interface SignTransaction {
     decredStakingTicket?: boolean;
     push?: boolean;
 }
+
 export type SignedTransaction = {
     signatures: string[];
     serializedTx: string;
@@ -145,6 +147,17 @@ export type GetOwnershipProof = {
 export type OwnershipProof = ProtobufOwnershipProof & {
     path: number[];
     serializedPath: string;
+};
+
+export type AuthorizeCoinJoin = {
+    path: string | number[];
+    coordinator: string;
+    maxRounds: number;
+    maxCoordinatorFeeRate: number;
+    maxFeePerKvbyte: number;
+    coin?: string;
+    scriptType?: InternalInputScriptType;
+    amountUnit?: AmountUnit;
 };
 
 // push transaction params

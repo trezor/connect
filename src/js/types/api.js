@@ -301,6 +301,8 @@ export type API = {
 
     getOwnershipProof: Bundled<Bitcoin.GetOwnershipProof, Protobuf.OwnershipProof>,
 
+    authorizeCoinJoin: Method<Bitcoin.AuthorizeCoinJoin, Protobuf.Success>,
+
     /**
      * Retrieves device state associated with passphrase.
      */

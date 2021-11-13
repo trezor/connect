@@ -5,6 +5,7 @@ import { ERRORS } from '../../constants';
 
 import AbstractMethod from './AbstractMethod';
 
+import authorizeCoinJoin from './AuthorizeCoinJoin';
 import blockchainDisconnect from './blockchain/BlockchainDisconnect';
 import blockchainEstimateFee from './blockchain/BlockchainEstimateFee';
 import blockchainGetAccountBalanceHistory from './blockchain/BlockchainGetAccountBalanceHistory';
@@ -70,6 +71,7 @@ import getCoinInfo from './GetCoinInfo';
 import rebootToBootloader from './RebootToBootloader';
 
 const METHODS = {
+    authorizeCoinJoin,
     blockchainDisconnect,
     blockchainEstimateFee,
     blockchainGetAccountBalanceHistory,

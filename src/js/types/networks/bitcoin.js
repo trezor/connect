@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    AmountUnit,
     PrevInput,
     TxInput as OrigTxInputType,
     TxInputType,
@@ -147,6 +148,17 @@ export type GetOwnershipProof = {
 export type OwnershipProof = ProtobufOwnershipProof & {
     path: number[],
     serializedPath: string,
+};
+
+export type AuthorizeCoinJoin = {
+    path: string | number[],
+    coordinator: string,
+    maxRounds: number,
+    maxCoordinatorFeeRate: number,
+    maxFeePerKvbyte: number,
+    coin?: string,
+    scriptType?: InternalInputScriptType,
+    amountUnit?: AmountUnit,
 };
 
 // push transaction params
