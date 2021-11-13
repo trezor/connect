@@ -33,6 +33,7 @@ import getAccountInfo from './GetAccountInfo';
 import getAddress from './GetAddress';
 import getDeviceState from './GetDeviceState';
 import getFeatures from './GetFeatures';
+import getOwnershipId from './GetOwnershipId';
 import getPublicKey from './GetPublicKey';
 import getSettings from './GetSettings';
 import liskDeprecated from './LiskDeprecated';
@@ -96,6 +97,7 @@ const METHODS = {
     getAddress,
     getDeviceState,
     getFeatures,
+    getOwnershipId,
     getPublicKey,
     getSettings,
     liskDeprecated,

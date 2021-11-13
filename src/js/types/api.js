@@ -297,6 +297,8 @@ export type API = {
      */
     getFeatures: Method<{}, Device.Features>,
 
+    getOwnershipId: Bundled<Bitcoin.GetOwnershipId, Bitcoin.OwnershipId>,
+
     /**
      * Retrieves device state associated with passphrase.
      */

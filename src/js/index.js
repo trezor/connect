@@ -109,6 +109,8 @@ const TrezorConnect: API = {
 
     getFeatures: params => call({ method: 'getFeatures', ...params }),
 
+    getOwnershipId: params => call({ method: 'getOwnershipId', ...params }),
+
     getPublicKey: params => call({ method: 'getPublicKey', ...params }),
 
     liskGetAddress: () => call({ method: 'liskDeprecated' }),

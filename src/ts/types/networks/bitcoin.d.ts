@@ -5,6 +5,7 @@ import type {
     TxOutputType,
     TxOutputBinType,
     Address as ProtobufAddress,
+    OwnershipId as ProtobufOwnershipId,
     MultisigRedeemScriptType,
     InternalInputScriptType,
 } from '../trezor/protobuf';
@@ -114,6 +115,18 @@ export type SignedTransaction = {
     signatures: string[];
     serializedTx: string;
     txid?: string;
+};
+
+export type GetOwnershipId = {
+    path: string | number[];
+    coin?: string;
+    multisig?: MultisigRedeemScriptType;
+    scriptType?: InternalInputScriptType;
+};
+
+export type OwnershipId = ProtobufOwnershipId & {
+    path: number[];
+    serializedPath: string;
 };
 
 // push transaction params
