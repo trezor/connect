@@ -1248,6 +1248,13 @@
                                     "type": "DecredStakingSpendType",
                                     "name": "decred_staking_spend",
                                     "id": 18
+                                },
+                                {
+                                    "rule": "optional",
+                                    "options": {},
+                                    "type": "bytes",
+                                    "name": "script_pubkey",
+                                    "id": 19
                                 }
                             ],
                             "enums": [],
@@ -1473,6 +1480,13 @@
                     "type": "DecredStakingSpendType",
                     "name": "decred_staking_spend",
                     "id": 18
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "script_pubkey",
+                    "id": 19
                 }
             ],
             "enums": [],
@@ -1726,8 +1740,7 @@
                 }
             ],
             "options": {
-                "(wire_type)": 22,
-                "(include_in_bitcoin_only)": true
+                "(wire_type)": 22
             },
             "oneofs": {}
         },
@@ -1762,8 +1775,7 @@
                 }
             ],
             "options": {
-                "(wire_type)": 22,
-                "(include_in_bitcoin_only)": true
+                "(wire_type)": 22
             },
             "oneofs": {}
         },
@@ -1781,8 +1793,7 @@
             "enums": [],
             "messages": [],
             "options": {
-                "(wire_type)": 22,
-                "(include_in_bitcoin_only)": true
+                "(wire_type)": 22
             },
             "oneofs": {}
         },
@@ -1817,8 +1828,7 @@
                 }
             ],
             "options": {
-                "(wire_type)": 22,
-                "(include_in_bitcoin_only)": true
+                "(wire_type)": 22
             },
             "oneofs": {}
         },
@@ -1853,8 +1863,7 @@
                 }
             ],
             "options": {
-                "(wire_type)": 22,
-                "(include_in_bitcoin_only)": true
+                "(wire_type)": 22
             },
             "oneofs": {}
         },
@@ -1889,8 +1898,7 @@
                 }
             ],
             "options": {
-                "(wire_type)": 22,
-                "(include_in_bitcoin_only)": true
+                "(wire_type)": 22
             },
             "oneofs": {}
         },
@@ -2233,6 +2241,13 @@
                     "type": "CardanoNativeScriptHashDisplayFormat",
                     "name": "display_format",
                     "id": 2
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "CardanoDerivationType",
+                    "name": "derivation_type",
+                    "id": 3
                 }
             ],
             "enums": [],
@@ -2346,6 +2361,13 @@
                     "type": "CardanoAddressParametersType",
                     "name": "address_parameters",
                     "id": 5
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "CardanoDerivationType",
+                    "name": "derivation_type",
+                    "id": 6
                 }
             ],
             "enums": [],
@@ -2385,6 +2407,13 @@
                     "type": "bool",
                     "name": "show_display",
                     "id": 2
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "CardanoDerivationType",
+                    "name": "derivation_type",
+                    "id": 3
                 }
             ],
             "enums": [],
@@ -2508,6 +2537,13 @@
                     "type": "uint32",
                     "name": "minting_asset_groups_count",
                     "id": 13
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "CardanoDerivationType",
+                    "name": "derivation_type",
+                    "id": 14
                 }
             ],
             "enums": [],
@@ -5577,6 +5613,225 @@
             "oneofs": {}
         },
         {
+            "name": "EthereumSignTypedData",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "address_n",
+                    "id": 1
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "string",
+                    "name": "primary_type",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "default": true
+                    },
+                    "type": "bool",
+                    "name": "metamask_v4_compat",
+                    "id": 3
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EthereumTypedDataStructRequest",
+            "fields": [
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "string",
+                    "name": "name",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EthereumTypedDataStructAck",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "EthereumStructMember",
+                    "name": "members",
+                    "id": 1
+                }
+            ],
+            "enums": [
+                {
+                    "name": "EthereumDataType",
+                    "values": [
+                        {
+                            "name": "UINT",
+                            "id": 1
+                        },
+                        {
+                            "name": "INT",
+                            "id": 2
+                        },
+                        {
+                            "name": "BYTES",
+                            "id": 3
+                        },
+                        {
+                            "name": "STRING",
+                            "id": 4
+                        },
+                        {
+                            "name": "BOOL",
+                            "id": 5
+                        },
+                        {
+                            "name": "ADDRESS",
+                            "id": 6
+                        },
+                        {
+                            "name": "ARRAY",
+                            "id": 7
+                        },
+                        {
+                            "name": "STRUCT",
+                            "id": 8
+                        }
+                    ],
+                    "options": {}
+                }
+            ],
+            "messages": [
+                {
+                    "name": "EthereumStructMember",
+                    "fields": [
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "EthereumFieldType",
+                            "name": "type",
+                            "id": 1
+                        },
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "string",
+                            "name": "name",
+                            "id": 2
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                },
+                {
+                    "name": "EthereumFieldType",
+                    "fields": [
+                        {
+                            "rule": "required",
+                            "options": {},
+                            "type": "EthereumDataType",
+                            "name": "data_type",
+                            "id": 1
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "uint32",
+                            "name": "size",
+                            "id": 2
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "EthereumFieldType",
+                            "name": "entry_type",
+                            "id": 3
+                        },
+                        {
+                            "rule": "optional",
+                            "options": {},
+                            "type": "string",
+                            "name": "struct_name",
+                            "id": 4
+                        }
+                    ],
+                    "enums": [],
+                    "messages": [],
+                    "options": {},
+                    "oneofs": {}
+                }
+            ],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EthereumTypedDataValueRequest",
+            "fields": [
+                {
+                    "rule": "repeated",
+                    "options": {},
+                    "type": "uint32",
+                    "name": "member_path",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EthereumTypedDataValueAck",
+            "fields": [
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "value",
+                    "id": 1
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
+            "name": "EthereumTypedDataSignature",
+            "fields": [
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "bytes",
+                    "name": "signature",
+                    "id": 1
+                },
+                {
+                    "rule": "required",
+                    "options": {},
+                    "type": "string",
+                    "name": "address",
+                    "id": 2
+                }
+            ],
+            "enums": [],
+            "messages": [],
+            "options": {},
+            "oneofs": {}
+        },
+        {
             "name": "EthereumGetPublicKey",
             "fields": [
                 {
@@ -6011,6 +6266,13 @@
                     "type": "bytes",
                     "name": "session_id",
                     "id": 1
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "derive_cardano",
+                    "id": 3
                 }
             ],
             "enums": [],
@@ -9358,13 +9620,6 @@
                     "type": "uint32",
                     "name": "wire_type",
                     "id": 52002
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "include_in_bitcoin_only",
-                    "id": 60000
                 }
             ]
         },
@@ -9377,6 +9632,18 @@
                     "type": "bool",
                     "name": "experimental",
                     "id": 53001
+                }
+            ]
+        },
+        {
+            "ref": "google.protobuf.FileOptions",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "include_in_bitcoin_only",
+                    "id": 60000
                 }
             ]
         },
@@ -11143,6 +11410,10 @@
                 {
                     "name": "SPENDP2SHWITNESS",
                     "id": 4
+                },
+                {
+                    "name": "SPENDTAPROOT",
+                    "id": 5
                 }
             ],
             "options": {}
@@ -11173,6 +11444,10 @@
                 {
                     "name": "PAYTOP2SHWITNESS",
                     "id": 5
+                },
+                {
+                    "name": "PAYTOTAPROOT",
+                    "id": 6
                 }
             ],
             "options": {}
@@ -11209,6 +11484,24 @@
                 {
                     "name": "SATOSHI",
                     "id": 3
+                }
+            ],
+            "options": {}
+        },
+        {
+            "name": "CardanoDerivationType",
+            "values": [
+                {
+                    "name": "LEDGER",
+                    "id": 0
+                },
+                {
+                    "name": "ICARUS",
+                    "id": 1
+                },
+                {
+                    "name": "ICARUS_TREZOR",
+                    "id": 2
                 }
             ],
             "options": {}
@@ -11811,6 +12104,30 @@
                 {
                     "name": "MessageType_EthereumMessageSignature",
                     "id": 66
+                },
+                {
+                    "name": "MessageType_EthereumSignTypedData",
+                    "id": 464
+                },
+                {
+                    "name": "MessageType_EthereumTypedDataStructRequest",
+                    "id": 465
+                },
+                {
+                    "name": "MessageType_EthereumTypedDataStructAck",
+                    "id": 466
+                },
+                {
+                    "name": "MessageType_EthereumTypedDataValueRequest",
+                    "id": 467
+                },
+                {
+                    "name": "MessageType_EthereumTypedDataValueAck",
+                    "id": 468
+                },
+                {
+                    "name": "MessageType_EthereumTypedDataSignature",
+                    "id": 469
                 },
                 {
                     "name": "MessageType_NEMGetAddress",

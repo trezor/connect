@@ -5,6 +5,7 @@ export enum Enum_InputScriptType {
     EXTERNAL = 2,
     SPENDWITNESS = 3,
     SPENDP2SHWITNESS = 4,
+    SPENDTAPROOT = 5,
 }
 export type InputScriptType = keyof typeof Enum_InputScriptType;
 
@@ -15,6 +16,7 @@ export enum Enum_OutputScriptType {
     PAYTOOPRETURN = 3,
     PAYTOWITNESS = 4,
     PAYTOP2SHWITNESS = 5,
+    PAYTOTAPROOT = 6,
 }
 export type OutputScriptType = keyof typeof Enum_OutputScriptType;
 
@@ -28,6 +30,12 @@ export enum AmountUnit {
     MILLIBITCOIN = 1,
     MICROBITCOIN = 2,
     SATOSHI = 3,
+}
+
+export enum CardanoDerivationType {
+    LEDGER = 0,
+    ICARUS = 1,
+    ICARUS_TREZOR = 2,
 }
 
 export enum CardanoAddressType {
@@ -359,6 +367,7 @@ export type TxInputType = {
     orig_hash?: string;
     orig_index?: number;
     decred_staking_spend?: DecredStakingSpendType;
+    script_pubkey?: string;
 };
 
 export type TxOutputBinType = {
@@ -418,6 +427,7 @@ export type TxInput = {
     orig_hash?: string;
     orig_index?: number;
     decred_staking_spend?: DecredStakingSpendType;
+    script_pubkey?: string;
 };
 
 // TxOutput
@@ -609,6 +619,7 @@ export type CardanoNativeScript = {
 export type CardanoGetNativeScriptHash = {
     script: CardanoNativeScript;
     display_format: CardanoNativeScriptHashDisplayFormat;
+    derivation_type: CardanoDerivationType;
 };
 
 // CardanoNativeScriptHash
@@ -633,6 +644,7 @@ export type CardanoGetAddress = {
     protocol_magic: number;
     network_id: number;
     address_parameters: CardanoAddressParametersType;
+    derivation_type: CardanoDerivationType;
 };
 
 // CardanoAddress
@@ -644,6 +656,7 @@ export type CardanoAddress = {
 export type CardanoGetPublicKey = {
     address_n: number[];
     show_display?: boolean;
+    derivation_type: CardanoDerivationType;
 };
 
 // CardanoPublicKey
@@ -667,6 +680,7 @@ export type CardanoSignTxInit = {
     validity_interval_start?: string | number;
     witness_requests_count: number;
     minting_asset_groups_count: number;
+    derivation_type: CardanoDerivationType;
 };
 
 // CardanoTxInput
@@ -1322,6 +1336,62 @@ export type EosSignedTx = {
     signature: string;
 };
 
+// EthereumSignTypedData
+export type EthereumSignTypedData = {
+    address_n: number[];
+    primary_type: string;
+    metamask_v4_compat?: boolean;
+};
+
+// EthereumTypedDataStructRequest
+export type EthereumTypedDataStructRequest = {
+    name: string;
+};
+
+export enum EthereumDataType {
+    UINT = 1,
+    INT = 2,
+    BYTES = 3,
+    STRING = 4,
+    BOOL = 5,
+    ADDRESS = 6,
+    ARRAY = 7,
+    STRUCT = 8,
+}
+
+export type EthereumFieldType = {
+    data_type: EthereumDataType;
+    size?: number;
+    entry_type?: EthereumFieldType;
+    struct_name?: string;
+};
+
+export type EthereumStructMember = {
+    type: EthereumFieldType;
+    name: string;
+};
+
+// EthereumTypedDataStructAck
+export type EthereumTypedDataStructAck = {
+    members: EthereumStructMember[];
+};
+
+// EthereumTypedDataValueRequest
+export type EthereumTypedDataValueRequest = {
+    member_path: number[];
+};
+
+// EthereumTypedDataValueAck
+export type EthereumTypedDataValueAck = {
+    value: string;
+};
+
+// EthereumTypedDataSignature
+export type EthereumTypedDataSignature = {
+    signature: string;
+    address: string;
+};
+
 // EthereumGetPublicKey
 export type EthereumGetPublicKey = {
     address_n: number[];
@@ -1415,6 +1485,7 @@ export type EthereumVerifyMessage = {
 // Initialize
 export type Initialize = {
     session_id?: string;
+    derive_cardano?: boolean;
 };
 
 // GetFeatures
