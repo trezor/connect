@@ -229,6 +229,7 @@ const parseBitcoinNetworksJson = (json: any) => {
             xPubMagic: coin.xpub_magic,
             xPubMagicSegwitNative: coin.xpub_magic_segwit_native,
             xPubMagicSegwit: coin.xpub_magic_segwit_p2sh,
+            taproot: coin.taproot,
 
             // custom
             network, // bitcoinjs network

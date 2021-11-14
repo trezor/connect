@@ -57,6 +57,7 @@ export interface BitcoinNetworkInfo extends Common {
     xPubMagic: number;
     xPubMagicSegwitNative?: number;
     xPubMagicSegwit?: number;
+    taproot?: boolean;
 
     // custom
     network: Network;

@@ -1726,8 +1726,7 @@
                 }
             ],
             "options": {
-                "(wire_type)": 22,
-                "(include_in_bitcoin_only)": true
+                "(wire_type)": 22
             },
             "oneofs": {}
         },
@@ -1762,8 +1761,7 @@
                 }
             ],
             "options": {
-                "(wire_type)": 22,
-                "(include_in_bitcoin_only)": true
+                "(wire_type)": 22
             },
             "oneofs": {}
         },
@@ -1781,8 +1779,7 @@
             "enums": [],
             "messages": [],
             "options": {
-                "(wire_type)": 22,
-                "(include_in_bitcoin_only)": true
+                "(wire_type)": 22
             },
             "oneofs": {}
         },
@@ -1817,8 +1814,7 @@
                 }
             ],
             "options": {
-                "(wire_type)": 22,
-                "(include_in_bitcoin_only)": true
+                "(wire_type)": 22
             },
             "oneofs": {}
         },
@@ -1853,8 +1849,7 @@
                 }
             ],
             "options": {
-                "(wire_type)": 22,
-                "(include_in_bitcoin_only)": true
+                "(wire_type)": 22
             },
             "oneofs": {}
         },
@@ -1889,8 +1884,7 @@
                 }
             ],
             "options": {
-                "(wire_type)": 22,
-                "(include_in_bitcoin_only)": true
+                "(wire_type)": 22
             },
             "oneofs": {}
         },
@@ -9358,13 +9352,6 @@
                     "type": "uint32",
                     "name": "wire_type",
                     "id": 52002
-                },
-                {
-                    "rule": "optional",
-                    "options": {},
-                    "type": "bool",
-                    "name": "include_in_bitcoin_only",
-                    "id": 60000
                 }
             ]
         },
@@ -9377,6 +9364,18 @@
                     "type": "bool",
                     "name": "experimental",
                     "id": 53001
+                }
+            ]
+        },
+        {
+            "ref": "google.protobuf.FileOptions",
+            "fields": [
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "include_in_bitcoin_only",
+                    "id": 60000
                 }
             ]
         },
@@ -11143,6 +11142,10 @@
                 {
                     "name": "SPENDP2SHWITNESS",
                     "id": 4
+                },
+                {
+                    "name": "SPENDTAPROOT",
+                    "id": 5
                 }
             ],
             "options": {}
@@ -11173,6 +11176,10 @@
                 {
                     "name": "PAYTOP2SHWITNESS",
                     "id": 5
+                },
+                {
+                    "name": "PAYTOTAPROOT",
+                    "id": 6
                 }
             ],
             "options": {}

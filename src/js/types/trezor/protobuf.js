@@ -6,6 +6,7 @@ export const Enum_InputScriptType = Object.freeze({
     EXTERNAL: 2,
     SPENDWITNESS: 3,
     SPENDP2SHWITNESS: 4,
+    SPENDTAPROOT: 5,
 });
 export type InputScriptType = $Keys<typeof Enum_InputScriptType>;
 
@@ -16,6 +17,7 @@ export const Enum_OutputScriptType = Object.freeze({
     PAYTOOPRETURN: 3,
     PAYTOWITNESS: 4,
     PAYTOP2SHWITNESS: 5,
+    PAYTOTAPROOT: 6,
 });
 export type OutputScriptType = $Keys<typeof Enum_OutputScriptType>;
 

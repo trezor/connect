@@ -58,6 +58,7 @@ export type BitcoinNetworkInfo = Common & {
     xPubMagic: number,
     xPubMagicSegwitNative?: number,
     xPubMagicSegwit?: number,
+    taproot?: boolean,
 
     // custom
     network: Network,
