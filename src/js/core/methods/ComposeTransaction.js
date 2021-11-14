@@ -135,10 +135,9 @@ export default class ComposeTransaction extends AbstractMethod {
     ): Promise<PrecomposedTransaction[]> {
         const { coinInfo, outputs, baseFee, skipPermutation } = this.params;
         const address_n = pathUtils.validatePath(account.path);
-        const segwit = pathUtils.isSegwitPath(address_n) || pathUtils.isBech32Path(address_n);
         const composer = new TransactionComposer({
             account: {
-                type: segwit ? 'normal' : 'legacy',
+                type: pathUtils.getAccountType(address_n),
                 label: 'Account',
                 descriptor: account.path,
                 address_n,

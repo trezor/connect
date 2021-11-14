@@ -468,7 +468,7 @@ export const getAccountInfo = async () => {
             ledger: 1,
             seq: 1,
         },
-        defaultAccountType: 'normal',
+        defaultAccountType: 'p2sh',
     });
     if (account.success) {
         const { payload } = account;

@@ -79,15 +79,15 @@ export default {
             result: [
                 {
                     type: 'final',
-                    bytes: 167,
-                    fee: '167',
+                    bytes: 142,
+                    fee: '142',
                     feePerByte: '1',
                     max: undefined,
-                    totalSpent: '6664',
+                    totalSpent: '6639',
                     transaction: {
                         inputs: [{ script_type: 'SPENDWITNESS', sequence: 0xffffffff }],
                         outputs: [
-                            { amount: '2762', script_type: 'PAYTOWITNESS' },
+                            { amount: '2787', script_type: 'PAYTOWITNESS' },
                             { amount: '6497', script_type: 'PAYTOADDRESS' },
                         ],
                         outputsPermutation: [1, 0], // default permutation from @trezor/utxo-lib/compose
@@ -115,16 +115,16 @@ export default {
             result: [
                 {
                     type: 'final',
-                    bytes: 167,
-                    fee: '334',
-                    feePerByte: '2',
+                    bytes: 142,
+                    fee: '309',
+                    feePerByte: '2.176056338028169',
                     max: undefined,
-                    totalSpent: '6831',
+                    totalSpent: '6806',
                     transaction: {
                         inputs: [{ script_type: 'SPENDWITNESS', sequence: 1 }],
                         outputs: [
                             { amount: '6497', script_type: 'PAYTOADDRESS' },
-                            { amount: '2595', script_type: 'PAYTOWITNESS' }, // skipped permutation
+                            { amount: '2620', script_type: 'PAYTOWITNESS' }, // skipped permutation
                         ],
                         outputsPermutation: [0, 1],
                     },
@@ -170,14 +170,14 @@ export default {
             result: [
                 {
                     type: 'final',
-                    bytes: 167,
-                    fee: '167',
-                    totalSpent: '1167',
+                    bytes: 142,
+                    fee: '142',
+                    totalSpent: '1142',
                     transaction: {
                         inputs: [{ amount: '9426', script_type: 'SPENDWITNESS' }],
                         outputs: [
                             { amount: '1000', script_type: 'PAYTOADDRESS' },
-                            { amount: '8259', script_type: 'PAYTOWITNESS' },
+                            { amount: '8284', script_type: 'PAYTOWITNESS' },
                         ],
                     },
                 },
@@ -232,9 +232,9 @@ export default {
             result: [
                 {
                     type: 'final',
-                    bytes: 351,
-                    fee: '351',
-                    totalSpent: '16751',
+                    bytes: 278,
+                    fee: '278',
+                    totalSpent: '16678',
                     transaction: {
                         inputs: [
                             { amount: '7086' },
@@ -243,7 +243,7 @@ export default {
                         ],
                         outputs: [
                             { amount: '16400', script_type: 'PAYTOADDRESS' },
-                            { amount: '309657', script_type: 'PAYTOWITNESS' },
+                            { amount: '309730', script_type: 'PAYTOWITNESS' },
                         ],
                     },
                 },
@@ -265,20 +265,20 @@ export default {
             result: [
                 {
                     type: 'final',
-                    bytes: 135,
-                    fee: '135',
+                    bytes: 111,
+                    fee: '111',
                     feePerByte: '1',
-                    max: '9291',
+                    max: '9315',
                     totalSpent: '9426',
                     transaction: {
                         inputs: [{ script_type: 'SPENDWITNESS' }],
-                        outputs: [{ amount: '9291', script_type: 'PAYTOADDRESS' }],
+                        outputs: [{ amount: '9315', script_type: 'PAYTOADDRESS' }],
                     },
                 },
             ],
         },
         {
-            description: 'P2SH: precompose with send-max',
+            description: 'Bitcoin (Segwit/P2SH): precompose with send-max',
             params: {
                 account: BECH32_ACCOUNT,
                 feeLevels: FEE_LEVELS,
@@ -293,14 +293,14 @@ export default {
             result: [
                 {
                     type: 'final',
-                    bytes: 135,
-                    fee: '135',
+                    bytes: 111,
+                    fee: '111',
                     feePerByte: '1',
-                    max: '9291',
+                    max: '9315',
                     totalSpent: '9426',
                     transaction: {
                         inputs: [{ script_type: 'SPENDWITNESS' }],
-                        outputs: [{ amount: '9291', script_type: 'PAYTOADDRESS' }],
+                        outputs: [{ amount: '9315', script_type: 'PAYTOADDRESS' }],
                     },
                 },
             ],
@@ -321,7 +321,7 @@ export default {
             result: [
                 {
                     type: 'final',
-                    bytes: 229, // NOTE: more bytes than BECH32
+                    bytes: 226,
                     fee: '100000000',
                     max: undefined,
                     totalSpent: '200000000',
@@ -355,7 +355,7 @@ export default {
             result: [
                 {
                     type: 'final',
-                    bytes: 229, // NOTE: more bytes than BECH32
+                    bytes: 226,
                     fee: '200000000', // NOTE: +1 DOGE per dust limit output
                     max: undefined,
                     totalSpent: '210000000',
@@ -394,7 +394,7 @@ export default {
             result: [
                 {
                     type: 'final',
-                    bytes: 229, // NOTE: more bytes than BECH32
+                    bytes: 226,
                     fee: '290000000', // NOTE: +1 DOGE per dust limit output + 0.9 DOGE dust limit change
                     max: undefined,
                     totalSpent: '500000000',
@@ -432,7 +432,7 @@ export default {
             result: [
                 {
                     type: 'final',
-                    bytes: 195, // NOTE: more bytes than BECH32
+                    bytes: 192,
                     fee: '100000000',
                     max: '400000000',
                     totalSpent: '500000000',

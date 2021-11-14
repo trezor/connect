@@ -178,12 +178,11 @@ export default class TransactionComposer {
         }
 
         return composeTx({
+            txType: account.type,
             utxos: this.utxos,
             outputs: this.outputs,
             height: this.blockHeight,
             feeRate,
-            segwit: coinInfo.segwit && account.type !== 'legacy',
-            inputAmounts: true, // since 2.3.4 every utxo needs to have "amount" field
             skipPermutation: this.skipPermutation,
             basePath: account.address_n,
             network: coinInfo.network,

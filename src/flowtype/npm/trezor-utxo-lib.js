@@ -227,12 +227,11 @@ declare module '@trezor/utxo-lib' {
     declare type ComposeOutput = ComposeFinalOutput | ComposeNotFinalOutput;
 
     declare type ComposeRequest = {
+        txType: 'p2pkh' | 'p2sh' | 'p2tr' | 'p2wpkh',
         utxos: ComposeInput[],
         outputs: ComposeOutput[],
         height: number,
         feeRate: string,
-        segwit: boolean,
-        inputAmounts: boolean,
         basePath: number[],
         network: Network,
         changeId: number,
@@ -248,14 +247,12 @@ declare module '@trezor/utxo-lib' {
         hash: Buffer,
         index: number,
         path: number[],
-        segwit: boolean,
         amount?: string,
     }
 
     declare type ComposedTxOutput = {|
         path: number[],
         value: string,
-        segwit: boolean,
     |} | {|
         address: string,
         value: string,
