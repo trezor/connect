@@ -5,6 +5,7 @@ export enum Enum_InputScriptType {
     EXTERNAL = 2,
     SPENDWITNESS = 3,
     SPENDP2SHWITNESS = 4,
+    SPENDTAPROOT = 5,
 }
 export type InputScriptType = keyof typeof Enum_InputScriptType;
 
@@ -15,6 +16,7 @@ export enum Enum_OutputScriptType {
     PAYTOOPRETURN = 3,
     PAYTOWITNESS = 4,
     PAYTOP2SHWITNESS = 5,
+    PAYTOTAPROOT = 6,
 }
 export type OutputScriptType = keyof typeof Enum_OutputScriptType;
 

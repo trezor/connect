@@ -118,6 +118,7 @@ describe('utils/deviceFeaturesUtils', () => {
             replaceTransaction: 'update-required',
             decreaseOutput: 'update-required',
             eip1559: 'update-required',
+            taproot: 'update-required',
         });
 
         const feat2 = {
@@ -133,6 +134,7 @@ describe('utils/deviceFeaturesUtils', () => {
             replaceTransaction: 'update-required',
             decreaseOutput: 'update-required',
             eip1559: 'update-required',
+            taproot: 'update-required',
         });
 
         // added new capability

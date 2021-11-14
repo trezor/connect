@@ -9,8 +9,10 @@ import {
     isMultisigPath,
     isSegwitPath,
     isBech32Path,
+    isTaprootPath,
     getSerializedPath,
     getScriptType,
+    fromHardened,
     toHardened,
 } from '../utils/pathUtils';
 import { getAccountAddressN } from '../utils/accountUtils';
@@ -617,6 +619,12 @@ export default class DeviceCommands {
             : getAccountAddressN(coinInfo, indexOrPath);
         if (coinInfo.type === 'bitcoin') {
             const resp = await this.getHDNode(address_n, coinInfo, false);
+            if (isTaprootPath(address_n)) {
+                // wrap regular xpub into bitcoind native descriptor
+                resp.xpubSegwit = `tr([5c9e228d/86'/${fromHardened(address_n[1])}'/${fromHardened(
+                    address_n[2],
+                )}']${resp.xpub}/<0;1>/*)`;
+            }
             return {
                 descriptor: resp.xpubSegwit || resp.xpub,
                 legacyXpub: resp.xpub,

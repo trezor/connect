@@ -27,13 +27,11 @@ const derivePubKeyHash = async (
     if (address_n.length === 5) {
         const response = await getHDNode(address_n.slice(0, 4), coinInfo);
         const node = bip32.fromBase58(response.xpub, coinInfo.network);
-        const addr = node.derive(address_n[address_n.length - 1]);
-        return addr.identifier;
+        return node.derive(address_n[address_n.length - 1]);
     }
     // custom address_n
     const response = await getHDNode(address_n, coinInfo);
-    const node = bip32.fromBase58(response.xpub, coinInfo.network);
-    return node.identifier;
+    return bip32.fromBase58(response.xpub, coinInfo.network);
 };
 
 const deriveOutputScript = async (
@@ -62,8 +60,8 @@ const deriveOutputScript = async (
     }
 
     const scriptType = getOutputScriptType(output.address_n);
-    const pkh = await derivePubKeyHash(output.address_n, getHDNode, coinInfo);
-    const payment = { hash: pkh, network: coinInfo.network };
+    const node = await derivePubKeyHash(output.address_n, getHDNode, coinInfo);
+    const payment = { hash: node.identifier, network: coinInfo.network };
 
     if (scriptType === 'PAYTOADDRESS') {
         return BitcoinJsPayments.p2pkh(payment).output;
@@ -81,6 +79,13 @@ const deriveOutputScript = async (
 
     if (scriptType === 'PAYTOWITNESS') {
         return BitcoinJsPayments.p2wpkh(payment).output;
+    }
+
+    if (scriptType === 'PAYTOTAPROOT') {
+        return BitcoinJsPayments.p2tr({
+            pubkey: node.publicKey,
+            network: coinInfo.network,
+        }).output;
     }
 
     throw ERRORS.TypedError('Runtime', `deriveOutputScript: Unknown script type ${scriptType}`);
@@ -183,9 +188,9 @@ export const verifyTicketTx = async (
                 );
             }
 
-            const hash = await derivePubKeyHash(output.address_n, getHDNode, coinInfo);
+            const node = await derivePubKeyHash(output.address_n, getHDNode, coinInfo);
             scriptA = BitcoinJsPayments.sstxcommitment({
-                hash,
+                hash: node.identifier,
                 amount: output.amount,
                 network: coinInfo.network,
             }).output;

@@ -155,6 +155,11 @@
             "capabilities": ["eip1559"],
             "min": ["1.10.4", "2.4.2"],
             "comment": ["new eth transaction pricing mechanism (EIP1559) since 1.10.4/2.4.2"]
+        },
+        {
+            "capabilities": ["taproot"],
+            "min": ["1.10.4", "2.4.3"],
+            "comment": ["new btc accounts taproot since 1.10.4/2.4.3 (BTC + TEST only)"]
         }
     ]
 }

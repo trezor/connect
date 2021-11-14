@@ -105,6 +105,42 @@ export default [
         tx: '01000000016d20f69067ad1ffd50ee7c0f377dde2c932ccb03e84b5659732da99c20f1f650010000006a4730440220714c3704cb9aee785a5e03eb77eacf5bd95d29a4fe9cf33e4a868aa4100d2b6902207c5bdef296404d3fedeaaa71579140768b72c0bea882c7a2f16c029963d7c622012102a7a079c1ef9916b289c2ff21a992c808d0de3dfcf8a9f163205c5c9e21f55d5cffffffff0110270000000000002200201863143c14c5166804bd19203356da136c985678cd4d27a1b8c632960490326200000000',
     },
     {
+        // https://tbtc1.trezor.io/tx/d7bae8f41c45f43447ec6eedf2b900c5e15359a1b88771d2e4dee9a1aaf3e23e
+        description: 'external P2TR output',
+        network: 'testnet',
+        inputs: [{}, {}, {}],
+        outputs: [
+            {
+                address: 'tb1p5cxhpna6xuthmq3e6qvpshvxfv4a6r90tct4l4z9fnqqdlfdwkkq5cyr45',
+                amount: '34009772',
+                script_type: 'PAYTOADDRESS',
+            },
+        ],
+        tx: '010000000001036681d03f108f557f55dc885cfcf9e5ac8f2bc564d5ff4fbd55627bb06ffa6e87000000000000000000f33120595c2b58a67121393289b4017ff6c627e5f929b602d00a17c819104ecd000000000000000000f7b890100da516c5fe7bb3627da6b166d5bf4a8feaec3e98544e36d0338c8f9800000000000000000001acf2060200000000225120a60d70cfba37177d8239d018185d864b2bdd0caf5e175fd4454cc006fd2d75ac01402124dd40569c8518e42eb23e3e75d6446c816b099f89dd485171ae4ae6dbacff54847e4aed4f7265128d107ac73422f7d3fef65ee8ef7d57d907183fac2ce9fe01405d837bb4c7933f70915dc9c8e1f8b3843bf018292a8febd9a1801a2c5b137da407e463b7c091e6cc05ea5f3b6377d7c3c17c42d9f1db37654defeae22cfcd5690140c49a7fc0a2be865f4c1d8be8b56af8eecd3b8af55c823159c417b2ef390a1dab1f8ccba681a3cf3fd0dd072261ca4f5263196e69bbcccbb889d1c189f20ee61500000000',
+    },
+    {
+        // https://tbtc1.trezor.io/tx/ab1494fd55bcfe16822d2eb7f7619e34168f4d41e082e7868c753e7c87971d19
+        description: 'internal P2TR output',
+        network: 'testnet',
+        inputs: [{}],
+        outputs: [
+            {
+                address: 'tb1pdsepw2hky9etm9d3yfumyq9g25xwys6d0jysstaaymgc6nheggasgamqts',
+                amount: '2000',
+                script_type: 'PAYTOADDRESS',
+            },
+            {
+                address_n: [2147483734, 2147483649, 2147483648, 1, 1],
+                amount: '8580',
+                script_type: 'PAYTOTAPROOT',
+            },
+        ],
+        tx: '0100000000010137c69a1d916c702a237ae1af6362d3d0ad63a078488c860d3fe0c276aa37d83d0000000000fdffffff02d0070000000000002251206c32172af62172bd95b12279b200a8550ce2434d7c89082fbd26d18d4ef9423b84210000000000002251207866dd733460c84db1aa3f7208d9a2d0f706c80306b398050b41dcd44cd214ad014081ed20fcb7fa953e0cdda874383af18d6127102e03c8386ac13a41a4e4da6e3eb2f52ffe85cf482b35f93523fa226e6b6e382cb71ee2bebac6551c29d16a94f900000000',
+        getHDNode: () => ({
+            xpub: 'tpubDECt75TERm1JRzmVvnEta9ywSwgfTJ1WQQnAoEG9EAY75gWwJU5e2GqEdDaYSTi3ogdPeqC25T4to7Lzp9uui7HfKqhPX1PtRW7ZGz6PBw3',
+        }),
+    },
+    {
         description: 'opreturn output',
         inputs,
         outputs: [

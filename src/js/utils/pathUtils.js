@@ -53,7 +53,11 @@ export const isSegwitPath = (path: ?Array<number>) =>
 export const isBech32Path = (path: ?Array<number>) =>
     Array.isArray(path) && path[0] === toHardened(84);
 
+export const isTaprootPath = (path: ?Array<number>) =>
+    Array.isArray(path) && path[0] === toHardened(86);
+
 export const getAccountType = (path: ?Array<number>) => {
+    if (isTaprootPath(path)) return 'p2tr';
     if (isBech32Path(path)) return 'p2wpkh';
     if (isSegwitPath(path)) return 'p2sh';
     return 'p2pkh';
@@ -70,6 +74,8 @@ export const getScriptType = (path: ?Array<number>): InputScriptType => {
             return 'SPENDP2SHWITNESS';
         case 84:
             return 'SPENDWITNESS';
+        case 86:
+            return 'SPENDTAPROOT';
         default:
             return 'SPENDADDRESS';
     }
@@ -91,6 +97,8 @@ export const getOutputScriptType = (path?: number[]): ChangeOutputScriptType => 
             return 'PAYTOP2SHWITNESS';
         case 84:
             return 'PAYTOWITNESS';
+        case 86:
+            return 'PAYTOTAPROOT';
         default:
             return 'PAYTOADDRESS';
     }

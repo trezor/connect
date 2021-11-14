@@ -1,7 +1,7 @@
 import { TxInputType, TxOutputType } from './trezor/protobuf';
 import { VinVout, BlockbookTransaction } from './backend/transactions';
 
-export type DiscoveryAccountType = 'p2pkh' | 'p2sh' | 'p2wpkh';
+export type DiscoveryAccountType = 'p2pkh' | 'p2sh' | 'p2tr' | 'p2wpkh';
 
 // getAccountInfo params
 export interface GetAccountInfo {
