@@ -53,6 +53,12 @@ export const isSegwitPath = (path: ?Array<number>) =>
 export const isBech32Path = (path: ?Array<number>) =>
     Array.isArray(path) && path[0] === toHardened(84);
 
+export const getAccountType = (path: ?Array<number>) => {
+    if (isBech32Path(path)) return 'p2wpkh';
+    if (isSegwitPath(path)) return 'p2sh';
+    return 'p2pkh';
+};
+
 export const getScriptType = (path: ?Array<number>): InputScriptType => {
     if (!Array.isArray(path) || path.length < 1) return 'SPENDADDRESS';
 
