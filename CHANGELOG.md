@@ -1,3 +1,13 @@
+# 8.2.3 (not released)
+
+### Added
+- Bitcoin Taproot support.
+- Stellar: support for StellarManageBuyOfferOp and StellarPathPaymentStrictSendOp.
+- Decred support.
+
+### Changed
+- @trezor/utxo-lib dependency from monorepo: https://github.com/trezor/trezor-suite/tree/develop/packages/utxo-lib
+
 # 8.2.2
 
 ### Added
