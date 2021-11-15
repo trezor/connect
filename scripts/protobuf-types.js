@@ -167,6 +167,7 @@ const ORDER = {
     CardanoAssetGroupType: 'CardanoTxOutputType',
     CardanoTokenType: 'CardanoAssetGroupType',
     TxAck: 'TxAckInputWrapper',
+    EthereumFieldType: 'EthereumStructMember',
 };
 Object.keys(ORDER).forEach(key => {
     // find indexes
