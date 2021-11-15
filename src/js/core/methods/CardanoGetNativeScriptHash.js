@@ -8,12 +8,12 @@ import { validatePath } from '../../utils/pathUtils';
 import type { CoreMessage } from '../../types';
 import type { CardanoNativeScript } from '../../types/networks/cardano';
 import type {
-    CardanoGetNativeScriptHash as CardanoGetNativeScriptHashProto,
     CardanoNativeScript as CardanoNativeScriptProto,
+    MessageType,
 } from '../../types/trezor/protobuf';
+import { Enum_CardanoDerivationType as CardanoDerivationType } from '../../types/trezor/protobuf';
 
-type Params = CardanoGetNativeScriptHashProto;
-
+type Params = $ElementType<MessageType, 'CardanoGetNativeScriptHash'>;
 export default class CardanoGetNativeScriptHash extends AbstractMethod {
     params: Params;
 
@@ -33,6 +33,7 @@ export default class CardanoGetNativeScriptHash extends AbstractMethod {
         validateParams(payload, [
             { name: 'script', type: 'object', obligatory: true },
             { name: 'displayFormat', type: 'number', obligatory: true },
+            { name: 'derivationType', type: 'number' },
         ]);
 
         this.validateScript(payload.script);
@@ -40,6 +41,10 @@ export default class CardanoGetNativeScriptHash extends AbstractMethod {
         this.params = {
             script: this.scriptToProto(payload.script),
             display_format: payload.displayFormat,
+            derivation_type:
+                typeof payload.derivationType !== 'undefined'
+                    ? payload.derivationType
+                    : CardanoDerivationType.ICARUS_TREZOR,
         };
     }
 
@@ -90,6 +95,7 @@ export default class CardanoGetNativeScriptHash extends AbstractMethod {
             .typedCall('CardanoGetNativeScriptHash', 'CardanoNativeScriptHash', {
                 script: this.params.script,
                 display_format: this.params.display_format,
+                derivation_type: this.params.derivation_type,
             });
 
         return {

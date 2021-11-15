@@ -70,6 +70,8 @@ export default class AbstractMethod implements MethodInterface {
 
     network: string;
 
+    useCardanoDerivation: boolean;
+
     +confirmation: () => Promise<boolean>;
 
     +noBackupConfirmation: () => Promise<boolean>;
@@ -132,6 +134,11 @@ export default class AbstractMethod implements MethodInterface {
         this.useDevice = true;
         this.useDeviceState = true;
         this.useUi = true;
+        // should derive cardano seed? respect provided option or fall back to do it only when cardano method is called
+        this.useCardanoDerivation =
+            typeof payload.useCardanoDerivation === 'boolean'
+                ? payload.useCardanoDerivation
+                : payload.method.startsWith('cardano');
     }
 
     setDevice(device: IDevice) {

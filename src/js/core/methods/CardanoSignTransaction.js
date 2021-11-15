@@ -15,12 +15,14 @@ import {
     Enum_CardanoTxAuxiliaryDataSupplementType as CardanoTxAuxiliaryDataSupplementType,
     Enum_CardanoTxSigningMode as CardanoTxSigningModeEnum,
     Enum_CardanoTxWitnessType as CardanoTxWitnessType,
+    Enum_CardanoDerivationType,
 } from '../../types/trezor/protobuf';
 import type {
     CardanoTxInput,
     CardanoTxWithdrawal,
     CardanoTxAuxiliaryData,
     CardanoTxSigningMode,
+    CardanoDerivationType,
 } from '../../types/trezor/protobuf';
 import type { CoreMessage } from '../../types';
 import type {
@@ -68,6 +70,7 @@ export type CardanoSignTransactionParams = {
     networkId: number,
     witnessPaths: Path[],
     additionalWitnessRequests: Path[],
+    derivationType: CardanoDerivationType,
 };
 
 export default class CardanoSignTransaction extends AbstractMethod {
@@ -113,6 +116,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             { name: 'protocolMagic', type: 'number', obligatory: true },
             { name: 'networkId', type: 'number', obligatory: true },
             { name: 'additionalWitnessRequests', type: 'array', allowEmpty: true },
+            { name: 'derivationType', type: 'number' },
         ]);
 
         const inputsWithPath: InputWithPath[] = payload.inputs.map(input => {
@@ -191,6 +195,10 @@ export default class CardanoSignTransaction extends AbstractMethod {
                 payload.signingMode,
             ),
             additionalWitnessRequests,
+            derivationType:
+                typeof payload.derivationType !== 'undefined'
+                    ? payload.derivationType
+                    : Enum_CardanoDerivationType.ICARUS_TREZOR,
         };
     }
 
@@ -273,6 +281,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             validity_interval_start: this.params.validityIntervalStart,
             witness_requests_count: this.params.witnessPaths.length,
             minting_asset_groups_count: this.params.mint.length,
+            derivation_type: this.params.derivationType,
         };
 
         // init

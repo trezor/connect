@@ -17,6 +17,7 @@ import type { CoreMessage } from '../../types';
 import type { CardanoAddress } from '../../types/networks/cardano';
 import { CardanoAddressType } from '../../types/networks/cardano';
 import type { CardanoAddressParametersType, MessageType } from '../../types/trezor/protobuf';
+import { Enum_CardanoDerivationType as CardanoDerivationType } from '../../types/trezor/protobuf';
 
 type Params = {
     ...$ElementType<MessageType, 'CardanoGetAddress'>,
@@ -60,6 +61,7 @@ export default class CardanoGetAddress extends AbstractMethod {
                 { name: 'addressParameters', type: 'object', obligatory: true },
                 { name: 'networkId', type: 'number', obligatory: true },
                 { name: 'protocolMagic', type: 'number', obligatory: true },
+                { name: 'derivationType', type: 'number' },
                 { name: 'address', type: 'string' },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
@@ -76,6 +78,10 @@ export default class CardanoGetAddress extends AbstractMethod {
                 address: batch.address,
                 protocol_magic: batch.protocolMagic,
                 network_id: batch.networkId,
+                derivation_type:
+                    typeof batch.derivationType !== 'undefined'
+                        ? batch.derivationType
+                        : CardanoDerivationType.ICARUS_TREZOR,
                 show_display: showOnTrezor,
             });
         });
@@ -152,12 +158,19 @@ export default class CardanoGetAddress extends AbstractMethod {
         return uiResp.payload;
     }
 
-    async _call({ address_parameters, protocol_magic, network_id, show_display }: Params) {
+    async _call({
+        address_parameters,
+        protocol_magic,
+        network_id,
+        derivation_type,
+        show_display,
+    }: Params) {
         const cmd = this.device.getCommands();
         const response = await cmd.typedCall('CardanoGetAddress', 'CardanoAddress', {
             address_parameters,
             protocol_magic,
             network_id,
+            derivation_type,
             show_display,
         });
         return response.message;

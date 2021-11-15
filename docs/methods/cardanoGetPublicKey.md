@@ -19,6 +19,7 @@ TrezorConnect.cardanoGetPublicKey(params).then(function(result) {
 #### Exporting single public key
 * `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
 * `showOnTrezor` — *optional* `boolean` determines if publick key will be displayed on device. Default is set to `true`
+* `derivationType` — *optional* `CardanoDerivationType` enum. determines used derivation type. Default is set to ICARUS_TREZOR=2
 
 #### Exporting bundle of publick keys
 * `bundle` - `Array` of Objects with `path` and `showOnTrezor` fields
