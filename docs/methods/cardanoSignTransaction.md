@@ -32,6 +32,7 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 * `mint` - *optional* [CardanoMint](../../src/js/types/networks/cardano.js#L164)
 * `additionalWitnessRequests` - *optional* `Array` of `string | Array<number>` (paths). Used for multi-sig and token minting witness requests as those can not be determined from the transaction parameters.
 * `metadata` - *removed* - use `auxiliaryData` instead
+* `derivationType` — *optional* `CardanoDerivationType` enum. determines used derivation type. Default is set to ICARUS_TREZOR=2
 
 ### CardanoTxSigningMode
 

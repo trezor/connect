@@ -325,8 +325,15 @@ export default class DeviceCommands {
         };
     }
 
-    getDeviceState(networkType: ?string) {
-        return this._getAddressForNetworkType(networkType);
+    getDeviceState(networkType?: string) {
+        // cardano backwards compatibility. we only need this for firmware before initialize.derive_cardano message was introduced
+        if (!this.device.atLeast('2.4.3')) {
+            return this._getAddressForNetworkType(networkType);
+        }
+
+        // skipping network type parameter intentionally
+        return this._getAddressForNetworkType();
+
         // bitcoin.crypto.hash256(Buffer.from(secret, 'binary')).toString('hex');
     }
 
@@ -487,6 +494,7 @@ export default class DeviceCommands {
     async _getAddressForNetworkType(networkType: ?string) {
         switch (networkType) {
             case NETWORK.TYPES.cardano: {
+                // $FlowIssue derivation_type is not available for older firmwares
                 const { message } = await this.typedCall('CardanoGetAddress', 'CardanoAddress', {
                     // $FlowIssue TEMP proto, address_n_staking missing
                     address_parameters: {
@@ -495,6 +503,9 @@ export default class DeviceCommands {
                     },
                     protocol_magic: 42,
                     network_id: 0,
+                    // derivation type doesn't really matter as it is not recognized by older firmwares.
+                    // but it is a required field withing protobuf definitions so we must provide something here
+                    derivation_type: 2, // icarus_trezor
                 });
                 return message.address;
             }

@@ -572,7 +572,10 @@ export const onCall = async (message: CoreMessage) => {
                         if (uiResp.payload) {
                             // reset internal device state and try again
                             device.setInternalState(undefined);
-                            await device.initialize(method.useEmptyPassphrase);
+                            await device.initialize(
+                                method.useEmptyPassphrase,
+                                method.useCardanoDerivation,
+                            );
                             return inner();
                         }
                         // set new state as requested
@@ -627,6 +630,7 @@ export const onCall = async (message: CoreMessage) => {
             keepSession: method.keepSession,
             useEmptyPassphrase: method.useEmptyPassphrase,
             skipFinalReload: method.skipFinalReload,
+            useCardanoDerivation: method.useCardanoDerivation,
         });
     } catch (error) {
         // corner case: Device was disconnected during authorization

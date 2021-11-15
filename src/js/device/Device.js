@@ -46,6 +46,7 @@ export type RunOptions = {
 
     keepSession?: boolean,
     useEmptyPassphrase?: boolean,
+    useCardanoDerivation?: boolean,
 };
 
 const parseRunOptions = (options?: RunOptions): RunOptions => {
@@ -262,7 +263,10 @@ class Device extends EventEmitter {
             // update features
             try {
                 if (fn) {
-                    await this.initialize(!!options.useEmptyPassphrase);
+                    await this.initialize(
+                        !!options.useEmptyPassphrase,
+                        !!options.useCardanoDerivation,
+                    );
                 } else {
                     // do not initialize while firstRunPromise otherwise `features.session_id` could be affected
                     // Corner-case: T1 + bootloader < 1.4.0 doesn't know the "GetFeatures" message yet and it will send no response to it
@@ -407,12 +411,15 @@ class Device extends EventEmitter {
         return !this.atLeast(['1.9.0', '2.3.0']);
     }
 
-    async initialize(useEmptyPassphrase: boolean) {
+    async initialize(useEmptyPassphrase: boolean, useCardanoDerivation: boolean) {
         let payload;
         if (this.features) {
             const legacy = this.useLegacyPassphrase();
             const internalState = this.getInternalState();
             payload = {};
+            // If the user has BIP-39 seed, and Initialize(derive_cardano=True) is not sent,
+            // all Cardano calls will fail because the root secret will not be available.
+            payload.derive_cardano = useCardanoDerivation;
             if (!legacy && internalState) {
                 payload.session_id = internalState;
             }

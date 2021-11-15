@@ -11,6 +11,7 @@ import { UiMessage } from '../../message/builder';
 import type { CoreMessage } from '../../types';
 import type { CardanoPublicKey } from '../../types/networks/cardano';
 import type { MessageType } from '../../types/trezor/protobuf';
+import { Enum_CardanoDerivationType as CardanoDerivationType } from '../../types/trezor/protobuf';
 
 export default class CardanoGetPublicKey extends AbstractMethod {
     params: $ElementType<MessageType, 'CardanoGetPublicKey'>[] = [];
@@ -43,6 +44,7 @@ export default class CardanoGetPublicKey extends AbstractMethod {
             // validate incoming parameters for each batch
             validateParams(batch, [
                 { name: 'path', obligatory: true },
+                { name: 'derivationType', type: 'number' },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
@@ -54,6 +56,10 @@ export default class CardanoGetPublicKey extends AbstractMethod {
 
             this.params.push({
                 address_n: path,
+                derivation_type:
+                    typeof batch.derivationType !== 'undefined'
+                        ? batch.derivationType
+                        : CardanoDerivationType.ICARUS_TREZOR,
                 show_display: showOnTrezor,
             });
         });
