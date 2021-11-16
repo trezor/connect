@@ -104,5 +104,45 @@ export default {
                 address: 'TsRQTRqf5TdEfqsnJ1gcQEDvPP363cEjr4B',
             },
         },
+        {
+            description: 'Regtest P2PKH first address',
+            params: {
+                path: "m/44'/1'/0'/0/0",
+                coin: 'regtest',
+            },
+            result: {
+                address: 'mkqRFzxmkCGX9jxgpqqFHcxRUmLJcLDBer',
+            },
+        },
+        {
+            description: 'Regtest P2SH first address',
+            params: {
+                path: "m/49'/1'/0'/0/0",
+                coin: 'regtest',
+            },
+            result: {
+                address: '2N4dH9yn4eYnnjHTYpN9xDmuMRS2k1AHWd8',
+            },
+        },
+        {
+            description: 'Regtest P2WPHK first address',
+            params: {
+                path: "m/84'/1'/0'/0/0",
+                coin: 'regtest',
+            },
+            result: {
+                address: 'bcrt1qnspxpr2xj9s2jt6qlhuvdnxw6q55jvyg6q7g5r',
+            },
+        },
+        {
+            description: 'Regtest P2TR first address',
+            params: {
+                path: "m/86'/1'/0'/0/0",
+                coin: 'regtest',
+            },
+            result: {
+                address: 'bcrt1p0wxg3r4ddwhdsze3ket8egal8caf4u5rflnlnun9tm2ekafgzc7se7tuts',
+            },
+        },
     ],
 };
