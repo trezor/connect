@@ -55,6 +55,26 @@ export const validAddresses = [
         address: 'tb1qqqqqp399et2xygdj5xreqhjjvcmzhxw4aywxecjdzew6hylgvsesrxh6hy',
     },
     {
+        description: 'Regtest P2PKH',
+        coin: 'regtest',
+        address: 'mvbu1Gdy8SUjTenqerxUaZyYjmveZvt33q',
+    },
+    {
+        description: 'Regtest P2SH',
+        coin: 'regtest',
+        address: '2N4Q5FhU2497BryFfUgbqkAJE87aKHUhXMp',
+    },
+    {
+        description: 'Regtest P2WPKH',
+        coin: 'regtest',
+        address: 'bcrt1qkvwu9g3k2pdxewfqr7syz89r3gj557l374sg5v',
+    },
+    {
+        description: 'Regtest P2TR',
+        coin: 'regtest',
+        address: 'bcrt1pswrqtykue8r89t9u4rprjs0gt4qzkdfuursfnvqaa3f2yql07zmq2fdmpx',
+    },
+    {
         description: 'Litecoin P2PKH',
         coin: 'ltc',
         address: 'LVg2kJoFNg45Nbpy53h7Fe1wKyeXVRhMH9',
