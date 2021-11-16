@@ -24,6 +24,7 @@ export default class SignMessage extends AbstractMethod {
             { name: 'coin', type: 'string' },
             { name: 'message', type: 'string', obligatory: true },
             { name: 'hex', type: 'boolean' },
+            { name: 'no_script_type', type: 'boolean' },
         ]);
 
         const path = validatePath(payload.path);
@@ -37,10 +38,13 @@ export default class SignMessage extends AbstractMethod {
 
         this.info = getLabel('Sign #NETWORK message', coinInfo);
 
-        if (coinInfo) {
-            // check required firmware with coinInfo support
-            this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
-        }
+        // firmware range depends on used no_script_type parameter
+        // AOPP is possible since 1.10/42.4.3
+        this.firmwareRange = getFirmwareRange(
+            payload.no_script_type ? 'aopp' : this.name,
+            coinInfo,
+            this.firmwareRange,
+        );
 
         const messageHex = payload.hex
             ? messageToHex(payload.message)
@@ -51,6 +55,7 @@ export default class SignMessage extends AbstractMethod {
             message: messageHex,
             coin_name: coinInfo ? coinInfo.name : undefined,
             script_type: scriptType && scriptType !== 'SPENDMULTISIG' ? scriptType : 'SPENDADDRESS', // script_type 'SPENDMULTISIG' throws Failure_FirmwareError
+            no_script_type: payload.no_script_type,
         };
     }
 

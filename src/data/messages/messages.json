@@ -711,6 +711,13 @@
                     "type": "InputScriptType",
                     "name": "script_type",
                     "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {},
+                    "type": "bool",
+                    "name": "no_script_type",
+                    "id": 5
                 }
             ],
             "enums": [],
