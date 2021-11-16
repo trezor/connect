@@ -27,6 +27,7 @@ export default class ApplySettings extends AbstractMethod {
             { name: 'auto_lock_delay_ms', type: 'number' },
             { name: 'display_rotation', type: 'number' },
             { name: 'safety_checks', type: 'string' },
+            { name: 'experimental_features', type: 'boolean' },
         ]);
 
         this.params = {
@@ -39,6 +40,7 @@ export default class ApplySettings extends AbstractMethod {
             auto_lock_delay_ms: payload.auto_lock_delay_ms,
             display_rotation: payload.display_rotation,
             safety_checks: payload.safety_checks,
+            experimental_features: payload.experimental_features,
         };
     }
 
