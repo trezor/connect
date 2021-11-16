@@ -52,7 +52,12 @@ const setup = async (controller, options) => {
         await controller.send({ type: 'emulator-allow-unsafe-paths' });
 
         // after all is done, start bridge again
-        await controller.send({ type: 'bridge-start' });
+        await controller.send({
+            type: 'bridge-start',
+            // todo: this works, but when this version is not provided,
+            // there is a super weird error "device disconnected during action"
+            // version: '2.0.27',
+        });
         // Wait to prevent Transport is missing error from TrezorConnect
         await wait(1000);
     } catch (err) {
