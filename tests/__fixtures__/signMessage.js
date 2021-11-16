@@ -187,5 +187,53 @@ export default {
                 ).toString('base64'),
             },
         },
+        {
+            description: 'BTC AOPP p2pkh',
+            params: {
+                coin: 'Bitcoin',
+                path: ADDRESS_N("m/44'/0'/0'/0/0"),
+                message: 'This is an example of a signed message.',
+                no_script_type: true,
+            },
+            result: {
+                address: '1JAd7XCBzGudGpJQSDSfpmJhiygtLQWaGL',
+                signature: Buffer.from(
+                    '20fd8f2f7db5238fcdd077d5204c3e6949c261d700269cefc1d9d2dcef6b95023630ee617f6c8acf9eb40c8edd704c9ca74ea4afc393f43f35b4e8958324cbdd1c',
+                    'hex',
+                ).toString('base64'),
+            },
+        },
+        {
+            description: 'BTC AOPP p2sh',
+            params: {
+                coin: 'Bitcoin',
+                path: ADDRESS_N("m/49'/0'/0'/0/0"),
+                message: 'This is an example of a signed message.',
+                no_script_type: true,
+            },
+            result: {
+                address: '3L6TyTisPBmrDAj6RoKmDzNnj4eQi54gD2',
+                signature: Buffer.from(
+                    '1f744de4516fac5c140808015664516a32fead94de89775cec7e24dbc24fe133075ac09301c4cc8e197bea4b6481661d5b8e9bf19d8b7b8a382ecdb53c2ee0750d',
+                    'hex',
+                ).toString('base64'),
+            },
+        },
+        {
+            description: 'BTC AOPP p2wpkh',
+            params: {
+                coin: 'Bitcoin',
+                path: ADDRESS_N("m/84'/0'/0'/0/0"),
+                message: 'This is an example of a signed message.',
+                no_script_type: true,
+            },
+            result: {
+                address: 'bc1qannfxke2tfd4l7vhepehpvt05y83v3qsf6nfkk',
+                signature: Buffer.from(
+                    '20b55d7600d9e9a7e2a49155ddf3cfdb8e796c207faab833010fa41fb7828889bc47cf62348a7aaa0923c0832a589fab541e8f12eb54fb711c90e2307f0f66b194',
+                    'hex',
+                ).toString('base64'),
+            },
+        },
     ],
 };

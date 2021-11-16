@@ -282,6 +282,7 @@ export type SignMessage = {
     message: string;
     coin_name?: string;
     script_type?: InputScriptType;
+    no_script_type?: boolean;
 };
 
 // MessageSignature
