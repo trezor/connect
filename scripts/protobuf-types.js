@@ -35,81 +35,84 @@ const ENUM_KEYS = [
     'WordRequestType',
 ];
 
-const parseEnumTypescript = item => {
+const parseEnumTypescript = (itemName, item) => {
     const value = [];
-    const IS_KEY = ENUM_KEYS.includes(item.name);
+    const IS_KEY = ENUM_KEYS.includes(itemName);
     // declare enum
     if (IS_KEY) {
-        value.push(`export enum Enum_${item.name} {`);
+        value.push(`export enum Enum_${itemName} {`);
     } else {
-        value.push(`export enum ${item.name} {`);
+        value.push(`export enum ${itemName} {`);
     }
 
     // declare fields
-    item.values.forEach(field => {
-        value.push(`    ${field.name} = ${field.id},`);
+    Object.entries(item.values).forEach(([name, id]) => {
+        value.push(`    ${name} = ${id},`);
     });
     // close enum declaration
     value.push('}');
 
     if (IS_KEY) {
-        value.push(`export type ${item.name} = keyof typeof Enum_${item.name};`);
+        value.push(`export type ${itemName} = keyof typeof Enum_${itemName};`);
     }
     // empty line
     value.push('');
 
     types.push({
         type: 'enum',
-        name: item.name,
+        name: itemName,
         value: value.join('\n'),
     });
 };
 
-const parseEnum = item => {
-    if (isTypescript) return parseEnumTypescript(item);
+const parseEnum = (itemName, item) => {
+    if (isTypescript) return parseEnumTypescript(itemName, item);
     const value = [];
     // declare enum
-    value.push(`export const Enum_${item.name} = Object.freeze({`);
+    value.push(`export const Enum_${itemName} = Object.freeze({`);
     // declare fields
-    item.values.forEach(field => {
-        value.push(`    ${field.name}: ${field.id},`);
+    Object.entries(item.values).forEach(([name, id]) => {
+        value.push(`    ${name}: ${id},`);
     });
     // close enum declaration
     value.push('});');
     // declare enum type using Keys or Values
-    const KEY = ENUM_KEYS.includes(item.name) ? 'Keys' : 'Values';
-    value.push(`export type ${item.name} = $${KEY}<typeof Enum_${item.name}>;`);
+    const KEY = ENUM_KEYS.includes(itemName) ? 'Keys' : 'Values';
+    value.push(`export type ${itemName} = $${KEY}<typeof Enum_${itemName}>;`);
     // empty line
     value.push('');
 
     types.push({
         type: 'enum',
-        name: item.name,
+        name: itemName,
         value: value.join('\n'),
     });
 };
 
-const parseMessage = (message, depth = 0) => {
-    if (!message.name) return;
-
+const parseMessage = (messageName, message, depth = 0) => {
+    if (messageName === 'google') return;
     const value = [];
     // add comment line
-    if (!depth) value.push(`// ${message.name}`);
+    if (!depth) value.push(`// ${messageName}`);
     // declare nested enums
-    if (message.enums) {
-        message.enums.forEach(e => parseEnum(e));
-    }
+
     // declare nested values
-    if (message.messages) {
-        message.messages.forEach(item => parseMessage(item, depth + 1));
+    if (message.nested) {
+        Object.keys(message.nested).map(item =>
+            parseMessage(item, message.nested[item], depth + 1),
+        );
     }
-    if (!message.fields.length) {
+
+    if (message.values) {
+        return parseEnum(messageName, message);
+    }
+    if (!message.fields || !Object.keys(message.fields).length) {
         // few types are just empty objects, make it one line
-        value.push(`export type ${message.name} = {};`);
+        value.push(`export type ${messageName} = {};`);
         value.push('');
     } else {
         // find patch
-        const definition = DEFINITION_PATCH[message.name];
+        const definition = DEFINITION_PATCH[messageName];
         if (definition) {
             // replace whole declaration
             if (isTypescript) {
@@ -125,19 +128,20 @@ const parseMessage = (message, depth = 0) => {
             }
         } else {
             // declare type
-            value.push(`export type ${message.name} = {`);
-            message.fields.forEach(field => {
-                const fieldKey = `${message.name}.${field.name}`;
+            value.push(`export type ${messageName} = {`);
+            Object.keys(message.fields).forEach(fieldName => {
+                const field = message.fields[fieldName];
+                const fieldKey = `${messageName}.${fieldName}`;
                 // find patch for "rule"
                 const fieldRule = RULE_PATCH[fieldKey] || field.rule;
-                const rule = fieldRule === 'optional' ? '?: ' : ': ';
+                const rule = fieldRule === 'required' || fieldRule === 'repeated' ? ': ' : '?: ';
                 // find patch for "type"
                 let type = TYPE_PATCH[fieldKey] || FIELD_TYPES[field.type] || field.type;
                 // array
                 if (field.rule === 'repeated') {
                     type = type.split('|').length > 1 ? `Array<${type}>` : `${type}[]`;
                 }
-                value.push(`    ${field.name}${rule}${type};`);
+                value.push(`    ${fieldName}${rule}${type};`);
             });
             // close type declaration
             value.push('};');
@@ -146,19 +150,24 @@ const parseMessage = (message, depth = 0) => {
         }
     }
     // type doest have to be e
-    const exact = message.fields.find(f => f.rule === 'required');
+    const exact = message.fields && Object.values(message.fields).find(f => f.rule === 'required');
     types.push({
         type: 'message',
-        name: message.name,
+        name: messageName,
         value: value.join('\n'),
         exact,
     });
 };
 
-// top level enums
-json.enums.map(e => parseEnum(e));
 // top level messages and nested messages
-json.messages.map(e => parseMessage(e));
+Object.keys(json.nested).map(e => parseMessage(e, json.nested[e]));
+
+types.sort((a, b) => {
+    if (a.type === b.type) {
+        return 0;
+    }
+    return -1;
+});
 
 // types needs reordering (used before defined)
 const ORDER = {
@@ -168,7 +177,29 @@ const ORDER = {
     CardanoTokenType: 'CardanoAssetGroupType',
     TxAck: 'TxAckInputWrapper',
     EthereumFieldType: 'EthereumStructMember',
+    DebugSwipeDirection: 'DebugLinkDecision',
+    EosAuthorizationWait: 'EosAuthorization',
+    EosAsset: 'EosActionTransfer',
+    EosAuthorization: 'EosActionUpdateAuth',
+    EosAuthorizationKey: 'EosAuthorization',
+    EosActionCommon: 'EosTxActionAck',
+    EosActionDelegate: 'EosTxActionAck',
+    EosActionRefund: 'EosTxActionAck',
+    EosActionBuyRam: 'EosTxActionAck',
+    EosActionBuyRamBytes: 'EosTxActionAck',
+    EosActionVoteProducer: 'EosTxActionAck',
+    EosActionUpdateAuth: 'EosTxActionAck',
+    EosActionDeleteAuth: 'EosTxActionAck',
+    EosActionUnlinkAuth: 'EosTxActionAck',
+    EosActionUnknown: 'EosTxActionAck',
+    NEMMosaicLevy: 'NEMMosaicDefinition',
+    NEMTransactionCommon: 'NEMSignTx',
+    NEMTransfer: 'NEMSignTx',
+    NEMProvisionNamespace: 'NEMSignTx',
+    NEMMosaic: 'NEMTransfer',
+    StellarSignerType: 'StellarSetOptionsOp',
 };
+
 Object.keys(ORDER).forEach(key => {
     // find indexes
     const indexA = types.findIndex(t => t && t.name === key);
