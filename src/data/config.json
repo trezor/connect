@@ -146,6 +146,12 @@
                 "new btc accounts taproot since 1.10.4/2.4.3 (BTC + TEST only)",
                 "SignMessage with AOPP support"
             ]
+        },
+        {
+            "coin": ["dcr", "tdcr"],
+            "methods": ["signTransaction"],
+            "min": ["1.10.1", "2.4.0"],
+            "comment": [""]
         }
     ]
 }
