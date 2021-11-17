@@ -57,6 +57,13 @@ const FEE_LEVELS = [
     },
 ];
 
+const DOGE_FEE_LEVELS = [
+    {
+        label: 'normal',
+        feePerUnit: '1000', // 0.001 DOGE
+    },
+];
+
 export default {
     method: 'composeTransaction',
     setup: {
@@ -309,7 +316,7 @@ export default {
             description: 'Doge (P2PKH): precompose with change',
             params: {
                 account: DOGE_ACCOUNT,
-                feeLevels: FEE_LEVELS,
+                feeLevels: DOGE_FEE_LEVELS,
                 outputs: [
                     {
                         address: 'DDn7UV1CrqVefzwrHyw7H2zEZZKqfzR2ZD',
@@ -322,9 +329,9 @@ export default {
                 {
                     type: 'final',
                     bytes: 226,
-                    fee: '100000000',
+                    fee: '226000',
                     max: undefined,
-                    totalSpent: '200000000',
+                    totalSpent: '100226000',
                     transaction: {
                         inputs: [{ script_type: 'SPENDADDRESS' }],
                         outputs: [
@@ -333,7 +340,7 @@ export default {
                                 amount: '100000000',
                                 script_type: 'PAYTOADDRESS',
                             },
-                            { amount: '300000000', script_type: 'PAYTOADDRESS' },
+                            { amount: '399774000', script_type: 'PAYTOADDRESS' },
                         ],
                     },
                 },
@@ -343,11 +350,11 @@ export default {
             description: 'Doge (P2PKH): precompose with 1 dust limit output',
             params: {
                 account: DOGE_ACCOUNT,
-                feeLevels: FEE_LEVELS,
+                feeLevels: DOGE_FEE_LEVELS,
                 outputs: [
                     {
                         address: 'DDn7UV1CrqVefzwrHyw7H2zEZZKqfzR2ZD',
-                        amount: '10000000',
+                        amount: '100000',
                     },
                 ],
                 coin: 'doge',
@@ -356,18 +363,18 @@ export default {
                 {
                     type: 'final',
                     bytes: 226,
-                    fee: '200000000', // NOTE: +1 DOGE per dust limit output
+                    fee: '1000000', // NOTE: +0.01 DOGE per dust limit output
                     max: undefined,
-                    totalSpent: '210000000',
+                    totalSpent: '1100000',
                     transaction: {
                         inputs: [{ script_type: 'SPENDADDRESS' }],
                         outputs: [
                             {
                                 address: 'DDn7UV1CrqVefzwrHyw7H2zEZZKqfzR2ZD',
-                                amount: '10000000',
+                                amount: '100000',
                                 script_type: 'PAYTOADDRESS',
                             },
-                            { amount: '290000000', script_type: 'PAYTOADDRESS' },
+                            { amount: '498900000', script_type: 'PAYTOADDRESS' },
                         ],
                     },
                 },
@@ -378,11 +385,11 @@ export default {
                 'Doge (P2PKH): precompose with 1 dust limit output, change spent as dust limit',
             params: {
                 account: DOGE_ACCOUNT,
-                feeLevels: FEE_LEVELS,
+                feeLevels: DOGE_FEE_LEVELS,
                 outputs: [
                     {
                         address: 'DDn7UV1CrqVefzwrHyw7H2zEZZKqfzR2ZD',
-                        amount: '10000000',
+                        amount: '299000000',
                     },
                     {
                         address: 'DDn7UV1CrqVefzwrHyw7H2zEZZKqfzR2ZD',
@@ -395,7 +402,7 @@ export default {
                 {
                     type: 'final',
                     bytes: 226,
-                    fee: '290000000', // NOTE: +1 DOGE per dust limit output + 0.9 DOGE dust limit change
+                    fee: '1000000', // NOTE: +0.01 DOGE per dust limit output + ~0.08 DOGE dust limit change
                     max: undefined,
                     totalSpent: '500000000',
                     transaction: {
@@ -403,12 +410,12 @@ export default {
                         outputs: [
                             {
                                 address: 'DDn7UV1CrqVefzwrHyw7H2zEZZKqfzR2ZD',
-                                amount: '10000000',
+                                amount: '200000000',
                                 script_type: 'PAYTOADDRESS',
                             },
                             {
                                 address: 'DDn7UV1CrqVefzwrHyw7H2zEZZKqfzR2ZD',
-                                amount: '200000000',
+                                amount: '299000000',
                                 script_type: 'PAYTOADDRESS',
                             },
                         ],
@@ -420,7 +427,7 @@ export default {
             description: 'Doge (P2PKH): precompose with send-max',
             params: {
                 account: DOGE_ACCOUNT,
-                feeLevels: FEE_LEVELS,
+                feeLevels: DOGE_FEE_LEVELS,
                 outputs: [
                     {
                         type: 'send-max',
@@ -433,12 +440,12 @@ export default {
                 {
                     type: 'final',
                     bytes: 192,
-                    fee: '100000000',
-                    max: '400000000',
+                    fee: '192000',
+                    max: '499808000',
                     totalSpent: '500000000',
                     transaction: {
                         inputs: [{ script_type: 'SPENDADDRESS' }],
-                        outputs: [{ amount: '400000000', script_type: 'PAYTOADDRESS' }],
+                        outputs: [{ amount: '499808000', script_type: 'PAYTOADDRESS' }],
                     },
                 },
             ],

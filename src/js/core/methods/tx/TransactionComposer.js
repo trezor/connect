@@ -172,9 +172,7 @@ export default class TransactionComposer {
 
         // DOGE changed fee policy and requires:
         if (coinInfo.shortcut === 'DOGE') {
-            enhancement.floorBaseFee = enhancement.baseFee === 0; // fee rounded down not to overprice tx (see @trezor/utxo-lib/compose) use only if baseFee is not specified
-            enhancement.baseFee = enhancement.baseFee || 100000000; // default 1 DOGE base fee
-            enhancement.dustOutputFee = 100000000; // 1 DOGE for every output lower than dust (dust = 1 DOGE)
+            enhancement.dustOutputFee = 1000000; // 0.01 DOGE for every output lower than dust (dust = 0.01 DOGE)
         }
 
         return composeTx({
