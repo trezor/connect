@@ -38,6 +38,7 @@ module.exports = {
             path: false,
             net: false, // ignore "net" and "tls" imports in "ripple-lib"
             tls: false,
+            https: false, // ignore "https" imports in "ripple-lib"
             crypto: false, // no polyfill
             stream: require.resolve('stream-browserify'), // polyfill
         },

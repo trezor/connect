@@ -105,6 +105,7 @@ module.exports = {
             path: false, // ignore "path" import in protobufjs-old-fixed-webpack (dependency of trezor-link)
             net: false, // ignore "net" import in "ripple-lib"
             tls: false, // ignore "tls" imports in "ripple-lib"
+            https: false, // ignore "https" imports in "ripple-lib"
             vm: false, // ignore "vm" imports in "asn1.js@4.10.1" > crypto-browserify"
             util: require.resolve('util'), // required by "ripple-lib"
             assert: require.resolve('assert'), // required by multiple dependencies
