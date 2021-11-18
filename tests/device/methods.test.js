@@ -41,7 +41,8 @@ describe(`TrezorConnect methods`, () => {
                     }
 
                     await initTrezorConnect(controller);
-
+                    const res = await TrezorConnect.getFeatures();
+                    console.log('Setup finished. Running tests against device: ', res);
                     done();
                 } catch (error) {
                     console.log('Controller WS init error', error);
