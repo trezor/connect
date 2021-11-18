@@ -4,6 +4,10 @@ stages:
   - test
   - deploy
 
+variables:
+  GIT_STRATEGY: clone
+  GIT_SUBMODULE_STRATEGY: recursive
+
 setup environment:
   stage: setup
   script:
