@@ -55,6 +55,7 @@ const CardanoSignTransactionFeatures = Object.freeze({
     OutputDatumHash: ['0', '2.4.4'],
     ScriptDataHash: ['0', '2.4.4'],
     Plutus: ['0', '2.4.4'],
+    KeyHashStakeCredential: ['0', '2.4.4'],
 });
 
 export type CardanoSignTransactionParams = {
@@ -145,11 +146,13 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
                 validateParams(withdrawal, [
                     { name: 'amount', type: 'uint', required: true },
                     { name: 'scriptHash', type: 'string' },
+                    { name: 'keyHash', type: 'string' },
                 ]);
                 return {
                     path: withdrawal.path ? validatePath(withdrawal.path, 5) : undefined,
                     amount: withdrawal.amount,
                     script_hash: withdrawal.scriptHash,
+                    key_hash: withdrawal.keyHash,
                 };
             });
         }
@@ -243,6 +246,10 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             if (certificate.type === CardanoCertificateType.STAKE_POOL_REGISTRATION) {
                 this._ensureFeatureIsSupported('SignStakePoolRegistrationAsOwner');
             }
+
+            if (certificate.key_hash) {
+                this._ensureFeatureIsSupported('KeyHashStakeCredential');
+            }
         });
 
         if (params.validityIntervalStart != null) {
@@ -256,6 +263,12 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
 
             if (output.datum_hash) {
                 this._ensureFeatureIsSupported('OutputDatumHash');
+            }
+        });
+
+        params.withdrawals.forEach(withdrawal => {
+            if (withdrawal.key_hash) {
+                this._ensureFeatureIsSupported('KeyHashStakeCredential');
             }
         });
 

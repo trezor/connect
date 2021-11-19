@@ -323,9 +323,12 @@ export const cardanoSignTransaction = async () => {
                     },
                 },
                 scriptHash: 'aaff00..',
+                keyHash: 'aaff00..',
             },
         ],
-        withdrawals: [{ path: 'm/44', amount: '3003112', scriptHash: 'aaff00..' }],
+        withdrawals: [
+            { path: 'm/44', amount: '3003112', scriptHash: 'aaff00..', keyHash: 'aaff00..' },
+        ],
         mint: [
             {
                 policyId: 'aaff00..',
