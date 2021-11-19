@@ -28,11 +28,11 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 * `validityIntervalStart` - *optional* `String`
 * `certificates` - *optional* `Array` of [CardanoCertificate](../../src/js/types/networks/cardano.js#L158)
 * `withdrawals` - *optional* `Array` of [CardanoWithdrawal](../../src/js/types/networks/cardano.js#L166)
-* `auxiliaryData` - *optional* [CardanoAuxiliaryData](../../src/js/types/networks/cardano.js#L181)
-* `mint` - *optional* [CardanoMint](../../src/js/types/networks/cardano.js#L172)
+* `auxiliaryData` - *optional* [CardanoAuxiliaryData](../../src/js/types/networks/cardano.js#L194)
+* `mint` - *optional* [CardanoMint](../../src/js/types/networks/cardano.js#L174)
 * `scriptDataHash` - *optional* `String`
-* `collateralInputs` - *optional* `Array` of [CardanoCollateralInput](../../src/js/types/networks/cardano.js#L174)
-* `requiredSigners` - *optional* `Array` of [CardanoRequiredSigner](../../src/js/types/networks/cardano.js#L180)
+* `collateralInputs` - *optional* `Array` of [CardanoCollateralInput](../../src/js/types/networks/cardano.js#L176)
+* `requiredSigners` - *optional* `Array` of [CardanoRequiredSigner](../../src/js/types/networks/cardano.js#L182)
 * `additionalWitnessRequests` - *optional* `Array` of `string | Array<number>` (paths). Used for multi-sig and token minting witness requests as those can not be determined from the transaction parameters.
 * `metadata` - *removed* - use `auxiliaryData` instead
 * `derivationType` — *optional* `CardanoDerivationType` enum. Determines used derivation type. Default is set to ICARUS_TREZOR=2.
@@ -50,6 +50,7 @@ The transaction
 - *should* have valid `path` property on all `inputs`
 - *must not* contain a pool registration certificate
 - *must not* contain `collateralInputs` and `requiredSigners`
+- *must* contain paths as stake credentials in certificates and withdrawals (no key hashes or script hashes)
 - *may* contain only 1852 and 1855 paths
 - *must not* contain 1855 witness requests when transaction is not minting/burning tokens
 
@@ -75,7 +76,7 @@ The transaction
 - *must not* contain output addresses given by parameters
 - *must not* contain a pool registration certificate
 - *must not* contain `collateralInputs` and `requiredSigners`
-- *must* contain script hash stake credentials in certificates and withdrawals (no paths)
+- *must* contain script hash stake credentials in certificates and withdrawals (no paths or key hashes)
 - *may* contain only 1854 and 1855 witness requests
 - *must not* contain 1855 witness requests when transaction is not minting/burning tokens
 
@@ -91,7 +92,7 @@ The transaction
 
 ### Stake pool registration certificate specifics
 
-Trezor supports signing of stake pool registration certificates as a pool owner. The transaction may contain external inputs (e.g. belonging to the pool operator) and Trezor is not able verify whether they are actually external or not, so if we allowed signing the transaction with a spending key, there is the risk of losing funds from an input that the user did not intend to spend from. Moreover there is the risk of inadvertedly signing a withdrawal in the transaction if there's any. To mitigate those risks, we introduced special validation rules for stake pool registration transactions which are validated on Trezor as well. The validation rules are the following:
+Trezor supports signing of stake pool registration certificates as a pool owner. The transaction may contain external inputs (e.g. belonging to the pool operator) and Trezor is not able to verify whether they are actually external or not, so if we allowed signing the transaction with a spending key, there is the risk of losing funds from an input that the user did not intend to spend from. Moreover there is the risk of inadvertedly signing a withdrawal in the transaction if there's any. To mitigate those risks, we introduced special validation rules for stake pool registration transactions which are validated on Trezor as well. The validation rules are the following:
 
 1. The transaction must not contain any other certificates, not even another stake pool registration
 2. The transaction must not contain any withdrawals
@@ -416,11 +417,11 @@ TrezorConnect.cardanoSignTransaction({
     certificates: [
         {
             type: CardanoCertificateType.STAKE_REGISTRATION,
-            scriptHash: '29fb5fd4aa8cadd6705acc8263cee0fc62edca5ac38db593fec2f9fd',
+            path: "m/1852'/1815'/0'/2/0",
         },
         {
             type: CardanoCertificateType.STAKE_DEREGISTRATION,
-            scriptHash: '29fb5fd4aa8cadd6705acc8263cee0fc62edca5ac38db593fec2f9fd',
+            keyHash: '3a7f09d3df4cf66a7399c2b05bfa234d5a29560c311fc5db4c490711',
         },
         {
             type: CardanoCertificateType.STAKE_DELEGATION,
@@ -431,6 +432,14 @@ TrezorConnect.cardanoSignTransaction({
     withdrawals: [
         {
             path: "m/1852'/1815'/0'/2/0",
+            amount: "1000",
+        },
+        {
+            keyHash: "3a7f09d3df4cf66a7399c2b05bfa234d5a29560c311fc5db4c490711",
+            amount: "1000",
+        },
+        {
+            scriptHash: "29fb5fd4aa8cadd6705acc8263cee0fc62edca5ac38db593fec2f9fd",
             amount: "1000",
         }
     ],

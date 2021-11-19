@@ -161,12 +161,14 @@ export type CardanoCertificate = {
     pool?: string,
     poolParameters?: CardanoPoolParameters,
     scriptHash?: string,
+    keyHash?: string,
 };
 
 export type CardanoWithdrawal = {
     path?: string | number[],
     amount: string,
     scriptHash?: string,
+    keyHash?: string,
 };
 
 export type CardanoMint = CardanoAssetGroup[];
