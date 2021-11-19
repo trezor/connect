@@ -18,7 +18,7 @@ import type {
 } from '../../../types/networks/cardano';
 
 import type {
-    CardanoTxCertificateType,
+    CardanoTxCertificate,
     CardanoPoolParametersType,
     CardanoPoolOwner as CardanoPoolOwnerProto,
     CardanoPoolRelayParameters as CardanoPoolRelayProto,
@@ -125,7 +125,7 @@ const validatePoolParameters = (poolParameters: CardanoPoolParameters) => {
 };
 
 export type CertificateWithPoolOwnersAndRelays = {
-    certificate: CardanoTxCertificateType,
+    certificate: CardanoTxCertificate,
     poolOwners: CardanoPoolOwnerProto[],
     poolRelays: CardanoPoolRelayProto[],
 };
@@ -184,6 +184,7 @@ export const transformCertificate = (
 
     if (certificate.type !== CardanoCertificateType.STAKE_POOL_REGISTRATION) {
         paramsToValidate.push({ name: 'scriptHash', type: 'string' });
+        paramsToValidate.push({ name: 'keyHash', type: 'string' });
     }
 
     if (certificate.type === CardanoCertificateType.STAKE_DELEGATION) {
@@ -205,6 +206,7 @@ export const transformCertificate = (
             type: certificate.type,
             path: certificate.path ? validatePath(certificate.path, 5) : undefined,
             script_hash: certificate.scriptHash,
+            key_hash: certificate.keyHash,
             pool: certificate.pool,
             pool_parameters: poolParameters,
         },

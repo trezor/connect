@@ -172,6 +172,10 @@ const SAMPLE_CERTIFICATES = {
         type: CardanoCertificateType.STAKE_DEREGISTRATION,
         scriptHash: '29fb5fd4aa8cadd6705acc8263cee0fc62edca5ac38db593fec2f9fd',
     },
+    stake_deregistration_key_hash: {
+        type: CardanoCertificateType.STAKE_DEREGISTRATION,
+        keyHash: '3a7f09d3df4cf66a7399c2b05bfa234d5a29560c311fc5db4c490711',
+    },
     stake_delegation: {
         type: CardanoCertificateType.STAKE_DELEGATION,
         path: "m/1852'/1815'/0'/2/0",
@@ -260,14 +264,19 @@ const SAMPLE_CERTIFICATES = {
     },
 };
 
-const SAMPLE_WITHDRAWAL = {
-    path: "m/1852'/1815'/0'/2/0",
-    amount: '1000',
-};
-
-const SAMPLE_WITHDRAWAL_SCRIPT = {
-    scriptHash: '29fb5fd4aa8cadd6705acc8263cee0fc62edca5ac38db593fec2f9fd',
-    amount: '1000',
+const SAMPLE_WITHDRAWALS = {
+    basic: {
+        path: "m/1852'/1815'/0'/2/0",
+        amount: '1000',
+    },
+    script: {
+        scriptHash: '29fb5fd4aa8cadd6705acc8263cee0fc62edca5ac38db593fec2f9fd',
+        amount: '1000',
+    },
+    key_hash: {
+        keyHash: '3a7f09d3df4cf66a7399c2b05bfa234d5a29560c311fc5db4c490711',
+        amount: '1000',
+    },
 };
 
 const SAMPLE_MINTS = {
@@ -321,13 +330,34 @@ const TTL = '10';
 const VALIDITY_INTERVAL_START = '47';
 const SCRIPT_DATA_HASH = 'd593fd793c377ac50a3169bb8378ffc257c944da31aa8f355dfa5a4f6ff89e02';
 
-const legacyResults = [
-    {
+const legacyResults = {
+    beforeSignTx: {
         // cardanoSignTransaction not supported below this version
         rules: ['<2.3.2', '1'],
         success: false,
     },
-];
+    beforeStakePoolRegistrationAsOwner: {
+        // older FW doesn't support stake pool registration as owner
+        rules: ['<2.3.5', '1'],
+        payload: false,
+    },
+    beforeAuxiliaryData: {
+        // older FW doesn't support auxiliary data
+        rules: ['<2.3.7', '1'],
+        payload: false,
+    },
+    beforeMultisig: {
+        // older FW doesn't support multisig
+        rules: ['<2.4.3', '1'],
+        payload: false,
+    },
+    beforePlutus: {
+        // older FW doesn't support plutus-related features (OutputDatumHash, ScriptDataHash,
+        // Plutus, KeyHashStakeCredential)
+        rules: ['<2.4.4', '1'],
+        payload: false,
+    },
+};
 
 export default {
     method: 'cardanoSignTransaction',
@@ -360,7 +390,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [legacyResults.beforeSignTx],
         },
 
         {
@@ -388,7 +418,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [legacyResults.beforeSignTx],
         },
 
         {
@@ -418,7 +448,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [legacyResults.beforeSignTx],
         },
 
         {
@@ -448,7 +478,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [legacyResults.beforeSignTx],
         },
 
         {
@@ -478,7 +508,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [legacyResults.beforeSignTx],
         },
 
         {
@@ -508,7 +538,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [legacyResults.beforeSignTx],
         },
 
         {
@@ -536,7 +566,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [legacyResults.beforeSignTx],
         },
 
         {
@@ -609,7 +639,7 @@ export default {
                 auxiliaryDataSupplement: undefined,
             },
             legacyResults: [
-                ...legacyResults,
+                legacyResults.beforeSignTx,
                 {
                     // witness are ordered differently
                     rules: ['2.3.2-2.3.6'],
@@ -670,7 +700,7 @@ export default {
                 auxiliaryDataSupplement: undefined,
             },
             legacyResults: [
-                ...legacyResults,
+                legacyResults.beforeSignTx,
                 {
                     // witness are ordered differently
                     rules: ['2.3.2-2.3.6'],
@@ -706,7 +736,7 @@ export default {
                 fee: FEE,
                 ttl: TTL,
                 certificates: [SAMPLE_CERTIFICATES.stake_deregistration],
-                withdrawals: [SAMPLE_WITHDRAWAL],
+                withdrawals: [SAMPLE_WITHDRAWALS.basic],
                 protocolMagic: PROTOCOL_MAGICS.mainnet,
                 networkId: NETWORK_IDS.mainnet,
                 signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,
@@ -732,7 +762,7 @@ export default {
                 auxiliaryDataSupplement: undefined,
             },
             legacyResults: [
-                ...legacyResults,
+                legacyResults.beforeSignTx,
                 {
                     // witness are ordered differently
                     rules: ['2.3.2-2.3.6'],
@@ -823,7 +853,7 @@ export default {
             },
             legacyResults: [
                 {
-                    // older FW doesn't support auxiliary data hash or auxiliary data at all
+                    // older FW doesn't support auxiliary data hash
                     rules: ['<2.4.2', '1'],
                     payload: false,
                 },
@@ -872,13 +902,7 @@ export default {
                         'ed3335aead65c665ceee21f2549c0ef4c9137b94c13fa642bea4a2c24e44e7f1ee06b47e14151efcf8d5569a404260c01f277b3ba516b5826a15c8ba2c97f70c',
                 },
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support auxiliary data
-                    rules: ['<2.3.7', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforeAuxiliaryData],
         },
 
         {
@@ -923,13 +947,7 @@ export default {
                         'ed3335aead65c665ceee21f2549c0ef4c9137b94c13fa642bea4a2c24e44e7f1ee06b47e14151efcf8d5569a404260c01f277b3ba516b5826a15c8ba2c97f70c',
                 },
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support auxiliary data
-                    rules: ['<2.3.7', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforeAuxiliaryData],
         },
 
         {
@@ -956,13 +974,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support output datum hash
-                    rules: ['<2.4.4', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforePlutus],
         },
 
         {
@@ -990,13 +1002,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support script data hash
-                    rules: ['<2.4.4', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforePlutus],
         },
 
         {
@@ -1028,7 +1034,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [legacyResults.beforeSignTx],
         },
 
         {
@@ -1056,13 +1062,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support stake pool registration as owner
-                    rules: ['<2.3.5', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforeStakePoolRegistrationAsOwner],
         },
 
         {
@@ -1090,13 +1090,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support stake pool registration as owner
-                    rules: ['<2.3.5', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforeStakePoolRegistrationAsOwner],
         },
 
         {
@@ -1241,13 +1235,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support multisig
-                    rules: ['<2.4.3', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforeMultisig],
         },
 
         {
@@ -1276,13 +1264,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support multisig
-                    rules: ['<2.4.3', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforeMultisig],
         },
 
         {
@@ -1321,13 +1303,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support multisig
-                    rules: ['<2.4.3', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforeMultisig],
         },
 
         {
@@ -1363,13 +1339,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support multisig
-                    rules: ['<2.4.3', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforeMultisig],
         },
 
         {
@@ -1380,7 +1350,7 @@ export default {
                 fee: FEE,
                 ttl: TTL,
                 certificates: [SAMPLE_CERTIFICATES.stake_deregistration_script],
-                withdrawals: [SAMPLE_WITHDRAWAL_SCRIPT],
+                withdrawals: [SAMPLE_WITHDRAWALS.script],
                 protocolMagic: PROTOCOL_MAGICS.mainnet,
                 networkId: NETWORK_IDS.mainnet,
                 signingMode: CardanoTxSigningMode.MULTISIG_TRANSACTION,
@@ -1406,13 +1376,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support multisig
-                    rules: ['<2.4.3', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforeMultisig],
         },
 
         {
@@ -1431,7 +1395,7 @@ export default {
                     SAMPLE_CERTIFICATES.stake_deregistration_script,
                     SAMPLE_CERTIFICATES.stake_delegation_script,
                 ],
-                withdrawals: [SAMPLE_WITHDRAWAL_SCRIPT],
+                withdrawals: [SAMPLE_WITHDRAWALS.script],
                 auxiliaryData: {
                     hash: '58ec01578fcdfdc376f09631a7b2adc608eaf57e3720484c7ff37c13cff90fdf',
                 },
@@ -1474,13 +1438,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support output datum hash and script data hash
-                    rules: ['<2.4.4', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforePlutus],
         },
 
         {
@@ -1667,7 +1625,7 @@ export default {
                     SAMPLE_CERTIFICATES.stake_delegation,
                     SAMPLE_CERTIFICATES.stake_deregistration,
                 ],
-                withdrawals: [SAMPLE_WITHDRAWAL],
+                withdrawals: [SAMPLE_WITHDRAWALS.basic],
                 auxiliaryData: {
                     catalystRegistrationParameters: {
                         votingPublicKey:
@@ -1726,11 +1684,7 @@ export default {
                 },
             },
             legacyResults: [
-                {
-                    // older FW doesn't support auxiliary data
-                    rules: ['<2.3.7', '1'],
-                    payload: false,
-                },
+                legacyResults.beforeAuxiliaryData,
                 {
                     // witnesses are ordered differently since they are parsed from the tx body
                     rules: ['2.3.7-2.4.1'],
@@ -1856,13 +1810,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support plutus
-                    rules: ['<2.4.4', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforePlutus],
         },
 
         {
@@ -1900,13 +1848,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support plutus
-                    rules: ['<2.4.4', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforePlutus],
         },
 
         {
@@ -1954,13 +1896,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support plutus
-                    rules: ['<2.4.4', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforePlutus],
         },
 
         {
@@ -2005,13 +1941,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support plutus
-                    rules: ['<2.4.4', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforePlutus],
         },
 
         {
@@ -2022,7 +1952,7 @@ export default {
                 fee: FEE,
                 ttl: TTL,
                 certificates: [SAMPLE_CERTIFICATES.stake_deregistration_script],
-                withdrawals: [SAMPLE_WITHDRAWAL_SCRIPT],
+                withdrawals: [SAMPLE_WITHDRAWALS.script],
                 protocolMagic: PROTOCOL_MAGICS.mainnet,
                 networkId: NETWORK_IDS.mainnet,
                 signingMode: CardanoTxSigningMode.PLUTUS_TRANSACTION,
@@ -2057,13 +1987,106 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support plutus
-                    rules: ['<2.4.4', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforePlutus],
+        },
+
+        {
+            description: 'plutusWithPathStakeCredentials',
+            params: {
+                inputs: [SAMPLE_INPUTS.external_input],
+                outputs: [SAMPLE_OUTPUTS.simple_shelley_output],
+                fee: FEE,
+                ttl: TTL,
+                certificates: [SAMPLE_CERTIFICATES.stake_deregistration],
+                withdrawals: [SAMPLE_WITHDRAWALS.basic],
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.PLUTUS_TRANSACTION,
+                scriptDataHash: SCRIPT_DATA_HASH,
+                collateralInputs: [SAMPLE_INPUTS.shelley_input],
+                additionalWitnessRequests: ["m/1854'/1815'/0'/0/0", "m/1854'/1815'/0'/2/0"],
+            },
+            result: {
+                hash: '782d27250d487d1feec96a44aeda4e796f3f97cbeedc9eaf0f4cd2ec6f399106',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: 'bc65be1b0b9d7531778a1317c2aa6de936963c3f9ac7d5ee9e9eda25e0c97c5e',
+                        signature:
+                            '03a62ab84cbc9f3f1819b7fd68f2bfeca545a97967d824644f3362488763d8d88597cf19661e4c200eccf9a1e747666916099b604e849ae94a286dc935de8a0d',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            'b00848c888bdad1036335bf3f085af00080e448a223187475c6e898aa2a0a6587a28234ac6c7c918847ea00e497b515854ce86471d5860e014d4336fa171fd0d',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'b10be5c0d11ad8292bbe69e220ca0cfbe154610b3041a8e72f9d515c226ab3b1',
+                        signature:
+                            '8abf56dadd52259a404563eda52a39631875e36cadd2050829cf755906c5dba91a99834ef3c0e6e507fdc36ed7e8c4880fb8d8834a48dc2315d7201dd6308c00',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'f2ef4ecd21ad28a8d270ca7be7e96c87f60dc821e13c0d0c5870344e9693637c',
+                        signature:
+                            '0b045abaa864a00badd747bdcbc67870336cd94b83f58a5d84cfbfac9e9ba53f8e18175eb630928696072831d9697c1fa33b745a12d6dde2cc6722dd0bed3409',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [legacyResults.beforePlutus],
+        },
+
+        {
+            description: 'plutusWithKeyHashStakeCredentials',
+            params: {
+                inputs: [SAMPLE_INPUTS.external_input],
+                outputs: [SAMPLE_OUTPUTS.simple_shelley_output],
+                fee: FEE,
+                ttl: TTL,
+                certificates: [SAMPLE_CERTIFICATES.stake_deregistration_key_hash],
+                withdrawals: [SAMPLE_WITHDRAWALS.key_hash],
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.PLUTUS_TRANSACTION,
+                scriptDataHash: SCRIPT_DATA_HASH,
+                collateralInputs: [SAMPLE_INPUTS.shelley_input],
+                additionalWitnessRequests: ["m/1854'/1815'/0'/0/0", "m/1854'/1815'/0'/2/0"],
+            },
+            result: {
+                hash: 'fdcfc5a84caaf8b4ee5efbafb0bc0118eb4e0fec88312429de60ebf34f60e44f',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            '9a69dbfb8b61ae7269f3d17c7821b670697382a77584a2fde58bb5cd5b15e8cd08c04a9baaa416b45498649961f1362641e5d2e01dee6f949ac5809ecb0ede02',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'b10be5c0d11ad8292bbe69e220ca0cfbe154610b3041a8e72f9d515c226ab3b1',
+                        signature:
+                            '79a4671f3703f6fe1d67768eed906cf1fdd230655be54360d5e512dd040f5f27022cff99d0ddb073ac58c72d1aecdccc3dff29d49b274214367475767fdd1c0e',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'f2ef4ecd21ad28a8d270ca7be7e96c87f60dc821e13c0d0c5870344e9693637c',
+                        signature:
+                            'c8fc1809c122e6040e564b9226fcdf215075ffa418fc21c74fd04a8d804a989fc005963f1803fcb2fc1b017ff20c5d1bc0fe7a8d20b284210ed89405f5269c02',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [legacyResults.beforePlutus],
         },
 
         {
@@ -2111,13 +2134,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support plutus
-                    rules: ['<2.4.4', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforePlutus],
         },
 
         {
@@ -2128,7 +2145,7 @@ export default {
                 fee: FEE,
                 ttl: TTL,
                 certificates: [SAMPLE_CERTIFICATES.stake_deregistration_script],
-                withdrawals: [SAMPLE_WITHDRAWAL_SCRIPT],
+                withdrawals: [SAMPLE_WITHDRAWALS.script],
                 protocolMagic: PROTOCOL_MAGICS.mainnet,
                 networkId: NETWORK_IDS.mainnet,
                 signingMode: CardanoTxSigningMode.PLUTUS_TRANSACTION,
@@ -2196,13 +2213,7 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults: [
-                {
-                    // older FW doesn't support plutus
-                    rules: ['<2.4.4', '1'],
-                    payload: false,
-                },
-            ],
+            legacyResults: [legacyResults.beforePlutus],
         },
     ],
 };

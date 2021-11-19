@@ -808,6 +808,7 @@ export type CardanoTxCertificate = {
     pool?: string,
     pool_parameters?: CardanoPoolParametersType,
     script_hash?: string,
+    key_hash?: string,
 };
 
 // CardanoTxWithdrawal
@@ -815,6 +816,7 @@ export type CardanoTxWithdrawal = {
     path?: number[],
     amount: UintType,
     script_hash?: string,
+    key_hash?: string,
 };
 
 // CardanoCatalystRegistrationParametersType
