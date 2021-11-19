@@ -143,6 +143,13 @@ export default {
             result: {
                 address: 'bcrt1p0wxg3r4ddwhdsze3ket8egal8caf4u5rflnlnun9tm2ekafgzc7se7tuts',
             },
+            legacyResults: [
+                {
+                    // taproot supported since 2.4.3
+                    rules: ['<2.4.3'],
+                    success: false,
+                },
+            ],
         },
     ],
 };

@@ -2,6 +2,14 @@ const { ADDRESS_N } = global.TestUtils;
 
 // vectors from https://github.com/trezor/trezor-firmware/blob/master/tests/device_tests/test_msg_signmessage.py
 
+const legacyResults = [
+    // AOPP
+    {
+        rules: ['<2.4.3'],
+        success: false,
+    },
+];
+
 export default {
     method: 'signMessage',
     setup: {
@@ -202,6 +210,7 @@ export default {
                     'hex',
                 ).toString('base64'),
             },
+            legacyResults,
         },
         {
             description: 'BTC AOPP p2sh',
@@ -218,6 +227,7 @@ export default {
                     'hex',
                 ).toString('base64'),
             },
+            legacyResults,
         },
         {
             description: 'BTC AOPP p2wpkh',
@@ -234,6 +244,7 @@ export default {
                     'hex',
                 ).toString('base64'),
             },
+            legacyResults,
         },
     ],
 };
