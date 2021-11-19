@@ -233,6 +233,6 @@ export const getFirmwareRange = [
             { support: { trezor1: '1.6.2', trezor2: '2.1.0' }, shortcut: 'eth', type: 'ethereum' },
             DEFAULT_RANGE,
         ],
-        result: { '1': { min: '1.10.4', max: '0' }, '2': { min: '2.4.2', max: '0' } },
+        result: { '1': { min: '1.8.0', max: '0' }, '2': { min: '2.1.0', max: '0' } },
     },
 ];

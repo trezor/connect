@@ -92,6 +92,11 @@
             "comment": ["There were protobuf backwards incompatible changes with introduction of 1.9.0/2.3.0 firmwares"]
         },
         {
+            "coin": ["eth", "trop"],
+            "min": ["1.8.0", "2.1.0"],
+            "comment": ["There were protobuf backwards incompatible changes."]
+        },
+        {
             "methods": [
                 "rippleGetAddress",
                 "rippleSignTransaction"
