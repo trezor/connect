@@ -413,6 +413,12 @@ export default class DeviceCommands {
             return Promise.resolve(res);
         }
 
+        if (res.message.code === '_Deprecated_ButtonRequest_PassphraseType') {
+            // for backwards compatibility stick to old message type
+            // which was part of protobuf in versions < 2.3.0
+            res.message.code = 'ButtonRequest_PassphraseType';
+        }
+
         if (res.type === 'ButtonRequest') {
             if (res.message.code === 'ButtonRequest_PassphraseEntry') {
                 this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE, this.device);
