@@ -87,6 +87,11 @@
             "comment": ["Since firmware 2.1.0 there is a new protobuf field 'destination_tag' in RippleSignTx"]
         },
         {
+            "coin": ["bnb"],
+            "min": ["1.9.0", "2.3.0"],
+            "comment": ["There were protobuf backwards incompatible changes with introduction of 1.9.0/2.3.0 firmwares"]
+        },
+        {
             "methods": [
                 "rippleGetAddress",
                 "rippleSignTransaction"
