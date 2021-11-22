@@ -10,7 +10,10 @@ _Written by @szymonlesisz, checked by @tsusanka._
 1. Run `yarn version:patch` - this will update the version number in multiple files.
 1. Commit these changes with the Changelog changes into `develop` with message "version X.X.X" ([example commit](https://github.com/trezor/connect/commit/d28e506524bc666757715294f7d030ea1a1d6eef)).
 1. Prepare PR from `develop` to `v8` branch, paste changelog as description and tag @prusnak or @tsusanka ([example PR](https://github.com/trezor/connect/pull/812)).
-1. Review and merge.
+1. Review and merge: 
+    - `git checkout v8`
+    - `git merge develop`
+    - `git push v8`
 
 
 ## Deploying
