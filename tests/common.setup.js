@@ -1,6 +1,6 @@
 import semver from 'semver';
 import { Controller } from './websocket-client';
-import TrezorConnect from '../src/js/index';
+import TrezorConnect, { TRANSPORT_EVENT } from '../src/js/index';
 import * as UI from '../src/js/constants/ui';
 import { versionCompare } from '../src/js/utils/versionUtils';
 
@@ -12,11 +12,6 @@ const MNEMONICS = {
 };
 
 const firmware = process.env.TESTS_FIRMWARE;
-
-const wait = ms =>
-    new Promise(resolve => {
-        setTimeout(resolve, ms);
-    });
 
 const setup = async (controller, options) => {
     try {
@@ -56,8 +51,6 @@ const setup = async (controller, options) => {
         }
         // after all is done, start bridge again
         await controller.send({ type: 'bridge-start' });
-        // Wait to prevent Transport is missing error from TrezorConnect
-        await wait(2000);
     } catch (err) {
         // this means that something in trezor-user-env got wrong.
         console.log(err);
@@ -79,6 +72,16 @@ const initTrezorConnect = async (controller, options) => {
 
     TrezorConnect.removeAllListeners();
 
+    const transportPromise = new Promise(resolve => {
+        // todo: in karma I never get TRANSPORT_EVENT, investigate why
+        const timeout = setTimeout(() => resolve(), 5000);
+
+        TrezorConnect.on(TRANSPORT_EVENT, () => {
+            clearTimeout(timeout);
+            resolve();
+        });
+    });
+
     await TrezorConnect.init({
         manifest: {
             appUrl: 'tests.connect.trezor.io',
@@ -94,6 +97,8 @@ const initTrezorConnect = async (controller, options) => {
     TrezorConnect.on(UI.REQUEST_CONFIRMATION, onUiRequestConfirmation);
 
     TrezorConnect.on(UI.REQUEST_BUTTON, onUiRequestButton);
+
+    await transportPromise;
 };
 
 // skipping tests rules:
