@@ -6276,6 +6276,15 @@
                 },
                 {
                     "rule": "optional",
+                    "options": {
+                        "deprecated": true
+                    },
+                    "type": "bool",
+                    "name": "_skip_passphrase",
+                    "id": 2
+                },
+                {
+                    "rule": "optional",
                     "options": {},
                     "type": "bool",
                     "name": "derive_cardano",
@@ -6402,6 +6411,15 @@
                     "type": "bool",
                     "name": "unlocked",
                     "id": 16
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "deprecated": true
+                    },
+                    "type": "bool",
+                    "name": "_passphrase_cached",
+                    "id": 17
                 },
                 {
                     "rule": "optional",
@@ -6693,6 +6711,15 @@
                     "type": "bytes",
                     "name": "homescreen",
                     "id": 4
+                },
+                {
+                    "rule": "optional",
+                    "options": {
+                        "deprecated": true
+                    },
+                    "type": "uint32",
+                    "name": "_passphrase_source",
+                    "id": 5
                 },
                 {
                     "rule": "optional",
