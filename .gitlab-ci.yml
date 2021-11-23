@@ -155,9 +155,10 @@ publish beta release to npm:
     - "setup environment"
   variables:
     SDL_VIDEODRIVER: "dummy"
-    TESTS_FIRMWARE: "2-master"
     TESTS_USE_TX_CACHE: "false"
     TESTS_USE_WS_CACHE: "false"
+    # todo: make this dynamic just like in tests/run.sh
+    TESTS_FIRMWARE: "2.4.2"
   before_script:
     - nix-shell --run "yarn"
   script:
@@ -281,5 +282,68 @@ test legacy tezos:
 
 test legacy binance:
   extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "binanceSignTransaction"
+
+# Test nightly
+.test-nightly:
+  extends: .test
+  only:
+    - schedules
+  variables:
+    TESTS_FIRMWARE: "2-master"
+
+test management nightly:
+  extends: .test-nightly
+  variables:
+    TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
+
+test btc sign nightly:
+  extends: .test-nightly
+  variables:
+    TESTS_INCLUDED_METHODS: "signTransaction"
+
+test btc others nightly:
+  extends: .test-nightly
+  variables:
+    TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction"
+
+test stellar nightly:
+  extends: .test-nightly
+  variables:
+    TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
+
+test cardano nightly:
+  extends: .test-nightly
+  variables:
+    TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction"
+
+test eos nightly:
+  extends: .test-nightly
+  variables:
+    TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
+
+test eth nightly:
+  extends: .test-nightly
+  variables:
+    TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage"
+
+test nem nightly:
+  extends: .test-nightly
+  variables:
+    TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
+
+test ripple nightly:
+  extends: .test-nightly
+  variables:
+    TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
+
+test tezos nightly:
+  extends: .test-nightly
+  variables:
+    TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
+
+test binance nightly:
+  extends: .test-nightly
   variables:
     TESTS_INCLUDED_METHODS: "binanceSignTransaction"
