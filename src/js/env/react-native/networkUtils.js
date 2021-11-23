@@ -14,10 +14,6 @@ exports.httpRequest = function httpRequest(url, _type) {
             return require('@trezor/connect-common/files/firmware/1/releases.json');
         case './data/firmware/2/releases.json':
             return require('@trezor/connect-common/files/firmware/2/releases.json');
-        case './data/messages/messages-v6.json':
-            return require('../../../data/messages/messages-v6.json');
-        case './data/messages/messages-v7.json':
-            return require('../../../data/messages/messages-v7.json');
         case './data/messages/messages.json':
             return require('../../../data/messages/messages.json');
         default:

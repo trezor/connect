@@ -1,3 +1,11 @@
+const legacyResults = [
+    {
+        // binanceSignTransaction not supported below this version
+        rules: ['<2.3.0'],
+        success: false,
+    },
+];
+
 export default {
     method: 'binanceSignTransaction',
     setup: {
@@ -36,6 +44,7 @@ export default {
                 signature:
                     'faf5b908d6c4ec0c7e2e7d8f7e1b9ca56ac8b1a22b01655813c62ce89bf84a4c7b14f58ce51e85d64c13f47e67d6a9187b8f79f09e0a9b82019f47ae190a4db3',
             },
+            legacyResults,
         },
         {
             description: 'placeOrder',
@@ -64,6 +73,7 @@ export default {
                 signature:
                     '851fc9542342321af63ecbba7d3ece545f2a42bad01ba32cff5535b18e54b6d3106e10b6a4525993d185a1443d9a125186960e028eabfdd8d76cf70a3a7e3100',
             },
+            legacyResults,
         },
         {
             description: 'cancelOrder',
@@ -87,6 +97,7 @@ export default {
                 signature:
                     'd93fb0402b2b30e7ea08e123bb139ad68bf0a1577f38592eb22d11e127f09bbd3380f29b4bf15bdfa973454c5c8ed444f2e256e956fe98cfd21e886a946e21e5',
             },
+            legacyResults,
         },
     ],
 };

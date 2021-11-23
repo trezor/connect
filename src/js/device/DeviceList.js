@@ -123,7 +123,7 @@ export default class DeviceList extends EventEmitter {
         if (Array.isArray(messages)) {
             messages = DataManager.getProtobufMessages(messages);
         }
-        if (this.currentMessages === messages) return;
+        if (this.currentMessages === messages || !messages) return;
         try {
             await this.transport.configure(JSON.stringify(messages));
             this.currentMessages = messages;

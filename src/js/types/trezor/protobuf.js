@@ -1517,6 +1517,7 @@ export type EthereumVerifyMessage = {
 // Initialize
 export type Initialize = {
     session_id?: string,
+    _skip_passphrase?: boolean,
     derive_cardano?: boolean,
 };
 
@@ -1561,6 +1562,7 @@ export type Features = {
     bootloader_hash: string | null,
     imported: boolean | null,
     unlocked: boolean | null,
+    _passphrase_cached?: boolean,
     firmware_present: boolean | null,
     needs_backup: boolean | null,
     flags: number | null,
@@ -1598,6 +1600,7 @@ export type ApplySettings = {
     label?: string,
     use_passphrase?: boolean,
     homescreen?: string,
+    _passphrase_source?: number,
     auto_lock_delay_ms?: number,
     display_rotation?: number,
     passphrase_always_on_device?: boolean,

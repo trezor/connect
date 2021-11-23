@@ -2,6 +2,7 @@ stages:
   - setup
   - build
   - test
+  - test-compatibility
   - deploy
 
 variables:
@@ -23,7 +24,6 @@ setup environment:
 
 verify:
   stage: build
-  needs: ["setup environment"]
   dependencies:
     - "setup environment"
   script:
@@ -37,7 +37,6 @@ verify:
 
 build:
   stage: build
-  needs: ["setup environment"]
   dependencies:
     - "setup environment"
   script:
@@ -57,7 +56,6 @@ deploy test:
   variables:
     GIT_STRATEGY: none
   when: manual
-  needs: ["build"]
   dependencies:
     - build
   environment:
@@ -83,7 +81,6 @@ rollback production copy:
     refs:
       - v8
   when: manual
-  needs: ["verify"]
   variables:
     GIT_STRATEGY: none
   before_script: []
@@ -99,7 +96,6 @@ deploy production:
     refs:
       - v8
   when: manual
-  needs: ["build"]
   dependencies:
     - build
   variables:
@@ -118,7 +114,6 @@ publish release to npm:
     refs:
       - v8
   when: manual
-  needs: ["setup environment", "verify"]
   dependencies:
     - "setup environment"
   before_script:
@@ -139,7 +134,6 @@ publish beta release to npm:
   except:
     - v8
   when: manual
-  needs: ["setup environment", "verify"]
   dependencies:
     - "setup environment"
   before_script:
@@ -157,7 +151,6 @@ publish beta release to npm:
 .test:
   image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
   stage: test
-  needs: ["setup environment", "verify"]
   dependencies:
     - "setup environment"
   variables:
@@ -224,5 +217,69 @@ test tezos:
 
 test binance:
   extends: .test
+  variables:
+    TESTS_INCLUDED_METHODS: "binanceSignTransaction"
+
+# testing backwards compatibility for the oldest supported firmware 
+
+.test-compatibility:
+  extends: .test
+  stage: test-compatibility
+  variables:
+    # 2.2.0 released in January 2020
+    TESTS_FIRMWARE: "2.2.0"
+
+test legacy management:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
+
+test legacy btc sign:
+  extends: .test-compatibility
+  variables:
+     TESTS_INCLUDED_METHODS: "signTransaction"
+
+test legacy btc others:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage"
+
+test legacy stellar:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
+
+test legacy cardano:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction"
+
+test legacy eos:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
+
+test legacy eth:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage"
+
+test legacy nem:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
+
+test legacy ripple:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
+
+test legacy tezos:
+  extends: .test-compatibility
+  variables:
+    TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
+
+test legacy binance:
+  extends: .test-compatibility
   variables:
     TESTS_INCLUDED_METHODS: "binanceSignTransaction"

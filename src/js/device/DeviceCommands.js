@@ -413,6 +413,12 @@ export default class DeviceCommands {
             return Promise.resolve(res);
         }
 
+        if (res.message.code === '_Deprecated_ButtonRequest_PassphraseType') {
+            // for backwards compatibility stick to old message type
+            // which was part of protobuf in versions < 2.3.0
+            res.message.code = 'ButtonRequest_PassphraseType';
+        }
+
         if (res.type === 'ButtonRequest') {
             if (res.message.code === 'ButtonRequest_PassphraseEntry') {
                 this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE, this.device);
@@ -446,9 +452,9 @@ export default class DeviceCommands {
             }
 
             // TT fw lower than 2.3.0, entering passphrase on device
-            if (legacy && res.message.on_device) {
+            if (legacy && res.message._on_device) {
                 this.device.emit(DEVICE.PASSPHRASE_ON_DEVICE, this.device);
-                return this._commonCall('PassphraseAck', { state });
+                return this._commonCall('PassphraseAck', { _state: state });
             }
 
             return this._promptPassphrase().then(
@@ -459,7 +465,7 @@ export default class DeviceCommands {
                         return this._commonCall('PassphraseAck', { passphrase });
                     }
                     if (legacy) {
-                        return this._commonCall('PassphraseAck', { passphrase, state });
+                        return this._commonCall('PassphraseAck', { passphrase, _state: state });
                     }
                     return !passphraseOnDevice
                         ? this._commonCall('PassphraseAck', { passphrase })
@@ -474,11 +480,10 @@ export default class DeviceCommands {
 
         // TT fw lower than 2.3.0, device send his current state
         // new passphrase design set this value from `features.session_id`
-        if (res.type === 'PassphraseStateRequest') {
+        if (res.type === 'Deprecated_PassphraseStateRequest') {
             const { state } = res.message;
             this.device.setInternalState(state);
-            // $FlowIssue older protobuf messages
-            return this._commonCall('PassphraseStateAck', {});
+            return this._commonCall('Deprecated_PassphraseStateAck', {});
         }
 
         if (res.type === 'WordRequest') {

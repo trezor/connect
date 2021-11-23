@@ -165,5 +165,12 @@ export default {
             publicKey: result.public_key,
             signature: Buffer.from(result.signature, 'base64').toString('hex'),
         },
+        legacyResults: [
+            {
+                // stellar has required update
+                rules: ['<2.3.0'],
+                payload: false,
+            },
+        ],
     })),
 };
