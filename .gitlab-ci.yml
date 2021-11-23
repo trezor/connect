@@ -157,6 +157,8 @@ publish beta release to npm:
     SDL_VIDEODRIVER: "dummy"
     TESTS_USE_TX_CACHE: "false"
     TESTS_USE_WS_CACHE: "false"
+    # todo: make this dynamic just like in tests/run.sh
+    TESTS_FIRMWARE: "2.4.2"
   before_script:
     - nix-shell --run "yarn"
   script:
