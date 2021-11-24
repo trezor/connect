@@ -980,6 +980,7 @@ const initDeviceList = async (settings: ConnectSettings) => {
             await _deviceList.waitForTransportFirstEvent();
         }
     } catch (error) {
+        console.log('====, device list error', error);
         _deviceList = null;
         postMessage(TransportMessage(TRANSPORT.ERROR, { error }));
         if (!settings.transportReconnect) {

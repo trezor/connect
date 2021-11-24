@@ -95,6 +95,7 @@ export default class DeviceList extends EventEmitter {
     }
 
     async init() {
+        console.log('=== deviceList.init');
         const { transport } = this;
         try {
             _log.debug('Initializing transports');

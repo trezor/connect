@@ -88,7 +88,7 @@ const initTrezorConnect = async (controller, options) => {
             email: 'tests@connect.trezor.io',
         },
         webusb: false,
-        debug: false,
+        debug: true,
         popup: false,
         connectSrc: process.env.TREZOR_CONNECT_SRC, // custom source for karma tests
         ...options,
