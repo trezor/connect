@@ -5,6 +5,7 @@ import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/stellarSignTx';
+import { ERRORS } from '../../constants';
 
 import type { CoreMessage } from '../../types';
 
@@ -13,6 +14,11 @@ type Params = {
     networkPassphrase: string,
     transaction: any,
 };
+
+const StellarSignTransactionFeatures = Object.freeze({
+    manageBuyOffer: ['1.10.4', '2.4.3'],
+    pathPaymentStrictSend: ['1.10.4', '2.4.3'],
+});
 
 export default class StellarSignTransaction extends AbstractMethod {
     params: Params;
@@ -45,7 +51,39 @@ export default class StellarSignTransaction extends AbstractMethod {
         };
     }
 
+    _isFeatureSupported(feature: $Keys<typeof StellarSignTransactionFeatures>) {
+        return this.device.atLeast(StellarSignTransactionFeatures[feature]);
+    }
+
+    _ensureFeatureIsSupported(feature: $Keys<typeof StellarSignTransactionFeatures>) {
+        if (!this._isFeatureSupported(feature)) {
+            throw ERRORS.TypedError(
+                'Method_InvalidParameter',
+                `Feature ${feature} not supported by device firmware`,
+            );
+        }
+    }
+
+    _ensureFirmwareSupportsParams() {
+        const { params } = this;
+        if (
+            params.transaction.operations &&
+            params.transaction.operations.find(o => o.type === 'manageBuyOffer')
+        ) {
+            this._ensureFeatureIsSupported('manageBuyOffer');
+        }
+
+        if (
+            params.transaction.operations &&
+            params.transaction.operations.find(o => o.type === 'pathPaymentStrictSend')
+        ) {
+            this._ensureFeatureIsSupported('pathPaymentStrictSend');
+        }
+    }
+
     async run() {
+        this._ensureFirmwareSupportsParams();
+
         const response = await helper.stellarSignTx(
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             this.params.path,
