@@ -164,6 +164,7 @@ publish beta release to npm:
   script:
     - "echo Firmware version: $TESTS_FIRMWARE"
     - /trezor-user-env/run.sh &
+    - nix-shell --run "sleep 5"
     - nix-shell --run "yarn test:integration --coverage true"
 
 test management:
