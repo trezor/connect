@@ -1073,6 +1073,13 @@ export type DebugLinkGetState = {
     wait_layout?: boolean;
 };
 
+export enum Enum_BackupType {
+    Bip39 = 0,
+    Slip39_Basic = 1,
+    Slip39_Advanced = 2,
+}
+export type BackupType = keyof typeof Enum_BackupType;
+
 // DebugLinkState
 export type DebugLinkState = {
     layout?: string;
@@ -1167,9 +1174,21 @@ export type EosTxActionRequest = {
     data_size?: number;
 };
 
+export type EosAsset = {
+    amount?: string;
+    symbol?: string;
+};
+
 export type EosPermissionLevel = {
     actor?: string;
     permission?: string;
+};
+
+export type EosAuthorizationKey = {
+    type?: number;
+    key: string;
+    address_n?: number[];
+    weight: number;
 };
 
 export type EosAuthorizationAccount = {
@@ -1182,9 +1201,17 @@ export type EosAuthorizationWait = {
     weight?: number;
 };
 
-export type EosAsset = {
-    amount?: string;
-    symbol?: string;
+export type EosAuthorization = {
+    threshold?: number;
+    keys: EosAuthorizationKey[];
+    accounts: EosAuthorizationAccount[];
+    waits: EosAuthorizationWait[];
+};
+
+export type EosActionCommon = {
+    account?: string;
+    name?: string;
+    authorization: EosPermissionLevel[];
 };
 
 export type EosActionTransfer = {
@@ -1194,58 +1221,19 @@ export type EosActionTransfer = {
     memo?: string;
 };
 
-export type EosActionUndelegate = {
-    sender?: string;
-    receiver?: string;
-    net_quantity?: EosAsset;
-    cpu_quantity?: EosAsset;
-};
-
-export type EosActionSellRam = {
-    account?: string;
-    bytes?: number;
-};
-
-export type EosAuthorizationKey = {
-    type?: number;
-    key: string;
-    address_n?: number[];
-    weight: number;
-};
-
-export type EosAuthorization = {
-    threshold?: number;
-    keys: EosAuthorizationKey[];
-    accounts: EosAuthorizationAccount[];
-    waits: EosAuthorizationWait[];
-};
-
-export type EosActionLinkAuth = {
-    account?: string;
-    code?: string;
-    type?: string;
-    requirement?: string;
-};
-
-export type EosActionNewAccount = {
-    creator?: string;
-    name?: string;
-    owner?: EosAuthorization;
-    active?: EosAuthorization;
-};
-
-export type EosActionCommon = {
-    account?: string;
-    name?: string;
-    authorization: EosPermissionLevel[];
-};
-
 export type EosActionDelegate = {
     sender?: string;
     receiver?: string;
     net_quantity?: EosAsset;
     cpu_quantity?: EosAsset;
     transfer?: boolean;
+};
+
+export type EosActionUndelegate = {
+    sender?: string;
+    receiver?: string;
+    net_quantity?: EosAsset;
+    cpu_quantity?: EosAsset;
 };
 
 export type EosActionRefund = {
@@ -1261,6 +1249,11 @@ export type EosActionBuyRam = {
 export type EosActionBuyRamBytes = {
     payer?: string;
     receiver?: string;
+    bytes?: number;
+};
+
+export type EosActionSellRam = {
+    account?: string;
     bytes?: number;
 };
 
@@ -1282,10 +1275,24 @@ export type EosActionDeleteAuth = {
     permission?: string;
 };
 
+export type EosActionLinkAuth = {
+    account?: string;
+    code?: string;
+    type?: string;
+    requirement?: string;
+};
+
 export type EosActionUnlinkAuth = {
     account?: string;
     code?: string;
     type?: string;
+};
+
+export type EosActionNewAccount = {
+    creator?: string;
+    name?: string;
+    owner?: EosAuthorization;
+    active?: EosAuthorization;
 };
 
 export type EosActionUnknown = {
@@ -1329,6 +1336,17 @@ export type EthereumTypedDataStructRequest = {
     name: string;
 };
 
+export enum EthereumDataType {
+    UINT = 1,
+    INT = 2,
+    BYTES = 3,
+    STRING = 4,
+    BOOL = 5,
+    ADDRESS = 6,
+    ARRAY = 7,
+    STRUCT = 8,
+}
+
 export type EthereumFieldType = {
     data_type: EthereumDataType;
     size?: number;
@@ -1340,17 +1358,6 @@ export type EthereumStructMember = {
     type: EthereumFieldType;
     name: string;
 };
-
-export enum EthereumDataType {
-    UINT = 1,
-    INT = 2,
-    BYTES = 3,
-    STRING = 4,
-    BOOL = 5,
-    ADDRESS = 6,
-    ARRAY = 7,
-    STRUCT = 8,
-}
 
 // EthereumTypedDataStructAck
 export type EthereumTypedDataStructAck = {
@@ -1462,13 +1469,6 @@ export type EthereumVerifyMessage = {
     message: string;
     address: string;
 };
-
-export enum Enum_BackupType {
-    Bip39 = 0,
-    Slip39_Basic = 1,
-    Slip39_Advanced = 2,
-}
-export type BackupType = keyof typeof Enum_BackupType;
 
 export enum Enum_SafetyCheckLevel {
     Strict = 0,
@@ -1729,6 +1729,36 @@ export type NEMAddress = {
     address: string;
 };
 
+export type NEMTransactionCommon = {
+    address_n?: number[];
+    network?: number;
+    timestamp?: number;
+    fee?: number;
+    deadline?: number;
+    signer?: string;
+};
+
+export type NEMMosaic = {
+    namespace?: string;
+    mosaic?: string;
+    quantity?: number;
+};
+
+export type NEMTransfer = {
+    recipient?: string;
+    amount?: string | number;
+    payload?: string;
+    public_key?: string;
+    mosaics?: NEMMosaic[];
+};
+
+export type NEMProvisionNamespace = {
+    namespace?: string;
+    parent?: string;
+    sink?: string;
+    fee?: number;
+};
+
 export enum NEMMosaicLevy {
     MosaicLevy_Absolute = 1,
     MosaicLevy_Percentile = 2,
@@ -1793,36 +1823,6 @@ export enum NEMImportanceTransferMode {
 export type NEMImportanceTransfer = {
     mode?: NEMImportanceTransferMode;
     public_key?: string;
-};
-
-export type NEMTransactionCommon = {
-    address_n?: number[];
-    network?: number;
-    timestamp?: number;
-    fee?: number;
-    deadline?: number;
-    signer?: string;
-};
-
-export type NEMMosaic = {
-    namespace?: string;
-    mosaic?: string;
-    quantity?: number;
-};
-
-export type NEMTransfer = {
-    recipient?: string;
-    amount?: string | number;
-    payload?: string;
-    public_key?: string;
-    mosaics?: NEMMosaic[];
-};
-
-export type NEMProvisionNamespace = {
-    namespace?: string;
-    parent?: string;
-    sink?: string;
-    fee?: number;
 };
 
 // NEMSignTx
