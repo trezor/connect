@@ -162,13 +162,6 @@ const parseMessage = (messageName, message, depth = 0) => {
 // top level messages and nested messages
 Object.keys(json.nested).map(e => parseMessage(e, json.nested[e]));
 
-types.sort((a, b) => {
-    if (a.type === b.type) {
-        return 0;
-    }
-    return -1;
-});
-
 // types needs reordering (used before defined)
 const ORDER = {
     BinanceCoin: 'BinanceInputOutput',
@@ -177,27 +170,8 @@ const ORDER = {
     CardanoTokenType: 'CardanoAssetGroupType',
     TxAck: 'TxAckInputWrapper',
     EthereumFieldType: 'EthereumStructMember',
-    DebugSwipeDirection: 'DebugLinkDecision',
-    EosAuthorizationWait: 'EosAuthorization',
-    EosAsset: 'EosActionTransfer',
-    EosAuthorization: 'EosActionUpdateAuth',
-    EosAuthorizationKey: 'EosAuthorization',
-    EosActionCommon: 'EosTxActionAck',
-    EosActionDelegate: 'EosTxActionAck',
-    EosActionRefund: 'EosTxActionAck',
-    EosActionBuyRam: 'EosTxActionAck',
-    EosActionBuyRamBytes: 'EosTxActionAck',
-    EosActionVoteProducer: 'EosTxActionAck',
-    EosActionUpdateAuth: 'EosTxActionAck',
-    EosActionDeleteAuth: 'EosTxActionAck',
-    EosActionUnlinkAuth: 'EosTxActionAck',
-    EosActionUnknown: 'EosTxActionAck',
-    NEMMosaicLevy: 'NEMMosaicDefinition',
-    NEMTransactionCommon: 'NEMSignTx',
-    NEMTransfer: 'NEMSignTx',
-    NEMProvisionNamespace: 'NEMSignTx',
-    NEMMosaic: 'NEMTransfer',
-    StellarSignerType: 'StellarSetOptionsOp',
+    BackupType: 'DebugLinkState',
+    EthereumDataType: 'EthereumFieldType',
 };
 
 Object.keys(ORDER).forEach(key => {
