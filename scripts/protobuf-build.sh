@@ -24,7 +24,8 @@ grep -hv -e '^import ' -e '^syntax' -e '^package' -e 'option java_' $SRC/message
 | grep -v '    reserved '>> $DIST/messages.proto
 
 # BUILD messages.json from message.proto
-./node_modules/.bin/proto2js $DIST/messages.proto > $DIST/messages.json
+./node_modules/.bin/pbjs -t json -p $DIST -o $DIST/messages.json --keep-case messages.proto
+rm $DIST/messages.proto
 
 # BUILD types
 # build flowtype definitions
@@ -34,6 +35,6 @@ node ./scripts/protobuf-types.js
 node ./scripts/protobuf-types.js typescript
 
 # eslint fix is required for flowtype since prettier uses comma as delimiter (default is semicolon)
-eslint ./src/js/types/trezor/protobuf.js --fix
+yarn eslint ./src/js/types/trezor/protobuf.js --fix
 # check flowtype
-flow check ./src/js
+yarn flow

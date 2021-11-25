@@ -1,121 +1,4 @@
 // This file is auto generated from data/messages/message.json
-export enum Enum_InputScriptType {
-    SPENDADDRESS = 0,
-    SPENDMULTISIG = 1,
-    EXTERNAL = 2,
-    SPENDWITNESS = 3,
-    SPENDP2SHWITNESS = 4,
-    SPENDTAPROOT = 5,
-}
-export type InputScriptType = keyof typeof Enum_InputScriptType;
-
-export enum Enum_OutputScriptType {
-    PAYTOADDRESS = 0,
-    PAYTOSCRIPTHASH = 1,
-    PAYTOMULTISIG = 2,
-    PAYTOOPRETURN = 3,
-    PAYTOWITNESS = 4,
-    PAYTOP2SHWITNESS = 5,
-    PAYTOTAPROOT = 6,
-}
-export type OutputScriptType = keyof typeof Enum_OutputScriptType;
-
-export enum DecredStakingSpendType {
-    SSGen = 0,
-    SSRTX = 1,
-}
-
-export enum AmountUnit {
-    BITCOIN = 0,
-    MILLIBITCOIN = 1,
-    MICROBITCOIN = 2,
-    SATOSHI = 3,
-}
-
-export enum CardanoDerivationType {
-    LEDGER = 0,
-    ICARUS = 1,
-    ICARUS_TREZOR = 2,
-}
-
-export enum CardanoAddressType {
-    BASE = 0,
-    BASE_SCRIPT_KEY = 1,
-    BASE_KEY_SCRIPT = 2,
-    BASE_SCRIPT_SCRIPT = 3,
-    POINTER = 4,
-    POINTER_SCRIPT = 5,
-    ENTERPRISE = 6,
-    ENTERPRISE_SCRIPT = 7,
-    BYRON = 8,
-    REWARD = 14,
-    REWARD_SCRIPT = 15,
-}
-
-export enum CardanoNativeScriptType {
-    PUB_KEY = 0,
-    ALL = 1,
-    ANY = 2,
-    N_OF_K = 3,
-    INVALID_BEFORE = 4,
-    INVALID_HEREAFTER = 5,
-}
-
-export enum CardanoNativeScriptHashDisplayFormat {
-    HIDE = 0,
-    BECH32 = 1,
-    POLICY_ID = 2,
-}
-
-export enum CardanoCertificateType {
-    STAKE_REGISTRATION = 0,
-    STAKE_DEREGISTRATION = 1,
-    STAKE_DELEGATION = 2,
-    STAKE_POOL_REGISTRATION = 3,
-}
-
-export enum CardanoPoolRelayType {
-    SINGLE_HOST_IP = 0,
-    SINGLE_HOST_NAME = 1,
-    MULTIPLE_HOST_NAME = 2,
-}
-
-export enum CardanoTxAuxiliaryDataSupplementType {
-    NONE = 0,
-    CATALYST_REGISTRATION_SIGNATURE = 1,
-}
-
-export enum CardanoTxSigningMode {
-    ORDINARY_TRANSACTION = 0,
-    POOL_REGISTRATION_AS_OWNER = 1,
-    MULTISIG_TRANSACTION = 2,
-}
-
-export enum CardanoTxWitnessType {
-    BYRON_WITNESS = 0,
-    SHELLEY_WITNESS = 1,
-}
-
-export enum Enum_BackupType {
-    Bip39 = 0,
-    Slip39_Basic = 1,
-    Slip39_Advanced = 2,
-}
-export type BackupType = keyof typeof Enum_BackupType;
-
-export enum Enum_SafetyCheckLevel {
-    Strict = 0,
-    PromptAlways = 1,
-    PromptTemporarily = 2,
-}
-export type SafetyCheckLevel = keyof typeof Enum_SafetyCheckLevel;
-
-export enum StellarAssetType {
-    NATIVE = 0,
-    ALPHANUM4 = 1,
-    ALPHANUM12 = 2,
-}
-
 // BinanceGetAddress
 export type BinanceGetAddress = {
     address_n: number[];
@@ -212,6 +95,39 @@ export type BinanceSignedTx = {
     signature: string;
     public_key: string;
 };
+
+export enum Enum_InputScriptType {
+    SPENDADDRESS = 0,
+    SPENDMULTISIG = 1,
+    EXTERNAL = 2,
+    SPENDWITNESS = 3,
+    SPENDP2SHWITNESS = 4,
+    SPENDTAPROOT = 5,
+}
+export type InputScriptType = keyof typeof Enum_InputScriptType;
+
+export enum Enum_OutputScriptType {
+    PAYTOADDRESS = 0,
+    PAYTOSCRIPTHASH = 1,
+    PAYTOMULTISIG = 2,
+    PAYTOOPRETURN = 3,
+    PAYTOWITNESS = 4,
+    PAYTOP2SHWITNESS = 5,
+    PAYTOTAPROOT = 6,
+}
+export type OutputScriptType = keyof typeof Enum_OutputScriptType;
+
+export enum DecredStakingSpendType {
+    SSGen = 0,
+    SSRTX = 1,
+}
+
+export enum AmountUnit {
+    BITCOIN = 0,
+    MILLIBITCOIN = 1,
+    MICROBITCOIN = 2,
+    SATOSHI = 3,
+}
 
 // HDNodeType
 export type HDNodeType = {
@@ -597,6 +513,70 @@ export type FirmwareUpload = {
 export type SelfTest = {
     payload?: string;
 };
+
+export enum CardanoDerivationType {
+    LEDGER = 0,
+    ICARUS = 1,
+    ICARUS_TREZOR = 2,
+}
+
+export enum CardanoAddressType {
+    BASE = 0,
+    BASE_SCRIPT_KEY = 1,
+    BASE_KEY_SCRIPT = 2,
+    BASE_SCRIPT_SCRIPT = 3,
+    POINTER = 4,
+    POINTER_SCRIPT = 5,
+    ENTERPRISE = 6,
+    ENTERPRISE_SCRIPT = 7,
+    BYRON = 8,
+    REWARD = 14,
+    REWARD_SCRIPT = 15,
+}
+
+export enum CardanoNativeScriptType {
+    PUB_KEY = 0,
+    ALL = 1,
+    ANY = 2,
+    N_OF_K = 3,
+    INVALID_BEFORE = 4,
+    INVALID_HEREAFTER = 5,
+}
+
+export enum CardanoNativeScriptHashDisplayFormat {
+    HIDE = 0,
+    BECH32 = 1,
+    POLICY_ID = 2,
+}
+
+export enum CardanoCertificateType {
+    STAKE_REGISTRATION = 0,
+    STAKE_DEREGISTRATION = 1,
+    STAKE_DELEGATION = 2,
+    STAKE_POOL_REGISTRATION = 3,
+}
+
+export enum CardanoPoolRelayType {
+    SINGLE_HOST_IP = 0,
+    SINGLE_HOST_NAME = 1,
+    MULTIPLE_HOST_NAME = 2,
+}
+
+export enum CardanoTxAuxiliaryDataSupplementType {
+    NONE = 0,
+    CATALYST_REGISTRATION_SIGNATURE = 1,
+}
+
+export enum CardanoTxSigningMode {
+    ORDINARY_TRANSACTION = 0,
+    POOL_REGISTRATION_AS_OWNER = 1,
+    MULTISIG_TRANSACTION = 2,
+}
+
+export enum CardanoTxWitnessType {
+    BYRON_WITNESS = 0,
+    SHELLEY_WITNESS = 1,
+}
 
 // CardanoBlockchainPointerType
 export type CardanoBlockchainPointerType = {
@@ -1093,6 +1073,13 @@ export type DebugLinkGetState = {
     wait_layout?: boolean;
 };
 
+export enum Enum_BackupType {
+    Bip39 = 0,
+    Slip39_Basic = 1,
+    Slip39_Advanced = 2,
+}
+export type BackupType = keyof typeof Enum_BackupType;
+
 // DebugLinkState
 export type DebugLinkState = {
     layout?: string;
@@ -1482,6 +1469,13 @@ export type EthereumVerifyMessage = {
     message: string;
     address: string;
 };
+
+export enum Enum_SafetyCheckLevel {
+    Strict = 0,
+    PromptAlways = 1,
+    PromptTemporarily = 2,
+}
+export type SafetyCheckLevel = keyof typeof Enum_SafetyCheckLevel;
 
 // Initialize
 export type Initialize = {
@@ -1895,6 +1889,12 @@ export type RippleSignedTx = {
     signature: string;
     serialized_tx: string;
 };
+
+export enum StellarAssetType {
+    NATIVE = 0,
+    ALPHANUM4 = 1,
+    ALPHANUM12 = 2,
+}
 
 // StellarAsset
 export type StellarAsset = {

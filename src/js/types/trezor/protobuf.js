@@ -1,138 +1,5 @@
 // @flow
 // This file is auto generated from data/messages/message.json
-export const Enum_InputScriptType = Object.freeze({
-    SPENDADDRESS: 0,
-    SPENDMULTISIG: 1,
-    EXTERNAL: 2,
-    SPENDWITNESS: 3,
-    SPENDP2SHWITNESS: 4,
-    SPENDTAPROOT: 5,
-});
-export type InputScriptType = $Keys<typeof Enum_InputScriptType>;
-
-export const Enum_OutputScriptType = Object.freeze({
-    PAYTOADDRESS: 0,
-    PAYTOSCRIPTHASH: 1,
-    PAYTOMULTISIG: 2,
-    PAYTOOPRETURN: 3,
-    PAYTOWITNESS: 4,
-    PAYTOP2SHWITNESS: 5,
-    PAYTOTAPROOT: 6,
-});
-export type OutputScriptType = $Keys<typeof Enum_OutputScriptType>;
-
-export const Enum_DecredStakingSpendType = Object.freeze({
-    SSGen: 0,
-    SSRTX: 1,
-});
-export type DecredStakingSpendType = $Values<typeof Enum_DecredStakingSpendType>;
-
-export const Enum_AmountUnit = Object.freeze({
-    BITCOIN: 0,
-    MILLIBITCOIN: 1,
-    MICROBITCOIN: 2,
-    SATOSHI: 3,
-});
-export type AmountUnit = $Values<typeof Enum_AmountUnit>;
-
-export const Enum_CardanoDerivationType = Object.freeze({
-    LEDGER: 0,
-    ICARUS: 1,
-    ICARUS_TREZOR: 2,
-});
-export type CardanoDerivationType = $Values<typeof Enum_CardanoDerivationType>;
-
-export const Enum_CardanoAddressType = Object.freeze({
-    BASE: 0,
-    BASE_SCRIPT_KEY: 1,
-    BASE_KEY_SCRIPT: 2,
-    BASE_SCRIPT_SCRIPT: 3,
-    POINTER: 4,
-    POINTER_SCRIPT: 5,
-    ENTERPRISE: 6,
-    ENTERPRISE_SCRIPT: 7,
-    BYRON: 8,
-    REWARD: 14,
-    REWARD_SCRIPT: 15,
-});
-export type CardanoAddressType = $Values<typeof Enum_CardanoAddressType>;
-
-export const Enum_CardanoNativeScriptType = Object.freeze({
-    PUB_KEY: 0,
-    ALL: 1,
-    ANY: 2,
-    N_OF_K: 3,
-    INVALID_BEFORE: 4,
-    INVALID_HEREAFTER: 5,
-});
-export type CardanoNativeScriptType = $Values<typeof Enum_CardanoNativeScriptType>;
-
-export const Enum_CardanoNativeScriptHashDisplayFormat = Object.freeze({
-    HIDE: 0,
-    BECH32: 1,
-    POLICY_ID: 2,
-});
-export type CardanoNativeScriptHashDisplayFormat = $Values<
-    typeof Enum_CardanoNativeScriptHashDisplayFormat,
->;
-
-export const Enum_CardanoCertificateType = Object.freeze({
-    STAKE_REGISTRATION: 0,
-    STAKE_DEREGISTRATION: 1,
-    STAKE_DELEGATION: 2,
-    STAKE_POOL_REGISTRATION: 3,
-});
-export type CardanoCertificateType = $Values<typeof Enum_CardanoCertificateType>;
-
-export const Enum_CardanoPoolRelayType = Object.freeze({
-    SINGLE_HOST_IP: 0,
-    SINGLE_HOST_NAME: 1,
-    MULTIPLE_HOST_NAME: 2,
-});
-export type CardanoPoolRelayType = $Values<typeof Enum_CardanoPoolRelayType>;
-
-export const Enum_CardanoTxAuxiliaryDataSupplementType = Object.freeze({
-    NONE: 0,
-    CATALYST_REGISTRATION_SIGNATURE: 1,
-});
-export type CardanoTxAuxiliaryDataSupplementType = $Values<
-    typeof Enum_CardanoTxAuxiliaryDataSupplementType,
->;
-
-export const Enum_CardanoTxSigningMode = Object.freeze({
-    ORDINARY_TRANSACTION: 0,
-    POOL_REGISTRATION_AS_OWNER: 1,
-    MULTISIG_TRANSACTION: 2,
-});
-export type CardanoTxSigningMode = $Values<typeof Enum_CardanoTxSigningMode>;
-
-export const Enum_CardanoTxWitnessType = Object.freeze({
-    BYRON_WITNESS: 0,
-    SHELLEY_WITNESS: 1,
-});
-export type CardanoTxWitnessType = $Values<typeof Enum_CardanoTxWitnessType>;
-
-export const Enum_BackupType = Object.freeze({
-    Bip39: 0,
-    Slip39_Basic: 1,
-    Slip39_Advanced: 2,
-});
-export type BackupType = $Keys<typeof Enum_BackupType>;
-
-export const Enum_SafetyCheckLevel = Object.freeze({
-    Strict: 0,
-    PromptAlways: 1,
-    PromptTemporarily: 2,
-});
-export type SafetyCheckLevel = $Keys<typeof Enum_SafetyCheckLevel>;
-
-export const Enum_StellarAssetType = Object.freeze({
-    NATIVE: 0,
-    ALPHANUM4: 1,
-    ALPHANUM12: 2,
-});
-export type StellarAssetType = $Values<typeof Enum_StellarAssetType>;
-
 // BinanceGetAddress
 export type BinanceGetAddress = {
     address_n: number[],
@@ -232,6 +99,41 @@ export type BinanceSignedTx = {
     signature: string,
     public_key: string,
 };
+
+export const Enum_InputScriptType = Object.freeze({
+    SPENDADDRESS: 0,
+    SPENDMULTISIG: 1,
+    EXTERNAL: 2,
+    SPENDWITNESS: 3,
+    SPENDP2SHWITNESS: 4,
+    SPENDTAPROOT: 5,
+});
+export type InputScriptType = $Keys<typeof Enum_InputScriptType>;
+
+export const Enum_OutputScriptType = Object.freeze({
+    PAYTOADDRESS: 0,
+    PAYTOSCRIPTHASH: 1,
+    PAYTOMULTISIG: 2,
+    PAYTOOPRETURN: 3,
+    PAYTOWITNESS: 4,
+    PAYTOP2SHWITNESS: 5,
+    PAYTOTAPROOT: 6,
+});
+export type OutputScriptType = $Keys<typeof Enum_OutputScriptType>;
+
+export const Enum_DecredStakingSpendType = Object.freeze({
+    SSGen: 0,
+    SSRTX: 1,
+});
+export type DecredStakingSpendType = $Values<typeof Enum_DecredStakingSpendType>;
+
+export const Enum_AmountUnit = Object.freeze({
+    BITCOIN: 0,
+    MILLIBITCOIN: 1,
+    MICROBITCOIN: 2,
+    SATOSHI: 3,
+});
+export type AmountUnit = $Values<typeof Enum_AmountUnit>;
 
 // HDNodeType
 export type HDNodeType = {
@@ -625,6 +527,83 @@ export type FirmwareUpload = {
 export type SelfTest = {
     payload?: string,
 };
+
+export const Enum_CardanoDerivationType = Object.freeze({
+    LEDGER: 0,
+    ICARUS: 1,
+    ICARUS_TREZOR: 2,
+});
+export type CardanoDerivationType = $Values<typeof Enum_CardanoDerivationType>;
+
+export const Enum_CardanoAddressType = Object.freeze({
+    BASE: 0,
+    BASE_SCRIPT_KEY: 1,
+    BASE_KEY_SCRIPT: 2,
+    BASE_SCRIPT_SCRIPT: 3,
+    POINTER: 4,
+    POINTER_SCRIPT: 5,
+    ENTERPRISE: 6,
+    ENTERPRISE_SCRIPT: 7,
+    BYRON: 8,
+    REWARD: 14,
+    REWARD_SCRIPT: 15,
+});
+export type CardanoAddressType = $Values<typeof Enum_CardanoAddressType>;
+
+export const Enum_CardanoNativeScriptType = Object.freeze({
+    PUB_KEY: 0,
+    ALL: 1,
+    ANY: 2,
+    N_OF_K: 3,
+    INVALID_BEFORE: 4,
+    INVALID_HEREAFTER: 5,
+});
+export type CardanoNativeScriptType = $Values<typeof Enum_CardanoNativeScriptType>;
+
+export const Enum_CardanoNativeScriptHashDisplayFormat = Object.freeze({
+    HIDE: 0,
+    BECH32: 1,
+    POLICY_ID: 2,
+});
+export type CardanoNativeScriptHashDisplayFormat = $Values<
+    typeof Enum_CardanoNativeScriptHashDisplayFormat,
+>;
+
+export const Enum_CardanoCertificateType = Object.freeze({
+    STAKE_REGISTRATION: 0,
+    STAKE_DEREGISTRATION: 1,
+    STAKE_DELEGATION: 2,
+    STAKE_POOL_REGISTRATION: 3,
+});
+export type CardanoCertificateType = $Values<typeof Enum_CardanoCertificateType>;
+
+export const Enum_CardanoPoolRelayType = Object.freeze({
+    SINGLE_HOST_IP: 0,
+    SINGLE_HOST_NAME: 1,
+    MULTIPLE_HOST_NAME: 2,
+});
+export type CardanoPoolRelayType = $Values<typeof Enum_CardanoPoolRelayType>;
+
+export const Enum_CardanoTxAuxiliaryDataSupplementType = Object.freeze({
+    NONE: 0,
+    CATALYST_REGISTRATION_SIGNATURE: 1,
+});
+export type CardanoTxAuxiliaryDataSupplementType = $Values<
+    typeof Enum_CardanoTxAuxiliaryDataSupplementType,
+>;
+
+export const Enum_CardanoTxSigningMode = Object.freeze({
+    ORDINARY_TRANSACTION: 0,
+    POOL_REGISTRATION_AS_OWNER: 1,
+    MULTISIG_TRANSACTION: 2,
+});
+export type CardanoTxSigningMode = $Values<typeof Enum_CardanoTxSigningMode>;
+
+export const Enum_CardanoTxWitnessType = Object.freeze({
+    BYRON_WITNESS: 0,
+    SHELLEY_WITNESS: 1,
+});
+export type CardanoTxWitnessType = $Values<typeof Enum_CardanoTxWitnessType>;
 
 // CardanoBlockchainPointerType
 export type CardanoBlockchainPointerType = {
@@ -1123,6 +1102,13 @@ export type DebugLinkGetState = {
     wait_layout?: boolean,
 };
 
+export const Enum_BackupType = Object.freeze({
+    Bip39: 0,
+    Slip39_Basic: 1,
+    Slip39_Advanced: 2,
+});
+export type BackupType = $Keys<typeof Enum_BackupType>;
+
 // DebugLinkState
 export type DebugLinkState = {
     layout?: string,
@@ -1513,6 +1499,13 @@ export type EthereumVerifyMessage = {
     message: string,
     address: string,
 };
+
+export const Enum_SafetyCheckLevel = Object.freeze({
+    Strict: 0,
+    PromptAlways: 1,
+    PromptTemporarily: 2,
+});
+export type SafetyCheckLevel = $Keys<typeof Enum_SafetyCheckLevel>;
 
 // Initialize
 export type Initialize = {
@@ -1932,6 +1925,13 @@ export type RippleSignedTx = {
     signature: string,
     serialized_tx: string,
 };
+
+export const Enum_StellarAssetType = Object.freeze({
+    NATIVE: 0,
+    ALPHANUM4: 1,
+    ALPHANUM12: 2,
+});
+export type StellarAssetType = $Values<typeof Enum_StellarAssetType>;
 
 // StellarAsset
 export type StellarAsset = {
