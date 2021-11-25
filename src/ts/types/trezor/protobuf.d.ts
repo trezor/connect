@@ -1,287 +1,4 @@
 // This file is auto generated from data/messages/message.json
-export enum BinanceOrderType {
-    OT_UNKNOWN = 0,
-    MARKET = 1,
-    LIMIT = 2,
-    OT_RESERVED = 3,
-}
-
-export enum BinanceOrderSide {
-    SIDE_UNKNOWN = 0,
-    BUY = 1,
-    SELL = 2,
-}
-
-export enum BinanceTimeInForce {
-    TIF_UNKNOWN = 0,
-    GTE = 1,
-    TIF_RESERVED = 2,
-    IOC = 3,
-}
-
-export enum Enum_InputScriptType {
-    SPENDADDRESS = 0,
-    SPENDMULTISIG = 1,
-    EXTERNAL = 2,
-    SPENDWITNESS = 3,
-    SPENDP2SHWITNESS = 4,
-    SPENDTAPROOT = 5,
-}
-export type InputScriptType = keyof typeof Enum_InputScriptType;
-
-export enum Enum_OutputScriptType {
-    PAYTOADDRESS = 0,
-    PAYTOSCRIPTHASH = 1,
-    PAYTOMULTISIG = 2,
-    PAYTOOPRETURN = 3,
-    PAYTOWITNESS = 4,
-    PAYTOP2SHWITNESS = 5,
-    PAYTOTAPROOT = 6,
-}
-export type OutputScriptType = keyof typeof Enum_OutputScriptType;
-
-export enum DecredStakingSpendType {
-    SSGen = 0,
-    SSRTX = 1,
-}
-
-export enum AmountUnit {
-    BITCOIN = 0,
-    MILLIBITCOIN = 1,
-    MICROBITCOIN = 2,
-    SATOSHI = 3,
-}
-
-export enum Enum_RequestType {
-    TXINPUT = 0,
-    TXOUTPUT = 1,
-    TXMETA = 2,
-    TXFINISHED = 3,
-    TXEXTRADATA = 4,
-    TXORIGINPUT = 5,
-    TXORIGOUTPUT = 6,
-}
-export type RequestType = keyof typeof Enum_RequestType;
-
-export enum CardanoDerivationType {
-    LEDGER = 0,
-    ICARUS = 1,
-    ICARUS_TREZOR = 2,
-}
-
-export enum CardanoAddressType {
-    BASE = 0,
-    BASE_SCRIPT_KEY = 1,
-    BASE_KEY_SCRIPT = 2,
-    BASE_SCRIPT_SCRIPT = 3,
-    POINTER = 4,
-    POINTER_SCRIPT = 5,
-    ENTERPRISE = 6,
-    ENTERPRISE_SCRIPT = 7,
-    BYRON = 8,
-    REWARD = 14,
-    REWARD_SCRIPT = 15,
-}
-
-export enum CardanoNativeScriptType {
-    PUB_KEY = 0,
-    ALL = 1,
-    ANY = 2,
-    N_OF_K = 3,
-    INVALID_BEFORE = 4,
-    INVALID_HEREAFTER = 5,
-}
-
-export enum CardanoNativeScriptHashDisplayFormat {
-    HIDE = 0,
-    BECH32 = 1,
-    POLICY_ID = 2,
-}
-
-export enum CardanoCertificateType {
-    STAKE_REGISTRATION = 0,
-    STAKE_DEREGISTRATION = 1,
-    STAKE_DELEGATION = 2,
-    STAKE_POOL_REGISTRATION = 3,
-}
-
-export enum CardanoPoolRelayType {
-    SINGLE_HOST_IP = 0,
-    SINGLE_HOST_NAME = 1,
-    MULTIPLE_HOST_NAME = 2,
-}
-
-export enum CardanoTxAuxiliaryDataSupplementType {
-    NONE = 0,
-    CATALYST_REGISTRATION_SIGNATURE = 1,
-}
-
-export enum CardanoTxSigningMode {
-    ORDINARY_TRANSACTION = 0,
-    POOL_REGISTRATION_AS_OWNER = 1,
-    MULTISIG_TRANSACTION = 2,
-}
-
-export enum CardanoTxWitnessType {
-    BYRON_WITNESS = 0,
-    SHELLEY_WITNESS = 1,
-}
-
-export enum FailureType {
-    Failure_UnexpectedMessage = 1,
-    Failure_ButtonExpected = 2,
-    Failure_DataError = 3,
-    Failure_ActionCancelled = 4,
-    Failure_PinExpected = 5,
-    Failure_PinCancelled = 6,
-    Failure_PinInvalid = 7,
-    Failure_InvalidSignature = 8,
-    Failure_ProcessError = 9,
-    Failure_NotEnoughFunds = 10,
-    Failure_NotInitialized = 11,
-    Failure_PinMismatch = 12,
-    Failure_WipeCodeMismatch = 13,
-    Failure_InvalidSession = 14,
-    Failure_FirmwareError = 99,
-}
-
-export enum Enum_ButtonRequestType {
-    ButtonRequest_Other = 1,
-    ButtonRequest_FeeOverThreshold = 2,
-    ButtonRequest_ConfirmOutput = 3,
-    ButtonRequest_ResetDevice = 4,
-    ButtonRequest_ConfirmWord = 5,
-    ButtonRequest_WipeDevice = 6,
-    ButtonRequest_ProtectCall = 7,
-    ButtonRequest_SignTx = 8,
-    ButtonRequest_FirmwareCheck = 9,
-    ButtonRequest_Address = 10,
-    ButtonRequest_PublicKey = 11,
-    ButtonRequest_MnemonicWordCount = 12,
-    ButtonRequest_MnemonicInput = 13,
-    _Deprecated_ButtonRequest_PassphraseType = 14,
-    ButtonRequest_UnknownDerivationPath = 15,
-    ButtonRequest_RecoveryHomepage = 16,
-    ButtonRequest_Success = 17,
-    ButtonRequest_Warning = 18,
-    ButtonRequest_PassphraseEntry = 19,
-    ButtonRequest_PinEntry = 20,
-}
-export type ButtonRequestType = keyof typeof Enum_ButtonRequestType;
-
-export enum Enum_PinMatrixRequestType {
-    PinMatrixRequestType_Current = 1,
-    PinMatrixRequestType_NewFirst = 2,
-    PinMatrixRequestType_NewSecond = 3,
-    PinMatrixRequestType_WipeCodeFirst = 4,
-    PinMatrixRequestType_WipeCodeSecond = 5,
-}
-export type PinMatrixRequestType = keyof typeof Enum_PinMatrixRequestType;
-
-export enum EthereumDataType {
-    UINT = 1,
-    INT = 2,
-    BYTES = 3,
-    STRING = 4,
-    BOOL = 5,
-    ADDRESS = 6,
-    ARRAY = 7,
-    STRUCT = 8,
-}
-
-export enum Enum_BackupType {
-    Bip39 = 0,
-    Slip39_Basic = 1,
-    Slip39_Advanced = 2,
-}
-export type BackupType = keyof typeof Enum_BackupType;
-
-export enum Enum_SafetyCheckLevel {
-    Strict = 0,
-    PromptAlways = 1,
-    PromptTemporarily = 2,
-}
-export type SafetyCheckLevel = keyof typeof Enum_SafetyCheckLevel;
-
-export enum Enum_Capability {
-    Capability_Bitcoin = 1,
-    Capability_Bitcoin_like = 2,
-    Capability_Binance = 3,
-    Capability_Cardano = 4,
-    Capability_Crypto = 5,
-    Capability_EOS = 6,
-    Capability_Ethereum = 7,
-    Capability_Lisk = 8,
-    Capability_Monero = 9,
-    Capability_NEM = 10,
-    Capability_Ripple = 11,
-    Capability_Stellar = 12,
-    Capability_Tezos = 13,
-    Capability_U2F = 14,
-    Capability_Shamir = 15,
-    Capability_ShamirGroups = 16,
-    Capability_PassphraseEntry = 17,
-}
-export type Capability = keyof typeof Enum_Capability;
-
-export enum SdProtectOperationType {
-    DISABLE = 0,
-    ENABLE = 1,
-    REFRESH = 2,
-}
-
-export enum RecoveryDeviceType {
-    RecoveryDeviceType_ScrambledWords = 0,
-    RecoveryDeviceType_Matrix = 1,
-}
-
-export enum Enum_WordRequestType {
-    WordRequestType_Plain = 0,
-    WordRequestType_Matrix9 = 1,
-    WordRequestType_Matrix6 = 2,
-}
-export type WordRequestType = keyof typeof Enum_WordRequestType;
-
-export enum NEMSupplyChangeType {
-    SupplyChange_Increase = 1,
-    SupplyChange_Decrease = 2,
-}
-
-export enum NEMModificationType {
-    CosignatoryModification_Add = 1,
-    CosignatoryModification_Delete = 2,
-}
-
-export enum NEMImportanceTransferMode {
-    ImportanceTransfer_Activate = 1,
-    ImportanceTransfer_Deactivate = 2,
-}
-
-export enum StellarAssetType {
-    NATIVE = 0,
-    ALPHANUM4 = 1,
-    ALPHANUM12 = 2,
-}
-
-export enum StellarMemoType {
-    NONE = 0,
-    TEXT = 1,
-    ID = 2,
-    HASH = 3,
-    RETURN = 4,
-}
-
-export enum TezosContractType {
-    Implicit = 0,
-    Originated = 1,
-}
-
-export enum TezosBallotType {
-    Yay = 0,
-    Nay = 1,
-    Pass = 2,
-}
-
 // BinanceGetAddress
 export type BinanceGetAddress = {
     address_n: number[];
@@ -334,6 +51,26 @@ export type BinanceTransferMsg = {
     outputs: BinanceInputOutput[];
 };
 
+export enum BinanceOrderType {
+    OT_UNKNOWN = 0,
+    MARKET = 1,
+    LIMIT = 2,
+    OT_RESERVED = 3,
+}
+
+export enum BinanceOrderSide {
+    SIDE_UNKNOWN = 0,
+    BUY = 1,
+    SELL = 2,
+}
+
+export enum BinanceTimeInForce {
+    TIF_UNKNOWN = 0,
+    GTE = 1,
+    TIF_RESERVED = 2,
+    IOC = 3,
+}
+
 // BinanceOrderMsg
 export type BinanceOrderMsg = {
     id?: string;
@@ -358,6 +95,39 @@ export type BinanceSignedTx = {
     signature: string;
     public_key: string;
 };
+
+export enum Enum_InputScriptType {
+    SPENDADDRESS = 0,
+    SPENDMULTISIG = 1,
+    EXTERNAL = 2,
+    SPENDWITNESS = 3,
+    SPENDP2SHWITNESS = 4,
+    SPENDTAPROOT = 5,
+}
+export type InputScriptType = keyof typeof Enum_InputScriptType;
+
+export enum Enum_OutputScriptType {
+    PAYTOADDRESS = 0,
+    PAYTOSCRIPTHASH = 1,
+    PAYTOMULTISIG = 2,
+    PAYTOOPRETURN = 3,
+    PAYTOWITNESS = 4,
+    PAYTOP2SHWITNESS = 5,
+    PAYTOTAPROOT = 6,
+}
+export type OutputScriptType = keyof typeof Enum_OutputScriptType;
+
+export enum DecredStakingSpendType {
+    SSGen = 0,
+    SSRTX = 1,
+}
+
+export enum AmountUnit {
+    BITCOIN = 0,
+    MILLIBITCOIN = 1,
+    MICROBITCOIN = 2,
+    SATOSHI = 3,
+}
 
 // HDNodeType
 export type HDNodeType = {
@@ -466,6 +236,17 @@ export type SignTx = {
     amount_unit?: AmountUnit;
     decred_staking_ticket?: boolean;
 };
+
+export enum Enum_RequestType {
+    TXINPUT = 0,
+    TXOUTPUT = 1,
+    TXMETA = 2,
+    TXFINISHED = 3,
+    TXEXTRADATA = 4,
+    TXORIGINPUT = 5,
+    TXORIGOUTPUT = 6,
+}
+export type RequestType = keyof typeof Enum_RequestType;
 
 export type TxRequestDetailsType = {
     request_index: number;
@@ -732,6 +513,70 @@ export type FirmwareUpload = {
 export type SelfTest = {
     payload?: string;
 };
+
+export enum CardanoDerivationType {
+    LEDGER = 0,
+    ICARUS = 1,
+    ICARUS_TREZOR = 2,
+}
+
+export enum CardanoAddressType {
+    BASE = 0,
+    BASE_SCRIPT_KEY = 1,
+    BASE_KEY_SCRIPT = 2,
+    BASE_SCRIPT_SCRIPT = 3,
+    POINTER = 4,
+    POINTER_SCRIPT = 5,
+    ENTERPRISE = 6,
+    ENTERPRISE_SCRIPT = 7,
+    BYRON = 8,
+    REWARD = 14,
+    REWARD_SCRIPT = 15,
+}
+
+export enum CardanoNativeScriptType {
+    PUB_KEY = 0,
+    ALL = 1,
+    ANY = 2,
+    N_OF_K = 3,
+    INVALID_BEFORE = 4,
+    INVALID_HEREAFTER = 5,
+}
+
+export enum CardanoNativeScriptHashDisplayFormat {
+    HIDE = 0,
+    BECH32 = 1,
+    POLICY_ID = 2,
+}
+
+export enum CardanoCertificateType {
+    STAKE_REGISTRATION = 0,
+    STAKE_DEREGISTRATION = 1,
+    STAKE_DELEGATION = 2,
+    STAKE_POOL_REGISTRATION = 3,
+}
+
+export enum CardanoPoolRelayType {
+    SINGLE_HOST_IP = 0,
+    SINGLE_HOST_NAME = 1,
+    MULTIPLE_HOST_NAME = 2,
+}
+
+export enum CardanoTxAuxiliaryDataSupplementType {
+    NONE = 0,
+    CATALYST_REGISTRATION_SIGNATURE = 1,
+}
+
+export enum CardanoTxSigningMode {
+    ORDINARY_TRANSACTION = 0,
+    POOL_REGISTRATION_AS_OWNER = 1,
+    MULTISIG_TRANSACTION = 2,
+}
+
+export enum CardanoTxWitnessType {
+    BYRON_WITNESS = 0,
+    SHELLEY_WITNESS = 1,
+}
 
 // CardanoBlockchainPointerType
 export type CardanoBlockchainPointerType = {
@@ -1038,11 +883,53 @@ export type Success = {
     message: string;
 };
 
+export enum FailureType {
+    Failure_UnexpectedMessage = 1,
+    Failure_ButtonExpected = 2,
+    Failure_DataError = 3,
+    Failure_ActionCancelled = 4,
+    Failure_PinExpected = 5,
+    Failure_PinCancelled = 6,
+    Failure_PinInvalid = 7,
+    Failure_InvalidSignature = 8,
+    Failure_ProcessError = 9,
+    Failure_NotEnoughFunds = 10,
+    Failure_NotInitialized = 11,
+    Failure_PinMismatch = 12,
+    Failure_WipeCodeMismatch = 13,
+    Failure_InvalidSession = 14,
+    Failure_FirmwareError = 99,
+}
+
 // Failure
 export type Failure = {
     code?: FailureType;
     message?: string;
 };
+
+export enum Enum_ButtonRequestType {
+    ButtonRequest_Other = 1,
+    ButtonRequest_FeeOverThreshold = 2,
+    ButtonRequest_ConfirmOutput = 3,
+    ButtonRequest_ResetDevice = 4,
+    ButtonRequest_ConfirmWord = 5,
+    ButtonRequest_WipeDevice = 6,
+    ButtonRequest_ProtectCall = 7,
+    ButtonRequest_SignTx = 8,
+    ButtonRequest_FirmwareCheck = 9,
+    ButtonRequest_Address = 10,
+    ButtonRequest_PublicKey = 11,
+    ButtonRequest_MnemonicWordCount = 12,
+    ButtonRequest_MnemonicInput = 13,
+    _Deprecated_ButtonRequest_PassphraseType = 14,
+    ButtonRequest_UnknownDerivationPath = 15,
+    ButtonRequest_RecoveryHomepage = 16,
+    ButtonRequest_Success = 17,
+    ButtonRequest_Warning = 18,
+    ButtonRequest_PassphraseEntry = 19,
+    ButtonRequest_PinEntry = 20,
+}
+export type ButtonRequestType = keyof typeof Enum_ButtonRequestType;
 
 // ButtonRequest
 export type ButtonRequest = {
@@ -1052,6 +939,15 @@ export type ButtonRequest = {
 
 // ButtonAck
 export type ButtonAck = {};
+
+export enum Enum_PinMatrixRequestType {
+    PinMatrixRequestType_Current = 1,
+    PinMatrixRequestType_NewFirst = 2,
+    PinMatrixRequestType_NewSecond = 3,
+    PinMatrixRequestType_WipeCodeFirst = 4,
+    PinMatrixRequestType_WipeCodeSecond = 5,
+}
+export type PinMatrixRequestType = keyof typeof Enum_PinMatrixRequestType;
 
 // PinMatrixRequest
 export type PinMatrixRequest = {
@@ -1445,6 +1341,394 @@ export type EthereumStructMember = {
     name: string;
 };
 
+export enum EthereumDataType {
+    UINT = 1,
+    INT = 2,
+    BYTES = 3,
+    STRING = 4,
+    BOOL = 5,
+    ADDRESS = 6,
+    ARRAY = 7,
+    STRUCT = 8,
+}
+
+// EthereumTypedDataStructAck
+export type EthereumTypedDataStructAck = {
+    members: EthereumStructMember[];
+};
+
+// EthereumTypedDataValueRequest
+export type EthereumTypedDataValueRequest = {
+    member_path: number[];
+};
+
+// EthereumTypedDataValueAck
+export type EthereumTypedDataValueAck = {
+    value: string;
+};
+
+// EthereumTypedDataSignature
+export type EthereumTypedDataSignature = {
+    signature: string;
+    address: string;
+};
+
+// EthereumGetPublicKey
+export type EthereumGetPublicKey = {
+    address_n: number[];
+    show_display?: boolean;
+};
+
+// EthereumPublicKey
+export type EthereumPublicKey = {
+    node: HDNodeType;
+    xpub: string;
+};
+
+// EthereumGetAddress
+export type EthereumGetAddress = {
+    address_n: number[];
+    show_display?: boolean;
+};
+
+// EthereumAddress
+export type EthereumAddress = {
+    _old_address?: string;
+    address: string;
+};
+
+// EthereumSignTx
+export type EthereumSignTx = {
+    address_n: number[];
+    nonce?: string;
+    gas_price: string;
+    gas_limit: string;
+    to?: string;
+    value?: string;
+    data_initial_chunk?: string;
+    data_length?: number;
+    chain_id: number;
+    tx_type?: number;
+};
+
+export type EthereumAccessList = {
+    address: string;
+    storage_keys: string[];
+};
+
+// EthereumSignTxEIP1559
+export type EthereumSignTxEIP1559 = {
+    address_n: number[];
+    nonce: string;
+    max_gas_fee: string;
+    max_priority_fee: string;
+    gas_limit: string;
+    to?: string;
+    value: string;
+    data_initial_chunk?: string;
+    data_length: number;
+    chain_id: number;
+    access_list: EthereumAccessList[];
+};
+
+// EthereumTxRequest
+export type EthereumTxRequest = {
+    data_length?: number;
+    signature_v?: number;
+    signature_r?: string;
+    signature_s?: string;
+};
+
+// EthereumTxAck
+export type EthereumTxAck = {
+    data_chunk: string;
+};
+
+// EthereumSignMessage
+export type EthereumSignMessage = {
+    address_n: number[];
+    message: string;
+};
+
+// EthereumMessageSignature
+export type EthereumMessageSignature = {
+    signature: string;
+    address: string;
+};
+
+// EthereumVerifyMessage
+export type EthereumVerifyMessage = {
+    signature: string;
+    message: string;
+    address: string;
+};
+
+export enum Enum_BackupType {
+    Bip39 = 0,
+    Slip39_Basic = 1,
+    Slip39_Advanced = 2,
+}
+export type BackupType = keyof typeof Enum_BackupType;
+
+export enum Enum_SafetyCheckLevel {
+    Strict = 0,
+    PromptAlways = 1,
+    PromptTemporarily = 2,
+}
+export type SafetyCheckLevel = keyof typeof Enum_SafetyCheckLevel;
+
+// Initialize
+export type Initialize = {
+    session_id?: string;
+    _skip_passphrase?: boolean;
+    derive_cardano?: boolean;
+};
+
+// GetFeatures
+export type GetFeatures = {};
+
+export enum Enum_Capability {
+    Capability_Bitcoin = 1,
+    Capability_Bitcoin_like = 2,
+    Capability_Binance = 3,
+    Capability_Cardano = 4,
+    Capability_Crypto = 5,
+    Capability_EOS = 6,
+    Capability_Ethereum = 7,
+    Capability_Lisk = 8,
+    Capability_Monero = 9,
+    Capability_NEM = 10,
+    Capability_Ripple = 11,
+    Capability_Stellar = 12,
+    Capability_Tezos = 13,
+    Capability_U2F = 14,
+    Capability_Shamir = 15,
+    Capability_ShamirGroups = 16,
+    Capability_PassphraseEntry = 17,
+}
+export type Capability = keyof typeof Enum_Capability;
+
+// Features
+export type Features = {
+    vendor: string;
+    major_version: number;
+    minor_version: number;
+    patch_version: number;
+    bootloader_mode: boolean | null;
+    device_id: string | null;
+    pin_protection: boolean | null;
+    passphrase_protection: boolean | null;
+    language: string | null;
+    label: string | null;
+    initialized: boolean | null;
+    revision: string | null;
+    bootloader_hash: string | null;
+    imported: boolean | null;
+    unlocked: boolean | null;
+    _passphrase_cached?: boolean;
+    firmware_present: boolean | null;
+    needs_backup: boolean | null;
+    flags: number | null;
+    model: string;
+    fw_major: number | null;
+    fw_minor: number | null;
+    fw_patch: number | null;
+    fw_vendor: string | null;
+    fw_vendor_keys: string | null;
+    unfinished_backup: boolean | null;
+    no_backup: boolean | null;
+    recovery_mode: boolean | null;
+    capabilities: Capability[];
+    backup_type: BackupType | null;
+    sd_card_present: boolean | null;
+    sd_protection: boolean | null;
+    wipe_code_protection: boolean | null;
+    session_id: string | null;
+    passphrase_always_on_device: boolean | null;
+    safety_checks: SafetyCheckLevel | null;
+    auto_lock_delay_ms: number | null;
+    display_rotation: number | null;
+    experimental_features: boolean | null;
+};
+
+// LockDevice
+export type LockDevice = {};
+
+// EndSession
+export type EndSession = {};
+
+// ApplySettings
+export type ApplySettings = {
+    language?: string;
+    label?: string;
+    use_passphrase?: boolean;
+    homescreen?: string;
+    _passphrase_source?: number;
+    auto_lock_delay_ms?: number;
+    display_rotation?: number;
+    passphrase_always_on_device?: boolean;
+    safety_checks?: SafetyCheckLevel;
+    experimental_features?: boolean;
+};
+
+// ApplyFlags
+export type ApplyFlags = {
+    flags: number;
+};
+
+// ChangePin
+export type ChangePin = {
+    remove?: boolean;
+};
+
+// ChangeWipeCode
+export type ChangeWipeCode = {
+    remove?: boolean;
+};
+
+export enum SdProtectOperationType {
+    DISABLE = 0,
+    ENABLE = 1,
+    REFRESH = 2,
+}
+
+// SdProtect
+export type SdProtect = {
+    operation: SdProtectOperationType;
+};
+
+// Ping
+export type Ping = {
+    message?: string;
+    button_protection?: boolean;
+};
+
+// Cancel
+export type Cancel = {};
+
+// GetEntropy
+export type GetEntropy = {
+    size: number;
+};
+
+// Entropy
+export type Entropy = {
+    entropy: string;
+};
+
+// WipeDevice
+export type WipeDevice = {};
+
+// LoadDevice
+export type LoadDevice = {
+    mnemonics: string[];
+    pin?: string;
+    passphrase_protection?: boolean;
+    language?: string;
+    label?: string;
+    skip_checksum?: boolean;
+    u2f_counter?: number;
+    needs_backup?: boolean;
+    no_backup?: boolean;
+};
+
+// ResetDevice
+export type ResetDevice = {
+    display_random?: boolean;
+    strength?: number;
+    passphrase_protection?: boolean;
+    pin_protection?: boolean;
+    language?: string;
+    label?: string;
+    u2f_counter?: number;
+    skip_backup?: boolean;
+    no_backup?: boolean;
+    backup_type?: BackupType;
+};
+
+// BackupDevice
+export type BackupDevice = {};
+
+// EntropyRequest
+export type EntropyRequest = {};
+
+// EntropyAck
+export type EntropyAck = {
+    entropy: string;
+};
+
+export enum RecoveryDeviceType {
+    RecoveryDeviceType_ScrambledWords = 0,
+    RecoveryDeviceType_Matrix = 1,
+}
+
+// RecoveryDevice
+export type RecoveryDevice = {
+    word_count?: number;
+    passphrase_protection?: boolean;
+    pin_protection?: boolean;
+    language?: string;
+    label?: string;
+    enforce_wordlist?: boolean;
+    type?: RecoveryDeviceType;
+    u2f_counter?: number;
+    dry_run?: boolean;
+};
+
+export enum Enum_WordRequestType {
+    WordRequestType_Plain = 0,
+    WordRequestType_Matrix9 = 1,
+    WordRequestType_Matrix6 = 2,
+}
+export type WordRequestType = keyof typeof Enum_WordRequestType;
+
+// WordRequest
+export type WordRequest = {
+    type: WordRequestType;
+};
+
+// WordAck
+export type WordAck = {
+    word: string;
+};
+
+// SetU2FCounter
+export type SetU2FCounter = {
+    u2f_counter: number;
+};
+
+// GetNextU2FCounter
+export type GetNextU2FCounter = {};
+
+// NextU2FCounter
+export type NextU2FCounter = {
+    u2f_counter: number;
+};
+
+// DoPreauthorized
+export type DoPreauthorized = {};
+
+// PreauthorizedRequest
+export type PreauthorizedRequest = {};
+
+// CancelAuthorization
+export type CancelAuthorization = {};
+
+// RebootToBootloader
+export type RebootToBootloader = {};
+
+// NEMGetAddress
+export type NEMGetAddress = {
+    address_n: number[];
+    network?: number;
+    show_display?: boolean;
+};
+
+// NEMAddress
+export type NEMAddress = {
+    address: string;
+};
+
 export enum NEMMosaicLevy {
     MosaicLevy_Absolute = 1,
     MosaicLevy_Percentile = 2,
@@ -1474,12 +1758,22 @@ export type NEMMosaicCreation = {
     fee?: number;
 };
 
+export enum NEMSupplyChangeType {
+    SupplyChange_Increase = 1,
+    SupplyChange_Decrease = 2,
+}
+
 export type NEMMosaicSupplyChange = {
     namespace?: string;
     mosaic?: string;
     type?: NEMSupplyChangeType;
     delta?: number;
 };
+
+export enum NEMModificationType {
+    CosignatoryModification_Add = 1,
+    CosignatoryModification_Delete = 2,
+}
 
 export type NEMCosignatoryModification = {
     type?: NEMModificationType;
@@ -1490,6 +1784,11 @@ export type NEMAggregateModification = {
     modifications?: NEMCosignatoryModification[];
     relative_change?: number;
 };
+
+export enum NEMImportanceTransferMode {
+    ImportanceTransfer_Activate = 1,
+    ImportanceTransfer_Deactivate = 2,
+}
 
 export type NEMImportanceTransfer = {
     mode?: NEMImportanceTransferMode;
@@ -1591,6 +1890,12 @@ export type RippleSignedTx = {
     serialized_tx: string;
 };
 
+export enum StellarAssetType {
+    NATIVE = 0,
+    ALPHANUM4 = 1,
+    ALPHANUM12 = 2,
+}
+
 // StellarAsset
 export type StellarAsset = {
     type: StellarAssetType;
@@ -1608,6 +1913,14 @@ export type StellarGetAddress = {
 export type StellarAddress = {
     address: string;
 };
+
+export enum StellarMemoType {
+    NONE = 0,
+    TEXT = 1,
+    ID = 2,
+    HASH = 3,
+    RETURN = 4,
+}
 
 // StellarSignTx
 export type StellarSignTx = {
@@ -1782,6 +2095,11 @@ export type TezosPublicKey = {
     public_key: string;
 };
 
+export enum TezosContractType {
+    Implicit = 0,
+    Originated = 1,
+}
+
 export type TezosContractID = {
     tag: number;
     hash: Uint8Array;
@@ -1848,6 +2166,12 @@ export type TezosProposalOp = {
     proposals: string[];
 };
 
+export enum TezosBallotType {
+    Yay = 0,
+    Nay = 1,
+    Pass = 2,
+}
+
 export type TezosBallotOp = {
     source?: string;
     period?: number;
@@ -1872,328 +2196,4 @@ export type TezosSignedTx = {
     signature: string;
     sig_op_contents: string;
     operation_hash: string;
-};
-
-// EthereumTypedDataStructAck
-export type EthereumTypedDataStructAck = {
-    members: EthereumStructMember[];
-};
-
-// EthereumTypedDataValueRequest
-export type EthereumTypedDataValueRequest = {
-    member_path: number[];
-};
-
-// EthereumTypedDataValueAck
-export type EthereumTypedDataValueAck = {
-    value: string;
-};
-
-// EthereumTypedDataSignature
-export type EthereumTypedDataSignature = {
-    signature: string;
-    address: string;
-};
-
-// EthereumGetPublicKey
-export type EthereumGetPublicKey = {
-    address_n: number[];
-    show_display?: boolean;
-};
-
-// EthereumPublicKey
-export type EthereumPublicKey = {
-    node: HDNodeType;
-    xpub: string;
-};
-
-// EthereumGetAddress
-export type EthereumGetAddress = {
-    address_n: number[];
-    show_display?: boolean;
-};
-
-// EthereumAddress
-export type EthereumAddress = {
-    _old_address?: string;
-    address: string;
-};
-
-// EthereumSignTx
-export type EthereumSignTx = {
-    address_n: number[];
-    nonce?: string;
-    gas_price: string;
-    gas_limit: string;
-    to?: string;
-    value?: string;
-    data_initial_chunk?: string;
-    data_length?: number;
-    chain_id: number;
-    tx_type?: number;
-};
-
-export type EthereumAccessList = {
-    address: string;
-    storage_keys: string[];
-};
-
-// EthereumSignTxEIP1559
-export type EthereumSignTxEIP1559 = {
-    address_n: number[];
-    nonce: string;
-    max_gas_fee: string;
-    max_priority_fee: string;
-    gas_limit: string;
-    to?: string;
-    value: string;
-    data_initial_chunk?: string;
-    data_length: number;
-    chain_id: number;
-    access_list: EthereumAccessList[];
-};
-
-// EthereumTxRequest
-export type EthereumTxRequest = {
-    data_length?: number;
-    signature_v?: number;
-    signature_r?: string;
-    signature_s?: string;
-};
-
-// EthereumTxAck
-export type EthereumTxAck = {
-    data_chunk: string;
-};
-
-// EthereumSignMessage
-export type EthereumSignMessage = {
-    address_n: number[];
-    message: string;
-};
-
-// EthereumMessageSignature
-export type EthereumMessageSignature = {
-    signature: string;
-    address: string;
-};
-
-// EthereumVerifyMessage
-export type EthereumVerifyMessage = {
-    signature: string;
-    message: string;
-    address: string;
-};
-
-// Initialize
-export type Initialize = {
-    session_id?: string;
-    _skip_passphrase?: boolean;
-    derive_cardano?: boolean;
-};
-
-// GetFeatures
-export type GetFeatures = {};
-
-// Features
-export type Features = {
-    vendor: string;
-    major_version: number;
-    minor_version: number;
-    patch_version: number;
-    bootloader_mode: boolean | null;
-    device_id: string | null;
-    pin_protection: boolean | null;
-    passphrase_protection: boolean | null;
-    language: string | null;
-    label: string | null;
-    initialized: boolean | null;
-    revision: string | null;
-    bootloader_hash: string | null;
-    imported: boolean | null;
-    unlocked: boolean | null;
-    _passphrase_cached?: boolean;
-    firmware_present: boolean | null;
-    needs_backup: boolean | null;
-    flags: number | null;
-    model: string;
-    fw_major: number | null;
-    fw_minor: number | null;
-    fw_patch: number | null;
-    fw_vendor: string | null;
-    fw_vendor_keys: string | null;
-    unfinished_backup: boolean | null;
-    no_backup: boolean | null;
-    recovery_mode: boolean | null;
-    capabilities: Capability[];
-    backup_type: BackupType | null;
-    sd_card_present: boolean | null;
-    sd_protection: boolean | null;
-    wipe_code_protection: boolean | null;
-    session_id: string | null;
-    passphrase_always_on_device: boolean | null;
-    safety_checks: SafetyCheckLevel | null;
-    auto_lock_delay_ms: number | null;
-    display_rotation: number | null;
-    experimental_features: boolean | null;
-};
-
-// LockDevice
-export type LockDevice = {};
-
-// EndSession
-export type EndSession = {};
-
-// ApplySettings
-export type ApplySettings = {
-    language?: string;
-    label?: string;
-    use_passphrase?: boolean;
-    homescreen?: string;
-    _passphrase_source?: number;
-    auto_lock_delay_ms?: number;
-    display_rotation?: number;
-    passphrase_always_on_device?: boolean;
-    safety_checks?: SafetyCheckLevel;
-    experimental_features?: boolean;
-};
-
-// ApplyFlags
-export type ApplyFlags = {
-    flags: number;
-};
-
-// ChangePin
-export type ChangePin = {
-    remove?: boolean;
-};
-
-// ChangeWipeCode
-export type ChangeWipeCode = {
-    remove?: boolean;
-};
-
-// SdProtect
-export type SdProtect = {
-    operation: SdProtectOperationType;
-};
-
-// Ping
-export type Ping = {
-    message?: string;
-    button_protection?: boolean;
-};
-
-// Cancel
-export type Cancel = {};
-
-// GetEntropy
-export type GetEntropy = {
-    size: number;
-};
-
-// Entropy
-export type Entropy = {
-    entropy: string;
-};
-
-// WipeDevice
-export type WipeDevice = {};
-
-// LoadDevice
-export type LoadDevice = {
-    mnemonics: string[];
-    pin?: string;
-    passphrase_protection?: boolean;
-    language?: string;
-    label?: string;
-    skip_checksum?: boolean;
-    u2f_counter?: number;
-    needs_backup?: boolean;
-    no_backup?: boolean;
-};
-
-// ResetDevice
-export type ResetDevice = {
-    display_random?: boolean;
-    strength?: number;
-    passphrase_protection?: boolean;
-    pin_protection?: boolean;
-    language?: string;
-    label?: string;
-    u2f_counter?: number;
-    skip_backup?: boolean;
-    no_backup?: boolean;
-    backup_type?: BackupType;
-};
-
-// BackupDevice
-export type BackupDevice = {};
-
-// EntropyRequest
-export type EntropyRequest = {};
-
-// EntropyAck
-export type EntropyAck = {
-    entropy: string;
-};
-
-// RecoveryDevice
-export type RecoveryDevice = {
-    word_count?: number;
-    passphrase_protection?: boolean;
-    pin_protection?: boolean;
-    language?: string;
-    label?: string;
-    enforce_wordlist?: boolean;
-    type?: RecoveryDeviceType;
-    u2f_counter?: number;
-    dry_run?: boolean;
-};
-
-// WordRequest
-export type WordRequest = {
-    type: WordRequestType;
-};
-
-// WordAck
-export type WordAck = {
-    word: string;
-};
-
-// SetU2FCounter
-export type SetU2FCounter = {
-    u2f_counter: number;
-};
-
-// GetNextU2FCounter
-export type GetNextU2FCounter = {};
-
-// NextU2FCounter
-export type NextU2FCounter = {
-    u2f_counter: number;
-};
-
-// DoPreauthorized
-export type DoPreauthorized = {};
-
-// PreauthorizedRequest
-export type PreauthorizedRequest = {};
-
-// CancelAuthorization
-export type CancelAuthorization = {};
-
-// RebootToBootloader
-export type RebootToBootloader = {};
-
-// NEMGetAddress
-export type NEMGetAddress = {
-    address_n: number[];
-    network?: number;
-    show_display?: boolean;
-};
-
-// NEMAddress
-export type NEMAddress = {
-    address: string;
 };
