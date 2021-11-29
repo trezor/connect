@@ -62,7 +62,12 @@
             "address_type": 111,
             "address_type_p2sh": 196,
             "bech32_prefix": "bcrt",
-            "blockchain_link": null,
+            "blockchain_link": {
+                "type": "blockbook",
+                "url": [
+                    "http://localhost:19121"
+                ]
+            },
             "blocktime_seconds": 600,
             "cashaddr_prefix": null,
             "coin_label": "Regtest",
