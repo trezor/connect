@@ -258,9 +258,8 @@ TrezorConnect.cardanoSignTransaction({
                 "1af8fa0b754ff99253d983894e63a2b09cbb56c833ba18c3384210163f63dcfc",
             stakingPath: "m/1852'/1815'/0'/2/0",
             rewardAddressParameters: {
-                addressType: CardanoAddressType.BASE,
-                path: "m/1852'/1815'/0'/0/0",
-                stakingPath: "m/1852'/1815'/0'/2/0",
+                addressType: CardanoAddressType.REWARD,
+                path: "m/1852'/1815'/0'/2/0",
             },
             nonce: "22634813",
         },
