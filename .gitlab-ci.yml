@@ -226,6 +226,8 @@ test binance:
 .test-compatibility:
   extends: .test
   stage: test-compatibility
+  only:
+    - schedules
   variables:
     # 2.2.0 released in January 2020
     TESTS_FIRMWARE: "2.2.0"
