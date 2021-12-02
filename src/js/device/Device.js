@@ -426,7 +426,7 @@ class Device extends EventEmitter {
             if (legacy && !this.isT1()) {
                 payload.state = internalState;
                 if (useEmptyPassphrase) {
-                    payload.skip_passphrase = useEmptyPassphrase;
+                    payload._skip_passphrase = useEmptyPassphrase;
                     payload.state = null;
                 }
             }
