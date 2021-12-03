@@ -1787,10 +1787,10 @@
     tiny-worker "^2.3.0"
     ws "^7.4.0"
 
-"@trezor/connect-common@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@trezor/connect-common/-/connect-common-0.0.2.tgz#d2bb1e90de6be2895b7f44215f09b52db361aaf4"
-  integrity sha512-b0R/HfA10mH2CR0BoPkKUs/2TC5Bf4MSGBFRF+1Q4tluQfSRzongQEZivg09vbBQEZBD1Ora3Oikn74zqsW4Aw==
+"@trezor/connect-common@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@trezor/connect-common/-/connect-common-0.0.3.tgz#d136453d259d24f9200daf72d0184594d56e92e2"
+  integrity sha512-oc4K/Ve2e1o3R1M0QAexLYN7aOepeSlcO5NVP/cfxBA+36cApZrRSy6kbs3OB2uc15tua5qkmYEDpJ3QSnZarg==
 
 "@trezor/rollout@^1.2.0":
   version "1.2.0"
