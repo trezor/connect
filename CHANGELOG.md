@@ -1,12 +1,23 @@
-# 8.2.3 (not released)
+# 8.2.4 (not released)
+
+# 8.2.3
 
 ### Added
 - Bitcoin Taproot support.
 - Stellar: support for StellarManageBuyOfferOp and StellarPathPaymentStrictSendOp.
 - Decred support.
+- Stellar: support for StellarPathPaymentStrictReceiveOp operation
+- Stellar: support for StellarPathPaymentStrictSendOp operation
+- GetFeatures: experimental_features parameter
+- 1.10.4 and 2.4.3 FW releases
 
 ### Changed
 - @trezor/utxo-lib dependency from monorepo: https://github.com/trezor/trezor-suite/tree/develop/packages/utxo-lib
+- major refactor of trezor-link dependency https://github.com/trezor/trezor-link/pull/44
+- removed multiple instances of messages.json (protobuf descriptors). connect now holds only one set of descriptors and should keep backwards compatibility with older devices.
+
+### Fixed
+- Doge: fees calculation
 
 # 8.2.2
 
