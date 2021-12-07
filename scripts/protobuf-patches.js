@@ -344,19 +344,6 @@ const SKIP = [
     'WebAuthnRemoveResidentCredential',
     'WebAuthnCredential',
     'WebAuthnCredentials',
-    'wire_in',
-    'wire_out',
-    'wire_debug_in',
-    'wire_debug_out',
-    'wire_tiny',
-    'wire_bootloader',
-    'wire_no_fsm',
-    'bitcoin_only',
-    'has_bitcoin_only_values',
-    'unstable',
-    'wire_type',
-    'experimental',
-    'include_in_bitcoin_only',
 ];
 
 module.exports = {
