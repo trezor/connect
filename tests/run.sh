@@ -76,13 +76,8 @@ show_usage() {
   echo "  -s       actual test script. default: 'yarn test:integration'"
 }
 
-# Find the latest released firmware version
-RELEASED_FIRMWARE=$(curl https://raw.githubusercontent.com/trezor/webwallet-data/master/firmware/2/releases.json | tac | tac | grep -m1 -o -P '(?<="version\": \[).*(?=\])' | sed 's/, /./g')
-echo "Detected released firmware: $RELEASED_FIRMWARE"
-echo $RELEASED_FIRMWARE
-
 # default options
-FIRMWARE=$RELEASED_FIRMWARE
+FIRMWARE=""
 INCLUDED_METHODS=""
 EXCLUDED_METHODS=""
 DOCKER=true
