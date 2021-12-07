@@ -1,6 +1,10 @@
+import releases2 from '@trezor/connect-common/files/firmware/2/releases.json';
+
 // firmware should be always set. This tests actually tests the fact that
 // we are indeed testing with the firmware version we believe we do.
-const [major, minor, patch] = process.env.TESTS_FIRMWARE.split('.');
+const [major, minor, patch] = (process.env.TESTS_FIRMWARE || releases2[0].version.join('.')).split(
+    '.',
+);
 
 // if custom build is used, we ignore firmware version numbers
 const customFirmwareBuild =

@@ -1,4 +1,6 @@
 import semver from 'semver';
+import releases2 from '@trezor/connect-common/files/firmware/2/releases.json';
+
 import { Controller } from './websocket-client';
 import TrezorConnect from '../src/js/index';
 import * as UI from '../src/js/constants/ui';
@@ -11,7 +13,8 @@ const MNEMONICS = {
         'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
 };
 
-const firmware = process.env.TESTS_FIRMWARE;
+// use currently released model 2 firmware if not specified otherwise
+const firmware = process.env.TESTS_FIRMWARE || releases2[0].version.join('.');
 
 const wait = ms =>
     new Promise(resolve => {
