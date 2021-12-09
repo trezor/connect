@@ -4,6 +4,7 @@
 import EventEmitter from 'events';
 import TrezorLink from 'trezor-link';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
+import fetch from 'cross-fetch';
 import { TRANSPORT, DEVICE, ERRORS } from '../constants';
 import DescriptorStream from './DescriptorStream';
 import type { DeviceDescriptorDiff } from './DescriptorStream';
@@ -81,10 +82,6 @@ export default class DeviceList extends EventEmitter {
                     BridgeV2.setFetch(fetchWithSignal, true);
                 }
             } else if (typeof window === 'undefined') {
-                // eslint-disable-next-line global-require
-                const fetch = require('node-fetch');
-
-                // todo: maybe pass fetch param from env/node, env/browser, etc..
                 BridgeV2.setFetch(fetch, true);
             }
 
