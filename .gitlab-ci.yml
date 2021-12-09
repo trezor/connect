@@ -349,3 +349,17 @@ test binance nightly:
   extends: .test-nightly
   variables:
     TESTS_INCLUDED_METHODS: "binanceSignTransaction"
+
+# Example
+example-node:
+  image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
+  stage: test
+  dependencies:
+    - "setup environment"
+  before_script:
+    - nix-shell --run "yarn"
+  script:
+    - nix-shell --run "yarn build:npm-extended"
+    - /trezor-user-env/run.sh &
+    - sleep 10
+    - yarn babel-node ./examples/node/index.js
