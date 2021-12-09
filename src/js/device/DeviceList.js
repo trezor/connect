@@ -80,6 +80,12 @@ export default class DeviceList extends EventEmitter {
                         fetch(args, { ...options, signal });
                     BridgeV2.setFetch(fetchWithSignal, true);
                 }
+            } else if (typeof window === 'undefined') {
+                // eslint-disable-next-line global-require
+                const fetch = require('node-fetch');
+
+                // todo: maybe pass fetch param from env/node, env/browser, etc..
+                BridgeV2.setFetch(fetch, true);
             }
 
             transports.push(bridge);
