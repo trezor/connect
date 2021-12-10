@@ -3,7 +3,10 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
-import { transformAuxiliaryData } from './helpers/cardanoAuxiliaryData';
+import {
+    modifyAuxiliaryDataForBackwardsCompatibility,
+    transformAuxiliaryData,
+} from './helpers/cardanoAuxiliaryData';
 import { transformCertificate } from './helpers/cardanoCertificate';
 import type { CertificateWithPoolOwnersAndRelays } from './helpers/cardanoCertificate';
 import { transformOutput } from './helpers/cardanoOutputs';
@@ -322,7 +325,15 @@ export default class CardanoSignTransaction extends AbstractMethod {
         }
         // auxiliary data
         let auxiliaryDataSupplement: CardanoAuxiliaryDataSupplement;
-        if (hasAuxiliaryData) {
+        if (this.params.auxiliaryData) {
+            const { catalyst_registration_parameters } = this.params.auxiliaryData;
+            if (catalyst_registration_parameters) {
+                this.params.auxiliaryData = modifyAuxiliaryDataForBackwardsCompatibility(
+                    this.device,
+                    this.params.auxiliaryData,
+                );
+            }
+
             const { message } = await typedCall(
                 'CardanoTxAuxiliaryData',
                 'CardanoTxAuxiliaryDataSupplement',
@@ -382,7 +393,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
     async _sign_tx_legacy(): Promise<CardanoSignedTxData> {
         const typedCall = this.device.getCommands().typedCall.bind(this.device.getCommands());
 
-        const legacyParams = toLegacyParams(this.params);
+        const legacyParams = toLegacyParams(this.device, this.params);
 
         let serializedTx = '';
 

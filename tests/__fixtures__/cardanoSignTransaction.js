@@ -816,7 +816,7 @@ export default {
         },
 
         {
-            description: 'signCatalystVotingRegistration',
+            description: 'signCatalystVotingRegistrationWithPath',
             params: {
                 inputs: [SAMPLE_INPUTS.shelley_input],
                 outputs: [SAMPLE_OUTPUTS.simple_shelley_output],
@@ -828,8 +828,58 @@ export default {
                             '1af8fa0b754ff99253d983894e63a2b09cbb56c833ba18c3384210163f63dcfc',
                         stakingPath: "m/1852'/1815'/0'/2/0",
                         rewardAddressParameters: {
-                            addressType: 0,
-                            path: "m/1852'/1815'/0'/0/0",
+                            addressType: CardanoAddressType.REWARD,
+                            path: "m/1852'/1815'/0'/2/0",
+                        },
+                        nonce: '22634813',
+                    },
+                },
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,
+            },
+            result: {
+                hash: '7ab0767e0142e1d53b534f5bad053273709ad5ca4037aef20f205fffd44a8463',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            'bab6bd91c481ee822258e2a7d31a33bfc40ddbfb09147f19f07de690eeae431d2349752f9f77c58df25a68310f7a15f56d12fab5acd20c5ccaded6c263f8240c',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: {
+                    type: 1,
+                    auxiliaryDataHash:
+                        'b712ad07750007ba68d7558abeeab103b36a09133062ba9fa6611953085d9137',
+                    catalystSignature:
+                        'ed3335aead65c665ceee21f2549c0ef4c9137b94c13fa642bea4a2c24e44e7f1ee06b47e14151efcf8d5569a404260c01f277b3ba516b5826a15c8ba2c97f70c',
+                },
+            },
+            legacyResults: [
+                {
+                    // older FW doesn't support auxiliary data
+                    rules: ['<2.3.7'],
+                    payload: false,
+                },
+            ],
+        },
+
+        {
+            description: 'signCatalystVotingRegistrationWithStakingPath',
+            params: {
+                inputs: [SAMPLE_INPUTS.shelley_input],
+                outputs: [SAMPLE_OUTPUTS.simple_shelley_output],
+                fee: FEE,
+                ttl: TTL,
+                auxiliaryData: {
+                    catalystRegistrationParameters: {
+                        votingPublicKey:
+                            '1af8fa0b754ff99253d983894e63a2b09cbb56c833ba18c3384210163f63dcfc',
+                        stakingPath: "m/1852'/1815'/0'/2/0",
+                        rewardAddressParameters: {
+                            addressType: CardanoAddressType.REWARD,
                             stakingPath: "m/1852'/1815'/0'/2/0",
                         },
                         nonce: '22634813',
@@ -840,22 +890,22 @@ export default {
                 signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,
             },
             result: {
-                hash: '839a587109358e0aa81b8fb3d5fa74665fac303425ec544a4db7f6ba4e882dff',
+                hash: '7ab0767e0142e1d53b534f5bad053273709ad5ca4037aef20f205fffd44a8463',
                 witnesses: [
                     {
                         type: 1,
                         pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
                         signature:
-                            '187ecd899e01390272a8d8289088199b3453945fa076819b5b5df60c325c10315477cc801044dfb553e780a300d79627ef5c09e64c6f953cc33bbc59152c9002',
+                            'bab6bd91c481ee822258e2a7d31a33bfc40ddbfb09147f19f07de690eeae431d2349752f9f77c58df25a68310f7a15f56d12fab5acd20c5ccaded6c263f8240c',
                         chainCode: null,
                     },
                 ],
                 auxiliaryDataSupplement: {
                     type: 1,
                     auxiliaryDataHash:
-                        'a943e9166f1bb6d767b175384d3bd7d23645170df36fc1861fbf344135d8e120',
+                        'b712ad07750007ba68d7558abeeab103b36a09133062ba9fa6611953085d9137',
                     catalystSignature:
-                        '74f27d877bbb4a5fc4f7c56869905c11f70bad0af3de24b23afaa1d024e750930f434ecc4b73e5d1723c2cb8548e8bf6098ac876487b3a6ed0891cb76994d409',
+                        'ed3335aead65c665ceee21f2549c0ef4c9137b94c13fa642bea4a2c24e44e7f1ee06b47e14151efcf8d5569a404260c01f277b3ba516b5826a15c8ba2c97f70c',
                 },
             },
             legacyResults: [

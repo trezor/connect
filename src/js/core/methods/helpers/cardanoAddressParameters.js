@@ -2,7 +2,11 @@
 import { validateParams } from './paramsValidator';
 import { validatePath } from '../../../utils/pathUtils';
 
+import { ERRORS } from '../../../constants';
+import type { IDevice } from '../../../device/Device';
+
 import type { CardanoAddressParametersType } from '../../../types/trezor/protobuf';
+import { CardanoAddressType } from '../../../types/networks/cardano';
 import type { CardanoAddressParameters } from '../../../types/networks/cardano';
 
 export const validateAddressParameters = (addressParameters: CardanoAddressParameters) => {
@@ -27,6 +31,41 @@ export const validateAddressParameters = (addressParameters: CardanoAddressParam
             { name: 'certificateIndex', type: 'number', obligatory: true },
         ]);
     }
+};
+
+export const modifyAddressParametersForBackwardsCompatibility = (
+    device: IDevice,
+    address_parameters: CardanoAddressParametersType,
+): CardanoAddressParametersType => {
+    if (address_parameters.address_type === CardanoAddressType.REWARD) {
+        // older firmware expects reward address path in path field instead of staking path
+        let { address_n, address_n_staking } = address_parameters;
+
+        if (address_n.length > 0 && address_n_staking.length > 0) {
+            throw ERRORS.TypedError(
+                'Method_InvalidParameter',
+                `Only stakingPath is allowed for CardanoAddressType.REWARD`,
+            );
+        }
+
+        if (device.atLeast(['0', '2.4.3'])) {
+            if (address_n.length > 0) {
+                address_n_staking = address_n;
+                address_n = [];
+            }
+        } else if (address_n_staking.length > 0) {
+            address_n = address_n_staking;
+            address_n_staking = [];
+        }
+
+        return {
+            ...address_parameters,
+            address_n,
+            address_n_staking,
+        };
+    }
+
+    return address_parameters;
 };
 
 export const addressParametersToProto = (
