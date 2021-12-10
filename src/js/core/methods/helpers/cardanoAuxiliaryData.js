@@ -1,7 +1,13 @@
 /* @flow */
-import { addressParametersToProto, validateAddressParameters } from './cardanoAddressParameters';
+import {
+    addressParametersToProto,
+    modifyAddressParametersForBackwardsCompatibility,
+    validateAddressParameters,
+} from './cardanoAddressParameters';
 import { validateParams } from './paramsValidator';
 import { validatePath } from '../../../utils/pathUtils';
+
+import type { IDevice } from '../../../device/Device';
 
 import type {
     CardanoTxAuxiliaryData,
@@ -53,4 +59,25 @@ export const transformAuxiliaryData = (
         hash: auxiliaryData.hash,
         catalyst_registration_parameters: catalystRegistrationParameters,
     };
+};
+
+export const modifyAuxiliaryDataForBackwardsCompatibility = (
+    device: IDevice,
+    auxiliary_data: CardanoTxAuxiliaryData,
+): CardanoTxAuxiliaryData => {
+    const { catalyst_registration_parameters } = auxiliary_data;
+    if (catalyst_registration_parameters) {
+        catalyst_registration_parameters.reward_address_parameters =
+            modifyAddressParametersForBackwardsCompatibility(
+                device,
+                catalyst_registration_parameters.reward_address_parameters,
+            );
+
+        return {
+            ...auxiliary_data,
+            catalyst_registration_parameters,
+        };
+    }
+
+    return auxiliary_data;
 };
