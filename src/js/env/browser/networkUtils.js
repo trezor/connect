@@ -1,6 +1,6 @@
 /* @flow */
 
-import 'cross-fetch';
+import fetch from 'cross-fetch';
 
 export const httpRequest = async (url: string, type: string = 'text'): any => {
     const response = await fetch(url, { credentials: 'same-origin' });
