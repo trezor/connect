@@ -1,6 +1,7 @@
 /* @flow */
 import * as cbor from 'cbor-web';
 import { ERRORS } from '../../../constants';
+import type { IDevice } from '../../../device/Device';
 import type {
     CardanoCatalystRegistrationParametersType,
     CardanoTxWithdrawalType,
@@ -21,6 +22,7 @@ import type {
     CardanoAuxiliaryDataSupplement,
 } from '../../../types/networks/cardano';
 import type { CardanoSignTransactionParams } from '../CardanoSignTransaction';
+import { modifyAuxiliaryDataForBackwardsCompatibility } from './cardanoAuxiliaryData';
 
 const METADATA_HASH_KEY = 7;
 
@@ -69,6 +71,7 @@ type CardanoSignTransactionLegacyParams = {
 };
 
 export const toLegacyParams = (
+    device: IDevice,
     params: CardanoSignTransactionParams,
 ): CardanoSignTransactionLegacyParams => ({
     inputs: params.inputsWithPath.map(({ input, path }) => ({ ...input, address_n: path })),
@@ -116,7 +119,8 @@ export const toLegacyParams = (
         ? {
               catalyst_registration_parameters: params.auxiliaryData
                   .catalyst_registration_parameters
-                  ? params.auxiliaryData.catalyst_registration_parameters
+                  ? modifyAuxiliaryDataForBackwardsCompatibility(device, params.auxiliaryData)
+                        .catalyst_registration_parameters
                   : undefined,
           }
         : undefined,
