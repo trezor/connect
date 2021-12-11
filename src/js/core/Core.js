@@ -657,9 +657,9 @@ export const onCall = async (message: CoreMessage) => {
 
         if (response) {
             if (method.name === 'rebootToBootloader' && response.success) {
-                // trezord may not detect auto reboot
-                // wait for device to switch to bootloader
-                await resolveAfter(501);
+                // Wait for device to switch to bootloader
+                // This delay is crucial see https://github.com/trezor/trezor-firmware/issues/1983
+                await resolveAfter(1000);
                 // call Device.run with empty function to fetch new Features
                 // (acquire > Initialize > nothing > release)
                 await device.run(() => Promise.resolve(), { skipFinalReload: true });
