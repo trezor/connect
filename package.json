@@ -66,6 +66,7 @@
         "@trezor/blockchain-link": "^1.0.17",
         "@trezor/connect-common": "^0.0.3",
         "@trezor/rollout": "^1.2.0",
+        "@trezor/transport": "1.0.1-beta.1",
         "@trezor/utxo-lib": "1.0.0-beta.10",
         "assert": "^2.0.0",
         "babel-eslint": "^10.1.0",
@@ -111,7 +112,6 @@
         "style-loader": "3.2.1",
         "terser-webpack-plugin": "5.2.4",
         "tiny-worker": "^2.3.0",
-        "trezor-link": "2.0.0-beta.6",
         "typescript": "^4.4.3",
         "uglify-es": "3.3.9",
         "util": "^0.12.3",
@@ -130,13 +130,13 @@
         "@trezor/blockchain-link": "^1.0.17",
         "@trezor/connect-common": "^0.0.3",
         "@trezor/rollout": "^1.2.0",
+        "@trezor/transport": "1.0.1-beta.1",
         "@trezor/utxo-lib": "1.0.0-beta.10",
         "bignumber.js": "^9.0.1",
         "bowser": "^2.11.0",
         "cbor-web": "^7.0.6",
         "keccak": "^3.0.2",
         "parse-uri": "^1.0.3",
-        "tiny-worker": "^2.3.0",
-        "trezor-link": "2.0.0-beta.6"
+        "tiny-worker": "^2.3.0"
     }
 }

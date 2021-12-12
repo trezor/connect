@@ -2,8 +2,8 @@
 /* @flow */
 
 import EventEmitter from 'events';
-import TrezorLink from 'trezor-link';
-import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
+import TrezorLink from '@trezor/transport';
+import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from '@trezor/transport';
 import fetch from 'cross-fetch';
 import { TRANSPORT, DEVICE, ERRORS } from '../constants';
 import DescriptorStream from './DescriptorStream';

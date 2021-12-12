@@ -1,7 +1,7 @@
 /* @flow */
 
 import EventEmitter from 'events';
-import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
+import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from '@trezor/transport';
 import DeviceCommands from './DeviceCommands';
 
 import type {

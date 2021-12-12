@@ -1800,6 +1800,16 @@
     cross-fetch "^3.0.6"
     runtypes "^5.0.1"
 
+"@trezor/transport@1.0.1-beta.1":
+  version "1.0.1-beta.1"
+  resolved "https://registry.yarnpkg.com/@trezor/transport/-/transport-1.0.1-beta.1.tgz#09b9d95fe80f4c7f4101b4039bf34f175c88cb42"
+  integrity sha512-6FXf692gRM/1ySIfs4gnwLWgsAmk+ldEeqG+Lg7NnkIsRyz3g++1mzC4oUlk8gBFqSOFJwK9mWkTb87Y6b/Z6A==
+  dependencies:
+    bytebuffer "^5.0.1"
+    json-stable-stringify "^1.0.1"
+    long "^4.0.0"
+    protobufjs "^6.11.2"
+
 "@trezor/utxo-lib@1.0.0-beta.10":
   version "1.0.0-beta.10"
   resolved "https://registry.yarnpkg.com/@trezor/utxo-lib/-/utxo-lib-1.0.0-beta.10.tgz#93f16ce607d94e50f8338a75ca8a3710f106c20e"
@@ -9603,16 +9613,6 @@ tr46@^2.0.2:
   integrity sha512-3n1qG+/5kg+jrbTzwAykB5yRYtQCTqOGKq5U5PE3b0a1/mzo6snDhjGS0zJVJunO0NrT3Dg1MLy5TjWP/UJppg==
   dependencies:
     punycode "^2.1.1"
-
-trezor-link@2.0.0-beta.6:
-  version "2.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/trezor-link/-/trezor-link-2.0.0-beta.6.tgz#e727890a539ee1b6ff109a0227c38328d42d95c7"
-  integrity sha512-DwmbKV434Vx7RmuPxcZzABTLFK5n5mZ+5+UjQ8tA0lLx41NstRJ+/OKO0b8qMJOv1ZnoQ87dfu5LtI7o9EXKuw==
-  dependencies:
-    bytebuffer "^5.0.1"
-    json-stable-stringify "^1.0.1"
-    long "^4.0.0"
-    protobufjs "^6.11.2"
 
 trim-right@^1.0.1:
   version "1.0.1"
