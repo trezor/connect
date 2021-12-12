@@ -91,6 +91,7 @@ export default class StellarSignTransaction extends AbstractMethod {
             this.params.transaction,
         );
 
+        console.log('repsonse', response);
         return {
             publicKey: response.public_key,
             signature: response.signature,
