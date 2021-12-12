@@ -168,40 +168,74 @@ export default {
     setup: {
         mnemonic: commonFixtures.setup.mnemonic,
     },
-    tests: commonFixtures.tests.map(({ name, parameters, result }) => ({
-        description: name,
-        params: {
-            path: parameters.address_n,
-            networkPassphrase: parameters.network_passphrase,
-            transaction: {
-                source: parameters.tx.source_account,
-                fee: parameters.tx.fee,
-                sequence: parameters.tx.sequence_number,
-                timebounds: {
-                    minTime: parameters.tx.timebounds_start,
-                    maxTime: parameters.tx.timebounds_end,
+    tests: [
+        ...commonFixtures.tests.map(({ name, parameters, result }) => ({
+            description: name,
+            params: {
+                path: parameters.address_n,
+                networkPassphrase: parameters.network_passphrase,
+                transaction: {
+                    source: parameters.tx.source_account,
+                    fee: parameters.tx.fee,
+                    sequence: parameters.tx.sequence_number,
+                    timebounds: {
+                        minTime: parameters.tx.timebounds_start,
+                        maxTime: parameters.tx.timebounds_end,
+                    },
+                    memo: {
+                        type: Enum_StellarMemoType[parameters.tx.memo_type],
+                        text: parameters.tx.memo_text,
+                        id: parameters.tx.memo_id,
+                        hash: parameters.tx.memo_hash,
+                    },
+                    operations: parameters.operations.flatMap(transformOperation),
                 },
-                memo: {
-                    type: Enum_StellarMemoType[parameters.tx.memo_type],
-                    text: parameters.tx.memo_text,
-                    id: parameters.tx.memo_id,
-                    hash: parameters.tx.memo_hash,
+            },
+            result: {
+                publicKey: result.public_key,
+                signature: Buffer.from(result.signature, 'base64').toString('hex'),
+            },
+            legacyResults: legacyResultsMap[name]
+                ? legacyResultsMap[name]
+                : [
+                      {
+                          // stellar has required update
+                          rules: ['<2.3.0'],
+                          payload: false,
+                      },
+                  ],
+        })),
+        {
+            description: 'Sequence is over Number.MAX_SAFE_INTEGER and is sent as string',
+            mnemonic: 'bridge endless life will season cigar crash relief give syrup annual inner',
+            params: {
+                path: "m/44'/148'/0'",
+                networkPassphrase: 'Public Global Stellar Network ; September 2015',
+                transaction: {
+                    source: 'GDIO5QKU6PBJ6OCML6XCU3EBG4LINOVXPMNJJFMAWXDZIKMGJP7JH2UL',
+                    fee: 100,
+                    sequence: '166054873161269249',
+                    memo: {
+                        type: 0,
+                    },
+                    timebounds: {
+                        minTime: 0,
+                        maxTime: 1639135778,
+                    },
+                    operations: [
+                        {
+                            type: 'manageData',
+                            name: 'hello',
+                        },
+                    ],
                 },
-                operations: parameters.operations.flatMap(transformOperation),
+            },
+            result: {
+                signature: Buffer.from(
+                    'Xwqw6xRo2pP7mUE4ybQxvYy7T4tYHq8YuoIlZ5UqnyM70+8PIf/wKFGzFY2kBVCoScYQlBzR9lopH3VoHiL+DA==',
+                    'base64',
+                ).toString('hex'),
             },
         },
-        result: {
-            publicKey: result.public_key,
-            signature: Buffer.from(result.signature, 'base64').toString('hex'),
-        },
-        legacyResults: legacyResultsMap[name]
-            ? legacyResultsMap[name]
-            : [
-                  {
-                      // stellar has required update
-                      rules: ['<2.3.0'],
-                      payload: false,
-                  },
-              ],
-    })),
+    ],
 };
