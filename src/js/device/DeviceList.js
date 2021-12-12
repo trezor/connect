@@ -4,6 +4,7 @@
 import EventEmitter from 'events';
 import TrezorLink from 'trezor-link';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
+import fetch from 'cross-fetch';
 import { TRANSPORT, DEVICE, ERRORS } from '../constants';
 import DescriptorStream from './DescriptorStream';
 import type { DeviceDescriptorDiff } from './DescriptorStream';
@@ -80,6 +81,8 @@ export default class DeviceList extends EventEmitter {
                         fetch(args, { ...options, signal });
                     BridgeV2.setFetch(fetchWithSignal, true);
                 }
+            } else if (typeof window === 'undefined') {
+                BridgeV2.setFetch(fetch, true);
             }
 
             transports.push(bridge);

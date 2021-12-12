@@ -1,10 +1,10 @@
 /* @flow */
 /* eslint-disable global-require */
 
-import nodeFetch from 'node-fetch';
+import fetch from 'cross-fetch';
 
 if (global && typeof global.fetch !== 'function') {
-    global.fetch = nodeFetch;
+    global.fetch = fetch;
 }
 
 export const httpRequest = (url: string, _type: string): any => {

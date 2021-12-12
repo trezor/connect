@@ -51,7 +51,8 @@
         "flow": "flow check .",
         "typescript": "tsc --project src/ts/types/tsconfig.json",
         "lint": "eslint .",
-        "lint:fix": "eslint --fix ."
+        "lint:fix": "eslint --fix .",
+        "example:node": "./tests/run.sh -s 'yarn babel-node ./examples/node/index.js'"
     },
     "devDependencies": {
         "@babel/cli": "^7.15.7",
@@ -103,7 +104,6 @@
         "less-plugin-autoprefix": "^2.0.0",
         "less-plugin-clean-css": "^1.5.1",
         "mini-css-extract-plugin": "2.3.0",
-        "node-fetch": "^2.6.1",
         "parse-uri": "^1.0.3",
         "prettier": "^2.4.1",
         "process": "^0.11.10",
@@ -124,7 +124,7 @@
     "dependencies": {
         "@babel/runtime": "^7.15.4",
         "events": "^3.3.0",
-        "whatwg-fetch": "^3.6.2"
+        "cross-fetch": "^3.1.4"
     },
     "extendedDependencies": {
         "@trezor/blockchain-link": "^1.0.17",
@@ -135,7 +135,6 @@
         "bowser": "^2.11.0",
         "cbor-web": "^7.0.6",
         "keccak": "^3.0.2",
-        "node-fetch": "^2.6.1",
         "parse-uri": "^1.0.3",
         "tiny-worker": "^2.3.0",
         "trezor-link": "2.0.0-beta.6"
