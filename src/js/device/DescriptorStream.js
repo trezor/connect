@@ -3,7 +3,7 @@
 // This file reads descriptor with very little logic, and sends it to layers above
 
 import EventEmitter from 'events';
-import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from 'trezor-link';
+import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from '@trezor/transport';
 import * as TRANSPORT from '../constants/transport';
 import * as DEVICE from '../constants/device';
 

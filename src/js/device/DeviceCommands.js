@@ -1,7 +1,7 @@
 /* @flow */
 
 import randombytes from 'randombytes';
-import type { Transport } from 'trezor-link';
+import type { Transport } from '@trezor/transport';
 import { DEVICE, ERRORS, NETWORK } from '../constants';
 
 import * as hdnodeUtils from '../utils/hdnodeUtils';
