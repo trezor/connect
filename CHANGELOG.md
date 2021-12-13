@@ -1,4 +1,17 @@
-# 8.2.4 (not released)
+# 8.2.4
+
+# Fixed
+
+- Communication with trezor bridge in node.js environment
+- Race condition for RebootToBootloader message
+- Encoding protobuf messages which contain number (sent as string) which is over Number.MAX_SAVE_INTEGER in browser environment
+- Stellar: convert manageBuyOffer.buyAmount to manageBuyOffer.amount
+- Stellar: transformTransaction, convert transaction fee to number
+- Stellar: transformTransaction, when the memo type is TEXT, convert memo.value to string
+- Cardano: fix catalyst reward address backwards compatibility
+
+# Changed
+- trezor-link was replaced with @trezor/transport
 
 # 8.2.3
 
