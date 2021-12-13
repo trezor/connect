@@ -163,7 +163,7 @@ const transformTransaction = (path, transaction) => {
         networkPassphrase: transaction.networkPassphrase,
         transaction: {
             source: transaction.source,
-            fee: transaction.fee,
+            fee: Number.parseInt(transaction.fee, 10),
             sequence: transaction.sequence,
             memo: transformMemo(transaction.memo),
             timebounds: transformTimebounds(transaction.timeBounds),
