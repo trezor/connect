@@ -64,7 +64,7 @@ const transformAmount = amount => new BigNumber(amount).times(10000000).toString
 const transformMemo = memo => {
     switch (memo.type) {
         case StellarSdk.MemoText:
-            return { type: 1, text: memo.value };
+            return { type: 1, text: memo.value.toString('utf-8') };
         case StellarSdk.MemoID:
             return { type: 2, id: memo.value };
         case StellarSdk.MemoHash:
