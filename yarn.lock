@@ -1792,18 +1792,18 @@
   resolved "https://registry.yarnpkg.com/@trezor/connect-common/-/connect-common-0.0.3.tgz#d136453d259d24f9200daf72d0184594d56e92e2"
   integrity sha512-oc4K/Ve2e1o3R1M0QAexLYN7aOepeSlcO5NVP/cfxBA+36cApZrRSy6kbs3OB2uc15tua5qkmYEDpJ3QSnZarg==
 
-"@trezor/rollout@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@trezor/rollout/-/rollout-1.2.0.tgz#827316debc5cf2e8af2210900eb49540ea2753d1"
-  integrity sha512-R8/M8PsGQUndHlyETZ5+mPOveaJSTlEgmAovY7Ifm3quvk8nV5ByWL1LUJ8IYUgir209EWDWSKWfa5RWoon8IA==
+"@trezor/rollout@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@trezor/rollout/-/rollout-1.2.1.tgz#47c81186768bbb0514d27b386d92a719c290ab5e"
+  integrity sha512-BDYtPE+rl4QKilGzb3lGxv17+lA5rou04zr1DdWaDqazyvfPW0fj46us4A4WLWptGVL+gfXtn0ZGqgsxHLBm7A==
   dependencies:
-    cross-fetch "^3.0.6"
+    cross-fetch "^3.1.4"
     runtypes "^5.0.1"
 
-"@trezor/transport@1.0.1-beta.1":
-  version "1.0.1-beta.1"
-  resolved "https://registry.yarnpkg.com/@trezor/transport/-/transport-1.0.1-beta.1.tgz#09b9d95fe80f4c7f4101b4039bf34f175c88cb42"
-  integrity sha512-6FXf692gRM/1ySIfs4gnwLWgsAmk+ldEeqG+Lg7NnkIsRyz3g++1mzC4oUlk8gBFqSOFJwK9mWkTb87Y6b/Z6A==
+"@trezor/transport@1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@trezor/transport/-/transport-1.0.1.tgz#bf0d11a44d1220fe1486e7679370920f9f60afa4"
+  integrity sha512-JWjA3QlVhcn6zPJFDt80Ayqj5+zrY9m9jzWVd9sceFKYTUuCrsuhze1ho0CBlXLm8GF2/CzFijGbo6O93aL23Q==
   dependencies:
     bytebuffer "^5.0.1"
     json-stable-stringify "^1.0.1"
@@ -3648,7 +3648,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4, create-hmac@^1.1.7:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-cross-fetch@^3.0.6, cross-fetch@^3.1.4:
+cross-fetch@^3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.4.tgz#9723f3a3a247bf8b89039f3a380a9244e8fa2f39"
   integrity sha512-1eAtFWdIubi6T4XPy6ei9iUFoKpUkIF971QLN8lIvvvwueI65+Nw5haMNKUwfJxabqlIIDODJKGrQ66gxC0PbQ==
