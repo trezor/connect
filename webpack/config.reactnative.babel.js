@@ -6,6 +6,9 @@ import { SRC, JS_SRC, DIST, LIB_NAME } from './constants';
 
 module.exports = {
     mode: 'production',
+    stats: {
+        children: true,
+    },
     entry: {
         'trezor-connect': `${JS_SRC}index.js`,
     },
@@ -17,7 +20,6 @@ module.exports = {
         libraryTarget: 'umd',
         libraryExport: 'default',
     },
-    stats: { children: true },
     externals: {
         'react-native': 'commonjs react-native',
         'react-native-threads': 'commonjs react-native-threads',

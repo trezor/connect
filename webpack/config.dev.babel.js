@@ -15,10 +15,10 @@ import {
 
 module.exports = {
     target: 'web',
+    mode: 'development',
     stats: {
         children: true,
     },
-    mode: 'development',
     devtool: 'inline-source-map',
     entry: {
         'trezor-connect': `${JS_SRC}index.js`,
@@ -112,13 +112,8 @@ module.exports = {
         mainFields: ['browser', 'module', 'main'],
         fallback: {
             fs: false, // ignore "fs" import in fastxpub (hd-wallet)
-            path: false, // ignore "path" import in protobufjs-old-fixed-webpack (dependency of trezor-link)
-            net: false, // ignore "net" import in "ripple-lib"
-            tls: false, // ignore "tls" imports in "ripple-lib"
-            vm: false, // ignore "vm" imports in "asn1.js@4.10.1" > crypto-browserify"
             https: false, // ignore "https" import in "ripple-lib"
-            http: false, // ignore "http" import in "ripple-lib"
-            util: require.resolve('util'), // required by "ripple-lib"
+            vm: false, // ignore "vm" imports in "asn1.js@4.10.1" > crypto-browserify"
             assert: require.resolve('assert'), // required by multiple dependencies
             crypto: require.resolve('crypto-browserify'), // required by multiple dependencies
             stream: require.resolve('stream-browserify'), // required by utxo-lib and keccak
