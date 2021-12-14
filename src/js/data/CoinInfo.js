@@ -338,30 +338,3 @@ export const getUniqueNetworks = (networks: Array<?CoinInfo>): CoinInfo[] =>
 
 export const getAllNetworks = (): CoinInfo[] =>
     [].concat(bitcoinNetworks).concat(ethereumNetworks).concat(miscNetworks);
-
-export const getCoinInfoByCapability = (capabilities: string[]): CoinInfo[] => {
-    const networks = capabilities.reduce((result: Array<?CoinInfo>, c: string) => {
-        if (c === 'Capability_Bitcoin') {
-            return result.concat(getCoinInfo('Bitcoin')).concat(getCoinInfo('Testnet'));
-        }
-        if (c === 'Capability_Bitcoin_like') {
-            return result.concat(bitcoinNetworks);
-        }
-        if (c === 'Capability_Binance') {
-            return result.concat(getCoinInfo('BNB'));
-        }
-        if (c === 'Capability_Ethereum') {
-            return result.concat(ethereumNetworks);
-        }
-        if (c === 'Capability_Ripple') {
-            return result.concat(getCoinInfo('xrp')).concat(getCoinInfo('txrp'));
-        }
-        const [, networkName] = c.split('_');
-        if (typeof networkName === 'string') {
-            return result.concat(getCoinInfo(networkName));
-        }
-
-        return result;
-    }, []);
-    return getUniqueNetworks(networks);
-};
