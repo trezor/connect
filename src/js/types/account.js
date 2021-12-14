@@ -1,7 +1,6 @@
 /* @flow */
 import type { TxInputType, TxOutputType, CardanoDerivationType } from './trezor/protobuf';
 import type { VinVout, BlockbookTransaction } from './backend/transactions';
-import type { CardanoInput, CardanoOutput } from './networks/cardano';
 
 export type DiscoveryAccountType = 'p2pkh' | 'p2sh' | 'p2tr' | 'p2wpkh';
 
@@ -251,33 +250,6 @@ export type PrecomposedTransaction =
           transaction: {
               inputs: TxInputType[],
               outputs: TxOutputType[],
-              outputsPermutation: number[],
-          },
-      };
-
-export type PrecomposedTransactionCardano =
-    | {
-          type: 'error',
-          error: string,
-      }
-    | {
-          type: 'nonfinal',
-          max: string | typeof undefined,
-          totalSpent: string, // all the outputs, no fee, no change
-          fee: string,
-          feePerByte: string,
-          bytes: number,
-      }
-    | {
-          type: 'final',
-          max: string | typeof undefined,
-          totalSpent: string, // all the outputs, no fee, no change
-          fee: string,
-          feePerByte: string,
-          bytes: number,
-          transaction: {
-              inputs: CardanoInput[],
-              outputs: CardanoOutput[],
               outputsPermutation: number[],
           },
       };
