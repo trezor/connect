@@ -2727,7 +2727,7 @@
             "decimals": 6,
             "name": "Cardano",
             "shortcut": "ADA",
-            "slip44": 1815,
+            "slip44": 1,
             "support": {
                 "connect": true,
                 "suite": false,
