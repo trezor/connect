@@ -27,6 +27,10 @@ export const getAccountAddressN = (
     if (coinInfo.type === 'bitcoin') {
         return [toHardened(options.purpose), toHardened(options.coinType), toHardened(index)];
     }
+    // see: https://github.com/cardano-foundation/CIPs/blob/master/CIP-1852/CIP-1852.md
+    if (coinInfo.shortcut === 'ADA' || coinInfo.shortcut === 'tADA') {
+        return [toHardened(1852), toHardened(options.coinType), toHardened(index)];
+    }
     if (coinInfo.type === 'ethereum') {
         return [toHardened(options.purpose), toHardened(options.coinType), toHardened(0), 0, index];
     }
@@ -99,3 +103,6 @@ export const getPublicKeyLabel = (path: number[], coinInfo: ?BitcoinNetworkInfo)
     }
     return prefix;
 };
+
+export const isUtxoBased = (coinInfo: CoinInfo) =>
+    coinInfo.type === 'bitcoin' || coinInfo.shortcut === 'ADA' || coinInfo.shortcut === 'tADA';

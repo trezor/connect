@@ -77,6 +77,8 @@ export const getUnavailableCapabilities = (
         }
         // misc
         if (info.shortcut === 'BNB') return !capabilities.includes('Capability_Binance');
+        if (info.shortcut === 'ADA' || info.shortcut === 'tADA')
+            return !capabilities.includes('Capability_Cardano');
         if (info.shortcut === 'XRP' || info.shortcut === 'tXRP')
             return !capabilities.includes('Capability_Ripple');
         return !capabilities.includes(`Capability_${info.name}`);

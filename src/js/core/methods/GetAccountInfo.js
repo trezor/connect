@@ -3,7 +3,7 @@ import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getSerializedPath } from '../../utils/pathUtils';
-import { getAccountLabel } from '../../utils/accountUtils';
+import { getAccountLabel, isUtxoBased } from '../../utils/accountUtils';
 import { resolveAfter } from '../../utils/promiseUtils';
 import { getCoinInfo } from '../../data/CoinInfo';
 
@@ -18,6 +18,8 @@ import type {
     AccountInfo,
     AccountUtxo,
 } from '../../types/account';
+import type { CardanoDerivationType } from '../../types/trezor/protobuf';
+import { Enum_CardanoDerivationType } from '../../types/trezor/protobuf';
 
 type Request = GetAccountInfoParams & { address_n: number[], coinInfo: CoinInfo };
 type Params = Request[];
@@ -31,8 +33,11 @@ export default class GetAccountInfo extends AbstractMethod {
 
     discovery: Discovery | typeof undefined = undefined;
 
+    derivationType: ?CardanoDerivationType;
+
     constructor(message: CoreMessage) {
         super(message);
+
         this.requiredPermissions = ['read'];
         this.info = 'Export account info';
         this.useDevice = true;
@@ -48,7 +53,10 @@ export default class GetAccountInfo extends AbstractMethod {
             : message.payload;
 
         // validate bundle type
-        validateParams(payload, [{ name: 'bundle', type: 'array' }]);
+        validateParams(payload, [
+            { name: 'bundle', type: 'array' },
+            { name: 'derivationType', type: 'number' },
+        ]);
 
         payload.bundle.forEach(batch => {
             // validate incoming parameters
@@ -99,6 +107,11 @@ export default class GetAccountInfo extends AbstractMethod {
 
         this.useDevice = willUseDevice;
         this.useUi = willUseDevice;
+
+        this.derivationType =
+            typeof payload.derivationType !== 'undefined'
+                ? payload.derivationType
+                : Enum_CardanoDerivationType.ICARUS_TREZOR;
     }
 
     async confirmation() {
@@ -249,7 +262,7 @@ export default class GetAccountInfo extends AbstractMethod {
                 try {
                     const accountDescriptor = await this.device
                         .getCommands()
-                        .getAccountDescriptor(request.coinInfo, address_n);
+                        .getAccountDescriptor(request.coinInfo, address_n, this.derivationType);
                     if (accountDescriptor) {
                         descriptor = accountDescriptor.descriptor;
                         legacyXpub = accountDescriptor.legacyXpub;
@@ -296,7 +309,7 @@ export default class GetAccountInfo extends AbstractMethod {
 
                 let utxo: AccountUtxo;
                 if (
-                    request.coinInfo.type === 'bitcoin' &&
+                    isUtxoBased(request.coinInfo) &&
                     typeof request.details === 'string' &&
                     request.details !== 'basic'
                 ) {
@@ -339,6 +352,7 @@ export default class GetAccountInfo extends AbstractMethod {
         const discovery = new Discovery({
             blockchain,
             commands: this.device.getCommands(),
+            derivationType: this.derivationType,
         });
         discovery.on('progress', accounts => {
             this.postMessage(
@@ -398,8 +412,9 @@ export default class GetAccountInfo extends AbstractMethod {
         });
 
         let utxo: AccountUtxo;
+
         if (
-            request.coinInfo.type === 'bitcoin' &&
+            isUtxoBased(coinInfo) &&
             typeof request.details === 'string' &&
             request.details !== 'basic'
         ) {

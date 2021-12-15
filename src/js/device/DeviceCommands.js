@@ -30,6 +30,7 @@ import type {
     Network,
     HDNodeResponse,
 } from '../types';
+import type { CardanoDerivationType } from '../types/trezor/protobuf';
 import * as PROTO from '../types/trezor/protobuf';
 
 export type DefaultMessageResponse = {
@@ -629,10 +630,12 @@ export default class DeviceCommands {
     async getAccountDescriptor(
         coinInfo: CoinInfo,
         indexOrPath: number | number[],
+        derivationType: ?CardanoDerivationType,
     ): Promise<?{ descriptor: string, legacyXpub?: string, address_n: number[] }> {
         const address_n = Array.isArray(indexOrPath)
             ? indexOrPath
             : getAccountAddressN(coinInfo, indexOrPath);
+
         if (coinInfo.type === 'bitcoin') {
             const resp = await this.getHDNode(address_n, coinInfo, false);
             if (isTaprootPath(address_n)) {
@@ -651,6 +654,20 @@ export default class DeviceCommands {
             const resp = await this.ethereumGetAddress({ address_n }, coinInfo);
             return {
                 descriptor: resp.address,
+                address_n,
+            };
+        }
+        if (coinInfo.shortcut === 'ADA' || coinInfo.shortcut === 'tADA') {
+            if (typeof derivationType === 'undefined')
+                throw new Error('Derivation type is not specified');
+
+            const { message } = await this.typedCall('CardanoGetPublicKey', 'CardanoPublicKey', {
+                address_n,
+                // $FlowIssue - is specified
+                derivation_type: derivationType,
+            });
+            return {
+                descriptor: message.xpub,
                 address_n,
             };
         }

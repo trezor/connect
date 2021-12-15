@@ -16,6 +16,9 @@ import {
 module.exports = {
     target: 'web',
     mode: 'production',
+    stats: {
+        children: true,
+    },
     entry: {
         'trezor-connect': `${JS_SRC}index.js`,
         iframe: `${JS_SRC}iframe/iframe.js`,
@@ -87,6 +90,13 @@ module.exports = {
                     filename: './workers/ripple-worker.[contenthash].js',
                 },
             },
+            {
+                test: /\workers\/blockfrost\/index/i,
+                loader: 'worker-loader',
+                options: {
+                    filename: './workers/blockfrost-worker.[contenthash].js',
+                },
+            },
         ],
     },
     resolve: {
@@ -94,11 +104,8 @@ module.exports = {
         mainFields: ['browser', 'module', 'main'],
         fallback: {
             fs: false, // ignore "fs" import in fastxpub (hd-wallet)
-            path: false, // ignore "path" import in protobufjs-old-fixed-webpack (dependency of trezor-link)
-            net: false, // ignore "net" import in "ripple-lib"
-            tls: false, // ignore "tls" imports in "ripple-lib"
+            https: false, // ignore "https" import in "ripple-lib"
             vm: false, // ignore "vm" imports in "asn1.js@4.10.1" > crypto-browserify"
-            util: require.resolve('util'), // required by "ripple-lib"
             assert: require.resolve('assert'), // required by multiple dependencies
             crypto: require.resolve('crypto-browserify'), // required by multiple dependencies
             stream: require.resolve('stream-browserify'), // required by utxo-lib and keccak

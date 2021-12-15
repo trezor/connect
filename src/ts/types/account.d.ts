@@ -1,4 +1,4 @@
-import { TxInputType, TxOutputType } from './trezor/protobuf';
+import { CardanoDerivationType, TxInputType, TxOutputType } from './trezor/protobuf';
 import { VinVout, BlockbookTransaction } from './backend/transactions';
 
 export type DiscoveryAccountType = 'p2pkh' | 'p2sh' | 'p2tr' | 'p2wpkh';
@@ -21,6 +21,7 @@ export interface GetAccountInfo {
         seq: number;
     };
     defaultAccountType?: DiscoveryAccountType;
+    derivationType?: CardanoDerivationType;
 }
 
 export interface TokenInfo {
@@ -58,6 +59,9 @@ export interface AccountUtxo {
     confirmations: number;
     coinbase?: boolean;
     required?: boolean;
+    cardanoSpecific?: {
+        unit: string,
+    },
 }
 
 // Transaction object
@@ -99,6 +103,14 @@ export interface AccountTransaction {
     tokens: TokenTransfer[];
     rbf?: boolean;
     ethereumSpecific?: BlockbookTransaction['ethereumSpecific'];
+    cardanoSpecific?: {
+        subtype:
+            | 'withdrawal'
+            | 'stake_delegation'
+            | 'stake_registration'
+            | 'stake_deregistration'
+            | null;
+    };
     details: {
         vin: VinVout[];
         vout: VinVout[];
@@ -133,6 +145,14 @@ export interface AccountInfo {
         // XRP
         sequence?: number;
         reserve?: string;
+        // ADA
+        staking: {
+            address: string;
+            isActive: boolean;
+            rewards: string;
+            poolId: string | null;
+        };
+
     };
     page?: {
         // blockbook

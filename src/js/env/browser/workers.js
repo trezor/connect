@@ -1,6 +1,7 @@
 import SharedConnectionWorker from '@trezor/transport/lib/lowlevel/sharedConnectionWorker';
 import BlockbookWorker from '@trezor/blockchain-link/lib/workers/blockbook';
 import RippleWorker from '@trezor/blockchain-link/lib/workers/ripple';
+import BlockfrostWorker from '@trezor/blockchain-link/lib/workers/blockfrost';
 
 import TrezorLink from '@trezor/transport';
 
@@ -12,4 +13,4 @@ const WebUsbPlugin = () =>
 
 const ReactNativeUsbPlugin = undefined;
 
-export { WebUsbPlugin, ReactNativeUsbPlugin, BlockbookWorker, RippleWorker };
+export { WebUsbPlugin, ReactNativeUsbPlugin, BlockbookWorker, RippleWorker, BlockfrostWorker };

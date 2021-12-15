@@ -289,6 +289,12 @@ const parseMiscNetworksJSON = (json: any, type?: 'misc' | 'nem') => {
             maxFee = 10000;
             defaultFees = { Normal: 12 };
         }
+        if (shortcut === 'ada' || shortcut === 'tada') {
+            minFee = 44;
+            // max tx size * lovelace per byte + base fee
+            maxFee = 16384 * 44 + 155381;
+            defaultFees = { Normal: 44 };
+        }
         miscNetworks.push({
             type: type || 'misc',
             blockchainLink: network.blockchain_link,

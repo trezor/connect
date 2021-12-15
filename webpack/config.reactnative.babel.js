@@ -6,6 +6,9 @@ import { SRC, JS_SRC, DIST, LIB_NAME } from './constants';
 
 module.exports = {
     mode: 'production',
+    stats: {
+        children: true,
+    },
     entry: {
         'trezor-connect': `${JS_SRC}index.js`,
     },
@@ -38,6 +41,8 @@ module.exports = {
             path: false,
             net: false, // ignore "net" and "tls" imports in "ripple-lib"
             tls: false,
+            http: false, // ignore "http" imports in "ripple-lib"
+            https: false, // ignore "http" imports in "ripple-lib"
             crypto: false, // no polyfill
             stream: require.resolve('stream-browserify'), // polyfill
         },
