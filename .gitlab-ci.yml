@@ -165,6 +165,15 @@ publish beta release to npm:
     - "echo Firmware version: $TESTS_FIRMWARE"
     - /trezor-user-env/run.sh &
     - nix-shell --run "yarn test:integration --coverage true"
+  after_script:
+    - cp /trezor-user-env/logs/debugging.log trezor-user-env-debugging.log
+    - cp /trezor-user-env/logs/emulator_bridge.log tenv-emulator-bridge-debugging.log
+  artifacts:
+    paths:
+      - trezor-user-env-debugging.log
+      - tenv-emulator-bridge-debugging.log
+    expire_in: 1 week
+    when: always
 
 test management:
   extends: .test
@@ -221,7 +230,7 @@ test binance:
   variables:
     TESTS_INCLUDED_METHODS: "binanceSignTransaction"
 
-# testing backwards compatibility for the oldest supported firmware 
+# testing backwards compatibility for the oldest supported firmware
 
 .test-compatibility:
   extends: .test
