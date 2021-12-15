@@ -63,16 +63,16 @@ const getFieldType = (types: EIP712Types, typeName: string): EthereumFieldType =
 
     const match = typeName.match(/^([a-z]+)(\d*)$/);
     if (!match) {
-        throw new Error('Invalid field type');
+        throw new Error(`Invalid field type name: '${typeName}'`);
     }
-    const [name, sizeStr] = match;
+    const [_, name, sizeStr] = match;
     if (!(name in NAME_TO_DATA_TYPE)) {
-        throw new Error('Invalid field type');
+        throw new Error(`Unknown field type: '${name}'`);
     }
     const dataType = NAME_TO_DATA_TYPE[name];
     if (dataType in [Enum_EthereumDataType.UINT, Enum_EthereumDataType.INT]) {
         if (sizeStr === '') {
-            throw new Error('Invalid field type');
+            throw new Error(`Field of type ${dataType} must have a size: '${typeName}'`);
         }
         return {
             data_type: dataType,
@@ -84,7 +84,7 @@ const getFieldType = (types: EIP712Types, typeName: string): EthereumFieldType =
         [Enum_EthereumDataType.STRING, Enum_EthereumDataType.ADDRESS, Enum_EthereumDataType.BOOL]
     ) {
         if (sizeStr !== '') {
-            throw new Error('Invalid field type');
+            throw new Error(`Field of type ${dataType} must not have a size: '${typeName}'`);
         }
         return { data_type: dataType };
     }

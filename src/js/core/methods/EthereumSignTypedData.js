@@ -36,7 +36,7 @@ export default class EthereumSignTypedData extends AbstractMethod {
 
         this.info = getNetworkLabel('Sign #NETWORK typed data', network);
 
-        this.params = { path, message, network };
+        this.params = { path, message: payload.message, network };
     }
 
     async run() {
