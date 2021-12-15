@@ -1,6 +1,12 @@
+# 8.2.5 (not released)
+
+### Added
+
+- Support for cardano in GetAccountInto method
+
 # 8.2.4
 
-# Fixed
+### Fixed
 
 - Communication with trezor bridge in node.js environment
 - Race condition for RebootToBootloader message
@@ -10,7 +16,7 @@
 - Stellar: transformTransaction, when the memo type is TEXT, convert memo.value to string
 - Cardano: fix catalyst reward address backwards compatibility
 
-# Changed
+### Changed
 - trezor-link was replaced with @trezor/transport
 
 # 8.2.3
