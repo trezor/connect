@@ -658,12 +658,13 @@ export default class DeviceCommands {
             };
         }
         if (coinInfo.shortcut === 'ADA' || coinInfo.shortcut === 'tADA') {
+            if (typeof derivationType === 'undefined')
+                throw new Error('Derivation type is not specified');
+
             const { message } = await this.typedCall('CardanoGetPublicKey', 'CardanoPublicKey', {
                 address_n,
-                derivation_type:
-                    typeof derivationType === 'number'
-                        ? derivationType
-                        : PROTO.Enum_CardanoDerivationType.ICARUS_TREZOR,
+                // $FlowIssue - is specified
+                derivation_type: derivationType,
             });
             return {
                 descriptor: message.xpub,
