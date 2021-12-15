@@ -29,7 +29,7 @@ export const getAccountAddressN = (
     }
     // see: https://github.com/cardano-foundation/CIPs/blob/master/CIP-1852/CIP-1852.md
     if (coinInfo.shortcut === 'ADA' || coinInfo.shortcut === 'tADA') {
-        return [toHardened(1852), toHardened(coinInfo.slip44), toHardened(index)];
+        return [toHardened(1852), toHardened(options.coinType), toHardened(index)];
     }
     if (coinInfo.type === 'ethereum') {
         return [toHardened(options.purpose), toHardened(options.coinType), toHardened(0), 0, index];
