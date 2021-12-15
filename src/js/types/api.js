@@ -255,6 +255,10 @@ export type API = {
     ethereumSignTransaction: Bundled<Ethereum.EthereumSignTransaction, Ethereum.EthereumSignedTx>,
     ethereumSignMessage: Method<Ethereum.EthereumSignMessage, Protobuf.EthereumMessageSignature>,
     ethereumVerifyMessage: Method<Ethereum.EthereumVerifyMessage, P.DefaultMessage>,
+    ethereumSignTypedData: Method<
+        Ethereum.EthereumSignTypedData,
+        Protobuf.EthereumTypedDataSignature,
+    >,
 
     // NEM
     nemGetAddress: Bundled<NEM.NEMGetAddress, NEM.NEMAddress>,

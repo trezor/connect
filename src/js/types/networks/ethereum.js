@@ -83,3 +83,8 @@ export type EthereumVerifyMessage = {
     hex?: boolean,
     signature: string,
 };
+
+export type EthereumSignTypedData = {
+    path: string | number[],
+    message: { [string]: any },
+};
