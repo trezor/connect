@@ -70,28 +70,31 @@ const getFieldType = (types: EIP712Types, typeName: string): EthereumFieldType =
         throw new Error(`Unknown field type: '${name}'`);
     }
     const dataType = NAME_TO_DATA_TYPE[name];
-    if (dataType in [Enum_EthereumDataType.UINT, Enum_EthereumDataType.INT]) {
-        if (sizeStr === '') {
-            throw new Error(`Field of type ${dataType} must have a size: '${typeName}'`);
+    switch (dataType) {
+        case Enum_EthereumDataType.UINT:
+        case Enum_EthereumDataType.INT: {
+            if (sizeStr === '') {
+                throw new Error(`Field of type ${dataType} must have a size: '${typeName}'`);
+            }
+            return {
+                data_type: dataType,
+                size: Math.floor(parseInt(sizeStr, 10) / 8),
+            };
         }
-        return {
-            data_type: dataType,
-            size: Math.floor(parseInt(sizeStr, 10) / 8),
-        };
-    }
-    if (
-        dataType in
-        [Enum_EthereumDataType.STRING, Enum_EthereumDataType.ADDRESS, Enum_EthereumDataType.BOOL]
-    ) {
-        if (sizeStr !== '') {
-            throw new Error(`Field of type ${dataType} must not have a size: '${typeName}'`);
+        case Enum_EthereumDataType.STRING:
+        case Enum_EthereumDataType.ADDRESS:
+        case Enum_EthereumDataType.BOOL: {
+            if (sizeStr !== '') {
+                throw new Error(`Field of type ${dataType} must not have a size: '${typeName}'`);
+            }
+            return { data_type: dataType };
         }
-        return { data_type: dataType };
+        default:
+            return {
+                data_type: dataType,
+                size: sizeStr === '' ? undefined : parseInt(sizeStr, 10),
+            };
     }
-    return {
-        data_type: dataType,
-        size: sizeStr === '' ? undefined : parseInt(sizeStr, 10),
-    };
 };
 
 const encodeStructType = (types: EIP712Types, typeName: string): Array<EthereumStructMember> => {
@@ -114,15 +117,23 @@ const encodeValue = (type: EthereumFieldType, value: any): string => {
                 throw new Error('Invalid field type');
             }
             let bn = new BigNumber(value);
-            const buf = Buffer.alloc(numberSize);
-            for (let i = 0; i < numberSize; ++i) {
-                buf[numberSize - i] = bn.mod(256).toNumber();
-                bn = bn.div(256);
+            let fillValue = 0;
+            if (bn.isNegative()) {
+                if (type.data_type === Enum_EthereumDataType.UINT) {
+                    throw new Error('Negative integer in unsigned field');
+                }
+                fillValue = 255;
+            }
+            const buf = Buffer.alloc(numberSize, fillValue);
+            for (let i = numberSize - 1; i >= 0; --i) {
+                if (bn.isZero()) break;
+                buf[i] = bn.mod(256).toNumber();
+                bn = bn.idiv(256);
             }
             return buf.toString('hex');
         }
         case Enum_EthereumDataType.STRING:
-            return value;
+            return Buffer.from(value, 'utf8').toString('hex');
         case Enum_EthereumDataType.ADDRESS: {
             const hex = value.replace(/^0x/, '');
             if (hex.length !== 40) {
@@ -198,27 +209,27 @@ let processEIP712Request;
 
 const processStructRequest = async (
     typedCall: TypedCall,
-    request: EthereumTypedDataStructRequest,
+    request: $Exact<EthereumTypedDataStructRequest>,
     preparedTypes: PreparedTypes,
     preparedValues: any[],
-): EthereumTypedDataSignature => {
+): Promise<EthereumTypedDataSignature> => {
     const response = await typedCall(
         'EthereumTypedDataStructAck',
         'EthereumTypedDataStructRequest|EthereumTypedDataValueRequest|EthereumTypedDataSignature',
-        prepareTypes[request.name],
+        preparedTypes[request.name],
     );
     return processEIP712Request(typedCall, response, preparedTypes, preparedValues);
 };
 
 const processValueRequest = async (
     typedCall: TypedCall,
-    request: EthereumTypedDataValueRequest,
+    request: $Exact<EthereumTypedDataValueRequest>,
     preparedTypes: PreparedTypes,
     preparedValues: any[],
-): EthereumTypedDataSignature => {
-    let data: string | any[] = '';
+): Promise<EthereumTypedDataSignature> => {
+    let data = preparedValues;
     for (const idx of request.member_path) {
-        data = preparedValues[idx];
+        data = data[idx];
     }
     let value;
     if (Array.isArray(data)) {
@@ -234,25 +245,37 @@ const processValueRequest = async (
     return processEIP712Request(typedCall, response, preparedTypes, preparedValues);
 };
 
-processEIP712Request = async (
+processEIP712Request = (
     typedCall: TypedCall,
-    request: {
-        type: string,
-        message:
-            | EthereumTypedDataStructRequest
-            | EthereumTypedDataValueRequest
-            | EthereumTypedDataSignature,
-    },
+    request:
+        | {
+              type: 'EthereumTypedDataStructRequest',
+              message: $Exact<EthereumTypedDataStructRequest>,
+          }
+        | {
+              type: 'EthereumTypedDataValueRequest',
+              message: $Exact<EthereumTypedDataValueRequest>,
+          }
+        | {
+              type: 'EthereumTypedDataSignature',
+              message: EthereumTypedDataSignature,
+          },
     preparedTypes: PreparedTypes,
     preparedValues: any[],
-): EthereumTypedDataSignature => {
+): Promise<EthereumTypedDataSignature> => {
     switch (request.type) {
-        case 'EthereumTypedDataStructRequest':
-            return await processStructRequest(typedCall, request.message, preparedTypes, preparedValues);
-        case 'EthereumTypedDataValueRequest':
-            return await processValueRequest(typedCall, request.message, preparedTypes, preparedValues);
-        case 'EthereumTypedDataSignature':
-            return request.message;
+        case 'EthereumTypedDataStructRequest': {
+            const { message } = request;
+            return processStructRequest(typedCall, message, preparedTypes, preparedValues);
+        }
+        case 'EthereumTypedDataValueRequest': {
+            const { message } = request;
+            return processValueRequest(typedCall, message, preparedTypes, preparedValues);
+        }
+        case 'EthereumTypedDataSignature': {
+            const { message } = request;
+            return Promise.resolve(message);
+        }
         default:
             throw new Error('Invalid request type');
     }
@@ -262,13 +285,14 @@ export const ethereumSignTypedData = async (
     typedCall: TypedCall,
     address_n: number[],
     eip712Message: { [string]: any },
-): EthereumTypedDataSignature => {
+    metamaskV4Compat: boolean,
+): Promise<EthereumTypedDataSignature> => {
     const preparedTypes = prepareTypes(eip712Message.types);
     const preparedValues = prepareValues(preparedTypes, eip712Message);
     const response = await typedCall('EthereumSignTypedData', 'EthereumTypedDataStructRequest', {
         address_n,
         primary_type: eip712Message.primaryType,
-        metamask_v4_compat: true,
+        metamask_v4_compat: metamaskV4Compat,
     });
     return processEIP712Request(typedCall, response, preparedTypes, preparedValues);
 };

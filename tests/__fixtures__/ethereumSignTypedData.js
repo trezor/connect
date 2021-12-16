@@ -10,6 +10,7 @@ export default {
         params: {
             path: parameters.path,
             message: parameters.data,
+            metamaskV4Compat: parameters.metamask_v4_compat,
         },
         result: {
             address: result.address,
