@@ -29,6 +29,7 @@ Every method require an [`Object`](https://developer.mozilla.org/en-US/docs/Web/
 * [TrezorConnect.ethereumGetAddress](methods/ethereumGetAddress.md)
 * [TrezorConnect.ethereumSignTransaction](methods/ethereumSignTransaction.md)
 * [TrezorConnect.ethereumSignMessage](methods/ethereumSignMessage.md)
+* [TrezorConnect.ethereumSignTypedData](methods/ethereumSignTypedData.md)
 * [TrezorConnect.ethereumVerifyMessage](methods/ethereumVerifyMessage.md)
 
 ### Eos

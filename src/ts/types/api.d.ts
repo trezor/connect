@@ -303,6 +303,9 @@ export namespace TrezorConnect {
     function ethereumSignMessage(
         params: P.CommonParams & Ethereum.EthereumSignMessage,
     ): P.Response<Protobuf.MessageSignature>;
+    function ethereumSignTypedData<T extends Ethereum.EthereumSignTypedDataTypes>(
+        params: P.CommonParams & Ethereum.EthereumSignTypedData<T>,
+    ): P.Response<Protobuf.EthereumTypedDataSignature>;
     function ethereumVerifyMessage(
         params: P.CommonParams & Ethereum.EthereumVerifyMessage,
     ): P.Response<P.DefaultMessage>;
