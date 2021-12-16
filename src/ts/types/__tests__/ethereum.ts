@@ -177,3 +177,59 @@ export const signMessage = async () => {
         payload.message;
     }
 };
+
+export const signTypedData = async () => {
+    const sign = await TrezorConnect.ethereumSignTypedData({
+        path: 'm/44',
+        data: {
+            types: {
+                EIP712Domain: [
+                    {
+                        name: 'name',
+                        type: 'string',
+                    },
+                    {
+                        name: 'version',
+                        type: 'string',
+                    },
+                    {
+                        name: 'chainId',
+                        type: 'uint256',
+                    },
+                    {
+                        name: 'verifyingContract',
+                        type: 'address',
+                    },
+                    {
+                        name: 'salt',
+                        type: 'bytes32',
+                    },
+                ],
+                Message: [
+                    {
+                        name: 'Test Field',
+                        type: 'string',
+                    },
+                ],
+            },
+            primaryType: 'Message',
+            domain: {
+                name: 'example.metamask.io',
+                version: '1',
+                chainId: 1,
+                verifyingContract: '0x0000000000000000000000000000000000000000',
+                salt: new Int32Array([1, 2, 3]).buffer,
+            },
+            message: {
+                'Test Field': 'Hello World',
+            },
+        },
+        metamask_v4_compat: true,
+    });
+
+    if (sign.success) {
+        const { payload } = sign;
+        payload.address;
+        payload.signature;
+    }
+};

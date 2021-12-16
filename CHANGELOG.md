@@ -19,6 +19,10 @@
 ### Changed
 - trezor-link was replaced with @trezor/transport
 
+### Added
+
+- Ethereum: Support for EthereumSignTypedData operation (Trezor T only)
+
 # 8.2.3
 
 ### Added

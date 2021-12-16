@@ -74,6 +74,37 @@ export interface EthereumSignMessage {
     hex?: boolean;
 }
 
+// sign typed message (eip-712)
+
+interface EthereumSignTypedDataTypeProperty {
+    name: string;
+    type: string;
+}
+
+interface EthereumSignTypedDataTypes {
+    EIP712Domain: EthereumSignTypedDataTypeProperty[];
+    [additionalProperties: string]: EthereumSignTypedDataTypeProperty[];
+}
+
+interface EthereumSignTypedDataMessage<T extends EthereumSignTypedDataTypes> {
+    types: T;
+    primaryType: keyof T;
+    domain: {
+        name?: string;
+        version?: string;
+        chainId?: number | bigint;
+        verifyingContract?: string;
+        salt?: ArrayBuffer;
+    };
+    message: { [fieldName: string]: any };
+}
+
+export interface EthereumSignTypedData<T extends EthereumSignTypedDataTypes> {
+    path: string | number[];
+    data: EthereumSignTypedDataMessage<T>;
+    metamask_v4_compat: boolean;
+}
+
 // verify message
 
 export interface EthereumVerifyMessage {

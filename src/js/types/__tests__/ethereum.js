@@ -191,3 +191,52 @@ export const signMessage = async () => {
         (payload.message: string);
     }
 };
+
+export const signTypedData = async () => {
+    // $FlowIssue with `await` and Promises: https://github.com/facebook/flow/issues/5294 TODO: Update flow
+    const sign = await TrezorConnect.ethereumSignTypedData({
+        path: 'm/44',
+        data: {
+            types: {
+                EIP712Domain: [
+                    {
+                        name: 'name',
+                        type: 'string',
+                    },
+                    {
+                        name: 'version',
+                        type: 'string',
+                    },
+                    {
+                        name: 'chainId',
+                        type: 'uint256',
+                    },
+                    {
+                        name: 'verifyingContract',
+                        type: 'address',
+                    },
+                    {
+                        name: 'salt',
+                        type: 'bytes32',
+                    },
+                ],
+            },
+            primaryType: 'EIP712Domain',
+            domain: {
+                name: 'example.metamask.io',
+                version: '1',
+                chainId: 1,
+                verifyingContract: '0x0000000000000000000000000000000000000000',
+                salt: new Int32Array([1, 2, 3]).buffer,
+            },
+            message: {},
+        },
+        metamask_v4_compat: true,
+    });
+
+    if (sign.success) {
+        const { payload } = sign;
+        (payload.signature: string);
+        (payload.network: string);
+    }
+};
