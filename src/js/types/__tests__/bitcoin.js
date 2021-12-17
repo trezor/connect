@@ -387,6 +387,9 @@ export const signTransaction = async () => {
         (payload.signatures: string[]);
         (payload.serializedTx: string);
         (payload.txid: string | null | void);
+        if (payload.witnesses) {
+            payload.witnesses.filter(w => typeof w === 'string');
+        }
     }
 
     // with invalid params

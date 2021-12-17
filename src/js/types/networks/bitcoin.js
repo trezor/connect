@@ -120,6 +120,7 @@ export type SignTransaction = {
 };
 export type SignedTransaction = {
     signatures: string[],
+    witnesses?: Array<string | typeof undefined>,
     serializedTx: string,
     txid?: string,
 };

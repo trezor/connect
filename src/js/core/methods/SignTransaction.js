@@ -21,6 +21,7 @@ import {
     transformReferencedTransactions,
     getOrigTransactions,
     transformOrigTransactions,
+    getWitness,
 } from './tx';
 
 import type { RefTransaction, TransactionOptions } from '../../types/networks/bitcoin';
@@ -197,13 +198,17 @@ export default class SignTransaction extends AbstractMethod<'signTransaction'> {
                 params.coinInfo,
             );
         } else {
-            await verifyTx(
+            const bitcoinTx = await verifyTx(
                 device.getCommands().getHDNode.bind(device.getCommands()),
                 params.inputs,
                 params.outputs,
                 response.serializedTx,
                 params.coinInfo,
             );
+
+            if (bitcoinTx.hasWitnesses()) {
+                response.witnesses = bitcoinTx.ins.map(inp => getWitness(inp.witness));
+            }
         }
 
         if (params.push) {

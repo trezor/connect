@@ -46,7 +46,7 @@ export const getOrigTransactions = (inputs: TxInputType[], outputs: TxOutputType
 // expected hex response format:
 // chunks size + (chunk[i].size + chunk[i])
 // TODO: this code should be implemented in BitcoinJsTransaction (@trezor/utxo-lib)
-const getWitness = (witness?: Buffer[]) => {
+export const getWitness = (witness?: Buffer[]) => {
     if (!Array.isArray(witness)) return;
     const getChunkSize = (n: number) => {
         const buf = Buffer.allocUnsafe(1);
