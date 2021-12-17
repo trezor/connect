@@ -160,6 +160,11 @@ export const fixPath = <T: TxInputType | TxOutputType>(utxo: T): T => {
     if (utxo.address_n && Array.isArray(utxo.address_n)) {
         utxo.address_n = utxo.address_n.map(i => i >>> 0);
     }
+    // This is only a part of API wide issue: https://github.com/trezor/trezor-suite/issues/4875
+    // it works only in runtime. type T needs to have address_n as string, but currently we are using Protobuf declaration
+    if (utxo.address_n && typeof utxo.address_n === 'string') {
+        utxo.address_n = getHDPath(utxo.address_n);
+    }
     return utxo;
 };
 
