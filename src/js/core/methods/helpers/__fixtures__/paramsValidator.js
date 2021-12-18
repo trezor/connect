@@ -37,6 +37,83 @@ export const validateParams = [
         type: 'array-buffer',
         value: 0,
     },
+    {
+        description: 'amount valid',
+        type: 'amount',
+        value: '10',
+        success: true,
+    },
+    {
+        description: 'amount invalid leading zeros',
+        type: 'amount',
+        value: '01',
+    },
+    {
+        description: 'amount invalid decimals',
+        type: 'amount',
+        value: '0.1',
+    },
+    {
+        description: 'amount invalid digits',
+        type: 'amount',
+        value: '123f',
+    },
+    {
+        description: 'amount invalid type',
+        type: 'amount',
+        value: true,
+    },
+    {
+        description: 'not required param without value (null)',
+        type: 'number',
+        value: null,
+        success: true,
+    },
+    {
+        description: 'not required param without value (undefined)',
+        type: 'string',
+        value: null,
+        success: true,
+    },
+    {
+        description: 'required param without type and false negative value (0)',
+        obligatory: true,
+        value: 0,
+        success: true,
+    },
+    {
+        description: 'required param without type and false negative value (false)',
+        obligatory: true,
+        value: false,
+        success: true,
+    },
+    {
+        description: 'required param without value (null)',
+        obligatory: true,
+        value: null,
+    },
+    {
+        description: 'required param without value (undefined)',
+        obligatory: true,
+        value: undefined,
+    },
+    {
+        description: 'param with union of types (string)',
+        type: ['string', 'boolean', 'number'],
+        value: 'true',
+        success: true,
+    },
+    {
+        description: 'param with union of types (boolean)',
+        type: ['string', 'boolean', 'number'],
+        value: true,
+        success: true,
+    },
+    {
+        description: 'param with union of types (invalid value)',
+        type: ['string', 'boolean', 'number', 'array', 'array-buffer'],
+        value: Buffer.from('00'),
+    },
 ];
 
 const DEFAULT_RANGE = {
