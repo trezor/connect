@@ -105,6 +105,12 @@ export interface EthereumSignTypedData<T extends EthereumSignTypedDataTypes> {
     metamask_v4_compat: boolean;
 }
 
+export interface EthereumSignTypedHash {
+    path: string | number[];
+    domain_separator_hash: string;
+    message_hash: string;
+}
+
 // verify message
 
 export interface EthereumVerifyMessage {

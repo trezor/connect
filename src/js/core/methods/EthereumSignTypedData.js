@@ -7,12 +7,16 @@ import { getEthereumNetwork } from '../../data/CoinInfo';
 import { getNetworkLabel } from '../../utils/ethereumUtils';
 import type { MessageResponse, EthereumTypedDataStructAck } from '../../types/trezor/protobuf';
 import { ERRORS } from '../../constants';
-import type { EthereumSignTypedData as EthereumSignTypedDataParams } from '../../types/networks/ethereum';
+import type {
+    EthereumSignTypedData as EthereumSignTypedDataParams,
+    EthereumSignTypedHash as EthereumSignTypedHashParams,
+} from '../../types/networks/ethereum';
 import { getFieldType, parseArrayType, encodeData } from './helpers/ethereumSignTypedData';
 
 type Params = {
-    ...EthereumSignTypedDataParams,
-    path: number[],
+    address_n: number[],
+    ...$Exact<EthereumSignTypedDataParams>,
+    ...$Exact<EthereumSignTypedHashParams>,
 };
 
 export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignTypedData'> {
@@ -26,8 +30,12 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
         // validate incoming parameters
         validateParams(payload, [
             { name: 'path', required: true },
-            { name: 'data', type: 'object', required: true },
-            { name: 'metamask_v4_compat', type: 'boolean', required: true },
+            { name: 'metamask_v4_compat', type: 'boolean' },
+            // model T
+            { name: 'data', type: 'object' },
+            // model One
+            { name: 'domain_separator_hash', type: 'string' },
+            { name: 'message_hash', type: 'string' },
         ]);
 
         const path = validatePath(payload.path, 3);
@@ -36,21 +44,52 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
 
         this.info = getNetworkLabel('Sign #NETWORK typed data', network);
 
-        const { data, metamask_v4_compat } = payload;
-
         this.params = {
             path,
-            data,
-            metamask_v4_compat,
+            address_n: path,
+            metamask_v4_compat: payload.metamask_v4_compat,
+            domain_separator_hash: payload.domain_separator_hash || '',
+            message_hash: payload.message_hash || '',
+            data: payload.data || undefined,
         };
     }
 
     async run() {
         const cmd = this.device.getCommands();
-        const { path: address_n, data, metamask_v4_compat } = this.params;
+        const { address_n } = this.params;
 
+        if (this.device.features.model === '1') {
+            validateParams(this.params, [
+                { name: 'domain_separator_hash', type: 'string', required: true },
+                { name: 'message_hash', type: 'string', required: true },
+            ]);
+
+            const { domain_separator_hash, message_hash } = this.params;
+
+            // For Model 1 we use EthereumSignTypedHash
+            const response = await cmd.typedCall(
+                'EthereumSignTypedHash',
+                'EthereumTypedDataSignature',
+                {
+                    address_n,
+                    domain_separator_hash,
+                    message_hash,
+                },
+            );
+
+            const { address, signature } = response.message;
+            return {
+                address,
+                signature: `0x${signature}`,
+            };
+        }
+
+        validateParams(this.params, [{ name: 'data', type: 'object', required: true }]);
+        const { data, metamask_v4_compat } = this.params;
+        // $FlowIssue
         const { types, primaryType, domain, message } = data;
 
+        // For Model T we use EthereumSignTypedData
         let response: MessageResponse<
             | 'EthereumTypedDataStructRequest'
             | 'EthereumTypedDataValueRequest'

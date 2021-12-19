@@ -103,8 +103,18 @@ type EthereumSignTypedDataMessage<T: EthereumSignTypedDataTypes> = {
 
 export type EthereumSignTypedData = {
     path: string | number[],
-    data: EthereumSignTypedDataMessage<any>,
     metamask_v4_compat: boolean,
+    data: EthereumSignTypedDataMessage<any>,
+    domain_separator_hash?: typeof undefined,
+    message_hash?: typeof undefined,
+};
+
+export type EthereumSignTypedHash = {
+    path: string | number[],
+    metamask_v4_compat?: typeof undefined,
+    data?: typeof undefined,
+    domain_separator_hash: string,
+    message_hash: string,
 };
 
 // verify message
