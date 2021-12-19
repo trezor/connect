@@ -1,5 +1,7 @@
 /* @flow */
 
+const sigUtil = require('@metamask/eth-sig-util');
+
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
@@ -16,6 +18,24 @@ type Params = {
     path: number[],
     network?: EthereumNetworkInfo,
 };
+
+// Sanitization is used for T1 as eth-sig-util does not support BigInt
+function sanitizeData(data) {
+  switch(Object.prototype.toString.call(data)) {
+    case '[object Object]':
+      let entries = Object.keys(data).map((k) => [k, sanitizeData(data[k])]);
+      return Object.fromEntries(entries);
+
+    case '[object Array]':
+      return data.map((v) => sanitizeData(v));
+
+    case '[object BigInt]':
+      return data.toString();
+
+    default:
+      return data;
+  }
+}
 
 export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignTypedData'> {
     params: Params;
@@ -52,13 +72,45 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
         const cmd = this.device.getCommands();
         const { path: address_n, network, data, metamask_v4_compat } = this.params;
 
-        const { types, primaryType, domain, message } = data;
+        const { types, primaryType, domain, message } = sigUtil.TypedDataUtils.sanitizeData(data);
 
         let response: MessageResponse<
             | 'EthereumTypedDataStructRequest'
             | 'EthereumTypedDataValueRequest'
             | 'EthereumTypedDataSignature',
-        > = await cmd.typedCall(
+        >;
+
+        if (this.device.features.model === '1') {
+          // For Model 1 we use EthereumSignTypedHash
+          const version = metamask_v4_compat ?
+            sigUtil.SignTypedDataVersion.V4 : sigUtil.SignTypedDataVersion.V3
+
+          const domainSeparatorHash =  sigUtil.TypedDataUtils.hashStruct(
+            'EIP712Domain',
+            sanitizeData(domain),
+            types,
+            version,
+          ).toString('hex');
+
+          const messageHash = sigUtil.TypedDataUtils.hashStruct(
+            primaryType,
+            sanitizeData(message),
+            types,
+            version,
+          ).toString('hex');
+
+          response = await cmd.typedCall(
+            'EthereumSignTypedHash',
+            'EthereumTypedDataSignature',
+            {
+              address_n,
+              domain_separator_hash: domainSeparatorHash,
+              message_hash: messageHash
+            },
+          );
+        } else {
+          // For Model T we use EthereumSignTypedData
+          response = await cmd.typedCall(
             'EthereumSignTypedData',
             // $FlowIssue typedCall problem with unions in response, TODO: accept unions
             'EthereumTypedDataStructRequest|EthereumTypedDataValueRequest|EthereumTypedDataSignature',
@@ -67,7 +119,8 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
                 primary_type: primaryType,
                 metamask_v4_compat,
             },
-        );
+          );
+        }
 
         // sending all the type data
         while (response.type === 'EthereumTypedDataStructRequest') {

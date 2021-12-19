@@ -3611,20 +3611,6 @@
         }
       }
     },
-    "EthereumTypedDataSignature": {
-      "fields": {
-        "signature": {
-          "rule": "required",
-          "type": "bytes",
-          "id": 1
-        },
-        "address": {
-          "rule": "required",
-          "type": "string",
-          "id": 2
-        }
-      }
-    },
     "EthereumGetPublicKey": {
       "fields": {
         "address_n": {
@@ -3910,6 +3896,42 @@
           "rule": "required",
           "type": "string",
           "id": 4
+        }
+      }
+    },
+    "EthereumSignTypedHash": {
+      "fields": {
+        "address_n": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 1,
+          "options": {
+            "packed": false
+          }
+        },
+        "domain_separator_hash": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 2
+        },
+        "message_hash": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 3
+        }
+      }
+    },
+    "EthereumTypedDataSignature": {
+      "fields": {
+        "signature": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 1
+        },
+        "address": {
+          "rule": "required",
+          "type": "string",
+          "id": 2
         }
       }
     },
@@ -5972,6 +5994,7 @@
         "MessageType_EthereumTypedDataValueRequest": 467,
         "MessageType_EthereumTypedDataValueAck": 468,
         "MessageType_EthereumTypedDataSignature": 469,
+        "MessageType_EthereumSignTypedHash": 470,
         "MessageType_NEMGetAddress": 67,
         "MessageType_NEMAddress": 68,
         "MessageType_NEMSignTx": 69,
