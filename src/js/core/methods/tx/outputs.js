@@ -23,7 +23,7 @@ export const validateTrezorOutputs = (
         validateParams(output, [
             { name: 'address_n', type: 'array' },
             { name: 'address', type: 'string' },
-            { name: 'amount', type: 'string' },
+            { name: 'amount', type: 'uint' },
             { name: 'op_return_data', type: 'string' },
             { name: 'multisig', type: 'object' },
         ]);
@@ -91,7 +91,7 @@ export const validateHDOutput = (
             };
 
         case 'noaddress':
-            validateParams(output, [{ name: 'amount', type: 'string', required: true }]);
+            validateParams(output, [{ name: 'amount', type: 'uint', required: true }]);
             return {
                 type: 'noaddress',
                 amount: output.amount,
@@ -104,7 +104,7 @@ export const validateHDOutput = (
 
         default:
             validateParams(output, [
-                { name: 'amount', type: 'string', required: true },
+                { name: 'amount', type: 'uint', required: true },
                 { name: 'address', type: 'string', required: true },
             ]);
             validateAddress(output.address);

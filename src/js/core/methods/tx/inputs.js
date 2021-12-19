@@ -27,7 +27,7 @@ export const validateTrezorInputs = (
             validateParams(input, [
                 { name: 'prev_hash', type: 'string', required: true },
                 { name: 'prev_index', type: 'number', required: true },
-                { name: 'amount', type: 'string', required: useAmount },
+                { name: 'amount', type: 'uint', required: useAmount },
                 { name: 'script_type', type: 'string' },
                 { name: 'sequence', type: 'number' },
                 { name: 'multisig', type: 'object' },

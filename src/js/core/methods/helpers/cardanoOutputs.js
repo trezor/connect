@@ -14,7 +14,7 @@ export type OutputWithTokens = {
 export const transformOutput = (output: any) => {
     validateParams(output, [
         { name: 'address', type: 'string' },
-        { name: 'amount', type: 'amount', required: true },
+        { name: 'amount', type: 'uint', required: true },
         { name: 'tokenBundle', type: 'array', allowEmpty: true },
     ]);
 
