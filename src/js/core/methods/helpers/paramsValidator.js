@@ -7,7 +7,7 @@ import { versionCompare } from '../../../utils/versionUtils';
 import DataManager from '../../../data/DataManager';
 import type { CoinInfo, FirmwareRange } from '../../../types';
 
-type ParamType = 'string' | 'number' | 'array' | 'array-buffer' | 'boolean' | 'amount' | 'object';
+type ParamType = 'string' | 'number' | 'array' | 'array-buffer' | 'boolean' | 'uint' | 'object';
 
 type Param = {
     name: string,
@@ -65,7 +65,7 @@ export function validateParams<P: $ReadOnly<{ [name: string]: any }>>(
             if (!field.allowEmpty && value.length < 1) {
                 throw invalidParameter(`Parameter "${name}" is empty.`);
             }
-        } else if (type === 'amount') {
+        } else if (type === 'uint') {
             if (typeof value !== 'string' && typeof value !== 'number') {
                 throw invalidParameter(
                     `Parameter "${name}" has invalid type. "string|number" expected.`,

@@ -87,7 +87,7 @@ export const createTx = (
         validateParams(reveal, [
             { name: 'source', type: 'string', required: true },
             { name: 'public_key', type: 'string', required: true },
-            { name: 'fee', type: 'number', required: true },
+            { name: 'fee', type: 'uint', required: true },
             { name: 'counter', type: 'number', required: true },
             { name: 'gas_limit', type: 'number', required: true },
             { name: 'storage_limit', type: 'number', required: true },
@@ -114,9 +114,9 @@ export const createTx = (
         validateParams(transaction, [
             { name: 'source', type: 'string', required: true },
             { name: 'destination', type: 'string', required: true },
-            { name: 'amount', type: 'number', required: true },
+            { name: 'amount', type: 'uint', required: true },
             { name: 'counter', type: 'number', required: true },
-            { name: 'fee', type: 'number', required: true },
+            { name: 'fee', type: 'uint', required: true },
             { name: 'gas_limit', type: 'number', required: true },
             { name: 'storage_limit', type: 'number', required: true },
         ]);
@@ -186,7 +186,7 @@ export const createTx = (
                 const { transfer } = parameters_manager;
 
                 validateParams(transfer, [
-                    { name: 'amount', type: 'number', required: true },
+                    { name: 'amount', type: 'uint', required: true },
                     { name: 'destination', type: 'string', required: true },
                 ]);
 
@@ -217,7 +217,7 @@ export const createTx = (
         validateParams(origination, [
             { name: 'source', type: 'string', required: true },
             { name: 'balance', type: 'number', required: true },
-            { name: 'fee', type: 'number', required: true },
+            { name: 'fee', type: 'uint', required: true },
             { name: 'counter', type: 'number', required: true },
             { name: 'gas_limit', type: 'number', required: true },
             { name: 'storage_limit', type: 'number', required: true },
@@ -256,7 +256,7 @@ export const createTx = (
         validateParams(delegation, [
             { name: 'source', type: 'string', required: true },
             { name: 'delegate', type: 'string', required: true },
-            { name: 'fee', type: 'number', required: true },
+            { name: 'fee', type: 'uint', required: true },
             { name: 'counter', type: 'number', required: true },
             { name: 'gas_limit', type: 'number', required: true },
             { name: 'storage_limit', type: 'number', required: true },

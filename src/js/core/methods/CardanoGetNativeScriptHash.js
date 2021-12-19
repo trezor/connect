@@ -51,8 +51,8 @@ export default class CardanoGetNativeScriptHash extends AbstractMethod<'cardanoG
             { name: 'scripts', type: 'array', allowEmpty: true },
             { name: 'keyHash', type: 'string' },
             { name: 'requiredSignaturesCount', type: 'number' },
-            { name: 'invalidBefore', type: 'amount' },
-            { name: 'invalidHereafter', type: 'amount' },
+            { name: 'invalidBefore', type: 'uint' },
+            { name: 'invalidHereafter', type: 'uint' },
         ]);
 
         if (script.keyPath) {

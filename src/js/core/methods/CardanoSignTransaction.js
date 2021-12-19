@@ -111,12 +111,12 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             { name: 'signingMode', type: 'number', required: true },
             { name: 'inputs', type: 'array', required: true },
             { name: 'outputs', type: 'array', required: true, allowEmpty: true },
-            { name: 'fee', type: 'amount', required: true },
-            { name: 'ttl', type: 'amount' },
+            { name: 'fee', type: 'uint', required: true },
+            { name: 'ttl', type: 'uint' },
             { name: 'certificates', type: 'array', allowEmpty: true },
             { name: 'withdrawals', type: 'array', allowEmpty: true },
             { name: 'mint', type: 'array', allowEmpty: true },
-            { name: 'validityIntervalStart', type: 'amount' },
+            { name: 'validityIntervalStart', type: 'uint' },
             { name: 'protocolMagic', type: 'number', required: true },
             { name: 'networkId', type: 'number', required: true },
             { name: 'additionalWitnessRequests', type: 'array', allowEmpty: true },
@@ -148,7 +148,7 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
         if (payload.withdrawals) {
             withdrawals = payload.withdrawals.map(withdrawal => {
                 validateParams(withdrawal, [
-                    { name: 'amount', type: 'amount', required: true },
+                    { name: 'amount', type: 'uint', required: true },
                     { name: 'scriptHash', type: 'string' },
                 ]);
                 return {
