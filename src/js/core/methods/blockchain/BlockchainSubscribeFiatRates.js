@@ -25,8 +25,8 @@ export default class BlockchainSubscribeFiatRates extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'currency', type: 'string', obligatory: false },
-            { name: 'coin', type: 'string', obligatory: true },
+            { name: 'currency', type: 'string', required: false },
+            { name: 'coin', type: 'string', required: true },
         ]);
 
         const coinInfo = getCoinInfo(payload.coin);

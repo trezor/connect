@@ -47,7 +47,7 @@ export default class GetAddress extends AbstractMethod {
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
-                { name: 'path', obligatory: true },
+                { name: 'path', required: true },
                 { name: 'coin', type: 'string' },
                 { name: 'address', type: 'string' },
                 { name: 'showOnTrezor', type: 'boolean' },

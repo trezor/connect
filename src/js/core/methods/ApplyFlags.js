@@ -18,7 +18,7 @@ export default class ApplyFlags extends AbstractMethod {
 
         const { payload } = message;
 
-        validateParams(payload, [{ name: 'flags', type: 'number', obligatory: true }]);
+        validateParams(payload, [{ name: 'flags', type: 'number', required: true }]);
 
         this.params = {
             flags: payload.flags,

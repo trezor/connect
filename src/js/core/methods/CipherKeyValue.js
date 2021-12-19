@@ -34,7 +34,7 @@ export default class CipherKeyValue extends AbstractMethod {
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
-                { name: 'path', obligatory: true },
+                { name: 'path', required: true },
                 { name: 'key', type: 'string' },
                 { name: 'value', type: 'string' },
                 { name: 'encrypt', type: 'boolean' },

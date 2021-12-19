@@ -25,8 +25,8 @@ export default class BlockchainGetFiatRatesForTimestamps extends AbstractMethod 
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'timestamps', type: 'array', obligatory: true },
-            { name: 'coin', type: 'string', obligatory: true },
+            { name: 'timestamps', type: 'array', required: true },
+            { name: 'coin', type: 'string', required: true },
         ]);
 
         const coinInfo = getCoinInfo(payload.coin);

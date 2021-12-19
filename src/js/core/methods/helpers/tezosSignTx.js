@@ -85,12 +85,12 @@ export const createTx = (
 
         // validate reveal parameters
         validateParams(reveal, [
-            { name: 'source', type: 'string', obligatory: true },
-            { name: 'public_key', type: 'string', obligatory: true },
-            { name: 'fee', type: 'number', obligatory: true },
-            { name: 'counter', type: 'number', obligatory: true },
-            { name: 'gas_limit', type: 'number', obligatory: true },
-            { name: 'storage_limit', type: 'number', obligatory: true },
+            { name: 'source', type: 'string', required: true },
+            { name: 'public_key', type: 'string', required: true },
+            { name: 'fee', type: 'number', required: true },
+            { name: 'counter', type: 'number', required: true },
+            { name: 'gas_limit', type: 'number', required: true },
+            { name: 'storage_limit', type: 'number', required: true },
         ]);
 
         message = {
@@ -112,13 +112,13 @@ export const createTx = (
 
         // validate transaction parameters
         validateParams(transaction, [
-            { name: 'source', type: 'string', obligatory: true },
-            { name: 'destination', type: 'string', obligatory: true },
-            { name: 'amount', type: 'number', obligatory: true },
-            { name: 'counter', type: 'number', obligatory: true },
-            { name: 'fee', type: 'number', obligatory: true },
-            { name: 'gas_limit', type: 'number', obligatory: true },
-            { name: 'storage_limit', type: 'number', obligatory: true },
+            { name: 'source', type: 'string', required: true },
+            { name: 'destination', type: 'string', required: true },
+            { name: 'amount', type: 'number', required: true },
+            { name: 'counter', type: 'number', required: true },
+            { name: 'fee', type: 'number', required: true },
+            { name: 'gas_limit', type: 'number', required: true },
+            { name: 'storage_limit', type: 'number', required: true },
         ]);
 
         message = {
@@ -152,9 +152,9 @@ export const createTx = (
             const { parameters_manager } = transaction;
 
             validateParams(parameters_manager, [
-                { name: 'set_delegate', type: 'string', obligatory: false },
-                { name: 'cancel_delegate', type: 'boolean', obligatory: false },
-                { name: 'transfer', type: 'object', obligatory: false },
+                { name: 'set_delegate', type: 'string', required: false },
+                { name: 'cancel_delegate', type: 'boolean', required: false },
+                { name: 'transfer', type: 'object', required: false },
             ]);
 
             if (parameters_manager.set_delegate) {
@@ -186,8 +186,8 @@ export const createTx = (
                 const { transfer } = parameters_manager;
 
                 validateParams(transfer, [
-                    { name: 'amount', type: 'number', obligatory: true },
-                    { name: 'destination', type: 'string', obligatory: true },
+                    { name: 'amount', type: 'number', required: true },
+                    { name: 'destination', type: 'string', required: true },
                 ]);
 
                 message = {
@@ -215,13 +215,13 @@ export const createTx = (
 
         // validate origination parameters
         validateParams(origination, [
-            { name: 'source', type: 'string', obligatory: true },
-            { name: 'balance', type: 'number', obligatory: true },
-            { name: 'fee', type: 'number', obligatory: true },
-            { name: 'counter', type: 'number', obligatory: true },
-            { name: 'gas_limit', type: 'number', obligatory: true },
-            { name: 'storage_limit', type: 'number', obligatory: true },
-            { name: 'script', type: 'string', obligatory: true },
+            { name: 'source', type: 'string', required: true },
+            { name: 'balance', type: 'number', required: true },
+            { name: 'fee', type: 'number', required: true },
+            { name: 'counter', type: 'number', required: true },
+            { name: 'gas_limit', type: 'number', required: true },
+            { name: 'storage_limit', type: 'number', required: true },
+            { name: 'script', type: 'string', required: true },
         ]);
 
         message = {
@@ -254,12 +254,12 @@ export const createTx = (
 
         // validate delegation parameters
         validateParams(delegation, [
-            { name: 'source', type: 'string', obligatory: true },
-            { name: 'delegate', type: 'string', obligatory: true },
-            { name: 'fee', type: 'number', obligatory: true },
-            { name: 'counter', type: 'number', obligatory: true },
-            { name: 'gas_limit', type: 'number', obligatory: true },
-            { name: 'storage_limit', type: 'number', obligatory: true },
+            { name: 'source', type: 'string', required: true },
+            { name: 'delegate', type: 'string', required: true },
+            { name: 'fee', type: 'number', required: true },
+            { name: 'counter', type: 'number', required: true },
+            { name: 'gas_limit', type: 'number', required: true },
+            { name: 'storage_limit', type: 'number', required: true },
         ]);
 
         message = {

@@ -25,8 +25,8 @@ export default class CustomMessage extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(message.payload, [
-            { name: 'message', type: 'string', obligatory: true },
-            { name: 'params', type: 'object', obligatory: true },
+            { name: 'message', type: 'string', required: true },
+            { name: 'params', type: 'object', required: true },
         ]);
 
         if (Object.prototype.hasOwnProperty.call(payload, 'messages')) {
@@ -76,14 +76,14 @@ export default class CustomMessage extends AbstractMethod {
         const { payload } = uiResp;
 
         // validate incoming response
-        validateParams(payload, [{ name: 'message', type: 'string', obligatory: true }]);
+        validateParams(payload, [{ name: 'message', type: 'string', required: true }]);
 
         if (payload.message.toLowerCase() === 'release') {
             // release device
             return response;
         }
         // validate incoming parameters
-        validateParams(payload, [{ name: 'params', type: 'object', obligatory: true }]);
+        validateParams(payload, [{ name: 'params', type: 'object', required: true }]);
 
         // change local params and make another call to device
         this.params.message = payload.message;

@@ -26,9 +26,9 @@ export default class TezosSignTransaction extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'path', obligatory: true },
-            { name: 'branch', type: 'string', obligatory: true },
-            { name: 'operation', obligatory: true },
+            { name: 'path', required: true },
+            { name: 'branch', type: 'string', required: true },
+            { name: 'operation', required: true },
         ]);
 
         const path = validatePath(payload.path, 3);

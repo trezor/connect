@@ -61,7 +61,7 @@ export default class GetAccountInfo extends AbstractMethod {
         payload.bundle.forEach(batch => {
             // validate incoming parameters
             validateParams(batch, [
-                { name: 'coin', type: 'string', obligatory: true },
+                { name: 'coin', type: 'string', required: true },
                 { name: 'descriptor', type: 'string' },
                 { name: 'path', type: 'string' },
 

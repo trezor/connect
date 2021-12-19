@@ -21,8 +21,8 @@ export default class NEMSignTransaction extends AbstractMethod {
         const { payload } = message;
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'path', obligatory: true },
-            { name: 'transaction', obligatory: true },
+            { name: 'path', required: true },
+            { name: 'transaction', required: true },
         ]);
 
         const path = validatePath(payload.path, 3);

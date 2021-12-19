@@ -12,7 +12,7 @@ export type AssetGroupWithTokens = {
 const validateTokens = (tokenAmounts: CardanoToken[]) => {
     tokenAmounts.forEach(tokenAmount => {
         validateParams(tokenAmount, [
-            { name: 'assetNameBytes', type: 'string', obligatory: true },
+            { name: 'assetNameBytes', type: 'string', required: true },
             { name: 'amount', type: 'amount' },
             { name: 'mintAmount', type: 'amount' },
         ]);
@@ -22,8 +22,8 @@ const validateTokens = (tokenAmounts: CardanoToken[]) => {
 export const validateTokenBundle = (tokenBundle: CardanoAssetGroup[]) => {
     tokenBundle.forEach(tokenGroup => {
         validateParams(tokenGroup, [
-            { name: 'policyId', type: 'string', obligatory: true },
-            { name: 'tokenAmounts', type: 'array', obligatory: true },
+            { name: 'policyId', type: 'string', required: true },
+            { name: 'tokenAmounts', type: 'array', required: true },
         ]);
 
         validateTokens(tokenGroup.tokenAmounts);

@@ -49,7 +49,7 @@ export default class EthereumGetAddress extends AbstractMethod {
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
-                { name: 'path', obligatory: true },
+                { name: 'path', required: true },
                 { name: 'address', type: 'string' },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);

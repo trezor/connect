@@ -20,9 +20,9 @@ export default class EthereumVerifyMessage extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'address', type: 'string', obligatory: true },
-            { name: 'signature', type: 'string', obligatory: true },
-            { name: 'message', type: 'string', obligatory: true },
+            { name: 'address', type: 'string', required: true },
+            { name: 'signature', type: 'string', required: true },
+            { name: 'message', type: 'string', required: true },
             { name: 'hex', type: 'boolean' },
         ]);
 

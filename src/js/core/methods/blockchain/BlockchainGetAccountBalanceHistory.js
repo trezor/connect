@@ -30,11 +30,11 @@ export default class BlockchainGetAccountBalanceHistory extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'coin', type: 'string', obligatory: true },
-            { name: 'descriptor', type: 'string', obligatory: true },
-            { name: 'from', type: 'number', obligatory: false },
-            { name: 'to', type: 'number', obligatory: false },
-            { name: 'groupBy', type: 'number', obligatory: false },
+            { name: 'coin', type: 'string', required: true },
+            { name: 'descriptor', type: 'string', required: true },
+            { name: 'from', type: 'number', required: false },
+            { name: 'to', type: 'number', required: false },
+            { name: 'groupBy', type: 'number', required: false },
         ]);
 
         const coinInfo = getCoinInfo(payload.coin);

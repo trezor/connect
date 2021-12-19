@@ -62,8 +62,8 @@ export default class ComposeTransaction extends AbstractMethod {
         const { payload } = message;
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'outputs', type: 'array', obligatory: true },
-            { name: 'coin', type: 'string', obligatory: true },
+            { name: 'outputs', type: 'array', required: true },
+            { name: 'coin', type: 'string', required: true },
             { name: 'push', type: 'boolean' },
             { name: 'account', type: 'object' },
             { name: 'feeLevels', type: 'array' },

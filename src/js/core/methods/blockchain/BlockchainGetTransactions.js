@@ -25,8 +25,8 @@ export default class BlockchainGetTransactions extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'txs', type: 'array', obligatory: true },
-            { name: 'coin', type: 'string', obligatory: true },
+            { name: 'txs', type: 'array', required: true },
+            { name: 'coin', type: 'string', required: true },
         ]);
 
         const coinInfo = getCoinInfo(payload.coin);

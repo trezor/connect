@@ -107,25 +107,25 @@ export default class CardanoSignTransaction extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'signingMode', type: 'number', obligatory: true },
-            { name: 'inputs', type: 'array', obligatory: true },
-            { name: 'outputs', type: 'array', obligatory: true, allowEmpty: true },
-            { name: 'fee', type: 'amount', obligatory: true },
+            { name: 'signingMode', type: 'number', required: true },
+            { name: 'inputs', type: 'array', required: true },
+            { name: 'outputs', type: 'array', required: true, allowEmpty: true },
+            { name: 'fee', type: 'amount', required: true },
             { name: 'ttl', type: 'amount' },
             { name: 'certificates', type: 'array', allowEmpty: true },
             { name: 'withdrawals', type: 'array', allowEmpty: true },
             { name: 'mint', type: 'array', allowEmpty: true },
             { name: 'validityIntervalStart', type: 'amount' },
-            { name: 'protocolMagic', type: 'number', obligatory: true },
-            { name: 'networkId', type: 'number', obligatory: true },
+            { name: 'protocolMagic', type: 'number', required: true },
+            { name: 'networkId', type: 'number', required: true },
             { name: 'additionalWitnessRequests', type: 'array', allowEmpty: true },
             { name: 'derivationType', type: 'number' },
         ]);
 
         const inputsWithPath: InputWithPath[] = payload.inputs.map(input => {
             validateParams(input, [
-                { name: 'prev_hash', type: 'string', obligatory: true },
-                { name: 'prev_index', type: 'number', obligatory: true },
+                { name: 'prev_hash', type: 'string', required: true },
+                { name: 'prev_index', type: 'number', required: true },
             ]);
             return {
                 input: {
@@ -148,7 +148,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
         if (payload.withdrawals) {
             withdrawals = payload.withdrawals.map(withdrawal => {
                 validateParams(withdrawal, [
-                    { name: 'amount', type: 'amount', obligatory: true },
+                    { name: 'amount', type: 'amount', required: true },
                     { name: 'scriptHash', type: 'string' },
                 ]);
                 return {

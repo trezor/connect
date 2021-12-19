@@ -31,23 +31,23 @@ const ipv6AddressToHex = (ipv6Address: string) => ipv6Address.split(':').join(''
 
 const validatePoolMargin = (margin: CardanoPoolMargin) => {
     validateParams(margin, [
-        { name: 'numerator', type: 'string', obligatory: true },
-        { name: 'denominator', type: 'string', obligatory: true },
+        { name: 'numerator', type: 'string', required: true },
+        { name: 'denominator', type: 'string', required: true },
     ]);
 };
 
 const validatePoolMetadata = (metadata: CardanoPoolMetadata) => {
     validateParams(metadata, [
-        { name: 'url', type: 'string', obligatory: true },
-        { name: 'hash', type: 'string', obligatory: true },
+        { name: 'url', type: 'string', required: true },
+        { name: 'hash', type: 'string', required: true },
     ]);
 };
 
 const validatePoolRelay = (relay: CardanoPoolRelay) => {
-    validateParams(relay, [{ name: 'type', type: 'number', obligatory: true }]);
+    validateParams(relay, [{ name: 'type', type: 'number', required: true }]);
 
     if (relay.type === CardanoPoolRelayType.SINGLE_HOST_IP) {
-        const paramsToValidate = [{ name: 'port', type: 'number', obligatory: true }];
+        const paramsToValidate = [{ name: 'port', type: 'number', required: true }];
         if (relay.ipv4Address) {
             paramsToValidate.push({ name: 'ipv4Address', type: 'string' });
         }
@@ -65,11 +65,11 @@ const validatePoolRelay = (relay: CardanoPoolRelay) => {
         }
     } else if (relay.type === CardanoPoolRelayType.SINGLE_HOST_NAME) {
         validateParams(relay, [
-            { name: 'hostName', type: 'string', obligatory: true },
-            { name: 'port', type: 'number', obligatory: true },
+            { name: 'hostName', type: 'string', required: true },
+            { name: 'port', type: 'number', required: true },
         ]);
     } else if (relay.type === CardanoPoolRelayType.MULTIPLE_HOST_NAME) {
-        validateParams(relay, [{ name: 'hostName', type: 'string', obligatory: true }]);
+        validateParams(relay, [{ name: 'hostName', type: 'string', required: true }]);
     }
 };
 
@@ -77,7 +77,7 @@ const validatePoolOwners = (owners: CardanoPoolOwner[]) => {
     owners.forEach(owner => {
         if (owner.stakingKeyHash) {
             validateParams(owner, [
-                { name: 'stakingKeyHash', type: 'string', obligatory: !owner.stakingKeyPath },
+                { name: 'stakingKeyHash', type: 'string', required: !owner.stakingKeyPath },
             ]);
         }
 
@@ -104,14 +104,14 @@ const validatePoolOwners = (owners: CardanoPoolOwner[]) => {
 
 const validatePoolParameters = (poolParameters: CardanoPoolParameters) => {
     validateParams(poolParameters, [
-        { name: 'poolId', type: 'string', obligatory: true },
-        { name: 'vrfKeyHash', type: 'string', obligatory: true },
-        { name: 'pledge', type: 'string', obligatory: true },
-        { name: 'cost', type: 'string', obligatory: true },
-        { name: 'margin', type: 'object', obligatory: true },
-        { name: 'rewardAccount', type: 'string', obligatory: true },
-        { name: 'owners', type: 'array', obligatory: true },
-        { name: 'relays', type: 'array', obligatory: true, allowEmpty: true },
+        { name: 'poolId', type: 'string', required: true },
+        { name: 'vrfKeyHash', type: 'string', required: true },
+        { name: 'pledge', type: 'string', required: true },
+        { name: 'cost', type: 'string', required: true },
+        { name: 'margin', type: 'object', required: true },
+        { name: 'rewardAccount', type: 'string', required: true },
+        { name: 'owners', type: 'array', required: true },
+        { name: 'relays', type: 'array', required: true, allowEmpty: true },
         { name: 'metadata', type: 'object' },
     ]);
 
@@ -180,18 +180,18 @@ const transformPoolParameters = (
 export const transformCertificate = (
     certificate: CardanoCertificate,
 ): CertificateWithPoolOwnersAndRelays => {
-    const paramsToValidate = [{ name: 'type', type: 'number', obligatory: true }];
+    const paramsToValidate = [{ name: 'type', type: 'number', required: true }];
 
     if (certificate.type !== CardanoCertificateType.STAKE_POOL_REGISTRATION) {
         paramsToValidate.push({ name: 'scriptHash', type: 'string' });
     }
 
     if (certificate.type === CardanoCertificateType.STAKE_DELEGATION) {
-        paramsToValidate.push({ name: 'pool', type: 'string', obligatory: true });
+        paramsToValidate.push({ name: 'pool', type: 'string', required: true });
     }
 
     if (certificate.type === CardanoCertificateType.STAKE_POOL_REGISTRATION) {
-        paramsToValidate.push({ name: 'poolParameters', type: 'object', obligatory: true });
+        paramsToValidate.push({ name: 'poolParameters', type: 'object', required: true });
     }
 
     validateParams(certificate, paramsToValidate);

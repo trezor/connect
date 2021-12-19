@@ -71,8 +71,8 @@ export default class RequestLogin extends AbstractMethod {
 
             // validate incoming parameters
             validateParams(payload, [
-                { name: 'challengeHidden', type: 'string', obligatory: true },
-                { name: 'challengeVisual', type: 'string', obligatory: true },
+                { name: 'challengeHidden', type: 'string', required: true },
+                { name: 'challengeVisual', type: 'string', required: true },
             ]);
 
             this.params.challenge_hidden = payload.challengeHidden;

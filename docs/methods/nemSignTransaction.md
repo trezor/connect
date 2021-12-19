@@ -18,8 +18,8 @@ TrezorConnect.nemSignTransaction(params).then(function(result) {
 ### Params 
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L114-L117)
-* `path` - *obligatory* `string | Array<number>`
-* `transaction` - *obligatory* `Object` type of [NEMTransaction](../../src/js/types/nem.js#L41)
+* `path` - *required* `string | Array<number>`
+* `transaction` - *required* `Object` type of [NEMTransaction](../../src/js/types/nem.js#L41)
 
 ### Example
 Sign simple transaction

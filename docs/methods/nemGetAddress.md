@@ -17,7 +17,7 @@ TrezorConnect.nemGetAddress(params).then(function(result) {
 ### Params
 [****Optional common params****](commonParams.md)
 #### Exporting single address
-* `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
+* `path` — *required* `string | Array<number>` minimum length is `3`. [read more](path.md)
 * `address` — *optional* `string` address for validation (read `Handle button request` section below)
 * `network` — *optional* `number` `0x68` - Mainnet, `0x96` - Testnet, `0x60` - Mijin. Default is set to `Mainnet`
 * `showOnTrezor` — *optional* `boolean` determines if address will be displayed on device. Default is set to `true`

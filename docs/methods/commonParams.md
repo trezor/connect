@@ -3,7 +3,7 @@ Every call require an [`Object`](https://developer.mozilla.org/en-US/docs/Web/Ja
 All common parameters are optional.
 
 * `device` - *optional* `Object`
-    - `path` - *obligatory* `string` call to a direct device. Useful when working with multiple connected devices. This value is emitted by [`TrezorConnectEvent`](../events.md)
+    - `path` - *required* `string` call to a direct device. Useful when working with multiple connected devices. This value is emitted by [`TrezorConnectEvent`](../events.md)
     - `state` - *optional* `string` sets expected state. This value is emitted by [`TrezorConnectEvent`](../events.md)
     - `instance` - *optional* `number` sets an instance of device. Useful when working with one device and multiple passphrases. This value is emitted by [`TrezorConnectEvent`](../events.md)
 * `useEmptyPassphrase` — *optional* `boolean` method will not ask for a passphrase. Default is set to `false`

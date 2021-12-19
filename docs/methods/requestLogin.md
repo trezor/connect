@@ -33,11 +33,11 @@ TrezorConnect.requestLogin(params).then(function(result) {
 <br>
 Common parameter `useEmptyPassphrase` - is always set to `true` and it will be ignored by this method
 #### Login using server-side async challenge
-- `callback` — *obligatory* `function` which will be called from API to fetch `challengeHidden` and `challengeVisual` from server
+- `callback` — *required* `function` which will be called from API to fetch `challengeHidden` and `challengeVisual` from server
 
 #### Login without async challenge
-- `challengeHidden` - *obligatory* `string` hexadecimal value
-- `challengeVisual` - *obligatory* `string` text displayed on Trezor
+- `challengeHidden` - *required* `string` hexadecimal value
+- `challengeVisual` - *required* `string` text displayed on Trezor
 
 
 ### Example

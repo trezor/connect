@@ -26,8 +26,8 @@ export default class PushTransaction extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'tx', type: 'string', obligatory: true },
-            { name: 'coin', type: 'string', obligatory: true },
+            { name: 'tx', type: 'string', required: true },
+            { name: 'coin', type: 'string', required: true },
         ]);
 
         const coinInfo = getCoinInfo(payload.coin);

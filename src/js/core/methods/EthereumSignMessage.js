@@ -26,8 +26,8 @@ export default class EthereumSignMessage extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'path', obligatory: true },
-            { name: 'message', type: 'string', obligatory: true },
+            { name: 'path', required: true },
+            { name: 'message', type: 'string', required: true },
             { name: 'hex', type: 'boolean' },
         ]);
 

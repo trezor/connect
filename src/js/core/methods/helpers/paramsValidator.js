@@ -12,7 +12,7 @@ type ParamType = 'string' | 'number' | 'array' | 'array-buffer' | 'boolean' | 'a
 type Param = {
     name: string,
     type?: ParamType | ParamType[],
-    obligatory?: boolean,
+    required?: boolean,
     allowEmpty?: boolean,
 };
 
@@ -21,7 +21,7 @@ const invalidParameter = (message: string) => ERRORS.TypedError('Method_InvalidP
 export function validateParams<P: { [name: string]: any }>(params: P, schema: Param[]): P {
     schema.forEach(field => {
         const value = params[field.name];
-        if (field.obligatory && value == null) {
+        if (field.required && value == null) {
             // required parameter not found
             throw invalidParameter(`Parameter "${field.name}" is missing.`);
         }

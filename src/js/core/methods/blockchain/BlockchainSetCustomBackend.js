@@ -26,7 +26,7 @@ export default class BlockchainSetCustomBackend extends AbstractMethod {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'coin', type: 'string', obligatory: true },
+            { name: 'coin', type: 'string', required: true },
             { name: 'blockchainLink', type: 'object' },
         ]);
 

@@ -22,14 +22,14 @@ export const validateTrezorInputs = (
     trezorInputs.forEach(input => {
         validatePath(input.address_n);
         const useAmount = isSegwitPath(input.address_n);
-        // since 2.3.5 amount is obligatory for all inputs.
+        // since 2.3.5 amount is required for all inputs.
         // this change however is breaking 3rd party implementations
         // missing amount will be delivered by refTx object
         validateParams(input, [
-            { name: 'prev_hash', type: 'string', obligatory: true },
-            { name: 'prev_index', type: 'number', obligatory: true },
+            { name: 'prev_hash', type: 'string', required: true },
+            { name: 'prev_index', type: 'number', required: true },
             { name: 'script_type', type: 'string' },
-            { name: 'amount', type: 'string', obligatory: useAmount },
+            { name: 'amount', type: 'string', required: useAmount },
             { name: 'sequence', type: 'number' },
             { name: 'multisig', type: 'object' },
         ]);
