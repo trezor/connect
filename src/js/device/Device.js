@@ -41,7 +41,7 @@ export type RunOptions = {
     onlyOneActivity?: boolean,
 
     // cancel popup request when we are sure that there is no need to authenticate
-    // Method gets called after run() fetch new Features but before trezor-link dispatch "acquire" event
+    // Method gets called after run() fetch new Features but before @trezor/transport dispatch "acquire" event
     cancelPopupRequest?: Function,
 
     keepSession?: boolean,
@@ -140,7 +140,7 @@ class Device extends EventEmitter {
     }
 
     async acquire() {
-        // will be resolved after trezor-link acquire event
+        // will be resolved after @trezor/transport acquire event
         this.deferredActions[DEVICE.ACQUIRE] = createDeferred();
         this.deferredActions[DEVICE.ACQUIRED] = createDeferred();
         try {
@@ -161,7 +161,7 @@ class Device extends EventEmitter {
             }
             this.commands = new DeviceCommands(this, this.transport, sessionID);
 
-            // future defer for trezor-link release event
+            // future defer for @trezor/transport release event
             this.deferredActions[DEVICE.RELEASE] = createDeferred();
         } catch (error) {
             this.deferredActions[DEVICE.ACQUIRED].resolve();
@@ -306,7 +306,7 @@ class Device extends EventEmitter {
             this.keepSession = true;
         }
 
-        // wait for event from trezor-link
+        // wait for event from @trezor/transport
         await this.deferredActions[DEVICE.ACQUIRE].promise;
 
         // call inner function

@@ -11,7 +11,7 @@ export const ERROR_CODES = {
     Popup_ConnectionMissing: 'Unable to establish connection with iframe', // thrown by popup
 
     Transport_Missing: 'Transport is missing', // no transport available
-    Transport_InvalidProtobuf: '', // generic error from transport layer (trezor-link)
+    Transport_InvalidProtobuf: '', // generic error from transport layer (@trezor/transport)
 
     Method_InvalidPackage:
         'This version of trezor-connect is not suitable to work without browser. Use trezor-connect@extended package instead', // thrown by node and react-native env while using regular 'web' package

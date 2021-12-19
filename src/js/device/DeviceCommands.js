@@ -682,16 +682,16 @@ export default class DeviceCommands {
         }
     }
 
-    // TODO: implement whole "cancel" logic in "trezor-link"
+    // TODO: implement whole "cancel" logic in @trezor/transport
     async cancel() {
-        // TEMP: this patch should be implemented in 'trezor-link' instead
+        // TEMP: this patch should be implemented in @trezor/transport instead
         // NOTE:
         // few ButtonRequests can be canceled by design because they are awaiting for user input
         // those are: Pin, Passphrase, Word
         // _cancelableRequest holds reference to the UI promise `reject` method
         // in those cases `this.transport.call` needs to be used
         // calling `this.transport.post` (below) will result with throttling somewhere in low level
-        // trezor-link or trezord (not sure which one) will reject NEXT incoming call with "Cancelled" error
+        // @trezor/transport or trezord (not sure which one) will reject NEXT incoming call with "Cancelled" error
         if (this._cancelableRequest) {
             this._cancelableRequest();
             this._cancelableRequest = undefined;

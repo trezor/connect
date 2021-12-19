@@ -71,7 +71,7 @@ export namespace DEVICE {
 
     const LOADING = 'device-loading';
 
-    // trezor-link events in protobuf format
+    // @trezor/transport events in protobuf format
     const BUTTON = 'button';
     const PIN = 'pin';
     const PASSPHRASE = 'passphrase';

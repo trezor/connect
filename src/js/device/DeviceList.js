@@ -22,7 +22,7 @@ const { BridgeV2, Fallback } = TrezorLink;
 // custom log
 const _log = initLog('DeviceList');
 
-// TODO: plugins are not typed in 'trezor-link'
+// TODO: plugins are not typed in @trezor/transport
 type LowLevelPlugin = {
     name: 'WebUsbPlugin' | 'ReactNativePlugin',
     unreadableHidDeviceChange: {
@@ -108,7 +108,7 @@ export default class DeviceList extends EventEmitter {
 
             const { activeName } = transport;
             if (activeName === 'LowlevelTransportWithSharedConnections') {
-                // $FlowIssue "activeTransport" is not typed in trezor-link
+                // $FlowIssue "activeTransport" is not typed in @trezor/transport
                 this.transportPlugin = transport.activeTransport.plugin;
             }
 

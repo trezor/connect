@@ -1,15 +1,11 @@
-[include]
-.*/node_modules/trezor-link
-
 [ignore]
-.*/node_modules/protobufjs-old-fixed-webpack/src/bower.json
 .*/_old/.*
 .*/build/.*
+.*/npm/.*
+.*/npm-extended/.*
 .*/trezor-common/.*
 
 [libs]
-./node_modules/trezor-link/flowtype/chrome.js
-./node_modules/trezor-link/flowtype/webusb.js
 ./src/flowtype/
 
 [options]

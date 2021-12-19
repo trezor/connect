@@ -9,13 +9,13 @@ The beginning and source of truth are the `.proto` definitions in the [firmware 
 
 `trezor-common` is included in Connect as a git submodule mounted at `submodules/trezor-common`.
 
-Here, `.proto` definitions are translated to a JSON format using [proto2js](https://www.npmjs.com/package/proto2js) package. This JSON is used on runtime by the [trezor-link](https://github.com/trezor/trezor-link/) (de)serialization logic and to generate the Flow and Typescript definitions.
+Here, `.proto` definitions are translated to a JSON format using [proto2js](https://www.npmjs.com/package/proto2js) package. This JSON is used on runtime by the [@trezor/transport](https://github.com/trezor/trezor-suite/tree/develop/packages/transport) (de)serialization logic and to generate the Flow and Typescript definitions.
 
 The JSON is transformed to Flow and/or TypeScript definitions by a script in `scripts/protobuf-types.js`. The script also applies 'patches' I.e. after-the-fact fixes manually described in `scripts/protobuf-patches.js`. The patches compensate for/fix
 - The source `.proto` definitions that do not reflect the actual business logic. Usually fields marked as required which are in fact optional.
-- Fields typed as `uint32`, `uint64`, `sint32`, `sint64` in protobuf that need to be represented as strings in runtime because of javascript number's insufficient range. Runtime conversion is handled automatically by `trezor-link`.
+- Fields typed as `uint32`, `uint64`, `sint32`, `sint64` in protobuf that need to be represented as strings in runtime because of javascript number's insufficient range. Runtime conversion is handled automatically by `@trezor/transport`.
 - Similarly, fields typed as `bytes` in protobuf may be represented as hexadecimal `string`, `Buffer`, `Uint8Array` or `Array<number>` in runtime.
-- Optional protobuf fields that get typed as `<T> | undefined` but are in fact deserialized as `<T> | null`. This could be handled globally by `trezor-link`. The patches exist mainly for historical reasons.
+- Optional protobuf fields that get typed as `<T> | undefined` but are in fact deserialized as `<T> | null`. This could be handled globally by `@trezor/transport`. The patches exist mainly for historical reasons.
 
 All these steps are done manually and all the generated files are tracked in git. It's also not uncommon to circumvent
 some step by eg. generating the messages.json file not from the Common submodule but directly from the firmware repo.

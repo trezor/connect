@@ -79,7 +79,7 @@ const getDiff = (
 };
 
 export default class DescriptorStream extends EventEmitter {
-    // actual low-level transport, from trezor-link
+    // actual low-level transport, from @trezor/transport
     transport: Transport;
 
     // if the transport works

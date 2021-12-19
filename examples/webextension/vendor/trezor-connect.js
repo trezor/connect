@@ -1594,7 +1594,7 @@ var RELEASE = 'device-release';
 var ACQUIRED = 'device-acquired';
 var RELEASED = 'device-released';
 var USED_ELSEWHERE = 'device-used_elsewhere';
-var LOADING = 'device-loading'; // trezor-link events in protobuf format
+var LOADING = 'device-loading'; // @trezor/transport events in protobuf format
 
 var BUTTON = 'button';
 var PIN = 'pin';
