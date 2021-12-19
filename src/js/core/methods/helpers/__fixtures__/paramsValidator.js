@@ -39,28 +39,28 @@ export const validateParams = [
     },
     {
         description: 'amount valid',
-        type: 'amount',
+        type: 'int',
         value: '10',
         success: true,
     },
     {
         description: 'amount invalid leading zeros',
-        type: 'amount',
+        type: 'int',
         value: '01',
     },
     {
         description: 'amount invalid decimals',
-        type: 'amount',
+        type: 'int',
         value: '0.1',
     },
     {
         description: 'amount invalid digits',
-        type: 'amount',
+        type: 'int',
         value: '123f',
     },
     {
         description: 'amount invalid type',
-        type: 'amount',
+        type: 'int',
         value: true,
     },
     {

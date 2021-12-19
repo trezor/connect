@@ -29,7 +29,7 @@ export const validateTrezorInputs = (
             { name: 'prev_hash', type: 'string', required: true },
             { name: 'prev_index', type: 'number', required: true },
             { name: 'script_type', type: 'string' },
-            { name: 'amount', type: 'string', required: useAmount },
+            { name: 'amount', type: 'int', required: useAmount },
             { name: 'sequence', type: 'number' },
             { name: 'multisig', type: 'object' },
         ]);

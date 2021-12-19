@@ -65,7 +65,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
         case 'createAccount':
             validateParams(op, [
                 { name: 'destination', type: 'string', required: true },
-                { name: 'startingBalance', type: 'amount', required: true },
+                { name: 'startingBalance', type: 'int', required: true },
             ]);
             return {
                 type: 'StellarCreateAccountOp',
@@ -77,7 +77,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
         case 'payment':
             validateParams(op, [
                 { name: 'destination', type: 'string', required: true },
-                { name: 'amount', type: 'amount', required: true },
+                { name: 'amount', type: 'int', required: true },
             ]);
             return {
                 type: 'StellarPaymentOp',
@@ -88,7 +88,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
             };
 
         case 'pathPaymentStrictReceive':
-            validateParams(op, [{ name: 'destAmount', type: 'amount', required: true }]);
+            validateParams(op, [{ name: 'destAmount', type: 'int', required: true }]);
             return {
                 type: 'StellarPathPaymentStrictReceiveOp',
                 source_account: op.source,
@@ -101,7 +101,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
             };
 
         case 'pathPaymentStrictSend':
-            validateParams(op, [{ name: 'destMin', type: 'amount', required: true }]);
+            validateParams(op, [{ name: 'destMin', type: 'int', required: true }]);
             return {
                 type: 'StellarPathPaymentStrictSendOp',
                 source_account: op.source,
@@ -114,7 +114,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
             };
 
         case 'createPassiveSellOffer':
-            validateParams(op, [{ name: 'amount', type: 'amount', required: true }]);
+            validateParams(op, [{ name: 'amount', type: 'int', required: true }]);
             return {
                 type: 'StellarCreatePassiveSellOfferOp',
                 source_account: op.source,
@@ -126,7 +126,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
             };
 
         case 'manageSellOffer':
-            validateParams(op, [{ name: 'amount', type: 'amount', required: true }]);
+            validateParams(op, [{ name: 'amount', type: 'int', required: true }]);
             return {
                 type: 'StellarManageSellOfferOp',
                 source_account: op.source,
@@ -139,7 +139,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
             };
 
         case 'manageBuyOffer':
-            validateParams(op, [{ name: 'amount', type: 'amount', required: true }]);
+            validateParams(op, [{ name: 'amount', type: 'int', required: true }]);
             return {
                 type: 'StellarManageBuyOfferOp',
                 source_account: op.source,
@@ -175,7 +175,7 @@ const transformOperation = (op: StellarOperation): ?StellarOperationMessage => {
         }
 
         case 'changeTrust':
-            validateParams(op, [{ name: 'limit', type: 'amount' }]);
+            validateParams(op, [{ name: 'limit', type: 'int' }]);
             return {
                 type: 'StellarChangeTrustOp',
                 source_account: op.source,

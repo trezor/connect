@@ -33,7 +33,7 @@ export default class RippleSignTransaction extends AbstractMethod {
         const { transaction } = payload;
 
         validateParams(transaction, [
-            { name: 'fee', type: 'string' },
+            { name: 'fee', type: 'int' },
             { name: 'flags', type: 'number' },
             { name: 'sequence', type: 'number' },
             { name: 'maxLedgerVersion', type: 'number' },
@@ -41,7 +41,7 @@ export default class RippleSignTransaction extends AbstractMethod {
         ]);
 
         validateParams(transaction.payment, [
-            { name: 'amount', type: 'string', required: true },
+            { name: 'amount', type: 'int', required: true },
             { name: 'destination', type: 'string', required: true },
             { name: 'destinationTag', type: 'number' },
         ]);

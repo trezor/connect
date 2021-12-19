@@ -24,7 +24,7 @@ const transformCatalystRegistrationParameters = (
     validateParams(catalystRegistrationParameters, [
         { name: 'votingPublicKey', type: 'string', required: true },
         { name: 'stakingPath', required: true },
-        { name: 'nonce', type: 'amount', required: true },
+        { name: 'nonce', type: 'int', required: true },
     ]);
     validateAddressParameters(catalystRegistrationParameters.rewardAddressParameters);
 

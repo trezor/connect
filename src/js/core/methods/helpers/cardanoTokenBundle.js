@@ -13,8 +13,8 @@ const validateTokens = (tokenAmounts: CardanoToken[]) => {
     tokenAmounts.forEach(tokenAmount => {
         validateParams(tokenAmount, [
             { name: 'assetNameBytes', type: 'string', required: true },
-            { name: 'amount', type: 'amount' },
-            { name: 'mintAmount', type: 'amount' },
+            { name: 'amount', type: 'int' },
+            { name: 'mintAmount', type: 'int' },
         ]);
     });
 };
