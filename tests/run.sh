@@ -32,8 +32,9 @@ trap cleanup EXIT
 runDocker() {
   echo "Pulling latest trezor-user-env"
   "$DOCKER_PATH" pull "$USER_ENV_IMAGE"
+  # `--rm` flag will automatically delete container when done
   dockerID=$(
-    "$DOCKER_PATH" run -d \
+    "$DOCKER_PATH" run -d --rm \
       -e SDL_VIDEODRIVER="dummy" \
       -p "9001:9001" \
       -p "21326:21326" \
