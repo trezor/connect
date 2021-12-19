@@ -48,9 +48,9 @@ export default class SignTransaction extends AbstractMethod<'signTransaction'> {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'coin', type: 'string', obligatory: true },
-            { name: 'inputs', type: 'array', obligatory: true },
-            { name: 'outputs', type: 'array', obligatory: true },
+            { name: 'coin', type: 'string', required: true },
+            { name: 'inputs', type: 'array', required: true },
+            { name: 'outputs', type: 'array', required: true },
             { name: 'refTxs', type: 'array', allowEmpty: true },
             { name: 'account', type: 'object' },
             { name: 'locktime', type: 'number' },

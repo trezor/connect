@@ -16,8 +16,8 @@ TrezorConnect.binanceSignTransaction(params).then(function(result) {
 
 ### Params 
 [****Optional common params****](commonParams.md)
-* `path` — *obligatory* `string | Array<number>` minimum length is `5`. [read more](path.md)
-* `transaction` - *obligatory* `Object` type of [Transaction](../../src/js/types/binance.js#L61-71)
+* `path` — *required* `string | Array<number>` minimum length is `5`. [read more](path.md)
+* `transaction` - *required* `Object` type of [Transaction](../../src/js/types/binance.js#L61-71)
 
 ### Transfer example
 ```javascript

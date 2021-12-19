@@ -17,8 +17,8 @@ TrezorConnect.eosSignTransaction(params).then(function(result) {
 ### Params 
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L69-L72)
-* `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
-* `transaction` - *obligatory* `Object` type of [Transaction](../../src/js/types/eos.js#L145-L149)
+* `path` — *required* `string | Array<number>` minimum length is `3`. [read more](path.md)
+* `transaction` - *required* `Object` type of [Transaction](../../src/js/types/eos.js#L145-L149)
 
 ### Transfer example
 ```javascript

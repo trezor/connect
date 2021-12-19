@@ -219,10 +219,10 @@ export const validateReferencedTransactions = (
         // TODO: detailed params validation will be addressed in https://github.com/trezor/connect/pull/782
         // currently it's 1:1 with previous validation in SignTransaction.js method
         validateParams(tx, [
-            { name: 'hash', type: 'string', obligatory: true },
-            { name: 'inputs', type: 'array', obligatory: true },
-            { name: 'version', type: 'number', obligatory: true },
-            { name: 'lock_time', type: 'number', obligatory: true },
+            { name: 'hash', type: 'string', required: true },
+            { name: 'inputs', type: 'array', required: true },
+            { name: 'version', type: 'number', required: true },
+            { name: 'lock_time', type: 'number', required: true },
             { name: 'extra_data', type: 'string' },
             { name: 'timestamp', type: 'number' },
             { name: 'version_group_id', type: 'number' },
@@ -232,19 +232,19 @@ export const validateReferencedTransactions = (
         if (origTxs.includes(tx.hash)) {
             // validate specific fields of origTx
             // protobuf.TxInput
-            validateParams(tx, [{ name: 'outputs', type: 'array', obligatory: true }]);
+            validateParams(tx, [{ name: 'outputs', type: 'array', required: true }]);
             // TODO: detailed validation will be addressed in #782
             return tx;
         }
 
         // validate specific fields of refTx
-        validateParams(tx, [{ name: 'bin_outputs', type: 'array', obligatory: true }]);
+        validateParams(tx, [{ name: 'bin_outputs', type: 'array', required: true }]);
         tx.inputs.forEach(input => {
             validateParams(input, [
-                { name: 'prev_hash', type: 'string', obligatory: true },
-                { name: 'prev_index', type: 'number', obligatory: true },
-                { name: 'script_sig', type: 'string', obligatory: true },
-                { name: 'sequence', type: 'number', obligatory: true },
+                { name: 'prev_hash', type: 'string', required: true },
+                { name: 'prev_index', type: 'number', required: true },
+                { name: 'script_sig', type: 'string', required: true },
+                { name: 'sequence', type: 'number', required: true },
                 { name: 'decred_tree', type: 'number' },
             ]);
         });

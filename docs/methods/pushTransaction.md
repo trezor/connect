@@ -16,8 +16,8 @@ TrezorConnect.pushTransaction(params).then(function(result) {
 ### Params 
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L119-L22)
-* `tx` - *obligatory* `string` serialized transaction,
-* `coin` - *obligatory* `string` Determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
+* `tx` - *required* `string` serialized transaction,
+* `coin` - *required* `string` Determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 
 ### Example
 ```javascript

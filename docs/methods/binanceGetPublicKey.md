@@ -17,7 +17,7 @@ TrezorConnect.binanceGetPublicKey(params).then(function(result) {
 ### Params
 [****Optional common params****](commonParams.md)
 #### Exporting single address
-* `path` — *obligatory* `string | Array<number>` minimum length is `5`. [read more](path.md)
+* `path` — *required* `string | Array<number>` minimum length is `5`. [read more](path.md)
 * `showOnTrezor` — *optional* `boolean` determines if address will be displayed on device. Default is set to `true`
 
 #### Exporting bundle of addresses

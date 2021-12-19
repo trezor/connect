@@ -56,9 +56,9 @@ export default class CardanoGetAddress extends AbstractMethod<'cardanoGetAddress
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
-                { name: 'addressParameters', type: 'object', obligatory: true },
-                { name: 'networkId', type: 'number', obligatory: true },
-                { name: 'protocolMagic', type: 'number', obligatory: true },
+                { name: 'addressParameters', type: 'object', required: true },
+                { name: 'networkId', type: 'number', required: true },
+                { name: 'protocolMagic', type: 'number', required: true },
                 { name: 'derivationType', type: 'number' },
                 { name: 'address', type: 'string' },
                 { name: 'showOnTrezor', type: 'boolean' },

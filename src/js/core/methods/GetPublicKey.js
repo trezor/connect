@@ -40,7 +40,7 @@ export default class GetPublicKey extends AbstractMethod<'getPublicKey'> {
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
-                { name: 'path', obligatory: true },
+                { name: 'path', required: true },
                 { name: 'coin', type: 'string' },
                 { name: 'crossChain', type: 'boolean' },
                 { name: 'showOnTrezor', type: 'boolean' },

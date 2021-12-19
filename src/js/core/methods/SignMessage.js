@@ -18,9 +18,9 @@ export default class SignMessage extends AbstractMethod<'signMessage'> {
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'path', obligatory: true },
+            { name: 'path', required: true },
             { name: 'coin', type: 'string' },
-            { name: 'message', type: 'string', obligatory: true },
+            { name: 'message', type: 'string', required: true },
             { name: 'hex', type: 'boolean' },
             { name: 'no_script_type', type: 'boolean' },
         ]);

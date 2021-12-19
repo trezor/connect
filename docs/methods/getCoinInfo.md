@@ -16,7 +16,7 @@ TrezorConnect.getCoinInfo(params).then(function(result) {
 ### Params
 [****Optional common params****](commonParams.md)
 #### Exporting single address
-* `coin` — *obligatory* `string` coin symbol (btc, eth, bch, ...).
+* `coin` — *required* `string` coin symbol (btc, eth, bch, ...).
 
 ### Example
 Get coin info for Bitcoin.

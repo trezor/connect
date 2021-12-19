@@ -18,10 +18,10 @@ TrezorConnect.verifyMessage(params).then(function(result) {
 ### Params 
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L156-L161)
-* `address` - *obligatory* `string` signer address,
-* `message` - *obligatory* `string` signed message,
-* `signature` - *obligatory* `string` signature in base64 format,
-* `coin` - *obligatory* `string` Determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
+* `address` - *required* `string` signer address,
+* `message` - *required* `string` signed message,
+* `signature` - *required* `string` signature in base64 format,
+* `coin` - *required* `string` Determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 * `hex` - *optional* `boolean` convert message from hex
 
 ### Example

@@ -27,9 +27,9 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'path', obligatory: true },
-            { name: 'data', type: 'object', obligatory: true },
-            { name: 'metamask_v4_compat', type: 'boolean', obligatory: true },
+            { name: 'path', required: true },
+            { name: 'data', type: 'object', required: true },
+            { name: 'metamask_v4_compat', type: 'boolean', required: true },
         ]);
 
         const path = validatePath(payload.path, 3);

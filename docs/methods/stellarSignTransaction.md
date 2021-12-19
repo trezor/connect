@@ -18,9 +18,9 @@ TrezorConnect.stellarSignTransaction(params).then(function(result) {
 ### Params
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L149-L154)
-* `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
-* `networkPassphrase` - *obligatory* `string` network passphrase
-* `transaction` - *obligatory* `Object` type of [StellarTransaction](../../src/js/types/stellar.js#L129)
+* `path` — *required* `string | Array<number>` minimum length is `3`. [read more](path.md)
+* `networkPassphrase` - *required* `string` network passphrase
+* `transaction` - *required* `Object` type of [StellarTransaction](../../src/js/types/stellar.js#L129)
 
 ### Stellar SDK compatibility
 `stellar-sdk` is not a part of `trezor-connect` repository.

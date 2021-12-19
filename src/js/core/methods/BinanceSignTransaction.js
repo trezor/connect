@@ -24,8 +24,8 @@ export default class BinanceSignTransaction extends AbstractMethod<'binanceSignT
         const { payload } = this;
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'path', type: 'string', obligatory: true },
-            { name: 'transaction', obligatory: true },
+            { name: 'path', type: 'string', required: true },
+            { name: 'transaction', required: true },
         ]);
 
         const path = validatePath(payload.path, 3);

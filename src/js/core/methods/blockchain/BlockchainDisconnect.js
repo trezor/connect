@@ -24,7 +24,7 @@ export default class BlockchainDisconnect extends AbstractMethod<'blockchainDisc
         const { payload } = this;
 
         // validate incoming parameters
-        validateParams(payload, [{ name: 'coin', type: 'string', obligatory: true }]);
+        validateParams(payload, [{ name: 'coin', type: 'string', required: true }]);
 
         const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {

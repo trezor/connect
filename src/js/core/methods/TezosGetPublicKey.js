@@ -39,7 +39,7 @@ export default class TezosGetPublicKey extends AbstractMethod<'tezosGetPublicKey
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
-                { name: 'path', obligatory: true },
+                { name: 'path', required: true },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 

@@ -83,7 +83,7 @@ export const validateHDOutput = (
             };
 
         case 'send-max':
-            validateParams(output, [{ name: 'address', type: 'string', obligatory: true }]);
+            validateParams(output, [{ name: 'address', type: 'string', required: true }]);
             validateAddress(output.address);
             return {
                 type: 'send-max',
@@ -91,7 +91,7 @@ export const validateHDOutput = (
             };
 
         case 'noaddress':
-            validateParams(output, [{ name: 'amount', type: 'string', obligatory: true }]);
+            validateParams(output, [{ name: 'amount', type: 'string', required: true }]);
             return {
                 type: 'noaddress',
                 amount: output.amount,
@@ -104,8 +104,8 @@ export const validateHDOutput = (
 
         default:
             validateParams(output, [
-                { name: 'amount', type: 'string', obligatory: true },
-                { name: 'address', type: 'string', obligatory: true },
+                { name: 'amount', type: 'string', required: true },
+                { name: 'address', type: 'string', required: true },
             ]);
             validateAddress(output.address);
             return {

@@ -25,12 +25,12 @@ export default class BlockchainSubscribe extends AbstractMethod<'blockchainSubsc
         // validate incoming parameters
         validateParams(payload, [
             { name: 'accounts', type: 'array', allowEmpty: true },
-            { name: 'coin', type: 'string', obligatory: true },
+            { name: 'coin', type: 'string', required: true },
         ]);
 
         if (payload.accounts) {
             payload.accounts.forEach(account => {
-                validateParams(account, [{ name: 'descriptor', type: 'string', obligatory: true }]);
+                validateParams(account, [{ name: 'descriptor', type: 'string', required: true }]);
             });
         }
 

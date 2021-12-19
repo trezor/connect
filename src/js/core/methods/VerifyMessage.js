@@ -19,10 +19,10 @@ export default class VerifyMessage extends AbstractMethod<'verifyMessage'> {
 
         // validate incoming parameters for each batch
         validateParams(payload, [
-            { name: 'address', type: 'string', obligatory: true },
-            { name: 'signature', type: 'string', obligatory: true },
-            { name: 'message', type: 'string', obligatory: true },
-            { name: 'coin', type: 'string', obligatory: true },
+            { name: 'address', type: 'string', required: true },
+            { name: 'signature', type: 'string', required: true },
+            { name: 'message', type: 'string', required: true },
+            { name: 'coin', type: 'string', required: true },
             { name: 'hex', type: 'boolean' },
         ]);
 
