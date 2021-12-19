@@ -1300,12 +1300,6 @@ export type EthereumTypedDataValueAck = {
     value: string,
 };
 
-// EthereumTypedDataSignature
-export type EthereumTypedDataSignature = {
-    signature: string,
-    address: string,
-};
-
 // EthereumGetPublicKey
 export type EthereumGetPublicKey = {
     address_n: number[],
@@ -1402,6 +1396,19 @@ export const Enum_BackupType = Object.freeze({
     Slip39_Advanced: 2,
 });
 export type BackupType = $Keys<typeof Enum_BackupType>;
+
+// EthereumSignTypedHash
+export type EthereumSignTypedHash = {
+    address_n: number[],
+    domain_separator_hash: string,
+    message_hash: string,
+};
+
+// EthereumTypedDataSignature
+export type EthereumTypedDataSignature = {
+    signature: string,
+    address: string,
+};
 
 export const Enum_SafetyCheckLevel = Object.freeze({
     Strict: 0,
@@ -2279,7 +2286,6 @@ export type MessageType = {
     EthereumTypedDataStructAck: EthereumTypedDataStructAck,
     EthereumTypedDataValueRequest: EthereumTypedDataValueRequest,
     EthereumTypedDataValueAck: $Exact<EthereumTypedDataValueAck>,
-    EthereumTypedDataSignature: $Exact<EthereumTypedDataSignature>,
     EthereumGetPublicKey: EthereumGetPublicKey,
     EthereumPublicKey: $Exact<EthereumPublicKey>,
     EthereumGetAddress: EthereumGetAddress,
@@ -2292,6 +2298,8 @@ export type MessageType = {
     EthereumSignMessage: $Exact<EthereumSignMessage>,
     EthereumMessageSignature: $Exact<EthereumMessageSignature>,
     EthereumVerifyMessage: $Exact<EthereumVerifyMessage>,
+    EthereumSignTypedHash: $Exact<EthereumSignTypedHash>,
+    EthereumTypedDataSignature: $Exact<EthereumTypedDataSignature>,
     Initialize: Initialize,
     GetFeatures: GetFeatures,
     Features: $Exact<Features>,

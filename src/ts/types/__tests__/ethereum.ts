@@ -232,4 +232,10 @@ export const signTypedData = async () => {
         payload.address;
         payload.signature;
     }
+
+    await TrezorConnect.ethereumSignTypedData({
+        path: 'm/44',
+        message_hash: '0x',
+        domain_separator_hash: '0x',
+    });
 };

@@ -254,10 +254,13 @@ export type API = {
     ethereumGetPublicKey: Bundled<Ethereum.EthereumGetPublicKey, Bitcoin.HDNodeResponse>,
     ethereumSignTransaction: Method<Ethereum.EthereumSignTransaction, Ethereum.EthereumSignedTx>,
     ethereumSignMessage: Method<Ethereum.EthereumSignMessage, Protobuf.EthereumMessageSignature>,
-    ethereumSignTypedData: Method<
+    ethereumSignTypedData: Mixed<
         Ethereum.EthereumSignTypedData,
+        Ethereum.EthereumSignTypedHash,
+        Protobuf.EthereumTypedDataSignature,
         Protobuf.EthereumTypedDataSignature,
     >,
+
     ethereumVerifyMessage: Method<Ethereum.EthereumVerifyMessage, P.DefaultMessage>,
 
     // NEM

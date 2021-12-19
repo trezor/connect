@@ -2,11 +2,13 @@
 .*/node_modules/trezor-link
 
 [ignore]
-.*/node_modules/protobufjs-old-fixed-webpack/src/bower.json
-.*/_old/.*
 .*/build/.*
 .*/trezor-common/.*
 .*/ts/.*
+.*/plugins/.*
+.*/npm/.*
+.*/npm-extended/.*
+
 
 [libs]
 ./node_modules/trezor-link/flowtype/chrome.js

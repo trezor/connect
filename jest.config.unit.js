@@ -6,7 +6,7 @@ module.exports = {
     rootDir: './',
     moduleFileExtensions: ['js'],
     testMatch: ['**/src/js/**/*.test.(js)'],
-    testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/src/js/device/_old/'],
+    testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/src/js/plugins'],
     coverageDirectory: './coverage/',
     collectCoverage: true,
     modulePathIgnorePatterns: ['node_modules'],

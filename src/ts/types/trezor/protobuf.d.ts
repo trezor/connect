@@ -1275,12 +1275,6 @@ export type EthereumTypedDataValueAck = {
     value: string;
 };
 
-// EthereumTypedDataSignature
-export type EthereumTypedDataSignature = {
-    signature: string;
-    address: string;
-};
-
 // EthereumGetPublicKey
 export type EthereumGetPublicKey = {
     address_n: number[];
@@ -1377,6 +1371,19 @@ export enum Enum_BackupType {
     Slip39_Advanced = 2,
 }
 export type BackupType = keyof typeof Enum_BackupType;
+
+// EthereumSignTypedHash
+export type EthereumSignTypedHash = {
+    address_n: number[];
+    domain_separator_hash: string;
+    message_hash: string;
+};
+
+// EthereumTypedDataSignature
+export type EthereumTypedDataSignature = {
+    signature: string;
+    address: string;
+};
 
 export enum Enum_SafetyCheckLevel {
     Strict = 0,
