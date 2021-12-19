@@ -21,7 +21,9 @@ _Note: Running tests with custom firmware [is not currently possible](https://gi
 
 ### On Linux
 #### Prerequisites
+
 - [Docker](https://docs.docker.com/engine/install/)
+- [Podman](https://podman.io/getting-started/installation) using `tests/run.sh -D podman` (not officially supported)
 
 ### On MacOS
 _Note: As of now M1 Macs aren't supported. See [this issue](https://github.com/trezor/trezor-suite/issues/3616) for detailed information._
