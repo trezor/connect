@@ -21,7 +21,7 @@ export default class GetCoinInfo extends AbstractMethod<'getCoinInfo'> {
 
         const { payload } = this;
 
-        validateParams(payload, [{ name: 'coin', type: 'string', obligatory: true }]);
+        validateParams(payload, [{ name: 'coin', type: 'string', required: true }]);
 
         const coinInfo = getCoinInfo(payload.coin);
         if (!coinInfo) {

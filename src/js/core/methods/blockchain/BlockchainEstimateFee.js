@@ -29,7 +29,7 @@ export default class BlockchainEstimateFee extends AbstractMethod<'blockchainEst
 
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'coin', type: 'string', obligatory: true },
+            { name: 'coin', type: 'string', required: true },
             { name: 'request', type: 'object' },
         ]);
 

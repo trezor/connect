@@ -12,7 +12,7 @@ type ParamType = 'string' | 'number' | 'array' | 'array-buffer' | 'boolean' | 'a
 type Param = {
     name: string,
     type?: ParamType | ParamType[],
-    obligatory?: boolean,
+    required?: boolean,
     allowEmpty?: boolean,
     allowNegative?: boolean,
 };
@@ -25,7 +25,7 @@ export function validateParams<P: $ReadOnly<{ [name: string]: any }>>(
 ): P {
     schema.forEach(field => {
         const value = params[field.name];
-        if (field.obligatory && value == null) {
+        if (field.required && value == null) {
             // required parameter not found
             throw invalidParameter(`Parameter "${field.name}" is missing.`);
         }

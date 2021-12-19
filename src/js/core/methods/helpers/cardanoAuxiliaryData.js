@@ -22,9 +22,9 @@ const transformCatalystRegistrationParameters = (
     catalystRegistrationParameters: CardanoCatalystRegistrationParameters,
 ): CardanoCatalystRegistrationParametersType => {
     validateParams(catalystRegistrationParameters, [
-        { name: 'votingPublicKey', type: 'string', obligatory: true },
-        { name: 'stakingPath', obligatory: true },
-        { name: 'nonce', type: 'amount', obligatory: true },
+        { name: 'votingPublicKey', type: 'string', required: true },
+        { name: 'stakingPath', required: true },
+        { name: 'nonce', type: 'amount', required: true },
     ]);
     validateAddressParameters(catalystRegistrationParameters.rewardAddressParameters);
 

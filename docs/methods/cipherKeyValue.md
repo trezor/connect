@@ -21,7 +21,7 @@ TrezorConnect.cipherKeyValue(params).then(function(result) {
 Common parameter `useEmptyPassphrase` - is always set to `true` and it will be ignored by this method
 
 #### Encrypt single value
-* `path` — *obligatory* `string | Array<number>` minimum length is `1`. [read more](path.md)
+* `path` — *required* `string | Array<number>` minimum length is `1`. [read more](path.md)
 * `key` — *optional* `string` a message shown on device
 * `value` — *optional* `string` hexadecimal value with length a multiple of 16 bytes (32 letters in hexadecimal). Value is what is actually being encrypted.
 * `askOnEncrypt` - *optional* `boolean` should user confirm encrypt?

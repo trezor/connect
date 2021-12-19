@@ -18,12 +18,12 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 ### Params
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/networks/cardano.js#L87-L211)
-* `signingMode` - *obligatory* [CardanoTxSigningMode](#CardanoTxSigningMode)
-* `inputs` - *obligatory* `Array` of [CardanoInput](../../src/js/types/networks/cardano.js#L87)
-* `outputs` - *obligatory* `Array` of [CardanoOutput](../../src/js/types/networks/cardano.js#L103)
-* `fee` - *obligatory* `String`
-* `protocolMagic` - *obligatory* `Integer` 764824073 for Mainnet, 42 for Testnet
-* `networkId` - *obligatory* `Integer` 1 for Mainnet, 0 for Testnet
+* `signingMode` - *required* [CardanoTxSigningMode](#CardanoTxSigningMode)
+* `inputs` - *required* `Array` of [CardanoInput](../../src/js/types/networks/cardano.js#L87)
+* `outputs` - *required* `Array` of [CardanoOutput](../../src/js/types/networks/cardano.js#L103)
+* `fee` - *required* `String`
+* `protocolMagic` - *required* `Integer` 764824073 for Mainnet, 42 for Testnet
+* `networkId` - *required* `Integer` 1 for Mainnet, 0 for Testnet
 * `ttl` - *optional* `String`
 * `validityIntervalStart` - *optional* `String`
 * `certificates` - *optional* `Array` of [CardanoCertificate](../../src/js/types/networks/cardano.js#L150)

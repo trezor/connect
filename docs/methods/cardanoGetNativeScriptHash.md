@@ -16,13 +16,13 @@ TrezorConnect.cardanoGetNativeScriptHash(params).then(function(result) {
 ### Params
 [****Optional common params****](commonParams.md)
 ##### [flowtype](../../src/js/types/networks/cardano.js#L76-L79)
-* `script` — *obligatory* `CardanoNativeScript` see description below.
-* `displayFormat` — *obligatory* `CardanoNativeScriptHashDisplayFormat` enum.
+* `script` — *required* `CardanoNativeScript` see description below.
+* `displayFormat` — *required* `CardanoNativeScriptHashDisplayFormat` enum.
 * `derivationType` — *optional* `CardanoDerivationType` enum. determines used derivation type. Default is set to ICARUS_TREZOR=2 
 
 #### CardanoNativeScript
 ###### [flowtype](../../src/js/types/networks/cardano.js#L66-74)
-* `type` - *obligatory* `CardanoNativeScriptType`/`number`.
+* `type` - *required* `CardanoNativeScriptType`/`number`.
 * `scripts` — *optional* `Array` of nested `CardanoNativeScript`s.
 * `keyHash` — *optional* `string` hex string of key hash. Used for `CardanoScriptType.PUB_KEY`.
 * `keyPath` - *optional* `string | Array<number>` minimum length is `3`. Used for `CardanoScriptType.PUB_KEY`.

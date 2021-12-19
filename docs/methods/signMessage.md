@@ -17,8 +17,8 @@ TrezorConnect.signMessage(params).then(function(result) {
 ### Params 
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L131-L135)
-* `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
-* `message` - *obligatory* `string`
+* `path` — *required* `string | Array<number>` minimum length is `3`. [read more](path.md)
+* `message` - *required* `string`
 * `coin` - *optional* `string` Determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used. If `coin` is not set API will try to get network definition from `path`.
 * `hex` - *optional* `boolean` convert message from hex
 

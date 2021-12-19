@@ -28,8 +28,8 @@ export default class CardanoGetNativeScriptHash extends AbstractMethod<'cardanoG
         const { payload } = this;
 
         validateParams(payload, [
-            { name: 'script', type: 'object', obligatory: true },
-            { name: 'displayFormat', type: 'number', obligatory: true },
+            { name: 'script', type: 'object', required: true },
+            { name: 'displayFormat', type: 'number', required: true },
             { name: 'derivationType', type: 'number' },
         ]);
 
@@ -47,7 +47,7 @@ export default class CardanoGetNativeScriptHash extends AbstractMethod<'cardanoG
 
     validateScript(script: CardanoNativeScript) {
         validateParams(script, [
-            { name: 'type', type: 'number', obligatory: true },
+            { name: 'type', type: 'number', required: true },
             { name: 'scripts', type: 'array', allowEmpty: true },
             { name: 'keyHash', type: 'string' },
             { name: 'requiredSignaturesCount', type: 'number' },

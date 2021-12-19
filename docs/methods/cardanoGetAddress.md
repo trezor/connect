@@ -16,10 +16,10 @@ TrezorConnect.cardanoGetAddress(params).then(function(result) {
 ### Params
 [****Optional common params****](commonParams.md)
 #### Exporting single address
-* `addressParameters` — *obligatory* see description below
+* `addressParameters` — *required* see description below
 * `address` — *optional* `string` address for validation (read `Handle button request` section below)
-* `protocolMagic` - *obligatory* `Integer` 764824073 for Mainnet, 42 for Testnet
-* `networkId` - *obligatory* `Integer` 1 for Mainnet, 0 for Testnet
+* `protocolMagic` - *required* `Integer` 764824073 for Mainnet, 42 for Testnet
+* `networkId` - *required* `Integer` 1 for Mainnet, 0 for Testnet
 * `showOnTrezor` — *optional* `boolean` determines if address will be displayed on device. Default is set to `true`
 * `derivationType` — *optional* `CardanoDerivationType` enum. determines used derivation type. Default is set to ICARUS_TREZOR=2
 
@@ -28,8 +28,8 @@ TrezorConnect.cardanoGetAddress(params).then(function(result) {
 
 #### Address Parameters
 ###### [flowtype](../../src/js/types/networks/cardano.js#L37-L45)
-* `addressType` - *obligatory* `CardanoAddressType`/`number` - you can use the flow `CARDANO.ADDRESS_TYPE` object or typescript `CardanoAddressType` enum. Supports all address types.
-* `path` — *obligatory* `string | Array<number>` minimum length is `5`. [read more](path.md)
+* `addressType` - *required* `CardanoAddressType`/`number` - you can use the flow `CARDANO.ADDRESS_TYPE` object or typescript `CardanoAddressType` enum. Supports all address types.
+* `path` — *required* `string | Array<number>` minimum length is `5`. [read more](path.md)
 * `stakingPath` — *optional* `string | Array<number>` minimum length is `5`. [read more](path.md) Used for base and reward address derivation
 * `stakingKeyHash` - *optional* `string` hex string of staking key hash. Used for base address derivation (as an alternative to `stakingPath`)
 * `certificatePointer` - *optional* `CardanoCertificatePointer` object. Must contain `number`s `blockIndex`, `txIndex` and `certificateIndex`. ([flowtype](../../src/js/types/networks/cardano.js#L31-L35)) Used for pointer address derivation. [read more about pointer address](https://hydra.iohk.io/build/2006688/download/1/delegation_design_spec.pdf#subsubsection.3.2.2)

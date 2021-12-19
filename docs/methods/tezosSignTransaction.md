@@ -18,9 +18,9 @@ TrezorConnect.tezosSignTransaction(params).then(function(result) {
 ### Params 
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/tezos.js#L104-L108)
-* `path` - *obligatory* `string | Array<number>`
-* `branch` - *obligatory* `string`
-* `operation` - *obligatory* `Object` type of [TezosOperation](../../src/js/types/tezos.js#L54)
+* `path` - *required* `string | Array<number>`
+* `branch` - *required* `string`
+* `operation` - *required* `Object` type of [TezosOperation](../../src/js/types/tezos.js#L54)
 
 ### Example
 Sign transaction operation

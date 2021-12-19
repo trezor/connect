@@ -21,13 +21,13 @@ export const validateTrezorInputs = (
         .map(convertMultisigPubKey.bind(null, coinInfo.network))
         .map(input => {
             const useAmount = input.script_type === 'EXTERNAL' || isSegwitPath(input.address_n);
-            // since 2.3.5 amount is obligatory for all inputs.
+            // since 2.3.5 amount is required for all inputs.
             // this change however is breaking 3rd party implementations
             // missing amount will be delivered by refTx object
             validateParams(input, [
-                { name: 'prev_hash', type: 'string', obligatory: true },
-                { name: 'prev_index', type: 'number', obligatory: true },
-                { name: 'amount', type: 'string', obligatory: useAmount },
+                { name: 'prev_hash', type: 'string', required: true },
+                { name: 'prev_index', type: 'number', required: true },
+                { name: 'amount', type: 'string', required: useAmount },
                 { name: 'script_type', type: 'string' },
                 { name: 'sequence', type: 'number' },
                 { name: 'multisig', type: 'object' },
@@ -35,7 +35,7 @@ export const validateTrezorInputs = (
 
             if (input.script_type === 'EXTERNAL') {
                 validateParams(input, [
-                    { name: 'script_pubkey', type: 'string', obligatory: true },
+                    { name: 'script_pubkey', type: 'string', required: true },
                     { name: 'commitment_data', type: 'string' },
                     { name: 'ownership_proof', type: 'string' },
                     { name: 'script_sig', type: 'string' },

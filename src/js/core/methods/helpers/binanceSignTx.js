@@ -32,7 +32,7 @@ const processTxRequest = async (
 // validate and translate params to protobuf
 export const validate = (tx: BinanceSDKTransaction) => {
     validateParams(tx, [
-        { name: 'chain_id', type: 'string', obligatory: true },
+        { name: 'chain_id', type: 'string', required: true },
         { name: 'account_number', type: 'number' },
         { name: 'memo', type: 'string' },
         { name: 'sequence', type: 'number' },
@@ -53,8 +53,8 @@ export const validate = (tx: BinanceSDKTransaction) => {
 
     if (transfer) {
         validateParams(transfer, [
-            { name: 'inputs', type: 'array', obligatory: true },
-            { name: 'outputs', type: 'array', obligatory: true },
+            { name: 'inputs', type: 'array', required: true },
+            { name: 'outputs', type: 'array', required: true },
         ]);
         preparedTx.messages.push({
             ...transfer,
@@ -79,9 +79,9 @@ export const validate = (tx: BinanceSDKTransaction) => {
 
     if (cancelOrder) {
         validateParams(cancelOrder, [
-            { name: 'refid', type: 'string', obligatory: true },
-            { name: 'sender', type: 'string', obligatory: true },
-            { name: 'symbol', type: 'string', obligatory: true },
+            { name: 'refid', type: 'string', required: true },
+            { name: 'sender', type: 'string', required: true },
+            { name: 'symbol', type: 'string', required: true },
         ]);
         preparedTx.messages.push({
             ...cancelOrder,

@@ -129,24 +129,24 @@ export const validateParams = [
     },
     {
         description: 'required param without type and false negative value (0)',
-        obligatory: true,
+        required: true,
         value: 0,
         success: true,
     },
     {
         description: 'required param without type and false negative value (false)',
-        obligatory: true,
+        required: true,
         value: false,
         success: true,
     },
     {
         description: 'required param without value (null)',
-        obligatory: true,
+        required: true,
         value: null,
     },
     {
         description: 'required param without value (undefined)',
-        obligatory: true,
+        required: true,
         value: undefined,
     },
     {

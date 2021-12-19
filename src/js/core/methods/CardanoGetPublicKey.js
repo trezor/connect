@@ -40,7 +40,7 @@ export default class CardanoGetPublicKey extends AbstractMethod<'cardanoGetPubli
         payload.bundle.forEach(batch => {
             // validate incoming parameters for each batch
             validateParams(batch, [
-                { name: 'path', obligatory: true },
+                { name: 'path', required: true },
                 { name: 'derivationType', type: 'number' },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);

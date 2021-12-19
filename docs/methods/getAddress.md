@@ -16,7 +16,7 @@ TrezorConnect.getAddress(params).then(function(result) {
 ### Params
 [****Optional common params****](commonParams.md)
 #### Exporting single address
-* `path` — *obligatory* `string | Array<number>` minimum length is `5`. [read more](path.md)
+* `path` — *required* `string | Array<number>` minimum length is `5`. [read more](path.md)
 * `address` — *optional* `string` address for validation (read `Handle button request` section below)
 * `showOnTrezor` — *optional* `boolean` determines if address will be displayed on device. Default is set to `true`
 * `coin` - *optional* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used. If `coin` is not set API will try to get network definition from `path`.

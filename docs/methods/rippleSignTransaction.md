@@ -18,8 +18,8 @@ TrezorConnect.rippleSignTransaction(params).then(function(result) {
 ### Params 
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L149-L154)
-* `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
-* `transaction` - *obligatory* `Object` type of [RippleTransaction](../../src/js/types/ripple.js#L36-L42)
+* `path` — *required* `string | Array<number>` minimum length is `3`. [read more](path.md)
+* `transaction` - *required* `Object` type of [RippleTransaction](../../src/js/types/ripple.js#L36-L42)
 
 ### Example
 ```javascript

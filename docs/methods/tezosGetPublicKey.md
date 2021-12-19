@@ -17,7 +17,7 @@ TrezorConnect.tezosGetPublicKey(params).then(function(result) {
 ### Params
 [****Optional common params****](commonParams.md)
 #### Exporting single public key
-* `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
+* `path` — *required* `string | Array<number>` minimum length is `3`. [read more](path.md)
 * `showOnTrezor` — *optional* `boolean` determines if public key will be displayed on device. 
 
 #### Exporting bundle of public keys

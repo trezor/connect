@@ -18,10 +18,10 @@ TrezorConnect.ethereumVerifyMessage(params).then(function(result) {
 ### Params 
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L74-L78)
-* `address` - *obligatory* `string` signer address. "0x" prefix is optional
-* `message` - *obligatory* `string` signed message in plain text
+* `address` - *required* `string` signer address. "0x" prefix is optional
+* `message` - *required* `string` signed message in plain text
 * `hex` - *optional* `boolean` convert message from hex
-* `signature` - *obligatory* `string` signature in hexadecimal format. "0x" prefix is optional
+* `signature` - *required* `string` signature in hexadecimal format. "0x" prefix is optional
 
 ### Example
 ```javascript

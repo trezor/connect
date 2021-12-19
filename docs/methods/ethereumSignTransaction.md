@@ -18,8 +18,8 @@ TrezorConnect.ethereumSignTransaction(params).then(function(result) {
 ### Params 
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L69-L72)
-* `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
-* `transaction` - *obligatory* `Object` type of [`EthereumTransactionEIP1559`](../../src/js/types/networks/ethereum.js#L46)` | `[`EthereumSignTransaction`](../../src/js/types/networks/ethereum.js#L59) "0x" prefix for each field is optional
+* `path` — *required* `string | Array<number>` minimum length is `3`. [read more](path.md)
+* `transaction` - *required* `Object` type of [`EthereumTransactionEIP1559`](../../src/js/types/networks/ethereum.js#L46)` | `[`EthereumSignTransaction`](../../src/js/types/networks/ethereum.js#L59) "0x" prefix for each field is optional
 
 ### Examples
 

@@ -26,8 +26,8 @@ export default class EosSignTransaction extends AbstractMethod<'eosSignTransacti
         const { payload } = this;
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'path', obligatory: true },
-            { name: 'transaction', obligatory: true },
+            { name: 'path', required: true },
+            { name: 'transaction', required: true },
         ]);
 
         const path = validatePath(payload.path, 3);

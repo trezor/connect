@@ -21,8 +21,8 @@ export default class RippleSignTransaction extends AbstractMethod<'rippleSignTra
         const { payload } = this;
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'path', obligatory: true },
-            { name: 'transaction', obligatory: true },
+            { name: 'path', required: true },
+            { name: 'transaction', required: true },
         ]);
 
         const path = validatePath(payload.path, 5);
@@ -38,8 +38,8 @@ export default class RippleSignTransaction extends AbstractMethod<'rippleSignTra
         ]);
 
         validateParams(transaction.payment, [
-            { name: 'amount', type: 'string', obligatory: true },
-            { name: 'destination', type: 'string', obligatory: true },
+            { name: 'amount', type: 'string', required: true },
+            { name: 'destination', type: 'string', required: true },
             { name: 'destinationTag', type: 'number' },
         ]);
 

@@ -33,9 +33,9 @@ export default class StellarSignTransaction extends AbstractMethod<'stellarSignT
         const { payload } = this;
         // validate incoming parameters
         validateParams(payload, [
-            { name: 'path', obligatory: true },
-            { name: 'networkPassphrase', type: 'string', obligatory: true },
-            { name: 'transaction', obligatory: true },
+            { name: 'path', required: true },
+            { name: 'networkPassphrase', type: 'string', required: true },
+            { name: 'transaction', required: true },
         ]);
 
         const path = validatePath(payload.path, 3);

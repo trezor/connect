@@ -17,16 +17,16 @@ TrezorConnect.getAccountInfo(params).then(function(result) {
 ### Params
 [****Optional common params****](commonParams.md)
 #### Using path
-* `path` — *obligatory* `string | Array<number>` minimum length is `3`. [read more](path.md)
-* `coin` — *obligatory* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
+* `path` — *required* `string | Array<number>` minimum length is `3`. [read more](path.md)
+* `coin` — *required* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 
 #### Using public key
-* `descriptor` — *obligatory* `string` public key of account
-* `coin` — *obligatory* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
+* `descriptor` — *required* `string` public key of account
+* `coin` — *required* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 
 #### Using discovery
 BIP-0044 account discovery is performed and user is presented with a list of accounts. Result is returned after account selection.
-- `coin` — *obligatory* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
+- `coin` — *required* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
 
 ### Other optional params
 params are forwarded to [BlockBook backend](https://github.com/trezor/blockbook/blob/master/docs/api.md#api-v2) using `@trezor/blockchain-link` package
