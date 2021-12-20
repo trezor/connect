@@ -293,11 +293,10 @@ export type TxOutputBinType = {
     decred_script_version?: number;
 };
 
-// - TxOutputType replacement
+// TxOutputType replacement
 // TxOutputType needs more exact types
 // differences: external output (no address_n), opreturn output (no address_n, no address)
-// eslint-disable-next-line no-unused-vars
-// type Exclude<A, B> = $Keys<$Diff<typeof Enum_OutputScriptType, { PAYTOOPRETURN: 3 }>>; // flowtype equivalent of typescript Exclude
+
 export type ChangeOutputScriptType = Exclude<OutputScriptType, 'PAYTOOPRETURN'>;
 
 export type TxOutputType =
@@ -328,6 +327,9 @@ export type TxOutputType =
           orig_hash?: string;
           orig_index?: number;
       };
+
+export type TxOutput = TxOutputType;
+
 // - TxOutputType replacement end
 
 // TxInput
@@ -349,12 +351,6 @@ export type TxInput = {
     decred_staking_spend?: DecredStakingSpendType;
     script_pubkey?: string;
 };
-
-// TxOutput
-
-// - TxOutput replacement
-export type TxOutput = TxOutputType;
-// - TxOutput replacement end
 
 // PrevTx
 export type PrevTx = {
@@ -386,7 +382,8 @@ export type PrevOutput = {
 };
 
 // TxAck
-// - TxAck replacement
+
+// TxAck replacement
 // TxAck needs more exact types
 // PrevInput and TxInputType requires exact responses in TxAckResponse
 // main difference: PrevInput should not contain address_n (unexpected field by protobuf)

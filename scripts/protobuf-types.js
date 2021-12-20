@@ -89,6 +89,24 @@ const parseEnum = (itemName, item) => {
     });
 };
 
+const useDefinition = def => {
+    // remove flow overhead
+    const clean = def
+        .replace(/\/\/ @flow/, '')
+        .replace(/\/\/ @overhead-start(.*)@overhead-end/s, '');
+
+    if (isTypescript) {
+        // use typescript variant
+        // replace flowtype exact declaration {| ...type |} to typescript { ...type }
+        return clean
+            .replace(/\/\/ @typescript-variant:/, '')
+            .replace(/\/\/ @flowtype-variant(.*)/, '')
+            .replace(/{\|/gi, '{')
+            .replace(/\|}/gi, '}');
+    }
+    return clean.replace(/\/\/ @typescript-variant(.*)/, '').replace(/\/\/ @flowtype-variant:/, '');
+};
+
 const parseMessage = (messageName, message, depth = 0) => {
     if (messageName === 'google') return;
     const value = [];
@@ -115,17 +133,7 @@ const parseMessage = (messageName, message, depth = 0) => {
         const definition = DEFINITION_PATCH[messageName];
         if (definition) {
             // replace whole declaration
-            if (isTypescript) {
-                // replace flowtype exact declaration {| ...type |} to typescript { ...type }
-                let cleanTS = definition.replace(/{\|/gi, '{').replace(/\|}/gi, '}');
-                // comment out flowtype Exclude type/helper (typescript build-in)
-                if (cleanTS.indexOf('type Exclude') >= 0) {
-                    cleanTS = cleanTS.replace('type Exclude', '// type Exclude');
-                }
-                value.push(cleanTS);
-            } else {
-                value.push(definition);
-            }
+            value.push(useDefinition(definition));
         } else {
             // declare type
             value.push(`export type ${messageName} = {`);
