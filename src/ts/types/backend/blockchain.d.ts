@@ -148,22 +148,22 @@ export interface BlockchainSetCustomBackend {
 
 export type BlockchainEvent =
     | {
-        type: typeof BLOCKCHAIN.CONNECT;
-        payload: BlockchainInfo;
-    }
+          type: typeof BLOCKCHAIN.CONNECT;
+          payload: BlockchainInfo;
+      }
     | {
-        type: typeof BLOCKCHAIN.ERROR;
-        payload: BlockchainError;
-    }
+          type: typeof BLOCKCHAIN.ERROR;
+          payload: BlockchainError;
+      }
     | {
-        type: typeof BLOCKCHAIN.BLOCK;
-        payload: BlockchainBlock;
-    }
+          type: typeof BLOCKCHAIN.BLOCK;
+          payload: BlockchainBlock;
+      }
     | {
-        type: typeof BLOCKCHAIN.NOTIFICATION;
-        payload: BlockchainNotification;
-    }
+          type: typeof BLOCKCHAIN.NOTIFICATION;
+          payload: BlockchainNotification;
+      }
     | {
-        type: typeof BLOCKCHAIN.FIAT_RATES_UPDATE;
-        payload: BlockchainFiatRatesUpdate;
-    };
+          type: typeof BLOCKCHAIN.FIAT_RATES_UPDATE;
+          payload: BlockchainFiatRatesUpdate;
+      };

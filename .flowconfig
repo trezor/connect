@@ -6,6 +6,7 @@
 .*/_old/.*
 .*/build/.*
 .*/trezor-common/.*
+.*/ts/.*
 
 [libs]
 ./node_modules/trezor-link/flowtype/chrome.js

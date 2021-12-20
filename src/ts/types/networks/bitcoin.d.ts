@@ -43,33 +43,35 @@ export interface HDNodeResponse {
 }
 
 // based on PROTO.TransactionType, with required fields
-export type RefTransaction = {
-    hash: string;
-    version: number;
-    inputs: PrevInput[];
-    bin_outputs: TxOutputBinType[];
-    outputs?: undefined;
-    lock_time: number;
-    extra_data?: string;
-    expiry?: number;
-    overwintered?: boolean;
-    version_group_id?: number;
-    timestamp?: number;
-    branch_id?: number;
-} | {
-    hash: string;
-    version: number;
-    inputs: OrigTxInputType[];
-    bin_outputs?: undefined;
-    outputs: TxOutputType[];
-    lock_time: number;
-    extra_data?: string;
-    expiry?: number;
-    overwintered?: boolean;
-    version_group_id?: number;
-    timestamp?: number;
-    branch_id?: number;
-}
+export type RefTransaction =
+    | {
+          hash: string;
+          version: number;
+          inputs: PrevInput[];
+          bin_outputs: TxOutputBinType[];
+          outputs?: undefined;
+          lock_time: number;
+          extra_data?: string;
+          expiry?: number;
+          overwintered?: boolean;
+          version_group_id?: number;
+          timestamp?: number;
+          branch_id?: number;
+      }
+    | {
+          hash: string;
+          version: number;
+          inputs: OrigTxInputType[];
+          bin_outputs?: undefined;
+          outputs: TxOutputType[];
+          lock_time: number;
+          extra_data?: string;
+          expiry?: number;
+          overwintered?: boolean;
+          version_group_id?: number;
+          timestamp?: number;
+          branch_id?: number;
+      };
 
 // based on PROTO.SignTx, only optional fields
 export type TransactionOptions = {
@@ -88,7 +90,8 @@ export interface SignTransaction {
     inputs: TxInputType[];
     outputs: TxOutputType[];
     refTxs?: RefTransaction[];
-    account?: { // Partial account (addresses)
+    account?: {
+        // Partial account (addresses)
         addresses: {
             used: { path: string; address: string }[];
             unused: { path: string; address: string }[];

@@ -47,7 +47,7 @@
     },
     "overrides": [
         {
-            "files": ["**/types/__tests__/*.js"],
+            "files": ["**/types/__tests__/*.js", "**/types/__tests__/*.ts"],
             "rules": {
                 "no-unused-expressions": "off"
             }
@@ -67,6 +67,22 @@
             "files": [ "**/examples/**/*.js" ],
             "rules": {
                 "import/no-unresolved": "off"
+            }
+        },
+        {
+            "files": [
+                "**/*.ts"
+            ],
+            "parser": "@typescript-eslint/parser",
+            "plugins": ["import", "@typescript-eslint"],
+            "rules": {
+                "flowtype/no-types-missing-file-annotation": "off", // flowtype errors are irrelevant for typescript
+                "import/no-unresolved": "off", // imports are resolved below
+                "import/extensions": ["error", { "parser": "typescript" } ], // import typescript *.d.ts files
+                "no-unused-vars": "off", // api method params mostly
+                "no-shadow": "off", // typescript enum, use parser below
+                "@typescript-eslint/no-shadow": ["error"],
+                "prettier/prettier": ["error", {"semicolon": true, "parser": "typescript"}] // use ";" instead of ","
             }
         }
     ]

@@ -60,7 +60,7 @@ export const init = async () => {
     TrezorConnect.disableWebUSB();
 };
 
-export const events = async () => {
+export const events = () => {
     TrezorConnect.on(DEVICE_EVENT, event => {
         const { payload } = event;
         event.type;
