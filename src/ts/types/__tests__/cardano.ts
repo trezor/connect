@@ -1,4 +1,11 @@
-import { CardanoAddressType, CardanoCertificateType, CardanoNativeScriptHashDisplayFormat, CardanoNativeScriptType, CardanoPoolRelayType, CardanoTxSigningMode } from 'types/trezor/protobuf';
+import {
+    CardanoAddressType,
+    CardanoCertificateType,
+    CardanoNativeScriptHashDisplayFormat,
+    CardanoNativeScriptType,
+    CardanoPoolRelayType,
+    CardanoTxSigningMode,
+} from 'types/trezor/protobuf';
 import TrezorConnect from '../index';
 
 export const cardanoGetAddress = async () => {

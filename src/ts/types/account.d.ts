@@ -60,8 +60,8 @@ export interface AccountUtxo {
     coinbase?: boolean;
     required?: boolean;
     cardanoSpecific?: {
-        unit: string,
-    },
+        unit: string;
+    };
 }
 
 // Transaction object
@@ -152,7 +152,6 @@ export interface AccountInfo {
             rewards: string;
             poolId: string | null;
         };
-
     };
     page?: {
         // blockbook

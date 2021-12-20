@@ -156,7 +156,11 @@ export const ethereumSignTransaction = async () => {
 };
 
 export const signMessage = async () => {
-    const sign = await TrezorConnect.ethereumSignMessage({ path: 'm/44', message: 'foo', hex: false });
+    const sign = await TrezorConnect.ethereumSignMessage({
+        path: 'm/44',
+        message: 'foo',
+        hex: false,
+    });
     if (sign.success) {
         const { payload } = sign;
         payload.address;

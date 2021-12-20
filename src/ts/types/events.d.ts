@@ -129,7 +129,7 @@ export type IFrameLoaded = {
     payload: {
         useBroadcastChannel: boolean;
     };
-}
+};
 
 export interface PopupInit {
     type: typeof POPUP.INIT;

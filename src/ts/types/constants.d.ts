@@ -83,6 +83,8 @@ export namespace DEVICE {
 }
 
 export namespace UI {
+    // TRANSPORT is also defined as standalone namespace. plugin bug or invalid syntax?
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     const TRANSPORT = 'ui-no_transport';
     const BOOTLOADER = 'ui-device_bootloader_mode';
     const NOT_IN_BOOTLOADER = 'ui-device_not_in_bootloader_mode';
@@ -164,6 +166,6 @@ export namespace CARDANO {
         StakeRegistration = 0,
         StakeDeregistration = 1,
         StakeDelegation = 2,
-        StakePoolRegistration = 3
+        StakePoolRegistration = 3,
     }
 }
