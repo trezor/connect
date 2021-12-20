@@ -29,8 +29,8 @@ export interface EthereumTransaction {
     value: string;
     gasPrice: string;
     gasLimit: string;
-    maxFeePerGas?: typeof undefined,
-    maxPriorityFeePerGas?: typeof undefined,
+    maxFeePerGas?: typeof undefined;
+    maxPriorityFeePerGas?: typeof undefined;
     nonce: string;
     data?: string;
     chainId: number;

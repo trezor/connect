@@ -527,7 +527,12 @@ export const signMessage = async () => {
         payload.address;
         payload.signature;
     }
-    const verify = await TrezorConnect.verifyMessage({ address: 'a', signature: 'a', message: 'foo', coin: 'btc' });
+    const verify = await TrezorConnect.verifyMessage({
+        address: 'a',
+        signature: 'a',
+        message: 'foo',
+        coin: 'btc',
+    });
     if (verify.success) {
         const { payload } = verify;
         payload.message;

@@ -300,31 +300,34 @@ export type TxOutputBinType = {
 // type Exclude<A, B> = $Keys<$Diff<typeof Enum_OutputScriptType, { PAYTOOPRETURN: 3 }>>; // flowtype equivalent of typescript Exclude
 export type ChangeOutputScriptType = Exclude<OutputScriptType, 'PAYTOOPRETURN'>;
 
-export type TxOutputType = {
-    address: string;
-    address_n?: typeof undefined;
-    script_type: 'PAYTOADDRESS';
-    amount: string;
-    multisig?: MultisigRedeemScriptType;
-    orig_hash?: string;
-    orig_index?: number;
-} | {
-    address?: typeof undefined;
-    address_n: number[];
-    script_type: ChangeOutputScriptType;
-    amount: string;
-    multisig?: MultisigRedeemScriptType;
-    orig_hash?: string;
-    orig_index?: number;
-} | {
-    address?: typeof undefined;
-    address_n?: typeof undefined;
-    amount: '0';
-    op_return_data: string;
-    script_type: 'PAYTOOPRETURN';
-    orig_hash?: string;
-    orig_index?: number;
-};
+export type TxOutputType =
+    | {
+          address: string;
+          address_n?: typeof undefined;
+          script_type: 'PAYTOADDRESS';
+          amount: string;
+          multisig?: MultisigRedeemScriptType;
+          orig_hash?: string;
+          orig_index?: number;
+      }
+    | {
+          address?: typeof undefined;
+          address_n: number[];
+          script_type: ChangeOutputScriptType;
+          amount: string;
+          multisig?: MultisigRedeemScriptType;
+          orig_hash?: string;
+          orig_index?: number;
+      }
+    | {
+          address?: typeof undefined;
+          address_n?: typeof undefined;
+          amount: '0';
+          op_return_data: string;
+          script_type: 'PAYTOOPRETURN';
+          orig_hash?: string;
+          orig_index?: number;
+      };
 // - TxOutputType replacement end
 
 // TxInput
@@ -388,26 +391,31 @@ export type PrevOutput = {
 // PrevInput and TxInputType requires exact responses in TxAckResponse
 // main difference: PrevInput should not contain address_n (unexpected field by protobuf)
 
-export type TxAckResponse = {
-    inputs: Array<TxInputType | PrevInput>;
-} | {
-    bin_outputs: TxOutputBinType[];
-} | {
-    outputs: TxOutputType[];
-} | {
-    extra_data: string;
-} | {
-    version?: number;
-    lock_time?: number;
-    inputs_cnt: number;
-    outputs_cnt: number;
-    extra_data?: string;
-    extra_data_len?: number;
-    timestamp?: number;
-    version_group_id?: number;
-    expiry?: number;
-    branch_id?: number;
-};
+export type TxAckResponse =
+    | {
+          inputs: Array<TxInputType | PrevInput>;
+      }
+    | {
+          bin_outputs: TxOutputBinType[];
+      }
+    | {
+          outputs: TxOutputType[];
+      }
+    | {
+          extra_data: string;
+      }
+    | {
+          version?: number;
+          lock_time?: number;
+          inputs_cnt: number;
+          outputs_cnt: number;
+          extra_data?: string;
+          extra_data_len?: number;
+          timestamp?: number;
+          version_group_id?: number;
+          expiry?: number;
+          branch_id?: number;
+      };
 
 export type TxAck = {
     tx: TxAckResponse;

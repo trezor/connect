@@ -75,7 +75,7 @@ export const blockchainGetTransactions = async () => {
     }
 };
 
-export const others = async () => {
+export const others = () => {
     const accounts = [
         {
             descriptor: 'xpub',
