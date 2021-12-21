@@ -39,6 +39,7 @@ import signTransactionBgold from './signTransactionBgold';
 import signTransactionDash from './signTransactionDash';
 import signTransactionDecred from './signTransactionDecred';
 import signTransactionDoge from './signTransactionDoge';
+import signTransactionExternal from './signTransactionExternal';
 import signTransactionKomodo from './signTransactionKomodo';
 import signTransactionMultisig from './signTransactionMultisig';
 import signTransactionMultisigChange from './signTransactionMultisigChange';
@@ -108,6 +109,7 @@ let fixtures = [
     signTransactionDash,
     signTransactionDecred,
     signTransactionDoge,
+    signTransactionExternal,
     signTransactionKomodo,
     signTransactionMultisig,
     signTransactionMultisigChange,
