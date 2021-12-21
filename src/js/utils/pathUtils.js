@@ -3,7 +3,7 @@
 import { ERRORS } from '../constants';
 import type { CoinInfo } from '../types';
 import type {
-    InputScriptType,
+    InternalInputScriptType,
     ChangeOutputScriptType,
     TxInputType,
     TxOutputType,
@@ -63,7 +63,7 @@ export const getAccountType = (path: ?Array<number>) => {
     return 'p2pkh';
 };
 
-export const getScriptType = (path: ?Array<number>): InputScriptType => {
+export const getScriptType = (path: ?Array<number>): InternalInputScriptType => {
     if (!Array.isArray(path) || path.length < 1) return 'SPENDADDRESS';
 
     const p1 = fromHardened(path[0]);

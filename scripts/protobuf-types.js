@@ -97,12 +97,14 @@ const useDefinition = def => {
 
     if (isTypescript) {
         // use typescript variant
-        // replace flowtype exact declaration {| ...type |} to typescript { ...type }
+        // replace flowtype $Exact declaration: {| foo: 1 |} => { foo: 1 }
+        // replace flowtype spread with typescript union: { ...T, foo: 1 } => T & { foo: 1 }, see TxInputType patch
         return clean
             .replace(/\/\/ @typescript-variant:/, '')
             .replace(/\/\/ @flowtype-variant(.*)/, '')
             .replace(/{\|/gi, '{')
-            .replace(/\|}/gi, '}');
+            .replace(/\|}/gi, '}')
+            .replace(/\{\n.*.\.{3}(.*?),/g, '$1 & {');
     }
     return clean.replace(/\/\/ @typescript-variant(.*)/, '').replace(/\/\/ @flowtype-variant:/, '');
 };

@@ -7,7 +7,6 @@ const RULE_PATCH = {
     'TxRequestDetailsType.request_index': 'required',
     'TxRequest.request_type': 'required',
     'TxRequest.details': 'required',
-    'TxInputType.amount': 'required', // since 1.9.4/2.3.5
     'CardanoPoolOwnerType.staking_key_path': 'optional',
     'CardanoPoolOwner.staking_key_path': 'optional',
     'CardanoTxCertificateType.path': 'optional',
@@ -107,9 +106,7 @@ const TYPE_PATCH = {
     'Features.display_rotation': 'number | null',
     'Features.experimental_features': 'boolean | null',
     'HDNodePathType.node': 'HDNodeType | string',
-    'TxInputType.amount': 'number | string',
     'TxOutputBinType.amount': 'number | string',
-    'TxInput.amount': 'string | number',
     'PrevOutput.amount': 'string | number',
     'FirmwareUpload.payload': 'Buffer',
     'CardanoCatalystRegistrationParametersType.nonce': 'string | number',
@@ -208,6 +205,7 @@ const TYPE_PATCH = {
 };
 
 const DEFINITION_PATCH = {
+    TxInputType: fs.readFileSync('./scripts/protobuf-patches/TxInputType.js', 'utf8'),
     TxOutputType: fs.readFileSync('./scripts/protobuf-patches/TxOutputType.js', 'utf8'),
     TxAck: fs.readFileSync('./scripts/protobuf-patches/TxAck.js', 'utf8'),
 };
@@ -216,6 +214,7 @@ const DEFINITION_PATCH = {
 const SKIP = [
     'MessageType', // connect uses custom definition
     'TransactionType', // connect uses custom definition
+    'TxInput', // declared in TxInputType patch
     'TxOutput', // declared in TxOutputType patch
     // not implemented
     'CosiCommit',
