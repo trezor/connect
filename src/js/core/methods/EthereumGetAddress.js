@@ -143,15 +143,12 @@ export default class EthereumGetAddress extends AbstractMethod<'ethereumGetAddre
         return uiResp.payload;
     }
 
-    _call({ address_n, show_display, network }: Params) {
+    _call({ address_n, show_display }: Params) {
         const cmd = this.device.getCommands();
-        return cmd.ethereumGetAddress(
-            {
-                address_n,
-                show_display,
-            },
-            network,
-        );
+        return cmd.ethereumGetAddress({
+            address_n,
+            show_display,
+        });
     }
 
     async run() {

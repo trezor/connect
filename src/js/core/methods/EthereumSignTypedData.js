@@ -4,8 +4,7 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
-import { toChecksumAddress, getNetworkLabel } from '../../utils/ethereumUtils';
-import type { EthereumNetworkInfo } from '../../types';
+import { getNetworkLabel } from '../../utils/ethereumUtils';
 import type { MessageResponse, EthereumTypedDataStructAck } from '../../types/trezor/protobuf';
 import { ERRORS } from '../../constants';
 import type { EthereumSignTypedData as EthereumSignTypedDataParams } from '../../types/networks/ethereum';
@@ -14,7 +13,6 @@ import { getFieldType, parseArrayType, encodeData } from './helpers/ethereumSign
 type Params = {
     ...EthereumSignTypedDataParams,
     path: number[],
-    network?: EthereumNetworkInfo,
 };
 
 export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignTypedData'> {
@@ -42,7 +40,6 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
 
         this.params = {
             path,
-            network,
             data,
             metamask_v4_compat,
         };
@@ -50,7 +47,7 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
 
     async run() {
         const cmd = this.device.getCommands();
-        const { path: address_n, network, data, metamask_v4_compat } = this.params;
+        const { path: address_n, data, metamask_v4_compat } = this.params;
 
         const { types, primaryType, domain, message } = data;
 
@@ -154,7 +151,7 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
         // $FlowIssue disjoint union Refinements not working, TODO: check if new Flow versions fix this
         const { address, signature } = response.message;
         return {
-            address: toChecksumAddress(address, network),
+            address,
             signature: `0x${signature}`,
         };
     }

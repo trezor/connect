@@ -16,19 +16,12 @@ import {
     toHardened,
 } from '../utils/pathUtils';
 import { getAccountAddressN } from '../utils/accountUtils';
-import { toChecksumAddress } from '../utils/ethereumUtils';
 import { versionCompare } from '../utils/versionUtils';
 
 import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
 import type { IDevice } from './Device';
-import type {
-    CoinInfo,
-    BitcoinNetworkInfo,
-    EthereumNetworkInfo,
-    Network,
-    HDNodeResponse,
-} from '../types';
+import type { CoinInfo, BitcoinNetworkInfo, Network, HDNodeResponse } from '../types';
 import type { CardanoDerivationType } from '../types/trezor/protobuf';
 import * as PROTO from '../types/trezor/protobuf';
 
@@ -278,10 +271,7 @@ export default class DeviceCommands {
         };
     }
 
-    async ethereumGetAddress(
-        { address_n, show_display }: PROTO.EthereumGetAddress,
-        network?: EthereumNetworkInfo,
-    ) {
+    async ethereumGetAddress({ address_n, show_display }: PROTO.EthereumGetAddress) {
         const response = await this.typedCall('EthereumGetAddress', 'EthereumAddress', {
             address_n,
             show_display,
@@ -289,7 +279,7 @@ export default class DeviceCommands {
         return {
             path: address_n,
             serializedPath: getSerializedPath(address_n),
-            address: toChecksumAddress(response.message.address, network),
+            address: response.message.address,
         };
     }
 
@@ -616,7 +606,7 @@ export default class DeviceCommands {
             };
         }
         if (coinInfo.type === 'ethereum') {
-            const resp = await this.ethereumGetAddress({ address_n }, coinInfo);
+            const resp = await this.ethereumGetAddress({ address_n });
             return {
                 descriptor: resp.address,
                 address_n,
