@@ -3,6 +3,7 @@
 ### Added
 
 - Support for cardano in GetAccountInto method
+- Ethereum: Support for EthereumSignTypedData operation (Trezor T only) [#983](https://github.com/trezor/connect/pull/983)
 
 # 8.2.4
 
@@ -18,10 +19,6 @@
 
 ### Changed
 - trezor-link was replaced with @trezor/transport
-
-### Added
-
-- Ethereum: Support for EthereumSignTypedData operation (Trezor T only)
 
 # 8.2.3
 
