@@ -8,7 +8,7 @@ export const getAddress = async () => {
         payload.address;
         payload.path;
         payload.serializedPath;
-        // @ts-ignore
+        // @ts-expect-error
         payload.forEach(item => {
             item.address;
         });
@@ -22,7 +22,7 @@ export const getAddress = async () => {
             item.path;
             item.serializedPath;
         });
-        // @ts-ignore
+        // @ts-expect-error
         bundleAddress.payload.address;
     } else {
         bundleAddress.payload.error;
@@ -47,13 +47,13 @@ export const getAddress = async () => {
     });
 
     // with invalid params
-    // @ts-ignore
+    // @ts-expect-error
     TrezorConnect.getAddress();
-    // @ts-ignore
+    // @ts-expect-error
     TrezorConnect.getAddress({ coin: 'btc' });
-    // @ts-ignore
+    // @ts-expect-error
     TrezorConnect.getAddress({ path: 1 });
-    // @ts-ignore
+    // @ts-expect-error
     TrezorConnect.getAddress({ bundle: 1 });
 };
 
@@ -71,7 +71,7 @@ export const getPublicKey = async () => {
         payload.publicKey;
         payload.fingerprint;
         payload.depth;
-        // @ts-ignore
+        // @ts-expect-error
         payload.forEach(item => {
             item.path;
         });
@@ -91,7 +91,7 @@ export const getPublicKey = async () => {
             item.fingerprint;
             item.depth;
         });
-        // @ts-ignore
+        // @ts-expect-error
         bundlePK.payload.xpub;
     } else {
         bundlePK.payload.error;
@@ -154,6 +154,31 @@ export const signTransaction = async () => {
                     signatures: ['signature'],
                     m: 0,
                 },
+            },
+            {
+                prev_index: 0,
+                prev_hash: 'txhash',
+                amount: '1',
+                script_type: 'EXTERNAL',
+                script_pubkey: '1001',
+                script_sig: '1110',
+            },
+            {
+                prev_index: 0,
+                prev_hash: 'txhash',
+                amount: '1',
+                script_type: 'EXTERNAL',
+                script_pubkey: '1001',
+                witness: '1110',
+            },
+            {
+                prev_index: 0,
+                prev_hash: 'abcd',
+                amount: '1',
+                script_type: 'EXTERNAL',
+                script_pubkey: '1001',
+                ownership_proof: '0011',
+                commitment_data: '1100',
             },
         ],
         outputs: [
@@ -347,9 +372,9 @@ export const signTransaction = async () => {
     }
 
     // with invalid params
-    // @ts-ignore
+    // @ts-expect-error
     TrezorConnect.signTransaction();
-    // @ts-ignore
+    // @ts-expect-error
     TrezorConnect.signTransaction({ coin: 'btc' });
 
     TrezorConnect.signTransaction({
@@ -359,25 +384,38 @@ export const signTransaction = async () => {
                 prev_index: 0,
                 prev_hash: 'txhash',
                 amount: '1',
-                // @ts-ignore
+                // @ts-expect-error
                 script_type: 'SPENDADDRESS-2',
+            },
+            // @ts-expect-error missing address_n
+            {
+                prev_index: 0,
+                prev_hash: 'txhash',
+                amount: '1',
+            },
+            // @ts-expect-error missing script_pubkey
+            {
+                prev_index: 0,
+                prev_hash: 'txhash',
+                amount: '1',
+                script_type: 'EXTERNAL',
             },
         ],
         outputs: [
-            // @ts-ignore unexpected address_n
+            // @ts-expect-error unexpected address_n
             {
                 address_n: [0],
                 amount: '0',
                 op_return_data: 'deadbeef',
                 script_type: 'PAYTOOPRETURN',
             },
-            // @ts-ignore unexpected script_type
+            // @ts-expect-error unexpected script_type
             {
                 address: 'abcd',
                 amount: '100',
                 script_type: 'PAYTOP2SHWITNESS',
             },
-            // @ts-ignore unexpected address
+            // @ts-expect-error unexpected address
             {
                 address: 'abcd',
                 amount: '0',
@@ -396,9 +434,9 @@ export const pushTransaction = async () => {
     }
 
     // with invalid params
-    // @ts-ignore
+    // @ts-expect-error
     TrezorConnect.pushTransaction();
-    // @ts-ignore
+    // @ts-expect-error
     TrezorConnect.pushTransaction({ coin: 'btc' });
 };
 
@@ -443,7 +481,7 @@ export const composeTransaction = async () => {
         }
     } else {
         precompose.payload.error;
-        // @ts-ignore
+        // @ts-expect-error
         precompose.payload.type;
     }
 };

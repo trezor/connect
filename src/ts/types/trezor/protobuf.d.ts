@@ -268,24 +268,43 @@ export type TxRequest = {
     serialized?: TxRequestSerializedType;
 };
 
-export type TxInputType = {
-    address_n: number[];
-    prev_hash: string;
-    prev_index: number;
-    script_sig?: string;
+// TxInputType replacement
+// TxInputType needs more exact types
+// differences: external input (no address_n + required script_pubkey)
+
+export type InternalInputScriptType = Exclude<InputScriptType, 'EXTERNAL'>;
+
+type CommonTxInputType = {
+    prev_hash: string; // required: previous transaction hash (reversed)
+    prev_index: number; // required: previous transaction index
+    amount: number | string; // required
     sequence?: number;
-    script_type?: InputScriptType;
     multisig?: MultisigRedeemScriptType;
-    amount: number | string;
     decred_tree?: number;
-    witness?: string;
-    ownership_proof?: string;
-    commitment_data?: string;
-    orig_hash?: string;
-    orig_index?: number;
+    orig_hash?: string; // RBF
+    orig_index?: number; // RBF
     decred_staking_spend?: DecredStakingSpendType;
-    script_pubkey?: string;
+    script_pubkey?: string; // required if script_type=EXTERNAL
+    script_sig?: string; // used by EXTERNAL, depending on script_pubkey
+    witness?: string; // used by EXTERNAL, depending on script_pubkey
+    ownership_proof?: string; // used by EXTERNAL, depending on script_pubkey
+    commitment_data?: string; // used by EXTERNAL, depending on ownership_proof
 };
+
+export type TxInputType =
+    | (CommonTxInputType & {
+          address_n: number[];
+          script_type?: InternalInputScriptType;
+      })
+    | (CommonTxInputType & {
+          address_n?: typeof undefined;
+          script_type: 'EXTERNAL';
+          script_pubkey: string;
+      });
+
+export type TxInput = TxInputType;
+
+// TxInputType replacement end
 
 export type TxOutputBinType = {
     amount: number | string;
@@ -331,26 +350,6 @@ export type TxOutputType =
 export type TxOutput = TxOutputType;
 
 // - TxOutputType replacement end
-
-// TxInput
-export type TxInput = {
-    address_n: number[];
-    prev_hash: string;
-    prev_index: number;
-    script_sig?: string;
-    sequence?: number;
-    script_type?: InputScriptType;
-    multisig?: MultisigRedeemScriptType;
-    amount: string | number;
-    decred_tree?: number;
-    witness?: string;
-    ownership_proof?: string;
-    commitment_data?: string;
-    orig_hash?: string;
-    orig_index?: number;
-    decred_staking_spend?: DecredStakingSpendType;
-    script_pubkey?: string;
-};
 
 // PrevTx
 export type PrevTx = {

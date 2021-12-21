@@ -173,6 +173,31 @@ export const signTransaction = async () => {
                     m: 0,
                 },
             },
+            {
+                prev_index: 0,
+                prev_hash: 'txhash',
+                amount: '1',
+                script_type: 'EXTERNAL',
+                script_pubkey: '1001',
+                script_sig: '1110',
+            },
+            {
+                prev_index: 0,
+                prev_hash: 'txhash',
+                amount: '1',
+                script_type: 'EXTERNAL',
+                script_pubkey: '1001',
+                witness: '1110',
+            },
+            {
+                prev_index: 0,
+                prev_hash: 'abcd',
+                amount: '1',
+                script_type: 'EXTERNAL',
+                script_pubkey: '1001',
+                ownership_proof: '0011',
+                commitment_data: '1100',
+            },
         ],
         outputs: [
             // external outputs
@@ -371,13 +396,26 @@ export const signTransaction = async () => {
     TrezorConnect.signTransaction({ coin: 'btc' });
     TrezorConnect.signTransaction({
         inputs: [
+            // $FlowExpectedError: invalid script_type
             {
                 address_n: [0],
                 prev_index: 0,
                 prev_hash: 'txhash',
                 amount: '1',
-                // $FlowExpectedError: invalid script_type
                 script_type: 'SPENDADDRESS-2',
+            },
+            // $FlowExpectedError: missing address_n
+            {
+                prev_index: 0,
+                prev_hash: 'txhash',
+                amount: '1',
+            },
+            // $FlowExpectedError: missing script_pubkey
+            {
+                prev_index: 0,
+                prev_hash: 'txhash',
+                amount: '1',
+                script_type: 'EXTERNAL',
             },
         ],
         outputs: [
