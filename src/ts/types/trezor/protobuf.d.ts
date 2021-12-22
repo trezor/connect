@@ -1,4 +1,8 @@
 // This file is auto generated from data/messages/message.json
+
+// custom type uint32/64 may be represented as string
+export type UintType = string | number;
+
 // BinanceGetAddress
 export type BinanceGetAddress = {
     address_n: number[];
@@ -36,7 +40,7 @@ export type BinanceSignTx = {
 export type BinanceTxRequest = {};
 
 export type BinanceCoin = {
-    amount?: number;
+    amount?: UintType;
     denom?: string;
 };
 
@@ -277,7 +281,7 @@ export type InternalInputScriptType = Exclude<InputScriptType, 'EXTERNAL'>;
 type CommonTxInputType = {
     prev_hash: string; // required: previous transaction hash (reversed)
     prev_index: number; // required: previous transaction index
-    amount: number | string; // required
+    amount: UintType; // required
     sequence?: number;
     multisig?: MultisigRedeemScriptType;
     decred_tree?: number;
@@ -307,7 +311,7 @@ export type TxInput = TxInputType;
 // TxInputType replacement end
 
 export type TxOutputBinType = {
-    amount: number | string;
+    amount: UintType;
     script_pubkey: string;
     decred_script_version?: number;
 };
@@ -323,7 +327,7 @@ export type TxOutputType =
           address: string;
           address_n?: typeof undefined;
           script_type: 'PAYTOADDRESS';
-          amount: string;
+          amount: UintType;
           multisig?: MultisigRedeemScriptType;
           orig_hash?: string;
           orig_index?: number;
@@ -332,7 +336,7 @@ export type TxOutputType =
           address?: typeof undefined;
           address_n: number[];
           script_type: ChangeOutputScriptType;
-          amount: string;
+          amount: UintType;
           multisig?: MultisigRedeemScriptType;
           orig_hash?: string;
           orig_index?: number;
@@ -375,7 +379,7 @@ export type PrevInput = {
 
 // PrevOutput
 export type PrevOutput = {
-    amount: string | number;
+    amount: UintType;
     script_pubkey: string;
     decred_script_version?: number;
 };
@@ -596,8 +600,8 @@ export type CardanoNativeScript = {
     key_hash?: string;
     key_path?: number[];
     required_signatures_count?: number;
-    invalid_before?: string | number;
-    invalid_hereafter?: string | number;
+    invalid_before?: UintType;
+    invalid_hereafter?: UintType;
 };
 
 // CardanoGetNativeScriptHash
@@ -657,12 +661,12 @@ export type CardanoSignTxInit = {
     network_id: number;
     inputs_count: number;
     outputs_count: number;
-    fee: string | number;
-    ttl?: string | number;
+    fee: UintType;
+    ttl?: UintType;
     certificates_count: number;
     withdrawals_count: number;
     has_auxiliary_data: boolean;
-    validity_interval_start?: string | number;
+    validity_interval_start?: UintType;
     witness_requests_count: number;
     minting_asset_groups_count: number;
     derivation_type: CardanoDerivationType;
@@ -678,7 +682,7 @@ export type CardanoTxInput = {
 export type CardanoTxOutput = {
     address?: string;
     address_parameters?: CardanoAddressParametersType;
-    amount: string | number;
+    amount: UintType;
     asset_groups_count: number;
 };
 
@@ -691,8 +695,8 @@ export type CardanoAssetGroup = {
 // CardanoToken
 export type CardanoToken = {
     asset_name_bytes: string;
-    amount?: string | number;
-    mint_amount?: string | number;
+    amount?: UintType;
+    mint_amount?: UintType;
 };
 
 // CardanoPoolOwner
@@ -720,10 +724,10 @@ export type CardanoPoolMetadataType = {
 export type CardanoPoolParametersType = {
     pool_id: string;
     vrf_key_hash: string;
-    pledge: string | number;
-    cost: string | number;
-    margin_numerator: string | number;
-    margin_denominator: string | number;
+    pledge: UintType;
+    cost: UintType;
+    margin_numerator: UintType;
+    margin_denominator: UintType;
     reward_account: string;
     owners: CardanoPoolOwner[];
     relays: CardanoPoolRelayParameters[];
@@ -744,7 +748,7 @@ export type CardanoTxCertificate = {
 // CardanoTxWithdrawal
 export type CardanoTxWithdrawal = {
     path?: number[];
-    amount: string | number;
+    amount: UintType;
     script_hash?: string;
 };
 
@@ -753,7 +757,7 @@ export type CardanoCatalystRegistrationParametersType = {
     voting_public_key: string;
     staking_path: number[];
     reward_address_parameters: CardanoAddressParametersType;
-    nonce: string | number;
+    nonce: UintType;
 };
 
 // CardanoTxAuxiliaryData
@@ -809,7 +813,7 @@ export type CardanoTxInputType = {
 
 export type CardanoTokenType = {
     asset_name_bytes: string;
-    amount: string | number;
+    amount: UintType;
 };
 
 export type CardanoAssetGroupType = {
@@ -819,7 +823,7 @@ export type CardanoAssetGroupType = {
 
 export type CardanoTxOutputType = {
     address?: string;
-    amount: string | number;
+    amount: UintType;
     address_parameters?: CardanoAddressParametersType;
     token_bundle: CardanoAssetGroupType[];
 };
@@ -846,7 +850,7 @@ export type CardanoTxCertificateType = {
 
 export type CardanoTxWithdrawalType = {
     path: number[];
-    amount: string | number;
+    amount: UintType;
 };
 
 export type CardanoTxAuxiliaryDataType = {
@@ -859,12 +863,12 @@ export type CardanoSignTx = {
     inputs: CardanoTxInputType[];
     outputs: CardanoTxOutputType[];
     protocol_magic: number;
-    fee: string | number;
-    ttl?: string | number;
+    fee: UintType;
+    ttl?: UintType;
     network_id: number;
     certificates: CardanoTxCertificateType[];
     withdrawals: CardanoTxWithdrawalType[];
-    validity_interval_start?: string | number;
+    validity_interval_start?: UintType;
     auxiliary_data?: CardanoTxAuxiliaryDataType;
 };
 
@@ -1179,7 +1183,7 @@ export type EosTxActionRequest = {
 };
 
 export type EosAsset = {
-    amount?: string;
+    amount?: UintType;
     symbol?: string;
 };
 
@@ -1737,7 +1741,7 @@ export type NEMTransactionCommon = {
     address_n?: number[];
     network?: number;
     timestamp?: number;
-    fee?: number;
+    fee?: UintType;
     deadline?: number;
     signer?: string;
 };
@@ -1750,7 +1754,7 @@ export type NEMMosaic = {
 
 export type NEMTransfer = {
     recipient?: string;
-    amount?: string | number;
+    amount?: UintType;
     payload?: string;
     public_key?: string;
     mosaics?: NEMMosaic[];
@@ -1760,7 +1764,7 @@ export type NEMProvisionNamespace = {
     namespace?: string;
     parent?: string;
     sink?: string;
-    fee?: number;
+    fee?: UintType;
 };
 
 export enum NEMMosaicLevy {
@@ -1775,7 +1779,7 @@ export type NEMMosaicDefinition = {
     mosaic?: string;
     divisibility?: number;
     levy?: NEMMosaicLevy;
-    fee?: number;
+    fee?: UintType;
     levy_address?: string;
     levy_namespace?: string;
     levy_mosaic?: string;
@@ -1789,7 +1793,7 @@ export type NEMMosaicDefinition = {
 export type NEMMosaicCreation = {
     definition?: NEMMosaicDefinition;
     sink?: string;
-    fee?: number;
+    fee?: UintType;
 };
 
 export enum NEMSupplyChangeType {
@@ -1873,7 +1877,7 @@ export type RippleAddress = {
 };
 
 export type RipplePayment = {
-    amount: string | number;
+    amount: UintType;
     destination: string;
     destination_tag?: number;
 };
@@ -1881,7 +1885,7 @@ export type RipplePayment = {
 // RippleSignTx
 export type RippleSignTx = {
     address_n: number[];
-    fee?: string | number;
+    fee?: UintType;
     flags?: number;
     sequence?: number;
     last_ledger_sequence?: number;
@@ -1931,8 +1935,8 @@ export type StellarSignTx = {
     address_n: number[];
     network_passphrase: string;
     source_account: string;
-    fee: number;
-    sequence_number: string | number;
+    fee: UintType;
+    sequence_number: UintType;
     timebounds_start: number;
     timebounds_end: number;
     memo_type: StellarMemoType;
@@ -1950,24 +1954,24 @@ export type StellarPaymentOp = {
     source_account?: string;
     destination_account: string;
     asset: StellarAsset;
-    amount: string | number;
+    amount: UintType;
 };
 
 // StellarCreateAccountOp
 export type StellarCreateAccountOp = {
     source_account?: string;
     new_account: string;
-    starting_balance: string | number;
+    starting_balance: UintType;
 };
 
 // StellarPathPaymentStrictReceiveOp
 export type StellarPathPaymentStrictReceiveOp = {
     source_account?: string;
     send_asset: StellarAsset;
-    send_max: string | number;
+    send_max: UintType;
     destination_account: string;
     destination_asset: StellarAsset;
-    destination_amount: string | number;
+    destination_amount: UintType;
     paths?: StellarAsset[];
 };
 
@@ -1975,10 +1979,10 @@ export type StellarPathPaymentStrictReceiveOp = {
 export type StellarPathPaymentStrictSendOp = {
     source_account?: string;
     send_asset: StellarAsset;
-    send_amount: string | number;
+    send_amount: UintType;
     destination_account: string;
     destination_asset: StellarAsset;
-    destination_min: string | number;
+    destination_min: UintType;
     paths?: StellarAsset[];
 };
 
@@ -1987,10 +1991,10 @@ export type StellarManageSellOfferOp = {
     source_account?: string;
     selling_asset: StellarAsset;
     buying_asset: StellarAsset;
-    amount: string | number;
+    amount: UintType;
     price_n: number;
     price_d: number;
-    offer_id: string | number;
+    offer_id: UintType;
 };
 
 // StellarManageBuyOfferOp
@@ -1998,10 +2002,10 @@ export type StellarManageBuyOfferOp = {
     source_account?: string;
     selling_asset: StellarAsset;
     buying_asset: StellarAsset;
-    amount: string | number;
+    amount: UintType;
     price_n: number;
     price_d: number;
-    offer_id: string | number;
+    offer_id: UintType;
 };
 
 // StellarCreatePassiveSellOfferOp
@@ -2009,7 +2013,7 @@ export type StellarCreatePassiveSellOfferOp = {
     source_account?: string;
     selling_asset: StellarAsset;
     buying_asset: StellarAsset;
-    amount: string | number;
+    amount: UintType;
     price_n: number;
     price_d: number;
 };
@@ -2026,10 +2030,10 @@ export type StellarSetOptionsOp = {
     inflation_destination_account?: string;
     clear_flags?: number;
     set_flags?: number;
-    master_weight?: string | number;
-    low_threshold?: string | number;
-    medium_threshold?: string | number;
-    high_threshold?: string | number;
+    master_weight?: UintType;
+    low_threshold?: UintType;
+    medium_threshold?: UintType;
+    high_threshold?: UintType;
     home_domain?: string;
     signer_type?: StellarSignerType;
     signer_key?: Buffer | string;
@@ -2040,7 +2044,7 @@ export type StellarSetOptionsOp = {
 export type StellarChangeTrustOp = {
     source_account?: string;
     asset: StellarAsset;
-    limit: string | number;
+    limit: UintType;
 };
 
 // StellarAllowTrustOp
@@ -2068,7 +2072,7 @@ export type StellarManageDataOp = {
 // StellarBumpSequenceOp
 export type StellarBumpSequenceOp = {
     source_account?: string;
-    bump_to: string | number;
+    bump_to: UintType;
 };
 
 // StellarSignedTx
@@ -2111,7 +2115,7 @@ export type TezosContractID = {
 
 export type TezosRevealOp = {
     source: Uint8Array;
-    fee: number;
+    fee: UintType;
     counter: number;
     gas_limit: number;
     storage_limit: number;
@@ -2120,7 +2124,7 @@ export type TezosRevealOp = {
 
 export type TezosManagerTransfer = {
     destination?: TezosContractID;
-    amount?: number;
+    amount?: UintType;
 };
 
 export type TezosParametersManager = {
@@ -2131,11 +2135,11 @@ export type TezosParametersManager = {
 
 export type TezosTransactionOp = {
     source: Uint8Array;
-    fee: number;
+    fee: UintType;
     counter: number;
     gas_limit: number;
     storage_limit: number;
-    amount: number;
+    amount: UintType;
     destination: TezosContractID;
     parameters?: number[];
     parameters_manager?: TezosParametersManager;
@@ -2143,7 +2147,7 @@ export type TezosTransactionOp = {
 
 export type TezosOriginationOp = {
     source: Uint8Array;
-    fee: number;
+    fee: UintType;
     counter: number;
     gas_limit: number;
     storage_limit: number;
@@ -2157,7 +2161,7 @@ export type TezosOriginationOp = {
 
 export type TezosDelegationOp = {
     source: Uint8Array;
-    fee: number;
+    fee: UintType;
     counter: number;
     gas_limit: number;
     storage_limit: number;

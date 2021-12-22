@@ -5,6 +5,7 @@
 
 // @overhead-start
 // will be removed during compilation
+type UintType = any;
 type MultisigRedeemScriptType = any;
 type ChangeOutputScriptType = any;
 // @overhead-end
@@ -17,7 +18,7 @@ export type TxOutputType =
           address: string,
           address_n?: typeof undefined,
           script_type: 'PAYTOADDRESS',
-          amount: string,
+          amount: UintType,
           multisig?: MultisigRedeemScriptType,
           orig_hash?: string,
           orig_index?: number,
@@ -26,7 +27,7 @@ export type TxOutputType =
           address?: typeof undefined,
           address_n: number[],
           script_type: ChangeOutputScriptType,
-          amount: string,
+          amount: UintType,
           multisig?: MultisigRedeemScriptType,
           orig_hash?: string,
           orig_index?: number,

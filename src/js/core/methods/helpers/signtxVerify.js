@@ -191,7 +191,7 @@ export const verifyTicketTx = async (
             const node = await derivePubKeyHash(output.address_n, getHDNode, coinInfo);
             scriptA = BitcoinJsPayments.sstxcommitment({
                 hash: node.identifier,
-                amount: output.amount,
+                amount: output.amount.toString(),
                 network: coinInfo.network,
             }).output;
         } else {
