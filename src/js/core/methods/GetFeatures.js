@@ -1,13 +1,10 @@
 /* @flow */
 
 import AbstractMethod from './AbstractMethod';
-
-import type { CoreMessage } from '../../types';
 import * as UI from '../../constants/ui';
 
-export default class GetFeatures extends AbstractMethod {
-    constructor(message: CoreMessage) {
-        super(message);
+export default class GetFeatures extends AbstractMethod<'getFeatures'> {
+    init() {
         this.requiredPermissions = [];
         this.useUi = false;
         this.allowDeviceMode = [...this.allowDeviceMode, UI.INITIALIZE, UI.BOOTLOADER];

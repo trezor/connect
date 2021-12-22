@@ -9,7 +9,6 @@ import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
 import type { TezosAddress } from '../../types/networks/tezos';
-import type { CoreMessage } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {
@@ -17,7 +16,7 @@ type Params = {
     address?: string,
 };
 
-export default class TezosGetAddress extends AbstractMethod {
+export default class TezosGetAddress extends AbstractMethod<'tezosGetAddress'> {
     params: Params[] = [];
 
     hasBundle: boolean;
@@ -26,9 +25,7 @@ export default class TezosGetAddress extends AbstractMethod {
 
     confirmed: ?boolean;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['read'];
         this.firmwareRange = getFirmwareRange(
             this.name,
@@ -37,10 +34,10 @@ export default class TezosGetAddress extends AbstractMethod {
         );
 
         // create a bundle with only one batch if bundle doesn't exists
-        this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle
-            ? { ...message.payload, bundle: [message.payload] }
-            : message.payload;
+        this.hasBundle = !!this.payload.bundle;
+        const payload = !this.payload.bundle
+            ? { ...this.payload, bundle: [this.payload] }
+            : this.payload;
 
         // validate bundle type
         validateParams(payload, [

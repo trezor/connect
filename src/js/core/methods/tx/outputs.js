@@ -1,12 +1,12 @@
 /* @flow */
 
-import type { ComposeOutput, ComposedTxOutput } from '@trezor/utxo-lib';
+import type { ComposeOutput as UtxoLibOutput, ComposedTxOutput } from '@trezor/utxo-lib';
 import { getOutputScriptType, fixPath } from '../../../utils/pathUtils';
 import { isValidAddress } from '../../../utils/addressUtils';
 import { convertMultisigPubKey } from '../../../utils/hdnodeUtils';
 import { validateParams } from '../helpers/paramsValidator';
 import { ERRORS } from '../../../constants';
-import type { BitcoinNetworkInfo } from '../../../types';
+import type { BitcoinNetworkInfo, ComposeOutput } from '../../../types';
 import type { TxOutputType } from '../../../types/trezor/protobuf';
 
 /** *****
@@ -64,9 +64,9 @@ export const validateTrezorOutputs = (
 export const validateHDOutput = (
     output: ComposeOutput,
     coinInfo: BitcoinNetworkInfo,
-): ComposeOutput => {
+): UtxoLibOutput => {
     const validateAddress = address => {
-        if (!isValidAddress(address, coinInfo)) {
+        if (!address || !isValidAddress(address, coinInfo)) {
             throw ERRORS.TypedError(
                 'Method_InvalidParameter',
                 `Invalid ${coinInfo.label} output address format`,
@@ -110,6 +110,7 @@ export const validateHDOutput = (
             validateAddress(output.address);
             return {
                 type: 'complete',
+                // $FlowIssue missing address will fail in validation above
                 address: output.address,
                 amount: output.amount,
             };

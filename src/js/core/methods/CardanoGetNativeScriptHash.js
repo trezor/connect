@@ -5,7 +5,6 @@ import { getFirmwareRange, validateParams } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 
-import type { CoreMessage } from '../../types';
 import type { CardanoNativeScript } from '../../types/networks/cardano';
 import type {
     CardanoNativeScript as CardanoNativeScriptProto,
@@ -14,12 +13,10 @@ import type {
 import { Enum_CardanoDerivationType as CardanoDerivationType } from '../../types/trezor/protobuf';
 
 type Params = $ElementType<MessageType, 'CardanoGetNativeScriptHash'>;
-export default class CardanoGetNativeScriptHash extends AbstractMethod {
+export default class CardanoGetNativeScriptHash extends AbstractMethod<'cardanoGetNativeScriptHash'> {
     params: Params;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['read'];
         this.firmwareRange = getFirmwareRange(
             this.name,
@@ -28,7 +25,7 @@ export default class CardanoGetNativeScriptHash extends AbstractMethod {
         );
         this.info = 'Get Cardano native script hash';
 
-        const { payload } = message;
+        const { payload } = this;
 
         validateParams(payload, [
             { name: 'script', type: 'object', obligatory: true },

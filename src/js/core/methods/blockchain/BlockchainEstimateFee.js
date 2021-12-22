@@ -7,7 +7,6 @@ import Fees from '../tx/Fees';
 import { isBackendSupported, initBlockchain } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
 import type {
-    CoreMessage,
     CoinInfo,
     BlockchainEstimateFee as BlockchainEstimateFeeParams,
 } from '../../../types';
@@ -19,15 +18,14 @@ type Params = {
     request: Request,
 };
 
-export default class BlockchainEstimateFee extends AbstractMethod {
+export default class BlockchainEstimateFee extends AbstractMethod<'blockchainEstimateFee'> {
     params: Params;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.useDevice = false;
         this.useUi = false;
 
-        const { payload } = message;
+        const { payload } = this;
 
         // validate incoming parameters
         validateParams(payload, [

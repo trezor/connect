@@ -7,22 +7,21 @@ import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 import DataManager from '../../data/DataManager';
 
-import type { ConnectSettings, CoreMessage } from '../../types';
+import type { ConnectSettings } from '../../types';
 import type { MessageType, IdentityType } from '../../types/trezor/protobuf';
 
-export default class RequestLogin extends AbstractMethod {
+export default class RequestLogin extends AbstractMethod<'requestLogin'> {
     params: $ElementType<MessageType, 'SignIdentity'>;
 
     asyncChallenge: boolean;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.requiredPermissions = ['read', 'write'];
         this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Login';
         this.useEmptyPassphrase = true;
 
-        const { payload } = message;
+        const { payload } = this;
 
         const identity: IdentityType = {};
         const settings: ConnectSettings = DataManager.getSettings();
@@ -48,7 +47,7 @@ export default class RequestLogin extends AbstractMethod {
             challenge_hidden: payload.challengeHidden || '',
             challenge_visual: payload.challengeVisual || '',
         };
-        this.asyncChallenge = payload.asyncChallenge;
+        this.asyncChallenge = !!payload.asyncChallenge;
     }
 
     async run() {

@@ -151,9 +151,9 @@ export const ethereumSignTransaction = async () => {
         },
     });
 
-    // $FlowExpectedError: combined gasPrice + maxFeePerGas
     TrezorConnect.ethereumSignTransaction({
         path: 'm/44',
+        // $FlowExpectedError: combined gasPrice + maxFeePerGas
         transaction: {
             nonce: '0x0',
             maxFeePerGas: '0x14',

@@ -7,8 +7,6 @@ import { UiMessage } from '../../message/builder';
 import { validateParams } from './helpers/paramsValidator';
 import { getReleases } from '../../data/FirmwareInfo';
 
-import type { CoreMessage } from '../../types';
-
 type Params = {
     binary?: ArrayBuffer,
     version?: number[],
@@ -17,11 +15,10 @@ type Params = {
     intermediary?: boolean,
 };
 
-export default class FirmwareUpdate extends AbstractMethod {
+export default class FirmwareUpdate extends AbstractMethod<'firmwareUpdate'> {
     params: Params;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.useEmptyPassphrase = true;
         this.requiredPermissions = ['management'];
         this.allowDeviceMode = [UI.BOOTLOADER, UI.INITIALIZE];
@@ -29,7 +26,7 @@ export default class FirmwareUpdate extends AbstractMethod {
         this.useDeviceState = false;
         this.skipFirmwareCheck = true;
 
-        const { payload } = message;
+        const { payload } = this;
 
         validateParams(payload, [
             { name: 'version', type: 'array' },
@@ -74,13 +71,13 @@ export default class FirmwareUpdate extends AbstractMethod {
     }
 
     async run() {
-        const { device } = this;
+        const { device, params } = this;
 
         let binary: ArrayBuffer;
         try {
-            if (this.params.binary) {
+            if (params.binary) {
                 binary = modifyFirmware({
-                    fw: this.params.binary,
+                    fw: params.binary,
                     features: device.features,
                 });
             } else {
@@ -89,10 +86,10 @@ export default class FirmwareUpdate extends AbstractMethod {
                     features: device.features,
                     releases: getReleases(device.features.major_version),
                     // version argument is used to find and fetch concrete release from releases list
-                    version: this.params.version,
-                    btcOnly: this.params.btcOnly,
-                    baseUrl: this.params.baseUrl,
-                    intermediary: this.params.intermediary,
+                    version: params.version,
+                    btcOnly: params.btcOnly,
+                    baseUrl: params.baseUrl,
+                    intermediary: params.intermediary,
                 });
                 binary = firmware.binary;
             }

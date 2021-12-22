@@ -2,12 +2,11 @@
 
 import AbstractMethod from '../AbstractMethod';
 import { ERRORS } from '../../../constants';
-import type { CoreMessage } from '../../../types';
 import type { DebugLinkState } from '../../../types/trezor/protobuf';
 
-export default class DebugLinkGetState extends AbstractMethod {
-    constructor(message: CoreMessage) {
-        super(message);
+// TODO: remove unused method
+export default class DebugLinkGetState extends AbstractMethod<'debugLinkGetState'> {
+    init() {
         this.useDevice = true;
         this.debugLink = true;
         this.useUi = false;

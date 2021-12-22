@@ -7,7 +7,6 @@ import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/eosSignTx';
 
 import type { EosTxHeader, EosTxActionAck } from '../../types/trezor/protobuf';
-import type { CoreMessage } from '../../types';
 
 type Params = {
     path: number[],
@@ -16,16 +15,15 @@ type Params = {
     ack: EosTxActionAck[],
 };
 
-export default class EosSignTransaction extends AbstractMethod {
+export default class EosSignTransaction extends AbstractMethod<'eosSignTransaction'> {
     params: Params;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.requiredPermissions = ['read', 'write'];
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('EOS'), this.firmwareRange);
         this.info = 'Sign EOS transaction';
 
-        const { payload } = message;
+        const { payload } = this;
         // validate incoming parameters
         validateParams(payload, [
             { name: 'path', obligatory: true },

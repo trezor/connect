@@ -16,6 +16,7 @@ import type {
 export type EosGetPublicKey = {
     path: string | number[],
     showOnTrezor?: boolean,
+    useEventListener?: boolean, // set automatically if UI.ADDRESS_VALIDATION listener is used
 };
 
 export type EosPublicKey = {

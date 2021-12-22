@@ -6,23 +6,22 @@ import { getCoinInfo } from '../../data/CoinInfo';
 import { ERRORS } from '../../constants';
 import { isBackendSupported, initBlockchain } from '../../backend/BlockchainLink';
 
-import type { CoreMessage, CoinInfo } from '../../types';
+import type { CoinInfo } from '../../types';
 
 type Params = {
     tx: string,
     coinInfo: CoinInfo,
 };
 
-export default class PushTransaction extends AbstractMethod {
+export default class PushTransaction extends AbstractMethod<'pushTransaction'> {
     params: Params;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.requiredPermissions = [];
         this.useUi = false;
         this.useDevice = false;
 
-        const { payload } = message;
+        const { payload } = this;
 
         // validate incoming parameters
         validateParams(payload, [

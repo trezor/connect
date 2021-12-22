@@ -9,7 +9,7 @@ import { getEthereumNetwork, getUniqueNetworks } from '../../data/CoinInfo';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { CoreMessage, EthereumNetworkInfo, HDNodeResponse } from '../../types';
+import type { EthereumNetworkInfo, HDNodeResponse } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {
@@ -17,23 +17,21 @@ type Params = {
     network?: EthereumNetworkInfo,
 };
 
-export default class EthereumGetPublicKey extends AbstractMethod {
+export default class EthereumGetPublicKey extends AbstractMethod<'ethereumGetPublicKey'> {
     params: Params[] = [];
 
     hasBundle: boolean;
 
     confirmed: ?boolean;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['read'];
 
         // create a bundle with only one batch if bundle doesn't exists
-        this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle
-            ? { ...message.payload, bundle: [message.payload] }
-            : message.payload;
+        this.hasBundle = !!this.payload.bundle;
+        const payload = !this.payload.bundle
+            ? { ...this.payload, bundle: [this.payload] }
+            : this.payload;
 
         // validate bundle type
         validateParams(payload, [{ name: 'bundle', type: 'array' }]);

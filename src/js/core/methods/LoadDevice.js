@@ -4,22 +4,21 @@ import AbstractMethod from './AbstractMethod';
 import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 import { validateParams } from './helpers/paramsValidator';
-import type { CoreMessage } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
-export default class LoadDevice extends AbstractMethod {
+// TODO: this method is not used in API
+export default class LoadDevice extends AbstractMethod<any> {
     params: $ElementType<MessageType, 'LoadDevice'>;
 
     confirmed: ?boolean;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.allowDeviceMode = [UI.INITIALIZE, UI.SEEDLESS];
         this.useDeviceState = false;
         this.requiredPermissions = ['management'];
         this.info = 'Load device';
 
-        const { payload } = message;
+        const { payload } = this;
         // validate bundle type
         validateParams(payload, [
             { name: 'mnemonics', type: 'array' },

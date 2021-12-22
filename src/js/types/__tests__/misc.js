@@ -15,7 +15,9 @@ export const cipherKeyValue = async () => {
     }
 
     // bundle
-    const bundleKV = await TrezorConnect.cipherKeyValue({ bundle: [{ path: 'm/44', key: 'key' }] });
+    const bundleKV = await TrezorConnect.cipherKeyValue({
+        bundle: [{ path: 'm/44', key: 'key', value: 'hash' }],
+    });
     (bundleKV.success: boolean);
     if (bundleKV.success) {
         bundleKV.payload.forEach(item => {
@@ -60,11 +62,6 @@ export const requestLogin = async () => {
             challengeVisual: 'b',
         }),
     });
-    // const { success, payload } = a;
-    // if (success && payload.address) {
-    //     (payload.address: string);
-    // }
-    // (payload: { error: string });
     (a.success: boolean);
     if (a.success) {
         (a.payload.address: string);

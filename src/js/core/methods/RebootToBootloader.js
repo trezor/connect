@@ -6,14 +6,10 @@ import { getFirmwareRange } from './helpers/paramsValidator';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { CoreMessage } from '../../types';
-
-export default class RebootToBootloader extends AbstractMethod {
+export default class RebootToBootloader extends AbstractMethod<'rebootToBootloader'> {
     confirmed: ?boolean;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.allowDeviceMode = [UI.INITIALIZE, UI.SEEDLESS];
         this.skipFinalReload = true;
         this.keepSession = false;

@@ -4,24 +4,21 @@ import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-import type { CoreMessage } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
-export default class ResetDevice extends AbstractMethod {
+export default class ResetDevice extends AbstractMethod<'resetDevice'> {
     params: $ElementType<MessageType, 'ResetDevice'>;
 
     confirmed: ?boolean;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.allowDeviceMode = [UI.INITIALIZE, UI.SEEDLESS];
         this.useDeviceState = false;
         this.requiredPermissions = ['management'];
         this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Setup device';
 
-        const { payload } = message;
+        const { payload } = this;
         // validate bundle type
         validateParams(payload, [
             { name: 'display_random', type: 'boolean' },

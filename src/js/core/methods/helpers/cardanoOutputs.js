@@ -4,7 +4,7 @@ import { validateParams } from './paramsValidator';
 import type { CardanoTxOutput } from '../../../types/trezor/protobuf';
 import { addressParametersToProto, validateAddressParameters } from './cardanoAddressParameters';
 import type { AssetGroupWithTokens } from './cardanoTokenBundle';
-import { tokenBundleToProto, validateTokenBundle } from './cardanoTokenBundle';
+import { tokenBundleToProto } from './cardanoTokenBundle';
 
 export type OutputWithTokens = {
     output: CardanoTxOutput,
@@ -33,7 +33,6 @@ export const transformOutput = (output: any) => {
     }
 
     if (output.tokenBundle) {
-        validateTokenBundle(output.tokenBundle);
         result.tokenBundle = tokenBundleToProto(output.tokenBundle);
         result.output.asset_groups_count = result.tokenBundle.length;
     } else {

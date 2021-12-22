@@ -6,22 +6,21 @@ import { ERRORS } from '../../../constants';
 
 import { isBackendSupported, initBlockchain } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
-import type { CoreMessage, CoinInfo } from '../../../types';
+import type { CoinInfo } from '../../../types';
 
 type Params = {
     txs: string[],
     coinInfo: CoinInfo,
 };
 
-export default class BlockchainGetTransactions extends AbstractMethod {
+export default class BlockchainGetTransactions extends AbstractMethod<'blockchainGetTransactions'> {
     params: Params;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.useDevice = false;
         this.useUi = false;
 
-        const { payload } = message;
+        const { payload } = this;
 
         // validate incoming parameters
         validateParams(payload, [

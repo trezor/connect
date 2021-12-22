@@ -47,7 +47,7 @@ let _core: Core; // Class with event emitter
 let _deviceList: ?DeviceList; // Instance of DeviceList
 let _popupPromise: ?Deferred<void>; // Waiting for popup handshake
 let _uiPromises: Deferred<UiPromiseResponse>[] = []; // Waiting for ui response
-const _callMethods: AbstractMethod[] = [];
+const _callMethods: AbstractMethod<any>[] = []; // generic type is irrelevant. only common functions are called at this level
 let _preferredDevice: any; // TODO: type
 let _interactionTimeout: InteractionTimeout;
 
@@ -211,7 +211,7 @@ export const handleMessage = (message: CoreMessage, isTrustedOrigin: boolean = f
  * @returns {Promise<IDevice>}
  * @memberof Core
  */
-const initDevice = async (method: AbstractMethod) => {
+const initDevice = async (method: AbstractMethod<any>) => {
     if (!_deviceList) {
         throw ERRORS.TypedError('Transport_Missing');
     }
@@ -302,7 +302,7 @@ export const onCall = async (message: CoreMessage) => {
     }
 
     // find method and parse incoming params
-    let method: AbstractMethod;
+    let method: AbstractMethod<any>;
     let messageResponse: ?CoreMessage;
     try {
         method = findMethod(message);
@@ -312,6 +312,8 @@ export const onCall = async (message: CoreMessage) => {
         method.createUiPromise = createUiPromise;
         method.findUiPromise = findUiPromise;
         method.removeUiPromise = removeUiPromise;
+        // start validation process
+        method.init();
     } catch (error) {
         postMessage(UiMessage(POPUP.CANCEL_POPUP_REQUEST));
         postMessage(ResponseMessage(responseID, false, { error }));
@@ -722,7 +724,7 @@ const closePopup = () => {
 const onDeviceButtonHandler = async (
     device: IDevice,
     request: ButtonRequest,
-    method: AbstractMethod,
+    method: AbstractMethod<any>,
 ) => {
     // wait for popup handshake
     const addressRequest = request.code === 'ButtonRequest_Address';

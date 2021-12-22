@@ -4,18 +4,16 @@ import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 import { validateParams } from './helpers/paramsValidator';
 import { UiMessage } from '../../message/builder';
-import type { CoreMessage } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
-export default class RecoveryDevice extends AbstractMethod {
+export default class RecoveryDevice extends AbstractMethod<'recoveryDevice'> {
     params: $ElementType<MessageType, 'RecoveryDevice'>;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.requiredPermissions = ['management'];
         this.useEmptyPassphrase = true;
 
-        const { payload } = message;
+        const { payload } = this;
 
         validateParams(payload, [
             { name: 'word_count', type: 'number' },

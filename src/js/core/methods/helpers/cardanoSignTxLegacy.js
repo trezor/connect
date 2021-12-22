@@ -60,13 +60,13 @@ type CardanoTxAuxiliaryDataTypeLegacy = {
 type CardanoSignTransactionLegacyParams = {
     auxiliary_data: void | CardanoTxAuxiliaryDataTypeLegacy,
     certificates: CardanoTxCertificateTypeLegacy[],
-    fee: number,
+    fee: string | number,
     inputs: CardanoTxInputType[],
     network_id: number,
     outputs: CardanoTxOutputType[],
     protocol_magic: number,
-    ttl: number,
-    validity_interval_start: number,
+    ttl?: string | number,
+    validity_interval_start?: string | number,
     withdrawals: CardanoTxWithdrawalType[],
 };
 

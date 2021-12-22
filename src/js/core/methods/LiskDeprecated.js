@@ -6,10 +6,8 @@ import AbstractMethod from './AbstractMethod';
 // FirmwareRange is set to "0" for both T1 and TT
 // This should be removed in next major version of connect
 
-export default class LiskDeprecated extends AbstractMethod {
-    constructor(message: any) {
-        super(message);
-
+export default class LiskDeprecated extends AbstractMethod<any> {
+    init() {
         this.firmwareRange = {
             '1': { min: '0', max: '0' },
             '2': { min: '0', max: '0' },

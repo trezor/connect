@@ -5,18 +5,16 @@ import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/pa
 import { validatePath, getLabel, getScriptType } from '../../utils/pathUtils';
 import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { messageToHex } from '../../utils/formatUtils';
-import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
+import type { BitcoinNetworkInfo } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
-export default class SignMessage extends AbstractMethod {
+export default class SignMessage extends AbstractMethod<'signMessage'> {
     params: $ElementType<MessageType, 'SignMessage'>;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['read', 'write'];
 
-        const { payload } = message;
+        const { payload } = this;
 
         // validate incoming parameters
         validateParams(payload, [
