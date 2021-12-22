@@ -38,7 +38,7 @@ export type TokenInfo = {
 export type AccountAddress = {
     address: string,
     path: string,
-    transfers: number,
+    transfers?: number,
     balance?: string,
     sent?: string,
     received?: string,
@@ -173,12 +173,14 @@ export type AccountInfo = {
 export type RegularOutput = {
     type?: 'external',
     address: string,
+    address_n?: typeof undefined,
     amount: string,
     script_type?: 'PAYTOADDRESS',
 };
 
 export type InternalOutput = {
     type?: 'internal',
+    address?: typeof undefined,
     address_n: number[],
     amount: string,
     script_type?: string,
@@ -261,6 +263,9 @@ export type ComposeParams = {
     sequence?: number,
     account?: typeof undefined,
     feeLevels?: typeof undefined,
+    baseFee?: number,
+    floorBaseFee?: boolean,
+    skipPermutation?: boolean,
 };
 
 export type DiscoveryAccount = {

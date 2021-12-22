@@ -6,7 +6,7 @@ import { validatePath } from '../../utils/pathUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
 import { toChecksumAddress, getNetworkLabel } from '../../utils/ethereumUtils';
 import { messageToHex } from '../../utils/formatUtils';
-import type { CoreMessage, EthereumNetworkInfo } from '../../types';
+import type { EthereumNetworkInfo } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {
@@ -14,15 +14,13 @@ type Params = {
     network?: EthereumNetworkInfo,
 };
 
-export default class EthereumSignMessage extends AbstractMethod {
+export default class EthereumSignMessage extends AbstractMethod<'ethereumSignMessage'> {
     params: Params;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['read', 'write'];
 
-        const { payload } = message;
+        const { payload } = this;
 
         // validate incoming parameters
         validateParams(payload, [

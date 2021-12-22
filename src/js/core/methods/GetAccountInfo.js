@@ -12,7 +12,7 @@ import { UiMessage } from '../../message/builder';
 
 import { isBackendSupported, initBlockchain } from '../../backend/BlockchainLink';
 
-import type { CoreMessage, CoinInfo } from '../../types';
+import type { CoinInfo } from '../../types';
 import type {
     GetAccountInfo as GetAccountInfoParams,
     AccountInfo,
@@ -24,7 +24,7 @@ import { Enum_CardanoDerivationType } from '../../types/trezor/protobuf';
 type Request = GetAccountInfoParams & { address_n: number[], coinInfo: CoinInfo };
 type Params = Request[];
 
-export default class GetAccountInfo extends AbstractMethod {
+export default class GetAccountInfo extends AbstractMethod<'getAccountInfo'> {
     params: Params;
 
     disposed: boolean = false;
@@ -35,9 +35,7 @@ export default class GetAccountInfo extends AbstractMethod {
 
     derivationType: ?CardanoDerivationType;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['read'];
         this.info = 'Export account info';
         this.useDevice = true;
@@ -47,10 +45,10 @@ export default class GetAccountInfo extends AbstractMethod {
         let willUseDevice = false;
 
         // create a bundle with only one batch if bundle doesn't exists
-        this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle
-            ? { ...message.payload, bundle: [message.payload] }
-            : message.payload;
+        this.hasBundle = !!this.payload.bundle;
+        const payload = !this.payload.bundle
+            ? { ...this.payload, bundle: [this.payload] }
+            : this.payload;
 
         // validate bundle type
         validateParams(payload, [
@@ -58,7 +56,7 @@ export default class GetAccountInfo extends AbstractMethod {
             { name: 'derivationType', type: 'number' },
         ]);
 
-        payload.bundle.forEach(batch => {
+        this.params = payload.bundle.map(batch => {
             // validate incoming parameters
             validateParams(batch, [
                 { name: 'coin', type: 'string', obligatory: true },
@@ -85,8 +83,9 @@ export default class GetAccountInfo extends AbstractMethod {
             // validate backend
             isBackendSupported(coinInfo);
             // validate path if exists
+            let address_n = [];
             if (batch.path) {
-                batch.address_n = validatePath(batch.path, 3);
+                address_n = validatePath(batch.path, 3);
                 // since there is no descriptor device will be used
                 willUseDevice = typeof batch.descriptor !== 'string';
             }
@@ -97,13 +96,16 @@ export default class GetAccountInfo extends AbstractMethod {
                 // device will be used in Discovery
                 willUseDevice = true;
             }
-            batch.coinInfo = coinInfo;
 
             // set firmware range
             this.firmwareRange = getFirmwareRange(this.name, coinInfo, this.firmwareRange);
-        });
 
-        this.params = payload.bundle;
+            return {
+                ...batch,
+                address_n,
+                coinInfo,
+            };
+        });
 
         this.useDevice = willUseDevice;
         this.useUi = willUseDevice;

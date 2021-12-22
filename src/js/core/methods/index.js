@@ -135,7 +135,7 @@ const METHODS = {
     rebootToBootloader,
 };
 
-export const find = (message: CoreMessage): AbstractMethod => {
+export const find = (message: CoreMessage): AbstractMethod<any> => {
     if (!message.payload) {
         throw ERRORS.TypedError('Method_InvalidParameter', 'Message payload not found');
     }

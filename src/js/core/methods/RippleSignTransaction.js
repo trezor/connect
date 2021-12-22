@@ -4,15 +4,12 @@ import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
-
-import type { CoreMessage } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
-export default class RippleSignTransaction extends AbstractMethod {
+export default class RippleSignTransaction extends AbstractMethod<'rippleSignTransaction'> {
     params: $ElementType<MessageType, 'RippleSignTx'>;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.requiredPermissions = ['read', 'write'];
         this.firmwareRange = getFirmwareRange(
             this.name,
@@ -21,7 +18,7 @@ export default class RippleSignTransaction extends AbstractMethod {
         );
         this.info = 'Sign Ripple transaction';
 
-        const { payload } = message;
+        const { payload } = this;
         // validate incoming parameters
         validateParams(payload, [
             { name: 'path', obligatory: true },

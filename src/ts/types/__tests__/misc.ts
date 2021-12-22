@@ -14,7 +14,9 @@ export const cipherKeyValue = async () => {
     }
 
     // bundle
-    const bundleKV = await TrezorConnect.cipherKeyValue({ bundle: [{ path: 'm/44', key: 'key' }] });
+    const bundleKV = await TrezorConnect.cipherKeyValue({
+        bundle: [{ path: 'm/44', key: 'key', value: 'hash' }],
+    });
 
     if (bundleKV.success) {
         bundleKV.payload.forEach(item => {

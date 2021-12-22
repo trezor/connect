@@ -27,7 +27,6 @@ import type {
     CardanoTxSigningMode,
     CardanoDerivationType,
 } from '../../types/trezor/protobuf';
-import type { CoreMessage } from '../../types';
 import type {
     CardanoAuxiliaryDataSupplement,
     CardanoSignedTxData,
@@ -35,7 +34,7 @@ import type {
 } from '../../types/networks/cardano';
 import { gatherWitnessPaths } from './helpers/cardanoWitnesses';
 import type { AssetGroupWithTokens } from './helpers/cardanoTokenBundle';
-import { tokenBundleToProto, validateTokenBundle } from './helpers/cardanoTokenBundle';
+import { tokenBundleToProto } from './helpers/cardanoTokenBundle';
 
 // todo: remove when listed firmwares become mandatory for cardanoSignTransaction
 const CardanoSignTransactionFeatures = Object.freeze({
@@ -62,13 +61,13 @@ export type CardanoSignTransactionParams = {
     signingMode: CardanoTxSigningMode,
     inputsWithPath: InputWithPath[],
     outputsWithTokens: OutputWithTokens[],
-    fee: number,
-    ttl: number,
+    fee: string | number,
+    ttl?: string | number,
     certificatesWithPoolOwnersAndRelays: CertificateWithPoolOwnersAndRelays[],
     withdrawals: CardanoTxWithdrawal[],
     mint: AssetGroupWithTokens[],
     auxiliaryData?: CardanoTxAuxiliaryData,
-    validityIntervalStart: number,
+    validityIntervalStart?: string | number,
     protocolMagic: number,
     networkId: number,
     witnessPaths: Path[],
@@ -76,11 +75,10 @@ export type CardanoSignTransactionParams = {
     derivationType: CardanoDerivationType,
 };
 
-export default class CardanoSignTransaction extends AbstractMethod {
+export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignTransaction'> {
     params: CardanoSignTransactionParams;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.requiredPermissions = ['read', 'write'];
         this.firmwareRange = getFirmwareRange(
             this.name,
@@ -89,8 +87,9 @@ export default class CardanoSignTransaction extends AbstractMethod {
         );
         this.info = 'Sign Cardano transaction';
 
-        const { payload } = message;
+        const { payload } = this;
 
+        // $FlowIssue payload.metadata is a legacy param
         if (payload.metadata) {
             throw ERRORS.TypedError(
                 'Method_InvalidParameter',
@@ -98,6 +97,7 @@ export default class CardanoSignTransaction extends AbstractMethod {
             );
         }
 
+        // $FlowIssue payload.auxiliaryData.blob is a legacy param
         if (payload.auxiliaryData && payload.auxiliaryData.blob) {
             throw ERRORS.TypedError(
                 'Method_InvalidParameter',
@@ -131,7 +131,6 @@ export default class CardanoSignTransaction extends AbstractMethod {
                 input: {
                     prev_hash: input.prev_hash,
                     prev_index: input.prev_index,
-                    type: input.type,
                 },
                 path: input.path ? validatePath(input.path, 5) : undefined,
             };
@@ -161,7 +160,6 @@ export default class CardanoSignTransaction extends AbstractMethod {
 
         let mint: AssetGroupWithTokens[] = [];
         if (payload.mint) {
-            validateTokenBundle(payload.mint);
             mint = tokenBundleToProto(payload.mint);
         }
 

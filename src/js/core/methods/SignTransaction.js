@@ -25,7 +25,7 @@ import {
 
 import type { RefTransaction, TransactionOptions } from '../../types/networks/bitcoin';
 import type { TxInputType, TxOutputType } from '../../types/trezor/protobuf';
-import type { CoreMessage, BitcoinNetworkInfo, AccountAddresses } from '../../types';
+import type { BitcoinNetworkInfo, AccountAddresses } from '../../types';
 
 type Params = {
     inputs: TxInputType[],
@@ -37,15 +37,14 @@ type Params = {
     push: boolean,
 };
 
-export default class SignTransaction extends AbstractMethod {
+export default class SignTransaction extends AbstractMethod<'signTransaction'> {
     params: Params;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.requiredPermissions = ['read', 'write'];
         this.info = 'Sign transaction';
 
-        const { payload } = message;
+        const { payload } = this;
 
         // validate incoming parameters
         validateParams(payload, [

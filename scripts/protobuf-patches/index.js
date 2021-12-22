@@ -125,6 +125,8 @@ const TYPE_PATCH = {
     'CardanoToken.mint_amount': 'string | number',
     'CardanoTxOutputType.amount': 'string | number',
     'CardanoTxOutput.amount': 'string | number',
+    'CardanoTxWithdrawal.amount': 'string | number',
+    'CardanoTxWithdrawalType.amount': 'string | number',
     'CardanoNativeScript.invalid_before': 'string | number',
     'CardanoNativeScript.invalid_hereafter': 'string | number',
     'EosAsset.amount': 'string',
@@ -164,6 +166,7 @@ const TYPE_PATCH = {
     'EosActionNewAccount.creator': 'string',
     'EosActionNewAccount.name': 'string',
     'NEMTransfer.amount': 'string | number',
+    'ResetDevice.backup_type': 'string | number', // BackupType is a enum. in Features displayed as string, in resetDevice method param accepted as number
     'RipplePayment.amount': 'string | number',
     'RippleSignTx.fee': 'string | number',
     'StellarAssetType.type': '0 | 1 | 2',

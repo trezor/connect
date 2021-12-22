@@ -114,6 +114,7 @@ export type NEMGetAddress = {
     address?: string,
     network: number,
     showOnTrezor?: boolean,
+    useEventListener?: boolean, // set automatically if UI.ADDRESS_VALIDATION listener is used
 };
 
 export type NEMAddress = {

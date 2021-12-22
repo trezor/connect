@@ -37,7 +37,7 @@ export interface TokenInfo {
 export interface AccountAddress {
     address: string;
     path: string;
-    transfers: number;
+    transfers?: number;
     balance?: string;
     sent?: string;
     received?: string;
@@ -257,6 +257,9 @@ export interface ComposeParams {
     coin: string;
     push?: boolean;
     sequence?: number;
+    baseFee?: number;
+    floorBaseFee?: boolean;
+    skipPermutation?: boolean;
 }
 
 export interface DiscoveryAccount {

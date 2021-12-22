@@ -9,7 +9,7 @@ import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
 import type { Address } from '../../types/networks/bitcoin';
-import type { CoreMessage, BitcoinNetworkInfo } from '../../types';
+import type { BitcoinNetworkInfo } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {
@@ -18,7 +18,7 @@ type Params = {
     coinInfo: BitcoinNetworkInfo,
 };
 
-export default class GetAddress extends AbstractMethod {
+export default class GetAddress extends AbstractMethod<'getAddress'> {
     params: Params[] = [];
 
     hasBundle: boolean;
@@ -27,16 +27,14 @@ export default class GetAddress extends AbstractMethod {
 
     confirmed: ?boolean;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['read'];
 
         // create a bundle with only one batch if bundle doesn't exists
-        this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle
-            ? { ...message.payload, bundle: [message.payload] }
-            : message.payload;
+        this.hasBundle = !!this.payload.bundle;
+        const payload = !this.payload.bundle
+            ? { ...this.payload, bundle: [this.payload] }
+            : this.payload;
 
         // validate bundle type
         validateParams(payload, [

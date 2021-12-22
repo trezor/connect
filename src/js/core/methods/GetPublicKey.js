@@ -9,7 +9,7 @@ import { UiMessage } from '../../message/builder';
 
 import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getPublicKeyLabel } from '../../utils/accountUtils';
-import type { CoreMessage, BitcoinNetworkInfo, HDNodeResponse } from '../../types';
+import type { BitcoinNetworkInfo, HDNodeResponse } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {
@@ -17,24 +17,22 @@ type Params = {
     coinInfo: ?BitcoinNetworkInfo,
 };
 
-export default class GetPublicKey extends AbstractMethod {
+export default class GetPublicKey extends AbstractMethod<'getPublicKey'> {
     params: Params[] = [];
 
     hasBundle: boolean;
 
     confirmed: ?boolean;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['read'];
         this.info = 'Export public key';
 
         // create a bundle with only one batch if bundle doesn't exists
-        this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle
-            ? { ...message.payload, bundle: [message.payload] }
-            : message.payload;
+        this.hasBundle = !!this.payload.bundle;
+        const payload = !this.payload.bundle
+            ? { ...this.payload, bundle: [this.payload] }
+            : this.payload;
 
         // validate bundle type
         validateParams(payload, [{ name: 'bundle', type: 'array' }]);

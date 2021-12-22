@@ -7,8 +7,6 @@ import { getEthereumNetwork } from '../../data/CoinInfo';
 import { getNetworkLabel } from '../../utils/ethereumUtils';
 import { stripHexPrefix } from '../../utils/formatUtils';
 import * as helper from './helpers/ethereumSignTx';
-
-import type { CoreMessage } from '../../types';
 import type {
     EthereumTransaction,
     EthereumTransactionEIP1559,
@@ -40,15 +38,13 @@ const strip: (value: any) => any = value => {
     return value;
 };
 
-export default class EthereumSignTx extends AbstractMethod {
+export default class EthereumSignTx extends AbstractMethod<'ethereumSignTransaction'> {
     params: Params;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['read', 'write'];
 
-        const { payload } = message;
+        const { payload } = this;
 
         // validate incoming parameters
         validateParams(payload, [

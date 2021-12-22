@@ -1,11 +1,9 @@
 /* @flow */
 
 import AbstractMethod from './AbstractMethod';
-import type { CoreMessage } from '../../types';
 
-export default class GetDeviceState extends AbstractMethod {
-    constructor(message: CoreMessage) {
-        super(message);
+export default class GetDeviceState extends AbstractMethod<'getDeviceState'> {
+    init() {
         this.requiredPermissions = [];
     }
 

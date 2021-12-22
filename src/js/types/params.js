@@ -67,6 +67,11 @@ export type Bundle<T> = {
     bundle: T[],
 };
 
+export type NoBundle<T> = {
+    ...T,
+    bundle?: typeof undefined,
+};
+
 export type CoreMessage = {
     event: string,
     type: string,

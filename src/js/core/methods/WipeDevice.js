@@ -5,14 +5,11 @@ import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 import { getFirmwareRange } from './helpers/paramsValidator';
-import type { CoreMessage } from '../../types';
 
-export default class WipeDevice extends AbstractMethod {
+export default class WipeDevice extends AbstractMethod<'wipeDevice'> {
     confirmed: ?boolean;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.allowDeviceMode = [UI.INITIALIZE, UI.SEEDLESS];
         this.useDeviceState = false;
         this.requiredPermissions = ['management'];

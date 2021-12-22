@@ -6,7 +6,6 @@ import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/binanceSignTx';
 
-import type { CoreMessage } from '../../types';
 import type { BinancePreparedTransaction } from '../../types/networks/binance';
 
 type Params = {
@@ -14,16 +13,15 @@ type Params = {
     transaction: BinancePreparedTransaction,
 };
 
-export default class BinanceSignTransaction extends AbstractMethod {
+export default class BinanceSignTransaction extends AbstractMethod<'binanceSignTransaction'> {
     params: Params;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.requiredPermissions = ['read', 'write'];
         this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('BNB'), this.firmwareRange);
         this.info = 'Sign Binance transaction';
 
-        const { payload } = message;
+        const { payload } = this;
         // validate incoming parameters
         validateParams(payload, [
             { name: 'path', type: 'string', obligatory: true },

@@ -53,6 +53,7 @@ export type CardanoGetAddress = {
     address?: string,
     showOnTrezor?: boolean,
     derivationType?: CardanoDerivationType,
+    useEventListener?: boolean, // set automatically if UI.ADDRESS_VALIDATION listener is used
 };
 
 export type CardanoAddress = {
