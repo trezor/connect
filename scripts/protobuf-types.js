@@ -2,7 +2,7 @@
 // flowtype doesn't have `enum` declarations like typescript
 
 const fs = require('fs');
-const { RULE_PATCH, TYPE_PATCH, DEFINITION_PATCH, SKIP } = require('./protobuf-patches');
+const { RULE_PATCH, TYPE_PATCH, DEFINITION_PATCH, SKIP, UINT_TYPE } = require('./protobuf-patches');
 const json = require('../src/data/messages/messages.json');
 
 const args = process.argv.slice(2);
@@ -147,6 +147,10 @@ const parseMessage = (messageName, message, depth = 0) => {
                 const rule = fieldRule === 'required' || fieldRule === 'repeated' ? ': ' : '?: ';
                 // find patch for "type"
                 let type = TYPE_PATCH[fieldKey] || FIELD_TYPES[field.type] || field.type;
+                // automatically convert all amount and fee fields to UINT_TYPE
+                if (['amount', 'fee'].includes(fieldName)) {
+                    type = UINT_TYPE;
+                }
                 // array
                 if (field.rule === 'repeated') {
                     type = type.split('|').length > 1 ? `Array<${type}>` : `${type}[]`;
@@ -206,6 +210,10 @@ const content = types.flatMap(t => (t ? [t.value] : [])).join('\n');
 const lines = []; // string[]
 if (!isTypescript) lines.push('// @flow');
 lines.push('// This file is auto generated from data/messages/message.json');
+lines.push('');
+lines.push('// custom type uint32/64 may be represented as string');
+lines.push(`export type ${UINT_TYPE} = string | number;`);
+lines.push('');
 lines.push(content);
 
 // create custom definition

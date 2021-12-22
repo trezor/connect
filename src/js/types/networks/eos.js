@@ -1,5 +1,6 @@
 /* @flow */
 import type {
+    UintType,
     EosPermissionLevel,
     EosAuthorizationKey,
     EosActionBuyRamBytes,
@@ -29,7 +30,7 @@ export type EosPublicKey = {
 // sign tx
 
 export type EosTxHeader = {
-    expiration: number | string,
+    expiration: UintType,
     refBlockNum: number,
     refBlockPrefix: number,
     maxNetUsageWords: number,

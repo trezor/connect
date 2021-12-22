@@ -3,6 +3,7 @@ import * as cbor from 'cbor-web';
 import { ERRORS } from '../../../constants';
 import type { IDevice } from '../../../device/Device';
 import type {
+    UintType,
     CardanoCatalystRegistrationParametersType,
     CardanoTxWithdrawalType,
     CardanoTxInputType,
@@ -35,10 +36,10 @@ const CATALYST_REGISTRATION_SIGNATURE_KEY = 1;
 type CardanoPoolParametersTypeLegacy = {
     pool_id: string,
     vrf_key_hash: string,
-    pledge: string | number,
-    cost: string | number,
-    margin_numerator: string | number,
-    margin_denominator: string | number,
+    pledge: UintType,
+    cost: UintType,
+    margin_numerator: UintType,
+    margin_denominator: UintType,
     reward_account: string,
     owners: CardanoPoolOwner[],
     relays: CardanoPoolRelayParameters[],
@@ -60,13 +61,13 @@ type CardanoTxAuxiliaryDataTypeLegacy = {
 type CardanoSignTransactionLegacyParams = {
     auxiliary_data: void | CardanoTxAuxiliaryDataTypeLegacy,
     certificates: CardanoTxCertificateTypeLegacy[],
-    fee: string | number,
+    fee: UintType,
     inputs: CardanoTxInputType[],
     network_id: number,
     outputs: CardanoTxOutputType[],
     protocol_magic: number,
-    ttl?: string | number,
-    validity_interval_start?: string | number,
+    ttl?: UintType,
+    validity_interval_start?: UintType,
     withdrawals: CardanoTxWithdrawalType[],
 };
 

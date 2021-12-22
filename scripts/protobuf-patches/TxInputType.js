@@ -5,6 +5,7 @@
 
 // @overhead-start
 // will be removed during compilation
+type UintType = any;
 type MultisigRedeemScriptType = any;
 type InternalInputScriptType = any;
 type DecredStakingSpendType = any;
@@ -16,7 +17,7 @@ type DecredStakingSpendType = any;
 type CommonTxInputType = {|
     prev_hash: string, // required: previous transaction hash (reversed)
     prev_index: number, // required: previous transaction index
-    amount: number | string, // required
+    amount: UintType, // required
     sequence?: number,
     multisig?: MultisigRedeemScriptType,
     decred_tree?: number,

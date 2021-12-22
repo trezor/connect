@@ -2,6 +2,8 @@
 // NEM types from nem-sdk
 // https://nemproject.github.io/#transferTransaction
 
+import type { UintType } from '../trezor/protobuf';
+
 type MosaicID = {
     namespaceId: string,
     name: string,
@@ -49,7 +51,7 @@ type TransactionCommon = {
 export type NEMTransferTransaction = TransactionCommon & {
     type: 0x0101,
     recipient: string,
-    amount: number | string,
+    amount: UintType,
     mosaics?: NEMMosaic[],
     message?: Message,
 };

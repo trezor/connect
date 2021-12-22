@@ -1,4 +1,5 @@
 import {
+    UintType,
     EosPermissionLevel,
     EosAuthorizationKey,
     EosActionBuyRamBytes,
@@ -27,7 +28,7 @@ export interface EosPublicKey {
 // sign tx
 
 export interface EosTxHeader {
-    expiration: number | string;
+    expiration: UintType;
     refBlockNum: number;
     refBlockPrefix: number;
     maxNetUsageWords: number;
