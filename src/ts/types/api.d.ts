@@ -450,6 +450,4 @@ export namespace TrezorConnect {
 
     // // Developer mode
     function customMessage(params: P.CommonParams & Misc.CustomMessage): P.Response<any>;
-    function debugLinkDecision(params?: P.CommonParams): P.Response<{ debugLink: true }>;
-    function debugLinkGetState(params?: P.CommonParams): P.Response<{ debugLink: true }>;
 }

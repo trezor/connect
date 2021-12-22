@@ -184,7 +184,6 @@ const ORDER = {
     CardanoTokenType: 'CardanoAssetGroupType',
     TxAck: 'TxAckInputWrapper',
     EthereumFieldType: 'EthereumStructMember',
-    BackupType: 'DebugLinkState',
     EthereumDataType: 'EthereumFieldType',
 };
 

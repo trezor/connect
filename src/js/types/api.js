@@ -358,6 +358,4 @@ export type API = {
 
     // // Developer mode
     customMessage: Method<Misc.CustomMessage, any>,
-    debugLinkDecision: Method<{}, { debugLink: true }>,
-    debugLinkGetState: Method<{}, { debugLink: true }>,
 };

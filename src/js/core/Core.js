@@ -380,19 +380,6 @@ export const onCall = async (message: CoreMessage) => {
 
     method.setDevice(device);
 
-    // method is a debug link message
-    if (method.debugLink) {
-        try {
-            const response = await method.run();
-            messageResponse = ResponseMessage(method.responseID, true, response);
-            postMessage(messageResponse);
-            return Promise.resolve();
-        } catch (error) {
-            postMessage(ResponseMessage(method.responseID, false, { error }));
-            throw error;
-        }
-    }
-
     // find pending calls to this device
     const previousCall = _callMethods.filter(
         call => call && call !== method && call.devicePath === method.devicePath,

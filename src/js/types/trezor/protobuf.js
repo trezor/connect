@@ -1065,114 +1065,6 @@ export type ECDHSessionKey = {
     public_key?: string,
 };
 
-export const Enum_DebugSwipeDirection = Object.freeze({
-    UP: 0,
-    DOWN: 1,
-    LEFT: 2,
-    RIGHT: 3,
-});
-export type DebugSwipeDirection = $Values<typeof Enum_DebugSwipeDirection>;
-
-// DebugLinkDecision
-export type DebugLinkDecision = {
-    yes_no?: boolean,
-    swipe?: DebugSwipeDirection,
-    input?: string,
-    x?: number,
-    y?: number,
-    wait?: boolean,
-    hold_ms?: number,
-};
-
-// DebugLinkLayout
-export type DebugLinkLayout = {
-    lines: string[],
-};
-
-// DebugLinkReseedRandom
-export type DebugLinkReseedRandom = {
-    value?: number,
-};
-
-// DebugLinkRecordScreen
-export type DebugLinkRecordScreen = {
-    target_directory?: string,
-};
-
-// DebugLinkGetState
-export type DebugLinkGetState = {
-    wait_word_list?: boolean,
-    wait_word_pos?: boolean,
-    wait_layout?: boolean,
-};
-
-export const Enum_BackupType = Object.freeze({
-    Bip39: 0,
-    Slip39_Basic: 1,
-    Slip39_Advanced: 2,
-});
-export type BackupType = $Keys<typeof Enum_BackupType>;
-
-// DebugLinkState
-export type DebugLinkState = {
-    layout?: string,
-    pin?: string,
-    matrix?: string,
-    mnemonic_secret?: string,
-    node?: HDNodeType,
-    passphrase_protection?: boolean,
-    reset_word?: string,
-    reset_entropy?: string,
-    recovery_fake_word?: string,
-    recovery_word_pos?: number,
-    reset_word_pos?: number,
-    mnemonic_type?: BackupType,
-    layout_lines: string[],
-};
-
-// DebugLinkStop
-export type DebugLinkStop = {};
-
-// DebugLinkLog
-export type DebugLinkLog = {
-    level?: number,
-    bucket?: string,
-    text?: string,
-};
-
-// DebugLinkMemoryRead
-export type DebugLinkMemoryRead = {
-    address?: number,
-    length?: number,
-};
-
-// DebugLinkMemory
-export type DebugLinkMemory = {
-    memory?: string,
-};
-
-// DebugLinkMemoryWrite
-export type DebugLinkMemoryWrite = {
-    address?: number,
-    memory?: string,
-    flash?: boolean,
-};
-
-// DebugLinkFlashErase
-export type DebugLinkFlashErase = {
-    sector?: number,
-};
-
-// DebugLinkEraseSdCard
-export type DebugLinkEraseSdCard = {
-    format?: boolean,
-};
-
-// DebugLinkWatchLayout
-export type DebugLinkWatchLayout = {
-    watch?: boolean,
-};
-
 // EosGetPublicKey
 export type EosGetPublicKey = {
     address_n: number[],
@@ -1503,6 +1395,13 @@ export type EthereumVerifyMessage = {
     message: string,
     address: string,
 };
+
+export const Enum_BackupType = Object.freeze({
+    Bip39: 0,
+    Slip39_Basic: 1,
+    Slip39_Advanced: 2,
+});
+export type BackupType = $Keys<typeof Enum_BackupType>;
 
 export const Enum_SafetyCheckLevel = Object.freeze({
     Strict: 0,
@@ -2358,20 +2257,6 @@ export type MessageType = {
     SignedIdentity: $Exact<SignedIdentity>,
     GetECDHSessionKey: $Exact<GetECDHSessionKey>,
     ECDHSessionKey: $Exact<ECDHSessionKey>,
-    DebugLinkDecision: DebugLinkDecision,
-    DebugLinkLayout: DebugLinkLayout,
-    DebugLinkReseedRandom: DebugLinkReseedRandom,
-    DebugLinkRecordScreen: DebugLinkRecordScreen,
-    DebugLinkGetState: DebugLinkGetState,
-    DebugLinkState: DebugLinkState,
-    DebugLinkStop: DebugLinkStop,
-    DebugLinkLog: DebugLinkLog,
-    DebugLinkMemoryRead: DebugLinkMemoryRead,
-    DebugLinkMemory: DebugLinkMemory,
-    DebugLinkMemoryWrite: DebugLinkMemoryWrite,
-    DebugLinkFlashErase: DebugLinkFlashErase,
-    DebugLinkEraseSdCard: DebugLinkEraseSdCard,
-    DebugLinkWatchLayout: DebugLinkWatchLayout,
     EosGetPublicKey: EosGetPublicKey,
     EosPublicKey: $Exact<EosPublicKey>,
     EosTxHeader: $Exact<EosTxHeader>,
