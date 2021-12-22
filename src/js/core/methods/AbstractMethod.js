@@ -70,8 +70,6 @@ export default class AbstractMethod<P: ApiMethods> {
 
     requireDeviceMode: string[];
 
-    debugLink: boolean;
-
     network: string;
 
     useCardanoDerivation: boolean;
@@ -122,7 +120,6 @@ export default class AbstractMethod<P: ApiMethods> {
         if (this.allowSeedlessDevice) {
             this.allowDeviceMode = [UI.SEEDLESS];
         }
-        this.debugLink = false;
         // Determine the type based on the method name
         this.network = 'Bitcoin';
         Object.keys(NETWORK.TYPES).forEach(t => {

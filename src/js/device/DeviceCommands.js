@@ -17,7 +17,6 @@ import {
 } from '../utils/pathUtils';
 import { getAccountAddressN } from '../utils/accountUtils';
 import { toChecksumAddress } from '../utils/ethereumUtils';
-import { resolveAfter } from '../utils/promiseUtils';
 import { versionCompare } from '../utils/versionUtils';
 
 import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
@@ -591,40 +590,6 @@ export default class DeviceCommands {
                 }
             });
         });
-    }
-    // DebugLink messages
-
-    async debugLinkDecision(msg: PROTO.DebugLinkDecision) {
-        const session = await this.transport.acquire(
-            {
-                path: this.device.originalDescriptor.path,
-                previous: this.device.originalDescriptor.debugSession,
-            },
-            true,
-        );
-        await resolveAfter(501, null); // wait for propagation from bridge
-
-        await this.transport.post(session, 'DebugLinkDecision', msg, true);
-        await this.transport.release(session, true, true);
-        this.device.originalDescriptor.debugSession = null; // make sure there are no leftovers
-        await resolveAfter(501, null); // wait for propagation from bridge
-    }
-
-    async debugLinkGetState() {
-        const session = await this.transport.acquire(
-            {
-                path: this.device.originalDescriptor.path,
-                previous: this.device.originalDescriptor.debugSession,
-            },
-            true,
-        );
-        await resolveAfter(501, null); // wait for propagation from bridge
-
-        const response = await this.transport.call(session, 'DebugLinkGetState', {}, true);
-        assertType(response, 'DebugLinkState');
-        await this.transport.release(session, true, true);
-        await resolveAfter(501, null); // wait for propagation from bridge
-        return response.message;
     }
 
     async getAccountDescriptor(

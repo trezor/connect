@@ -23,8 +23,6 @@ import cardanoSignTransaction from './CardanoSignTransaction';
 import cipherKeyValue from './CipherKeyValue';
 import composeTransaction from './ComposeTransaction';
 import customMessage from './CustomMessage';
-import debugLinkDecision from './debuglink/DebugLinkDecision';
-import debugLinkGetState from './debuglink/DebugLinkGetState';
 import ethereumGetAddress from './EthereumGetAddress';
 import ethereumGetPublicKey from './EthereumGetPublicKey';
 import ethereumSignMessage from './EthereumSignMessage';
@@ -88,8 +86,6 @@ const METHODS = {
     cipherKeyValue,
     composeTransaction,
     customMessage,
-    debugLinkDecision,
-    debugLinkGetState,
     ethereumGetAddress,
     ethereumGetPublicKey,
     ethereumSignMessage,

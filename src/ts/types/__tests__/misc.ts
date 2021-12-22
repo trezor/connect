@@ -91,8 +91,3 @@ export const requestLogin = async () => {
     // @ts-ignore
     TrezorConnect.requestLogin({ challengeVisual: 1 });
 };
-
-export const debugLink = () => {
-    TrezorConnect.debugLinkDecision({ device: { path: '1' } });
-    TrezorConnect.debugLinkGetState({ device: { path: '1' } });
-};

@@ -83,10 +83,6 @@ const TrezorConnect: API = {
 
     composeTransaction: params => call({ method: 'composeTransaction', ...params }),
 
-    debugLinkDecision: params => call({ method: 'debugLinkDecision', ...params }),
-
-    debugLinkGetState: params => call({ method: 'debugLinkGetState', ...params }),
-
     ethereumGetAddress: params => {
         const useEventListener = eventEmitter.listenerCount(UI.ADDRESS_VALIDATION) > 0;
         return call({ method: 'ethereumGetAddress', ...params, useEventListener });
