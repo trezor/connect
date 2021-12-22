@@ -257,7 +257,7 @@ export default {
                         script_type: 'EXTERNAL',
                         script_pubkey: '00149c02608d469160a92f40fdf8c6ccced029493088',
                         ownership_proof:
-                            '534c001900016b2055d8190244b2ed2d46513c40658a574d3bc2deb6969c0535bb818b44d2c40002483045022100d4ad0374c922848c71d913fba59c81b9075e0d33e884d953f0c4b4806b8ffd0c022024740e6717a2b6a5aa03148c3a28b02c713b4e30fc8aeae67fa69eb20e8ddcd9012103505f0d82bbdd251511591b34f36ad5eea37d3220c2b81a1189084431ddb3aa3d',
+                            '534c001900016b2055d8190244b2ed2d46513c40658a574d3bc2deb6969c0535bb818b44d2c4000247304402201b0a2cd9398f5f3b63e624bb960436a45bdacbd5174b29a47ed3f659b2d4137b022007f8981f476216e012a04956ce77a483cdbff2905227b103a48a15e61379c43d012103505f0d82bbdd251511591b34f36ad5eea37d3220c2b81a1189084431ddb3aa3d',
                     },
                     {
                         address_n: ADDRESS_N("m/84'/1'/0'/1/0"),
@@ -302,7 +302,7 @@ export default {
                         script_pubkey:
                             '5120272393e4c1de4919d3771f755c17f711cfaa0d2bdf72d777cd6b4c3fd97c66b9',
                         ownership_proof:
-                            '534c001900015f6c298a141152b5aef9ef31badea5ceaf9f628a968bed0a14d5ad660761cf1c00014088cb80b8c559d9991c1403eed4ff27717a46ee5d11feb4996ce1f3247504d888e7f04675f6c78961893997b2416431d046439c6740d6c262895d0857e11d2aa0',
+                            '534c001900015f6c298a141152b5aef9ef31badea5ceaf9f628a968bed0a14d5ad660761cf1c00014022269a1567cb4f892d0702e6be1175de8b892eda26ffde896d2d240814a747e0b574819431c9c8c95c364f15f447019fe3d4dcc6229110d0598f0265af2b5945',
                     },
                     {
                         address_n: ADDRESS_N("m/86'/1'/0'/0/0"),
