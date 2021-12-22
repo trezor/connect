@@ -78,7 +78,7 @@ export const validate = (tx: BinanceSDKTransaction) => {
     }
 
     if (cancelOrder) {
-        validateParams(tx.cancelOrder, [
+        validateParams(cancelOrder, [
             { name: 'refid', type: 'string', obligatory: true },
             { name: 'sender', type: 'string', obligatory: true },
             { name: 'symbol', type: 'string', obligatory: true },

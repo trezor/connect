@@ -14,7 +14,7 @@ const validateTokens = (tokenAmounts: CardanoToken[]) => {
         validateParams(tokenAmount, [
             { name: 'assetNameBytes', type: 'string', obligatory: true },
             { name: 'amount', type: 'amount' },
-            { name: 'mintAmount', type: 'amount' },
+            { name: 'mintAmount', type: 'amount', allowNegative: true },
         ]);
     });
 };
