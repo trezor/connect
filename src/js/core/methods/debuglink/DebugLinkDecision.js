@@ -3,20 +3,19 @@
 import AbstractMethod from '../AbstractMethod';
 import { validateParams } from '../helpers/paramsValidator';
 import { ERRORS } from '../../../constants';
-import type { CoreMessage } from '../../../types';
 import type { MessageType } from '../../../types/trezor/protobuf';
 
-export default class DebugLinkDecision extends AbstractMethod {
+// TODO: remove unused method
+export default class DebugLinkDecision extends AbstractMethod<any> {
     params: $ElementType<MessageType, 'DebugLinkDecision'>;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.useDevice = true;
         this.debugLink = true;
         this.useUi = false;
         this.requiredPermissions = ['management'];
 
-        const { payload } = message;
+        const { payload } = this;
         validateParams(payload, [
             { name: 'yes_no', type: 'boolean' },
             { name: 'up_down', type: 'boolean' },

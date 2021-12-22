@@ -5,7 +5,7 @@ import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { getEthereumNetwork } from '../../data/CoinInfo';
 import { toChecksumAddress, getNetworkLabel } from '../../utils/ethereumUtils';
-import type { CoreMessage, EthereumNetworkInfo } from '../../types';
+import type { EthereumNetworkInfo } from '../../types';
 import type { MessageResponse, EthereumTypedDataStructAck } from '../../types/trezor/protobuf';
 import { ERRORS } from '../../constants';
 import type { EthereumSignTypedData as EthereumSignTypedDataParams } from '../../types/networks/ethereum';
@@ -17,15 +17,13 @@ type Params = {
     network?: EthereumNetworkInfo,
 };
 
-export default class EthereumSignTypedData extends AbstractMethod {
+export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignTypedData'> {
     params: Params;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['read', 'write'];
 
-        const { payload } = message;
+        const { payload } = this;
 
         // validate incoming parameters
         validateParams(payload, [

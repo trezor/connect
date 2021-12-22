@@ -1,7 +1,7 @@
 export interface CipherKeyValue {
     path: string | number[];
-    key?: string;
-    value?: string | Buffer;
+    key: string;
+    value: string | Buffer;
     encrypt?: boolean;
     askOnEncrypt?: boolean;
     askOnDecrypt?: boolean;
@@ -19,6 +19,7 @@ export interface LoginChallenge {
 
 export interface RequestLoginAsync {
     callback: () => LoginChallenge;
+    asyncChallenge?: boolean;
 }
 
 export interface Login {

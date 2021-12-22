@@ -744,7 +744,7 @@ export type CardanoTxCertificate = {
 // CardanoTxWithdrawal
 export type CardanoTxWithdrawal = {
     path?: number[];
-    amount: number;
+    amount: string | number;
     script_hash?: string;
 };
 
@@ -846,7 +846,7 @@ export type CardanoTxCertificateType = {
 
 export type CardanoTxWithdrawalType = {
     path: number[];
-    amount: number;
+    amount: string | number;
 };
 
 export type CardanoTxAuxiliaryDataType = {
@@ -1647,7 +1647,7 @@ export type ResetDevice = {
     u2f_counter?: number;
     skip_backup?: boolean;
     no_backup?: boolean;
-    backup_type?: BackupType;
+    backup_type?: string | number;
 };
 
 // BackupDevice

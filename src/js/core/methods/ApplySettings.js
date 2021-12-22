@@ -5,17 +5,15 @@ import * as UI from '../../constants/ui';
 import { validateParams } from './helpers/paramsValidator';
 import { UiMessage } from '../../message/builder';
 
-import type { CoreMessage } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
-export default class ApplySettings extends AbstractMethod {
+export default class ApplySettings extends AbstractMethod<'applySettings'> {
     params: $ElementType<MessageType, 'ApplySettings'>;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.requiredPermissions = ['management'];
         this.useDeviceState = false;
-        const { payload } = message;
+        const { payload } = this;
 
         validateParams(payload, [
             { name: 'language', type: 'string' },
@@ -35,12 +33,13 @@ export default class ApplySettings extends AbstractMethod {
             label: payload.label,
             use_passphrase: payload.use_passphrase,
             homescreen: payload.homescreen,
-            passphrase_source: payload.passphrase_source,
             passphrase_always_on_device: payload.passphrase_always_on_device,
             auto_lock_delay_ms: payload.auto_lock_delay_ms,
             display_rotation: payload.display_rotation,
             safety_checks: payload.safety_checks,
             experimental_features: payload.experimental_features,
+            // $FlowIssue passphrase_source is a legacy param
+            _passphrase_source: payload.passphrase_source,
         };
     }
 

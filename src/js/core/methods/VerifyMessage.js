@@ -6,19 +6,16 @@ import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
 import { messageToHex } from '../../utils/formatUtils';
 import { ERRORS } from '../../constants';
-import type { CoreMessage } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
-export default class VerifyMessage extends AbstractMethod {
+export default class VerifyMessage extends AbstractMethod<'verifyMessage'> {
     params: $ElementType<MessageType, 'VerifyMessage'>;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['read', 'write'];
         this.info = 'Verify message';
 
-        const { payload } = message;
+        const { payload } = this;
 
         // validate incoming parameters for each batch
         validateParams(payload, [

@@ -8,6 +8,7 @@ import { versionCompare } from '../../utils/versionUtils';
 import { UiMessage, DeviceMessage } from '../../message/builder';
 import type { IDevice } from '../../device/Device';
 import type {
+    API,
     Deferred,
     CoreMessage,
     UiPromiseResponse,
@@ -16,12 +17,13 @@ import type {
     ButtonRequestData,
 } from '../../types';
 
-export interface MethodInterface {
-    +responseID: number;
-    +device: IDevice;
-}
+// types used for extraction API methods parameters
+type ApiMethods = $Keys<API>;
+type ExtractArg = <Arg, Ret>([(Arg) => any]) => Arg;
+type Arguments<F> = $Call<ExtractArg, [F]>;
+type Payload<P> = $ReadOnly<Arguments<$ElementType<API, P>>>;
 
-export default class AbstractMethod implements MethodInterface {
+export default class AbstractMethod<P: ApiMethods> {
     responseID: number;
 
     device: IDevice;
@@ -44,7 +46,9 @@ export default class AbstractMethod implements MethodInterface {
 
     overridden: boolean;
 
-    name: string; // method name
+    name: P; // method name
+
+    payload: Payload<P>; // method payload
 
     info: string; // method info, displayed in popup info-panel
 
@@ -92,6 +96,7 @@ export default class AbstractMethod implements MethodInterface {
     constructor(message: CoreMessage) {
         const { payload } = message;
         this.name = payload.method;
+        this.payload = payload;
         this.responseID = message.id || 0;
         this.devicePath = payload.device ? payload.device.path : null;
         this.deviceInstance = payload.device ? payload.device.instance : 0;
@@ -275,6 +280,10 @@ export default class AbstractMethod implements MethodInterface {
                 return UI.FIRMWARE_NOT_COMPATIBLE;
             }
         }
+    }
+
+    init() {
+        // to override
     }
 
     run(): Promise<any> {

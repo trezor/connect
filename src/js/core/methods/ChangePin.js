@@ -2,19 +2,16 @@
 
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
-import type { CoreMessage } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
-export default class ChangePin extends AbstractMethod {
+export default class ChangePin extends AbstractMethod<'changePin'> {
     params: $ElementType<MessageType, 'ChangePin'>;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['management'];
         this.useDeviceState = false;
 
-        const { payload } = message;
+        const { payload } = this;
         validateParams(payload, [{ name: 'remove', type: 'boolean' }]);
 
         this.params = {

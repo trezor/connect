@@ -5,28 +5,24 @@ import { UiMessage } from '../../message/builder';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
-
-import type { CoreMessage } from '../../types';
 import type { MessageType, CipheredKeyValue } from '../../types/trezor/protobuf';
 
-export default class CipherKeyValue extends AbstractMethod {
+export default class CipherKeyValue extends AbstractMethod<'cipherKeyValue'> {
     params: $ElementType<MessageType, 'CipherKeyValue'>[] = [];
 
     hasBundle: boolean;
 
-    constructor(message: CoreMessage) {
-        super(message);
-
+    init() {
         this.requiredPermissions = ['read', 'write'];
         this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
         this.info = 'Cypher key value';
         this.useEmptyPassphrase = true;
 
         // create a bundle with only one batch if bundle doesn't exists
-        this.hasBundle = Object.prototype.hasOwnProperty.call(message.payload, 'bundle');
-        const payload = !this.hasBundle
-            ? { ...message.payload, bundle: [message.payload] }
-            : message.payload;
+        this.hasBundle = !!this.payload.bundle;
+        const payload = !this.payload.bundle
+            ? { ...this.payload, bundle: [this.payload] }
+            : this.payload;
 
         // validate bundle type
         validateParams(payload, [{ name: 'bundle', type: 'array' }]);

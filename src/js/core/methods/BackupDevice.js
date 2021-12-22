@@ -4,11 +4,8 @@ import AbstractMethod from './AbstractMethod';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { CoreMessage } from '../../types';
-
-export default class BackupDevice extends AbstractMethod {
-    constructor(message: CoreMessage) {
-        super(message);
+export default class BackupDevice extends AbstractMethod<'backupDevice'> {
+    init() {
         this.requiredPermissions = ['management'];
         this.useDeviceState = false;
     }

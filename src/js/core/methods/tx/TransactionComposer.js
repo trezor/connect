@@ -159,7 +159,7 @@ export default class TransactionComposer {
         if (!addresses) return { type: 'error', error: 'ADDRESSES-NOT-SET' };
         // find not used change address or fallback to the last in the list
         const changeAddress =
-            addresses.change.find(a => a.transfers < 1) ||
+            addresses.change.find(a => !a.transfers) ||
             addresses.change[addresses.change.length - 1];
         const changeId = getHDPath(changeAddress.path).slice(-1)[0]; // get address id from the path
         // const inputAmounts = coinInfo.segwit || coinInfo.forkid !== null || coinInfo.network.consensusBranchId !== null;

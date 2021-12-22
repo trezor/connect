@@ -6,7 +6,7 @@ import { ERRORS } from '../../../constants';
 
 import { isBackendSupported, initBlockchain } from '../../../backend/BlockchainLink';
 import { getCoinInfo } from '../../../data/CoinInfo';
-import type { CoreMessage, CoinInfo } from '../../../types';
+import type { CoinInfo } from '../../../types';
 
 type Params = {
     coinInfo: CoinInfo,
@@ -18,15 +18,14 @@ type Params = {
     },
 };
 
-export default class BlockchainGetAccountBalanceHistory extends AbstractMethod {
+export default class BlockchainGetAccountBalanceHistory extends AbstractMethod<'blockchainGetAccountBalanceHistory'> {
     params: Params;
 
-    constructor(message: CoreMessage) {
-        super(message);
+    init() {
         this.useDevice = false;
         this.useUi = false;
 
-        const { payload } = message;
+        const { payload } = this;
 
         // validate incoming parameters
         validateParams(payload, [

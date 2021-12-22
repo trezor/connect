@@ -2,11 +2,9 @@
 
 import AbstractMethod from './AbstractMethod';
 import DataManager from '../../data/DataManager';
-import type { CoreMessage } from '../../types';
 
-export default class GetSettings extends AbstractMethod {
-    constructor(message: CoreMessage) {
-        super(message);
+export default class GetSettings extends AbstractMethod<'getSettings'> {
+    init() {
         this.requiredPermissions = [];
         this.useDevice = false;
         this.useUi = false;
