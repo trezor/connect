@@ -91,7 +91,6 @@ let fixtures = [
     getFeatures,
     getPublicKey,
     // todo: missing fixtures: GetSettings.js
-    // todo: missing fixtures: LoadDevice.js
     nemGetAddress,
     nemSignTransactionMosaic,
     nemSignTransactionMultisig,
