@@ -36,7 +36,6 @@ import getFeatures from './GetFeatures';
 import getPublicKey from './GetPublicKey';
 import getSettings from './GetSettings';
 import liskDeprecated from './LiskDeprecated';
-import loadDevice from './LoadDevice';
 import pushTransaction from './PushTransaction';
 import requestLogin from './RequestLogin';
 import resetDevice from './ResetDevice';
@@ -99,7 +98,6 @@ const METHODS = {
     getPublicKey,
     getSettings,
     liskDeprecated,
-    loadDevice,
     pushTransaction,
     requestLogin,
     resetDevice,

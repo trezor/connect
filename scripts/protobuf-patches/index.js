@@ -223,6 +223,7 @@ const SKIP = [
     'DebugLinkFlashErase',
     'DebugLinkEraseSdCard',
     'DebugLinkWatchLayout',
+    'LoadDevice',
     'MoneroRctKeyPublic',
     'MoneroOutputEntry',
     'MoneroMultisigKLRki',
