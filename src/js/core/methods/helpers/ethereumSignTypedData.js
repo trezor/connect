@@ -5,7 +5,7 @@ import type { EthereumSignTypedDataTypes } from '../../../types/networks/ethereu
 import type { EthereumFieldType } from '../../../types/trezor/protobuf';
 import { Enum_EthereumDataType } from '../../../types/trezor/protobuf';
 import { ERRORS } from '../../../constants';
-import { stripHexPrefix } from '../../../utils/formatUtils';
+import { messageToHex } from '../../../utils/formatUtils';
 
 // Copied from https://github.com/ethers-io/ethers.js/blob/v5.5.2/packages/abi/src.ts/fragments.ts#L249
 const paramTypeArray = new RegExp(/^(.*)\[([0-9]*)\]$/);
@@ -103,7 +103,7 @@ function intToHex(
  */
 export function encodeData(typeName: string, data: any): string {
     if (paramTypeBytes.test(typeName) || typeName === 'address') {
-        return stripHexPrefix(data);
+        return messageToHex(data);
     }
     if (typeName === 'string') {
         return Buffer.from(data, 'utf-8').toString('hex');
