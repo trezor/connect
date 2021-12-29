@@ -186,9 +186,34 @@ export const encodeData = [
         description: 'should remove leading `0x` from byte hex-string',
         input: {
             typeName: 'bytes',
-            data: '0x123456789abcdef',
+            data: '0x0123456789abcdef',
         },
-        output: '123456789abcdef',
+        output: '0123456789abcdef',
+    },
+    {
+        description: 'should pad hex to nearest byte',
+        input: {
+            typeName: 'bytes',
+            data: '0x1',
+        },
+        output: '01',
+    },
+    {
+        description: 'should encode bytes from Buffer',
+        // Required for MetaMask compatability
+        input: {
+            typeName: 'bytes',
+            data: Buffer.from('0123456789abcdef', 'hex'),
+        },
+        output: '0123456789abcdef',
+    },
+    {
+        description: 'should encode bytes from ArrayBuffer',
+        input: {
+            typeName: 'bytes',
+            data: new Uint8Array([0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef]).buffer,
+        },
+        output: '0123456789abcdef',
     },
     {
         description: 'should remove leading `0x` from Ethereum address',
@@ -249,6 +274,14 @@ export const encodeData = [
             data: new BigNumber(2).pow(254).negated().plus(1),
         },
         // Python (-(2 ** 254) + 1).to_bytes(32, "big", signed=True).hex()
+        output: 'c000000000000000000000000000000000000000000000000000000000000001',
+    },
+    {
+        description: `should encode uint from hex-string`,
+        input: {
+            typeName: 'uint256',
+            data: '0xc000000000000000000000000000000000000000000000000000000000000001',
+        },
         output: 'c000000000000000000000000000000000000000000000000000000000000001',
     },
     {
