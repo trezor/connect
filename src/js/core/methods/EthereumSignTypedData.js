@@ -17,24 +17,6 @@ type Params = {
     network?: EthereumNetworkInfo,
 };
 
-// Sanitization is used for T1 as eth-sig-util does not support BigInt
-function sanitizeData(data) {
-  switch(Object.prototype.toString.call(data)) {
-    case '[object Object]':
-      let entries = Object.keys(data).map((k) => [k, sanitizeData(data[k])]);
-      return Object.fromEntries(entries);
-
-    case '[object Array]':
-      return data.map((v) => sanitizeData(v));
-
-    case '[object BigInt]':
-      return data.toString();
-
-    default:
-      return data;
-  }
-}
-
 export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignTypedData'> {
     params: Params;
 
@@ -77,32 +59,28 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
         >;
 
         if (this.device.features.model === '1') {
-          // For Model 1 we use EthereumSignTypedHash
-          const { domainSeparatorHash, messageHash } = data;
+            // For Model 1 we use EthereumSignTypedHash
+            const { domainSeparatorHash, messageHash } = data;
 
-          response = await cmd.typedCall(
-            'EthereumSignTypedHash',
-            'EthereumTypedDataSignature',
-            {
-              address_n,
-              domain_separator_hash: domainSeparatorHash,
-              message_hash: messageHash
-            },
-          );
-        } else {
-          // For Model T we use EthereumSignTypedData
-          const { types, primaryType, domain, message } = data;
-
-          response = await cmd.typedCall(
-            'EthereumSignTypedData',
-            // $FlowIssue typedCall problem with unions in response, TODO: accept unions
-            'EthereumTypedDataStructRequest|EthereumTypedDataValueRequest|EthereumTypedDataSignature',
-            {
+            response = await cmd.typedCall('EthereumSignTypedHash', 'EthereumTypedDataSignature', {
                 address_n,
-                primary_type: primaryType,
-                metamask_v4_compat,
-            },
-          );
+                domain_separator_hash: domainSeparatorHash,
+                message_hash: messageHash,
+            });
+        } else {
+            // For Model T we use EthereumSignTypedData
+            const { types, primaryType, domain, message } = data;
+
+            response = await cmd.typedCall(
+                'EthereumSignTypedData',
+                // $FlowIssue typedCall problem with unions in response, TODO: accept unions
+                'EthereumTypedDataStructRequest|EthereumTypedDataValueRequest|EthereumTypedDataSignature',
+                {
+                    address_n,
+                    primary_type: primaryType,
+                    metamask_v4_compat,
+                },
+            );
         }
 
         // sending all the type data
