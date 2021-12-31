@@ -1,7 +1,5 @@
 /* @flow */
 
-const sigUtil = require('@metamask/eth-sig-util');
-
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
@@ -72,8 +70,6 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
         const cmd = this.device.getCommands();
         const { path: address_n, network, data, metamask_v4_compat } = this.params;
 
-        const { types, primaryType, domain, message } = sigUtil.TypedDataUtils.sanitizeData(data);
-
         let response: MessageResponse<
             | 'EthereumTypedDataStructRequest'
             | 'EthereumTypedDataValueRequest'
@@ -82,22 +78,7 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
 
         if (this.device.features.model === '1') {
           // For Model 1 we use EthereumSignTypedHash
-          const version = metamask_v4_compat ?
-            sigUtil.SignTypedDataVersion.V4 : sigUtil.SignTypedDataVersion.V3
-
-          const domainSeparatorHash =  sigUtil.TypedDataUtils.hashStruct(
-            'EIP712Domain',
-            sanitizeData(domain),
-            types,
-            version,
-          ).toString('hex');
-
-          const messageHash = sigUtil.TypedDataUtils.hashStruct(
-            primaryType,
-            sanitizeData(message),
-            types,
-            version,
-          ).toString('hex');
+          const { domainSeparatorHash, messageHash } = data;
 
           response = await cmd.typedCall(
             'EthereumSignTypedHash',
@@ -110,6 +91,8 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
           );
         } else {
           // For Model T we use EthereumSignTypedData
+          const { types, primaryType, domain, message } = data;
+
           response = await cmd.typedCall(
             'EthereumSignTypedData',
             // $FlowIssue typedCall problem with unions in response, TODO: accept unions
