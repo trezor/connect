@@ -28,4 +28,5 @@ module.exports = {
     collectCoverageFrom: ['./src/js/**/*.{js}', '!**/node_modules/**'],
     verbose: true,
     bail: true,
+    testEnvironment: 'node',
 };
