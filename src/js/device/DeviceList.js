@@ -68,22 +68,21 @@ export default class DeviceList extends EventEmitter {
             const bridgeLatestVersion = getBridgeInfo().version.join('.');
             const bridge = new BridgeV2(null, null);
             bridge.setBridgeLatestVersion(bridgeLatestVersion);
+            // modify fetch being used by lower layer (@trezor/transport)
+            if (typeof AbortController !== 'undefined') {
+                // AbortController part of node since v15
+                // with cross-fetch:
+                // https://github.com/node-fetch/node-fetch#request-cancellation-with-abortsignal
+                this.fetchController = new AbortController();
 
-            if (typeof fetch !== 'undefined' && typeof AbortController !== 'undefined') {
-                try {
-                    this.fetchController = new AbortController();
-                } catch (error) {
-                    // silent error. fetchController is not available.
-                }
-                if (this.fetchController) {
-                    const { signal } = this.fetchController;
-                    const fetchWithSignal = (args, options = {}) =>
-                        fetch(args, { ...options, signal });
-                    BridgeV2.setFetch(fetchWithSignal, true);
-                }
+                const { signal } = this.fetchController;
+                const fetchWithSignal = (args, options = {}) => fetch(args, { ...options, signal });
+                BridgeV2.setFetch(fetchWithSignal, typeof window === 'undefined');
             } else if (typeof window === 'undefined') {
+                // node <15
                 BridgeV2.setFetch(fetch, true);
             }
+            // otherwise @trezor/transport defaults to window.fetch
 
             transports.push(bridge);
         }
