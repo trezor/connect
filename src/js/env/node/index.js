@@ -57,6 +57,8 @@ const handleMessage = (message: $T.CoreMessage) => {
         return;
     }
 
+    if (type === POPUP.CANCEL_POPUP_REQUEST) return;
+
     _log.log('handleMessage', message);
 
     switch (event) {
