@@ -64,7 +64,7 @@ TrezorConnect.getAccountInfo({
 Get info about account using public key (device is not used)
 ```javascript
 TrezorConnect.getAccountInfo({
-    xpub: "xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx",
+    descriptor: "xpub6CVKsQYXc9awxgV1tWbG4foDvdcnieK2JkbpPEBKB5WwAPKBZ1mstLbKVB4ov7QzxzjaxNK6EfmNY5Jsk2cG26EVcEkycGW4tchT2dyUhrx",
     coin: "btc",
 });
 ```
