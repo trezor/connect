@@ -11,17 +11,17 @@ export const ReactNativeUsbPlugin: TransportWrapper | typeof undefined = undefin
 export const BlockbookWorker = () =>
     new TinyWorker(() => {
         // $FlowIssue
-        require('@trezor/blockchain-link/build/node/blockbook-worker'); // eslint-disable-line global-require
+        require('@trezor/blockchain-link/lib/workers/blockbook'); // eslint-disable-line global-require
     });
 
 export const RippleWorker = () =>
     new TinyWorker(() => {
         // $FlowIssue
-        require('@trezor/blockchain-link/build/node/ripple-worker'); // eslint-disable-line global-require
+        require('@trezor/blockchain-link/lib/workers/ripple'); // eslint-disable-line global-require
     });
 
 export const BlockfrostWorker = () =>
     new TinyWorker(() => {
         // $FlowIssue
-        require('@trezor/blockchain-link/build/node/blockfrost-worker'); // eslint-disable-line global-require
+        require('@trezor/blockchain-link/lib/workers/blockfrost'); // eslint-disable-line global-require
     });
