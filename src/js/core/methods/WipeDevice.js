@@ -3,6 +3,7 @@
 import AbstractMethod from './AbstractMethod';
 
 import * as UI from '../../constants/ui';
+import * as DEVICE from '../../constants/device';
 import { UiMessage } from '../../message/builder';
 import { getFirmwareRange } from './helpers/paramsValidator';
 
@@ -45,7 +46,14 @@ export default class WipeDevice extends AbstractMethod<'wipeDevice'> {
 
     async run() {
         const cmd = this.device.getCommands();
+
+        if (this.device.isBootloader()) {
+            // firmware doesn't send this button request in bootloader mode
+            this.device.emit(DEVICE.BUTTON, this.device, { code: 'ButtonRequest_WipeDevice' });
+        }
+
         const response = await cmd.typedCall('WipeDevice', 'Success');
+
         return response.message;
     }
 }
