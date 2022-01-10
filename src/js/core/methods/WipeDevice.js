@@ -10,7 +10,7 @@ export default class WipeDevice extends AbstractMethod<'wipeDevice'> {
     confirmed: ?boolean;
 
     init() {
-        this.allowDeviceMode = [UI.INITIALIZE, UI.SEEDLESS];
+        this.allowDeviceMode = [UI.INITIALIZE, UI.SEEDLESS, UI.BOOTLOADER];
         this.useDeviceState = false;
         this.requiredPermissions = ['management'];
         this.firmwareRange = getFirmwareRange(this.name, null, this.firmwareRange);
