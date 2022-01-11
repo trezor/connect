@@ -286,6 +286,13 @@ export default {
                 serializedTx:
                     '010000000001028abbd1cf69e00fbf60fa3ba475dccdbdba4a859ffa6bfd1ee820a75b1be2b7e50000000000ffffffff7b010c5faeb41cc5c253121b6bf69bf1a7c5867cd7f2d91569fea0ecd311b8650100000000ffffffff02b0c4120000000000160014a579388225827d9f2fe9014add644487808c695da0cf5d00000000001976a914a579388225827d9f2fe9014add644487808c695d88ac0002483045022100b17fe0eb21da96bdf9640bbe94f6198ff2ced183765753ee3d5119e661977cb20220121dfdc7a121afdcc08fae1389c7147a10bc58b2daea46799c6e6547c648ba1d012103505647c017ff2156eb6da20fae72173d3b681a1d0a629f95f49e884db300689f00000000',
             },
+            legacyResults: [
+                {
+                    // bug in prev implementation https://github.com/trezor/trezor-firmware/pull/2034
+                    rules: ['<2.4.4', '1.10.5'],
+                    success: false,
+                },
+            ],
         },
         {
             description: 'Testnet (P2TR): with proof',
@@ -326,6 +333,13 @@ export default {
                 serializedTx:
                     '01000000000102ae4d6d8f642d1e5c8608e5b8430dd89432da2c7425081522e9482970412ddeaf0200000000ffffffffbf1cff9e0fc816acdc2753af9a45c1a6e92c04d0cff2b858372475b6abd912400000000000ffffffff0128a2010000000000225120e120bd124f345d412a91b50cb7e07650a448e90f48afd861b575a664b985b97f000140af196d0b64cfe8b5e7a2074b43ec1f11bfdea1df3ecb3b9d6c17e7542d7ca43b698237b5b9788cb49fa758f787311bc79bcbfa4e6046271c682927d7a9c2480900000000',
             },
+            legacyResults: [
+                {
+                    // bug in prev implementation https://github.com/trezor/trezor-firmware/pull/2034
+                    rules: ['<2.4.4', '1.10.5'],
+                    success: false,
+                },
+            ],
         },
     ],
 };
