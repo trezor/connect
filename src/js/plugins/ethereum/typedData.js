@@ -20,11 +20,13 @@ function sanitizeData(data) {
 }
 
 const transformTypedData = (data, metamask_v4_compat) => {
-    const { types, primaryType, domain, message } = sigUtil.TypedDataUtils.sanitizeData(data);
+    if (!metamask_v4_compat) {
+      throw new Error('Trezor: Only version 4 of typed data signing is supported');
+    }
 
-    const version = metamask_v4_compat
-        ? sigUtil.SignTypedDataVersion.V4
-        : sigUtil.SignTypedDataVersion.V3;
+    const version = sigUtil.SignTypedDataVersion.V4;
+
+    const { types, primaryType, domain, message } = sigUtil.TypedDataUtils.sanitizeData(data);
 
     const domainSeparatorHash = sigUtil.TypedDataUtils.hashStruct(
         'EIP712Domain',
