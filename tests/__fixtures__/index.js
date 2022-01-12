@@ -139,6 +139,10 @@ if (firmware) {
                 return true;
             }
             return t.setup.firmware.some(fw => {
+                if (firmware === '1-master' && fw[1] === '2-master') return false;
+                if (firmware === '1-master' && fw[1] === '1-master') return true;
+
+                if (firmware === '2-master' && fw[1] === '1-master') return false;
                 if (firmware === '2-master' && fw[1] === '2-master') return true;
 
                 const [fromMajor, fromMinor, fromPatch] = fw[0].split('.');

@@ -53,7 +53,7 @@ const setup = async (controller, options) => {
             options,
         });
         // lower firmware does not have this interface
-        if (firmware === '2-master' || semver.gte(firmware, '2.3.2')) {
+        if (firmware !== '1-master' && (firmware === '2-master' || semver.gte(firmware, '2.3.2'))) {
             // todo: temporary from 2.3.2 until sync fixtures with trezor-firmware
             await controller.send({ type: 'emulator-allow-unsafe-paths' });
         }
