@@ -63,7 +63,7 @@
         "@babel/plugin-transform-runtime": "^7.15.0",
         "@babel/preset-env": "^7.15.6",
         "@babel/preset-flow": "^7.14.5",
-        "@trezor/blockchain-link": "1.1.0",
+        "@trezor/blockchain-link": "2.0.0",
         "@trezor/connect-common": "0.0.4",
         "@trezor/rollout": "^1.2.1",
         "@trezor/transport": "1.0.1",
@@ -112,7 +112,6 @@
         "stream-browserify": "^3.0.0",
         "style-loader": "3.2.1",
         "terser-webpack-plugin": "5.2.4",
-        "tiny-worker": "^2.3.0",
         "typescript": "^4.4.3",
         "uglify-es": "3.3.9",
         "util": "^0.12.3",
@@ -128,7 +127,7 @@
         "events": "^3.3.0"
     },
     "extendedDependencies": {
-        "@trezor/blockchain-link": "1.1.0",
+        "@trezor/blockchain-link": "2.0.0",
         "@trezor/connect-common": "0.0.4",
         "@trezor/rollout": "^1.2.1",
         "@trezor/transport": "1.0.1",
@@ -136,7 +135,6 @@
         "bignumber.js": "^9.0.1",
         "bowser": "^2.11.0",
         "cbor-web": "^7.0.6",
-        "parse-uri": "^1.0.3",
-        "tiny-worker": "^2.3.0"
+        "parse-uri": "^1.0.3"
     }
 }

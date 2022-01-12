@@ -1,23 +1,15 @@
-/* eslint-disable import/extensions */
 /* @flow */
 
-// $FlowIssue
-import BlockbookWorkerWrapper from '@trezor/blockchain-link/build/module/blockbook-worker.js';
-// $FlowIssue
-import RippleWorkerWrapper from '@trezor/blockchain-link/build/module/ripple-worker.js';
-// $FlowIssue
-import BlockfrostWorkerWrapper from '@trezor/blockchain-link/build/module/blockfrost-worker.js';
+import BlockbookWorker from '@trezor/blockchain-link/lib/workers/blockbook';
+import RippleWorker from '@trezor/blockchain-link/lib/workers/ripple';
+import BlockfrostWorker from '@trezor/blockchain-link/lib/workers/blockfrost';
 
 import TrezorLink from '@trezor/transport';
 
 import RNUsbPlugin from './RNUsbPlugin';
 
-export const WebUsbPlugin = undefined;
+const WebUsbPlugin = undefined;
 
-export const ReactNativeUsbPlugin = () => new TrezorLink.Lowlevel(new RNUsbPlugin());
+const ReactNativeUsbPlugin = () => new TrezorLink.Lowlevel(new RNUsbPlugin());
 
-export const BlockbookWorker = () => new BlockbookWorkerWrapper();
-
-export const RippleWorker = () => new RippleWorkerWrapper();
-
-export const BlockfrostWorker = () => new BlockfrostWorkerWrapper();
+export { WebUsbPlugin, ReactNativeUsbPlugin, BlockbookWorker, RippleWorker, BlockfrostWorker };
