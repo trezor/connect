@@ -1,5 +1,6 @@
 import semver from 'semver';
 import releases2 from '@trezor/connect-common/files/firmware/2/releases.json';
+import releases1 from '@trezor/connect-common/files/firmware/1/releases.json';
 
 import { Controller } from './websocket-client';
 import TrezorConnect from '../src/js/index';
@@ -13,8 +14,19 @@ const MNEMONICS = {
         'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
 };
 
-// use currently released model 2 firmware if not specified otherwise
-const firmware = process.env.TESTS_FIRMWARE || releases2[0].version.join('.');
+let firmware = process.env.TESTS_FIRMWARE;
+
+if (firmware === '1-latest') {
+    firmware = releases1[0].version.join('.');
+}
+if (firmware === '2-latest') {
+    firmware = releases2[0].version.join('.');
+}
+
+if (!firmware) {
+    // fallback to the latest officially release model T firmware
+    firmware = releases2[0].version.join('.');
+}
 
 const wait = ms =>
     new Promise(resolve => {
@@ -53,7 +65,7 @@ const setup = async (controller, options) => {
             options,
         });
         // lower firmware does not have this interface
-        if (firmware !== '1-master' && (firmware === '2-master' || semver.gte(firmware, '2.3.2'))) {
+        if (firmware === '1-master' || firmware === '2-master' || semver.gte(firmware, '2.3.2')) {
             // todo: temporary from 2.3.2 until sync fixtures with trezor-firmware
             await controller.send({ type: 'emulator-allow-unsafe-paths' });
         }
@@ -108,7 +120,7 @@ const initTrezorConnect = async (controller, options) => {
 const skipTest = rules => {
     if (!rules || !Array.isArray(rules)) return;
     const fwModel = firmware.substr(0, 1);
-    const fwMaster = firmware.search('-') > 0;
+    const fwMaster = firmware.includes('-master');
     const rule = rules
         .filter(skip => skip.substr(0, 1) === fwModel || skip.substr(1, 1) === fwModel) // filter rules only for current model
         .find(skip => {

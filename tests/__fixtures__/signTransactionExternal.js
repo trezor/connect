@@ -2,6 +2,14 @@
 
 const { ADDRESS_N, TX_CACHE } = global.TestUtils;
 
+const legacyResults = [
+    {
+        // pretaproot firmwares - EXTERNAL and PAYTOTAPROOT script types not supported
+        rules: ['<2.4.3', '<1.10.5'],
+        success: false,
+    },
+];
+
 export default {
     method: 'signTransaction',
     setup: {
@@ -10,6 +18,10 @@ export default {
     tests: [
         {
             description: 'Testnet (P2PKH): presigned',
+            // todo: T1 error, tested with 1.10.6:
+            // "code": "Failure_DataError",
+            // "error": "signing.c:1021:Unsupported script type.",
+            skip: ['1'],
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -67,9 +79,14 @@ export default {
                 serializedTx:
                     '0100000002cd3b93f5b24ae190ce5141235091cd93fbb2908e24e5b9ff6776aec11b0e04e5000000006a473044022054fa66bfe1de1c850d59840f165143a66075bae78be3a6bc2809d1ac09431d380220019ecb086e16384f18cbae09b02bd2dce18763cd06454d33d93630561250965e0121030e669acac1f280d1ddf441cd2ba5e97417bf2689e4bbec86df4f831bf9f7ffd0ffffffff747b11157ff1d871f6d2efa282c21aa06d295a8288be680a7a23d9c377b830d80100000069463043021f3a0a7fdf27b340358ddf8b4e6e3e6cc0be728d6f1d9d3413ae59741f57599002204809d59a9432a2c7fcb10639c5efa82935d8c3cc21b185ff5e44f0e1a80e635401210294e3e5e77e22eea0e4c0d30d89beb4db7f69b4bf1ae709e411d6a06618b8f852ffffffff020073f424000000001600149c02608d469160a92f40fdf8c6ccced029493088b0b1a700000000001976a9143d3cca567e00a04819742b21a696a67da796498b88ac00000000',
             },
+            legacyResults,
         },
         {
             description: 'Testnet (P2SH): presigned',
+            // todo: T1 error, tested with 1.10.6:
+            // "code": "Failure_DataError",
+            // "error": "signing.c:1021:Unsupported script type.",
+            skip: ['1'],
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -116,9 +133,14 @@ export default {
                 serializedTx:
                     '010000000001028a44999c07bba32df1cacdc50987944e68e3205b4429438fdde35c76024614090100000017160014d16b8c0680c61fc6ed2e407455715055e41052f5ffffffff7b010c5faeb41cc5c253121b6bf69bf1a7c5867cd7f2d91569fea0ecd311b8650100000000ffffffff03e0aebb0000000000160014a579388225827d9f2fe9014add644487808c695d00cdb7020000000017a91491233e24a9bf8dbb19c1187ad876a9380c12e787870d859b03000000001976a914a579388225827d9f2fe9014add644487808c695d88ac02483045022100ead79ee134f25bb585b48aee6284a4bb14e07f03cc130253e83450d095515e5202201e161e9402c8b26b666f2b67e5b668a404ef7e57858ae9a6a68c3837e65fdc69012103e7bfe10708f715e8538c92d46ca50db6f657bbc455b7494e6a0303ccdb868b7902463043021f585c54a84dc7326fa60e22729accd41153c7dd4725bd4c8f751aa3a8cd8d6a0220631bfd83fc312cc6d5d129572a25178696d81eaf50c8c3f16c6121be4f4c029d012103505647c017ff2156eb6da20fae72173d3b681a1d0a629f95f49e884db300689f00000000',
             },
+            legacyResults,
         },
         {
             description: 'Testnet (P2WPKH): presigned',
+            // todo: T1 error, tested with 1.10.6:
+            // "code": "Failure_DataError",
+            // "error": "signing.c:1021:Unsupported script type.",
+            skip: ['1'],
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -160,9 +182,14 @@ export default {
                 serializedTx:
                     '010000000001029e506939e23ad82a559f2c5e812d13788644e1e0017afd5c40383ab01e87f9700000000000ffffffffd9375b60919f9d5e1db4d7c6aba3d61d4fa080fba195bdee09b2cfccda68b7650000000000ffffffff0250c30000000000001600149c02608d469160a92f40fdf8c6ccced02949308878e6000000000000160014cc8067093f6f843d6d3e22004a4290cd0c0f336b0247304402207be75627767e59046da2699328ca1c27b60cfb34bb257a9d90442e496b5f936202201f43e2b55e1b2acf5677d3e29b9c5a78e2a4ae03a01be5c50a17cf4b88a3b278012103adc58245cf28406af0ef5cc24b8afba7f1be6c72f279b642d85c48798685f862024730440220432ac60461de52713ad543cbb1484f7eca1a72c615d539b3f42f5668da4501d2022063786a6d6940a5c1ed9c2d2fd02cef90b6c01ddd84829c946561e15be6c0aae1012103dcf3bc936ecb2ec57b8f468050abce8c8756e75fd74273c9977744b1a0be7d0300000000',
             },
+            legacyResults,
         },
         {
             description: 'Testnet (P2WSH): presigned',
+            // todo: T1 error, tested with 1.10.6:
+            // "code": "Failure_DataError",
+            // "error": "messages.c:231:bytes overflow",
+            skip: ['1'],
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -199,9 +226,14 @@ export default {
                 serializedTx:
                     '010000000001028a44999c07bba32df1cacdc50987944e68e3205b4429438fdde35c76024614090000000000ffffffff48e37c58a68ab4899400dc0950a661817ea7bac3e4556044c685b35957b845a30000000000ffffffff013488bb000000000017a9147a55d61848e77ca266e79a39bfc85c580a6426c9870247304402204270cf602ec151e72b99c5048755379c368c6c7cd722e4234ad4bb7b1b87d09d02207fa59b1c2926ea6b4f0094ab77c08e50b089a199a5bc8419e1ee6674809c4fb4012103adc58245cf28406af0ef5cc24b8afba7f1be6c72f279b642d85c48798685f862030047304402206b570b99c22c841548a35a9b9c673fa3b87a9563ed64ad7d979aa3e01b2e303802201d0bebf58b7243e09798e734fc32892936c4d0c4984bec755dc951ef646e4a9a0147512103505f0d82bbdd251511591b34f36ad5eea37d3220c2b81a1189084431ddb3aa3d2103adc58245cf28406af0ef5cc24b8afba7f1be6c72f279b642d85c48798685f86252ae00000000',
             },
+            legacyResults,
         },
         {
             description: 'Testnet (P2TR): external presigned',
+            // todo: T1 error, tested with 1.10.6:
+            // "code": "Failure_DataError",
+            // "error": "signing.c:1021:Unsupported script type.",
+            skip: ['1'],
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -243,9 +275,14 @@ export default {
                 serializedTx:
                     '010000000001029f67664b8972ae01498e25ea98a37889f19aa86a2f39ddad84ff31da312e86df0000000000ffffffff9b117a776a9aaf70d4c3ffe89f009dcd23210a03d649ee5e38791d83902ec33a0100000000ffffffff02983a000000000000160014f0ca4661a8c7f4edad7da1c864a8bd3db05d4ac4f8110000000000002251209a9af24b396f593b34e23fefba6b417a55c5ee3f430c3837379fcb5246ab36d70140b51992353d2f99b7b620c0882cb06694996f1b6c7e62a3c1d3036e0f896fbf0b92f3d9aeab94f2454809a501715667345f702c8214693f469225de5f6636b86b01409956e47403278bf76eecbbbc3af0c2731d8347763825248a2e0f39aca5a684a7d5054e7222a1033fb5864a886180f1a8c64adab12433c78298d1f83e4c8f46e100000000',
             },
+            legacyResults,
         },
         {
             description: 'Testnet (P2WPKH): with proof',
+            // todo: T1 error, tested with 1.10.6:
+            // "code": "Failure_DataError",
+            // "error": "signing.c:1021:Unsupported script type.",
+            skip: ['1'],
             params: {
                 coin: 'Testnet',
                 inputs: [
@@ -295,7 +332,11 @@ export default {
             ],
         },
         {
+            // todo: T1 error, tested with 1.10.6:
+            // "code": "Failure_DataError",
+            // "error": "signing.c:1021:Unsupported script type.",
             description: 'Testnet (P2TR): with proof',
+            skip: ['1'],
             mnemonic: 'mnemonic_abandon', // <- important, external input is from all-all (previous case)
             params: {
                 coin: 'Testnet',

@@ -236,6 +236,13 @@ export default {
                     'base64',
                 ).toString('hex'),
             },
+            legacyResults: [
+                {
+                    // stellar has required update
+                    rules: ['<2.3.0'],
+                    payload: false,
+                },
+            ],
         },
     ],
 };

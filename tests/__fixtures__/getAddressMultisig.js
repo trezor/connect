@@ -17,6 +17,14 @@ const multisig = {
     m: 2,
 };
 
+const legacyResults = [
+    {
+        // "error": "fsm_msg_coin.h:162:Forbidden key path",
+        rules: ['<1.10.6'],
+        success: false,
+    },
+];
+
 export default {
     method: 'getAddress',
     setup: {
@@ -34,6 +42,7 @@ export default {
             result: {
                 address: '3E7GDtuHqnqPmDgwH59pVC7AvySiSkbibz',
             },
+            legacyResults,
         },
         {
             description: 'show multisig address (2)',
@@ -46,6 +55,7 @@ export default {
             result: {
                 address: '3E7GDtuHqnqPmDgwH59pVC7AvySiSkbibz',
             },
+            legacyResults,
         },
         {
             description: 'show multisig address (3)',
@@ -58,6 +68,7 @@ export default {
             result: {
                 address: '3E7GDtuHqnqPmDgwH59pVC7AvySiSkbibz',
             },
+            legacyResults,
         },
     ],
 };
