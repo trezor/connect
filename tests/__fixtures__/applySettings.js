@@ -18,6 +18,9 @@ export default {
         },
         {
             description: 'Change auto_lock_delay back',
+            setup: {
+                firmware: ['2.3.2', '2-master'],
+            },
             params: {
                 auto_lock_delay: 1000,
                 display_rotation: 0,

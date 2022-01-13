@@ -104,6 +104,9 @@ export default {
         },
         {
             description: 'Decred Testnet: purchase ticket',
+            // todo: T1 error, tested with 1.10.6:
+            // "error": "signing.c:1689:Not enough funds",
+            skip: ['1'],
             params: {
                 coin: 'tdcr',
                 inputs: [
@@ -147,6 +150,9 @@ export default {
         },
         {
             description: 'Decred Testnet: spend from stake generation and revocation',
+            // todo: T1 error, tested with 1.10.6:
+            // "error": "signing.c:1689:Not enough funds",
+            skip: ['1'],
             params: {
                 coin: 'tdcr',
                 inputs: [
@@ -186,7 +192,21 @@ export default {
                 serializedTx:
                     '010000000254e249113666e84c70de1dbee976f18d1438e4b7c58b376ffe64370ac190688b0200000001ffffffffc8e8dfb5c0e534b12adede611853a1f607c5b6912e03f577487c0d5354fc001f0000000001ffffffff0160fdd5170000000000001976a914819d291a2f7fbf770e784bfd78b5ce92c58e95ea88ac00000000000000000200c2eb0b0000000000000000ffffffff6b483045022100bdcb877c97d72db74eca06fefa21a7f7b00afcd5d916fce2155ed7df1ca5546102201e1f9efd7d652b449474c2c70171bfc4535544927bed62021f7334447d1ea4740121030e669acac1f280d1ddf441cd2ba5e97417bf2689e4bbec86df4f831bf9f7ffd000c2eb0b0000000000000000ffffffff6a473044022030c5743c442bd696d19dcf73d54e95526e726de965c2e2b4b9fd70248eaae21d02201305a3bcc2bb0e33122277763990e3b48f317d61264a68d190fb8acfc004cc640121030e669acac1f280d1ddf441cd2ba5e97417bf2689e4bbec86df4f831bf9f7ffd0',
             },
-            legacyResults,
+            legacyResults: [
+                ...legacyResults,
+                {
+                    // different result,
+                    rules: ['<1.10.6'],
+                    payload: {
+                        signatures: [
+                            '304402202b7caed34aca59bfcf71a3eb6ad7bef59f61ca4df11e18b669cb78f1c77ecd320220735c06fd61a71a6f5ed487293139ef74332649002b0ccae77058f3431d21ef8f',
+                            '3045022100e42c0e4fd00c462e81f470cb02f880f5d175b4020661fd1b46f4735be6c1796a022059f5e7cc7aa6027ec3e227eaff267f1ecf64c217f82c58a363f8738b5b101be9',
+                        ],
+                        serializedTx:
+                            '010000000254e249113666e84c70de1dbee976f18d1438e4b7c58b376ffe64370ac190688b0200000001ffffffffc8e8dfb5c0e534b12adede611853a1f607c5b6912e03f577487c0d5354fc001f0000000001ffffffff0160fdd5170000000000001976a914819d291a2f7fbf770e784bfd78b5ce92c58e95ea88ac00000000000000000200c2eb0b0000000000000000ffffffff6a47304402202b7caed34aca59bfcf71a3eb6ad7bef59f61ca4df11e18b669cb78f1c77ecd320220735c06fd61a71a6f5ed487293139ef74332649002b0ccae77058f3431d21ef8f0121030e669acac1f280d1ddf441cd2ba5e97417bf2689e4bbec86df4f831bf9f7ffd000c2eb0b0000000000000000ffffffff6b483045022100e42c0e4fd00c462e81f470cb02f880f5d175b4020661fd1b46f4735be6c1796a022059f5e7cc7aa6027ec3e227eaff267f1ecf64c217f82c58a363f8738b5b101be90121030e669acac1f280d1ddf441cd2ba5e97417bf2689e4bbec86df4f831bf9f7ffd0',
+                    },
+                },
+            ],
         },
         // {
         //     description: 'Decred Testnet: multisig change',

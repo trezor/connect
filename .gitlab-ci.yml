@@ -2,7 +2,8 @@ stages:
   - setup
   - build
   - test
-  - test-compatibility
+  - test extended
+  - examples
   - deploy
 
 variables:
@@ -148,9 +149,33 @@ publish beta release to npm:
     - deploy
 
 # Test
+
+.jobs:
+  parallel:
+    matrix:
+      - TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
+      - TESTS_INCLUDED_METHODS: "signTransaction"
+      - TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction"
+      - TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
+      - TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction"
+      - TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
+      - TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage"
+      - TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
+      - TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
+      - TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
+      - TESTS_INCLUDED_METHODS: "binanceSignTransaction"
+
+.jobs-t1:
+  parallel:
+    matrix:
+      - TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
+      - TESTS_INCLUDED_METHODS: "signTransaction"
+      - TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction"
+      - TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage"
+
 .test:
+  extends: .jobs
   image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
-  stage: test
   dependencies:
     - "setup environment"
   variables:
@@ -173,194 +198,82 @@ publish beta release to npm:
     expire_in: 1 week
     when: always
 
-test management:
+TT latest: 
   extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
-
-test btc sign:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "signTransaction"
-
-test btc others:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction"
-
-test stellar:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
-
-test cardano:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction"
-
-test eos:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
-
-test eth:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage"
-
-test nem:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
-
-test ripple:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
-
-test tezos:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
-
-test binance:
-  extends: .test
-  variables:
-    TESTS_INCLUDED_METHODS: "binanceSignTransaction"
-
-# testing backwards compatibility for the oldest supported firmware
-
-.test-compatibility:
-  extends: .test
-  stage: test-compatibility
-  only:
-    - schedules
-  variables:
-    # 2.2.0 released in January 2020
-    TESTS_FIRMWARE: "2.2.0"
-
-test legacy management:
-  extends: .test-compatibility
-  variables:
-    TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
-
-test legacy btc sign:
-  extends: .test-compatibility
-  variables:
-     TESTS_INCLUDED_METHODS: "signTransaction"
-
-test legacy btc others:
-  extends: .test-compatibility
-  variables:
-    TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage"
-
-test legacy stellar:
-  extends: .test-compatibility
-  variables:
-    TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
-
-test legacy cardano:
-  extends: .test-compatibility
-  variables:
-    TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction"
-
-test legacy eos:
-  extends: .test-compatibility
-  variables:
-    TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
-
-test legacy eth:
-  extends: .test-compatibility
-  variables:
-    TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage"
-
-test legacy nem:
-  extends: .test-compatibility
-  variables:
-    TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
-
-test legacy ripple:
-  extends: .test-compatibility
-  variables:
-    TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
-
-test legacy tezos:
-  extends: .test-compatibility
-  variables:
-    TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
-
-test legacy binance:
-  extends: .test-compatibility
-  variables:
-    TESTS_INCLUDED_METHODS: "binanceSignTransaction"
-
-# Test nightly
+  stage: test
+  
 .test-nightly:
   extends: .test
+  stage: test extended
   only:
     - schedules
+  # todo: resolve tests flakiness and remove retry option
+  retry: 2
+ 
+.test-manual:
+  extends: .test
+  stage: test extended
+  when: manual
+  # out of stages order, needs makes jobs available along with "base tests"
+  needs: ["setup environment", "verify", "build"]
+
+TT master: 
+  extends: .test-nightly
   variables:
     TESTS_FIRMWARE: "2-master"
 
-test management nightly:
-  extends: .test-nightly
+TT master: 
+  extends: .test-manual
   variables:
-    TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
+    TESTS_FIRMWARE: "2-master"
 
-test btc sign nightly:
+TT 2.2.0: 
   extends: .test-nightly
+  # todo: remove delay. according to my observation, the higher number of jobs running concurrently, the higher chance of test failing. are we sure jobs are isolated from each other
+  when: delayed
+  start_in: 5 minutes
   variables:
-    TESTS_INCLUDED_METHODS: "signTransaction"
+    TESTS_FIRMWARE: "2.2.0"
 
-test btc others nightly:
+TT 2.2.0: 
+  extends: .test-manual
+  variables:
+    TESTS_FIRMWARE: "2.2.0"
+
+T1 latest: 
   extends: .test-nightly
+  # todo: remove delay. according to my observation, the higher number of jobs running concurrently, the higher chance of test failing. are we sure jobs are isolated from each other
+  when: delayed
+  start_in: 10 minutes
   variables:
-    TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction"
+    TESTS_FIRMWARE: "1-latest"
+  parallel: !reference [.jobs-t1,parallel]
 
-test stellar nightly:
+T1 latest: 
+  extends: .test-manual
+  variables:
+    TESTS_FIRMWARE: "1-latest"
+  parallel: !reference [.jobs-t1,parallel]
+
+T1 master: 
   extends: .test-nightly
+    # todo: remove delay. according to my observation, the higher number of jobs running concurrently, the higher chance of test failing. are we sure jobs are isolated from each other
+  when: delayed
+  start_in: 15 minutes
   variables:
-    TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
+    TESTS_FIRMWARE: "1-master"
+  parallel: !reference [.jobs-t1,parallel]
 
-test cardano nightly:
-  extends: .test-nightly
+T1 master: 
+  extends: .test-manual
   variables:
-    TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction"
+    TESTS_FIRMWARE: "1-master"
+  parallel: !reference [.jobs-t1,parallel]
 
-test eos nightly:
-  extends: .test-nightly
-  variables:
-    TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
-
-test eth nightly:
-  extends: .test-nightly
-  variables:
-    TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage"
-
-test nem nightly:
-  extends: .test-nightly
-  variables:
-    TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
-
-test ripple nightly:
-  extends: .test-nightly
-  variables:
-    TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
-
-test tezos nightly:
-  extends: .test-nightly
-  variables:
-    TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
-
-test binance nightly:
-  extends: .test-nightly
-  variables:
-    TESTS_INCLUDED_METHODS: "binanceSignTransaction"
-
-# Example
-example-node:
+# Examples
+node:
   image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
-  stage: test
+  stage: examples
   dependencies:
     - "setup environment"
   variables:
