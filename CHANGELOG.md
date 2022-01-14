@@ -1,9 +1,17 @@
-# 8.2.5 (not released)
+# 8.2.5
 
 ### Added
 
 - Support for cardano in GetAccountInto method
-- Ethereum: Support for EthereumSignTypedData operation (Trezor T only) [#983](https://github.com/trezor/connect/pull/983)
+- Ethereum: Support for EthereumSignTypedData operation [#983](https://github.com/trezor/connect/pull/983) and [#1015](https://github.com/trezor/connect/pull/1015)
+- Management: Wipe device from bootloader mode
+
+### Changed
+- use modules instead of blockchain-link builds in nodejs
+
+### Removed
+- debugLink methods removed
+- loadDevice method removed
 
 # 8.2.4
 
