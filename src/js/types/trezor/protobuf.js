@@ -636,6 +636,7 @@ export const Enum_CardanoTxSigningMode = Object.freeze({
     ORDINARY_TRANSACTION: 0,
     POOL_REGISTRATION_AS_OWNER: 1,
     MULTISIG_TRANSACTION: 2,
+    PLUTUS_TRANSACTION: 3,
 });
 export type CardanoTxSigningMode = $Values<typeof Enum_CardanoTxSigningMode>;
 
@@ -731,6 +732,8 @@ export type CardanoSignTxInit = {
     derivation_type: CardanoDerivationType,
     include_network_id?: boolean,
     script_data_hash?: string,
+    collateral_inputs_count: number,
+    required_signers_count: number,
 };
 
 // CardanoTxInput
@@ -831,6 +834,18 @@ export type CardanoTxAuxiliaryData = {
 // CardanoTxMint
 export type CardanoTxMint = {
     asset_groups_count: number,
+};
+
+// CardanoTxCollateralInput
+export type CardanoTxCollateralInput = {
+    prev_hash: string,
+    prev_index: number,
+};
+
+// CardanoTxRequiredSigner
+export type CardanoTxRequiredSigner = {
+    key_hash?: string,
+    key_path?: number[],
 };
 
 // CardanoTxItemAck
@@ -2272,6 +2287,8 @@ export type MessageType = {
     CardanoCatalystRegistrationParametersType: $Exact<CardanoCatalystRegistrationParametersType>,
     CardanoTxAuxiliaryData: CardanoTxAuxiliaryData,
     CardanoTxMint: $Exact<CardanoTxMint>,
+    CardanoTxCollateralInput: $Exact<CardanoTxCollateralInput>,
+    CardanoTxRequiredSigner: CardanoTxRequiredSigner,
     CardanoTxItemAck: CardanoTxItemAck,
     CardanoTxAuxiliaryDataSupplement: $Exact<CardanoTxAuxiliaryDataSupplement>,
     CardanoTxWitnessRequest: CardanoTxWitnessRequest,

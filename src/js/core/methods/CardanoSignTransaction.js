@@ -9,6 +9,8 @@ import {
 } from './helpers/cardanoAuxiliaryData';
 import { transformCertificate } from './helpers/cardanoCertificate';
 import type { CertificateWithPoolOwnersAndRelays } from './helpers/cardanoCertificate';
+import type { Path, InputWithPath, CollateralInputWithPath } from './helpers/cardanoInputs';
+import { transformInput, transformCollateralInput } from './helpers/cardanoInputs';
 import { transformOutput } from './helpers/cardanoOutputs';
 import type { OutputWithTokens } from './helpers/cardanoOutputs';
 import { legacySerializedTxToResult, toLegacyParams } from './helpers/cardanoSignTxLegacy';
@@ -22,9 +24,9 @@ import {
 } from '../../types/trezor/protobuf';
 import type {
     UintType,
-    CardanoTxInput,
     CardanoTxWithdrawal,
     CardanoTxAuxiliaryData,
+    CardanoTxRequiredSigner,
     CardanoTxSigningMode,
     CardanoDerivationType,
 } from '../../types/trezor/protobuf';
@@ -52,14 +54,8 @@ const CardanoSignTransactionFeatures = Object.freeze({
     NetworkIdInTxBody: ['0', '2.4.4'],
     OutputDatumHash: ['0', '2.4.4'],
     ScriptDataHash: ['0', '2.4.4'],
+    Plutus: ['0', '2.4.4'],
 });
-
-export type Path = number[];
-
-export type InputWithPath = {
-    input: CardanoTxInput,
-    path?: Path,
-};
 
 export type CardanoSignTransactionParams = {
     signingMode: CardanoTxSigningMode,
@@ -73,6 +69,8 @@ export type CardanoSignTransactionParams = {
     auxiliaryData?: CardanoTxAuxiliaryData,
     validityIntervalStart?: UintType,
     scriptDataHash?: string,
+    collateralInputsWithPath: CollateralInputWithPath[],
+    requiredSigners: CardanoTxRequiredSigner[],
     protocolMagic: number,
     networkId: number,
     witnessPaths: Path[],
@@ -123,6 +121,8 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             { name: 'mint', type: 'array', allowEmpty: true },
             { name: 'validityIntervalStart', type: 'uint' },
             { name: 'scriptDataHash', type: 'string' },
+            { name: 'collateralInputs', type: 'array', allowEmpty: true },
+            { name: 'requiredSigners', type: 'array', allowEmpty: true },
             { name: 'protocolMagic', type: 'number', required: true },
             { name: 'networkId', type: 'number', required: true },
             { name: 'additionalWitnessRequests', type: 'array', allowEmpty: true },
@@ -130,21 +130,9 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             { name: 'includeNetworkId', type: 'boolean' },
         ]);
 
-        const inputsWithPath: InputWithPath[] = payload.inputs.map(input => {
-            validateParams(input, [
-                { name: 'prev_hash', type: 'string', required: true },
-                { name: 'prev_index', type: 'number', required: true },
-            ]);
-            return {
-                input: {
-                    prev_hash: input.prev_hash,
-                    prev_index: input.prev_index,
-                },
-                path: input.path ? validatePath(input.path, 5) : undefined,
-            };
-        });
+        const inputsWithPath: InputWithPath[] = payload.inputs.map(transformInput);
 
-        const outputsWithTokens = payload.outputs.map(output => transformOutput(output));
+        const outputsWithTokens: OutputWithTokens[] = payload.outputs.map(transformOutput);
 
         let certificatesWithPoolOwnersAndRelays: CertificateWithPoolOwnersAndRelays[] = [];
         if (payload.certificates) {
@@ -183,6 +171,24 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             );
         }
 
+        let collateralInputsWithPath: CollateralInputWithPath[] = [];
+        if (payload.collateralInputs) {
+            collateralInputsWithPath = payload.collateralInputs.map(transformCollateralInput);
+        }
+
+        let requiredSigners: CardanoTxRequiredSigner[] = [];
+        if (payload.requiredSigners) {
+            requiredSigners = payload.requiredSigners.map(requiredSigner => {
+                validateParams(requiredSigner, [{ name: 'keyHash', type: 'string' }]);
+                return ({
+                    key_path: requiredSigner.keyPath
+                        ? validatePath(requiredSigner.keyPath, 3)
+                        : undefined,
+                    key_hash: requiredSigner.keyHash,
+                }: CardanoTxRequiredSigner);
+            });
+        }
+
         this.params = {
             signingMode: payload.signingMode,
             inputsWithPath,
@@ -195,12 +201,16 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             auxiliaryData,
             validityIntervalStart: payload.validityIntervalStart,
             scriptDataHash: payload.scriptDataHash,
+            collateralInputsWithPath,
+            requiredSigners,
             protocolMagic: payload.protocolMagic,
             networkId: payload.networkId,
             witnessPaths: gatherWitnessPaths(
                 inputsWithPath,
                 certificatesWithPoolOwnersAndRelays,
                 withdrawals,
+                collateralInputsWithPath,
+                requiredSigners,
                 additionalWitnessRequests,
                 payload.signingMode,
             ),
@@ -283,6 +293,10 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
         if (params.scriptDataHash) {
             this._ensureFeatureIsSupported('ScriptDataHash');
         }
+
+        if (params.signingMode === CardanoTxSigningModeEnum.PLUTUS_TRANSACTION) {
+            this._ensureFeatureIsSupported('Plutus');
+        }
     }
 
     async _sign_tx(): Promise<CardanoSignedTxData> {
@@ -305,6 +319,8 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             witness_requests_count: this.params.witnessPaths.length,
             minting_asset_groups_count: this.params.mint.length,
             script_data_hash: this.params.scriptDataHash,
+            collateral_inputs_count: this.params.collateralInputsWithPath.length,
+            required_signers_count: this.params.requiredSigners.length,
             derivation_type: this.params.derivationType,
             include_network_id: this.params.includeNetworkId,
         };
@@ -385,6 +401,14 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
                     await typedCall('CardanoToken', 'CardanoTxItemAck', token);
                 }
             }
+        }
+        // collateral inputs
+        for (const { collateralInput } of this.params.collateralInputsWithPath) {
+            await typedCall('CardanoTxCollateralInput', 'CardanoTxItemAck', collateralInput);
+        }
+        // required signers
+        for (const requiredSigner of this.params.requiredSigners) {
+            await typedCall('CardanoTxRequiredSigner', 'CardanoTxItemAck', requiredSigner);
         }
         // witnesses
         const witnesses: CardanoSignedTxWitness[] = [];
