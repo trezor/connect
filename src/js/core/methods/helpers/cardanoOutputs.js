@@ -16,12 +16,14 @@ export const transformOutput = (output: any) => {
         { name: 'address', type: 'string' },
         { name: 'amount', type: 'uint', required: true },
         { name: 'tokenBundle', type: 'array', allowEmpty: true },
+        { name: 'datumHash', type: 'string' },
     ]);
 
     const result: OutputWithTokens = {
         output: {
             amount: output.amount,
             asset_groups_count: 0,
+            datum_hash: output.datumHash,
         },
     };
 

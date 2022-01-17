@@ -143,6 +143,11 @@ const SAMPLE_OUTPUTS = {
             },
         ],
     },
+    output_with_datum_hash: {
+        address: 'addr1w9rhu54nz94k9l5v6d9rzfs47h7dv7xffcwkekuxcx3evnqpvuxu0',
+        amount: '1',
+        datumHash: '3b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b7',
+    },
 };
 
 const SAMPLE_CERTIFICATES = {
@@ -309,6 +314,7 @@ const SAMPLE_MINTS = {
 const FEE = '42';
 const TTL = '10';
 const VALIDITY_INTERVAL_START = '47';
+const SCRIPT_DATA_HASH = 'd593fd793c377ac50a3169bb8378ffc257c944da31aa8f355dfa5a4f6ff89e02';
 
 const legacyResults = [
     {
@@ -922,6 +928,73 @@ export default {
         },
 
         {
+            description: 'signOutputWithDatumHash',
+            params: {
+                inputs: [SAMPLE_INPUTS.shelley_input],
+                outputs: [SAMPLE_OUTPUTS.output_with_datum_hash],
+                fee: FEE,
+                ttl: TTL,
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,
+            },
+            result: {
+                hash: '8ea2765f1e46d84f02d8b25a5f0cf445aaeaadcab913e17e59388a4f898ca812',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            'ccc4e3c2adbf63561881212c8dffd42a02850460256da9b393aaed2cbd131fbb2798a92a2adf59c31d22e1e33c3dad011d91e09aa2d5b15ba64fa995bf241900',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [
+                {
+                    // older FW doesn't support output datum hash
+                    rules: ['<2.4.4', '1'],
+                    payload: false,
+                },
+            ],
+        },
+
+        {
+            description: 'signScriptDataHash',
+            params: {
+                inputs: [SAMPLE_INPUTS.shelley_input],
+                outputs: [SAMPLE_OUTPUTS.simple_shelley_output],
+                fee: FEE,
+                ttl: TTL,
+                scriptDataHash: SCRIPT_DATA_HASH,
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,
+            },
+            result: {
+                hash: '8606e5b69b5c40bd359d7bad6ed6f77810b8e8acba6cbca298c13f92b11178d4',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            'c8676cf593554f347e2d6a5ffc6a1371638156eaaddb3e7f94ae9a7488a6adb01c3660d8aff1da08e01c4899615158e69c5c797841ef7747740ab56d3b452f0c',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [
+                {
+                    // older FW doesn't support script data hash
+                    rules: ['<2.4.4', '1'],
+                    payload: false,
+                },
+            ],
+        },
+
+        {
             description: 'signTestnet',
             params: {
                 inputs: [SAMPLE_INPUTS.byron_input],
@@ -1335,7 +1408,10 @@ export default {
             description: 'multisigWithMostElementsFilledAndSharedWithLedger',
             params: {
                 inputs: [SAMPLE_INPUTS.external_input],
-                outputs: [SAMPLE_OUTPUTS.output_common_with_ledger],
+                outputs: [
+                    SAMPLE_OUTPUTS.output_common_with_ledger,
+                    SAMPLE_OUTPUTS.output_with_datum_hash,
+                ],
                 fee: FEE,
                 ttl: TTL,
                 validityIntervalStart: VALIDITY_INTERVAL_START,
@@ -1349,26 +1425,39 @@ export default {
                     hash: '58ec01578fcdfdc376f09631a7b2adc608eaf57e3720484c7ff37c13cff90fdf',
                 },
                 mint: SAMPLE_MINTS.common_with_ledger,
+                scriptDataHash: '3b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b7',
                 protocolMagic: PROTOCOL_MAGICS.mainnet,
                 networkId: NETWORK_IDS.mainnet,
                 signingMode: CardanoTxSigningMode.MULTISIG_TRANSACTION,
-                additionalWitnessRequests: ["m/1854'/1815'/0'/0/0", "m/1854'/1815'/0'/2/0"],
+                additionalWitnessRequests: [
+                    "m/1854'/1815'/0'/0/0",
+                    "m/1854'/1815'/0'/2/0",
+                    "m/1855'/1815'/0'",
+                ],
+                includeNetworkId: true,
             },
             result: {
-                hash: '2be64c04ea3f5bac3c224ec47a4157ade91fc6ab4fd6b83ce3d57b2e9186720b',
+                hash: 'c3637e34529fae17dbbb90c58307df0cf3b818f4c034860fff362d1ea864cca4',
                 witnesses: [
                     {
                         type: 1,
                         pubKey: 'b10be5c0d11ad8292bbe69e220ca0cfbe154610b3041a8e72f9d515c226ab3b1',
                         signature:
-                            '38a56a46b21caef91742ffafdec202ed96809c3070c9bfd51db5c750d77edbfb8514d9cd2255ab5a857dd8a63706ae0ca29e390fba6af7a906b186aed117b809',
+                            '58bc9f1c39f2cd4248ad79a5f6a4733a6e751e86b09163e468b92ec1079590f6052f30f9a782812ba1b553f1c5f22cad807af97494cf8a0a26bf123bc2f60202',
                         chainCode: null,
                     },
                     {
                         type: 1,
                         pubKey: 'f2ef4ecd21ad28a8d270ca7be7e96c87f60dc821e13c0d0c5870344e9693637c',
                         signature:
-                            '0c9071c421fe207ac1d9102643eac8ddf5ff29238782956b5706b9f1f084dfc5c087b4ceda6d079f8bb6438d3b556d3ac97565a87a8ec33f11856408b0480400',
+                            '8b3e5b1b013d7456c1b0d67a334af725e3e1d3ea9a4a8ff05889314691f797cb49fff2cc10764133bce154db5e0eb91e4c1982cf53e6578648cf1f251f37020a',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'b75258e4f61eb7b313d8554c2fe10673cf214ca2d762bfd53ec3b7846e2ee872',
+                        signature:
+                            'cb3daca29e217a9f0c7e5ad47b0d07827ce8937d252ba6e32415f4613e8e6675e1b3964d28b354d338bae623bba1c30bf47a37818b56602a6e7ba7ff081aa605',
                         chainCode: null,
                     },
                 ],
@@ -1376,8 +1465,8 @@ export default {
             },
             legacyResults: [
                 {
-                    // older FW doesn't support multisig
-                    rules: ['<2.4.3', '1'],
+                    // older FW doesn't support output datum hash and script data hash
+                    rules: ['<2.4.4', '1'],
                     payload: false,
                 },
             ],

@@ -730,6 +730,7 @@ export type CardanoSignTxInit = {
     minting_asset_groups_count: number,
     derivation_type: CardanoDerivationType,
     include_network_id?: boolean,
+    script_data_hash?: string,
 };
 
 // CardanoTxInput
@@ -744,6 +745,7 @@ export type CardanoTxOutput = {
     address_parameters?: CardanoAddressParametersType,
     amount: UintType,
     asset_groups_count: number,
+    datum_hash?: string,
 };
 
 // CardanoAssetGroup
