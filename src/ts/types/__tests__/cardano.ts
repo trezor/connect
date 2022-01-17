@@ -320,6 +320,7 @@ export const cardanoSignTransaction = async () => {
         protocolMagic: 0,
         networkId: 0,
         signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,
+        includeNetworkId: false,
     });
 
     if (sign.success) {
