@@ -553,7 +553,13 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [
+                {
+                    // older FW doesn't support transactions with no outputs
+                    rules: ['<2.3.5', '1'],
+                    payload: false,
+                },
+            ],
         },
 
         {
@@ -595,7 +601,7 @@ export default {
                 ...legacyResults,
                 {
                     // witness are ordered differently
-                    rules: ['2.3.3-2.3.8'],
+                    rules: ['2.3.2-2.3.6'],
                     payload: {
                         hash: '439764b5f7e08839881536a3191faeaf111e75d9f00f83b102c5c1c6fa9fcaf9',
                         witnesses: [
@@ -656,7 +662,7 @@ export default {
                 ...legacyResults,
                 {
                     // witness are ordered differently
-                    rules: ['2.3.3-2.3.8'],
+                    rules: ['2.3.2-2.3.6'],
                     payload: {
                         hash: '3aca1784d151dc75bdbb80fae71bda3f4b26af3f5fd71bd5e9e9bbcdd2b64ad1',
                         witnesses: [
@@ -718,7 +724,7 @@ export default {
                 ...legacyResults,
                 {
                     // witness are ordered differently
-                    rules: ['2.3.3-2.3.8'],
+                    rules: ['2.3.2-2.3.6'],
                     payload: {
                         hash: '22c67f12e6f6aa0f2f09fd27d472b19c7208ccd7c3af4b09604fd5d462c1de2b',
                         witnesses: [
@@ -971,7 +977,13 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [
+                {
+                    // older FW doesn't support stake pool registration as owner
+                    rules: ['<2.3.5', '1'],
+                    payload: false,
+                },
+            ],
         },
         {
             description: 'signStakePoolRegistrationNoMetadata',
@@ -998,7 +1010,13 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [
+                {
+                    // older FW doesn't support stake pool registration as owner
+                    rules: ['<2.3.5', '1'],
+                    payload: false,
+                },
+            ],
         },
         {
             description: 'signMaryWithValidityIntervalStart',
@@ -1024,7 +1042,13 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [
+                {
+                    // older FW doesn't support validity interval start
+                    rules: ['<2.3.5', '1'],
+                    payload: false,
+                },
+            ],
         },
         {
             description: 'signMaryTokenSending',
@@ -1049,7 +1073,13 @@ export default {
                 ],
                 auxiliaryDataSupplement: undefined,
             },
-            legacyResults,
+            legacyResults: [
+                {
+                    // older FW doesn't support multiasset outputs
+                    rules: ['<2.3.5', '1'],
+                    payload: false,
+                },
+            ],
         },
         {
             description: 'ordinaryTransactionWithTokenMinting',
@@ -1595,10 +1625,14 @@ export default {
                 },
             },
             legacyResults: [
-                ...legacyResults,
+                {
+                    // older FW doesn't support auxiliary data
+                    rules: ['<2.3.7', '1'],
+                    payload: false,
+                },
                 {
                     // witnesses are ordered differently since they are parsed from the tx body
-                    rules: ['2.2.1-2.4.1'],
+                    rules: ['2.3.7-2.4.1'],
                     payload: {
                         hash: 'ee0dfef8b97857ebe7aa8935af50e9f8f608ff4054c0c034600750d722d90631',
                         witnesses: [
@@ -1639,6 +1673,41 @@ export default {
                                 '74f27d877bbb4a5fc4f7c56869905c11f70bad0af3de24b23afaa1d024e750930f434ecc4b73e5d1723c2cb8548e8bf6098ac876487b3a6ed0891cb76994d409',
                         },
                     },
+                },
+            ],
+        },
+
+        {
+            description: 'signWithIncludeNetworkId',
+            params: {
+                inputs: [SAMPLE_INPUTS.byron_input],
+                outputs: [SAMPLE_OUTPUTS.simple_byron_output],
+                fee: FEE,
+                ttl: TTL,
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,
+                includeNetworkId: true,
+            },
+            result: {
+                hash: '4fcd4532bb0a9dfff2368e60be80d46819a92a9acfb2c64a7bf5975040789bac',
+                witnesses: [
+                    {
+                        type: 0,
+                        pubKey: '89053545a6c254b0d9b1464e48d2b5fcf91d4e25c128afb1fcfc61d0843338ea',
+                        signature:
+                            '7223909207fc1fa0c6125ffd4fbf7e1d845b7ca77078de7705aa34e4b6f416bb2efaaadfa022a91437ba4f33875b9a688f78d6fb30542b59417650a169afde01',
+                        chainCode:
+                            '26308151516f3b0e02bb1638142747863c520273ce9bd3e5cd91e1d46fe2a635',
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [
+                {
+                    // older FW doesn't support network id in tx body
+                    rules: ['<2.4.4', '1'],
+                    payload: false,
                 },
             ],
         },

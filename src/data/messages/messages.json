@@ -1855,6 +1855,13 @@
           "rule": "required",
           "type": "CardanoDerivationType",
           "id": 14
+        },
+        "include_network_id": {
+          "type": "bool",
+          "id": 15,
+          "options": {
+            "default": false
+          }
         }
       }
     },

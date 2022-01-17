@@ -729,6 +729,7 @@ export type CardanoSignTxInit = {
     witness_requests_count: number,
     minting_asset_groups_count: number,
     derivation_type: CardanoDerivationType,
+    include_network_id?: boolean,
 };
 
 // CardanoTxInput

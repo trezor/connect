@@ -49,6 +49,7 @@ const CardanoSignTransactionFeatures = Object.freeze({
     AuxiliaryDataHash: ['0', '2.4.2'],
     TokenMinting: ['0', '2.4.3'],
     Multisig: ['0', '2.4.3'],
+    NetworkIdInTxBody: ['0', '2.4.4'],
 });
 
 export type Path = number[];
@@ -74,6 +75,7 @@ export type CardanoSignTransactionParams = {
     witnessPaths: Path[],
     additionalWitnessRequests: Path[],
     derivationType: CardanoDerivationType,
+    includeNetworkId?: boolean,
 };
 
 export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignTransaction'> {
@@ -121,6 +123,7 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             { name: 'networkId', type: 'number', required: true },
             { name: 'additionalWitnessRequests', type: 'array', allowEmpty: true },
             { name: 'derivationType', type: 'number' },
+            { name: 'includeNetworkId', type: 'boolean' },
         ]);
 
         const inputsWithPath: InputWithPath[] = payload.inputs.map(input => {
@@ -201,6 +204,7 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
                 typeof payload.derivationType !== 'undefined'
                     ? payload.derivationType
                     : Enum_CardanoDerivationType.ICARUS_TREZOR,
+            includeNetworkId: payload.includeNetworkId,
         };
     }
 
@@ -262,6 +266,10 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
         ) {
             this._ensureFeatureIsSupported('Multisig');
         }
+
+        if (params.includeNetworkId) {
+            this._ensureFeatureIsSupported('NetworkIdInTxBody');
+        }
     }
 
     async _sign_tx(): Promise<CardanoSignedTxData> {
@@ -284,6 +292,7 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             witness_requests_count: this.params.witnessPaths.length,
             minting_asset_groups_count: this.params.mint.length,
             derivation_type: this.params.derivationType,
+            include_network_id: this.params.includeNetworkId,
         };
 
         // init
