@@ -320,6 +320,19 @@ export const cardanoSignTransaction = async () => {
         ttl: '10',
         validityIntervalStart: '20',
         scriptDataHash: 'aaff00..',
+        collateralInputs: [
+            {
+                path: 'm/44',
+                prev_hash: '1af..',
+                prev_index: 0,
+            },
+        ],
+        requiredSigners: [
+            {
+                keyPath: 'm/44',
+                keyHash: '1af..',
+            },
+        ],
         protocolMagic: 0,
         networkId: 0,
         signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,

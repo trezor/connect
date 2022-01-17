@@ -1576,7 +1576,8 @@
       "values": {
         "ORDINARY_TRANSACTION": 0,
         "POOL_REGISTRATION_AS_OWNER": 1,
-        "MULTISIG_TRANSACTION": 2
+        "MULTISIG_TRANSACTION": 2,
+        "PLUTUS_TRANSACTION": 3
       }
     },
     "CardanoTxWitnessType": {
@@ -1866,6 +1867,16 @@
         "script_data_hash": {
           "type": "bytes",
           "id": 16
+        },
+        "collateral_inputs_count": {
+          "rule": "required",
+          "type": "uint32",
+          "id": 17
+        },
+        "required_signers_count": {
+          "rule": "required",
+          "type": "uint32",
+          "id": 18
         }
       }
     },
@@ -2159,6 +2170,36 @@
           "rule": "required",
           "type": "uint32",
           "id": 1
+        }
+      }
+    },
+    "CardanoTxCollateralInput": {
+      "fields": {
+        "prev_hash": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 1
+        },
+        "prev_index": {
+          "rule": "required",
+          "type": "uint32",
+          "id": 2
+        }
+      }
+    },
+    "CardanoTxRequiredSigner": {
+      "fields": {
+        "key_hash": {
+          "type": "bytes",
+          "id": 1
+        },
+        "key_path": {
+          "rule": "repeated",
+          "type": "uint32",
+          "id": 2,
+          "options": {
+            "packed": false
+          }
         }
       }
     },
@@ -6309,6 +6350,8 @@
         "MessageType_CardanoGetNativeScriptHash": 330,
         "MessageType_CardanoNativeScriptHash": 331,
         "MessageType_CardanoTxMint": 332,
+        "MessageType_CardanoTxCollateralInput": 333,
+        "MessageType_CardanoTxRequiredSigner": 334,
         "MessageType_RippleGetAddress": 400,
         "MessageType_RippleAddress": 401,
         "MessageType_RippleSignTx": 402,
