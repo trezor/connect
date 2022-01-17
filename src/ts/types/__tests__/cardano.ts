@@ -224,6 +224,7 @@ export const cardanoSignTransaction = async () => {
                         tokenAmounts: [{ assetNameBytes: 'aaff00..', amount: '3003112' }],
                     },
                 ],
+                datumHash: 'aaff00..',
             },
             {
                 addressParameters: {
@@ -244,6 +245,7 @@ export const cardanoSignTransaction = async () => {
                         tokenAmounts: [{ assetNameBytes: 'aaff00..', amount: '3003112' }],
                     },
                 ],
+                datumHash: 'aaff00..',
             },
         ],
         certificates: [
@@ -317,6 +319,7 @@ export const cardanoSignTransaction = async () => {
         fee: '42',
         ttl: '10',
         validityIntervalStart: '20',
+        scriptDataHash: 'aaff00..',
         protocolMagic: 0,
         networkId: 0,
         signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,

@@ -109,11 +109,13 @@ export type CardanoOutput =
           addressParameters: CardanoAddressParameters;
           amount: string;
           tokenBundle?: CardanoAssetGroup[];
+          datumHash?: string;
       }
     | {
           address: string;
           amount: string;
           tokenBundle?: CardanoAssetGroup[];
+          datumHash?: string;
       };
 
 export type CardanoPoolOwner = {
@@ -189,6 +191,7 @@ export interface CardanoSignTransaction {
     validityIntervalStart?: string;
     auxiliaryData?: CardanoAuxiliaryData;
     mint?: CardanoMint;
+    scriptDataHash?: string;
     additionalWitnessRequests?: (string | number[])[];
     protocolMagic: number;
     networkId: number;
