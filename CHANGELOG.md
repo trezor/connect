@@ -1,3 +1,9 @@
+# 8.2.6  (not released)
+
+### Added
+
+- 1.10.5 FW release
+
 # 8.2.5
 
 ### Added
