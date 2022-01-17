@@ -88,7 +88,7 @@ export interface CardanoNativeScriptHash {
 // Sign transaction
 
 export interface CardanoInput {
-    path: string | number[];
+    path?: string | number[];
     prev_hash: string;
     prev_index: number;
 }
