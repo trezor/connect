@@ -64,7 +64,7 @@
         "@babel/preset-env": "^7.15.6",
         "@babel/preset-flow": "^7.14.5",
         "@trezor/blockchain-link": "1.1.0",
-        "@trezor/connect-common": "^0.0.3",
+        "@trezor/connect-common": "0.0.4",
         "@trezor/rollout": "^1.2.1",
         "@trezor/transport": "1.0.1",
         "@trezor/utxo-lib": "1.0.0-beta.10",
@@ -129,7 +129,7 @@
     },
     "extendedDependencies": {
         "@trezor/blockchain-link": "1.1.0",
-        "@trezor/connect-common": "^0.0.3",
+        "@trezor/connect-common": "0.0.4",
         "@trezor/rollout": "^1.2.1",
         "@trezor/transport": "1.0.1",
         "@trezor/utxo-lib": "1.0.0-beta.10",
