@@ -194,6 +194,7 @@ export interface CardanoSignTransaction {
     networkId: number;
     signingMode: CardanoTxSigningMode;
     derivationType?: CardanoDerivationType;
+    includeNetworkId?: boolean;
 }
 
 export type CardanoSignedTxWitness = {

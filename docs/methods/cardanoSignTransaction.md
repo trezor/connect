@@ -32,7 +32,8 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 * `mint` - *optional* [CardanoMint](../../src/js/types/networks/cardano.js#L164)
 * `additionalWitnessRequests` - *optional* `Array` of `string | Array<number>` (paths). Used for multi-sig and token minting witness requests as those can not be determined from the transaction parameters.
 * `metadata` - *removed* - use `auxiliaryData` instead
-* `derivationType` — *optional* `CardanoDerivationType` enum. determines used derivation type. Default is set to ICARUS_TREZOR=2
+* `derivationType` — *optional* `CardanoDerivationType` enum. Determines used derivation type. Default is set to ICARUS_TREZOR=2.
+* `includeNetworkId` — *optional* `Boolean`. Determines whether `networkId` should be explicitly serialized into the transaction body. Default is `false`.
 
 ### CardanoTxSigningMode
 
@@ -153,6 +154,7 @@ TrezorConnect.cardanoSignTransaction({
     },
     protocolMagic: 764824073,
     networkId: 1,
+    includeNetworkId: false,
 });
 ```
 
@@ -175,6 +177,7 @@ TrezorConnect.cardanoSignTransaction({
     ttl: "500000000",
     protocolMagic: 764824073,
     networkId: 1,
+    includeNetworkId: false,
     certificates: [
         {
             type: CardanoCertificateType.STAKE_POOL_REGISTRATION,
@@ -266,6 +269,7 @@ TrezorConnect.cardanoSignTransaction({
     },
     protocolMagic: 764824073,
     networkId: 1,
+    includeNetworkId: false,
 });
 ```
 
@@ -340,6 +344,7 @@ TrezorConnect.cardanoSignTransaction({
     ],
     protocolMagic: 764824073,
     networkId: 1,
+    includeNetworkId: false,
 });
 ```
 
