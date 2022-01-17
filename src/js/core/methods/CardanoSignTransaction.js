@@ -50,6 +50,8 @@ const CardanoSignTransactionFeatures = Object.freeze({
     TokenMinting: ['0', '2.4.3'],
     Multisig: ['0', '2.4.3'],
     NetworkIdInTxBody: ['0', '2.4.4'],
+    OutputDatumHash: ['0', '2.4.4'],
+    ScriptDataHash: ['0', '2.4.4'],
 });
 
 export type Path = number[];
@@ -70,6 +72,7 @@ export type CardanoSignTransactionParams = {
     mint: AssetGroupWithTokens[],
     auxiliaryData?: CardanoTxAuxiliaryData,
     validityIntervalStart?: UintType,
+    scriptDataHash?: string,
     protocolMagic: number,
     networkId: number,
     witnessPaths: Path[],
@@ -119,6 +122,7 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             { name: 'withdrawals', type: 'array', allowEmpty: true },
             { name: 'mint', type: 'array', allowEmpty: true },
             { name: 'validityIntervalStart', type: 'uint' },
+            { name: 'scriptDataHash', type: 'string' },
             { name: 'protocolMagic', type: 'number', required: true },
             { name: 'networkId', type: 'number', required: true },
             { name: 'additionalWitnessRequests', type: 'array', allowEmpty: true },
@@ -190,6 +194,7 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             mint,
             auxiliaryData,
             validityIntervalStart: payload.validityIntervalStart,
+            scriptDataHash: payload.scriptDataHash,
             protocolMagic: payload.protocolMagic,
             networkId: payload.networkId,
             witnessPaths: gatherWitnessPaths(
@@ -234,9 +239,13 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             this._ensureFeatureIsSupported('ValidityIntervalStart');
         }
 
-        params.outputsWithTokens.forEach(output => {
-            if (output.tokenBundle && output.tokenBundle.length > 0) {
+        params.outputsWithTokens.forEach(({ output, tokenBundle }) => {
+            if (tokenBundle && tokenBundle.length > 0) {
                 this._ensureFeatureIsSupported('MultiassetOutputs');
+            }
+
+            if (output.datum_hash) {
+                this._ensureFeatureIsSupported('OutputDatumHash');
             }
         });
 
@@ -270,6 +279,10 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
         if (params.includeNetworkId) {
             this._ensureFeatureIsSupported('NetworkIdInTxBody');
         }
+
+        if (params.scriptDataHash) {
+            this._ensureFeatureIsSupported('ScriptDataHash');
+        }
     }
 
     async _sign_tx(): Promise<CardanoSignedTxData> {
@@ -291,6 +304,7 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
             validity_interval_start: this.params.validityIntervalStart,
             witness_requests_count: this.params.witnessPaths.length,
             minting_asset_groups_count: this.params.mint.length,
+            script_data_hash: this.params.scriptDataHash,
             derivation_type: this.params.derivationType,
             include_network_id: this.params.includeNetworkId,
         };

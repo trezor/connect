@@ -17,19 +17,20 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 
 ### Params
 [****Optional common params****](commonParams.md)
-###### [flowtype](../../src/js/types/networks/cardano.js#L87-L211)
+###### [flowtype](../../src/js/types/networks/cardano.js#L90-L203)
 * `signingMode` - *required* [CardanoTxSigningMode](#CardanoTxSigningMode)
-* `inputs` - *required* `Array` of [CardanoInput](../../src/js/types/networks/cardano.js#L87)
-* `outputs` - *required* `Array` of [CardanoOutput](../../src/js/types/networks/cardano.js#L103)
+* `inputs` - *required* `Array` of [CardanoInput](../../src/js/types/networks/cardano.js#L92)
+* `outputs` - *required* `Array` of [CardanoOutput](../../src/js/types/networks/cardano.js#L109)
 * `fee` - *required* `String`
 * `protocolMagic` - *required* `Integer` 764824073 for Mainnet, 42 for Testnet
 * `networkId` - *required* `Integer` 1 for Mainnet, 0 for Testnet
 * `ttl` - *optional* `String`
 * `validityIntervalStart` - *optional* `String`
-* `certificates` - *optional* `Array` of [CardanoCertificate](../../src/js/types/networks/cardano.js#L150)
-* `withdrawals` - *optional* `Array` of [CardanoWithdrawal](../../src/js/types/networks/cardano.js#L158)
-* `auxiliaryData` - *optional* [CardanoAuxiliaryData](../../src/js/types/networks/cardano.js#L173)
-* `mint` - *optional* [CardanoMint](../../src/js/types/networks/cardano.js#L164)
+* `certificates` - *optional* `Array` of [CardanoCertificate](../../src/js/types/networks/cardano.js#L158)
+* `withdrawals` - *optional* `Array` of [CardanoWithdrawal](../../src/js/types/networks/cardano.js#L166)
+* `auxiliaryData` - *optional* [CardanoAuxiliaryData](../../src/js/types/networks/cardano.js#L181)
+* `mint` - *optional* [CardanoMint](../../src/js/types/networks/cardano.js#L172)
+* `scriptDataHash` - *optional* `String`
 * `additionalWitnessRequests` - *optional* `Array` of `string | Array<number>` (paths). Used for multi-sig and token minting witness requests as those can not be determined from the transaction parameters.
 * `metadata` - *removed* - use `auxiliaryData` instead
 * `derivationType` — *optional* `CardanoDerivationType` enum. Determines used derivation type. Default is set to ICARUS_TREZOR=2.
@@ -37,7 +38,7 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 
 ### CardanoTxSigningMode
 
-[Type definition](../../src/js/types/trezor/protobuf.js#L98)
+[Type definition](../../src/js/types/trezor/protobuf.js#L604)
 
 #### `ORDINARY_TRANSACTION`
 
@@ -123,6 +124,11 @@ TrezorConnect.cardanoSignTransaction({
                     ]
                 }
             ]
+        },
+        {
+            address: 'addr1w9rhu54nz94k9l5v6d9rzfs47h7dv7xffcwkekuxcx3evnqpvuxu0',
+            amount: '1',
+            datumHash: '3b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b7',
         }
     ],
     fee: "42",
@@ -152,6 +158,7 @@ TrezorConnect.cardanoSignTransaction({
     auxiliaryData: {
         hash: "ea4c91860dd5ec5449f8f985d227946ff39086b17f10b5afb93d12ee87050b6a"
     },
+    scriptDataHash: "d593fd793c377ac50a3169bb8378ffc257c944da31aa8f355dfa5a4f6ff89e02",
     protocolMagic: 764824073,
     networkId: 1,
     includeNetworkId: false,
@@ -352,7 +359,7 @@ TrezorConnect.cardanoSignTransaction({
 
 Since transaction streaming has been introduced to the Cardano implementation on Trezor because of memory constraints, Trezor no longer returns the whole serialized transaction as a result of the `CardanoSignTransaction` call. Instead the transaction hash, transaction witnesses and auxiliary data supplement are returned and the serialized transaction needs to be assembled by the client.
 
-###### [flowtype](../../src/js/types/networks/cardano.js#L175-L179)
+###### [flowtype](../../src/js/types/networks/cardano.js#L218-L222)
 ```javascript
 {
     success: true,

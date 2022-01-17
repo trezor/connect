@@ -1862,6 +1862,10 @@
           "options": {
             "default": false
           }
+        },
+        "script_data_hash": {
+          "type": "bytes",
+          "id": 16
         }
       }
     },
@@ -1898,6 +1902,10 @@
           "rule": "required",
           "type": "uint32",
           "id": 4
+        },
+        "datum_hash": {
+          "type": "bytes",
+          "id": 5
         }
       }
     },
