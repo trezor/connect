@@ -18,6 +18,7 @@ const RULE_PATCH = {
     'CardanoTxWithdrawal.path': 'optional',
     'CardanoNativeScript.scripts': 'optional',
     'CardanoNativeScript.key_path': 'optional',
+    'CardanoTxRequiredSigner.key_path': 'optional',
     'Success.message': 'required', // didn't find use case where it's not sent
     'SignedIdentity.address': 'required',
     'EosAuthorizationKey.key': 'required', // its valid to be undefined according to implementation/tests

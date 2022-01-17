@@ -1,16 +1,22 @@
 /* @flow */
 import type { CertificateWithPoolOwnersAndRelays } from './cardanoCertificate';
-import type { InputWithPath, Path } from '../CardanoSignTransaction';
+import type { CollateralInputWithPath, InputWithPath, Path } from './cardanoInputs';
 import {
     Enum_CardanoCertificateType as CardanoCertificateType,
     Enum_CardanoTxSigningMode as CardanoTxSigningModeEnum,
 } from '../../../types/trezor/protobuf';
-import type { CardanoTxSigningMode, CardanoTxWithdrawal } from '../../../types/trezor/protobuf';
+import type {
+    CardanoTxSigningMode,
+    CardanoTxWithdrawal,
+    CardanoTxRequiredSigner,
+} from '../../../types/trezor/protobuf';
 
 export const gatherWitnessPaths = (
     inputsWithPath: InputWithPath[],
     certificatesWithPoolOwnersAndRelays: CertificateWithPoolOwnersAndRelays[],
     withdrawals: CardanoTxWithdrawal[],
+    collateralInputsWithPath: CollateralInputWithPath[],
+    requiredSigners: CardanoTxRequiredSigner[],
     additionalWitnessRequests: Path[],
     signingMode: CardanoTxSigningMode,
 ): Path[] => {
@@ -20,6 +26,7 @@ export const gatherWitnessPaths = (
         witnessPaths.set(pathKey, path);
     }
 
+    // don't gather paths from tx elements in MULTISIG_TRANSACTION signing mode
     if (signingMode !== CardanoTxSigningModeEnum.MULTISIG_TRANSACTION) {
         inputsWithPath.forEach(({ path }) => {
             if (path) _insert(path);
@@ -34,19 +41,27 @@ export const gatherWitnessPaths = (
                 _insert(certificate.path);
             }
             poolOwners.forEach(poolOwner => {
-                if (poolOwner.staking_key_path) {
-                    _insert(poolOwner.staking_key_path);
-                }
+                if (poolOwner.staking_key_path) _insert(poolOwner.staking_key_path);
             });
         });
 
         withdrawals.forEach(({ path }) => {
-            if (path) {
-                _insert(path);
-            }
+            if (path) _insert(path);
         });
     }
 
+    // gather Plutus-related paths
+    if (signingMode === CardanoTxSigningModeEnum.PLUTUS_TRANSACTION) {
+        collateralInputsWithPath.forEach(({ path }) => {
+            if (path) _insert(path);
+        });
+
+        requiredSigners.forEach(({ key_path }) => {
+            if (key_path) _insert(key_path);
+        });
+    }
+
+    // add additional witness requests in all cases (because of minting)
     additionalWitnessRequests.forEach(path => {
         _insert(path);
     });

@@ -11,7 +11,7 @@ export type OutputWithTokens = {
     tokenBundle?: AssetGroupWithTokens[],
 };
 
-export const transformOutput = (output: any) => {
+export const transformOutput = (output: any): OutputWithTokens => {
     validateParams(output, [
         { name: 'address', type: 'string' },
         { name: 'amount', type: 'uint', required: true },

@@ -18,6 +18,11 @@ const SAMPLE_INPUTS = {
         prev_hash: '3b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b7',
         prev_index: 0,
     },
+    shelley_input_2: {
+        path: "m/1852'/1815'/0'/0/1",
+        prev_hash: '991af8fa0b754ff99253d983894e63a2b09cbb56c833ba18c3384210163f63dc',
+        prev_index: 0,
+    },
     external_input: {
         path: undefined,
         prev_hash: '3b40265111d8bb3c3c608d95b3a0bf83461ace32d79336579a1939b3aad1c0b7',
@@ -1025,6 +1030,7 @@ export default {
             },
             legacyResults,
         },
+
         {
             description: 'signStakePoolRegistration',
             params: {
@@ -1058,6 +1064,7 @@ export default {
                 },
             ],
         },
+
         {
             description: 'signStakePoolRegistrationNoMetadata',
             params: {
@@ -1091,6 +1098,7 @@ export default {
                 },
             ],
         },
+
         {
             description: 'signMaryWithValidityIntervalStart',
             params: {
@@ -1123,6 +1131,7 @@ export default {
                 },
             ],
         },
+
         {
             description: 'signMaryTokenSending',
             params: {
@@ -1154,6 +1163,7 @@ export default {
                 },
             ],
         },
+
         {
             description: 'ordinaryTransactionWithTokenMinting',
             params: {
@@ -1196,6 +1206,7 @@ export default {
                 },
             ],
         },
+
         {
             description: 'multisigTransactionWithTokenMinting',
             params: {
@@ -1471,6 +1482,7 @@ export default {
                 },
             ],
         },
+
         {
             description: 'signTtlIs0',
             params: {
@@ -1795,6 +1807,398 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support network id in tx body
+                    rules: ['<2.4.4', '1'],
+                    payload: false,
+                },
+            ],
+        },
+
+        {
+            description: 'plutusTransactionWithTokenMinting',
+            params: {
+                inputs: [SAMPLE_INPUTS.external_input],
+                outputs: [SAMPLE_OUTPUTS.token_output],
+                fee: FEE,
+                ttl: TTL,
+                validityIntervalStart: VALIDITY_INTERVAL_START,
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.PLUTUS_TRANSACTION,
+                mint: SAMPLE_MINTS.basic,
+                scriptDataHash: SCRIPT_DATA_HASH,
+                collateralInputs: [SAMPLE_INPUTS.shelley_input],
+                additionalWitnessRequests: ["m/1854'/1815'/0'/0/0", "m/1855'/1815'/0'"],
+            },
+            result: {
+                hash: '0bccf5125597d7459b3e19c807c0264b8e49864608ae271e3f37d602e28b5a5a',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            '064c4876b3ddc6da4bc869f69b1a4408792469a7ba0f2646b7399f999bd76e2cb4d8da82e21b9b164ba56e14e5d8b78f3360ee52a29ca97ec4151368fbeb9f0d',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'b10be5c0d11ad8292bbe69e220ca0cfbe154610b3041a8e72f9d515c226ab3b1',
+                        signature:
+                            'c31e0e311c9dd3cac3cfd3214c1cf8fb02537df8b56afde06c57e7d56029eef2aee18a4422a22e64894fad48aaf745c7b019dd42fe562575986a93ec25a6250f',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'b75258e4f61eb7b313d8554c2fe10673cf214ca2d762bfd53ec3b7846e2ee872',
+                        signature:
+                            'd1f1727457d4905ad15b5f40756fd137647f09f7cafa36fd5de285193cf527dc36b4e403b64fd34ba0b9cad4f4a6a4906425d3d5f7fd07697ec3899598300e0a',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [
+                {
+                    // older FW doesn't support plutus
+                    rules: ['<2.4.4', '1'],
+                    payload: false,
+                },
+            ],
+        },
+
+        {
+            description: 'plutusWithStakeRegistration',
+            params: {
+                inputs: [SAMPLE_INPUTS.external_input],
+                outputs: [SAMPLE_OUTPUTS.simple_shelley_output],
+                fee: FEE,
+                ttl: TTL,
+                certificates: [SAMPLE_CERTIFICATES.stake_registration_script],
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.PLUTUS_TRANSACTION,
+                scriptDataHash: SCRIPT_DATA_HASH,
+                collateralInputs: [SAMPLE_INPUTS.shelley_input],
+                additionalWitnessRequests: ["m/1854'/1815'/0'/0/0"],
+            },
+            result: {
+                hash: 'bb3641fac12c97ff6282030cc329865c9358891d75a4f4994592cbda3c17ad3d',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            '929c5cf0ab54d17223391d635a984c52e0d208273ec2b1681dbbb5c5945b8a6f423caaa7b916beb2337e381bfb7a365abe71a218c84bd9c959b8c6a77608d201',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'b10be5c0d11ad8292bbe69e220ca0cfbe154610b3041a8e72f9d515c226ab3b1',
+                        signature:
+                            '1ed19c09e302c3f09b9209d25bdf4df067401db1fb2c4fd99a7d0a605092be854cab36ebcdd5ba72e5c42114f99621a3e521cc6a2327fd0c1eb735e73175a201',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [
+                {
+                    // older FW doesn't support plutus
+                    rules: ['<2.4.4', '1'],
+                    payload: false,
+                },
+            ],
+        },
+
+        {
+            description: 'plutusWithStakeRegistrationAndStakeDelegation',
+            params: {
+                inputs: [SAMPLE_INPUTS.external_input],
+                outputs: [SAMPLE_OUTPUTS.simple_shelley_output],
+                fee: FEE,
+                ttl: TTL,
+                certificates: [
+                    SAMPLE_CERTIFICATES.stake_registration_script,
+                    SAMPLE_CERTIFICATES.stake_delegation_script,
+                ],
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.PLUTUS_TRANSACTION,
+                scriptDataHash: SCRIPT_DATA_HASH,
+                collateralInputs: [SAMPLE_INPUTS.shelley_input],
+                additionalWitnessRequests: ["m/1854'/1815'/0'/0/0", "m/1854'/1815'/0'/2/0"],
+            },
+            result: {
+                hash: '1508afe08c30bc41574f311752e62f6dea1e65970bc29efb33e296e7f160b433',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            '438787bb03133652ae21d7e96c9affc87f8c567d57d487e8bb2a9a6ab46ec5d58d6fc83ea60c5be1d80a1b1daba049a8a9c911e53832d5ee94b897ed6b6d7305',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'b10be5c0d11ad8292bbe69e220ca0cfbe154610b3041a8e72f9d515c226ab3b1',
+                        signature:
+                            '728c37c2053a87ecede6c660cb50b2863bc50a9c7a63593f2b7e07a1e8b0787150cf48a8b836c83586b470b43bcad65f68522478b0a8aad94f6f124244cf4b07',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'f2ef4ecd21ad28a8d270ca7be7e96c87f60dc821e13c0d0c5870344e9693637c',
+                        signature:
+                            'd570d163a74a9703a991ee74e7e50a67e1cd01290d879452a3ee1cb046a5a4711a1e89e90748f3bb11086d35b7f6343040886fcd3003fb1e8930258b6d06b60f',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [
+                {
+                    // older FW doesn't support plutus
+                    rules: ['<2.4.4', '1'],
+                    payload: false,
+                },
+            ],
+        },
+
+        {
+            description: 'plutusWithStakeDeregistration',
+            params: {
+                inputs: [SAMPLE_INPUTS.external_input],
+                outputs: [SAMPLE_OUTPUTS.simple_shelley_output],
+                fee: FEE,
+                ttl: TTL,
+                certificates: [SAMPLE_CERTIFICATES.stake_deregistration_script],
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.PLUTUS_TRANSACTION,
+                scriptDataHash: SCRIPT_DATA_HASH,
+                collateralInputs: [SAMPLE_INPUTS.shelley_input],
+                additionalWitnessRequests: ["m/1854'/1815'/0'/0/0", "m/1854'/1815'/0'/2/0"],
+            },
+            result: {
+                hash: '077c9e912f66f69d78c939c8368b164a9734b05ce95a859ee95dbeea48819f45',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            '4552cbea3af1224153a15ff0b99fd03a51f3cbd626205ad278e97b7e162428a6907ef68d2e4ca4740c6554f3b8df2e2035a72fd2652739bc713c163497c5760b',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'b10be5c0d11ad8292bbe69e220ca0cfbe154610b3041a8e72f9d515c226ab3b1',
+                        signature:
+                            '0c140e1f59b2c0a9f0573ddb51357387de9388c7acd920ffd99efe39cab21b90afeaf3ed576ab11d2350f94fe731c70e8b7a57a328ec0722720fa854e6acce0f',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'f2ef4ecd21ad28a8d270ca7be7e96c87f60dc821e13c0d0c5870344e9693637c',
+                        signature:
+                            '35bc8f64f4a9d5200a5e363e7ec500ed718c5264c2d7aa51426c5cc19ba74259fe89a2c26f9120f3dd9fccb41a33efdede38d15bf02818866d663533efdc150b',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [
+                {
+                    // older FW doesn't support plutus
+                    rules: ['<2.4.4', '1'],
+                    payload: false,
+                },
+            ],
+        },
+
+        {
+            description: 'plutusWithStakeDeregistrationAndWithdrawal',
+            params: {
+                inputs: [SAMPLE_INPUTS.external_input],
+                outputs: [SAMPLE_OUTPUTS.simple_shelley_output],
+                fee: FEE,
+                ttl: TTL,
+                certificates: [SAMPLE_CERTIFICATES.stake_deregistration_script],
+                withdrawals: [SAMPLE_WITHDRAWAL_SCRIPT],
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.PLUTUS_TRANSACTION,
+                scriptDataHash: SCRIPT_DATA_HASH,
+                collateralInputs: [SAMPLE_INPUTS.shelley_input],
+                additionalWitnessRequests: ["m/1854'/1815'/0'/0/0", "m/1854'/1815'/0'/2/0"],
+            },
+            result: {
+                hash: '978a642582aa183a26768e3d22ff964cb8c8db1fb94abb571355ad7bfc8d3020',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            '6d04fcde8a22e2170d9639b4422737d784b7f11496374d8466a233b635274c84848697c891a5c687d35e304b57cf80af62d4f80badc2b62e07484583ed313c0c',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'b10be5c0d11ad8292bbe69e220ca0cfbe154610b3041a8e72f9d515c226ab3b1',
+                        signature:
+                            '9d16583fbb3bacbba6fa23e22133d449235cf56b5262a40df158b92311ee3319427496f0a0740382c9915ea41387ef71e6b6a9e0c1d836b478bfbca3d27e4b0f',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'f2ef4ecd21ad28a8d270ca7be7e96c87f60dc821e13c0d0c5870344e9693637c',
+                        signature:
+                            'eb97a4bdde77feb6116bbfbd2dce81419e0fae77bb54ed6ed7ad3b23de054eb3ada57d35ec73307f761c807ddb87d88e3bd434f164d524b76174916665af2406',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [
+                {
+                    // older FW doesn't support plutus
+                    rules: ['<2.4.4', '1'],
+                    payload: false,
+                },
+            ],
+        },
+
+        {
+            description: 'plutusWithRequiredSigners',
+            params: {
+                inputs: [SAMPLE_INPUTS.shelley_input],
+                outputs: [SAMPLE_OUTPUTS.simple_shelley_output],
+                fee: FEE,
+                ttl: TTL,
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.PLUTUS_TRANSACTION,
+                scriptDataHash: SCRIPT_DATA_HASH,
+                collateralInputs: [SAMPLE_INPUTS.shelley_input_2],
+                requiredSigners: [
+                    { keyPath: "m/1852'/1815'/0'/0/0" },
+                    { keyPath: "m/1854'/1815'/0'/0/0" },
+                    { keyHash: '3a7f09d3df4cf66a7399c2b05bfa234d5a29560c311fc5db4c490711' },
+                ],
+            },
+            result: {
+                hash: 'a95ab5e64e225cef28ba889580ca55ec2d95c7154e3f970015f725c0489ba8f6',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            'd6463e5436b97d06cffe8785fe2da73325b749279c10f56b69c1b1d66a2825ff9c943a57efdce35cf8e0172512635b3cde4d0058f376406f07000c13c4d4c600',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: '36a8ef21d5b98fdf23a27325cf643deaac35e912c835e35037f23d1061ae5b16',
+                        signature:
+                            '77d3a31d8ab3636eff7f6a92124635d6049b9e62adc83aca06afe1613159151361b4334a56e05385f83dd42cf43ab375cb96a31afa3c0085c07a48f61b41a400',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'b10be5c0d11ad8292bbe69e220ca0cfbe154610b3041a8e72f9d515c226ab3b1',
+                        signature:
+                            '0edd219618307ebf9be9618d35136f38efcefdc242ca3d42324c88199cdadb1e773bf76f0f731746ffc7b14a9ae92e692ab6a3886f19f7b28f148c2a08825e06',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [
+                {
+                    // older FW doesn't support plutus
+                    rules: ['<2.4.4', '1'],
+                    payload: false,
+                },
+            ],
+        },
+
+        {
+            description: 'plutusWithManyWitnesses',
+            params: {
+                inputs: [SAMPLE_INPUTS.shelley_input],
+                outputs: [SAMPLE_OUTPUTS.simple_shelley_output],
+                fee: FEE,
+                ttl: TTL,
+                certificates: [SAMPLE_CERTIFICATES.stake_deregistration_script],
+                withdrawals: [SAMPLE_WITHDRAWAL_SCRIPT],
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.PLUTUS_TRANSACTION,
+                scriptDataHash: SCRIPT_DATA_HASH,
+                collateralInputs: [SAMPLE_INPUTS.shelley_input_2],
+                requiredSigners: [
+                    { keyPath: "m/1852'/1815'/0'/0/2" },
+                    { keyPath: "m/1854'/1815'/0'/0/2" },
+                    { keyPath: "m/1855'/1815'/0'" },
+                ],
+                additionalWitnessRequests: ["m/1852'/1815'/0'/0/3", "m/1854'/1815'/0'/0/3"],
+            },
+            result: {
+                hash: '37face132b208b869d0c11fcab487648067e6978df37b5347bde2964902cc9da',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            '21bb9cd8950b7fcb87a18fd061cc022e58de5f01f24d85c88148b84c4ce98cf646754a86c5bb70eae156a3b9e6676c9d817e2adcf47dd538dc54042a1fe2fc07',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: '36a8ef21d5b98fdf23a27325cf643deaac35e912c835e35037f23d1061ae5b16',
+                        signature:
+                            '7075c37f7ea5c2def45249792c36b97a787e9fe99bd85f0629d31e81a42e3c07754b231b197c53e4a86219782c356eb5efc8792319da25206e8ce151da01880c',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'e90d7b0a6cf831b0042d37961dd528842860e77914e715bcece676c75353b812',
+                        signature:
+                            '8725de956178b26539901d0f74a5094d7eacd482e3f7c62a48aac782ee89f25071f2ab9852ea876bdde3501e82e9978bc22ba672b16c25e65d2413ff6f74c00a',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'e03c8b809288457c44e6dac9bc03d7c91cc0b26b482ae370f6b58da7c1fa90ec',
+                        signature:
+                            'cfc5fc39fd2cacf0ed8ce628a3ef4976f36be33b35357b1cae91752490fc222615f936af858caeefa48b27be949f49c1e165510854f41bc44c6ee447647e3e0b',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: 'b75258e4f61eb7b313d8554c2fe10673cf214ca2d762bfd53ec3b7846e2ee872',
+                        signature:
+                            '0a2934ab1262f829e63d83111db991d71a067e854dbbecd490c2f94331699213fb5b6da317eb9b9a20b6de20c3dc2512547603ba6838c872281604285a830101',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: '10ae189d1d30bef9214e006a0287fc5f2caf56576f04c9d3ef381f0f67856166',
+                        signature:
+                            '446ee208d7b5ac79509f1b6218c34929e382932cbb4d7278241fcf66fee2417d72bccc76d265828a525017aba9ee1ef08708a3a51162907023969eefa9ebee04',
+                        chainCode: null,
+                    },
+                    {
+                        type: 1,
+                        pubKey: '6ca4df772965773f096792f45f5241e01aa065ccb6ac12091483e418a04721e9',
+                        signature:
+                            '2f5c120e60211d14cd47a405f79e59cae591bb83599972b62c0027c2864794cc1d2b3d5659f5e56c76f39b71f113f3b1ede12390f2fccc143c52d37606d02803',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [
+                {
+                    // older FW doesn't support plutus
                     rules: ['<2.4.4', '1'],
                     payload: false,
                 },

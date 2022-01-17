@@ -171,6 +171,17 @@ export type CardanoWithdrawal = {
 
 export type CardanoMint = CardanoAssetGroup[];
 
+export type CardanoCollateralInput = {
+    path?: string | number[],
+    prev_hash: string,
+    prev_index: number,
+};
+
+export type CardanoRequiredSigner = {
+    keyPath?: string | number[],
+    keyHash?: string,
+};
+
 export type CardanoCatalystRegistrationParameters = {
     votingPublicKey: string,
     stakingPath: string | number[],
@@ -194,6 +205,8 @@ export type CardanoSignTransaction = {
     auxiliaryData?: CardanoAuxiliaryData,
     mint?: CardanoMint,
     scriptDataHash?: string,
+    collateralInputs?: CardanoCollateralInput[],
+    requiredSigners?: CardanoRequiredSigner[],
     additionalWitnessRequests?: (string | number[])[],
     protocolMagic: number,
     networkId: number,
