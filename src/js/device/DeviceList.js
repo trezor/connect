@@ -16,6 +16,8 @@ import { initLog } from '../utils/debug';
 import { resolveAfter } from '../utils/promiseUtils';
 
 import { WebUsbPlugin, ReactNativeUsbPlugin } from '../env/node/workers';
+import { getAbortController } from './AbortController';
+import type { Controller } from './AbortController';
 
 const { BridgeV2, Fallback } = TrezorLink;
 
@@ -52,7 +54,7 @@ export default class DeviceList extends EventEmitter {
 
     penalizedDevices: { [deviceID: string]: number } = {};
 
-    fetchController: ?AbortController;
+    fetchController: ?Controller;
 
     constructor() {
         super();
@@ -68,21 +70,11 @@ export default class DeviceList extends EventEmitter {
             const bridgeLatestVersion = getBridgeInfo().version.join('.');
             const bridge = new BridgeV2(null, null);
             bridge.setBridgeLatestVersion(bridgeLatestVersion);
-            // modify fetch being used by lower layer (@trezor/transport)
-            if (typeof AbortController !== 'undefined') {
-                // AbortController part of node since v15
-                // with cross-fetch:
-                // https://github.com/node-fetch/node-fetch#request-cancellation-with-abortsignal
-                this.fetchController = new AbortController();
 
-                const { signal } = this.fetchController;
-                const fetchWithSignal = (args, options = {}) => fetch(args, { ...options, signal });
-                BridgeV2.setFetch(fetchWithSignal, typeof window === 'undefined');
-            } else if (typeof window === 'undefined') {
-                // node <15
-                BridgeV2.setFetch(fetch, true);
-            }
-            // otherwise @trezor/transport defaults to window.fetch
+            this.fetchController = getAbortController();
+            const { signal } = this.fetchController;
+            const fetchWithSignal = (args, options = {}) => fetch(args, { ...options, signal });
+            BridgeV2.setFetch(fetchWithSignal, typeof window === 'undefined');
 
             transports.push(bridge);
         }
