@@ -22,11 +22,12 @@ module.exports = config => {
 
         // include custom karma.plugin
         plugins: ['karma-*', path.resolve(__dirname, './tests/karma.plugin.js')],
-        frameworks: ['jasmine', 'webpack'],
+        frameworks: ['jasmine', 'webpack', 'WebsocketServer'], // use custom framework from karma.plugin
         preprocessors: {
             './tests/karma.setup.js': 'webpack',
             './tests/common.setup.js': 'webpack',
-            './tests/__txcache__/index.js': 'TrezorConnect', // use custom preprocessor from karma.plugin
+            './tests/__txcache__/index.js': 'TxCachePreprocessor', // use custom preprocessor from karma.plugin
+            './build/data/coins.json': 'WsCachePreprocessor', // use custom preprocessor from karma.plugin
             './tests/device/**/*.test.js': ['webpack'],
         },
         files: [
@@ -34,11 +35,11 @@ module.exports = config => {
             { pattern: './tests/common.setup.js', watched: false },
             { pattern: './tests/__txcache__/index.js', watched: false },
             {
-                pattern: 'build/**/*.*',
+                pattern: './build/**/*.*',
                 watched: false,
                 included: false,
                 served: true,
-                nocache: true,
+                nocache: false,
             },
             './tests/device/**/*.test.js',
         ],
@@ -96,7 +97,7 @@ module.exports = config => {
             ],
         },
 
-        reporters: ['progress', 'coverage', 'TrezorConnect'], // use custom reporter from karma.plugin
+        reporters: ['progress', 'coverage', 'CustomReporter'], // use custom reporter from karma.plugin
         coverageReporter: {
             dir: 'coverage',
             reporters: [

@@ -1,35 +1,17 @@
-const fs = require('fs');
-const path = require('path');
+const { createServer } = require('./server');
 
-// collect all json files
-/* 
-{ [methodName] => {
-    [key] => json
-} }
- */
-
-const cacheFiles = (dir, cache = {}) => {
-    const dirFiles = fs.readdirSync(dir);
-    dirFiles.forEach(file => {
-        const filePath = path.resolve(dir, file);
-        if (fs.statSync(filePath).isDirectory()) {
-            cacheFiles(filePath, cache);
-        } else if (file.endsWith('.json')) {
-            const method = path.basename(dir);
-            if (!cache[method]) cache[method] = {};
-            const key = file.replace('.json', '');
-            try {
-                const rawJson = fs.readFileSync(filePath);
-                const content = JSON.parse(rawJson);
-                cache[method][key] = content;
-            } catch (error) {
-                console.error(`WS_CACHE parsing error: ${filePath}`);
-                throw error;
+// Change all "blockchain_link" urls to localhost.
+// This method is used in karma.plugin.js and jest.setup.js
+const transformCoinsJson = json => {
+    Object.keys(json).forEach(key => {
+        json[key].forEach(coin => {
+            if (coin.blockchain_link) {
+                const query = `?type=${coin.blockchain_link.type}&shortcut=${coin.shortcut}&suffix=/websocket`;
+                coin.blockchain_link.url = [`ws://localhost:18088/${query}`];
             }
-        }
+        });
     });
-    return cache;
+    return json;
 };
 
-// read cache directory
-export const WS_CACHE = cacheFiles(path.resolve(__dirname));
+export { createServer, transformCoinsJson };
