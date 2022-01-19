@@ -1,5 +1,3 @@
-import { MockedWorker } from './__wscache__/worker';
-
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
 
 // jasmine is missing "toMatchObject" matcher (deeply partial matching)
@@ -51,12 +49,3 @@ jasmine.getEnv().beforeAll(() => {
 
 // expect is missing "any" matcher
 expect.any = jasmine.any;
-
-// catch trezor-connect iframe handshake and override native Worker class with cached responses
-// this is possible ONLY because both connect and tests are running from the same origin
-window.addEventListener('message', event => {
-    // Always mock blockchain-link worker unless it's explicitly required not to.
-    if (event.data.type === 'iframe-bootstrap' && process.env.TESTS_USE_WS_CACHE !== 'false') {
-        event.currentTarget.Worker = MockedWorker;
-    }
-});

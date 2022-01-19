@@ -7,11 +7,15 @@ let controller;
 let currentMnemonic;
 
 describe(`TrezorConnect methods`, () => {
-    // reset controller at the end
     afterAll(done => {
+        // reset controller at the end
         if (controller) {
             controller.dispose();
             controller = undefined;
+        }
+        // global.WsCacheServer is assigned in jest.setup.js
+        if (global.WsCacheServer) {
+            global.WsCacheServer.close();
         }
         done();
     });
