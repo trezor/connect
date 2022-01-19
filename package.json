@@ -109,6 +109,7 @@
         "parse-uri": "^1.0.3",
         "prettier": "^2.4.1",
         "process": "^0.11.10",
+        "randombytes": "2.1.0",
         "stream-browserify": "^3.0.0",
         "style-loader": "3.2.1",
         "terser-webpack-plugin": "5.2.4",
@@ -135,6 +136,7 @@
         "bignumber.js": "^9.0.1",
         "bowser": "^2.11.0",
         "cbor-web": "^7.0.6",
-        "parse-uri": "^1.0.3"
+        "parse-uri": "^1.0.3",
+        "randombytes": "2.1.0"
     }
 }
