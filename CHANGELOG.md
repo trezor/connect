@@ -1,4 +1,4 @@
-# 8.2.6  (not released)
+# 8.2.6
 
 ### Added
 
