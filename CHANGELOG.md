@@ -1,3 +1,8 @@
+# 8.2.7 (not released)
+
+### Changed
+- @trezor/blockchain-link 2.0.0 use workers as commonjs modules in nodejs and react-native env.
+
 # 8.2.6
 
 ### Added
