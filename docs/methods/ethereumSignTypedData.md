@@ -33,7 +33,7 @@ TrezorConnect.ethereumSignTypedData(params).then(function(result) {
 ### Example
 
 ```javascript
-TrezorConnect.ethereumSignMessage({
+TrezorConnect.ethereumSignTypedData({
     path: "m/44'/60'/0'",
     data: {
         types: {
