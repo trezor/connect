@@ -37,6 +37,44 @@ export default {
 
             return fixture;
         })
+        // Cross-chain transaction
+        .concat([
+            {
+                description: 'Cross-chain transaction not allowed (missing param)',
+                params: {
+                    path: 'm/0',
+                    transaction: {
+                        nonce: '0x0',
+                        gasPrice: '0x4e20',
+                        gasLimit: '0x4e20',
+                        to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
+                        value: '0xab54a98ceb1f0ad2',
+                        chainId: 1,
+                    },
+                },
+                result: false,
+            },
+            {
+                description: 'Cross-chain transaction allowed',
+                params: {
+                    path: 'm/0',
+                    crossChain: true,
+                    transaction: {
+                        nonce: '0x1e240',
+                        gasPrice: '0x4e20',
+                        gasLimit: '0x4e20',
+                        to: '0x1d1c328764a41bda0492b66baa30c4a339ff85ef',
+                        value: '0xab54a98ceb1f0ad2',
+                        chainId: 1,
+                    },
+                },
+                result: {
+                    r: '0xb5c20b25405169a930f550c86cd4513c27213949a0f7e3c31aa13dda84f6c8b6',
+                    s: '0x4e8a1f8a381a54b5cda09d61a638db3b23ec6069eddd4c909ab1861fd8b886e3',
+                    v: '0x26',
+                },
+            },
+        ])
         // Expect failure scenarios
         .concat([
             {

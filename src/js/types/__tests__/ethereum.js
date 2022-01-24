@@ -39,6 +39,7 @@ export const ethereumGetAddress = async () => {
         path: 'm/44',
         address: '0x',
         showOnTrezor: true,
+        crossChain: true,
     });
 
     // $FlowExpectedError: payload is Address
@@ -100,6 +101,8 @@ export const ethereumGetPublicKey = async () => {
         (bundlePK.payload.error: string);
     }
 
+    TrezorConnect.ethereumGetPublicKey({ path: 'm/44', crossChain: true });
+
     // errors
     // $FlowExpectedError: payload is PublicKey
     const e1 = await TrezorConnect.ethereumGetPublicKey({ path: 'm/44' });
@@ -126,6 +129,7 @@ export const ethereumSignTransaction = async () => {
             value: '0x0',
             data: '0xa',
         },
+        crossChain: false,
     });
 
     if (sign.success) {

@@ -66,5 +66,15 @@ export default {
             },
             result: false,
         },
+        {
+            description: 'Cross-chain path',
+            params: {
+                path: [0],
+                crossChain: true,
+            },
+            result: {
+                xpub: 'xpub68zNxjsTrV8y8uoJ6ruP8b4YWfWxVjBXqi8XVoVszyQZRPR2xonw7X6tiVbXzQkGEoCMTxDqJWyXoPkcxF2QWehP8isk5Tgdt7jDRjc8emc',
+            },
+        },
     ],
 };

@@ -151,5 +151,16 @@ export default {
                 },
             ],
         },
+        {
+            description: 'Cross-chain BCH address with BTC path',
+            params: {
+                path: "m/44'/0'/0'/0/0",
+                coin: 'bch',
+                crossChain: true,
+            },
+            result: {
+                address: 'bitcoincash:qzwf6g05wwp8vt0n4kqnj8hqje9j3hv4zuhvwtuajy',
+            },
+        },
     ],
 };

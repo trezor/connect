@@ -44,6 +44,7 @@ export const ethereumGetAddress = async () => {
         path: 'm/44',
         address: '0x',
         showOnTrezor: true,
+        crossChain: true,
     });
 
     // with invalid params
@@ -98,6 +99,8 @@ export const ethereumGetPublicKey = async () => {
     } else {
         bundlePK.payload.error;
     }
+
+    TrezorConnect.ethereumGetPublicKey({ path: 'm/44', crossChain: true });
 };
 
 export const ethereumSignTransaction = async () => {
@@ -112,6 +115,7 @@ export const ethereumSignTransaction = async () => {
             value: '0x0',
             data: '0xa',
         },
+        crossChain: false,
     });
 
     if (sign.success) {
