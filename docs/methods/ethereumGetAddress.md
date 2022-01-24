@@ -19,6 +19,7 @@ TrezorConnect.ethereumGetAddress(params).then(function(result) {
 * `path` — *required* `string | Array<number>` minimum length is `5`. [read more](path.md)
 * `address` — *required* `string` address for validation (read `Handle button request` section below)
 * `showOnTrezor` — *optional* `boolean` determines if address will be displayed on device. Default is set to `true`
+* `crossChain` — *optional* `boolean` Advanced feature. Require disabled `safety_checks`. Use it only if you are know what you are doing. Allows to generate address using nonstandard derivation path.
 
 #### Exporting bundle of addresses
 * `bundle` - `Array` of Objects with `path` and `showOnTrezor` fields

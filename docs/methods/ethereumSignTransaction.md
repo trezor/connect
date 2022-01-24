@@ -20,7 +20,7 @@ TrezorConnect.ethereumSignTransaction(params).then(function(result) {
 ###### [flowtype](../../src/js/types/params.js#L69-L72)
 * `path` — *required* `string | Array<number>` minimum length is `3`. [read more](path.md)
 * `transaction` - *required* `Object` type of [`EthereumTransactionEIP1559`](../../src/js/types/networks/ethereum.js#L46)` | `[`EthereumSignTransaction`](../../src/js/types/networks/ethereum.js#L59) "0x" prefix for each field is optional
-
+* `crossChain` — *optional* `boolean` Advanced feature. Require disabled `safety_checks`. Use it only if you are know what you are doing. Allows to sign transaction using nonstandard derivation path.
 ### Examples
 
 #### EIP1559 ([after The London Upgrade](https://ethereum.org/en/developers/docs/gas/#post-london))
