@@ -53,7 +53,9 @@ export default class GetAddress extends AbstractMethod<'getAddress'> {
                 { name: 'scriptType', type: 'string' },
             ]);
 
-            const path = validatePath(batch.path, 1);
+            // min. path/address_n length for GetAddress message should be 5 (m/44'/60'/0'/0/address_index) but this change may brake 3rd party implementations.
+            // TODO: set to 5 in next major version
+            const path = validatePath(batch.path, !batch.crossChain ? 1 : 0);
             let coinInfo: ?BitcoinNetworkInfo;
             if (batch.coin) {
                 coinInfo = getBitcoinNetwork(batch.coin);

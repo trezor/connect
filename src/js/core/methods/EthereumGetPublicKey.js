@@ -43,7 +43,7 @@ export default class EthereumGetPublicKey extends AbstractMethod<'ethereumGetPub
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
 
-            const path = validatePath(batch.path, 3);
+            const path = validatePath(batch.path, !batch.crossChain ? 3 : 0);
             const network = getEthereumNetwork(path);
             this.firmwareRange = getFirmwareRange(this.name, network, this.firmwareRange);
 

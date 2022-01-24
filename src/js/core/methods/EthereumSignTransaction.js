@@ -52,7 +52,7 @@ export default class EthereumSignTx extends AbstractMethod<'ethereumSignTransact
             { name: 'transaction', required: true },
         ]);
 
-        const path = validatePath(payload.path, 3);
+        const path = validatePath(payload.path, !payload.crossChain ? 3 : 0);
         const network = getEthereumNetwork(path);
 
         this.info = getNetworkLabel('Sign #NETWORK transaction', network);

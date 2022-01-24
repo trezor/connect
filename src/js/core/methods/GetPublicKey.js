@@ -51,7 +51,7 @@ export default class GetPublicKey extends AbstractMethod<'getPublicKey'> {
                 coinInfo = getBitcoinNetwork(batch.coin);
             }
 
-            const path = validatePath(batch.path, coinInfo ? 3 : 0);
+            const path = validatePath(batch.path, !batch.crossChain && coinInfo ? 3 : 0);
 
             if (coinInfo && !batch.crossChain) {
                 validateCoinPath(coinInfo, path);

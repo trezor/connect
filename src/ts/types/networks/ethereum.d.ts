@@ -7,6 +7,7 @@ export interface EthereumGetAddress {
     path: string | number[];
     address?: string;
     showOnTrezor?: boolean;
+    crossChain?: boolean;
 }
 
 export interface EthereumAddress {
@@ -20,6 +21,7 @@ export interface EthereumAddress {
 export interface EthereumGetPublicKey {
     path: string | number[];
     showOnTrezor?: boolean;
+    crossChain?: boolean;
 }
 
 // sign transaction
@@ -58,6 +60,7 @@ export type EthereumTransactionEIP1559 = {
 export interface EthereumSignTransaction {
     path: string | number[];
     transaction: EthereumTransaction | EthereumTransactionEIP1559;
+    crossChain?: boolean;
 }
 
 export interface EthereumSignedTx {

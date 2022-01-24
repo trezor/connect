@@ -9,6 +9,7 @@ export type EthereumGetAddress = {
     address?: string,
     showOnTrezor?: boolean,
     useEventListener?: boolean, // set automatically if UI.ADDRESS_VALIDATION listener is used
+    crossChain?: boolean,
 };
 
 export type EthereumAddress = {
@@ -22,6 +23,7 @@ export type EthereumAddress = {
 export type EthereumGetPublicKey = {
     path: string | number[],
     showOnTrezor?: boolean,
+    crossChain?: boolean,
 };
 
 // sign transaction
@@ -60,6 +62,7 @@ export type EthereumTransactionEIP1559 = {
 export type EthereumSignTransaction = {
     path: string | number[],
     transaction: EthereumTransaction | EthereumTransactionEIP1559,
+    crossChain?: boolean,
 };
 
 export type EthereumSignedTx = {

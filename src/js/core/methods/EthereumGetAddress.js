@@ -51,8 +51,9 @@ export default class EthereumGetAddress extends AbstractMethod<'ethereumGetAddre
                 { name: 'address', type: 'string' },
                 { name: 'showOnTrezor', type: 'boolean' },
             ]);
-
-            const path = validatePath(batch.path, 3);
+            // min. path/address_n length for EthereumGetAddress should be 5 (m/44'/60'/0'/0/address_index) but this change may brake 3rd party implementations.
+            // TODO: set to 5 in next major version
+            const path = validatePath(batch.path, !batch.crossChain ? 3 : 0);
             const network = getEthereumNetwork(path);
             this.firmwareRange = getFirmwareRange(this.name, network, this.firmwareRange);
 
