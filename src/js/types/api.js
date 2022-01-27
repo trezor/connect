@@ -359,6 +359,11 @@ export type API = {
      */
     rebootToBootloader: Method<{}, P.DefaultMessage>,
 
+    /**
+     * Set tor proxy for @trezor/blockchain-link connections
+     */
+    setProxy: Method<Misc.SetProxy, Protobuf.Success>,
+
     // // Developer mode
     customMessage: Method<Misc.CustomMessage, any>,
 };

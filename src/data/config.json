@@ -27,6 +27,9 @@
         { "origin": "webextension@metamask.io", "label": "MetaMask", "icon": "./data/icons/metamask.svg" },
         { "origin": "file://", "label": " " }
     ],
+    "onionDomains": {
+        "trezor.io": "trezoriovpjcahpzkrewelclulmszwbqpzmzgub37gbcjlvluxtruqad.onion"
+    },
     "resources": {
         "bridge": "./data/bridge/latest.txt"
     },
