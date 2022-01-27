@@ -242,7 +242,34 @@ export const signTypedData = async () => {
 
     await TrezorConnect.ethereumSignTypedData({
         path: 'm/44',
+        data: {
+            types: {
+                EIP712Domain: [],
+                EmptyMessage: [],
+            },
+            primaryType: 'EmptyMessage',
+            domain: {},
+            message: {},
+        },
         message_hash: '0x',
         domain_separator_hash: '0x',
+        metamask_v4_compat: true,
+    });
+
+    // $FlowExpectedError `message_hash` is given, but it's an invalid type.
+    await TrezorConnect.ethereumSignTypedData({
+        path: 'm/44',
+        data: {
+            types: {
+                EIP712Domain: [],
+                EmptyMessage: [],
+            },
+            primaryType: 'EmptyMessage',
+            domain: {},
+            message: {},
+        },
+        message_hash: 123456,
+        domain_separator_hash: '0x1234',
+        metamask_v4_compat: true,
     });
 };

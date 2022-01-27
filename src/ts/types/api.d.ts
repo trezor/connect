@@ -303,11 +303,14 @@ export namespace TrezorConnect {
     function ethereumSignMessage(
         params: P.CommonParams & Ethereum.EthereumSignMessage,
     ): P.Response<Protobuf.MessageSignature>;
+    /**
+     * @param params Passing:
+     * - {@link Ethereum.EthereumSignTypedData} is required for Trezor T
+     * - {@link Ethereum.EthereumSignTypedHash} is required for Trezor 1 compatability
+     */
     function ethereumSignTypedData<T extends Ethereum.EthereumSignTypedDataTypes>(
-        params: P.CommonParams & Ethereum.EthereumSignTypedData<T>,
-    ): P.Response<Protobuf.EthereumTypedDataSignature>;
-    function ethereumSignTypedData(
-        params: P.CommonParams & Ethereum.EthereumSignTypedHash,
+        params: P.CommonParams &
+            (Ethereum.EthereumSignTypedData<T> | Ethereum.EthereumSignTypedHashAndData<T>),
     ): P.Response<Protobuf.EthereumTypedDataSignature>;
     function ethereumVerifyMessage(
         params: P.CommonParams & Ethereum.EthereumVerifyMessage,
