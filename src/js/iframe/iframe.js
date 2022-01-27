@@ -16,7 +16,7 @@ import type { CoreMessage, PostMessageEvent } from '../types';
 
 import { initLog } from '../utils/debug';
 import { sendMessage } from '../utils/windowsUtils';
-import { getOrigin } from '../env/browser/networkUtils';
+import { getOrigin } from '../utils/urlUtils';
 import { suggestBridgeInstaller, suggestUdevInstaller } from '../env/browser/browserUtils';
 import { load as loadStorage, PERMISSIONS_KEY } from '../storage';
 
