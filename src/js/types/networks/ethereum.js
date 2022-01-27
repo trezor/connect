@@ -101,20 +101,32 @@ type EthereumSignTypedDataMessage<T: EthereumSignTypedDataTypes> = {
     message: { [fieldName: string]: any },
 };
 
+/**
+ * Used for full EIP-712 signing
+ * (currently only supported on Trezor Model T)
+ */
 export type EthereumSignTypedData = {
     path: string | number[],
     metamask_v4_compat: boolean,
-    data: EthereumSignTypedDataMessage<any>,
-    domain_separator_hash?: typeof undefined,
-    message_hash?: typeof undefined,
+    data: EthereumSignTypedDataMessage<EthereumSignTypedDataTypes>,
 };
 
+/**
+ * Used for EIP-712 blind signing on Trezor Model 1 only
+ */
 export type EthereumSignTypedHash = {
     path: string | number[],
-    metamask_v4_compat?: typeof undefined,
-    data?: typeof undefined,
     domain_separator_hash: string,
     message_hash: string,
+};
+
+/**
+ * Used for full EIP-712 signing or blind signing.
+ * Supports both Trezor Model T and Trezor Model 1
+ */
+export type EthereumSignTypedHashAndData = {
+    ...$Exact<EthereumSignTypedData>,
+    ...$Exact<EthereumSignTypedHash>,
 };
 
 // verify message

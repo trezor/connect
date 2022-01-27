@@ -254,10 +254,8 @@ export type API = {
     ethereumGetPublicKey: Bundled<Ethereum.EthereumGetPublicKey, Bitcoin.HDNodeResponse>,
     ethereumSignTransaction: Method<Ethereum.EthereumSignTransaction, Ethereum.EthereumSignedTx>,
     ethereumSignMessage: Method<Ethereum.EthereumSignMessage, Protobuf.EthereumMessageSignature>,
-    ethereumSignTypedData: Mixed<
-        Ethereum.EthereumSignTypedData,
-        Ethereum.EthereumSignTypedHash,
-        Protobuf.EthereumTypedDataSignature,
+    ethereumSignTypedData: Method<
+        Ethereum.EthereumSignTypedData | Ethereum.EthereumSignTypedHashAndData,
         Protobuf.EthereumTypedDataSignature,
     >,
 

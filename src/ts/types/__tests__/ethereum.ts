@@ -235,7 +235,29 @@ export const signTypedData = async () => {
 
     await TrezorConnect.ethereumSignTypedData({
         path: 'm/44',
+        metamask_v4_compat: true,
+        data: {
+            types: { EIP712Domain: [] },
+            primaryType: 'EIP712Domain',
+            domain: {},
+            message: {},
+        },
         message_hash: '0x',
+        domain_separator_hash: '0x',
+    });
+
+    await TrezorConnect.ethereumSignTypedData({
+        path: 'm/44',
+        metamask_v4_compat: true,
+        data: {
+            types: { EIP712Domain: [] },
+            // @ts-expect-error: primaryType not in `types`
+            primaryType: 'UnknownType',
+            domain: {},
+            message: {},
+        },
+        // @ts-expect-error: incorrect type for message_hash
+        message_hash: 12345,
         domain_separator_hash: '0x',
     });
 };

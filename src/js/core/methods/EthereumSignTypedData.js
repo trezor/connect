@@ -9,15 +9,17 @@ import type { MessageResponse, EthereumTypedDataStructAck } from '../../types/tr
 import { ERRORS } from '../../constants';
 import type {
     EthereumSignTypedData as EthereumSignTypedDataParams,
-    EthereumSignTypedHash as EthereumSignTypedHashParams,
+    EthereumSignTypedHashAndData as EthereumSignTypedHashAndDataParams,
 } from '../../types/networks/ethereum';
 import { getFieldType, parseArrayType, encodeData } from './helpers/ethereumSignTypedData';
 
-type Params = {
-    address_n: number[],
-    ...$Exact<EthereumSignTypedDataParams>,
-    ...$Exact<EthereumSignTypedHashParams>,
-};
+type Params = $Diff<
+    {
+        address_n: number[],
+        ...$Exact<EthereumSignTypedDataParams> | $Exact<EthereumSignTypedHashAndDataParams>,
+    },
+    { path: any }, // removes the "path" variable from this.params
+>;
 
 export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignTypedData'> {
     params: Params;
@@ -30,10 +32,10 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
         // validate incoming parameters
         validateParams(payload, [
             { name: 'path', required: true },
-            { name: 'metamask_v4_compat', type: 'boolean' },
             // model T
-            { name: 'data', type: 'object' },
-            // model One
+            { name: 'metamask_v4_compat', type: 'boolean', required: true },
+            { name: 'data', type: 'object', required: true },
+            // model One (optional params)
             { name: 'domain_separator_hash', type: 'string' },
             { name: 'message_hash', type: 'string' },
         ]);
@@ -45,13 +47,18 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
         this.info = getNetworkLabel('Sign #NETWORK typed data', network);
 
         this.params = {
-            path,
             address_n: path,
             metamask_v4_compat: payload.metamask_v4_compat,
-            domain_separator_hash: payload.domain_separator_hash || '',
-            message_hash: payload.message_hash || '',
-            data: payload.data || undefined,
+            data: payload.data,
         };
+
+        if (payload.message_hash) {
+            this.params = {
+                ...this.params,
+                domain_separator_hash: payload.domain_separator_hash,
+                message_hash: payload.message_hash,
+            };
+        }
     }
 
     async run() {
@@ -64,7 +71,9 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
                 { name: 'message_hash', type: 'string', required: true },
             ]);
 
-            const { domain_separator_hash, message_hash } = this.params;
+            const { domain_separator_hash, message_hash } =
+                // $FlowIssue validateParams() confirms that these hashes exist
+                (this.params: EthereumSignTypedHashAndDataParams);
 
             // For Model 1 we use EthereumSignTypedHash
             const response = await cmd.typedCall(
@@ -84,9 +93,7 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
             };
         }
 
-        validateParams(this.params, [{ name: 'data', type: 'object', required: true }]);
         const { data, metamask_v4_compat } = this.params;
-        // $FlowIssue
         const { types, primaryType, domain, message } = data;
 
         // For Model T we use EthereumSignTypedData

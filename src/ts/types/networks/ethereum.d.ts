@@ -105,11 +105,22 @@ export interface EthereumSignTypedData<T extends EthereumSignTypedDataTypes> {
     metamask_v4_compat: boolean;
 }
 
+/**
+ * The Trezor Model 1 cannot currently calculate EIP-712 hashes by itself,
+ * so we have to precalculate them.
+ */
 export interface EthereumSignTypedHash {
     path: string | number[];
     domain_separator_hash: string;
     message_hash: string;
 }
+
+/**
+ * Used for full EIP-712 signing or blind signing.
+ * Supports both Trezor Model T and Trezor Model 1.
+ */
+export type EthereumSignTypedHashAndData<T extends EthereumSignTypedDataTypes> =
+    EthereumSignTypedData<T> & EthereumSignTypedHash;
 
 // verify message
 
