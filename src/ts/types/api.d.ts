@@ -451,6 +451,11 @@ export namespace TrezorConnect {
      */
     function rebootToBootloader(params?: P.CommonParams): P.Response<P.DefaultMessage>;
 
+    /**
+     * Set tor proxy for @trezor/blockchain-link connections
+     */
+    function setProxy(params: Misc.SetProxy): P.Response<Protobuf.Success>;
+
     // // Developer mode
     function customMessage(params: P.CommonParams & Misc.CustomMessage): P.Response<any>;
 }

@@ -50,6 +50,7 @@ export type Config = {
     whitelist: WhiteList[],
     management: WhiteList[],
     knownHosts: KnownHost[],
+    onionDomains: { [key: string]: string },
     webusb: WebUSB[],
     resources: Resources,
     assets: Asset[],

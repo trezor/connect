@@ -34,3 +34,8 @@ export interface CustomMessage {
     params: JSON | object;
     callback: (request: any) => Promise<{ message: string; params?: object }>;
 }
+
+export type SetProxy = {
+    proxy?: string;
+    useOnionLinks?: boolean;
+};

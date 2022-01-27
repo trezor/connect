@@ -192,6 +192,8 @@ const TrezorConnect: API = {
 
     rebootToBootloader: params => call({ method: 'rebootToBootloader', ...params }),
 
+    setProxy: params => call({ method: 'setProxy', ...params }),
+
     dispose,
 
     cancel,
