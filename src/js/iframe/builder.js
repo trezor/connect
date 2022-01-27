@@ -2,7 +2,7 @@
 
 import { create as createDeferred } from '../utils/deferred';
 import { IFRAME, ERRORS } from '../constants';
-import { getOrigin } from '../env/browser/networkUtils';
+import { getOrigin } from '../utils/urlUtils';
 import css from './inline-styles';
 import type { ConnectSettings, Deferred } from '../types';
 
