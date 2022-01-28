@@ -1,5 +1,8 @@
 # 8.2.7 (not released)
 
+### Added
+- `TrezorConnect.setProxy` method. Allow @trezor/blockchain-link using TOR proxy.
+
 ### Changed
 - @trezor/blockchain-link 2.0.0 use workers as commonjs modules in nodejs and react-native env.
 
