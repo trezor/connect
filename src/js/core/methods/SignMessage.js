@@ -37,9 +37,9 @@ export default class SignMessage extends AbstractMethod<'signMessage'> {
         this.info = getLabel('Sign #NETWORK message', coinInfo);
 
         // firmware range depends on used no_script_type parameter
-        // AOPP is possible since 1.10/42.4.3
+        // no_script_type is possible since 1.10.4 / 2.4.3
         this.firmwareRange = getFirmwareRange(
-            payload.no_script_type ? 'aopp' : this.name,
+            payload.no_script_type ? 'signMessageNoScriptType' : this.name,
             coinInfo,
             this.firmwareRange,
         );

@@ -3,7 +3,7 @@ const { ADDRESS_N } = global.TestUtils;
 // vectors from https://github.com/trezor/trezor-firmware/blob/master/tests/device_tests/test_msg_signmessage.py
 
 const legacyResults = [
-    // AOPP
+    // SignMessage.no_script_type
     {
         rules: ['<2.4.3'],
         success: false,
@@ -196,7 +196,7 @@ export default {
             },
         },
         {
-            description: 'BTC AOPP p2pkh',
+            description: 'BTC no_script_type p2pkh',
             params: {
                 coin: 'Bitcoin',
                 path: ADDRESS_N("m/44'/0'/0'/0/0"),
@@ -213,7 +213,7 @@ export default {
             legacyResults,
         },
         {
-            description: 'BTC AOPP p2sh',
+            description: 'BTC no_script_type p2sh',
             params: {
                 coin: 'Bitcoin',
                 path: ADDRESS_N("m/49'/0'/0'/0/0"),
@@ -230,7 +230,7 @@ export default {
             legacyResults,
         },
         {
-            description: 'BTC AOPP p2wpkh',
+            description: 'BTC no_script_type p2wpkh',
             params: {
                 coin: 'Bitcoin',
                 path: ADDRESS_N("m/84'/0'/0'/0/0"),

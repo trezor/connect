@@ -153,11 +153,11 @@
             "comment": ["new eth transaction pricing mechanism (EIP1559) since 1.10.4/2.4.2"]
         },
         {
-            "capabilities": ["taproot", "aopp"],
+            "capabilities": ["taproot", "signMessageNoScriptType"],
             "min": ["1.10.4", "2.4.3"],
             "comment": [
                 "new btc accounts taproot since 1.10.4/2.4.3 (BTC + TEST only)",
-                "SignMessage with AOPP support"
+                "SignMessage with no_script_type support"
             ]
         },
         {

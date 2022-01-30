@@ -120,7 +120,7 @@ describe('utils/deviceFeaturesUtils', () => {
             decreaseOutput: 'update-required',
             eip1559: 'update-required',
             taproot: 'update-required',
-            aopp: 'update-required',
+            signMessageNoScriptType: 'update-required',
         });
 
         const feat2 = {
@@ -137,7 +137,7 @@ describe('utils/deviceFeaturesUtils', () => {
             decreaseOutput: 'update-required',
             eip1559: 'update-required',
             taproot: 'update-required',
-            aopp: 'update-required',
+            signMessageNoScriptType: 'update-required',
         });
 
         // added new capability
