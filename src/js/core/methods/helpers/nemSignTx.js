@@ -107,7 +107,7 @@ const provisionNamespaceMessage = (
     tx: $T.NEMProvisionNamespaceTransaction,
 ): NEMProvisionNamespace => ({
     namespace: tx.newPart,
-    parent: tx.parent || undefined,
+    parent: tx.parent,
     sink: tx.rentalFeeSink,
     fee: tx.rentalFee,
 });
@@ -168,7 +168,7 @@ const supplyChangeMessage = (tx: $T.NEMSupplyChangeTransaction): NEMMosaicSupply
 
 export const createTx = (tx: $T.NEMTransaction, address_n: number[]) => {
     let transaction = tx;
-    const message: NEMSignTx = {
+    const message: $Exact<NEMSignTx> = {
         transaction: getCommon(tx, address_n),
         transfer: undefined,
         importance_transfer: undefined,

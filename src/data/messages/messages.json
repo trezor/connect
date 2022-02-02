@@ -5517,7 +5517,10 @@
         },
         "network": {
           "type": "uint32",
-          "id": 2
+          "id": 2,
+          "options": {
+            "default": 104
+          }
         },
         "show_display": {
           "type": "bool",
@@ -5537,6 +5540,7 @@
     "NEMSignTx": {
       "fields": {
         "transaction": {
+          "rule": "required",
           "type": "NEMTransactionCommon",
           "id": 1
         },
@@ -5586,17 +5590,23 @@
             },
             "network": {
               "type": "uint32",
-              "id": 2
+              "id": 2,
+              "options": {
+                "default": 104
+              }
             },
             "timestamp": {
+              "rule": "required",
               "type": "uint32",
               "id": 3
             },
             "fee": {
+              "rule": "required",
               "type": "uint64",
               "id": 4
             },
             "deadline": {
+              "rule": "required",
               "type": "uint32",
               "id": 5
             },
@@ -5609,16 +5619,21 @@
         "NEMTransfer": {
           "fields": {
             "recipient": {
+              "rule": "required",
               "type": "string",
               "id": 1
             },
             "amount": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
             "payload": {
               "type": "bytes",
-              "id": 3
+              "id": 3,
+              "options": {
+                "default": ""
+              }
             },
             "public_key": {
               "type": "bytes",
@@ -5634,14 +5649,17 @@
             "NEMMosaic": {
               "fields": {
                 "namespace": {
+                  "rule": "required",
                   "type": "string",
                   "id": 1
                 },
                 "mosaic": {
+                  "rule": "required",
                   "type": "string",
                   "id": 2
                 },
                 "quantity": {
+                  "rule": "required",
                   "type": "uint64",
                   "id": 3
                 }
@@ -5652,6 +5670,7 @@
         "NEMProvisionNamespace": {
           "fields": {
             "namespace": {
+              "rule": "required",
               "type": "string",
               "id": 1
             },
@@ -5660,10 +5679,12 @@
               "id": 2
             },
             "sink": {
+              "rule": "required",
               "type": "string",
               "id": 3
             },
             "fee": {
+              "rule": "required",
               "type": "uint64",
               "id": 4
             }
@@ -5672,14 +5693,17 @@
         "NEMMosaicCreation": {
           "fields": {
             "definition": {
+              "rule": "required",
               "type": "NEMMosaicDefinition",
               "id": 1
             },
             "sink": {
+              "rule": "required",
               "type": "string",
               "id": 2
             },
             "fee": {
+              "rule": "required",
               "type": "uint64",
               "id": 3
             }
@@ -5696,10 +5720,12 @@
                   "id": 2
                 },
                 "namespace": {
+                  "rule": "required",
                   "type": "string",
                   "id": 3
                 },
                 "mosaic": {
+                  "rule": "required",
                   "type": "string",
                   "id": 4
                 },
@@ -5740,6 +5766,7 @@
                   "id": 13
                 },
                 "description": {
+                  "rule": "required",
                   "type": "string",
                   "id": 14
                 },
@@ -5766,18 +5793,22 @@
         "NEMMosaicSupplyChange": {
           "fields": {
             "namespace": {
+              "rule": "required",
               "type": "string",
               "id": 1
             },
             "mosaic": {
+              "rule": "required",
               "type": "string",
               "id": 2
             },
             "type": {
+              "rule": "required",
               "type": "NEMSupplyChangeType",
               "id": 3
             },
             "delta": {
+              "rule": "required",
               "type": "uint64",
               "id": 4
             }
@@ -5807,10 +5838,12 @@
             "NEMCosignatoryModification": {
               "fields": {
                 "type": {
+                  "rule": "required",
                   "type": "NEMModificationType",
                   "id": 1
                 },
                 "public_key": {
+                  "rule": "required",
                   "type": "bytes",
                   "id": 2
                 }
@@ -5829,10 +5862,12 @@
         "NEMImportanceTransfer": {
           "fields": {
             "mode": {
+              "rule": "required",
               "type": "NEMImportanceTransferMode",
               "id": 1
             },
             "public_key": {
+              "rule": "required",
               "type": "bytes",
               "id": 2
             }

@@ -1639,31 +1639,31 @@ export type NEMAddress = {
 export type NEMTransactionCommon = {
     address_n?: number[];
     network?: number;
-    timestamp?: number;
-    fee?: UintType;
-    deadline?: number;
+    timestamp: number;
+    fee: UintType;
+    deadline: number;
     signer?: string;
 };
 
 export type NEMMosaic = {
-    namespace?: string;
-    mosaic?: string;
-    quantity?: number;
+    namespace: string;
+    mosaic: string;
+    quantity: number;
 };
 
 export type NEMTransfer = {
-    recipient?: string;
-    amount?: UintType;
+    recipient: string;
+    amount: UintType;
     payload?: string;
     public_key?: string;
     mosaics?: NEMMosaic[];
 };
 
 export type NEMProvisionNamespace = {
-    namespace?: string;
+    namespace: string;
     parent?: string;
-    sink?: string;
-    fee?: UintType;
+    sink: string;
+    fee: UintType;
 };
 
 export enum NEMMosaicLevy {
@@ -1674,8 +1674,8 @@ export enum NEMMosaicLevy {
 export type NEMMosaicDefinition = {
     name?: string;
     ticker?: string;
-    namespace?: string;
-    mosaic?: string;
+    namespace: string;
+    mosaic: string;
     divisibility?: number;
     levy?: NEMMosaicLevy;
     fee?: UintType;
@@ -1685,14 +1685,14 @@ export type NEMMosaicDefinition = {
     supply?: number;
     mutable_supply?: boolean;
     transferable?: boolean;
-    description?: string;
+    description: string;
     networks?: number[];
 };
 
 export type NEMMosaicCreation = {
-    definition?: NEMMosaicDefinition;
-    sink?: string;
-    fee?: UintType;
+    definition: NEMMosaicDefinition;
+    sink: string;
+    fee: UintType;
 };
 
 export enum NEMSupplyChangeType {
@@ -1701,10 +1701,10 @@ export enum NEMSupplyChangeType {
 }
 
 export type NEMMosaicSupplyChange = {
-    namespace?: string;
-    mosaic?: string;
-    type?: NEMSupplyChangeType;
-    delta?: number;
+    namespace: string;
+    mosaic: string;
+    type: NEMSupplyChangeType;
+    delta: number;
 };
 
 export enum NEMModificationType {
@@ -1713,8 +1713,8 @@ export enum NEMModificationType {
 }
 
 export type NEMCosignatoryModification = {
-    type?: NEMModificationType;
-    public_key?: string;
+    type: NEMModificationType;
+    public_key: string;
 };
 
 export type NEMAggregateModification = {
@@ -1728,13 +1728,13 @@ export enum NEMImportanceTransferMode {
 }
 
 export type NEMImportanceTransfer = {
-    mode?: NEMImportanceTransferMode;
-    public_key?: string;
+    mode: NEMImportanceTransferMode;
+    public_key: string;
 };
 
 // NEMSignTx
 export type NEMSignTx = {
-    transaction?: NEMTransactionCommon;
+    transaction: NEMTransactionCommon;
     multisig?: NEMTransactionCommon;
     transfer?: NEMTransfer;
     cosigning?: boolean;
