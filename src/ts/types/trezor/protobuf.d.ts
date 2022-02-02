@@ -1375,7 +1375,7 @@ export type EthereumVerifyMessage = {
 export type EthereumSignTypedHash = {
     address_n: number[];
     domain_separator_hash: string;
-    message_hash: string;
+    message_hash?: string;
 };
 
 // EthereumTypedDataSignature
