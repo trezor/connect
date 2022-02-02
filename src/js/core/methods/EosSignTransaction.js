@@ -11,8 +11,8 @@ import type { EosTxHeader, EosTxActionAck } from '../../types/trezor/protobuf';
 type Params = {
     path: number[],
     chain_id: string,
-    header?: EosTxHeader,
-    ack: EosTxActionAck[],
+    header: EosTxHeader,
+    ack: $Exact<EosTxActionAck>[],
 };
 
 export default class EosSignTransaction extends AbstractMethod<'eosSignTransaction'> {

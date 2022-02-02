@@ -58,7 +58,7 @@ export type EosTxAction =
               from: string;
               to: string;
               quantity: string;
-              memo?: string;
+              memo: string;
           };
       })
     | (EosTxActionCommon & {
@@ -68,7 +68,7 @@ export type EosTxAction =
               receiver: string;
               stake_net_quantity: string;
               stake_cpu_quantity: string;
-              transfer?: boolean;
+              transfer: boolean;
           };
       })
     | (EosTxActionCommon & {
@@ -146,7 +146,7 @@ export type EosTxAction =
 
 export interface EosSDKTransaction {
     chainId: string;
-    header?: EosTxHeader;
+    header: EosTxHeader;
     actions: Array<EosTxAction | (EosTxActionCommon & { name: string; data: string })>;
     // actions: EosTxAction[];
 }

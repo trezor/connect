@@ -3035,14 +3035,17 @@
           }
         },
         "chain_id": {
+          "rule": "required",
           "type": "bytes",
           "id": 2
         },
         "header": {
+          "rule": "required",
           "type": "EosTxHeader",
           "id": 3
         },
         "num_actions": {
+          "rule": "required",
           "type": "uint32",
           "id": 4
         }
@@ -3095,6 +3098,7 @@
     "EosTxActionAck": {
       "fields": {
         "common": {
+          "rule": "required",
           "type": "EosActionCommon",
           "id": 1
         },
@@ -3159,10 +3163,12 @@
         "EosAsset": {
           "fields": {
             "amount": {
+              "rule": "required",
               "type": "sint64",
               "id": 1
             },
             "symbol": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             }
@@ -3171,10 +3177,12 @@
         "EosPermissionLevel": {
           "fields": {
             "actor": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "permission": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             }
@@ -3209,10 +3217,12 @@
         "EosAuthorizationAccount": {
           "fields": {
             "account": {
+              "rule": "required",
               "type": "EosPermissionLevel",
               "id": 1
             },
             "weight": {
+              "rule": "required",
               "type": "uint32",
               "id": 2
             }
@@ -3221,10 +3231,12 @@
         "EosAuthorizationWait": {
           "fields": {
             "wait_sec": {
+              "rule": "required",
               "type": "uint32",
               "id": 1
             },
             "weight": {
+              "rule": "required",
               "type": "uint32",
               "id": 2
             }
@@ -3233,6 +3245,7 @@
         "EosAuthorization": {
           "fields": {
             "threshold": {
+              "rule": "required",
               "type": "uint32",
               "id": 1
             },
@@ -3256,10 +3269,12 @@
         "EosActionCommon": {
           "fields": {
             "account": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "name": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
@@ -3273,18 +3288,22 @@
         "EosActionTransfer": {
           "fields": {
             "sender": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "receiver": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
             "quantity": {
+              "rule": "required",
               "type": "EosAsset",
               "id": 3
             },
             "memo": {
+              "rule": "required",
               "type": "string",
               "id": 4
             }
@@ -3293,22 +3312,27 @@
         "EosActionDelegate": {
           "fields": {
             "sender": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "receiver": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
             "net_quantity": {
+              "rule": "required",
               "type": "EosAsset",
               "id": 3
             },
             "cpu_quantity": {
+              "rule": "required",
               "type": "EosAsset",
               "id": 4
             },
             "transfer": {
+              "rule": "required",
               "type": "bool",
               "id": 5
             }
@@ -3317,18 +3341,22 @@
         "EosActionUndelegate": {
           "fields": {
             "sender": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "receiver": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
             "net_quantity": {
+              "rule": "required",
               "type": "EosAsset",
               "id": 3
             },
             "cpu_quantity": {
+              "rule": "required",
               "type": "EosAsset",
               "id": 4
             }
@@ -3337,6 +3365,7 @@
         "EosActionRefund": {
           "fields": {
             "owner": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             }
@@ -3345,14 +3374,17 @@
         "EosActionBuyRam": {
           "fields": {
             "payer": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "receiver": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
             "quantity": {
+              "rule": "required",
               "type": "EosAsset",
               "id": 3
             }
@@ -3361,14 +3393,17 @@
         "EosActionBuyRamBytes": {
           "fields": {
             "payer": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "receiver": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
             "bytes": {
+              "rule": "required",
               "type": "uint32",
               "id": 3
             }
@@ -3377,10 +3412,12 @@
         "EosActionSellRam": {
           "fields": {
             "account": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "bytes": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             }
@@ -3389,10 +3426,12 @@
         "EosActionVoteProducer": {
           "fields": {
             "voter": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "proxy": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
@@ -3409,18 +3448,22 @@
         "EosActionUpdateAuth": {
           "fields": {
             "account": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "permission": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
             "parent": {
+              "rule": "required",
               "type": "uint64",
               "id": 3
             },
             "auth": {
+              "rule": "required",
               "type": "EosAuthorization",
               "id": 4
             }
@@ -3429,10 +3472,12 @@
         "EosActionDeleteAuth": {
           "fields": {
             "account": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "permission": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             }
@@ -3441,18 +3486,22 @@
         "EosActionLinkAuth": {
           "fields": {
             "account": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "code": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
             "type": {
+              "rule": "required",
               "type": "uint64",
               "id": 3
             },
             "requirement": {
+              "rule": "required",
               "type": "uint64",
               "id": 4
             }
@@ -3461,14 +3510,17 @@
         "EosActionUnlinkAuth": {
           "fields": {
             "account": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "code": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
             "type": {
+              "rule": "required",
               "type": "uint64",
               "id": 3
             }
@@ -3477,18 +3529,22 @@
         "EosActionNewAccount": {
           "fields": {
             "creator": {
+              "rule": "required",
               "type": "uint64",
               "id": 1
             },
             "name": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
             "owner": {
+              "rule": "required",
               "type": "EosAuthorization",
               "id": 3
             },
             "active": {
+              "rule": "required",
               "type": "EosAuthorization",
               "id": 4
             }
@@ -3502,6 +3558,7 @@
               "id": 1
             },
             "data_chunk": {
+              "rule": "required",
               "type": "bytes",
               "id": 2
             }

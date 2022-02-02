@@ -1071,9 +1071,9 @@ export type EosTxHeader = {
 // EosSignTx
 export type EosSignTx = {
     address_n: number[];
-    chain_id?: string;
-    header?: EosTxHeader;
-    num_actions?: number;
+    chain_id: string;
+    header: EosTxHeader;
+    num_actions: number;
 };
 
 // EosTxActionRequest
@@ -1082,13 +1082,13 @@ export type EosTxActionRequest = {
 };
 
 export type EosAsset = {
-    amount?: UintType;
-    symbol?: string;
+    amount: UintType;
+    symbol: string;
 };
 
 export type EosPermissionLevel = {
-    actor?: string;
-    permission?: string;
+    actor: string;
+    permission: string;
 };
 
 export type EosAuthorizationKey = {
@@ -1099,117 +1099,117 @@ export type EosAuthorizationKey = {
 };
 
 export type EosAuthorizationAccount = {
-    account?: EosPermissionLevel;
-    weight?: number;
+    account: EosPermissionLevel;
+    weight: number;
 };
 
 export type EosAuthorizationWait = {
-    wait_sec?: number;
-    weight?: number;
+    wait_sec: number;
+    weight: number;
 };
 
 export type EosAuthorization = {
-    threshold?: number;
+    threshold: number;
     keys: EosAuthorizationKey[];
     accounts: EosAuthorizationAccount[];
     waits: EosAuthorizationWait[];
 };
 
 export type EosActionCommon = {
-    account?: string;
-    name?: string;
+    account: string;
+    name: string;
     authorization: EosPermissionLevel[];
 };
 
 export type EosActionTransfer = {
-    sender?: string;
-    receiver?: string;
-    quantity?: EosAsset;
-    memo?: string;
+    sender: string;
+    receiver: string;
+    quantity: EosAsset;
+    memo: string;
 };
 
 export type EosActionDelegate = {
-    sender?: string;
-    receiver?: string;
-    net_quantity?: EosAsset;
-    cpu_quantity?: EosAsset;
-    transfer?: boolean;
+    sender: string;
+    receiver: string;
+    net_quantity: EosAsset;
+    cpu_quantity: EosAsset;
+    transfer: boolean;
 };
 
 export type EosActionUndelegate = {
-    sender?: string;
-    receiver?: string;
-    net_quantity?: EosAsset;
-    cpu_quantity?: EosAsset;
+    sender: string;
+    receiver: string;
+    net_quantity: EosAsset;
+    cpu_quantity: EosAsset;
 };
 
 export type EosActionRefund = {
-    owner?: string;
+    owner: string;
 };
 
 export type EosActionBuyRam = {
-    payer?: string;
-    receiver?: string;
-    quantity?: EosAsset;
+    payer: string;
+    receiver: string;
+    quantity: EosAsset;
 };
 
 export type EosActionBuyRamBytes = {
-    payer?: string;
-    receiver?: string;
-    bytes?: number;
+    payer: string;
+    receiver: string;
+    bytes: number;
 };
 
 export type EosActionSellRam = {
-    account?: string;
-    bytes?: number;
+    account: string;
+    bytes: number;
 };
 
 export type EosActionVoteProducer = {
-    voter?: string;
-    proxy?: string;
+    voter: string;
+    proxy: string;
     producers: string[];
 };
 
 export type EosActionUpdateAuth = {
-    account?: string;
-    permission?: string;
-    parent?: string;
-    auth?: EosAuthorization;
+    account: string;
+    permission: string;
+    parent: string;
+    auth: EosAuthorization;
 };
 
 export type EosActionDeleteAuth = {
-    account?: string;
-    permission?: string;
+    account: string;
+    permission: string;
 };
 
 export type EosActionLinkAuth = {
-    account?: string;
-    code?: string;
-    type?: string;
-    requirement?: string;
+    account: string;
+    code: string;
+    type: string;
+    requirement: string;
 };
 
 export type EosActionUnlinkAuth = {
-    account?: string;
-    code?: string;
-    type?: string;
+    account: string;
+    code: string;
+    type: string;
 };
 
 export type EosActionNewAccount = {
-    creator?: string;
-    name?: string;
-    owner?: EosAuthorization;
-    active?: EosAuthorization;
+    creator: string;
+    name: string;
+    owner: EosAuthorization;
+    active: EosAuthorization;
 };
 
 export type EosActionUnknown = {
     data_size: number;
-    data_chunk?: string;
+    data_chunk: string;
 };
 
 // EosTxActionAck
 export type EosTxActionAck = {
-    common?: EosActionCommon;
+    common: EosActionCommon;
     transfer?: EosActionTransfer;
     delegate?: EosActionDelegate;
     undelegate?: EosActionUndelegate;
