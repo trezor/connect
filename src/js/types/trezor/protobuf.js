@@ -2058,8 +2058,8 @@ export type TezosRevealOp = {
 };
 
 export type TezosManagerTransfer = {
-    destination?: TezosContractID,
-    amount?: UintType,
+    destination: TezosContractID,
+    amount: UintType,
 };
 
 export type TezosParametersManager = {
@@ -2104,8 +2104,8 @@ export type TezosDelegationOp = {
 };
 
 export type TezosProposalOp = {
-    source?: string,
-    period?: number,
+    source: string,
+    period: number,
     proposals: string[],
 };
 
@@ -2117,10 +2117,10 @@ export const Enum_TezosBallotType = Object.freeze({
 export type TezosBallotType = $Values<typeof Enum_TezosBallotType>;
 
 export type TezosBallotOp = {
-    source?: string,
-    period?: number,
-    proposal?: string,
-    ballot?: TezosBallotType,
+    source: string,
+    period: number,
+    proposal: string,
+    ballot: TezosBallotType,
 };
 
 // TezosSignTx
@@ -2381,13 +2381,13 @@ export type MessageType = {
     TezosPublicKey: $Exact<TezosPublicKey>,
     TezosContractID: $Exact<TezosContractID>,
     TezosRevealOp: $Exact<TezosRevealOp>,
-    TezosManagerTransfer: TezosManagerTransfer,
+    TezosManagerTransfer: $Exact<TezosManagerTransfer>,
     TezosParametersManager: TezosParametersManager,
     TezosTransactionOp: $Exact<TezosTransactionOp>,
     TezosOriginationOp: $Exact<TezosOriginationOp>,
     TezosDelegationOp: $Exact<TezosDelegationOp>,
-    TezosProposalOp: TezosProposalOp,
-    TezosBallotOp: TezosBallotOp,
+    TezosProposalOp: $Exact<TezosProposalOp>,
+    TezosBallotOp: $Exact<TezosBallotOp>,
     TezosSignTx: $Exact<TezosSignTx>,
     TezosSignedTx: $Exact<TezosSignedTx>,
 };
