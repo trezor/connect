@@ -24,9 +24,9 @@ type Payment = {
 };
 
 export type RippleTransaction = {
-    fee?: string,
+    fee: string,
     flags?: number,
-    sequence?: number,
+    sequence: number,
     maxLedgerVersion?: number, // Proto: "last_ledger_sequence"
     payment: Payment,
 };
