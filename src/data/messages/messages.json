@@ -3991,7 +3991,6 @@
           "id": 2
         },
         "message_hash": {
-          "rule": "required",
           "type": "bytes",
           "id": 3
         }
