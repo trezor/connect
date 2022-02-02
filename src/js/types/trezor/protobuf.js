@@ -29,24 +29,24 @@ export type BinancePublicKey = {
 // BinanceSignTx
 export type BinanceSignTx = {
     address_n: number[],
-    msg_count?: number,
-    account_number?: number,
+    msg_count: number,
+    account_number: number,
     chain_id?: string,
     memo?: string,
-    sequence?: number,
-    source?: number,
+    sequence: number,
+    source: number,
 };
 
 // BinanceTxRequest
 export type BinanceTxRequest = {};
 
 export type BinanceCoin = {
-    amount?: UintType,
-    denom?: string,
+    amount: UintType,
+    denom: string,
 };
 
 export type BinanceInputOutput = {
-    address?: string,
+    address: string,
     coins: BinanceCoin[],
 };
 
@@ -82,13 +82,13 @@ export type BinanceTimeInForce = $Values<typeof Enum_BinanceTimeInForce>;
 // BinanceOrderMsg
 export type BinanceOrderMsg = {
     id?: string,
-    ordertype?: BinanceOrderType,
-    price?: number,
-    quantity?: number,
+    ordertype: BinanceOrderType,
+    price: number,
+    quantity: number,
     sender?: string,
-    side?: BinanceOrderSide,
+    side: BinanceOrderSide,
     symbol?: string,
-    timeinforce?: BinanceTimeInForce,
+    timeinforce: BinanceTimeInForce,
 };
 
 // BinanceCancelMsg
@@ -2142,12 +2142,12 @@ export type MessageType = {
     BinanceAddress: $Exact<BinanceAddress>,
     BinanceGetPublicKey: BinanceGetPublicKey,
     BinancePublicKey: $Exact<BinancePublicKey>,
-    BinanceSignTx: BinanceSignTx,
+    BinanceSignTx: $Exact<BinanceSignTx>,
     BinanceTxRequest: BinanceTxRequest,
-    BinanceCoin: BinanceCoin,
-    BinanceInputOutput: BinanceInputOutput,
+    BinanceCoin: $Exact<BinanceCoin>,
+    BinanceInputOutput: $Exact<BinanceInputOutput>,
     BinanceTransferMsg: BinanceTransferMsg,
-    BinanceOrderMsg: BinanceOrderMsg,
+    BinanceOrderMsg: $Exact<BinanceOrderMsg>,
     BinanceCancelMsg: BinanceCancelMsg,
     BinanceSignedTx: $Exact<BinanceSignedTx>,
     HDNodeType: $Exact<HDNodeType>,
