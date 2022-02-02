@@ -1667,31 +1667,31 @@ export type NEMAddress = {
 export type NEMTransactionCommon = {
     address_n?: number[],
     network?: number,
-    timestamp?: number,
-    fee?: UintType,
-    deadline?: number,
+    timestamp: number,
+    fee: UintType,
+    deadline: number,
     signer?: string,
 };
 
 export type NEMMosaic = {
-    namespace?: string,
-    mosaic?: string,
-    quantity?: number,
+    namespace: string,
+    mosaic: string,
+    quantity: number,
 };
 
 export type NEMTransfer = {
-    recipient?: string,
-    amount?: UintType,
+    recipient: string,
+    amount: UintType,
     payload?: string,
     public_key?: string,
     mosaics?: NEMMosaic[],
 };
 
 export type NEMProvisionNamespace = {
-    namespace?: string,
+    namespace: string,
     parent?: string,
-    sink?: string,
-    fee?: UintType,
+    sink: string,
+    fee: UintType,
 };
 
 export const Enum_NEMMosaicLevy = Object.freeze({
@@ -1703,8 +1703,8 @@ export type NEMMosaicLevy = $Values<typeof Enum_NEMMosaicLevy>;
 export type NEMMosaicDefinition = {
     name?: string,
     ticker?: string,
-    namespace?: string,
-    mosaic?: string,
+    namespace: string,
+    mosaic: string,
     divisibility?: number,
     levy?: NEMMosaicLevy,
     fee?: UintType,
@@ -1714,14 +1714,14 @@ export type NEMMosaicDefinition = {
     supply?: number,
     mutable_supply?: boolean,
     transferable?: boolean,
-    description?: string,
+    description: string,
     networks?: number[],
 };
 
 export type NEMMosaicCreation = {
-    definition?: NEMMosaicDefinition,
-    sink?: string,
-    fee?: UintType,
+    definition: NEMMosaicDefinition,
+    sink: string,
+    fee: UintType,
 };
 
 export const Enum_NEMSupplyChangeType = Object.freeze({
@@ -1731,10 +1731,10 @@ export const Enum_NEMSupplyChangeType = Object.freeze({
 export type NEMSupplyChangeType = $Values<typeof Enum_NEMSupplyChangeType>;
 
 export type NEMMosaicSupplyChange = {
-    namespace?: string,
-    mosaic?: string,
-    type?: NEMSupplyChangeType,
-    delta?: number,
+    namespace: string,
+    mosaic: string,
+    type: NEMSupplyChangeType,
+    delta: number,
 };
 
 export const Enum_NEMModificationType = Object.freeze({
@@ -1744,8 +1744,8 @@ export const Enum_NEMModificationType = Object.freeze({
 export type NEMModificationType = $Values<typeof Enum_NEMModificationType>;
 
 export type NEMCosignatoryModification = {
-    type?: NEMModificationType,
-    public_key?: string,
+    type: NEMModificationType,
+    public_key: string,
 };
 
 export type NEMAggregateModification = {
@@ -1760,13 +1760,13 @@ export const Enum_NEMImportanceTransferMode = Object.freeze({
 export type NEMImportanceTransferMode = $Values<typeof Enum_NEMImportanceTransferMode>;
 
 export type NEMImportanceTransfer = {
-    mode?: NEMImportanceTransferMode,
-    public_key?: string,
+    mode: NEMImportanceTransferMode,
+    public_key: string,
 };
 
 // NEMSignTx
 export type NEMSignTx = {
-    transaction?: NEMTransactionCommon,
+    transaction: NEMTransactionCommon,
     multisig?: NEMTransactionCommon,
     transfer?: NEMTransfer,
     cosigning?: boolean,
@@ -2337,17 +2337,17 @@ export type MessageType = {
     RebootToBootloader: RebootToBootloader,
     NEMGetAddress: NEMGetAddress,
     NEMAddress: $Exact<NEMAddress>,
-    NEMTransactionCommon: NEMTransactionCommon,
-    NEMMosaic: NEMMosaic,
-    NEMTransfer: NEMTransfer,
-    NEMProvisionNamespace: NEMProvisionNamespace,
-    NEMMosaicDefinition: NEMMosaicDefinition,
-    NEMMosaicCreation: NEMMosaicCreation,
-    NEMMosaicSupplyChange: NEMMosaicSupplyChange,
-    NEMCosignatoryModification: NEMCosignatoryModification,
+    NEMTransactionCommon: $Exact<NEMTransactionCommon>,
+    NEMMosaic: $Exact<NEMMosaic>,
+    NEMTransfer: $Exact<NEMTransfer>,
+    NEMProvisionNamespace: $Exact<NEMProvisionNamespace>,
+    NEMMosaicDefinition: $Exact<NEMMosaicDefinition>,
+    NEMMosaicCreation: $Exact<NEMMosaicCreation>,
+    NEMMosaicSupplyChange: $Exact<NEMMosaicSupplyChange>,
+    NEMCosignatoryModification: $Exact<NEMCosignatoryModification>,
     NEMAggregateModification: NEMAggregateModification,
-    NEMImportanceTransfer: NEMImportanceTransfer,
-    NEMSignTx: NEMSignTx,
+    NEMImportanceTransfer: $Exact<NEMImportanceTransfer>,
+    NEMSignTx: $Exact<NEMSignTx>,
     NEMSignedTx: $Exact<NEMSignedTx>,
     NEMDecryptMessage: NEMDecryptMessage,
     NEMDecryptedMessage: $Exact<NEMDecryptedMessage>,
