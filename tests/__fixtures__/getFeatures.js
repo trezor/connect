@@ -46,7 +46,6 @@ export default {
                 fw_minor: null,
                 fw_patch: null,
                 fw_vendor: null,
-                fw_vendor_keys: null,
                 unfinished_backup: expect.any(Boolean),
                 no_backup: expect.any(Boolean),
                 recovery_mode: false,

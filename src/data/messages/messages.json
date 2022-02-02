@@ -2770,8 +2770,8 @@
     },
     "DebugLinkDecision": {
       "fields": {
-        "yes_no": {
-          "type": "bool",
+        "button": {
+          "type": "DebugButton",
           "id": 1
         },
         "swipe": {
@@ -2806,6 +2806,13 @@
             "DOWN": 1,
             "LEFT": 2,
             "RIGHT": 3
+          }
+        },
+        "DebugButton": {
+          "values": {
+            "NO": 0,
+            "YES": 1,
+            "INFO": 2
           }
         }
       }
@@ -4086,10 +4093,6 @@
         "fw_vendor": {
           "type": "string",
           "id": 25
-        },
-        "fw_vendor_keys": {
-          "type": "bytes",
-          "id": 26
         },
         "unfinished_backup": {
           "type": "bool",
