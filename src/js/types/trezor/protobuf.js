@@ -1065,6 +1065,13 @@ export type ECDHSessionKey = {
     public_key?: string,
 };
 
+export const Enum_DebugButton = Object.freeze({
+    NO: 0,
+    YES: 1,
+    INFO: 2,
+});
+export type DebugButton = $Values<typeof Enum_DebugButton>;
+
 // EosGetPublicKey
 export type EosGetPublicKey = {
     address_n: number[],
@@ -1390,13 +1397,6 @@ export type EthereumVerifyMessage = {
     address: string,
 };
 
-export const Enum_BackupType = Object.freeze({
-    Bip39: 0,
-    Slip39_Basic: 1,
-    Slip39_Advanced: 2,
-});
-export type BackupType = $Keys<typeof Enum_BackupType>;
-
 // EthereumSignTypedHash
 export type EthereumSignTypedHash = {
     address_n: number[],
@@ -1409,6 +1409,13 @@ export type EthereumTypedDataSignature = {
     signature: string,
     address: string,
 };
+
+export const Enum_BackupType = Object.freeze({
+    Bip39: 0,
+    Slip39_Basic: 1,
+    Slip39_Advanced: 2,
+});
+export type BackupType = $Keys<typeof Enum_BackupType>;
 
 export const Enum_SafetyCheckLevel = Object.freeze({
     Strict: 0,
@@ -1474,7 +1481,6 @@ export type Features = {
     fw_minor: number | null,
     fw_patch: number | null,
     fw_vendor: string | null,
-    fw_vendor_keys: string | null,
     unfinished_backup: boolean | null,
     no_backup: boolean | null,
     recovery_mode: boolean | null,
