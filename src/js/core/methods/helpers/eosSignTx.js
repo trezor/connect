@@ -182,7 +182,7 @@ const parseDate = (d: string) => {
     return Date.parse(d) / 1000;
 };
 
-const parseAck = (action: Action): EosTxActionAck | null => {
+const parseAck = (action: Action) => {
     switch (action.name) {
         case 'transfer':
             return {
@@ -296,7 +296,7 @@ const parseAck = (action: Action): EosTxActionAck | null => {
     }
 };
 
-const parseUnknown = (action: Action): EosTxActionAck | null => {
+const parseUnknown = (action: Action) => {
     if (typeof action.data !== 'string') return null;
     return {
         unknown: {
@@ -315,7 +315,7 @@ const parseCommon = (action: Action): EosActionCommon => ({
     })),
 });
 
-const parseAction = (action: any): EosTxActionAck => {
+const parseAction = (action: any) => {
     const ack = parseAck(action) || parseUnknown(action);
     return {
         common: parseCommon(action),
@@ -324,21 +324,19 @@ const parseAction = (action: any): EosTxActionAck => {
 };
 
 export const validate = (address_n: number[], tx: EosSDKTransaction) => {
-    const header = tx.header
-        ? {
-              expiration:
-                  typeof tx.header.expiration === 'number'
-                      ? tx.header.expiration
-                      : parseDate(tx.header.expiration),
-              ref_block_num: tx.header.refBlockNum,
-              ref_block_prefix: tx.header.refBlockPrefix,
-              max_net_usage_words: tx.header.maxNetUsageWords,
-              max_cpu_usage_ms: tx.header.maxCpuUsageMs,
-              delay_sec: tx.header.delaySec,
-          }
-        : undefined;
+    const header = {
+        expiration:
+            typeof tx.header.expiration === 'number'
+                ? tx.header.expiration
+                : parseDate(tx.header.expiration),
+        ref_block_num: tx.header.refBlockNum,
+        ref_block_prefix: tx.header.refBlockPrefix,
+        max_net_usage_words: tx.header.maxNetUsageWords,
+        max_cpu_usage_ms: tx.header.maxCpuUsageMs,
+        delay_sec: tx.header.delaySec,
+    };
 
-    const ack: EosTxActionAck[] = [];
+    const ack: $Exact<EosTxActionAck>[] = [];
     tx.actions.forEach(action => {
         ack.push(parseAction(action));
     });
@@ -353,8 +351,8 @@ export const validate = (address_n: number[], tx: EosSDKTransaction) => {
 // sign transaction logic
 
 const CHUNK_SIZE = 2048;
-const getDataChunk = (data: ?string, offset: number) => {
-    if (!data || offset < 0 || data.length < offset) return;
+const getDataChunk = (data: string, offset: number) => {
+    if (!data || offset < 0 || data.length < offset) return '';
     const o = offset > 0 ? data.length - offset * 2 : 0;
     return data.substring(o, o + CHUNK_SIZE * 2);
 };
@@ -362,7 +360,7 @@ const getDataChunk = (data: ?string, offset: number) => {
 const processTxRequest = async (
     typedCall: TypedCall,
     message: EosTxActionRequest,
-    actions: EosTxActionAck[],
+    actions: $Exact<EosTxActionAck>[],
     index: number,
 ) => {
     const action = actions[index];
@@ -408,8 +406,8 @@ export const signTx = async (
     typedCall: TypedCall,
     address_n: number[],
     chain_id: string,
-    header?: EosTxHeader,
-    actions: EosTxActionAck[],
+    header: EosTxHeader,
+    actions: $Exact<EosTxActionAck>[],
 ) => {
     const response = await typedCall('EosSignTx', 'EosTxActionRequest', {
         address_n,
