@@ -28,24 +28,24 @@ export type BinancePublicKey = {
 // BinanceSignTx
 export type BinanceSignTx = {
     address_n: number[];
-    msg_count?: number;
-    account_number?: number;
+    msg_count: number;
+    account_number: number;
     chain_id?: string;
     memo?: string;
-    sequence?: number;
-    source?: number;
+    sequence: number;
+    source: number;
 };
 
 // BinanceTxRequest
 export type BinanceTxRequest = {};
 
 export type BinanceCoin = {
-    amount?: UintType;
-    denom?: string;
+    amount: UintType;
+    denom: string;
 };
 
 export type BinanceInputOutput = {
-    address?: string;
+    address: string;
     coins: BinanceCoin[];
 };
 
@@ -78,13 +78,13 @@ export enum BinanceTimeInForce {
 // BinanceOrderMsg
 export type BinanceOrderMsg = {
     id?: string;
-    ordertype?: BinanceOrderType;
-    price?: number;
-    quantity?: number;
+    ordertype: BinanceOrderType;
+    price: number;
+    quantity: number;
     sender?: string;
-    side?: BinanceOrderSide;
+    side: BinanceOrderSide;
     symbol?: string;
-    timeinforce?: BinanceTimeInForce;
+    timeinforce: BinanceTimeInForce;
 };
 
 // BinanceCancelMsg

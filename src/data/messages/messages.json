@@ -61,10 +61,12 @@
           }
         },
         "msg_count": {
+          "rule": "required",
           "type": "uint32",
           "id": 2
         },
         "account_number": {
+          "rule": "required",
           "type": "sint64",
           "id": 3
         },
@@ -77,10 +79,12 @@
           "id": 5
         },
         "sequence": {
+          "rule": "required",
           "type": "sint64",
           "id": 6
         },
         "source": {
+          "rule": "required",
           "type": "sint64",
           "id": 7
         }
@@ -106,6 +110,7 @@
         "BinanceInputOutput": {
           "fields": {
             "address": {
+              "rule": "required",
               "type": "string",
               "id": 1
             },
@@ -119,10 +124,12 @@
         "BinanceCoin": {
           "fields": {
             "amount": {
+              "rule": "required",
               "type": "sint64",
               "id": 1
             },
             "denom": {
+              "rule": "required",
               "type": "string",
               "id": 2
             }
@@ -137,14 +144,17 @@
           "id": 1
         },
         "ordertype": {
+          "rule": "required",
           "type": "BinanceOrderType",
           "id": 2
         },
         "price": {
+          "rule": "required",
           "type": "sint64",
           "id": 3
         },
         "quantity": {
+          "rule": "required",
           "type": "sint64",
           "id": 4
         },
@@ -153,6 +163,7 @@
           "id": 5
         },
         "side": {
+          "rule": "required",
           "type": "BinanceOrderSide",
           "id": 6
         },
@@ -161,6 +172,7 @@
           "id": 7
         },
         "timeinforce": {
+          "rule": "required",
           "type": "BinanceTimeInForce",
           "id": 8
         }

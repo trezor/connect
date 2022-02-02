@@ -30,7 +30,7 @@ const processTxRequest = async (
 };
 
 // validate and translate params to protobuf
-export const validate = (tx: BinanceSDKTransaction) => {
+export const validate = (tx: $Shape<BinanceSDKTransaction>) => {
     validateParams(tx, [
         { name: 'chain_id', type: 'string', required: true },
         { name: 'account_number', type: 'number' },
