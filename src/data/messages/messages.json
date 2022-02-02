@@ -7049,10 +7049,12 @@
                 "TezosManagerTransfer": {
                   "fields": {
                     "destination": {
+                      "rule": "required",
                       "type": "TezosContractID",
                       "id": 1
                     },
                     "amount": {
+                      "rule": "required",
                       "type": "uint64",
                       "id": 2
                     }
@@ -7154,10 +7156,12 @@
         "TezosProposalOp": {
           "fields": {
             "source": {
+              "rule": "required",
               "type": "bytes",
               "id": 1
             },
             "period": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
@@ -7171,18 +7175,22 @@
         "TezosBallotOp": {
           "fields": {
             "source": {
+              "rule": "required",
               "type": "bytes",
               "id": 1
             },
             "period": {
+              "rule": "required",
               "type": "uint64",
               "id": 2
             },
             "proposal": {
+              "rule": "required",
               "type": "bytes",
               "id": 3
             },
             "ballot": {
+              "rule": "required",
               "type": "TezosBallotType",
               "id": 4
             }

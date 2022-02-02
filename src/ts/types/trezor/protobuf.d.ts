@@ -2022,8 +2022,8 @@ export type TezosRevealOp = {
 };
 
 export type TezosManagerTransfer = {
-    destination?: TezosContractID;
-    amount?: UintType;
+    destination: TezosContractID;
+    amount: UintType;
 };
 
 export type TezosParametersManager = {
@@ -2068,8 +2068,8 @@ export type TezosDelegationOp = {
 };
 
 export type TezosProposalOp = {
-    source?: string;
-    period?: number;
+    source: string;
+    period: number;
     proposals: string[];
 };
 
@@ -2080,10 +2080,10 @@ export enum TezosBallotType {
 }
 
 export type TezosBallotOp = {
-    source?: string;
-    period?: number;
-    proposal?: string;
-    ballot?: TezosBallotType;
+    source: string;
+    period: number;
+    proposal: string;
+    ballot: TezosBallotType;
 };
 
 // TezosSignTx
