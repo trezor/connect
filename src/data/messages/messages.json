@@ -6259,14 +6259,19 @@
           }
         },
         "fee": {
+          "rule": "required",
           "type": "uint64",
           "id": 2
         },
         "flags": {
           "type": "uint32",
-          "id": 3
+          "id": 3,
+          "options": {
+            "default": 0
+          }
         },
         "sequence": {
+          "rule": "required",
           "type": "uint32",
           "id": 4
         },
@@ -6275,6 +6280,7 @@
           "id": 5
         },
         "payment": {
+          "rule": "required",
           "type": "RipplePayment",
           "id": 6
         }

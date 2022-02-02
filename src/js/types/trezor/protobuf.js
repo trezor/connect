@@ -1816,11 +1816,11 @@ export type RipplePayment = {
 // RippleSignTx
 export type RippleSignTx = {
     address_n: number[],
-    fee?: UintType,
+    fee: UintType,
     flags?: number,
-    sequence?: number,
+    sequence: number,
     last_ledger_sequence?: number,
-    payment?: RipplePayment,
+    payment: RipplePayment,
 };
 
 // RippleSignedTx
@@ -2354,7 +2354,7 @@ export type MessageType = {
     RippleGetAddress: RippleGetAddress,
     RippleAddress: $Exact<RippleAddress>,
     RipplePayment: $Exact<RipplePayment>,
-    RippleSignTx: RippleSignTx,
+    RippleSignTx: $Exact<RippleSignTx>,
     RippleSignedTx: $Exact<RippleSignedTx>,
     StellarAsset: $Exact<StellarAsset>,
     StellarGetAddress: StellarGetAddress,
