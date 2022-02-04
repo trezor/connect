@@ -5,6 +5,7 @@
 
 ### Fixed
 - Some methods not throwing `ui-device_firmware_unsupported` when the current device firmware didn't support the method.
+- Ethereum: EthereumSignTypedData now supports signing domain-only data, i.e. when `primaryType` is equal to `EIP712Domain`.
 
 ### Changed
 

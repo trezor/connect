@@ -170,6 +170,11 @@
             "methods": ["ethereumSignTypedData"],
             "min": ["1.10.5", "2.4.3"],
             "comment": ["EIP-712 typed signing support added in 1.10.5/2.4.3"]
+        },
+        {
+            "capabilities": ["eip712-domain-only"],
+            "min": ["1.10.6", "2.4.4"],
+            "comment": ["EIP-712 domain-only signing, when primaryType=EIP712Domain"]
         }
     ]
 }
