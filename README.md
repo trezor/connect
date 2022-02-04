@@ -8,6 +8,8 @@ Trezor Connect is a platform for easy integration of Trezor into 3rd party servi
 * [Integration](docs/index.md)
 * [Development](https://wiki.trezor.io/Developers_guide:Trezor_Connect_API)
 
+## Issues
+Please report any issues directly in our [Trezor Suite monorepo](https://github.com/trezor/trezor-suite/issues) and apply the `connect` label.
 
 ## Versions
 We started tagging versions and releasing them to separate URLs, so we don't break any existing (and working) integrations.
