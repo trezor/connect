@@ -168,8 +168,8 @@
         },
         {
             "methods": ["ethereumSignTypedData"],
-            "min": ["0", "2.4.3"],
-            "comment": ["EIP-712 typed signing support added in 2.4.3"]
+            "min": ["1.10.5", "2.4.3"],
+            "comment": ["EIP-712 typed signing support added in 1.10.5/2.4.3"]
         }
     ]
 }

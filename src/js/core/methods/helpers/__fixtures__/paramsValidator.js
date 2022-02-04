@@ -233,17 +233,18 @@ export const getFirmwareRange = [
         result: { '1': { min: '1.10.0', max: '0' }, '2': { min: '2.4.0', max: '0' } },
     },
     {
-        description: 'range from config.json (by coinType)',
+        description: 'range from config.json (by coinType and coin as string)',
         config: {
             supportedFirmware: [
                 // this one is ignored, different excludedMethod
-                { coinType: 'bitcoin', methods: ['showAddress'], min: ['1.11.0', '2.5.0'] },
-                { coinType: 'bitcoin', min: ['1.10.0', '2.4.0'] },
-                { coin: 'btc', min: ['1.11.0', '2.5.0'] },
+                { coinType: 'bitcoin', methods: ['showAddress'], min: ['1.12.0', '2.6.0'] },
+                // should merge both of these ranges together, since they both match
+                { coinType: 'bitcoin', min: ['1.10.0', '2.5.0'] },
+                { coin: 'btc', min: ['1.11.0', '2.4.0'] },
             ],
         },
         params: ['signTransaction', DEFAULT_COIN_INFO, DEFAULT_RANGE],
-        result: { '1': { min: '1.10.0', max: '0' }, '2': { min: '2.4.0', max: '0' } },
+        result: { '1': { min: '1.11.0', max: '0' }, '2': { min: '2.5.0', max: '0' } },
     },
     {
         description: 'range from config.json (by coin as string)',
@@ -362,6 +363,6 @@ export const getFirmwareRange = [
             { support: { trezor1: '1.6.2', trezor2: '2.1.0' }, shortcut: 'eth', type: 'ethereum' },
             DEFAULT_RANGE,
         ],
-        result: { '1': { min: '1.8.0', max: '0' }, '2': { min: '2.1.0', max: '0' } },
+        result: { '1': { min: '1.10.4', max: '0' }, '2': { min: '2.4.2', max: '0' } },
     },
 ];
