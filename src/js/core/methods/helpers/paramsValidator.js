@@ -127,7 +127,7 @@ export const getFirmwareRange = (
     const shortcut = coinInfo ? coinInfo.shortcut.toLowerCase() : null;
     // find firmware range in config.json
     const { supportedFirmware } = DataManager.getConfig();
-    const range = supportedFirmware
+    const ranges = supportedFirmware
         .filter(rule => {
             // check if rule applies to requested method
             if (rule.methods) {
@@ -141,7 +141,7 @@ export const getFirmwareRange = (
             // it may be a global rule for coin or coinType
             return true;
         })
-        .find(c => {
+        .filter(c => {
             if (c.coinType) {
                 // rule for coin type
                 return c.coinType === coinType;
@@ -154,7 +154,7 @@ export const getFirmwareRange = (
             return c.methods || c.capabilities;
         });
 
-    if (range) {
+    for (const range of ranges) {
         const { min, max } = range;
         // override defaults
         // NOTE:
