@@ -119,6 +119,7 @@ describe('utils/deviceFeaturesUtils', () => {
             replaceTransaction: 'update-required',
             decreaseOutput: 'update-required',
             eip1559: 'update-required',
+            'eip712-domain-only': 'update-required',
             taproot: 'update-required',
             signMessageNoScriptType: 'update-required',
         });
@@ -136,6 +137,7 @@ describe('utils/deviceFeaturesUtils', () => {
             replaceTransaction: 'update-required',
             decreaseOutput: 'update-required',
             eip1559: 'update-required',
+            'eip712-domain-only': 'update-required',
             taproot: 'update-required',
             signMessageNoScriptType: 'update-required',
         });

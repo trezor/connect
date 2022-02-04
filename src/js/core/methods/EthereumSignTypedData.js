@@ -12,6 +12,7 @@ import type {
     EthereumSignTypedHashAndData as EthereumSignTypedHashAndDataParams,
 } from '../../types/networks/ethereum';
 import { getFieldType, parseArrayType, encodeData } from './helpers/ethereumSignTypedData';
+import { messageToHex } from '../../utils/formatUtils';
 
 type Params = $Diff<
     {
@@ -52,12 +53,42 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
             data: payload.data,
         };
 
-        if (payload.message_hash) {
+        if (payload.domain_separator_hash) {
             this.params = {
                 ...this.params,
-                domain_separator_hash: payload.domain_separator_hash,
-                message_hash: payload.message_hash,
+                // leading `0x` in hash-strings causes issues
+                domain_separator_hash: messageToHex(payload.domain_separator_hash),
             };
+
+            if (payload.message_hash) {
+                this.params = {
+                    ...this.params,
+                    // leading `0x` in hash-strings causes issues
+                    message_hash: messageToHex(payload.message_hash),
+                };
+            } else if (this.params.data.primaryType !== 'EIP712Domain') {
+                throw ERRORS.TypedError(
+                    'Method_InvalidParameter',
+                    'message_hash should only be empty when data.primaryType=EIP712Domain',
+                );
+            }
+        }
+
+        if (this.params.data.primaryType === 'EIP712Domain') {
+            // Only newer firmwares support this feature
+            // Older firmwares will give wrong results / throw errors
+            this.firmwareRange = getFirmwareRange(
+                'eip712-domain-only',
+                network,
+                this.firmwareRange,
+            );
+
+            if (this.params.message_hash) {
+                throw ERRORS.TypedError(
+                    'Method_InvalidParameter',
+                    'message_hash should be empty when data.primaryType=EIP712Domain',
+                );
+            }
         }
     }
 
@@ -68,7 +99,7 @@ export default class EthereumSignTypedData extends AbstractMethod<'ethereumSignT
         if (this.device.features.model === '1') {
             validateParams(this.params, [
                 { name: 'domain_separator_hash', type: 'string', required: true },
-                { name: 'message_hash', type: 'string', required: true },
+                { name: 'message_hash', type: 'string' },
             ]);
 
             const { domain_separator_hash, message_hash } =

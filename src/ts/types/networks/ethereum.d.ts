@@ -112,7 +112,8 @@ export interface EthereumSignTypedData<T extends EthereumSignTypedDataTypes> {
 export interface EthereumSignTypedHash {
     path: string | number[];
     domain_separator_hash: string;
-    message_hash: string;
+    /** Not required for domain-only signing, when EIP712Domain is the `primaryType` */
+    message_hash?: string;
 }
 
 /**

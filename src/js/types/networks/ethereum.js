@@ -117,7 +117,8 @@ export type EthereumSignTypedData = {
 export type EthereumSignTypedHash = {
     path: string | number[],
     domain_separator_hash: string,
-    message_hash: string,
+    /** Optional for domain-only hashes (when EIP712Domain is the primaryType) */
+    message_hash?: string,
 };
 
 /**

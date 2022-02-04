@@ -27,6 +27,8 @@ TrezorConnect.ethereumSignTypedData(params).then(function(result) {
 
 ###### [flowtype](../../src/js/types/networks/ethereum.js#104-116)
 
+> :warning: **Domain-only signing (`data.primaryType` = `"EIP712Domain"`) is supported only on Trezor T with Firmware 2.4.4 or higher!**
+
 * `path` — *required* `string | Array<number>` minimum length is `3`. [read more](path.md)
 * `data` - *required* `Object` type of [`EthereumSignTypedDataMessage`](../../src/js/types/networks/ethereum.js#L90)`. A JSON Schema definition can be found in the [EIP-712 spec]([EIP-712](https://eips.ethereum.org/EIPS/eip-712)).
 * `metamask_v4_compat` - *required* `boolean` set to `true` for compatibility with [MetaMask's signTypedData_v4](https://docs.metamask.io/guide/signing-data.html#sign-typed-data-v4).
@@ -46,8 +48,11 @@ You may also wish to contruct your own hashes using a different library.
 
 ###### [flowtype](../../src/js/types/networks/ethereum.js#L114-121)
 
+> :warning: **Domain-only signing (empty `message_hash`) is supported only on Trezor Model 1 with Firmware 1.10.6 or higher!**
+
 * `domain_separator_hash` - *required* `string` hex-encoded 32-byte hash of the EIP-712 domain.
-* `message_hash` - *required* `string` hex-encoded 32-byte hash of the EIP-712 message.
+* `message_hash` - *optional* `string` hex-encoded 32-byte hash of the EIP-712 message.
+  This is optional for the domain-only hashes where `primaryType` is `EIP712Domain`.
 
 ### Example
 
