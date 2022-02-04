@@ -313,7 +313,7 @@ const VALIDITY_INTERVAL_START = '47';
 const legacyResults = [
     {
         // cardanoSignTransaction not supported below this version
-        rules: ['<2.3.2'],
+        rules: ['<2.3.2', '1'],
         success: false,
     },
 ];
@@ -1644,5 +1644,5 @@ export default {
                 },
             ],
         },
-    ],
+    ].map(fixture => ({ ...fixture, legacyResults })),
 };

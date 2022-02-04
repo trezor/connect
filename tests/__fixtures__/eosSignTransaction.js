@@ -1,3 +1,11 @@
+const legacyResults = [
+    {
+        // EOS not supported below this version
+        rules: ['<2.1.1', '1'],
+        success: false,
+    },
+];
+
 export default {
     method: 'eosSignTransaction',
     setup: {
@@ -664,5 +672,5 @@ export default {
                     'SIG_K1_JvoJtrHpQJjHAZzEBhiQm75iimYabcAVNDvz8mkempLh6avSJgnXm5JzCCUEBjDtW3syByfXknmgr93Sw3P9RNLnwySmv6',
             },
         },
-    ],
+    ].map(fixture => ({ ...fixture, legacyResults })),
 };

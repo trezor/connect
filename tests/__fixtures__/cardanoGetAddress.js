@@ -4,7 +4,7 @@ import { Enum_CardanoAddressType as CardanoAddressType } from '../../src/js/type
 const legacyResults = [
     {
         // cardanoGetAddress not supported below this version
-        rules: ['<2.3.2'],
+        rules: ['<2.3.2', '1'],
         success: false,
     },
 ];
@@ -592,5 +592,5 @@ export default {
             },
             result: false,
         },
-    ],
+    ].map(fixture => ({ ...fixture, legacyResults })),
 };

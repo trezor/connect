@@ -1,3 +1,11 @@
+const legacyResults = [
+    {
+        // rippleGetAddress not supported below this version
+        rules: ['<2.1.0', '1'],
+        success: false,
+    },
+];
+
 export default {
     method: 'rippleGetAddress',
     setup: {
@@ -39,5 +47,5 @@ export default {
                 address: 'rwrZ3agNYYJw4yi6v1r7Ui9AwX9KsWzghr',
             },
         },
-    ],
+    ].map(fixture => ({ ...fixture, legacyResults })),
 };
