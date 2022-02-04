@@ -1,3 +1,11 @@
+const legacyResults = [
+    {
+        // rippleGetAddress not supported below this version
+        rules: ['<2.1.0', '1'],
+        success: false,
+    },
+];
+
 export default {
     method: 'rippleSignTransaction',
     setup: {
@@ -84,5 +92,5 @@ export default {
             },
             result: false,
         },
-    ],
+    ].map(fixture => ({ ...fixture, legacyResults })),
 };

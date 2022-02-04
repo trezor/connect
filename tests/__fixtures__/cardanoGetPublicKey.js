@@ -1,7 +1,7 @@
 const legacyResults = [
     {
         // cardanoGetPublicKey not supported below this version
-        rules: ['<2.3.2'],
+        rules: ['<2.3.2', '1'],
         success: false,
     },
 ];
@@ -74,5 +74,5 @@ export default {
             },
             legacyResults,
         },
-    ],
+    ].map(fixture => ({ ...fixture, legacyResults })),
 };

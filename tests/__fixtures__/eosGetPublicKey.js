@@ -1,3 +1,11 @@
+const legacyResults = [
+    {
+        // EOS not supported below this version
+        rules: ['<2.1.1', '1'],
+        success: false,
+    },
+];
+
 export default {
     method: 'eosGetPublicKey',
     setup: {
@@ -63,5 +71,5 @@ export default {
                 },
             ],
         },
-    ],
+    ].map(fixture => ({ ...fixture, legacyResults })),
 };

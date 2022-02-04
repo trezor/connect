@@ -1,7 +1,7 @@
 const legacyResults = [
     {
         // binanceSignTransaction not supported below this version
-        rules: ['<2.3.0'],
+        rules: ['<2.3.0', '1'],
         success: false,
     },
 ];

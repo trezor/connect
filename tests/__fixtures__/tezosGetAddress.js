@@ -1,3 +1,11 @@
+const legacyResults = [
+    {
+        // Tezos not supported below this version
+        rules: ['<2.0.8', '1'],
+        success: false,
+    },
+];
+
 export default {
     method: 'tezosGetAddress',
     setup: {
@@ -40,5 +48,5 @@ export default {
             },
             result: false,
         },
-    ],
+    ].map(fixture => ({ ...fixture, legacyResults })),
 };

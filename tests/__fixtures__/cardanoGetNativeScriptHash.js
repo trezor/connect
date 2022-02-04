@@ -23,7 +23,7 @@ export default {
             },
             legacyResults: [
                 {
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -42,7 +42,7 @@ export default {
             },
             legacyResults: [
                 {
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -70,7 +70,7 @@ export default {
             },
             legacyResults: [
                 {
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -98,7 +98,7 @@ export default {
             },
             legacyResults: [
                 {
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -126,7 +126,7 @@ export default {
             },
             legacyResults: [
                 {
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -154,7 +154,7 @@ export default {
             },
             legacyResults: [
                 {
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -182,7 +182,7 @@ export default {
             },
             legacyResults: [
                 {
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -215,7 +215,7 @@ export default {
             },
             legacyResults: [
                 {
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -248,7 +248,7 @@ export default {
             },
             legacyResults: [
                 {
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -276,7 +276,7 @@ export default {
             },
             legacyResults: [
                 {
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -304,7 +304,7 @@ export default {
             },
             legacyResults: [
                 {
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -374,7 +374,7 @@ export default {
             },
             legacyResults: [
                 {
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
