@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Connect issues have moved to Trezor Suite
+    url: https://github.com/trezor/trezor-suite/issues/new
+    about: Please open any Connect related issues in Trezor Suite repository.
