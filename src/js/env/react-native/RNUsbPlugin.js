@@ -8,7 +8,7 @@ type TrezorDeviceInfoDebug = {
     debug: boolean,
 };
 
-interface RNBridge {
+interface TrezorTransport {
     enumerate(): Promise<TrezorDeviceInfoDebug[]>;
     acquire(path: string, debugLink: boolean): Promise<void>;
     release(path: string, debugLink: boolean, closePort: boolean): Promise<void>;
@@ -42,10 +42,10 @@ export default class ReactNativePlugin {
 
     requestNeeded = false;
 
-    usb: RNBridge;
+    usb: TrezorTransport;
 
     constructor() {
-        this.usb = NativeModules.RNBridge;
+        this.usb = NativeModules.TrezorTransport;
     }
 
     init(debug: ?boolean) {
