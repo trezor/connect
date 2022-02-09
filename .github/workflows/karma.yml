@@ -190,7 +190,7 @@ jobs:
         path: build
     # xvfb is required to run karma 
     - run: sudo apt-get install xvfb
-    - run: xvfb-run --auto-servernum ./tests/run.sh -s 'yarn test:karma:production' -i ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage
+    - run: xvfb-run --auto-servernum ./tests/run.sh -s 'yarn test:karma:production' -i ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData
 
   nem:
     needs: check
