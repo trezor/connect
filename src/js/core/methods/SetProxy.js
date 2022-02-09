@@ -15,11 +15,15 @@ export default class SetProxy extends AbstractMethod<'setProxy'> {
     }
 
     async run() {
-        DataManager.settings.proxy = this.payload.proxy
-            ? this.payload.proxy.replace('socks5', 'socks') // socks5 doesnt work
-            : undefined;
-        DataManager.settings.useOnionLinks = this.payload.useOnionLinks;
-        await reconnectAllBackends();
+        const { proxy, useOnionLinks } = DataManager.getSettings();
+        const isChanged =
+            proxy !== this.payload.proxy || useOnionLinks !== this.payload.useOnionLinks;
+        if (isChanged) {
+            DataManager.settings.proxy = this.payload.proxy;
+            DataManager.settings.useOnionLinks = this.payload.useOnionLinks;
+            await reconnectAllBackends();
+        }
+
         return { message: 'Success' };
     }
 }

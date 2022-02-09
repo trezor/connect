@@ -1,5 +1,7 @@
 /* @flow */
 
+import type { Proxy } from './params';
+
 export type CipherKeyValue = {
     path: string | number[],
     key: string,
@@ -37,6 +39,6 @@ export type CustomMessage = {
 };
 
 export type SetProxy = {
-    proxy?: string,
+    proxy?: Proxy,
     useOnionLinks?: boolean,
 };
