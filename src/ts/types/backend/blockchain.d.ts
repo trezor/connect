@@ -6,6 +6,7 @@ import { TypedRawTransaction } from './transactions';
 export interface BlockchainInfo {
     coin: CoinInfo;
     url: string;
+    cleanUrl?: string;
     blockHash: string;
     blockHeight: number;
     decimals: number;

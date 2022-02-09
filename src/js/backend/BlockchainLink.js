@@ -47,6 +47,8 @@ export default class Blockchain {
 
     coinInfo: $ElementType<Options, 'coinInfo'>;
 
+    onionDomains: { [onion: string]: string };
+
     postMessage: $ElementType<Options, 'postMessage'>;
 
     feeForBlock: Fee[] = [];
@@ -70,9 +72,20 @@ export default class Blockchain {
             );
         }
 
-        const server = options.onionDomains
-            ? getOnionDomain(blockchainLink.url, options.onionDomains)
-            : blockchainLink.url;
+        // map clean urls in to object. key = onion domain, value = clean domain
+        const { onionDomains } = options;
+        this.onionDomains = onionDomains
+            ? blockchainLink.url.reduce((a, url) => {
+                  const onion = getOnionDomain(url, onionDomains);
+                  // NOTE: onion is not necessarily an onion domain.
+                  if (onion !== url) {
+                      a[onion] = url;
+                  }
+                  return a;
+              }, {})
+            : {};
+
+        const server = onionDomains ? Object.keys(this.onionDomains) : blockchainLink.url;
 
         this.link = new BlockchainLink({
             name: this.coinInfo.shortcut,
@@ -106,13 +119,17 @@ export default class Blockchain {
                 return;
             }
 
+            // find clean domain for current connection
+            const cleanUrl = this.onionDomains[info.url];
+
             // eslint-disable-next-line no-use-before-define
-            setPreferredBacked(this.coinInfo, info.url);
+            setPreferredBacked(this.coinInfo, cleanUrl || info.url);
 
             this.postMessage(
                 BlockchainMessage(BLOCKCHAIN.CONNECT, {
                     coin: this.coinInfo,
                     ...info,
+                    cleanUrl,
                 }),
             );
         });
@@ -331,9 +348,10 @@ export const initBlockchain = async (
             postMessage,
             debug: DataManager.getSettings('debug'),
             proxy: DataManager.getSettings('proxy'),
-            onionDomains: DataManager.getSettings('useOnionLinks')
-                ? DataManager.getConfig().onionDomains
-                : undefined,
+            onionDomains:
+                DataManager.getSettings('useOnionLinks') && !customBackends[coinInfo.shortcut]
+                    ? DataManager.getConfig().onionDomains
+                    : undefined,
         });
         instances.push(backend);
 
