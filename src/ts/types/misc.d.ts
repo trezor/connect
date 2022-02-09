@@ -1,3 +1,5 @@
+import type { Proxy } from './params';
+
 export interface CipherKeyValue {
     path: string | number[];
     key: string;
@@ -36,6 +38,6 @@ export interface CustomMessage {
 }
 
 export type SetProxy = {
-    proxy?: string;
+    proxy?: Proxy;
     useOnionLinks?: boolean;
 };
