@@ -64,8 +64,8 @@ const WebSocketServer = (args, config, logger) => {
     const log = logger.create('framework.WebSocketServer');
 
     log.info('Starting websocket server...');
-    createServer().then(s => {
-        log.info('Server started...', s);
+    createServer().then(() => {
+        log.info('Server started...');
     });
 };
 

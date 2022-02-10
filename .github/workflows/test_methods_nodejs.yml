@@ -1,4 +1,4 @@
-name: Node.js
+name: Test methods node.js
 
 on:
   push:
@@ -57,7 +57,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i applySettings,applyFlags,getFeatures
+    - run: ./tests/run.sh -s 'yarn test:integration methods' -i applySettings,applyFlags,getFeatures
 
   btc-sign:
     needs: check
@@ -70,7 +70,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i signTransaction
+    - run: ./tests/run.sh -s 'yarn test:integration methods' -i signTransaction
 
   btc-others:
     needs: check
@@ -83,7 +83,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction
+    - run: ./tests/run.sh -s 'yarn test:integration methods' -i getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction
 
   stellar:
     needs: check
@@ -96,7 +96,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i stellarGetAddress,stellarSignTransaction
+    - run: ./tests/run.sh -s 'yarn test:integration methods' -i stellarGetAddress,stellarSignTransaction
 
   cardano:
     needs: check
@@ -109,7 +109,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction
+    - run: ./tests/run.sh -s 'yarn test:integration methods' -i cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction
 
   eos:
     needs: check
@@ -122,7 +122,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i eosGetPublicKey,eosSignTransaction
+    - run: ./tests/run.sh -s 'yarn test:integration methods' -i eosGetPublicKey,eosSignTransaction
 
   eth:
     needs: check
@@ -135,7 +135,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData
+    - run: ./tests/run.sh -s 'yarn test:integration methods' -i ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData
 
   nem:
     needs: check
@@ -148,7 +148,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i nemGetAddress,nemSignTransaction
+    - run: ./tests/run.sh -s 'yarn test:integration methods' -i nemGetAddress,nemSignTransaction
 
   ripple:
     needs: check
@@ -161,7 +161,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i rippleGetAddress,rippleSignTransaction
+    - run: ./tests/run.sh -s 'yarn test:integration methods' -i rippleGetAddress,rippleSignTransaction
 
   tezos:
     needs: check
@@ -174,7 +174,7 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i tezosGetAddress,tezosGetPublicKey
+    - run: ./tests/run.sh -s 'yarn test:integration methods' -i tezosGetAddress,tezosGetPublicKey
 
   binance:
     needs: check
@@ -187,4 +187,4 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -i binanceSignTransaction
+    - run: ./tests/run.sh -s 'yarn test:integration methods' -i binanceSignTransaction

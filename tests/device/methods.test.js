@@ -13,10 +13,6 @@ describe(`TrezorConnect methods`, () => {
             controller.dispose();
             controller = undefined;
         }
-        // global.WsCacheServer is assigned in jest.setup.js
-        if (global.WsCacheServer) {
-            global.WsCacheServer.close();
-        }
         done();
     });
 

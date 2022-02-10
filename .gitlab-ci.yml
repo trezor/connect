@@ -9,6 +9,7 @@ stages:
 variables:
   GIT_STRATEGY: clone
   GIT_SUBMODULE_STRATEGY: recursive
+  TEST_PATTERN: "methods"
 
 setup environment:
   stage: setup
@@ -173,6 +174,11 @@ publish beta release to npm:
       - TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction"
       - TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData"
 
+.jobs-api:
+  parallel:
+    matrix:
+      - TEST_PATTERN: "init"
+
 .test:
   extends: .jobs
   image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
@@ -187,7 +193,7 @@ publish beta release to npm:
   script:
     - "echo Firmware version: $TESTS_FIRMWARE"
     - /trezor-user-env/run.sh &
-    - nix-shell --run "yarn test:integration --coverage true"
+    - nix-shell --run "yarn test:integration ${TEST_PATTERN} --coverage true"
   after_script:
     - cp /trezor-user-env/logs/debugging.log trezor-user-env-debugging.log
     - cp /trezor-user-env/logs/emulator_bridge.log tenv-emulator-bridge-debugging.log
@@ -201,6 +207,11 @@ publish beta release to npm:
 TT latest: 
   extends: .test
   stage: test
+
+API:
+  extends: .test
+  stage: test
+  parallel: !reference [.jobs-api,parallel]
   
 .test-nightly:
   extends: .test
