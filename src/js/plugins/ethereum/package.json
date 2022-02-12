@@ -1,6 +1,7 @@
 {
     "name": "trezor-connect",
     "version": "1.0.0",
+    "private": "true",
     "author": "Trezor <info@trezor.io>",
     "homepage": "https://github.com/trezor/connect",
     "description": "Trezor 3rd party plugins",
