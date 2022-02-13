@@ -188,3 +188,26 @@ jobs:
         path: node_modules
         key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
     - run: ./tests/run.sh -s 'yarn test:integration methods' -i binanceSignTransaction
+
+  ethereum-plugin:
+    name: Test Ethereum Plugin
+    needs: check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/js/plugins/ethereum
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: yarn
+        # cache by default looks at repo root only, not working-directory
+        cache-dependency-path: src/js/plugins/ethereum/yarn.lock
+    - name: Installing plugin dependencies
+      run: yarn install
+    - name: Test Unit
+      run: yarn test:unit
