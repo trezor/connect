@@ -201,7 +201,22 @@ publish beta release to npm:
 TT latest: 
   extends: .test
   stage: test
-  
+
+test ethereum plugin:
+  stage: test
+  dependencies:
+    # we only need the submodules part of this, not the node_modules
+    - "setup environment"
+  script:
+    - nix-shell --run "cd src/js/plugins/ethereum/ && yarn install --cache-folder ./.yarn-cache"
+    - nix-shell --run "cd src/js/plugins/ethereum/ && yarn test:unit"
+  cache:
+    key:
+      files:
+        src/js/plugins/ethereum/yarn.lock
+    paths:
+      src/js/plugins/ethereum/.yarn-cache
+
 .test-nightly:
   extends: .test
   stage: test extended
