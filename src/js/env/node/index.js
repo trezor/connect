@@ -25,32 +25,34 @@ import * as $T from '../../types';
 export const eventEmitter = new EventEmitter();
 const _log = initLog('[trezor-connect.js]');
 
-let _settings: $T.ConnectSettings;
-let _core: Core;
+let _settings = parseSettings();
+let _core: Core | null = null;
 
 let _messageID: number = 0;
 export const messagePromises: { [key: number]: $T.Deferred<any> } = {};
 
-export const manifest = (m: $T.Manifest) => {
-    _settings = parseSettings({ manifest: m });
+export const manifest = (data: $T.Manifest) => {
+    _settings = parseSettings({
+        ..._settings,
+        manifest: data,
+    });
 };
 
 export const dispose = () => {
     eventEmitter.removeAllListeners();
+    _settings = parseSettings();
     if (_core) {
         _core.dispose();
+        _core = null;
     }
-    // TODO: fix top level values during refactor
-    // $FlowIssue
-    _settings = null;
-    // $FlowIssue
-    _core = null;
 };
 
 // handle message received from iframe
 const handleMessage = (message: $T.CoreMessage) => {
     const { event, type, payload } = message;
     const id = message.id || 0;
+
+    if (!_core) return;
 
     if (type === UI.REQUEST_UI_WINDOW) {
         _core.handleMessage({ event: UI_EVENT, type: POPUP.HANDSHAKE }, true);
@@ -120,9 +122,10 @@ const postMessage = (message: any, usePromise: boolean = true) => {
 };
 
 export const init = async (settings: $Shape<$T.ConnectSettings> = {}) => {
-    if (!_settings) {
-        _settings = parseSettings(settings);
+    if (_core) {
+        throw ERRORS.TypedError('Init_AlreadyInitialized');
     }
+    _settings = parseSettings({ ..._settings, ...settings });
     // set defaults for node
     _settings.origin = 'http://node.trezor.io/';
     _settings.popup = false;
@@ -148,9 +151,6 @@ export const init = async (settings: $Shape<$T.ConnectSettings> = {}) => {
 
 export const call = async (params: any): Promise<any> => {
     if (!_core) {
-        _settings = parseSettings({ debug: false, popup: false });
-
-        // auto init with default settings
         try {
             await init(_settings);
         } catch (error) {
@@ -171,6 +171,9 @@ export const call = async (params: any): Promise<any> => {
 };
 
 const customMessageResponse = (payload: ?{ message: string, params?: any }) => {
+    if (!_core) {
+        return Promise.resolve(errorMessage(ERRORS.TypedError('Init_NotInitialized')));
+    }
     _core.handleMessage(
         {
             event: UI_EVENT,
@@ -182,6 +185,9 @@ const customMessageResponse = (payload: ?{ message: string, params?: any }) => {
 };
 
 export const uiResponse = (response: $T.UiResponse) => {
+    if (!_core) {
+        throw ERRORS.TypedError('Init_NotInitialized');
+    }
     const { type, payload } = response;
     _core.handleMessage({ event: UI_EVENT, type, payload }, true);
 };
@@ -194,9 +200,14 @@ export const getSettings = (): $T.Response<$T.ConnectSettings> => {
 };
 
 export const customMessage: $PropertyType<$T.API, 'customMessage'> = async params => {
+    if (!_core) {
+        return Promise.resolve(errorMessage(ERRORS.TypedError('Init_NotInitialized')));
+    }
     if (typeof params.callback !== 'function') {
         return errorMessage(ERRORS.TypedError('Method_CustomMessage_Callback'));
     }
+
+    const core = _core;
 
     // TODO: set message listener only if iframe is loaded correctly
     const { callback } = params;
@@ -211,14 +222,20 @@ export const customMessage: $PropertyType<$T.API, 'customMessage'> = async param
             }
         }
     };
-    _core.on(CORE_EVENT, customMessageListener);
+    core.on(CORE_EVENT, customMessageListener);
 
     const response = await call({ method: 'customMessage', ...params, callback: null });
-    _core.removeListener(CORE_EVENT, customMessageListener);
+    core.removeListener(CORE_EVENT, customMessageListener);
     return response;
 };
 
 export const requestLogin: $PropertyType<$T.API, 'requestLogin'> = async params => {
+    if (!_core) {
+        return Promise.resolve(errorMessage(ERRORS.TypedError('Init_NotInitialized')));
+    }
+
+    const core = _core;
+
     if (typeof params.callback === 'function') {
         const { callback } = params;
 
@@ -228,7 +245,7 @@ export const requestLogin: $PropertyType<$T.API, 'requestLogin'> = async params 
             if (data && data.type === UI.LOGIN_CHALLENGE_REQUEST) {
                 try {
                     const payload = await callback();
-                    _core.handleMessage(
+                    core.handleMessage(
                         {
                             event: UI_EVENT,
                             type: UI.LOGIN_CHALLENGE_RESPONSE,
@@ -237,7 +254,7 @@ export const requestLogin: $PropertyType<$T.API, 'requestLogin'> = async params 
                         true,
                     );
                 } catch (error) {
-                    _core.handleMessage(
+                    core.handleMessage(
                         {
                             event: UI_EVENT,
                             type: UI.LOGIN_CHALLENGE_RESPONSE,
@@ -249,7 +266,7 @@ export const requestLogin: $PropertyType<$T.API, 'requestLogin'> = async params 
             }
         };
 
-        _core.on(CORE_EVENT, loginChallengeListener);
+        core.on(CORE_EVENT, loginChallengeListener);
 
         const response = await call({
             method: 'requestLogin',
@@ -257,7 +274,7 @@ export const requestLogin: $PropertyType<$T.API, 'requestLogin'> = async params 
             asyncChallenge: true,
             callback: null,
         });
-        _core.removeListener(CORE_EVENT, loginChallengeListener);
+        core.removeListener(CORE_EVENT, loginChallengeListener);
         return response;
     }
     return call({ method: 'requestLogin', ...params });

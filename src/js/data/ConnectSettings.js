@@ -37,8 +37,6 @@ const initialSettings: ConnectSettings = {
     interactionTimeout: 600, // 5 minutes
 };
 
-let currentSettings: ConnectSettings = initialSettings;
-
 const parseManifest = (manifest: ?Manifest): ?Manifest => {
     if (!manifest) return;
     if (typeof manifest.email !== 'string') return;
@@ -98,7 +96,7 @@ export const corsValidator = (url?: string) => {
 };
 
 export const parse = (input: $Shape<ConnectSettings> = {}) => {
-    const settings: ConnectSettings = { ...currentSettings };
+    const settings: ConnectSettings = { ...initialSettings };
     if (Object.prototype.hasOwnProperty.call(input, 'debug')) {
         if (Array.isArray(input)) {
             // enable log with prefix
@@ -187,6 +185,5 @@ export const parse = (input: $Shape<ConnectSettings> = {}) => {
         settings.manifest = parseManifest(input.manifest);
     }
 
-    currentSettings = settings;
-    return currentSettings;
+    return settings;
 };
