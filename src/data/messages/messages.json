@@ -419,6 +419,10 @@
           "rule": "required",
           "type": "string",
           "id": 1
+        },
+        "mac": {
+          "type": "bytes",
+          "id": 2
         }
       }
     },
@@ -632,7 +636,8 @@
             "TXFINISHED": 3,
             "TXEXTRADATA": 4,
             "TXORIGINPUT": 5,
-            "TXORIGOUTPUT": 6
+            "TXORIGOUTPUT": 6,
+            "TXPAYMENTREQ": 7
           }
         },
         "TxRequestDetailsType": {
@@ -889,6 +894,13 @@
                 "orig_index": {
                   "type": "uint32",
                   "id": 11
+                },
+                "payment_req_index": {
+                  "type": "uint32",
+                  "id": 12,
+                  "options": {
+                    "(experimental)": true
+                  }
                 }
               }
             }
@@ -1018,6 +1030,13 @@
         "orig_index": {
           "type": "uint32",
           "id": 11
+        },
+        "payment_req_index": {
+          "type": "uint32",
+          "id": 12,
+          "options": {
+            "(experimental)": true
+          }
         }
       }
     },
@@ -1111,6 +1130,101 @@
         "decred_script_version": {
           "type": "uint32",
           "id": 3
+        }
+      }
+    },
+    "TxAckPaymentRequest": {
+      "options": {
+        "(unstable)": true
+      },
+      "fields": {
+        "nonce": {
+          "type": "bytes",
+          "id": 1
+        },
+        "recipient_name": {
+          "rule": "required",
+          "type": "string",
+          "id": 2
+        },
+        "memos": {
+          "rule": "repeated",
+          "type": "PaymentRequestMemo",
+          "id": 3
+        },
+        "amount": {
+          "type": "uint64",
+          "id": 4
+        },
+        "signature": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 5
+        }
+      },
+      "nested": {
+        "PaymentRequestMemo": {
+          "fields": {
+            "text_memo": {
+              "type": "TextMemo",
+              "id": 1
+            },
+            "refund_memo": {
+              "type": "RefundMemo",
+              "id": 2
+            },
+            "coin_purchase_memo": {
+              "type": "CoinPurchaseMemo",
+              "id": 3
+            }
+          }
+        },
+        "TextMemo": {
+          "fields": {
+            "text": {
+              "rule": "required",
+              "type": "string",
+              "id": 1
+            }
+          }
+        },
+        "RefundMemo": {
+          "fields": {
+            "address": {
+              "rule": "required",
+              "type": "string",
+              "id": 1
+            },
+            "mac": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 2
+            }
+          }
+        },
+        "CoinPurchaseMemo": {
+          "fields": {
+            "coin_type": {
+              "rule": "required",
+              "type": "uint32",
+              "id": 1
+            },
+            "amount": {
+              "rule": "required",
+              "type": "string",
+              "id": 2
+            },
+            "address": {
+              "rule": "required",
+              "type": "string",
+              "id": 3
+            },
+            "mac": {
+              "rule": "required",
+              "type": "bytes",
+              "id": 4
+            }
+          }
         }
       }
     },
@@ -4593,6 +4707,24 @@
     "RebootToBootloader": {
       "fields": {}
     },
+    "GetNonce": {
+      "options": {
+        "(unstable)": true
+      },
+      "fields": {}
+    },
+    "Nonce": {
+      "options": {
+        "(unstable)": true
+      },
+      "fields": {
+        "nonce": {
+          "rule": "required",
+          "type": "bytes",
+          "id": 1
+        }
+      }
+    },
     "MoneroTransactionSourceEntry": {
       "fields": {
         "outputs": {
@@ -6019,6 +6151,8 @@
         "MessageType_ButtonRequest": 26,
         "MessageType_ButtonAck": 27,
         "MessageType_ApplyFlags": 28,
+        "MessageType_GetNonce": 31,
+        "MessageType_Nonce": 33,
         "MessageType_BackupDevice": 34,
         "MessageType_EntropyRequest": 35,
         "MessageType_EntropyAck": 36,
@@ -6051,6 +6185,7 @@
         "MessageType_TxAck": 22,
         "MessageType_GetAddress": 29,
         "MessageType_Address": 30,
+        "MessageType_TxAckPaymentRequest": 37,
         "MessageType_SignMessage": 38,
         "MessageType_VerifyMessage": 39,
         "MessageType_MessageSignature": 40,
