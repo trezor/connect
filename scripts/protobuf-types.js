@@ -185,6 +185,7 @@ const ORDER = {
     TxAck: 'TxAckInputWrapper',
     EthereumFieldType: 'EthereumStructMember',
     EthereumDataType: 'EthereumFieldType',
+    PaymentRequestMemo: 'TxAckPaymentRequest',
 };
 
 Object.keys(ORDER).forEach(key => {

@@ -22,6 +22,7 @@ export type TxOutputType =
           multisig?: MultisigRedeemScriptType,
           orig_hash?: string,
           orig_index?: number,
+          payment_req_index?: number,
       |}
     | {|
           address?: typeof undefined,
@@ -31,6 +32,7 @@ export type TxOutputType =
           multisig?: MultisigRedeemScriptType,
           orig_hash?: string,
           orig_index?: number,
+          payment_req_index?: number,
       |}
     | {|
           address?: typeof undefined,
@@ -40,6 +42,7 @@ export type TxOutputType =
           script_type: 'PAYTOOPRETURN',
           orig_hash?: string,
           orig_index?: number,
+          payment_req_index?: number,
       |};
 
 export type TxOutput = TxOutputType;

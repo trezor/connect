@@ -9,6 +9,7 @@ const RULE_PATCH = {
     'TxRequestDetailsType.request_index': 'required',
     'TxRequest.request_type': 'required',
     'TxRequest.details': 'required',
+    'TxAckPaymentRequest.memos': 'optional', // protobuf repeated bytes are always optional (fallback to [])
     'CardanoPoolOwnerType.staking_key_path': 'optional',
     'CardanoPoolOwner.staking_key_path': 'optional',
     'CardanoTxCertificateType.path': 'optional',

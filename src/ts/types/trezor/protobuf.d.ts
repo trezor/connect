@@ -187,6 +187,7 @@ export type GetAddress = {
 // Address
 export type Address = {
     address: string;
+    mac?: string;
 };
 
 // GetOwnershipId
@@ -249,6 +250,7 @@ export enum Enum_RequestType {
     TXEXTRADATA = 4,
     TXORIGINPUT = 5,
     TXORIGOUTPUT = 6,
+    TXPAYMENTREQ = 7,
 }
 export type RequestType = keyof typeof Enum_RequestType;
 
@@ -331,6 +333,7 @@ export type TxOutputType =
           multisig?: MultisigRedeemScriptType;
           orig_hash?: string;
           orig_index?: number;
+          payment_req_index?: number;
       }
     | {
           address?: typeof undefined;
@@ -340,6 +343,7 @@ export type TxOutputType =
           multisig?: MultisigRedeemScriptType;
           orig_hash?: string;
           orig_index?: number;
+          payment_req_index?: number;
       }
     | {
           address?: typeof undefined;
@@ -349,6 +353,7 @@ export type TxOutputType =
           script_type: 'PAYTOOPRETURN';
           orig_hash?: string;
           orig_index?: number;
+          payment_req_index?: number;
       };
 
 export type TxOutput = TxOutputType;
@@ -382,6 +387,37 @@ export type PrevOutput = {
     amount: UintType;
     script_pubkey: string;
     decred_script_version?: number;
+};
+
+export type TextMemo = {
+    text: string;
+};
+
+export type RefundMemo = {
+    address: string;
+    mac: string;
+};
+
+export type CoinPurchaseMemo = {
+    coin_type: number;
+    amount: UintType;
+    address: string;
+    mac: string;
+};
+
+export type PaymentRequestMemo = {
+    text_memo?: TextMemo;
+    refund_memo?: RefundMemo;
+    coin_purchase_memo?: CoinPurchaseMemo;
+};
+
+// TxAckPaymentRequest
+export type TxAckPaymentRequest = {
+    nonce?: string;
+    recipient_name: string;
+    memos?: PaymentRequestMemo[];
+    amount?: UintType;
+    signature: string;
 };
 
 // TxAck
@@ -1623,6 +1659,14 @@ export type CancelAuthorization = {};
 
 // RebootToBootloader
 export type RebootToBootloader = {};
+
+// GetNonce
+export type GetNonce = {};
+
+// Nonce
+export type Nonce = {
+    nonce: string;
+};
 
 // NEMGetAddress
 export type NEMGetAddress = {

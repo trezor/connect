@@ -193,6 +193,7 @@ export type GetAddress = {
 // Address
 export type Address = {
     address: string,
+    mac?: string,
 };
 
 // GetOwnershipId
@@ -255,6 +256,7 @@ export const Enum_RequestType = Object.freeze({
     TXEXTRADATA: 4,
     TXORIGINPUT: 5,
     TXORIGOUTPUT: 6,
+    TXPAYMENTREQ: 7,
 });
 export type RequestType = $Keys<typeof Enum_RequestType>;
 
@@ -341,6 +343,7 @@ export type TxOutputType =
           multisig?: MultisigRedeemScriptType,
           orig_hash?: string,
           orig_index?: number,
+          payment_req_index?: number,
       |}
     | {|
           address?: typeof undefined,
@@ -350,6 +353,7 @@ export type TxOutputType =
           multisig?: MultisigRedeemScriptType,
           orig_hash?: string,
           orig_index?: number,
+          payment_req_index?: number,
       |}
     | {|
           address?: typeof undefined,
@@ -359,6 +363,7 @@ export type TxOutputType =
           script_type: 'PAYTOOPRETURN',
           orig_hash?: string,
           orig_index?: number,
+          payment_req_index?: number,
       |};
 
 export type TxOutput = TxOutputType;
@@ -392,6 +397,37 @@ export type PrevOutput = {
     amount: UintType,
     script_pubkey: string,
     decred_script_version?: number,
+};
+
+export type TextMemo = {
+    text: string,
+};
+
+export type RefundMemo = {
+    address: string,
+    mac: string,
+};
+
+export type CoinPurchaseMemo = {
+    coin_type: number,
+    amount: UintType,
+    address: string,
+    mac: string,
+};
+
+export type PaymentRequestMemo = {
+    text_memo?: TextMemo,
+    refund_memo?: RefundMemo,
+    coin_purchase_memo?: CoinPurchaseMemo,
+};
+
+// TxAckPaymentRequest
+export type TxAckPaymentRequest = {
+    nonce?: string,
+    recipient_name: string,
+    memos?: PaymentRequestMemo[],
+    amount?: UintType,
+    signature: string,
 };
 
 // TxAck
@@ -1652,6 +1688,14 @@ export type CancelAuthorization = {};
 // RebootToBootloader
 export type RebootToBootloader = {};
 
+// GetNonce
+export type GetNonce = {};
+
+// Nonce
+export type Nonce = {
+    nonce: string,
+};
+
 // NEMGetAddress
 export type NEMGetAddress = {
     address_n: number[],
@@ -2178,6 +2222,11 @@ export type MessageType = {
     PrevTx: $Exact<PrevTx>,
     PrevInput: $Exact<PrevInput>,
     PrevOutput: $Exact<PrevOutput>,
+    TextMemo: $Exact<TextMemo>,
+    RefundMemo: $Exact<RefundMemo>,
+    CoinPurchaseMemo: $Exact<CoinPurchaseMemo>,
+    PaymentRequestMemo: PaymentRequestMemo,
+    TxAckPaymentRequest: $Exact<TxAckPaymentRequest>,
     TxAck: TxAck,
     TxAckInputWrapper: $Exact<TxAckInputWrapper>,
     TxAckInput: $Exact<TxAckInput>,
@@ -2335,6 +2384,8 @@ export type MessageType = {
     PreauthorizedRequest: PreauthorizedRequest,
     CancelAuthorization: CancelAuthorization,
     RebootToBootloader: RebootToBootloader,
+    GetNonce: GetNonce,
+    Nonce: $Exact<Nonce>,
     NEMGetAddress: NEMGetAddress,
     NEMAddress: $Exact<NEMAddress>,
     NEMTransactionCommon: $Exact<NEMTransactionCommon>,
