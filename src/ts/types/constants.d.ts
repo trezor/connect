@@ -146,7 +146,7 @@ export namespace UI {
 export namespace CARDANO {
     enum PROTOCOL_MAGICS {
         mainnet = 764824073,
-        testnet = 42,
+        testnet = 1097911063,
     }
 
     enum NETWORK_IDS {

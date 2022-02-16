@@ -1016,7 +1016,7 @@ export default {
                 ],
                 fee: FEE,
                 ttl: TTL,
-                protocolMagic: PROTOCOL_MAGICS.testnet,
+                protocolMagic: 42,
                 networkId: NETWORK_IDS.testnet,
                 signingMode: CardanoTxSigningMode.ORDINARY_TRANSACTION,
             },
