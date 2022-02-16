@@ -213,9 +213,9 @@ test ethereum plugin:
   cache:
     key:
       files:
-        src/js/plugins/ethereum/yarn.lock
+        - src/js/plugins/ethereum/yarn.lock
     paths:
-      src/js/plugins/ethereum/.yarn-cache
+      - src/js/plugins/ethereum/.yarn-cache
 
 .test-nightly:
   extends: .test
