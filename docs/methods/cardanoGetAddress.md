@@ -18,7 +18,7 @@ TrezorConnect.cardanoGetAddress(params).then(function(result) {
 #### Exporting single address
 * `addressParameters` — *required* see description below
 * `address` — *optional* `string` address for validation (read `Handle button request` section below)
-* `protocolMagic` - *required* `Integer` 764824073 for Mainnet, 42 for Testnet
+* `protocolMagic` - *required* `Integer` 764824073 for Mainnet, 1097911063 for Testnet
 * `networkId` - *required* `Integer` 1 for Mainnet, 0 for Testnet
 * `showOnTrezor` — *optional* `boolean` determines if address will be displayed on device. Default is set to `true`
 * `derivationType` — *optional* `CardanoDerivationType` enum. determines used derivation type. Default is set to ICARUS_TREZOR=2
@@ -217,7 +217,7 @@ TrezorConnect.cardanoGetAddress({
                 addressType: 8,
                 path: "m/44'/1815'/1'/0/2",
             },
-            protocolMagic: 42,
+            protocolMagic: 1097911063,
             networkId: 0,
             showOnTrezor: false
         },

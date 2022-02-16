@@ -22,7 +22,7 @@ TrezorConnect.cardanoSignTransaction(params).then(function(result) {
 * `inputs` - *required* `Array` of [CardanoInput](../../src/js/types/networks/cardano.js#L92)
 * `outputs` - *required* `Array` of [CardanoOutput](../../src/js/types/networks/cardano.js#L109)
 * `fee` - *required* `String`
-* `protocolMagic` - *required* `Integer` 764824073 for Mainnet, 42 for Testnet
+* `protocolMagic` - *required* `Integer` 764824073 for Mainnet, 1097911063 for Testnet
 * `networkId` - *required* `Integer` 1 for Mainnet, 0 for Testnet
 * `ttl` - *optional* `String`
 * `validityIntervalStart` - *optional* `String`
