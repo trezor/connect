@@ -2,6 +2,7 @@
 
 ### Added
 - `TrezorConnect.setProxy` method. Allow @trezor/blockchain-link using TOR proxy.
+- Support for Electrum backend
 
 ### Fixed
 - Some methods not throwing `ui-device_firmware_unsupported` when the current device firmware didn't support the method.
