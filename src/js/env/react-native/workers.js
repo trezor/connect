@@ -9,7 +9,15 @@ import TrezorLink from '@trezor/transport';
 import RNUsbPlugin from './RNUsbPlugin';
 
 const WebUsbPlugin = undefined;
+const ElectrumWorker = undefined;
 
 const ReactNativeUsbPlugin = () => new TrezorLink.Lowlevel(new RNUsbPlugin());
 
-export { WebUsbPlugin, ReactNativeUsbPlugin, BlockbookWorker, RippleWorker, BlockfrostWorker };
+export {
+    WebUsbPlugin,
+    ReactNativeUsbPlugin,
+    BlockbookWorker,
+    RippleWorker,
+    BlockfrostWorker,
+    ElectrumWorker,
+};
