@@ -12,7 +12,12 @@ import type {
     BlockchainGetAccountBalanceHistory,
 } from '../types';
 
-import { BlockbookWorker, RippleWorker, BlockfrostWorker } from '../env/node/workers';
+import {
+    BlockbookWorker,
+    RippleWorker,
+    BlockfrostWorker,
+    ElectrumWorker,
+} from '../env/node/workers';
 
 type Options = {
     coinInfo: CoinInfo,
@@ -37,6 +42,8 @@ const getWorker = (type: string) => {
             return RippleWorker;
         case 'blockfrost':
             return BlockfrostWorker;
+        case 'electrum':
+            return ElectrumWorker;
         default:
             return null;
     }

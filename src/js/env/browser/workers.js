@@ -12,5 +12,13 @@ const WebUsbPlugin = () =>
     );
 
 const ReactNativeUsbPlugin = undefined;
+const ElectrumWorker = undefined;
 
-export { WebUsbPlugin, ReactNativeUsbPlugin, BlockbookWorker, RippleWorker, BlockfrostWorker };
+export {
+    WebUsbPlugin,
+    ReactNativeUsbPlugin,
+    BlockbookWorker,
+    RippleWorker,
+    BlockfrostWorker,
+    ElectrumWorker,
+};
