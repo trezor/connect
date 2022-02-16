@@ -85,7 +85,6 @@ Represents a transactions containing Plutus script evaluation. The transaction w
 
 The transaction
 - *should* contain `scriptDataHash` and `collateralInputs`
-- *must not* contain output addresses given by parameters
 - *must not* contain a pool registration certificate
 - *may* contain only 1852, 1854 and 1855 required signers
 - *may* contain only 1852, 1854 and 1855 witness requests
