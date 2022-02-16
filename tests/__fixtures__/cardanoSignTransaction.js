@@ -1768,6 +1768,38 @@ export default {
         },
 
         {
+            description: 'plutusWithDeviceOwnedOutput',
+            params: {
+                inputs: [SAMPLE_INPUTS.external_input],
+                outputs: [
+                    SAMPLE_OUTPUTS.simple_shelley_output,
+                    SAMPLE_OUTPUTS.base_address_change_output,
+                ],
+                fee: FEE,
+                ttl: TTL,
+                protocolMagic: PROTOCOL_MAGICS.mainnet,
+                networkId: NETWORK_IDS.mainnet,
+                signingMode: CardanoTxSigningMode.PLUTUS_TRANSACTION,
+                scriptDataHash: SCRIPT_DATA_HASH,
+                collateralInputs: [SAMPLE_INPUTS.shelley_input],
+            },
+            result: {
+                hash: 'b201b4b2d889f931020fe0f3f637cd3fbe79fae460ab24fd61182e48e9bc975a',
+                witnesses: [
+                    {
+                        type: 1,
+                        pubKey: '5d010cf16fdeff40955633d6c565f3844a288a24967cf6b76acbeb271b4f13c1',
+                        signature:
+                            'd84707a76565c5f748679cd3a46b93ba0c1aec37e49d8e87fbb6785738c19bd10b311af9eddc22e520b43ef0a4a6e934be7917ff87456522a6378d84e431d207',
+                        chainCode: null,
+                    },
+                ],
+                auxiliaryDataSupplement: undefined,
+            },
+            legacyResults: [legacyResults.beforePlutus],
+        },
+
+        {
             description: 'plutusTransactionWithTokenMinting',
             params: {
                 inputs: [SAMPLE_INPUTS.external_input],
