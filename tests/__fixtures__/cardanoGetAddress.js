@@ -79,7 +79,7 @@ export default {
                     addressType: CardanoAddressType.BYRON,
                     path: "m/44'/1815'/0'/0/0",
                 },
-                protocolMagic: PROTOCOL_MAGICS.testnet,
+                protocolMagic: 42, // legacy testnet protocol magic
                 networkId: NETWORK_IDS.testnet,
             },
             result: {
@@ -94,7 +94,7 @@ export default {
                     addressType: CardanoAddressType.BYRON,
                     path: "m/44'/1815'/0'/0/1",
                 },
-                protocolMagic: PROTOCOL_MAGICS.testnet,
+                protocolMagic: 42, // legacy testnet protocol magic
                 networkId: NETWORK_IDS.testnet,
             },
             result: {
@@ -109,7 +109,7 @@ export default {
                     addressType: CardanoAddressType.BYRON,
                     path: "m/44'/1815'/0'/0/2",
                 },
-                protocolMagic: PROTOCOL_MAGICS.testnet,
+                protocolMagic: 42, // legacy testnet protocol magic
                 networkId: NETWORK_IDS.testnet,
             },
             result: {
