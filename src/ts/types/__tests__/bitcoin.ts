@@ -648,3 +648,35 @@ export const getOwnershipProof = async () => {
     // @ts-expect-error missing path
     TrezorConnect.getOwnershipProof({ coin_name: 'btc' });
 };
+
+export const authorizeCoinJoin = async () => {
+    const result = await TrezorConnect.authorizeCoinJoin({
+        path: 'm/44',
+        coordinator: 'TrezorCoinjoinCoordinator',
+        maxRounds: 1,
+        maxCoordinatorFeeRate: 100,
+        maxFeePerKvbyte: 100,
+    });
+    if (result.success) {
+        const { payload } = result;
+        payload.message;
+    }
+
+    TrezorConnect.authorizeCoinJoin({
+        path: 'm/44',
+        coordinator: 'TrezorCoinjoinCoordinator',
+        maxRounds: 1,
+        maxCoordinatorFeeRate: 100,
+        maxFeePerKvbyte: 100,
+        coin: 'btc',
+        scriptType: 'SPENDTAPROOT',
+        amountUnit: 1, // MILLIBITCOIN
+    });
+
+    // @ts-expect-error missing maxTotalFee
+    TrezorConnect.authorizeCoinJoin({ path: 'm/44', coordinator: '' });
+    // @ts-expect-error missing coordinator
+    TrezorConnect.authorizeCoinJoin({ path: 'm/44', maxTotalFee: 1 });
+    // @ts-expect-error missing path
+    TrezorConnect.authorizeCoinJoin({ coordinator: '', maxTotalFee: 1 });
+};
