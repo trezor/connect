@@ -178,6 +178,7 @@ export default async (
     typedCall: TypedCall,
     inputs: TxInputType[],
     outputs: TxOutputType[],
+    _paymentRequests: any[],
     refTxsArray: RefTransaction[],
     options: TransactionOptions,
     coinInfo: BitcoinNetworkInfo,

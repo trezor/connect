@@ -13,6 +13,7 @@ import type {
     TxInputType,
     TxOutputType,
     TxRequestSerializedType,
+    TxAckPaymentRequest,
 } from '../../../types/trezor/protobuf';
 
 type RefTxs = { [hash: string]: RefTransaction };
@@ -20,6 +21,7 @@ type Props = {
     typedCall: TypedCall,
     txRequest: TxRequest,
     refTxs: RefTxs,
+    paymentRequests: TxAckPaymentRequest[],
     inputs: TxInputType[],
     outputs: TxOutputType[],
     serializedTx: string[],
@@ -121,6 +123,7 @@ const requestSignedTxInfo = ({
     txRequest: { request_type, details },
     inputs,
     outputs,
+    paymentRequests,
 }: Props) => {
     if (request_type === 'TXINPUT') {
         return typedCall('TxAckInput', 'TxRequest', {
@@ -130,6 +133,22 @@ const requestSignedTxInfo = ({
     if (request_type === 'TXOUTPUT') {
         return typedCall('TxAckOutput', 'TxRequest', {
             tx: { output: outputs[details.request_index] },
+        });
+    }
+    if (request_type === 'TXPAYMENTREQ') {
+        const req = paymentRequests[details.request_index];
+        if (!req) {
+            throw ERRORS.TypedError(
+                'Runtime',
+                `requestPrevTxInfo: Requested unknown payment request at ${details.request_index}`,
+            );
+        }
+        return typedCall('TxAckPaymentRequest', 'TxRequest', {
+            nonce: req.nonce,
+            recipient_name: req.recipient_name,
+            memos: req.memos,
+            amount: req.amount,
+            signature: req.signature,
         });
     }
     if (request_type === 'TXMETA') {
@@ -182,7 +201,7 @@ const saveTxSignatures = (
 };
 
 const processTxRequest = async (props: Props) => {
-    const { typedCall, txRequest, refTxs, inputs, outputs, serializedTx, signatures } = props;
+    const { txRequest, serializedTx, signatures } = props;
     saveTxSignatures(txRequest.serialized, serializedTx, signatures);
     if (txRequest.request_type === 'TXFINISHED') {
         return Promise.resolve({
@@ -193,13 +212,8 @@ const processTxRequest = async (props: Props) => {
 
     const { message } = await requestTxAck(props);
     return processTxRequest({
-        typedCall,
+        ...props,
         txRequest: message,
-        refTxs,
-        inputs,
-        outputs,
-        serializedTx,
-        signatures,
     });
 };
 
@@ -207,6 +221,7 @@ export default async (
     typedCall: TypedCall,
     inputs: TxInputType[],
     outputs: TxOutputType[],
+    paymentRequests: TxAckPaymentRequest[],
     refTxsArray: RefTransaction[],
     options: TransactionOptions,
     coinInfo: BitcoinNetworkInfo,
@@ -229,6 +244,7 @@ export default async (
         refTxs,
         inputs,
         outputs,
+        paymentRequests,
         serializedTx: [],
         signatures: [],
     });

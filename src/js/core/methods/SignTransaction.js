@@ -24,12 +24,13 @@ import {
 } from './tx';
 
 import type { RefTransaction, TransactionOptions } from '../../types/networks/bitcoin';
-import type { TxInputType, TxOutputType } from '../../types/trezor/protobuf';
+import type { TxInputType, TxOutputType, TxAckPaymentRequest } from '../../types/trezor/protobuf';
 import type { BitcoinNetworkInfo, AccountAddresses } from '../../types';
 
 type Params = {
     inputs: TxInputType[],
     outputs: TxOutputType[],
+    paymentRequests: TxAckPaymentRequest[],
     refTxs?: RefTransaction[],
     addresses?: AccountAddresses,
     options: TransactionOptions,
@@ -97,6 +98,7 @@ export default class SignTransaction extends AbstractMethod<'signTransaction'> {
         this.params = {
             inputs,
             outputs: payload.outputs,
+            paymentRequests: payload.paymentRequests || [],
             refTxs,
             addresses: payload.account ? payload.account.addresses : undefined,
             options: {
@@ -174,6 +176,7 @@ export default class SignTransaction extends AbstractMethod<'signTransaction'> {
             device.getCommands().typedCall.bind(device.getCommands()),
             params.inputs,
             params.outputs,
+            params.paymentRequests,
             refTxs,
             params.options,
             params.coinInfo,

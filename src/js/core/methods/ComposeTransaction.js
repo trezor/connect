@@ -392,6 +392,7 @@ export default class ComposeTransaction extends AbstractMethod<'composeTransacti
             this.device.getCommands().typedCall.bind(this.device.getCommands()),
             inputs,
             outputs,
+            [], // paymentRequests are not used in this method
             refTxs,
             options,
             coinInfo,
