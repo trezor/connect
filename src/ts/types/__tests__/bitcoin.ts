@@ -610,3 +610,41 @@ export const getOwnershipId = async () => {
     // @ts-expect-error missing path
     TrezorConnect.getOwnershipId({ coin: 'btc' });
 };
+
+export const getOwnershipProof = async () => {
+    const result = await TrezorConnect.getOwnershipProof({ path: 'm/44' });
+    if (result.success) {
+        const { payload } = result;
+        payload.ownership_proof;
+        payload.signature;
+    }
+
+    TrezorConnect.getOwnershipProof({
+        path: 'm/44',
+        coin: 'btc',
+        scriptType: 'SPENDTAPROOT',
+        multisig: {
+            pubkeys: [{ node: 'HDNodeAsString', address_n: [0] }],
+            signatures: ['signature'],
+            m: 0,
+        },
+        userConfirmation: true,
+        ownershipIds: ['dead'],
+        commitmentData: 'beef',
+    });
+
+    // bundle
+    const bundleId = await TrezorConnect.getOwnershipProof({ bundle: [{ path: 'm/44' }] });
+    if (bundleId.success) {
+        bundleId.payload.forEach(item => {
+            item.ownership_proof;
+        });
+        // @ts-expect-error
+        bundleId.payload.ownership_proof;
+    } else {
+        bundleId.payload.error;
+    }
+
+    // @ts-expect-error missing path
+    TrezorConnect.getOwnershipProof({ coin_name: 'btc' });
+};

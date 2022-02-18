@@ -27,6 +27,7 @@ import ethereumVerifyMessage from './ethereumVerifyMessage';
 import getAccountInfo from './getAccountInfo';
 import getFeatures from './getFeatures';
 import getOwnershipId from './getOwnershipId';
+import getOwnershipProof from './getOwnershipProof';
 import nemGetAddress from './nemGetAddress';
 import nemSignTransactionMosaic from './nemSignTransactionMosaic';
 import nemSignTransactionMultisig from './nemSignTransactionMultisig';
@@ -91,6 +92,7 @@ let fixtures = [
     // todo: missing fixtures: GetDeviceState.js
     getFeatures,
     getOwnershipId,
+    getOwnershipProof,
     getPublicKey,
     // todo: missing fixtures: GetSettings.js
     nemGetAddress,

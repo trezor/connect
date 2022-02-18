@@ -156,7 +156,7 @@ publish beta release to npm:
     matrix:
       - TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
       - TESTS_INCLUDED_METHODS: "signTransaction"
-      - TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction,getOwnershipId"
+      - TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction,getOwnershipId,getOwnershipProof"
       - TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
       - TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction"
       - TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
