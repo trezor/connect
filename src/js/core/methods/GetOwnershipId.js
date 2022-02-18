@@ -9,7 +9,10 @@ import { getBitcoinNetwork } from '../../data/CoinInfo';
 import type { MessageType } from '../../types/trezor/protobuf';
 import type { OwnershipId } from '../../types/networks/bitcoin';
 
-type Params = $ElementType<MessageType, 'GetOwnershipId'>;
+type Params = {
+    ...$ElementType<MessageType, 'GetOwnershipId'>,
+    preauthorized: boolean,
+};
 
 export default class GetOwnershipId extends AbstractMethod<'getOwnershipId'> {
     params: Params[] = [];
@@ -50,6 +53,7 @@ export default class GetOwnershipId extends AbstractMethod<'getOwnershipId'> {
                 coin_name: coinInfo ? coinInfo.name : undefined,
                 multisig: batch.multisig,
                 script_type,
+                preauthorized: !!batch.preauthorized,
             });
         });
     }
@@ -85,6 +89,9 @@ export default class GetOwnershipId extends AbstractMethod<'getOwnershipId'> {
         const cmd = this.device.getCommands();
         for (let i = 0; i < this.params.length; i++) {
             const batch = this.params[i];
+            if (batch.preauthorized) {
+                await cmd.typedCall('DoPreauthorized', 'PreauthorizedRequest', {});
+            }
             const { message } = await cmd.typedCall('GetOwnershipId', 'OwnershipId', batch);
             responses.push({
                 ...message,

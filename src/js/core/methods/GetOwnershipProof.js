@@ -9,7 +9,10 @@ import { UiMessage } from '../../message/builder';
 import type { MessageType } from '../../types/trezor/protobuf';
 import type { OwnershipProof } from '../../types/networks/bitcoin';
 
-type Params = $ElementType<MessageType, 'GetOwnershipProof'>;
+type Params = {
+    ...$ElementType<MessageType, 'GetOwnershipProof'>,
+    preauthorized: boolean,
+};
 
 export default class GetOwnershipProof extends AbstractMethod<'getOwnershipProof'> {
     params: Params[] = [];
@@ -56,6 +59,7 @@ export default class GetOwnershipProof extends AbstractMethod<'getOwnershipProof
                 user_confirmation: batch.userConfirmation,
                 ownership_ids: batch.ownershipIds,
                 commitment_data: batch.commitmentData,
+                preauthorized: !!batch.preauthorized,
             });
         });
     }
@@ -91,6 +95,9 @@ export default class GetOwnershipProof extends AbstractMethod<'getOwnershipProof
         const cmd = this.device.getCommands();
         for (let i = 0; i < this.params.length; i++) {
             const batch = this.params[i];
+            if (batch.preauthorized) {
+                await cmd.typedCall('DoPreauthorized', 'PreauthorizedRequest', {});
+            }
             const { message } = await cmd.typedCall('GetOwnershipProof', 'OwnershipProof', batch);
             responses.push({
                 ...message,

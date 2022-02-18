@@ -114,6 +114,7 @@ export interface SignTransaction {
     branchId?: number;
     decredStakingTicket?: boolean;
     push?: boolean;
+    preauthorized?: boolean;
 }
 
 export type SignedTransaction = {
@@ -127,6 +128,7 @@ export type GetOwnershipId = {
     coin?: string;
     multisig?: MultisigRedeemScriptType;
     scriptType?: InternalInputScriptType;
+    preauthorized?: boolean;
 };
 
 export type OwnershipId = ProtobufOwnershipId & {
@@ -142,6 +144,7 @@ export type GetOwnershipProof = {
     userConfirmation?: boolean;
     ownershipIds?: string[];
     commitmentData?: string;
+    preauthorized?: boolean;
 };
 
 export type OwnershipProof = ProtobufOwnershipProof & {

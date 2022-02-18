@@ -36,6 +36,7 @@ type Params = {
     options: TransactionOptions,
     coinInfo: BitcoinNetworkInfo,
     push: boolean,
+    preauthorized?: boolean,
 };
 
 export default class SignTransaction extends AbstractMethod<'signTransaction'> {
@@ -113,6 +114,7 @@ export default class SignTransaction extends AbstractMethod<'signTransaction'> {
             },
             coinInfo,
             push: typeof payload.push === 'boolean' ? payload.push : false,
+            preauthorized: !!payload.preauthorized,
         };
 
         if (coinInfo.hasTimestamp && !Object.prototype.hasOwnProperty.call(payload, 'timestamp')) {
@@ -169,6 +171,10 @@ export default class SignTransaction extends AbstractMethod<'signTransaction'> {
             }
         } else {
             refTxs = params.refTxs;
+        }
+
+        if (params.preauthorized) {
+            await device.getCommands().typedCall('DoPreauthorized', 'PreauthorizedRequest', {});
         }
 
         const signTxMethod = !useLegacySignProcess ? signTx : signTxLegacy;
