@@ -4,6 +4,7 @@ import type {
     TxInputType,
     TxOutputType,
     TxOutputBinType,
+    TxAckPaymentRequest,
     Address as ProtobufAddress,
     MultisigRedeemScriptType,
     InternalInputScriptType,
@@ -95,6 +96,7 @@ export type TransactionOptions = {
 export interface SignTransaction {
     inputs: TxInputType[];
     outputs: TxOutputType[];
+    paymentRequests?: TxAckPaymentRequest[];
     refTxs?: RefTransaction[];
     account?: {
         addresses: AccountAddresses;

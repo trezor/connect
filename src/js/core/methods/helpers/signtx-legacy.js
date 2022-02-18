@@ -1,11 +1,6 @@
 /* @flow */
 import { ERRORS } from '../../../constants';
-import type { BitcoinNetworkInfo } from '../../../types';
-import type {
-    RefTransaction,
-    TransactionOptions,
-    SignedTransaction,
-} from '../../../types/networks/bitcoin';
+import type { RefTransaction, SignedTransaction } from '../../../types/networks/bitcoin';
 
 import type {
     TypedCall,
@@ -15,6 +10,7 @@ import type {
     TxOutputType,
     TxRequestSerializedType,
 } from '../../../types/trezor/protobuf';
+import type { SignTxHelperParams } from './signtx';
 
 type RefTxs = { [hash: string]: RefTransaction };
 type Props = {
@@ -174,19 +170,14 @@ const processTxRequest = async (props: Props) => {
     });
 };
 
-export default async (
-    typedCall: TypedCall,
-    inputs: TxInputType[],
-    outputs: TxOutputType[],
-    refTxsArray: RefTransaction[],
-    options: TransactionOptions,
-    coinInfo: BitcoinNetworkInfo,
-): Promise<SignedTransaction> => {
-    const refTxs: RefTxs = {};
-    refTxsArray.forEach(tx => {
-        refTxs[tx.hash.toLowerCase()] = tx;
-    });
-
+export default async ({
+    typedCall,
+    inputs,
+    outputs,
+    refTxs,
+    options,
+    coinInfo,
+}: SignTxHelperParams): Promise<SignedTransaction> => {
     const { message } = await typedCall('SignTx', 'TxRequest', {
         ...options,
         inputs_count: inputs.length,
@@ -197,7 +188,13 @@ export default async (
     return processTxRequest({
         typedCall,
         txRequest: message,
-        refTxs,
+        refTxs: refTxs.reduce(
+            (obj, tx) => ({
+                ...obj,
+                [tx.hash.toLowerCase()]: tx,
+            }),
+            {},
+        ),
         inputs,
         outputs,
         serializedTx: [],
