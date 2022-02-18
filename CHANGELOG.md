@@ -13,6 +13,7 @@
 # 8.2.7
 
 ### Added
+- `TrezorConnect.getOwnershipId` method.
 - `TrezorConnect.setProxy` method. Allow @trezor/blockchain-link using TOR proxy.
 - Support for Electrum backend
 
