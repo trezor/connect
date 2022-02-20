@@ -299,3 +299,21 @@ node:
     - /trezor-user-env/run.sh &
     - sleep 10
     - nix-shell --run "yarn babel-node ./examples/node/index.js"
+
+test ethereum plugin:
+  stage: test
+  dependencies:
+    # we only need the submodules part of this, not the node_modules
+    - "setup environment"
+  # Required only to make the `nix-shell` command available
+  # Alternatively, we could replace with generic `image: nixos/nix:latest`
+  image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
+  script:
+    - nix-shell --run "cd src/js/plugins/ethereum/ && yarn install --cache-folder ./.yarn-cache"
+    - nix-shell --run "cd src/js/plugins/ethereum/ && yarn test:unit"
+  cache:
+    key:
+      files:
+        - src/js/plugins/ethereum/yarn.lock
+    paths:
+      - src/js/plugins/ethereum/.yarn-cache
