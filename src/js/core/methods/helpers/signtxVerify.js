@@ -116,7 +116,7 @@ export const verifyTx = async (
 
         if (outputs[i].amount) {
             const { amount } = outputs[i];
-            if (amount !== bitcoinTx.outs[i].value) {
+            if (amount.toString() !== bitcoinTx.outs[i].value) {
                 throw ERRORS.TypedError(
                     'Runtime',
                     `verifyTx: Wrong output amount at output ${i}. Requested: ${amount}, signed: ${bitcoinTx.outs[i].value}`,
