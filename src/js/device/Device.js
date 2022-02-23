@@ -231,10 +231,10 @@ class Device extends EventEmitter {
         }
     }
 
-    interruptionFromUser(error: Error) {
+    async interruptionFromUser(error: Error) {
         _log.debug('+++++interruptionFromUser');
         if (this.commands) {
-            this.commands.cancel();
+            await this.commands.cancel();
             this.commands.dispose();
         }
         if (this.runPromise) {

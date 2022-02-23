@@ -653,6 +653,10 @@ export default class DeviceCommands {
             return;
         }
 
+        if (this.disposed) {
+            return;
+        }
+
         /**
          * Bridge version =< 2.0.28 has a bug that doesn't permit it to cancel
          * user interactions in progress, so we have to do it manually.
@@ -664,8 +668,12 @@ export default class DeviceCommands {
             versionCompare(version, '2.0.28') < 1
         ) {
             await this.device.legacyForceRelease();
+        } else {
+            await this.transport.post(this.sessionId, 'Cancel', {}, false);
+            // post does not read back from usb stack. this means that there is a pending message left
+            // and we need to remove it so that it does not interfere with the next transport call.
+            // see DeviceCommands.typedCall
+            await this.transport.read(this.sessionId);
         }
-
-        this.transport.post(this.sessionId, 'Cancel', {}, false);
     }
 }
