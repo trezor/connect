@@ -1,4 +1,4 @@
-# 8.2.7 (not released)
+# 8.2.7
 
 ### Added
 - `TrezorConnect.setProxy` method. Allow @trezor/blockchain-link using TOR proxy.
@@ -7,11 +7,13 @@
 ### Fixed
 - Some methods not throwing `ui-device_firmware_unsupported` when the current device firmware didn't support the method.
 - Ethereum: EthereumSignTypedData now supports signing domain-only data, i.e. when `primaryType` is equal to `EIP712Domain`.
-
+- GetAccountInfo method in popup mode
 ### Changed
-
 - @trezor/blockchain-link 2.0.0 use workers as commonjs modules in nodejs and react-native env.
 - Ethereum: EthereumSignTypedData must always have at least Trezor T parameters.
+
+### Removed
+- AOPP
 
 # 8.2.6
 
