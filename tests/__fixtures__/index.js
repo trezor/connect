@@ -44,6 +44,7 @@ import signTransactionExternal from './signTransactionExternal';
 import signTransactionKomodo from './signTransactionKomodo';
 import signTransactionMultisig from './signTransactionMultisig';
 import signTransactionMultisigChange from './signTransactionMultisigChange';
+import signTransactionPaymentRequest from './signTransactionPaymentRequest';
 import signTransactionPeercoin from './signTransactionPeercoin';
 import signTransactionReplace from './signTransactionReplace';
 import signTransactionSegwit from './signTransactionSegwit';
@@ -114,6 +115,7 @@ let fixtures = [
     signTransactionKomodo,
     signTransactionMultisig,
     signTransactionMultisigChange,
+    signTransactionPaymentRequest,
     signTransactionPeercoin,
     signTransactionReplace,
     signTransactionSegwit,
