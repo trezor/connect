@@ -33,6 +33,7 @@ TrezorConnect.signTransaction(params).then(function(result) {
 * `timestamp` - *optional* `number` only for Capricoin, transaction timestamp,
 * `branchId` - *optional* `number`, only for Zcash, BRANCH_ID when overwintered is set
 * `push` - *optional* `boolean` Broadcast signed transaction to blockchain. Default is set to false
+* `preauthorized` — *optional* `boolean` [read more](./authorizeCoinJoin.md)
 
 ### Example
 ###### PAYTOADDRESS

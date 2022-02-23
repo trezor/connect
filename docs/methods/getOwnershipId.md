@@ -22,6 +22,7 @@ TrezorConnect.getOwnershipId(params).then(function(result) {
 * `coin` — *optional* `string` determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used. If `coin` is not set API will try to get network definition from `path`.
 * `scriptType` — *optional* `InputScriptType`
 * `multisig` — *optional* `MultisigRedeemScriptType`
+* `preauthorized` — *optional* `boolean` [read more](./authorizeCoinJoin.md)
 
 #### Exporting bundle of ids
 * `bundle` - `Array` of Objects with fields listed above.

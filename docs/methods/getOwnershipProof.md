@@ -25,6 +25,7 @@ TrezorConnect.getOwnershipProof(params).then(function(result) {
 * `ownershipIds` — *optional* `Array<string>`
 * `commitmentData` — *optional* `string`
 * `multisig` — *optional* `MultisigRedeemScriptType`
+* `preauthorized` — *optional* `boolean` [read more](./authorizeCoinJoin.md)
 
 #### Exporting bundle of ids
 * `bundle` - `Array` of Objects with fields listed above.
