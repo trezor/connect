@@ -218,6 +218,9 @@ API:
   stage: test extended
   only:
     - schedules
+  variables:
+    TESTS_USE_TX_CACHE: "true"
+    TESTS_USE_WS_CACHE: "true"
   # todo: resolve tests flakiness and remove retry option
   retry: 2
  
