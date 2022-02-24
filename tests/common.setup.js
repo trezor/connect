@@ -1,4 +1,3 @@
-import semver from 'semver';
 import releases2 from '@trezor/connect-common/files/firmware/2/releases.json';
 import releases1 from '@trezor/connect-common/files/firmware/1/releases.json';
 
@@ -64,11 +63,16 @@ const setup = async (controller, options) => {
             needs_backup: false,
             options,
         });
-        // lower firmware does not have this interface
-        if (firmware === '1-master' || firmware === '2-master' || semver.gte(firmware, '2.3.2')) {
-            // todo: temporary from 2.3.2 until sync fixtures with trezor-firmware
-            await controller.send({ type: 'emulator-allow-unsafe-paths' });
+
+        if (options.settings) {
+            // allow apply-settings to fail, older FW may not know some flags yet
+            try {
+                await controller.send({ type: 'emulator-apply-settings', ...options.settings });
+            } catch (e) {
+                console.warn('Setup apply settings failed', options.settings, e.message);
+            }
         }
+
         // after all is done, start bridge again
         await controller.send({ type: 'bridge-start' });
         // Wait to prevent Transport is missing error from TrezorConnect

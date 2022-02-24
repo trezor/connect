@@ -45,6 +45,9 @@ export default {
     method: 'signTransaction',
     setup: {
         mnemonic: 'mnemonic_all',
+        settings: {
+            safety_checks: 2,
+        },
     },
     tests: [
         {
