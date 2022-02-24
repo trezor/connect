@@ -8,7 +8,7 @@ export default {
             description: 'Change label, rotation and passphrase',
             params: {
                 label: 'cool label',
-                auto_lock_delay: 300,
+                auto_lock_delay_ms: 10 * 1000, // minimum
                 display_rotation: 90,
                 use_passphrase: false,
             },
@@ -22,7 +22,7 @@ export default {
                 firmware: ['2.3.2', '2-master'],
             },
             params: {
-                auto_lock_delay: 1000,
+                auto_lock_delay_ms: 60 * 1000,
                 display_rotation: 0,
             },
             result: {
