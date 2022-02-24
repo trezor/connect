@@ -10,6 +10,9 @@ export default {
     method: 'eosGetPublicKey',
     setup: {
         mnemonic: 'mnemonic_abandon',
+        settings: {
+            safety_checks: 2,
+        },
     },
     tests: [
         {

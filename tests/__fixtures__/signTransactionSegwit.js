@@ -4,6 +4,9 @@ export default {
     method: 'signTransaction',
     setup: {
         mnemonic: 'mnemonic_12',
+        settings: {
+            safety_checks: 2,
+        },
     },
     tests: [
         {
