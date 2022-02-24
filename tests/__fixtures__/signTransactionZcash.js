@@ -1,5 +1,12 @@
 const { ADDRESS_N, TX_CACHE } = global.TestUtils;
 
+const legacyResults = [
+    {
+        rules: ['<1.8.1', '<2.1.1'], // Zcash support from coins.json
+        success: false,
+    },
+];
+
 export default {
     method: 'signTransaction',
     setup: {
@@ -9,9 +16,7 @@ export default {
         {
             // See https://zec1.trezor.io/tx/0f762a2da5252d684fb3510a3104bcfb556fab34583b3b0e1994d0f7409cc075
             description: 'Zcash: input v2, no change',
-            setup: {
-                firmware: [['2.0.0', '2.1.8']],
-            },
+            skip: ['>1.8.3', '>2.1.8'], // test works only in FW range [1.8.1 - 1.8.3] and [2.1.1 - 2.1.8]
             params: {
                 coin: 'Zcash',
                 inputs: [
@@ -35,13 +40,12 @@ export default {
                 serializedTx:
                     '01000000013adce2e9d7d0471817cd9dc74198f431b1958f5b74583ca3d12346db8955d229000000006b483045022100f36da2fba65831c24bae2264892d914abdf65ee747ba9e8deeaeb13d1c72b03102200b8ecb59698dbe90f8cfe529a6d05c8b7fa2f31a2f5a7a1b993700a20d04d63a0121022f5c53b6d2e1b64c37d85716dbef318bd398ad7d2a03d94960af060402380658ffffffff01081a0100000000001976a9142e383c56fe3df202792e6f4460c8056b6a4d5b3488ac00000000',
             },
+            legacyResults,
         },
         {
             // See https://zec1.trezor.io/tx/e5229ae8c02f74af5e0c2100371710424fa85902c29752498c39921de2246824
             description: 'Zcash: inputs v1, no change',
-            setup: {
-                firmware: [['2.0.0', '2.1.8']],
-            },
+            skip: ['>1.8.3', '>2.1.8'], // test works only in FW range [1.8.1 - 1.8.3] and [2.1.1 - 2.1.8]
             params: {
                 coin: 'Zcash',
                 inputs: [
@@ -71,6 +75,7 @@ export default {
                 serializedTx:
                     '01000000022adff4e740f4db482e8e83ced93fed3828504fdc51d84080e6ce4b24a63a5384000000006a473044022066a25c3b0fe18b17327f6080d9e5a26a880cf6ae6c47ff9b7bf9f8a59ab36814022065e4abcdff6f84311ac120b689e5a69db80312446731ab8fe1b3026e29c11ede0121032fd3a554fc321693de4b7cf66649da7726c4d0d3849a7b947774e04d54e38f91ffffffff2adff4e740f4db482e8e83ced93fed3828504fdc51d84080e6ce4b24a63a5384010000006a473044022009fb8f5c4a3ad7960f64a573084b7dec2b73bbe7044328ff05cb6106153014ef022035ab922f75a7c0ff07acd7e99b2469551ce7ff5b830c102d38d175bf3fa8ab74012102a1eb5e72ebdf2a6650593167a4c8391d9a37c2df19e1034fd0e4dc5b525696e9ffffffff01e4270000000000001976a91497e66840d01e615bdcea4a39a1b3afd0a27e6b0188ac00000000',
             },
+            legacyResults,
         },
         {
             // NOTE: this is not a valid transaction
@@ -115,18 +120,20 @@ export default {
             result: false, // since 2.3.3 Failure_DataError Unsupported transaction version.
             legacyResults: [
                 {
-                    rules: ['<2.3.3'],
+                    rules: ['<1.9.3', '<2.3.3'],
                     payload: {
                         serializedTx:
                             '030000807082c4030279ac50582b99028697df6b73f2966f8d17867ec57e8f24cde117fac6cd3cf56d010000006b483045022100f960b9c81d873f3dfafa828f8dbbe7ea88eec4fee41e1e7ccd42113e4b185838022050558c9398572d1c5003aac0b796acf1f177474879fa57c259659be1f9f07de70121032fd3a554fc321693de4b7cf66649da7726c4d0d3849a7b947774e04d54e38f91ffffffffe32ef09055993e26e042e07e85cd9fdd787d91c2591e058eb8fce89219d1e1e7000000006a47304402203a1662a30ae7a54b9b44206f1ee70ce7c5545003e932edcc2a60f01e3ecc90cb0220076e2e963518cee173c0f39b783a48f0fd418e99bb8175defd12993b93a83af1012102a1eb5e72ebdf2a6650593167a4c8391d9a37c2df19e1034fd0e4dc5b525696e9ffffffff0240899500000000001976a9142875b160968fae11ca7fdd0174825c812f24f05688aca0860100000000001976a914d32faea5595826da401c0e486418afd51ce7815488ac000000000000000000',
                     },
                 },
+                ...legacyResults,
             ],
         },
         {
             // NOTE: this is not a valid transaction
             // Inputs from https://zec1.trezor.io/tx/234b2cf6cb2a50be29f45efae27fe717e3bb31967a72927d122cac1f50988cab
             description: 'Zcash: input v4',
+            skip: ['<1.9.0', '<2.2.0'],
             params: {
                 coin: 'Zcash',
                 version: 4,
@@ -160,6 +167,7 @@ export default {
             // https://tzec1.trezor.io/tx/0cef132c1d6d67f11cfa48f7fca3209da29cf872ac782354bedb686e61a17a78
             // https://explorer.testnet.z.cash/api/tx/0cef132c1d6d67f11cfa48f7fca3209da29cf872ac782354bedb686e61a17a78
             description: 'Zcash testnet: v4',
+            skip: ['<1.9.0', '<2.2.0'],
             params: {
                 coin: 'taz',
                 version: 4,
@@ -192,6 +200,7 @@ export default {
         {
             // https://tzec1.trezor.io/tx/737eb78fc69f30ec9eff04359a1551969e026472ae5530e287a838047e237098
             description: 'Zcash testnet: blossom fork',
+            skip: ['<1.9.0', '<2.2.0'],
             params: {
                 coin: 'taz',
                 version: 4,

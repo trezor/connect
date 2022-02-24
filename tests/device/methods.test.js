@@ -1,10 +1,10 @@
 import chalk from 'chalk';
+import TrezorConnect from '../../src/js/index';
 import fixtures from '../__fixtures__';
 
-const { setup, skipTest, initTrezorConnect, Controller, TrezorConnect } = global.Trezor;
+const { getController, setup, skipTest, conditionalTest, initTrezorConnect } = global.Trezor;
 
 let controller;
-let currentMnemonic;
 
 describe(`TrezorConnect methods`, () => {
     afterAll(done => {
@@ -21,34 +21,15 @@ describe(`TrezorConnect methods`, () => {
             beforeAll(async done => {
                 try {
                     if (!controller) {
-                        controller = new Controller({
-                            url: 'ws://localhost:9001/',
-                            name: testCase.method,
-                        });
-                        controller.on('error', error => {
+                        controller = getController(testCase.method);
+                        controller.on('error', () => {
                             controller = undefined;
-                            console.log('Controller WS error', error);
-                        });
-                        controller.on('disconnect', () => {
-                            controller = undefined;
-                            console.log('Controller WS disconnected');
                         });
                     }
 
-                    if (testCase.setup.mnemonic && testCase.setup.mnemonic !== currentMnemonic) {
-                        await setup(controller, testCase.setup);
-                        currentMnemonic = testCase.setup.mnemonic;
-                    }
+                    await setup(controller, testCase.setup);
 
                     await initTrezorConnect(controller);
-                    const res = await TrezorConnect.getFeatures();
-                    const { major_version, minor_version, patch_version, revision } = res.payload;
-                    console.log('Setup finished. Running tests against device: ', {
-                        major_version,
-                        minor_version,
-                        patch_version,
-                        revision,
-                    });
                     done();
                 } catch (error) {
                     console.log('Controller WS init error', error);
@@ -63,30 +44,22 @@ describe(`TrezorConnect methods`, () => {
 
             testCase.tests.forEach(t => {
                 // check if test should be skipped on current configuration
-                const testMethod = skipTest(t.skip) ? it.skip : it;
-                testMethod(
+                conditionalTest(
+                    t.skip,
                     t.description,
                     async done => {
-                        if (!controller) {
-                            done('Controller not found');
-                            return;
-                        }
-
                         // print current test case, `jest` default reporter doesn't log this. see https://github.com/facebook/jest/issues/4471
                         if (typeof jest !== 'undefined' && process.stderr) {
                             const log = chalk.black.bgYellow.bold(` ${testCase.method}: `);
                             process.stderr.write(`\n${log} ${chalk.bold(t.description)}\n`);
                         }
 
-                        if (t.mnemonic && t.mnemonic !== currentMnemonic) {
-                            // single test requires different seed, switch it
-                            await setup(controller, { mnemonic: t.mnemonic });
-                            currentMnemonic = t.mnemonic;
-                        } else if (!t.mnemonic && testCase.setup.mnemonic !== currentMnemonic) {
-                            // restore testCase.setup
-                            await setup(controller, testCase.setup);
-                            currentMnemonic = testCase.setup.mnemonic;
+                        if (!controller) {
+                            throw new Error('Controller not found');
                         }
+
+                        // single test may require a different setup
+                        await setup(controller, t.setup || testCase.setup);
 
                         controller.options.name = t.description;
                         const result = await TrezorConnect[testCase.method](t.params);

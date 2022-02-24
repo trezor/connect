@@ -88,10 +88,8 @@ export default {
             },
         },
         {
+            skip: ['1', '<2.1.0'],
             description: 'Ripple: first account',
-            setup: {
-                firmware: [['2.1.0', '2-master']],
-            },
             params: {
                 coin: 'xrp',
                 path: "m/44'/144'/0'/0/0",
@@ -102,10 +100,8 @@ export default {
             },
         },
         {
+            skip: ['1', '<2.1.0'],
             description: 'Ripple: account from descriptor',
-            setup: {
-                firmware: [['2.1.0', '2-master']],
-            },
             params: {
                 coin: 'xrp',
                 descriptor: 'rfkV3EoXimH6JrG1QAyofgbVhnyZZDjWSj',
@@ -124,9 +120,9 @@ export default {
             result: false,
         },
         {
-            mnemonic: 'mnemonic_all',
+            skip: ['1', '<2.3.2'],
             setup: {
-                firmware: [['2.3.2', '2-master']],
+                mnemonic: 'mnemonic_all',
             },
             description: 'Cardano: empty account using descriptor',
             params: {
@@ -144,9 +140,9 @@ export default {
             },
         },
         {
-            mnemonic: 'mnemonic_all',
+            skip: ['1', '<2.3.2'],
             setup: {
-                firmware: [['2.3.2', '2-master']],
+                mnemonic: 'mnemonic_all',
             },
             description: 'Cardano: empty account using path',
             params: {

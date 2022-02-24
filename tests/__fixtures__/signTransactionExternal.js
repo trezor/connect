@@ -337,7 +337,9 @@ export default {
             // "error": "signing.c:1021:Unsupported script type.",
             description: 'Testnet (P2TR): with proof',
             skip: ['1'],
-            mnemonic: 'mnemonic_abandon', // <- important, external input is from all-all (previous case)
+            setup: {
+                mnemonic: 'mnemonic_abandon', // <- important, external input is from all-all (previous case)
+            },
             params: {
                 coin: 'Testnet',
                 inputs: [
