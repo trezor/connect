@@ -207,7 +207,10 @@ export default {
         })),
         {
             description: 'Sequence is over Number.MAX_SAFE_INTEGER and is sent as string',
-            mnemonic: 'bridge endless life will season cigar crash relief give syrup annual inner',
+            setup: {
+                mnemonic:
+                    'bridge endless life will season cigar crash relief give syrup annual inner',
+            },
             params: {
                 path: "m/44'/148'/0'",
                 networkPassphrase: 'Public Global Stellar Network ; September 2015',

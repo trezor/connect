@@ -129,38 +129,6 @@ let fixtures = [
     // todo: resetDevice,
 ];
 
-// if env variable TESTS_FIRMWARE, filter out those tests that do not match it
-const firmware = process.env.TESTS_FIRMWARE || '2-master';
-if (firmware) {
-    const [actualMajor, actualMinor, actualPatch] = firmware.split('.');
-    fixtures = fixtures.map(f => {
-        f.tests = f.tests.filter(t => {
-            if (!t.setup || !t.setup.firmware) {
-                return true;
-            }
-            return t.setup.firmware.some(fw => {
-                if (firmware === '1-master' && fw[1] === '2-master') return false;
-                if (firmware === '1-master' && fw[1] === '1-master') return true;
-
-                if (firmware === '2-master' && fw[1] === '1-master') return false;
-                if (firmware === '2-master' && fw[1] === '2-master') return true;
-
-                const [fromMajor, fromMinor, fromPatch] = fw[0].split('.');
-                const [toMajor, toMinor, toPatch] = fw[1].split('.');
-                return (
-                    actualMajor >= fromMajor &&
-                    actualMinor >= fromMinor &&
-                    actualPatch >= fromPatch &&
-                    actualMajor <= toMajor &&
-                    actualMinor <= toMinor &&
-                    actualPatch <= toPatch
-                );
-            });
-        });
-        return f;
-    });
-}
-
 const includedMethods = process.env.TESTS_INCLUDED_METHODS;
 const excludedMethods = process.env.TESTS_EXCLUDED_METHODS;
 if (includedMethods) {

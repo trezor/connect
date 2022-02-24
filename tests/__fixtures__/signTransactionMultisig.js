@@ -118,7 +118,9 @@ export default {
         },
         {
             description: 'Bitcoin (multisig): 15 of 15 (sign with 15th key)',
-            mnemonic: 'mnemonic_12',
+            setup: {
+                mnemonic: 'mnemonic_12',
+            },
             params: {
                 coin: 'Bitcoin',
                 inputs: [
@@ -172,7 +174,9 @@ export default {
         },
         {
             description: 'Bitcoin (multisig): missing pubkey (different seed)',
-            mnemonic: 'mnemonic_12',
+            setup: {
+                mnemonic: 'mnemonic_12',
+            },
             params: {
                 coin: 'Bitcoin',
                 inputs: [

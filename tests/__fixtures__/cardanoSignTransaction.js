@@ -745,9 +745,7 @@ export default {
 
         {
             description: 'signMetadata',
-            setup: {
-                firmware: [['2.0.0', '2.3.6']],
-            },
+            skip: ['>2.3.6'],
             params: {
                 inputs: [SAMPLE_INPUTS.shelley_input],
                 outputs: [SAMPLE_OUTPUTS.simple_shelley_output],
