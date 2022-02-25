@@ -1,3 +1,8 @@
+# 8.2.8 (not released)
+
+### Changed
+- signTransaction allows address_n to be bip44 path string
+
 # 8.2.7
 
 ### Added
