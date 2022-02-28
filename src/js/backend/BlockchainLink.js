@@ -92,7 +92,9 @@ export default class Blockchain {
               }, {})
             : {};
 
-        const server = onionDomains ? Object.keys(this.onionDomains) : blockchainLink.url;
+        const server = Object.keys(this.onionDomains).length
+            ? Object.keys(this.onionDomains)
+            : blockchainLink.url;
 
         this.link = new BlockchainLink({
             name: this.coinInfo.shortcut,
