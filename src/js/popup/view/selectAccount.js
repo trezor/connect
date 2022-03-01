@@ -28,11 +28,11 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>) 
     if (Array.isArray(accountTypes)) {
         showView('select-account');
         // setHeader(payload);
+        const selectAccountContainer = container.getElementsByClassName('select-account')[0];
 
         if (accountTypes.length > 1) {
             const tabs = container.getElementsByClassName('tabs')[0];
             tabs.style.display = 'flex';
-            const selectAccountContainer = container.getElementsByClassName('select-account')[0];
             const buttons = tabs.getElementsByClassName('tab-selection');
             const firstGroupHeader = tabs.children[0].innerHTML; // store default label (Accounts)
             const selectedType =
@@ -55,6 +55,10 @@ export const selectAccount = (payload: $PropertyType<SelectAccount, 'payload'>) 
                 }
             }
             tabs.children[0].innerHTML = firstGroupHeader; // switch first label to default
+        } else if (accountTypes.length === 1) {
+            selectAccountContainer.className = `select-account ${accountTypes[0]}`;
+        } else {
+            console.error('should never happen');
         }
     }
 
