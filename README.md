@@ -1,5 +1,9 @@
 # TREZOR Connect API
 
+## ⚠️  Deprecated ⚠️
+
+This documentation is legacy and no longer maintained. [Current documentation exists on the `develop` branch](https://github.com/trezor/connect#readme).
+
 TREZOR Connect is a platform for easy integration of TREZOR into 3rd party
 services. It provides websites with functionality to authenticate users, access
 public keys and sign transactions. User interface is presented in a secure popup
