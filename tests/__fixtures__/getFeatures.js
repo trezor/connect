@@ -5,7 +5,10 @@ const [major, minor, patch] = firmware.split('.');
 
 // if custom build is used, we ignore firmware version numbers
 const customFirmwareBuild =
-    process.env.TESTS_CUSTOM_FIRMWARE_BUILD || process.env.TESTS_FIRMWARE?.indexOf('master') > 0;
+    process.env.TESTS_CUSTOM_FIRMWARE_BUILD ||
+    process.env.TESTS_FIRMWARE?.includes('master') ||
+    // integration tests in trezor-firmware repo use 2.99.99 version
+    process.env.TESTS_FIRMWARE === '2.99.99';
 
 export default {
     method: 'getFeatures',
