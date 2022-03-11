@@ -1,8 +1,8 @@
 /* @flow */
 
+import { CoinInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import { UI, ERRORS } from '../../constants';
@@ -31,7 +31,11 @@ export default class NEMGetAddress extends AbstractMethod<'nemGetAddress'> {
 
     init() {
         this.requiredPermissions = ['read'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('NEM'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(
+            this.name,
+            CoinInfo.getMiscNetwork('NEM'),
+            this.firmwareRange,
+        );
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = !!this.payload.bundle;

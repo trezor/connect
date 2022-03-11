@@ -1,11 +1,11 @@
 /* @flow */
+import { getCoinInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getSerializedPath } from '../../utils/pathUtils';
 import { getAccountLabel, isUtxoBased } from '../../utils/accountUtils';
 import { resolveAfter } from '../../utils/promiseUtils';
-import { getCoinInfo } from '../../data/CoinInfo';
 
 import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';

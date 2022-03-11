@@ -1,7 +1,7 @@
 /* @flow */
+import { CoinInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import {
     modifyAuxiliaryDataForBackwardsCompatibility,
@@ -83,7 +83,7 @@ export default class CardanoSignTransaction extends AbstractMethod<'cardanoSignT
         this.requiredPermissions = ['read', 'write'];
         this.firmwareRange = getFirmwareRange(
             this.name,
-            getMiscNetwork('Cardano'),
+            CoinInfo.getMiscNetwork('Cardano'),
             this.firmwareRange,
         );
         this.info = 'Sign Cardano transaction';

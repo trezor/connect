@@ -1,8 +1,8 @@
 /* @flow */
 
+import { CoinInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
@@ -19,7 +19,11 @@ export default class EosGetPublicKey extends AbstractMethod<'eosGetPublicKey'> {
 
     init() {
         this.requiredPermissions = ['read'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('EOS'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(
+            this.name,
+            CoinInfo.getMiscNetwork('EOS'),
+            this.firmwareRange,
+        );
         this.info = 'Export Eos public key';
 
         // create a bundle with only one batch if bundle doesn't exists

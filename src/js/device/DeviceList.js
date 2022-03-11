@@ -5,13 +5,12 @@ import EventEmitter from 'events';
 import TrezorLink from '@trezor/transport';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from '@trezor/transport';
 import fetch from 'cross-fetch';
+import { DataManager, TransportInfo } from '@trezor/connect-common';
 import { TRANSPORT, DEVICE, ERRORS } from '../constants';
 import DescriptorStream from './DescriptorStream';
 import type { DeviceDescriptorDiff } from './DescriptorStream';
 import Device from './Device';
 import type { Device as DeviceTyped } from '../types';
-import DataManager from '../data/DataManager';
-import { getBridgeInfo } from '../data/TransportInfo';
 import { initLog } from '../utils/debug';
 import { resolveAfter } from '../utils/promiseUtils';
 
@@ -67,7 +66,7 @@ export default class DeviceList extends EventEmitter {
         if (env === 'react-native' && typeof ReactNativeUsbPlugin !== 'undefined') {
             transports.push(ReactNativeUsbPlugin());
         } else {
-            const bridgeLatestVersion = getBridgeInfo().version.join('.');
+            const bridgeLatestVersion = TransportInfo.getBridgeInfo().version.join('.');
             const bridge = new BridgeV2(null, null);
             bridge.setBridgeLatestVersion(bridgeLatestVersion);
 

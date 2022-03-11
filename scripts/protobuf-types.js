@@ -3,7 +3,7 @@
 
 const fs = require('fs');
 const { RULE_PATCH, TYPE_PATCH, DEFINITION_PATCH, SKIP, UINT_TYPE } = require('./protobuf-patches');
-const json = require('../src/data/messages/messages.json');
+const json = require('@trezor/connect-common/lib/files/messages.json');
 
 const args = process.argv.slice(2);
 

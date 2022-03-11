@@ -1,11 +1,11 @@
 /* @flow */
 
+import { DataManager } from '@trezor/connect-common';
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
 import * as POPUP from '../../constants/popup';
 import { LIBUSB_ERROR_MESSAGE } from '../../constants/errors';
 import { container, iframe, showView, postMessage } from './common';
-import DataManager from '../../data/DataManager';
 import { getOS } from '../../env/browser/browserUtils';
 import type { SelectDevice } from '../../types/events';
 

@@ -1,6 +1,6 @@
 /* @flow */
 import BlockchainLink from '@trezor/blockchain-link';
-import DataManager from '../data/DataManager';
+import { DataManager } from '@trezor/connect-common';
 import { BlockchainMessage } from '../message/builder';
 import { BLOCKCHAIN, ERRORS } from '../constants';
 import { getOnionDomain } from '../utils/urlUtils';

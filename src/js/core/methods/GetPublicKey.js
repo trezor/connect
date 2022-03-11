@@ -1,5 +1,6 @@
 /* @flow */
 
+import { getBitcoinNetwork } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
@@ -7,7 +8,6 @@ import { validatePath } from '../../utils/pathUtils';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getPublicKeyLabel } from '../../utils/accountUtils';
 import type { BitcoinNetworkInfo, HDNodeResponse } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';

@@ -1,7 +1,7 @@
 /* @flow */
 
 import EventEmitter from 'events';
-import DataManager from '../data/DataManager';
+import { DataManager } from '@trezor/connect-common';
 import DeviceList from '../device/DeviceList';
 
 import {
@@ -1037,17 +1037,26 @@ export const initCore = () => {
 
 export const initData = async (settings: ConnectSettings) => {
     try {
+        console.log('initData');
+
         await DataManager.load(settings);
+        console.log('initData done');
     } catch (error) {
-        _log.log('init error', error);
+        console.log('initData catch', error);
+
+        _log.log('initData error', error);
         throw error;
     }
 };
 
 export const init = async (settings: ConnectSettings) => {
     try {
+        console.log('init');
+
         _log.enabled = !!settings.debug;
         await DataManager.load(settings);
+        console.log('init done');
+
         await initCore();
 
         // If we're not in popup mode, set the interaction timeout to 0 (= disabled)
@@ -1057,6 +1066,8 @@ export const init = async (settings: ConnectSettings) => {
 
         return _core;
     } catch (error) {
+        _log.log('init error', error);
+
         // TODO: kill app
         _log.log('init error', error);
         throw error;
@@ -1065,6 +1076,7 @@ export const init = async (settings: ConnectSettings) => {
 
 export const initTransport = async (settings: ConnectSettings) => {
     try {
+        console.log('initTransport');
         if (!settings.transportReconnect) {
             // try only once, if it fails kill and throw initialization error
             await initDeviceList(settings);
@@ -1072,7 +1084,10 @@ export const initTransport = async (settings: ConnectSettings) => {
             // don't wait for DeviceList result, further communication will be thru TRANSPORT events
             initDeviceList(settings);
         }
+        console.log('initTransport done');
     } catch (error) {
+        console.log('initTransport er', error);
+
         _log.log('initTransport', error);
         throw error;
     }

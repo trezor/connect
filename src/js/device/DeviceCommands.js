@@ -2,6 +2,7 @@
 
 import randombytes from 'randombytes';
 import type { Transport } from '@trezor/transport';
+import { getSegwitNetwork, getBech32Network } from '@trezor/connect-common';
 import { DEVICE, ERRORS, NETWORK } from '../constants';
 
 import * as hdnodeUtils from '../utils/hdnodeUtils';
@@ -17,8 +18,6 @@ import {
 } from '../utils/pathUtils';
 import { getAccountAddressN } from '../utils/accountUtils';
 import { versionCompare } from '../utils/versionUtils';
-
-import { getSegwitNetwork, getBech32Network } from '../data/CoinInfo';
 
 import type { IDevice } from './Device';
 import type { CoinInfo, BitcoinNetworkInfo, Network, HDNodeResponse } from '../types';

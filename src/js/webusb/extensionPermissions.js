@@ -1,16 +1,16 @@
 /* @flow */
 
-import { httpRequest } from '../env/browser/networkUtils';
+// import type { Config } from '@trezor/connect-common/lib/data/DataManager';
 import { sendMessage } from '../utils/windowsUtils';
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/popup.less';
 
-import type { Config } from '../data/DataManager';
-
-let config: Config;
+let config: any;
 
 const onLoad = async () => {
-    config = await httpRequest('./data/config.json', 'json');
+    // todo: ?
+    // eslint-disable-next-line global-require
+    config = await require('@trezor/connect-common/lib/files/config.json');
     sendMessage('usb-permissions-init', '*');
 };
 

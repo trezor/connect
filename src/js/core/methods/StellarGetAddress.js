@@ -1,8 +1,8 @@
 /* @flow */
 
+import { CoinInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import { UI, ERRORS } from '../../constants';
@@ -29,7 +29,7 @@ export default class StellarGetAddress extends AbstractMethod<'stellarGetAddress
         this.requiredPermissions = ['read'];
         this.firmwareRange = getFirmwareRange(
             this.name,
-            getMiscNetwork('Stellar'),
+            CoinInfo.getMiscNetwork('Stellar'),
             this.firmwareRange,
         );
 

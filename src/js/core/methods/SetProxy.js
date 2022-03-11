@@ -1,8 +1,8 @@
 /* @flow */
 
+import { DataManager } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
-import DataManager from '../../data/DataManager';
 import { reconnectAllBackends } from '../../backend/BlockchainLink';
 
 export default class SetProxy extends AbstractMethod<'setProxy'> {

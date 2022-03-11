@@ -1,5 +1,5 @@
+import config from '@trezor/connect-common/lib/files/config.json';
 import { getOS, getBrowserState, getSuggestedPlatform } from '../browserUtils';
-import config from '../../../../data/config.json';
 
 // user agents taken from bowser tests:
 // https://github.com/lancedikson/bowser/blob/f09411489ced05811c91cc6670a8e4ca9cbe39a7/test/acceptance/useragentstrings.yml

@@ -1,7 +1,7 @@
 /* @flow */
 
+import { DataManager } from '@trezor/connect-common';
 import type { CoreMessage } from '../../types';
-import DataManager from '../../data/DataManager';
 import { POPUP, ERRORS } from '../../constants';
 
 export const header: HTMLElement = document.getElementsByTagName('header')[0];

@@ -41,10 +41,11 @@ module.exports = {
         // resolve trezor-connect modules as "browser"
         new webpack.NormalModuleReplacementPlugin(/env\/node$/, './env/browser'),
         new webpack.NormalModuleReplacementPlugin(/env\/node\/workers$/, '../env/browser/workers'),
-        new webpack.NormalModuleReplacementPlugin(
-            /env\/node\/networkUtils$/,
-            '../env/browser/networkUtils',
-        ),
+
+        // new webpack.NormalModuleReplacementPlugin(
+        //     /env\/node\/networkUtils$/,
+        //     '../env/browser/networkUtils',
+        // ),
     ],
 
     optimization: {

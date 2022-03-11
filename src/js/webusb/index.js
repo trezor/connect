@@ -1,10 +1,6 @@
 /* @flow */
-
-import { httpRequest } from '../env/browser/networkUtils';
 // eslint-disable-next-line no-unused-vars
 import styles from '../../styles/webusb.less';
-
-import type { Config } from '../data/DataManager';
 
 // handle message received from connect.js
 const handleMessage = async (event: MessageEvent) => {
@@ -16,7 +12,8 @@ const handleMessage = async (event: MessageEvent) => {
         return;
     }
 
-    const config: Config = await httpRequest('./data/config.json', 'json');
+    /* eslint-disable-next-line global-require */
+    const config = await require('@trezor/connect-common/lib/files/config.json');
     const filters = config.webusb.map(desc => ({
         vendorId: parseInt(desc.vendorId, 16),
         productId: parseInt(desc.productId, 16),

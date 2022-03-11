@@ -58,19 +58,26 @@ export const init = async (settings: ConnectSettings) => {
     }, 10000);
 
     const onLoad = () => {
+        console.log('iframe builder.js onload 1');
         if (!instance) {
             initPromise.reject(ERRORS.TypedError('Init_IframeBlocked'));
             return;
         }
         try {
+            console.log('iframe builder.js onload 2');
+            console.log('iframe builder.js onload 2 iframeOrigin', iframeOrigin);
+
             // if hosting page is able to access cross-origin location it means that the iframe is not loaded
             const iframeOrigin = instance.contentWindow.location.origin;
             if (!iframeOrigin || iframeOrigin === 'null') {
                 // eslint-disable-next-line no-use-before-define
+                console.log('iframe builder.js onload 2.1');
                 handleIframeBlocked();
                 return;
             }
         } catch (e) {
+            console.log('iframe builder.js onload 2e', e);
+
             // empty
         }
 
@@ -81,9 +88,12 @@ export const init = async (settings: ConnectSettings) => {
             chrome.runtime &&
             typeof chrome.runtime.onConnect !== 'undefined'
         ) {
+            console.log('iframe builder.js onload 3');
+
             chrome.runtime.onConnect.addListener(() => {});
             extension = chrome.runtime.id;
         }
+        console.log('iframe builder.js onload 4', instance.contentWindow);
 
         instance.contentWindow.postMessage(
             {
@@ -113,8 +123,13 @@ export const init = async (settings: ConnectSettings) => {
     }
 
     try {
+        console.log('iframe builder.js init 1');
+
         await initPromise.promise;
+        console.log('iframe builder.js onload 1.1');
     } catch (e) {
+        console.log('iframe builder.js onload 1e');
+
         // reset state to allow initialization again
         if (instance) {
             if (instance.parentNode) {
@@ -124,6 +139,8 @@ export const init = async (settings: ConnectSettings) => {
         }
         throw e;
     } finally {
+        console.log('iframe builder.js onload 2');
+
         window.clearTimeout(timeout);
         timeout = 0;
     }
@@ -152,6 +169,8 @@ const injectStyleSheet = () => {
 };
 
 const handleIframeBlocked = () => {
+    console.log('iframe builder.js handleIframeBlocked 1');
+
     window.clearTimeout(timeout);
 
     error = ERRORS.TypedError('Init_IframeBlocked');
@@ -162,6 +181,8 @@ const handleIframeBlocked = () => {
 
 // post messages to iframe
 export const postMessage = (message: any, usePromise: boolean = true) => {
+    console.log('iframe builder.js postMessage 1');
+
     if (!instance) {
         throw ERRORS.TypedError('Init_IframeBlocked');
     }

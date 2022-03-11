@@ -1,7 +1,7 @@
 /* @flow */
 
+import { DataManager } from '@trezor/connect-common';
 import { UiMessage } from '../../message/builder';
-import DataManager from '../../data/DataManager';
 import * as UI from '../../constants/ui';
 import { showView, postMessage } from './common';
 import type { UnexpectedDeviceMode } from '../../types/events';

@@ -1,8 +1,8 @@
 /* @flow */
 
+import { DataManager } from '@trezor/connect-common';
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
-import DataManager from '../../data/DataManager';
 import { container, showView, postMessage, createTooltip } from './common';
 import type { RequestPermission } from '../../types/events';
 

@@ -1,5 +1,5 @@
-import DataManager from '../../../../data/DataManager';
-import configJSON from '../../../../../data/config.json';
+import { DataManager } from '@trezor/connect-common';
+import configJSON from '@trezor/connect-common/lib/files/config.json';
 import { validateParams, getFirmwareRange } from '../paramsValidator';
 import * as fixtures from '../__fixtures__/paramsValidator';
 
@@ -19,6 +19,8 @@ describe('helpers/paramsValidator', () => {
             });
         });
     });
+
+    console.log('DataManager', DataManager.getConfig);
 
     describe('getFirmwareRange', () => {
         afterEach(() => {

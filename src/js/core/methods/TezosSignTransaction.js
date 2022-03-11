@@ -1,8 +1,8 @@
 /* @flow */
 
+import { CoinInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath } from '../../utils/pathUtils';
 import * as helper from './helpers/tezosSignTx';
 import type { MessageType } from '../../types/trezor/protobuf';
@@ -14,7 +14,7 @@ export default class TezosSignTransaction extends AbstractMethod<'tezosSignTrans
         this.requiredPermissions = ['read', 'write'];
         this.firmwareRange = getFirmwareRange(
             this.name,
-            getMiscNetwork('Tezos'),
+            CoinInfo.getMiscNetwork('Tezos'),
             this.firmwareRange,
         );
         this.info = 'Sign Tezos transaction';

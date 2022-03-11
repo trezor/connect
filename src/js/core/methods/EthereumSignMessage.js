@@ -1,9 +1,9 @@
 /* @flow */
 
+import { getEthereumNetwork } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
-import { getEthereumNetwork } from '../../data/CoinInfo';
 import { getNetworkLabel } from '../../utils/ethereumUtils';
 import { messageToHex } from '../../utils/formatUtils';
 import type { MessageType } from '../../types/trezor/protobuf';

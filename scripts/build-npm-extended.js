@@ -6,11 +6,15 @@ const SRC = path.resolve(__dirname, '../src/js');
 const TS = path.resolve(__dirname, '../src/ts/types');
 const NPM = path.resolve(__dirname, '../npm-extended');
 const LIB = path.resolve(__dirname, '../npm-extended/lib');
-const DATA_SRC = path.resolve(__dirname, '../src/data');
 const DATA = path.resolve(__dirname, '../npm-extended/data');
-const CONNECT_COMMON_DATA = path.resolve(__dirname, '../node_modules/@trezor/connect-common/files');
 
-const ignored = ['__tests__', '__fixtures__', '_old', 'icons', 'udev'];
+// todo: ???
+const CONNECT_COMMON_DATA = path.resolve(__dirname, '../node_modules/@trezor/connect-common/src/files');
+
+// todo: ???
+const DATA_SRC = path.resolve(__dirname, '../node_modules/@trezor/connect-common/src/files');
+
+const ignored = ['__tests__', '__fixtures__', '_old', 'icons', 'udev', '.bin', 'node_modules'];
 const shouldIgnore = src => ignored.find(i => src.indexOf(i) >= 0);
 
 // copy all js files any make a copy with .flow extension
@@ -38,6 +42,7 @@ fse.copySync(TS, `${LIB}/typescript`, {
 fse.copySync(DATA_SRC, DATA, {
     filter: (src, _dest) => !shouldIgnore(src),
 });
+
 // copy bridge and firmware releases
 fse.copySync(CONNECT_COMMON_DATA, DATA);
 

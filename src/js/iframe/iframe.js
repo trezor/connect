@@ -1,12 +1,11 @@
 /* @flow */
 
+import { ConnectSettings, DataManager } from '@trezor/connect-common';
+
 import { CORE_EVENT, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT } from '../constants';
 import * as POPUP from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
 import * as UI from '../constants/ui';
-
-import { parse as parseSettings } from '../data/ConnectSettings';
-import DataManager from '../data/DataManager';
 
 import { Core, init as initCore, initTransport } from '../core/Core';
 import { parseMessage } from '../message';
@@ -195,8 +194,15 @@ const filterDeviceEvent = (message: CoreMessage) => {
 };
 
 const init = async (payload: any, origin: string) => {
+    console.log('iframe init', payload, origin);
     if (DataManager.getSettings('origin')) return; // already initialized
-    const parsedSettings = parseSettings({ ...payload.settings, extension: payload.extension });
+    const parsedSettings = ConnectSettings.parseSettings({
+        ...payload.settings,
+        extension: payload.extension,
+    });
+
+    console.log('iframe init parsedSettings', parsedSettings);
+
     // set origin manually
     parsedSettings.origin = !origin || origin === 'null' ? payload.settings.origin : origin;
 
@@ -209,6 +215,8 @@ const init = async (payload: any, origin: string) => {
             _popupMessagePort = new BroadcastChannel(broadcastID);
             _popupMessagePort.onmessage = message => handleMessage(message);
         } catch (error) {
+            console.log('iframe init catch ', error);
+
             // tell the popup to use MessageChannel fallback communication (thru IFRAME.LOADED > POPUP.INIT)
         }
     }
@@ -216,14 +224,19 @@ const init = async (payload: any, origin: string) => {
     _log.enabled = !!parsedSettings.debug;
 
     try {
+        console.log('iframe init core');
+
         // initialize core
         _core = await initCore(parsedSettings);
         _core.on(CORE_EVENT, postMessage);
+        console.log('iframe init transport');
 
         // initialize transport and wait for the first transport event (start or error)
         await initTransport(parsedSettings);
         postMessage(UiMessage(IFRAME.LOADED, { useBroadcastChannel: !!_popupMessagePort }));
     } catch (error) {
+        console.log('iframe init catch error 2', error);
+
         postMessage(UiMessage(IFRAME.ERROR, { error }));
     }
 };

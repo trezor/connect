@@ -1,9 +1,9 @@
 /* @flow */
 
+import { getBitcoinNetwork } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getLabel, getScriptType } from '../../utils/pathUtils';
-import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { messageToHex } from '../../utils/formatUtils';
 import type { BitcoinNetworkInfo } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';

@@ -1,12 +1,12 @@
 /* @flow */
 
+import { DataManager, ConnectSettings } from '@trezor/connect-common';
+
 import * as POPUP from '../constants/popup';
 import * as UI from '../constants/ui';
 
 import { parseMessage } from '../message';
 import { UiMessage } from '../message/builder';
-import DataManager from '../data/DataManager';
-import { parse as parseSettings } from '../data/ConnectSettings';
 import { escapeHtml } from '../utils/windowsUtils';
 
 import * as view from './view';
@@ -154,7 +154,7 @@ const init = async (payload?: $PropertyType<PopupInit, 'payload'>) => {
         // load config only to get supported browsers list
         // settings received from parent (POPUP.INIT) are not considered as "safe" (they could be injected/modified)
         // settings will be replaced later on, after POPUP.HANDSHAKE event from iframe
-        await DataManager.load(parseSettings(settings), false);
+        await DataManager.load(ConnectSettings.parse(settings), false);
         // initialize message channel
         const broadcastID = useBroadcastChannel
             ? `${settings.env}-${settings.timestamp}`

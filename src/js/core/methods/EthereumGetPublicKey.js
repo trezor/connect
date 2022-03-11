@@ -1,10 +1,10 @@
 /* @flow */
 
+import { getEthereumNetwork, getUniqueNetworks } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
 import { getNetworkLabel } from '../../utils/ethereumUtils';
-import { getEthereumNetwork, getUniqueNetworks } from '../../data/CoinInfo';
 
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';

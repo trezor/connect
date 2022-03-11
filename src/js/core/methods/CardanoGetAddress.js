@@ -1,8 +1,8 @@
 /* @flow */
 
+import { CoinInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-import { getMiscNetwork } from '../../data/CoinInfo';
 import { fromHardened, getSerializedPath } from '../../utils/pathUtils';
 import {
     addressParametersFromProto,
@@ -37,7 +37,7 @@ export default class CardanoGetAddress extends AbstractMethod<'cardanoGetAddress
         this.requiredPermissions = ['read'];
         this.firmwareRange = getFirmwareRange(
             this.name,
-            getMiscNetwork('Cardano'),
+            CoinInfo.getMiscNetwork('Cardano'),
             this.firmwareRange,
         );
 

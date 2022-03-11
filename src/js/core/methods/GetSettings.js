@@ -1,7 +1,7 @@
 /* @flow */
 
+import { DataManager } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
-import DataManager from '../../data/DataManager';
 
 export default class GetSettings extends AbstractMethod<'getSettings'> {
     init() {

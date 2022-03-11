@@ -1,10 +1,10 @@
 /* @flow */
 
+import { getEthereumNetwork, getUniqueNetworks } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getSerializedPath } from '../../utils/pathUtils';
 import { getNetworkLabel } from '../../utils/ethereumUtils';
-import { getEthereumNetwork, getUniqueNetworks } from '../../data/CoinInfo';
 import { stripHexPrefix } from '../../utils/formatUtils';
 
 import { UI, ERRORS } from '../../constants';

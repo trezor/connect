@@ -1,7 +1,7 @@
 /* @flow */
 import EventEmitter from 'events';
 
-import { parse as parseSettings } from '../../data/ConnectSettings';
+import { ConnectSettings } from '@trezor/connect-common';
 import { initLog } from '../../utils/debug';
 import { errorMessage } from '../../message';
 import { Core, init as initCore, initTransport } from '../../core/Core';
@@ -25,14 +25,14 @@ import * as $T from '../../types';
 export const eventEmitter = new EventEmitter();
 const _log = initLog('[trezor-connect.js]');
 
-let _settings = parseSettings();
+let _settings = ConnectSettings.parse();
 let _core: Core | null = null;
 
 let _messageID: number = 0;
 export const messagePromises: { [key: number]: $T.Deferred<any> } = {};
 
 export const manifest = (data: $T.Manifest) => {
-    _settings = parseSettings({
+    _settings = ConnectSettings.parse({
         ..._settings,
         manifest: data,
     });
@@ -40,7 +40,7 @@ export const manifest = (data: $T.Manifest) => {
 
 export const dispose = () => {
     eventEmitter.removeAllListeners();
-    _settings = parseSettings();
+    _settings = ConnectSettings.parse();
     if (_core) {
         _core.dispose();
     }
@@ -126,7 +126,7 @@ export const init = async (settings: $Shape<$T.ConnectSettings> = {}): Promise<v
     if (_core) {
         throw ERRORS.TypedError('Init_AlreadyInitialized');
     }
-    _settings = parseSettings({ ..._settings, ...settings });
+    _settings = ConnectSettings.parse({ ..._settings, ...settings });
     // set defaults for node
     _settings.origin = 'http://node.trezor.io/';
     _settings.popup = false;

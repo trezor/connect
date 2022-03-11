@@ -1,7 +1,7 @@
 /* @flow */
+import { DataManager } from '@trezor/connect-common';
 import { container, showView, postMessage } from './common';
 import { UiMessage } from '../../message/builder';
-import DataManager from '../../data/DataManager';
 import * as POPUP from '../../constants/popup';
 import { load as loadStorage, save as saveStorage, BROWSER_KEY } from '../../storage';
 import { getBrowserState } from '../../env/browser/browserUtils';

@@ -1,11 +1,11 @@
 /* @flow */
 import { getBinary, modifyFirmware } from '@trezor/rollout';
+import { FirmwareInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { UI, ERRORS } from '../../constants';
 import { uploadFirmware } from './helpers/uploadFirmware';
 import { UiMessage } from '../../message/builder';
 import { validateParams } from './helpers/paramsValidator';
-import { getReleases } from '../../data/FirmwareInfo';
 
 type Params = {
     binary?: ArrayBuffer,
@@ -84,7 +84,7 @@ export default class FirmwareUpdate extends AbstractMethod<'firmwareUpdate'> {
                 const firmware = await getBinary({
                     // features and releases are used for sanity checking inside @trezor/rollout
                     features: device.features,
-                    releases: getReleases(device.features.major_version),
+                    releases: FirmwareInfo.getReleases(device.features.major_version),
                     // version argument is used to find and fetch concrete release from releases list
                     version: params.version,
                     btcOnly: params.btcOnly,

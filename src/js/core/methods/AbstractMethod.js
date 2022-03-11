@@ -1,6 +1,6 @@
 /* @flow */
 
-import DataManager from '../../data/DataManager';
+import { DataManager } from '@trezor/connect-common';
 import { UI, DEVICE, ERRORS, NETWORK } from '../../constants';
 import { load as loadStorage, save as saveStorage, PERMISSIONS_KEY } from '../../storage';
 import { versionCompare } from '../../utils/versionUtils';

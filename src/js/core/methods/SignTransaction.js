@@ -1,9 +1,9 @@
 /* @flow */
 
 import BigNumber from 'bignumber.js';
+import { getBitcoinNetwork } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-import { getBitcoinNetwork } from '../../data/CoinInfo';
 import { getLabel } from '../../utils/pathUtils';
 import { ERRORS } from '../../constants';
 

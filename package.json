@@ -1,6 +1,6 @@
 {
     "name": "trezor-connect",
-    "version": "8.2.8-beta.2",
+    "version": "8.2.8-beta.3",
     "author": "Trezor <info@trezor.io>",
     "homepage": "https://github.com/trezor/connect",
     "description": "High-level javascript interface for Trezor hardware wallet.",
@@ -21,13 +21,11 @@
     "main": "src/js/index.js",
     "browser": {
         "./lib/env/node": "./lib/env/browser",
-        "./lib/env/node/workers": "./lib/env/browser/workers",
-        "./lib/env/node/networkUtils": "./lib/env/browser/networkUtils"
+        "./lib/env/node/workers": "./lib/env/browser/workers"
     },
     "react-native": {
         "./lib/env/node": "./lib/env/react-native",
-        "./lib/env/node/workers": "./lib/env/react-native/workers",
-        "./lib/env/node/networkUtils": "./lib/env/react-native/networkUtils"
+        "./lib/env/node/workers": "./lib/env/react-native/workers"
     },
     "scripts": {
         "predev": "node webpack/generate_dev_cert.js",
@@ -64,7 +62,7 @@
         "@babel/preset-env": "^7.15.6",
         "@babel/preset-flow": "^7.14.5",
         "@trezor/blockchain-link": "^2.1.1",
-        "@trezor/connect-common": "^0.0.4",
+        "@trezor/connect-common": "../trezor-suite/packages/connect-common",
         "@trezor/rollout": "^1.3.1",
         "@trezor/transport": "^1.1.0",
         "@trezor/utxo-lib": "^1.0.0",
@@ -124,12 +122,11 @@
     },
     "dependencies": {
         "@babel/runtime": "^7.15.4",
-        "cross-fetch": "^3.1.5",
-        "events": "^3.3.0"
+        "cross-fetch": "^3.1.5"
     },
     "extendedDependencies": {
         "@trezor/blockchain-link": "^2.1.1",
-        "@trezor/connect-common": "^0.0.4",
+        "@trezor/connect-common": "../trezor-suite/packages/connect-common",
         "@trezor/rollout": "^1.3.1",
         "@trezor/transport": "^1.1.0",
         "@trezor/utxo-lib": "^1.0.0",

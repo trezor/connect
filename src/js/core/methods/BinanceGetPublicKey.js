@@ -1,8 +1,8 @@
 /* @flow */
 
+import { CoinInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
-import { getMiscNetwork } from '../../data/CoinInfo';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
 
 import * as UI from '../../constants/ui';
@@ -20,7 +20,11 @@ export default class BinanceGetPublicKey extends AbstractMethod<'binanceGetPubli
 
     init() {
         this.requiredPermissions = ['read'];
-        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('BNB'), this.firmwareRange);
+        this.firmwareRange = getFirmwareRange(
+            this.name,
+            CoinInfo.getMiscNetwork('BNB'),
+            this.firmwareRange,
+        );
         this.info = 'Export Binance public key';
 
         // create a bundle with only one batch if bundle doesn't exists

@@ -1,3 +1,5 @@
+<!-- todo: update this file -->
+<!-- todo: update all files containing references to src/data -->
 # Supported coins
 
 ## The pipeline

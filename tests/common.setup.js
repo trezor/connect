@@ -1,5 +1,5 @@
-import releases2 from '@trezor/connect-common/files/firmware/2/releases.json';
-import releases1 from '@trezor/connect-common/files/firmware/1/releases.json';
+import releases2 from '@trezor/connect-common/lib/files/firmware/2/releases.json';
+import releases1 from '@trezor/connect-common/lib/files/firmware/1/releases.json';
 
 import { Controller } from './websocket-client';
 import TrezorConnect from '../src/js/index';

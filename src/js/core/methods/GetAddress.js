@@ -1,9 +1,9 @@
 /* @flow */
 
+import { getBitcoinNetwork, fixCoinInfoNetwork, getUniqueNetworks } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getLabel, getSerializedPath } from '../../utils/pathUtils';
-import { getBitcoinNetwork, fixCoinInfoNetwork, getUniqueNetworks } from '../../data/CoinInfo';
 
 import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';

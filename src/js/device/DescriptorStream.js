@@ -4,11 +4,11 @@
 
 import EventEmitter from 'events';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from '@trezor/transport';
+import { DataManager } from '@trezor/connect-common';
 import * as TRANSPORT from '../constants/transport';
 import * as DEVICE from '../constants/device';
 
 import { initLog } from '../utils/debug';
-import DataManager from '../data/DataManager';
 import { resolveAfter } from '../utils/promiseUtils';
 
 export type DeviceDescriptorDiff = {

@@ -1,6 +1,6 @@
-import coinsJSON from '../../../data/coins.json';
-import configJSON from '../../../data/config.json';
-import { parseCoinsJson, getAllNetworks } from '../../data/CoinInfo';
+import { CoinInfo } from '@trezor/connect-common';
+import coinsJSON from '@trezor/connect-common/lib/files/coins.json';
+import configJSON from '@trezor/connect-common/lib/files/config.json';
 
 import {
     parseCapabilities,
@@ -10,7 +10,7 @@ import {
 
 describe('utils/deviceFeaturesUtils', () => {
     beforeAll(() => {
-        parseCoinsJson(coinsJSON);
+        CoinInfo.parseCoinsJson(coinsJSON);
     });
 
     it('parseCapabilities', () => {
@@ -91,7 +91,7 @@ describe('utils/deviceFeaturesUtils', () => {
 
     it('getUnavailableCapabilities', () => {
         const support = configJSON.supportedFirmware;
-        const coins = getAllNetworks();
+        const coins = CoinInfo.getAllNetworks();
 
         const feat1 = {
             major_version: 1,

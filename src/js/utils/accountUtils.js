@@ -1,6 +1,6 @@
 /* @flow */
+import { getCoinName } from '@trezor/connect-common';
 import { fromHardened, toHardened } from './pathUtils';
-import { getCoinName } from '../data/CoinInfo';
 import { ERRORS } from '../constants';
 import type { CoinInfo, BitcoinNetworkInfo } from '../types';
 
