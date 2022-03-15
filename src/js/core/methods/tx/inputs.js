@@ -2,11 +2,11 @@
 
 import type { ComposedTxInput } from '@trezor/utxo-lib';
 import type { TypedRawTransaction } from '@trezor/blockchain-link';
+import type { BitcoinNetworkInfo } from '@trezor/connect-common';
 import { reverseBuffer } from '../../../utils/bufferUtils';
 import { validatePath, isSegwitPath, getScriptType, fixPath } from '../../../utils/pathUtils';
 import { convertMultisigPubKey } from '../../../utils/hdnodeUtils';
 import { validateParams } from '../helpers/paramsValidator';
-import type { BitcoinNetworkInfo } from '../../../types';
 import type { TxInputType } from '../../../types/trezor/protobuf';
 
 /** *****

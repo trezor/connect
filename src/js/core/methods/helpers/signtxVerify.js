@@ -6,10 +6,11 @@ import {
     payments as BitcoinJsPayments,
     Transaction as BitcoinJsTransaction,
 } from '@trezor/utxo-lib';
+import type { BitcoinNetworkInfo } from '@trezor/connect-common';
 import { ERRORS } from '../../../constants';
 import { getOutputScriptType } from '../../../utils/pathUtils';
 
-import type { BitcoinNetworkInfo, HDNodeResponse } from '../../../types';
+import type { HDNodeResponse } from '../../../types';
 import type { TxInputType, TxOutputType } from '../../../types/trezor/protobuf';
 
 type GetHDNode = (

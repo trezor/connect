@@ -3,11 +3,11 @@ import BigNumber from 'bignumber.js';
 import { composeTx } from '@trezor/utxo-lib';
 import type { ComposeInput, ComposeOutput, ComposeResult } from '@trezor/utxo-lib';
 
+import type { BitcoinNetworkInfo } from '@trezor/connect-common';
 import Fees from './Fees';
 import BlockchainLink from '../../../backend/BlockchainLink';
 import { getHDPath } from '../../../utils/pathUtils';
 
-import type { BitcoinNetworkInfo } from '../../../types';
 import type { DiscoveryAccount, AccountUtxo, SelectFeeLevel } from '../../../types/account';
 
 type Options = {

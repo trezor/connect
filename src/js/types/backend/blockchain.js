@@ -1,6 +1,6 @@
 /* @flow */
+import type { CoinInfo } from '@trezor/connect-common';
 import { BLOCKCHAIN } from '../../constants';
-import type { CoinInfo } from '../networks/coinInfo';
 import type { AccountAddresses, AccountTransaction, FeeLevel } from '../account';
 import type { TypedRawTransaction } from './transactions';
 import type { CoreMessage } from '../params';

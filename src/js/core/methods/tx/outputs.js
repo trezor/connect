@@ -1,12 +1,13 @@
 /* @flow */
 
 import type { ComposeOutput as UtxoLibOutput, ComposedTxOutput } from '@trezor/utxo-lib';
+import type { BitcoinNetworkInfo } from '@trezor/connect-common';
 import { getOutputScriptType, fixPath } from '../../../utils/pathUtils';
 import { isValidAddress } from '../../../utils/addressUtils';
 import { convertMultisigPubKey } from '../../../utils/hdnodeUtils';
 import { validateParams } from '../helpers/paramsValidator';
 import { ERRORS } from '../../../constants';
-import type { BitcoinNetworkInfo, ComposeOutput } from '../../../types';
+import type { ComposeOutput } from '../../../types';
 import type { TxOutputType } from '../../../types/trezor/protobuf';
 
 /** *****

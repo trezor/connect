@@ -2,8 +2,8 @@
 // flowtype doesn't have `enum` declarations like typescript
 
 const fs = require('fs');
-const { RULE_PATCH, TYPE_PATCH, DEFINITION_PATCH, SKIP, UINT_TYPE } = require('./protobuf-patches');
 const json = require('@trezor/connect-common/lib/files/messages.json');
+const { RULE_PATCH, TYPE_PATCH, DEFINITION_PATCH, SKIP, UINT_TYPE } = require('./protobuf-patches');
 
 const args = process.argv.slice(2);
 

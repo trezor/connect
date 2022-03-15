@@ -1,6 +1,6 @@
 /* @flow */
 
-import { CoinInfo } from '@trezor/connect-common';
+import { getMiscNetwork } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { getFirmwareRange, validateParams } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
@@ -20,7 +20,7 @@ export default class CardanoGetNativeScriptHash extends AbstractMethod<'cardanoG
         this.requiredPermissions = ['read'];
         this.firmwareRange = getFirmwareRange(
             this.name,
-            CoinInfo.getMiscNetwork('Cardano'),
+            getMiscNetwork('Cardano'),
             this.firmwareRange,
         );
         this.info = 'Get Cardano native script hash';

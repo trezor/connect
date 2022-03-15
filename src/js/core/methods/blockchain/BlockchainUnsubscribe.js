@@ -1,12 +1,13 @@
 /* @flow */
 
 import { getCoinInfo } from '@trezor/connect-common';
+import type { CoinInfo } from '@trezor/connect-common';
 import AbstractMethod from '../AbstractMethod';
 import { validateParams } from '../helpers/paramsValidator';
 import { ERRORS } from '../../../constants';
 
 import { isBackendSupported, initBlockchain } from '../../../backend/BlockchainLink';
-import type { CoinInfo, BlockchainSubscribeAccount } from '../../../types';
+import type { BlockchainSubscribeAccount } from '../../../types';
 
 type Params = {
     accounts?: BlockchainSubscribeAccount[],

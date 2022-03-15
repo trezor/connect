@@ -1,41 +1,15 @@
+import type {
+    BridgeInfo,
+    UdevInfo,
+    BitcoinNetworkInfo,
+    CoinInfo,
+    TransportInfo,
+} from '@trezor/connect-common';
 import { TRANSPORT, UI, IFRAME, POPUP } from './constants';
 import { ConnectSettings } from './params';
 import { Device } from './trezor/device';
 import { ButtonRequest, PinMatrixRequestType, WordRequestType } from './trezor/protobuf';
 import { DiscoveryAccount, DiscoveryAccountType, SelectFeeLevel } from './account';
-import { CoinInfo, BitcoinNetworkInfo } from './networks/coinInfo';
-
-export interface BridgeInfo {
-    version: number[];
-    directory: string;
-    packages: Array<{
-        name: string;
-        platform: string[];
-        url: string;
-        signature?: string;
-        preferred?: boolean;
-    }>;
-    changelog: string;
-}
-
-export interface UdevInfo {
-    directory: string;
-    packages: Array<{
-        name: string;
-        platform: string[];
-        url: string;
-        signature?: string;
-        preferred?: boolean;
-    }>;
-}
-
-export interface TransportInfo {
-    type: string;
-    version: string;
-    outdated: boolean;
-    bridge?: BridgeInfo;
-    udev?: UdevInfo;
-}
 
 export type TransportEvent =
     | {

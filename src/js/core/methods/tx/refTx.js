@@ -7,12 +7,13 @@ import {
 import type { TypedRawTransaction } from '@trezor/blockchain-link';
 import type { TxInput as BitcoinJsInput, TxOutput as BitcoinJsOutput } from '@trezor/utxo-lib';
 // local modules
+import type { CoinInfo } from '@trezor/connect-common';
 import { reverseBuffer } from '../../../utils/bufferUtils';
 import { getHDPath, getScriptType, getOutputScriptType } from '../../../utils/pathUtils';
 import { validateParams } from '../helpers/paramsValidator';
 import { TypedError } from '../../../constants/errors';
 // local types
-import type { CoinInfo, RefTransaction, AccountAddresses } from '../../../types';
+import type { RefTransaction, AccountAddresses } from '../../../types';
 import type { TxInputType, TxOutputType } from '../../../types/trezor/protobuf';
 
 // Get array of unique referenced transactions ids

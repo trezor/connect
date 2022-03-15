@@ -1,5 +1,5 @@
+import { CoinInfo } from '@trezor/connect-common';
 import { BLOCKCHAIN } from '../constants';
-import { CoinInfo } from '../networks/coinInfo';
 import { AccountAddresses, AccountTransaction, FeeLevel } from '../account';
 import { TypedRawTransaction } from './transactions';
 

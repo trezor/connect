@@ -1,6 +1,7 @@
 /* @flow */
+import type { CoinInfo } from '@trezor/connect-common';
 import { versionCompare } from './versionUtils';
-import type { Features, CoinInfo, UnavailableCapabilities } from '../types';
+import type { Features, UnavailableCapabilities } from '../types';
 import type { Capability } from '../types/trezor/protobuf';
 
 // From protobuf

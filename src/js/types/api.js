@@ -1,4 +1,5 @@
 /* @flow */
+import type { CoinInfo, GetCoinInfo, ConnectSettings, Manifest } from '@trezor/connect-common';
 import * as CONSTANTS from '../constants';
 import * as P from './params';
 import * as Device from './trezor/device';
@@ -9,7 +10,6 @@ import * as Account from './account';
 import * as Bitcoin from './networks/bitcoin';
 import * as Binance from './networks/binance';
 import * as Cardano from './networks/cardano';
-import * as CoinInfo from './networks/coinInfo';
 import * as EOS from './networks/eos';
 import * as Ethereum from './networks/ethereum';
 import * as NEM from './networks/nem';
@@ -99,18 +99,18 @@ export type API = {
     /**
      * Set TrezorConnect manifest.
      */
-    manifest: (params: P.Manifest) => void,
+    manifest: (params: Manifest) => void,
 
     /**
      * Initializes TrezorConnect.
      * `manifest` is required
      */
-    init: (settings: { manifest: P.Manifest } & $Shape<P.ConnectSettings>) => Promise<void>,
+    init: (settings: { manifest: Manifest } & $Shape<ConnectSettings>) => Promise<void>,
 
     /**
      * Retrieves the settings that TrezorConnect was initialized with.
      */
-    getSettings: () => P.Response<P.ConnectSettings>,
+    getSettings: () => P.Response<ConnectSettings>,
 
     dispose: () => void,
 
@@ -350,7 +350,7 @@ export type API = {
     /**
      * Get static coin info
      */
-    getCoinInfo: Method<CoinInfo.GetCoinInfo, CoinInfo.CoinInfo>,
+    getCoinInfo: Method<GetCoinInfo, CoinInfo>,
 
     /**
      * Reboots device (currently only T1 with fw >= 1.10.0) in bootloader mode

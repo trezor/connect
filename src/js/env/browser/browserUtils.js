@@ -1,6 +1,6 @@
 /* @flow */
 import Bowser from 'bowser';
-import { UdevInfo, TransportInfo } from '@trezor/connect-common';
+import { getUdevInfo, getBridgeInfo } from '@trezor/connect-common';
 
 export type BrowserState = {
     name: string,
@@ -84,7 +84,7 @@ export const getSuggestedPlatform = () => {
 };
 
 export const suggestBridgeInstaller = () => {
-    const info = TransportInfo.getBridgeInfo();
+    const info = getBridgeInfo();
     // check if preferred field was already added
     if (!info.packages.find(p => p.preferred)) {
         const platform = getSuggestedPlatform();
@@ -100,7 +100,7 @@ export const suggestBridgeInstaller = () => {
 };
 
 export const suggestUdevInstaller = () => {
-    const info = UdevInfo.getUdevInfo();
+    const info = getUdevInfo();
     // check if preferred field was already added
     if (!info.packages.find(p => p.preferred)) {
         const platform = getSuggestedPlatform();

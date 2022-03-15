@@ -1,6 +1,6 @@
 /* @flow */
 
-import { CoinInfo } from '@trezor/connect-common';
+import { getMiscNetwork } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
@@ -22,7 +22,7 @@ export default class TezosGetPublicKey extends AbstractMethod<'tezosGetPublicKey
         this.requiredPermissions = ['read'];
         this.firmwareRange = getFirmwareRange(
             this.name,
-            CoinInfo.getMiscNetwork('Tezos'),
+            getMiscNetwork('Tezos'),
             this.firmwareRange,
         );
         this.info = 'Export Tezos public key';

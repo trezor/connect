@@ -2,6 +2,7 @@
 
 import BigNumber from 'bignumber.js';
 import { getBitcoinNetwork } from '@trezor/connect-common';
+import type { BitcoinNetworkInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { getLabel } from '../../utils/pathUtils';
@@ -25,7 +26,7 @@ import {
 
 import type { RefTransaction, TransactionOptions } from '../../types/networks/bitcoin';
 import type { TxInputType, TxOutputType } from '../../types/trezor/protobuf';
-import type { BitcoinNetworkInfo, AccountAddresses } from '../../types';
+import type { AccountAddresses } from '../../types';
 
 type Params = {
     inputs: TxInputType[],

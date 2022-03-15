@@ -2,7 +2,8 @@
 
 import BigNumber from 'bignumber.js';
 import type { ComposeOutput, ComposeResult } from '@trezor/utxo-lib';
-import { CoinInfo } from '@trezor/connect-common';
+import { getBitcoinNetwork, fixCoinInfoNetwork } from '@trezor/connect-common';
+import type { BitcoinNetworkInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
@@ -29,7 +30,6 @@ import { verifyTx } from './helpers/signtxVerify';
 
 import { UiMessage } from '../../message/builder';
 
-import type { BitcoinNetworkInfo } from '../../types';
 import type { SignedTransaction, TransactionOptions } from '../../types/networks/bitcoin';
 import type {
     DiscoveryAccount,
@@ -72,7 +72,7 @@ export default class ComposeTransaction extends AbstractMethod<'composeTransacti
             { name: 'skipPermutation', type: 'boolean' },
         ]);
 
-        const coinInfo = CoinInfo.getBitcoinNetwork(payload.coin);
+        const coinInfo = getBitcoinNetwork(payload.coin);
         if (!coinInfo) {
             throw ERRORS.TypedError('Method_UnknownCoin');
         }
@@ -284,7 +284,7 @@ export default class ComposeTransaction extends AbstractMethod<'composeTransacti
         }
 
         const account = discovery.accounts[uiResp.payload];
-        this.params.coinInfo = CoinInfo.fixCoinInfoNetwork(this.params.coinInfo, account.address_n);
+        this.params.coinInfo = fixCoinInfoNetwork(this.params.coinInfo, account.address_n);
         const utxo = await blockchain.getAccountUtxo(account.descriptor);
         return {
             account,

@@ -9,7 +9,10 @@ const LIB = path.resolve(__dirname, '../npm-extended/lib');
 const DATA = path.resolve(__dirname, '../npm-extended/data');
 
 // todo: ???
-const CONNECT_COMMON_DATA = path.resolve(__dirname, '../node_modules/@trezor/connect-common/src/files');
+const CONNECT_COMMON_DATA = path.resolve(
+    __dirname,
+    '../node_modules/@trezor/connect-common/src/files',
+);
 
 // todo: ???
 const DATA_SRC = path.resolve(__dirname, '../node_modules/@trezor/connect-common/src/files');

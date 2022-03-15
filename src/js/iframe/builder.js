@@ -1,10 +1,11 @@
 /* @flow */
 
+import type { ConnectSettings } from '@trezor/connect-common';
 import { create as createDeferred } from '../utils/deferred';
 import { IFRAME, ERRORS } from '../constants';
 import { getOrigin } from '../utils/urlUtils';
 import css from './inline-styles';
-import type { ConnectSettings, Deferred } from '../types';
+import type { Deferred } from '../types';
 
 /* eslint-disable import/no-mutable-exports */
 export let instance: HTMLIFrameElement | null;
@@ -64,14 +65,10 @@ export const init = async (settings: ConnectSettings) => {
             return;
         }
         try {
-            console.log('iframe builder.js onload 2');
-            console.log('iframe builder.js onload 2 iframeOrigin', iframeOrigin);
-
             // if hosting page is able to access cross-origin location it means that the iframe is not loaded
             const iframeOrigin = instance.contentWindow.location.origin;
             if (!iframeOrigin || iframeOrigin === 'null') {
                 // eslint-disable-next-line no-use-before-define
-                console.log('iframe builder.js onload 2.1');
                 handleIframeBlocked();
                 return;
             }

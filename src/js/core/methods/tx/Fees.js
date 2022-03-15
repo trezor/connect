@@ -1,7 +1,7 @@
 /* @flow */
 import BigNumber from 'bignumber.js';
+import type { CoinInfo } from '@trezor/connect-common';
 import BlockchainLink from '../../../backend/BlockchainLink';
-import type { CoinInfo } from '../../../types';
 import type { FeeLevel } from '../../../types/account';
 
 type Blocks = Array<string | typeof undefined>;

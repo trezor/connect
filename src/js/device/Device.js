@@ -2,7 +2,7 @@
 
 import EventEmitter from 'events';
 import type { Transport, TrezorDeviceInfoWithSession as DeviceDescriptor } from '@trezor/transport';
-import { FirmwareInfo, DataManager, CoinInfo } from '@trezor/connect-common';
+import { getFirmwareStatus, getRelease, DataManager, getAllNetworks } from '@trezor/connect-common';
 import DeviceCommands from './DeviceCommands';
 
 import type {
@@ -452,11 +452,11 @@ class Device extends EventEmitter {
         if (versionCompare(version, this.getVersion()) !== 0 || capabilitiesDidChange) {
             this.unavailableCapabilities = getUnavailableCapabilities(
                 feat,
-                CoinInfo.getAllNetworks(),
+                getAllNetworks(),
                 DataManager.getConfig().supportedFirmware,
             );
-            this.firmwareStatus = FirmwareInfo.getFirmwareStatus(feat);
-            this.firmwareRelease = FirmwareInfo.getRelease(feat);
+            this.firmwareStatus = getFirmwareStatus(feat);
+            this.firmwareRelease = getRelease(feat);
         }
         // GetFeatures doesn't return 'session_id'
         if (this.features && this.features.session_id && !feat.session_id) {

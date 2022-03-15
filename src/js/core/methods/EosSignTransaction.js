@@ -1,6 +1,6 @@
 /* @flow */
 
-import { CoinInfo } from '@trezor/connect-common';
+import { getMiscNetwork } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
@@ -20,11 +20,7 @@ export default class EosSignTransaction extends AbstractMethod<'eosSignTransacti
 
     init() {
         this.requiredPermissions = ['read', 'write'];
-        this.firmwareRange = getFirmwareRange(
-            this.name,
-            CoinInfo.getMiscNetwork('EOS'),
-            this.firmwareRange,
-        );
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('EOS'), this.firmwareRange);
         this.info = 'Sign EOS transaction';
 
         const { payload } = this;

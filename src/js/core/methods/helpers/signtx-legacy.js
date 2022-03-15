@@ -1,6 +1,6 @@
 /* @flow */
+import type { BitcoinNetworkInfo } from '@trezor/connect-common';
 import { ERRORS } from '../../../constants';
-import type { BitcoinNetworkInfo } from '../../../types';
 import type {
     RefTransaction,
     TransactionOptions,

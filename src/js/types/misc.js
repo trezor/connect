@@ -1,6 +1,6 @@
 /* @flow */
 
-import type { Proxy } from './params';
+import type { Proxy } from '@trezor/connect-common';
 
 export type CipherKeyValue = {
     path: string | number[],

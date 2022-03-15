@@ -1,6 +1,6 @@
 /* @flow */
 
-import { CoinInfo } from '@trezor/connect-common';
+import { getMiscNetwork } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
@@ -27,11 +27,7 @@ export default class BinanceGetAddress extends AbstractMethod<'binanceGetAddress
 
     init() {
         this.requiredPermissions = ['read'];
-        this.firmwareRange = getFirmwareRange(
-            this.name,
-            CoinInfo.getMiscNetwork('BNB'),
-            this.firmwareRange,
-        );
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('BNB'), this.firmwareRange);
 
         // create a bundle with only one batch if bundle doesn't exists
         this.hasBundle = !!this.payload.bundle;

@@ -1,12 +1,12 @@
 /* @flow */
 
+import type { BitcoinNetworkInfo } from '@trezor/connect-common';
 import { UiMessage } from '../../message/builder';
 import * as UI from '../../constants/ui';
 
 import { container, showView, postMessage } from './common';
 import { formatAmount, formatTime } from '../../utils/formatUtils';
 import type { SelectFee, UpdateCustomFee } from '../../types/events';
-import type { BitcoinNetworkInfo } from '../../types';
 import type { SelectFeeLevel } from '../../types/account';
 
 const fees: SelectFeeLevel[] = [];

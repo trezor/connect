@@ -1,6 +1,6 @@
 /* @flow */
 
-import { CoinInfo } from '@trezor/connect-common';
+import { getMiscNetwork } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
@@ -18,11 +18,7 @@ export default class BinanceSignTransaction extends AbstractMethod<'binanceSignT
 
     init() {
         this.requiredPermissions = ['read', 'write'];
-        this.firmwareRange = getFirmwareRange(
-            this.name,
-            CoinInfo.getMiscNetwork('BNB'),
-            this.firmwareRange,
-        );
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('BNB'), this.firmwareRange);
         this.info = 'Sign Binance transaction';
 
         const { payload } = this;

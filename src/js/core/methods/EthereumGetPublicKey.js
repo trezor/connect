@@ -1,6 +1,7 @@
 /* @flow */
 
 import { getEthereumNetwork, getUniqueNetworks } from '@trezor/connect-common';
+import type { EthereumNetworkInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
@@ -9,7 +10,7 @@ import { getNetworkLabel } from '../../utils/ethereumUtils';
 import * as UI from '../../constants/ui';
 import { UiMessage } from '../../message/builder';
 
-import type { EthereumNetworkInfo, HDNodeResponse } from '../../types';
+import type { HDNodeResponse } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {

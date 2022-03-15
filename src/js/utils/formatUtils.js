@@ -1,7 +1,7 @@
 /* @flow */
 
 import BigNumber from 'bignumber.js';
-import type { BitcoinNetworkInfo, CoinInfo } from '../types';
+import type { BitcoinNetworkInfo, CoinInfo } from '@trezor/connect-common';
 
 const currencyUnits = 'btc';
 

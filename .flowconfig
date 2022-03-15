@@ -11,8 +11,6 @@
 
 
 [libs]
-./node_modules/trezor-link/flowtype/chrome.js
-./node_modules/trezor-link/flowtype/webusb.js
 ./src/flowtype/
 
 [options]

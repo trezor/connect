@@ -1,13 +1,13 @@
 /* @flow */
 
 import { DataManager } from '@trezor/connect-common';
+import type { ConnectSettings } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 
 import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
-import type { ConnectSettings } from '../../types';
 import type { MessageType, IdentityType } from '../../types/trezor/protobuf';
 
 export default class RequestLogin extends AbstractMethod<'requestLogin'> {

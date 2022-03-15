@@ -1,6 +1,7 @@
 /* @flow */
 
 import { getEthereumNetwork, getUniqueNetworks } from '@trezor/connect-common';
+import type { EthereumNetworkInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getSerializedPath } from '../../utils/pathUtils';
@@ -11,13 +12,12 @@ import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
 import type { EthereumAddress } from '../../types/networks/ethereum';
-import type { EthereumNetworkInfo } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {
     ...$ElementType<MessageType, 'EthereumGetAddress'>,
     address?: string,
-    network?: EthereumNetworkInfo,
+    network: EthereumNetworkInfo,
 };
 
 export default class EthereumGetAddress extends AbstractMethod<'ethereumGetAddress'> {

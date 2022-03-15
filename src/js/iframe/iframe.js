@@ -1,6 +1,6 @@
 /* @flow */
 
-import { ConnectSettings, DataManager } from '@trezor/connect-common';
+import { parseConnectSettings, DataManager } from '@trezor/connect-common';
 
 import { CORE_EVENT, UI_EVENT, DEVICE_EVENT, TRANSPORT_EVENT } from '../constants';
 import * as POPUP from '../constants/popup';
@@ -194,14 +194,16 @@ const filterDeviceEvent = (message: CoreMessage) => {
 };
 
 const init = async (payload: any, origin: string) => {
-    console.log('iframe init', payload, origin);
+    console.log('iframe init 1', payload, origin, DataManager.getSettings('origin'));
     if (DataManager.getSettings('origin')) return; // already initialized
-    const parsedSettings = ConnectSettings.parseSettings({
+    console.log('iframe init 2', payload, origin);
+
+    const parsedSettings = parseConnectSettings({
         ...payload.settings,
         extension: payload.extension,
     });
 
-    console.log('iframe init parsedSettings', parsedSettings);
+    console.log('iframe init 3 parsedSettings', parsedSettings);
 
     // set origin manually
     parsedSettings.origin = !origin || origin === 'null' ? payload.settings.origin : origin;

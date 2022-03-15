@@ -1,11 +1,10 @@
 /* @flow */
 
 import { getCoinInfo } from '@trezor/connect-common';
+import type { CoinInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams } from './helpers/paramsValidator';
 import { ERRORS } from '../../constants';
-
-import type { CoinInfo } from '../../types';
 
 type Params = {
     coinInfo: CoinInfo,

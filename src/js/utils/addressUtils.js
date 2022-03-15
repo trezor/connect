@@ -1,7 +1,7 @@
 /* @flow */
 
 import { address as BitcoinJSAddress } from '@trezor/utxo-lib';
-import type { BitcoinNetworkInfo } from '../types';
+import type { BitcoinNetworkInfo } from '@trezor/connect-common';
 
 // Base58
 const isValidBase58Address = (

@@ -1,6 +1,6 @@
 /* @flow */
 
-import { CoinInfo } from '@trezor/connect-common';
+import { getMiscNetwork } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, fromHardened, getSerializedPath } from '../../utils/pathUtils';
@@ -23,7 +23,7 @@ export default class CardanoGetPublicKey extends AbstractMethod<'cardanoGetPubli
         this.requiredPermissions = ['read'];
         this.firmwareRange = getFirmwareRange(
             this.name,
-            CoinInfo.getMiscNetwork('Cardano'),
+            getMiscNetwork('Cardano'),
             this.firmwareRange,
         );
         this.info = 'Export Cardano public key';

@@ -1,6 +1,6 @@
 /* @flow */
 
-import { CoinInfo } from '@trezor/connect-common';
+import { getMiscNetwork } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
@@ -25,7 +25,7 @@ export default class StellarSignTransaction extends AbstractMethod<'stellarSignT
         this.requiredPermissions = ['read', 'write'];
         this.firmwareRange = getFirmwareRange(
             this.name,
-            CoinInfo.getMiscNetwork('Stellar'),
+            getMiscNetwork('Stellar'),
             this.firmwareRange,
         );
         this.info = 'Sign Stellar transaction';

@@ -2,6 +2,7 @@
 
 import EventEmitter from 'events';
 import { DataManager } from '@trezor/connect-common';
+import type { ConnectSettings, TransportInfo } from '@trezor/connect-common';
 import DeviceList from '../device/DeviceList';
 
 import {
@@ -27,14 +28,7 @@ import { dispose as disposeBackend } from '../backend/BlockchainLink';
 import InteractionTimeout from '../utils/interactionTimeout';
 
 import type { IDevice } from '../device/Device';
-import type {
-    ConnectSettings,
-    Device as DeviceTyped,
-    Deferred,
-    CoreMessage,
-    UiPromiseResponse,
-    TransportInfo,
-} from '../types';
+import type { Device as DeviceTyped, Deferred, CoreMessage, UiPromiseResponse } from '../types';
 import type {
     ButtonRequest,
     PinMatrixRequestType,

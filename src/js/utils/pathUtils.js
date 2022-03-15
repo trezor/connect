@@ -1,7 +1,7 @@
 /* @flow */
 
+import type { CoinInfo } from '@trezor/connect-common';
 import { ERRORS } from '../constants';
-import type { CoinInfo } from '../types';
 import type {
     InternalInputScriptType,
     ChangeOutputScriptType,

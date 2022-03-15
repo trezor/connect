@@ -1,11 +1,12 @@
 /* @flow */
 
 import EventEmitter from 'events';
+import type { ConnectSettings } from '@trezor/connect-common';
 import * as POPUP from '../constants/popup';
 import * as IFRAME from '../constants/iframe';
 import * as UI from '../constants/ui';
 import { showPopupRequest } from './showPopupRequest';
-import type { ConnectSettings, CoreMessage, Deferred } from '../types';
+import type { CoreMessage, Deferred } from '../types';
 import { getOrigin } from '../utils/urlUtils';
 import { create as createDeferred } from '../utils/deferred';
 

@@ -3,6 +3,7 @@
 import randombytes from 'randombytes';
 import type { Transport } from '@trezor/transport';
 import { getSegwitNetwork, getBech32Network } from '@trezor/connect-common';
+import type { CoinInfo, BitcoinNetworkInfo, Network } from '@trezor/connect-common';
 import { DEVICE, ERRORS, NETWORK } from '../constants';
 
 import * as hdnodeUtils from '../utils/hdnodeUtils';
@@ -20,7 +21,7 @@ import { getAccountAddressN } from '../utils/accountUtils';
 import { versionCompare } from '../utils/versionUtils';
 
 import type { IDevice } from './Device';
-import type { CoinInfo, BitcoinNetworkInfo, Network, HDNodeResponse } from '../types';
+import type { HDNodeResponse } from '../types';
 import type { CardanoDerivationType } from '../types/trezor/protobuf';
 import * as PROTO from '../types/trezor/protobuf';
 

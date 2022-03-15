@@ -1,8 +1,8 @@
 /* @flow */
 import { getCoinName } from '@trezor/connect-common';
+import type { CoinInfo, BitcoinNetworkInfo } from '@trezor/connect-common';
 import { fromHardened, toHardened } from './pathUtils';
 import { ERRORS } from '../constants';
-import type { CoinInfo, BitcoinNetworkInfo } from '../types';
 
 type Bip44Options = {
     purpose?: number,

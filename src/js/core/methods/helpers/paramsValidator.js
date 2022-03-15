@@ -1,11 +1,12 @@
 /* @flow */
 
 import { DataManager } from '@trezor/connect-common';
+import type { CoinInfo } from '@trezor/connect-common';
 import { ERRORS } from '../../../constants';
 import { fromHardened } from '../../../utils/pathUtils';
 import { versionCompare } from '../../../utils/versionUtils';
 
-import type { CoinInfo, FirmwareRange } from '../../../types';
+import type { FirmwareRange } from '../../../types';
 
 type ParamType = 'string' | 'number' | 'array' | 'array-buffer' | 'boolean' | 'uint' | 'object';
 

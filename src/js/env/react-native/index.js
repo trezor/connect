@@ -1,7 +1,10 @@
 /* @flow */
+
 import EventEmitter from 'events';
 
-import { ConnectSettings } from '@trezor/connect-common';
+import { parseConnectSettings } from '@trezor/connect-common';
+import type { ConnectSettings, Manifest } from '@trezor/connect-common';
+
 import { initLog } from '../../utils/debug';
 import { errorMessage } from '../../message';
 import { Core, init as initCore, initTransport } from '../../core/Core';
@@ -25,14 +28,14 @@ import * as $T from '../../types';
 export const eventEmitter = new EventEmitter();
 const _log = initLog('[trezor-connect.js]');
 
-let _settings = ConnectSettings.parse();
+let _settings = parseConnectSettings();
 let _core: Core | null = null;
 
 let _messageID: number = 0;
 export const messagePromises: { [key: number]: $T.Deferred<any> } = {};
 
-export const manifest = (data: $T.Manifest) => {
-    _settings = ConnectSettings.parse({
+export const manifest = (data: Manifest) => {
+    _settings = parseConnectSettings({
         ..._settings,
         manifest: data,
     });
@@ -40,7 +43,7 @@ export const manifest = (data: $T.Manifest) => {
 
 export const dispose = () => {
     eventEmitter.removeAllListeners();
-    _settings = ConnectSettings.parse();
+    _settings = parseConnectSettings();
     if (_core) {
         _core.dispose();
     }
@@ -122,11 +125,14 @@ const postMessage = (message: any, usePromise: boolean = true) => {
     return null;
 };
 
-export const init = async (settings: $Shape<$T.ConnectSettings> = {}): Promise<void> => {
+export const init = async (settings: $Shape<ConnectSettings> = {}): Promise<void> => {
     if (_core) {
         throw ERRORS.TypedError('Init_AlreadyInitialized');
     }
-    _settings = ConnectSettings.parse({ ..._settings, ...settings });
+    _settings = parseConnectSettings({
+        ..._settings,
+        ...settings,
+    });
     // set defaults for node
     _settings.origin = 'http://node.trezor.io/';
     _settings.popup = false;
@@ -193,7 +199,7 @@ export const uiResponse = (response: $T.UiResponse) => {
     _core.handleMessage({ event: UI_EVENT, type, payload }, true);
 };
 
-export const getSettings = (): $T.Response<$T.ConnectSettings> => {
+export const getSettings = (): $T.Response<ConnectSettings> => {
     if (!_core) {
         return Promise.resolve(errorMessage(ERRORS.TypedError('Init_NotInitialized')));
     }

@@ -1,5 +1,6 @@
 /* @flow */
 import EventEmitter from 'events';
+import type { CoinInfo } from '@trezor/connect-common';
 import { ERRORS } from '../../../constants';
 import Blockchain from '../../../backend/BlockchainLink';
 import DeviceCommands from '../../../device/DeviceCommands';
@@ -7,7 +8,6 @@ import { getAccountAddressN } from '../../../utils/accountUtils';
 import { formatAmount } from '../../../utils/formatUtils';
 import type { CardanoDerivationType } from '../../../types/trezor/protobuf';
 
-import type { CoinInfo } from '../../../types';
 import type {
     DiscoveryAccountType,
     DiscoveryAccount,

@@ -1,6 +1,6 @@
 /* @flow */
 
-import { CoinInfo } from '@trezor/connect-common';
+import { getMiscNetwork } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath } from '../../utils/pathUtils';
@@ -13,11 +13,7 @@ export default class NEMSignTransaction extends AbstractMethod<'nemSignTransacti
 
     init() {
         this.requiredPermissions = ['read', 'write'];
-        this.firmwareRange = getFirmwareRange(
-            this.name,
-            CoinInfo.getMiscNetwork('NEM'),
-            this.firmwareRange,
-        );
+        this.firmwareRange = getFirmwareRange(this.name, getMiscNetwork('NEM'), this.firmwareRange);
         this.info = 'Sign NEM transaction';
 
         const { payload } = this;

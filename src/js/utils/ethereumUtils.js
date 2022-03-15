@@ -1,5 +1,5 @@
 /* @flow */
-import type { CoinInfo } from '../types';
+import type { CoinInfo } from '@trezor/connect-common';
 
 export const getNetworkLabel = (label: string, network: ?CoinInfo) => {
     if (network) {

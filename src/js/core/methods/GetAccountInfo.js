@@ -1,5 +1,6 @@
 /* @flow */
 import { getCoinInfo } from '@trezor/connect-common';
+import type { CoinInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import Discovery from './helpers/Discovery';
 import { validateParams, getFirmwareRange } from './helpers/paramsValidator';
@@ -12,7 +13,6 @@ import { UiMessage } from '../../message/builder';
 
 import { isBackendSupported, initBlockchain } from '../../backend/BlockchainLink';
 
-import type { CoinInfo } from '../../types';
 import type {
     GetAccountInfo as GetAccountInfoParams,
     AccountInfo,

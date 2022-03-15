@@ -2,7 +2,8 @@
 
 import EventEmitter from 'events';
 
-import { ConnectSettings } from '@trezor/connect-common';
+import { parseConnectSettings } from '@trezor/connect-common';
+import type { ConnectSettings, Manifest } from '@trezor/connect-common';
 import PopupManager from '../../popup/PopupManager';
 import * as iframe from '../../iframe/builder';
 import webUSBButton from '../../webusb/button';
@@ -29,7 +30,7 @@ import * as $T from '../../types';
 export const eventEmitter = new EventEmitter();
 const _log = initLog('[trezor-connect.js]');
 
-let _settings = ConnectSettings.parse();
+let _settings = parseConnectSettings();
 let _popupManager: ?PopupManager;
 
 const initPopupManager = (): PopupManager => {
@@ -46,8 +47,8 @@ const initPopupManager = (): PopupManager => {
     return pm;
 };
 
-export const manifest = (data: $T.Manifest) => {
-    _settings = ConnectSettings.parse({
+export const manifest = (data: Manifest) => {
+    _settings = parseConnectSettings({
         ..._settings,
         manifest: data,
     });
@@ -56,7 +57,7 @@ export const manifest = (data: $T.Manifest) => {
 export const dispose = () => {
     eventEmitter.removeAllListeners();
     iframe.dispose();
-    _settings = ConnectSettings.parse();
+    _settings = parseConnectSettings();
     if (_popupManager) {
         _popupManager.close();
     }
@@ -132,11 +133,11 @@ const handleMessage = (messageEvent: $T.PostMessageEvent) => {
     }
 };
 
-export const init = async (settings: $Shape<$T.ConnectSettings> = {}): Promise<void> => {
+export const init = async (settings: $Shape<ConnectSettings> = {}): Promise<void> => {
     if (iframe.instance) {
         throw ERRORS.TypedError('Init_AlreadyInitialized');
     }
-    _settings = ConnectSettings.parse({ ..._settings, ...settings });
+    _settings = parseConnectSettings({ ..._settings, ...settings });
     console.log('_settings', _settings);
 
     if (!_settings.manifest) {
@@ -166,7 +167,7 @@ export const init = async (settings: $Shape<$T.ConnectSettings> = {}): Promise<v
 export const call = async (params: any): Promise<any> => {
     if (!iframe.instance && !iframe.timeout) {
         // init popup with lazy loading before iframe initialization
-        _settings = ConnectSettings.parse(_settings);
+        _settings = parseConnectSettings(_settings);
 
         if (!_settings.manifest) {
             return errorMessage(ERRORS.TypedError('Init_ManifestMissing'));
@@ -253,7 +254,7 @@ export const renderWebUSBButton = (className: ?string) => {
     webUSBButton(className, _settings.webusbSrc, iframe.origin);
 };
 
-export const getSettings = (): $T.Response<$T.ConnectSettings> => {
+export const getSettings = (): $T.Response<ConnectSettings> => {
     if (!iframe.instance) {
         return Promise.resolve(errorMessage(ERRORS.TypedError('Init_NotInitialized')));
     }

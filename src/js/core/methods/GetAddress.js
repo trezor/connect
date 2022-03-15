@@ -1,6 +1,7 @@
 /* @flow */
 
 import { getBitcoinNetwork, fixCoinInfoNetwork, getUniqueNetworks } from '@trezor/connect-common';
+import type { BitcoinNetworkInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getLabel, getSerializedPath } from '../../utils/pathUtils';
@@ -9,7 +10,6 @@ import { UI, ERRORS } from '../../constants';
 import { UiMessage } from '../../message/builder';
 
 import type { Address } from '../../types/networks/bitcoin';
-import type { BitcoinNetworkInfo } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
 type Params = {

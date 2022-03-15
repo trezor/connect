@@ -1,11 +1,11 @@
 /* @flow */
 
 import { getBitcoinNetwork } from '@trezor/connect-common';
+import type { BitcoinNetworkInfo } from '@trezor/connect-common';
 import AbstractMethod from './AbstractMethod';
 import { validateParams, validateCoinPath, getFirmwareRange } from './helpers/paramsValidator';
 import { validatePath, getLabel, getScriptType } from '../../utils/pathUtils';
 import { messageToHex } from '../../utils/formatUtils';
-import type { BitcoinNetworkInfo } from '../../types';
 import type { MessageType } from '../../types/trezor/protobuf';
 
 export default class SignMessage extends AbstractMethod<'signMessage'> {
