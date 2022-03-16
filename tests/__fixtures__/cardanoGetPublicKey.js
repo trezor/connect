@@ -74,5 +74,5 @@ export default {
             },
             legacyResults,
         },
-    ].map(fixture => ({ ...fixture, legacyResults })),
+    ],
 };
