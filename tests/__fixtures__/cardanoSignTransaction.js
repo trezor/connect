@@ -807,7 +807,7 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support auxiliary data hash or auxiliary data at all
-                    rules: ['<2.4.2'],
+                    rules: ['<2.4.2', '1'],
                     payload: false,
                 },
             ],
@@ -858,7 +858,7 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support auxiliary data
-                    rules: ['<2.3.7'],
+                    rules: ['<2.3.7', '1'],
                     payload: false,
                 },
             ],
@@ -909,7 +909,7 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support auxiliary data
-                    rules: ['<2.3.7'],
+                    rules: ['<2.3.7', '1'],
                     payload: false,
                 },
             ],
@@ -1088,7 +1088,7 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support token minting
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -1130,7 +1130,7 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support multisig
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -1165,7 +1165,7 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support multisig
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -1210,7 +1210,7 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support multisig
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -1252,7 +1252,7 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support multisig
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -1295,7 +1295,7 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support multisig
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -1347,7 +1347,7 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support multisig
-                    rules: ['<2.4.3'],
+                    rules: ['<2.4.3', '1'],
                     payload: false,
                 },
             ],
@@ -1382,7 +1382,7 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support a zero ttl
-                    rules: ['<2.4.2'],
+                    rules: ['<2.4.2', '1'],
                     payload: false,
                 },
             ],
@@ -1419,7 +1419,7 @@ export default {
             legacyResults: [
                 {
                     // older FW doesn't support a zero validityIntervalStart
-                    rules: ['<2.4.2'],
+                    rules: ['<2.4.2', '1'],
                     payload: false,
                 },
             ],
@@ -1642,5 +1642,5 @@ export default {
                 },
             ],
         },
-    ].map(fixture => ({ ...fixture, legacyResults })),
+    ],
 };
