@@ -18,6 +18,17 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
+    services:
+      trezor-user-env:
+        image: "ghcr.io/trezor/trezor-user-env:latest"
+        ports:
+        - 9001:9001
+        - 21326:21326
+        - 21325:21326
+        env:
+          SDL_VIDEODRIVER: "dummy"
+          USE_TX_CACHE: true
+          USE_WS_CACHE: true
     steps:
     - uses: actions/checkout@v2
       with:
@@ -29,7 +40,8 @@ jobs:
         cache: yarn
         cache-dependency-path: "**/yarn.lock"
     - run: yarn install
-    - run: ./tests/run.sh -s 'yarn test:integration ${{ inputs.test-pattern }}' -i '${{ inputs.methods }}'
+    # Use `-d` to disable Docker, since it's started under `trezor-user-env`
+    - run: ./tests/run.sh -d -s 'yarn test:integration ${{ inputs.test-pattern }}' -i '${{ inputs.methods }}'
 
   test-karma:
     name: Test Karma (${{ matrix.node-version }})
@@ -37,6 +49,17 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
+    services:
+      trezor-user-env:
+        image: "ghcr.io/trezor/trezor-user-env:latest"
+        ports:
+        - 9001:9001
+        - 21326:21326
+        - 21325:21326
+        env:
+          SDL_VIDEODRIVER: "dummy"
+          USE_TX_CACHE: true
+          USE_WS_CACHE: true
     steps:
     - uses: actions/checkout@v2
       with:
@@ -55,4 +78,5 @@ jobs:
         path: build
     # xvfb is required to run karma
     - run: sudo apt-get install xvfb
-    - run: xvfb-run --auto-servernum ./tests/run.sh -s 'yarn test:karma:production ${{ inputs.test-pattern }}' -i '${{ inputs.methods }}'
+    # Use `-d` to disable Docker, since it's started under `trezor-user-env`
+    - run: xvfb-run --auto-servernum  ./tests/run.sh -d -s 'yarn test:karma:production ${{ inputs.test-pattern }}' -i '${{ inputs.methods }}'
