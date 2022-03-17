@@ -30,3 +30,29 @@ jobs:
         cache-dependency-path: "**/yarn.lock"
     - run: yarn install
     - run: ./tests/run.sh -s 'yarn test:integration ${{ inputs.test-pattern }}' -i '${{ inputs.methods }}'
+
+  test-methods-karma:
+    name: Test Karma (${{ matrix.node-version }})
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: yarn
+        cache-dependency-path: "**/yarn.lock"
+    - run: yarn install
+    - name: Retrieve build artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: build-artifact
+        path: build
+    # xvfb is required to run karma
+    - run: sudo apt-get install xvfb
+    - run: xvfb-run --auto-servernum ./tests/run.sh -s 'yarn test:karma:production ${{ inputs.test-pattern }}' -i '${{ inputs.methods }}'
