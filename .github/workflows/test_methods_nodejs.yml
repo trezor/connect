@@ -1,4 +1,4 @@
-name: Test methods node.js
+name: Test methods
 
 on:
   push:
@@ -7,184 +7,127 @@ on:
     branches: [develop]
 
 jobs:
-  setup:
+  check:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [12.x]
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-    - uses: actions/cache@v2
-      id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
-    - run: yarn install
-
-
-  check:
-    needs: setup
-    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
-    - uses: actions/cache@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
       with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        node-version: ${{ matrix.node-version }}
+        cache: yarn
+        cache-dependency-path: "**/yarn.lock"
+    - run: yarn install
     - run: yarn test:health
     - run: yarn flow
     - run: yarn typescript
     - run: yarn lint
     - run: yarn test:unit
 
-  management:
-    needs: check
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node-version: [12.x]
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
-    - uses: actions/cache@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
       with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -s 'yarn test:integration methods' -i applySettings,applyFlags,getFeatures
+        node-version: ${{ matrix.node-version }}
+        cache: yarn
+        cache-dependency-path: "**/yarn.lock"
+    - run: yarn install
+    - run: yarn build
+    - run: yarn build:inline
+    - name: Save artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-artifact
+        path: build
+        if-no-files-found: error
+        retention-days: 1
+
+  management:
+    needs: [build, check]
+    uses: ./.github/workflows/test_with_trezor-user-env.yml
+    with:
+      test-pattern: methods
+      methods:  'applySettings,applyFlags,getFeatures'
 
   btc-sign:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -s 'yarn test:integration methods' -i signTransaction
+    needs: [build, check]
+    uses: ./.github/workflows/test_with_trezor-user-env.yml
+    with:
+      test-pattern: methods
+      methods:  signTransaction
 
   btc-others:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -s 'yarn test:integration methods' -i getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction
+    needs: [build, check]
+    uses: ./.github/workflows/test_with_trezor-user-env.yml
+    with:
+      test-pattern: methods
+      methods:  getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction
 
   stellar:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -s 'yarn test:integration methods' -i stellarGetAddress,stellarSignTransaction
+    needs: [build, check]
+    uses: ./.github/workflows/test_with_trezor-user-env.yml
+    with:
+      test-pattern: methods
+      methods:  stellarGetAddress,stellarSignTransaction
 
   cardano:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -s 'yarn test:integration methods' -i cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction
+    needs: [build, check]
+    uses: ./.github/workflows/test_with_trezor-user-env.yml
+    with:
+      test-pattern: methods
+      methods:  cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction
 
   eos:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -s 'yarn test:integration methods' -i eosGetPublicKey,eosSignTransaction
+    needs: [build, check]
+    uses: ./.github/workflows/test_with_trezor-user-env.yml
+    with:
+      test-pattern: methods
+      methods:  eosGetPublicKey,eosSignTransaction
 
   eth:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -s 'yarn test:integration methods' -i ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData
+    needs: [build, check]
+    uses: ./.github/workflows/test_with_trezor-user-env.yml
+    with:
+      test-pattern: methods
+      methods:  ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData
 
   nem:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -s 'yarn test:integration methods' -i nemGetAddress,nemSignTransaction
+    needs: [build, check]
+    uses: ./.github/workflows/test_with_trezor-user-env.yml
+    with:
+      test-pattern: methods
+      methods:  nemGetAddress,nemSignTransaction
 
   ripple:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -s 'yarn test:integration methods' -i rippleGetAddress,rippleSignTransaction
+    needs: [build, check]
+    uses: ./.github/workflows/test_with_trezor-user-env.yml
+    with:
+      test-pattern: methods
+      methods:  rippleGetAddress,rippleSignTransaction
 
   tezos:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -s 'yarn test:integration methods' -i tezosGetAddress,tezosGetPublicKey
+    needs: [build, check]
+    uses: ./.github/workflows/test_with_trezor-user-env.yml
+    with:
+      test-pattern: methods
+      methods:  tezosGetAddress,tezosGetPublicKey
 
   binance:
-    needs: check
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-    - uses: actions/cache@v2
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    - run: ./tests/run.sh -s 'yarn test:integration methods' -i binanceSignTransaction
+    needs: [build, check]
+    uses: ./.github/workflows/test_with_trezor-user-env.yml
+    with:
+      test-pattern: methods
+      methods:  binanceSignTransaction
