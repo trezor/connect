@@ -1,5 +1,4 @@
-name: Test methods
-
+name: Test
 on:
   push:
     branches: [develop]
@@ -54,6 +53,12 @@ jobs:
         path: build
         if-no-files-found: error
         retention-days: 1
+
+  api:
+    needs: [build, check]
+    uses: ./.github/workflows/test_with_trezor-user-env.yml
+    with:
+      test-pattern: init
 
   management:
     needs: [build, check]
