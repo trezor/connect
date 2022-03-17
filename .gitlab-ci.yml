@@ -181,7 +181,7 @@ publish beta release to npm:
 
 .test:
   extends: .jobs
-  image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
+  image: ghcr.io/trezor/trezor-user-env
   dependencies:
     - "setup environment"
   variables:
@@ -192,7 +192,7 @@ publish beta release to npm:
     - nix-shell --run "yarn"
   script:
     - "echo Firmware version: $TESTS_FIRMWARE"
-    - /trezor-user-env/run.sh &
+    - /trezor-user-env/run-nix.sh &
     - nix-shell --run "yarn test:integration ${TEST_PATTERN} --coverage true"
   after_script:
     - cp /trezor-user-env/logs/debugging.log trezor-user-env-debugging.log
@@ -204,7 +204,7 @@ publish beta release to npm:
     expire_in: 1 week
     when: always
 
-TT latest: 
+TT latest:
   extends: .test
   stage: test
 
@@ -212,7 +212,7 @@ API:
   extends: .test
   stage: test
   parallel: !reference [.jobs-api,parallel]
-  
+
 .test-nightly:
   extends: .test
   stage: test extended
@@ -223,7 +223,7 @@ API:
     TESTS_USE_WS_CACHE: "true"
   # todo: resolve tests flakiness and remove retry option
   retry: 2
- 
+
 .test-manual:
   extends: .test
   stage: test extended
@@ -231,17 +231,17 @@ API:
   # out of stages order, needs makes jobs available along with "base tests"
   needs: ["setup environment", "verify", "build"]
 
-TT master: 
+TT master:
   extends: .test-nightly
   variables:
     TESTS_FIRMWARE: "2-master"
 
-TT master: 
+TT master:
   extends: .test-manual
   variables:
     TESTS_FIRMWARE: "2-master"
 
-TT 2.2.0: 
+TT 2.2.0:
   extends: .test-nightly
   # todo: remove delay. according to my observation, the higher number of jobs running concurrently, the higher chance of test failing. are we sure jobs are isolated from each other
   when: delayed
@@ -249,12 +249,12 @@ TT 2.2.0:
   variables:
     TESTS_FIRMWARE: "2.2.0"
 
-TT 2.2.0: 
+TT 2.2.0:
   extends: .test-manual
   variables:
     TESTS_FIRMWARE: "2.2.0"
 
-T1 latest: 
+T1 latest:
   extends: .test-nightly
   # todo: remove delay. according to my observation, the higher number of jobs running concurrently, the higher chance of test failing. are we sure jobs are isolated from each other
   when: delayed
@@ -263,13 +263,13 @@ T1 latest:
     TESTS_FIRMWARE: "1-latest"
   parallel: !reference [.jobs-t1,parallel]
 
-T1 latest: 
+T1 latest:
   extends: .test-manual
   variables:
     TESTS_FIRMWARE: "1-latest"
   parallel: !reference [.jobs-t1,parallel]
 
-T1 master: 
+T1 master:
   extends: .test-nightly
     # todo: remove delay. according to my observation, the higher number of jobs running concurrently, the higher chance of test failing. are we sure jobs are isolated from each other
   when: delayed
@@ -278,7 +278,7 @@ T1 master:
     TESTS_FIRMWARE: "1-master"
   parallel: !reference [.jobs-t1,parallel]
 
-T1 master: 
+T1 master:
   extends: .test-manual
   variables:
     TESTS_FIRMWARE: "1-master"
@@ -286,7 +286,7 @@ T1 master:
 
 # Examples
 node:
-  image: registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env:latest
+  image: ghcr.io/trezor/trezor-user-env
   stage: examples
   dependencies:
     - "setup environment"
@@ -296,6 +296,6 @@ node:
     - nix-shell --run "yarn"
     - nix-shell --run "yarn build:npm-extended"
   script:
-    - /trezor-user-env/run.sh &
+    - /trezor-user-env/run-nix.sh &
     - sleep 10
     - nix-shell --run "yarn babel-node ./examples/node/index.js"
