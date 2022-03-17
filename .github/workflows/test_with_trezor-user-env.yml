@@ -31,7 +31,7 @@ jobs:
     - run: yarn install
     - run: ./tests/run.sh -s 'yarn test:integration ${{ inputs.test-pattern }}' -i '${{ inputs.methods }}'
 
-  test-methods-karma:
+  test-karma:
     name: Test Karma (${{ matrix.node-version }})
     runs-on: ubuntu-18.04
     strategy:
