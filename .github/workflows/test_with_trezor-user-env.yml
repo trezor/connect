@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [12.x, 14.x, 16.x]
     services:
       trezor-user-env:
         image: "ghcr.io/trezor/trezor-user-env:latest"
@@ -44,11 +44,8 @@ jobs:
     - run: ./tests/run.sh -d -s 'yarn test:integration ${{ inputs.test-pattern }}' -i '${{ inputs.methods }}'
 
   test-karma:
-    name: Test Karma (${{ matrix.node-version }})
+    name: Test Karma
     runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        node-version: [12.x]
     services:
       trezor-user-env:
         image: "ghcr.io/trezor/trezor-user-env:latest"
@@ -64,10 +61,11 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js 12.x
       uses: actions/setup-node@v2
       with:
-        node-version: ${{ matrix.node-version }}
+        # karma tests are run in browser, so node version doesn't matter too much
+        node-version: 12.x
         cache: yarn
         cache-dependency-path: "**/yarn.lock"
     - run: yarn install
