@@ -2006,14 +2006,13 @@
   resolved "https://registry.yarnpkg.com/@trezor/connect-common/-/connect-common-0.0.4.tgz#0df221685272544770399aca1c624b037870e310"
   integrity sha512-uE8t4JCwHVn224yj3cV4jLu8i5JAGDxzkBu8Als1UFs/Zt8Sfl5xwIqeTSvhXx5x+VXe+uxt2CXX3AcrKTxN3g==
 
-"@trezor/rollout@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@trezor/rollout/-/rollout-1.3.1.tgz#dc10e3f5334811f902ffbbea45a6615ca1766aee"
-  integrity sha512-DASS8pO0I0tL1edn4RdNd506nypp/5jR/mgq2gpesoSsVR9YMx74r8YR2IDhUCUvs8NEHCfbgxaj6n5l52ewIw==
+"@trezor/rollout@~1.2.0 || ^1.3.2":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@trezor/rollout/-/rollout-1.2.1.tgz#47c81186768bbb0514d27b386d92a719c290ab5e"
+  integrity sha512-BDYtPE+rl4QKilGzb3lGxv17+lA5rou04zr1DdWaDqazyvfPW0fj46us4A4WLWptGVL+gfXtn0ZGqgsxHLBm7A==
   dependencies:
-    "@trezor/utils" "^1.0.0"
-    cross-fetch "^3.1.5"
-    runtypes "^6.5.1"
+    cross-fetch "^3.1.4"
+    runtypes "^5.0.1"
 
 "@trezor/transport@^1.1.0":
   version "1.1.0"
@@ -3970,7 +3969,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4, create-hmac@^1.1.7:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-cross-fetch@^3.1.5:
+cross-fetch@^3.1.4, cross-fetch@^3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.5.tgz#e1389f44d9e7ba767907f7af8454787952ab534f"
   integrity sha512-lvb1SBsI0Z7GDwmuid+mU3kWVBwTVUbe7S0H52yaaAdQOXq2YktTCZdlAcNKFzE6QtRz0snpw9bNiPeOIkkQvw==
@@ -9068,10 +9067,10 @@ run-parallel@^1.1.9:
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.1.9.tgz#c9dd3a7cf9f4b2c4b6244e173a6ed866e61dd679"
   integrity sha512-DEqnSRTDw/Tc3FXf49zedI638Z9onwUotBMiUFKmrO2sdFKIbXamXGQ3Axd4qgphxKB4kw/qP1w5kTxnfU1B9Q==
 
-runtypes@^6.5.1:
-  version "6.5.1"
-  resolved "https://registry.yarnpkg.com/runtypes/-/runtypes-6.5.1.tgz#125d9a50c3b7dd45db6e47d42bb1c411b4f3f008"
-  integrity sha512-vYxcAYzC868ZY4BgazBomT9dpWHZnG3CH++5mhlVKGKqf2MzON4itmEmQt3uGTUOyipeUn7GALAN0nQhjPNRtA==
+runtypes@^5.0.1:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/runtypes/-/runtypes-5.2.0.tgz#1751a17860807873f0fddb4b15a5cd80fe574947"
+  integrity sha512-ArcmkYvNWkHrwg4Ic7St365oUGAkiIcs6vNmoRNzADv7nBhrTQC8C562TYnIV9nxxMxdmAAHsehD78xuWeYPJA==
 
 rxjs@^6.6.0:
   version "6.6.2"
