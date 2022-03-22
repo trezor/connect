@@ -2006,10 +2006,10 @@
   resolved "https://registry.yarnpkg.com/@trezor/connect-common/-/connect-common-0.0.4.tgz#0df221685272544770399aca1c624b037870e310"
   integrity sha512-uE8t4JCwHVn224yj3cV4jLu8i5JAGDxzkBu8Als1UFs/Zt8Sfl5xwIqeTSvhXx5x+VXe+uxt2CXX3AcrKTxN3g==
 
-"@trezor/rollout@^1.3.1":
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/@trezor/rollout/-/rollout-1.3.1.tgz#dc10e3f5334811f902ffbbea45a6615ca1766aee"
-  integrity sha512-DASS8pO0I0tL1edn4RdNd506nypp/5jR/mgq2gpesoSsVR9YMx74r8YR2IDhUCUvs8NEHCfbgxaj6n5l52ewIw==
+"@trezor/rollout@^1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@trezor/rollout/-/rollout-1.3.2.tgz#9120f77c31bb12253a509b7b894b3777317dd763"
+  integrity sha512-P660yMKCM0rKJZXEH+YmTYXLdrxcKquapSnC7YUa5cf0jVG8rNQLeETnaS6YnYjbYXRxtmUWL/537bfj6dZeWw==
   dependencies:
     "@trezor/utils" "^1.0.0"
     cross-fetch "^3.1.5"
