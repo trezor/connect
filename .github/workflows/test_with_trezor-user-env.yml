@@ -47,7 +47,7 @@ jobs:
 
   test-karma:
     name: Test Karma
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     services:
       trezor-user-env:
         image: "ghcr.io/trezor/trezor-user-env:latest"
