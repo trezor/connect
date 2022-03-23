@@ -21,8 +21,8 @@ TrezorConnect.signTransaction(params).then(function(result) {
 [****Optional common params****](commonParams.md)
 ###### [flowtype](../../src/js/types/params.js#L169-L164)
 * `coin` - *required* `string` Determines network definition specified in [coins.json](../../src/data/coins.json) file. Coin `shortcut`, `name` or `label` can be used.
-* `inputs` - *required* `Array` of [TransactionInput](../../src/js/types/trezor/protobuf.js#L100-L108),
-* `outputs` - *required* `Array` of [TransactionOutput](../../src/js/types/trezor/protobuf.js#L113-L131),
+* `inputs` - *required* `Array` of [TxInputType](../../28e33c79e6a8568540c47acf7e96fdbf452d5624/src/js/types/trezor/protobuf.js#L306-L317),
+* `outputs` - *required* `Array` of [TxOutputType](../../28e33c79e6a8568540c47acf7e96fdbf452d5624/src/js/types/trezor/protobuf.js#L337-L369),
 * `refTxs` - *optional* `Array` of [RefTransaction](../../src/js/types/trezor/protobuf.js#L139-L144). If you don't want to use build-in `blockbook` backend you can optionally provide those data from your own backend transformed to `Trezor` format. Since Firmware 2.3.0/1.9.0 referenced transactions are required. Zcash and Komodo refTxs should also contains `expiry`, `version_group_id` and `extra_data` fields.
 * `locktime` - *optional* `number`,
 * `version` - *optional* `number` transaction version,
