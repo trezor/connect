@@ -41,9 +41,7 @@ jobs:
         cache-dependency-path: "**/yarn.lock"
     - run: yarn install
     # Use `-d` to disable Docker, since it's started under `trezor-user-env`
-    - run: ./tests/run.sh -d -s 'yarn test:integration ${{ inputs.test-pattern }}'
-      env:
-        TESTS_INCLUDED_METHODS: '${{ inputs.methods }}'
+    - run: ./tests/run.sh -d -s 'yarn test:integration ${{ inputs.test-pattern }}' -i '${{ inputs.methods }}'
 
   test-karma:
     name: Test Karma
@@ -79,6 +77,4 @@ jobs:
     # xvfb is required to run karma
     - run: sudo apt-get install xvfb
     # Use `-d` to disable Docker, since it's started under `trezor-user-env`
-    - run: xvfb-run --auto-servernum  ./tests/run.sh -d -s 'yarn test:karma:production ${{ inputs.test-pattern }}'
-      env:
-        TESTS_INCLUDED_METHODS: '${{ inputs.methods }}'
+    - run: xvfb-run --auto-servernum  ./tests/run.sh -d -s 'yarn test:karma:production ${{ inputs.test-pattern }}' -i '${{ inputs.methods }}'
