@@ -538,8 +538,9 @@ export type OwnershipProof = {
 // AuthorizeCoinJoin
 export type AuthorizeCoinJoin = {
     coordinator: string,
-    max_total_fee: number,
-    fee_per_anonymity?: number,
+    max_rounds: number,
+    max_coordinator_fee_rate: number,
+    max_fee_per_kvbyte: number,
     address_n: number[],
     coin_name?: string,
     script_type?: InputScriptType,

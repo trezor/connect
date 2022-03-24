@@ -11,6 +11,7 @@ import {
     LIB_NAME,
     PORT,
     SRC,
+    MESSAGES_SRC,
 } from './constants';
 
 module.exports = {
@@ -172,6 +173,7 @@ module.exports = {
             patterns: [
                 { from: DATA_SRC, to: 'data' },
                 { from: CONNECT_COMMON_DATA_SRC, to: 'data' },
+                { from: MESSAGES_SRC, to: `data/messages`, force: true },
             ],
         }),
     ],
