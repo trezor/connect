@@ -22,7 +22,7 @@ export const httpRequest = (url: string, _type: string): any => {
         case './data/firmware/2/releases.json':
             return require('@trezor/connect-common/files/firmware/2/releases.json');
         case './data/messages/messages.json':
-            return require('../../../data/messages/messages.json');
+            return require('@trezor/transport/messages.json');
         default:
             return null;
     }

@@ -2015,10 +2015,10 @@
     cross-fetch "^3.1.5"
     runtypes "^6.5.1"
 
-"@trezor/transport@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@trezor/transport/-/transport-1.1.0.tgz#b255e23ffd4f31db6ab3e3a2adf7a2111581f271"
-  integrity sha512-UDBNAxJgKOsinbfqzTKGneiTfrkZqOQaq+OaYt/Oj0OImXXuLIjZuyQfzBRauFoQiXti0pnbUMJYMWgZS4KINQ==
+"@trezor/transport@1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@trezor/transport/-/transport-1.1.2.tgz#a176257d269724045e2860c0255e7663d1a00424"
+  integrity sha512-Fh81+R/SQmaRcfT6efAOf9xsgxXxPW9tEcREe8tiou3HVPITyQOCKvC5+1R8lqEPZRTZnil0l22a1c/cfFpIww==
   dependencies:
     "@trezor/utils" "^1.0.0"
     bytebuffer "^5.0.1"

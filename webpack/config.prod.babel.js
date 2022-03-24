@@ -11,6 +11,7 @@ import {
     DIST,
     LIB_NAME,
     CONNECT_COMMON_DATA_SRC,
+    MESSAGES_SRC,
 } from './constants';
 
 module.exports = {
@@ -166,6 +167,7 @@ module.exports = {
                 { from: `${HTML_SRC}index.html`, to: `${DIST}index.html` },
                 { from: DATA_SRC, to: `${DIST}data` },
                 { from: CONNECT_COMMON_DATA_SRC, to: `${DIST}data` },
+                { from: MESSAGES_SRC, to: `${DIST}data/messages`, force: true },
             ],
         }),
     ],

@@ -12,3 +12,4 @@ export const INLINE_STYLESHEET = path.join(ABSOLUTE_BASE, 'src/js/iframe/');
 export const NODE_MODULES = path.join(ABSOLUTE_BASE, 'node_modules/');
 export const CONNECT_COMMON_DATA_SRC = path.join(NODE_MODULES, '@trezor/connect-common/files');
 export const PORT = 8088;
+export const MESSAGES_SRC = path.join(NODE_MODULES, '@trezor/transport/messages.json');
