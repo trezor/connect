@@ -2,6 +2,7 @@
 
 ### Changed
 - signTransaction allows address_n to be bip44 path string
+- updated blockchain-link to 2.1.2
 
 ### Fixed
 - race condition causing "unexpected response" error for calls preceded by a cancelled call.

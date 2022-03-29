@@ -110,6 +110,8 @@ export interface AccountTransaction {
             | 'stake_registration'
             | 'stake_deregistration'
             | null;
+        withdrawal?: string;
+        deposit?: string;
     };
     details: {
         vin: VinVout[];
