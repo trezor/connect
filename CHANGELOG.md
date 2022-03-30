@@ -1,8 +1,11 @@
 # 8.2.8 (not released)
 
+### Added
+- Cardano: support for Plutus transactions (#1073)
+
 ### Changed
 - signTransaction allows address_n to be bip44 path string
-- updated blockchain-link to 2.1.2
+- updated blockchain-link to 2.1.3
 
 ### Fixed
 - race condition causing "unexpected response" error for calls preceded by a cancelled call.
