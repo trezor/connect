@@ -1,4 +1,4 @@
-# 8.2.8 (not released)
+# 8.2.8
 
 ### Added
 - Cardano: support for Plutus transactions (#1073)
