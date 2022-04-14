@@ -2002,10 +2002,10 @@
     socks-proxy-agent "6.1.1"
     ws "7.4.6"
 
-"@trezor/connect-common@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@trezor/connect-common/-/connect-common-0.0.4.tgz#0df221685272544770399aca1c624b037870e310"
-  integrity sha512-uE8t4JCwHVn224yj3cV4jLu8i5JAGDxzkBu8Als1UFs/Zt8Sfl5xwIqeTSvhXx5x+VXe+uxt2CXX3AcrKTxN3g==
+"@trezor/connect-common@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@trezor/connect-common/-/connect-common-0.0.5.tgz#1468bc26893ea1a7cb3d00f1608c2135fb060f2e"
+  integrity sha512-9qyprCe2oatYGcTSn/S/YyYTAmkpeFea4yap00o4SiFQhr5sg9Oxjzig8o+XJP241fzy8Q//85Y0Y/uvCvDRDQ==
 
 "@trezor/rollout@^1.3.2":
   version "1.3.2"
