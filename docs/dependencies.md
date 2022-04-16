@@ -32,8 +32,6 @@ Those dependencies are used in `npm-extended` package which contains whole busin
 
 ## Frozen dependencies:
 
-- `cbor-web@7.0.6` - lib used by cardanoSignTransaction, version 8 requires node@14. This will be removed together with "legacy cardanoSignTransaction".
-
 - `flow-bin@0.130` - flow has too many breaking changes, it's worthless to implement them since TrezorConnect is going to be rewritten to typescript.
 
 - `node-fetch@2.6.3` - version 3 requires node@14.
