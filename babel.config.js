@@ -29,5 +29,6 @@ module.exports = api => {
     return {
         presets,
         plugins,
+        sourceType: 'unambiguous', // This is required by karma tests (allow websocket-client module.exports = ... syntax)
     };
 };

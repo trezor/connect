@@ -193,7 +193,7 @@ publish beta release to npm:
   script:
     - "echo Firmware version: $TESTS_FIRMWARE"
     - /trezor-user-env/run-nix.sh &
-    - nix-shell --run "yarn test:integration ${TEST_PATTERN} --coverage true"
+    - nix-shell --run "export TESTS_FIRMWARE=\$(node ./tests/get-latest-firmware.js) && yarn test:integration ${TEST_PATTERN} --coverage true"
   after_script:
     - cp /trezor-user-env/logs/debugging.log trezor-user-env-debugging.log
     - cp /trezor-user-env/logs/emulator_bridge.log tenv-emulator-bridge-debugging.log

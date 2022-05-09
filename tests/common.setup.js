@@ -1,6 +1,3 @@
-import releases2 from '@trezor/connect-common/files/firmware/2/releases.json';
-import releases1 from '@trezor/connect-common/files/firmware/1/releases.json';
-
 import { Controller } from './websocket-client';
 import TrezorConnect from '../src/js/index';
 import * as UI from '../src/js/constants/ui';
@@ -13,18 +10,9 @@ const MNEMONICS = {
         'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
 };
 
-let firmware = process.env.TESTS_FIRMWARE;
-
-if (firmware === '1-latest') {
-    firmware = releases1[0].version.join('.');
-}
-if (firmware === '2-latest') {
-    firmware = releases2[0].version.join('.');
-}
-
+const firmware = process.env.TESTS_FIRMWARE;
 if (!firmware) {
-    // fallback to the latest officially release model T firmware
-    firmware = releases2[0].version.join('.');
+    throw new Error('TEST_FIRMWARE not set');
 }
 
 const wait = ms =>
@@ -34,7 +22,6 @@ const wait = ms =>
 
 const getController = name => {
     const controller = new Controller({
-        url: 'ws://localhost:9001/',
         name: name || 'unnamed controller',
     });
     controller.on('error', error => {
@@ -120,6 +107,7 @@ const initTrezorConnect = async (controller, options) => {
             minor_version,
             patch_version,
             revision,
+            requested: process.env.TESTS_FIRMWARE,
         });
     });
 

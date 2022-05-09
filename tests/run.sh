@@ -5,7 +5,7 @@
 
 set -euo pipefail
 
-USER_ENV_IMAGE="registry.gitlab.com/satoshilabs/trezor/trezor-user-env/trezor-user-env"
+USER_ENV_IMAGE="ghcr.io/trezor/trezor-user-env"
 
 cleanup() {
   if [ -n "${dockerID-}" ]; then
@@ -43,26 +43,6 @@ runDocker() {
   )
   "$DOCKER_PATH" logs -f "$dockerID" &
   echo "Running docker container with ID $dockerID"
-}
-
-waitForEnv() {
-  echo "Waiting for trezor-user-env to load up..."
-  counter=0
-  max_attempts=60
-
-  # there is no official support for websockets in curl
-  # trezor-user-env websocket server will return HTTP/1.1 426 Upgrade Required error with "Upgrade: websocket" header
-  until (curl -i -s -I http://localhost:9001 | grep 'websocket'); do
-    if [ ${counter} -eq ${max_attempts} ]; then
-      echo "trezor-user-env is not running. exiting"
-      exit 1
-    fi
-    counter=$(($counter+1))
-    printf "."
-    sleep 1
-  done
-
-  echo "trezor-user-env loaded up"
 }
 
 show_usage() {
@@ -138,10 +118,10 @@ run() {
     runDocker
   fi
 
-  waitForEnv
+  TESTS_FIRMWARE=$(node ./tests/get-latest-firmware.js)
 
   echo "Running ${TEST_SCRIPT}"
-  echo "  Firmware: ${FIRMWARE}"
+  echo "  Firmware: ${TESTS_FIRMWARE}"
   echo "  Included methods: ${INCLUDED_METHODS}"
   echo "  Excluded methods: ${EXCLUDED_METHODS}"
   echo "  TxCache: ${USE_TX_CACHE}"
