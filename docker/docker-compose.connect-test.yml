@@ -1,0 +1,24 @@
+version: "3"
+services:
+  trezor-user-env-unix:
+    image: ghcr.io/trezor/trezor-user-env
+    environment:
+      - SDL_VIDEODRIVER=dummy
+      - XDG_RUNTIME_DIR=/var/tmp
+    network_mode: bridge
+
+  test-run:
+    image: registry.gitlab.com/satoshilabs/trezor/trezor-suite/base:latest
+    environment:
+      - TESTS_FIRMWARE=$TESTS_FIRMWARE
+      - TESTS_INCLUDED_METHODS=$TESTS_INCLUDED_METHODS
+      - TESTS_EXCLUDED_METHODS=$TESTS_EXCLUDED_METHODS
+      - TESTS_USE_TX_CACHE=false
+      - TESTS_USE_WS_CACHE=false
+    depends_on:
+      - trezor-user-env-unix
+    network_mode: service:trezor-user-env-unix
+    working_dir: /connect
+    command: bash -c "docker/wait-for-env.sh && $TESTS_SCRIPT $TESTS_PATTERN"
+    volumes:
+      - ../:/connect

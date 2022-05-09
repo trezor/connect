@@ -151,138 +151,138 @@ publish beta release to npm:
 
 # Test
 
-.jobs:
-  parallel:
-    matrix:
-      - TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
-      - TESTS_INCLUDED_METHODS: "signTransaction"
-      - TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction"
-      - TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
-      - TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction"
-      - TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
-      - TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData"
-      - TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
-      - TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
-      - TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
-      - TESTS_INCLUDED_METHODS: "binanceSignTransaction"
+# .jobs:
+#   parallel:
+#     matrix:
+#       - TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
+#       - TESTS_INCLUDED_METHODS: "signTransaction"
+#       - TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction"
+#       - TESTS_INCLUDED_METHODS: "stellarGetAddress,stellarSignTransaction"
+#       - TESTS_INCLUDED_METHODS: "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction"
+#       - TESTS_INCLUDED_METHODS: "eosGetPublicKey,eosSignTransaction"
+#       - TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData"
+#       - TESTS_INCLUDED_METHODS: "nemGetAddress,nemSignTransaction"
+#       - TESTS_INCLUDED_METHODS: "rippleGetAddress,rippleSignTransaction"
+#       - TESTS_INCLUDED_METHODS: "tezosGetAddress,tezosGetPublicKey"
+#       - TESTS_INCLUDED_METHODS: "binanceSignTransaction"
 
-.jobs-t1:
-  parallel:
-    matrix:
-      - TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
-      - TESTS_INCLUDED_METHODS: "signTransaction"
-      - TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction"
-      - TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData"
+# .jobs-t1:
+#   parallel:
+#     matrix:
+#       - TESTS_INCLUDED_METHODS: "applySettings,applyFlags,getFeatures"
+#       - TESTS_INCLUDED_METHODS: "signTransaction"
+#       - TESTS_INCLUDED_METHODS: "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction"
+#       - TESTS_INCLUDED_METHODS: "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData"
 
-.jobs-api:
-  parallel:
-    matrix:
-      - TEST_PATTERN: "init"
+# .jobs-api:
+#   parallel:
+#     matrix:
+#       - TEST_PATTERN: "init"
 
-.test:
-  extends: .jobs
-  image: ghcr.io/trezor/trezor-user-env
-  dependencies:
-    - "setup environment"
-  variables:
-    SDL_VIDEODRIVER: "dummy"
-    TESTS_USE_TX_CACHE: "false"
-    TESTS_USE_WS_CACHE: "false"
-  before_script:
-    - nix-shell --run "yarn"
-  script:
-    - "echo Firmware version: $TESTS_FIRMWARE"
-    - /trezor-user-env/run-nix.sh &
-    - nix-shell --run "yarn test:integration ${TEST_PATTERN} --coverage true"
-  after_script:
-    - cp /trezor-user-env/logs/debugging.log trezor-user-env-debugging.log
-    - cp /trezor-user-env/logs/emulator_bridge.log tenv-emulator-bridge-debugging.log
-  artifacts:
-    paths:
-      - trezor-user-env-debugging.log
-      - tenv-emulator-bridge-debugging.log
-    expire_in: 1 week
-    when: always
+# .test:
+#   extends: .jobs
+#   image: ghcr.io/trezor/trezor-user-env
+#   dependencies:
+#     - "setup environment"
+#   variables:
+#     SDL_VIDEODRIVER: "dummy"
+#     TESTS_USE_TX_CACHE: "false"
+#     TESTS_USE_WS_CACHE: "false"
+#   before_script:
+#     - nix-shell --run "yarn"
+#   script:
+#     - "echo Firmware version: $TESTS_FIRMWARE"
+#     - /trezor-user-env/run-nix.sh &
+#     - nix-shell --run "yarn test:integration ${TEST_PATTERN} --coverage true"
+#   after_script:
+#     - cp /trezor-user-env/logs/debugging.log trezor-user-env-debugging.log
+#     - cp /trezor-user-env/logs/emulator_bridge.log tenv-emulator-bridge-debugging.log
+#   artifacts:
+#     paths:
+#       - trezor-user-env-debugging.log
+#       - tenv-emulator-bridge-debugging.log
+#     expire_in: 1 week
+#     when: always
 
-TT latest:
-  extends: .test
-  stage: test
+# TT latest:
+#   extends: .test
+#   stage: test
 
-API:
-  extends: .test
-  stage: test
-  parallel: !reference [.jobs-api,parallel]
+# API:
+#   extends: .test
+#   stage: test
+#   parallel: !reference [.jobs-api,parallel]
 
-.test-nightly:
-  extends: .test
-  stage: test extended
-  only:
-    - schedules
-  variables:
-    TESTS_USE_TX_CACHE: "true"
-    TESTS_USE_WS_CACHE: "true"
-  # todo: resolve tests flakiness and remove retry option
-  retry: 2
+# .test-nightly:
+#   extends: .test
+#   stage: test extended
+#   only:
+#     - schedules
+#   variables:
+#     TESTS_USE_TX_CACHE: "true"
+#     TESTS_USE_WS_CACHE: "true"
+#   # todo: resolve tests flakiness and remove retry option
+#   retry: 2
 
-.test-manual:
-  extends: .test
-  stage: test extended
-  when: manual
-  # out of stages order, needs makes jobs available along with "base tests"
-  needs: ["setup environment", "verify", "build"]
+# .test-manual:
+#   extends: .test
+#   stage: test extended
+#   when: manual
+#   # out of stages order, needs makes jobs available along with "base tests"
+#   needs: ["setup environment", "verify", "build"]
 
-TT master:
-  extends: .test-nightly
-  variables:
-    TESTS_FIRMWARE: "2-master"
+# TT master:
+#   extends: .test-nightly
+#   variables:
+#     TESTS_FIRMWARE: "2-master"
 
-TT master:
-  extends: .test-manual
-  variables:
-    TESTS_FIRMWARE: "2-master"
+# TT master:
+#   extends: .test-manual
+#   variables:
+#     TESTS_FIRMWARE: "2-master"
 
-TT 2.2.0:
-  extends: .test-nightly
-  # todo: remove delay. according to my observation, the higher number of jobs running concurrently, the higher chance of test failing. are we sure jobs are isolated from each other
-  when: delayed
-  start_in: 5 minutes
-  variables:
-    TESTS_FIRMWARE: "2.2.0"
+# TT 2.2.0:
+#   extends: .test-nightly
+#   # todo: remove delay. according to my observation, the higher number of jobs running concurrently, the higher chance of test failing. are we sure jobs are isolated from each other
+#   when: delayed
+#   start_in: 5 minutes
+#   variables:
+#     TESTS_FIRMWARE: "2.2.0"
 
-TT 2.2.0:
-  extends: .test-manual
-  variables:
-    TESTS_FIRMWARE: "2.2.0"
+# TT 2.2.0:
+#   extends: .test-manual
+#   variables:
+#     TESTS_FIRMWARE: "2.2.0"
 
-T1 latest:
-  extends: .test-nightly
-  # todo: remove delay. according to my observation, the higher number of jobs running concurrently, the higher chance of test failing. are we sure jobs are isolated from each other
-  when: delayed
-  start_in: 10 minutes
-  variables:
-    TESTS_FIRMWARE: "1-latest"
-  parallel: !reference [.jobs-t1,parallel]
+# T1 latest:
+#   extends: .test-nightly
+#   # todo: remove delay. according to my observation, the higher number of jobs running concurrently, the higher chance of test failing. are we sure jobs are isolated from each other
+#   when: delayed
+#   start_in: 10 minutes
+#   variables:
+#     TESTS_FIRMWARE: "1-latest"
+#   parallel: !reference [.jobs-t1,parallel]
 
-T1 latest:
-  extends: .test-manual
-  variables:
-    TESTS_FIRMWARE: "1-latest"
-  parallel: !reference [.jobs-t1,parallel]
+# T1 latest:
+#   extends: .test-manual
+#   variables:
+#     TESTS_FIRMWARE: "1-latest"
+#   parallel: !reference [.jobs-t1,parallel]
 
-T1 master:
-  extends: .test-nightly
-    # todo: remove delay. according to my observation, the higher number of jobs running concurrently, the higher chance of test failing. are we sure jobs are isolated from each other
-  when: delayed
-  start_in: 15 minutes
-  variables:
-    TESTS_FIRMWARE: "1-master"
-  parallel: !reference [.jobs-t1,parallel]
+# T1 master:
+#   extends: .test-nightly
+#     # todo: remove delay. according to my observation, the higher number of jobs running concurrently, the higher chance of test failing. are we sure jobs are isolated from each other
+#   when: delayed
+#   start_in: 15 minutes
+#   variables:
+#     TESTS_FIRMWARE: "1-master"
+#   parallel: !reference [.jobs-t1,parallel]
 
-T1 master:
-  extends: .test-manual
-  variables:
-    TESTS_FIRMWARE: "1-master"
-  parallel: !reference [.jobs-t1,parallel]
+# T1 master:
+#   extends: .test-manual
+#   variables:
+#     TESTS_FIRMWARE: "1-master"
+#   parallel: !reference [.jobs-t1,parallel]
 
 # Examples
 node:
@@ -299,3 +299,68 @@ node:
     - /trezor-user-env/run-nix.sh &
     - sleep 10
     - nix-shell --run "yarn babel-node ./examples/node/index.js"
+
+.connect:
+  stage: test
+  variables:
+    COMPOSE_PROJECT_NAME: $CI_JOB_ID
+    COMPOSE_FILE: ./docker/docker-compose.connect-test.yml
+    TESTS_INCLUDED_METHODS: $TESTS_INCLUDED_METHODS
+    TESTS_EXCLUDED_METHODS: $TESTS_EXCLUDED_METHODS
+    TESTS_PATTERN: $TESTS_PATTERN
+    TESTS_SCRIPT: yarn workspace @trezor/integration-tests test:connect:${TESTS_ENVIRONMENT}
+    TESTS_FIRMWARE: $TESTS_FIRMWARE
+    TESTS_USE_TX_CACHE: $TESTS_MOCK_BACKENDS
+    TESTS_USE_WS_CACHE: $TESTS_MOCK_BACKENDS
+  before_script:
+    - docker-compose down
+    - docker network prune -f
+  script:
+    - git submodule update --init --recursive
+    - yarn install --pure-lockfile --cache-folder .yarn --prefer-offline
+    - yarn build
+    - docker-compose pull
+    - docker-compose up -d trezor-user-env-unix
+    - docker-compose run test-run
+  after_script:
+    - docker-compose down
+    - docker network prune -f
+  parallel:
+    matrix:
+      - TESTS_ENVIRONMENT: ["node", "web"]
+        TESTS_PATTERN: "init"
+        TESTS_FIRMWARE: ["2-latest", "2.2.0"]
+        # todo:
+        # TESTS_NODE_VERSION: ["12", "14", "16"]
+      - TESTS_ENVIRONMENT: ["node", "web"]
+        TESTS_PATTERN: "methods"
+        TESTS_FIRMWARE: ["2-latest", "2.2.0"]
+        # todo:
+        # TESTS_NODE_VERSION: ["12", "14", "16"]
+        TESTS_INCLUDED_METHODS: [
+            "applySettings,applyFlags,getFeatures",
+            "signTransaction",
+            "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction",
+            "stellarGetAddress,stellarSignTransaction",
+            "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction",
+            "eosGetPublicKey,eosSignTransaction",
+            "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData",
+            # "nemGetAddress,nemSignTransaction",
+            "rippleGetAddress,rippleSignTransaction",
+            "tezosGetAddress,tezosGetPublicKey",
+            "binanceSignTransaction",
+          ]
+        TESTS_MOCK_BACKENDS: "false"
+
+connect:
+  extends: .connect
+  # only:
+  #   refs:
+  #     - schedules # only nightly jobs, this is too heavy for develop branches at the moment
+
+connect manual:
+  extends: .connect
+  except:
+    refs:
+      - schedules
+  when: manual

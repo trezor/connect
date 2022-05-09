@@ -16,15 +16,20 @@ const MNEMONICS = {
 let firmware = process.env.TESTS_FIRMWARE;
 
 if (firmware === '1-latest') {
-    firmware = releases1[0].version.join('.');
+    // firmware = releases1[0].version.join('.');
+    firmware = releases1[1].version.join('.');
 }
+
 if (firmware === '2-latest') {
-    firmware = releases2[0].version.join('.');
+    // firmware = releases2[0].version.join('.');
+    firmware = releases2[1].version.join('.');
 }
 
 if (!firmware) {
     // fallback to the latest officially release model T firmware
-    firmware = releases2[0].version.join('.');
+    // firmware = releases2[0].version.join('.');
+
+    firmware = releases2[1].version.join('.');
 }
 
 const wait = ms =>
