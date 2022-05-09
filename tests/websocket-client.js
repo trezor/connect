@@ -23,14 +23,17 @@ const createDeferred = id => {
 const DEFAULT_TIMEOUT = 40 * 1000;
 const DEFAULT_PING_TIMEOUT = 50 * 1000;
 
-export class Controller extends EventEmitter {
-    constructor(options) {
+class Controller extends EventEmitter {
+    constructor(options = {}) {
         super();
         this.messageID = 0;
         this.messages = [];
         this.subscriptions = [];
         this.setMaxListeners(Infinity);
-        this.options = options;
+        this.options = {
+            ...options,
+            url: options.url || 'ws://localhost:9001/',
+        };
     }
 
     setConnectionTimeout() {
@@ -119,6 +122,11 @@ export class Controller extends EventEmitter {
             const resp = JSON.parse(message);
             const { id, success } = resp;
             const dfd = this.messages.find(m => m.id === id);
+
+            if (resp.type === 'client') {
+                this.emit('firmwares', resp.firmwares);
+            }
+
             if (dfd) {
                 if (!success) {
                     dfd.reject(
@@ -228,3 +236,5 @@ export class Controller extends EventEmitter {
         this.removeAllListeners();
     }
 }
+
+module.exports = { Controller };
