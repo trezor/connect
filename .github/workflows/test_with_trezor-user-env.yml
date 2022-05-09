@@ -20,7 +20,7 @@ jobs:
         node-version: [12.x, 14.x, 16.x]
     services:
       trezor-user-env:
-        image: "ghcr.io/trezor/trezor-user-env:latest"
+        image: "ghcr.io/trezor/trezor-user-env:1d12b626fdd4aab4b5c8e148e42a81c269e7e5b5"
         ports:
         - 9001:9001
         - 21326:21326
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       trezor-user-env:
-        image: "ghcr.io/trezor/trezor-user-env:latest"
+        image: "ghcr.io/trezor/trezor-user-env:1d12b626fdd4aab4b5c8e148e42a81c269e7e5b5"
         ports:
         - 9001:9001
         - 21326:21326

@@ -181,7 +181,7 @@ publish beta release to npm:
 
 .test:
   extends: .jobs
-  image: ghcr.io/trezor/trezor-user-env
+  image: ghcr.io/trezor/trezor-user-env:1d12b626fdd4aab4b5c8e148e42a81c269e7e5b5
   dependencies:
     - "setup environment"
   variables:
@@ -286,7 +286,7 @@ T1 master:
 
 # Examples
 node:
-  image: ghcr.io/trezor/trezor-user-env
+  image: ghcr.io/trezor/trezor-user-env:1d12b626fdd4aab4b5c8e148e42a81c269e7e5b5
   stage: examples
   dependencies:
     - "setup environment"
