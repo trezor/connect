@@ -107,7 +107,6 @@ runDocker() {
   docker-compose -f ./docker/docker-compose.connect-test.yml up --abort-on-container-exit
 }
 
-
 run() {
   echo "Testing env: ${ENVIRONEMT}. Using: ${SCRIPT} ${PATTERN}"
   echo "  Firmware: ${FIRMWARE}"
@@ -119,6 +118,7 @@ run() {
   if [ $DOCKER = true ]; then
     runDocker
   else
+    ls -la
     ./docker/wait-for-env.sh
     $SCRIPT
   fi

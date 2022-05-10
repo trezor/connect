@@ -24,7 +24,7 @@ setup environment:
   tags:
     - deploy
 
-verify:
+.verify:
   stage: build
   dependencies:
     - "setup environment"
@@ -341,16 +341,16 @@ image: registry.gitlab.com/satoshilabs/trezor/trezor-suite/base@sha256:7002a4716
         # TESTS_NODE_VERSION: ["12", "14", "16"]
         TESTS_INCLUDED_METHODS: [
             "applySettings,applyFlags,getFeatures",
-            "signTransaction",
-            "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction",
-            "stellarGetAddress,stellarSignTransaction",
-            "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction",
-            "eosGetPublicKey,eosSignTransaction",
-            "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData",
-            # "nemGetAddress,nemSignTransaction",
-            "rippleGetAddress,rippleSignTransaction",
-            "tezosGetAddress,tezosGetPublicKey",
-            "binanceSignTransaction",
+            # "signTransaction",
+            # "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction",
+            # "stellarGetAddress,stellarSignTransaction",
+            # "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction",
+            # "eosGetPublicKey,eosSignTransaction",
+            # "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData",
+            # # "nemGetAddress,nemSignTransaction",
+            # "rippleGetAddress,rippleSignTransaction",
+            # "tezosGetAddress,tezosGetPublicKey",
+            # "binanceSignTransaction",
           ]
         TESTS_MOCK_BACKENDS: "false"
 
