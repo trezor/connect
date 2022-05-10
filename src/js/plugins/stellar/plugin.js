@@ -100,7 +100,16 @@ const transformTimebounds = timebounds => {
  * @returns {TrezorConnect.StellarTransaction}
  */
 const transformTransaction = (path, transaction) => {
-    const amounts = ['amount', 'sendMax', 'destAmount', 'startingBalance', 'limit', 'buyAmount'];
+    const amounts = [
+        'amount',
+        'sendMax',
+        'destAmount',
+        'sendAmount',
+        'destMin',
+        'startingBalance',
+        'limit',
+        'buyAmount',
+    ];
     const assets = ['asset', 'sendAsset', 'destAsset', 'selling', 'buying', 'line'];
 
     const operations = transaction.operations.map((o, i) => {
