@@ -335,25 +335,25 @@ image: registry.gitlab.com/satoshilabs/trezor/trezor-suite/base@sha256:7002a4716
         TESTS_FIRMWARE: ["2-latest", "2.2.0"]
         # todo:
         # TESTS_NODE_VERSION: ["12", "14", "16"]
-      - TESTS_ENVIRONMENT: ["node", "web"]
-        TESTS_PATTERN: "methods"
-        TESTS_FIRMWARE: ["2-latest", "2.2.0"]
-        # todo:
-        # TESTS_NODE_VERSION: ["12", "14", "16"]
-        TESTS_INCLUDED_METHODS: [
-            "applySettings,applyFlags,getFeatures",
-            # "signTransaction",
-            # "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction",
-            # "stellarGetAddress,stellarSignTransaction",
-            # "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction",
-            # "eosGetPublicKey,eosSignTransaction",
-            # "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData",
-            # # "nemGetAddress,nemSignTransaction",
-            # "rippleGetAddress,rippleSignTransaction",
-            # "tezosGetAddress,tezosGetPublicKey",
-            # "binanceSignTransaction",
-          ]
-        TESTS_MOCK_BACKENDS: "false"
+      # - TESTS_ENVIRONMENT: ["node", "web"]
+      #   TESTS_PATTERN: "methods"
+      #   TESTS_FIRMWARE: ["2-latest", "2.2.0"]
+      #   # todo:
+      #   # TESTS_NODE_VERSION: ["12", "14", "16"]
+      #   TESTS_INCLUDED_METHODS: [
+      #       "applySettings,applyFlags,getFeatures",
+      #       # "signTransaction",
+      #       # "getAccountInfo,getAddress,getPublicKey,signMessage,verifyMessage,composeTransaction",
+      #       # "stellarGetAddress,stellarSignTransaction",
+      #       # "cardanoGetAddress,cardanoGetNativeScriptHash,cardanoGetPublicKey,cardanoSignTransaction",
+      #       # "eosGetPublicKey,eosSignTransaction",
+      #       # "ethereumGetAddress,ethereumGetPublicKey,ethereumSignMessage,ethereumSignTransaction,ethereumVerifyMessage,ethereumSignTypedData",
+      #       # # "nemGetAddress,nemSignTransaction",
+      #       # "rippleGetAddress,rippleSignTransaction",
+      #       # "tezosGetAddress,tezosGetPublicKey",
+      #       # "binanceSignTransaction",
+      #     ]
+      #   TESTS_MOCK_BACKENDS: "false"
 
 connect:
   extends: .connect
