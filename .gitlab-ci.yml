@@ -300,8 +300,9 @@ node:
     - sleep 10
     - nix-shell --run "yarn babel-node ./examples/node/index.js"
 
+image: registry.gitlab.com/satoshilabs/trezor/trezor-suite/base@sha256:7002a4716e04b8b087dbd7b553c37724026949a0f0ee0c16618d5227d3224df0
+
 .connect:
-  image: registry.gitlab.com/satoshilabs/trezor/trezor-suite/base@sha256:7002a4716e04b8b087dbd7b553c37724026949a0f0ee0c16618d5227d3224df0
   stage: test
   variables:
     COMPOSE_PROJECT_NAME: $CI_JOB_ID
@@ -309,7 +310,7 @@ node:
     TESTS_INCLUDED_METHODS: $TESTS_INCLUDED_METHODS
     TESTS_EXCLUDED_METHODS: $TESTS_EXCLUDED_METHODS
     TESTS_PATTERN: $TESTS_PATTERN
-    TESTS_SCRIPT: yarn workspace @trezor/integration-tests test:connect:${TESTS_ENVIRONMENT}
+    TESTS_SCRIPT: yarn test:connect:${TESTS_ENVIRONMENT}
     TESTS_FIRMWARE: $TESTS_FIRMWARE
     TESTS_USE_TX_CACHE: $TESTS_MOCK_BACKENDS
     TESTS_USE_WS_CACHE: $TESTS_MOCK_BACKENDS
@@ -319,7 +320,7 @@ node:
   script:
     - git submodule update --init --recursive
     - yarn install --pure-lockfile --cache-folder .yarn --prefer-offline
-    - yarn build
+    # - yarn build
     - docker-compose pull
     - docker-compose up -d trezor-user-env-unix
     - docker-compose run test-run
