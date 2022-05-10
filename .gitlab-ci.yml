@@ -11,18 +11,18 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
   TEST_PATTERN: "methods"
 
-# setup environment:
-#   stage: setup
-#   script:
-#     - git submodule update --init --recursive
-#     - nix-shell --run "yarn"
-#   artifacts:
-#     expire_in: 1 week
-#     paths:
-#       - submodules
-#       - node_modules
-#   tags:
-#     - deploy
+setup environment:
+  stage: setup
+  script:
+    - git submodule update --init --recursive
+    - nix-shell --run "yarn"
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - submodules
+      - node_modules
+  tags:
+    - deploy
 
 # .verify:
 #   stage: build
