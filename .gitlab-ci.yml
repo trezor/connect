@@ -301,6 +301,7 @@ node:
     - nix-shell --run "yarn babel-node ./examples/node/index.js"
 
 .connect:
+  image: registry.gitlab.com/satoshilabs/trezor/trezor-suite/base@sha256:7002a4716e04b8b087dbd7b553c37724026949a0f0ee0c16618d5227d3224df0
   stage: test
   variables:
     COMPOSE_PROJECT_NAME: $CI_JOB_ID
