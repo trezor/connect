@@ -11,143 +11,143 @@ variables:
   GIT_SUBMODULE_STRATEGY: recursive
   TEST_PATTERN: "methods"
 
-setup environment:
-  stage: setup
-  script:
-    - git submodule update --init --recursive
-    - nix-shell --run "yarn"
-  artifacts:
-    expire_in: 1 week
-    paths:
-      - submodules
-      - node_modules
-  tags:
-    - deploy
+# setup environment:
+#   stage: setup
+#   script:
+#     - git submodule update --init --recursive
+#     - nix-shell --run "yarn"
+#   artifacts:
+#     expire_in: 1 week
+#     paths:
+#       - submodules
+#       - node_modules
+#   tags:
+#     - deploy
 
-.verify:
-  stage: build
-  dependencies:
-    - "setup environment"
-  script:
-    - nix-shell --run "yarn test:health"
-    - nix-shell --run "yarn flow"
-    - nix-shell --run "yarn typescript"
-    - nix-shell --run "yarn lint"
-    - nix-shell --run "yarn test:unit"
-  tags:
-    - deploy
+# .verify:
+#   stage: build
+#   dependencies:
+#     - "setup environment"
+#   script:
+#     - nix-shell --run "yarn test:health"
+#     - nix-shell --run "yarn flow"
+#     - nix-shell --run "yarn typescript"
+#     - nix-shell --run "yarn lint"
+#     - nix-shell --run "yarn test:unit"
+#   tags:
+#     - deploy
 
-build:
-  stage: build
-  dependencies:
-    - "setup environment"
-  script:
-    - nix-shell --run "yarn build:connect"
-  artifacts:
-    expire_in: 1 week
-    paths:
-      - build
-  tags:
-    - deploy
+# build:
+#   stage: build
+#   dependencies:
+#     - "setup environment"
+#   script:
+#     - nix-shell --run "yarn build:connect"
+#   artifacts:
+#     expire_in: 1 week
+#     paths:
+#       - build
+#   tags:
+#     - deploy
 
-# Deploy to testing environment
-deploy test:
-  stage: deploy
-  except:
-    - v8
-  variables:
-    GIT_STRATEGY: none
-  when: manual
-  dependencies:
-    - build
-  environment:
-    name: $CI_BUILD_REF_NAME
-    url: $BASE_REVIEW_URL/$CI_BUILD_REF_NAME
-  before_script: []
-  script:
-    - echo "Deploy a review app"
-    - '[ -z "${DEPLOY_BASE_DIR}" ] && echo "Deploy base dir cannot be empty" && exit 255'
-    - env
-    - mkdir -p "${DEPLOY_BASE_DIR}/${CI_BUILD_REF_NAME}"
-    - echo "Copy dev build to web server ${DEPLOY_BASE_DIR}/${CI_BUILD_REF_NAME}..."
-    - rsync --delete -va build/ "${DEPLOY_BASE_DIR}/${CI_BUILD_REF_NAME}/"
-  only:
-    - branches
-  tags:
-    - deploy
+# # Deploy to testing environment
+# deploy test:
+#   stage: deploy
+#   except:
+#     - v8
+#   variables:
+#     GIT_STRATEGY: none
+#   when: manual
+#   dependencies:
+#     - build
+#   environment:
+#     name: $CI_BUILD_REF_NAME
+#     url: $BASE_REVIEW_URL/$CI_BUILD_REF_NAME
+#   before_script: []
+#   script:
+#     - echo "Deploy a review app"
+#     - '[ -z "${DEPLOY_BASE_DIR}" ] && echo "Deploy base dir cannot be empty" && exit 255'
+#     - env
+#     - mkdir -p "${DEPLOY_BASE_DIR}/${CI_BUILD_REF_NAME}"
+#     - echo "Copy dev build to web server ${DEPLOY_BASE_DIR}/${CI_BUILD_REF_NAME}..."
+#     - rsync --delete -va build/ "${DEPLOY_BASE_DIR}/${CI_BUILD_REF_NAME}/"
+#   only:
+#     - branches
+#   tags:
+#     - deploy
 
-# Create rollback copy of connect.trezo.io
-rollback production copy:
-  stage: deploy
-  only:
-    refs:
-      - v8
-  when: manual
-  variables:
-    GIT_STRATEGY: none
-  before_script: []
-  script:
-    - aws s3 sync s3://connect.trezor.io s3://rollback-connect.trezor.io
-  tags:
-    - deploy
+# # Create rollback copy of connect.trezo.io
+# rollback production copy:
+#   stage: deploy
+#   only:
+#     refs:
+#       - v8
+#   when: manual
+#   variables:
+#     GIT_STRATEGY: none
+#   before_script: []
+#   script:
+#     - aws s3 sync s3://connect.trezor.io s3://rollback-connect.trezor.io
+#   tags:
+#     - deploy
 
-# Deploy release to connect.trezor.io
-deploy production:
-  stage: deploy
-  only:
-    refs:
-      - v8
-  when: manual
-  dependencies:
-    - build
-  variables:
-    GIT_STRATEGY: none
-  before_script: []
-  script:
-    - ./scripts/s3sync.sh 8
-  tags:
-    - deploy
+# # Deploy release to connect.trezor.io
+# deploy production:
+#   stage: deploy
+#   only:
+#     refs:
+#       - v8
+#   when: manual
+#   dependencies:
+#     - build
+#   variables:
+#     GIT_STRATEGY: none
+#   before_script: []
+#   script:
+#     - ./scripts/s3sync.sh 8
+#   tags:
+#     - deploy
 
-# Publish release to npm registry
+# # Publish release to npm registry
 
-publish release to npm:
-  stage: deploy
-  only:
-    refs:
-      - v8
-  when: manual
-  dependencies:
-    - "setup environment"
-  before_script:
-    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-    - nix-shell --run "yarn"
-  script:
-    - nix-shell --run "yarn build:npm && cd ./npm && npm publish"
-    - nix-shell --run "yarn build:npm-extended && cd ./npm-extended && npm publish --tag extended"
-  after_script:
-    - rm ~/.npmrc
-  tags:
-    - deploy
+# publish release to npm:
+#   stage: deploy
+#   only:
+#     refs:
+#       - v8
+#   when: manual
+#   dependencies:
+#     - "setup environment"
+#   before_script:
+#     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+#     - nix-shell --run "yarn"
+#   script:
+#     - nix-shell --run "yarn build:npm && cd ./npm && npm publish"
+#     - nix-shell --run "yarn build:npm-extended && cd ./npm-extended && npm publish --tag extended"
+#   after_script:
+#     - rm ~/.npmrc
+#   tags:
+#     - deploy
 
-# Publish beta release to npm registry
+# # Publish beta release to npm registry
 
-publish beta release to npm:
-  stage: deploy
-  except:
-    - v8
-  when: manual
-  dependencies:
-    - "setup environment"
-  before_script:
-    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-    - nix-shell --run "yarn"
-    - nix-shell --run "REMOTE_VERSION=\$(npm show trezor-connect version --tag beta) && node ./scripts/ci-check-version \$REMOTE_VERSION $CI_COMMIT_BRANCH"
-  script:
-    - nix-shell --run "yarn build:npm-extended && cd ./npm-extended && npm publish --tag beta"
-  after_script:
-    - rm ~/.npmrc
-  tags:
-    - deploy
+# publish beta release to npm:
+#   stage: deploy
+#   except:
+#     - v8
+#   when: manual
+#   dependencies:
+#     - "setup environment"
+#   before_script:
+#     - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+#     - nix-shell --run "yarn"
+#     - nix-shell --run "REMOTE_VERSION=\$(npm show trezor-connect version --tag beta) && node ./scripts/ci-check-version \$REMOTE_VERSION $CI_COMMIT_BRANCH"
+#   script:
+#     - nix-shell --run "yarn build:npm-extended && cd ./npm-extended && npm publish --tag beta"
+#   after_script:
+#     - rm ~/.npmrc
+#   tags:
+#     - deploy
 
 # Test
 
@@ -285,7 +285,7 @@ publish beta release to npm:
 #   parallel: !reference [.jobs-t1,parallel]
 
 # Examples
-node:
+.node:
   image: ghcr.io/trezor/trezor-user-env
   stage: examples
   dependencies:
@@ -320,7 +320,7 @@ image: registry.gitlab.com/satoshilabs/trezor/trezor-suite/base@sha256:7002a4716
   script:
     - git submodule update --init --recursive
     - yarn install --pure-lockfile --cache-folder .yarn --prefer-offline
-    # - yarn build
+    - yarn build
     - docker-compose pull
     - docker-compose up -d trezor-user-env-unix
     - docker-compose run test-run
