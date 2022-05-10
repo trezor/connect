@@ -28,7 +28,20 @@ module.exports = config => {
             useIframe: false,
             runInParent: true,
         },
-        browsers: ['Chrome'],
+        browsers: [
+            // 'Chrome',
+            'ChromeHeadlessNoSandbox',
+        ],
+        customLaunchers: {
+            ChromeHeadlessNoSandbox: {
+                base: 'ChromeHeadless',
+                flags: ['--no-sandbox'],
+            },
+            Chrome: {
+                base: 'Chrome',
+                flags: ['--no-sandbox'],
+            },
+        },
         concurrency: 0,
         browserNoActivityTimeout: 6000000,
         colors: true,
