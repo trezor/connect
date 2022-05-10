@@ -300,7 +300,7 @@ variables:
     - sleep 10
     - nix-shell --run "yarn babel-node ./examples/node/index.js"
 
-# image: registry.gitlab.com/satoshilabs/trezor/trezor-suite/base@sha256:7002a4716e04b8b087dbd7b553c37724026949a0f0ee0c16618d5227d3224df0
+image: registry.gitlab.com/satoshilabs/trezor/trezor-suite/base@sha256:7002a4716e04b8b087dbd7b553c37724026949a0f0ee0c16618d5227d3224df0
 
 .connect:
   stage: test
@@ -321,6 +321,7 @@ variables:
     # - git submodule update --init --recursive
     # - yarn install --pure-lockfile --cache-folder .yarn --prefer-offline
     # - yarn build
+    - echo "ls -la from gitlab file, so far good"
     - ls -la
     - docker-compose pull
     - docker-compose up -d trezor-user-env-unix
