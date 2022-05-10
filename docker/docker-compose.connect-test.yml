@@ -19,6 +19,6 @@ services:
       - trezor-user-env-unix
     network_mode: service:trezor-user-env-unix
     working_dir: /trezor-suite
-    command: bash -c "ls -la docker/wait-for-env.sh && $TESTS_SCRIPT $TESTS_PATTERN"
+    command: bash -c "ls -la TESTS_SCRIPT $TESTS_PATTERN"
     volumes:
       - ../:/trezor-suite
