@@ -1,3 +1,11 @@
+# 8.2.9
+
+### Added
+- 1.11.1 FW with 1.11.0 BL and 2.4.3 FW releases
+
+### Fixed
+- Zcash consensus branch updated to fix signing TX v4
+
 # 8.2.8
 
 ### Added
