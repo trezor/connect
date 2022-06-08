@@ -118,7 +118,7 @@ run() {
     runDocker
   fi
 
-  TESTS_FIRMWARE=$(node ./tests/get-latest-firmware.js)
+  TESTS_FIRMWARE=${TESTS_FIRMWARE:=$(node ./tests/get-latest-firmware.js)}
 
   echo "Running ${TEST_SCRIPT}"
   echo "  Firmware: ${TESTS_FIRMWARE}"
