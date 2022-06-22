@@ -7,9 +7,7 @@ import styles from '../../styles/webusb.less';
 import type { Config } from '../data/DataManager';
 
 // handle message received from connect.js
-const handleMessage = async (event: MessageEvent) => {
-    if (!event.data) return;
-
+const onload = async () => {
     const exists = document.getElementsByTagName('button');
     if (exists && exists.length > 0) {
         return;
@@ -41,4 +39,4 @@ const handleMessage = async (event: MessageEvent) => {
     }
 };
 
-window.addEventListener('message', handleMessage);
+window.addEventListener('load', onload);
