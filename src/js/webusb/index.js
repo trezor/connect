@@ -9,7 +9,6 @@ import type { Config } from '../data/DataManager';
 // handle message received from connect.js
 const handleMessage = async (event: MessageEvent) => {
     if (!event.data) return;
-    const { data } = event;
 
     const exists = document.getElementsByTagName('button');
     if (exists && exists.length > 0) {
@@ -24,16 +23,7 @@ const handleMessage = async (event: MessageEvent) => {
 
     const button = document.createElement('button');
 
-    if (typeof data.style === 'string') {
-        const css: { [k: string]: string } = JSON.parse(data.style);
-        Object.keys(css).forEach(key => {
-            if (Object.prototype.hasOwnProperty.call(button.style, key)) {
-                button.style.setProperty(key, css[key]);
-            }
-        });
-    } else {
-        button.className = 'default';
-    }
+    button.className = 'default';
 
     button.onclick = async () => {
         const { usb } = navigator;

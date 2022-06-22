@@ -248,7 +248,7 @@ export const uiResponse = (response: $T.UiResponse) => {
 };
 
 export const renderWebUSBButton = (className: ?string) => {
-    webUSBButton(className, _settings.webusbSrc, iframe.origin);
+    webUSBButton(className, _settings.webusbSrc);
 };
 
 export const getSettings = (): $T.Response<$T.ConnectSettings> => {
