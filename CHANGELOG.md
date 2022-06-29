@@ -1,3 +1,7 @@
+# 8.2.10
+
+- Update README. Announce connect v9.
+
 # 8.2.9
 
 ### Added
