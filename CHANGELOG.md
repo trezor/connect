@@ -1,3 +1,7 @@
+# 8.2.11
+
+- Update @trezor/connect-common (fw 1.11.2 & 2.5.2)
+
 # 8.2.10
 
 - Update README. Announce connect v9.
