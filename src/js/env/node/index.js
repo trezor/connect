@@ -122,6 +122,10 @@ const postMessage = (message: any, usePromise: boolean = true) => {
 };
 
 export const init = async (settings: $Shape<$T.ConnectSettings> = {}) => {
+    console.warn(
+        'trezor-connect version 8 has been deprecated. Please start using @trezor/connect version 9 https://www.npmjs.com/package/@trezor/connect',
+    );
+
     if (_core) {
         throw ERRORS.TypedError('Init_AlreadyInitialized');
     }
