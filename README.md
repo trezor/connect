@@ -1,8 +1,8 @@
 # :warning: Maintenance Mode
 
-Trezor Connect v8 is under maintenance mode, all new development efforts are focused on v9. New integrations are recommended to start with v9, currently in beta.
+Trezor Connect v8 is under maintenance mode, all new development efforts are focused on v9. New integrations are recommended to start with v9.
 
-* [Trezor Connect v9 BETA](https://github.com/trezor/trezor-suite/tree/develop/packages/connect)
+* [Trezor Connect](https://github.com/trezor/trezor-suite/tree/develop/packages/connect)
 * [@trezor/connect NPM](https://www.npmjs.com/package/@trezor/connect)
 
 ## New NPM package
