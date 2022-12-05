@@ -1,3 +1,8 @@
+# 8.2.12
+
+- Deprecation: update readme and add a console.log with deprecation warning
+- Update @trezor/connect-common (fw 2.5.3)
+
 # 8.2.11
 
 - Update @trezor/connect-common (fw 1.11.2 & 2.5.2)
