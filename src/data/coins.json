@@ -1914,7 +1914,7 @@
             "blockchain_link": {
                 "type": "blockbook",
                 "url": [
-                    "https://sys1.bcfn.ca"
+                    "https://blockbook.elint.services"
                 ]
             },
             "blocktime_seconds": 60,
