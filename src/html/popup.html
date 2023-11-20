@@ -43,7 +43,10 @@
                 </div>
             </div>
         </aside>
-        <section id="container">
+        <div style="display: flex; flex-direction: column; width: 100%; align-items: center;">
+        <div id="banner" style="color: black; background-color: #D99E00F2; width: 100%; text-align: center; font-weight: 500; font-size: 14px; line-height: 22px; padding: 4px;">Connect v8 is deprecated and will stop working at the start of 2024. Please contact the developers of the application and ask for an update to Connect v9.</div>
+
+        <section id="container" style="flex:1">
             <div class="loader">
                 <p>Loading...</p>
                 <svg class="circular" viewBox="25 25 50 50" preserveAspectRatio="xMidYMid">
@@ -52,11 +55,12 @@
                 </svg>
             </div>
         </section>
+        </div>
+
     </main>
 
     <!-- Views -->
     <div id="views" style="display: none;">
-
         <div class="unknown">
             <h3>Unknown view</h3>
             <p>view_name</p>

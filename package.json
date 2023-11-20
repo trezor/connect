@@ -3,7 +3,7 @@
     "version": "8.2.12",
     "author": "Trezor <info@trezor.io>",
     "homepage": "https://github.com/trezor/connect",
-    "description": "High-level javascript interface for Trezor hardware wallet.",
+    "description": "This package is deprecated. Use https://www.npmjs.com/package/@trezor/connect",
     "license": "SEE LICENSE IN LICENSE.md",
     "private": true,
     "repository": {
